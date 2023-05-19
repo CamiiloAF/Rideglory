@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:location/location.dart';
-// import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:geolocator/geolocator.dart' as geolocator;
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:rideglory/shared/constants/env_keys.dart';
 
 class MapPage extends StatefulWidget {
@@ -12,8 +12,7 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  // LatLng? _currentLocation;
-  // late CameraPosition _cameraPosition;
+  late MapboxMap controller;
 
   @override
   void initState() {
@@ -23,39 +22,77 @@ class _MapPageState extends State<MapPage> {
 
   Future<void> afterLayout() async {
     await initializeLocationAndSave();
-    // if (_currentLocation != null) {
-    //   _cameraPosition = CameraPosition(target: _currentLocation!);
-    // }
   }
 
   Future<void> initializeLocationAndSave() async {
     // Ensure all permissions are collected for Locations
-    Location location = Location();
-    bool? serviceEnabled;
-    PermissionStatus? permissionGranted;
 
-    serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
+    geolocator.LocationPermission permission =
+        await geolocator.Geolocator.checkPermission();
+    bool isLocationServiceEnabled =
+        await geolocator.Geolocator.isLocationServiceEnabled();
+
+    if (!isLocationServiceEnabled) {
+      await geolocator.Geolocator.openLocationSettings();
+      return;
     }
 
-    permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
+    if (permission == geolocator.LocationPermission.denied) {
+      await geolocator.Geolocator.openLocationSettings();
     }
 
     // Get the current user location
-    LocationData locationData = await location.getLocation();
-    // _currentLocation = LatLng(locationData.latitude!, locationData.longitude!);
+    final currentPosition = await geolocator.Geolocator.getCurrentPosition(
+        desiredAccuracy: geolocator.LocationAccuracy.high);
+    // _currentLocation =
+    //     LatLng(currentPosition.latitude, currentPosition.longitude);
+    final cameraOptions = CameraOptions(
+      center: Point(
+        coordinates: Position(
+          currentPosition.longitude,
+          currentPosition.latitude,
+        ),
+      ).toJson(),
+      zoom: 14,
+    );
+
+    await controller.flyTo(
+      cameraOptions,
+      MapAnimationOptions(duration: 2000, startDelay: 0),
+    );
+
+    final annotation =
+        await controller.annotations.createPointAnnotationManager();
+
+    await annotation.create(
+      PointAnnotationOptions(
+        geometry: Point(
+          coordinates: Position(
+            currentPosition.longitude,
+            currentPosition.latitude,
+          ),
+        ).toJson(),
+        iconSize: 24
+      ),
+    );
+
+    setState(() {
+
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
-    // return MapboxMap(
-    //   initialCameraPosition: _cameraPosition,
-    //   accessToken: dotenv.get(EnvKeys.mapBoxAccessToken),
-    //   myLocationEnabled: true,
-    // );
+    // return Container();
+    return SafeArea(
+      child: MapWidget(
+        resourceOptions: ResourceOptions(
+          accessToken: dotenv.get(EnvKeys.mapBoxAccessToken),
+        ),
+        onMapCreated: (controller) {
+          this.controller = controller;
+        },
+      ),
+    );
   }
 }

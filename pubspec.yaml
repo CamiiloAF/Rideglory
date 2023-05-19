@@ -38,9 +38,10 @@ dependencies:
   flutter_card_swiper: ^5.1.0
   flutter_dotenv: ^5.0.2
   shared_preferences: ^2.1.1
-  location: ^4.4.0
+  geolocator: ^9.0.2
+  mapbox_maps_flutter: ^0.4.3
+  mapbox_gl: ^0.16.0
 
-  flutter_mapbox_navigation: ^0.1.0
 
 dev_dependencies:
   flutter_test:
