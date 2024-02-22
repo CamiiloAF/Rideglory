@@ -1,27 +1,54 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:rideglory/features/home/presentation/pages/home_page.dart';
-import 'package:rideglory/shared/theme/theme.dart';
-import 'shared/routes/route_generator.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:rideglory/shared/theme/theme.dart';
 
-void main() async{
+import 'core/di/di_manager.dart';
+import 'firebase_options.dart';
+import 'generated/l10n.dart';
+import 'shared/routes/app_router.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: "assets/config/.env");
 
-  runApp(const MyApp());
+  DIManager.initializeDependencies();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
 
-  // This widget is the root of your application.
+  final _appRouter = AppRouter();
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: AppTheme.lightTheme,
-      onGenerateRoute: RouteGenerator.generateRoute,
-      home: const HomePage(),
+    return MaterialApp.router(
+      title: 'Rideglory',
+      theme: AppTheme.darkTheme,
+      localizationsDelegates: const [
+        AppStrings.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('es'),
+        Locale('en'),
+      ],
+      routerConfig: _appRouter.config(
+        reevaluateListenable: ReevaluateListenable.stream(
+          FirebaseAuth.instance.authStateChanges(),
+        ),
+      ),
     );
   }
 }

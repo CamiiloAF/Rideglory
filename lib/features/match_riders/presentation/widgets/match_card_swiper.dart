@@ -28,13 +28,13 @@ class _MatchCardSwiperState extends State<MatchCardSwiper> {
             controller: controller,
             cardsCount: cards.length,
             numberOfCardsDisplayed: 1,
-            isHorizontalSwipingEnabled: true,
-            isVerticalSwipingEnabled: false,
+            allowedSwipeDirection:  AllowedSwipeDirection.symmetric(horizontal: true),
+
             padding: EdgeInsets.zero,
             isLoop: false,
             onSwipe: _onSwipe,
             onUndo: _onUndo,
-            cardBuilder: (context, index) => MatchCard(index: index),
+            cardBuilder: (_, index, __, ___) => MatchCard(index: index),
           ),
         ),
         Padding(

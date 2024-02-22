@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/shared/routes/app_routes.dart';
 
 import '../../../../shared/theme/app_dimens.dart';
 
@@ -17,7 +16,7 @@ class MatchCard extends StatelessWidget {
       margin: AppDimens.matchPageHorizontalMargin,
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).pushNamed(AppRoutes.matchDetailPage);
+          // Navigator.of(context).pushNamed(AppRoutes.matchDetailPage);
         },
         child: Card(
           shape: RoundedRectangleBorder(

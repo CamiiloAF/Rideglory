@@ -1,0 +1,15 @@
+{
+  "loginWelcome": "Bienvenido a Rideglory",
+  "signInWithGoogle": "Iniciar sesión con google",
+  "personalInfo": "Información personal",
+  "male": "Masculino",
+  "female": "Femenino",
+  "preferDoNotSay": "Prefiero no decirlo",
+  "fullName": "Nombre completo",
+  "email": "Correo electrónico",
+  "dob": "Fecha de nacimiento",
+  "gender": "Género",
+  "phoneNumber": "Teléfono",
+  "save": "Guardar",
+  "signUpError": "Ocurrió un error al registrarse, intentalo más tarde"
+}
