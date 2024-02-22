@@ -11,5 +11,10 @@
   "gender": "Género",
   "phoneNumber": "Teléfono",
   "save": "Guardar",
-  "signUpError": "Ocurrió un error al registrarse, intentalo más tarde"
+  "signUpError": "Ocurrió un error al registrarse, intentalo más tarde",
+  "adventure": "Aventura",
+  "shortTrip": "Viaje corto",
+  "longTrip": "Viaje largo",
+  "couple": "Pareja",
+  "extreme": "Extremo"
 }

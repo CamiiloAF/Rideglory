@@ -179,6 +179,56 @@ class AppStrings {
       args: [],
     );
   }
+
+  /// `Aventura`
+  String get adventure {
+    return Intl.message(
+      'Aventura',
+      name: 'adventure',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Viaje corto`
+  String get shortTrip {
+    return Intl.message(
+      'Viaje corto',
+      name: 'shortTrip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Viaje largo`
+  String get longTrip {
+    return Intl.message(
+      'Viaje largo',
+      name: 'longTrip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pareja`
+  String get couple {
+    return Intl.message(
+      'Pareja',
+      name: 'couple',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Extremo`
+  String get extreme {
+    return Intl.message(
+      'Extremo',
+      name: 'extreme',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppStrings> {

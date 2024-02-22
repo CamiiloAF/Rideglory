@@ -22,13 +22,17 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "adventure": MessageLookupByLibrary.simpleMessage("Aventura"),
+        "couple": MessageLookupByLibrary.simpleMessage("Pareja"),
         "dob": MessageLookupByLibrary.simpleMessage("Fecha de nacimiento"),
         "email": MessageLookupByLibrary.simpleMessage("Correo electrónico"),
+        "extreme": MessageLookupByLibrary.simpleMessage("Extremo"),
         "female": MessageLookupByLibrary.simpleMessage("Femenino"),
         "fullName": MessageLookupByLibrary.simpleMessage("Nombre completo"),
         "gender": MessageLookupByLibrary.simpleMessage("Género"),
         "loginWelcome":
             MessageLookupByLibrary.simpleMessage("Bienvenido a Rideglory"),
+        "longTrip": MessageLookupByLibrary.simpleMessage("Viaje largo"),
         "male": MessageLookupByLibrary.simpleMessage("Masculino"),
         "personalInfo":
             MessageLookupByLibrary.simpleMessage("Información personal"),
@@ -36,6 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "preferDoNotSay":
             MessageLookupByLibrary.simpleMessage("Prefiero no decirlo"),
         "save": MessageLookupByLibrary.simpleMessage("Guardar"),
+        "shortTrip": MessageLookupByLibrary.simpleMessage("Viaje corto"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Iniciar sesión con google"),
         "signUpError": MessageLookupByLibrary.simpleMessage(

@@ -5,7 +5,7 @@ import 'package:rideglory/core/di/di_manager.dart';
 import 'package:rideglory/features/auth/sign_up/presentation/widgets/sign_up_form.dart';
 import 'package:rideglory/shared/extensions/widget_extensions.dart';
 
-import '../domain/repositories/sign_up_repository.dart';
+import '../domain/repositories/sign_up_repository_contract.dart';
 import 'manager/sign_up/sign_up_cubit.dart';
 
 @RoutePage()

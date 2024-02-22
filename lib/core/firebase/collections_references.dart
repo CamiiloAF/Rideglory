@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rideglory/core/models/user_model.dart';
+
+import '../../features/users/domain/entities/user_model.dart';
 
 abstract class CollectionsReferences {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -7,12 +8,7 @@ abstract class CollectionsReferences {
   static CollectionReference<UserModel> get usersRef =>
       _firestore.collection('users').withConverter(
         fromFirestore: (snapshots, _) {
-          return UserModel.fromJson(
-            snapshots.data()!
-              ..addAll(
-                {'id': snapshots.id},
-              ),
-          );
+          return UserModel.fromJson(snapshots.data()!);
         },
         toFirestore: (dynamic user, _) {
           return user!.toJson();

@@ -1,3 +1,3 @@
-abstract class DependencyInjector {
+abstract interface class DependencyInjector {
   void initializeDependencies();
 }

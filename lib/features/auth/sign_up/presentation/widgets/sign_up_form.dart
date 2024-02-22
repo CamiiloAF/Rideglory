@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:rideglory/core/models/user_model.dart';
 import 'package:rideglory/features/auth/sign_up/presentation/manager/sign_up/sign_up_cubit.dart';
 import 'package:rideglory/shared/extensions/build_context_extensions.dart';
 import 'package:rideglory/shared/extensions/form_control_extensions.dart';
@@ -15,6 +14,8 @@ import 'package:rideglory/shared/widgets/forms/our_reactive_drop_down_field.dart
 import 'package:rideglory/shared/widgets/forms/our_reactive_text_field.dart';
 
 import '../../../../../shared/widgets/forms/our_reactive_form.dart';
+import '../../../../users/domain/entities/enums/gender.dart';
+import '../../../../users/domain/entities/user_model.dart';
 import '../mixins/sign_up_form_mixin.dart';
 
 class SignUpForm extends StatefulWidget {
@@ -25,11 +26,6 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> with SignUpFormMixin {
-  late final _genders = [
-    appStrings.male,
-    appStrings.female,
-    appStrings.preferDoNotSay,
-  ];
 
   late final User firebaseUser;
 
@@ -70,11 +66,11 @@ class _SignUpFormState extends State<SignUpForm> with SignUpFormMixin {
           OurReactiveDropDownInput(
             formControlName: genderInput,
             hint: appStrings.gender,
-            items: _genders
+            items: Gender.values
                 .map(
                   (gender) => DropdownMenuItem(
                     value: gender,
-                    child: Text(gender),
+                    child: Text(gender.getText()),
                   ),
                 )
                 .toList(),
@@ -118,11 +114,12 @@ class _SignUpFormState extends State<SignUpForm> with SignUpFormMixin {
 
   UserModel _buildUserModel(final FormGroup formGroup) {
     return UserModel(
-      fullName: formGroup.getValue(fullNameInput),
-      dob: formGroup.getValue(dobInput),
-      email: formGroup.getValue(emailInput),
-      gender: formGroup.getValue(genderInput),
-      phoneNumberInput: formGroup.getValue(phoneNumberInput),
+      id: firebaseUser.uid,
+      fullName: formGroup.getValue<String>(fullNameInput),
+      dob: formGroup.getValue<DateTime>(dobInput),
+      email: formGroup.getValue<String>(emailInput),
+      gender: formGroup.getValue<Gender>(genderInput),
+      phoneNumber: formGroup.getValue<int>(phoneNumberInput),
     );
   }
 }

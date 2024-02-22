@@ -1,5 +1,7 @@
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../../../../users/domain/entities/enums/gender.dart';
+
 mixin SignUpFormMixin {
   final fullNameInput = 'fullName';
   final emailInput = 'email';
@@ -24,7 +26,7 @@ mixin SignUpFormMixin {
         Validators.required,
       ],
     ),
-    genderInput: FormControl<String>(
+    genderInput: FormControl<Gender>(
       validators: [
         Validators.required,
       ],
