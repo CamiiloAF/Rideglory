@@ -1,13 +1,13 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:rideglory/shared/theme/app_dimens.dart';
+import '../../../../shared/theme/app_dimens.dart';
 
 class MatchRidersHeader extends StatelessWidget {
-  const MatchRidersHeader({Key? key}) : super(key: key);
+  const MatchRidersHeader({final Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
 
@@ -37,7 +37,7 @@ class MatchRidersHeader extends StatelessWidget {
               ],
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -45,19 +45,19 @@ class MatchRidersHeader extends StatelessWidget {
 
 class PathPainter extends CustomPainter {
   @override
-  void paint(Canvas canvas, Size size) {
-    int curveHeight = 30;
-    Offset controlPoint = Offset(size.width / 2, size.height + curveHeight);
-    Offset endPoint = Offset(size.width, size.height - curveHeight);
+  void paint(final Canvas canvas, final Size size) {
+    const curveHeight = 30;
+    final controlPoint = Offset(size.width / 2, size.height + curveHeight);
+    final endPoint = Offset(size.width, size.height - curveHeight);
 
-    Paint paint = Paint()
-      ..shader = ui.Gradient.linear(const Offset(0.0, 0.0), endPoint, [
+    final paint = Paint()
+      ..shader = ui.Gradient.linear(Offset.zero, endPoint, [
         Colors.orange,
         Colors.red,
       ])
       ..style = PaintingStyle.fill;
 
-    Path path = Path();
+    final path = Path();
 
     path
       ..moveTo(0, size.height - curveHeight)
@@ -75,5 +75,5 @@ class PathPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  bool shouldRepaint(final CustomPainter oldDelegate) => true;
 }

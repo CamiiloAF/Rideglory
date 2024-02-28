@@ -229,6 +229,106 @@ class AppStrings {
       args: [],
     );
   }
+
+  /// `Perfil`
+  String get profile {
+    return Intl.message(
+      'Perfil',
+      name: 'profile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Completar perfil`
+  String get completeProfile {
+    return Intl.message(
+      'Completar perfil',
+      name: 'completeProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fotos`
+  String get photos {
+    return Intl.message(
+      'Fotos',
+      name: 'photos',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Géneros`
+  String get genders {
+    return Intl.message(
+      'Géneros',
+      name: 'genders',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Intereses`
+  String get interests {
+    return Intl.message(
+      'Intereses',
+      name: 'interests',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error, no se ha concedido permisos para acceder a la cámara`
+  String get noCameraPermissionGranted {
+    return Intl.message(
+      'Error, no se ha concedido permisos para acceder a la cámara',
+      name: 'noCameraPermissionGranted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ups, no pudimos seleccionar el archivo`
+  String get errorPickingFile {
+    return Intl.message(
+      'Ups, no pudimos seleccionar el archivo',
+      name: 'errorPickingFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Selecciona una imagen o toma una foto`
+  String get takeOrChooseAPicture {
+    return Intl.message(
+      'Selecciona una imagen o toma una foto',
+      name: 'takeOrChooseAPicture',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No pudimos subir el archivo, intentalo más tarde`
+  String get errorUploadingFile {
+    return Intl.message(
+      'No pudimos subir el archivo, intentalo más tarde',
+      name: 'errorUploadingFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No pudimos borrar el archivo, intentalo más tarde`
+  String get errorDeletingFile {
+    return Intl.message(
+      'No pudimos borrar el archivo, intentalo más tarde',
+      name: 'errorDeletingFile',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppStrings> {

@@ -13,10 +13,10 @@ class MatchCardSwiper extends StatefulWidget {
 class _MatchCardSwiperState extends State<MatchCardSwiper> {
   final CardSwiperController controller = CardSwiperController();
 
-  final cards = List.generate(1, (index) => '$index');
+  final cards = List.generate(1, (final index) => '$index');
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final size = MediaQuery.of(context).size;
 
     return Column(
@@ -34,11 +34,11 @@ class _MatchCardSwiperState extends State<MatchCardSwiper> {
             isLoop: false,
             onSwipe: _onSwipe,
             onUndo: _onUndo,
-            cardBuilder: (_, index, __, ___) => MatchCard(index: index),
+            cardBuilder: (final _, final index, final __, final ___) => MatchCard(index: index),
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 24.0),
+          padding: const EdgeInsets.only(top: 24),
           child: Row(
             children: [
               FloatingActionButton(
@@ -60,17 +60,17 @@ class _MatchCardSwiperState extends State<MatchCardSwiper> {
   }
 
   bool _onSwipe(
-    int previousIndex,
-    int? currentIndex,
-    CardSwiperDirection direction,
+    final int previousIndex,
+    final int? currentIndex,
+    final CardSwiperDirection direction,
   ) {
     return true;
   }
 
   bool _onUndo(
-    int? previousIndex,
-    int currentIndex,
-    CardSwiperDirection direction,
+    final int? previousIndex,
+    final int currentIndex,
+    final CardSwiperDirection direction,
   ) {
     return true;
   }

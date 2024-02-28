@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import '../../../../shared/theme/app_dimens.dart';
 
 class MatchCard extends StatelessWidget {
-  const MatchCard({Key? key, required this.index}) : super(key: key);
+  const MatchCard({required this.index, final Key? key}) : super(key: key);
 
   final int index;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final textTheme = Theme.of(context).textTheme;
 

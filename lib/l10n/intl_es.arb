@@ -16,5 +16,15 @@
   "shortTrip": "Viaje corto",
   "longTrip": "Viaje largo",
   "couple": "Pareja",
-  "extreme": "Extremo"
+  "extreme": "Extremo",
+  "profile": "Perfil",
+  "completeProfile": "Completar perfil",
+  "photos": "Fotos",
+  "genders": "Géneros",
+  "interests": "Intereses",
+  "noCameraPermissionGranted": "Error, no se ha concedido permisos para acceder a la cámara",
+  "errorPickingFile": "Ups, no pudimos seleccionar el archivo",
+  "takeOrChooseAPicture": "Selecciona una imagen o toma una foto",
+  "errorUploadingFile": "No pudimos subir el archivo, intentalo más tarde",
+  "errorDeletingFile": "No pudimos borrar el archivo, intentalo más tarde"
 }

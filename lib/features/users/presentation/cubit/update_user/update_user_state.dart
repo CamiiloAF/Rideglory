@@ -8,5 +8,5 @@ class UpdateUserState with _$UpdateUserState {
 
   const factory UpdateUserState.success() = UpdateUserSuccess;
 
-  const factory UpdateUserState.error(String message) = UpdateUserError;
+  const factory UpdateUserState.error(final String message) = UpdateUserError;
 }

@@ -4,10 +4,10 @@ import '../widgets/match_card_swiper.dart';
 import '../widgets/match_riders_header.dart';
 
 class MatchRidersPage extends StatelessWidget {
-  const MatchRidersPage({Key? key}) : super(key: key);
+  const MatchRidersPage({final Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final size = MediaQuery.of(context).size;
 
     return SizedBox(

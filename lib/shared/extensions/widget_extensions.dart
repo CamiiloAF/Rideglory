@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/generated/l10n.dart';
+
+import '../../generated/l10n.dart';
 
 extension StatelessWidgetExtension on StatelessWidget {
   AppStrings get appStrings => AppStrings.current;

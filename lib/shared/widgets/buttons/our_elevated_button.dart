@@ -13,13 +13,12 @@ class OurElevatedButton extends StatelessWidget {
   final bool isLoading;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         elevation: 1,
         shape: const RoundedRectangleBorder(
-          side: BorderSide.none,
           borderRadius: BorderRadius.all(Radius.circular(50)),
         ),
       ),

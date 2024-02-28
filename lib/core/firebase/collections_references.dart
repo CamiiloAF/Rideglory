@@ -7,11 +7,11 @@ abstract class CollectionsReferences {
 
   static CollectionReference<UserModel> get usersRef =>
       _firestore.collection('users').withConverter(
-        fromFirestore: (snapshots, _) {
+        fromFirestore: (final snapshots, final _) {
           return UserModel.fromJson(snapshots.data()!);
         },
-        toFirestore: (dynamic user, _) {
-          return user!.toJson();
+        toFirestore: (final user, final _) {
+          return user.toJson();
         },
       );
 }

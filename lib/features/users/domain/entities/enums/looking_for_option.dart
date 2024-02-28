@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:rideglory/generated/l10n.dart';
+import '../../../../../generated/l10n.dart';
 
 enum LookingForOption {
   @JsonValue(1)

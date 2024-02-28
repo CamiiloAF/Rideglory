@@ -3,19 +3,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:rideglory/features/auth/sign_up/presentation/manager/sign_up/sign_up_cubit.dart';
-import 'package:rideglory/shared/extensions/build_context_extensions.dart';
-import 'package:rideglory/shared/extensions/form_control_extensions.dart';
-import 'package:rideglory/shared/extensions/widget_extensions.dart';
-import 'package:rideglory/shared/routes/app_router.dart';
-import 'package:rideglory/shared/widgets/buttons/our_elevated_button.dart';
-import 'package:rideglory/shared/widgets/forms/our_reactive_date_time_picker.dart';
-import 'package:rideglory/shared/widgets/forms/our_reactive_drop_down_field.dart';
-import 'package:rideglory/shared/widgets/forms/our_reactive_text_field.dart';
 
+import '../../../../../shared/extensions/build_context_extensions.dart';
+import '../../../../../shared/extensions/form_control_extensions.dart';
+import '../../../../../shared/extensions/widget_extensions.dart';
+import '../../../../../shared/routes/app_router.dart';
+import '../../../../../shared/widgets/buttons/our_elevated_button.dart';
+import '../../../../../shared/widgets/forms/our_reactive_date_time_picker.dart';
+import '../../../../../shared/widgets/forms/our_reactive_drop_down_field.dart';
 import '../../../../../shared/widgets/forms/our_reactive_form.dart';
+import '../../../../../shared/widgets/forms/our_reactive_text_field.dart';
 import '../../../../users/domain/entities/enums/gender.dart';
 import '../../../../users/domain/entities/user_model.dart';
+import '../manager/sign_up/sign_up_cubit.dart';
 import '../mixins/sign_up_form_mixin.dart';
 
 class SignUpForm extends StatefulWidget {
@@ -44,7 +44,7 @@ class _SignUpFormState extends State<SignUpForm> with SignUpFormMixin {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: OurReactiveForm(
@@ -68,7 +68,7 @@ class _SignUpFormState extends State<SignUpForm> with SignUpFormMixin {
             hint: appStrings.gender,
             items: Gender.values
                 .map(
-                  (gender) => DropdownMenuItem(
+                  (final gender) => DropdownMenuItem(
                     value: gender,
                     child: Text(gender.getText()),
                   ),
@@ -81,17 +81,17 @@ class _SignUpFormState extends State<SignUpForm> with SignUpFormMixin {
             keyboardType: TextInputType.phone,
           ),
           BlocConsumer<SignUpCubit, SignUpState>(
-            listener: (context, state) {
+            listener: (final context, final state) {
               state.whenOrNull(
                 success: () {
                   context.router.replace(const HomeRoute());
                 },
-                error: (message) => context.showSnackBar(message),
+                error: (final message) => context.showSnackBar(message),
               );
             },
-            builder: (context, state) {
+            builder: (final context, final state) {
               return ReactiveFormConsumer(
-                builder: (context, formGroup, child) {
+                builder: (final context, final formGroup, final child) {
                   return OurElevatedButton(
                     buttonText: appStrings.save,
                     isLoading: state is LoadingSignUp,
@@ -106,7 +106,7 @@ class _SignUpFormState extends State<SignUpForm> with SignUpFormMixin {
                 },
               );
             },
-          )
+          ),
         ],
       ),
     );

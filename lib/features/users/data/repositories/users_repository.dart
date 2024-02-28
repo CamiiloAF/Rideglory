@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:rideglory/core/exceptions/failure.dart';
+import '../../../../core/exceptions/failure.dart';
 
 import '../../domain/entities/user_model.dart';
 import '../../domain/repositories/users_repository_contract.dart';
@@ -31,7 +31,7 @@ class UsersRepository implements UsersRepositoryContract {
   }
 
   @override
-  Future<void> updateUser(UserModel userModel) async {
+  Future<void> updateUser(final UserModel userModel) async {
     try {
       await userCollectionReference.doc(userModel.id).update(userModel.toJson());
     } on FirebaseException catch (e) {

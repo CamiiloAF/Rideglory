@@ -10,15 +10,10 @@ part 'user_model.g.dart';
 @freezed
 class UserModel with _$UserModel {
   const factory UserModel({
-    String? id,
-    required String fullName,
-    required String email,
-    required Gender? gender,
-    required DateTime dob,
-    required int phoneNumber,
-    @Default([]) List<LookingForOption> lookingFor,
-    @Default([]) List<Gender> gendersLike,
-    @Default([]) List<String> pictures,
+    required final String fullName, required final String email, required final Gender? gender, required final DateTime dob, required final int phoneNumber, final String? id,
+    @Default([]) final List<LookingForOption> lookingFor,
+    @Default([]) final List<Gender> gendersLike,
+    @Default([]) final List<String> pictures,
   }) = _UserModel;
 
   factory UserModel.fromJson(final Map<String, Object?> json) =>

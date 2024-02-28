@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rideglory/features/users/domain/entities/user_model.dart';
-import 'package:rideglory/features/users/domain/repositories/users_repository_contract.dart';
+import '../../../domain/entities/user_model.dart';
+import '../../../domain/repositories/users_repository_contract.dart';
 
 class CurrentUserCubit extends Cubit<UserModel?> {
-  CurrentUserCubit({required UsersRepositoryContract usersRepository})
+  CurrentUserCubit({required final UsersRepositoryContract usersRepository})
       : _usersRepository = usersRepository,
         super(null);
 
@@ -11,7 +11,9 @@ class CurrentUserCubit extends Cubit<UserModel?> {
 
   UserModel? _userModel;
 
-  Future<UserModel> getCurrentUser() async {
+  UserModel? get userModel => _userModel;
+
+  Future<UserModel> fetchCurrentUser() async {
     try {
       _userModel = _userModel ?? await _usersRepository.getCurrentUser();
       emit(_userModel);

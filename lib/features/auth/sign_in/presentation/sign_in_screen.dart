@@ -4,7 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:rideglory/shared/extensions/widget_extensions.dart';
+import '../../../../shared/extensions/widget_extensions.dart';
 
 import '../../../../shared/routes/app_router.dart';
 
@@ -18,7 +18,7 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -30,18 +30,18 @@ class _SignInScreenState extends State<SignInScreen> {
               const SizedBox(height: 34),
               MaterialButton(
                 key: widget.key,
-                height: 36.0,
+                height: 36,
                 elevation: 2,
-                padding: const EdgeInsets.all(0),
+                padding: EdgeInsets.zero,
                 color: const Color(0xFFFFFFFF),
                 onPressed: () async {
                   final userCredentials = await signInWithGoogle();
                   if (userCredentials?.user != null) {
                     if (userCredentials?.additionalUserInfo?.isNewUser ??
                         false) {
-                      context.router.replace(const SignUpRoute());
+                      await context.router.replace(const SignUpRoute());
                     } else {
-                      context.router.replace(const HomeRoute());
+                      await context.router.replace(const HomeRoute());
                     }
                   }
                 },
@@ -50,17 +50,16 @@ class _SignInScreenState extends State<SignInScreen> {
                 shape: ButtonTheme.of(context).shape,
                 child: Center(
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Container(
-                        margin: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                        margin: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
+                          borderRadius: BorderRadius.circular(8),
                           child: const Image(
                             image: AssetImage(
                               'assets/logos/google_light.png',
                             ),
-                            height: 36.0,
+                            height: 36,
                           ),
                         ),
                       ),
@@ -84,15 +83,15 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   Future<UserCredential?> signInWithGoogle() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
+    final auth = FirebaseAuth.instance;
     UserCredential? userCredential;
 
-    final GoogleSignIn googleSignIn = GoogleSignIn();
+    final googleSignIn = GoogleSignIn();
 
     final googleSignInAccount = await googleSignIn.signIn();
 
     if (googleSignInAccount != null) {
-      final GoogleSignInAuthentication googleSignInAuthentication =
+      final googleSignInAuthentication =
           await googleSignInAccount.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.credential(
@@ -105,10 +104,10 @@ class _SignInScreenState extends State<SignInScreen> {
       } on FirebaseAuthException catch (e) {
         if (e.code == 'account-exists-with-different-credential') {
           _showSnackBar(
-              'The account already exists with a different credential');
+              'The account already exists with a different credential',);
         } else if (e.code == 'invalid-credential') {
           _showSnackBar(
-              'Error occurred while accessing credentials. Try again.');
+              'Error occurred while accessing credentials. Try again.',);
         }
       } catch (e) {
         _showSnackBar('Error occurred using Google Sign In. Try again.');
@@ -119,7 +118,7 @@ class _SignInScreenState extends State<SignInScreen> {
     return null;
   }
 
-  void _showSnackBar(String text) {
+  void _showSnackBar(final String text) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 }

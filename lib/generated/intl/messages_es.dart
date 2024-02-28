@@ -23,27 +23,43 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "adventure": MessageLookupByLibrary.simpleMessage("Aventura"),
+        "completeProfile":
+            MessageLookupByLibrary.simpleMessage("Completar perfil"),
         "couple": MessageLookupByLibrary.simpleMessage("Pareja"),
         "dob": MessageLookupByLibrary.simpleMessage("Fecha de nacimiento"),
         "email": MessageLookupByLibrary.simpleMessage("Correo electrónico"),
+        "errorDeletingFile": MessageLookupByLibrary.simpleMessage(
+            "No pudimos borrar el archivo, intentalo más tarde"),
+        "errorPickingFile": MessageLookupByLibrary.simpleMessage(
+            "Ups, no pudimos seleccionar el archivo"),
+        "errorUploadingFile": MessageLookupByLibrary.simpleMessage(
+            "No pudimos subir el archivo, intentalo más tarde"),
         "extreme": MessageLookupByLibrary.simpleMessage("Extremo"),
         "female": MessageLookupByLibrary.simpleMessage("Femenino"),
         "fullName": MessageLookupByLibrary.simpleMessage("Nombre completo"),
         "gender": MessageLookupByLibrary.simpleMessage("Género"),
+        "genders": MessageLookupByLibrary.simpleMessage("Géneros"),
+        "interests": MessageLookupByLibrary.simpleMessage("Intereses"),
         "loginWelcome":
             MessageLookupByLibrary.simpleMessage("Bienvenido a Rideglory"),
         "longTrip": MessageLookupByLibrary.simpleMessage("Viaje largo"),
         "male": MessageLookupByLibrary.simpleMessage("Masculino"),
+        "noCameraPermissionGranted": MessageLookupByLibrary.simpleMessage(
+            "Error, no se ha concedido permisos para acceder a la cámara"),
         "personalInfo":
             MessageLookupByLibrary.simpleMessage("Información personal"),
         "phoneNumber": MessageLookupByLibrary.simpleMessage("Teléfono"),
+        "photos": MessageLookupByLibrary.simpleMessage("Fotos"),
         "preferDoNotSay":
             MessageLookupByLibrary.simpleMessage("Prefiero no decirlo"),
+        "profile": MessageLookupByLibrary.simpleMessage("Perfil"),
         "save": MessageLookupByLibrary.simpleMessage("Guardar"),
         "shortTrip": MessageLookupByLibrary.simpleMessage("Viaje corto"),
         "signInWithGoogle":
             MessageLookupByLibrary.simpleMessage("Iniciar sesión con google"),
         "signUpError": MessageLookupByLibrary.simpleMessage(
-            "Ocurrió un error al registrarse, intentalo más tarde")
+            "Ocurrió un error al registrarse, intentalo más tarde"),
+        "takeOrChooseAPicture": MessageLookupByLibrary.simpleMessage(
+            "Selecciona una imagen o toma una foto")
       };
 }
