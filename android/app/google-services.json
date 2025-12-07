@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1073521363686",
+    "project_id": "rideglory-f7383",
+    "storage_bucket": "rideglory-f7383.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1073521363686:android:d978a65130d04ab01c8927",
+        "android_client_info": {
+          "package_name": "com.camiloagudelo.rideglory"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1KXYl-tih16M96IchyhH4jkbmIwf1LKw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
