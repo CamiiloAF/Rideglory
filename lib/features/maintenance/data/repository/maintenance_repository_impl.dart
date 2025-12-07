@@ -6,6 +6,7 @@ import 'package:rideglory/features/maintenance/domain/model/maintenance_model.da
 import '../../../../core/exceptions/domain_exception.dart';
 import '../../../../core/http/rest_client_functions.dart';
 import '../../domain/repository/maintenance_repository.dart';
+import '../dto/maintenance_dto.dart';
 
 @Injectable(as: MaintenanceRepository)
 class MaintenanceRepositoryImpl implements MaintenanceRepository {
@@ -73,8 +74,4 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
       },
     );
   }
-}
-
-extension on MaintenanceModel {
-  Map<String, dynamic> toJson() => {};
 }

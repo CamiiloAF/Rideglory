@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
-import 'fab_option.dart';
+import 'package:go_router/go_router.dart';
+import 'package:rideglory/features/maintenance/presentation/widgets/fab_option.dart';
+import 'package:rideglory/shared/router/app_routes.dart';
 
 class ExpandableFab extends StatefulWidget {
   const ExpandableFab({super.key});
@@ -77,8 +78,8 @@ class _ExpandableFabState extends State<ExpandableFab>
                           icon: Icons.build,
                           label: 'Agregar Mantenimiento',
                           onPressed: () {
-                            _handleOptionPressed('Agregar Mantenimiento');
-                            // TODO: Navegar a agregar mantenimiento
+                            _toggleFab();
+                            context.pushNamed(AppRoutes.createMaintenance);
                           },
                         ),
                       ),

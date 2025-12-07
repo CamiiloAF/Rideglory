@@ -11,7 +11,7 @@ class UpdateMaintenanceUseCase {
 
   final MaintenanceRepository maintenanceRepository;
 
-  Future<Either<DomainException, MaintenanceModel>> execute(
+  Future<Either<DomainException, MaintenanceModel>> call(
     MaintenanceModel maintenance,
   ) async {
     return await maintenanceRepository.updateMaintenance(maintenance);

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/expandable_fab.dart';
 
-class MaintenancePage extends StatelessWidget {
-  const MaintenancePage({super.key});
+class MaintenancesPage extends StatelessWidget {
+  const MaintenancesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
