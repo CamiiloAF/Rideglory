@@ -48,7 +48,7 @@ class MaintenanceFormCubit extends Cubit<MaintenanceFormState> {
           notes: formData['notes'] as String?,
           date: formData['date'] as DateTime,
           nextMaintenanceDate: formData['nextMaintenanceDate'] as DateTime?,
-          currentMileage: double.parse(formData['currentMileage'] as String),
+          maintanceMileage: double.parse(formData['currentMileage'] as String),
           distanceUnit: formData['distanceUnit'] as DistanceUnit,
           receiveAlert: formData['receiveAlert'] as bool? ?? false,
           nextMaintenanceMileage:

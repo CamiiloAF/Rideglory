@@ -232,6 +232,7 @@ class _MaintenanceFormContentState extends State<_MaintenanceFormContent> {
                 alignLabelWithHint: true,
               ),
               maxLines: 4,
+              minLines: 1,
             ),
             const SizedBox(height: 16),
 
@@ -288,7 +289,7 @@ class _MaintenanceFormContentState extends State<_MaintenanceFormContent> {
           'notes': maintenance.notes,
           'date': maintenance.date,
           'nextMaintenanceDate': maintenance.nextMaintenanceDate,
-          'currentMileage': maintenance.currentMileage.toString(),
+          'currentMileage': maintenance.maintanceMileage.toString(),
           'distanceUnit': maintenance.distanceUnit,
           'receiveAlert': maintenance.receiveAlert,
           'nextMaintenanceMileage': maintenance.nextMaintenanceMileage

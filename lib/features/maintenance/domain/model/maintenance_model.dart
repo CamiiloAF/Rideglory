@@ -21,7 +21,7 @@ class MaintenanceModel {
   final String? notes;
   final DateTime date;
   final DateTime? nextMaintenanceDate;
-  final double currentMileage;
+  final double maintanceMileage;
   final DistanceUnit distanceUnit;
   final bool receiveAlert;
   final double? nextMaintenanceMileage;
@@ -33,7 +33,7 @@ class MaintenanceModel {
     this.notes,
     required this.date,
     this.nextMaintenanceDate,
-    required this.currentMileage,
+    required this.maintanceMileage,
     required this.distanceUnit,
     required this.receiveAlert,
     this.nextMaintenanceMileage,
@@ -46,7 +46,7 @@ class MaintenanceModel {
     String? notes,
     DateTime? date,
     DateTime? nextMaintenanceDate,
-    double? currentMileage,
+    double? maintanceMileage,
     DistanceUnit? distanceUnit,
     bool? receiveAlert,
     double? nextMaintenanceMileage,
@@ -58,7 +58,7 @@ class MaintenanceModel {
       notes: notes ?? this.notes,
       date: date ?? this.date,
       nextMaintenanceDate: nextMaintenanceDate ?? this.nextMaintenanceDate,
-      currentMileage: currentMileage ?? this.currentMileage,
+      maintanceMileage: maintanceMileage ?? this.maintanceMileage,
       distanceUnit: distanceUnit ?? this.distanceUnit,
       receiveAlert: receiveAlert ?? this.receiveAlert,
       nextMaintenanceMileage:
