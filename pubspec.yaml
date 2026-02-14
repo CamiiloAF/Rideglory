@@ -50,6 +50,11 @@ dependencies:
   # Firebase
   firebase_core: ^4.2.1
   cloud_firestore: ^6.1.0
+  firebase_auth: ^6.1.2
+
+  # Social authentication
+  google_sign_in: ^6.2.1
+  sign_in_with_apple: ^5.0.0
 
   # DI
   get_it: ^9.2.0
