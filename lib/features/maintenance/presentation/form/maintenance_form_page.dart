@@ -6,7 +6,7 @@ import 'package:rideglory/core/cubit/vehicle_cubit.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/form/cubit/maintenance_form_cubit.dart';
-import 'package:rideglory/features/maintenance/presentation/form/widgets/change_vehicle_mileage_dialog.dart';
+import 'package:rideglory/features/maintenance/presentation/form/widgets/change_vehicle_mileage_bottom_sheet.dart';
 import 'package:rideglory/shared/widgets/app_button.dart';
 
 class MaintenanceFormPage extends StatelessWidget {
@@ -133,10 +133,13 @@ class _MaintenanceFormContentState extends State<_MaintenanceFormContent> {
     int? currentMileage,
     MaintenanceFormCubit cubit,
   ) {
-    showDialog(
+    showModalBottomSheet<void>(
       context: context,
-      builder: (dialogContext) => ChangeVehicleMileageDialog(
-        context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (dialogContext) => ChangeVehicleMileageBottomSheet(
         maintenanceToSave: maintenanceToSave,
         currentMileage: currentMileage,
         saveMaintenance: (maintenance) {
