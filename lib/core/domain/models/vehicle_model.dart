@@ -4,7 +4,7 @@ class VehicleModel {
   final String? brand;
   final String? model;
   final int? year;
-  final double currentMileage;
+  final int currentMileage;
   final String distanceUnit; // 'KM' or 'Miles'
   final String? licensePlate;
   final String? vin; // Vehicle Identification Number
@@ -29,7 +29,7 @@ class VehicleModel {
     String? brand,
     String? model,
     int? year,
-    double? currentMileage,
+    int? currentMileage,
     String? distanceUnit,
     String? licensePlate,
     String? vin,
@@ -71,7 +71,7 @@ class VehicleModel {
       brand: json['brand'] as String?,
       model: json['model'] as String?,
       year: json['year'] as int?,
-      currentMileage: (json['currentMileage'] as num).toDouble(),
+      currentMileage: (json['currentMileage'] as num).toInt(),
       distanceUnit: json['distanceUnit'] as String? ?? 'KM',
       licensePlate: json['licensePlate'] as String?,
       vin: json['vin'] as String?,

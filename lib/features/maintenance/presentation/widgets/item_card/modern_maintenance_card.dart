@@ -21,7 +21,7 @@ class ModernMaintenanceCard extends StatelessWidget {
         : Icons.build_circle_rounded;
   }
 
-  double? _getProgressPercent(double? currentMileage) {
+  double? _getProgressPercent(int? currentMileage) {
     final nextMaintenanceMileage = maintenance.nextMaintenanceMileage;
 
     if (nextMaintenanceMileage == null || currentMileage == null) return null;
@@ -33,7 +33,7 @@ class ModernMaintenanceCard extends StatelessWidget {
     return currentMileage / nextMaintenanceMileage;
   }
 
-  double? _getRemainingDistance(double? currentMileage) {
+  double? _getRemainingDistance(int? currentMileage) {
     if (currentMileage == null || maintenance.nextMaintenanceMileage == null) {
       return null;
     }
@@ -55,7 +55,7 @@ class ModernMaintenanceCard extends StatelessWidget {
 
         final progressPercent = _getProgressPercent(currentMileage);
         final isUrgent =
-            (daysUntilNext != null && daysUntilNext < 15) ||
+            (daysUntilNext != null && daysUntilNext < 10) ||
             (progressPercent != null && progressPercent >= 0.95);
 
         return _MaintenanceCardContent(
@@ -77,11 +77,11 @@ class _MaintenanceCardContent extends StatelessWidget {
   final MaintenanceModel maintenance;
   final Color typeColor;
   final IconData typeIcon;
-  final double? currentMileage;
+  final int? currentMileage;
   final double? progressPercent;
   final bool isUrgent;
   final int? daysUntilNext;
-  final double? Function(double?) getRemainingDistance;
+  final double? Function(int?) getRemainingDistance;
 
   const _MaintenanceCardContent({
     required this.maintenance,

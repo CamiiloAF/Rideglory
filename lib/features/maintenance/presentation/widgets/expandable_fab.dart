@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rideglory/features/maintenance/presentation/list/maintenances/maintenances_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/fab_option.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
@@ -77,9 +79,17 @@ class _ExpandableFabState extends State<ExpandableFab>
                         child: FabOption(
                           icon: Icons.build,
                           label: 'Agregar Mantenimiento',
-                          onPressed: () {
+                          onPressed: () async {
                             _toggleFab();
-                            context.pushNamed(AppRoutes.createMaintenance);
+                            final result = await context.pushNamed<bool?>(
+                              AppRoutes.createMaintenance,
+                            );
+
+                            if (result == true && context.mounted) {
+                              context
+                                  .read<MaintenancesCubit>()
+                                  .fetchMaintenances();
+                            }
                           },
                         ),
                       ),

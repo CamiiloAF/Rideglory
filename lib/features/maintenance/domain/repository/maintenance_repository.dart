@@ -5,7 +5,7 @@ import '../../../../core/exceptions/domain_exception.dart';
 
 abstract class MaintenanceRepository {
   Future<Either<DomainException, List<MaintenanceModel>>>
-  getMaintenancesByUserId(String userId);
+  getMaintenancesByUserId();
 
   Future<Either<DomainException, MaintenanceModel>> addMaintenance(
     MaintenanceModel maintenance,

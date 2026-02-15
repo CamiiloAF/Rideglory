@@ -16,6 +16,7 @@ enum DistanceUnit {
 
 class MaintenanceModel {
   final String? id;
+  final String? userId;
   final String name;
   final MaintenanceType type;
   final String? notes;
@@ -25,6 +26,8 @@ class MaintenanceModel {
   final DistanceUnit distanceUnit;
   final bool receiveAlert;
   final double? nextMaintenanceMileage;
+  final DateTime? createdDate;
+  final DateTime? updatedDate;
 
   MaintenanceModel({
     this.id,
@@ -37,6 +40,9 @@ class MaintenanceModel {
     required this.distanceUnit,
     required this.receiveAlert,
     this.nextMaintenanceMileage,
+    this.userId,
+    this.createdDate,
+    this.updatedDate,
   });
 
   MaintenanceModel copyWith({
@@ -50,9 +56,13 @@ class MaintenanceModel {
     DistanceUnit? distanceUnit,
     bool? receiveAlert,
     double? nextMaintenanceMileage,
+    String? userId,
+    DateTime? createdDate,
+    DateTime? updatedDate,
   }) {
     return MaintenanceModel(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
       name: name ?? this.name,
       type: type ?? this.type,
       notes: notes ?? this.notes,
@@ -63,6 +73,8 @@ class MaintenanceModel {
       receiveAlert: receiveAlert ?? this.receiveAlert,
       nextMaintenanceMileage:
           nextMaintenanceMileage ?? this.nextMaintenanceMileage,
+      createdDate: createdDate ?? this.createdDate,
+      updatedDate: updatedDate ?? this.updatedDate,
     );
   }
 }

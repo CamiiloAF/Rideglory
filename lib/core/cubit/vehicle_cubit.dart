@@ -14,13 +14,13 @@ class VehicleCubit extends Cubit<VehicleState> {
     return null;
   }
 
-  double? get currentMileage => currentVehicle?.currentMileage;
+  int? get currentMileage => currentVehicle?.currentMileage;
 
   void setVehicle(VehicleModel vehicle) {
     emit(VehicleLoaded(vehicle));
   }
 
-  void updateMileage(double newMileage) {
+  void updateMileage(int newMileage) {
     final vehicle = currentVehicle;
     if (vehicle != null) {
       emit(VehicleLoaded(vehicle.copyWith(currentMileage: newMileage)));

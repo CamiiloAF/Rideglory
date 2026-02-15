@@ -5,6 +5,7 @@ class InfoChip extends StatelessWidget {
   final String label;
   final String value;
   final Color color;
+  final Widget? tooltip;
 
   const InfoChip({
     super.key,
@@ -12,6 +13,7 @@ class InfoChip extends StatelessWidget {
     required this.label,
     required this.value,
     required this.color,
+    this.tooltip,
   });
 
   @override
@@ -23,13 +25,18 @@ class InfoChip extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11,
-                color: Colors.grey[600],
-                fontWeight: FontWeight.w500,
-              ),
+            Row(
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                if (tooltip != null) ...[const SizedBox(width: 4), tooltip!],
+              ],
             ),
             Text(
               value,

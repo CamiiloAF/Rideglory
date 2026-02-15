@@ -8,7 +8,7 @@ import '../../features/authentication/application/auth_cubit.dart';
 import '../../features/authentication/login/presentation/login_view.dart';
 import '../../features/authentication/signup/presentation/signup_view.dart';
 import '../../features/maintenance/presentation/form/maintenance_form_page.dart';
-import '../../features/maintenance/presentation/maintenances_page.dart';
+import '../../features/maintenance/presentation/list/maintenances/maintenances_page.dart';
 import 'app_routes.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();

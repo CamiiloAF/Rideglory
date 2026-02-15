@@ -31,43 +31,53 @@ class MaintenanceFormCubit extends Cubit<MaintenanceFormState> {
     }
   }
 
-  Future<void> saveMaintenance() async {
-    if (formKey.currentState?.saveAndValidate() ?? false) {
+  Future<void> saveMaintenance(MaintenanceModel maintenanceToSave) async {
       emit(const MaintenanceFormState.loading());
 
-      try {
-        final formData = formKey.currentState!.value;
+      final result = await state.maybeWhen(
+        editing: (_) async =>
+            await _updateMaintenanceUseCase(maintenanceToSave),
+        orElse: () async => await _addMaintenanceUseCase(maintenanceToSave),
+      );
 
-        final maintenanceToSave = MaintenanceModel(
-          id: state.maybeWhen(
-            editing: (maintenance) => maintenance.id,
-            orElse: () => null,
-          ),
-          name: formData['name'] as String,
-          type: formData['type'] as MaintenanceType,
-          notes: formData['notes'] as String?,
-          date: formData['date'] as DateTime,
-          nextMaintenanceDate: formData['nextMaintenanceDate'] as DateTime?,
-          maintanceMileage: double.parse(formData['currentMileage'] as String),
-          distanceUnit: formData['distanceUnit'] as DistanceUnit,
-          receiveAlert: formData['receiveAlert'] as bool? ?? false,
-          nextMaintenanceMileage:
-              formData['nextMaintenanceMileage'] != null &&
-                  (formData['nextMaintenanceMileage'] as String).isNotEmpty
-              ? double.parse(formData['nextMaintenanceMileage'] as String)
-              : null,
-        );
+      result.fold(
+        (error) => emit(MaintenanceFormState.error(message: error.message)),
+        (maintenance) =>
+            emit(MaintenanceFormState.success(maintenance: maintenance)),
+      );
+    
+  }
 
-        await state.maybeWhen(
-          editing: (_) async =>
-              await _updateMaintenanceUseCase(maintenanceToSave),
-          orElse: () async => await _addMaintenanceUseCase(maintenanceToSave),
-        );
+  MaintenanceModel? buildMaintenanceToSave() {
+    if (formKey.currentState?.saveAndValidate() ?? false) {
 
-        emit(MaintenanceFormState.success(maintenance: maintenanceToSave));
-      } catch (e) {
-        emit(MaintenanceFormState.error(message: e.toString()));
-      }
+    final formData = formKey.currentState!.value;
+
+    final maintenanceToSave = MaintenanceModel(
+      id: state.maybeWhen(
+        editing: (maintenance) => maintenance.id,
+        orElse: () => null,
+      ),
+      name: formData['name'] as String,
+      type: formData['type'] as MaintenanceType,
+      notes: formData['notes'] as String?,
+      date: formData['date'] as DateTime,
+      nextMaintenanceDate: formData['nextMaintenanceDate'] as DateTime?,
+      maintanceMileage: double.parse(formData['currentMileage'] as String),
+      distanceUnit: formData['distanceUnit'] as DistanceUnit,
+      receiveAlert: formData['receiveAlert'] as bool? ?? false,
+      nextMaintenanceMileage:
+          formData['nextMaintenanceMileage'] != null &&
+              (formData['nextMaintenanceMileage'] as String).isNotEmpty
+          ? double.parse(formData['nextMaintenanceMileage'] as String)
+          : null,
+    );
+    return maintenanceToSave;
+    } else {
+      return null;
     }
   }
+
+  bool shouldChangeVehicleMileage(int currentMileage, int newMileage) =>
+      newMileage > currentMileage;
 }

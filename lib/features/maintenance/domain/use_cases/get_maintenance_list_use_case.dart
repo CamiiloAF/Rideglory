@@ -11,9 +11,7 @@ class GetMaintenanceListUseCase {
 
   final MaintenanceRepository maintenanceRepository;
 
-  Future<Either<DomainException, List<MaintenanceModel>>> execute(
-    String userId,
-  ) async {
-    return await maintenanceRepository.getMaintenancesByUserId(userId);
+  Future<Either<DomainException, List<MaintenanceModel>>> execute() async {
+    return await maintenanceRepository.getMaintenancesByUserId();
   }
 }

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:injectable/injectable.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 /// Exception thrown when authentication fails
@@ -13,14 +14,12 @@ class AuthException implements Exception {
   String toString() => message;
 }
 
-/// Service to handle all authentication operations
+@injectable
 class AuthService {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
-  AuthService({FirebaseAuth? firebaseAuth, GoogleSignIn? googleSignIn})
-    : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-      _googleSignIn = googleSignIn ?? GoogleSignIn();
+  AuthService(this._firebaseAuth,  this._googleSignIn);
 
   /// Get the current authenticated user
   User? get currentUser => _firebaseAuth.currentUser;
