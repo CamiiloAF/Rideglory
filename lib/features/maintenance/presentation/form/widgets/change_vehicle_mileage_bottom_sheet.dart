@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rideglory/core/cubit/vehicle_cubit.dart';
+import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 
 class ChangeVehicleMileageBottomSheet extends StatelessWidget {

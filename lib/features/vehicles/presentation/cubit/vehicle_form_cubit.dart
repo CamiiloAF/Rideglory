@@ -1,0 +1,103 @@
+import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:injectable/injectable.dart';
+import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/features/vehicles/domain/usecases/add_vehicle_usecase.dart';
+import 'package:rideglory/features/vehicles/domain/usecases/update_vehicle_usecase.dart';
+
+part 'vehicle_form_state.dart';
+
+@injectable
+class VehicleFormCubit extends Cubit<VehicleFormState> {
+  final AddVehicleUseCase _addVehicleUseCase;
+  final UpdateVehicleUseCase _updateVehicleUseCase;
+
+  final formKey = GlobalKey<FormBuilderState>();
+
+  VehicleFormCubit(this._addVehicleUseCase, this._updateVehicleUseCase)
+    : super(const VehicleFormInitial());
+
+  void initialize({VehicleModel? vehicle}) {
+    if (vehicle != null) {
+      emit(VehicleFormEditing(vehicle));
+    } else {
+      emit(const VehicleFormInitial());
+    }
+  }
+
+  Future<void> saveVehicle(VehicleModel vehicle) async {
+    emit(const VehicleFormLoading());
+
+    final isEditing = state is VehicleFormEditing;
+    final result = isEditing
+        ? await _updateVehicleUseCase(vehicle)
+        : await _addVehicleUseCase(vehicle);
+
+    result.fold(
+      (error) => emit(VehicleFormError(error.message)),
+      (savedVehicle) => emit(VehicleFormSuccess(savedVehicle)),
+    );
+  }
+
+  Future<void> addMultipleVehicles(List<VehicleModel> vehicles) async {
+    emit(const VehicleFormLoading());
+
+    for (var vehicle in vehicles) {
+      final result = await _addVehicleUseCase(vehicle);
+      final hasError = result.fold((error) {
+        emit(VehicleFormError(error.message));
+        return true;
+      }, (_) => false);
+
+      if (hasError) return;
+    }
+
+    if (vehicles.isNotEmpty) {
+      emit(VehicleFormSuccess(vehicles.last));
+    }
+  }
+
+  VehicleModel? buildVehicleToSave() {
+    if (formKey.currentState?.saveAndValidate() ?? false) {
+      final formData = formKey.currentState!.value;
+
+      final vehicleToSave = VehicleModel(
+        id: state is VehicleFormEditing
+            ? (state as VehicleFormEditing).vehicle.id
+            : null,
+        name: formData['name'] as String,
+        brand: (formData['brand'] as String?)?.isEmpty ?? true
+            ? null
+            : formData['brand'] as String?,
+        model: (formData['model'] as String?)?.isEmpty ?? true
+            ? null
+            : formData['model'] as String?,
+        year:
+            formData['year'] != null && (formData['year'] as String).isNotEmpty
+            ? int.tryParse(formData['year'] as String)
+            : null,
+        currentMileage:
+            formData['currentMileage'] != null &&
+                (formData['currentMileage'] as String).isNotEmpty
+            ? int.tryParse(formData['currentMileage'] as String) ?? 0
+            : 0,
+        distanceUnit: formData['distanceUnit'] as String? ?? 'KM',
+        licensePlate: (formData['licensePlate'] as String?)?.isEmpty ?? true
+            ? null
+            : formData['licensePlate'] as String?,
+        vin: (formData['vin'] as String?)?.isEmpty ?? true
+            ? null
+            : formData['vin'] as String?,
+        purchaseDate: formData['purchaseDate'] as DateTime?,
+      );
+      return vehicleToSave;
+    } else {
+      return null;
+    }
+  }
+
+  void reset() {
+    emit(const VehicleFormInitial());
+  }
+}

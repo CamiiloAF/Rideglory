@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:rideglory/core/cubit/vehicle_cubit.dart';
+import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/form/cubit/maintenance_form_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/form/widgets/change_vehicle_mileage_bottom_sheet.dart';
-import 'package:rideglory/shared/widgets/app_button.dart';
+import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/shared/widgets/form/app_date_picker.dart';
+import 'package:rideglory/shared/widgets/form/app_text_field.dart';
+import 'package:rideglory/shared/widgets/form/mileages_and_unit_fields.dart';
 
 class MaintenanceFormPage extends StatelessWidget {
   final MaintenanceModel? maintenance;
@@ -165,13 +168,10 @@ class _MaintenanceFormContentState extends State<_MaintenanceFormContent> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Nombre del mantenimiento
-            FormBuilderTextField(
+            AppTextField(
               name: 'name',
-              decoration: const InputDecoration(
-                labelText: 'Nombre del mantenimiento',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.build),
-              ),
+              labelText: 'Nombre del mantenimiento',
+              prefixIcon: Icons.build,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(
                   errorText: 'El nombre es requerido',
@@ -220,62 +220,12 @@ class _MaintenanceFormContentState extends State<_MaintenanceFormContent> {
             ),
             const SizedBox(height: 16),
 
-            // Kilometraje actual y unidad
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: FormBuilderTextField(
-                    name: 'currentMileage',
-                    initialValue: currentMileage?.toString(),
-                    decoration: const InputDecoration(
-                      labelText: 'Kilometraje actual',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.speed),
-                    ),
-                    keyboardType: TextInputType.number,
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(
-                        errorText: 'El kilometraje es requerido',
-                      ),
-                      FormBuilderValidators.numeric(
-                        errorText: 'Debe ser un número',
-                      ),
-                      FormBuilderValidators.min(
-                        0,
-                        errorText: 'Debe ser mayor a 0',
-                      ),
-                    ]),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: FormBuilderDropdown<DistanceUnit>(
-                    name: 'distanceUnit',
-                    decoration: const InputDecoration(
-                      labelText: 'Unidad',
-                      border: OutlineInputBorder(),
-                    ),
-                    initialValue: _selectedDistanceUnit,
-                    items: DistanceUnit.values
-                        .map(
-                          (unit) => DropdownMenuItem(
-                            value: unit,
-                            child: Text(unit.label),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (value) {
-                      if (value != null) {
-                        setState(() {
-                          _selectedDistanceUnit = value;
-                        });
-                      }
-                    },
-                  ),
-                ),
-              ],
+            MileagesAndUnitFields(
+              validatorsType: MileageValidatorsType.currentMileage,
+              distanceUnitFieldName: 'distanceUnit',
+              mileageFieldName: 'currentMileage',
             ),
+
             const SizedBox(height: 16),
 
             // Notas
@@ -293,16 +243,12 @@ class _MaintenanceFormContentState extends State<_MaintenanceFormContent> {
             const SizedBox(height: 16),
 
             // Fecha del próximo mantenimiento
-            FormBuilderDateTimePicker(
-              name: 'nextMaintenanceDate',
-              inputType: InputType.date,
+            AppDatePicker(
+              fieldName: 'nextMaintenanceDate',
+              labelText: 'Fecha del próximo mantenimiento',
               firstDate: DateTime.now(),
-              decoration: const InputDecoration(
-                labelText: 'Fecha del próximo mantenimiento (opcional)',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.event),
-              ),
             ),
+
             const SizedBox(height: 16),
 
             // Kilometraje del próximo mantenimiento

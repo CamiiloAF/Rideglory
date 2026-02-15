@@ -1,8 +1,10 @@
 import 'package:bloc/bloc.dart';
-import 'package:rideglory/core/domain/models/vehicle_model.dart';
+import 'package:injectable/injectable.dart';
+import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
 part 'vehicle_state.dart';
 
+@injectable
 class VehicleCubit extends Cubit<VehicleState> {
   VehicleCubit() : super(const VehicleInitial());
 
@@ -16,7 +18,7 @@ class VehicleCubit extends Cubit<VehicleState> {
 
   int? get currentMileage => currentVehicle?.currentMileage;
 
-  void setVehicle(VehicleModel vehicle) {
+  void setCurrentVehicle(VehicleModel vehicle) {
     emit(VehicleLoaded(vehicle));
   }
 
@@ -27,11 +29,11 @@ class VehicleCubit extends Cubit<VehicleState> {
     }
   }
 
-  void updateVehicle(VehicleModel vehicle) {
+  void updateCurrentVehicle(VehicleModel vehicle) {
     emit(VehicleLoaded(vehicle));
   }
 
-  void clearVehicle() {
+  void clearCurrentVehicle() {
     emit(const VehicleEmpty());
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rideglory/core/cubit/vehicle_cubit.dart';
+import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/core/di/injection.dart';
-import 'package:rideglory/core/domain/models/vehicle_model.dart';
+import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/domain/use_cases/get_maintenance_list_use_case.dart';
@@ -26,7 +26,7 @@ class _MaintenancesPageState extends State<MaintenancesPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final vehicleCubit = context.read<VehicleCubit>();
       if (vehicleCubit.currentVehicle == null) {
-        vehicleCubit.setVehicle(
+        vehicleCubit.setCurrentVehicle(
           const VehicleModel(
             id: '1',
             name: 'Mi Toyota Corolla',

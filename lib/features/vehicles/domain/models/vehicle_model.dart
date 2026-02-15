@@ -9,6 +9,8 @@ class VehicleModel {
   final String? licensePlate;
   final String? vin; // Vehicle Identification Number
   final DateTime? purchaseDate;
+  final DateTime? createdDate;
+  final DateTime? updatedDate;
 
   const VehicleModel({
     this.id,
@@ -21,6 +23,8 @@ class VehicleModel {
     this.licensePlate,
     this.vin,
     this.purchaseDate,
+    this.createdDate,
+    this.updatedDate,
   });
 
   VehicleModel copyWith({
@@ -34,6 +38,8 @@ class VehicleModel {
     String? licensePlate,
     String? vin,
     DateTime? purchaseDate,
+    DateTime? createdDate,
+    DateTime? updatedDate,
   }) {
     return VehicleModel(
       id: id ?? this.id,
@@ -46,38 +52,8 @@ class VehicleModel {
       licensePlate: licensePlate ?? this.licensePlate,
       vin: vin ?? this.vin,
       purchaseDate: purchaseDate ?? this.purchaseDate,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'brand': brand,
-      'model': model,
-      'year': year,
-      'currentMileage': currentMileage,
-      'distanceUnit': distanceUnit,
-      'licensePlate': licensePlate,
-      'vin': vin,
-      'purchaseDate': purchaseDate?.toIso8601String(),
-    };
-  }
-
-  factory VehicleModel.fromJson(Map<String, dynamic> json) {
-    return VehicleModel(
-      id: json['id'] as String?,
-      name: json['name'] as String,
-      brand: json['brand'] as String?,
-      model: json['model'] as String?,
-      year: json['year'] as int?,
-      currentMileage: (json['currentMileage'] as num).toInt(),
-      distanceUnit: json['distanceUnit'] as String? ?? 'KM',
-      licensePlate: json['licensePlate'] as String?,
-      vin: json['vin'] as String?,
-      purchaseDate: json['purchaseDate'] != null
-          ? DateTime.parse(json['purchaseDate'] as String)
-          : null,
+      createdDate: createdDate ?? this.createdDate,
+      updatedDate: updatedDate ?? this.updatedDate,
     );
   }
 }
