@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/shared/widgets/form/app_date_picker.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 import 'package:rideglory/shared/widgets/form/mileages_and_unit_fields.dart';
@@ -27,7 +28,7 @@ class VehicleForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return FormBuilder(
       key: formKey,
-      initialValue: initialValue ?? {'distanceUnit': 'KM'},
+      initialValue: initialValue ?? {'distanceUnit': DistanceUnit.kilometers},
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -54,40 +55,55 @@ class VehicleForm extends StatelessWidget {
                 child: AppTextField(
                   name: 'brand',
                   labelText: 'Marca',
-                  hintText: 'ej., Toyota, Ford',
+                  hintText: 'ej., Toyota',
                   prefixIcon: Icons.local_offer,
                 ),
               ),
+
               const SizedBox(width: 12),
               Expanded(
                 child: AppTextField(
-                  name: 'model',
-                  labelText: 'Modelo',
-                  hintText: 'ej., Camry, F-150',
-                  prefixIcon: Icons.directions_car_filled,
+                  name: 'year',
+                  labelText: 'Año',
+                  hintText: 'ej., 2020',
+                  prefixIcon: Icons.calendar_today,
+                  keyboardType: TextInputType.number,
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.numeric(
+                      errorText: 'Debe ser un número',
+                      checkNullOrEmpty: false,
+                    ),
+                    FormBuilderValidators.min(
+                      1900,
+                      errorText: 'Año inválido',
+                      checkNullOrEmpty: false,
+                    ),
+                    FormBuilderValidators.max(
+                      DateTime.now().year,
+                      errorText: 'Año inválido',
+                      checkNullOrEmpty: false,
+                    ),
+                  ]),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 16),
           AppTextField(
-            name: 'year',
-            labelText: 'Año',
-            hintText: 'ej., 2020',
-            prefixIcon: Icons.calendar_today,
-            keyboardType: TextInputType.number,
-            validator: FormBuilderValidators.compose([
-              FormBuilderValidators.numeric(errorText: 'Debe ser un número'),
-              FormBuilderValidators.min(1900, errorText: 'Año inválido'),
-            ]),
+            name: 'model',
+            labelText: 'Modelo',
+            hintText: 'ej., Camry',
+            prefixIcon: Icons.directions_car_filled,
           ),
           const SizedBox(height: 16),
+
           MileagesAndUnitFields(
             validatorsType: MileageValidatorsType.currentMileage,
             mileageFieldName: 'currentMileage',
             distanceUnitFieldName: 'distanceUnit',
           ),
           const SizedBox(height: 16),
+
           AppTextField(
             name: 'licensePlate',
             labelText: 'Placa',
@@ -95,6 +111,7 @@ class VehicleForm extends StatelessWidget {
             prefixIcon: Icons.confirmation_number,
           ),
           const SizedBox(height: 16),
+
           AppTextField(
             name: 'vin',
             labelText: 'VIN',

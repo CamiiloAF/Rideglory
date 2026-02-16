@@ -3,6 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
+import 'package:rideglory/shared/widgets/form/app_text_field_label.dart';
 
 class MileagesAndUnitFields extends StatefulWidget {
   const MileagesAndUnitFields({
@@ -10,7 +11,6 @@ class MileagesAndUnitFields extends StatefulWidget {
     this.currentMileage,
     required this.mileageFieldName,
     required this.distanceUnitFieldName,
-    this.onDistanceUnitChanged,
     this.validatorsType = MileageValidatorsType.noRequired,
     this.isRequired = true,
   });
@@ -18,7 +18,6 @@ class MileagesAndUnitFields extends StatefulWidget {
   final int? currentMileage;
   final String mileageFieldName;
   final String distanceUnitFieldName;
-  final ValueChanged<DistanceUnit>? onDistanceUnitChanged;
   final MileageValidatorsType validatorsType;
   final bool isRequired;
 
@@ -27,59 +26,52 @@ class MileagesAndUnitFields extends StatefulWidget {
 }
 
 class _MileagesAndUnitFieldsState extends State<MileagesAndUnitFields> {
-  String? _selectedDistanceUnit;
-
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
+    var labelText = 'Kilometraje actual';
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Expanded(
-          flex: 2,
-          child: AppTextField(
-            isRequired: widget.isRequired,
-            name: widget.mileageFieldName,
-            initialValue: widget.currentMileage?.toString(),
-            labelText: 'Kilometraje actual',
-            prefixIcon: Icons.speed,
-            keyboardType: TextInputType.number,
-            validator: FormBuilderValidators.compose(
-              widget.validatorsType.getValidators(widget.currentMileage),
+        AppTextFieldLabel(labelText: labelText, isRequired: widget.isRequired),
+        const SizedBox(height: 8),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 2,
+              child: AppTextField(
+                isRequired: widget.isRequired,
+                name: widget.mileageFieldName,
+                initialValue: widget.currentMileage?.toString(),
+                hintText: labelText,
+                prefixIcon: Icons.speed,
+                keyboardType: TextInputType.number,
+                validator: FormBuilderValidators.compose(
+                  widget.validatorsType.getValidators(widget.currentMileage),
+                ),
+
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+              ),
             ),
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: FormBuilderDropdown<String>(
-            name: widget.distanceUnitFieldName,
-            decoration: const InputDecoration(
-              labelText: 'Unidad',
-              border: OutlineInputBorder(),
+            const SizedBox(width: 16),
+            Expanded(
+              child: FormBuilderDropdown<DistanceUnit>(
+                name: widget.distanceUnitFieldName,
+                decoration: InputDecoration(
+                  labelText: 'Unidad',
+                  border: OutlineInputBorder(),
+                ),
+                items: DistanceUnit.values
+                    .map(
+                      (unit) => DropdownMenuItem(
+                        value: unit,
+                        child: Text(unit.label),
+                      ),
+                    )
+                    .toList(),
+              ),
             ),
-            initialValue: _selectedDistanceUnit,
-            items: DistanceUnit.values
-                .map(
-                  (unit) => DropdownMenuItem(
-                    value: unit.label,
-                    child: Text(unit.label),
-                  ),
-                )
-                .toList(),
-            onChanged: (value) {
-              if (value != null) {
-                setState(() {
-                  _selectedDistanceUnit = value;
-                });
-                if (widget.onDistanceUnitChanged != null) {
-                  widget.onDistanceUnitChanged!(
-                    DistanceUnit.values.firstWhere(
-                      (unit) => unit.label == value,
-                    ),
-                  );
-                }
-              }
-            },
-          ),
+          ],
         ),
       ],
     );

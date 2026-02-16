@@ -1,3 +1,5 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
 enum MaintenanceType {
   oilChange('Cambio de aceite'),
   preventive('Mantenimiento preventivo');
@@ -7,7 +9,9 @@ enum MaintenanceType {
 }
 
 enum DistanceUnit {
+  @JsonValue('kilometers')
   kilometers('KM'),
+  @JsonValue('miles')
   miles('Millas');
 
   final String label;

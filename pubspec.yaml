@@ -63,6 +63,9 @@ dependencies:
   # Router
   go_router: ^17.0.0
 
+  # Storage
+  shared_preferences: ^2.3.5
+
   # Utils
   dartz: 0.10.1
 

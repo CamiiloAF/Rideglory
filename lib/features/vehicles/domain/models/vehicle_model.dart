@@ -1,3 +1,5 @@
+import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
+
 class VehicleModel {
   final String? id;
   final String name;
@@ -5,7 +7,7 @@ class VehicleModel {
   final String? model;
   final int? year;
   final int currentMileage;
-  final String distanceUnit; // 'KM' or 'Miles'
+  final DistanceUnit distanceUnit; // 'KM' or 'Miles'
   final String? licensePlate;
   final String? vin; // Vehicle Identification Number
   final DateTime? purchaseDate;
@@ -19,7 +21,7 @@ class VehicleModel {
     this.model,
     this.year,
     required this.currentMileage,
-    this.distanceUnit = 'KM',
+    this.distanceUnit = DistanceUnit.kilometers,
     this.licensePlate,
     this.vin,
     this.purchaseDate,
@@ -34,7 +36,7 @@ class VehicleModel {
     String? model,
     int? year,
     int? currentMileage,
-    String? distanceUnit,
+    DistanceUnit? distanceUnit,
     String? licensePlate,
     String? vin,
     DateTime? purchaseDate,

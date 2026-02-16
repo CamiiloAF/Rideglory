@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
 part 'vehicle_dto.g.dart';
@@ -12,7 +13,7 @@ class VehicleDto extends VehicleModel {
     super.model,
     super.year,
     required super.currentMileage,
-    super.distanceUnit = 'KM',
+    super.distanceUnit,
     super.licensePlate,
     super.vin,
     super.purchaseDate,

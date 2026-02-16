@@ -1,31 +1,14 @@
 part of 'vehicle_form_cubit.dart';
 
-abstract class VehicleFormState {
-  const VehicleFormState();
-}
+@freezed
+abstract class VehicleFormState with _$VehicleFormState {
+  const VehicleFormState._();
 
-class VehicleFormInitial extends VehicleFormState {
-  const VehicleFormInitial();
-}
+  factory VehicleFormState({
+    @Default(ResultState.initial()) ResultState<VehicleModel> vehicleResult,
+    @Default(null) VehicleModel? vehicle,
+  }) = _VehicleFormState;
 
-class VehicleFormEditing extends VehicleFormState {
-  final VehicleModel vehicle;
-
-  const VehicleFormEditing(this.vehicle);
-}
-
-class VehicleFormLoading extends VehicleFormState {
-  const VehicleFormLoading();
-}
-
-class VehicleFormSuccess extends VehicleFormState {
-  final VehicleModel vehicle;
-
-  const VehicleFormSuccess(this.vehicle);
-}
-
-class VehicleFormError extends VehicleFormState {
-  final String message;
-
-  const VehicleFormError(this.message);
+  bool get isLoading => vehicleResult is Loading;
+  bool get isEditing => vehicle != null;
 }

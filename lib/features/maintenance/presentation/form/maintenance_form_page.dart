@@ -76,7 +76,6 @@ class _MaintenanceFormContent extends StatefulWidget {
 }
 
 class _MaintenanceFormContentState extends State<_MaintenanceFormContent> {
-  DistanceUnit _selectedDistanceUnit = DistanceUnit.kilometers;
   bool _shouldValidateNextMaintenanceMileage = false;
 
   Map<String, dynamic> _getInitialValues() {
@@ -255,8 +254,8 @@ class _MaintenanceFormContentState extends State<_MaintenanceFormContent> {
             FormBuilderTextField(
               name: 'nextMaintenanceMileage',
               decoration: InputDecoration(
-                labelText:
-                    'Kilometraje del próximo mantenimiento (${_selectedDistanceUnit.label})',
+                // labelText: TODO check
+                //     'Kilometraje del próximo mantenimiento (${_selectedDistanceUnit.label})',
                 border: const OutlineInputBorder(),
                 prefixIcon: const Icon(Icons.timeline),
               ),

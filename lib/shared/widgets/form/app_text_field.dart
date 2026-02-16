@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:rideglory/shared/widgets/form/app_text_field_label.dart';
 
 class AppTextField extends StatelessWidget {
   final String name;
-  final String labelText;
+  final String? labelText;
   final IconData? prefixIcon;
   final String? Function(String?)? validator;
   final String? initialValue;
@@ -14,11 +15,12 @@ class AppTextField extends StatelessWidget {
   final bool isRequired;
   final String? hintText;
   final void Function(String?)? onChanged;
+  final AutovalidateMode? autovalidateMode;
 
   const AppTextField({
     super.key,
     required this.name,
-    required this.labelText,
+    this.labelText,
     this.prefixIcon,
     this.validator,
     this.initialValue,
@@ -28,6 +30,7 @@ class AppTextField extends StatelessWidget {
     this.isRequired = false,
     this.hintText,
     this.onChanged,
+    this.autovalidateMode,
   });
 
   @override
@@ -35,28 +38,10 @@ class AppTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Text(
-              labelText,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF1F2937),
-              ),
-            ),
-            if (isRequired)
-              Text(
-                ' *',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFFEF4444),
-                ),
-              ),
-          ],
-        ),
-        const SizedBox(height: 8),
+        if (labelText != null) ...[
+          AppTextFieldLabel(labelText: labelText!, isRequired: isRequired),
+          const SizedBox(height: 8),
+        ],
         FormBuilderTextField(
           name: name,
           decoration: InputDecoration(
@@ -72,6 +57,7 @@ class AppTextField extends StatelessWidget {
           validator: validator != null
               ? FormBuilderValidators.compose([validator!])
               : null,
+          autovalidateMode: autovalidateMode,
         ),
       ],
     );

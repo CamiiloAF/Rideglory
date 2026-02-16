@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
@@ -34,17 +35,17 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
   Map<String, dynamic> _getInitialValues() {
     final state = context.read<VehicleFormCubit>().state;
 
-    return state is VehicleFormEditing
+    return state.isEditing
         ? {
-            'name': state.vehicle.name,
-            'brand': state.vehicle.brand,
-            'model': state.vehicle.model,
-            'year': state.vehicle.year?.toString(),
-            'currentMileage': state.vehicle.currentMileage.toString(),
-            'distanceUnit': state.vehicle.distanceUnit,
-            'licensePlate': state.vehicle.licensePlate,
-            'vin': state.vehicle.vin,
-            'purchaseDate': state.vehicle.purchaseDate,
+            'name': state.vehicle!.name,
+            'brand': state.vehicle!.brand,
+            'model': state.vehicle!.model,
+            'year': state.vehicle!.year?.toString(),
+            'currentMileage': state.vehicle!.currentMileage.toString(),
+            'distanceUnit': state.vehicle!.distanceUnit,
+            'licensePlate': state.vehicle!.licensePlate,
+            'vin': state.vehicle!.vin,
+            'purchaseDate': state.vehicle!.purchaseDate,
           }
         : {'distanceUnit': 'KM'};
   }
@@ -63,7 +64,7 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
   @override
   Widget build(BuildContext context) {
     final state = context.read<VehicleFormCubit>().state;
-    final isEditing = state is VehicleFormEditing;
+    final isEditing = state.isEditing;
 
     return Scaffold(
       appBar: AppBar(
@@ -73,33 +74,36 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
         elevation: 0,
       ),
       body: BlocConsumer<VehicleFormCubit, VehicleFormState>(
+        listenWhen: (previous, current) => true,
         listener: (context, state) {
-          if (state is VehicleFormSuccess) {
-            // Refresh the vehicle list
-            context.read<VehicleListCubit>().loadVehicles();
+          state.vehicleResult.whenOrNull(
+            data: (_) {
+              context.read<VehicleListCubit>().loadVehicles();
 
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  isEditing
-                      ? 'Vehicle updated successfully'
-                      : 'Vehicle added successfully',
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    isEditing
+                        ? 'Vehicle updated successfully'
+                        : 'Vehicle added successfully',
+                  ),
+                  backgroundColor: Colors.green,
                 ),
-                backgroundColor: Colors.green,
-              ),
-            );
-            context.pop();
-          } else if (state is VehicleFormError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
+              );
+              context.pop();
+            },
+            error: (error) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(error.message),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            },
+          );
         },
         builder: (context, state) {
-          final isLoading = state is VehicleFormLoading;
+          final isLoading = state.isLoading;
 
           return Stack(
             children: [
