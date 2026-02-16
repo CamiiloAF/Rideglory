@@ -6,8 +6,17 @@ import 'package:rideglory/features/maintenance/presentation/widgets/item_card/it
 
 class ModernMaintenanceCard extends StatelessWidget {
   final MaintenanceModel maintenance;
+  final VoidCallback? onTap;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
-  const ModernMaintenanceCard({super.key, required this.maintenance});
+  const ModernMaintenanceCard({
+    super.key,
+    required this.maintenance,
+    this.onTap,
+    this.onEdit,
+    this.onDelete,
+  });
 
   Color get _typeColor {
     return maintenance.type == MaintenanceType.oilChange
@@ -67,6 +76,9 @@ class ModernMaintenanceCard extends StatelessWidget {
           isUrgent: isUrgent,
           daysUntilNext: daysUntilNext,
           getRemainingDistance: _getRemainingDistance,
+          onTap: onTap,
+          onEdit: onEdit,
+          onDelete: onDelete,
         );
       },
     );
@@ -82,6 +94,9 @@ class _MaintenanceCardContent extends StatelessWidget {
   final bool isUrgent;
   final int? daysUntilNext;
   final double? Function(int?) getRemainingDistance;
+  final VoidCallback? onTap;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   const _MaintenanceCardContent({
     required this.maintenance,
@@ -92,10 +107,77 @@ class _MaintenanceCardContent extends StatelessWidget {
     required this.isUrgent,
     required this.daysUntilNext,
     required this.getRemainingDistance,
+    this.onTap,
+    this.onEdit,
+    this.onDelete,
   });
 
   @override
   Widget build(BuildContext context) {
+    return Dismissible(
+      key: Key(maintenance.id ?? maintenance.hashCode.toString()),
+      direction: DismissDirection.endToStart,
+      confirmDismiss: (direction) async {
+        return await showDialog(
+          context: context,
+          builder: (BuildContext dialogContext) {
+            return AlertDialog(
+              title: const Text('Eliminar mantenimiento'),
+              content: const Text(
+                '¿Estás seguro de que deseas eliminar este mantenimiento? Esta acción no se puede deshacer.',
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(false),
+                  child: const Text('Cancelar'),
+                ),
+                ElevatedButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(true),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text('Eliminar'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+      onDismissed: (direction) {
+        onDelete?.call();
+      },
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.delete_outline, color: Colors.white, size: 32),
+            SizedBox(height: 4),
+            Text(
+              'Eliminar',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+      child: _buildCard(context),
+    );
+  }
+
+  Widget _buildCard(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -118,18 +200,104 @@ class _MaintenanceCardContent extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () {},
+            onTap: onTap,
             borderRadius: BorderRadius.circular(24),
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  MaintenanceCardHeader(
-                    maintenance: maintenance,
-                    typeColor: typeColor,
-                    typeIcon: typeIcon,
-                    isUrgent: isUrgent,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: MaintenanceCardHeader(
+                          maintenance: maintenance,
+                          typeColor: typeColor,
+                          typeIcon: typeIcon,
+                          isUrgent: isUrgent,
+                        ),
+                      ),
+                      // Actions menu
+                      if (onEdit != null || onDelete != null)
+                        PopupMenuButton<String>(
+                          icon: Icon(Icons.more_vert, color: Colors.grey[600]),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          itemBuilder: (context) => [
+                            if (onEdit != null)
+                              const PopupMenuItem(
+                                value: 'edit',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.edit_outlined, size: 20),
+                                    SizedBox(width: 12),
+                                    Text('Editar'),
+                                  ],
+                                ),
+                              ),
+                            if (onDelete != null)
+                              const PopupMenuItem(
+                                value: 'delete',
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.delete_outline,
+                                      size: 20,
+                                      color: Colors.red,
+                                    ),
+                                    SizedBox(width: 12),
+                                    Text(
+                                      'Eliminar',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          ],
+                          onSelected: (value) async {
+                            if (value == 'edit') {
+                              onEdit?.call();
+                            } else if (value == 'delete') {
+                              final confirm = await showDialog<bool>(
+                                context: context,
+                                builder: (BuildContext dialogContext) {
+                                  return AlertDialog(
+                                    title: const Text('Eliminar mantenimiento'),
+                                    content: const Text(
+                                      '¿Estás seguro de que deseas eliminar este mantenimiento? Esta acción no se puede deshacer.',
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.of(
+                                          dialogContext,
+                                        ).pop(false),
+                                        child: const Text('Cancelar'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () => Navigator.of(
+                                          dialogContext,
+                                        ).pop(true),
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.red,
+                                          foregroundColor: Colors.white,
+                                        ),
+                                        child: const Text('Eliminar'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                              if (confirm == true) {
+                                onDelete?.call();
+                              }
+                            }
+                          },
+                        ),
+                    ],
                   ),
                   const SizedBox(height: 20),
                   MaintenanceMileageInfo(

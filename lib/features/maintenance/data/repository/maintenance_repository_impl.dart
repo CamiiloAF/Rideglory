@@ -37,7 +37,7 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
 
         if (doc.docs.isNotEmpty) {
           return doc.docs
-              .map((e) => MaintenanceDto.fromJson(e.data()))
+              .map((e) => MaintenanceDto.fromJson(e.data()).copyWith(id: e.id))
               .toList();
         } else {
           return [];

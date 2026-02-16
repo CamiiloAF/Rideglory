@@ -17,4 +17,5 @@ abstract class AppRoutes {
   // Maintenance routes
   static const String maintenances = '/maintenances';
   static const String createMaintenance = '/maintenances/create';
+  static const String editMaintenance = '/maintenances/edit/:id';
 }

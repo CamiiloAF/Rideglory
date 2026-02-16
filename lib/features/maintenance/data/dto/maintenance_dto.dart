@@ -25,24 +25,6 @@ class MaintenanceDto extends MaintenanceModel {
       _$MaintenanceDtoFromJson(json);
 
   Map<String, dynamic> toJson() => _$MaintenanceDtoToJson(this);
-
-  MaintenanceModel toModel() {
-    return MaintenanceModel(
-      id: id,
-      name: name,
-      type: type,
-      date: date,
-      maintanceMileage: maintanceMileage,
-      distanceUnit: distanceUnit,
-      receiveAlert: receiveAlert,
-      notes: notes,
-      nextMaintenanceDate: nextMaintenanceDate,
-      nextMaintenanceMileage: nextMaintenanceMileage,
-      userId: userId,
-      createdDate: createdDate,
-      updatedDate: updatedDate,
-    );
-  }
 }
 
 extension MaintenanceModelExtension on MaintenanceModel {

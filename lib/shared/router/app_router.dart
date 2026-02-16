@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 
 import '../../features/authentication/application/auth_cubit.dart';
 import '../../features/authentication/login/presentation/login_view.dart';
@@ -139,6 +140,14 @@ class AppRouter {
         name: AppRoutes.createMaintenance,
         builder: (context, state) {
           return const MaintenanceFormPage();
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.editMaintenance,
+        name: AppRoutes.editMaintenance,
+        builder: (context, state) {
+          final maintenance = state.extra as MaintenanceModel?;
+          return MaintenanceFormPage(maintenance: maintenance);
         },
       ),
     ],
