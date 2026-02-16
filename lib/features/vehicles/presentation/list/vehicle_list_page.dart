@@ -96,20 +96,19 @@ class _VehicleListView extends StatelessWidget {
                   ],
                 ),
               ),
+              empty: () {
+                return EmptyStateWidget(
+                  icon: Icons.directions_car_outlined,
+                  title: 'No tienes vehículos registrados',
+                  description: 'Agrega tu primer vehículo para comenzar',
+                  actionButtonText: 'Agregar vehículo',
+                  onActionPressed: () {
+                    context.pushNamed(AppRoutes.createVehicle);
+                  },
+                  iconColor: const Color(0xFF6366F1),
+                );
+              },
               data: (vehicles) {
-                if (vehicles.isEmpty) {
-                  return EmptyStateWidget(
-                    icon: Icons.directions_car_outlined,
-                    title: 'No tienes vehículos registrados',
-                    description: 'Agrega tu primer vehículo para comenzar',
-                    actionButtonText: 'Agregar vehículo',
-                    onActionPressed: () {
-                      context.pushNamed(AppRoutes.createVehicle);
-                    },
-                    iconColor: const Color(0xFF6366F1),
-                  );
-                }
-
                 return RefreshIndicator(
                   onRefresh: () async {
                     await context.read<VehicleListCubit>().loadVehicles();

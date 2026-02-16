@@ -15,10 +15,13 @@ class VehicleListCubit extends Cubit<ResultState<List<VehicleModel>>> {
     emit(const ResultState.loading());
     final result = await _getVehiclesUseCase();
 
-    result.fold(
-      (error) => emit(ResultState.error(error: error)),
-      (vehicles) => emit(ResultState.data(data: vehicles)),
-    );
+    result.fold((error) => emit(ResultState.error(error: error)), (vehicles) {
+      if (vehicles.isEmpty) {
+        emit(const ResultState.empty());
+      } else {
+        emit(ResultState.data(data: vehicles));
+      }
+    });
   }
 
   void removeVehicleFromList(String vehicleId) {
@@ -27,7 +30,11 @@ class VehicleListCubit extends Cubit<ResultState<List<VehicleModel>>> {
       final updatedVehicles = currentState.data
           .where((vehicle) => vehicle.id != vehicleId)
           .toList();
-      emit(ResultState.data(data: updatedVehicles));
+      if (updatedVehicles.isEmpty) {
+        emit(const ResultState.empty());
+      } else {
+        emit(ResultState.data(data: updatedVehicles));
+      }
     }
   }
 }

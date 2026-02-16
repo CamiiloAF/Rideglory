@@ -35,8 +35,7 @@ class _MaintenancesPageState extends State<MaintenancesPage> {
         body: BlocConsumer<MaintenancesCubit, ResultState<List<MaintenanceModel>>>(
           listener: (context, state) {
             setState(() {
-              _showExpandedFab =
-                  state is Data && (state as Data).data.isNotEmpty;
+              _showExpandedFab = state is Empty;
             });
           },
           builder: (context, state) {
@@ -53,30 +52,29 @@ class _MaintenancesPageState extends State<MaintenancesPage> {
                 onRefresh: onRefresh,
                 child: Center(child: Text('Error: ${error.message}')),
               ),
+              empty: () {
+                return ContainerPullToRefresh(
+                  onRefresh: onRefresh,
+                  child: EmptyStateWidget(
+                    icon: Icons.build_circle_outlined,
+                    title: 'No hay mantenimientos registrados',
+                    description:
+                        'Comienza a registrar los mantenimientos de tu vehículo para llevar un control completo',
+                    iconColor: Color(0xFF6366F1),
+                    actionButtonText: 'Agregar mantenimiento',
+                    onActionPressed: () async {
+                      final result = await context.pushNamed<bool?>(
+                        AppRoutes.createMaintenance,
+                      );
+
+                      if (result == true && context.mounted) {
+                        context.read<MaintenancesCubit>().fetchMaintenances();
+                      }
+                    },
+                  ),
+                );
+              },
               data: (maintenances) {
-                if (maintenances.isEmpty) {
-                  return ContainerPullToRefresh(
-                    onRefresh: onRefresh,
-                    child: EmptyStateWidget(
-                      icon: Icons.build_circle_outlined,
-                      title: 'No hay mantenimientos registrados',
-                      description:
-                          'Comienza a registrar los mantenimientos de tu vehículo para llevar un control completo',
-                      iconColor: Color(0xFF6366F1),
-                      actionButtonText: 'Agregar mantenimiento',
-                      onActionPressed: () async {
-                        final result = await context.pushNamed<bool?>(
-                          AppRoutes.createMaintenance,
-                        );
-
-                        if (result == true && context.mounted) {
-                          context.read<MaintenancesCubit>().fetchMaintenances();
-                        }
-                      },
-                    ),
-                  );
-                }
-
                 return RefreshIndicator(
                   onRefresh: onRefresh,
                   child: ListView.builder(

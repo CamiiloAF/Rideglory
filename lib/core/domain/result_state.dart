@@ -12,5 +12,7 @@ class ResultState<T> with _$ResultState<T> {
 
   const factory ResultState.data({required T data}) = Data<T>;
 
+  const factory ResultState.empty() = Empty<T>;
+
   const factory ResultState.error({required DomainException error}) = Error<T>;
 }

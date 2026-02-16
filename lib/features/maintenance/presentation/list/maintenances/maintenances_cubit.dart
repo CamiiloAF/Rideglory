@@ -13,9 +13,14 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
     emit(const ResultState.loading());
     final result = await _getMaintenancesUseCase.execute();
 
-    result.fold(
-      (error) => emit(ResultState.error(error: error)),
-      (maintenances) => emit(ResultState.data(data: maintenances)),
-    );
+    result.fold((error) => emit(ResultState.error(error: error)), (
+      maintenances,
+    ) {
+      if (maintenances.isEmpty) {
+        emit(const ResultState.empty());
+      } else {
+        emit(ResultState.data(data: maintenances));
+      }
+    });
   }
 }
