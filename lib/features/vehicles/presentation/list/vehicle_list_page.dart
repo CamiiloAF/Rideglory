@@ -8,6 +8,7 @@ import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_de
 import 'package:rideglory/features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/widgets/vehicle_card.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/shared/widgets/empty_state_widget.dart';
 
 class VehicleListPage extends StatelessWidget {
   const VehicleListPage({super.key});
@@ -97,42 +98,15 @@ class _VehicleListView extends StatelessWidget {
               ),
               data: (vehicles) {
                 if (vehicles.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.directions_car,
-                          size: 64,
-                          color: Colors.grey[400],
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          'No vehicles yet',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Add your first vehicle to get started',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[500],
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            context.pushNamed(AppRoutes.createVehicle);
-                          },
-                          icon: const Icon(Icons.add),
-                          label: const Text('Add Vehicle'),
-                        ),
-                      ],
-                    ),
+                  return EmptyStateWidget(
+                    icon: Icons.directions_car_outlined,
+                    title: 'No tienes vehículos registrados',
+                    description: 'Agrega tu primer vehículo para comenzar',
+                    actionButtonText: 'Agregar vehículo',
+                    onActionPressed: () {
+                      context.pushNamed(AppRoutes.createVehicle);
+                    },
+                    iconColor: const Color(0xFF6366F1),
                   );
                 }
 

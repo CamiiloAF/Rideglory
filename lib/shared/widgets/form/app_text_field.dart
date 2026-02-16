@@ -10,6 +10,7 @@ class AppTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final String? initialValue;
   final int? maxLines;
+  final int? minLines;
   final TextInputType? keyboardType;
   final bool enabled;
   final bool isRequired;
@@ -25,6 +26,7 @@ class AppTextField extends StatelessWidget {
     this.validator,
     this.initialValue,
     this.maxLines = 1,
+    this.minLines,
     this.keyboardType,
     this.enabled = true,
     this.isRequired = false,
@@ -38,10 +40,9 @@ class AppTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (labelText != null) ...[
+        if (labelText != null)
           AppTextFieldLabel(labelText: labelText!, isRequired: isRequired),
-          const SizedBox(height: 8),
-        ],
+
         FormBuilderTextField(
           name: name,
           decoration: InputDecoration(
@@ -51,6 +52,7 @@ class AppTextField extends StatelessWidget {
           ),
           initialValue: initialValue,
           maxLines: maxLines,
+          minLines: minLines,
           keyboardType: keyboardType,
           enabled: enabled,
           onChanged: onChanged,

@@ -8,7 +8,9 @@ import 'package:rideglory/features/maintenance/domain/model/maintenance_model.da
 import 'package:rideglory/features/maintenance/presentation/form/cubit/maintenance_form_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/form/widgets/change_vehicle_mileage_bottom_sheet.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/shared/widgets/form/app_checkbox.dart';
 import 'package:rideglory/shared/widgets/form/app_date_picker.dart';
+import 'package:rideglory/shared/widgets/form/app_dropdown.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 import 'package:rideglory/shared/widgets/form/mileages_and_unit_fields.dart';
 
@@ -99,6 +101,7 @@ class _MaintenanceFormContentState extends State<_MaintenanceFormContent> {
       orElse: () => {
         'date': DateTime.now(),
         'distanceUnit': DistanceUnit.kilometers,
+        'type': MaintenanceType.oilChange,
         'receiveAlert': false,
       },
     );
@@ -170,6 +173,7 @@ class _MaintenanceFormContentState extends State<_MaintenanceFormContent> {
             AppTextField(
               name: 'name',
               labelText: 'Nombre del mantenimiento',
+              isRequired: true,
               prefixIcon: Icons.build,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(
@@ -184,16 +188,13 @@ class _MaintenanceFormContentState extends State<_MaintenanceFormContent> {
             const SizedBox(height: 16),
 
             // Tipo de mantenimiento
-            FormBuilderDropdown<MaintenanceType>(
+            AppDropdown<MaintenanceType>(
               name: 'type',
-              decoration: const InputDecoration(
-                labelText: 'Tipo de mantenimiento',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.category),
-              ),
+              labelText: 'Tipo de mantenimiento',
               validator: FormBuilderValidators.required(
                 errorText: 'El tipo es requerido',
               ),
+              prefixIcon: Icon(Icons.category),
               items: MaintenanceType.values
                   .map(
                     (type) =>
@@ -204,18 +205,12 @@ class _MaintenanceFormContentState extends State<_MaintenanceFormContent> {
             const SizedBox(height: 16),
 
             // Fecha
-            FormBuilderDateTimePicker(
-              name: 'date',
-              inputType: InputType.date,
+            AppDatePicker(
+              fieldName: 'date',
               lastDate: DateTime.now(),
-              decoration: const InputDecoration(
-                labelText: 'Fecha del mantenimiento',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.calendar_today),
-              ),
-              validator: FormBuilderValidators.required(
-                errorText: 'La fecha es requerida',
-              ),
+              labelText: 'Fecha del mantenimiento',
+              isRequired: true,
+              prefixIcon: Icon(Icons.calendar_today),
             ),
             const SizedBox(height: 16),
 
@@ -228,14 +223,10 @@ class _MaintenanceFormContentState extends State<_MaintenanceFormContent> {
             const SizedBox(height: 16),
 
             // Notas
-            FormBuilderTextField(
+            AppTextField(
               name: 'notes',
-              decoration: const InputDecoration(
-                labelText: 'Notas',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.notes),
-                alignLabelWithHint: true,
-              ),
+              labelText: 'Notas',
+              prefixIcon: Icons.notes,
               maxLines: 4,
               minLines: 1,
             ),
@@ -251,14 +242,9 @@ class _MaintenanceFormContentState extends State<_MaintenanceFormContent> {
             const SizedBox(height: 16),
 
             // Kilometraje del próximo mantenimiento
-            FormBuilderTextField(
+            AppTextField(
               name: 'nextMaintenanceMileage',
-              decoration: InputDecoration(
-                // labelText: TODO check
-                //     'Kilometraje del próximo mantenimiento (${_selectedDistanceUnit.label})',
-                border: const OutlineInputBorder(),
-                prefixIcon: const Icon(Icons.timeline),
-              ),
+              labelText: 'Kilometraje del próximo mantenimiento',
               keyboardType: TextInputType.number,
               onChanged: (value) {
                 setState(() {
@@ -287,11 +273,10 @@ class _MaintenanceFormContentState extends State<_MaintenanceFormContent> {
             const SizedBox(height: 16),
 
             // Recibir alerta
-            FormBuilderCheckbox(
+            AppCheckbox(
               name: 'receiveAlert',
-              title: const Text('Recibir alerta de mantenimiento'),
+              title: 'Recibir alerta de mantenimiento',
               initialValue: false,
-              decoration: const InputDecoration(border: InputBorder.none),
             ),
             const SizedBox(height: 24),
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
+import 'package:rideglory/shared/widgets/form/app_dropdown.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field_label.dart';
 
@@ -33,7 +33,7 @@ class _MileagesAndUnitFieldsState extends State<MileagesAndUnitFields> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         AppTextFieldLabel(labelText: labelText, isRequired: widget.isRequired),
-        const SizedBox(height: 8),
+
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -55,12 +55,8 @@ class _MileagesAndUnitFieldsState extends State<MileagesAndUnitFields> {
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: FormBuilderDropdown<DistanceUnit>(
+              child: AppDropdown<DistanceUnit>(
                 name: widget.distanceUnitFieldName,
-                decoration: InputDecoration(
-                  labelText: 'Unidad',
-                  border: OutlineInputBorder(),
-                ),
                 items: DistanceUnit.values
                     .map(
                       (unit) => DropdownMenuItem(

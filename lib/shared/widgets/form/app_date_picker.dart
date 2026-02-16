@@ -12,6 +12,7 @@ class AppDatePicker extends StatelessWidget {
     this.lastDate,
     this.isRequired = false,
     this.hint,
+    this.prefixIcon,
   });
 
   final String fieldName;
@@ -21,6 +22,7 @@ class AppDatePicker extends StatelessWidget {
   final DateTime? firstDate;
   final DateTime? lastDate;
   final bool isRequired;
+  final Widget? prefixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,6 @@ class AppDatePicker extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         AppTextFieldLabel(labelText: labelText, isRequired: isRequired),
-        const SizedBox(height: 8),
         FormBuilderDateTimePicker(
           name: fieldName,
           initialValue: initialValue,
@@ -38,7 +39,7 @@ class AppDatePicker extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hint ?? labelText,
             border: const OutlineInputBorder(),
-            prefixIcon: const Icon(Icons.event),
+            prefixIcon: prefixIcon ?? const Icon(Icons.event),
           ),
         ),
       ],

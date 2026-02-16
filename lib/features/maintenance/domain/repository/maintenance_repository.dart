@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:rideglory/core/domain/nothing.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 
 import '../../../../core/exceptions/domain_exception.dart';
@@ -15,7 +16,7 @@ abstract class MaintenanceRepository {
     MaintenanceModel maintenance,
   );
 
-  Future<Either<DomainException, MaintenanceModel>> deleteMaintenance(
+  Future<Either<DomainException, Nothing>> deleteMaintenance(
     String id,
   );
 }

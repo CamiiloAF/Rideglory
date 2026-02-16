@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rideglory/core/domain/nothing.dart';
 import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 
@@ -69,11 +70,14 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
   }
 
   @override
-  Future<Either<DomainException, MaintenanceModel>> deleteMaintenance(
-    String id,
-  ) {
-    // TODO: implement deleteMaintenance
-    throw UnimplementedError();
+  Future<Either<DomainException, Nothing>> deleteMaintenance(String id) {
+    return executeService(
+      function: () async {
+        await firestore.collection(_collectionName).doc(id).delete();
+
+        return Nothing();
+      },
+    );
   }
 
   @override

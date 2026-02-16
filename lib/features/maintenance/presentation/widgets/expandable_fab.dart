@@ -107,7 +107,6 @@ class _ExpandableFabState extends State<ExpandableFab>
                           label: 'Ver Historial',
                           onPressed: () {
                             _handleOptionPressed('Ver Historial');
-                            // TODO: Navegar a historial
                           },
                         ),
                       ),
@@ -125,7 +124,6 @@ class _ExpandableFabState extends State<ExpandableFab>
                           label: 'Recordatorios',
                           onPressed: () {
                             _handleOptionPressed('Recordatorios');
-                            // TODO: Navegar a recordatorios
                           },
                         ),
                       ),
