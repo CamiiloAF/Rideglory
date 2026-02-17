@@ -12,10 +12,10 @@ abstract class AppRoutes {
   // Vehicle routes
   static const String vehicles = '/vehicles';
   static const String createVehicle = '/vehicles/create';
-  static const String editVehicle = '/vehicles/edit/:id';
+  static const String editVehicle = '/vehicles/edit';
 
   // Maintenance routes
   static const String maintenances = '/maintenances';
   static const String createMaintenance = '/maintenances/create';
-  static const String editMaintenance = '/maintenances/edit/:id';
+  static const String editMaintenance = '/maintenances/edit';
 }

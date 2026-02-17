@@ -97,10 +97,7 @@ class _SignupViewState extends State<SignupView> {
         backgroundColor: Colors.white,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: Color(0xFF1F2937)),
-          onPressed: () => context.pop(),
-        ),
+        iconTheme: const IconThemeData(color: Color(0xFF1F2937)),
       ),
       body: SafeArea(
         child: BlocListener<AuthCubit, AuthState>(

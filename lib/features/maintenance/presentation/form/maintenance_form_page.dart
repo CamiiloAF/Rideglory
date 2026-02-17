@@ -7,6 +7,7 @@ import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/form/cubit/maintenance_form_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/form/widgets/change_vehicle_mileage_bottom_sheet.dart';
+import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
 import 'package:rideglory/shared/widgets/form/app_checkbox.dart';
 import 'package:rideglory/shared/widgets/form/app_date_picker.dart';
@@ -40,7 +41,7 @@ class _MaintenanceFormViewState extends State<_MaintenanceFormView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Mantenimiento')),
+      appBar: const AppAppBar(title: 'Mantenimiento'),
       body: BlocListener<MaintenanceFormCubit, MaintenanceFormState>(
         listener: (context, state) {
           state.whenOrNull(
@@ -246,6 +247,7 @@ class _MaintenanceFormContentState extends State<_MaintenanceFormContent> {
               name: 'nextMaintenanceMileage',
               labelText: 'Kilometraje del próximo mantenimiento',
               keyboardType: TextInputType.number,
+              prefixIcon: Icons.speed,
               onChanged: (value) {
                 setState(() {
                   _shouldValidateNextMaintenanceMileage =

@@ -3,9 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
-import 'package:rideglory/features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
+import 'package:rideglory/shared/widgets/app_app_bar.dart';
 
 import '../widgets/vehicle_form.dart';
 
@@ -47,7 +48,7 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
             'vin': state.vehicle!.vin,
             'purchaseDate': state.vehicle!.purchaseDate,
           }
-        : {'distanceUnit': 'KM'};
+        : {'distanceUnit': DistanceUnit.kilometers};
   }
 
   void _saveVehicle() {
@@ -67,19 +68,12 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
     final isEditing = state.isEditing;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(isEditing ? 'Edit Vehicle' : 'Add Vehicle'),
-        backgroundColor: const Color(0xFF6366F1),
-        foregroundColor: Colors.white,
-        elevation: 0,
-      ),
+      appBar: AppAppBar(title: isEditing ? 'Edit Vehicle' : 'Add Vehicle'),
       body: BlocConsumer<VehicleFormCubit, VehicleFormState>(
         listenWhen: (previous, current) => true,
         listener: (context, state) {
           state.vehicleResult.whenOrNull(
             data: (_) {
-              context.read<VehicleListCubit>().loadVehicles();
-
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
@@ -90,7 +84,7 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
                   backgroundColor: Colors.green,
                 ),
               );
-              context.pop();
+              context.pop(true);
             },
             error: (error) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -110,7 +104,7 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
               SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: VehicleForm(
-                  key: context.read<VehicleFormCubit>().formKey,
+                  formKey: context.read<VehicleFormCubit>().formKey,
                   initialValue: _getInitialValues(),
                   isEditing: isEditing,
                   onSave: _saveVehicle,

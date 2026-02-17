@@ -8,6 +8,8 @@ import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_de
 import 'package:rideglory/features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/widgets/vehicle_card.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/shared/widgets/app_app_bar.dart';
+import 'package:rideglory/shared/widgets/app_drawer.dart';
 import 'package:rideglory/shared/widgets/empty_state_widget.dart';
 
 class VehicleListPage extends StatelessWidget {
@@ -30,29 +32,84 @@ class VehicleListPage extends StatelessWidget {
 class _VehicleListView extends StatelessWidget {
   const _VehicleListView();
 
+  Future<void> _goToEditVehicle(
+    BuildContext context,
+    VehicleModel vehicle,
+  ) async {
+    final result = await context.pushNamed(
+      AppRoutes.editVehicle,
+      extra: vehicle,
+    );
+    if (result == true && context.mounted) {
+      _loadVechicles(context);
+    }
+  }
+
+  Future<void> _loadVechicles(BuildContext context) =>
+      context.read<VehicleListCubit>().loadVehicles();
+
+  Future<void> _goToCreateVehicle(BuildContext context) async {
+    final result = await context.pushNamed(AppRoutes.createVehicle);
+    if (result == true && context.mounted) {
+      _loadVechicles(context);
+    }
+  }
+
+  void _showDeleteDialog(BuildContext context, VehicleModel vehicle) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Delete Vehicle'),
+        content: Text('Are you sure you want to delete "${vehicle.name}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              if (vehicle.id != null) {
+                context.read<VehicleDeleteCubit>().deleteVehicle(vehicle.id!);
+              }
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      appBar: AppBar(
-        title: const Text('My Vehicles'),
+      appBar: AppAppBar(
+        title: 'Mis Vehículos',
         actions: [
+          IconButton(
+            icon: const Icon(Icons.build_circle_outlined),
+            onPressed: () {
+              context.pushNamed(AppRoutes.maintenances);
+            },
+            tooltip: 'Mantenimientos',
+          ),
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              // Navigate to create vehicle form
               context.pushNamed(AppRoutes.createVehicle);
             },
+            tooltip: 'Agregar vehículo',
           ),
         ],
       ),
+      drawer: const AppDrawer(currentRoute: AppRoutes.vehicles),
       body: MultiBlocListener(
         listeners: [
           BlocListener<VehicleDeleteCubit, VehicleDeleteState>(
             listener: (context, state) {
-              state.when(
-                initial: () {},
-                loading: () {},
+              state.whenOrNull(
                 success: (deletedId) {
                   context.read<VehicleListCubit>().removeVehicleFromList(
                     deletedId,
@@ -78,9 +135,8 @@ class _VehicleListView extends StatelessWidget {
         ],
         child: BlocBuilder<VehicleListCubit, ResultState<List<VehicleModel>>>(
           builder: (context, state) {
-            return state.when(
-              initial: () => const Center(child: CircularProgressIndicator()),
-              loading: () => const Center(child: CircularProgressIndicator()),
+            return state.maybeWhen(
+              orElse: () => const Center(child: CircularProgressIndicator()),
               error: (error) => Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -89,7 +145,7 @@ class _VehicleListView extends StatelessWidget {
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () {
-                        context.read<VehicleListCubit>().loadVehicles();
+                        _loadVechicles(context);
                       },
                       child: const Text('Retry'),
                     ),
@@ -103,7 +159,7 @@ class _VehicleListView extends StatelessWidget {
                   description: 'Agrega tu primer vehículo para comenzar',
                   actionButtonText: 'Agregar vehículo',
                   onActionPressed: () {
-                    context.pushNamed(AppRoutes.createVehicle);
+                    _goToCreateVehicle(context);
                   },
                   iconColor: const Color(0xFF6366F1),
                 );
@@ -123,10 +179,7 @@ class _VehicleListView extends StatelessWidget {
                         onTap: () {
                           // Navigate to edit vehicle
                           if (vehicle.id != null) {
-                            context.pushNamed(
-                              AppRoutes.editVehicle,
-                              pathParameters: {'id': vehicle.id!},
-                            );
+                            _goToEditVehicle(context, vehicle);
                           }
                         },
                         onDelete: () {
@@ -140,32 +193,6 @@ class _VehicleListView extends StatelessWidget {
             );
           },
         ),
-      ),
-    );
-  }
-
-  void _showDeleteDialog(BuildContext context, VehicleModel vehicle) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete Vehicle'),
-        content: Text('Are you sure you want to delete "${vehicle.name}"?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              if (vehicle.id != null) {
-                context.read<VehicleDeleteCubit>().deleteVehicle(vehicle.id!);
-              }
-            },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
-          ),
-        ],
       ),
     );
   }

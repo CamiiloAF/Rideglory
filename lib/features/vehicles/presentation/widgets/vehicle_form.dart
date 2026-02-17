@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
+import 'package:rideglory/shared/widgets/form/app_button.dart';
 import 'package:rideglory/shared/widgets/form/app_date_picker.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 import 'package:rideglory/shared/widgets/form/mileages_and_unit_fields.dart';
@@ -129,23 +130,9 @@ class VehicleForm extends StatelessWidget {
 
           if (!isOnboarding) ...[
             const SizedBox(height: 32),
-            ElevatedButton(
+            AppButton(
               onPressed: isLoading ? null : onSave,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6366F1),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: Text(
-                isEditing ? 'Actualizar Vehículo' : 'Agregar Vehículo',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              label: isEditing ? 'Actualizar Vehículo' : 'Agregar Vehículo',
             ),
           ],
         ],

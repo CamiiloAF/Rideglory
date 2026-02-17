@@ -10,6 +10,8 @@ import 'package:rideglory/features/maintenance/presentation/list/maintenances/ma
 import 'package:rideglory/features/maintenance/presentation/widgets/expandable_fab.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/item_card/modern_maintenance_card.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/shared/widgets/app_app_bar.dart';
+import 'package:rideglory/shared/widgets/app_drawer.dart';
 import 'package:rideglory/shared/widgets/container_pull_to_refresh.dart';
 import 'package:rideglory/shared/widgets/empty_state_widget.dart';
 
@@ -46,14 +48,26 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      appBar: AppBar(title: const Text('Mantenimientos')),
+      appBar: AppAppBar(
+        title: 'Mantenimientos',
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.directions_car_outlined),
+            onPressed: () {
+              context.pushNamed(AppRoutes.vehicles);
+            },
+            tooltip: 'Mis Vehículos',
+          ),
+        ],
+      ),
+      drawer: const AppDrawer(currentRoute: AppRoutes.maintenances),
       floatingActionButton: _showExpandedFab ? const ExpandableFab() : null,
       body: MultiBlocListener(
         listeners: [
           BlocListener<MaintenancesCubit, ResultState<List<MaintenanceModel>>>(
             listener: (context, state) {
               setState(() {
-                _showExpandedFab = state is Empty;
+                _showExpandedFab = state is! Empty;
               });
             },
           ),
@@ -135,7 +149,6 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
                           if (maintenance.id != null) {
                             await context.pushNamed(
                               AppRoutes.editMaintenance,
-                              pathParameters: {'id': maintenance.id!},
                               extra: maintenance,
                             );
                             if (context.mounted) {
@@ -149,7 +162,6 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
                           if (maintenance.id != null) {
                             await context.pushNamed(
                               AppRoutes.editMaintenance,
-                              pathParameters: {'id': maintenance.id!},
                               extra: maintenance,
                             );
                             if (context.mounted) {

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
+import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
 import '../../features/authentication/application/auth_cubit.dart';
 import '../../features/authentication/login/presentation/login_view.dart';
@@ -13,10 +14,8 @@ import '../../features/maintenance/presentation/form/maintenance_form_page.dart'
 import '../../features/maintenance/presentation/list/maintenances/maintenances_page.dart';
 import '../../features/splash/presentation/splash_screen.dart';
 import '../../features/vehicles/presentation/form/vehicle_form_page.dart';
-import '../../features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
 import '../../features/vehicles/presentation/list/vehicle_list_page.dart';
 import '../../features/vehicles/presentation/views/vehicle_onboarding_view.dart';
-import '../../core/domain/result_state.dart';
 import 'app_routes.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -100,29 +99,7 @@ class AppRouter {
         path: AppRoutes.editVehicle,
         name: AppRoutes.editVehicle,
         builder: (context, state) {
-          final vehicleId = state.pathParameters['id'];
-          if (vehicleId == null) {
-            return const Scaffold(
-              body: Center(child: Text('Invalid vehicle ID')),
-            );
-          }
-
-          // Find vehicle in list
-          final vehicleListCubit = context.read<VehicleListCubit>();
-          final vehicle = vehicleListCubit.state.maybeWhen(
-            data: (vehicles) => vehicles.firstWhere(
-              (v) => v.id == vehicleId,
-              orElse: () => throw Exception('Vehicle not found'),
-            ),
-            orElse: () => null,
-          );
-
-          if (vehicle == null) {
-            return const Scaffold(
-              body: Center(child: Text('Vehicle not found')),
-            );
-          }
-
+          final vehicle = state.extra as VehicleModel?;
           return VehicleFormPage(vehicle: vehicle);
         },
       ),
