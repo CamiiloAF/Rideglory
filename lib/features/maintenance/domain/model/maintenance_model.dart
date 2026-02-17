@@ -21,6 +21,7 @@ enum DistanceUnit {
 class MaintenanceModel {
   final String? id;
   final String? userId;
+  final String? vehicleId;
   final String name;
   final MaintenanceType type;
   final String? notes;
@@ -35,6 +36,8 @@ class MaintenanceModel {
 
   MaintenanceModel({
     this.id,
+    this.userId,
+    this.vehicleId,
     required this.name,
     required this.type,
     this.notes,
@@ -44,7 +47,6 @@ class MaintenanceModel {
     required this.distanceUnit,
     required this.receiveAlert,
     this.nextMaintenanceMileage,
-    this.userId,
     this.createdDate,
     this.updatedDate,
   });
@@ -61,12 +63,14 @@ class MaintenanceModel {
     bool? receiveAlert,
     double? nextMaintenanceMileage,
     String? userId,
+    String? vehicleId,
     DateTime? createdDate,
     DateTime? updatedDate,
   }) {
     return MaintenanceModel(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      vehicleId: vehicleId ?? this.vehicleId,
       name: name ?? this.name,
       type: type ?? this.type,
       notes: notes ?? this.notes,

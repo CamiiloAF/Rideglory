@@ -39,7 +39,7 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
       (error) =>
           emit(state.copyWith(vehicleResult: ResultState.error(error: error))),
       (savedVehicle) => emit(
-        state.copyWith(vehicleResult: ResultState.data(data:vehicle)),
+        state.copyWith(vehicleResult: ResultState.data(data: savedVehicle)),
       ),
     );
   }
@@ -95,6 +95,8 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
             ? int.tryParse(formData['currentMileage'] as String) ?? 0
             : 0,
         distanceUnit: formData['distanceUnit'] as DistanceUnit,
+        vehicleType:
+            formData['vehicleType'] as VehicleType? ?? VehicleType.motorcycle,
         licensePlate: (formData['licensePlate'] as String?)?.isEmpty ?? true
             ? null
             : formData['licensePlate'] as String?,

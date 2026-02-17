@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
+import 'package:rideglory/features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/shared/router/app_router.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
           create: (context) => getIt.get<AuthCubit>()..checkAuthState(),
         ),
         BlocProvider(create: (context) => getIt.get<VehicleCubit>()),
+        BlocProvider(create: (context) => getIt.get<VehicleListCubit>()),
       ],
       child: MaterialApp.router(
         routerConfig: AppRouter.appRouter,

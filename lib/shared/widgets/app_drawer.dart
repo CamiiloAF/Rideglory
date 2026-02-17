@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/extensions/go_router.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
+import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
@@ -48,9 +49,11 @@ class AppDrawer extends StatelessWidget {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(
-                      Icons.directions_car_rounded,
-                      color: Color(0xFF6366F1),
+                    child: Icon(
+                      currentVehicle?.vehicleType == VehicleType.motorcycle
+                          ? Icons.two_wheeler_rounded
+                          : Icons.directions_car_rounded,
+                      color: const Color(0xFF6366F1),
                       size: 32,
                     ),
                   ),

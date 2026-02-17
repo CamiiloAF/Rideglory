@@ -147,11 +147,11 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
                         maintenance: maintenance,
                         onTap: () async {
                           if (maintenance.id != null) {
-                            await context.pushNamed(
+                            final result = await context.pushNamed<bool?>(
                               AppRoutes.editMaintenance,
                               extra: maintenance,
                             );
-                            if (context.mounted) {
+                            if (result == true && context.mounted) {
                               context
                                   .read<MaintenancesCubit>()
                                   .fetchMaintenances();
@@ -160,11 +160,11 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
                         },
                         onEdit: () async {
                           if (maintenance.id != null) {
-                            await context.pushNamed(
+                            final result = await context.pushNamed<bool?>(
                               AppRoutes.editMaintenance,
                               extra: maintenance,
                             );
-                            if (context.mounted) {
+                            if (result == true && context.mounted) {
                               context
                                   .read<MaintenancesCubit>()
                                   .fetchMaintenances();

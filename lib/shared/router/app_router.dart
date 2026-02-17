@@ -116,7 +116,8 @@ class AppRouter {
         path: AppRoutes.createMaintenance,
         name: AppRoutes.createMaintenance,
         builder: (context, state) {
-          return const MaintenanceFormPage();
+          final vehicle = state.extra as VehicleModel?;
+          return MaintenanceFormPage(preselectedVehicle: vehicle);
         },
       ),
       GoRoute(

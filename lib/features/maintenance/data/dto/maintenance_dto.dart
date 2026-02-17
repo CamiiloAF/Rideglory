@@ -17,6 +17,7 @@ class MaintenanceDto extends MaintenanceModel {
     required super.nextMaintenanceDate,
     required super.nextMaintenanceMileage,
     required super.userId,
+    required super.vehicleId,
     required super.createdDate,
     required super.updatedDate,
   });
@@ -40,6 +41,7 @@ extension MaintenanceModelExtension on MaintenanceModel {
     nextMaintenanceDate: nextMaintenanceDate,
     nextMaintenanceMileage: nextMaintenanceMileage,
     userId: userId,
+    vehicleId: vehicleId,
     createdDate: createdDate,
     updatedDate: updatedDate,
   ).toJson();

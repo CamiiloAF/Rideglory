@@ -5,12 +5,18 @@ class VehicleCard extends StatelessWidget {
   final VehicleModel vehicle;
   final VoidCallback? onTap;
   final VoidCallback? onDelete;
+  final VoidCallback? onSetAsCurrent;
+  final VoidCallback? onAddMaintenance;
+  final bool isCurrent;
 
   const VehicleCard({
     super.key,
     required this.vehicle,
     this.onTap,
     this.onDelete,
+    this.onSetAsCurrent,
+    this.onAddMaintenance,
+    this.isCurrent = false,
   });
 
   @override
@@ -60,8 +66,10 @@ class VehicleCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: const Icon(
-                        Icons.directions_car_rounded,
+                      child: Icon(
+                        vehicle.vehicleType == VehicleType.motorcycle
+                            ? Icons.two_wheeler_rounded
+                            : Icons.directions_car_rounded,
                         color: Colors.white,
                         size: 26,
                       ),
@@ -71,15 +79,58 @@ class VehicleCard extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            vehicle.name,
-                            style: const TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1F2937),
-                              letterSpacing: -0.5,
-                              height: 1.2,
-                            ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  vehicle.name,
+                                  style: const TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFF1F2937),
+                                    letterSpacing: -0.5,
+                                    height: 1.2,
+                                  ),
+                                ),
+                              ),
+                              if (isCurrent)
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(
+                                      0xFF10B981,
+                                    ).withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(6),
+                                    border: Border.all(
+                                      color: const Color(
+                                        0xFF10B981,
+                                      ).withValues(alpha: 0.3),
+                                    ),
+                                  ),
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.check_circle,
+                                        size: 14,
+                                        color: Color(0xFF10B981),
+                                      ),
+                                      SizedBox(width: 4),
+                                      Text(
+                                        'Principal',
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w600,
+                                          color: Color(0xFF10B981),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                            ],
                           ),
                           if (vehicle.brand != null ||
                               vehicle.model != null) ...[
@@ -123,6 +174,36 @@ class VehicleCard extends StatelessWidget {
                               ],
                             ),
                           ),
+                          if (!isCurrent && onSetAsCurrent != null)
+                            PopupMenuItem(
+                              value: 'setCurrent',
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.check_circle_outline,
+                                    size: 20,
+                                    color: Colors.grey[700],
+                                  ),
+                                  const SizedBox(width: 12),
+                                  const Text('Establecer como principal'),
+                                ],
+                              ),
+                            ),
+                          if (onAddMaintenance != null)
+                            PopupMenuItem(
+                              value: 'addMaintenance',
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.build_circle_outlined,
+                                    size: 20,
+                                    color: Colors.grey[700],
+                                  ),
+                                  const SizedBox(width: 12),
+                                  const Text('Agregar mantenimiento'),
+                                ],
+                              ),
+                            ),
                           PopupMenuItem(
                             value: 'delete',
                             child: const Row(
@@ -144,6 +225,12 @@ class VehicleCard extends StatelessWidget {
                         onSelected: (value) {
                           if (value == 'edit' && onTap != null) {
                             onTap!();
+                          } else if (value == 'setCurrent' &&
+                              onSetAsCurrent != null) {
+                            onSetAsCurrent!();
+                          } else if (value == 'addMaintenance' &&
+                              onAddMaintenance != null) {
+                            onAddMaintenance!();
                           } else if (value == 'delete') {
                             onDelete!();
                           }

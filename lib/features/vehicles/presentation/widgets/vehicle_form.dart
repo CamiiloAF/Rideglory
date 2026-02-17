@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
+import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/shared/widgets/form/app_checkbox.dart';
 import 'package:rideglory/shared/widgets/form/app_date_picker.dart';
+import 'package:rideglory/shared/widgets/form/app_dropdown.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 import 'package:rideglory/shared/widgets/form/mileages_and_unit_fields.dart';
 
@@ -29,7 +32,12 @@ class VehicleForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return FormBuilder(
       key: formKey,
-      initialValue: initialValue ?? {'distanceUnit': DistanceUnit.kilometers},
+      initialValue:
+          initialValue ??
+          {
+            'distanceUnit': DistanceUnit.kilometers,
+            'vehicleType': VehicleType.motorcycle,
+          },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -48,6 +56,22 @@ class VehicleForm extends StatelessWidget {
                 errorText: 'Mínimo 3 caracteres',
               ),
             ]),
+          ),
+          const SizedBox(height: 16),
+
+          AppDropdown<VehicleType>(
+            name: 'vehicleType',
+            labelText: 'Tipo de vehículo',
+            validator: FormBuilderValidators.required(
+              errorText: 'El tipo de vehículo es requerido',
+            ),
+            prefixIcon: const Icon(Icons.drive_eta),
+            items: VehicleType.values
+                .map(
+                  (type) =>
+                      DropdownMenuItem(value: type, child: Text(type.label)),
+                )
+                .toList(),
           ),
           const SizedBox(height: 16),
           Row(
@@ -129,7 +153,12 @@ class VehicleForm extends StatelessWidget {
           const SizedBox(height: 16),
 
           if (!isOnboarding) ...[
-            const SizedBox(height: 32),
+            AppCheckbox(
+              name: 'setAsCurrent',
+              title: 'Establecer como vehículo principal',
+              initialValue: false,
+            ),
+            const SizedBox(height: 24),
             AppButton(
               onPressed: isLoading ? null : onSave,
               label: isEditing ? 'Actualizar Vehículo' : 'Agregar Vehículo',

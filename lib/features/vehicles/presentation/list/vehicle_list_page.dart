@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_delete_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/widgets/vehicle_card.dart';
@@ -17,13 +18,8 @@ class VehicleListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => getIt<VehicleListCubit>()..loadVehicles(),
-        ),
-        BlocProvider(create: (context) => getIt<VehicleDeleteCubit>()),
-      ],
+    return BlocProvider(
+      create: (context) => getIt<VehicleDeleteCubit>(),
       child: const _VehicleListView(),
     );
   }
@@ -55,16 +51,25 @@ class _VehicleListView extends StatelessWidget {
     }
   }
 
+  Future<void> _goToCreateMaintenance(
+    BuildContext context,
+    VehicleModel vehicle,
+  ) async {
+    await context.pushNamed(AppRoutes.createMaintenance, extra: vehicle);
+  }
+
   void _showDeleteDialog(BuildContext context, VehicleModel vehicle) {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete Vehicle'),
-        content: Text('Are you sure you want to delete "${vehicle.name}"?'),
+        title: const Text('Eliminar Vehículo'),
+        content: Text(
+          '¿Estás seguro de que deseas eliminar "${vehicle.name}"?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
+            child: const Text('Cancelar'),
           ),
           TextButton(
             onPressed: () {
@@ -74,7 +79,7 @@ class _VehicleListView extends StatelessWidget {
               }
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
+            child: const Text('Eliminar'),
           ),
         ],
       ),
@@ -97,8 +102,8 @@ class _VehicleListView extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {
-              context.pushNamed(AppRoutes.createVehicle);
+            onPressed: () async {
+              await _goToCreateVehicle(context);
             },
             tooltip: 'Agregar vehículo',
           ),
@@ -116,7 +121,7 @@ class _VehicleListView extends StatelessWidget {
                   );
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Vehicle deleted successfully'),
+                      content: Text('Vehículo eliminado exitosamente'),
                       backgroundColor: Colors.green,
                     ),
                   );
@@ -147,7 +152,7 @@ class _VehicleListView extends StatelessWidget {
                       onPressed: () {
                         _loadVechicles(context);
                       },
-                      child: const Text('Retry'),
+                      child: const Text('Reintentar'),
                     ),
                   ],
                 ),
@@ -165,6 +170,11 @@ class _VehicleListView extends StatelessWidget {
                 );
               },
               data: (vehicles) {
+                final currentVehicleId = context
+                    .watch<VehicleCubit>()
+                    .currentVehicle
+                    ?.id;
+
                 return RefreshIndicator(
                   onRefresh: () async {
                     await context.read<VehicleListCubit>().loadVehicles();
@@ -174,14 +184,32 @@ class _VehicleListView extends StatelessWidget {
                     itemCount: vehicles.length,
                     itemBuilder: (context, index) {
                       final vehicle = vehicles[index];
+                      final isCurrent = vehicle.id == currentVehicleId;
+
                       return VehicleCard(
                         vehicle: vehicle,
-                        onTap: () {
+                        isCurrent: isCurrent,
+                        onTap: () async {
                           // Navigate to edit vehicle
                           if (vehicle.id != null) {
-                            _goToEditVehicle(context, vehicle);
+                            await _goToEditVehicle(context, vehicle);
                           }
                         },
+                        onSetAsCurrent: () {
+                          context.read<VehicleCubit>().setCurrentVehicle(
+                            vehicle,
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                '${vehicle.name} establecido como vehículo principal',
+                              ),
+                              backgroundColor: const Color(0xFF10B981),
+                            ),
+                          );
+                        },
+                        onAddMaintenance: () =>
+                            _goToCreateMaintenance(context, vehicle),
                         onDelete: () {
                           _showDeleteDialog(context, vehicle);
                         },

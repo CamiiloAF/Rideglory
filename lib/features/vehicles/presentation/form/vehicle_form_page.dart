@@ -5,6 +5,7 @@ import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
 import 'package:rideglory/shared/widgets/app_app_bar.dart';
 
@@ -44,11 +45,15 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
             'year': state.vehicle!.year?.toString(),
             'currentMileage': state.vehicle!.currentMileage.toString(),
             'distanceUnit': state.vehicle!.distanceUnit,
+            'vehicleType': state.vehicle!.vehicleType,
             'licensePlate': state.vehicle!.licensePlate,
             'vin': state.vehicle!.vin,
             'purchaseDate': state.vehicle!.purchaseDate,
           }
-        : {'distanceUnit': DistanceUnit.kilometers};
+        : {
+            'distanceUnit': DistanceUnit.kilometers,
+            'vehicleType': VehicleType.motorcycle,
+          };
   }
 
   void _saveVehicle() {
@@ -68,18 +73,38 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
     final isEditing = state.isEditing;
 
     return Scaffold(
-      appBar: AppAppBar(title: isEditing ? 'Edit Vehicle' : 'Add Vehicle'),
+      appBar: AppAppBar(
+        title: isEditing ? 'Editar Veículo' : 'Adicionar Veículo',
+      ),
       body: BlocConsumer<VehicleFormCubit, VehicleFormState>(
         listenWhen: (previous, current) => true,
         listener: (context, state) {
           state.vehicleResult.whenOrNull(
-            data: (_) {
+            data: (savedVehicle) {
+              // Update the current vehicle in VehicleCubit if it was edited
+              if (isEditing) {
+                context.read<VehicleCubit>().updateCurrentVehicleIfMatch(
+                  savedVehicle,
+                );
+              }
+
+              // Set as current vehicle if checkbox was checked
+              final formData = context
+                  .read<VehicleFormCubit>()
+                  .formKey
+                  .currentState
+                  ?.value;
+              final setAsCurrent = formData?['setAsCurrent'] as bool? ?? false;
+              if (setAsCurrent) {
+                context.read<VehicleCubit>().setCurrentVehicle(savedVehicle);
+              }
+
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
                     isEditing
-                        ? 'Vehicle updated successfully'
-                        : 'Vehicle added successfully',
+                        ? 'Vehículo actualizado exitosamente'
+                        : 'Vehículo agregado exitosamente',
                   ),
                   backgroundColor: Colors.green,
                 ),

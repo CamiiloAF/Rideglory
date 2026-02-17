@@ -57,6 +57,14 @@ class VehicleCubit extends Cubit<VehicleState> {
     }
   }
 
+  /// Updates the current vehicle if the edited vehicle ID matches the current one
+  void updateCurrentVehicleIfMatch(VehicleModel updatedVehicle) {
+    final current = currentVehicle;
+    if (current != null && current.id == updatedVehicle.id) {
+      emit(VehicleLoaded(updatedVehicle));
+    }
+  }
+
   Future<void> updateCurrentVehicle(VehicleModel vehicle) async {
     emit(VehicleLoaded(vehicle));
     if (vehicle.id != null) {

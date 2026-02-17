@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
+import 'package:rideglory/features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/item_card/item_card.dart';
 
@@ -58,27 +61,44 @@ class ModernMaintenanceCard extends StatelessWidget {
             ? vehicleState.vehicle.currentMileage
             : null;
 
-        final daysUntilNext = maintenance.nextMaintenanceDate
-            ?.difference(DateTime.now())
-            .inDays;
+        return BlocBuilder<VehicleListCubit, ResultState<List<VehicleModel>>>(
+          builder: (context, vehicleListState) {
+            VehicleModel? maintenanceVehicle;
+            if (maintenance.vehicleId != null &&
+                vehicleListState is Data<List<VehicleModel>>) {
+              try {
+                maintenanceVehicle = vehicleListState.data.firstWhere(
+                  (v) => v.id == maintenance.vehicleId,
+                );
+              } catch (e) {
+                // Vehicle not found
+              }
+            }
 
-        final progressPercent = _getProgressPercent(currentMileage);
-        final isUrgent =
-            (daysUntilNext != null && daysUntilNext < 10) ||
-            (progressPercent != null && progressPercent >= 0.95);
+            final daysUntilNext = maintenance.nextMaintenanceDate
+                ?.difference(DateTime.now())
+                .inDays;
 
-        return _MaintenanceCardContent(
-          maintenance: maintenance,
-          typeColor: _typeColor,
-          typeIcon: _typeIcon,
-          currentMileage: currentMileage,
-          progressPercent: progressPercent,
-          isUrgent: isUrgent,
-          daysUntilNext: daysUntilNext,
-          getRemainingDistance: _getRemainingDistance,
-          onTap: onTap,
-          onEdit: onEdit,
-          onDelete: onDelete,
+            final progressPercent = _getProgressPercent(currentMileage);
+            final isUrgent =
+                (daysUntilNext != null && daysUntilNext < 10) ||
+                (progressPercent != null && progressPercent >= 0.95);
+
+            return _MaintenanceCardContent(
+              maintenance: maintenance,
+              maintenanceVehicle: maintenanceVehicle,
+              typeColor: _typeColor,
+              typeIcon: _typeIcon,
+              currentMileage: currentMileage,
+              progressPercent: progressPercent,
+              isUrgent: isUrgent,
+              daysUntilNext: daysUntilNext,
+              getRemainingDistance: _getRemainingDistance,
+              onTap: onTap,
+              onEdit: onEdit,
+              onDelete: onDelete,
+            );
+          },
         );
       },
     );
@@ -87,6 +107,7 @@ class ModernMaintenanceCard extends StatelessWidget {
 
 class _MaintenanceCardContent extends StatelessWidget {
   final MaintenanceModel maintenance;
+  final VehicleModel? maintenanceVehicle;
   final Color typeColor;
   final IconData typeIcon;
   final int? currentMileage;
@@ -100,6 +121,7 @@ class _MaintenanceCardContent extends StatelessWidget {
 
   const _MaintenanceCardContent({
     required this.maintenance,
+    this.maintenanceVehicle,
     required this.typeColor,
     required this.typeIcon,
     required this.currentMileage,
@@ -299,6 +321,10 @@ class _MaintenanceCardContent extends StatelessWidget {
                         ),
                     ],
                   ),
+                  if (maintenanceVehicle != null) ...[
+                    const SizedBox(height: 12),
+                    _VehicleInfoChip(vehicle: maintenanceVehicle!),
+                  ],
                   const SizedBox(height: 20),
                   MaintenanceMileageInfo(
                     maintenance: maintenance,
@@ -320,6 +346,52 @@ class _MaintenanceCardContent extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _VehicleInfoChip extends StatelessWidget {
+  final VehicleModel vehicle;
+
+  const _VehicleInfoChip({required this.vehicle});
+
+  IconData get _vehicleIcon {
+    return vehicle.vehicleType == VehicleType.car
+        ? Icons.directions_car_rounded
+        : Icons.two_wheeler_rounded;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey[300]!, width: 1),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(_vehicleIcon, size: 16, color: Colors.grey[700]),
+          const SizedBox(width: 8),
+          Text(
+            vehicle.name,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey[700],
+            ),
+          ),
+          if (vehicle.brand != null) ...[
+            const SizedBox(width: 4),
+            Text(
+              '• ${vehicle.brand}',
+              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+            ),
+          ],
+        ],
       ),
     );
   }
