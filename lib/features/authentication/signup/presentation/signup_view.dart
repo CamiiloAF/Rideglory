@@ -20,6 +20,8 @@ class _SignupViewState extends State<SignupView> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final _passwordFocusNode = FocusNode();
+  final _confirmPasswordFocusNode = FocusNode();
   bool _acceptedTerms = false;
   bool _isEmailMode = false;
 
@@ -28,44 +30,46 @@ class _SignupViewState extends State<SignupView> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _passwordFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
     super.dispose();
   }
 
   String? _validateEmail(String? value) {
     if (value?.isEmpty ?? true) {
-      return 'Email is required';
+      return 'El email es requerido';
     }
     final emailRegex = RegExp(
       r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
     );
     if (!emailRegex.hasMatch(value!)) {
-      return 'Invalid email address';
+      return 'Dirección de correo inválida';
     }
     return null;
   }
 
   String? _validatePassword(String? value) {
     if (value?.isEmpty ?? true) {
-      return 'Password is required';
+      return 'La contraseña es requerida';
     }
     if (value!.length < 8) {
-      return 'Password must be at least 8 characters';
+      return 'La contraseña debe tener al menos 8 caracteres';
     }
     if (!RegExp(r'[A-Z]').hasMatch(value)) {
-      return 'Password must contain an uppercase letter';
+      return 'La contraseña debe contener una mayúscula';
     }
     if (!RegExp(r'[0-9]').hasMatch(value)) {
-      return 'Password must contain a number';
+      return 'La contraseña debe contener un número';
     }
     return null;
   }
 
   String? _validateConfirmPassword(String? value) {
     if (value?.isEmpty ?? true) {
-      return 'Please confirm your password';
+      return 'Por favor confirma tu contraseña';
     }
     if (value != _passwordController.text) {
-      return 'Passwords do not match';
+      return 'Las contraseñas no coinciden';
     }
     return null;
   }
@@ -74,7 +78,7 @@ class _SignupViewState extends State<SignupView> {
     if (!_acceptedTerms) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Please accept the terms and conditions'),
+          content: Text('Por favor acepta los términos y condiciones'),
           backgroundColor: Color(0xFFEF4444),
         ),
       );
@@ -107,7 +111,7 @@ class _SignupViewState extends State<SignupView> {
             } else if (state.hasError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(state.errorMessage ?? 'An error occurred'),
+                  content: Text(state.errorMessage ?? 'Ocurrió un error'),
                   backgroundColor: const Color(0xFFEF4444),
                 ),
               );
@@ -123,7 +127,7 @@ class _SignupViewState extends State<SignupView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _isEmailMode ? 'Create Account' : 'Join Us Today',
+                      _isEmailMode ? 'Crear Cuenta' : 'Únete Hoy',
                       style: const TextStyle(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
@@ -134,8 +138,8 @@ class _SignupViewState extends State<SignupView> {
                     const SizedBox(height: 8),
                     Text(
                       _isEmailMode
-                          ? 'Create your account with email and password'
-                          : 'Choose how you\'d like to create your account',
+                          ? 'Crea tu cuenta con email y contraseña'
+                          : 'Elige cómo crear tu cuenta',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.grey[600],
@@ -191,7 +195,7 @@ class _SignupViewState extends State<SignupView> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         child: Text(
-                          'Already have an account?',
+                          '¿Ya tienes cuenta?',
                           style: TextStyle(
                             color: Colors.grey[600],
                             fontSize: 13,
@@ -210,7 +214,7 @@ class _SignupViewState extends State<SignupView> {
                   Center(
                     child: RichText(
                       text: TextSpan(
-                        text: 'Sign in ',
+                        text: 'Ingresar ',
                         style: TextStyle(
                           fontSize: 15,
                           color: Colors.grey[700],
@@ -221,7 +225,7 @@ class _SignupViewState extends State<SignupView> {
                             child: GestureDetector(
                               onTap: () => context.pop(),
                               child: const Text(
-                                'here',
+                                'aquí',
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: Color(0xFF6366F1),
@@ -244,18 +248,30 @@ class _SignupViewState extends State<SignupView> {
                         EmailInputField(
                           controller: _emailController,
                           validator: _validateEmail,
+                          textInputAction: TextInputAction.next,
+                          onFieldSubmitted: () {
+                            _passwordFocusNode.requestFocus();
+                          },
                         ),
                         const SizedBox(height: 16),
                         PasswordInputField(
                           controller: _passwordController,
                           validator: _validatePassword,
-                          label: 'Create a password',
+                          label: 'Crea una contraseña',
+                          textInputAction: TextInputAction.next,
+                          focusNode: _passwordFocusNode,
+                          onFieldSubmitted: () {
+                            _confirmPasswordFocusNode.requestFocus();
+                          },
                         ),
                         const SizedBox(height: 16),
                         PasswordInputField(
                           controller: _confirmPasswordController,
                           validator: _validateConfirmPassword,
-                          label: 'Confirm password',
+                          label: 'Confirma tu contraseña',
+                          textInputAction: TextInputAction.done,
+                          focusNode: _confirmPasswordFocusNode,
+                          onFieldSubmitted: _handleEmailSignup,
                         ),
                         const SizedBox(height: 24),
 
@@ -313,28 +329,28 @@ class _SignupViewState extends State<SignupView> {
                                   },
                                   child: RichText(
                                     text: TextSpan(
-                                      text: 'I agree to the ',
+                                      text: 'Acepto los ',
                                       style: TextStyle(
                                         fontSize: 13,
                                         color: Colors.grey[700],
                                         fontWeight: FontWeight.w500,
                                       ),
                                       children: [
-                                        TextSpan(
-                                          text: 'Terms of Service',
-                                          style: const TextStyle(
+                                        const TextSpan(
+                                          text: 'Términos de Servicio',
+                                          style: TextStyle(
                                             color: Color(0xFF6366F1),
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         TextSpan(
-                                          text: ' and ',
+                                          text: ' y ',
                                           style: TextStyle(
                                             color: Colors.grey[700],
                                           ),
                                         ),
                                         const TextSpan(
-                                          text: 'Privacy Policy',
+                                          text: 'Política de Privacidad',
                                           style: TextStyle(
                                             color: Color(0xFF6366F1),
                                             fontWeight: FontWeight.bold,
@@ -391,7 +407,7 @@ class _SignupViewState extends State<SignupView> {
                                               ),
                                             )
                                           : const Text(
-                                              'Create Account',
+                                              'Crear Cuenta',
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w600,
@@ -436,7 +452,7 @@ class _SignupViewState extends State<SignupView> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    'Back',
+                                    'Volver',
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,

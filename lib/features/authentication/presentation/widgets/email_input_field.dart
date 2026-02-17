@@ -6,6 +6,9 @@ class EmailInputField extends StatefulWidget {
   final String? Function(String?)? validator;
   final VoidCallback? onChanged;
   final bool enabled;
+  final TextInputAction? textInputAction;
+  final VoidCallback? onFieldSubmitted;
+  final FocusNode? focusNode;
 
   const EmailInputField({
     super.key,
@@ -13,6 +16,9 @@ class EmailInputField extends StatefulWidget {
     this.validator,
     this.onChanged,
     this.enabled = true,
+    this.textInputAction,
+    this.onFieldSubmitted,
+    this.focusNode,
   });
 
   @override
@@ -51,13 +57,18 @@ class _EmailInputFieldState extends State<EmailInputField> {
           controller: widget.controller,
           enabled: widget.enabled,
           keyboardType: TextInputType.emailAddress,
+          textInputAction: widget.textInputAction ?? TextInputAction.next,
+          focusNode: widget.focusNode,
           validator: widget.validator,
           onChanged: (value) {
             widget.onChanged?.call();
           },
+          onFieldSubmitted: (value) {
+            widget.onFieldSubmitted?.call();
+          },
           autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: InputDecoration(
-            hintText: 'Enter your email',
+            hintText: 'Ingrese su correo electrónico',
             hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16),
             prefixIcon: Icon(
               Icons.email_rounded,

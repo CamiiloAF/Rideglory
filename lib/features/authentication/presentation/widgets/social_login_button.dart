@@ -35,19 +35,19 @@ class _SocialLoginButtonState extends State<SocialLoginButton> {
   void _setupButtonStyle() {
     switch (widget.type) {
       case SocialLoginType.google:
-        label = 'Continue with Google';
+        label = 'Continuar con Google';
         icon = Icons.login_rounded;
         backgroundColor = const Color(0xFFFAFAFA);
         textColor = const Color(0xFF1F2937);
         break;
       case SocialLoginType.apple:
-        label = 'Continue with Apple';
+        label = 'Continuar con Apple';
         icon = Icons.apple;
         backgroundColor = const Color(0xFF000000);
         textColor = Colors.white;
         break;
       case SocialLoginType.email:
-        label = 'Continue with Email';
+        label = 'Continuar con Correo';
         icon = Icons.email_rounded;
         backgroundColor = const Color(0xFF6366F1);
         textColor = Colors.white;
@@ -94,7 +94,7 @@ class _SocialLoginButtonState extends State<SocialLoginButton> {
                 ],
                 Expanded(
                   child: Text(
-                    widget.isLoading ? 'Signing in...' : label,
+                    widget.isLoading ? 'Iniciando sesión...' : label,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: textColor,

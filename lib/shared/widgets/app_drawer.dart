@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rideglory/core/extensions/go_router.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
@@ -9,6 +10,13 @@ class AppDrawer extends StatelessWidget {
   final String currentRoute;
 
   const AppDrawer({super.key, required this.currentRoute});
+
+  Future<void> _logout(BuildContext context) async {
+    context.read<AuthCubit>().signOut();
+    context.read<VehicleCubit>().clearCurrentVehicle();
+
+    context.goAndClearStack(AppRoutes.login);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +153,7 @@ class AppDrawer extends StatelessWidget {
                           child: const Text('Cancelar'),
                         ),
                         ElevatedButton(
-                          onPressed: () => Navigator.pop(context, true),
+                          onPressed: () => _logout(context),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,
                             foregroundColor: Colors.white,

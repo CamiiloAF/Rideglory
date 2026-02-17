@@ -7,6 +7,9 @@ class PasswordInputField extends StatefulWidget {
   final VoidCallback? onChanged;
   final bool enabled;
   final String label;
+  final TextInputAction? textInputAction;
+  final VoidCallback? onFieldSubmitted;
+  final FocusNode? focusNode;
 
   const PasswordInputField({
     super.key,
@@ -14,7 +17,10 @@ class PasswordInputField extends StatefulWidget {
     this.validator,
     this.onChanged,
     this.enabled = true,
-    this.label = 'Enter your password',
+    this.label = 'Ingrese su contraseña',
+    this.textInputAction,
+    this.onFieldSubmitted,
+    this.focusNode,
   });
 
   @override
@@ -54,10 +60,15 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
           controller: widget.controller,
           enabled: widget.enabled,
           obscureText: !_isPasswordVisible,
+          textInputAction: widget.textInputAction ?? TextInputAction.next,
+          focusNode: widget.focusNode,
           validator: widget.validator,
           onChanged: (value) {
             setState(() {});
             widget.onChanged?.call();
+          },
+          onFieldSubmitted: (value) {
+            widget.onFieldSubmitted?.call();
           },
           autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: InputDecoration(
