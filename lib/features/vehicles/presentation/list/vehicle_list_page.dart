@@ -25,8 +25,22 @@ class VehicleListPage extends StatelessWidget {
   }
 }
 
-class _VehicleListView extends StatelessWidget {
+class _VehicleListView extends StatefulWidget {
   const _VehicleListView();
+
+  @override
+  State<_VehicleListView> createState() => _VehicleListViewState();
+}
+
+class _VehicleListViewState extends State<_VehicleListView> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<VehicleListCubit>().loadVehicles();
+    });
+
+    super.initState();
+  }
 
   Future<void> _goToEditVehicle(
     BuildContext context,
@@ -86,6 +100,28 @@ class _VehicleListView extends StatelessWidget {
     );
   }
 
+  void _deleteVehicleListener(BuildContext context, VehicleDeleteState state) {
+    state.whenOrNull(
+      success: (deletedId) {
+        context.read<VehicleListCubit>().removeVehicleFromList(deletedId);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Vehículo eliminado exitosamente'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      },
+      error: (message) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $message'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,29 +149,7 @@ class _VehicleListView extends StatelessWidget {
       body: MultiBlocListener(
         listeners: [
           BlocListener<VehicleDeleteCubit, VehicleDeleteState>(
-            listener: (context, state) {
-              state.whenOrNull(
-                success: (deletedId) {
-                  context.read<VehicleListCubit>().removeVehicleFromList(
-                    deletedId,
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Vehículo eliminado exitosamente'),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                },
-                error: (message) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Error: $message'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                },
-              );
-            },
+            listener: _deleteVehicleListener,
           ),
         ],
         child: BlocBuilder<VehicleListCubit, ResultState<List<VehicleModel>>>(
@@ -177,7 +191,7 @@ class _VehicleListView extends StatelessWidget {
 
                 return RefreshIndicator(
                   onRefresh: () async {
-                    await context.read<VehicleListCubit>().loadVehicles();
+                    await _loadVechicles(context);
                   },
                   child: ListView.builder(
                     padding: const EdgeInsets.all(16),
@@ -196,8 +210,8 @@ class _VehicleListView extends StatelessWidget {
                           }
                         },
                         onSetAsCurrent: () {
-                          context.read<VehicleCubit>().setCurrentVehicle(
-                            vehicle,
+                          context.read<VehicleCubit>().setMainVehicle(
+                            vehicle.id!,
                           );
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(

@@ -54,7 +54,6 @@ dependencies:
 
   # Social authentication
   google_sign_in: ^6.2.1
-  sign_in_with_apple: ^5.0.0
 
   # DI
   get_it: ^9.2.0

@@ -67,60 +67,66 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
     cubit.saveVehicle(vehicleToSave);
   }
 
+  void _listener(BuildContext context, VehicleFormState state) {
+    state.vehicleResult.whenOrNull(
+      data: (savedVehicle) {
+        // Update the current vehicle in VehicleCubit if it was edited
+        if (state.isEditing) {
+          context.read<VehicleCubit>().updateCurrentVehicleIfMatch(
+            savedVehicle,
+          );
+        }
+
+        // Set as current vehicle if checkbox was checked
+        final formData = context
+            .read<VehicleFormCubit>()
+            .formKey
+            .currentState
+            ?.value;
+        final setAsCurrent = formData?['setAsCurrent'] as bool? ?? false;
+
+        if (setAsCurrent && savedVehicle.id != null) {
+          context.read<VehicleCubit>().updateCurrentVehicleIfMatch(
+            savedVehicle,
+            shouldUpdateMainVehicle: true,
+          );
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              state.isEditing
+                  ? 'Vehículo actualizado exitosamente'
+                  : 'Vehículo agregado exitosamente',
+            ),
+            backgroundColor: Colors.green,
+          ),
+        );
+        context.pop(true);
+      },
+      error: (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error.message), backgroundColor: Colors.red),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = context.read<VehicleFormCubit>().state;
     final isEditing = state.isEditing;
 
+    final mainVehicle = context.select(
+      (VehicleCubit cubit) => cubit.currentVehicle,
+    );
+
     return Scaffold(
       appBar: AppAppBar(
-        title: isEditing ? 'Editar Veículo' : 'Adicionar Veículo',
+        title: isEditing ? 'Editar Vehículo' : 'Agregar Vehículo',
       ),
       body: BlocConsumer<VehicleFormCubit, VehicleFormState>(
-        listenWhen: (previous, current) => true,
-        listener: (context, state) {
-          state.vehicleResult.whenOrNull(
-            data: (savedVehicle) {
-              // Update the current vehicle in VehicleCubit if it was edited
-              if (isEditing) {
-                context.read<VehicleCubit>().updateCurrentVehicleIfMatch(
-                  savedVehicle,
-                );
-              }
-
-              // Set as current vehicle if checkbox was checked
-              final formData = context
-                  .read<VehicleFormCubit>()
-                  .formKey
-                  .currentState
-                  ?.value;
-              final setAsCurrent = formData?['setAsCurrent'] as bool? ?? false;
-              if (setAsCurrent) {
-                context.read<VehicleCubit>().setCurrentVehicle(savedVehicle);
-              }
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    isEditing
-                        ? 'Vehículo actualizado exitosamente'
-                        : 'Vehículo agregado exitosamente',
-                  ),
-                  backgroundColor: Colors.green,
-                ),
-              );
-              context.pop(true);
-            },
-            error: (error) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(error.message),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            },
-          );
-        },
+        listener: _listener,
         builder: (context, state) {
           final isLoading = state.isLoading;
 
@@ -134,6 +140,7 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
                   isEditing: isEditing,
                   onSave: _saveVehicle,
                   isLoading: isLoading,
+                  isMainVehicle: mainVehicle == state.vehicle,
                 ),
               ),
               if (isLoading)

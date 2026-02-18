@@ -264,14 +264,14 @@ class _LoginViewState extends State<LoginView> {
                             context.read<AuthCubit>().signInWithGoogle();
                           },
                         ),
-                        const SizedBox(height: 12),
-                        SocialLoginButton(
-                          type: SocialLoginType.apple,
-                          isLoading: isLoading,
-                          onPressed: () {
-                            context.read<AuthCubit>().signInWithApple();
-                          },
-                        ),
+                        // const SizedBox(height: 12),
+                        // SocialLoginButton(
+                        //   type: SocialLoginType.apple,
+                        //   isLoading: isLoading,
+                        //   onPressed: () {
+                        //     context.read<AuthCubit>().signInWithApple();
+                        //   },
+                        // ),
                       ],
                     );
                   },

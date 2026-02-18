@@ -18,13 +18,14 @@ class VehicleModel {
   final String? model;
   final int? year;
   final int currentMileage;
-  final DistanceUnit distanceUnit; // 'KM' or 'Miles'
+  final DistanceUnit distanceUnit;
   final VehicleType vehicleType;
   final String? licensePlate;
-  final String? vin; // Vehicle Identification Number
+  final String? vin;
   final DateTime? purchaseDate;
   final DateTime? createdDate;
   final DateTime? updatedDate;
+  final bool isMainVehicle;
 
   const VehicleModel({
     this.id,
@@ -40,6 +41,7 @@ class VehicleModel {
     this.purchaseDate,
     this.createdDate,
     this.updatedDate,
+    this.isMainVehicle = false,
   });
 
   VehicleModel copyWith({
@@ -56,6 +58,7 @@ class VehicleModel {
     DateTime? purchaseDate,
     DateTime? createdDate,
     DateTime? updatedDate,
+    bool? isMainVehicle,
   }) {
     return VehicleModel(
       id: id ?? this.id,
@@ -71,6 +74,14 @@ class VehicleModel {
       purchaseDate: purchaseDate ?? this.purchaseDate,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
+      isMainVehicle: isMainVehicle ?? this.isMainVehicle,
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || other is VehicleModel && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

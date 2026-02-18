@@ -12,7 +12,20 @@
           "package_name": "com.camiloagudelo.rideglory"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1073521363686-ialjtdhvridmkubkoh5klmalbjajll9l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.camiloagudelo.rideglory",
+            "certificate_hash": "48b23114231b966b49c71913c3aa458b4dd25208"
+          }
+        },
+        {
+          "client_id": "1073521363686-c32enmeab94l3ac58abtenpc87b7n5s8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyB1KXYl-tih16M96IchyhH4jkbmIwf1LKw"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1073521363686-c32enmeab94l3ac58abtenpc87b7n5s8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1073521363686-e59ppbu316185di37689f57ikelle2j7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.camiloagudelo.rideglory"
+              }
+            }
+          ]
         }
       }
     }

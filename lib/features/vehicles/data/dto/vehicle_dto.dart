@@ -20,6 +20,7 @@ class VehicleDto extends VehicleModel {
     super.purchaseDate,
     super.createdDate,
     super.updatedDate,
+    super.isMainVehicle,
   });
 
   factory VehicleDto.fromJson(Map<String, dynamic> json) =>
@@ -42,6 +43,7 @@ class VehicleDto extends VehicleModel {
       purchaseDate: purchaseDate,
       createdDate: createdDate,
       updatedDate: updatedDate,
+      isMainVehicle: isMainVehicle,
     );
   }
 }
@@ -61,5 +63,6 @@ extension VehicleModelExtension on VehicleModel {
     purchaseDate: purchaseDate,
     createdDate: createdDate,
     updatedDate: updatedDate,
+    isMainVehicle: isMainVehicle,
   ).toJson();
 }

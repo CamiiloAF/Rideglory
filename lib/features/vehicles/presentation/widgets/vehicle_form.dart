@@ -17,6 +17,7 @@ class VehicleForm extends StatelessWidget {
     this.isLoading = false,
     this.isEditing = false,
     this.isOnboarding = false,
+    this.isMainVehicle = false,
     this.initialValue,
     this.onSave,
   });
@@ -27,6 +28,7 @@ class VehicleForm extends StatelessWidget {
   final bool isOnboarding;
   final Map<String, dynamic>? initialValue;
   final VoidCallback? onSave;
+  final bool isMainVehicle;
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +77,7 @@ class VehicleForm extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: AppTextField(
@@ -156,7 +159,8 @@ class VehicleForm extends StatelessWidget {
             AppCheckbox(
               name: 'setAsCurrent',
               title: 'Establecer como vehículo principal',
-              initialValue: false,
+              initialValue: isMainVehicle,
+              enabled: !isMainVehicle
             ),
             const SizedBox(height: 24),
             AppButton(

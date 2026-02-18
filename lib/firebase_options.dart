@@ -63,6 +63,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1073521363686',
     projectId: 'rideglory-f7383',
     storageBucket: 'rideglory-f7383.firebasestorage.app',
+    androidClientId: '1073521363686-ialjtdhvridmkubkoh5klmalbjajll9l.apps.googleusercontent.com',
+    iosClientId: '1073521363686-e59ppbu316185di37689f57ikelle2j7.apps.googleusercontent.com',
     iosBundleId: 'com.camiloagudelo.rideglory',
   );
+
 }

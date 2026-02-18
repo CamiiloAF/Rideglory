@@ -1,25 +1,18 @@
+import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-/// Exception thrown when authentication fails
-class AuthException implements Exception {
-  final String message;
-  final String? code;
-
-  AuthException({required this.message, this.code});
-
-  @override
-  String toString() => message;
-}
+import '../exceptions/domain_exception.dart';
+import '../http/rest_client_functions.dart';
 
 @injectable
 class AuthService {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
-  AuthService(this._firebaseAuth,  this._googleSignIn);
+  AuthService(this._firebaseAuth, this._googleSignIn);
 
   /// Get the current authenticated user
   User? get currentUser => _firebaseAuth.currentUser;
@@ -28,154 +21,127 @@ class AuthService {
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
   /// Sign up with email and password
-  Future<User?> signUpWithEmail({
+  Future<Either<DomainException, User?>> signUpWithEmail({
     required String email,
     required String password,
   }) async {
-    try {
-      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      return userCredential.user;
-    } on FirebaseAuthException catch (e) {
-      throw AuthException(message: _getErrorMessage(e.code), code: e.code);
-    } catch (e) {
-      throw AuthException(message: 'An unexpected error occurred: $e');
-    }
+    return executeService<User?>(
+      function: () async {
+        final userCredential = await _firebaseAuth
+            .createUserWithEmailAndPassword(email: email, password: password);
+        return userCredential.user;
+      },
+    );
   }
 
   /// Sign in with email and password
-  Future<User?> signInWithEmail({
+  Future<Either<DomainException, User?>> signInWithEmail({
     required String email,
     required String password,
   }) async {
-    try {
-      final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      return userCredential.user;
-    } on FirebaseAuthException catch (e) {
-      throw AuthException(message: _getErrorMessage(e.code), code: e.code);
-    } catch (e) {
-      throw AuthException(message: 'An unexpected error occurred: $e');
-    }
+    return executeService<User?>(
+      function: () async {
+        final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        return userCredential.user;
+      },
+    );
   }
 
   /// Sign in with Google
-  Future<User?> signInWithGoogle() async {
-    try {
-      final googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        throw AuthException(message: 'Google sign-in cancelled');
-      }
+  Future<Either<DomainException, User?>> signInWithGoogle() async {
+    return executeService<User?>(
+      function: () async {
+        final googleUser = await _googleSignIn.signIn();
+        if (googleUser == null) {
+          throw PlatformException(
+            code: 'sign_in_cancelled',
+            message: 'Google sign-in was cancelled',
+          );
+        }
 
-      final googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+        final googleAuth = await googleUser.authentication;
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
 
-      final userCredential = await _firebaseAuth.signInWithCredential(
-        credential,
-      );
-      return userCredential.user;
-    } on FirebaseAuthException catch (e) {
-      throw AuthException(message: _getErrorMessage(e.code), code: e.code);
-    } catch (e) {
-      throw AuthException(message: 'Google sign-in failed: $e');
-    }
+        final userCredential = await _firebaseAuth.signInWithCredential(
+          credential,
+        );
+        return userCredential.user;
+      },
+    );
   }
 
   /// Sign in with Apple
-  Future<User?> signInWithApple() async {
-    try {
-      final credential = await SignInWithApple.getAppleIDCredential(
-        scopes: const [],
-      );
-
-      final oauthCredential = OAuthProvider('apple.com').credential(
-        idToken: credential.identityToken,
-        accessToken: credential.authorizationCode,
-      );
-
-      final userCredential = await _firebaseAuth.signInWithCredential(
-        oauthCredential,
-      );
-      return userCredential.user;
-    } on FirebaseAuthException catch (e) {
-      throw AuthException(message: _getErrorMessage(e.code), code: e.code);
-    } catch (e) {
-      throw AuthException(message: 'Apple sign-in failed: $e');
-    }
+  Future<Either<DomainException, User?>> signInWithApple() async {
+    // TODO: Implement Apple sign-in when sign_in_with_apple is enabled
+    return const Left(
+      DomainException(message: 'Apple sign-in is not yet implemented'),
+    );
+    // return executeService<User?>(
+    //   function: () async {
+    //     final credential = await SignInWithApple.getAppleIDCredential(
+    //       scopes: const [],
+    //     );
+    //
+    //     final oauthCredential = OAuthProvider('apple.com').credential(
+    //       idToken: credential.identityToken,
+    //       accessToken: credential.authorizationCode,
+    //     );
+    //
+    //     final userCredential = await _firebaseAuth.signInWithCredential(
+    //       oauthCredential,
+    //     );
+    //     return userCredential.user;
+    //   },
+    // );
   }
 
   /// Sign out
-  Future<void> signOut() async {
-    try {
-      await Future.wait([_firebaseAuth.signOut(), _googleSignIn.signOut()]);
-    } catch (e) {
-      throw AuthException(message: 'Sign out failed: $e');
-    }
+  Future<Either<DomainException, Unit>> signOut() async {
+    return executeService<Unit>(
+      function: () async {
+        await Future.wait([_firebaseAuth.signOut(), _googleSignIn.signOut()]);
+        return unit;
+      },
+    );
   }
 
   /// Send password reset email
-  Future<void> sendPasswordResetEmail(String email) async {
-    try {
-      await _firebaseAuth.sendPasswordResetEmail(email: email);
-    } on FirebaseAuthException catch (e) {
-      throw AuthException(message: _getErrorMessage(e.code), code: e.code);
-    } catch (e) {
-      throw AuthException(message: 'Failed to send reset email: $e');
-    }
+  Future<Either<DomainException, Unit>> sendPasswordResetEmail(
+    String email,
+  ) async {
+    return executeService<Unit>(
+      function: () async {
+        await _firebaseAuth.sendPasswordResetEmail(email: email);
+        return unit;
+      },
+    );
   }
 
   /// Update user email
-  Future<void> updateEmail(String newEmail) async {
-    try {
-      await currentUser?.verifyBeforeUpdateEmail(newEmail);
-    } on FirebaseAuthException catch (e) {
-      throw AuthException(message: _getErrorMessage(e.code), code: e.code);
-    } catch (e) {
-      throw AuthException(message: 'Failed to update email: $e');
-    }
+  Future<Either<DomainException, Unit>> updateEmail(String newEmail) async {
+    return executeService<Unit>(
+      function: () async {
+        await currentUser?.verifyBeforeUpdateEmail(newEmail);
+        return unit;
+      },
+    );
   }
 
   /// Update user password
-  Future<void> updatePassword(String newPassword) async {
-    try {
-      await currentUser?.updatePassword(newPassword);
-    } on FirebaseAuthException catch (e) {
-      throw AuthException(message: _getErrorMessage(e.code), code: e.code);
-    } catch (e) {
-      throw AuthException(message: 'Failed to update password: $e');
-    }
-  }
-
-  /// Get Firebase Auth error message
-  String _getErrorMessage(String code) {
-    switch (code) {
-      case 'user-not-found':
-        return 'No user found with this email';
-      case 'wrong-password':
-        return 'Incorrect password';
-      case 'email-already-in-use':
-        return 'Email already in use';
-      case 'weak-password':
-        return 'Password is too weak';
-      case 'invalid-email':
-        return 'Invalid email address';
-      case 'user-disabled':
-        return 'User account has been disabled';
-      case 'too-many-requests':
-        return 'Too many login attempts. Try again later';
-      case 'operation-not-allowed':
-        return 'This operation is not allowed';
-      case 'credential-already-in-use':
-        return 'This account is already in use';
-      default:
-        return 'Authentication failed: $code';
-    }
+  Future<Either<DomainException, Unit>> updatePassword(
+    String newPassword,
+  ) async {
+    return executeService<Unit>(
+      function: () async {
+        await currentUser?.updatePassword(newPassword);
+        return unit;
+      },
+    );
   }
 }
