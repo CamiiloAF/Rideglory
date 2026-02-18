@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
+import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
+import 'package:rideglory/shared/widgets/form/app_button.dart';
 
 class ChangeVehicleMileageBottomSheet extends StatelessWidget {
   const ChangeVehicleMileageBottomSheet({
@@ -100,26 +101,31 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(
-                    onPressed: () {
-                      saveMaintenance(maintenanceToSave);
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('Guardar sin actualizar'),
+                  Expanded(
+                    child: AppButton(
+                      label: 'Solo guardar',
+                      variant: AppButtonVariant.outline,
+                      onPressed: () {
+                        saveMaintenance(maintenanceToSave);
+                        Navigator.of(context).pop();
+                      },
+                    ),
                   ),
-                  const SizedBox(width: 8),
-                  FilledButton.icon(
-                    onPressed: () {
-                      context.read<VehicleCubit>().updateMileage(
-                        maintenanceToSave.maintanceMileage.toInt(),
-                      );
-                      saveMaintenance(maintenanceToSave);
-                      Navigator.of(context).pop();
-                    },
-                    icon: const Icon(Icons.check, size: 18),
-                    label: const Text('Actualizar'),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: AppButton(
+                      label: 'Actualizar',
+                      icon: Icons.check,
+                      variant: AppButtonVariant.primary,
+                      onPressed: () {
+                        context.read<VehicleCubit>().updateMileage(
+                          maintenanceToSave.maintanceMileage.toInt(),
+                        );
+                        saveMaintenance(maintenanceToSave);
+                        Navigator.of(context).pop();
+                      },
+                    ),
                   ),
                 ],
               ),

@@ -7,15 +7,16 @@ import 'package:rideglory/features/maintenance/domain/model/maintenance_model.da
 import 'package:rideglory/features/maintenance/domain/use_cases/get_maintenance_list_use_case.dart';
 import 'package:rideglory/features/maintenance/presentation/delete/cubit/maintenance_delete_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/maintenances_cubit.dart';
+import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_data_widget.dart';
+import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_empty_widget.dart';
+import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_error_widget.dart';
+import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_loading_widget.dart';
+import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_page_app_bar.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/expandable_fab.dart';
-import 'package:rideglory/features/maintenance/presentation/widgets/item_card/modern_maintenance_card.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters_bottom_sheet.dart';
 import 'package:rideglory/features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/shared/widgets/app_drawer.dart';
-import 'package:rideglory/shared/widgets/container_pull_to_refresh.dart';
-import 'package:rideglory/shared/widgets/empty_state_widget.dart';
 
 class MaintenancesPage extends StatelessWidget {
   const MaintenancesPage({super.key});
@@ -65,6 +66,47 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
     }
   }
 
+  Future<void> _onTap(MaintenanceModel maintenance) async {
+    if (maintenance.id != null) {
+      final result = await context.pushNamed<bool?>(
+        AppRoutes.editMaintenance,
+        extra: maintenance,
+      );
+      if (result == true && mounted) {
+        context.read<MaintenancesCubit>().fetchMaintenances();
+      }
+    }
+  }
+
+  Future<void> _onEdit(MaintenanceModel maintenance) async {
+    if (maintenance.id != null) {
+      final result = await context.pushNamed<bool?>(
+        AppRoutes.editMaintenance,
+        extra: maintenance,
+      );
+      if (result == true && mounted) {
+        context.read<MaintenancesCubit>().fetchMaintenances();
+      }
+    }
+  }
+
+  void _onDelete(MaintenanceModel maintenance) {
+    if (maintenance.id != null) {
+      context.read<MaintenanceDeleteCubit>().deleteMaintenance(maintenance.id!);
+    }
+  }
+
+  Future<void> _onAddMaintenance() async {
+    final result = await context.pushNamed<bool?>(AppRoutes.createMaintenance);
+
+    if (result == true && mounted) {
+      context.read<MaintenancesCubit>().fetchMaintenances();
+    }
+  }
+
+  Future<void> _onRefresh() =>
+      context.read<MaintenancesCubit>().fetchMaintenances();
+
   @override
   Widget build(BuildContext context) {
     final activeFilterCount = context
@@ -74,51 +116,10 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
-      appBar: AppAppBar(
-        title: 'Mantenimientos',
-        actions: [
-          Stack(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.filter_list_rounded),
-                onPressed: _showFiltersBottomSheet,
-                tooltip: 'Filtros',
-              ),
-              if (activeFilterCount > 0)
-                Positioned(
-                  right: 8,
-                  top: 8,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF6366F1),
-                      shape: BoxShape.circle,
-                    ),
-                    constraints: const BoxConstraints(
-                      minWidth: 16,
-                      minHeight: 16,
-                    ),
-                    child: Text(
-                      '$activeFilterCount',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-          IconButton(
-            icon: const Icon(Icons.directions_car_outlined),
-            onPressed: () {
-              context.pushNamed(AppRoutes.vehicles);
-            },
-            tooltip: 'Mis Vehículos',
-          ),
-        ],
+      appBar: MaintenancesPageAppBar(
+        activeFilterCount: activeFilterCount,
+        onFilterPressed: _showFiltersBottomSheet,
+        onVehiclesPressed: () => context.pushNamed(AppRoutes.vehicles),
       ),
       drawer: const AppDrawer(currentRoute: AppRoutes.maintenances),
       floatingActionButton: _showExpandedFab ? const ExpandableFab() : null,
@@ -133,9 +134,7 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
           ),
           BlocListener<MaintenanceDeleteCubit, MaintenanceDeleteState>(
             listener: (context, state) {
-              state.when(
-                initial: () {},
-                loading: () {},
+              state.whenOrNull(
                 success: (deletedId) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -157,167 +156,31 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
             },
           ),
         ],
-        child: BlocBuilder<MaintenancesCubit, ResultState<List<MaintenanceModel>>>(
-          builder: (context, state) {
-            Future<void> onRefresh() async {
-              await context.read<MaintenancesCubit>().fetchMaintenances();
-            }
-
-            return state.maybeWhen(
-              orElse: () => ContainerPullToRefresh(
-                onRefresh: onRefresh,
-                child: const Center(child: CircularProgressIndicator()),
+        child:
+            BlocBuilder<MaintenancesCubit, ResultState<List<MaintenanceModel>>>(
+              builder: (context, state) => state.maybeWhen(
+                loading: () => MaintenancesLoadingWidget(onRefresh: _onRefresh),
+                error: (error) => MaintenancesErrorWidget(
+                  error: error,
+                  onRefresh: _onRefresh,
+                ),
+                empty: () => MaintenancesEmptyWidget(
+                  onRefresh: _onRefresh,
+                  onActionPressed: _onAddMaintenance,
+                ),
+                data: (maintenances) => MaintenancesDataWidget(
+                  maintenances: maintenances,
+                  onRefresh: _onRefresh,
+                  onSearchChanged: (value) {
+                    context.read<MaintenancesCubit>().updateSearchQuery(value);
+                  },
+                  onTap: _onTap,
+                  onEdit: _onEdit,
+                  onDelete: _onDelete,
+                ),
+                orElse: () => MaintenancesLoadingWidget(onRefresh: _onRefresh),
               ),
-              error: (error) => ContainerPullToRefresh(
-                onRefresh: onRefresh,
-                child: Center(child: Text('Error: ${error.message}')),
-              ),
-              empty: () {
-                return ContainerPullToRefresh(
-                  onRefresh: onRefresh,
-                  child: EmptyStateWidget(
-                    icon: Icons.build_circle_outlined,
-                    title: 'No hay mantenimientos registrados',
-                    description:
-                        'Comienza a registrar los mantenimientos de tu vehículo para llevar un control completo',
-                    iconColor: const Color(0xFF6366F1),
-                    actionButtonText: 'Agregar mantenimiento',
-                    onActionPressed: () async {
-                      final result = await context.pushNamed<bool?>(
-                        AppRoutes.createMaintenance,
-                      );
-
-                      if (result == true && context.mounted) {
-                        context.read<MaintenancesCubit>().fetchMaintenances();
-                      }
-                    },
-                  ),
-                );
-              },
-              data: (maintenances) {
-                return RefreshIndicator(
-                  onRefresh: onRefresh,
-                  child: Column(
-                    children: [
-                      // Search bar
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Buscar por nombre del mantenimiento',
-                            prefixIcon: const Icon(Icons.search),
-                            filled: true,
-                            fillColor: Colors.white,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.grey[300]!),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: Colors.grey[300]!),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 14,
-                            ),
-                          ),
-                          onChanged: (value) {
-                            context.read<MaintenancesCubit>().updateSearchQuery(
-                              value,
-                            );
-                          },
-                        ),
-                      ),
-                      // Maintenance list or empty filtered state
-                      Expanded(
-                        child: maintenances.isEmpty
-                            ? Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(32),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.search_off_rounded,
-                                        size: 80,
-                                        color: Colors.grey[400],
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Text(
-                                        'No se encontraron resultados',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.grey[700],
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        'Intenta ajustar los filtros o la búsqueda',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey[500],
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                            : ListView.builder(
-                                physics: const AlwaysScrollableScrollPhysics(),
-                                padding: const EdgeInsets.all(16),
-                                itemCount: maintenances.length,
-                                itemBuilder: (context, index) {
-                                  final maintenance = maintenances[index];
-                                  return ModernMaintenanceCard(
-                                    maintenance: maintenance,
-                                    onTap: () async {
-                                      if (maintenance.id != null) {
-                                        final result = await context
-                                            .pushNamed<bool?>(
-                                              AppRoutes.editMaintenance,
-                                              extra: maintenance,
-                                            );
-                                        if (result == true && context.mounted) {
-                                          context
-                                              .read<MaintenancesCubit>()
-                                              .fetchMaintenances();
-                                        }
-                                      }
-                                    },
-                                    onEdit: () async {
-                                      if (maintenance.id != null) {
-                                        final result = await context
-                                            .pushNamed<bool?>(
-                                              AppRoutes.editMaintenance,
-                                              extra: maintenance,
-                                            );
-                                        if (result == true && context.mounted) {
-                                          context
-                                              .read<MaintenancesCubit>()
-                                              .fetchMaintenances();
-                                        }
-                                      }
-                                    },
-                                    onDelete: () {
-                                      if (maintenance.id != null) {
-                                        context
-                                            .read<MaintenanceDeleteCubit>()
-                                            .deleteMaintenance(maintenance.id!);
-                                      }
-                                    },
-                                  );
-                                },
-                              ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            );
-          },
-        ),
+            ),
       ),
     );
   }

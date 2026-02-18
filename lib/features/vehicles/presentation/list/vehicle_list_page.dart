@@ -12,6 +12,7 @@ import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/shared/widgets/app_drawer.dart';
 import 'package:rideglory/shared/widgets/empty_state_widget.dart';
+import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
 
 class VehicleListPage extends StatelessWidget {
   const VehicleListPage({super.key});
@@ -72,40 +73,28 @@ class _VehicleListViewState extends State<_VehicleListView> {
     await context.pushNamed(AppRoutes.createMaintenance, extra: vehicle);
   }
 
-  void _showDeleteDialog(BuildContext context, VehicleModel vehicle) {
-    showDialog(
+  void _showDeleteDialog(BuildContext context, VehicleModel vehicle) async {
+    final confirmed = await AppDialogHelper.showConfirmation(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Eliminar Vehículo'),
-        content: Text(
+      title: 'Eliminar Vehículo',
+      content:
           '¿Estás seguro de que deseas eliminar "${vehicle.name}"? Esta acción eliminará todos los mantenimientos asociados a este vehículo y no se podrá deshacer.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancelar'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-              if (vehicle.id != null) {
-                final vehicleListState = context.read<VehicleListCubit>().state;
-                final availableVehicles =
-                    vehicleListState is Data<List<VehicleModel>>
-                    ? vehicleListState.data
-                    : <VehicleModel>[];
-                context.read<VehicleDeleteCubit>().deleteVehicle(
-                  vehicle.id!,
-                  availableVehicles: availableVehicles,
-                );
-              }
-            },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Eliminar'),
-          ),
-        ],
-      ),
+      cancelLabel: 'Cancelar',
+      confirmLabel: 'Eliminar',
+      confirmType: DialogActionType.danger,
+      dialogType: DialogType.warning,
     );
+
+    if (confirmed == true && context.mounted && vehicle.id != null) {
+      final vehicleListState = context.read<VehicleListCubit>().state;
+      final availableVehicles = vehicleListState is Data<List<VehicleModel>>
+          ? vehicleListState.data
+          : <VehicleModel>[];
+      context.read<VehicleDeleteCubit>().deleteVehicle(
+        vehicle.id!,
+        availableVehicles: availableVehicles,
+      );
+    }
   }
 
   void _deleteVehicleListener(BuildContext context, VehicleDeleteState state) {

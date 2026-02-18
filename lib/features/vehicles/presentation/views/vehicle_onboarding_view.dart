@@ -12,6 +12,7 @@ import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dar
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/widgets/vehicle_form.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
 
 class VehicleOnboardingView extends StatefulWidget {
   const VehicleOnboardingView({super.key});
@@ -45,27 +46,15 @@ class _VehicleOnboardingViewState extends State<VehicleOnboardingView> {
   }
 
   Future<bool> _showExitConfirmationDialog() async {
-    final result = await showDialog<bool>(
+    final result = await AppDialogHelper.showConfirmation(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('¿Salir de la configuración?'),
-        content: const Text(
+      title: '¿Salir de la configuración?',
+      content:
           'Necesitas agregar al menos un vehículo para usar la aplicación. Si sales ahora, la aplicación se cerrará y perderás tu progreso',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancelar'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: TextButton.styleFrom(
-              foregroundColor: const Color(0xFFEF4444),
-            ),
-            child: const Text('Salir'),
-          ),
-        ],
-      ),
+      cancelLabel: 'Cancelar',
+      confirmLabel: 'Salir',
+      confirmType: DialogActionType.danger,
+      dialogType: DialogType.warning,
     );
     return result ?? false;
   }

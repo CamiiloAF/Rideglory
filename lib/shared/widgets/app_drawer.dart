@@ -6,6 +6,8 @@ import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/shared/widgets/drawer_menu_item.dart';
+import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
 
 class AppDrawer extends StatelessWidget {
   final String currentRoute;
@@ -87,7 +89,7 @@ class AppDrawer extends StatelessWidget {
               child: ListView(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 children: [
-                  _DrawerMenuItem(
+                  DrawerMenuItem(
                     icon: Icons.build_circle_outlined,
                     title: 'Mantenimientos',
                     isSelected: currentRoute == AppRoutes.maintenances,
@@ -98,7 +100,7 @@ class AppDrawer extends StatelessWidget {
                       }
                     },
                   ),
-                  _DrawerMenuItem(
+                  DrawerMenuItem(
                     icon: Icons.directions_car_outlined,
                     title: 'Mis Vehículos',
                     isSelected: currentRoute == AppRoutes.vehicles,
@@ -108,7 +110,7 @@ class AppDrawer extends StatelessWidget {
                     },
                   ),
                   const Divider(height: 32),
-                  _DrawerMenuItem(
+                  DrawerMenuItem(
                     icon: Icons.settings_outlined,
                     title: 'Configuración',
                     isSelected: false,
@@ -132,7 +134,7 @@ class AppDrawer extends StatelessWidget {
               decoration: BoxDecoration(
                 border: Border(top: BorderSide(color: Colors.grey[200]!)),
               ),
-              child: _DrawerMenuItem(
+              child: DrawerMenuItem(
                 icon: Icons.logout_outlined,
                 title: 'Cerrar sesión',
                 isSelected: false,
@@ -140,96 +142,24 @@ class AppDrawer extends StatelessWidget {
                 iconColor: Colors.red,
                 onTap: () async {
                   Navigator.pop(context);
-                  final confirm = await showDialog<bool>(
+                  final confirm = await AppDialogHelper.showConfirmation(
                     context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Cerrar sesión'),
-                      content: const Text(
-                        '¿Estás seguro de que deseas cerrar sesión?',
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, false),
-                          child: const Text('Cancelar'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () => _logout(context),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
-                          ),
-                          child: const Text('Cerrar sesión'),
-                        ),
-                      ],
-                    ),
+                    title: 'Cerrar sesión',
+                    content: '¿Estás seguro de que deseas cerrar sesión?',
+                    cancelLabel: 'Cancelar',
+                    confirmLabel: 'Cerrar sesión',
+                    confirmType: DialogActionType.danger,
+                    dialogType: DialogType.warning,
                   );
 
                   if (confirm == true && context.mounted) {
-                    await context.read<AuthCubit>().signOut();
-                    if (context.mounted) {
-                      context.go(AppRoutes.login);
-                    }
+                    _logout(context);
                   }
                 },
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _DrawerMenuItem extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final bool isSelected;
-  final VoidCallback onTap;
-  final Color? textColor;
-  final Color? iconColor;
-
-  const _DrawerMenuItem({
-    required this.icon,
-    required this.title,
-    required this.isSelected,
-    required this.onTap,
-    this.textColor,
-    this.iconColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final selectedColor = const Color(0xFF6366F1);
-    final defaultTextColor = textColor ?? Colors.grey[800];
-    final defaultIconColor = iconColor ?? Colors.grey[600];
-
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      decoration: BoxDecoration(
-        color: isSelected
-            ? selectedColor.withValues(alpha: 0.1)
-            : Colors.transparent,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ListTile(
-        leading: Icon(
-          icon,
-          color: isSelected ? selectedColor : defaultIconColor,
-          size: 24,
-        ),
-        title: Text(
-          title,
-          style: TextStyle(
-            color: isSelected ? selectedColor : defaultTextColor,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-            fontSize: 15,
-          ),
-        ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        onTap: onTap,
       ),
     );
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
+import 'package:rideglory/features/maintenance/presentation/widgets/filter_section_title.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/shared/widgets/form/app_button.dart';
 
 class MaintenanceFilters {
   final String? searchQuery;
@@ -139,13 +141,15 @@ class _MaintenanceFiltersBottomSheetState
                   ),
                 ),
                 if (_filters.hasActiveFilters)
-                  TextButton(
+                  AppButton(
+                    label: 'Limpiar',
+                    variant: AppButtonVariant.text,
+                    isFullWidth: false,
                     onPressed: () {
                       setState(() {
                         _filters = const MaintenanceFilters();
                       });
                     },
-                    child: const Text('Limpiar'),
                   ),
               ],
             ),
@@ -158,7 +162,7 @@ class _MaintenanceFiltersBottomSheetState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Sort by
-                  _buildSectionTitle('Ordenar por'),
+                  const FilterSectionTitle('Ordenar por'),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -179,7 +183,7 @@ class _MaintenanceFiltersBottomSheetState
                   const SizedBox(height: 24),
 
                   // Maintenance types
-                  _buildSectionTitle('Tipos de mantenimiento'),
+                  const FilterSectionTitle('Tipos de mantenimiento'),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -209,7 +213,7 @@ class _MaintenanceFiltersBottomSheetState
 
                   // Vehicles
                   if (widget.availableVehicles.isNotEmpty) ...[
-                    _buildSectionTitle('Vehículos'),
+                    const FilterSectionTitle('Vehículos'),
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 8,
@@ -259,7 +263,7 @@ class _MaintenanceFiltersBottomSheetState
                   const SizedBox(height: 16),
 
                   // Date range
-                  _buildSectionTitle('Rango de fechas'),
+                  const FilterSectionTitle('Rango de fechas'),
                   const SizedBox(height: 8),
                   Row(
                     children: [
@@ -333,48 +337,24 @@ class _MaintenanceFiltersBottomSheetState
             child: Row(
               children: [
                 Expanded(
-                  child: OutlinedButton(
+                  child: AppButton(
+                    label: 'Cancelar',
+                    variant: AppButtonVariant.outline,
                     onPressed: () => Navigator.pop(context),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text('Cancelar'),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: ElevatedButton(
+                  child: AppButton(
+                    label: 'Aplicar',
+                    variant: AppButtonVariant.primary,
                     onPressed: () => Navigator.pop(context, _filters),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF6366F1),
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: const Text('Aplicar'),
                   ),
                 ),
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSectionTitle(String title) {
-    return Text(
-      title,
-      style: const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-        color: Color(0xFF1F2937),
       ),
     );
   }
