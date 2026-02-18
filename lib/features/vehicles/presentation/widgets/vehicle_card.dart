@@ -7,6 +7,8 @@ class VehicleCard extends StatelessWidget {
   final VoidCallback? onDelete;
   final VoidCallback? onSetAsCurrent;
   final VoidCallback? onAddMaintenance;
+  final VoidCallback? onArchive;
+  final VoidCallback? onUnarchive;
   final bool isCurrent;
 
   const VehicleCard({
@@ -16,6 +18,8 @@ class VehicleCard extends StatelessWidget {
     this.onDelete,
     this.onSetAsCurrent,
     this.onAddMaintenance,
+    this.onArchive,
+    this.onUnarchive,
     this.isCurrent = false,
   });
 
@@ -107,15 +111,15 @@ class VehicleCard extends StatelessWidget {
                                     border: Border.all(
                                       color: const Color(
                                         0xFF10B981,
-                                      ).withValues(alpha: 0.3),
+                                      ).withValues(alpha: .25),
                                     ),
                                   ),
                                   child: const Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(
-                                        Icons.check_circle,
-                                        size: 14,
+                                        Icons.check_circle_rounded,
+                                        size: 12,
                                         color: Color(0xFF10B981),
                                       ),
                                       SizedBox(width: 4),
@@ -125,6 +129,44 @@ class VehicleCard extends StatelessWidget {
                                           fontSize: 11,
                                           fontWeight: FontWeight.w600,
                                           color: Color(0xFF10B981),
+                                          letterSpacing: -0.2,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              if (vehicle.isArchived)
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  margin: EdgeInsets.only(
+                                    left: isCurrent ? 6 : 0,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.withValues(alpha: 0.1),
+                                    borderRadius: BorderRadius.circular(6),
+                                    border: Border.all(
+                                      color: Colors.grey.withValues(alpha: .25),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.archive_outlined,
+                                        size: 12,
+                                        color: Colors.grey[600],
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        'Archivado',
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey[600],
+                                          letterSpacing: -0.2,
                                         ),
                                       ),
                                     ],
@@ -204,6 +246,36 @@ class VehicleCard extends StatelessWidget {
                                 ],
                               ),
                             ),
+                          if (!vehicle.isArchived && onArchive != null)
+                            PopupMenuItem(
+                              value: 'archive',
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.archive_outlined,
+                                    size: 20,
+                                    color: Colors.grey[700],
+                                  ),
+                                  const SizedBox(width: 12),
+                                  const Text('Archivar'),
+                                ],
+                              ),
+                            ),
+                          if (vehicle.isArchived && onUnarchive != null)
+                            PopupMenuItem(
+                              value: 'unarchive',
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.unarchive_outlined,
+                                    size: 20,
+                                    color: Colors.grey[700],
+                                  ),
+                                  const SizedBox(width: 12),
+                                  const Text('Desarchivar'),
+                                ],
+                              ),
+                            ),
                           PopupMenuItem(
                             value: 'delete',
                             child: const Row(
@@ -231,6 +303,11 @@ class VehicleCard extends StatelessWidget {
                           } else if (value == 'addMaintenance' &&
                               onAddMaintenance != null) {
                             onAddMaintenance!();
+                          } else if (value == 'archive' && onArchive != null) {
+                            onArchive!();
+                          } else if (value == 'unarchive' &&
+                              onUnarchive != null) {
+                            onUnarchive!();
                           } else if (value == 'delete') {
                             onDelete!();
                           }

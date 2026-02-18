@@ -76,6 +76,10 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
     if (formKey.currentState?.saveAndValidate() ?? false) {
       final formData = formKey.currentState!.value;
 
+      // If editing an archived vehicle, unarchive it
+      final wasArchived =
+          state.isEditing && (state.vehicle?.isArchived ?? false);
+
       final vehicleToSave = VehicleModel(
         id: state.isEditing ? state.vehicle!.id : null,
         name: formData['name'] as String,
@@ -104,6 +108,7 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
             ? null
             : formData['vin'] as String?,
         purchaseDate: formData['purchaseDate'] as DateTime?,
+        isArchived: wasArchived ? false : (state.vehicle?.isArchived ?? false),
       );
       return vehicleToSave;
     } else {

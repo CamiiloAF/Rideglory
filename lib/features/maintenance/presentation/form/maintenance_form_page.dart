@@ -203,9 +203,10 @@ class _MaintenanceFormContentState extends State<_MaintenanceFormContent> {
   void validateAndSyncMileageIfNeeded() {}
 
   Future<void> _showVehicleSelectionDialog() async {
-    final vehicleListState = context.read<VehicleListCubit>().state;
+    final vehicleListCubit = context.read<VehicleListCubit>();
+    final vehicles = vehicleListCubit.activeVehicles;
 
-    if (vehicleListState is! Data<List<VehicleModel>>) {
+    if (vehicles.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('No hay vehículos disponibles'),
@@ -214,8 +215,6 @@ class _MaintenanceFormContentState extends State<_MaintenanceFormContent> {
       );
       return;
     }
-
-    final vehicles = vehicleListState.data;
 
     final selectedVehicle = await showModalBottomSheet<VehicleModel>(
       context: context,

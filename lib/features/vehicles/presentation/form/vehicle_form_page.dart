@@ -34,6 +34,130 @@ class _VehicleFormView extends StatefulWidget {
 }
 
 class _VehicleFormViewState extends State<_VehicleFormView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkArchivedVehicle();
+    });
+  }
+
+  Future<void> _checkArchivedVehicle() async {
+    final state = context.read<VehicleFormCubit>().state;
+    if (state.isEditing && state.vehicle?.isArchived == true) {
+      final shouldContinue = await _showArchivedVehicleDialog();
+      if (!shouldContinue && mounted) {
+        context.pop();
+      }
+    }
+  }
+
+  Future<bool> _showArchivedVehicleDialog() async {
+    return await showDialog<bool>(
+          context: context,
+          barrierDismissible: false,
+          builder: (dialogContext) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            title: const Row(
+              children: [
+                Icon(
+                  Icons.info_outline_rounded,
+                  color: Color(0xFF6366F1),
+                  size: 28,
+                ),
+                SizedBox(width: 12),
+                Text(
+                  'Vehículo Archivado',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Este vehículo está archivado. Si actualizas su información, el vehículo será desarchivado y volverá a estar disponible en tu lista de vehículos activos.',
+                  style: TextStyle(fontSize: 15, height: 1.5),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF6366F1).withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: const Color(0xFF6366F1).withValues(alpha: 0.2),
+                    ),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(
+                        Icons.unarchive_rounded,
+                        color: Color(0xFF6366F1),
+                        size: 20,
+                      ),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          '¿Deseas continuar con la edición?',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF6366F1),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(false),
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
+                ),
+                child: const Text(
+                  'Cancelar',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF6366F1),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  elevation: 0,
+                ),
+                child: const Text(
+                  'Continuar',
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
   Map<String, dynamic> _getInitialValues() {
     final state = context.read<VehicleFormCubit>().state;
 

@@ -78,7 +78,7 @@ class _VehicleListViewState extends State<_VehicleListView> {
       builder: (dialogContext) => AlertDialog(
         title: const Text('Eliminar Vehículo'),
         content: Text(
-          '¿Estás seguro de que deseas eliminar "${vehicle.name}"?',
+          '¿Estás seguro de que deseas eliminar "${vehicle.name}"? Esta acción eliminará todos los mantenimientos asociados a este vehículo y no se podrá deshacer.',
         ),
         actions: [
           TextButton(
@@ -144,22 +144,39 @@ class _VehicleListViewState extends State<_VehicleListView> {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppAppBar(
-        title: 'Mis Vehículos',
+        title: context.watch<VehicleListCubit>().showArchivedVehicles
+            ? 'Vehículos Archivados'
+            : 'Mis Vehículos',
         actions: [
           IconButton(
-            icon: const Icon(Icons.build_circle_outlined),
+            icon: Icon(
+              context.watch<VehicleListCubit>().showArchivedVehicles
+                  ? Icons.inventory_2
+                  : Icons.inventory_2_outlined,
+            ),
             onPressed: () {
-              context.pushNamed(AppRoutes.maintenances);
+              context.read<VehicleListCubit>().toggleShowArchived();
             },
-            tooltip: 'Mantenimientos',
+            tooltip: context.watch<VehicleListCubit>().showArchivedVehicles
+                ? 'Mostrar activos'
+                : 'Ver archivados',
           ),
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () async {
-              await _goToCreateVehicle(context);
-            },
-            tooltip: 'Agregar vehículo',
-          ),
+          if (!context.watch<VehicleListCubit>().showArchivedVehicles) ...[
+            IconButton(
+              icon: const Icon(Icons.build_circle_outlined),
+              onPressed: () {
+                context.pushNamed(AppRoutes.maintenances);
+              },
+              tooltip: 'Mantenimientos',
+            ),
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () async {
+                await _goToCreateVehicle(context);
+              },
+              tooltip: 'Agregar vehículo',
+            ),
+          ],
         ],
       ),
       drawer: const AppDrawer(currentRoute: AppRoutes.vehicles),
@@ -189,14 +206,25 @@ class _VehicleListViewState extends State<_VehicleListView> {
                 ),
               ),
               empty: () {
+                final showingArchived = context
+                    .watch<VehicleListCubit>()
+                    .showArchivedVehicles;
                 return EmptyStateWidget(
-                  icon: Icons.directions_car_outlined,
-                  title: 'No tienes vehículos registrados',
-                  description: 'Agrega tu primer vehículo para comenzar',
-                  actionButtonText: 'Agregar vehículo',
-                  onActionPressed: () {
-                    _goToCreateVehicle(context);
-                  },
+                  icon: showingArchived
+                      ? Icons.inventory_2_outlined
+                      : Icons.directions_car_outlined,
+                  title: showingArchived
+                      ? 'No hay vehículos archivados'
+                      : 'No tienes vehículos registrados',
+                  description: showingArchived
+                      ? 'Archiva vehículos que ya no uses'
+                      : 'Agrega tu primer vehículo para comenzar',
+                  actionButtonText: showingArchived ? null : 'Agregar vehículo',
+                  onActionPressed: showingArchived
+                      ? null
+                      : () {
+                          _goToCreateVehicle(context);
+                        },
                   iconColor: const Color(0xFF6366F1),
                 );
               },
@@ -226,21 +254,52 @@ class _VehicleListViewState extends State<_VehicleListView> {
                             await _goToEditVehicle(context, vehicle);
                           }
                         },
-                        onSetAsCurrent: () {
-                          context.read<VehicleCubit>().setMainVehicle(
-                            vehicle.id!,
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                '${vehicle.name} establecido como vehículo principal',
-                              ),
-                              backgroundColor: const Color(0xFF10B981),
-                            ),
-                          );
-                        },
-                        onAddMaintenance: () =>
-                            _goToCreateMaintenance(context, vehicle),
+                        onSetAsCurrent: !vehicle.isArchived
+                            ? () {
+                                context.read<VehicleCubit>().setMainVehicle(
+                                  vehicle.id!,
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      '${vehicle.name} establecido como vehículo principal',
+                                    ),
+                                    backgroundColor: const Color(0xFF10B981),
+                                  ),
+                                );
+                              }
+                            : null,
+                        onAddMaintenance: !vehicle.isArchived
+                            ? () => _goToCreateMaintenance(context, vehicle)
+                            : null,
+                        onArchive: !vehicle.isArchived
+                            ? () {
+                                context.read<VehicleListCubit>().archiveVehicle(
+                                  vehicle,
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('${vehicle.name} archivado'),
+                                    backgroundColor: const Color(0xFF6366F1),
+                                  ),
+                                );
+                              }
+                            : null,
+                        onUnarchive: vehicle.isArchived
+                            ? () {
+                                context
+                                    .read<VehicleListCubit>()
+                                    .unarchiveVehicle(vehicle);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      '${vehicle.name} desarchivado',
+                                    ),
+                                    backgroundColor: const Color(0xFF10B981),
+                                  ),
+                                );
+                              }
+                            : null,
                         onDelete: () {
                           _showDeleteDialog(context, vehicle);
                         },

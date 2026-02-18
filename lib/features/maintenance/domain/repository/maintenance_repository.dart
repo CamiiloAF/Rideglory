@@ -8,6 +8,9 @@ abstract class MaintenanceRepository {
   Future<Either<DomainException, List<MaintenanceModel>>>
   getMaintenancesByUserId();
 
+  Future<Either<DomainException, List<MaintenanceModel>>>
+  getMaintenancesByVehicleId(String vehicleId);
+
   Future<Either<DomainException, MaintenanceModel>> addMaintenance(
     MaintenanceModel maintenance,
   );

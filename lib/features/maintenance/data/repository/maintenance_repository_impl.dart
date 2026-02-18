@@ -47,6 +47,33 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
   }
 
   @override
+  Future<Either<DomainException, List<MaintenanceModel>>>
+  getMaintenancesByVehicleId(String vehicleId) async {
+    final userId = _authService.currentUser?.uid;
+    if (userId == null) {
+      throw DomainException(message: 'No user is currently authenticated.');
+    }
+
+    return executeService(
+      function: () async {
+        final doc = await firestore
+            .collection(_collectionName)
+            .where('userId', isEqualTo: userId)
+            .where('vehicleId', isEqualTo: vehicleId)
+            .get();
+
+        if (doc.docs.isNotEmpty) {
+          return doc.docs
+              .map((e) => MaintenanceDto.fromJson(e.data()).copyWith(id: e.id))
+              .toList();
+        } else {
+          return [];
+        }
+      },
+    );
+  }
+
+  @override
   Future<Either<DomainException, MaintenanceModel>> addMaintenance(
     MaintenanceModel maintenance,
   ) async {
