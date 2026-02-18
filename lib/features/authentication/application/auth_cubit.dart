@@ -26,7 +26,7 @@ class AuthCubit extends Cubit<AuthState> {
   void checkAuthState() {
     final user = _authService.currentUser;
     if (user != null) {
-      emit(AuthState.authenticated(user));
+      emit(const AuthState.loading());
       _syncAuthenticatedUserVehicles();
     } else {
       emit(const AuthState.unauthenticated());
@@ -45,18 +45,21 @@ class AuthCubit extends Cubit<AuthState> {
       password: password,
     );
 
-    result.fold((failure) => emit(AuthState.error(failure.message)), (user) {
-      if (user != null) {
-        emit(AuthState.authenticated(user));
-        _syncAuthenticatedUserVehicles();
-      } else {
-        emit(
-          const AuthState.error(
-            'Falló el registro, intenta de nuevo más tarde',
-          ),
-        );
-      }
-    });
+    await result.fold(
+      (failure) async => emit(AuthState.error(failure.message)),
+      (user) async {
+        if (user != null) {
+          // Wait for vehicles to sync before emitting auth state
+          await _syncAuthenticatedUserVehicles();
+        } else {
+          emit(
+            const AuthState.error(
+              'Falló el registro, intenta de nuevo más tarde',
+            ),
+          );
+        }
+      },
+    );
   }
 
   /// Sign in with email and password
@@ -71,18 +74,21 @@ class AuthCubit extends Cubit<AuthState> {
       password: password,
     );
 
-    result.fold((failure) => emit(AuthState.error(failure.message)), (user) {
-      if (user != null) {
-        emit(AuthState.authenticated(user));
-        _syncAuthenticatedUserVehicles();
-      } else {
-        emit(
-          const AuthState.error(
-            'Falló el inicio de sesión, intenta de nuevo más tarde',
-          ),
-        );
-      }
-    });
+    await result.fold(
+      (failure) async => emit(AuthState.error(failure.message)),
+      (user) async {
+        if (user != null) {
+          // Wait for vehicles to sync before emitting auth state
+          await _syncAuthenticatedUserVehicles();
+        } else {
+          emit(
+            const AuthState.error(
+              'Falló el inicio de sesión, intenta de nuevo más tarde',
+            ),
+          );
+        }
+      },
+    );
   }
 
   /// Sign in with Google
@@ -90,14 +96,17 @@ class AuthCubit extends Cubit<AuthState> {
     emit(const AuthState.loading());
 
     final result = await _authService.signInWithGoogle();
-    result.fold((failure) => emit(AuthState.error(failure.message)), (user) {
-      if (user != null) {
-        emit(AuthState.authenticated(user));
-        _syncAuthenticatedUserVehicles();
-      } else {
-        emit(const AuthState.error('Google sign-in failed'));
-      }
-    });
+    await result.fold(
+      (failure) async => emit(AuthState.error(failure.message)),
+      (user) async {
+        if (user != null) {
+          // Wait for vehicles to sync before emitting auth state
+          await _syncAuthenticatedUserVehicles();
+        } else {
+          emit(const AuthState.error('Google sign-in failed'));
+        }
+      },
+    );
   }
 
   /// Sign in with Apple
@@ -105,14 +114,17 @@ class AuthCubit extends Cubit<AuthState> {
     emit(const AuthState.loading());
 
     final result = await _authService.signInWithApple();
-    result.fold((failure) => emit(AuthState.error(failure.message)), (user) {
-      if (user != null) {
-        emit(AuthState.authenticated(user));
-        _syncAuthenticatedUserVehicles();
-      } else {
-        emit(const AuthState.error('Apple sign-in failed'));
-      }
-    });
+    await result.fold(
+      (failure) async => emit(AuthState.error(failure.message)),
+      (user) async {
+        if (user != null) {
+          // Wait for vehicles to sync before emitting auth state
+          await _syncAuthenticatedUserVehicles();
+        } else {
+          emit(const AuthState.error('Apple sign-in failed'));
+        }
+      },
+    );
   }
 
   Future<void> _syncAuthenticatedUserVehicles() async {
@@ -123,12 +135,24 @@ class AuthCubit extends Cubit<AuthState> {
         if (kDebugMode) {
           print('Failed to load vehicles: ${error.message}');
         }
-        // Silently fail - user is authenticated but vehicles couldn't be loaded
-        // They can retry manually if needed
+        // If vehicles couldn't be loaded, treat as no vehicles (redirect to onboarding)
+        final currentUser = _authService.currentUser;
+        if (currentUser != null) {
+          emit(AuthState.authenticatedWithoutVehicles(currentUser));
+        }
       },
       (vehicles) {
-        // Pre-set the selected vehicle in VehicleCubit
-        _vehicleCubit.loadSavedVehicle(vehicles);
+        final currentUser = _authService.currentUser;
+        if (currentUser == null) return;
+
+        if (vehicles.isEmpty) {
+          // No vehicles - redirect to onboarding
+          emit(AuthState.authenticatedWithoutVehicles(currentUser));
+        } else {
+          // Has vehicles - proceed normally
+          _vehicleCubit.loadSavedVehicle(vehicles);
+          emit(AuthState.authenticated(currentUser));
+        }
       },
     );
   }
@@ -165,4 +189,5 @@ class AuthCubit extends Cubit<AuthState> {
     }
     await _syncAuthenticatedUserVehicles();
   }
+
 }

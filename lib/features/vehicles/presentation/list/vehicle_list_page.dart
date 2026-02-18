@@ -89,7 +89,15 @@ class _VehicleListViewState extends State<_VehicleListView> {
             onPressed: () {
               Navigator.pop(dialogContext);
               if (vehicle.id != null) {
-                context.read<VehicleDeleteCubit>().deleteVehicle(vehicle.id!);
+                final vehicleListState = context.read<VehicleListCubit>().state;
+                final availableVehicles =
+                    vehicleListState is Data<List<VehicleModel>>
+                    ? vehicleListState.data
+                    : <VehicleModel>[];
+                context.read<VehicleDeleteCubit>().deleteVehicle(
+                  vehicle.id!,
+                  availableVehicles: availableVehicles,
+                );
               }
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
@@ -116,6 +124,15 @@ class _VehicleListViewState extends State<_VehicleListView> {
           SnackBar(
             content: Text('Error: $message'),
             backgroundColor: Colors.red,
+          ),
+        );
+      },
+      errorLastVehicle: (message) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+            backgroundColor: Colors.orange,
+            duration: const Duration(seconds: 4),
           ),
         );
       },

@@ -7,4 +7,6 @@ class VehicleDeleteState with _$VehicleDeleteState {
   const factory VehicleDeleteState.success({required String deletedId}) =
       _Success;
   const factory VehicleDeleteState.error({required String message}) = _Error;
+  const factory VehicleDeleteState.errorLastVehicle({required String message}) =
+      _ErrorLastVehicle;
 }

@@ -26,15 +26,27 @@ class AppRouter {
     initialLocation: AppRoutes.splash,
     redirect: (BuildContext context, GoRouterState state) {
       final authCubit = context.read<AuthCubit>();
-      final isAuthenticated = authCubit.state.isAuthenticated;
+      final isAuthenticated = authCubit.state.isAuthenticatedWithVehicles;
+      final isAuthenticatedWithoutVehicles =
+          authCubit.state.isAuthenticatedWithoutVehicles;
       final isOnSplash = state.matchedLocation == AppRoutes.splash;
       final isOnAuthPage =
           state.matchedLocation == AppRoutes.login ||
           state.matchedLocation == AppRoutes.signup;
+      final isOnOnboarding =
+          state.matchedLocation == AppRoutes.vehicleOnboarding;
 
       // Allow access to splash and auth pages
       if (isOnSplash || isOnAuthPage) {
         return null;
+      }
+
+      // If user is authenticated without vehicles, redirect to onboarding
+      if (isAuthenticatedWithoutVehicles) {
+        if (isOnOnboarding) {
+          return null; // Allow onboarding route
+        }
+        return AppRoutes.vehicleOnboarding;
       }
 
       // Protect authenticated routes
