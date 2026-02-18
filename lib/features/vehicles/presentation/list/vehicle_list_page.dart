@@ -238,73 +238,175 @@ class _VehicleListViewState extends State<_VehicleListView> {
                   onRefresh: () async {
                     await _loadVechicles(context);
                   },
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: vehicles.length,
-                    itemBuilder: (context, index) {
-                      final vehicle = vehicles[index];
-                      final isCurrent = vehicle.id == currentVehicleId;
+                  child: Column(
+                    children: [
+                      // Search bar
+                      if (!context
+                          .watch<VehicleListCubit>()
+                          .showArchivedVehicles)
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: 'Buscar por nombre, placa o marca',
+                              prefixIcon: const Icon(Icons.search),
+                              filled: true,
+                              fillColor: Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: Colors.grey[300]!,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(
+                                  color: Colors.grey[300]!,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 14,
+                              ),
+                            ),
+                            onChanged: (value) {
+                              context
+                                  .read<VehicleListCubit>()
+                                  .updateSearchQuery(value);
+                            },
+                          ),
+                        ),
+                      // Vehicle list or empty filtered state
+                      Expanded(
+                        child: vehicles.isEmpty
+                            ? Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(32),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.search_off_rounded,
+                                        size: 80,
+                                        color: Colors.grey[400],
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        'No se encontraron resultados',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey[700],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        context
+                                                .watch<VehicleListCubit>()
+                                                .showArchivedVehicles
+                                            ? 'No hay vehículos archivados'
+                                            : 'Intenta ajustar la búsqueda',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey[500],
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : ListView.builder(
+                                padding: const EdgeInsets.all(16),
+                                itemCount: vehicles.length,
+                                itemBuilder: (context, index) {
+                                  final vehicle = vehicles[index];
+                                  final isCurrent =
+                                      vehicle.id == currentVehicleId;
 
-                      return VehicleCard(
-                        vehicle: vehicle,
-                        isCurrent: isCurrent,
-                        onTap: () async {
-                          // Navigate to edit vehicle
-                          if (vehicle.id != null) {
-                            await _goToEditVehicle(context, vehicle);
-                          }
-                        },
-                        onSetAsCurrent: !vehicle.isArchived
-                            ? () {
-                                context.read<VehicleCubit>().setMainVehicle(
-                                  vehicle.id!,
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      '${vehicle.name} establecido como vehículo principal',
-                                    ),
-                                    backgroundColor: const Color(0xFF10B981),
-                                  ),
-                                );
-                              }
-                            : null,
-                        onAddMaintenance: !vehicle.isArchived
-                            ? () => _goToCreateMaintenance(context, vehicle)
-                            : null,
-                        onArchive: !vehicle.isArchived
-                            ? () {
-                                context.read<VehicleListCubit>().archiveVehicle(
-                                  vehicle,
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('${vehicle.name} archivado'),
-                                    backgroundColor: const Color(0xFF6366F1),
-                                  ),
-                                );
-                              }
-                            : null,
-                        onUnarchive: vehicle.isArchived
-                            ? () {
-                                context
-                                    .read<VehicleListCubit>()
-                                    .unarchiveVehicle(vehicle);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      '${vehicle.name} desarchivado',
-                                    ),
-                                    backgroundColor: const Color(0xFF10B981),
-                                  ),
-                                );
-                              }
-                            : null,
-                        onDelete: () {
-                          _showDeleteDialog(context, vehicle);
-                        },
-                      );
-                    },
+                                  return VehicleCard(
+                                    vehicle: vehicle,
+                                    isCurrent: isCurrent,
+                                    onTap: () async {
+                                      // Navigate to edit vehicle
+                                      if (vehicle.id != null) {
+                                        await _goToEditVehicle(
+                                          context,
+                                          vehicle,
+                                        );
+                                      }
+                                    },
+                                    onSetAsCurrent: !vehicle.isArchived
+                                        ? () {
+                                            context
+                                                .read<VehicleCubit>()
+                                                .setMainVehicle(vehicle.id!);
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  '${vehicle.name} establecido como vehículo principal',
+                                                ),
+                                                backgroundColor: const Color(
+                                                  0xFF10B981,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        : null,
+                                    onAddMaintenance: !vehicle.isArchived
+                                        ? () => _goToCreateMaintenance(
+                                            context,
+                                            vehicle,
+                                          )
+                                        : null,
+                                    onArchive: !vehicle.isArchived
+                                        ? () {
+                                            context
+                                                .read<VehicleListCubit>()
+                                                .archiveVehicle(vehicle);
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  '${vehicle.name} archivado',
+                                                ),
+                                                backgroundColor: const Color(
+                                                  0xFF6366F1,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        : null,
+                                    onUnarchive: vehicle.isArchived
+                                        ? () {
+                                            context
+                                                .read<VehicleListCubit>()
+                                                .unarchiveVehicle(vehicle);
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  '${vehicle.name} desarchivado',
+                                                ),
+                                                backgroundColor: const Color(
+                                                  0xFF10B981,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        : null,
+                                    onDelete: () {
+                                      _showDeleteDialog(context, vehicle);
+                                    },
+                                  );
+                                },
+                              ),
+                      ),
+                    ],
                   ),
                 );
               },

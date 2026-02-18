@@ -9,6 +9,8 @@ import 'package:rideglory/features/maintenance/presentation/delete/cubit/mainten
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/maintenances_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/expandable_fab.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/item_card/modern_maintenance_card.dart';
+import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters_bottom_sheet.dart';
+import 'package:rideglory/features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/shared/widgets/app_drawer.dart';
@@ -44,13 +46,71 @@ class _MaintenancesPageView extends StatefulWidget {
 class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
   bool _showExpandedFab = false;
 
+  Future<void> _showFiltersBottomSheet() async {
+    final cubit = context.read<MaintenancesCubit>();
+    final vehicleListCubit = context.read<VehicleListCubit>();
+
+    final result = await showModalBottomSheet<MaintenanceFilters>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => MaintenanceFiltersBottomSheet(
+        initialFilters: cubit.filters,
+        availableVehicles: vehicleListCubit.activeVehicles,
+      ),
+    );
+
+    if (result != null && mounted) {
+      cubit.updateFilters(result);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final activeFilterCount = context
+        .watch<MaintenancesCubit>()
+        .filters
+        .activeFilterCount;
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppAppBar(
         title: 'Mantenimientos',
         actions: [
+          Stack(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.filter_list_rounded),
+                onPressed: _showFiltersBottomSheet,
+                tooltip: 'Filtros',
+              ),
+              if (activeFilterCount > 0)
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF6366F1),
+                      shape: BoxShape.circle,
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 16,
+                      minHeight: 16,
+                    ),
+                    child: Text(
+                      '$activeFilterCount',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+            ],
+          ),
           IconButton(
             icon: const Icon(Icons.directions_car_outlined),
             onPressed: () {
@@ -137,49 +197,121 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
               data: (maintenances) {
                 return RefreshIndicator(
                   onRefresh: onRefresh,
-                  child: ListView.builder(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.all(16),
-                    itemCount: maintenances.length,
-                    itemBuilder: (context, index) {
-                      final maintenance = maintenances[index];
-                      return ModernMaintenanceCard(
-                        maintenance: maintenance,
-                        onTap: () async {
-                          if (maintenance.id != null) {
-                            final result = await context.pushNamed<bool?>(
-                              AppRoutes.editMaintenance,
-                              extra: maintenance,
+                  child: Column(
+                    children: [
+                      // Search bar
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Buscar por nombre del mantenimiento',
+                            prefixIcon: const Icon(Icons.search),
+                            filled: true,
+                            fillColor: Colors.white,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Colors.grey[300]!),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(color: Colors.grey[300]!),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 14,
+                            ),
+                          ),
+                          onChanged: (value) {
+                            context.read<MaintenancesCubit>().updateSearchQuery(
+                              value,
                             );
-                            if (result == true && context.mounted) {
-                              context
-                                  .read<MaintenancesCubit>()
-                                  .fetchMaintenances();
-                            }
-                          }
-                        },
-                        onEdit: () async {
-                          if (maintenance.id != null) {
-                            final result = await context.pushNamed<bool?>(
-                              AppRoutes.editMaintenance,
-                              extra: maintenance,
-                            );
-                            if (result == true && context.mounted) {
-                              context
-                                  .read<MaintenancesCubit>()
-                                  .fetchMaintenances();
-                            }
-                          }
-                        },
-                        onDelete: () {
-                          if (maintenance.id != null) {
-                            context
-                                .read<MaintenanceDeleteCubit>()
-                                .deleteMaintenance(maintenance.id!);
-                          }
-                        },
-                      );
-                    },
+                          },
+                        ),
+                      ),
+                      // Maintenance list or empty filtered state
+                      Expanded(
+                        child: maintenances.isEmpty
+                            ? Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(32),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.search_off_rounded,
+                                        size: 80,
+                                        color: Colors.grey[400],
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        'No se encontraron resultados',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.grey[700],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'Intenta ajustar los filtros o la búsqueda',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey[500],
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : ListView.builder(
+                                physics: const AlwaysScrollableScrollPhysics(),
+                                padding: const EdgeInsets.all(16),
+                                itemCount: maintenances.length,
+                                itemBuilder: (context, index) {
+                                  final maintenance = maintenances[index];
+                                  return ModernMaintenanceCard(
+                                    maintenance: maintenance,
+                                    onTap: () async {
+                                      if (maintenance.id != null) {
+                                        final result = await context
+                                            .pushNamed<bool?>(
+                                              AppRoutes.editMaintenance,
+                                              extra: maintenance,
+                                            );
+                                        if (result == true && context.mounted) {
+                                          context
+                                              .read<MaintenancesCubit>()
+                                              .fetchMaintenances();
+                                        }
+                                      }
+                                    },
+                                    onEdit: () async {
+                                      if (maintenance.id != null) {
+                                        final result = await context
+                                            .pushNamed<bool?>(
+                                              AppRoutes.editMaintenance,
+                                              extra: maintenance,
+                                            );
+                                        if (result == true && context.mounted) {
+                                          context
+                                              .read<MaintenancesCubit>()
+                                              .fetchMaintenances();
+                                        }
+                                      }
+                                    },
+                                    onDelete: () {
+                                      if (maintenance.id != null) {
+                                        context
+                                            .read<MaintenanceDeleteCubit>()
+                                            .deleteMaintenance(maintenance.id!);
+                                      }
+                                    },
+                                  );
+                                },
+                              ),
+                      ),
+                    ],
                   ),
                 );
               },

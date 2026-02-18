@@ -23,10 +23,12 @@ class VehicleListCubit extends Cubit<ResultState<List<VehicleModel>>> {
 
   bool _showArchivedVehicles = false;
   List<VehicleModel> _allVehicles = [];
+  String _searchQuery = '';
 
   bool get showArchivedVehicles => _showArchivedVehicles;
   List<VehicleModel> get activeVehicles =>
       _allVehicles.where((v) => !v.isArchived).toList();
+  String get searchQuery => _searchQuery;
 
   Future<void> loadVehicles() async {
     emit(const ResultState.loading());
@@ -43,12 +45,38 @@ class VehicleListCubit extends Cubit<ResultState<List<VehicleModel>>> {
     _filterAndEmitVehicles();
   }
 
+  void updateSearchQuery(String query) {
+    _searchQuery = query.toLowerCase();
+    _filterAndEmitVehicles();
+  }
+
   void _filterAndEmitVehicles() {
-    final filteredVehicles = _showArchivedVehicles
+    // First filter by archived state
+    var filteredVehicles = _showArchivedVehicles
         ? _allVehicles.where((v) => v.isArchived).toList()
         : _allVehicles.where((v) => !v.isArchived).toList();
 
-    if (filteredVehicles.isEmpty) {
+    // Check if we're in archived mode with no archived vehicles and no search
+    final isArchivedEmptyNoSearch =
+        _showArchivedVehicles &&
+        filteredVehicles.isEmpty &&
+        _searchQuery.isEmpty;
+
+    // Then filter by search query
+    if (_searchQuery.isNotEmpty) {
+      filteredVehicles = filteredVehicles.where((vehicle) {
+        final name = vehicle.name.toLowerCase();
+        final licensePlate = (vehicle.licensePlate ?? '').toLowerCase();
+        final brand = (vehicle.brand ?? '').toLowerCase();
+
+        return name.contains(_searchQuery) ||
+            licensePlate.contains(_searchQuery) ||
+            brand.contains(_searchQuery);
+      }).toList();
+    }
+
+    // Emit empty only if there are no vehicles at all OR in archived mode with no archived vehicles
+    if (_allVehicles.isEmpty || isArchivedEmptyNoSearch) {
       emit(const ResultState.empty());
     } else {
       emit(ResultState.data(data: filteredVehicles));
