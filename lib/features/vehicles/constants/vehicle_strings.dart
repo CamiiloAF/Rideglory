@@ -28,6 +28,7 @@ class VehicleStrings {
   static const String vehicleUnarchived = 'desarchivado';
   static const String noVehicles = 'No tienes vehículos registrados';
   static const String noVehiclesAvailable = 'No hay vehículos disponibles';
+  static const String noArchivedVehicles = 'No hay vehículos archivados';
   static const String mainVehicle = 'Vehículo principal';
   static const String thisWillBeMainVehicle = 'Este será tu vehículo principal';
   static const String archivedVehicle = 'Vehículo Archivado';

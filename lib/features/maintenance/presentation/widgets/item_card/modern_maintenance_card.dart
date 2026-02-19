@@ -45,7 +45,7 @@ class ModernMaintenanceCard extends StatelessWidget {
     return currentMileage / nextMaintenanceMileage;
   }
 
-  double? _getRemainingDistance(int? currentMileage) {
+  int? _getRemainingDistance(int? currentMileage) {
     if (currentMileage == null || maintenance.nextMaintenanceMileage == null) {
       return null;
     }

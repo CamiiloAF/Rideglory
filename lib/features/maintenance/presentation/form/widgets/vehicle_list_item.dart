@@ -44,7 +44,6 @@ class VehicleListItem extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  // Vehicle icon
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
@@ -57,9 +56,7 @@ class VehicleListItem extends StatelessWidget {
                       vehicle.vehicleType == VehicleType.motorcycle
                           ? Icons.two_wheeler_rounded
                           : Icons.directions_car_rounded,
-                      color: isSelected
-                          ? const Color.fromARGB(255, 33, 31, 31)
-                          : context.primaryColor,
+                      color: isSelected ? Colors.white : context.primaryColor,
                       size: 24,
                     ),
                   ),

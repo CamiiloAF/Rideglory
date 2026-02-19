@@ -66,4 +66,8 @@ class AuthStrings {
   static const String logoutConfirmTitle = 'Cerrar sesión';
   static const String logoutConfirmMessage =
       '¿Estás seguro de que deseas cerrar sesión?';
+
+  // Exit confirmation
+  static const String exitLoginTitle = 'Salir del inicio de sesión';
+  static const String exitLoginMessage = '¿Estás seguro de que deseas salir?';
 }

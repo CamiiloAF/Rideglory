@@ -29,6 +29,7 @@ class MaintenanceStrings {
   static const String nextMaintenance = 'Próximo mantenimiento';
   static const String nextMaintenanceMileage =
       'Kilometraje del próximo mantenimiento';
+  static String get distanceUnit => 'Unidad';
 
   // Status
   static const String urgent = 'Urgente';

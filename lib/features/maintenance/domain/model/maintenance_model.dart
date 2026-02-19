@@ -27,10 +27,10 @@ class MaintenanceModel {
   final String? notes;
   final DateTime date;
   final DateTime? nextMaintenanceDate;
-  final double maintanceMileage;
+  final int maintanceMileage;
   final DistanceUnit distanceUnit;
   final bool receiveAlert;
-  final double? nextMaintenanceMileage;
+  final int? nextMaintenanceMileage;
   final DateTime? createdDate;
   final DateTime? updatedDate;
 
@@ -58,10 +58,10 @@ class MaintenanceModel {
     String? notes,
     DateTime? date,
     DateTime? nextMaintenanceDate,
-    double? maintanceMileage,
+    int? maintanceMileage,
     DistanceUnit? distanceUnit,
     bool? receiveAlert,
-    double? nextMaintenanceMileage,
+    int? nextMaintenanceMileage,
     String? userId,
     String? vehicleId,
     DateTime? createdDate,

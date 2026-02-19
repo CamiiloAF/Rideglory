@@ -11,7 +11,7 @@ class MaintenanceMileageInfo extends StatelessWidget {
   final Color typeColor;
   final int? currentMileage;
   final double? progressPercent;
-  final double? Function(int?) getRemainingDistance;
+  final int? Function(int?) getRemainingDistance;
 
   const MaintenanceMileageInfo({
     super.key,

@@ -2,10 +2,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 
 enum VehicleType {
-  @JsonValue('car')
-  car('Carro'),
   @JsonValue('motorcycle')
-  motorcycle('Moto');
+  motorcycle('Moto'),
+  @JsonValue('car')
+  car('Carro');
 
   final String label;
   const VehicleType(this.label);

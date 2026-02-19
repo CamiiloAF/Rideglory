@@ -201,6 +201,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
               labelText: MaintenanceStrings.maintenanceName,
               isRequired: true,
               prefixIcon: Icons.build,
+              textInputAction: TextInputAction.next,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(
                   errorText: MaintenanceStrings.nameRequired,
@@ -257,6 +258,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
               validatorsType: MileageValidatorsType.currentMileage,
               distanceUnitFieldName: MaintenanceFormFields.distanceUnit,
               mileageFieldName: MaintenanceFormFields.currentMileage,
+              textInputAction: TextInputAction.next,
             ),
 
             const SizedBox(height: 16),
@@ -268,6 +270,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
               prefixIcon: Icons.notes,
               maxLines: 4,
               minLines: 1,
+              textInputAction: TextInputAction.done,
             ),
             const SizedBox(height: 16),
 

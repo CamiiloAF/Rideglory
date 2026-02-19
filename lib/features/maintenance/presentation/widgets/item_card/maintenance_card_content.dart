@@ -17,7 +17,7 @@ class MaintenanceCardContent extends StatelessWidget {
   final double? progressPercent;
   final bool isUrgent;
   final int? daysUntilNext;
-  final double? Function(int?) getRemainingDistance;
+  final int? Function(int?) getRemainingDistance;
   final VoidCallback? onTap;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;

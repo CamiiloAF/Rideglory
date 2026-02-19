@@ -8,21 +8,22 @@ class AppCheckbox extends StatelessWidget {
     required this.title,
     this.initialValue = false,
     this.enabled = true,
+    this.customTitle,
   });
 
   final String name;
   final String title;
   final bool initialValue;
   final bool enabled;
+  final Widget? customTitle;
 
   @override
   Widget build(BuildContext context) {
     return FormBuilderCheckbox(
       name: name,
-      title: Text(title),
+      title: customTitle ?? Text(title),
       initialValue: initialValue,
       enabled: enabled,
-      decoration: const InputDecoration(border: InputBorder.none),
     );
   }
 }

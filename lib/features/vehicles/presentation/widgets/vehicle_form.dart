@@ -53,7 +53,8 @@ class VehicleForm extends StatelessWidget {
             labelText: VehicleStrings.vehicleName,
             isRequired: true,
             hintText: VehicleStrings.vehicleNameHint,
-            prefixIcon: Icons.directions_car,
+            prefixIcon: Icons.label,
+            textInputAction: TextInputAction.next,
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(
                 errorText: VehicleStrings.nameRequired,
@@ -72,7 +73,7 @@ class VehicleForm extends StatelessWidget {
             validator: FormBuilderValidators.required(
               errorText: VehicleStrings.vehicleTypeRequired,
             ),
-            prefixIcon: const Icon(Icons.drive_eta),
+            prefixIcon: const Icon(Icons.category),
             items: VehicleType.values
                 .map(
                   (type) =>
@@ -90,6 +91,7 @@ class VehicleForm extends StatelessWidget {
                   labelText: VehicleStrings.vehicleBrand,
                   hintText: VehicleStrings.vehicleBrandHint,
                   prefixIcon: Icons.local_offer,
+                  textInputAction: TextInputAction.next,
                 ),
               ),
 
@@ -101,6 +103,7 @@ class VehicleForm extends StatelessWidget {
                   hintText: VehicleStrings.vehicleYearHint,
                   prefixIcon: Icons.calendar_today,
                   keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.next,
                   validator: FormBuilderValidators.compose([
                     FormBuilderValidators.numeric(
                       errorText: AppStrings.mustBeNumber,
@@ -126,7 +129,8 @@ class VehicleForm extends StatelessWidget {
             name: VehicleFormFields.model,
             labelText: VehicleStrings.vehicleModel,
             hintText: VehicleStrings.vehicleModelHint,
-            prefixIcon: Icons.directions_car_filled,
+            prefixIcon: Icons.style,
+            textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: 16),
 
@@ -134,6 +138,7 @@ class VehicleForm extends StatelessWidget {
             validatorsType: MileageValidatorsType.currentMileage,
             mileageFieldName: VehicleFormFields.currentMileage,
             distanceUnitFieldName: VehicleFormFields.distanceUnit,
+            textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: 16),
 
@@ -142,6 +147,7 @@ class VehicleForm extends StatelessWidget {
             labelText: VehicleStrings.vehiclePlate,
             hintText: VehicleStrings.vehiclePlateHint,
             prefixIcon: Icons.confirmation_number,
+            textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: 16),
 
@@ -150,6 +156,7 @@ class VehicleForm extends StatelessWidget {
             labelText: VehicleStrings.vehicleVin,
             hintText: VehicleStrings.vehicleVinHint,
             prefixIcon: Icons.pin,
+            textInputAction: TextInputAction.done,
           ),
           const SizedBox(height: 16),
 

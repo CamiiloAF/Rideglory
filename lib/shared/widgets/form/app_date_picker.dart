@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:rideglory/shared/widgets/form/app_text_field_label.dart';
+import 'package:rideglory/shared/widgets/form/text_field_label.dart';
 
 class AppDatePicker extends StatelessWidget {
   const AppDatePicker({
@@ -11,13 +11,13 @@ class AppDatePicker extends StatelessWidget {
     this.firstDate,
     this.lastDate,
     this.isRequired = false,
-    this.hint,
+    this.hintText,
     this.prefixIcon,
   });
 
   final String fieldName;
   final String labelText;
-  final String? hint;
+  final String? hintText;
   final DateTime? initialValue;
   final DateTime? firstDate;
   final DateTime? lastDate;
@@ -29,7 +29,6 @@ class AppDatePicker extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        AppTextFieldLabel(labelText: labelText, isRequired: isRequired),
         FormBuilderDateTimePicker(
           name: fieldName,
           initialValue: initialValue,
@@ -37,7 +36,8 @@ class AppDatePicker extends StatelessWidget {
           firstDate: firstDate,
           lastDate: lastDate,
           decoration: InputDecoration(
-            hintText: hint ?? labelText,
+            hintText: hintText,
+            label: TextFieldLabel(labelText: labelText, isRequired: isRequired),
             border: const OutlineInputBorder(),
             prefixIcon: prefixIcon ?? const Icon(Icons.event),
           ),

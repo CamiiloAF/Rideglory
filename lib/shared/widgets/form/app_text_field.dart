@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:rideglory/shared/widgets/form/app_text_field_label.dart';
+import 'package:rideglory/shared/widgets/form/text_field_label.dart';
 
 class AppTextField extends StatelessWidget {
   final String name;
   final String? labelText;
   final IconData? prefixIcon;
+  final Widget? suffixIcon;
   final String? Function(String?)? validator;
   final String? initialValue;
   final int? maxLines;
@@ -17,12 +18,17 @@ class AppTextField extends StatelessWidget {
   final String? hintText;
   final void Function(String?)? onChanged;
   final AutovalidateMode? autovalidateMode;
+  final bool obscureText;
+  final TextInputAction? textInputAction;
+  final void Function(String?)? onFieldSubmitted;
+  final FocusNode? focusNode;
 
   const AppTextField({
     super.key,
     required this.name,
     this.labelText,
     this.prefixIcon,
+    this.suffixIcon,
     this.validator,
     this.initialValue,
     this.maxLines = 1,
@@ -33,6 +39,10 @@ class AppTextField extends StatelessWidget {
     this.hintText,
     this.onChanged,
     this.autovalidateMode,
+    this.obscureText = false,
+    this.textInputAction,
+    this.onFieldSubmitted,
+    this.focusNode,
   });
 
   @override
@@ -40,15 +50,16 @@ class AppTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (labelText != null)
-          AppTextFieldLabel(labelText: labelText!, isRequired: isRequired),
-
         FormBuilderTextField(
           name: name,
           decoration: InputDecoration(
             border: const OutlineInputBorder(),
             prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
-            hintText: hintText ?? labelText,
+            suffixIcon: suffixIcon,
+            hintText: hintText,
+            label: labelText != null
+                ? TextFieldLabel(labelText: labelText!, isRequired: isRequired)
+                : null,
           ),
           initialValue: initialValue,
           maxLines: maxLines,
@@ -60,6 +71,10 @@ class AppTextField extends StatelessWidget {
               ? FormBuilderValidators.compose([validator!])
               : null,
           autovalidateMode: autovalidateMode,
+          obscureText: obscureText,
+          textInputAction: textInputAction,
+          onSubmitted: onFieldSubmitted,
+          focusNode: focusNode,
         ),
       ],
     );

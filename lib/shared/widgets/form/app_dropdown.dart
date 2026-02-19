@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:rideglory/shared/widgets/form/app_text_field_label.dart';
+import 'package:rideglory/shared/widgets/form/text_field_label.dart';
 
 class AppDropdown<T> extends StatelessWidget {
   const AppDropdown({
@@ -24,13 +24,12 @@ class AppDropdown<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (labelText != null)
-          AppTextFieldLabel(labelText: labelText!, isRequired: isRequired),
-
         FormBuilderDropdown<T>(
           name: name,
           decoration: InputDecoration(
-            hintText: labelText,
+            label: labelText != null
+                ? TextFieldLabel(labelText: labelText!, isRequired: isRequired)
+                : null,
             border: const OutlineInputBorder(),
             prefixIcon: prefixIcon,
           ),

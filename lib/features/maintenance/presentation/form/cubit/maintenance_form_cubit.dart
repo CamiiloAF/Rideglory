@@ -70,7 +70,7 @@ class MaintenanceFormCubit extends Cubit<MaintenanceFormState> {
         date: formData[MaintenanceFormFields.date] as DateTime,
         nextMaintenanceDate:
             formData[MaintenanceFormFields.nextMaintenanceDate] as DateTime?,
-        maintanceMileage: double.parse(
+        maintanceMileage: int.parse(
           formData[MaintenanceFormFields.currentMileage] as String,
         ),
         distanceUnit:
@@ -82,7 +82,7 @@ class MaintenanceFormCubit extends Cubit<MaintenanceFormState> {
                 (formData[MaintenanceFormFields.nextMaintenanceMileage]
                         as String)
                     .isNotEmpty
-            ? double.parse(
+            ? int.parse(
                 formData[MaintenanceFormFields.nextMaintenanceMileage]
                     as String,
               )

@@ -209,7 +209,7 @@ class _VehicleListViewState extends State<_VehicleListView> {
                       ? Icons.inventory_2_outlined
                       : Icons.directions_car_outlined,
                   title: showingArchived
-                      ? VehicleStrings.archivedVehicleMessage
+                      ? VehicleStrings.noArchivedVehicles
                       : VehicleStrings.noVehicles,
                   description: showingArchived
                       ? VehicleStrings.archiveVehiclesDescription
