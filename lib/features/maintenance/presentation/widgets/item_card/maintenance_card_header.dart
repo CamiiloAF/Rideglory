@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
-/// Widget para el encabezado de la tarjeta de mantenimiento
 class MaintenanceCardHeader extends StatelessWidget {
   final MaintenanceModel maintenance;
   final Color typeColor;
@@ -45,10 +45,8 @@ class MaintenanceCardHeader extends StatelessWidget {
             children: [
               Text(
                 maintenance.name,
-                style: const TextStyle(
-                  fontSize: 18,
+                style: context.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF1E293B),
                   letterSpacing: -0.5,
                 ),
               ),
@@ -64,8 +62,7 @@ class MaintenanceCardHeader extends StatelessWidget {
                 ),
                 child: Text(
                   maintenance.type.label,
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: context.labelSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: typeColor,
                   ),

@@ -81,6 +81,8 @@ String _getFirebaseAuthErrorMessage(String? code) {
       return 'Password is too weak';
     case 'invalid-email':
       return 'Invalid email address';
+    case 'invalid-credential':
+      return 'Invalid credentials';
     case 'user-disabled':
       return 'User account has been disabled';
     case 'too-many-requests':

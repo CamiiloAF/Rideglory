@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class DrawerMenuItem extends StatelessWidget {
   final IconData icon;
@@ -40,10 +41,9 @@ class DrawerMenuItem extends StatelessWidget {
         ),
         title: Text(
           title,
-          style: TextStyle(
+          style: context.bodyMedium?.copyWith(
             color: isSelected ? selectedColor : defaultTextColor,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-            fontSize: 15,
           ),
         ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

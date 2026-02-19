@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class AppTextFieldLabel extends StatelessWidget {
   const AppTextFieldLabel({
@@ -18,19 +19,14 @@ class AppTextFieldLabel extends StatelessWidget {
         children: [
           Text(
             labelText,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF1F2937),
-            ),
+            style: context.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
           ),
           if (isRequired)
             Text(
               ' *',
-              style: TextStyle(
-                fontSize: 14,
+              style: context.bodyMedium?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: Color(0xFFEF4444),
+                color: context.errorColor,
               ),
             ),
         ],

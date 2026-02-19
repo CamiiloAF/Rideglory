@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
+import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/core/constants/app_strings.dart';
+import 'package:rideglory/shared/widgets/info_chip.dart';
 
 class VehicleCard extends StatelessWidget {
   final VehicleModel vehicle;
@@ -88,12 +93,9 @@ class VehicleCard extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   vehicle.name,
-                                  style: const TextStyle(
-                                    fontSize: 17,
+                                  style: context.titleMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
-                                    color: Color(0xFF1F2937),
                                     letterSpacing: -0.5,
-                                    height: 1.2,
                                   ),
                                 ),
                               ),
@@ -182,9 +184,7 @@ class VehicleCard extends StatelessWidget {
                                 vehicle.brand,
                                 vehicle.model,
                               ].where((e) => e != null).join(' '),
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey[600],
+                              style: context.bodyMedium?.copyWith(
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -212,7 +212,7 @@ class VehicleCard extends StatelessWidget {
                                   color: Colors.grey[700],
                                 ),
                                 const SizedBox(width: 12),
-                                const Text('Editar'),
+                                const Text(AppStrings.edit),
                               ],
                             ),
                           ),
@@ -227,7 +227,7 @@ class VehicleCard extends StatelessWidget {
                                     color: Colors.grey[700],
                                   ),
                                   const SizedBox(width: 12),
-                                  const Text('Establecer como principal'),
+                                  const Text(VehicleStrings.setAsMain),
                                 ],
                               ),
                             ),
@@ -242,7 +242,9 @@ class VehicleCard extends StatelessWidget {
                                     color: Colors.grey[700],
                                   ),
                                   const SizedBox(width: 12),
-                                  const Text('Agregar mantenimiento'),
+                                  const Text(
+                                    MaintenanceStrings.addMaintenanceAction,
+                                  ),
                                 ],
                               ),
                             ),
@@ -257,7 +259,7 @@ class VehicleCard extends StatelessWidget {
                                     color: Colors.grey[700],
                                   ),
                                   const SizedBox(width: 12),
-                                  const Text('Archivar'),
+                                  const Text(VehicleStrings.archiveVehicle),
                                 ],
                               ),
                             ),
@@ -272,7 +274,7 @@ class VehicleCard extends StatelessWidget {
                                     color: Colors.grey[700],
                                   ),
                                   const SizedBox(width: 12),
-                                  const Text('Desarchivar'),
+                                  const Text(VehicleStrings.unarchiveVehicle),
                                 ],
                               ),
                             ),
@@ -287,7 +289,7 @@ class VehicleCard extends StatelessWidget {
                                 ),
                                 SizedBox(width: 12),
                                 Text(
-                                  'Eliminar',
+                                  AppStrings.delete,
                                   style: TextStyle(color: Colors.red),
                                 ),
                               ],
@@ -321,20 +323,20 @@ class VehicleCard extends StatelessWidget {
                   spacing: 8,
                   runSpacing: 8,
                   children: [
-                    _InfoChip(
+                    InfoChip(
                       icon: Icons.speed_rounded,
                       label:
                           '${vehicle.currentMileage} ${vehicle.distanceUnit.label}',
                       color: const Color(0xFF6366F1),
                     ),
                     if (vehicle.year != null)
-                      _InfoChip(
+                      InfoChip(
                         icon: Icons.calendar_today_rounded,
                         label: vehicle.year.toString(),
                         color: const Color(0xFF10B981),
                       ),
                     if (vehicle.licensePlate != null)
-                      _InfoChip(
+                      InfoChip(
                         icon: Icons.badge_rounded,
                         label: vehicle.licensePlate!,
                         color: const Color(0xFFF59E0B),
@@ -345,46 +347,6 @@ class VehicleCard extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _InfoChip extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final Color color;
-
-  const _InfoChip({
-    required this.icon,
-    required this.label,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: .1),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: color.withValues(alpha: .2), width: 1),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 15, color: color),
-          const SizedBox(width: 5),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12.5,
-              color: color,
-              fontWeight: FontWeight.w600,
-              height: 1,
-            ),
-          ),
-        ],
       ),
     );
   }

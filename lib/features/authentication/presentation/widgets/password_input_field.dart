@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/features/authentication/constants/auth_strings.dart';
 
 /// Custom password input field widget
 class PasswordInputField extends StatefulWidget {
@@ -17,7 +20,7 @@ class PasswordInputField extends StatefulWidget {
     this.validator,
     this.onChanged,
     this.enabled = true,
-    this.label = 'Ingrese su contraseña',
+    this.label = AuthStrings.enterPassword,
     this.textInputAction,
     this.onFieldSubmitted,
     this.focusNode,
@@ -43,14 +46,14 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
           boxShadow: _isFocused
               ? [
                   BoxShadow(
-                    color: const Color(0xFF6366F1).withValues(alpha: .2),
+                    color: AppColors.primaryShadow(opacity: 0.2),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
                 ]
               : [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: .05),
+                    color: AppColors.shadowLight,
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),
@@ -73,10 +76,10 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
           autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: InputDecoration(
             hintText: widget.label,
-            hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16),
+            hintStyle: TextStyle(color: AppColors.textTertiary, fontSize: 16),
             prefixIcon: Icon(
               Icons.lock_rounded,
-              color: _isFocused ? const Color(0xFF6366F1) : Colors.grey[400],
+              color: _isFocused ? context.primaryColor : AppColors.textTertiary,
               size: 20,
             ),
             suffixIcon: GestureDetector(
@@ -87,32 +90,31 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
                 _isPasswordVisible
                     ? Icons.visibility_rounded
                     : Icons.visibility_off_rounded,
-                color: _isFocused ? const Color(0xFF6366F1) : Colors.grey[400],
+                color: _isFocused
+                    ? context.primaryColor
+                    : AppColors.textTertiary,
                 size: 20,
               ),
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey[200]!),
+              borderSide: const BorderSide(color: AppColors.border),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey[200]!, width: 1.5),
+              borderSide: const BorderSide(color: AppColors.border, width: 1.5),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF6366F1), width: 2),
+              borderSide: BorderSide(color: context.primaryColor, width: 2),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(
-                color: Color(0xFFEF4444),
-                width: 1.5,
-              ),
+              borderSide: BorderSide(color: context.errorColor, width: 1.5),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFFEF4444), width: 2),
+              borderSide: BorderSide(color: context.errorColor, width: 2),
             ),
             filled: true,
             fillColor: Colors.white,
@@ -120,16 +122,13 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
               horizontal: 16,
               vertical: 14,
             ),
-            errorStyle: const TextStyle(
+            errorStyle: TextStyle(
               fontSize: 12,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.normal,
+              color: context.errorColor,
             ),
           ),
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[900],
-            fontWeight: FontWeight.w500,
-          ),
+          style: context.bodyLarge,
         ),
       ),
     );

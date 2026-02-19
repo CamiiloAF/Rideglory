@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class AppBottomSheet<T> extends StatelessWidget {
   final String title;
@@ -46,18 +47,13 @@ class AppBottomSheet<T> extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
-                    fontSize: 24,
+                  style: context.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF1F2937),
                   ),
                 ),
                 if (description != null) ...[
                   const SizedBox(height: 4),
-                  Text(
-                    description!,
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                  ),
+                  Text(description!, style: context.bodyMedium),
                 ],
               ],
             ),

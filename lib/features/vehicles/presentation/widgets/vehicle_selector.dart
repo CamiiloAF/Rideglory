@@ -4,6 +4,8 @@ import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 
 class VehicleSelector extends StatelessWidget {
   const VehicleSelector({super.key});
@@ -60,7 +62,7 @@ class VehicleSelector extends StatelessWidget {
                           child: DropdownButton<VehicleModel>(
                             value: currentVehicle,
                             isExpanded: true,
-                            hint: const Text('Select a vehicle'),
+                            hint: Text(VehicleStrings.selectVehicle),
                             items: vehicles.map((vehicle) {
                               return DropdownMenuItem<VehicleModel>(
                                 value: vehicle,
@@ -70,9 +72,8 @@ class VehicleSelector extends StatelessWidget {
                                   children: [
                                     Text(
                                       vehicle.name,
-                                      style: const TextStyle(
+                                      style: context.bodyMedium?.copyWith(
                                         fontWeight: FontWeight.w600,
-                                        fontSize: 14,
                                       ),
                                     ),
                                     if (vehicle.brand != null ||
@@ -82,10 +83,7 @@ class VehicleSelector extends StatelessWidget {
                                           vehicle.brand,
                                           vehicle.model,
                                         ].where((e) => e != null).join(' '),
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey[600],
-                                        ),
+                                        style: context.bodySmall,
                                       ),
                                   ],
                                 ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 
 class SelectedVehicleCard extends StatelessWidget {
   final VehicleModel vehicle;
@@ -73,7 +75,7 @@ class SelectedVehicleCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Vehículo',
+                    MaintenanceStrings.vehicle,
                     style: TextStyle(
                       fontSize: 12,
                       color: Color(0xFF6366F1),
@@ -84,11 +86,8 @@ class SelectedVehicleCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     vehicle.name,
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: context.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF1F2937),
-                      height: 1.2,
                     ),
                   ),
                   if (vehicle.brand != null || vehicle.model != null) ...[
@@ -98,11 +97,7 @@ class SelectedVehicleCard extends StatelessWidget {
                         vehicle.brand,
                         vehicle.model,
                       ].where((e) => e != null).join(' '),
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey[600],
-                        height: 1.3,
-                      ),
+                      style: context.bodyMedium?.copyWith(height: 1.3),
                     ),
                   ],
                 ],

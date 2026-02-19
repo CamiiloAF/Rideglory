@@ -8,6 +8,14 @@ import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dar
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/shared/widgets/drawer_menu_item.dart';
 import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
+import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/core/constants/app_strings.dart';
+import 'package:rideglory/features/authentication/constants/auth_strings.dart';
+import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
+import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 
 class AppDrawer extends StatelessWidget {
   final String currentRoute;
@@ -39,7 +47,7 @@ class AppDrawer extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [const Color(0xFF6366F1), const Color(0xFF8B5CF6)],
+                  colors: AppColors.primaryGradient,
                 ),
               ),
               child: Column(
@@ -55,16 +63,15 @@ class AppDrawer extends StatelessWidget {
                       currentVehicle?.vehicleType == VehicleType.motorcycle
                           ? Icons.two_wheeler_rounded
                           : Icons.directions_car_rounded,
-                      color: const Color(0xFF6366F1),
+                      color: context.primaryColor,
                       size: 32,
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'RideGlory',
-                    style: TextStyle(
+                  Text(
+                    AppStrings.appName,
+                    style: context.headlineMedium?.copyWith(
                       color: Colors.white,
-                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                       letterSpacing: -0.5,
                     ),
@@ -73,9 +80,8 @@ class AppDrawer extends StatelessWidget {
                   if (currentVehicle != null)
                     Text(
                       currentVehicle.name,
-                      style: TextStyle(
+                      style: context.bodyMedium?.copyWith(
                         color: Colors.white.withValues(alpha: 0.9),
-                        fontSize: 14,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -91,7 +97,7 @@ class AppDrawer extends StatelessWidget {
                 children: [
                   DrawerMenuItem(
                     icon: Icons.build_circle_outlined,
-                    title: 'Mantenimientos',
+                    title: MaintenanceStrings.maintenances,
                     isSelected: currentRoute == AppRoutes.maintenances,
                     onTap: () {
                       Navigator.pop(context);
@@ -102,7 +108,7 @@ class AppDrawer extends StatelessWidget {
                   ),
                   DrawerMenuItem(
                     icon: Icons.directions_car_outlined,
-                    title: 'Mis Vehículos',
+                    title: VehicleStrings.myVehicles,
                     isSelected: currentRoute == AppRoutes.vehicles,
                     onTap: () {
                       Navigator.pop(context);
@@ -112,14 +118,16 @@ class AppDrawer extends StatelessWidget {
                   const Divider(height: 32),
                   DrawerMenuItem(
                     icon: Icons.settings_outlined,
-                    title: 'Configuración',
+                    title: AppStrings.settings,
                     isSelected: false,
                     onTap: () {
                       Navigator.pop(context);
                       // Navigate to settings when implemented
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Configuración próximamente'),
+                        SnackBar(
+                          content: Text(
+                            '${AppStrings.settings} ${AppStrings.comingSoon}',
+                          ),
                         ),
                       );
                     },
@@ -132,29 +140,25 @@ class AppDrawer extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                border: Border(top: BorderSide(color: Colors.grey[200]!)),
+                border: Border(top: BorderSide(color: AppColors.border)),
               ),
               child: DrawerMenuItem(
                 icon: Icons.logout_outlined,
-                title: 'Cerrar sesión',
+                title: AuthStrings.logout,
                 isSelected: false,
-                textColor: Colors.red,
-                iconColor: Colors.red,
-                onTap: () async {
-                  Navigator.pop(context);
-                  final confirm = await AppDialogHelper.showConfirmation(
+                textColor: context.errorColor,
+                iconColor: context.errorColor,
+                onTap: () {
+                  ConfirmationDialog.show(
                     context: context,
-                    title: 'Cerrar sesión',
-                    content: '¿Estás seguro de que deseas cerrar sesión?',
-                    cancelLabel: 'Cancelar',
-                    confirmLabel: 'Cerrar sesión',
+                    title: AuthStrings.logoutConfirmTitle,
+                    content: AuthStrings.logoutConfirmMessage,
+                    cancelLabel: AppStrings.cancel,
+                    confirmLabel: AuthStrings.logout,
                     confirmType: DialogActionType.danger,
                     dialogType: DialogType.warning,
+                    onConfirm: () => _logout(context),
                   );
-
-                  if (confirm == true && context.mounted) {
-                    _logout(context);
-                  }
                 },
               ),
             ),

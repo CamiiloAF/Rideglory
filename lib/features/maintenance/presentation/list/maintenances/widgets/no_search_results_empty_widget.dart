@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class NoSearchResultsEmptyWidget extends StatelessWidget {
   const NoSearchResultsEmptyWidget({super.key});
@@ -11,27 +12,16 @@ class NoSearchResultsEmptyWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.search_off_rounded,
-              size: 80,
-              color: Colors.grey[400],
-            ),
+            Icon(Icons.search_off_rounded, size: 80, color: Colors.grey[400]),
             const SizedBox(height: 16),
             Text(
               'No se encontraron resultados',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey[700],
-              ),
+              style: context.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             Text(
               'Intenta ajustar los filtros o la búsqueda',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[500],
-              ),
+              style: context.bodyMedium,
               textAlign: TextAlign.center,
             ),
           ],

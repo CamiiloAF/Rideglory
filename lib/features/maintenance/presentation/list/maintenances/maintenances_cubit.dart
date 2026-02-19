@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/domain/use_cases/get_maintenance_list_use_case.dart';
-import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters_bottom_sheet.dart';
+import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters.dart';
 
 class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
   MaintenancesCubit(this._getMaintenancesUseCase)
@@ -89,6 +89,9 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
     if (_filters.showUrgentOnly == true) {
       final now = DateTime.now();
       filtered = filtered.where((m) {
+        // Must have alerts enabled
+        if (!m.receiveAlert) return false;
+
         if (m.nextMaintenanceDate != null) {
           final daysUntil = m.nextMaintenanceDate!.difference(now).inDays;
           // Urgent if overdue (negative) or within 7 days (0-6 days)

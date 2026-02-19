@@ -3,6 +3,10 @@ import 'package:rideglory/features/maintenance/domain/model/maintenance_model.da
 import 'package:rideglory/features/maintenance/presentation/widgets/item_card/maintenance_card_body.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
+import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
+import 'package:rideglory/core/constants/app_strings.dart';
+import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
+import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 
 class MaintenanceCardContent extends StatelessWidget {
   final MaintenanceModel maintenance;
@@ -40,16 +44,23 @@ class MaintenanceCardContent extends StatelessWidget {
       key: Key(maintenance.id ?? maintenance.hashCode.toString()),
       direction: DismissDirection.endToStart,
       confirmDismiss: (direction) async {
-        return await AppDialogHelper.showConfirmation(
+        bool confirmed = false;
+
+        await ConfirmationDialog.show(
           context: context,
-          title: 'Eliminar mantenimiento',
-          content:
-              '¿Estás seguro de que deseas eliminar este mantenimiento? Esta acción no se puede deshacer.',
-          cancelLabel: 'Cancelar',
-          confirmLabel: 'Eliminar',
+          title: MaintenanceStrings.deleteMaintenance,
+          content: MaintenanceStrings.deleteMaintenanceMessage,
+          cancelLabel: AppStrings.cancel,
+          confirmLabel: AppStrings.delete,
           confirmType: DialogActionType.danger,
           dialogType: DialogType.warning,
+          onConfirm: () {
+            confirmed = true;
+            onDelete?.call();
+          },
         );
+
+        return confirmed;
       },
       onDismissed: (direction) {
         onDelete?.call();
@@ -68,7 +79,7 @@ class MaintenanceCardContent extends StatelessWidget {
             Icon(Icons.delete_outline, color: Colors.white, size: 32),
             SizedBox(height: 4),
             Text(
-              'Eliminar',
+              AppStrings.delete,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,

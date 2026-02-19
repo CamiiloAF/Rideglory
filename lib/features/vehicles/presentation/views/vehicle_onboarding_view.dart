@@ -3,16 +3,25 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
+import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
+import 'package:rideglory/features/vehicles/constants/vehicle_form_fields.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
-import 'package:rideglory/features/vehicles/presentation/widgets/vehicle_form.dart';
+import 'package:rideglory/features/vehicles/presentation/widgets/onboarding/vehicle_onboarding_header.dart';
+import 'package:rideglory/features/vehicles/presentation/widgets/onboarding/vehicle_onboarding_counter.dart';
+import 'package:rideglory/features/vehicles/presentation/widgets/onboarding/vehicle_onboarding_page_indicator.dart';
+import 'package:rideglory/features/vehicles/presentation/widgets/onboarding/vehicle_onboarding_form_page.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/shared/widgets/form/app_button.dart';
 import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
+import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
+import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 
 class VehicleOnboardingView extends StatefulWidget {
   const VehicleOnboardingView({super.key});
@@ -45,18 +54,19 @@ class _VehicleOnboardingViewState extends State<VehicleOnboardingView> {
     FocusScope.of(context).unfocus();
   }
 
-  Future<bool> _showExitConfirmationDialog() async {
-    final result = await AppDialogHelper.showConfirmation(
+  void _showExitConfirmationDialog() {
+    ConfirmationDialog.show(
       context: context,
-      title: '¿Salir de la configuración?',
-      content:
-          'Necesitas agregar al menos un vehículo para usar la aplicación. Si sales ahora, la aplicación se cerrará y perderás tu progreso',
-      cancelLabel: 'Cancelar',
-      confirmLabel: 'Salir',
+      title: VehicleStrings.exitSetup,
+      content: VehicleStrings.exitSetupMessage,
+      cancelLabel: AppStrings.cancel,
+      confirmLabel: AppStrings.exit,
       confirmType: DialogActionType.danger,
       dialogType: DialogType.warning,
+      onConfirm: () {
+        SystemNavigator.pop();
+      },
     );
-    return result ?? false;
   }
 
   void _addVehicle() {
@@ -102,7 +112,7 @@ class _VehicleOnboardingViewState extends State<VehicleOnboardingView> {
     if (!allValid) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Por favor completa todos los campos requeridos'),
+          content: Text(VehicleStrings.completeRequiredFields),
           backgroundColor: Color(0xFFEF4444),
         ),
       );
@@ -116,25 +126,30 @@ class _VehicleOnboardingViewState extends State<VehicleOnboardingView> {
       final isFirstVehicle = index == 0;
 
       return VehicleModel(
-        name: formData['name'] as String,
-        brand: (formData['brand'] as String?)?.isEmpty ?? true
+        name: formData[VehicleFormFields.name] as String,
+        brand: (formData[VehicleFormFields.brand] as String?)?.isEmpty ?? true
             ? null
-            : formData['brand'] as String?,
-        model: (formData['model'] as String?)?.isEmpty ?? true
+            : formData[VehicleFormFields.brand] as String?,
+        model: (formData[VehicleFormFields.model] as String?)?.isEmpty ?? true
             ? null
-            : formData['model'] as String?,
+            : formData[VehicleFormFields.model] as String?,
         year:
-            formData['year'] != null && (formData['year'] as String).isNotEmpty
-            ? int.tryParse(formData['year'] as String)
+            formData[VehicleFormFields.year] != null &&
+                (formData[VehicleFormFields.year] as String).isNotEmpty
+            ? int.tryParse(formData[VehicleFormFields.year] as String)
             : null,
-        currentMileage: int.parse(formData['currentMileage'] as String),
-        distanceUnit: formData['distanceUnit'] as DistanceUnit,
-        licensePlate: (formData['licensePlate'] as String?)?.isEmpty ?? true
+        currentMileage: int.parse(
+          formData[VehicleFormFields.currentMileage] as String,
+        ),
+        distanceUnit: formData[VehicleFormFields.distanceUnit] as DistanceUnit,
+        licensePlate:
+            (formData[VehicleFormFields.licensePlate] as String?)?.isEmpty ??
+                true
             ? null
-            : formData['licensePlate'] as String?,
-        vin: (formData['vin'] as String?)?.isEmpty ?? true
+            : formData[VehicleFormFields.licensePlate] as String?,
+        vin: (formData[VehicleFormFields.vin] as String?)?.isEmpty ?? true
             ? null
-            : formData['vin'] as String?,
+            : formData[VehicleFormFields.vin] as String?,
         isMainVehicle: isFirstVehicle, // First vehicle is always main
       );
     }).toList();
@@ -179,13 +194,10 @@ class _VehicleOnboardingViewState extends State<VehicleOnboardingView> {
         builder: (context, state) {
           return PopScope(
             canPop: false,
-            onPopInvokedWithResult: (didPop, result) async {
+            onPopInvokedWithResult: (didPop, result) {
               if (didPop) return;
 
-              final shouldExit = await _showExitConfirmationDialog();
-              if (shouldExit && context.mounted) {
-                SystemNavigator.pop();
-              }
+              _showExitConfirmationDialog();
             },
             child: Scaffold(
               backgroundColor: Colors.white,
@@ -193,90 +205,22 @@ class _VehicleOnboardingViewState extends State<VehicleOnboardingView> {
                 child: Column(
                   children: [
                     // Header
-                    Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '¡Bienvenido! 🎉',
-                            style: TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xFF1F2937),
-                              letterSpacing: -0.5,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Agrega al menos un vehículo para comenzar',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    const VehicleOnboardingHeader(),
 
                     // Vehicle counter and add button
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Vehículo ${_currentPage + 1} de ${_formKeys.length}',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              if (_formKeys.length > 1)
-                                IconButton(
-                                  onPressed: () => _removeVehicle(_currentPage),
-                                  icon: const Icon(Icons.remove_circle_outline),
-                                  color: const Color(0xFFEF4444),
-                                  tooltip: 'Eliminar vehículo',
-                                ),
-                              IconButton(
-                                onPressed: _addVehicle,
-                                icon: const Icon(Icons.add_circle_outline),
-                                color: const Color(0xFF6366F1),
-                                tooltip: 'Agregar otro vehículo',
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                    VehicleOnboardingCounter(
+                      currentPage: _currentPage,
+                      totalPages: _formKeys.length,
+                      onAddVehicle: _addVehicle,
+                      onRemoveVehicle: () => _removeVehicle(_currentPage),
+                      canRemove: _formKeys.length > 1,
                     ),
 
                     // Page indicator
-                    if (_formKeys.length > 1)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(
-                            _formKeys.length,
-                            (index) => Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 4),
-                              width: 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: _currentPage == index
-                                    ? const Color(0xFF6366F1)
-                                    : Colors.grey[300],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                    VehicleOnboardingPageIndicator(
+                      totalPages: _formKeys.length,
+                      currentPage: _currentPage,
+                    ),
 
                     // Vehicle forms
                     if (_formKeys.isNotEmpty)
@@ -291,7 +235,7 @@ class _VehicleOnboardingViewState extends State<VehicleOnboardingView> {
                           itemCount: _formKeys.length,
                           itemBuilder: (context, index) {
                             final formKey = _formKeys[index];
-                            return _VehicleFormPage(
+                            return VehicleOnboardingFormPage(
                               formKey: formKey,
                               isFirstVehicle: index == 0,
                             );
@@ -302,66 +246,14 @@ class _VehicleOnboardingViewState extends State<VehicleOnboardingView> {
                     // Bottom buttons
                     Padding(
                       padding: const EdgeInsets.all(24),
-                      child: Column(
-                        children: [
-                          BlocBuilder<VehicleFormCubit, VehicleFormState>(
-                            builder: (context, state) {
-                              final isLoading = state.isLoading;
-                              return Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: const Color(
-                                        0xFF6366F1,
-                                      ).withValues(alpha: .3),
-                                      blurRadius: 12,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ],
-                                ),
-                                child: Material(
-                                  color: const Color(0xFF6366F1),
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: InkWell(
-                                    onTap: isLoading
-                                        ? null
-                                        : () => _saveVehicles(context),
-                                    borderRadius: BorderRadius.circular(12),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 16,
-                                      ),
-                                      child: Center(
-                                        child: isLoading
-                                            ? const SizedBox(
-                                                width: 20,
-                                                height: 20,
-                                                child: CircularProgressIndicator(
-                                                  strokeWidth: 2,
-                                                  valueColor:
-                                                      AlwaysStoppedAnimation<
-                                                        Color
-                                                      >(Colors.white),
-                                                ),
-                                              )
-                                            : const Text(
-                                                'Completar configuración',
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                  letterSpacing: -0.3,
-                                                ),
-                                              ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
+                      child: BlocBuilder<VehicleFormCubit, VehicleFormState>(
+                        builder: (context, state) {
+                          return AppButton(
+                            label: VehicleStrings.completeSetup,
+                            onPressed: () => _saveVehicles(context),
+                            isLoading: state.isLoading,
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -370,36 +262,6 @@ class _VehicleOnboardingViewState extends State<VehicleOnboardingView> {
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-/// Wrapper widget that keeps the form alive when navigating between pages
-class _VehicleFormPage extends StatefulWidget {
-  final GlobalKey<FormBuilderState> formKey;
-  final bool isFirstVehicle;
-
-  const _VehicleFormPage({required this.formKey, required this.isFirstVehicle});
-
-  @override
-  State<_VehicleFormPage> createState() => _VehicleFormPageState();
-}
-
-class _VehicleFormPageState extends State<_VehicleFormPage>
-    with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context); // Required for AutomaticKeepAliveClientMixin
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: VehicleForm(
-        formKey: widget.formKey,
-        isOnboarding: true,
-        isFirstVehicleInOnboarding: widget.isFirstVehicle,
       ),
     );
   }

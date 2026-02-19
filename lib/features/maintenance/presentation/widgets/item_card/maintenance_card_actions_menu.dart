@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
+import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
+import 'package:rideglory/core/constants/app_strings.dart';
+import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
+import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 
 class MaintenanceCardActionsMenu extends StatelessWidget {
   final VoidCallback? onEdit;
@@ -20,7 +24,7 @@ class MaintenanceCardActionsMenu extends StatelessWidget {
               children: [
                 Icon(Icons.edit_outlined, size: 20),
                 SizedBox(width: 12),
-                Text('Editar'),
+                Text(AppStrings.edit),
               ],
             ),
           ),
@@ -31,28 +35,25 @@ class MaintenanceCardActionsMenu extends StatelessWidget {
               children: [
                 Icon(Icons.delete_outline, size: 20, color: Colors.red),
                 SizedBox(width: 12),
-                Text('Eliminar', style: TextStyle(color: Colors.red)),
+                Text(AppStrings.delete, style: TextStyle(color: Colors.red)),
               ],
             ),
           ),
       ],
-      onSelected: (value) async {
+      onSelected: (value) {
         if (value == 'edit') {
           onEdit?.call();
         } else if (value == 'delete') {
-          final confirm = await AppDialogHelper.showConfirmation(
+          ConfirmationDialog.show(
             context: context,
-            title: 'Eliminar mantenimiento',
-            content:
-                '¿Estás seguro de que deseas eliminar este mantenimiento? Esta acción no se puede deshacer.',
-            cancelLabel: 'Cancelar',
-            confirmLabel: 'Eliminar',
+            title: MaintenanceStrings.deleteMaintenance,
+            content: MaintenanceStrings.deleteMaintenanceMessage,
+            cancelLabel: AppStrings.cancel,
+            confirmLabel: AppStrings.delete,
             confirmType: DialogActionType.danger,
             dialogType: DialogType.warning,
+            onConfirm: () => onDelete?.call(),
           );
-          if (confirm == true) {
-            onDelete?.call();
-          }
         }
       },
     );

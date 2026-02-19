@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 
 class MaintenanceSearchBar extends StatelessWidget {
   final Function(String) onSearchChanged;
@@ -11,7 +12,7 @@ class MaintenanceSearchBar extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: TextField(
         decoration: InputDecoration(
-          hintText: 'Buscar por nombre del mantenimiento',
+          hintText: MaintenanceStrings.searchMaintenances,
           prefixIcon: const Icon(Icons.search),
           filled: true,
           fillColor: Colors.white,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/presentation/form/widgets/vehicle_list_item.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
@@ -59,7 +60,7 @@ class VehicleSelectionBottomSheet extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Seleccionar Vehículo',
+                  MaintenanceStrings.selectVehicle,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -68,7 +69,7 @@ class VehicleSelectionBottomSheet extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Elige el vehículo para este mantenimiento',
+                  MaintenanceStrings.chooseVehicleForMaintenance,
                   style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
               ],

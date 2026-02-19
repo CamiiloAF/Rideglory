@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
-import 'package:rideglory/features/maintenance/presentation/widgets/item_card/info_chip.dart';
+import 'package:rideglory/shared/widgets/info_chip.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/item_card/info_chip_tooltip.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/item_card/maintenance_progress_bar.dart';
+import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class MaintenanceMileageInfo extends StatelessWidget {
   final MaintenanceModel maintenance;
@@ -39,7 +41,7 @@ class MaintenanceMileageInfo extends StatelessWidget {
             children: [
               InfoChip(
                 icon: Icons.build_rounded,
-                label: 'Mantenimiento',
+                label: MaintenanceStrings.maintenance,
                 value:
                     '${maintenance.maintanceMileage.toStringAsFixed(0)} ${maintenance.distanceUnit.label}',
                 color: const Color(0xFF64748B),
@@ -52,7 +54,7 @@ class MaintenanceMileageInfo extends StatelessWidget {
                   children: [
                     InfoChip(
                       icon: Icons.flag_rounded,
-                      label: 'Próximo',
+                      label: MaintenanceStrings.next,
                       value:
                           '${maintenance.nextMaintenanceMileage!.toStringAsFixed(0)} ${maintenance.distanceUnit.label}',
                       color: typeColor,
@@ -75,13 +77,15 @@ class MaintenanceMileageInfo extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               remainingDistance != null
-                  ? '${remainingDistance.toStringAsFixed(0)} ${maintenance.distanceUnit.label} restantes'
-                  : 'Calcular distancia restante',
-              style: TextStyle(
-                fontSize: 12,
+                  ? MaintenanceStrings.remainingDistance(
+                      remainingDistance.toStringAsFixed(0),
+                      maintenance.distanceUnit.label,
+                    )
+                  : MaintenanceStrings.calculateRemainingDistance,
+              style: context.labelSmall?.copyWith(
                 color: remainingDistance != null && remainingDistance <= 0
                     ? const Color(0xFFEF4444)
-                    : Colors.grey[600],
+                    : null,
                 fontWeight: FontWeight.w500,
               ),
             ),

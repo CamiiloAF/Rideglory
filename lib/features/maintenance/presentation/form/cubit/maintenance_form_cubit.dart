@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/domain/use_cases/add_maintenance_use_case.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/features/maintenance/constants/maintenance_form_fields.dart';
 
 import '../../../domain/use_cases/update_maintenance_use_case.dart';
 
@@ -62,19 +63,29 @@ class MaintenanceFormCubit extends Cubit<MaintenanceFormState> {
           editing: (maintenance) => maintenance.id,
           orElse: () => null,
         ),
-        vehicleId: formData['vehicleId'] as String?,
-        name: formData['name'] as String,
-        type: formData['type'] as MaintenanceType,
-        notes: formData['notes'] as String?,
-        date: formData['date'] as DateTime,
-        nextMaintenanceDate: formData['nextMaintenanceDate'] as DateTime?,
-        maintanceMileage: double.parse(formData['currentMileage'] as String),
-        distanceUnit: formData['distanceUnit'] as DistanceUnit,
-        receiveAlert: formData['receiveAlert'] as bool? ?? false,
+        vehicleId: formData[MaintenanceFormFields.vehicleId] as String?,
+        name: formData[MaintenanceFormFields.name] as String,
+        type: formData[MaintenanceFormFields.type] as MaintenanceType,
+        notes: formData[MaintenanceFormFields.notes] as String?,
+        date: formData[MaintenanceFormFields.date] as DateTime,
+        nextMaintenanceDate:
+            formData[MaintenanceFormFields.nextMaintenanceDate] as DateTime?,
+        maintanceMileage: double.parse(
+          formData[MaintenanceFormFields.currentMileage] as String,
+        ),
+        distanceUnit:
+            formData[MaintenanceFormFields.distanceUnit] as DistanceUnit,
+        receiveAlert:
+            formData[MaintenanceFormFields.receiveAlert] as bool? ?? false,
         nextMaintenanceMileage:
-            formData['nextMaintenanceMileage'] != null &&
-                (formData['nextMaintenanceMileage'] as String).isNotEmpty
-            ? double.parse(formData['nextMaintenanceMileage'] as String)
+            formData[MaintenanceFormFields.nextMaintenanceMileage] != null &&
+                (formData[MaintenanceFormFields.nextMaintenanceMileage]
+                        as String)
+                    .isNotEmpty
+            ? double.parse(
+                formData[MaintenanceFormFields.nextMaintenanceMileage]
+                    as String,
+              )
             : null,
       );
       return maintenanceToSave;

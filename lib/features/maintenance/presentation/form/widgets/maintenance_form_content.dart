@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
+import 'package:rideglory/features/maintenance/constants/maintenance_form_fields.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/form/cubit/maintenance_form_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/form/widgets/change_vehicle_mileage_bottom_sheet.dart';
@@ -10,6 +12,7 @@ import 'package:rideglory/features/maintenance/presentation/form/widgets/next_ma
 import 'package:rideglory/features/maintenance/presentation/form/widgets/save_maintenance_button.dart';
 import 'package:rideglory/features/maintenance/presentation/form/widgets/selected_vehicle_card.dart';
 import 'package:rideglory/features/maintenance/presentation/form/widgets/vehicle_selection_bottom_sheet.dart';
+import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
@@ -66,25 +69,30 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
     return state.maybeWhen(
       editing: (maintenance) {
         return {
-          'name': maintenance.name,
-          'type': maintenance.type,
-          'notes': maintenance.notes,
-          'date': maintenance.date,
-          'nextMaintenanceDate': maintenance.nextMaintenanceDate,
-          'currentMileage': maintenance.maintanceMileage.toString(),
-          'distanceUnit': maintenance.distanceUnit,
-          'receiveAlert': maintenance.receiveAlert,
-          'nextMaintenanceMileage': maintenance.nextMaintenanceMileage
+          MaintenanceFormFields.name: maintenance.name,
+          MaintenanceFormFields.type: maintenance.type,
+          MaintenanceFormFields.notes: maintenance.notes,
+          MaintenanceFormFields.date: maintenance.date,
+          MaintenanceFormFields.nextMaintenanceDate:
+              maintenance.nextMaintenanceDate,
+          MaintenanceFormFields.currentMileage: maintenance.maintanceMileage
+              .toString(),
+          MaintenanceFormFields.distanceUnit: maintenance.distanceUnit,
+          MaintenanceFormFields.receiveAlert: maintenance.receiveAlert,
+          MaintenanceFormFields.nextMaintenanceMileage: maintenance
+              .nextMaintenanceMileage
               ?.toString(),
-          'vehicleId': maintenance.vehicleId ?? currentVehicleId,
+          MaintenanceFormFields.vehicleId:
+              maintenance.vehicleId ?? currentVehicleId,
         };
       },
       orElse: () => {
-        'date': DateTime.now(),
-        'distanceUnit': DistanceUnit.kilometers,
-        'type': MaintenanceType.oilChange,
-        'receiveAlert': false,
-        'vehicleId': preselectedVehicleId ?? currentVehicleId,
+        MaintenanceFormFields.date: DateTime.now(),
+        MaintenanceFormFields.distanceUnit: DistanceUnit.kilometers,
+        MaintenanceFormFields.type: MaintenanceType.oilChange,
+        MaintenanceFormFields.receiveAlert: false,
+        MaintenanceFormFields.vehicleId:
+            preselectedVehicleId ?? currentVehicleId,
       },
     );
   }
@@ -145,7 +153,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
     if (vehicles.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('No hay vehículos disponibles'),
+          content: Text(VehicleStrings.noVehiclesAvailable),
           backgroundColor: Colors.orange,
         ),
       );
@@ -168,7 +176,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
           .read<MaintenanceFormCubit>()
           .formKey
           .currentState
-          ?.fields['vehicleId']
+          ?.fields[MaintenanceFormFields.vehicleId]
           ?.didChange(selectedVehicle.id);
     }
   }
@@ -189,17 +197,17 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
           children: [
             // Nombre del mantenimiento
             AppTextField(
-              name: 'name',
-              labelText: 'Nombre del mantenimiento',
+              name: MaintenanceFormFields.name,
+              labelText: MaintenanceStrings.maintenanceName,
               isRequired: true,
               prefixIcon: Icons.build,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(
-                  errorText: 'El nombre es requerido',
+                  errorText: MaintenanceStrings.nameRequired,
                 ),
                 FormBuilderValidators.minLength(
                   3,
-                  errorText: 'Mínimo 3 caracteres',
+                  errorText: MaintenanceStrings.minCharacters,
                 ),
               ]),
             ),
@@ -207,10 +215,10 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
 
             // Tipo de mantenimiento
             AppDropdown<MaintenanceType>(
-              name: 'type',
-              labelText: 'Tipo de mantenimiento',
+              name: MaintenanceFormFields.type,
+              labelText: MaintenanceStrings.maintenanceType,
               validator: FormBuilderValidators.required(
-                errorText: 'El tipo es requerido',
+                errorText: MaintenanceStrings.typeRequired,
               ),
               prefixIcon: const Icon(Icons.category),
               items: MaintenanceType.values
@@ -229,7 +237,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                 onTap: _showVehicleSelectionDialog,
               ),
               FormBuilderField<String>(
-                name: 'vehicleId',
+                name: MaintenanceFormFields.vehicleId,
                 builder: (field) => const SizedBox.shrink(),
               ),
               const SizedBox(height: 16),
@@ -237,9 +245,9 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
 
             // Fecha
             AppDatePicker(
-              fieldName: 'date',
+              fieldName: MaintenanceFormFields.date,
               lastDate: DateTime.now(),
-              labelText: 'Fecha del mantenimiento',
+              labelText: MaintenanceStrings.maintenanceDateLabel,
               isRequired: true,
               prefixIcon: const Icon(Icons.calendar_today),
             ),
@@ -247,16 +255,16 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
 
             MileagesAndUnitFields(
               validatorsType: MileageValidatorsType.currentMileage,
-              distanceUnitFieldName: 'distanceUnit',
-              mileageFieldName: 'currentMileage',
+              distanceUnitFieldName: MaintenanceFormFields.distanceUnit,
+              mileageFieldName: MaintenanceFormFields.currentMileage,
             ),
 
             const SizedBox(height: 16),
 
             // Notas
             AppTextField(
-              name: 'notes',
-              labelText: 'Notas',
+              name: MaintenanceFormFields.notes,
+              labelText: MaintenanceStrings.maintenanceNotes,
               prefixIcon: Icons.notes,
               maxLines: 4,
               minLines: 1,
@@ -265,8 +273,8 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
 
             // Fecha del próximo mantenimiento
             AppDatePicker(
-              fieldName: 'nextMaintenanceDate',
-              labelText: 'Fecha del próximo mantenimiento',
+              fieldName: MaintenanceFormFields.nextMaintenanceDate,
+              labelText: MaintenanceStrings.nextMaintenanceDate,
               firstDate: DateTime.now(),
             ),
 
@@ -281,8 +289,8 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
 
             // Recibir alerta
             AppCheckbox(
-              name: 'receiveAlert',
-              title: 'Recibir alerta de mantenimiento',
+              name: MaintenanceFormFields.receiveAlert,
+              title: MaintenanceStrings.receiveMaintenanceAlert,
               initialValue: false,
             ),
             const SizedBox(height: 24),

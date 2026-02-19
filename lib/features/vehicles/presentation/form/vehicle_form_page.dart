@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
+import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
+import 'package:rideglory/features/vehicles/constants/vehicle_form_fields.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
 import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
+import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
+import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 
 import '../widgets/vehicle_form.dart';
 
@@ -46,19 +51,19 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
   Future<void> _checkArchivedVehicle() async {
     final state = context.read<VehicleFormCubit>().state;
     if (state.isEditing && state.vehicle?.isArchived == true) {
-      final shouldContinue = await AppDialogHelper.showConfirmation(
+      await ConfirmationDialog.show(
         context: context,
-        title: 'Vehículo Archivado',
-        content:
-            'Este vehículo está archivado. Si actualizas su información, el vehículo será desarchivado y volverá a estar disponible en tu lista de vehículos activos.',
-        cancelLabel: 'Cancelar',
-        confirmLabel: 'Continuar',
+        title: VehicleStrings.archivedVehicle,
+        content: VehicleStrings.archivedVehicleMessage,
+        cancelLabel: AppStrings.cancel,
+        confirmLabel: AppStrings.continue_,
         confirmType: DialogActionType.primary,
         dialogType: DialogType.confirmation,
+        onCancel: (dialogContext) {
+          context.pop();
+          context.pop();
+        },
       );
-      if (shouldContinue != true && mounted) {
-        context.pop();
-      }
     }
   }
 
@@ -67,20 +72,21 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
 
     return state.isEditing
         ? {
-            'name': state.vehicle!.name,
-            'brand': state.vehicle!.brand,
-            'model': state.vehicle!.model,
-            'year': state.vehicle!.year?.toString(),
-            'currentMileage': state.vehicle!.currentMileage.toString(),
-            'distanceUnit': state.vehicle!.distanceUnit,
-            'vehicleType': state.vehicle!.vehicleType,
-            'licensePlate': state.vehicle!.licensePlate,
-            'vin': state.vehicle!.vin,
-            'purchaseDate': state.vehicle!.purchaseDate,
+            VehicleFormFields.name: state.vehicle!.name,
+            VehicleFormFields.brand: state.vehicle!.brand,
+            VehicleFormFields.model: state.vehicle!.model,
+            VehicleFormFields.year: state.vehicle!.year?.toString(),
+            VehicleFormFields.currentMileage: state.vehicle!.currentMileage
+                .toString(),
+            VehicleFormFields.distanceUnit: state.vehicle!.distanceUnit,
+            VehicleFormFields.vehicleType: state.vehicle!.vehicleType,
+            VehicleFormFields.licensePlate: state.vehicle!.licensePlate,
+            VehicleFormFields.vin: state.vehicle!.vin,
+            VehicleFormFields.purchaseDate: state.vehicle!.purchaseDate,
           }
         : {
-            'distanceUnit': DistanceUnit.kilometers,
-            'vehicleType': VehicleType.motorcycle,
+            VehicleFormFields.distanceUnit: DistanceUnit.kilometers,
+            VehicleFormFields.vehicleType: VehicleType.motorcycle,
           };
   }
 
@@ -111,7 +117,8 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
             .formKey
             .currentState
             ?.value;
-        final setAsCurrent = formData?['setAsCurrent'] as bool? ?? false;
+        final setAsCurrent =
+            formData?[VehicleFormFields.setAsCurrent] as bool? ?? false;
 
         if (setAsCurrent && savedVehicle.id != null) {
           context.read<VehicleCubit>().updateCurrentVehicleIfMatch(
@@ -124,8 +131,8 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
           SnackBar(
             content: Text(
               state.isEditing
-                  ? 'Vehículo actualizado exitosamente'
-                  : 'Vehículo agregado exitosamente',
+                  ? AppStrings.updatedSuccessfully
+                  : AppStrings.savedSuccessfully,
             ),
             backgroundColor: Colors.green,
           ),
@@ -151,7 +158,9 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
 
     return Scaffold(
       appBar: AppAppBar(
-        title: isEditing ? 'Editar Vehículo' : 'Agregar Vehículo',
+        title: isEditing
+            ? VehicleStrings.editVehicle
+            : VehicleStrings.addVehicle,
       ),
       body: BlocConsumer<VehicleFormCubit, VehicleFormState>(
         listener: _listener,

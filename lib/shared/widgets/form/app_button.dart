@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
-enum AppButtonVariant { primary, secondary, outline, text }
+enum AppButtonVariant { primary, secondary, outline, text, danger }
 
 class AppButton extends StatelessWidget {
   final String label;
@@ -29,9 +31,11 @@ class AppButton extends StatelessWidget {
   Color get _backgroundColor {
     switch (variant) {
       case AppButtonVariant.primary:
-        return const Color(0xFF6366F1);
+        return AppColors.primary;
       case AppButtonVariant.secondary:
-        return const Color(0xFF8B5CF6);
+        return AppColors.secondary;
+      case AppButtonVariant.danger:
+        return Colors.red;
       case AppButtonVariant.outline:
       case AppButtonVariant.text:
         return Colors.transparent;
@@ -42,17 +46,18 @@ class AppButton extends StatelessWidget {
     switch (variant) {
       case AppButtonVariant.primary:
       case AppButtonVariant.secondary:
+      case AppButtonVariant.danger:
         return Colors.white;
       case AppButtonVariant.outline:
       case AppButtonVariant.text:
-        return const Color(0xFF6366F1);
+        return AppColors.primary;
     }
   }
 
   Color get _borderColor {
     switch (variant) {
       case AppButtonVariant.outline:
-        return Colors.grey[300]!;
+        return AppColors.border;
       default:
         return Colors.transparent;
     }
@@ -60,7 +65,8 @@ class AppButton extends StatelessWidget {
 
   BoxShadow? get _shadow {
     if (variant == AppButtonVariant.primary ||
-        variant == AppButtonVariant.secondary) {
+        variant == AppButtonVariant.secondary ||
+        variant == AppButtonVariant.danger) {
       return BoxShadow(
         color: _backgroundColor.withValues(alpha: .3),
         blurRadius: 12,
@@ -98,8 +104,9 @@ class AppButton extends StatelessWidget {
                       height: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(_foregroundColor),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          _foregroundColor,
+                        ),
                       ),
                     )
                   : Row(
@@ -107,19 +114,13 @@ class AppButton extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         if (icon != null) ...[
-                          Icon(
-                            icon,
-                            color: _foregroundColor,
-                            size: 20,
-                          ),
+                          Icon(icon, color: _foregroundColor, size: 20),
                           const SizedBox(width: 8),
                         ],
                         Text(
                           label,
-                          style: TextStyle(
+                          style: context.labelLarge?.copyWith(
                             color: _foregroundColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
                             letterSpacing: 0.3,
                           ),
                         ),

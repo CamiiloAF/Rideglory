@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class VehicleListItem extends StatelessWidget {
   final VehicleModel vehicle;
@@ -25,16 +27,16 @@ class VehicleListItem extends StatelessWidget {
           child: Ink(
             decoration: BoxDecoration(
               gradient: isSelected
-                  ? const LinearGradient(
+                  ? LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
+                      colors: AppColors.primaryGradient,
                     )
                   : null,
-              color: isSelected ? null : Colors.grey[50],
+              color: isSelected ? null : AppColors.backgroundGray,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isSelected ? Colors.transparent : Colors.grey[200]!,
+                color: isSelected ? Colors.transparent : AppColors.border,
                 width: 1.5,
               ),
             ),
@@ -47,8 +49,8 @@ class VehicleListItem extends StatelessWidget {
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? Colors.white.withValues(alpha: 0.25)
-                          : const Color(0xFF6366F1).withValues(alpha: 0.1),
+                          ? AppColors.overlayMedium
+                          : AppColors.primary.withValues(alpha: .1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -56,8 +58,8 @@ class VehicleListItem extends StatelessWidget {
                           ? Icons.two_wheeler_rounded
                           : Icons.directions_car_rounded,
                       color: isSelected
-                          ? Colors.white
-                          : const Color(0xFF6366F1),
+                          ? const Color.fromARGB(255, 33, 31, 31)
+                          : context.primaryColor,
                       size: 24,
                     ),
                   ),
@@ -70,12 +72,11 @@ class VehicleListItem extends StatelessWidget {
                       children: [
                         Text(
                           vehicle.name,
-                          style: TextStyle(
-                            fontSize: 16,
+                          style: context.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: isSelected
                                 ? Colors.white
-                                : const Color(0xFF1F2937),
+                                : AppColors.textPrimary,
                           ),
                         ),
                         if (vehicle.brand != null || vehicle.model != null) ...[
@@ -85,11 +86,10 @@ class VehicleListItem extends StatelessWidget {
                               vehicle.brand,
                               vehicle.model,
                             ].where((e) => e != null).join(' '),
-                            style: TextStyle(
-                              fontSize: 14,
+                            style: context.bodyMedium?.copyWith(
                               color: isSelected
-                                  ? Colors.white.withValues(alpha: 0.9)
-                                  : Colors.grey[600],
+                                  ? AppColors.overlayStrong
+                                  : AppColors.textSecondary,
                             ),
                           ),
                         ],
@@ -102,7 +102,7 @@ class VehicleListItem extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.25),
+                        color: AppColors.overlayMedium,
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -117,7 +117,10 @@ class VehicleListItem extends StatelessWidget {
                       height: 24,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.grey[300]!, width: 2),
+                        border: Border.all(
+                          color: AppColors.borderDark,
+                          width: 2,
+                        ),
                       ),
                     ),
                 ],

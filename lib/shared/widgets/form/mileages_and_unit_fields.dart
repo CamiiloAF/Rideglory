@@ -4,6 +4,8 @@ import 'package:rideglory/features/maintenance/domain/model/maintenance_model.da
 import 'package:rideglory/shared/widgets/form/app_dropdown.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field_label.dart';
+import 'package:rideglory/core/constants/app_strings.dart';
+import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 
 class MileagesAndUnitFields extends StatefulWidget {
   const MileagesAndUnitFields({
@@ -28,7 +30,7 @@ class MileagesAndUnitFields extends StatefulWidget {
 class _MileagesAndUnitFieldsState extends State<MileagesAndUnitFields> {
   @override
   Widget build(BuildContext context) {
-    var labelText = 'Kilometraje actual';
+    var labelText = MaintenanceStrings.currentMileage;
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -86,17 +88,20 @@ enum MileageValidatorsType {
       case MileageValidatorsType.currentMileage:
         return [
           FormBuilderValidators.required(
-            errorText: 'El kilometraje es requerido',
+            errorText: '${MaintenanceStrings.mileage} ${AppStrings.required}',
           ),
-          FormBuilderValidators.numeric(errorText: 'Debe ser un número'),
-          FormBuilderValidators.min(0, errorText: 'Debe ser mayor a 0'),
+          FormBuilderValidators.numeric(errorText: AppStrings.mustBeNumber),
+          FormBuilderValidators.min(
+            0,
+            errorText: AppStrings.mustBeGreaterThanZero,
+          ),
         ];
       case MileageValidatorsType.nextMileageMaintenance:
         return [
-          FormBuilderValidators.numeric(errorText: 'Debe ser un número'),
+          FormBuilderValidators.numeric(errorText: AppStrings.mustBeNumber),
           FormBuilderValidators.min(
             currentMileage ?? 0,
-            errorText: 'Debe ser mayor a ${currentMileage ?? 0}',
+            errorText: '${AppStrings.mustBeGreaterThan} ${currentMileage ?? 0}',
           ),
         ];
       case MileageValidatorsType.noRequired:

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/shared/widgets/form/app_button.dart';
 
 /// A reusable empty state widget that can be used across features
 /// to show when lists or data are empty.
@@ -61,11 +63,7 @@ class EmptyStateWidget extends StatelessWidget {
             // Title
             Text(
               title,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[800],
-              ),
+              style: context.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
 
@@ -74,33 +72,19 @@ class EmptyStateWidget extends StatelessWidget {
               const SizedBox(height: 12),
               Text(
                 description!,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                  height: 1.5,
-                ),
+                style: context.bodyMedium?.copyWith(height: 1.5),
                 textAlign: TextAlign.center,
               ),
             ],
 
-            // Action button (if provided)
             if (actionButtonText != null && onActionPressed != null) ...[
               const SizedBox(height: 32),
-              ElevatedButton.icon(
+              AppButton(
+                label: actionButtonText!,
                 onPressed: onActionPressed,
-                icon: const Icon(Icons.add),
-                label: Text(actionButtonText!),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF6366F1),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 12,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
+                icon: Icons.add,
+                isFullWidth: false,
+                width: MediaQuery.of(context).size.width * 0.7,
               ),
             ],
           ],

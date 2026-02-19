@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
-/// Widget para la sección de notas del mantenimiento
 class MaintenanceNotesSection extends StatelessWidget {
   final MaintenanceModel maintenance;
 
@@ -25,11 +25,7 @@ class MaintenanceNotesSection extends StatelessWidget {
             Expanded(
               child: Text(
                 maintenance.notes!,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey[700],
-                  height: 1.4,
-                ),
+                style: context.bodySmall?.copyWith(height: 1.4),
               ),
             ),
           ],

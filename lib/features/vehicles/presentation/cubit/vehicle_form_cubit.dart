@@ -8,6 +8,7 @@ import 'package:rideglory/features/maintenance/domain/model/maintenance_model.da
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/add_vehicle_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/update_vehicle_usecase.dart';
+import 'package:rideglory/features/vehicles/constants/vehicle_form_fields.dart';
 
 part 'vehicle_form_state.dart';
 part 'vehicle_form_cubit.freezed.dart';
@@ -82,32 +83,40 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
 
       final vehicleToSave = VehicleModel(
         id: state.isEditing ? state.vehicle!.id : null,
-        name: formData['name'] as String,
-        brand: (formData['brand'] as String?)?.isEmpty ?? true
+        name: formData[VehicleFormFields.name] as String,
+        brand: (formData[VehicleFormFields.brand] as String?)?.isEmpty ?? true
             ? null
-            : formData['brand'] as String?,
-        model: (formData['model'] as String?)?.isEmpty ?? true
+            : formData[VehicleFormFields.brand] as String?,
+        model: (formData[VehicleFormFields.model] as String?)?.isEmpty ?? true
             ? null
-            : formData['model'] as String?,
+            : formData[VehicleFormFields.model] as String?,
         year:
-            formData['year'] != null && (formData['year'] as String).isNotEmpty
-            ? int.tryParse(formData['year'] as String)
+            formData[VehicleFormFields.year] != null &&
+                (formData[VehicleFormFields.year] as String).isNotEmpty
+            ? int.tryParse(formData[VehicleFormFields.year] as String)
             : null,
         currentMileage:
-            formData['currentMileage'] != null &&
-                (formData['currentMileage'] as String).isNotEmpty
-            ? int.tryParse(formData['currentMileage'] as String) ?? 0
+            formData[VehicleFormFields.currentMileage] != null &&
+                (formData[VehicleFormFields.currentMileage] as String)
+                    .isNotEmpty
+            ? int.tryParse(
+                    formData[VehicleFormFields.currentMileage] as String,
+                  ) ??
+                  0
             : 0,
-        distanceUnit: formData['distanceUnit'] as DistanceUnit,
+        distanceUnit: formData[VehicleFormFields.distanceUnit] as DistanceUnit,
         vehicleType:
-            formData['vehicleType'] as VehicleType? ?? VehicleType.motorcycle,
-        licensePlate: (formData['licensePlate'] as String?)?.isEmpty ?? true
+            formData[VehicleFormFields.vehicleType] as VehicleType? ??
+            VehicleType.motorcycle,
+        licensePlate:
+            (formData[VehicleFormFields.licensePlate] as String?)?.isEmpty ??
+                true
             ? null
-            : formData['licensePlate'] as String?,
-        vin: (formData['vin'] as String?)?.isEmpty ?? true
+            : formData[VehicleFormFields.licensePlate] as String?,
+        vin: (formData[VehicleFormFields.vin] as String?)?.isEmpty ?? true
             ? null
-            : formData['vin'] as String?,
-        purchaseDate: formData['purchaseDate'] as DateTime?,
+            : formData[VehicleFormFields.vin] as String?,
+        purchaseDate: formData[VehicleFormFields.purchaseDate] as DateTime?,
         isArchived: wasArchived ? false : (state.vehicle?.isArchived ?? false),
       );
       return vehicleToSave;

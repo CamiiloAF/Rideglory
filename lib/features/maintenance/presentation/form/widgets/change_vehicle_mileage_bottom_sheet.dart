@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
@@ -38,14 +39,14 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                   const Icon(Icons.speed, size: 28),
                   const SizedBox(width: 8),
                   Text(
-                    'Actualizar kilometraje',
+                    MaintenanceStrings.updateMileage,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],
               ),
               const SizedBox(height: 12),
               Text(
-                'El kilometraje del mantenimiento es mayor al kilometraje actual del vehículo.',
+                MaintenanceStrings.mileageGreaterThanCurrent,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 16),
@@ -61,7 +62,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Actual:',
+                          MaintenanceStrings.current,
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         Text(
@@ -76,7 +77,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Mantenimiento:',
+                          MaintenanceStrings.maintenanceLabel,
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         Text(
@@ -94,7 +95,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                '¿Deseas actualizar el kilometraje del vehículo?',
+                MaintenanceStrings.updateVehicleMileageQuestion,
                 style: Theme.of(
                   context,
                 ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
@@ -104,7 +105,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                 children: [
                   Expanded(
                     child: AppButton(
-                      label: 'Solo guardar',
+                      label: MaintenanceStrings.saveOnly,
                       variant: AppButtonVariant.outline,
                       onPressed: () {
                         saveMaintenance(maintenanceToSave);
@@ -115,7 +116,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: AppButton(
-                      label: 'Actualizar',
+                      label: MaintenanceStrings.update,
                       icon: Icons.check,
                       variant: AppButtonVariant.primary,
                       onPressed: () {

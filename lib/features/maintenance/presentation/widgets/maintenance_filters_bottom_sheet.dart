@@ -1,83 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/constants/app_strings.dart';
+import 'package:rideglory/core/extensions/date_extensions.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/filter_section_title.dart';
+import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
-
-class MaintenanceFilters {
-  final String? searchQuery;
-  final List<MaintenanceType> types;
-  final List<String> vehicleIds;
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final bool? showUrgentOnly;
-  final MaintenanceSortOption sortBy;
-
-  const MaintenanceFilters({
-    this.searchQuery,
-    this.types = const [],
-    this.vehicleIds = const [],
-    this.startDate,
-    this.endDate,
-    this.showUrgentOnly,
-    this.sortBy = MaintenanceSortOption.nextMaintenance,
-  });
-
-  MaintenanceFilters copyWith({
-    String? searchQuery,
-    List<MaintenanceType>? types,
-    List<String>? vehicleIds,
-    DateTime? startDate,
-    DateTime? endDate,
-    bool Function()? showUrgentOnly,
-    MaintenanceSortOption? sortBy,
-  }) {
-    return MaintenanceFilters(
-      searchQuery: searchQuery ?? this.searchQuery,
-      types: types ?? this.types,
-      vehicleIds: vehicleIds ?? this.vehicleIds,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
-      showUrgentOnly: showUrgentOnly != null
-          ? showUrgentOnly()
-          : this.showUrgentOnly,
-      sortBy: sortBy ?? this.sortBy,
-    );
-  }
-
-  bool get hasActiveFilters =>
-      (searchQuery?.isNotEmpty ?? false) ||
-      types.isNotEmpty ||
-      vehicleIds.isNotEmpty ||
-      startDate != null ||
-      endDate != null ||
-      showUrgentOnly == true;
-
-  int get activeFilterCount {
-    int count = 0;
-    if (searchQuery?.isNotEmpty ?? false) count++;
-    if (types.isNotEmpty) count++;
-    if (vehicleIds.isNotEmpty) count++;
-    if (startDate != null || endDate != null) count++;
-    if (showUrgentOnly == true) count++;
-    return count;
-  }
-}
-
-enum MaintenanceSortOption { nextMaintenance, date, name }
-
-extension MaintenanceSortOptionExt on MaintenanceSortOption {
-  String get label {
-    switch (this) {
-      case MaintenanceSortOption.nextMaintenance:
-        return 'Próximo mantenimiento';
-      case MaintenanceSortOption.date:
-        return 'Fecha de realización';
-      case MaintenanceSortOption.name:
-        return 'Nombre';
-    }
-  }
-}
 
 class MaintenanceFiltersBottomSheet extends StatefulWidget {
   final MaintenanceFilters initialFilters;
@@ -130,19 +60,17 @@ class _MaintenanceFiltersBottomSheetState
             padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
             child: Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'Filtros',
-                    style: TextStyle(
-                      fontSize: 24,
+                    MaintenanceStrings.filters,
+                    style: context.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF1F2937),
                     ),
                   ),
                 ),
                 if (_filters.hasActiveFilters)
                   AppButton(
-                    label: 'Limpiar',
+                    label: AppStrings.clear,
                     variant: AppButtonVariant.text,
                     isFullWidth: false,
                     onPressed: () {
@@ -162,7 +90,7 @@ class _MaintenanceFiltersBottomSheetState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Sort by
-                  const FilterSectionTitle('Ordenar por'),
+                  FilterSectionTitle(MaintenanceStrings.sortBy),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -183,7 +111,7 @@ class _MaintenanceFiltersBottomSheetState
                   const SizedBox(height: 24),
 
                   // Maintenance types
-                  const FilterSectionTitle('Tipos de mantenimiento'),
+                  FilterSectionTitle(MaintenanceStrings.maintenanceTypes),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -213,7 +141,7 @@ class _MaintenanceFiltersBottomSheetState
 
                   // Vehicles
                   if (widget.availableVehicles.isNotEmpty) ...[
-                    const FilterSectionTitle('Vehículos'),
+                    FilterSectionTitle(MaintenanceStrings.myVehicles),
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 8,
@@ -246,9 +174,9 @@ class _MaintenanceFiltersBottomSheetState
 
                   // Urgent only
                   SwitchListTile(
-                    title: const Text('Solo urgentes'),
+                    title: Text(MaintenanceStrings.urgentOnly),
                     subtitle: const Text(
-                      'Próximo mantenimiento en 7 días o menos',
+                      MaintenanceStrings.urgentOnlyDescription,
                     ),
                     value: _filters.showUrgentOnly ?? false,
                     onChanged: (value) {
@@ -263,7 +191,7 @@ class _MaintenanceFiltersBottomSheetState
                   const SizedBox(height: 16),
 
                   // Date range
-                  const FilterSectionTitle('Rango de fechas'),
+                  FilterSectionTitle(MaintenanceStrings.dateRange),
                   const SizedBox(height: 8),
                   Row(
                     children: [
@@ -272,8 +200,8 @@ class _MaintenanceFiltersBottomSheetState
                           icon: const Icon(Icons.calendar_today, size: 18),
                           label: Text(
                             _filters.startDate != null
-                                ? '${_filters.startDate!.day}/${_filters.startDate!.month}/${_filters.startDate!.year}'
-                                : 'Fecha inicio',
+                                ? _filters.startDate!.toFormattedString()
+                                : MaintenanceStrings.startDate,
                           ),
                           onPressed: () async {
                             final date = await showDatePicker(
@@ -296,8 +224,8 @@ class _MaintenanceFiltersBottomSheetState
                           icon: const Icon(Icons.calendar_today, size: 18),
                           label: Text(
                             _filters.endDate != null
-                                ? '${_filters.endDate!.day}/${_filters.endDate!.month}/${_filters.endDate!.year}'
-                                : 'Fecha fin',
+                                ? _filters.endDate!.toFormattedString()
+                                : MaintenanceStrings.endDate,
                           ),
                           onPressed: () async {
                             final date = await showDatePicker(
@@ -338,7 +266,7 @@ class _MaintenanceFiltersBottomSheetState
               children: [
                 Expanded(
                   child: AppButton(
-                    label: 'Cancelar',
+                    label: AppStrings.cancel,
                     variant: AppButtonVariant.outline,
                     onPressed: () => Navigator.pop(context),
                   ),
@@ -346,7 +274,7 @@ class _MaintenanceFiltersBottomSheetState
                 const SizedBox(width: 12),
                 Expanded(
                   child: AppButton(
-                    label: 'Aplicar',
+                    label: AppStrings.apply,
                     variant: AppButtonVariant.primary,
                     onPressed: () => Navigator.pop(context, _filters),
                   ),

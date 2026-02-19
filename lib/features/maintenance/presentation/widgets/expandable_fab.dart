@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/maintenances_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/fab_option.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 
 class ExpandableFab extends StatefulWidget {
   const ExpandableFab({super.key});
@@ -78,7 +79,7 @@ class _ExpandableFabState extends State<ExpandableFab>
                         ).animate(_animation),
                         child: FabOption(
                           icon: Icons.build,
-                          label: 'Agregar Mantenimiento',
+                          label: MaintenanceStrings.addMaintenance_,
                           onPressed: () async {
                             _toggleFab();
                             final result = await context.pushNamed<bool?>(
@@ -104,9 +105,11 @@ class _ExpandableFabState extends State<ExpandableFab>
                         ).animate(_animation),
                         child: FabOption(
                           icon: Icons.history,
-                          label: 'Ver Historial',
+                          label: MaintenanceStrings.maintenanceHistory,
                           onPressed: () {
-                            _handleOptionPressed('Ver Historial');
+                            _handleOptionPressed(
+                              MaintenanceStrings.maintenanceHistory,
+                            );
                           },
                         ),
                       ),
@@ -121,9 +124,9 @@ class _ExpandableFabState extends State<ExpandableFab>
                         ).animate(_animation),
                         child: FabOption(
                           icon: Icons.notifications_active,
-                          label: 'Recordatorios',
+                          label: MaintenanceStrings.reminders,
                           onPressed: () {
-                            _handleOptionPressed('Recordatorios');
+                            _handleOptionPressed(MaintenanceStrings.reminders);
                           },
                         ),
                       ),

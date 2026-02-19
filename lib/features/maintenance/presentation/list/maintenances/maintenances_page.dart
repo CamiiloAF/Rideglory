@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/domain/use_cases/get_maintenance_list_use_case.dart';
 import 'package:rideglory/features/maintenance/presentation/delete/cubit/maintenance_delete_cubit.dart';
@@ -13,6 +15,7 @@ import 'package:rideglory/features/maintenance/presentation/list/maintenances/wi
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_loading_widget.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_page_app_bar.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/expandable_fab.dart';
+import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters_bottom_sheet.dart';
 import 'package:rideglory/features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
@@ -138,7 +141,9 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
                 success: (deletedId) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Mantenimiento eliminado exitosamente'),
+                      content: Text(
+                        MaintenanceStrings.maintenanceDeletedSuccessfully,
+                      ),
                       backgroundColor: Colors.green,
                     ),
                   );
@@ -147,7 +152,7 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
                 error: (message) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Error: $message'),
+                      content: Text(AppStrings.errorMessage(message)),
                       backgroundColor: Colors.red,
                     ),
                   );
@@ -161,7 +166,7 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
               builder: (context, state) => state.maybeWhen(
                 loading: () => MaintenancesLoadingWidget(onRefresh: _onRefresh),
                 error: (error) => MaintenancesErrorWidget(
-                  error: error,
+                  error: error.message,
                   onRefresh: _onRefresh,
                 ),
                 empty: () => MaintenancesEmptyWidget(

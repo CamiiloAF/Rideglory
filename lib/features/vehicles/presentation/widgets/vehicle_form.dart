@@ -9,6 +9,9 @@ import 'package:rideglory/shared/widgets/form/app_date_picker.dart';
 import 'package:rideglory/shared/widgets/form/app_dropdown.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 import 'package:rideglory/shared/widgets/form/mileages_and_unit_fields.dart';
+import 'package:rideglory/core/constants/app_strings.dart';
+import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
+import 'package:rideglory/features/vehicles/constants/vehicle_form_fields.dart';
 
 class VehicleForm extends StatelessWidget {
   const VehicleForm({
@@ -39,35 +42,35 @@ class VehicleForm extends StatelessWidget {
       initialValue:
           initialValue ??
           {
-            'distanceUnit': DistanceUnit.kilometers,
-            'vehicleType': VehicleType.motorcycle,
+            VehicleFormFields.distanceUnit: DistanceUnit.kilometers,
+            VehicleFormFields.vehicleType: VehicleType.motorcycle,
           },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           AppTextField(
-            name: 'name',
-            labelText: 'Nombre del vehículo',
+            name: VehicleFormFields.name,
+            labelText: VehicleStrings.vehicleName,
             isRequired: true,
-            hintText: 'ej., Mi Auto, Camioneta Familiar',
+            hintText: VehicleStrings.vehicleNameHint,
             prefixIcon: Icons.directions_car,
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(
-                errorText: 'El nombre es requerido',
+                errorText: VehicleStrings.nameRequired,
               ),
               FormBuilderValidators.minLength(
                 3,
-                errorText: 'Mínimo 3 caracteres',
+                errorText: VehicleStrings.minCharacters,
               ),
             ]),
           ),
           const SizedBox(height: 16),
 
           AppDropdown<VehicleType>(
-            name: 'vehicleType',
-            labelText: 'Tipo de vehículo',
+            name: VehicleFormFields.vehicleType,
+            labelText: VehicleStrings.vehicleType,
             validator: FormBuilderValidators.required(
-              errorText: 'El tipo de vehículo es requerido',
+              errorText: VehicleStrings.vehicleTypeRequired,
             ),
             prefixIcon: const Icon(Icons.drive_eta),
             items: VehicleType.values
@@ -83,9 +86,9 @@ class VehicleForm extends StatelessWidget {
             children: [
               Expanded(
                 child: AppTextField(
-                  name: 'brand',
-                  labelText: 'Marca',
-                  hintText: 'ej., Toyota',
+                  name: VehicleFormFields.brand,
+                  labelText: VehicleStrings.vehicleBrand,
+                  hintText: VehicleStrings.vehicleBrandHint,
                   prefixIcon: Icons.local_offer,
                 ),
               ),
@@ -93,24 +96,24 @@ class VehicleForm extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: AppTextField(
-                  name: 'year',
-                  labelText: 'Año',
-                  hintText: 'ej., 2020',
+                  name: VehicleFormFields.year,
+                  labelText: VehicleStrings.vehicleYear,
+                  hintText: VehicleStrings.vehicleYearHint,
                   prefixIcon: Icons.calendar_today,
                   keyboardType: TextInputType.number,
                   validator: FormBuilderValidators.compose([
                     FormBuilderValidators.numeric(
-                      errorText: 'Debe ser un número',
+                      errorText: AppStrings.mustBeNumber,
                       checkNullOrEmpty: false,
                     ),
                     FormBuilderValidators.min(
                       1900,
-                      errorText: 'Año inválido',
+                      errorText: VehicleStrings.invalidYear,
                       checkNullOrEmpty: false,
                     ),
                     FormBuilderValidators.max(
                       DateTime.now().year,
-                      errorText: 'Año inválido',
+                      errorText: VehicleStrings.invalidYear,
                       checkNullOrEmpty: false,
                     ),
                   ]),
@@ -120,62 +123,64 @@ class VehicleForm extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           AppTextField(
-            name: 'model',
-            labelText: 'Modelo',
-            hintText: 'ej., Camry',
+            name: VehicleFormFields.model,
+            labelText: VehicleStrings.vehicleModel,
+            hintText: VehicleStrings.vehicleModelHint,
             prefixIcon: Icons.directions_car_filled,
           ),
           const SizedBox(height: 16),
 
           MileagesAndUnitFields(
             validatorsType: MileageValidatorsType.currentMileage,
-            mileageFieldName: 'currentMileage',
-            distanceUnitFieldName: 'distanceUnit',
+            mileageFieldName: VehicleFormFields.currentMileage,
+            distanceUnitFieldName: VehicleFormFields.distanceUnit,
           ),
           const SizedBox(height: 16),
 
           AppTextField(
-            name: 'licensePlate',
-            labelText: 'Placa',
-            hintText: 'ej., ABC-1234',
+            name: VehicleFormFields.licensePlate,
+            labelText: VehicleStrings.vehiclePlate,
+            hintText: VehicleStrings.vehiclePlateHint,
             prefixIcon: Icons.confirmation_number,
           ),
           const SizedBox(height: 16),
 
           AppTextField(
-            name: 'vin',
-            labelText: 'VIN',
-            hintText: 'Número de Identificación del Vehículo',
+            name: VehicleFormFields.vin,
+            labelText: VehicleStrings.vehicleVin,
+            hintText: VehicleStrings.vehicleVinHint,
             prefixIcon: Icons.pin,
           ),
           const SizedBox(height: 16),
 
           AppDatePicker(
-            fieldName: 'purchaseDate',
-            labelText: 'Fecha de compra',
+            fieldName: VehicleFormFields.purchaseDate,
+            labelText: VehicleStrings.purchaseDate,
             lastDate: DateTime.now(),
           ),
           const SizedBox(height: 16),
 
           if (!isOnboarding) ...[
             AppCheckbox(
-              name: 'setAsCurrent',
-              title: 'Establecer como vehículo principal',
+              name: VehicleFormFields.setAsCurrent,
+              title: VehicleStrings.setAsMainVehicle,
               initialValue: isMainVehicle,
               enabled: !isMainVehicle,
             ),
             const SizedBox(height: 24),
             AppButton(
               onPressed: isLoading ? null : onSave,
-              label: isEditing ? 'Actualizar Vehículo' : 'Agregar Vehículo',
+              label: isEditing
+                  ? VehicleStrings.editVehicle
+                  : VehicleStrings.addVehicle,
             ),
           ],
 
           // In onboarding, show checkbox only for first vehicle
           if (isOnboarding && isFirstVehicleInOnboarding) ...[
             AppCheckbox(
-              name: 'setAsCurrent',
-              title: 'Este será tu vehículo principal',
+              name: VehicleFormFields.setAsCurrent,
+              title: VehicleStrings.thisWillBeMainVehicle,
               initialValue: true,
               enabled: false,
             ),

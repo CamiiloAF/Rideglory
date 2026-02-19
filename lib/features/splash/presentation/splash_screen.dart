@@ -8,6 +8,8 @@ import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/core/constants/app_strings.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -80,8 +82,9 @@ class _SplashScreenContentState extends State<_SplashScreenContent> {
         _hasNavigated = true;
 
         final vehicles = vehicleListState.data;
-        final selectedVehicle =
-            await context.read<SplashCubit>().getSelectedVehicle(vehicles);
+        final selectedVehicle = await context
+            .read<SplashCubit>()
+            .getSelectedVehicle(vehicles);
 
         if (selectedVehicle != null && mounted) {
           context.read<VehicleCubit>().setCurrentVehicle(selectedVehicle);
@@ -121,92 +124,85 @@ class _SplashScreenContentState extends State<_SplashScreenContent> {
       child: Scaffold(
         backgroundColor: const Color(0xFF6366F1),
         body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // App logo or icon
-                Container(
-                  width: 120,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: .1),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.directions_car_rounded,
-                    size: 64,
-                    color: Color(0xFF6366F1),
-                  ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // App logo or icon
+              Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: .1),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 32),
-                // App name
-                const Text(
-                  'RideGlory',
-                  style: TextStyle(
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: -1,
-                  ),
+                child: const Icon(
+                  Icons.directions_car_rounded,
+                  size: 64,
+                  color: Color(0xFF6366F1),
                 ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Vehicle Maintenance Tracker',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white70,
-                    fontWeight: FontWeight.w500,
-                  ),
+              ),
+              const SizedBox(height: 32),
+              // App name
+              Text(
+                AppStrings.appName,
+                style: context.displayLarge?.copyWith(
+                  color: Colors.white,
+                  letterSpacing: -1,
                 ),
-                const SizedBox(height: 48),
-                // Loading indicator
-                BlocBuilder<SplashCubit, SplashState>(
-                  builder: (context, state) {
-                    if (state is SplashError) {
-                      return Column(
-                        children: [
-                          Text(
-                            'Error: ${state.message}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
-                            textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Vehicle Maintenance Tracker',
+                style: context.titleMedium?.copyWith(color: Colors.white70),
+              ),
+              const SizedBox(height: 48),
+              // Loading indicator
+              BlocBuilder<SplashCubit, SplashState>(
+                builder: (context, state) {
+                  if (state is SplashError) {
+                    return Column(
+                      children: [
+                        Text(
+                          'Error: ${state.message}',
+                          style: context.bodyMedium?.copyWith(
+                            color: Colors.white,
                           ),
-                          const SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                _hasNavigated = false;
-                                _hasLoadedVehicles = false;
-                              });
-                              context.read<SplashCubit>().initialize();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: const Color(0xFF6366F1),
-                            ),
-                            child: const Text('Retry'),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              _hasNavigated = false;
+                              _hasLoadedVehicles = false;
+                            });
+                            context.read<SplashCubit>().initialize();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: const Color(0xFF6366F1),
                           ),
-                        ],
-                      );
-                    }
-                    return const CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          child: Text(AppStrings.retry),
+                        ),
+                      ],
                     );
-                  },
-                ),
-              ],
-            ),
+                  }
+                  return const CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  );
+                },
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    );
   }
 }

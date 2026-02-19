@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/features/authentication/constants/auth_strings.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 /// Custom email input field widget
 class EmailInputField extends StatefulWidget {
@@ -40,14 +43,14 @@ class _EmailInputFieldState extends State<EmailInputField> {
           boxShadow: _isFocused
               ? [
                   BoxShadow(
-                    color: const Color(0xFF6366F1).withValues(alpha: .2),
+                    color: AppColors.primaryShadow(opacity: 0.2),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
                 ]
               : [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: .05),
+                    color: AppColors.shadowLight,
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),
@@ -68,35 +71,32 @@ class _EmailInputFieldState extends State<EmailInputField> {
           },
           autovalidateMode: AutovalidateMode.onUserInteraction,
           decoration: InputDecoration(
-            hintText: 'Ingrese su correo electrónico',
-            hintStyle: TextStyle(color: Colors.grey[400], fontSize: 16),
+            hintText: AuthStrings.enterEmail,
+            hintStyle: TextStyle(color: AppColors.textTertiary, fontSize: 16),
             prefixIcon: Icon(
               Icons.email_rounded,
-              color: _isFocused ? const Color(0xFF6366F1) : Colors.grey[400],
+              color: _isFocused ? context.primaryColor : AppColors.textTertiary,
               size: 20,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey[200]!),
+              borderSide: const BorderSide(color: AppColors.border),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey[200]!, width: 1.5),
+              borderSide: const BorderSide(color: AppColors.border, width: 1.5),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF6366F1), width: 2),
+              borderSide: BorderSide(color: context.primaryColor, width: 2),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(
-                color: Color(0xFFEF4444),
-                width: 1.5,
-              ),
+              borderSide: BorderSide(color: context.errorColor, width: 1.5),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFFEF4444), width: 2),
+              borderSide: BorderSide(color: context.errorColor, width: 2),
             ),
             filled: true,
             fillColor: Colors.white,
@@ -104,16 +104,13 @@ class _EmailInputFieldState extends State<EmailInputField> {
               horizontal: 16,
               vertical: 14,
             ),
-            errorStyle: const TextStyle(
+            errorStyle: TextStyle(
               fontSize: 12,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.normal,
+              color: context.errorColor,
             ),
           ),
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[900],
-            fontWeight: FontWeight.w500,
-          ),
+          style: context.bodyLarge,
         ),
       ),
     );

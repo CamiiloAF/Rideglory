@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 /// Button type for social login
 enum SocialLoginType { google, apple, email }
@@ -96,10 +97,8 @@ class _SocialLoginButtonState extends State<SocialLoginButton> {
                   child: Text(
                     widget.isLoading ? 'Iniciando sesión...' : label,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: context.labelLarge?.copyWith(
                       color: textColor,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
                       letterSpacing: 0.3,
                     ),
                   ),
