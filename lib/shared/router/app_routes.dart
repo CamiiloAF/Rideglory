@@ -18,4 +18,14 @@ abstract class AppRoutes {
   static const String maintenances = '/maintenances';
   static const String createMaintenance = '/maintenances/create';
   static const String editMaintenance = '/maintenances/edit';
+
+  // Events routes
+  static const String events = '/events';
+  static const String myEvents = '/events/mine';
+  static const String createEvent = '/events/create';
+  static const String editEvent = '/events/edit';
+  static const String eventDetail = '/events/detail';
+  static const String eventRegistration = '/events/registration';
+  static const String eventAttendees = '/events/attendees';
+  static const String myRegistrations = '/events/my-registrations';
 }

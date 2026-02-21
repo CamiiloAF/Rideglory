@@ -4,6 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/features/events/domain/model/event_model.dart';
+import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/events/presentation/attendees/attendees_page.dart';
+import 'package:rideglory/features/events/presentation/detail/event_detail_page.dart';
+import 'package:rideglory/features/events/presentation/form/event_form_page.dart';
+import 'package:rideglory/features/events/presentation/list/events_page.dart';
+import 'package:rideglory/features/events/presentation/registration/form/event_registration_page.dart';
+import 'package:rideglory/features/events/presentation/registration/list/my_registrations_page.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
@@ -139,6 +147,65 @@ class AppRouter {
           final maintenance = state.extra as MaintenanceModel?;
           return MaintenanceFormPage(maintenance: maintenance);
         },
+      ),
+
+      // Events routes
+      GoRoute(
+        path: AppRoutes.events,
+        name: AppRoutes.events,
+        builder: (context, state) => const EventsPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.myEvents,
+        name: AppRoutes.myEvents,
+        builder: (context, state) => const EventsPage(showMyEvents: true),
+      ),
+      GoRoute(
+        path: AppRoutes.createEvent,
+        name: AppRoutes.createEvent,
+        builder: (context, state) => const EventFormPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.editEvent,
+        name: AppRoutes.editEvent,
+        builder: (context, state) {
+          final event = state.extra as EventModel?;
+          return EventFormPage(event: event);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.eventDetail,
+        name: AppRoutes.eventDetail,
+        builder: (context, state) {
+          final event = state.extra as EventModel;
+          return EventDetailPage(event: event);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.eventRegistration,
+        name: AppRoutes.eventRegistration,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          final event = extra['event'] as EventModel;
+          final registration = extra['registration'] as EventRegistrationModel?;
+          return EventRegistrationPage(
+            event: event,
+            existingRegistration: registration,
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.eventAttendees,
+        name: AppRoutes.eventAttendees,
+        builder: (context, state) {
+          final event = state.extra as EventModel;
+          return AttendeesPage(event: event);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.myRegistrations,
+        name: AppRoutes.myRegistrations,
+        builder: (context, state) => const MyRegistrationsPage(),
       ),
     ],
   );

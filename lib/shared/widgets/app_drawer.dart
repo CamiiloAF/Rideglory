@@ -13,6 +13,8 @@ import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/features/authentication/constants/auth_strings.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
+import 'package:rideglory/features/events/constants/event_strings.dart';
+import 'package:rideglory/features/events/constants/registration_strings.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
@@ -113,6 +115,40 @@ class AppDrawer extends StatelessWidget {
                     onTap: () {
                       Navigator.pop(context);
                       context.pushNamed(AppRoutes.vehicles);
+                    },
+                  ),
+                  const Divider(height: 32),
+                  DrawerMenuItem(
+                    icon: Icons.explore_outlined,
+                    title: EventStrings.events,
+                    isSelected: currentRoute == AppRoutes.events,
+                    onTap: () {
+                      Navigator.pop(context);
+                      if (currentRoute != AppRoutes.events) {
+                        context.pushReplacementNamed(AppRoutes.events);
+                      }
+                    },
+                  ),
+                  DrawerMenuItem(
+                    icon: Icons.event_note_outlined,
+                    title: EventStrings.myEvents,
+                    isSelected: currentRoute == AppRoutes.myEvents,
+                    onTap: () {
+                      Navigator.pop(context);
+                      if (currentRoute != AppRoutes.myEvents) {
+                        context.pushReplacementNamed(AppRoutes.myEvents);
+                      }
+                    },
+                  ),
+                  DrawerMenuItem(
+                    icon: Icons.assignment_outlined,
+                    title: RegistrationStrings.myRegistrations,
+                    isSelected: currentRoute == AppRoutes.myRegistrations,
+                    onTap: () {
+                      Navigator.pop(context);
+                      if (currentRoute != AppRoutes.myRegistrations) {
+                        context.pushNamed(AppRoutes.myRegistrations);
+                      }
                     },
                   ),
                   const Divider(height: 32),
