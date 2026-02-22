@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/constants/registration_strings.dart';
@@ -10,6 +11,7 @@ import 'package:rideglory/features/events/presentation/registration/list/widgets
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/shared/widgets/app_drawer.dart';
+import 'package:rideglory/shared/widgets/empty_state_widget.dart';
 
 class MyRegistrationsView extends StatelessWidget {
   const MyRegistrationsView({super.key});
@@ -36,37 +38,39 @@ class MyRegistrationsView extends StatelessWidget {
                     padding: const EdgeInsets.all(16),
                     itemCount: registrations.length,
                     separatorBuilder: (_, __) => const SizedBox(height: 8),
-                    itemBuilder: (context, index) =>
-                        RegistrationCard(registration: registrations[index]),
+                    itemBuilder: (context, index) {
+                      final reg = registrations[index];
+                      return RegistrationCard(
+                        registration: reg,
+                        onViewDetails: () => context.pushNamed(
+                          AppRoutes.registrationDetail,
+                          extra: (
+                            reg,
+                            reg.id != null
+                                ? () async => context
+                                      .read<MyRegistrationsCubit>()
+                                      .cancelRegistration(reg.id!)
+                                : null as Future<bool> Function()?,
+                          ),
+                        ),
+                        onViewEvent: () => context.pushNamed(
+                          AppRoutes.eventDetailById,
+                          extra: reg.eventId,
+                        ),
+                      );
+                    },
                   ),
                 ),
-                empty: () => Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.event_busy_outlined,
-                        size: 64,
-                        color: Colors.grey,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        RegistrationStrings.noRegistrations,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        RegistrationStrings.noRegistrationsDescription,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      const SizedBox(height: 24),
-                      OutlinedButton(
-                        onPressed: () => context.pushNamed(AppRoutes.events),
-                        child: const Text(EventStrings.events),
-                      ),
-                    ],
-                  ),
+                empty: () => EmptyStateWidget(
+                  icon: Icons.event_busy_outlined,
+                  title: RegistrationStrings.noRegistrations,
+                  description: RegistrationStrings.noRegistrationsDescription,
+                  actionButtonText: RegistrationStrings.goToEvents,
+                  showButtonIcon: false,
+                  onActionPressed: () => context.pushNamed(AppRoutes.events),
+                  onRefresh: () => context
+                      .read<MyRegistrationsCubit>()
+                      .fetchMyRegistrations(),
                 ),
                 error: (error) => Center(
                   child: Column(
@@ -78,7 +82,7 @@ class MyRegistrationsView extends StatelessWidget {
                         onPressed: () => context
                             .read<MyRegistrationsCubit>()
                             .fetchMyRegistrations(),
-                        child: const Text(EventStrings.retry),
+                        child: const Text(AppStrings.retry),
                       ),
                     ],
                   ),

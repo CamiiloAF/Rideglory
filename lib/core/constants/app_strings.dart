@@ -16,13 +16,8 @@ class AppStrings {
   static const String add = 'Agregar';
   static const String apply = 'Aplicar';
   static const String clear = 'Limpiar';
-  static const String search = 'Buscar';
   static const String retry = 'Reintentar';
-  static const String close = 'Cerrar';
   static const String back = 'Volver';
-  static const String next = 'Siguiente';
-  static const String previous = 'Anterior';
-  static const String done = 'Listo';
   static const String continue_ = 'Continuar';
   static const String exit = 'Salir';
 

@@ -2,21 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/features/events/constants/registration_form_fields.dart';
 import 'package:rideglory/features/events/constants/registration_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/registration/form/cubit/registration_form_cubit.dart';
-import 'package:rideglory/features/events/presentation/registration/form/widgets/vehicle_preload_bottom_sheet.dart';
-import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
+import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/shared/widgets/form/app_text_button.dart';
+import 'package:rideglory/shared/widgets/form/form_section_header.dart';
+import 'package:rideglory/shared/widgets/vehicle_selection_bottom_sheet.dart';
 
-// TODO Improve widgets
 class RegistrationFormContent extends StatelessWidget {
   final EventModel event;
 
   const RegistrationFormContent({super.key, required this.event});
+
+  Future<void> _preloadFromVehicle(BuildContext context) async {
+    final cubit = context.read<RegistrationFormCubit>();
+    final vehicles = context.read<VehicleListCubit>().activeVehicles;
+    if (vehicles.isEmpty) return;
+    final selected = await VehicleSelectionBottomSheet.show(
+      context: context,
+      subtitle: RegistrationStrings.selectVehicleToPreload,
+      vehicles: vehicles,
+    );
+    if (selected != null && context.mounted) {
+      cubit.preloadFromVehicle(selected);
+    }
+  }
+
+  void _clearForm(BuildContext context) {
+    context.read<RegistrationFormCubit>().formKey.currentState?.reset();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,24 +43,17 @@ class RegistrationFormContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _PreloadActions(
-          onPreloadFromProfile: () => cubit.preloadFromRiderProfile(),
-          onPreloadFromVehicle: () async {
-            final vehicleListCubit = getIt<VehicleListCubit>();
-            final vehicles = vehicleListCubit.activeVehicles;
-            if (vehicles.isEmpty) return;
-            final selected = await VehiclePreloadBottomSheet.show(
-              context: context,
-              vehicles: vehicles,
-              currentVehicle: context.read<VehicleCubit>().currentVehicle,
-            );
-            if (selected != null && context.mounted) {
-              cubit.preloadFromVehicle(selected);
-            }
-          },
+        Align(
+          alignment: Alignment.centerRight,
+          child: AppTextButton(
+            label: RegistrationStrings.clearForm,
+            onPressed: () => _clearForm(context),
+            icon: Icons.clear_all_rounded,
+            variant: AppTextButtonVariant.muted,
+          ),
         ),
-        const SizedBox(height: 20),
-        _SectionHeader(title: RegistrationStrings.personalInfo),
+        const SizedBox(height: 4),
+        FormSectionHeader(title: RegistrationStrings.personalInfo),
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.firstName,
@@ -129,7 +140,7 @@ class RegistrationFormContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        _SectionHeader(title: RegistrationStrings.medicalInfo),
+        FormSectionHeader(title: RegistrationStrings.medicalInfo),
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.eps,
@@ -162,7 +173,7 @@ class RegistrationFormContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        _SectionHeader(title: RegistrationStrings.emergencyContact),
+        FormSectionHeader(title: RegistrationStrings.emergencyContact),
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.emergencyContactName,
@@ -186,7 +197,22 @@ class RegistrationFormContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        _SectionHeader(title: RegistrationStrings.vehicleInfo),
+        // Vehicle section header with preload button
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: FormSectionHeader(title: RegistrationStrings.vehicleInfo),
+            ),
+            AppTextButton(
+              label: RegistrationStrings.preloadFromVehicle,
+              onPressed: () => _preloadFromVehicle(context),
+              icon: Icons.motorcycle_rounded,
+              iconSize: 16,
+              visualDensity: VisualDensity.compact,
+            ),
+          ],
+        ),
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.vehicleBrand,
@@ -237,83 +263,16 @@ class RegistrationFormContent extends StatelessWidget {
               editing: (_) => true,
               orElse: () => false,
             );
-            return FilledButton(
-              onPressed: isLoading
-                  ? null
-                  : () => context
-                        .read<RegistrationFormCubit>()
-                        .saveRegistration(),
-              child: isLoading
-                  ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
-                    )
-                  : Text(
-                      isEditing
-                          ? RegistrationStrings.updateRegistration
-                          : RegistrationStrings.sendRegistration,
-                    ),
+            return AppButton(
+              label: isEditing
+                  ? RegistrationStrings.updateRegistration
+                  : RegistrationStrings.sendRegistration,
+              onPressed: isLoading ? null : cubit.saveRegistration,
+              isLoading: isLoading,
             );
           },
         ),
         const SizedBox(height: 32),
-      ],
-    );
-  }
-}
-
-class _SectionHeader extends StatelessWidget {
-  final String title;
-  const _SectionHeader({required this.title});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: theme.textTheme.titleSmall?.copyWith(
-            color: theme.colorScheme.primary,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const Divider(height: 8),
-      ],
-    );
-  }
-}
-
-class _PreloadActions extends StatelessWidget {
-  final VoidCallback onPreloadFromProfile;
-  final VoidCallback onPreloadFromVehicle;
-
-  const _PreloadActions({
-    required this.onPreloadFromProfile,
-    required this.onPreloadFromVehicle,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: [
-        OutlinedButton.icon(
-          onPressed: onPreloadFromProfile,
-          icon: const Icon(Icons.person_outlined, size: 18),
-          label: const Text(RegistrationStrings.preloadFromMainVehicle),
-        ),
-        OutlinedButton.icon(
-          onPressed: onPreloadFromVehicle,
-          icon: const Icon(Icons.two_wheeler_outlined, size: 18),
-          label: const Text(RegistrationStrings.preloadFromVehicle),
-        ),
       ],
     );
   }

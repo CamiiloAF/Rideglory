@@ -9,10 +9,12 @@ import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/delete/cubit/event_delete_cubit.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/event_card.dart';
+import 'package:rideglory/shared/widgets/no_search_results_empty_widget.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/shared/widgets/empty_state_widget.dart';
+import 'package:rideglory/shared/widgets/form/app_search_bar.dart';
 import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
 import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
-import 'package:rideglory/features/events/presentation/list/widgets/events_state_widgets.dart';
 import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 
 class EventsDataView extends StatelessWidget {
@@ -26,18 +28,16 @@ class EventsDataView extends StatelessWidget {
 
     return Column(
       children: [
-        Padding(
+        AppSearchBar(
+          hintText: EventStrings.searchEvents,
+          onSearchChanged: (query) =>
+              context.read<EventsCubit>().updateSearchQuery(query),
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-          child: SearchBar(
-            hintText: EventStrings.searchEvents,
-            leading: const Icon(Icons.search),
-            onChanged: (v) => context.read<EventsCubit>().updateSearchQuery(v),
-          ),
         ),
-        Expanded(
-          child: events.isEmpty
-              ? const EventNoSearchResultsWidget()
-              : RefreshIndicator(
+        events.isEmpty
+            ? NoSearchResultsEmptyWidget()
+            : Expanded(
+                child: RefreshIndicator(
                   onRefresh: () => context.read<EventsCubit>().fetchEvents(),
                   child: ListView.builder(
                     padding: const EdgeInsets.all(16),
@@ -75,7 +75,7 @@ class EventsDataView extends StatelessWidget {
                     },
                   ),
                 ),
-        ),
+              ),
       ],
     );
   }

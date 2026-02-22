@@ -56,6 +56,7 @@ class EventRegistrationStatusCard extends StatelessWidget {
         status: registration!.status,
         description: EventStrings.pendingDescription,
         onCancel: onCancelRegistration,
+        onViewRecommendations: onViewRecommendations,
       ),
       RegistrationStatus.approved => RegistrationStatusContent(
         status: registration!.status,

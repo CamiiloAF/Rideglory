@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
+import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/shared/widgets/form/app_text_button.dart';
 
 class NoRegistrationContent extends StatelessWidget {
   final EventModel event;
@@ -36,17 +38,17 @@ class NoRegistrationContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        FilledButton.icon(
+        AppButton(
+          label: EventStrings.joinEvent,
           onPressed: onRegister,
-          icon: const Icon(Icons.how_to_reg_outlined),
-          label: const Text(EventStrings.joinEvent),
+          icon: Icons.how_to_reg_outlined,
         ),
         if (onViewRecommendations != null) ...[
           const SizedBox(height: 8),
-          TextButton.icon(
+          AppTextButton(
+            label: EventStrings.viewRecommendations,
             onPressed: onViewRecommendations,
-            icon: const Icon(Icons.tips_and_updates_outlined),
-            label: const Text(EventStrings.viewRecommendations),
+            icon: Icons.tips_and_updates_outlined,
           ),
         ],
       ],

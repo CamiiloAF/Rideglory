@@ -33,11 +33,12 @@ class RegistrationStrings {
   static const String vin = 'VIN (opcional)';
 
   // Vehicle preload
-  static const String preloadFromVehicle = 'Precargar desde vehículo';
+  static const String preloadFromVehicle = 'Precargar vehículo';
   static const String selectVehicleToPreload =
       'Selecciona un vehículo para precargar la información';
-  static const String preloadFromMainVehicle =
-      'Precargar desde vehículo principal';
+
+  // Form actions
+  static const String clearForm = 'Limpiar formulario';
 
   // Save button
   static const String sendRegistration = 'Enviar inscripción';
@@ -82,4 +83,15 @@ class RegistrationStrings {
       'Error al cargar las inscripciones';
   static const String errorSendingRegistration =
       'Error al enviar la inscripción';
+
+  // Actions
+  static const String viewDetail = 'Ver detalle';
+  static const String viewEvent = 'Ver evento';
+  static const String goToEvents = 'Ir a eventos';
+
+  // Detail page
+  static const String registrationDetail = 'Detalle de inscripción';
+  static const String eventInfo = 'Información del evento';
+  static const String inscriptionDate = 'Fecha de inscripción';
+  static const String errorLoadingEvent = 'Error al cargar el evento';
 }

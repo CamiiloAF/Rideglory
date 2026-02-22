@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/nothing.dart';
 import 'package:rideglory/core/domain/result_state.dart';
@@ -9,6 +10,7 @@ import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/events/domain/use_cases/cancel_event_registration_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_my_registration_for_event_use_case.dart';
 import 'package:rideglory/features/events/presentation/delete/cubit/event_delete_cubit.dart';
 import 'package:rideglory/features/events/presentation/detail/cubit/event_detail_cubit.dart';
@@ -31,9 +33,10 @@ class EventDetailPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) =>
-              EventDetailCubit(getIt<GetMyRegistrationForEventUseCase>())
-                ..loadMyRegistration(event.id!),
+          create: (_) => EventDetailCubit(
+            getIt<GetMyRegistrationForEventUseCase>(),
+            getIt<CancelEventRegistrationUseCase>(),
+          )..loadMyRegistration(event.id!),
         ),
         BlocProvider(create: (_) => getIt<EventDeleteCubit>()),
       ],
@@ -122,8 +125,12 @@ class _EventDetailView extends StatelessWidget {
                       data: (registration) => EventRegistrationStatusCard(
                         event: event,
                         registration: registration,
-                        onRegister: () =>
-                            _navigateToRegistration(context, null),
+                        onRegister: () => _navigateToRegistration(
+                          context,
+                          registration?.status == RegistrationStatus.cancelled
+                              ? registration
+                              : null,
+                        ),
                         onEditRegistration: registration != null
                             ? () =>
                                   _navigateToRegistration(context, registration)
@@ -177,19 +184,30 @@ class _EventDetailView extends StatelessWidget {
     BuildContext context,
     EventRegistrationModel registration,
   ) async {
+    var confirmed = false;
     await ConfirmationDialog.show(
       context: context,
       title: EventStrings.cancelRegistrationTitle,
       content: EventStrings.cancelRegistrationMessage,
       dialogType: DialogType.warning,
-      confirmLabel: EventStrings.cancelRegistration,
+      confirmLabel: AppStrings.accept,
       confirmType: DialogActionType.danger,
       onConfirm: () {
-        if (registration.id != null && context.mounted) {
-          context.read<EventDetailCubit>().cancelRegistration(registration.id!);
-        }
+        confirmed = true;
       },
     );
+    if (!confirmed || !context.mounted) return;
+    final success = await context.read<EventDetailCubit>().cancelRegistration(
+      registration.id!,
+    );
+    if (success && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(EventStrings.cancelRegistrationSuccess),
+          backgroundColor: Colors.green,
+        ),
+      );
+    }
   }
 
   void _showRecommendations(BuildContext context) {

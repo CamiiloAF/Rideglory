@@ -12,6 +12,8 @@ import 'package:rideglory/features/events/presentation/form/event_form_page.dart
 import 'package:rideglory/features/events/presentation/list/events_page.dart';
 import 'package:rideglory/features/events/presentation/registration/form/event_registration_page.dart';
 import 'package:rideglory/features/events/presentation/registration/list/my_registrations_page.dart';
+import 'package:rideglory/features/events/presentation/registration/detail/registration_detail_page.dart';
+import 'package:rideglory/features/events/presentation/detail/event_detail_by_id_page.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
@@ -206,6 +208,26 @@ class AppRouter {
         path: AppRoutes.myRegistrations,
         name: AppRoutes.myRegistrations,
         builder: (context, state) => const MyRegistrationsPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.registrationDetail,
+        name: AppRoutes.registrationDetail,
+        builder: (context, state) {
+          final extra =
+              state.extra as (EventRegistrationModel, Future<bool> Function()?);
+          return RegistrationDetailPage(
+            registration: extra.$1,
+            onCancelRegistration: extra.$2,
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.eventDetailById,
+        name: AppRoutes.eventDetailById,
+        builder: (context, state) {
+          final eventId = state.extra as String;
+          return EventDetailByIdPage(eventId: eventId);
+        },
       ),
     ],
   );

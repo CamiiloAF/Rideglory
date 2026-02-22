@@ -31,6 +31,13 @@ class AppDrawer extends StatelessWidget {
     context.goAndClearStack(AppRoutes.login);
   }
 
+  void _goTo(String route, BuildContext context) {
+    Navigator.pop(context);
+    if (currentRoute != route) {
+      context.goAndClearStack(route);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final vehicleCubit = context.watch<VehicleCubit>();
@@ -102,10 +109,7 @@ class AppDrawer extends StatelessWidget {
                     title: MaintenanceStrings.maintenances,
                     isSelected: currentRoute == AppRoutes.maintenances,
                     onTap: () {
-                      Navigator.pop(context);
-                      if (currentRoute != AppRoutes.maintenances) {
-                        context.pushReplacementNamed(AppRoutes.maintenances);
-                      }
+                      _goTo(AppRoutes.maintenances, context);
                     },
                   ),
                   DrawerMenuItem(
@@ -113,8 +117,7 @@ class AppDrawer extends StatelessWidget {
                     title: VehicleStrings.myVehicles,
                     isSelected: currentRoute == AppRoutes.vehicles,
                     onTap: () {
-                      Navigator.pop(context);
-                      context.pushNamed(AppRoutes.vehicles);
+                      _goTo(AppRoutes.vehicles, context);
                     },
                   ),
                   const Divider(height: 32),
@@ -123,10 +126,7 @@ class AppDrawer extends StatelessWidget {
                     title: EventStrings.events,
                     isSelected: currentRoute == AppRoutes.events,
                     onTap: () {
-                      Navigator.pop(context);
-                      if (currentRoute != AppRoutes.events) {
-                        context.pushReplacementNamed(AppRoutes.events);
-                      }
+                      _goTo(AppRoutes.events, context);
                     },
                   ),
                   DrawerMenuItem(
@@ -134,10 +134,7 @@ class AppDrawer extends StatelessWidget {
                     title: EventStrings.myEvents,
                     isSelected: currentRoute == AppRoutes.myEvents,
                     onTap: () {
-                      Navigator.pop(context);
-                      if (currentRoute != AppRoutes.myEvents) {
-                        context.pushReplacementNamed(AppRoutes.myEvents);
-                      }
+                      _goTo(AppRoutes.myEvents, context);
                     },
                   ),
                   DrawerMenuItem(
@@ -145,10 +142,7 @@ class AppDrawer extends StatelessWidget {
                     title: RegistrationStrings.myRegistrations,
                     isSelected: currentRoute == AppRoutes.myRegistrations,
                     onTap: () {
-                      Navigator.pop(context);
-                      if (currentRoute != AppRoutes.myRegistrations) {
-                        context.pushNamed(AppRoutes.myRegistrations);
-                      }
+                      _goTo(AppRoutes.myRegistrations, context);
                     },
                   ),
                   const Divider(height: 32),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 
+// TODO Update strings
 class NoSearchResultsEmptyWidget extends StatelessWidget {
   const NoSearchResultsEmptyWidget({super.key});
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
@@ -55,7 +56,7 @@ class AttendeesView extends StatelessWidget {
                         onPressed: () => context
                             .read<AttendeesCubit>()
                             .fetchAttendees(event.id!),
-                        child: const Text(EventStrings.retry),
+                        child: const Text(AppStrings.retry),
                       ),
                     ],
                   ),

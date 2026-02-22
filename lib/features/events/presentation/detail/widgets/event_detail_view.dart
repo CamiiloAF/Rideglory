@@ -158,7 +158,7 @@ class EventDetailView extends StatelessWidget {
       title: EventStrings.cancelRegistrationTitle,
       content: EventStrings.cancelRegistrationMessage,
       dialogType: DialogType.warning,
-      confirmLabel: EventStrings.cancelRegistration,
+      confirmLabel: AppStrings.accept,
       confirmType: DialogActionType.danger,
       onConfirm: () {
         if (registration.id != null && context.mounted) {

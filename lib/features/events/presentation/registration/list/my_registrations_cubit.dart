@@ -26,8 +26,11 @@ class MyRegistrationsCubit
     );
   }
 
-  Future<void> cancelRegistration(String registrationId) async {
+  Future<bool> cancelRegistration(String registrationId) async {
     final result = await _cancelRegistrationUseCase(registrationId);
-    result.fold((error) => null, (_) => fetchMyRegistrations());
+    return result.fold((error) => false, (_) {
+      fetchMyRegistrations();
+      return true;
+    });
   }
 }

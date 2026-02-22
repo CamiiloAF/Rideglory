@@ -35,7 +35,7 @@ class RegistrationFormCubit extends Cubit<RegistrationFormState> {
   final AuthService _authService;
 
   String? _eventId;
-  RiderProfileModel? riderProfile;
+  RiderProfileModel? _riderProfile;
 
   void initialize({
     required String eventId,
@@ -43,6 +43,10 @@ class RegistrationFormCubit extends Cubit<RegistrationFormState> {
   }) {
     _eventId = eventId;
     if (existingRegistration != null) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        _preloadFromExistingRegistration(existingRegistration);
+      });
+
       emit(RegistrationFormState.editing(registration: existingRegistration));
     } else {
       emit(const RegistrationFormState.initial());
@@ -50,10 +54,56 @@ class RegistrationFormCubit extends Cubit<RegistrationFormState> {
     _loadRiderProfile();
   }
 
+  void _preloadFromExistingRegistration(
+    EventRegistrationModel? existingRegistration,
+  ) {
+    formKey.currentState?.patchValue({
+      if (existingRegistration?.firstName != null)
+        RegistrationFormFields.firstName: existingRegistration!.firstName,
+      if (existingRegistration?.lastName != null)
+        RegistrationFormFields.lastName: existingRegistration!.lastName,
+      if (existingRegistration?.identificationNumber != null)
+        RegistrationFormFields.identificationNumber:
+            existingRegistration!.identificationNumber,
+      if (existingRegistration?.birthDate != null)
+        RegistrationFormFields.birthDate: existingRegistration!.birthDate,
+      if (existingRegistration?.phone != null)
+        RegistrationFormFields.phone: existingRegistration!.phone,
+      if (existingRegistration?.email != null)
+        RegistrationFormFields.email: existingRegistration!.email,
+      if (existingRegistration?.residenceCity != null)
+        RegistrationFormFields.residenceCity:
+            existingRegistration!.residenceCity,
+      if (existingRegistration?.eps != null)
+        RegistrationFormFields.eps: existingRegistration!.eps,
+      if (existingRegistration?.medicalInsurance != null)
+        RegistrationFormFields.medicalInsurance:
+            existingRegistration!.medicalInsurance,
+      if (existingRegistration?.bloodType != null)
+        RegistrationFormFields.bloodType: existingRegistration!.bloodType,
+      if (existingRegistration?.emergencyContactName != null)
+        RegistrationFormFields.emergencyContactName:
+            existingRegistration!.emergencyContactName,
+      if (existingRegistration?.emergencyContactPhone != null)
+        RegistrationFormFields.emergencyContactPhone:
+            existingRegistration!.emergencyContactPhone,
+      if (existingRegistration?.vehicleBrand != null)
+        RegistrationFormFields.vehicleBrand: existingRegistration!.vehicleBrand,
+      if (existingRegistration?.vehicleReference != null)
+        RegistrationFormFields.vehicleReference:
+            existingRegistration!.vehicleReference,
+      if (existingRegistration?.licensePlate != null)
+        RegistrationFormFields.licensePlate: existingRegistration!.licensePlate,
+      if (existingRegistration?.vin != null)
+        RegistrationFormFields.vin: existingRegistration!.vin,
+    });
+  }
+
   Future<void> _loadRiderProfile() async {
     final result = await _getRiderProfileUseCase();
     result.fold((_) => null, (profile) {
-      riderProfile = profile;
+      _riderProfile = profile;
+      preloadFromRiderProfile();
     });
   }
 
@@ -67,8 +117,8 @@ class RegistrationFormCubit extends Cubit<RegistrationFormState> {
   }
 
   void preloadFromRiderProfile() {
-    if (riderProfile == null) return;
-    final profile = riderProfile!;
+    if (_riderProfile == null) return;
+    final profile = _riderProfile!;
     formKey.currentState?.patchValue({
       if (profile.firstName != null)
         RegistrationFormFields.firstName: profile.firstName,
@@ -99,17 +149,13 @@ class RegistrationFormCubit extends Cubit<RegistrationFormState> {
 
   Future<void> saveRegistration() async {
     final registration = _buildRegistration();
+
     if (registration == null) return;
 
     emit(const RegistrationFormState.loading());
 
-    final isEditing = state.maybeWhen(
-      editing: (_) => true,
-      orElse: () => false,
-    );
-
-    final result = isEditing
-        ? await _updateRegistrationUseCase(registration)
+    final result = registration.id != null
+        ? await _updateRegistrationUseCase(registration.copyWith())
         : await _addRegistrationUseCase(registration);
 
     result.fold(

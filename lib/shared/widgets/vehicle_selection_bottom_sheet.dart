@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
-import 'package:rideglory/features/maintenance/presentation/form/widgets/vehicle_list_item.dart';
+import 'package:rideglory/shared/widgets/vehicle_list_item.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
 class VehicleSelectionBottomSheet extends StatelessWidget {
+  final String? subtitle;
   final List<VehicleModel> vehicles;
   final String? selectedVehicleId;
 
   const VehicleSelectionBottomSheet({
     super.key,
+    this.subtitle,
     required this.vehicles,
     this.selectedVehicleId,
   });
 
   static Future<VehicleModel?> show({
     required BuildContext context,
+    String? subtitle,
     required List<VehicleModel> vehicles,
     String? selectedVehicleId,
   }) {
@@ -22,7 +24,8 @@ class VehicleSelectionBottomSheet extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => VehicleSelectionBottomSheet(
+      builder: (_) => VehicleSelectionBottomSheet(
+        subtitle: subtitle,
         vehicles: vehicles,
         selectedVehicleId: selectedVehicleId,
       ),
@@ -60,18 +63,20 @@ class VehicleSelectionBottomSheet extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  MaintenanceStrings.selectVehicle,
+                  'Seleccionar vehículo',
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: Color(0xFF1F2937),
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  MaintenanceStrings.chooseVehicleForMaintenance,
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                ),
+                if (subtitle != null) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle!,
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                  ),
+                ],
               ],
             ),
           ),
@@ -95,7 +100,6 @@ class VehicleSelectionBottomSheet extends StatelessWidget {
             ),
           ),
 
-          // Bottom padding for safe area
           SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
         ],
       ),

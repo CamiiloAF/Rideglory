@@ -11,7 +11,7 @@ import 'package:rideglory/features/maintenance/presentation/form/widgets/change_
 import 'package:rideglory/features/maintenance/presentation/form/widgets/next_maintenance_mileage_field.dart';
 import 'package:rideglory/features/maintenance/presentation/form/widgets/save_maintenance_button.dart';
 import 'package:rideglory/features/maintenance/presentation/form/widgets/selected_vehicle_card.dart';
-import 'package:rideglory/features/maintenance/presentation/form/widgets/vehicle_selection_bottom_sheet.dart';
+import 'package:rideglory/shared/widgets/vehicle_selection_bottom_sheet.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
@@ -162,6 +162,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
 
     final selectedVehicle = await VehicleSelectionBottomSheet.show(
       context: context,
+      subtitle: MaintenanceStrings.chooseVehicleForMaintenance,
       vehicles: vehicles,
       selectedVehicleId: _selectedVehicle?.id,
     );
@@ -171,7 +172,6 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
         _selectedVehicle = selectedVehicle;
       });
 
-      // Update form field
       context
           .read<MaintenanceFormCubit>()
           .formKey

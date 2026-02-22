@@ -1,13 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/events/domain/use_cases/cancel_event_registration_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_my_registration_for_event_use_case.dart';
 
 class EventDetailCubit extends Cubit<ResultState<EventRegistrationModel?>> {
-  EventDetailCubit(this._getMyRegistrationUseCase)
-    : super(const ResultState.initial());
+  EventDetailCubit(
+    this._getMyRegistrationUseCase,
+    this._cancelRegistrationUseCase,
+  ) : super(const ResultState.initial());
 
   final GetMyRegistrationForEventUseCase _getMyRegistrationUseCase;
+  final CancelEventRegistrationUseCase _cancelRegistrationUseCase;
 
   String? _eventId;
 
@@ -21,8 +25,11 @@ class EventDetailCubit extends Cubit<ResultState<EventRegistrationModel?>> {
     );
   }
 
-  Future<void> cancelRegistration(String registrationId) async {
-    // Handled externally via MyRegistrationsCubit, just refresh
-    if (_eventId != null) loadMyRegistration(_eventId!);
+  Future<bool> cancelRegistration(String registrationId) async {
+    final result = await _cancelRegistrationUseCase(registrationId);
+    return result.fold((error) => false, (_) {
+      if (_eventId != null) loadMyRegistration(_eventId!);
+      return true;
+    });
   }
 }

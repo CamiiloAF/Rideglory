@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/shared/widgets/registration_status_chip.dart';
+import 'package:rideglory/shared/widgets/form/app_button.dart';
 
 class CancelledRegistrationContent extends StatelessWidget {
   final VoidCallback onRegister;
@@ -26,10 +27,10 @@ class CancelledRegistrationContent extends StatelessWidget {
           style: theme.textTheme.bodySmall,
         ),
         const SizedBox(height: 12),
-        FilledButton.icon(
+        AppButton(
+          label: EventStrings.joinEvent,
           onPressed: onRegister,
-          icon: const Icon(Icons.how_to_reg_outlined),
-          label: const Text(EventStrings.joinEvent),
+          icon: Icons.how_to_reg_outlined,
         ),
       ],
     );

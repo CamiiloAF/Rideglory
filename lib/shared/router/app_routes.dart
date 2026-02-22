@@ -28,4 +28,6 @@ abstract class AppRoutes {
   static const String eventRegistration = '/events/registration';
   static const String eventAttendees = '/events/attendees';
   static const String myRegistrations = '/events/my-registrations';
+  static const String registrationDetail = '/events/registration-detail';
+  static const String eventDetailById = '/events/detail-by-id';
 }

@@ -12,12 +12,13 @@ import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/shared/widgets/app_drawer.dart';
 import 'package:rideglory/shared/widgets/empty_state_widget.dart';
+import 'package:rideglory/shared/widgets/form/app_search_bar.dart';
 import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
 import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
+import 'package:rideglory/shared/widgets/no_search_results_empty_widget.dart';
 
 class VehicleListPage extends StatelessWidget {
   const VehicleListPage({super.key});
@@ -136,27 +137,28 @@ class _VehicleListViewState extends State<_VehicleListView> {
 
   @override
   Widget build(BuildContext context) {
+    final showingArchived = context
+        .watch<VehicleListCubit>()
+        .showArchivedVehicles;
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppAppBar(
-        title: context.watch<VehicleListCubit>().showArchivedVehicles
+        title: showingArchived
             ? VehicleStrings.archivedVehicle
             : VehicleStrings.myVehicles,
         actions: [
           IconButton(
             icon: Icon(
-              context.watch<VehicleListCubit>().showArchivedVehicles
-                  ? Icons.inventory_2
-                  : Icons.inventory_2_outlined,
+              showingArchived ? Icons.inventory_2 : Icons.inventory_2_outlined,
             ),
             onPressed: () {
               context.read<VehicleListCubit>().toggleShowArchived();
             },
-            tooltip: context.watch<VehicleListCubit>().showArchivedVehicles
+            tooltip: showingArchived
                 ? VehicleStrings.showActiveVehicles
                 : VehicleStrings.viewArchived,
           ),
-          if (!context.watch<VehicleListCubit>().showArchivedVehicles) ...[
+          if (!showingArchived) ...[
             IconButton(
               icon: const Icon(Icons.build_circle_outlined),
               onPressed: () {
@@ -201,9 +203,6 @@ class _VehicleListViewState extends State<_VehicleListView> {
                 ),
               ),
               empty: () {
-                final showingArchived = context
-                    .watch<VehicleListCubit>()
-                    .showArchivedVehicles;
                 return EmptyStateWidget(
                   icon: showingArchived
                       ? Icons.inventory_2_outlined
@@ -222,12 +221,11 @@ class _VehicleListViewState extends State<_VehicleListView> {
                       : () {
                           _goToCreateVehicle(context);
                         },
-                  iconColor: const Color(0xFF6366F1),
                 );
               },
               data: (vehicles) {
                 final currentVehicleId = context
-                    .watch<VehicleCubit>()
+                    .read<VehicleCubit>()
                     .currentVehicle
                     ?.id;
 
@@ -235,80 +233,23 @@ class _VehicleListViewState extends State<_VehicleListView> {
                   onRefresh: () async {
                     await _loadVechicles(context);
                   },
+                  // TODO Move to another widget
                   child: Column(
                     children: [
                       // Search bar
-                      if (!context
-                          .watch<VehicleListCubit>()
-                          .showArchivedVehicles)
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: VehicleStrings.searchVehicles,
-                              prefixIcon: const Icon(Icons.search),
-                              filled: true,
-                              fillColor: Colors.white,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: Colors.grey[300]!,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(
-                                  color: Colors.grey[300]!,
-                                ),
-                              ),
-                              contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 14,
-                              ),
-                            ),
-                            onChanged: (value) {
-                              context
-                                  .read<VehicleListCubit>()
-                                  .updateSearchQuery(value);
-                            },
-                          ),
+                      if (!showingArchived)
+                        AppSearchBar(
+                          hintText: VehicleStrings.searchVehicles,
+                          onSearchChanged: (value) {
+                            context.read<VehicleListCubit>().updateSearchQuery(
+                              value,
+                            );
+                          },
                         ),
                       // Vehicle list or empty filtered state
                       Expanded(
                         child: vehicles.isEmpty
-                            ? Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(32),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.search_off_rounded,
-                                        size: 80,
-                                        color: Colors.grey[400],
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Text(
-                                        AppStrings.noResults,
-                                        style: context.titleMedium?.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        context
-                                                .watch<VehicleListCubit>()
-                                                .showArchivedVehicles
-                                            ? VehicleStrings
-                                                  .archivedVehicleMessage
-                                            : VehicleStrings.adjustSearch,
-                                        style: context.bodyMedium,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
+                            ? NoSearchResultsEmptyWidget()
                             : ListView.builder(
                                 padding: const EdgeInsets.all(16),
                                 itemCount: vehicles.length,

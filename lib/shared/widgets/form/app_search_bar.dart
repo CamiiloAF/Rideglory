@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 
-class MaintenanceSearchBar extends StatelessWidget {
+class AppSearchBar extends StatelessWidget {
+  final String hintText;
   final Function(String) onSearchChanged;
+  final EdgeInsetsGeometry? padding;
 
-  const MaintenanceSearchBar({super.key, required this.onSearchChanged});
+  const AppSearchBar({
+    super.key,
+    required this.hintText,
+    required this.onSearchChanged,
+    this.padding,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      padding: padding ?? const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: TextField(
         decoration: InputDecoration(
-          hintText: MaintenanceStrings.searchMaintenances,
+          hintText: hintText,
           prefixIcon: const Icon(Icons.search),
           filled: true,
           fillColor: Colors.white,

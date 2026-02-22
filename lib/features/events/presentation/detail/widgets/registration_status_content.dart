@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/shared/widgets/registration_status_chip.dart';
+import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/shared/widgets/form/app_text_button.dart';
 
 class RegistrationStatusContent extends StatelessWidget {
   final RegistrationStatus status;
@@ -31,10 +33,10 @@ class RegistrationStatusContent extends StatelessWidget {
         if (onEdit != null || onCancel != null || onViewRecommendations != null)
           const SizedBox(height: 12),
         if (onEdit != null)
-          FilledButton.icon(
+          AppButton(
+            label: EventStrings.editRegistration,
             onPressed: onEdit,
-            icon: const Icon(Icons.edit_outlined),
-            label: const Text(EventStrings.editRegistration),
+            icon: Icons.edit_outlined,
           ),
         if (onViewRecommendations != null) ...[
           const SizedBox(height: 8),
@@ -46,11 +48,11 @@ class RegistrationStatusContent extends StatelessWidget {
         ],
         if (onCancel != null) ...[
           const SizedBox(height: 8),
-          TextButton.icon(
+          AppTextButton(
+            label: EventStrings.cancelRegistration,
             onPressed: onCancel,
-            icon: const Icon(Icons.cancel_outlined),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            label: const Text(EventStrings.cancelRegistration),
+            icon: Icons.cancel_outlined,
+            variant: AppTextButtonVariant.danger,
           ),
         ],
       ],

@@ -8,21 +8,22 @@ class ContainerPullToRefresh extends StatelessWidget {
   });
 
   final Widget child;
-  final RefreshCallback onRefresh;
+  final RefreshCallback? onRefresh;
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: onRefresh,
+      onRefresh: onRefresh ?? () async {},
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            minHeight:
+            maxHeight:
                 MediaQuery.of(context).size.height -
                 kToolbarHeight -
                 MediaQuery.of(context).padding.top -
-                MediaQuery.of(context).padding.bottom,
+                MediaQuery.of(context).padding.bottom -
+                100,
           ),
           child: child,
         ),

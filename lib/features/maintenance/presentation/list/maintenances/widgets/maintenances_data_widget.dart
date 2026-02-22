@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenance_list.dart';
-import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenance_search_bar.dart';
-import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/no_search_results_empty_widget.dart';
+import 'package:rideglory/shared/widgets/no_search_results_empty_widget.dart';
+import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
+import 'package:rideglory/shared/widgets/form/app_search_bar.dart';
 
 class MaintenancesDataWidget extends StatelessWidget {
   final List<MaintenanceModel> maintenances;
@@ -28,7 +29,10 @@ class MaintenancesDataWidget extends StatelessWidget {
       onRefresh: onRefresh,
       child: Column(
         children: [
-          MaintenanceSearchBar(onSearchChanged: onSearchChanged),
+          AppSearchBar(
+            hintText: MaintenanceStrings.searchMaintenances,
+            onSearchChanged: onSearchChanged,
+          ),
           Expanded(
             child: maintenances.isEmpty
                 ? const NoSearchResultsEmptyWidget()

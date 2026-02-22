@@ -11,9 +11,11 @@ import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/event_filters_bottom_sheet.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/events_data_view.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/events_state_widgets.dart';
+import 'package:rideglory/shared/widgets/no_search_results_empty_widget.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/shared/widgets/app_drawer.dart';
+import 'package:rideglory/shared/widgets/empty_state_widget.dart';
 
 class EventsPageView extends StatelessWidget {
   final bool showMyEvents;
@@ -46,14 +48,11 @@ class EventsPageView extends StatelessWidget {
             ),
             onPressed: () => _showFilters(context),
           ),
-          IconButton(
-            icon: const Icon(Icons.my_library_books_outlined),
-            tooltip: EventStrings.myEvents,
-            onPressed: () => context.pushNamed(AppRoutes.myEvents),
-          ),
         ],
       ),
-      drawer: const AppDrawer(currentRoute: AppRoutes.events),
+      drawer: AppDrawer(
+        currentRoute: showMyEvents ? AppRoutes.myEvents : AppRoutes.events,
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _navigateToCreate(context),
         child: const Icon(Icons.add),
@@ -85,19 +84,26 @@ class EventsPageView extends StatelessWidget {
           ),
         ],
         child: BlocBuilder<EventsCubit, ResultState<List<EventModel>>>(
-          builder: (context, state) => state.maybeWhen(
-            loading: () => const EventsLoadingWidget(),
-            error: (error) => EventsErrorWidget(
-              message: error.message,
-              onRefresh: () => context.read<EventsCubit>().fetchEvents(),
-            ),
-            empty: () => EventsEmptyWidget(
-              onRefresh: () => context.read<EventsCubit>().fetchEvents(),
-              onCreatePressed: () => _navigateToCreate(context),
-            ),
-            data: (events) => EventsDataView(events: events),
-            orElse: () => const EventsLoadingWidget(),
-          ),
+          builder: (context, state) {
+            final eventsCubit = context.read<EventsCubit>();
+            return state.maybeWhen(
+              loading: () => const EventsLoadingWidget(),
+              error: (error) => EventsErrorWidget(
+                message: error.message,
+                onRefresh: () => eventsCubit.fetchEvents(),
+              ),
+              empty: () => EmptyStateWidget(
+                icon: Icons.event_outlined,
+                title: EventStrings.noEvents,
+                description: EventStrings.noEventsDescription,
+                actionButtonText: EventStrings.createEvent,
+                onActionPressed: () => _navigateToCreate(context),
+                onRefresh: () => eventsCubit.fetchEvents(),
+              ),
+              data: (events) => EventsDataView(events: events),
+              orElse: () => const EventsLoadingWidget(),
+            );
+          },
         ),
       ),
     );
@@ -111,13 +117,6 @@ class EventsPageView extends StatelessWidget {
   }
 
   Future<void> _showFilters(BuildContext context) async {
-    final cubit = context.read<EventsCubit>();
-    final result = await EventFiltersBottomSheet.show(
-      context: context,
-      initialFilters: cubit.filters,
-    );
-    if (result != null && context.mounted) {
-      cubit.updateFilters(result);
-    }
+    await EventFiltersBottomSheet.show(context: context);
   }
 }

@@ -1,34 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:rideglory/features/events/constants/event_filter_form_fields.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
+import 'package:rideglory/shared/widgets/form/app_button.dart';
 import 'package:rideglory/shared/widgets/form/app_checkbox.dart';
 import 'package:rideglory/shared/widgets/form/app_date_picker.dart';
+import 'package:rideglory/shared/widgets/form/app_text_button.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 
-// TODO Refactor to separate widget
-class EventFiltersBottomSheet extends StatelessWidget {
-  final EventFilters initialFilters;
+class EventFiltersBottomSheet extends StatefulWidget {
+  const EventFiltersBottomSheet({super.key, required this.cubitContext});
 
-  const EventFiltersBottomSheet({super.key, required this.initialFilters});
+  final BuildContext cubitContext;
 
-  static Future<EventFilters?> show({
-    required BuildContext context,
-    required EventFilters initialFilters,
-  }) {
-    return showModalBottomSheet<EventFilters>(
+  static Future<void> show({required BuildContext context}) {
+    return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => EventFiltersBottomSheet(initialFilters: initialFilters),
+      builder: (_) => EventFiltersBottomSheet(cubitContext: context),
     );
   }
 
   @override
+  State<EventFiltersBottomSheet> createState() =>
+      _EventFiltersBottomSheetState();
+}
+
+class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
+  final _formKey = GlobalKey<FormBuilderState>();
+  late Set<EventType> _selectedTypes;
+  late Set<EventDifficulty> _selectedDifficulties;
+
+  @override
+  void initState() {
+    super.initState();
+    final cubit = widget.cubitContext.read<EventsCubit>();
+    _selectedTypes = Set.from(cubit.filters.types);
+    _selectedDifficulties = Set.from(cubit.filters.difficulties);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormBuilderState>();
     final theme = Theme.of(context);
+    final cubit = widget.cubitContext.read<EventsCubit>();
 
     return DraggableScrollableSheet(
       initialChildSize: 0.75,
@@ -40,14 +58,13 @@ class EventFiltersBottomSheet extends StatelessWidget {
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: FormBuilder(
-          key: formKey,
+          key: _formKey,
           initialValue: {
-            // TODO Improve keys access
-            'city': initialFilters.city ?? '',
-            'freeOnly': initialFilters.freeOnly,
-            'multiBrandOnly': initialFilters.multiBrandOnly,
-            'startDate': initialFilters.startDate,
-            'endDate': initialFilters.endDate,
+            EventFilterFormFields.city: cubit.filters.city ?? '',
+            EventFilterFormFields.freeOnly: cubit.filters.freeOnly,
+            EventFilterFormFields.multiBrandOnly: cubit.filters.multiBrandOnly,
+            EventFilterFormFields.startDate: cubit.filters.startDate,
+            EventFilterFormFields.endDate: cubit.filters.endDate,
           },
           child: Column(
             children: [
@@ -73,11 +90,17 @@ class EventFiltersBottomSheet extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    TextButton(
+                    AppTextButton(
+                      label: EventStrings.clearFilters,
                       onPressed: () {
-                        Navigator.of(context).pop(const EventFilters());
+                        setState(() {
+                          _selectedTypes.clear();
+                          _selectedDifficulties.clear();
+                        });
+                        _formKey.currentState?.reset();
+                        cubit.clearFilters();
+                        Navigator.of(context).pop();
                       },
-                      child: const Text(EventStrings.clearFilters),
                     ),
                   ],
                 ),
@@ -99,8 +122,22 @@ class EventFiltersBottomSheet extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      _EventTypeFilterChips(
-                        selectedTypes: initialFilters.types,
+                      Wrap(
+                        spacing: 8,
+                        children: EventType.values.map((type) {
+                          final selected = _selectedTypes.contains(type);
+                          return FilterChip(
+                            label: Text(type.label),
+                            selected: selected,
+                            onSelected: (_) {
+                              setState(() {
+                                selected
+                                    ? _selectedTypes.remove(type)
+                                    : _selectedTypes.add(type);
+                              });
+                            },
+                          );
+                        }).toList(),
                       ),
                       const SizedBox(height: 16),
                       // Difficulty filter
@@ -111,13 +148,27 @@ class EventFiltersBottomSheet extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      _DifficultyFilterChips(
-                        selectedDifficulties: initialFilters.difficulties,
+                      Wrap(
+                        spacing: 8,
+                        children: EventDifficulty.values.map((diff) {
+                          final selected = _selectedDifficulties.contains(diff);
+                          return FilterChip(
+                            label: Text('🌶' * diff.value),
+                            selected: selected,
+                            onSelected: (_) {
+                              setState(() {
+                                selected
+                                    ? _selectedDifficulties.remove(diff)
+                                    : _selectedDifficulties.add(diff);
+                              });
+                            },
+                          );
+                        }).toList(),
                       ),
                       const SizedBox(height: 16),
                       // City filter
                       AppTextField(
-                        name: 'city',
+                        name: EventFilterFormFields.city,
                         labelText: EventStrings.filterByCity,
                         prefixIcon: Icons.location_city_outlined,
                       ),
@@ -134,7 +185,7 @@ class EventFiltersBottomSheet extends StatelessWidget {
                         children: [
                           Expanded(
                             child: AppDatePicker(
-                              fieldName: 'startDate',
+                              fieldName: EventFilterFormFields.startDate,
                               labelText: EventStrings.startDate,
                               firstDate: DateTime(2020),
                               lastDate: DateTime(2030),
@@ -143,7 +194,7 @@ class EventFiltersBottomSheet extends StatelessWidget {
                           const SizedBox(width: 12),
                           Expanded(
                             child: AppDatePicker(
-                              fieldName: 'endDate',
+                              fieldName: EventFilterFormFields.endDate,
                               labelText: EventStrings.endDate,
                               firstDate: DateTime(2020),
                               lastDate: DateTime(2030),
@@ -154,11 +205,11 @@ class EventFiltersBottomSheet extends StatelessWidget {
                       const SizedBox(height: 16),
                       // Boolean filters
                       AppCheckbox(
-                        name: 'freeOnly',
+                        name: EventFilterFormFields.freeOnly,
                         title: EventStrings.filterByFreeOnly,
                       ),
                       AppCheckbox(
-                        name: 'multiBrandOnly',
+                        name: EventFilterFormFields.multiBrandOnly,
                         title: EventStrings.filterByMultiBrand,
                       ),
                       const SizedBox(height: 24),
@@ -174,122 +225,38 @@ class EventFiltersBottomSheet extends StatelessWidget {
                   bottom: MediaQuery.of(context).viewInsets.bottom + 16,
                   top: 8,
                 ),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: FilledButton(
-                    onPressed: () {
-                      formKey.currentState?.save();
-                      final values = formKey.currentState?.value ?? {};
+                child: AppButton(
+                  label: EventStrings.applyFilters,
+                  onPressed: () {
+                    _formKey.currentState?.save();
+                    final values = _formKey.currentState?.value ?? {};
 
-                      final typeChipState = _typeFilterKey.currentState;
-                      final diffChipState = _diffFilterKey.currentState;
+                    final filters = EventFilters(
+                      types: _selectedTypes,
+                      difficulties: _selectedDifficulties,
+                      city: values[EventFilterFormFields.city] as String?,
+                      startDate:
+                          values[EventFilterFormFields.startDate] as DateTime?,
+                      endDate:
+                          values[EventFilterFormFields.endDate] as DateTime?,
+                      freeOnly:
+                          values[EventFilterFormFields.freeOnly] as bool? ??
+                          false,
+                      multiBrandOnly:
+                          values[EventFilterFormFields.multiBrandOnly]
+                              as bool? ??
+                          false,
+                    );
 
-                      Navigator.of(context).pop(
-                        EventFilters(
-                          types:
-                              typeChipState?.selectedTypes ??
-                              initialFilters.types,
-                          difficulties:
-                              diffChipState?.selectedDifficulties ??
-                              initialFilters.difficulties,
-                          city: values['city'] as String?,
-                          startDate: values['startDate'] as DateTime?,
-                          endDate: values['endDate'] as DateTime?,
-                          freeOnly: values['freeOnly'] as bool? ?? false,
-                          multiBrandOnly:
-                              values['multiBrandOnly'] as bool? ?? false,
-                        ),
-                      );
-                    },
-                    child: const Text(EventStrings.applyFilters),
-                  ),
+                    cubit.updateFilters(filters);
+                    Navigator.of(context).pop();
+                  },
                 ),
               ),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  static final _typeFilterKey = GlobalKey<_EventTypeFilterChipsState>();
-  static final _diffFilterKey = GlobalKey<_DifficultyFilterChipsState>();
-}
-
-class _EventTypeFilterChips extends StatefulWidget {
-  final Set<EventType> selectedTypes;
-
-  const _EventTypeFilterChips({required this.selectedTypes});
-
-  @override
-  State<_EventTypeFilterChips> createState() => _EventTypeFilterChipsState();
-}
-
-class _EventTypeFilterChipsState extends State<_EventTypeFilterChips> {
-  late Set<EventType> selectedTypes;
-
-  @override
-  void initState() {
-    super.initState();
-    selectedTypes = Set.from(widget.selectedTypes);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 8,
-      children: EventType.values.map((type) {
-        final selected = selectedTypes.contains(type);
-        return FilterChip(
-          label: Text(type.label),
-          selected: selected,
-          onSelected: (_) {
-            setState(() {
-              selected ? selectedTypes.remove(type) : selectedTypes.add(type);
-            });
-          },
-        );
-      }).toList(),
-    );
-  }
-}
-
-class _DifficultyFilterChips extends StatefulWidget {
-  final Set<EventDifficulty> selectedDifficulties;
-
-  const _DifficultyFilterChips({required this.selectedDifficulties});
-
-  @override
-  State<_DifficultyFilterChips> createState() => _DifficultyFilterChipsState();
-}
-
-class _DifficultyFilterChipsState extends State<_DifficultyFilterChips> {
-  late Set<EventDifficulty> selectedDifficulties;
-
-  @override
-  void initState() {
-    super.initState();
-    selectedDifficulties = Set.from(widget.selectedDifficulties);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 8,
-      children: EventDifficulty.values.map((diff) {
-        final selected = selectedDifficulties.contains(diff);
-        return FilterChip(
-          label: Text('🌶' * diff.value),
-          selected: selected,
-          onSelected: (_) {
-            setState(() {
-              selected
-                  ? selectedDifficulties.remove(diff)
-                  : selectedDifficulties.add(diff);
-            });
-          },
-        );
-      }).toList(),
     );
   }
 }

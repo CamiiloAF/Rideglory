@@ -6,14 +6,14 @@ class AppCheckbox extends StatelessWidget {
     super.key,
     required this.name,
     required this.title,
-    this.initialValue = false,
+    this.initialValue,
     this.enabled = true,
     this.customTitle,
   });
 
   final String name;
   final String title;
-  final bool initialValue;
+  final bool? initialValue;
   final bool enabled;
   final Widget? customTitle;
 

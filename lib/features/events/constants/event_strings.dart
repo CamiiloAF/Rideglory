@@ -135,10 +135,9 @@ class EventStrings {
   static const String cancelRegistrationTitle = 'Cancelar inscripción';
   static const String cancelRegistrationMessage =
       '¿Estás seguro de que deseas cancelar tu inscripción? Esta acción no se puede deshacer. Podrás inscribirte nuevamente en cualquier momento.';
-
-  // Generic actions
-  static const String retry = 'Reintentar';
-
+  static const String cancelRegistrationSuccess =
+      'Tu inscripción fue cancelada exitosamente';
+      
   // Dynamic confirmation messages
   static String approveConfirmMessage(String name) =>
       '¿Aprobar la inscripción de $name?';
