@@ -1,5 +1,3 @@
-import 'package:rideglory/features/events/domain/model/event_lat_lng.dart';
-
 enum EventType {
   offRoad('Off-Road'),
   onRoad('On-Road'),
@@ -36,11 +34,8 @@ class EventModel {
   final EventDifficulty difficulty;
   final String meetingPoint;
   final String destination;
-  final EventLatLng? meetingPointLatLng;
-  final EventLatLng? destinationLatLng;
   final DateTime meetingTime;
   final EventType eventType;
-  final bool isMultiBrand;
   final List<String> allowedBrands;
   final double? price;
   final String? recommendations;
@@ -58,11 +53,8 @@ class EventModel {
     required this.difficulty,
     required this.meetingPoint,
     required this.destination,
-    this.meetingPointLatLng,
-    this.destinationLatLng,
     required this.meetingTime,
     required this.eventType,
-    required this.isMultiBrand,
     this.allowedBrands = const [],
     this.price,
     this.recommendations,
@@ -71,6 +63,8 @@ class EventModel {
   });
 
   bool get isFree => price == null || price == 0;
+
+  bool get isMultiBrand => allowedBrands.isEmpty;
 
   bool get isMultiDay => endDate != null;
 
@@ -85,11 +79,8 @@ class EventModel {
     EventDifficulty? difficulty,
     String? meetingPoint,
     String? destination,
-    EventLatLng? meetingPointLatLng,
-    EventLatLng? destinationLatLng,
     DateTime? meetingTime,
     EventType? eventType,
-    bool? isMultiBrand,
     List<String>? allowedBrands,
     double? price,
     String? recommendations,
@@ -107,11 +98,9 @@ class EventModel {
       difficulty: difficulty ?? this.difficulty,
       meetingPoint: meetingPoint ?? this.meetingPoint,
       destination: destination ?? this.destination,
-      meetingPointLatLng: meetingPointLatLng ?? this.meetingPointLatLng,
-      destinationLatLng: destinationLatLng ?? this.destinationLatLng,
+
       meetingTime: meetingTime ?? this.meetingTime,
       eventType: eventType ?? this.eventType,
-      isMultiBrand: isMultiBrand ?? this.isMultiBrand,
       allowedBrands: allowedBrands ?? this.allowedBrands,
       price: price ?? this.price,
       recommendations: recommendations ?? this.recommendations,

@@ -9,11 +9,13 @@ class AppCheckbox extends StatelessWidget {
     this.initialValue,
     this.enabled = true,
     this.customTitle,
+    this.onChanged,
   });
 
   final String name;
   final String title;
   final bool? initialValue;
+  final ValueChanged<bool?>? onChanged;
   final bool enabled;
   final Widget? customTitle;
 
@@ -24,6 +26,7 @@ class AppCheckbox extends StatelessWidget {
       title: customTitle ?? Text(title),
       initialValue: initialValue,
       enabled: enabled,
+      onChanged: onChanged,
     );
   }
 }

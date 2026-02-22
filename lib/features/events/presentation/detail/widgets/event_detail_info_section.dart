@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_info_row.dart';
-import 'package:rideglory/features/events/presentation/detail/widgets/event_maps_button.dart';
 
 class EventDetailInfoSection extends StatelessWidget {
   final EventModel event;
@@ -33,18 +32,12 @@ class EventDetailInfoSection extends StatelessWidget {
             icon: Icons.flag_outlined,
             label: EventStrings.meetingPointLabel,
             value: event.meetingPoint,
-            trailing: event.meetingPointLatLng != null
-                ? EventMapsButton(url: event.meetingPointLatLng!.mapsUrl)
-                : null,
           ),
           const SizedBox(height: 12),
           EventInfoRow(
             icon: Icons.location_on_outlined,
             label: EventStrings.destinationLabel,
             value: event.destination,
-            trailing: event.destinationLatLng != null
-                ? EventMapsButton(url: event.destinationLatLng!.mapsUrl)
-                : null,
           ),
         ],
       ),

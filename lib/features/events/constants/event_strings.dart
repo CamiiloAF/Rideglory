@@ -23,6 +23,7 @@ class EventStrings {
   static const String eventCity = 'Ciudad';
   static const String startDate = 'Fecha de inicio';
   static const String endDate = 'Fecha de fin (opcional)';
+  static const String dateRange = 'Rango de fechas del evento';
   static const String isMultiDay = 'Es un evento de varios días';
   static const String meetingTime = 'Hora de encuentro';
   static const String difficulty = 'Dificultad';
@@ -35,6 +36,9 @@ class EventStrings {
   static const String longitude = 'Longitud';
   static const String isMultiBrand = 'Evento multimarca (abierto a todos)';
   static const String allowedBrands = 'Marcas permitidas';
+  static const String allowedBrandsHint = 'Honda, Yamaha, Kawasaki...';
+  static const String allowedBrandsHelper =
+      'Separar con coma. Dejar vacío si acepta todas las marcas.';
   static const String addBrand = 'Agregar marca';
   static const String price = 'Precio del evento (opcional)';
   static const String freeEvent = 'Evento gratuito';
@@ -137,7 +141,7 @@ class EventStrings {
       '¿Estás seguro de que deseas cancelar tu inscripción? Esta acción no se puede deshacer. Podrás inscribirte nuevamente en cualquier momento.';
   static const String cancelRegistrationSuccess =
       'Tu inscripción fue cancelada exitosamente';
-      
+
   // Dynamic confirmation messages
   static String approveConfirmMessage(String name) =>
       '¿Aprobar la inscripción de $name?';
@@ -155,6 +159,8 @@ class EventStrings {
   static const String nameRequired = 'El nombre es requerido';
   static const String descriptionRequired = 'La descripción es requerida';
   static const String cityRequired = 'La ciudad es requerida';
+  static const String dateRangeRequired =
+      'Las fechas del evento son requeridas';
   static const String startDateRequired = 'La fecha de inicio es requerida';
   static const String meetingTimeRequired = 'La hora de encuentro es requerida';
   static const String meetingPointRequired =

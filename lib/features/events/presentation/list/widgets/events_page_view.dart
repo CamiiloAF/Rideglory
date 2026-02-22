@@ -11,7 +11,6 @@ import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/event_filters_bottom_sheet.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/events_data_view.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/events_state_widgets.dart';
-import 'package:rideglory/shared/widgets/no_search_results_empty_widget.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/shared/widgets/app_drawer.dart';

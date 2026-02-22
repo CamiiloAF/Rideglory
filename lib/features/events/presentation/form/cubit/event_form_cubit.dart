@@ -5,7 +5,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
-import 'package:rideglory/features/events/domain/model/event_lat_lng.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/use_cases/add_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
@@ -55,37 +54,7 @@ class EventFormCubit extends Cubit<EventFormState> {
     final formData = formKey.currentState!.value;
     final userId = _authService.currentUser?.uid ?? '';
 
-    final isMultiDay = formData[EventFormFields.isMultiDay] as bool? ?? false;
-    final isFree = formData[EventFormFields.isFree] as bool? ?? true;
-
-    final meetingPointLat =
-        formData[EventFormFields.meetingPointLat] as String?;
-    final meetingPointLng =
-        formData[EventFormFields.meetingPointLng] as String?;
-    final destinationLat = formData[EventFormFields.destinationLat] as String?;
-    final destinationLng = formData[EventFormFields.destinationLng] as String?;
-
-    EventLatLng? meetingPointLatLng;
-    if (meetingPointLat != null &&
-        meetingPointLng != null &&
-        meetingPointLat.isNotEmpty &&
-        meetingPointLng.isNotEmpty) {
-      meetingPointLatLng = EventLatLng(
-        latitude: double.tryParse(meetingPointLat) ?? 0,
-        longitude: double.tryParse(meetingPointLng) ?? 0,
-      );
-    }
-
-    EventLatLng? destinationLatLng;
-    if (destinationLat != null &&
-        destinationLng != null &&
-        destinationLat.isNotEmpty &&
-        destinationLng.isNotEmpty) {
-      destinationLatLng = EventLatLng(
-        latitude: double.tryParse(destinationLat) ?? 0,
-        longitude: double.tryParse(destinationLng) ?? 0,
-      );
-    }
+    final dateRange = formData[EventFormFields.dateRange] as DateTimeRange?;
 
     final allowedBrandsRaw =
         formData[EventFormFields.allowedBrands] as String? ?? '';
@@ -94,9 +63,9 @@ class EventFormCubit extends Cubit<EventFormState> {
         : <String>[];
 
     final priceStr = formData[EventFormFields.price] as String?;
-    final price = isFree
-        ? null
-        : (priceStr != null ? double.tryParse(priceStr) : null);
+    final price = priceStr != null && priceStr.isNotEmpty
+        ? double.tryParse(priceStr)
+        : null;
 
     return EventModel(
       id: state.maybeWhen(editing: (e) => e.id, orElse: () => null),
@@ -104,18 +73,13 @@ class EventFormCubit extends Cubit<EventFormState> {
       name: formData[EventFormFields.name] as String,
       description: formData[EventFormFields.description] as String,
       city: formData[EventFormFields.city] as String,
-      startDate: formData[EventFormFields.startDate] as DateTime,
-      endDate: isMultiDay
-          ? formData[EventFormFields.endDate] as DateTime?
-          : null,
+      startDate: dateRange?.start ?? DateTime.now(),
+      endDate: dateRange?.end != dateRange?.start ? dateRange?.end : null,
       difficulty: formData[EventFormFields.difficulty] as EventDifficulty,
       meetingPoint: formData[EventFormFields.meetingPoint] as String,
       destination: formData[EventFormFields.destination] as String,
-      meetingPointLatLng: meetingPointLatLng,
-      destinationLatLng: destinationLatLng,
       meetingTime: formData[EventFormFields.meetingTime] as DateTime,
       eventType: formData[EventFormFields.eventType] as EventType,
-      isMultiBrand: formData[EventFormFields.isMultiBrand] as bool? ?? true,
       allowedBrands: allowedBrands,
       price: price,
       recommendations: formData[EventFormFields.recommendations] as String?,

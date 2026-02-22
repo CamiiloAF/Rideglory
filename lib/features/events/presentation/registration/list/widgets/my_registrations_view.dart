@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/domain/result_state.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/constants/registration_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/registration/list/my_registrations_cubit.dart';

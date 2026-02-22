@@ -13,6 +13,7 @@ class AppDatePicker extends StatelessWidget {
     this.isRequired = false,
     this.hintText,
     this.prefixIcon,
+    this.inputType,
   });
 
   final String fieldName;
@@ -23,6 +24,7 @@ class AppDatePicker extends StatelessWidget {
   final DateTime? lastDate;
   final bool isRequired;
   final Widget? prefixIcon;
+  final InputType? inputType;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class AppDatePicker extends StatelessWidget {
         FormBuilderDateTimePicker(
           name: fieldName,
           initialValue: initialValue,
-          inputType: InputType.date,
+          inputType: inputType ?? InputType.date,
           firstDate: firstDate,
           lastDate: lastDate,
           decoration: InputDecoration(
