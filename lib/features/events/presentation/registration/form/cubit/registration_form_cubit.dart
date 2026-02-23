@@ -35,13 +35,16 @@ class RegistrationFormCubit extends Cubit<RegistrationFormState> {
   final AuthService _authService;
 
   String? _eventId;
+  String? _eventName;
   RiderProfileModel? _riderProfile;
 
   void initialize({
     required String eventId,
+    required String eventName,
     EventRegistrationModel? existingRegistration,
   }) {
     _eventId = eventId;
+    _eventName = eventName;
     if (existingRegistration != null) {
       Future.delayed(const Duration(milliseconds: 100), () {
         _preloadFromExistingRegistration(existingRegistration);
@@ -176,6 +179,7 @@ class RegistrationFormCubit extends Cubit<RegistrationFormState> {
     return EventRegistrationModel(
       id: state.maybeWhen(editing: (r) => r.id, orElse: () => null),
       eventId: _eventId ?? '',
+      eventName: _eventName ?? '',
       userId: userId,
       firstName: formData[RegistrationFormFields.firstName] as String,
       lastName: formData[RegistrationFormFields.lastName] as String,

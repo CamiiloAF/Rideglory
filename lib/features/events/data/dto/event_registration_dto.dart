@@ -5,9 +5,14 @@ part 'event_registration_dto.g.dart';
 
 @JsonSerializable()
 class EventRegistrationDto extends EventRegistrationModel {
+  @JsonKey(defaultValue: '')
+  @override
+  final String eventName;
+
   const EventRegistrationDto({
     required super.id,
     required super.eventId,
+    required this.eventName,
     required super.userId,
     required super.status,
     required super.firstName,
@@ -28,7 +33,7 @@ class EventRegistrationDto extends EventRegistrationModel {
     super.vin,
     super.createdDate,
     super.updatedDate,
-  });
+  }) : super(eventName: eventName);
 
   factory EventRegistrationDto.fromJson(Map<String, dynamic> json) =>
       _$EventRegistrationDtoFromJson(json);
@@ -40,6 +45,7 @@ extension EventRegistrationModelExtension on EventRegistrationModel {
   Map<String, dynamic> toJson() => EventRegistrationDto(
     id: id,
     eventId: eventId,
+    eventName: eventName,
     userId: userId,
     status: status,
     firstName: firstName,

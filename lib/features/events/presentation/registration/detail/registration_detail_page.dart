@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/constants/registration_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/registration/detail/widgets/registration_detail_info_row.dart';
 import 'package:rideglory/features/events/presentation/registration/detail/widgets/registration_detail_section.dart';
+import 'package:rideglory/features/events/presentation/shared/dialogs/cancel_registration_dialog.dart';
 import 'package:rideglory/features/events/presentation/shared/widgets/registration_status_chip.dart';
 import 'package:rideglory/shared/widgets/app_app_bar.dart';
-import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
-import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
-import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 
 class RegistrationDetailPage extends StatelessWidget {
   final EventRegistrationModel registration;
@@ -39,7 +36,7 @@ class RegistrationDetailPage extends StatelessWidget {
               children: [
                 Flexible(
                   child: Text(
-                    registration.eventId,
+                    registration.registrationTitle,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -182,27 +179,11 @@ class RegistrationDetailPage extends StatelessWidget {
   }
 
   Future<void> _handleCancel(BuildContext context) async {
-    var confirmed = false;
-    await ConfirmationDialog.show(
+    final success = await CancelRegistrationDialog.show(
       context: context,
-      title: EventStrings.cancelRegistrationTitle,
-      content: EventStrings.cancelRegistrationMessage,
-      dialogType: DialogType.warning,
-      confirmLabel: AppStrings.accept,
-      confirmType: DialogActionType.danger,
-      onConfirm: () {
-        confirmed = true;
-      },
+      onCancel: onCancelRegistration!,
     );
-    if (!confirmed || !context.mounted) return;
-    final success = await onCancelRegistration!();
     if (success && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(EventStrings.cancelRegistrationSuccess),
-          backgroundColor: Colors.green,
-        ),
-      );
       context.pop();
     }
   }

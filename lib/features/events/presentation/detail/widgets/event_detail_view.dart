@@ -14,6 +14,7 @@ import 'package:rideglory/features/events/presentation/detail/cubit/event_detail
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_header.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_info_section.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_registration_status_card.dart';
+import 'package:rideglory/features/events/presentation/shared/dialogs/cancel_registration_dialog.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
@@ -154,13 +155,8 @@ class EventDetailView extends StatelessWidget {
     BuildContext context,
     EventRegistrationModel registration,
   ) async {
-    await ConfirmationDialog.show(
+    await CancelRegistrationDialog.showAndExecute(
       context: context,
-      title: EventStrings.cancelRegistrationTitle,
-      content: EventStrings.cancelRegistrationMessage,
-      dialogType: DialogType.warning,
-      confirmLabel: AppStrings.accept,
-      confirmType: DialogActionType.danger,
       onConfirm: () {
         if (registration.id != null && context.mounted) {
           context.read<EventDetailCubit>().cancelRegistration(registration.id!);

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/nothing.dart';
 import 'package:rideglory/core/domain/result_state.dart';
@@ -16,6 +15,7 @@ import 'package:rideglory/features/events/presentation/delete/cubit/event_delete
 import 'package:rideglory/features/events/presentation/detail/cubit/event_detail_cubit.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_info_section.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_registration_status_card.dart';
+import 'package:rideglory/features/events/presentation/shared/dialogs/cancel_registration_dialog.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/shared/widgets/rich_text_viewer.dart';
@@ -185,30 +185,11 @@ class _EventDetailView extends StatelessWidget {
     BuildContext context,
     EventRegistrationModel registration,
   ) async {
-    var confirmed = false;
-    await ConfirmationDialog.show(
+    await CancelRegistrationDialog.show(
       context: context,
-      title: EventStrings.cancelRegistrationTitle,
-      content: EventStrings.cancelRegistrationMessage,
-      dialogType: DialogType.warning,
-      confirmLabel: AppStrings.accept,
-      confirmType: DialogActionType.danger,
-      onConfirm: () {
-        confirmed = true;
-      },
+      onCancel: () =>
+          context.read<EventDetailCubit>().cancelRegistration(registration.id!),
     );
-    if (!confirmed || !context.mounted) return;
-    final success = await context.read<EventDetailCubit>().cancelRegistration(
-      registration.id!,
-    );
-    if (success && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(EventStrings.cancelRegistrationSuccess),
-          backgroundColor: Colors.green,
-        ),
-      );
-    }
   }
 
   void _showRecommendations(BuildContext context) {

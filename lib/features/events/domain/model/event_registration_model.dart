@@ -26,6 +26,7 @@ enum BloodType {
 class EventRegistrationModel {
   final String? id;
   final String eventId;
+  final String eventName; // Nombre del evento para mostrar
   final String userId;
   final RegistrationStatus status;
 
@@ -59,6 +60,7 @@ class EventRegistrationModel {
   const EventRegistrationModel({
     this.id,
     required this.eventId,
+    required this.eventName,
     required this.userId,
     this.status = RegistrationStatus.pending,
     required this.firstName,
@@ -83,9 +85,12 @@ class EventRegistrationModel {
 
   String get fullName => '$firstName $lastName';
 
+  String get registrationTitle => 'Inscripción al evento $eventName';
+
   EventRegistrationModel copyWith({
     String? id,
     String? eventId,
+    String? eventName,
     String? userId,
     RegistrationStatus? status,
     String? firstName,
@@ -110,6 +115,7 @@ class EventRegistrationModel {
     return EventRegistrationModel(
       id: id ?? this.id,
       eventId: eventId ?? this.eventId,
+      eventName: eventName ?? this.eventName,
       userId: userId ?? this.userId,
       status: status ?? this.status,
       firstName: firstName ?? this.firstName,

@@ -25,6 +25,7 @@ class EventRegistrationPage extends StatelessWidget {
       create: (_) => getIt<RegistrationFormCubit>()
         ..initialize(
           eventId: event.id!,
+          eventName: event.name,
           existingRegistration: existingRegistration,
         ),
       child: _RegistrationFormView(event: event),

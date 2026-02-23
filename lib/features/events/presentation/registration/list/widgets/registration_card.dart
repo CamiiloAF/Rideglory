@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/constants/registration_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/registration/list/my_registrations_cubit.dart';
+import 'package:rideglory/features/events/presentation/shared/dialogs/cancel_registration_dialog.dart';
 import 'package:rideglory/features/events/presentation/shared/widgets/registration_status_chip.dart';
 import 'package:rideglory/shared/widgets/info_chip.dart';
-import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
-import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
-import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 
 class RegistrationCard extends StatelessWidget {
   final EventRegistrationModel registration;
@@ -34,21 +31,17 @@ class RegistrationCard extends StatelessWidget {
         RegistrationStatus.readyForEdit => EventStrings.readyForEditDescription,
       };
 
-  Future<void> _confirmCancel(BuildContext context) => ConfirmationDialog.show(
-    context: context,
-    title: EventStrings.cancelRegistrationTitle,
-    content: EventStrings.cancelRegistrationMessage,
-    dialogType: DialogType.warning,
-    confirmLabel: AppStrings.accept,
-    confirmType: DialogActionType.danger,
-    onConfirm: () {
-      if (registration.id != null) {
-        context.read<MyRegistrationsCubit>().cancelRegistration(
-          registration.id!,
-        );
-      }
-    },
-  );
+  Future<void> _confirmCancel(BuildContext context) =>
+      CancelRegistrationDialog.showAndExecute(
+        context: context,
+        onConfirm: () {
+          if (registration.id != null) {
+            context.read<MyRegistrationsCubit>().cancelRegistration(
+              registration.id!,
+            );
+          }
+        },
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +88,7 @@ class RegistrationCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            registration.eventId,
+                            registration.registrationTitle,
                             style: context.titleMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               letterSpacing: -0.5,
