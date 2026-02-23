@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/form_section_title.dart';
+import 'package:rideglory/shared/widgets/form/app_chips_input.dart';
 import 'package:rideglory/shared/widgets/form/app_dropdown.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 
@@ -44,15 +44,12 @@ class EventFormDetailsSection extends StatelessWidget {
               .toList(),
         ),
         const SizedBox(height: 16),
-        FormBuilderTextField(
+        AppChipsInput(
           name: EventFormFields.allowedBrands,
-          decoration: const InputDecoration(
-            labelText: EventStrings.allowedBrands,
-            hintText: EventStrings.allowedBrandsHint,
-            prefixIcon: Icon(Icons.shield_outlined),
-            border: OutlineInputBorder(),
-            helperText: EventStrings.allowedBrandsHelper,
-          ),
+          labelText: EventStrings.allowedBrands,
+          hintText: EventStrings.allowedBrandsHint,
+          helperText: EventStrings.allowedBrandsHelper,
+          prefixIcon: Icons.shield_outlined,
         ),
         const SizedBox(height: 16),
         AppTextField(

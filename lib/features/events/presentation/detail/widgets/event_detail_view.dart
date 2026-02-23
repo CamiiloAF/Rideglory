@@ -18,6 +18,7 @@ import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
 import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
+import 'package:rideglory/shared/widgets/rich_text_viewer.dart';
 import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 
 class EventDetailView extends StatelessWidget {
@@ -118,7 +119,7 @@ class EventDetailView extends StatelessWidget {
                     );
                   },
                 ),
-              if (isOwner && event.recommendations != null) ...[
+              if (event.recommendations != null) ...[
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: OutlinedButton.icon(
@@ -188,10 +189,7 @@ class EventDetailView extends StatelessWidget {
               Expanded(
                 child: SingleChildScrollView(
                   controller: controller,
-                  child: Text(
-                    event.recommendations ?? '',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+                  child: RichTextViewer(content: event.recommendations ?? ''),
                 ),
               ),
             ],

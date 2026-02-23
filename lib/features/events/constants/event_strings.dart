@@ -108,6 +108,7 @@ class EventStrings {
   static const String allBrands = 'Abierto a todos';
 
   // Status labels
+  // TODO USAR ESTO
   static const String pending = 'Pendiente';
   static const String approved = 'Aprobado';
   static const String rejected = 'Rechazado';

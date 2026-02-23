@@ -30,7 +30,7 @@ class EventFormContent extends StatelessWidget {
         EventFormFields.eventType: event.eventType,
         EventFormFields.meetingPoint: event.meetingPoint,
         EventFormFields.destination: event.destination,
-        EventFormFields.allowedBrands: event.allowedBrands.join(', '),
+        EventFormFields.allowedBrands: event.allowedBrands,
         EventFormFields.price: event.price?.toString() ?? '',
         EventFormFields.recommendations: event.recommendations ?? '',
       },
@@ -66,7 +66,12 @@ class EventFormContent extends StatelessWidget {
             const SizedBox(height: 24),
             const EventFormLocationsSection(),
             const SizedBox(height: 24),
-            const EventFormRecommendationsSection(),
+            EventFormRecommendationsSection(
+              initialValue: cubit.state.maybeWhen(
+                editing: (event) => event.recommendations,
+                orElse: () => null,
+              ),
+            ),
             const SizedBox(height: 32),
             BlocBuilder<EventFormCubit, EventFormState>(
               builder: (context, state) {

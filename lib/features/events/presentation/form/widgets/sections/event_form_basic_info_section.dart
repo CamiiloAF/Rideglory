@@ -38,6 +38,7 @@ class EventFormBasicInfoSection extends StatelessWidget {
           isRequired: true,
           prefixIcon: Icons.description_outlined,
           maxLines: 3,
+          minLines: 1,
           validator: FormBuilderValidators.required(
             errorText: EventStrings.descriptionRequired,
           ),

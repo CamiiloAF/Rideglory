@@ -56,11 +56,8 @@ class EventFormCubit extends Cubit<EventFormState> {
 
     final dateRange = formData[EventFormFields.dateRange] as DateTimeRange?;
 
-    final allowedBrandsRaw =
-        formData[EventFormFields.allowedBrands] as String? ?? '';
-    final allowedBrands = allowedBrandsRaw.isNotEmpty
-        ? allowedBrandsRaw.split(',').map((e) => e.trim()).toList()
-        : <String>[];
+    final allowedBrands =
+        formData[EventFormFields.allowedBrands] as List<String>? ?? <String>[];
 
     final priceStr = formData[EventFormFields.price] as String?;
     final price = priceStr != null && priceStr.isNotEmpty

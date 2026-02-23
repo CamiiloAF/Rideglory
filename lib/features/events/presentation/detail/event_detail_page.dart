@@ -18,6 +18,7 @@ import 'package:rideglory/features/events/presentation/detail/widgets/event_deta
 import 'package:rideglory/features/events/presentation/detail/widgets/event_registration_status_card.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/shared/widgets/app_app_bar.dart';
+import 'package:rideglory/shared/widgets/rich_text_viewer.dart';
 import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
 import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
 import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
@@ -230,10 +231,7 @@ class _EventDetailView extends StatelessWidget {
               Expanded(
                 child: SingleChildScrollView(
                   controller: controller,
-                  child: Text(
-                    event.recommendations ?? '',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+                  child: RichTextViewer(content: event.recommendations ?? ''),
                 ),
               ),
             ],

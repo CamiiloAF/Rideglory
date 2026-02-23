@@ -75,6 +75,7 @@ class EventRegistrationStatusCard extends StatelessWidget {
         status: registration!.status,
         description: EventStrings.readyForEditDescription,
         onEdit: onEditRegistration,
+        onViewRecommendations: onViewRecommendations,
       ),
     };
   }
