@@ -21,6 +21,8 @@ class EventFormContent extends StatelessWidget {
         EventFormFields.name: event.name,
         EventFormFields.description: event.description,
         EventFormFields.city: event.city,
+        EventFormFields.isMultiDay:
+            event.endDate != null && event.endDate != event.startDate,
         EventFormFields.dateRange: DateTimeRange(
           start: event.startDate,
           end: event.endDate ?? event.startDate,
@@ -37,6 +39,7 @@ class EventFormContent extends StatelessWidget {
       orElse: () => {
         EventFormFields.difficulty: EventDifficulty.one,
         EventFormFields.eventType: EventType.onRoad,
+        EventFormFields.isMultiDay: false,
         EventFormFields.dateRange: DateTimeRange(
           start: DateTime.now(),
           end: DateTime.now(),

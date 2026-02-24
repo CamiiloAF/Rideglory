@@ -9,7 +9,6 @@ class CancelledRegistrationContent extends StatelessWidget {
 
   const CancelledRegistrationContent({super.key, required this.onRegister});
 
-  // TODO revisar row 18
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

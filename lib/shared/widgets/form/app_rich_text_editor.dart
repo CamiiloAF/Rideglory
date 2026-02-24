@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_quill/flutter_quill.dart' as quill;
+import 'package:flutter_quill/flutter_quill.dart';
 
 class AppRichTextEditor extends StatefulWidget {
   final String name;
@@ -32,7 +32,7 @@ class AppRichTextEditor extends StatefulWidget {
 }
 
 class _AppRichTextEditorState extends State<AppRichTextEditor> {
-  late quill.QuillController _controller;
+  late QuillController _controller;
   final FocusNode _focusNode = FocusNode();
 
   @override
@@ -45,24 +45,24 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
     });
   }
 
-  quill.QuillController _initializeController() {
+  QuillController _initializeController() {
     if (widget.initialValue != null && widget.initialValue!.isNotEmpty) {
       try {
-        final doc = quill.Document.fromJson(jsonDecode(widget.initialValue!));
-        return quill.QuillController(
+        final doc = Document.fromJson(jsonDecode(widget.initialValue!));
+        return QuillController(
           document: doc,
           selection: const TextSelection.collapsed(offset: 0),
         );
       } catch (e) {
         // Si falla el parsing, crear un documento con el texto plano
-        final doc = quill.Document()..insert(0, widget.initialValue!);
-        return quill.QuillController(
+        final doc = Document()..insert(0, widget.initialValue!);
+        return QuillController(
           document: doc,
           selection: const TextSelection.collapsed(offset: 0),
         );
       }
     }
-    return quill.QuillController.basic();
+    return QuillController.basic();
   }
 
   @override
@@ -81,6 +81,15 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    final toolbarToggleStyleButtonOptions =
+        QuillToolbarToggleStyleButtonOptions(
+          iconTheme: QuillIconTheme(
+            iconButtonSelectedData: IconButtonData(
+              color: theme.colorScheme.onPrimary,
+            ),
+          ),
+        );
 
     return FormBuilderField<String>(
       name: widget.name,
@@ -126,46 +135,51 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          quill.QuillToolbarHistoryButton(
+                          QuillToolbarHistoryButton(
                             controller: _controller,
                             isUndo: true,
                           ),
-                          quill.QuillToolbarHistoryButton(
+                          QuillToolbarHistoryButton(
                             controller: _controller,
                             isUndo: false,
                           ),
+                          QuillToolbarToggleStyleButton(
+                            attribute: Attribute.bold,
+                            controller: _controller,
+                            options: toolbarToggleStyleButtonOptions,
+                          ),
+                          QuillToolbarToggleStyleButton(
+                            attribute: Attribute.italic,
+                            controller: _controller,
+                            options: toolbarToggleStyleButtonOptions,
+                          ),
+                          QuillToolbarToggleStyleButton(
+                            attribute: Attribute.underline,
+                            controller: _controller,
+                            options: toolbarToggleStyleButtonOptions,
+                          ),
+                          QuillToolbarToggleStyleButton(
+                            attribute: Attribute.strikeThrough,
+                            controller: _controller,
+                            options: toolbarToggleStyleButtonOptions,
+                          ),
+                          QuillToolbarToggleStyleButton(
+                            attribute: Attribute.ul,
+                            controller: _controller,
+                            options: toolbarToggleStyleButtonOptions,
+                          ),
+                          QuillToolbarToggleStyleButton(
+                            attribute: Attribute.ol,
+                            controller: _controller,
+                            options: toolbarToggleStyleButtonOptions,
+                          ),
+                          QuillToolbarToggleStyleButton(
+                            attribute: Attribute.checked,
+                            controller: _controller,
+                            options: toolbarToggleStyleButtonOptions,
+                          ),
                           const SizedBox(width: 8),
-                          quill.QuillToolbarToggleStyleButton(
-                            attribute: quill.Attribute.bold,
-                            controller: _controller,
-                          ),
-                          quill.QuillToolbarToggleStyleButton(
-                            attribute: quill.Attribute.italic,
-                            controller: _controller,
-                          ),
-                          quill.QuillToolbarToggleStyleButton(
-                            attribute: quill.Attribute.underline,
-                            controller: _controller,
-                          ),
-                          quill.QuillToolbarToggleStyleButton(
-                            attribute: quill.Attribute.strikeThrough,
-                            controller: _controller,
-                          ),
-                          const SizedBox(width: 8),
-                          quill.QuillToolbarToggleStyleButton(
-                            attribute: quill.Attribute.ul,
-                            controller: _controller,
-                          ),
-                          quill.QuillToolbarToggleStyleButton(
-                            attribute: quill.Attribute.ol,
-                            controller: _controller,
-                          ),
-                          quill.QuillToolbarToggleStyleButton(
-                            attribute: quill.Attribute.checked,
-                            controller: _controller,
-                          ),
-                          const SizedBox(width: 8),
-                          quill.QuillToolbarClearFormatButton(
+                          QuillToolbarClearFormatButton(
                             controller: _controller,
                           ),
                         ],
@@ -185,7 +199,7 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
                           field.didChange(_getJsonContent());
                         }
                       },
-                      child: quill.QuillEditor(
+                      child: QuillEditor(
                         controller: _controller,
                         focusNode: _focusNode,
 

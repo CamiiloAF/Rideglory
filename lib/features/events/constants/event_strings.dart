@@ -46,6 +46,9 @@ class EventStrings {
       'Escribe recomendaciones, notas importantes, links, etc.';
   static const String recommendationsLabel = 'Recomendaciones del organizador';
 
+  static const String startDateMustBeBeforeEndDate =
+      'La fecha de inicio debe ser anterior a la fecha de fin';
+
   // Difficulty labels
   static const String difficultyOne = '🌶 Fácil';
   static const String difficultyTwo = '🌶🌶 Moderado';

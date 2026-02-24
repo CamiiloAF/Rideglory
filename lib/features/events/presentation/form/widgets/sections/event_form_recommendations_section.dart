@@ -22,7 +22,7 @@ class EventFormRecommendationsSection extends StatelessWidget {
           name: EventFormFields.recommendations,
           labelText: EventStrings.recommendationsLabel,
           hintText: EventStrings.recommendationsHint,
-          initialValue: initialValue ,
+          initialValue: initialValue,
           minLines: 8,
           onChanged: (value) {
             form?.fields[EventFormFields.recommendations]?.didChange(value);

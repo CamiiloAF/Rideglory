@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
+import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/form_section_title.dart';
 import 'package:rideglory/shared/widgets/form/app_chips_input.dart';
 import 'package:rideglory/shared/widgets/form/app_dropdown.dart';
@@ -50,6 +52,10 @@ class EventFormDetailsSection extends StatelessWidget {
           hintText: EventStrings.allowedBrandsHint,
           helperText: EventStrings.allowedBrandsHelper,
           prefixIcon: Icons.shield_outlined,
+          initialValue: context.read<EventFormCubit>().state.maybeWhen(
+            editing: (event) => event.allowedBrands,
+            orElse: () => [],
+          ),
         ),
         const SizedBox(height: 16),
         AppTextField(
