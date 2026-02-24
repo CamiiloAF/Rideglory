@@ -307,7 +307,7 @@ class _EventDetailHeader extends StatelessWidget {
               ),
               _Chip(
                 label: event.isMultiBrand
-                    ? EventStrings.allBrands
+                    ? EventStrings.openToAllBrands
                     : event.allowedBrands.join(', '),
                 color: colorScheme.secondary,
               ),

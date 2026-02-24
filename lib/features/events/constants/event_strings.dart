@@ -10,6 +10,12 @@ class EventStrings {
   static const String eventDetail = 'Detalle del Evento';
   static const String deleteEvent = 'Eliminar Evento';
 
+  // Actions
+  static const String edit = 'Editar';
+  static const String delete = 'Eliminar';
+  static const String meetingTimePrefix = 'Encuentro: ';
+  static const String allBrands = 'Todas las marcas';
+
   // Event form section titles
   static const String basicInfo = 'Información básica';
   static const String dateAndTime = 'Fecha y hora';
@@ -108,7 +114,7 @@ class EventStrings {
   static const String typeLabel = 'Tipo';
   static const String organizer = 'Organizador';
   static const String brandRestriction = 'Marcas';
-  static const String allBrands = 'Abierto a todos';
+  static const String openToAllBrands = 'Abierto a todos';
 
   // Status labels
   // TODO USAR ESTO
