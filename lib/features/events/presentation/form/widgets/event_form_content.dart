@@ -58,51 +58,60 @@ class EventFormContent extends StatelessWidget {
       child: FormBuilder(
         key: cubit.formKey,
         initialValue: _getInitialValues(cubit),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const EventFormBasicInfoSection(),
-            const SizedBox(height: 24),
-            const EventFormDateTimeSection(),
-            const SizedBox(height: 24),
-            EventFormDetailsSection(),
-            const SizedBox(height: 24),
-            const EventFormLocationsSection(),
-            const SizedBox(height: 24),
-            EventFormRecommendationsSection(
-              initialValue: cubit.state.maybeWhen(
-                editing: (event) => event.recommendations,
-                orElse: () => null,
-              ),
-            ),
-            const SizedBox(height: 32),
-            BlocBuilder<EventFormCubit, EventFormState>(
-              builder: (context, state) {
-                final isLoading = state.maybeWhen(
-                  loading: () => true,
-                  orElse: () => false,
-                );
-                final isEditing = state.maybeWhen(
-                  editing: (_) => true,
-                  orElse: () => false,
-                );
-                return AppButton(
-                  label: isEditing
-                      ? EventStrings.updateEvent
-                      : EventStrings.saveEvent,
-                  isLoading: isLoading,
-                  icon: Icons.save_outlined,
-                  onPressed: isLoading
-                      ? null
-                      : () {
-                          final event = cubit.buildEventToSave();
-                          if (event != null) cubit.saveEvent(event);
-                        },
-                );
-              },
-            ),
-            const SizedBox(height: 16),
-          ],
+        child: BlocBuilder<EventFormCubit, EventFormState>(
+          builder: (context, state) {
+            final isEditing = state.maybeWhen(
+              editing: (_) => true,
+              orElse: () => false,
+            );
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                EventFormBasicInfoSection(isEditing: isEditing),
+                const SizedBox(height: 24),
+                const EventFormDateTimeSection(),
+                const SizedBox(height: 24),
+                EventFormDetailsSection(),
+                const SizedBox(height: 24),
+                const EventFormLocationsSection(),
+                const SizedBox(height: 24),
+                EventFormRecommendationsSection(
+                  initialValue: cubit.state.maybeWhen(
+                    editing: (event) => event.recommendations,
+                    orElse: () => null,
+                  ),
+                ),
+                const SizedBox(height: 32),
+                BlocBuilder<EventFormCubit, EventFormState>(
+                  builder: (context, state) {
+                    final isLoading = state.maybeWhen(
+                      loading: () => true,
+                      orElse: () => false,
+                    );
+                    final isEditing = state.maybeWhen(
+                      editing: (_) => true,
+                      orElse: () => false,
+                    );
+                    return AppButton(
+                      label: isEditing
+                          ? EventStrings.updateEvent
+                          : EventStrings.saveEvent,
+                      isLoading: isLoading,
+                      icon: Icons.save_outlined,
+                      onPressed: isLoading
+                          ? null
+                          : () {
+                              final event = cubit.buildEventToSave();
+                              if (event != null) cubit.saveEvent(event);
+                            },
+                    );
+                  },
+                ),
+                const SizedBox(height: 16),
+              ],
+            );
+          },
         ),
       ),
     );

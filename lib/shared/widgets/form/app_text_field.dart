@@ -16,6 +16,7 @@ class AppTextField extends StatelessWidget {
   final bool enabled;
   final bool isRequired;
   final String? hintText;
+  final String? helperText;
   final void Function(String?)? onChanged;
   final AutovalidateMode? autovalidateMode;
   final bool obscureText;
@@ -37,6 +38,7 @@ class AppTextField extends StatelessWidget {
     this.enabled = true,
     this.isRequired = false,
     this.hintText,
+    this.helperText,
     this.onChanged,
     this.autovalidateMode,
     this.obscureText = false,
@@ -57,6 +59,8 @@ class AppTextField extends StatelessWidget {
             prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
             suffixIcon: suffixIcon,
             hintText: hintText,
+            helperText: helperText,
+            helperMaxLines: 3,
             label: labelText != null
                 ? TextFieldLabel(labelText: labelText!, isRequired: isRequired)
                 : null,

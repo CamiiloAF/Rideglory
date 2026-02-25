@@ -28,6 +28,10 @@ class EventStrings {
   static const String eventDescription = 'Descripción';
   static const String eventCity = 'Ciudad';
   static const String startDate = 'Fecha de inicio';
+
+  // Form field helper text
+  static const String eventNameCannotBeModified =
+      'El nombre del evento no se puede modificar una vez creado.';
   static const String endDate = 'Fecha de fin (opcional)';
   static const String dateRange = 'Rango de fechas del evento';
   static const String isMultiDay = 'Es un evento de varios días';

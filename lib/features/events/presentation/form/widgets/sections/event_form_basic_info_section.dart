@@ -6,7 +6,9 @@ import 'package:rideglory/features/events/presentation/form/widgets/form_section
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 
 class EventFormBasicInfoSection extends StatelessWidget {
-  const EventFormBasicInfoSection({super.key});
+  final bool isEditing;
+
+  const EventFormBasicInfoSection({super.key, this.isEditing = false});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +21,10 @@ class EventFormBasicInfoSection extends StatelessWidget {
           name: EventFormFields.name,
           labelText: EventStrings.eventName,
           isRequired: true,
+          enabled: !isEditing,
+          helperText: !isEditing
+              ? EventStrings.eventNameCannotBeModified
+              : null,
           prefixIcon: Icons.event,
           textInputAction: TextInputAction.next,
           validator: FormBuilderValidators.compose([
