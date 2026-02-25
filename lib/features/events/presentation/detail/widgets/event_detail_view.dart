@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/di/injection.dart';
-import 'package:rideglory/core/domain/nothing.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
@@ -22,116 +21,140 @@ import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
 import 'package:rideglory/shared/widgets/rich_text_viewer.dart';
 import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 
-class EventDetailView extends StatelessWidget {
+class EventDetailView extends StatefulWidget {
   final EventModel event;
 
   const EventDetailView({super.key, required this.event});
 
   @override
+  State<EventDetailView> createState() => _EventDetailViewState();
+}
+
+class _EventDetailViewState extends State<EventDetailView> {
+  late EventModel _currentEvent;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentEvent = widget.event;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final currentUserId = getIt<AuthService>().currentUser?.uid;
-    final isOwner = event.ownerId == currentUserId;
+    final isOwner = _currentEvent.ownerId == currentUserId;
 
-    return Scaffold(
-      appBar: AppAppBar(
-        title: EventStrings.eventDetail,
-        actions: [
-          if (isOwner) ...[
-            IconButton(
-              icon: const Icon(Icons.people_outline),
-              tooltip: EventStrings.viewAttendees,
-              onPressed: () =>
-                  context.pushNamed(AppRoutes.eventAttendees, extra: event),
-            ),
-            IconButton(
-              icon: const Icon(Icons.edit_outlined),
-              tooltip: AppStrings.edit,
-              onPressed: () async {
-                final result = await context.pushNamed<bool?>(
-                  AppRoutes.editEvent,
-                  extra: event,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) context.pop(_currentEvent);
+      },
+      child: Scaffold(
+        appBar: AppAppBar(
+          title: EventStrings.eventDetail,
+          actions: [
+            if (isOwner) ...[
+              IconButton(
+                icon: const Icon(Icons.people_outline),
+                tooltip: EventStrings.viewAttendees,
+                onPressed: () => context.pushNamed(
+                  AppRoutes.eventAttendees,
+                  extra: _currentEvent,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.edit_outlined),
+                tooltip: AppStrings.edit,
+                onPressed: () async {
+                  final result = await context.pushNamed<EventModel?>(
+                    AppRoutes.editEvent,
+                    extra: _currentEvent,
+                  );
+                  if (result != null && mounted) {
+                    setState(() => _currentEvent = result);
+                  }
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.delete_outline),
+                tooltip: AppStrings.delete,
+                onPressed: () => _confirmDelete(context),
+              ),
+            ],
+          ],
+        ),
+        body: MultiBlocListener(
+          listeners: [
+            BlocListener<EventDeleteCubit, ResultState<String>>(
+              listener: (context, state) {
+                state.whenOrNull(
+                  data: (_) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(EventStrings.eventDeletedSuccess),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                    context.pop(true);
+                  },
                 );
-                if (result == true && context.mounted) {
-                  context.pop(true);
-                }
               },
             ),
-            IconButton(
-              icon: const Icon(Icons.delete_outline),
-              tooltip: AppStrings.delete,
-              onPressed: () => _confirmDelete(context),
-            ),
           ],
-        ],
-      ),
-      body: MultiBlocListener(
-        listeners: [
-          BlocListener<EventDeleteCubit, ResultState<Nothing>>(
-            listener: (context, state) {
-              state.whenOrNull(
-                data: (_) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text(EventStrings.eventDeletedSuccess),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                  context.pop(true);
-                },
-              );
-            },
-          ),
-        ],
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              EventDetailHeader(event: event),
-              const Divider(height: 1),
-              EventDetailInfoSection(event: event),
-              const Divider(height: 1),
-              if (!isOwner)
-                BlocBuilder<
-                  EventDetailCubit,
-                  ResultState<EventRegistrationModel?>
-                >(
-                  builder: (context, state) {
-                    return state.maybeWhen(
-                      data: (registration) => EventRegistrationStatusCard(
-                        event: event,
-                        registration: registration,
-                        onRegister: () =>
-                            _navigateToRegistration(context, null),
-                        onEditRegistration: registration != null
-                            ? () =>
-                                  _navigateToRegistration(context, registration)
-                            : null,
-                        onCancelRegistration: registration != null
-                            ? () => _confirmCancelRegistration(
-                                context,
-                                registration,
-                              )
-                            : null,
-                        onViewRecommendations: event.recommendations != null
-                            ? () => _showRecommendations(context)
-                            : null,
-                      ),
-                      orElse: () => const SizedBox.shrink(),
-                    );
-                  },
-                ),
-              if (event.recommendations != null) ...[
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: OutlinedButton.icon(
-                    onPressed: () => _showRecommendations(context),
-                    icon: const Icon(Icons.tips_and_updates_outlined),
-                    label: const Text(EventStrings.viewRecommendations),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                EventDetailHeader(event: _currentEvent),
+                const Divider(height: 1),
+                EventDetailInfoSection(event: _currentEvent),
+                const Divider(height: 1),
+                if (!isOwner)
+                  BlocBuilder<
+                    EventDetailCubit,
+                    ResultState<EventRegistrationModel?>
+                  >(
+                    builder: (context, state) {
+                      return state.maybeWhen(
+                        data: (registration) => EventRegistrationStatusCard(
+                          event: _currentEvent,
+                          registration: registration,
+                          onRegister: () =>
+                              _navigateToRegistration(context, null),
+                          onEditRegistration: registration != null
+                              ? () => _navigateToRegistration(
+                                  context,
+                                  registration,
+                                )
+                              : null,
+                          onCancelRegistration: registration != null
+                              ? () => _confirmCancelRegistration(
+                                  context,
+                                  registration,
+                                )
+                              : null,
+                          onViewRecommendations:
+                              _currentEvent.recommendations != null
+                              ? () => _showRecommendations(context)
+                              : null,
+                        ),
+                        orElse: () => const SizedBox.shrink(),
+                      );
+                    },
                   ),
-                ),
+                if (_currentEvent.recommendations != null) ...[
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: OutlinedButton.icon(
+                      onPressed: () => _showRecommendations(context),
+                      icon: const Icon(Icons.tips_and_updates_outlined),
+                      label: const Text(EventStrings.viewRecommendations),
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 32),
               ],
-              const SizedBox(height: 32),
-            ],
+            ),
           ),
         ),
       ),
@@ -144,10 +167,10 @@ class EventDetailView extends StatelessWidget {
   ) async {
     final result = await context.pushNamed<bool?>(
       AppRoutes.eventRegistration,
-      extra: {'event': event, 'registration': existing},
+      extra: {'event': _currentEvent, 'registration': existing},
     );
     if (result == true && context.mounted) {
-      context.read<EventDetailCubit>().loadMyRegistration(event.id!);
+      context.read<EventDetailCubit>().loadMyRegistration(_currentEvent.id!);
     }
   }
 
@@ -185,7 +208,9 @@ class EventDetailView extends StatelessWidget {
               Expanded(
                 child: SingleChildScrollView(
                   controller: controller,
-                  child: RichTextViewer(content: event.recommendations ?? ''),
+                  child: RichTextViewer(
+                    content: _currentEvent.recommendations ?? '',
+                  ),
                 ),
               ),
             ],
@@ -204,8 +229,8 @@ class EventDetailView extends StatelessWidget {
       confirmLabel: AppStrings.delete,
       confirmType: DialogActionType.danger,
       onConfirm: () {
-        if (event.id != null) {
-          context.read<EventDeleteCubit>().deleteEvent(event.id!);
+        if (_currentEvent.id != null) {
+          context.read<EventDeleteCubit>().deleteEvent(_currentEvent.id!);
         }
       },
     );

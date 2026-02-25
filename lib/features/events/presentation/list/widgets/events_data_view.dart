@@ -48,22 +48,31 @@ class EventsDataView extends StatelessWidget {
                         event: event,
                         isOwner: isOwner,
                         onTap: () async {
-                          final result = await context.pushNamed<bool?>(
+                          final result = await context.pushNamed<dynamic>(
                             AppRoutes.eventDetail,
                             extra: event,
                           );
-                          if (result == true && context.mounted) {
-                            context.read<EventsCubit>().fetchEvents();
+                          if (context.mounted) {
+                            if (result is EventModel) {
+                              context.read<EventsCubit>().updateEvent(result);
+                            } else if (result == true && event.id != null) {
+                              context.read<EventsCubit>().removeEvent(
+                                event.id!,
+                              );
+                            }
                           }
                         },
                         onEdit: isOwner
                             ? () async {
-                                final result = await context.pushNamed<bool?>(
-                                  AppRoutes.editEvent,
-                                  extra: event,
-                                );
-                                if (result == true && context.mounted) {
-                                  context.read<EventsCubit>().fetchEvents();
+                                final result = await context
+                                    .pushNamed<EventModel?>(
+                                      AppRoutes.editEvent,
+                                      extra: event,
+                                    );
+                                if (result != null && context.mounted) {
+                                  context.read<EventsCubit>().updateEvent(
+                                    result,
+                                  );
                                 }
                               }
                             : null,

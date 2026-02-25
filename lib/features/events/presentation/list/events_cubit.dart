@@ -96,7 +96,34 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
     _applyFiltersAndEmit();
   }
 
+  /// Adds a newly created event to the local list without re-fetching.
+  void addEvent(EventModel event) {
+    _allEvents = [event, ..._allEvents];
+    _applyFiltersAndEmit();
+  }
+
+  /// Replaces an updated event in the local list without re-fetching.
+  void updateEvent(EventModel event) {
+    final index = _allEvents.indexWhere((e) => e.id == event.id);
+    if (index == -1) return;
+    _allEvents[index] = event;
+
+    _applyFiltersAndEmit();
+  }
+
+  /// Removes a deleted event from the local list without re-fetching.
+  void removeEvent(String eventId) {
+    _allEvents = _allEvents.where((e) => e.id != eventId).toList();
+    if (_allEvents.isEmpty) {
+      emit(const ResultState.empty());
+    } else {
+      _applyFiltersAndEmit();
+    }
+  }
+
   void _applyFiltersAndEmit() {
+    emit(const ResultState.initial());
+
     var filtered = List<EventModel>.from(_allEvents);
 
     if (_searchQuery.isNotEmpty) {

@@ -13,10 +13,7 @@ class EventDetailCubit extends Cubit<ResultState<EventRegistrationModel?>> {
   final GetMyRegistrationForEventUseCase _getMyRegistrationUseCase;
   final CancelEventRegistrationUseCase _cancelRegistrationUseCase;
 
-  String? _eventId;
-
   Future<void> loadMyRegistration(String eventId) async {
-    _eventId = eventId;
     emit(const ResultState.loading());
     final result = await _getMyRegistrationUseCase(eventId);
     result.fold(
@@ -28,7 +25,19 @@ class EventDetailCubit extends Cubit<ResultState<EventRegistrationModel?>> {
   Future<bool> cancelRegistration(String registrationId) async {
     final result = await _cancelRegistrationUseCase(registrationId);
     return result.fold((error) => false, (_) {
-      if (_eventId != null) loadMyRegistration(_eventId!);
+      state.whenOrNull(
+        data: (registration) {
+          if (registration != null) {
+            emit(
+              ResultState.data(
+                data: registration.copyWith(
+                  status: RegistrationStatus.cancelled,
+                ),
+              ),
+            );
+          }
+        },
+      );
       return true;
     });
   }

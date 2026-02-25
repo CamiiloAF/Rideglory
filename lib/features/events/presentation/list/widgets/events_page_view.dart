@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
-import 'package:rideglory/core/domain/nothing.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
@@ -58,17 +57,17 @@ class EventsPageView extends StatelessWidget {
       ),
       body: MultiBlocListener(
         listeners: [
-          BlocListener<EventDeleteCubit, ResultState<Nothing>>(
+          BlocListener<EventDeleteCubit, ResultState<String>>(
             listener: (context, state) {
               state.whenOrNull(
-                data: (_) {
+                data: (eventId) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text(EventStrings.eventDeletedSuccess),
                       backgroundColor: Colors.green,
                     ),
                   );
-                  context.read<EventsCubit>().fetchEvents();
+                  context.read<EventsCubit>().removeEvent(eventId);
                 },
                 error: (error) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -109,9 +108,9 @@ class EventsPageView extends StatelessWidget {
   }
 
   Future<void> _navigateToCreate(BuildContext context) async {
-    final result = await context.pushNamed<bool?>(AppRoutes.createEvent);
-    if (result == true && context.mounted) {
-      context.read<EventsCubit>().fetchEvents();
+    final result = await context.pushNamed<EventModel?>(AppRoutes.createEvent);
+    if (result != null && context.mounted) {
+      context.read<EventsCubit>().addEvent(result);
     }
   }
 

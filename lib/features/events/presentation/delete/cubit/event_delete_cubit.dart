@@ -1,11 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:rideglory/core/domain/nothing.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/domain/use_cases/delete_event_use_case.dart';
 
 @injectable
-class EventDeleteCubit extends Cubit<ResultState<Nothing>> {
+class EventDeleteCubit extends Cubit<ResultState<String>> {
   EventDeleteCubit(this._deleteEventUseCase)
     : super(const ResultState.initial());
 
@@ -18,7 +17,7 @@ class EventDeleteCubit extends Cubit<ResultState<Nothing>> {
 
     result.fold(
       (error) => emit(ResultState.error(error: error)),
-      (_) => emit(ResultState.data(data: Nothing())),
+      (_) => emit(ResultState.data(data: eventId)),
     );
   }
 }

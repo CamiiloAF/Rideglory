@@ -22,7 +22,7 @@ class EventFormView extends StatelessWidget {
                 backgroundColor: Colors.green,
               ),
             );
-            context.pop(true);
+            context.pop(event);
           },
           error: (message) {
             ScaffoldMessenger.of(context).showSnackBar(
