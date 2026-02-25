@@ -79,6 +79,7 @@ class VehicleListCubit extends Cubit<ResultState<List<VehicleModel>>> {
     if (_allVehicles.isEmpty || isArchivedEmptyNoSearch) {
       emit(const ResultState.empty());
     } else {
+      emit(const ResultState.initial());
       emit(ResultState.data(data: filteredVehicles));
       // Only update available vehicles with non-archived ones
       final activeVehicles = _allVehicles.where((v) => !v.isArchived).toList();
@@ -134,5 +135,27 @@ class VehicleListCubit extends Cubit<ResultState<List<VehicleModel>>> {
   void removeVehicleFromList(String vehicleId) {
     _allVehicles = _allVehicles.where((v) => v.id != vehicleId).toList();
     _filterAndEmitVehicles();
+  }
+
+  /// Add a new vehicle to the local list without refetching from Firebase
+  void addVehicleLocally(VehicleModel vehicle) {
+    _allVehicles = [..._allVehicles, vehicle];
+    _filterAndEmitVehicles();
+  }
+
+  /// Update an existing vehicle in the local list without refetching from Firebase
+  void updateVehicleLocally(VehicleModel updatedVehicle) {
+    final index = _allVehicles.indexWhere((m) => m.id == updatedVehicle.id);
+    if (index != -1) {
+      _allVehicles = [
+        ..._allVehicles.sublist(0, index),
+        updatedVehicle,
+        ..._allVehicles.sublist(index + 1),
+      ];
+      _filterAndEmitVehicles();
+    }
+
+    // Also update in VehicleCubit if it's the current vehicle
+    _vehicleCubit.updateCurrentVehicleIfMatch(updatedVehicle);
   }
 }

@@ -53,12 +53,12 @@ class _VehicleListViewState extends State<_VehicleListView> {
     BuildContext context,
     VehicleModel vehicle,
   ) async {
-    final result = await context.pushNamed(
+    final result = await context.pushNamed<VehicleModel?>(
       AppRoutes.editVehicle,
       extra: vehicle,
     );
-    if (result == true && context.mounted) {
-      _loadVechicles(context);
+    if (result != null && context.mounted) {
+      context.read<VehicleListCubit>().updateVehicleLocally(result);
     }
   }
 
@@ -66,9 +66,11 @@ class _VehicleListViewState extends State<_VehicleListView> {
       context.read<VehicleListCubit>().loadVehicles();
 
   Future<void> _goToCreateVehicle(BuildContext context) async {
-    final result = await context.pushNamed(AppRoutes.createVehicle);
-    if (result == true && context.mounted) {
-      _loadVechicles(context);
+    final result = await context.pushNamed<VehicleModel?>(
+      AppRoutes.createVehicle,
+    );
+    if (result != null && context.mounted) {
+      context.read<VehicleListCubit>().addVehicleLocally(result);
     }
   }
 
@@ -225,7 +227,7 @@ class _VehicleListViewState extends State<_VehicleListView> {
               },
               data: (vehicles) {
                 final currentVehicleId = context
-                    .read<VehicleCubit>()
+                    .watch<VehicleCubit>()
                     .currentVehicle
                     ?.id;
 
@@ -258,83 +260,101 @@ class _VehicleListViewState extends State<_VehicleListView> {
                                   final isCurrent =
                                       vehicle.id == currentVehicleId;
 
-                                  return VehicleCard(
-                                    vehicle: vehicle,
-                                    isCurrent: isCurrent,
-                                    onTap: () async {
-                                      // Navigate to edit vehicle
-                                      if (vehicle.id != null) {
-                                        await _goToEditVehicle(
-                                          context,
-                                          vehicle,
-                                        );
-                                      }
-                                    },
-                                    onSetAsCurrent: !vehicle.isArchived
-                                        ? () {
-                                            context
-                                                .read<VehicleCubit>()
-                                                .setMainVehicle(vehicle.id!);
-                                            ScaffoldMessenger.of(
+                                  return BlocBuilder<
+                                    VehicleDeleteCubit,
+                                    VehicleDeleteState
+                                  >(
+                                    builder: (context, state) {
+                                      return VehicleCard(
+                                        vehicle: vehicle,
+                                        isCurrent: isCurrent,
+                                        onTap: state.maybeWhen(
+                                          orElse: () {
+                                            return () => _goToEditVehicle(
                                               context,
-                                            ).showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                  '${vehicle.name} ${VehicleStrings.vehicleSetAsMain}',
-                                                ),
-                                                backgroundColor: const Color(
-                                                  0xFF10B981,
-                                                ),
-                                              ),
+                                              vehicle,
                                             );
-                                          }
-                                        : null,
-                                    onAddMaintenance: !vehicle.isArchived
-                                        ? () => _goToCreateMaintenance(
-                                            context,
-                                            vehicle,
-                                          )
-                                        : null,
-                                    onArchive: !vehicle.isArchived
-                                        ? () {
-                                            context
-                                                .read<VehicleListCubit>()
-                                                .archiveVehicle(vehicle);
-                                            ScaffoldMessenger.of(
+                                          },
+                                          success: (deletedId) {
+                                            if (deletedId == vehicle.id) {
+                                              return null;
+                                            }
+
+                                            return () => _goToEditVehicle(
                                               context,
-                                            ).showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                  '${vehicle.name} ${VehicleStrings.vehicleArchived}',
-                                                ),
-                                                backgroundColor: const Color(
-                                                  0xFF6366F1,
-                                                ),
-                                              ),
+                                              vehicle,
                                             );
-                                          }
-                                        : null,
-                                    onUnarchive: vehicle.isArchived
-                                        ? () {
-                                            context
-                                                .read<VehicleListCubit>()
-                                                .unarchiveVehicle(vehicle);
-                                            ScaffoldMessenger.of(
-                                              context,
-                                            ).showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                  '${vehicle.name} ${VehicleStrings.vehicleUnarchived}',
-                                                ),
-                                                backgroundColor: const Color(
-                                                  0xFF10B981,
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        : null,
-                                    onDelete: () {
-                                      _showDeleteDialog(context, vehicle);
+                                          },
+                                          loading: () {
+                                            return null;
+                                          },
+                                        ),
+                                        onSetAsCurrent: !vehicle.isArchived
+                                            ? () {
+                                                context
+                                                    .read<VehicleCubit>()
+                                                    .setMainVehicle(
+                                                      vehicle.id!,
+                                                    );
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      '${vehicle.name} ${VehicleStrings.vehicleSetAsMain}',
+                                                    ),
+                                                    backgroundColor:
+                                                        const Color(0xFF10B981),
+                                                  ),
+                                                );
+                                              }
+                                            : null,
+                                        onAddMaintenance: !vehicle.isArchived
+                                            ? () => _goToCreateMaintenance(
+                                                context,
+                                                vehicle,
+                                              )
+                                            : null,
+                                        onArchive: !vehicle.isArchived
+                                            ? () {
+                                                context
+                                                    .read<VehicleListCubit>()
+                                                    .archiveVehicle(vehicle);
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      '${vehicle.name} ${VehicleStrings.vehicleArchived}',
+                                                    ),
+                                                    backgroundColor:
+                                                        const Color(0xFF6366F1),
+                                                  ),
+                                                );
+                                              }
+                                            : null,
+                                        onUnarchive: vehicle.isArchived
+                                            ? () {
+                                                context
+                                                    .read<VehicleListCubit>()
+                                                    .unarchiveVehicle(vehicle);
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      '${vehicle.name} ${VehicleStrings.vehicleUnarchived}',
+                                                    ),
+                                                    backgroundColor:
+                                                        const Color(0xFF10B981),
+                                                  ),
+                                                );
+                                              }
+                                            : null,
+                                        onDelete: () {
+                                          _showDeleteDialog(context, vehicle);
+                                        },
+                                      );
                                     },
                                   );
                                 },

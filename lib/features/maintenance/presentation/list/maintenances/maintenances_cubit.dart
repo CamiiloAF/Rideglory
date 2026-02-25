@@ -38,6 +38,35 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
     _applyFiltersAndEmit();
   }
 
+  /// Add a new maintenance to the local list without refetching from Firebase
+  void addMaintenanceLocally(MaintenanceModel maintenance) {
+    _allMaintenances = [..._allMaintenances, maintenance];
+    _applyFiltersAndEmit();
+  }
+
+  /// Update an existing maintenance in the local list without refetching from Firebase
+  void updateMaintenanceLocally(MaintenanceModel updatedMaintenance) {
+    final index = _allMaintenances.indexWhere(
+      (m) => m.id == updatedMaintenance.id,
+    );
+    if (index != -1) {
+      _allMaintenances = [
+        ..._allMaintenances.sublist(0, index),
+        updatedMaintenance,
+        ..._allMaintenances.sublist(index + 1),
+      ];
+      _applyFiltersAndEmit();
+    }
+  }
+
+  /// Remove a maintenance from the local list without refetching from Firebase
+  void deleteMaintenanceLocally(String maintenanceId) {
+    _allMaintenances = _allMaintenances
+        .where((m) => m.id != maintenanceId)
+        .toList();
+    _applyFiltersAndEmit();
+  }
+
   void _applyFiltersAndEmit() {
     var filtered = List<MaintenanceModel>.from(_allMaintenances);
 

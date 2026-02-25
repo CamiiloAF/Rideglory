@@ -83,15 +83,13 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
       createdDate: now,
       updatedDate: now,
     );
-
     return executeService(
       function: () async {
-        await firestore
+        final docRef = await firestore
             .collection(_collectionName)
-            .doc(maintenanceWithDates.id)
-            .set(maintenanceWithDates.toJson());
+            .add(maintenanceWithDates.toJson());
 
-        return maintenanceWithDates;
+        return maintenanceWithDates.copyWith(id: docRef.id);
       },
     );
   }

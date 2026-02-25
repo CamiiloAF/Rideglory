@@ -26,6 +26,7 @@ class MaintenanceFormCubit extends Cubit<MaintenanceFormState> {
   final UpdateMaintenanceUseCase _updateMaintenanceUseCase;
 
   VehicleModel? preselectedVehicle;
+  String? userId;
 
   void initialize({
     MaintenanceModel? maintenance,
@@ -33,6 +34,7 @@ class MaintenanceFormCubit extends Cubit<MaintenanceFormState> {
   }) {
     this.preselectedVehicle = preselectedVehicle;
     if (maintenance != null) {
+      userId = maintenance.userId;
       emit(MaintenanceFormState.editing(maintenance: maintenance));
     } else {
       emit(const MaintenanceFormState.initial());
@@ -42,10 +44,9 @@ class MaintenanceFormCubit extends Cubit<MaintenanceFormState> {
   Future<void> saveMaintenance(MaintenanceModel maintenanceToSave) async {
     emit(const MaintenanceFormState.loading());
 
-    final result = await state.maybeWhen(
-      editing: (_) async => await _updateMaintenanceUseCase(maintenanceToSave),
-      orElse: () async => await _addMaintenanceUseCase(maintenanceToSave),
-    );
+    final result = maintenanceToSave.id != null
+        ? await _updateMaintenanceUseCase(maintenanceToSave)
+        : await _addMaintenanceUseCase(maintenanceToSave);
 
     result.fold(
       (error) => emit(MaintenanceFormState.error(message: error.message)),
@@ -65,6 +66,7 @@ class MaintenanceFormCubit extends Cubit<MaintenanceFormState> {
         ),
         vehicleId: formData[MaintenanceFormFields.vehicleId] as String?,
         name: formData[MaintenanceFormFields.name] as String,
+        userId: userId,
         type: formData[MaintenanceFormFields.type] as MaintenanceType,
         notes: formData[MaintenanceFormFields.notes] as String?,
         date: formData[MaintenanceFormFields.date] as DateTime,

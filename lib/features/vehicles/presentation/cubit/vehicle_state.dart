@@ -1,5 +1,6 @@
 part of 'vehicle_cubit.dart';
 
+// TODO ELIMINAR ESTO Y USAr result state
 abstract class VehicleState {
   const VehicleState();
 }

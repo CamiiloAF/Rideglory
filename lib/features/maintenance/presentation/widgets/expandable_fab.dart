@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/maintenances_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/fab_option.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
@@ -82,14 +83,15 @@ class _ExpandableFabState extends State<ExpandableFab>
                           label: MaintenanceStrings.addMaintenance_,
                           onPressed: () async {
                             _toggleFab();
-                            final result = await context.pushNamed<bool?>(
-                              AppRoutes.createMaintenance,
-                            );
+                            final result = await context
+                                .pushNamed<MaintenanceModel?>(
+                                  AppRoutes.createMaintenance,
+                                );
 
-                            if (result == true && context.mounted) {
+                            if (result != null && context.mounted) {
                               context
                                   .read<MaintenancesCubit>()
-                                  .fetchMaintenances();
+                                  .addMaintenanceLocally(result);
                             }
                           },
                         ),

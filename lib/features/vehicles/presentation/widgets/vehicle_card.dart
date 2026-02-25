@@ -126,6 +126,7 @@ class VehicleCard extends StatelessWidget {
                                       ),
                                       SizedBox(width: 4),
                                       Text(
+                                        // TODO Extraer textos
                                         'Principal',
                                         style: TextStyle(
                                           fontSize: 11,

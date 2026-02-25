@@ -93,12 +93,15 @@ class VehicleCubit extends Cubit<VehicleState> {
   }
 
   /// Updates the current vehicle if the edited vehicle ID matches the current one
-  void updateCurrentVehicleIfMatch(VehicleModel updatedVehicle, {bool shouldUpdateMainVehicle = false}) {
+  void updateCurrentVehicleIfMatch(
+    VehicleModel updatedVehicle, {
+    bool shouldUpdateMainVehicle = false,
+  }) {
     final current = currentVehicle;
     if (current != null && current.id == updatedVehicle.id) {
       emit(VehicleLoaded(updatedVehicle));
-    } 
-    
+    }
+
     if (shouldUpdateMainVehicle) {
       if (!_availableVehicles.contains(updatedVehicle)) {
         _availableVehicles.add(updatedVehicle);
@@ -150,6 +153,38 @@ class VehicleCubit extends Cubit<VehicleState> {
   /// Update the available vehicles list
   void updateAvailableVehicles(List<VehicleModel> vehicles) {
     _availableVehicles = vehicles;
+  }
+
+  /// Add a new vehicle to the available vehicles list without refetching
+  void addVehicleLocally(VehicleModel vehicle) {
+    _availableVehicles = [..._availableVehicles, vehicle];
+
+    // If it's the first vehicle or marked as main, set it as current
+    if (_availableVehicles.length == 1 || vehicle.isMainVehicle) {
+      setCurrentVehicle(vehicle);
+    }
+  }
+
+  /// Remove a vehicle from the available vehicles list without refetching
+  Future<void> deleteVehicleLocally(String vehicleId) async {
+    final wasCurrentVehicle = currentVehicle?.id == vehicleId;
+
+    _availableVehicles = _availableVehicles
+        .where((v) => v.id != vehicleId)
+        .toList();
+
+    // If the deleted vehicle was the current one, select another
+    if (wasCurrentVehicle) {
+      if (_availableVehicles.isEmpty) {
+        await clearCurrentVehicle();
+      } else {
+        // Select the main vehicle or the first one
+        final newVehicle =
+            _availableVehicles.firstWhereOrNull((v) => v.isMainVehicle) ??
+            _availableVehicles.first;
+        await setCurrentVehicle(newVehicle);
+      }
+    }
   }
 
   /// Clear the current vehicle and remove from preferences

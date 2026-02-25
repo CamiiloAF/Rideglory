@@ -69,26 +69,14 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
     }
   }
 
-  Future<void> _onTap(MaintenanceModel maintenance) async {
-    if (maintenance.id != null) {
-      final result = await context.pushNamed<bool?>(
-        AppRoutes.editMaintenance,
-        extra: maintenance,
-      );
-      if (result == true && mounted) {
-        context.read<MaintenancesCubit>().fetchMaintenances();
-      }
-    }
-  }
-
   Future<void> _onEdit(MaintenanceModel maintenance) async {
     if (maintenance.id != null) {
-      final result = await context.pushNamed<bool?>(
+      final result = await context.pushNamed<MaintenanceModel?>(
         AppRoutes.editMaintenance,
         extra: maintenance,
       );
-      if (result == true && mounted) {
-        context.read<MaintenancesCubit>().fetchMaintenances();
+      if (result != null && mounted) {
+        context.read<MaintenancesCubit>().updateMaintenanceLocally(result);
       }
     }
   }
@@ -100,10 +88,12 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
   }
 
   Future<void> _onAddMaintenance() async {
-    final result = await context.pushNamed<bool?>(AppRoutes.createMaintenance);
+    final result = await context.pushNamed<MaintenanceModel?>(
+      AppRoutes.createMaintenance,
+    );
 
-    if (result == true && mounted) {
-      context.read<MaintenancesCubit>().fetchMaintenances();
+    if (result != null && mounted) {
+      context.read<MaintenancesCubit>().addMaintenanceLocally(result);
     }
   }
 
@@ -147,7 +137,9 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
                       backgroundColor: Colors.green,
                     ),
                   );
-                  context.read<MaintenancesCubit>().fetchMaintenances();
+                  context.read<MaintenancesCubit>().deleteMaintenanceLocally(
+                    deletedId,
+                  );
                 },
                 error: (message) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -179,7 +171,7 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
                   onSearchChanged: (value) {
                     context.read<MaintenancesCubit>().updateSearchQuery(value);
                   },
-                  onTap: _onTap,
+                  onTap: _onEdit,
                   onEdit: _onEdit,
                   onDelete: _onDelete,
                 ),

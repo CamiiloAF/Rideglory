@@ -28,7 +28,7 @@ class _MaintenanceFormViewState extends State<MaintenanceFormView> {
                   backgroundColor: Colors.green,
                 ),
               );
-              Navigator.of(context).pop(true);
+              Navigator.of(context).pop(maintenance);
             },
             error: (message) {
               ScaffoldMessenger.of(context).showSnackBar(
