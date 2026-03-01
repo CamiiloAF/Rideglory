@@ -8,6 +8,7 @@ import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/attendees/attendees_page.dart';
 import 'package:rideglory/features/events/presentation/detail/event_detail_page.dart';
+import 'package:rideglory/features/events/presentation/detail/params.dart';
 import 'package:rideglory/features/events/presentation/form/event_form_page.dart';
 import 'package:rideglory/features/events/presentation/list/events_page.dart';
 import 'package:rideglory/features/events/presentation/registration/form/event_registration_page.dart';
@@ -180,7 +181,7 @@ class AppRouter {
         name: AppRoutes.eventDetail,
         builder: (context, state) {
           final event = state.extra as EventModel;
-          return EventDetailPage(event: event);
+          return EventDetailPage(params: EventDetailPageParams(event: event),);
         },
       ),
       GoRoute(

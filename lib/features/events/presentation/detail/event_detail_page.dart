@@ -9,9 +9,11 @@ import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/domain/use_cases/cancel_event_registration_use_case.dart';
+import 'package:rideglory/features/events/domain/use_cases/get_event_by_id_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_my_registration_for_event_use_case.dart';
 import 'package:rideglory/features/events/presentation/delete/cubit/event_delete_cubit.dart';
 import 'package:rideglory/features/events/presentation/detail/cubit/event_detail_cubit.dart';
+import 'package:rideglory/features/events/presentation/detail/params.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_info_section.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_registration_status_card.dart';
 import 'package:rideglory/features/events/presentation/shared/dialogs/cancel_registration_dialog.dart';
@@ -24,30 +26,53 @@ import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 
 // TODO STRINGS and widgets
 class EventDetailPage extends StatelessWidget {
-  final EventModel event;
+  final EventDetailPageParams params;
 
-  const EventDetailPage({super.key, required this.event});
+  const EventDetailPage({super.key, required this.params});
+
+  void _listener(BuildContext context, EventDetailState state) {
+    state.registrationResult.whenOrNull(
+      data: (registration) {
+        if (params.onRegistrationChanged != null) {
+          params.onRegistrationChanged!(registration!);
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) => EventDetailCubit(
-            getIt<GetMyRegistrationForEventUseCase>(),
-            getIt<CancelEventRegistrationUseCase>(),
-          )..loadMyRegistration(event.id!),
-        ),
+        if (!params.isFromEventDetailByIdPage)
+          BlocProvider(
+            create: (_) => EventDetailCubit(
+              getIt<GetMyRegistrationForEventUseCase>(),
+              getIt<CancelEventRegistrationUseCase>(),
+              getIt<GetEventByIdUseCase>(),
+            )..loadMyRegistration(params.event.id!),
+          ),
         BlocProvider(create: (_) => getIt<EventDeleteCubit>()),
       ],
-      child: _EventDetailView(event: event),
+      child: BlocListener<EventDetailCubit, EventDetailState>(
+        listener: _listener,
+        child: _EventDetailView(
+          event: params.event,
+          isFromEventDetailByIdPage: params.isFromEventDetailByIdPage,
+        ),
+      ),
     );
   }
 }
 
 class _EventDetailView extends StatefulWidget {
   final EventModel event;
-  const _EventDetailView({required this.event});
+  final bool isFromEventDetailByIdPage;
+
+  const _EventDetailView({
+    required this.event,
+    required this.isFromEventDetailByIdPage,
+  });
 
   @override
   State<_EventDetailView> createState() => _EventDetailViewState();
@@ -68,9 +93,11 @@ class _EventDetailViewState extends State<_EventDetailView> {
     final isOwner = _currentEvent.ownerId == currentUserId;
 
     return PopScope(
-      canPop: false,
+      canPop: widget.isFromEventDetailByIdPage,
       onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) context.pop(_currentEvent);
+        if (!didPop && !widget.isFromEventDetailByIdPage) {
+          context.pop(_currentEvent);
+        }
       },
       child: Scaffold(
         appBar: AppAppBar(
@@ -136,12 +163,9 @@ class _EventDetailViewState extends State<_EventDetailView> {
                 const Divider(height: 1),
                 // Registration status for non-owners
                 if (!isOwner)
-                  BlocBuilder<
-                    EventDetailCubit,
-                    ResultState<EventRegistrationModel?>
-                  >(
+                  BlocBuilder<EventDetailCubit, EventDetailState>(
                     builder: (context, state) {
-                      return state.maybeWhen(
+                      return state.registrationResult.maybeWhen(
                         data: (registration) => EventRegistrationStatusCard(
                           event: _currentEvent,
                           registration: registration,
@@ -193,14 +217,14 @@ class _EventDetailViewState extends State<_EventDetailView> {
 
   Future<void> _navigateToRegistration(
     BuildContext context,
-    EventRegistrationModel? existing,
+    EventRegistrationModel? registration,
   ) async {
-    final result = await context.pushNamed<bool?>(
+    final result = await context.pushNamed<EventRegistrationModel?>(
       AppRoutes.eventRegistration,
-      extra: {'event': _currentEvent, 'registration': existing},
+      extra: {'event': _currentEvent, 'registration': registration},
     );
-    if (result == true && context.mounted) {
-      context.read<EventDetailCubit>().loadMyRegistration(_currentEvent.id!);
+    if (result != null && context.mounted) {
+      context.read<EventDetailCubit>().updateRegistration(result);
     }
   }
 

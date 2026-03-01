@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/constants/registration_strings.dart';
+import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/registration/list/my_registrations_cubit.dart';
 import 'package:rideglory/features/events/presentation/registration/list/widgets/registration_card.dart';
@@ -36,26 +37,35 @@ class MyRegistrationsView extends StatelessWidget {
                   child: ListView.separated(
                     padding: const EdgeInsets.all(16),
                     itemCount: registrations.length,
-                    separatorBuilder: (_, __) => const SizedBox(height: 8),
+                    separatorBuilder: (_, _) => const SizedBox(height: 8),
                     itemBuilder: (context, index) {
-                      final reg = registrations[index];
+                      final registration = registrations[index];
                       return RegistrationCard(
-                        registration: reg,
+                        registration: registration,
                         onViewDetails: () => context.pushNamed(
                           AppRoutes.registrationDetail,
                           extra: (
-                            reg,
-                            reg.id != null
+                            registration,
+                            registration.id != null
                                 ? () async => context
                                       .read<MyRegistrationsCubit>()
-                                      .cancelRegistration(reg.id!)
-                                : null as Future<bool> Function()?,
+                                      .cancelRegistration(registration.id!)
+                                : null,
                           ),
                         ),
-                        onViewEvent: () => context.pushNamed(
-                          AppRoutes.eventDetailById,
-                          extra: reg.eventId,
-                        ),
+                        onViewEvent: () async {
+                          final result = await context
+                              .pushNamed<EventRegistrationModel?>(
+                                AppRoutes.eventDetailById,
+                                extra: registration.eventId,
+                              );
+
+                          if (result != null && context.mounted) {
+                            context
+                                .read<MyRegistrationsCubit>()
+                                .onChangeRegistration(result);
+                          }
+                        },
                       );
                     },
                   ),

@@ -23,8 +23,9 @@ import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 
 class EventDetailView extends StatefulWidget {
   final EventModel event;
+  final ValueChanged<EventRegistrationModel>? onRegistrationChanged;
 
-  const EventDetailView({super.key, required this.event});
+  const EventDetailView({super.key, required this.event, this.onRegistrationChanged});
 
   @override
   State<EventDetailView> createState() => _EventDetailViewState();
@@ -112,10 +113,10 @@ class _EventDetailViewState extends State<EventDetailView> {
                 if (!isOwner)
                   BlocBuilder<
                     EventDetailCubit,
-                    ResultState<EventRegistrationModel?>
+                    EventDetailState
                   >(
                     builder: (context, state) {
-                      return state.maybeWhen(
+                      return state.registrationResult.maybeWhen(
                         data: (registration) => EventRegistrationStatusCard(
                           event: _currentEvent,
                           registration: registration,

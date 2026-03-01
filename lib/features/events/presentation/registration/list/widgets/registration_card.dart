@@ -13,7 +13,7 @@ import 'package:rideglory/shared/widgets/info_chip.dart';
 class RegistrationCard extends StatelessWidget {
   final EventRegistrationModel registration;
   final VoidCallback? onViewDetails;
-  final VoidCallback? onViewEvent;
+  final Future<void> Function()? onViewEvent;
 
   const RegistrationCard({
     super.key,
@@ -143,9 +143,11 @@ class RegistrationCard extends StatelessWidget {
                             ),
                           ),
                       ],
-                      onSelected: (v) {
-                        if (v == 'event') onViewEvent?.call();
-                        if (v == 'cancel') _confirmCancel(context);
+                      onSelected: (v) async {
+                        if (v == 'event') await onViewEvent?.call();
+                        if (v == 'cancel' && context.mounted) {
+                          _confirmCancel(context);
+                        }
                       },
                     ),
                   ],

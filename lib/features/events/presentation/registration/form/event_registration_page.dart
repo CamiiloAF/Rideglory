@@ -61,7 +61,7 @@ class _RegistrationFormView extends StatelessWidget {
                   backgroundColor: Colors.green,
                 ),
               );
-              context.pop(true);
+              context.pop(registration);
             },
             error: (message) {
               ScaffoldMessenger.of(context).showSnackBar(

@@ -32,7 +32,6 @@ class AppDrawer extends StatelessWidget {
   }
 
   void _goTo(String route, BuildContext context) {
-    Navigator.pop(context);
     if (currentRoute != route) {
       context.goAndClearStack(route);
     }
