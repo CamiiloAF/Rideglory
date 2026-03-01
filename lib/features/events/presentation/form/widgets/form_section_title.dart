@@ -11,14 +11,15 @@ class FormSectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        if (icon != null) ...[          Icon(icon, color: AppColors.primary, size: 20),
+        if (icon != null) ...[
+          Icon(icon, color: AppColors.primary, size: 20),
           const SizedBox(width: 8),
         ],
         Text(
           title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w700,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
         ),
       ],
     );

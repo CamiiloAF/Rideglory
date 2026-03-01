@@ -117,10 +117,7 @@ class _EventFormDetailsSectionState extends State<EventFormDetailsSection> {
                     padding: const EdgeInsets.only(top: 6, left: 4),
                     child: Text(
                       field.errorText!,
-                      style: TextStyle(
-                        color: cs.error,
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: cs.error, fontSize: 12),
                     ),
                   ),
               ],
@@ -170,9 +167,7 @@ class _EventFormDetailsSectionState extends State<EventFormDetailsSection> {
                               : cs.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(50),
                           border: Border.all(
-                            color: selected
-                                ? cs.primary
-                                : cs.outlineVariant,
+                            color: selected ? cs.primary : cs.outlineVariant,
                           ),
                         ),
                         child: Text(

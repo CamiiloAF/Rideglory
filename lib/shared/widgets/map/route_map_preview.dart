@@ -11,11 +11,7 @@ class RouteMapPreview extends StatefulWidget {
   final String? meetingPoint;
   final String? destination;
 
-  const RouteMapPreview({
-    super.key,
-    this.meetingPoint,
-    this.destination,
-  });
+  const RouteMapPreview({super.key, this.meetingPoint, this.destination});
 
   @override
   State<RouteMapPreview> createState() => _RouteMapPreviewState();
@@ -60,15 +56,21 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
     ]);
   }
 
-  Future<void> _geocodeAddress(String? address, {required bool isOrigin}) async {
+  Future<void> _geocodeAddress(
+    String? address, {
+    required bool isOrigin,
+  }) async {
     if (address == null || address.trim().length < 4) return;
     setState(() => _isLoading = true);
     try {
-      final locations = await locationFromAddress(address.trim()).timeout(
-        const Duration(seconds: 5),
-      );
+      final locations = await locationFromAddress(
+        address.trim(),
+      ).timeout(const Duration(seconds: 5));
       if (locations.isNotEmpty && mounted) {
-        final latlng = LatLng(locations.first.latitude, locations.first.longitude);
+        final latlng = LatLng(
+          locations.first.latitude,
+          locations.first.longitude,
+        );
         setState(() {
           if (isOrigin) {
             _origin = latlng;
@@ -90,12 +92,20 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
     if (_origin != null && _dest != null) {
       final bounds = LatLngBounds(
         southwest: LatLng(
-          _origin!.latitude < _dest!.latitude ? _origin!.latitude : _dest!.latitude,
-          _origin!.longitude < _dest!.longitude ? _origin!.longitude : _dest!.longitude,
+          _origin!.latitude < _dest!.latitude
+              ? _origin!.latitude
+              : _dest!.latitude,
+          _origin!.longitude < _dest!.longitude
+              ? _origin!.longitude
+              : _dest!.longitude,
         ),
         northeast: LatLng(
-          _origin!.latitude > _dest!.latitude ? _origin!.latitude : _dest!.latitude,
-          _origin!.longitude > _dest!.longitude ? _origin!.longitude : _dest!.longitude,
+          _origin!.latitude > _dest!.latitude
+              ? _origin!.latitude
+              : _dest!.latitude,
+          _origin!.longitude > _dest!.longitude
+              ? _origin!.longitude
+              : _dest!.longitude,
         ),
       );
       _mapController!.animateCamera(CameraUpdate.newLatLngBounds(bounds, 60));
@@ -113,7 +123,9 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
         Marker(
           markerId: const MarkerId('origin'),
           position: _origin!,
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueGreen,
+          ),
           infoWindow: InfoWindow(
             title: widget.meetingPoint ?? 'Punto de encuentro',
           ),
@@ -126,9 +138,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
           markerId: const MarkerId('destination'),
           position: _dest!,
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-          infoWindow: InfoWindow(
-            title: widget.destination ?? 'Destino',
-          ),
+          infoWindow: InfoWindow(title: widget.destination ?? 'Destino'),
         ),
       );
     }
