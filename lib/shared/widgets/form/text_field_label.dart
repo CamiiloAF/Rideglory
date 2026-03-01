@@ -19,7 +19,6 @@ class TextFieldLabel extends StatelessWidget {
     return Text.rich(
       TextSpan(
         text: labelText,
-        style: const TextStyle(color: Color(0xFF374151)),
         children: const [
           TextSpan(
             text: ' *',

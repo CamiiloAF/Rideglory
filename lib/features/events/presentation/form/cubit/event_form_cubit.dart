@@ -61,7 +61,7 @@ class EventFormCubit extends Cubit<EventFormState> {
 
     final priceStr = formData[EventFormFields.price] as String?;
     final price = priceStr != null && priceStr.isNotEmpty
-        ? double.tryParse(priceStr)
+        ? int.tryParse(priceStr)
         : null;
 
     return EventModel(

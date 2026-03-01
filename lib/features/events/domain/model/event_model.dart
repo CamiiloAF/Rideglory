@@ -37,7 +37,7 @@ class EventModel {
   final DateTime meetingTime;
   final EventType eventType;
   final List<String> allowedBrands;
-  final double? price;
+  final int? price;
   final String? recommendations;
   final DateTime? createdDate;
   final DateTime? updatedDate;
@@ -82,7 +82,7 @@ class EventModel {
     DateTime? meetingTime,
     EventType? eventType,
     List<String>? allowedBrands,
-    double? price,
+    int? price,
     String? recommendations,
     DateTime? createdDate,
     DateTime? updatedDate,

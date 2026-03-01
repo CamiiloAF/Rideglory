@@ -88,7 +88,7 @@ class _SplashScreenContentState extends State<_SplashScreenContent> {
 
         if (selectedVehicle != null && mounted) {
           context.read<VehicleCubit>().setCurrentVehicle(selectedVehicle);
-          context.pushReplacementNamed(AppRoutes.maintenances);
+          context.pushReplacementNamed(AppRoutes.events);
         }
         return;
       }
