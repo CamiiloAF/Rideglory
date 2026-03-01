@@ -10,7 +10,6 @@ import 'package:rideglory/features/events/presentation/form/widgets/sections/eve
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_details_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_locations_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_recommendations_section.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
 
 class EventFormContent extends StatelessWidget {
   const EventFormContent({super.key});
@@ -52,9 +51,10 @@ class EventFormContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<EventFormCubit>();
+    final cs = Theme.of(context).colorScheme;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       child: FormBuilder(
         key: cubit.formKey,
         initialValue: _getInitialValues(cubit),
@@ -68,47 +68,56 @@ class EventFormContent extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                EventFormBasicInfoSection(isEditing: isEditing),
-                const SizedBox(height: 24),
-                const EventFormDateTimeSection(),
-                const SizedBox(height: 24),
-                EventFormDetailsSection(),
-                const SizedBox(height: 24),
-                const EventFormLocationsSection(),
-                const SizedBox(height: 24),
-                EventFormRecommendationsSection(
-                  initialValue: cubit.state.maybeWhen(
-                    editing: (event) => event.recommendations,
-                    orElse: () => null,
+                // ── Información Básica ───────────────────────────
+                _FormCard(
+                  icon: Icons.info_outline,
+                  title: EventStrings.basicInfo,
+                  colorScheme: cs,
+                  child: Column(
+                    children: [
+                      EventFormBasicInfoSection(isEditing: isEditing),
+                      const SizedBox(height: 16),
+                      const EventFormDateTimeSection(),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 32),
-                BlocBuilder<EventFormCubit, EventFormState>(
-                  builder: (context, state) {
-                    final isLoading = state.maybeWhen(
-                      loading: () => true,
-                      orElse: () => false,
-                    );
-                    final isEditing = state.maybeWhen(
-                      editing: (_) => true,
-                      orElse: () => false,
-                    );
-                    return AppButton(
-                      label: isEditing
-                          ? EventStrings.updateEvent
-                          : EventStrings.saveEvent,
-                      isLoading: isLoading,
-                      icon: Icons.save_outlined,
-                      onPressed: isLoading
-                          ? null
-                          : () {
-                              final event = cubit.buildEventToSave();
-                              if (event != null) cubit.saveEvent(event);
-                            },
-                    );
-                  },
-                ),
+
                 const SizedBox(height: 16),
+
+                // ── Detalles Técnicos ────────────────────────────
+                _FormCard(
+                  icon: Icons.settings_outlined,
+                  title: 'Detalles Técnicos',
+                  colorScheme: cs,
+                  child: EventFormDetailsSection(),
+                ),
+
+                const SizedBox(height: 16),
+
+                // ── Logística de Ruta ────────────────────────────
+                _FormCard(
+                  icon: Icons.route_outlined,
+                  title: 'Logística de Ruta',
+                  colorScheme: cs,
+                  child: const EventFormLocationsSection(),
+                ),
+
+                const SizedBox(height: 16),
+
+                // ── Recomendaciones ──────────────────────────────
+                _FormCard(
+                  icon: Icons.tips_and_updates_outlined,
+                  title: EventStrings.recommendations,
+                  colorScheme: cs,
+                  child: EventFormRecommendationsSection(
+                    initialValue: cubit.state.maybeWhen(
+                      editing: (event) => event.recommendations,
+                      orElse: () => null,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 8),
               ],
             );
           },
@@ -117,3 +126,61 @@ class EventFormContent extends StatelessWidget {
     );
   }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Card container for each section (matches Stitch design)
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _FormCard extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final Widget child;
+  final ColorScheme colorScheme;
+
+  const _FormCard({
+    required this.icon,
+    required this.title,
+    required this.child,
+    required this.colorScheme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: colorScheme.outlineVariant),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Section header
+          Row(
+            children: [
+              Icon(icon, color: colorScheme.primary, size: 22),
+              const SizedBox(width: 10),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          child,
+        ],
+      ),
+    );
+  }
+}
+

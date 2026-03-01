@@ -1,0 +1,9 @@
+{
+    "chat.mcp.serverSampling": {
+        "Rideglory/.vscode/mcp.json: stitch": {
+            "allowedModels": [
+                "copilot/claude-opus-4.5"
+            ]
+        }
+    }
+}

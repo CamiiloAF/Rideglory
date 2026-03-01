@@ -29,6 +29,14 @@ class AppColors {
   static const Color surface = Colors.white;
   static const Color surfaceGray = Color(0xFFF3F4F6); // Gray 100
 
+  // Dark mode backgrounds (matches Stitch design)
+  static const Color darkBackground = Color(0xFF111821);   // Stitch background-dark
+  static const Color darkSurface = Color(0xFF161F2E);      // card/sheet surface
+  static const Color darkSurfaceHighest = Color(0xFF1C2840); // elevated cards
+  static const Color darkBorder = Color(0xFF233047);       // slate-800 equivalent
+  static const Color darkTextPrimary = Color(0xFFF1F5F9);  // slate-100
+  static const Color darkTextSecondary = Color(0xFF94A3B8); // slate-400
+
   // Border colors
   static const Color border = Color(0xFFE5E7EB); // Gray 200
   static const Color borderLight = Color(0xFFF3F4F6); // Gray 100

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
-import 'package:rideglory/features/events/presentation/form/widgets/form_section_title.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 
 class EventFormBasicInfoSection extends StatelessWidget {
@@ -15,8 +14,6 @@ class EventFormBasicInfoSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FormSectionTitle(title: EventStrings.basicInfo),
-        const SizedBox(height: 12),
         AppTextField(
           name: EventFormFields.name,
           labelText: EventStrings.eventName,

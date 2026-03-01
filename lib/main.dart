@@ -42,6 +42,8 @@ class MyApp extends StatelessWidget {
         routerConfig: AppRouter.appRouter,
         title: AppStrings.appName,
         theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.dark,
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
