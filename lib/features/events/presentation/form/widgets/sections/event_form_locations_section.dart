@@ -13,8 +13,7 @@ class EventFormLocationsSection extends StatefulWidget {
       _EventFormLocationsSectionState();
 }
 
-class _EventFormLocationsSectionState
-    extends State<EventFormLocationsSection> {
+class _EventFormLocationsSectionState extends State<EventFormLocationsSection> {
   String? _meetingPoint;
   String? _destination;
 
@@ -55,10 +54,7 @@ class _EventFormLocationsSectionState
         ),
 
         // ── Map preview ────────────────────────────────────────
-        RouteMapPreview(
-          meetingPoint: _meetingPoint,
-          destination: _destination,
-        ),
+        RouteMapPreview(meetingPoint: _meetingPoint, destination: _destination),
       ],
     );
   }

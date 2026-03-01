@@ -107,14 +107,16 @@ class _RouteRow extends StatelessWidget {
               Text(
                 'Trayecto',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.5),
                 ),
               ),
               Text(
                 '${event.meetingPoint} → ${event.destination}',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
               ),
             ],
           ),
@@ -138,9 +140,9 @@ class _BrandChip extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-          fontWeight: FontWeight.w600,
-        ),
+        style: Theme.of(
+          context,
+        ).textTheme.labelMedium?.copyWith(fontWeight: FontWeight.w600),
       ),
     );
   }
@@ -151,12 +153,12 @@ class _DifficultyCard extends StatelessWidget {
   const _DifficultyCard({required this.difficulty});
 
   static String _label(EventDifficulty d) => switch (d) {
-        EventDifficulty.one => 'Fácil',
-        EventDifficulty.two => 'Moderado',
-        EventDifficulty.three => 'Intermedio',
-        EventDifficulty.four => 'Difícil',
-        EventDifficulty.five => 'Muy difícil',
-      };
+    EventDifficulty.one => 'Fácil',
+    EventDifficulty.two => 'Moderado',
+    EventDifficulty.three => 'Intermedio',
+    EventDifficulty.four => 'Difícil',
+    EventDifficulty.five => 'Muy difícil',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -185,9 +187,9 @@ class _DifficultyCard extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 _label(difficulty),
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
               ),
             ],
           ),
@@ -319,7 +321,11 @@ class _DescriptionCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(Icons.description_outlined, color: AppColors.primary, size: 20),
+              Icon(
+                Icons.description_outlined,
+                color: AppColors.primary,
+                size: 20,
+              ),
               const SizedBox(width: 8),
               Text(
                 'Descripción',

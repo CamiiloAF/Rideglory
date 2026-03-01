@@ -106,8 +106,7 @@ class EventFormView extends StatelessWidget {
                       onPressed: isLoading
                           ? null
                           : () {
-                              final cubit =
-                                  context.read<EventFormCubit>();
+                              final cubit = context.read<EventFormCubit>();
                               final event = cubit.buildEventToSave();
                               if (event != null) cubit.saveEvent(event);
                             },
@@ -149,4 +148,3 @@ class EventFormView extends StatelessWidget {
     );
   }
 }
-

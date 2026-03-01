@@ -138,8 +138,7 @@ class _EventDetailViewState extends State<_EventDetailView> {
                   },
                   onEdit: isOwner
                       ? () async {
-                          final result =
-                              await context.pushNamed<EventModel?>(
+                          final result = await context.pushNamed<EventModel?>(
                             AppRoutes.editEvent,
                             extra: _currentEvent,
                           );
@@ -150,12 +149,11 @@ class _EventDetailViewState extends State<_EventDetailView> {
                       : null,
                   onAttendees: isOwner
                       ? () => context.pushNamed(
-                            AppRoutes.eventAttendees,
-                            extra: _currentEvent,
-                          )
+                          AppRoutes.eventAttendees,
+                          extra: _currentEvent,
+                        )
                       : null,
-                  onDelete:
-                      isOwner ? () => _confirmDelete(context) : null,
+                  onDelete: isOwner ? () => _confirmDelete(context) : null,
                 ),
 
                 // ── Info sections ─────────────────────────────────
@@ -181,19 +179,16 @@ class _EventDetailViewState extends State<_EventDetailView> {
                                   : null,
                             ),
                             onEditRegistration: () =>
-                                _navigateToRegistration(
-                              context,
-                              registration,
-                            ),
+                                _navigateToRegistration(context, registration),
                             onCancelRegistration: () =>
                                 _confirmCancelRegistration(
-                              context,
-                              registration,
-                            ),
+                                  context,
+                                  registration,
+                                ),
                             onViewRecommendations:
                                 _currentEvent.recommendations != null
-                                    ? () => _showRecommendations(context)
-                                    : null,
+                                ? () => _showRecommendations(context)
+                                : null,
                           );
                         },
                         orElse: () => const SizedBox.shrink(),
@@ -227,10 +222,7 @@ class _EventDetailViewState extends State<_EventDetailView> {
                     data: (registration) => _EventCTABar(
                       event: _currentEvent,
                       registration: registration,
-                      onRegister: () => _navigateToRegistration(
-                        context,
-                        null,
-                      ),
+                      onRegister: () => _navigateToRegistration(context, null),
                     ),
                     orElse: () => const SizedBox.shrink(),
                   );
@@ -337,11 +329,11 @@ class _EventDetailHeader extends StatelessWidget {
 
   // Gradient color per event type
   Color _typeColor(EventType type) => switch (type) {
-        EventType.offRoad => const Color(0xFF8B4513),
-        EventType.onRoad => AppColors.primary,
-        EventType.exhibition => const Color(0xFF7C3AED),
-        EventType.charitable => const Color(0xFF0891B2),
-      };
+    EventType.offRoad => const Color(0xFF8B4513),
+    EventType.onRoad => AppColors.primary,
+    EventType.exhibition => const Color(0xFF7C3AED),
+    EventType.charitable => const Color(0xFF0891B2),
+  };
 
   String _badgeLabel() {
     final now = DateTime.now();
@@ -377,11 +369,7 @@ class _EventDetailHeader extends StatelessWidget {
             top: 30,
             child: Opacity(
               opacity: 0.07,
-              child: Icon(
-                Icons.motorcycle,
-                size: 260,
-                color: Colors.white,
-              ),
+              child: Icon(Icons.motorcycle, size: 260, color: Colors.white),
             ),
           ),
 
@@ -408,8 +396,10 @@ class _EventDetailHeader extends StatelessWidget {
             children: [
               SafeArea(
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -559,12 +549,14 @@ class _EventCTABar extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
         border: Border(
-          top: BorderSide(
-            color: Theme.of(context).colorScheme.outlineVariant,
-          ),
+          top: BorderSide(color: Theme.of(context).colorScheme.outlineVariant),
         ),
         boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 12, offset: Offset(0, -2)),
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 12,
+            offset: Offset(0, -2),
+          ),
         ],
       ),
       padding: EdgeInsets.fromLTRB(16, 12, 16, max(16.0, bottomPadding)),
@@ -577,10 +569,7 @@ class _EventCTABar extends StatelessWidget {
                 icon: const Icon(Icons.how_to_reg_outlined),
                 label: const Text(
                   'Inscribirse Ahora',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                 ),
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
@@ -624,19 +613,18 @@ class _EventCTABar extends StatelessWidget {
   }
 
   Color _statusColor(RegistrationStatus status) => switch (status) {
-        RegistrationStatus.pending => Colors.orange,
-        RegistrationStatus.approved => Colors.green,
-        RegistrationStatus.rejected => Colors.red,
-        RegistrationStatus.cancelled => Colors.grey,
-        RegistrationStatus.readyForEdit => Colors.blue,
-      };
+    RegistrationStatus.pending => Colors.orange,
+    RegistrationStatus.approved => Colors.green,
+    RegistrationStatus.rejected => Colors.red,
+    RegistrationStatus.cancelled => Colors.grey,
+    RegistrationStatus.readyForEdit => Colors.blue,
+  };
 
   String _statusLabel(RegistrationStatus status) => switch (status) {
-        RegistrationStatus.pending => 'Inscripción pendiente',
-        RegistrationStatus.approved => 'Inscripción aprobada',
-        RegistrationStatus.rejected => 'Inscripción rechazada',
-        RegistrationStatus.cancelled => 'Inscripción cancelada',
-        RegistrationStatus.readyForEdit => 'Lista para editar',
-      };
+    RegistrationStatus.pending => 'Inscripción pendiente',
+    RegistrationStatus.approved => 'Inscripción aprobada',
+    RegistrationStatus.rejected => 'Inscripción rechazada',
+    RegistrationStatus.cancelled => 'Inscripción cancelada',
+    RegistrationStatus.readyForEdit => 'Lista para editar',
+  };
 }
-
