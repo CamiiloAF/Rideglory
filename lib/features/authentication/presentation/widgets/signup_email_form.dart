@@ -5,14 +5,13 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/authentication/constants/auth_form_fields.dart';
 import 'package:rideglory/features/authentication/constants/auth_strings.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/shared/widgets/form/app_text_field.dart';
-import 'package:rideglory/shared/widgets/form/app_password_text_field.dart';
+import 'package:rideglory/features/authentication/signup/presentation/widgets/signup_terms_text.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
 import 'package:rideglory/shared/widgets/form/app_checkbox.dart';
+import 'package:rideglory/shared/widgets/form/app_password_text_field.dart';
+import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 
-/// Email/password signup form widget
+/// Email/password signup form — colors via theme, strings via AuthStrings.
 class SignupEmailForm extends StatefulWidget {
   final GlobalKey<FormBuilderState> formKey;
   final VoidCallback onBack;
@@ -44,13 +43,12 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
     if (widget.formKey.currentState?.saveAndValidate() ?? false) {
       final formData = widget.formKey.currentState!.value;
 
-      // Check if terms are accepted
       final acceptedTerms = formData[AuthFormFields.acceptTerms] as bool?;
       if (acceptedTerms != true) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text(AuthStrings.acceptTermsError),
-            backgroundColor: context.errorColor,
+            backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
         return;
@@ -71,9 +69,7 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
         children: [
           AppTextField(
             name: AuthFormFields.email,
-            labelText: AuthStrings.email,
-            hintText: AuthStrings.enterEmail,
-            prefixIcon: Icons.email_rounded,
+            hintText: AuthStrings.emailHint,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
             focusNode: _emailFocusNode,
@@ -88,8 +84,7 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
           const SizedBox(height: 16),
           AppPasswordTextField(
             name: AuthFormFields.password,
-            labelText: AuthStrings.password,
-            hintText: AuthStrings.createPassword,
+            hintText: AuthStrings.passwordMinStitch,
             textInputAction: TextInputAction.next,
             focusNode: _passwordFocusNode,
             onFieldSubmitted: (_) => _confirmPasswordFocusNode.requestFocus(),
@@ -114,9 +109,7 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
           const SizedBox(height: 16),
           AppPasswordTextField(
             name: AuthFormFields.confirmPassword,
-            labelText: AuthStrings.confirmPassword,
             hintText: AuthStrings.confirmYourPassword,
-            prefixIcon: Icons.lock_outline_rounded,
             textInputAction: TextInputAction.done,
             focusNode: _confirmPasswordFocusNode,
             onFieldSubmitted: (_) => _handleEmailSignup(context),
@@ -130,71 +123,28 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
                     .currentState
                     ?.fields[AuthFormFields.password]
                     ?.value;
-                if (value != password) {
-                  return AuthStrings.passwordsDoNotMatch;
-                }
+                if (value != password) return AuthStrings.passwordsDoNotMatch;
                 return null;
               },
             ]),
           ),
           const SizedBox(height: 24),
-
-          // Terms and conditions checkbox
           AppCheckbox(
             name: AuthFormFields.acceptTerms,
             title: '',
             initialValue: false,
-            customTitle: RichText(
-              text: const TextSpan(
-                text: AuthStrings.acceptTerms,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Color(0xFF374151),
-                  fontWeight: FontWeight.w500,
-                ),
-                children: [
-                  TextSpan(
-                    text: AuthStrings.termsOfService,
-                    style: TextStyle(
-                      color: Color(0xFF6366F1),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextSpan(
-                    text: ' y ',
-                    style: TextStyle(color: Color(0xFF374151)),
-                  ),
-                  TextSpan(
-                    text: AuthStrings.privacyPolicy,
-                    style: TextStyle(
-                      color: Color(0xFF6366F1),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            customTitle: const SignupTermsText(),
           ),
           const SizedBox(height: 24),
-
-          // Sign up button
           BlocBuilder<AuthCubit, AuthState>(
             builder: (context, state) {
               return AppButton(
                 onPressed: state.isLoading
                     ? null
                     : () => _handleEmailSignup(context),
-                label: AuthStrings.createAccount,
+                label: AuthStrings.createAccountButton,
               );
             },
-          ),
-          const SizedBox(height: 16),
-
-          // Back button
-          AppButton(
-            onPressed: widget.onBack,
-            label: AppStrings.back,
-            variant: AppButtonVariant.outline,
           ),
         ],
       ),

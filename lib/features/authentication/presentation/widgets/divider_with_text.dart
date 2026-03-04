@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/theme/app_text_styles.dart';
 
 /// Divider with centered text widget
 class DividerWithText extends StatelessWidget {
@@ -12,15 +10,20 @@ class DividerWithText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Expanded(child: Divider(height: 1, color: AppColors.border)),
+        const Expanded(child: Divider(height: 1, color: Color(0xFF3D2810))),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text(
             text,
-            style: AppTextStyles.caption.copyWith(fontSize: 13),
+            style: const TextStyle(
+              color: Color(0xFF94A3B8),
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 1.2,
+            ),
           ),
         ),
-        const Expanded(child: Divider(height: 1, color: AppColors.border)),
+        const Expanded(child: Divider(height: 1, color: Color(0xFF3D2810))),
       ],
     );
   }

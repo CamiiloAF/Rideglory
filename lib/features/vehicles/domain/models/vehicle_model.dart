@@ -23,6 +23,7 @@ class VehicleModel {
   final String? licensePlate;
   final String? vin;
   final DateTime? purchaseDate;
+  final String? imageUrl;
   final DateTime? createdDate;
   final DateTime? updatedDate;
   final bool isMainVehicle;
@@ -40,6 +41,7 @@ class VehicleModel {
     this.licensePlate,
     this.vin,
     this.purchaseDate,
+    this.imageUrl,
     this.createdDate,
     this.updatedDate,
     this.isMainVehicle = false,
@@ -58,6 +60,7 @@ class VehicleModel {
     String? licensePlate,
     String? vin,
     DateTime? purchaseDate,
+    String? imageUrl,
     DateTime? createdDate,
     DateTime? updatedDate,
     bool? isMainVehicle,
@@ -75,6 +78,7 @@ class VehicleModel {
       licensePlate: licensePlate ?? this.licensePlate,
       vin: vin ?? this.vin,
       purchaseDate: purchaseDate ?? this.purchaseDate,
+      imageUrl: imageUrl ?? this.imageUrl,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
       isMainVehicle: isMainVehicle ?? this.isMainVehicle,

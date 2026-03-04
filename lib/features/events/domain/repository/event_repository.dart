@@ -15,4 +15,9 @@ abstract class EventRepository {
   Future<Either<DomainException, EventModel>> updateEvent(EventModel event);
 
   Future<Either<DomainException, Nothing>> deleteEvent(String id);
+
+  Future<Either<DomainException, String>> uploadEventImage({
+    required String eventId,
+    required String localImagePath,
+  });
 }

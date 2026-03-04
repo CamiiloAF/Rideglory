@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/core/http/rest_client_functions.dart';
@@ -10,10 +13,11 @@ import 'package:rideglory/features/vehicles/domain/repository/vehicle_repository
 
 @Injectable(as: VehicleRepository)
 class VehicleRepositoryImpl implements VehicleRepository {
-  VehicleRepositoryImpl(this.firestore, this._authService);
+  VehicleRepositoryImpl(this.firestore, this._authService, this._storage);
 
   final FirebaseFirestore firestore;
   final AuthService _authService;
+  final FirebaseStorage _storage;
 
   static const _collectionName = 'vehicles';
 
@@ -101,6 +105,21 @@ class VehicleRepositoryImpl implements VehicleRepository {
     return executeService(
       function: () async {
         await firestore.collection(_collectionName).doc(id).delete();
+      },
+    );
+  }
+
+  @override
+  Future<Either<DomainException, String>> uploadVehicleImage({
+    required String vehicleId,
+    required String localImagePath,
+  }) {
+    return executeService(
+      function: () async {
+        final file = File(localImagePath);
+        final ref = _storage.ref().child('vehicles/$vehicleId/cover.jpg');
+        final uploadTask = await ref.putFile(file);
+        return uploadTask.ref.getDownloadURL();
       },
     );
   }

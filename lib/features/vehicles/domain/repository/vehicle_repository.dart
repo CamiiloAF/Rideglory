@@ -14,4 +14,9 @@ abstract class VehicleRepository {
   );
 
   Future<Either<DomainException, void>> deleteVehicle(String id);
+
+  Future<Either<DomainException, String>> uploadVehicleImage({
+    required String vehicleId,
+    required String localImagePath,
+  });
 }

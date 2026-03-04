@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 
-/// Password text field widget with toggle visibility functionality
 class AppPasswordTextField extends StatefulWidget {
   final String name;
   final String? labelText;
@@ -49,7 +48,7 @@ class _AppPasswordTextFieldState extends State<AppPasswordTextField> {
       name: widget.name,
       labelText: widget.labelText,
       hintText: widget.hintText,
-      prefixIcon: widget.prefixIcon ?? Icons.lock_rounded,
+      prefixIcon: widget.prefixIcon,
       suffixIcon: IconButton(
         icon: Icon(
           _isObscured ? Icons.visibility_off : Icons.visibility,
