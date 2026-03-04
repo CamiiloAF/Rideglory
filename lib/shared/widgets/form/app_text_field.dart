@@ -52,18 +52,22 @@ class AppTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (labelText != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 6),
+            child: TextFieldLabel(
+              labelText: labelText!,
+              isRequired: isRequired,
+            ),
+          ),
         FormBuilderTextField(
           name: name,
           decoration: InputDecoration(
-            border: const OutlineInputBorder(),
             prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
             suffixIcon: suffixIcon,
             hintText: hintText,
             helperText: helperText,
             helperMaxLines: 3,
-            label: labelText != null
-                ? TextFieldLabel(labelText: labelText!, isRequired: isRequired)
-                : null,
           ),
           initialValue: initialValue,
           maxLines: maxLines,

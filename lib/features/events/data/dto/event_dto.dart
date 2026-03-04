@@ -23,6 +23,7 @@ class EventDto extends EventModel {
     super.allowedBrands = const [],
     super.price,
     super.recommendations,
+    super.imageUrl,
     super.createdDate,
     super.updatedDate,
   });
@@ -51,6 +52,7 @@ extension EventModelExtension on EventModel {
     allowedBrands: allowedBrands,
     price: price,
     recommendations: recommendations,
+    imageUrl: imageUrl,
     createdDate: createdDate,
     updatedDate: updatedDate,
   ).toJson();

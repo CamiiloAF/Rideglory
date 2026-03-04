@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 
-/// Centralized text styles for the Rideglory app
 class AppTextStyles {
   AppTextStyles._();
 
-  // Display styles (large headings)
+  // ── Display ──────────────────────────────────────────────────────────────────
+  // displayLarge → brand mark, animated titles (e.g. RIDEGLORY splash)
   static const TextStyle displayLarge = TextStyle(
-    fontSize: 32,
-    fontWeight: FontWeight.bold,
+    fontSize: 40,
+    fontWeight: FontWeight.w800,
     color: AppColors.textPrimary,
-    letterSpacing: -0.5,
+    letterSpacing: 1.5,
   );
 
+  // displayMedium → main screen headings (e.g. "Bienvenido de vuelta")
   static const TextStyle displayMedium = TextStyle(
-    fontSize: 28,
-    fontWeight: FontWeight.bold,
+    fontSize: 30,
+    fontWeight: FontWeight.w700,
     color: AppColors.textPrimary,
-    letterSpacing: -0.5,
   );
 
+  // displaySmall → secondary screen headings (e.g. "Crear cuenta")
   static const TextStyle displaySmall = TextStyle(
-    fontSize: 24,
-    fontWeight: FontWeight.bold,
+    fontSize: 28,
+    fontWeight: FontWeight.w700,
     color: AppColors.textPrimary,
-    letterSpacing: -0.5,
   );
 
-  // Headline styles
+  // ── Headline ─────────────────────────────────────────────────────────────────
   static const TextStyle headlineMedium = TextStyle(
     fontSize: 20,
     fontWeight: FontWeight.w600,
@@ -40,10 +40,10 @@ class AppTextStyles {
     color: AppColors.textPrimary,
   );
 
-  // Title styles
+  // ── Title ────────────────────────────────────────────────────────────────────
   static const TextStyle titleLarge = TextStyle(
     fontSize: 16,
-    fontWeight: FontWeight.bold,
+    fontWeight: FontWeight.w700,
     color: AppColors.textPrimary,
   );
 
@@ -53,91 +53,56 @@ class AppTextStyles {
     color: AppColors.textPrimary,
   );
 
+  // titleSmall → AppBar titles, section titles
   static const TextStyle titleSmall = TextStyle(
     fontSize: 14,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w700,
     color: AppColors.textPrimary,
+    letterSpacing: 0.5,
   );
 
-  // Body styles
+  // ── Body ─────────────────────────────────────────────────────────────────────
   static const TextStyle bodyLarge = TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.normal,
     color: AppColors.textPrimary,
   );
 
+  // bodyMedium → body text, subtítulos de pantalla
   static const TextStyle bodyMedium = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.normal,
     color: AppColors.textSecondary,
   );
 
+  // bodySmall → texto secundario, preguntas inline ("¿No tienes cuenta?")
   static const TextStyle bodySmall = TextStyle(
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: FontWeight.normal,
     color: AppColors.textSecondary,
   );
 
-  // Label styles
+  // ── Label ────────────────────────────────────────────────────────────────────
+  // labelLarge → texto de botones principales, CTA primarios
   static const TextStyle labelLarge = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-    color: AppColors.textPrimary,
-  );
-
-  static const TextStyle labelMedium = TextStyle(
     fontSize: 14,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w700,
+    color: AppColors.textPrimary,
+    letterSpacing: 0.5,
+  );
+
+  // labelMedium → links CTA secundarios ("REGÍSTRATE GRATIS")
+  static const TextStyle labelMedium = TextStyle(
+    fontSize: 13,
+    fontWeight: FontWeight.w700,
     color: AppColors.textPrimary,
   );
 
+  // labelSmall → form field labels, dividers, captions
   static const TextStyle labelSmall = TextStyle(
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: FontWeight.w600,
     color: AppColors.textSecondary,
-  );
-
-  // Button styles
-  static const TextStyle button = TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-    letterSpacing: 0.3,
-  );
-
-  static const TextStyle buttonSmall = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w600,
-    letterSpacing: 0.3,
-  );
-
-  // Caption/hint styles
-  static const TextStyle caption = TextStyle(
-    fontSize: 12,
-    fontWeight: FontWeight.normal,
-    color: AppColors.textTertiary,
-  );
-
-  static const TextStyle hint = TextStyle(
-    fontSize: 16,
-    color: AppColors.textTertiary,
-  );
-
-  // Special styles
-  static const TextStyle error = TextStyle(
-    fontSize: 12,
-    fontWeight: FontWeight.normal,
-    color: AppColors.error,
-  );
-
-  static const TextStyle success = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w600,
-    color: AppColors.success,
-  );
-
-  static const TextStyle warning = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w600,
-    color: AppColors.warning,
+    letterSpacing: 1.2,
   );
 }

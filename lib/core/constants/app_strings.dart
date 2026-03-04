@@ -1,8 +1,6 @@
 /// Global string constants for the Rideglory app
 /// This file contains common strings used across the entire application
-class AppStrings {
-  AppStrings._();
-
+abstract class AppStrings {
   // App name
   static const String appName = 'Rideglory';
 

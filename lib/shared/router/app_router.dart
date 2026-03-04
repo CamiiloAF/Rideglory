@@ -15,6 +15,7 @@ import 'package:rideglory/features/events/presentation/registration/form/event_r
 import 'package:rideglory/features/events/presentation/registration/list/my_registrations_page.dart';
 import 'package:rideglory/features/events/presentation/registration/detail/registration_detail_page.dart';
 import 'package:rideglory/features/events/presentation/detail/event_detail_by_id_page.dart';
+import 'package:rideglory/features/home/presentation/home_page.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
@@ -103,6 +104,13 @@ class AppRouter {
         },
       ),
 
+      // Home route
+      GoRoute(
+        path: AppRoutes.home,
+        name: AppRoutes.home,
+        builder: (context, state) => const HomePage(),
+      ),
+
       // Vehicle routes
       GoRoute(
         path: AppRoutes.vehicles,
@@ -181,7 +189,7 @@ class AppRouter {
         name: AppRoutes.eventDetail,
         builder: (context, state) {
           final event = state.extra as EventModel;
-          return EventDetailPage(params: EventDetailPageParams(event: event),);
+          return EventDetailPage(params: EventDetailPageParams(event: event));
         },
       ),
       GoRoute(

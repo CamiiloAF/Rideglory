@@ -1,0 +1,54 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/features/authentication/application/auth_cubit.dart';
+import 'package:rideglory/features/home/constants/home_strings.dart';
+import 'package:rideglory/features/home/presentation/widgets/home_notification_button.dart';
+
+class HomeHeader extends StatelessWidget {
+  const HomeHeader({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final authState = context.watch<AuthCubit>().state;
+    final userName =
+        authState.currentUser?.displayName ??
+        authState.currentUser?.email?.split('@').first ??
+        'Rider';
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  HomeStrings.greeting.toUpperCase(),
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  userName,
+                  style: const TextStyle(
+                    color: AppColors.darkTextPrimary,
+                    fontSize: 26,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const HomeNotificationButton(showBadge: true),
+        ],
+      ),
+    );
+  }
+}

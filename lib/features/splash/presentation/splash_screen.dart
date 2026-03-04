@@ -3,13 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/splash/presentation/cubit/splash_cubit.dart';
+import 'package:rideglory/features/splash/presentation/widgets/splash_brand_content.dart';
+import 'package:rideglory/features/splash/presentation/widgets/splash_footer.dart';
+import 'package:rideglory/features/splash/presentation/widgets/splash_glow_background.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -18,21 +20,44 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => getIt<SplashCubit>()..initialize(),
-      child: const _SplashScreenContent(),
+      child: const _SplashContent(),
     );
   }
 }
 
-class _SplashScreenContent extends StatefulWidget {
-  const _SplashScreenContent();
+class _SplashContent extends StatefulWidget {
+  const _SplashContent();
 
   @override
-  State<_SplashScreenContent> createState() => _SplashScreenContentState();
+  State<_SplashContent> createState() => _SplashContentState();
 }
 
-class _SplashScreenContentState extends State<_SplashScreenContent> {
+class _SplashContentState extends State<_SplashContent>
+    with SingleTickerProviderStateMixin {
   bool _hasNavigated = false;
   bool _hasLoadedVehicles = false;
+
+  late AnimationController _progressController;
+  late Animation<double> _progressAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _progressController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2200),
+    );
+    _progressAnimation = Tween<double>(begin: 0.0, end: 0.85).animate(
+      CurvedAnimation(parent: _progressController, curve: Curves.easeInOut),
+    );
+    _progressController.forward();
+  }
+
+  @override
+  void dispose() {
+    _progressController.dispose();
+    super.dispose();
+  }
 
   void _handleNavigation() async {
     if (_hasNavigated) return;
@@ -40,21 +65,14 @@ class _SplashScreenContentState extends State<_SplashScreenContent> {
     final splashState = context.read<SplashCubit>().state;
     final vehicleListState = context.read<VehicleListCubit>().state;
 
-    // Wait for authentication check
-    if (splashState is SplashLoading || splashState is SplashInitial) {
-      return;
-    }
+    if (splashState is SplashLoading || splashState is SplashInitial) return;
 
-    // Handle unauthenticated state
     if (splashState is SplashUnauthenticated) {
       _hasNavigated = true;
-      if (mounted) {
-        context.pushReplacementNamed(AppRoutes.login);
-      }
+      if (mounted) context.pushReplacementNamed(AppRoutes.login);
       return;
     }
 
-    // User is authenticated, load vehicles if not already loaded
     if (splashState is SplashAuthenticated) {
       if (!_hasLoadedVehicles) {
         _hasLoadedVehicles = true;
@@ -62,25 +80,16 @@ class _SplashScreenContentState extends State<_SplashScreenContent> {
         return;
       }
 
-      // Wait for vehicles to load
-      if (vehicleListState is Initial || vehicleListState is Loading) {
-        return;
-      }
+      if (vehicleListState is Initial || vehicleListState is Loading) return;
 
-      // Handle vehicle states
       if (vehicleListState is Empty) {
-        // No vehicles, go to onboarding
         _hasNavigated = true;
-        if (mounted) {
-          context.pushReplacementNamed(AppRoutes.vehicleOnboarding);
-        }
+        if (mounted) context.pushReplacementNamed(AppRoutes.vehicleOnboarding);
         return;
       }
 
       if (vehicleListState is Data<List<VehicleModel>>) {
-        // Has vehicles, select current and navigate to home
         _hasNavigated = true;
-
         final vehicles = vehicleListState.data;
         final selectedVehicle = await context
             .read<SplashCubit>()
@@ -88,116 +97,48 @@ class _SplashScreenContentState extends State<_SplashScreenContent> {
 
         if (selectedVehicle != null && mounted) {
           context.read<VehicleCubit>().setCurrentVehicle(selectedVehicle);
-          context.pushReplacementNamed(AppRoutes.events);
+          context.pushReplacementNamed(AppRoutes.home);
         }
         return;
       }
 
       if (vehicleListState is Error) {
-        // Error loading vehicles, go to login to retry
         _hasNavigated = true;
-        if (mounted) {
-          context.pushReplacementNamed(AppRoutes.login);
-        }
+        if (mounted) context.pushReplacementNamed(AppRoutes.login);
         return;
       }
     }
+  }
+
+  void _onRetry() {
+    setState(() {
+      _hasNavigated = false;
+      _hasLoadedVehicles = false;
+    });
+    context.read<SplashCubit>().initialize();
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        // Listen to SplashCubit state changes
         BlocListener<SplashCubit, SplashState>(
-          listener: (context, state) {
-            _handleNavigation();
-          },
+          listener: (context, state) => _handleNavigation(),
         ),
-        // Listen to VehicleListCubit state changes
         BlocListener<VehicleListCubit, ResultState<List<VehicleModel>>>(
-          listener: (context, state) {
-            _handleNavigation();
-          },
+          listener: (context, state) => _handleNavigation(),
         ),
       ],
       child: Scaffold(
-        backgroundColor: const Color(0xFF6366F1),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        backgroundColor: AppColors.darkBackground,
+        body: SafeArea(
+          child: Stack(
             children: [
-              // App logo or icon
-              Container(
-                width: 120,
-                height: 120,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: .1),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.directions_car_rounded,
-                  size: 64,
-                  color: Color(0xFF6366F1),
-                ),
-              ),
-              const SizedBox(height: 32),
-              // App name
-              Text(
-                AppStrings.appName,
-                style: context.displayLarge?.copyWith(
-                  color: Colors.white,
-                  letterSpacing: -1,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Vehicle Maintenance Tracker',
-                style: context.titleMedium?.copyWith(color: Colors.white70),
-              ),
-              const SizedBox(height: 48),
-              // Loading indicator
-              BlocBuilder<SplashCubit, SplashState>(
-                builder: (context, state) {
-                  if (state is SplashError) {
-                    return Column(
-                      children: [
-                        Text(
-                          'Error: ${state.message}',
-                          style: context.bodyMedium?.copyWith(
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              _hasNavigated = false;
-                              _hasLoadedVehicles = false;
-                            });
-                            context.read<SplashCubit>().initialize();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: const Color(0xFF6366F1),
-                          ),
-                          child: Text(AppStrings.retry),
-                        ),
-                      ],
-                    );
-                  }
-                  return const CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                  );
-                },
+              const SplashGlowBackground(),
+              const SplashBrandContent(),
+              SplashFooter(
+                progressAnimation: _progressAnimation,
+                onRetry: _onRetry,
               ),
             ],
           ),

@@ -39,6 +39,7 @@ class EventModel {
   final List<String> allowedBrands;
   final int? price;
   final String? recommendations;
+  final String? imageUrl;
   final DateTime? createdDate;
   final DateTime? updatedDate;
 
@@ -58,6 +59,7 @@ class EventModel {
     this.allowedBrands = const [],
     this.price,
     this.recommendations,
+    this.imageUrl,
     this.createdDate,
     this.updatedDate,
   });
@@ -84,6 +86,7 @@ class EventModel {
     List<String>? allowedBrands,
     int? price,
     String? recommendations,
+    String? imageUrl,
     DateTime? createdDate,
     DateTime? updatedDate,
   }) {
@@ -104,6 +107,7 @@ class EventModel {
       allowedBrands: allowedBrands ?? this.allowedBrands,
       price: price ?? this.price,
       recommendations: recommendations ?? this.recommendations,
+      imageUrl: imageUrl ?? this.imageUrl,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
     );

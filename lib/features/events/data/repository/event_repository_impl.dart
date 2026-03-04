@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/domain/nothing.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
@@ -11,10 +14,11 @@ import 'package:rideglory/features/events/domain/repository/event_repository.dar
 
 @Injectable(as: EventRepository)
 class EventRepositoryImpl implements EventRepository {
-  EventRepositoryImpl(this._firestore, this._authService);
+  EventRepositoryImpl(this._firestore, this._authService, this._storage);
 
   final FirebaseFirestore _firestore;
   final AuthService _authService;
+  final FirebaseStorage _storage;
 
   static const _collectionName = 'events';
 
@@ -115,6 +119,21 @@ class EventRepositoryImpl implements EventRepository {
       function: () async {
         await _firestore.collection(_collectionName).doc(id).delete();
         return Nothing();
+      },
+    );
+  }
+
+  @override
+  Future<Either<DomainException, String>> uploadEventImage({
+    required String eventId,
+    required String localImagePath,
+  }) {
+    return executeService(
+      function: () async {
+        final file = File(localImagePath);
+        final ref = _storage.ref().child('events/$eventId/cover.jpg');
+        final uploadTask = await ref.putFile(file);
+        return uploadTask.ref.getDownloadURL();
       },
     );
   }

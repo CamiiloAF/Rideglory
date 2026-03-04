@@ -63,38 +63,24 @@ class AppButton extends StatelessWidget {
     }
   }
 
-  BoxShadow? get _shadow {
-    if (variant == AppButtonVariant.primary ||
-        variant == AppButtonVariant.secondary ||
-        variant == AppButtonVariant.danger) {
-      return BoxShadow(
-        color: _backgroundColor.withValues(alpha: .3),
-        blurRadius: 12,
-        offset: const Offset(0, 4),
-      );
-    }
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     final buttonWidget = Container(
       width: isFullWidth ? double.infinity : width,
       height: height,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         color: _backgroundColor,
         border: Border.all(
           color: _borderColor,
           width: variant == AppButtonVariant.outline ? 1.5 : 0,
         ),
-        boxShadow: _shadow != null ? [_shadow!] : null,
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onPressed == null || isLoading ? null : onPressed,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           child: Padding(
             padding: padding,
             child: Center(
