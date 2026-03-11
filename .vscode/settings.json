@@ -5,5 +5,11 @@
                 "copilot/claude-opus-4.5"
             ]
         }
+    },
+    "chat.tools.terminal.autoApprove": {
+        "/^cat \"/Users/cami/Library/Application Support/Code/User/workspaceStorage/ecbab7a723d52065fedbe31caf83f070/GitHub\\.copilot-chat/chat-session-resources/53dbc537-ce62-4336-b181-9516dfd9b677/toolu_bdrk_01HBvyLZb2vXVHugZBsReetu__vscode-1772862844373/content\\.json\" \\| python3 -c \"import json,sys; data=json\\.load\\(sys\\.stdin\\); \\[print\\(s\\.get\\('title','\\(sin título\\)'\\), '-', s\\['name'\\]\\.split\\('/'\\)\\[-1\\]\\) for s in data\\.get\\('screens',\\[\\]\\)\\]\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
     }
 }

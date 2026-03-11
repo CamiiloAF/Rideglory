@@ -41,7 +41,7 @@ trigger: always_on
 
 ## 🏗️ Estructura general
 
-- No está permitido crear métodos para construir widgets (_buildXWidget())
+- No está permitido crear métodos que retornen un widget ejemplo "Widget _buildHeader()"
 - Cada Widget debe vivir en un archivo y cada archivo solo tendrá máximo 1 widget no importa si es público o privado
 - Debe seguir una arquitectura limpia separada por capas: presentation, data, domain
 - Constantes de campos de formulario → `lib/features/<feature>/constants/<feature>_form_fields.dart`
@@ -75,3 +75,55 @@ trigger: always_on
 - Modo: **Dark**
 - Fuente: **Space Grotesk** (`google_fonts`)
 - Border radius estándar: **8 px** (`ROUND_EIGHT`)
+
+
+## 🧭 Navegación (go_router)
+
+- **Preferir `context.pushNamed`** por encima de `context.goNamed` para navegar entre pantallas.
+  - `pushNamed` apila la nueva ruta sobre el stack actual, permitiendo volver atrás con el botón de retroceso.
+  - `goNamed` reemplaza el stack completo de navegación, lo que impide volver a la pantalla anterior.
+- Para limpiar el stack completo y redirigir (e.g. al login tras cerrar sesión), usar la extensión **`context.goAndClearStack(routeName)`** definida en `lib/core/extensions/go_router.dart`.
+  - Hace pop de todas las rutas apiladas y luego hace `pushReplacementNamed`, dejando solo la nueva ruta.
+  - ✅ `context.pushNamed(AppRoutes.eventDetail, pathParameters: {'id': event.id})`
+  - ✅ `context.goAndClearStack(AppRoutes.login)` — después de logout o al finalizar onboarding
+  - ❌ `context.goNamed(AppRoutes.eventDetail, ...)` — para navegación normal
+
+---
+
+🧊 Cubits — Estado con ResultState<T>
+Cubit simple (un solo resultado): si el cubit maneja una única operación asíncrona, debe extender Cubit<ResultState<T>> directamente.
+
+dart
+// ✅ Correcto
+class AttendeesCubit extends Cubit<ResultState<List<EventRegistrationModel>>> {
+  AttendeesCubit(...) : super(const ResultState.initial());
+}
+Cubit complejo (múltiples resultados independientes): si el cubit maneja más de un 
+
+ResultState
+ o combina datos de distintas fuentes, se debe crear un state con @freezed en un archivo separado <feature>_state.dart como part of del cubit, con un campo ResultState<T> por cada dato independiente. 
+
+Está prohibido crear una clase State con solamente 1 result, en ese caso se debe usar Cubit<ResultState<T>> directamente. 
+
+dart
+// event_detail_state.dart
+part of 'event_detail_cubit.dart';
+@freezed
+abstract class EventDetailState with _$EventDetailState {
+  const EventDetailState._();
+  const factory EventDetailState({
+    required ResultState<EventModel> eventResult,
+    required ResultState<EventRegistrationModel?> registrationResult,
+  }) = _EventDetailState;
+}
+Prohibido:
+
+Usar bool isLoading, String? errorMessage, u otros campos primitivos para representar estados de carga/error — siempre usar ResultState<T>.
+Crear estados propios con variantes del tipo XState.loading() / XState.error() cuando ResultState<T> ya cubre ese ciclo de vida. cuando se crea un state con
+varios states si se puede tener una propiedad isLoading que compare si uno o más de los states esté en estado loading.
+Tener un state class con sealed/abstract + subclases propias (p. ej. XLoading, XError, XLoaded) — esos casos también se resuelven con ResultState<T>.
+Regla de decisión:
+
+Escenario	Patrón
+1 resultado asíncrono	Cubit<ResultState<T>>
+2+ resultados o estado mixto	Cubit<XState> con @freezed + archivo x_state.dart

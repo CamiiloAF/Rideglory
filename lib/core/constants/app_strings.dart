@@ -28,6 +28,7 @@ abstract class AppStrings {
   // Empty states
   static const String noData = 'No hay datos';
   static const String noResults = 'No se encontraron resultados';
+  static const String notAvailable = 'N/A';
   static const String noSearchResults =
       'No se encontraron resultados para tu búsqueda';
 

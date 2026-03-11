@@ -5,11 +5,14 @@ class MaintenanceStrings {
   // Page titles
   static const String maintenance = 'Mantenimiento';
   static const String maintenances = 'Mantenimientos';
-  static const String addMaintenance = 'Agregar Mantenimiento';
-  static const String editMaintenance = 'Editar Mantenimiento';
+  static const String addMaintenance = 'Agregar mantenimiento';
+  static const String editMaintenance = 'Editar mantenimiento';
   static const String deleteMaintenance = 'Eliminar mantenimiento';
-  static const String maintenanceHistory = 'Ver Historial';
+  static const String maintenanceHistory = 'Ver historial';
   static const String reminders = 'Recordatorios';
+  static const String maintenanceDetail = 'Detalle de mantenimiento';
+  static const String newRecord = 'Nuevo Registro';
+  static const String editRecord = 'Editar Registro';
 
   // Messages
   static const String deleteMaintenanceMessage =
@@ -17,19 +20,36 @@ class MaintenanceStrings {
   static const String noMaintenances = 'No hay mantenimientos registrados';
   static const String noMaintenancesDescription =
       'Comienza a registrar los mantenimientos de tu vehículo para llevar un control completo';
+  static const String receiveMaintenanceAlert =
+      'Recibe una notificación cuando se acerque el próximo mantenimiento';
+
+  static const String mileageAlert = 'Alerta por kilometraje';
+  static const String mileageAlertHint =
+      'Notificar cuando falten 500 km para el mantenimiento';
+
+  static const String dateAlert = 'Alerta por fecha';
+  static const String dateAlertHint =
+      'Notificar una semana antes de la fecha programada';
+
   static const String maintenanceDeletedSuccessfully =
-      'Mantenimiento eliminado exitosamente';
+      'Mantenimiento eliminado correctamente';
+  static const String errorLoadingRecords = 'Error cargando registros';
+  static const String noRecordsYet = 'Aún no hay registros';
 
   // Form fields
-  static const String maintenanceType = 'Tipo de mantenimiento';
-  static const String maintenanceDate = 'Fecha de mantenimiento';
-  static const String maintenanceNotes = 'Notas';
-  static const String maintenanceCost = 'Costo';
-  static const String maintenanceMileage = 'Kilometraje';
+  static const String maintenanceType = 'Tipo de Mantenimiento';
+  static const String maintenanceDate = 'Fecha de Mantenimiento';
+  static const String maintenanceNotes = 'Notas / Observaciones';
+  static const String maintenanceCost = 'Costo del Mantenimiento';
+  static const String maintenanceMileage = 'Kilometraje Actual';
   static const String nextMaintenance = 'Próximo mantenimiento';
   static const String nextMaintenanceMileage =
       'Kilometraje del próximo mantenimiento';
   static String get distanceUnit => 'Unidad';
+  static const String totalCost = 'Costo total';
+  static const String serviceNotes = 'Notas de servicio';
+  static const String estimatedDate = 'Fecha estimada';
+  static String performedOn(String date) => 'Realizado el $date';
 
   // Status
   static const String urgent = 'Urgente';
@@ -43,7 +63,7 @@ class MaintenanceStrings {
 
   // Mileage
   static const String mileage = 'Kilometraje';
-  static const String currentMileage = 'Kilometraje actual';
+  static const String currentMileage = 'Kilometraje Actual';
   static const String updateMileage = 'Actualizar kilometraje';
   static const String mileageUnit = 'Unidad';
   static const String kilometers = 'Kilómetros';
@@ -72,10 +92,10 @@ class MaintenanceStrings {
   static const String monthDec = 'Dic';
 
   // Actions
-  static const String addMaintenance_ = 'Agregar Mantenimiento';
+  static const String addMaintenance_ = 'Agregar mantenimiento';
   static const String addMaintenanceAction = 'Agregar mantenimiento';
-  static const String viewHistory = 'Ver Historial';
-  static const String saveMaintenance = 'Guardar Mantenimiento';
+  static const String viewHistory = 'Ver historial';
+  static const String saveMaintenance = 'Guardar Registro';
   static const String saveOnly = 'Solo guardar';
   static const String update = 'Actualizar';
 
@@ -104,9 +124,10 @@ class MaintenanceStrings {
       '$distance $unit restantes';
 
   // Form field labels
-  static const String maintenanceName = 'Nombre del mantenimiento';
-  static const String nextMaintenanceDate = 'Fecha del próximo mantenimiento';
-  static const String maintenanceDateLabel = 'Fecha del mantenimiento';
+  static const String maintenanceName = 'Nombre del Mantenimiento';
+  static const String nextMaintenanceDate = 'PRÓXIMA FECHA';
+  static const String maintenanceDateLabel = 'Fecha de Servicio';
+  static const String nextMaintenanceMileageLabel = 'PRÓXIMO KM';
 
   // Validation messages
   static const String nameRequired = 'El nombre es requerido';
@@ -114,10 +135,20 @@ class MaintenanceStrings {
   static const String typeRequired = 'El tipo es requerido';
 
   // Alerts & Notifications
-  static const String receiveMaintenanceAlert =
-      'Recibir alerta de mantenimiento';
+  static const String remindersLabel = 'Recibe recordatorios automáticos';
+  static const String nextServiceAlerts = 'Alertas de próximo servicio';
+  static const String alertsConfiguration = 'Configuración de alertas';
+  static const String alertsActivatedDesc =
+      'Las alertas están activadas para este mantenimiento.';
 
   // Search
   static const String searchMaintenances =
       'Buscar por nombre del mantenimiento';
+
+  // Vehicle selection
+  static const String allVehicles = 'Todos los vehículos';
+
+  // List
+  static const String recentRecords = 'Registros recientes';
+  static const String filter = 'Filtrar';
 }

@@ -6,9 +6,7 @@ import 'package:rideglory/features/events/domain/use_cases/get_event_registratio
 import 'package:rideglory/features/events/domain/use_cases/reject_registration_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/set_registration_ready_for_edit_use_case.dart';
 
-// TODO agregar un estado para cuando se aprueba o rechaza una solicitud, para mostrar un mensaje de éxito o error
-class AttendeesCubit
-    extends Cubit<ResultState<List<EventRegistrationModel>>> {
+class AttendeesCubit extends Cubit<ResultState<List<EventRegistrationModel>>> {
   AttendeesCubit(
     this._getRegistrationsUseCase,
     this._approveUseCase,

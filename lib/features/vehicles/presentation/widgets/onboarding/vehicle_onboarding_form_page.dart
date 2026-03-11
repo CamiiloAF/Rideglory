@@ -28,11 +28,7 @@ class _VehicleOnboardingFormPageState extends State<VehicleOnboardingFormPage>
     super.build(context); // Required for AutomaticKeepAliveClientMixin
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: VehicleForm(
-        formKey: widget.formKey,
-        isOnboarding: true,
-        isFirstVehicleInOnboarding: widget.isFirstVehicle,
-      ),
+      child: VehicleForm(formKey: widget.formKey),
     );
   }
 }

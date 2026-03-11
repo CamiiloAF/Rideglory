@@ -17,68 +17,42 @@ class SelectedVehicleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(8),
       child: Container(
-        padding: const EdgeInsets.all(18),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              const Color(0xFF6366F1).withValues(alpha: 0.08),
-              const Color(0xFF8B5CF6).withValues(alpha: 0.05),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(16),
+          color: context.colorScheme.surface,
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: const Color(0xFF6366F1).withValues(alpha: 0.15),
-            width: 1.5,
+            color: context.colorScheme.outline.withValues(alpha: 0.1),
+            width: 1,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF6366F1).withValues(alpha: 0.08),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
         ),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                ),
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF6366F1).withValues(alpha: 0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+                color: context.colorScheme.primary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
                 vehicle.vehicleType == VehicleType.motorcycle
                     ? Icons.two_wheeler_rounded
                     : Icons.directions_car_rounded,
-                color: Colors.white,
-                size: 22,
+                color: context.colorScheme.primary,
+                size: 24,
               ),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     MaintenanceStrings.vehicle,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF6366F1),
+                    style: context.textTheme.labelSmall?.copyWith(
+                      color: context.colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.5,
                     ),
@@ -86,7 +60,7 @@ class SelectedVehicleCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     vehicle.name,
-                    style: context.titleMedium?.copyWith(
+                    style: context.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -97,35 +71,18 @@ class SelectedVehicleCard extends StatelessWidget {
                         vehicle.brand,
                         vehicle.model,
                       ].where((e) => e != null).join(' '),
-                      style: context.bodyMedium?.copyWith(height: 1.3),
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 ],
               ),
             ),
-            const SizedBox(width: 10),
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: const Color(0xFF6366F1).withValues(alpha: 0.2),
-                  width: 1,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: const Icon(
-                Icons.swap_horiz_rounded,
-                color: Color(0xFF6366F1),
-                size: 22,
-              ),
+            const SizedBox(width: 12),
+            Icon(
+              Icons.chevron_right_rounded,
+              color: context.colorScheme.onSurfaceVariant,
             ),
           ],
         ),

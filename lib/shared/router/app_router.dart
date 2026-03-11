@@ -22,11 +22,12 @@ import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import '../../features/authentication/application/auth_cubit.dart';
 import '../../features/authentication/login/presentation/login_view.dart';
 import '../../features/authentication/signup/presentation/signup_view.dart';
+import '../../features/maintenance/presentation/detail/maintenance_detail_page.dart';
 import '../../features/maintenance/presentation/form/maintenance_form_page.dart';
 import '../../features/maintenance/presentation/list/maintenances/maintenances_page.dart';
 import '../../features/splash/presentation/splash_screen.dart';
 import '../../features/vehicles/presentation/form/vehicle_form_page.dart';
-import '../../features/vehicles/presentation/list/vehicle_list_page.dart';
+import '../../features/vehicles/presentation/garage/garage_page.dart';
 import '../../features/vehicles/presentation/views/vehicle_onboarding_view.dart';
 import 'app_routes.dart';
 
@@ -45,20 +46,15 @@ class AppRouter {
       final isOnAuthPage =
           state.matchedLocation == AppRoutes.login ||
           state.matchedLocation == AppRoutes.signup;
-      final isOnOnboarding =
-          state.matchedLocation == AppRoutes.vehicleOnboarding;
 
       // Allow access to splash and auth pages
       if (isOnSplash || isOnAuthPage) {
         return null;
       }
 
-      // If user is authenticated without vehicles, redirect to onboarding
+      // Discard empty vehicle restriction: allow access to app directly
       if (isAuthenticatedWithoutVehicles) {
-        if (isOnOnboarding) {
-          return null; // Allow onboarding route
-        }
-        return AppRoutes.vehicleOnboarding;
+        return AppRoutes.home;
       }
 
       // Protect authenticated routes
@@ -113,10 +109,10 @@ class AppRouter {
 
       // Vehicle routes
       GoRoute(
-        path: AppRoutes.vehicles,
-        name: AppRoutes.vehicles,
+        path: AppRoutes.garage,
+        name: AppRoutes.garage,
         builder: (context, state) {
-          return const VehicleListPage();
+          return const GaragePage();
         },
       ),
       GoRoute(
@@ -140,7 +136,8 @@ class AppRouter {
         path: AppRoutes.maintenances,
         name: AppRoutes.maintenances,
         builder: (context, state) {
-          return const MaintenancesPage();
+          final initialVehicleId = state.extra as String?;
+          return MaintenancesPage(initialVehicleId: initialVehicleId);
         },
       ),
       GoRoute(
@@ -157,6 +154,14 @@ class AppRouter {
         builder: (context, state) {
           final maintenance = state.extra as MaintenanceModel?;
           return MaintenanceFormPage(maintenance: maintenance);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.maintenanceDetail,
+        name: AppRoutes.maintenanceDetail,
+        builder: (context, state) {
+          final maintenance = state.extra as MaintenanceModel;
+          return MaintenanceDetailPage(maintenance: maintenance);
         },
       ),
 

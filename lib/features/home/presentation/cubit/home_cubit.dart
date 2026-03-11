@@ -27,10 +27,7 @@ class HomeCubit extends Cubit<HomeState> {
     vehiclesResult.fold((_) {}, (vehicles) {
       final active = vehicles.where((v) => !v.isArchived).toList();
       if (active.isNotEmpty) {
-        mainVehicle = active.firstWhere(
-          (v) => v.isMainVehicle,
-          orElse: () => active.first,
-        );
+        mainVehicle = active.first;
       }
     });
 

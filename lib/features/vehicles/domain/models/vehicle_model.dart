@@ -26,7 +26,6 @@ class VehicleModel {
   final String? imageUrl;
   final DateTime? createdDate;
   final DateTime? updatedDate;
-  final bool isMainVehicle;
   final bool isArchived;
 
   const VehicleModel({
@@ -44,7 +43,6 @@ class VehicleModel {
     this.imageUrl,
     this.createdDate,
     this.updatedDate,
-    this.isMainVehicle = false,
     this.isArchived = false,
   });
 
@@ -63,7 +61,6 @@ class VehicleModel {
     String? imageUrl,
     DateTime? createdDate,
     DateTime? updatedDate,
-    bool? isMainVehicle,
     bool? isArchived,
   }) {
     return VehicleModel(
@@ -81,7 +78,6 @@ class VehicleModel {
       imageUrl: imageUrl ?? this.imageUrl,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
-      isMainVehicle: isMainVehicle ?? this.isMainVehicle,
       isArchived: isArchived ?? this.isArchived,
     );
   }

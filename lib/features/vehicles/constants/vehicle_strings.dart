@@ -5,9 +5,12 @@ class VehicleStrings {
   // Page titles
   static const String vehicles = 'Vehículos';
   static const String myVehicles = 'Mis Vehículos';
-  static const String addVehicle = 'Agregar Vehículo';
-  static const String editVehicle = 'Editar Vehículo';
-  static const String deleteVehicle = 'Eliminar Vehículo';
+  static const String myGarage = 'Mi Garaje';
+  static const String addVehicle = 'Agregar vehículo';
+  static const String saveVehicle = 'Guardar vehículo';
+  static const String editVehicle = 'Editar vehículo';
+  static const String deleteVehicle = 'Eliminar vehículo';
+  static const String addMaintenance = 'Agregar mantenimiento';
 
   // Actions
   static const String selectVehicle = 'Seleccionar vehículo';
@@ -51,12 +54,18 @@ class VehicleStrings {
   static const String vehicleVin = 'VIN';
 
   // Hints
-  static const String vehicleNameHint = 'ej., Mi Auto, Camioneta Familiar';
-  static const String vehicleBrandHint = 'ej., Toyota';
-  static const String vehicleModelHint = 'ej., Camry';
-  static const String vehicleYearHint = 'ej., 2020';
-  static const String vehiclePlateHint = 'ej., ABC-1234';
-  static const String vehicleVinHint = 'Número de Identificación del Vehículo';
+  static const String vehicleNameHint = 'Ej. Mi moto negra';
+  static const String vehicleBrandHint = 'Ej. Yamaha';
+  static const String vehicleModelHint = 'Ej. MT-07';
+  static const String vehicleYearHint = 'Ej. 2022';
+  static const String vehiclePlateHint = 'ABC-123';
+  static const String vehicleVinHint = '17 caracteres';
+
+  // Image upload
+  static const String vehiclePhoto = 'Foto del vehículo';
+  static const String uploadPhoto = 'Subir foto';
+  static const String selectImage = 'Seleccionar imagen';
+  static const String changePhoto = 'Cambiar foto';
 
   // View states
   static const String viewArchived = 'Ver archivados';
@@ -99,4 +108,18 @@ class VehicleStrings {
   // Units
   static const String kilometers = 'Kilómetros';
   static const String miles = 'Millas';
+
+  // Garage V1 Design Strings
+  static const String quickInfo = 'INFO RÁPIDA';
+  static const String licensePlateLabel = 'PLACA';
+  static const String currentMileageLabel = 'KILOMETRAJE ACTUAL';
+  static const String fullSpecs = 'ESPECIFICACIONES COMPLETAS';
+  static const String garageOverview = 'RESUMEN DEL GARAJE';
+  static const String total = 'TOTAL';
+  static const String lastRide = 'ÚLTIMO VIAJE';
+  static const String allVehicles = 'Todos';
+
+  // Garage V1 Maintenance History
+  static const String maintenanceHistory = 'Historial de Registros';
+  static const String seeAll = 'Ver todos';
 }

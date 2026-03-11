@@ -11,8 +11,9 @@ class MaintenanceDto extends MaintenanceModel {
     required super.type,
     required super.date,
     required super.maintanceMileage,
-    required super.distanceUnit,
     required super.receiveAlert,
+    required super.receiveMileageAlert,
+    required super.receiveDateAlert,
     required super.notes,
     required super.nextMaintenanceDate,
     required super.nextMaintenanceMileage,
@@ -20,6 +21,7 @@ class MaintenanceDto extends MaintenanceModel {
     required super.vehicleId,
     required super.createdDate,
     required super.updatedDate,
+    super.cost,
   });
 
   factory MaintenanceDto.fromJson(Map<String, dynamic> json) =>
@@ -35,8 +37,9 @@ extension MaintenanceModelExtension on MaintenanceModel {
     type: type,
     date: date,
     maintanceMileage: maintanceMileage,
-    distanceUnit: distanceUnit,
     receiveAlert: receiveAlert,
+    receiveMileageAlert: receiveMileageAlert,
+    receiveDateAlert: receiveDateAlert,
     notes: notes,
     nextMaintenanceDate: nextMaintenanceDate,
     nextMaintenanceMileage: nextMaintenanceMileage,
@@ -44,5 +47,6 @@ extension MaintenanceModelExtension on MaintenanceModel {
     vehicleId: vehicleId,
     createdDate: createdDate,
     updatedDate: updatedDate,
+    cost: cost,
   ).toJson();
 }
