@@ -3,6 +3,7 @@ import 'package:rideglory/features/maintenance/constants/maintenance_strings.dar
 import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/shared/widgets/info_chip.dart';
 
@@ -10,7 +11,6 @@ class VehicleCard extends StatelessWidget {
   final VehicleModel vehicle;
   final VoidCallback? onTap;
   final VoidCallback? onDelete;
-  final VoidCallback? onSetAsCurrent;
   final VoidCallback? onAddMaintenance;
   final VoidCallback? onArchive;
   final VoidCallback? onUnarchive;
@@ -21,7 +21,6 @@ class VehicleCard extends StatelessWidget {
     required this.vehicle,
     this.onTap,
     this.onDelete,
-    this.onSetAsCurrent,
     this.onAddMaintenance,
     this.onArchive,
     this.onUnarchive,
@@ -33,54 +32,39 @@ class VehicleCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF6366F1).withValues(alpha: .06),
-            blurRadius: 16,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        color: AppColors.darkSurface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.darkBorder),
       ),
       child: Material(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
           child: Padding(
-            padding: const EdgeInsets.all(18),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Gradient icon container
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(
-                              0xFF6366F1,
-                            ).withValues(alpha: .25),
-                            blurRadius: 6,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Icon(
-                        vehicle.vehicleType == VehicleType.motorcycle
-                            ? Icons.two_wheeler_rounded
-                            : Icons.directions_car_rounded,
-                        color: Colors.white,
-                        size: 26,
+                    // Vehicle Image or Placeholder
+                    ClipOval(
+                      child: Container(
+                        width: 56,
+                        height: 56,
+                        color: AppColors.darkSurfaceHighest,
+                        child:
+                            vehicle.imageUrl != null &&
+                                vehicle.imageUrl!.isNotEmpty
+                            ? Image.network(
+                                vehicle.imageUrl!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) =>
+                                    _buildPlaceholderIcon(),
+                              )
+                            : _buildPlaceholderIcon(),
                       ),
                     ),
                     const SizedBox(width: 14),
@@ -95,64 +79,19 @@ class VehicleCard extends StatelessWidget {
                                   vehicle.name,
                                   style: context.titleMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
-                                    letterSpacing: -0.5,
+                                    color: context.colorScheme.onSurface,
                                   ),
                                 ),
                               ),
-                              if (isCurrent)
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: const Color(
-                                      0xFF10B981,
-                                    ).withValues(alpha: 0.1),
-                                    borderRadius: BorderRadius.circular(6),
-                                    border: Border.all(
-                                      color: const Color(
-                                        0xFF10B981,
-                                      ).withValues(alpha: .25),
-                                    ),
-                                  ),
-                                  child: const Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(
-                                        Icons.check_circle_rounded,
-                                        size: 12,
-                                        color: Color(0xFF10B981),
-                                      ),
-                                      SizedBox(width: 4),
-                                      Text(
-                                        // TODO Extraer textos
-                                        'Principal',
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w600,
-                                          color: Color(0xFF10B981),
-                                          letterSpacing: -0.2,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
                               if (vehicle.isArchived)
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 8,
                                     vertical: 4,
                                   ),
-                                  margin: EdgeInsets.only(
-                                    left: isCurrent ? 6 : 0,
-                                  ),
                                   decoration: BoxDecoration(
-                                    color: Colors.grey.withValues(alpha: 0.1),
+                                    color: AppColors.darkSurfaceHighest,
                                     borderRadius: BorderRadius.circular(6),
-                                    border: Border.all(
-                                      color: Colors.grey.withValues(alpha: .25),
-                                    ),
                                   ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -160,7 +99,9 @@ class VehicleCard extends StatelessWidget {
                                       Icon(
                                         Icons.archive_outlined,
                                         size: 12,
-                                        color: Colors.grey[600],
+                                        color: context
+                                            .colorScheme
+                                            .onSurfaceVariant,
                                       ),
                                       const SizedBox(width: 4),
                                       Text(
@@ -168,8 +109,9 @@ class VehicleCard extends StatelessWidget {
                                         style: TextStyle(
                                           fontSize: 11,
                                           fontWeight: FontWeight.w600,
-                                          color: Colors.grey[600],
-                                          letterSpacing: -0.2,
+                                          color: context
+                                              .colorScheme
+                                              .onSurfaceVariant,
                                         ),
                                       ),
                                     ],
@@ -179,28 +121,30 @@ class VehicleCard extends StatelessWidget {
                           ),
                           if (vehicle.brand != null ||
                               vehicle.model != null) ...[
-                            const SizedBox(height: 3),
+                            const SizedBox(height: 4),
                             Text(
                               [
                                 vehicle.brand,
                                 vehicle.model,
                               ].where((e) => e != null).join(' '),
                               style: context.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w500,
+                                color: context.colorScheme.onSurfaceVariant,
                               ),
                             ),
                           ],
                         ],
                       ),
                     ),
-                    if (onDelete != null)
+                    if (onDelete != null || onAddMaintenance != null)
                       PopupMenuButton<String>(
                         icon: Icon(
                           Icons.more_vert_rounded,
-                          color: Colors.grey[600],
+                          color: context.colorScheme.onSurfaceVariant,
                         ),
+                        color: AppColors.darkSurfaceHighest,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(8),
+                          side: const BorderSide(color: AppColors.darkBorder),
                         ),
                         itemBuilder: (context) => [
                           PopupMenuItem(
@@ -210,28 +154,18 @@ class VehicleCard extends StatelessWidget {
                                 Icon(
                                   Icons.edit_outlined,
                                   size: 20,
-                                  color: Colors.grey[700],
+                                  color: context.colorScheme.onSurface,
                                 ),
                                 const SizedBox(width: 12),
-                                const Text(AppStrings.edit),
+                                Text(
+                                  AppStrings.edit,
+                                  style: TextStyle(
+                                    color: context.colorScheme.onSurface,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
-                          if (!isCurrent && onSetAsCurrent != null)
-                            PopupMenuItem(
-                              value: 'setCurrent',
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.check_circle_outline,
-                                    size: 20,
-                                    color: Colors.grey[700],
-                                  ),
-                                  const SizedBox(width: 12),
-                                  const Text(VehicleStrings.setAsMain),
-                                ],
-                              ),
-                            ),
                           if (onAddMaintenance != null)
                             PopupMenuItem(
                               value: 'addMaintenance',
@@ -240,11 +174,14 @@ class VehicleCard extends StatelessWidget {
                                   Icon(
                                     Icons.build_circle_outlined,
                                     size: 20,
-                                    color: Colors.grey[700],
+                                    color: context.colorScheme.onSurface,
                                   ),
                                   const SizedBox(width: 12),
-                                  const Text(
+                                  Text(
                                     MaintenanceStrings.addMaintenanceAction,
+                                    style: TextStyle(
+                                      color: context.colorScheme.onSurface,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -257,10 +194,15 @@ class VehicleCard extends StatelessWidget {
                                   Icon(
                                     Icons.archive_outlined,
                                     size: 20,
-                                    color: Colors.grey[700],
+                                    color: context.colorScheme.onSurface,
                                   ),
                                   const SizedBox(width: 12),
-                                  const Text(VehicleStrings.archiveVehicle),
+                                  Text(
+                                    VehicleStrings.archiveVehicle,
+                                    style: TextStyle(
+                                      color: context.colorScheme.onSurface,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -272,26 +214,33 @@ class VehicleCard extends StatelessWidget {
                                   Icon(
                                     Icons.unarchive_outlined,
                                     size: 20,
-                                    color: Colors.grey[700],
+                                    color: context.colorScheme.onSurface,
                                   ),
                                   const SizedBox(width: 12),
-                                  const Text(VehicleStrings.unarchiveVehicle),
+                                  Text(
+                                    VehicleStrings.unarchiveVehicle,
+                                    style: TextStyle(
+                                      color: context.colorScheme.onSurface,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
                           PopupMenuItem(
                             value: 'delete',
-                            child: const Row(
+                            child: Row(
                               children: [
                                 Icon(
                                   Icons.delete_outline,
                                   size: 20,
-                                  color: Colors.red,
+                                  color: context.colorScheme.error,
                                 ),
-                                SizedBox(width: 12),
+                                const SizedBox(width: 12),
                                 Text(
                                   AppStrings.delete,
-                                  style: TextStyle(color: Colors.red),
+                                  style: TextStyle(
+                                    color: context.colorScheme.error,
+                                  ),
                                 ),
                               ],
                             ),
@@ -300,9 +249,6 @@ class VehicleCard extends StatelessWidget {
                         onSelected: (value) {
                           if (value == 'edit' && onTap != null) {
                             onTap!();
-                          } else if (value == 'setCurrent' &&
-                              onSetAsCurrent != null) {
-                            onSetAsCurrent!();
                           } else if (value == 'addMaintenance' &&
                               onAddMaintenance != null) {
                             onAddMaintenance!();
@@ -328,19 +274,19 @@ class VehicleCard extends StatelessWidget {
                       icon: Icons.speed_rounded,
                       label:
                           '${vehicle.currentMileage} ${vehicle.distanceUnit.label}',
-                      color: const Color(0xFF6366F1),
+                      color: AppColors.primary,
                     ),
                     if (vehicle.year != null)
                       InfoChip(
                         icon: Icons.calendar_today_rounded,
                         label: vehicle.year.toString(),
-                        color: const Color(0xFF10B981),
+                        color: context.colorScheme.onSurfaceVariant,
                       ),
                     if (vehicle.licensePlate != null)
                       InfoChip(
                         icon: Icons.badge_rounded,
                         label: vehicle.licensePlate!,
-                        color: const Color(0xFFF59E0B),
+                        color: context.colorScheme.onSurfaceVariant,
                       ),
                   ],
                 ),
@@ -349,6 +295,16 @@ class VehicleCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildPlaceholderIcon() {
+    return Icon(
+      vehicle.vehicleType == VehicleType.motorcycle
+          ? Icons.two_wheeler_rounded
+          : Icons.directions_car_rounded,
+      color: AppColors.primary,
+      size: 28,
     );
   }
 }

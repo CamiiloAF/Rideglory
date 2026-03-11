@@ -1,24 +1,21 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/use_cases/add_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
 
-part 'event_form_cubit.freezed.dart';
-part 'event_form_state.dart';
-
 @injectable
-class EventFormCubit extends Cubit<EventFormState> {
+class EventFormCubit extends Cubit<ResultState<EventModel>> {
   EventFormCubit(
     this._addEventUseCase,
     this._updateEventUseCase,
     this._authService,
-  ) : super(const EventFormState.initial());
+  ) : super(const ResultState.initial());
 
   final formKey = GlobalKey<FormBuilderState>();
 
@@ -26,25 +23,26 @@ class EventFormCubit extends Cubit<EventFormState> {
   final UpdateEventUseCase _updateEventUseCase;
   final AuthService _authService;
 
+  EventModel? _editingEvent;
+
+  bool get isEditing => _editingEvent != null;
+  EventModel? get editingEvent => _editingEvent;
+
   void initialize({EventModel? event}) {
-    if (event != null) {
-      emit(EventFormState.editing(event: event));
-    } else {
-      emit(const EventFormState.initial());
-    }
+    _editingEvent = event;
+    emit(const ResultState.initial());
   }
 
   Future<void> saveEvent(EventModel eventToSave) async {
-    emit(const EventFormState.loading());
+    emit(const ResultState.loading());
 
-    final result = await state.maybeWhen(
-      editing: (_) async => await _updateEventUseCase(eventToSave),
-      orElse: () async => await _addEventUseCase(eventToSave),
-    );
+    final result = isEditing
+        ? await _updateEventUseCase(eventToSave)
+        : await _addEventUseCase(eventToSave);
 
     result.fold(
-      (error) => emit(EventFormState.error(message: error.message)),
-      (event) => emit(EventFormState.success(event: event)),
+      (error) => emit(ResultState.error(error: error)),
+      (event) => emit(ResultState.data(data: event)),
     );
   }
 
@@ -65,8 +63,8 @@ class EventFormCubit extends Cubit<EventFormState> {
         : null;
 
     return EventModel(
-      id: state.maybeWhen(editing: (e) => e.id, orElse: () => null),
-      ownerId: state.maybeWhen(editing: (e) => e.ownerId, orElse: () => userId),
+      id: _editingEvent?.id,
+      ownerId: _editingEvent?.ownerId ?? userId,
       name: formData[EventFormFields.name] as String,
       description: formData[EventFormFields.description] as String,
       city: formData[EventFormFields.city] as String,

@@ -112,11 +112,11 @@ class AppDrawer extends StatelessWidget {
                     },
                   ),
                   DrawerMenuItem(
-                    icon: Icons.directions_car_outlined,
-                    title: VehicleStrings.myVehicles,
-                    isSelected: currentRoute == AppRoutes.vehicles,
+                    icon: Icons.garage_outlined,
+                    title: VehicleStrings.myGarage,
+                    isSelected: currentRoute == AppRoutes.garage,
                     onTap: () {
-                      _goTo(AppRoutes.vehicles, context);
+                      _goTo(AppRoutes.garage, context);
                     },
                   ),
                   const Divider(height: 32),

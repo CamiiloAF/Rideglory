@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/home/presentation/cubit/home_cubit.dart';
-import 'package:rideglory/features/home/presentation/widgets/home_add_submenu.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_events_section.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_garage_section.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_header.dart';
@@ -26,14 +25,6 @@ class HomePage extends StatelessWidget {
 
 class _HomeScaffold extends StatelessWidget {
   const _HomeScaffold();
-
-  void _showAddSubMenu(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (_) => const HomeAddSubMenu(),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,14 +79,14 @@ class _HomeScaffold extends StatelessWidget {
         onTap: (index) {
           switch (index) {
             case 1:
-              context.goNamed(AppRoutes.vehicles);
+              context.pushNamed(AppRoutes.garage);
             case 3:
-              context.goNamed(AppRoutes.events);
+              context.pushNamed(AppRoutes.events);
             case 4:
               break;
           }
         },
-        onAddTap: () => _showAddSubMenu(context),
+        onAddTap: () => context.pushNamed(AppRoutes.createEvent),
       ),
     );
   }

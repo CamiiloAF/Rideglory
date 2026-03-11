@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/constants/registration_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
@@ -39,7 +40,8 @@ class _RegistrationFormView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isEditing = existingRegistration(context) != null;
+    final cubit = context.read<RegistrationFormCubit>();
+    final isEditing = cubit.isEditing;
 
     return Scaffold(
       appBar: AppAppBar(
@@ -47,37 +49,38 @@ class _RegistrationFormView extends StatelessWidget {
             ? RegistrationStrings.editRegistration
             : RegistrationStrings.registrationForm,
       ),
-      body: BlocListener<RegistrationFormCubit, RegistrationFormState>(
-        listener: (context, state) {
-          state.whenOrNull(
-            success: (registration) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    isEditing
-                        ? RegistrationStrings.registrationUpdatedSuccess
-                        : RegistrationStrings.registrationSentSuccess,
-                  ),
-                  backgroundColor: Colors.green,
-                ),
+      body:
+          BlocListener<
+            RegistrationFormCubit,
+            ResultState<EventRegistrationModel>
+          >(
+            listener: (context, state) {
+              state.whenOrNull(
+                data: (registration) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        isEditing
+                            ? RegistrationStrings.registrationUpdatedSuccess
+                            : RegistrationStrings.registrationSentSuccess,
+                      ),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                  context.pop(registration);
+                },
+                error: (error) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(error.message),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                },
               );
-              context.pop(registration);
             },
-            error: (message) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(message), backgroundColor: Colors.red),
-              );
-            },
-          );
-        },
-        child: RegistrationFormView(event: event),
-      ),
-    );
-  }
-
-  EventRegistrationModel? existingRegistration(BuildContext context) {
-    return context.read<RegistrationFormCubit>().state.whenOrNull(
-      editing: (registration) => registration,
+            child: RegistrationFormView(event: event),
+          ),
     );
   }
 }

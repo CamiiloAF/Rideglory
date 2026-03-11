@@ -16,10 +16,11 @@ class EventsPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => showMyEvents
-              ? EventsCubit.myEvents(getIt<GetMyEventsUseCase>())
-              : EventsCubit(getIt<GetEventsUseCase>())
-            ..fetchEvents(),
+          create: (_) =>
+              showMyEvents
+                    ? EventsCubit.myEvents(getIt<GetMyEventsUseCase>())
+                    : EventsCubit(getIt<GetEventsUseCase>())
+                ..fetchEvents(),
         ),
         BlocProvider(create: (_) => getIt<EventDeleteCubit>()),
       ],

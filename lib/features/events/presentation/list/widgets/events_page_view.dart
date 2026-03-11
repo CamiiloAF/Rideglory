@@ -67,7 +67,7 @@ class EventsPageView extends StatelessWidget {
               break;
             case 2:
               // Navegar a Garage
-              context.pushNamed(AppRoutes.vehicles);
+              context.pushNamed(AppRoutes.garage);
               break;
             case 3:
               // Navegar a Perfil

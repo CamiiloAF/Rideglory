@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:rideglory/core/data/colombia_cities_data.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
+import 'package:rideglory/shared/widgets/form/app_autocomplete_field.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 
 class EventFormBasicInfoSection extends StatelessWidget {
-  final bool isEditing;
-
   const EventFormBasicInfoSection({super.key, this.isEditing = false});
+
+  final bool isEditing;
 
   @override
   Widget build(BuildContext context) {
@@ -47,15 +49,19 @@ class EventFormBasicInfoSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        AppTextField(
+        AppAutocompleteField(
           name: EventFormFields.city,
           labelText: EventStrings.eventCity,
           isRequired: true,
           prefixIcon: Icons.location_city_outlined,
-          textInputAction: TextInputAction.next,
-          validator: FormBuilderValidators.required(
-            errorText: EventStrings.cityRequired,
-          ),
+          hintText: 'Ej: Medellín, Pereira...',
+          suggestions: ColombiaCitiesData.search,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return EventStrings.cityRequired;
+            }
+            return null;
+          },
         ),
       ],
     );

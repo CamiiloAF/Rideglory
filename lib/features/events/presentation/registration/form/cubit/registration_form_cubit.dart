@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/features/events/constants/registration_form_fields.dart';
 import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
@@ -13,18 +13,15 @@ import 'package:rideglory/features/events/domain/use_cases/save_rider_profile_us
 import 'package:rideglory/features/events/domain/use_cases/update_event_registration_use_case.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
-part 'registration_form_cubit.freezed.dart';
-part 'registration_form_state.dart';
-
 @injectable
-class RegistrationFormCubit extends Cubit<RegistrationFormState> {
+class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
   RegistrationFormCubit(
     this._addRegistrationUseCase,
     this._updateRegistrationUseCase,
     this._getRiderProfileUseCase,
     this._saveRiderProfileUseCase,
     this._authService,
-  ) : super(const RegistrationFormState.initial());
+  ) : super(const ResultState.initial());
 
   final formKey = GlobalKey<FormBuilderState>();
 
@@ -36,7 +33,10 @@ class RegistrationFormCubit extends Cubit<RegistrationFormState> {
 
   String? _eventId;
   String? _eventName;
+  EventRegistrationModel? _editingRegistration;
   RiderProfileModel? _riderProfile;
+
+  bool get isEditing => _editingRegistration != null;
 
   void initialize({
     required String eventId,
@@ -45,15 +45,15 @@ class RegistrationFormCubit extends Cubit<RegistrationFormState> {
   }) {
     _eventId = eventId;
     _eventName = eventName;
+    _editingRegistration = existingRegistration;
+
     if (existingRegistration != null) {
       Future.delayed(const Duration(milliseconds: 100), () {
         _preloadFromExistingRegistration(existingRegistration);
       });
-
-      emit(RegistrationFormState.editing(registration: existingRegistration));
-    } else {
-      emit(const RegistrationFormState.initial());
     }
+
+    emit(const ResultState.initial());
     _loadRiderProfile();
   }
 
@@ -155,19 +155,18 @@ class RegistrationFormCubit extends Cubit<RegistrationFormState> {
 
     if (registration == null) return;
 
-    emit(const RegistrationFormState.loading());
+    emit(const ResultState.loading());
 
-    final result = registration.id != null
+    final result = isEditing
         ? await _updateRegistrationUseCase(registration.copyWith())
         : await _addRegistrationUseCase(registration);
 
-    result.fold(
-      (error) => emit(RegistrationFormState.error(message: error.message)),
-      (saved) async {
-        await _saveRiderProfileUseCase(_buildRiderProfile(registration));
-        emit(RegistrationFormState.success(registration: saved));
-      },
-    );
+    result.fold((error) => emit(ResultState.error(error: error)), (
+      saved,
+    ) async {
+      await _saveRiderProfileUseCase(_buildRiderProfile(registration));
+      emit(ResultState.data(data: saved));
+    });
   }
 
   EventRegistrationModel? _buildRegistration() {
@@ -177,7 +176,7 @@ class RegistrationFormCubit extends Cubit<RegistrationFormState> {
     final userId = _authService.currentUser?.uid ?? '';
 
     return EventRegistrationModel(
-      id: state.maybeWhen(editing: (r) => r.id, orElse: () => null),
+      id: _editingRegistration?.id,
       eventId: _eventId ?? '',
       eventName: _eventName ?? '',
       userId: userId,

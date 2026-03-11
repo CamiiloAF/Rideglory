@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
-import 'package:rideglory/shared/widgets/form/app_dropdown.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
+import 'package:rideglory/shared/widgets/form/app_dropdown.dart';
 
 class MileagesAndUnitFields extends StatefulWidget {
   const MileagesAndUnitFields({
@@ -15,6 +16,7 @@ class MileagesAndUnitFields extends StatefulWidget {
     this.validatorsType = MileageValidatorsType.noRequired,
     this.isRequired = true,
     this.textInputAction,
+    this.showUnitDropdown = true,
   });
 
   final int? currentMileage;
@@ -23,6 +25,7 @@ class MileagesAndUnitFields extends StatefulWidget {
   final MileageValidatorsType validatorsType;
   final bool isRequired;
   final TextInputAction? textInputAction;
+  final bool showUnitDropdown;
 
   @override
   State<MileagesAndUnitFields> createState() => _MileagesAndUnitFieldsState();
@@ -31,7 +34,35 @@ class MileagesAndUnitFields extends StatefulWidget {
 class _MileagesAndUnitFieldsState extends State<MileagesAndUnitFields> {
   @override
   Widget build(BuildContext context) {
-    var labelText = MaintenanceStrings.currentMileage;
+    final labelText = MaintenanceStrings.currentMileage;
+
+    if (!widget.showUnitDropdown) {
+      return Column(
+        children: [
+          AppTextField(
+            name: widget.mileageFieldName,
+            labelText: labelText,
+            isRequired: widget.isRequired,
+            initialValue: widget.currentMileage?.toString(),
+            hintText: labelText,
+            prefixIcon: Icons.speed,
+            keyboardType: TextInputType.number,
+            textInputAction: widget.textInputAction ?? TextInputAction.next,
+            suffixText: 'km',
+            validator: FormBuilderValidators.compose(
+              widget.validatorsType.getValidators(widget.currentMileage),
+            ),
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+          ),
+          FormBuilderField<DistanceUnit>(
+            name: widget.distanceUnitFieldName,
+            initialValue: DistanceUnit.kilometers,
+            builder: (field) => const SizedBox.shrink(),
+          ),
+        ],
+      );
+    }
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -52,7 +83,7 @@ class _MileagesAndUnitFieldsState extends State<MileagesAndUnitFields> {
             autovalidateMode: AutovalidateMode.onUserInteraction,
           ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 12),
         Expanded(
           child: AppDropdown<DistanceUnit>(
             name: widget.distanceUnitFieldName,

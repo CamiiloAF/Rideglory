@@ -7,6 +7,7 @@ abstract class VehicleFormState with _$VehicleFormState {
   factory VehicleFormState({
     @Default(ResultState.initial()) ResultState<VehicleModel> vehicleResult,
     @Default(null) VehicleModel? vehicle,
+    @Default(null) String? localImagePath,
   }) = _VehicleFormState;
 
   bool get isLoading => vehicleResult is Loading;

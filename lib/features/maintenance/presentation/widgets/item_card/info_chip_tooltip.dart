@@ -21,7 +21,7 @@ class InfoChipTooltip extends StatelessWidget {
       builder: (context) => MileageInfoDialog(
         typeColor: typeColor,
         currentMileage: currentMileage,
-        distanceUnitLabel: maintenance.distanceUnit.label,
+        distanceUnitLabel: 'km', // TODO: Add distance unit
       ),
     );
   }

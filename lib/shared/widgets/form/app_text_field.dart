@@ -8,6 +8,8 @@ class AppTextField extends StatelessWidget {
   final String? labelText;
   final IconData? prefixIcon;
   final Widget? suffixIcon;
+  final String? suffixText;
+  final TextStyle? suffixStyle;
   final String? Function(String?)? validator;
   final String? initialValue;
   final int? maxLines;
@@ -30,6 +32,8 @@ class AppTextField extends StatelessWidget {
     this.labelText,
     this.prefixIcon,
     this.suffixIcon,
+    this.suffixText,
+    this.suffixStyle,
     this.validator,
     this.initialValue,
     this.maxLines = 1,
@@ -65,6 +69,8 @@ class AppTextField extends StatelessWidget {
           decoration: InputDecoration(
             prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
             suffixIcon: suffixIcon,
+            suffixText: suffixText,
+            suffixStyle: suffixStyle,
             hintText: hintText,
             helperText: helperText,
             helperMaxLines: 3,

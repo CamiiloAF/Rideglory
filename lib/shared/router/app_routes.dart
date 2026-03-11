@@ -13,14 +13,14 @@ abstract class AppRoutes {
   static const String vehicleOnboarding = '/onboarding/vehicle';
 
   // Vehicle routes
-  static const String vehicles = '/vehicles';
+  static const String garage = '/garage';
   static const String createVehicle = '/vehicles/create';
   static const String editVehicle = '/vehicles/edit';
 
-  // Maintenance routes
   static const String maintenances = '/maintenances';
   static const String createMaintenance = '/maintenances/create';
   static const String editMaintenance = '/maintenances/edit';
+  static const String maintenanceDetail = '/maintenances/detail';
 
   // Events routes
   static const String events = '/events';

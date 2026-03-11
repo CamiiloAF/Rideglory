@@ -7,5 +7,9 @@ class EventDetailPageParams {
   final ValueChanged<EventRegistrationModel>? onRegistrationChanged;
   final bool isFromEventDetailByIdPage;
 
-  EventDetailPageParams({required this.event, this.onRegistrationChanged, this.isFromEventDetailByIdPage = false});
+  EventDetailPageParams({
+    required this.event,
+    this.onRegistrationChanged,
+    this.isFromEventDetailByIdPage = false,
+  });
 }

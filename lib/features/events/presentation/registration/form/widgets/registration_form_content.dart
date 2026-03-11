@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/constants/registration_form_fields.dart';
 import 'package:rideglory/features/events/constants/registration_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/registration/form/cubit/registration_form_cubit.dart';
-import 'package:rideglory/features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
+import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
 import 'package:rideglory/shared/widgets/form/app_text_button.dart';
 import 'package:rideglory/shared/widgets/form/form_section_header.dart';
@@ -20,7 +21,11 @@ class RegistrationFormContent extends StatelessWidget {
 
   Future<void> _preloadFromVehicle(BuildContext context) async {
     final cubit = context.read<RegistrationFormCubit>();
-    final vehicles = context.read<VehicleListCubit>().activeVehicles;
+    final vehicles = context
+        .read<VehicleCubit>()
+        .availableVehicles
+        .where((v) => !v.isArchived)
+        .toList();
     if (vehicles.isEmpty) return;
     final selected = await VehicleSelectionBottomSheet.show(
       context: context,
@@ -253,16 +258,10 @@ class RegistrationFormContent extends StatelessWidget {
           textCapitalization: TextCapitalization.characters,
         ),
         const SizedBox(height: 32),
-        BlocBuilder<RegistrationFormCubit, RegistrationFormState>(
+        BlocBuilder<RegistrationFormCubit, ResultState<EventRegistrationModel>>(
           builder: (context, state) {
-            final isLoading = state.maybeWhen(
-              loading: () => true,
-              orElse: () => false,
-            );
-            final isEditing = state.maybeWhen(
-              editing: (_) => true,
-              orElse: () => false,
-            );
+            final isLoading = state is Loading;
+            final isEditing = cubit.isEditing;
             return AppButton(
               label: isEditing
                   ? RegistrationStrings.updateRegistration

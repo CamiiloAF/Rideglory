@@ -21,7 +21,6 @@ class VehicleDto extends VehicleModel {
     super.imageUrl,
     super.createdDate,
     super.updatedDate,
-    super.isMainVehicle,
     super.isArchived,
   });
 
@@ -46,7 +45,6 @@ class VehicleDto extends VehicleModel {
       imageUrl: imageUrl,
       createdDate: createdDate,
       updatedDate: updatedDate,
-      isMainVehicle: isMainVehicle,
       isArchived: isArchived,
     );
   }
@@ -68,7 +66,6 @@ extension VehicleModelExtension on VehicleModel {
     imageUrl: imageUrl,
     createdDate: createdDate,
     updatedDate: updatedDate,
-    isMainVehicle: isMainVehicle,
     isArchived: isArchived,
   ).toJson();
 }

@@ -30,6 +30,7 @@ class _NextMaintenanceMileageFieldState
       labelText: MaintenanceStrings.nextMaintenanceMileage,
       keyboardType: TextInputType.number,
       prefixIcon: Icons.speed,
+      suffixText: 'km',
       textInputAction: TextInputAction.done,
       onChanged: (value) {
         final shouldValidate = value != null && value.isNotEmpty;

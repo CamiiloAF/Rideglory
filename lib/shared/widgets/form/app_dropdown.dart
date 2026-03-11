@@ -11,6 +11,7 @@ class AppDropdown<T> extends StatelessWidget {
     required this.items,
     this.isRequired = false,
     this.prefixIcon,
+    this.onChanged,
   });
 
   final String name;
@@ -19,22 +20,30 @@ class AppDropdown<T> extends StatelessWidget {
   final List<DropdownMenuItem<T>> items;
   final bool isRequired;
   final Widget? prefixIcon;
+  final ValueChanged<T?>? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (labelText != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 6),
+            child: TextFieldLabel(
+              labelText: labelText!,
+              isRequired: isRequired,
+            ),
+          ),
         FormBuilderDropdown<T>(
           name: name,
           decoration: InputDecoration(
-            label: labelText != null
-                ? TextFieldLabel(labelText: labelText!, isRequired: isRequired)
-                : null,
             border: const OutlineInputBorder(),
             prefixIcon: prefixIcon,
           ),
           validator: validator,
           items: items,
+          onChanged: onChanged,
         ),
       ],
     );

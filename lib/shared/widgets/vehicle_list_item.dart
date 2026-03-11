@@ -77,9 +77,10 @@ class VehicleListItem extends StatelessWidget {
                         if (vehicle.brand != null || vehicle.model != null) ...[
                           const SizedBox(height: 4),
                           Text(
-                            [vehicle.brand, vehicle.model]
-                                .where((e) => e != null)
-                                .join(' '),
+                            [
+                              vehicle.brand,
+                              vehicle.model,
+                            ].where((e) => e != null).join(' '),
                             style: context.bodySmall?.copyWith(
                               color: isSelected
                                   ? Colors.white70

@@ -136,24 +136,18 @@ class AuthCubit extends Cubit<AuthState> {
         if (kDebugMode) {
           print('Failed to load vehicles: ${error.message}');
         }
-        // If vehicles couldn't be loaded, treat as no vehicles (redirect to onboarding)
+        // If vehicles couldn't be loaded, treat as empty (redirect to home anyway)
         final currentUser = _authService.currentUser;
         if (currentUser != null) {
-          emit(AuthState.authenticatedWithoutVehicles(currentUser));
+          emit(AuthState.authenticated(currentUser));
         }
       },
       (vehicles) {
         final currentUser = _authService.currentUser;
         if (currentUser == null) return;
 
-        if (vehicles.isEmpty) {
-          // No vehicles - redirect to onboarding
-          emit(AuthState.authenticatedWithoutVehicles(currentUser));
-        } else {
-          // Has vehicles - proceed normally
-          _vehicleCubit.loadSavedVehicle(vehicles);
-          emit(AuthState.authenticated(currentUser));
-        }
+        _vehicleCubit.loadSavedVehicle(vehicles);
+        emit(AuthState.authenticated(currentUser));
       },
     );
   }

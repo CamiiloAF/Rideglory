@@ -120,10 +120,8 @@ class _VehicleOnboardingViewState extends State<VehicleOnboardingView> {
     }
     final vehicleFormCubit = context.read<VehicleFormCubit>();
     final vehiclesToAdd = _formKeys.asMap().entries.map((entry) {
-      final index = entry.key;
       final formKey = entry.value;
       final formData = formKey.currentState!.value;
-      final isFirstVehicle = index == 0;
 
       return VehicleModel(
         name: formData[VehicleFormFields.name] as String,
@@ -150,7 +148,7 @@ class _VehicleOnboardingViewState extends State<VehicleOnboardingView> {
         vin: (formData[VehicleFormFields.vin] as String?)?.isEmpty ?? true
             ? null
             : formData[VehicleFormFields.vin] as String?,
-        isMainVehicle: isFirstVehicle, // First vehicle is always main
+        isArchived: false,
       );
     }).toList();
     await vehicleFormCubit.addMultipleVehicles(vehiclesToAdd);
