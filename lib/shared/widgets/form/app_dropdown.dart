@@ -28,12 +28,9 @@ class AppDropdown<T> extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (labelText != null)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 6),
-            child: TextFieldLabel(
-              labelText: labelText!,
-              isRequired: isRequired,
-            ),
+          TextFieldLabel(
+            labelText: labelText!,
+            isRequired: isRequired,
           ),
         FormBuilderDropdown<T>(
           name: name,

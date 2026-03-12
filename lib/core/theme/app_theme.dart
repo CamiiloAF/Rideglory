@@ -262,7 +262,7 @@ class AppTheme {
             displayColor: AppColors.darkTextPrimary,
           ),
 
-      // Input decoration
+      // Input decoration — orange labels/borders
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.darkSurfaceHighest,
@@ -272,11 +272,11 @@ class AppTheme {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppColors.darkBorder),
+          borderSide: const BorderSide(color: AppColors.primary),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: AppColors.darkBorder, width: 1.5),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
@@ -294,19 +294,14 @@ class AppTheme {
           color: AppColors.darkTextSecondary,
           fontSize: 16,
         ),
-        labelStyle: const TextStyle(
-          color: AppColors.darkTextSecondary,
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          letterSpacing: 0.8,
-        ),
+        labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         floatingLabelStyle: const TextStyle(
-          color: AppColors.darkTextSecondary,
-          fontSize: 12,
+          color: AppColors.primary,
+          fontSize: 14,
           fontWeight: FontWeight.w600,
         ),
-        prefixIconColor: AppColors.darkTextSecondary,
-        suffixIconColor: AppColors.darkTextSecondary,
+        prefixIconColor: AppColors.darkInputIcon,
+        suffixIconColor: AppColors.darkInputIcon,
       ),
 
       // Buttons

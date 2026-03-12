@@ -60,7 +60,7 @@ class _EventFormDetailsSectionState extends State<EventFormDetailsSection> {
         AppAutocompleteChipsField(
           name: EventFormFields.allowedBrands,
           labelText: EventStrings.allowedBrands,
-          hintText: 'Honda, Yamaha...',
+          hintText: EventStrings.allowedBrandsHint,
           helperText: EventStrings.allowedBrandsHelper,
           prefixIcon: Icons.shield_outlined,
           suggestions: ColombiaMotosBrandsData.search,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
 
 class AppSearchBar extends StatelessWidget {
   final String hintText;
@@ -16,39 +17,36 @@ class AppSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    final fillColor = darkMode ? AppColors.darkSurfaceHighest : Colors.white;
+    final borderColor = darkMode ? theme.colorScheme.primary : Colors.grey[300]!;
+    final hintColor = darkMode ? AppColors.darkTextSecondary : Colors.grey[600]!;
+    final textColor = darkMode ? AppColors.darkTextPrimary : Colors.black;
+    final iconColor = darkMode ? AppColors.darkInputIcon : Colors.grey[600]!;
+
     return Padding(
       padding: padding ?? const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: TextField(
-        style: TextStyle(color: darkMode ? Colors.white : Colors.black),
+        style: TextStyle(color: textColor),
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: TextStyle(
-            color: darkMode ? Colors.grey[500] : Colors.grey[600],
-          ),
-          prefixIcon: Icon(
-            Icons.search,
-            color: darkMode ? Colors.grey[400] : Colors.grey[600],
-          ),
+          hintStyle: TextStyle(color: hintColor),
+          prefixIcon: Icon(Icons.search, color: iconColor),
           filled: true,
-          fillColor: darkMode ? const Color(0xFF1A1A1A) : Colors.white,
+          fillColor: fillColor,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: darkMode ? const Color(0xFF2A2A2A) : Colors.grey[300]!,
-            ),
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: borderColor),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(
-              color: darkMode ? const Color(0xFF2A2A2A) : Colors.grey[300]!,
-            ),
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: borderColor, width: 1),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(
-              color: darkMode
-                  ? Colors.grey[600]!
-                  : Theme.of(context).primaryColor,
+              color: darkMode ? theme.colorScheme.primary : theme.primaryColor,
               width: 2,
             ),
           ),

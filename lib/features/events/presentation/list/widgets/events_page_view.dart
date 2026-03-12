@@ -11,9 +11,7 @@ import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/events_data_view.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/events_state_widgets.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/shared/widgets/app_drawer.dart';
 import 'package:rideglory/shared/widgets/empty_state_widget.dart';
-import 'package:rideglory/shared/widgets/main_bottom_navigation_bar.dart';
 
 class EventsPageView extends StatelessWidget {
   final bool showMyEvents;
@@ -22,59 +20,7 @@ class EventsPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0A),
-      drawer: AppDrawer(
-        currentRoute: showMyEvents ? AppRoutes.myEvents : AppRoutes.events,
-      ),
-      floatingActionButton: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: AppColors.primaryGradient,
-          ),
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary.withOpacity(0.4),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () => _navigateToCreate(context),
-            borderRadius: BorderRadius.circular(32),
-            child: const Icon(Icons.add, color: Colors.white, size: 32),
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: MainBottomNavigationBar(
-        currentIndex: 0, // Explorar activo
-        onTap: (index) {
-          // TODO: Implementar navegación entre secciones
-          switch (index) {
-            case 0:
-              // Ya estamos en Explorar (Eventos)
-              break;
-            case 1:
-              // Navegar a Mapa
-              break;
-            case 2:
-              // Navegar a Garage
-              context.pushNamed(AppRoutes.garage);
-              break;
-            case 3:
-              // Navegar a Perfil
-              break;
-          }
-        },
-      ),
+      backgroundColor: AppColors.darkBackground,
       body: SafeArea(
         child: MultiBlocListener(
           listeners: [

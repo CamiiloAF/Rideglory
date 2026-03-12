@@ -170,10 +170,7 @@ class _AppAutocompleteChipsFieldState extends State<AppAutocompleteChipsField> {
                   helperText: widget.helperText,
                   helperMaxLines: 2,
                   prefixIcon: widget.prefixIcon != null
-                      ? Icon(
-                          widget.prefixIcon,
-                          color: AppColors.darkTextSecondary,
-                        )
+                      ? Icon(widget.prefixIcon, color: AppColors.darkInputIcon)
                       : null,
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.add_circle_outline),

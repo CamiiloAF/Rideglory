@@ -4,6 +4,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/shared/widgets/form/app_date_picker.dart';
+import 'package:rideglory/shared/widgets/form/text_field_label.dart';
 
 class EventFormDateTimeSection extends StatefulWidget {
   const EventFormDateTimeSection({super.key});
@@ -47,26 +48,32 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
         ),
         const SizedBox(height: 16),
         if (_isMultiDay)
-          FormBuilderDateRangePicker(
-            name: EventFormFields.dateRange,
-            firstDate: firstDate,
-            lastDate: lastDate,
-            decoration: const InputDecoration(
-              labelText: EventStrings.dateRange,
-              prefixIcon: Icon(Icons.date_range_outlined),
-              border: OutlineInputBorder(),
-            ),
-            validator: FormBuilderValidators.compose([
-              FormBuilderValidators.required(
-                errorText: EventStrings.dateRangeRequired,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFieldLabel(
+                labelText: EventStrings.dateRange,
+                isRequired: true,
               ),
-              (value) {
-                if (value != null && value.start.isAtSameMomentAs(value.end)) {
-                  return EventStrings.startDateMustBeBeforeEndDate;
-                }
-                return null;
-              },
-            ]),
+              FormBuilderDateRangePicker(
+                name: EventFormFields.dateRange,
+                firstDate: firstDate,
+                lastDate: lastDate,
+                decoration: const InputDecoration(border: OutlineInputBorder()),
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(
+                    errorText: EventStrings.dateRangeRequired,
+                  ),
+                  (value) {
+                    if (value != null &&
+                        value.start.isAtSameMomentAs(value.end)) {
+                      return EventStrings.startDateMustBeBeforeEndDate;
+                    }
+                    return null;
+                  },
+                ]),
+              ),
+            ],
           )
         else
           FormBuilderField<DateTimeRange>(
@@ -75,22 +82,29 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
               errorText: EventStrings.startDateRequired,
             ),
             builder: (field) {
-              return FormBuilderDateTimePicker(
-                name: '_singleDate_temp',
-                inputType: InputType.date,
-                firstDate: field.value?.start ?? firstDate,
-                lastDate: lastDate,
-                initialValue: field.value?.start,
-                decoration: const InputDecoration(
-                  labelText: EventStrings.startDate,
-                  prefixIcon: Icon(Icons.event_outlined),
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (date) {
-                  if (date != null) {
-                    field.didChange(DateTimeRange(start: date, end: date));
-                  }
-                },
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextFieldLabel(
+                    labelText: EventStrings.startDate,
+                    isRequired: true,
+                  ),
+                  FormBuilderDateTimePicker(
+                    name: '_singleDate_temp',
+                    inputType: InputType.date,
+                    firstDate: field.value?.start ?? firstDate,
+                    lastDate: lastDate,
+                    initialValue: field.value?.start,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (date) {
+                      if (date != null) {
+                        field.didChange(DateTimeRange(start: date, end: date));
+                      }
+                    },
+                  ),
+                ],
               );
             },
           ),
@@ -99,7 +113,6 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
           fieldName: EventFormFields.meetingTime,
           labelText: EventStrings.meetingTime,
           inputType: InputType.time,
-          prefixIcon: const Icon(Icons.access_time_outlined),
         ),
       ],
     );

@@ -11,7 +11,6 @@ import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_e
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_options_bottom_sheet.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_detail_view.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/shared/widgets/home_bottom_navigation_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class GaragePage extends StatefulWidget {
@@ -26,9 +25,14 @@ class _GaragePageState extends State<GaragePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: getIt<VehicleCubit>(),
-      child: Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, _) {
+        if (!didPop) context.goNamed(AppRoutes.home);
+      },
+      child: BlocProvider.value(
+        value: getIt<VehicleCubit>(),
+        child: Scaffold(
         backgroundColor: const Color(
           0xFF1C1209,
         ), // Deeper contrast matching theme
@@ -194,20 +198,7 @@ class _GaragePageState extends State<GaragePage> {
             },
           ),
         ),
-        bottomNavigationBar: HomeBottomNavigationBar(
-          currentIndex: 1, // Garage is index 1
-          onTap: (index) {
-            switch (index) {
-              case 0:
-                context.pushNamed(AppRoutes.home);
-              case 3:
-                context.pushNamed(AppRoutes.events);
-            }
-          },
-          onAddTap: () {
-            context.pushNamed(AppRoutes.createVehicle);
-          },
-        ),
+      ),
       ),
     );
   }

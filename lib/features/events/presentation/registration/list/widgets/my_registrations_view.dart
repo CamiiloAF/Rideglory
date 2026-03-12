@@ -4,13 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/constants/registration_strings.dart';
-import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/registration/list/my_registrations_cubit.dart';
 import 'package:rideglory/features/events/presentation/registration/list/widgets/registration_card.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/shared/widgets/app_app_bar.dart';
-import 'package:rideglory/shared/widgets/app_drawer.dart';
 import 'package:rideglory/shared/widgets/empty_state_widget.dart';
 
 class MyRegistrationsView extends StatelessWidget {
@@ -20,7 +18,6 @@ class MyRegistrationsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppAppBar(title: RegistrationStrings.myRegistrations),
-      drawer: const AppDrawer(currentRoute: AppRoutes.myRegistrations),
       body:
           BlocBuilder<
             MyRegistrationsCubit,

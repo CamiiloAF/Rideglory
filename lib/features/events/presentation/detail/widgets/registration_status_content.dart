@@ -10,7 +10,6 @@ class RegistrationStatusContent extends StatelessWidget {
   final String description;
   final VoidCallback? onCancel;
   final VoidCallback? onEdit;
-  final VoidCallback? onViewRecommendations;
 
   const RegistrationStatusContent({
     super.key,
@@ -18,7 +17,6 @@ class RegistrationStatusContent extends StatelessWidget {
     required this.description,
     this.onCancel,
     this.onEdit,
-    this.onViewRecommendations,
   });
 
   @override
@@ -30,22 +28,13 @@ class RegistrationStatusContent extends StatelessWidget {
         Row(children: [RegistrationStatusChip(status: status)]),
         const SizedBox(height: 8),
         Text(description, style: theme.textTheme.bodySmall),
-        if (onEdit != null || onCancel != null || onViewRecommendations != null)
-          const SizedBox(height: 12),
+        if (onEdit != null || onCancel != null) const SizedBox(height: 12),
         if (onEdit != null)
           AppButton(
             label: EventStrings.editRegistration,
             onPressed: onEdit,
             icon: Icons.edit_outlined,
           ),
-        if (onViewRecommendations != null) ...[
-          const SizedBox(height: 8),
-          OutlinedButton.icon(
-            onPressed: onViewRecommendations,
-            icon: const Icon(Icons.tips_and_updates_outlined),
-            label: const Text(EventStrings.viewRecommendations),
-          ),
-        ],
         if (onCancel != null) ...[
           const SizedBox(height: 8),
           AppTextButton(

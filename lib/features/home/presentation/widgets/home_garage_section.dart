@@ -31,7 +31,7 @@ class HomeGarageSection extends StatelessWidget {
                 ),
               ),
               GestureDetector(
-                onTap: () => context.pushNamed(AppRoutes.garage),
+                onTap: () => context.goNamed(AppRoutes.garage),
                 child: const Text(
                   'VER TODAS',
                   style: TextStyle(

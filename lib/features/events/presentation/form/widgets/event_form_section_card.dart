@@ -27,19 +27,20 @@ class EventFormSectionCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, color: AppColors.primary, size: 22),
+              Icon(icon, color: AppColors.darkTextPrimary, size: 22),
               const SizedBox(width: 10),
-              Text(
-                title,
-                style: const TextStyle(
-                  color: AppColors.darkTextPrimary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    color: AppColors.darkTextPrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
           child,
         ],
       ),

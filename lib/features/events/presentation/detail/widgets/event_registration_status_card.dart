@@ -12,7 +12,6 @@ class EventRegistrationStatusCard extends StatelessWidget {
   final VoidCallback onRegister;
   final VoidCallback? onEditRegistration;
   final VoidCallback? onCancelRegistration;
-  final VoidCallback? onViewRecommendations;
 
   const EventRegistrationStatusCard({
     super.key,
@@ -21,7 +20,6 @@ class EventRegistrationStatusCard extends StatelessWidget {
     required this.onRegister,
     this.onEditRegistration,
     this.onCancelRegistration,
-    this.onViewRecommendations,
   });
 
   @override
@@ -47,7 +45,6 @@ class EventRegistrationStatusCard extends StatelessWidget {
       return NoRegistrationContent(
         event: event,
         onRegister: onRegister,
-        onViewRecommendations: onViewRecommendations,
       );
     }
 
@@ -56,13 +53,11 @@ class EventRegistrationStatusCard extends StatelessWidget {
         status: registration!.status,
         description: EventStrings.pendingDescription,
         onCancel: onCancelRegistration,
-        onViewRecommendations: onViewRecommendations,
       ),
       RegistrationStatus.approved => RegistrationStatusContent(
         status: registration!.status,
         description: EventStrings.approvedDescription,
         onCancel: onCancelRegistration,
-        onViewRecommendations: onViewRecommendations,
       ),
       RegistrationStatus.rejected => RegistrationStatusContent(
         status: registration!.status,
@@ -75,7 +70,6 @@ class EventRegistrationStatusCard extends StatelessWidget {
         status: registration!.status,
         description: EventStrings.readyForEditDescription,
         onEdit: onEditRegistration,
-        onViewRecommendations: onViewRecommendations,
       ),
     };
   }

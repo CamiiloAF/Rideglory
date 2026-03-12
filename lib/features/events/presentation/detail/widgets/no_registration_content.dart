@@ -2,18 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
-import 'package:rideglory/shared/widgets/form/app_text_button.dart';
 
 class NoRegistrationContent extends StatelessWidget {
   final EventModel event;
   final VoidCallback onRegister;
-  final VoidCallback? onViewRecommendations;
 
   const NoRegistrationContent({
     super.key,
     required this.event,
     required this.onRegister,
-    this.onViewRecommendations,
   });
 
   @override
@@ -43,14 +40,6 @@ class NoRegistrationContent extends StatelessWidget {
           onPressed: onRegister,
           icon: Icons.how_to_reg_outlined,
         ),
-        if (onViewRecommendations != null) ...[
-          const SizedBox(height: 8),
-          AppTextButton(
-            label: EventStrings.viewRecommendations,
-            onPressed: onViewRecommendations,
-            icon: Icons.tips_and_updates_outlined,
-          ),
-        ],
       ],
     );
   }

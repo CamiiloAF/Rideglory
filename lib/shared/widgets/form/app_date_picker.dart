@@ -33,10 +33,7 @@ class AppDatePicker extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 6),
-          child: TextFieldLabel(labelText: labelText, isRequired: isRequired),
-        ),
+        TextFieldLabel(labelText: labelText, isRequired: isRequired),
         FormBuilderDateTimePicker(
           name: fieldName,
           initialValue: initialValue,
@@ -47,7 +44,7 @@ class AppDatePicker extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hintText,
             border: const OutlineInputBorder(),
-            prefixIcon: prefixIcon ?? const Icon(Icons.event),
+            prefixIcon: prefixIcon,
           ),
         ),
       ],

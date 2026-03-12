@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
+import 'package:rideglory/features/events/presentation/form/widgets/form_section_title.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 import 'package:rideglory/shared/widgets/map/route_map_preview.dart';
 
@@ -22,12 +23,11 @@ class _EventFormLocationsSectionState extends State<EventFormLocationsSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ── Meeting point ──────────────────────────────────────
         AppTextField(
           name: EventFormFields.meetingPoint,
-          labelText: EventStrings.meetingPoint,
+          hintText: EventStrings.meetingPoint,
           isRequired: true,
-          prefixIcon: Icons.location_on_outlined,
+          prefixIcon: Icons.radio_button_unchecked,
           textInputAction: TextInputAction.next,
           validator: FormBuilderValidators.required(
             errorText: EventStrings.meetingPointRequired,
@@ -38,12 +38,11 @@ class _EventFormLocationsSectionState extends State<EventFormLocationsSection> {
         ),
         const SizedBox(height: 16),
 
-        // ── Destination ────────────────────────────────────────
         AppTextField(
           name: EventFormFields.destination,
-          labelText: EventStrings.destination,
+          hintText: EventStrings.finalDestination,
           isRequired: true,
-          prefixIcon: Icons.flag_outlined,
+          prefixIcon: Icons.location_on_outlined,
           textInputAction: TextInputAction.next,
           validator: FormBuilderValidators.required(
             errorText: EventStrings.destinationRequired,
@@ -52,9 +51,18 @@ class _EventFormLocationsSectionState extends State<EventFormLocationsSection> {
             setState(() => _destination = value);
           },
         ),
-
-        // ── Map preview ────────────────────────────────────────
-        RouteMapPreview(meetingPoint: _meetingPoint, destination: _destination),
+        const SizedBox(height: 24),
+        FormSectionTitle(
+          title: EventStrings.meetingPointPreview.toUpperCase(),
+          icon: Icons.map_outlined,
+        ),
+        RouteMapPreview(
+          meetingPoint: _meetingPoint,
+          destination: _destination,
+          onViewMapTap: () {
+            // TODO: open full map or external app
+          },
+        ),
       ],
     );
   }
