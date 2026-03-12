@@ -16,7 +16,10 @@ import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_info_tile.dart';
 import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_section_header.dart';
-import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_detail_row.dart';
+import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_alert_card.dart';
+import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_detail_header.dart';
+import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 
 class MaintenanceDetailPage extends StatelessWidget {
   const MaintenanceDetailPage({super.key, required this.maintenance});
@@ -130,6 +133,10 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
             leading: BackButton(onPressed: _popWithResult),
             actions: [
               IconButton(
+                icon: const Icon(Icons.share_outlined),
+                onPressed: () {},
+              ),
+              IconButton(
                 icon: const Icon(Icons.more_vert),
                 onPressed: _showOptions,
               ),
@@ -137,34 +144,32 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
           ),
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header
-                Text(
-                  _maintenance.name,
-                  style: context.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  MaintenanceStrings.performedOn(
-                    DateFormat('dd MMM, yyyy').format(_maintenance.date),
-                  ),
-                  style: context.bodyLarge?.copyWith(color: Colors.grey[400]),
-                ),
+            child: BlocBuilder<VehicleCubit, VehicleState>(
+              builder: (context, vehicleState) {
+                VehicleModel? vehicle;
+                if (_maintenance.vehicleId != null) {
+                  try {
+                    vehicle = context.read<VehicleCubit>().availableVehicles
+                        .firstWhere(
+                          (v) => v.id == _maintenance.vehicleId,
+                        );
+                  } catch (_) {}
+                }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    MaintenanceDetailHeader(
+                      maintenance: _maintenance,
+                      vehicle: vehicle,
+                    ),
                 const SizedBox(height: 24),
-
-                // Cost and Mileage grid
                 Row(
                   children: [
                     Expanded(
                       child: MaintenanceInfoTile(
-                        label: MaintenanceStrings.maintenanceMileage,
+                        label: MaintenanceStrings.mileage,
                         value:
-                            numberFormat.format(_maintenance.maintanceMileage),
+                            '${numberFormat.format(_maintenance.maintanceMileage)} km',
                         icon: Icons.speed,
                       ),
                     ),
@@ -181,8 +186,6 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                   ],
                 ),
                 const SizedBox(height: 24),
-
-                // Service Notes
                 if (_maintenance.notes != null &&
                     _maintenance.notes!.isNotEmpty) ...[
                   const MaintenanceSectionHeader(
@@ -195,26 +198,49 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: AppColors.darkSurface,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: AppColors.darkBorder),
                     ),
                     child: Text(
                       _maintenance.notes!,
                       style: context.bodyMedium?.copyWith(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onSurface,
                         height: 1.5,
                       ),
                     ),
                   ),
                   const SizedBox(height: 24),
                 ],
-
-                // Next Maintenance
                 if (_maintenance.nextMaintenanceDate != null ||
                     _maintenance.nextMaintenanceMileage != null) ...[
-                  const MaintenanceSectionHeader(
-                    title: MaintenanceStrings.nextMaintenance,
-                    icon: Icons.event_repeat_outlined,
+                  Row(
+                    children: [
+                      const MaintenanceSectionHeader(
+                        title: MaintenanceStrings.nextMaintenance,
+                        icon: Icons.event_repeat_outlined,
+                      ),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context)
+                              .colorScheme.primary
+                              .withValues(alpha: 0.25),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Text(
+                          MaintenanceStrings.suggested.toUpperCase(),
+                          style: context.labelSmall?.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 12),
                   Container(
@@ -222,72 +248,150 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: AppColors.darkSurface,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: AppColors.darkBorder),
                     ),
-                    child: Column(
+                    child: Row(
                       children: [
                         if (_maintenance.nextMaintenanceDate != null)
-                          MaintenanceDetailRow(
-                            label: MaintenanceStrings.estimatedDate,
-                            value: DateFormat(
-                              'dd MMM, yyyy',
-                            ).format(_maintenance.nextMaintenanceDate!),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  MaintenanceStrings.estimatedDate.toUpperCase(),
+                                  style: context.bodySmall?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme.onSurfaceVariant,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.8,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  DateFormat('dd MMM, yyyy')
+                                      .format(_maintenance.nextMaintenanceDate!),
+                                  style: context.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context)
+                                        .colorScheme.onSurface,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         if (_maintenance.nextMaintenanceDate != null &&
                             _maintenance.nextMaintenanceMileage != null)
-                          const Divider(
+                          Container(
+                            width: 1,
+                            height: 48,
                             color: AppColors.darkBorder,
-                            height: 24,
                           ),
                         if (_maintenance.nextMaintenanceMileage != null)
-                          MaintenanceDetailRow(
-                            label: MaintenanceStrings.maintenanceMileage,
-                            value:
-                                numberFormat.format(_maintenance.nextMaintenanceMileage),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  MaintenanceStrings.mileage.toUpperCase(),
+                                  style: context.bodySmall?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme.onSurfaceVariant,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.8,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  '${numberFormat.format(_maintenance.nextMaintenanceMileage)} km',
+                                  style: context.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context)
+                                        .colorScheme.onSurface,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 24),
                 ],
-
-                // Alerts
                 if (_maintenance.receiveAlert) ...[
                   const MaintenanceSectionHeader(
                     title: MaintenanceStrings.alertsConfiguration,
                     icon: Icons.notifications_active_outlined,
                   ),
                   const SizedBox(height: 12),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: AppColors.darkSurface,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: AppColors.darkBorder),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.notifications_active,
-                          color: AppColors.primary,
-                          size: 24,
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Text(
-                            MaintenanceStrings.alertsActivatedDesc,
-                            style: context.bodyMedium?.copyWith(
-                              color: Colors.white,
+                  if (!_maintenance.receiveMileageAlert &&
+                      !_maintenance.receiveDateAlert)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AppColors.darkSurface,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: AppColors.darkBorder),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.notifications_active,
+                            color: Theme.of(context).colorScheme.primary,
+                            size: 24,
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Text(
+                              MaintenanceStrings.alertsActivatedDesc,
+                              style: context.bodyMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
                             ),
                           ),
-                        ),
+                        ],
+                      ),
+                    )
+                  else
+                    Row(
+                      children: [
+                        if (_maintenance.receiveMileageAlert ||
+                            _maintenance.nextMaintenanceMileage != null)
+                          Expanded(
+                            child: MaintenanceAlertCard(
+                              icon: Icons.speed,
+                              label: MaintenanceStrings.alertByMileage.toUpperCase(),
+                              value: _maintenance.nextMaintenanceMileage != null
+                                  ? '${numberFormat.format(_maintenance.nextMaintenanceMileage)} km'
+                                  : '-',
+                              subtitle: MaintenanceStrings.mileageAlertBefore,
+                              isOn: _maintenance.receiveMileageAlert,
+                            ),
+                          ),
+                        if (_maintenance.receiveMileageAlert &&
+                            _maintenance.receiveDateAlert)
+                          const SizedBox(width: 12),
+                        if (_maintenance.receiveDateAlert ||
+                            _maintenance.nextMaintenanceDate != null)
+                          Expanded(
+                            child: MaintenanceAlertCard(
+                              icon: Icons.calendar_month_outlined,
+                              label: MaintenanceStrings.alertByDate.toUpperCase(),
+                              value: _maintenance.nextMaintenanceDate != null
+                                  ? DateFormat('dd MMM, yyyy')
+                                      .format(_maintenance.nextMaintenanceDate!)
+                                  : '-',
+                              subtitle: MaintenanceStrings.dateAlertBefore,
+                              isOn: _maintenance.receiveDateAlert,
+                            ),
+                          ),
                       ],
                     ),
-                  ),
                 ],
               ],
+            );
+              },
             ),
           ),
         ),

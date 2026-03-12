@@ -133,7 +133,7 @@ class _DifficultyPicker extends StatelessWidget {
                           Icons.local_fire_department,
                           size: 34,
                           color: filled
-                              ? Colors.redAccent
+                              ? AppColors.primary
                               : AppColors.darkTextSecondary.withValues(
                                   alpha: 0.3,
                                 ),
@@ -149,13 +149,13 @@ class _DifficultyPicker extends StatelessWidget {
                     vertical: 5,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.redAccent.withValues(alpha: 0.1),
+                    color: AppColors.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     labels[selected] ?? '',
                     style: const TextStyle(
-                      color: Colors.redAccent,
+                      color: AppColors.primary,
                       fontWeight: FontWeight.w700,
                       fontSize: 12,
                     ),
@@ -163,6 +163,7 @@ class _DifficultyPicker extends StatelessWidget {
                 ),
               ],
             ),
+
             if (field.hasError)
               Padding(
                 padding: const EdgeInsets.only(top: 6, left: 4),

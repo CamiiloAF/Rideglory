@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;

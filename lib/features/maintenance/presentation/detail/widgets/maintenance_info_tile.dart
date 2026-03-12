@@ -7,12 +7,12 @@ class MaintenanceInfoTile extends StatelessWidget {
     super.key,
     required this.label,
     required this.value,
-    required this.icon,
+    this.icon,
   });
 
   final String label;
   final String value;
-  final IconData icon;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -20,30 +20,26 @@ class MaintenanceInfoTile extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.darkSurface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.darkBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Icon(icon, color: AppColors.primary, size: 20),
-              const SizedBox(width: 8),
-              Text(
-                label,
-                style: context.bodyMedium?.copyWith(color: Colors.grey[400]),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+          Text(
+            label.toUpperCase(),
+            style: context.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.8,
+            ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           Text(
             value,
             style: context.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ],
