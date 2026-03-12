@@ -38,6 +38,9 @@ class AppColors {
   /// Secondary text on dark
   static const Color darkTextSecondary = Color(0xFF94A3B8);
 
+  /// Leading/trailing icons in inputs (medium orange-brown)
+  static const Color darkInputIcon = Color(0xFFD38F3A);
+
   // ─── Light-mode text/background (kept for compatibility) ───────────────────
   static const Color textPrimary = Color(0xFF1F2937);
   static const Color textSecondary = Color(0xFF6B7280);

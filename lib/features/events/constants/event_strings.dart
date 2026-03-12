@@ -21,15 +21,16 @@ class EventStrings {
   static const String dateAndTime = 'Fecha y hora';
   static const String locations = 'Ubicaciones';
   static const String eventDetails = 'Detalles del evento';
-  static const String recommendations = 'Recomendaciones';
 
   // Form field labels
   static const String eventName = 'Nombre del evento';
   static const String eventDescription = 'Descripción';
   static const String eventCity = 'Ciudad';
+  static const String eventCityHint = 'Buscar ciudad y departamento...';
   static const String startDate = 'Fecha de inicio';
 
   // Form field helper text
+  static const String eventNameHint = 'Ej: Rodada de la semana';
   static const String eventNameCannotBeModified =
       'El nombre del evento no se puede modificar una vez creado.';
   static const String endDate = 'Fecha de fin (opcional)';
@@ -37,11 +38,14 @@ class EventStrings {
   static const String isMultiDay = 'Es un evento de varios días';
   static const String meetingTime = 'Hora de encuentro';
   static const String difficulty = 'Dificultad';
+  static const String rideDifficulty = 'Dificultad de la Ruta';
   static const String eventType = 'Tipo de evento';
+  static const String finalDestination = 'Destino final';
+  static const String searchBrandsPlaceholder = 'Escribe para buscar marcas...';
   static const String meetingPoint = 'Punto de encuentro';
+  static const String meetingPointHint = 'Ej: Parque principal, Cra 5 #10-20';
   static const String meetingPointLocation = 'Ubicación del punto de encuentro';
   static const String destination = 'Destino';
-  static const String destinationLocation = 'Ubicación del destino';
   static const String latitude = 'Latitud';
   static const String longitude = 'Longitud';
   static const String isMultiBrand = 'Evento multimarca (abierto a todos)';
@@ -51,10 +55,8 @@ class EventStrings {
       'Separar con coma. Dejar vacío si acepta todas las marcas.';
   static const String addBrand = 'Agregar marca';
   static const String price = 'Precio del evento (opcional)';
+  static const String priceHint = '0 para evento gratuito';
   static const String freeEvent = 'Evento gratuito';
-  static const String recommendationsHint =
-      'Escribe recomendaciones, notas importantes, links, etc.';
-  static const String recommendationsLabel = 'Recomendaciones del organizador';
 
   static const String startDateMustBeBeforeEndDate =
       'La fecha de inicio debe ser anterior a la fecha de fin';
@@ -76,22 +78,31 @@ class EventStrings {
   static const String saveEvent = 'Guardar Evento';
   static const String updateEvent = 'Actualizar Evento';
   static const String publishEvent = 'Publicar evento';
+  static const String newEvent = 'Nuevo evento';
+  static const String publish = 'Publicar';
+  static const String aiSuggestDescription = 'Sugerir con IA';
 
-  // Event form V1 (cover, labels)
   static const String addEventCover = 'Agregar portada del evento';
   static const String addEventCoverHint =
       'Una imagen impactante atrae a más motociclistas. Formatos: JPG, PNG.';
   static const String uploadImage = 'Subir imagen';
-  static const String generateWithAI = 'Generar con IA';
+  static const String generateWithAI = 'Generar';
+  static const String photoPermissionDenied =
+      'Se necesita acceso a la galería para elegir la portada del evento.';
+  static const String photoPermissionPermanentlyDenied =
+      'El acceso a la galería está desactivado. Actívalo en Ajustes para subir una imagen.';
+  static const String openSettings = 'Abrir ajustes';
+  static const String pickImageError = 'No se pudo seleccionar la imagen.';
   static const String originCity = 'Ciudad de origen';
   static const String dateRangeLabel = 'Fecha (rango)';
   static const String routeAndMap = 'Ruta y mapa';
-  static const String meetingPointPreview = 'Vista previa del punto de encuentro';
+  static const String meetingPointPreview =
+      'Vista previa del punto de encuentro';
   static const String viewOnMap = 'Ver en mapa';
   static const String multiBrandLabel = 'Multimarca';
   static const String multiBrandAllowAny =
       'Permitir motos de cualquier fabricante';
-  static const String orSelectBrands = 'O seleccionar marcas específicas';
+  static const String selectBrands = 'Seleccionar marcas permitidas';
   static const String registrationPriceOptional =
       'Precio de inscripción (opcional)';
   static const String descriptionAndRecommendations =
@@ -146,7 +157,6 @@ class EventStrings {
   static const String aboutTheRide = 'Sobre la rodada';
   static const String organizedBy = 'Organizado por';
   static const String organizerPlaceholder = 'el creador';
-  static const String finalDestination = 'DESTINO FINAL';
   static const String totalParticipation = 'Total participación';
   static const String registerMe = 'Inscribirme';
   static const String viewMap = 'Ver mapa';
@@ -170,7 +180,6 @@ class EventStrings {
   static const String followRideLive = 'Seguir rodada en vivo';
   static const String eventFinished = 'Finalizado';
   static const String dateLabel = 'Fecha';
-  static const String timeLabel = 'Hora de encuentro';
   static const String priceLabel = 'Precio';
   static const String free = 'Gratuito';
   static const String difficultyLabel = 'Dificultad';

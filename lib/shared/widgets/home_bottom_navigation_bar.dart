@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/shared/widgets/bottom_nav_add_button.dart';
 import 'package:rideglory/shared/widgets/bottom_nav_item.dart';
 

@@ -10,7 +10,6 @@ import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/event_form_content.dart';
-import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
 
 class EventFormView extends StatelessWidget {
@@ -22,9 +21,14 @@ class EventFormView extends StatelessWidget {
       listener: (context, state) {
         state.whenOrNull(
           data: (event) {
+            final isEditing = context.read<EventFormCubit>().isEditing;
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(EventStrings.eventCreatedSuccess),
+              SnackBar(
+                content: Text(
+                  isEditing
+                      ? EventStrings.eventUpdatedSuccess
+                      : EventStrings.eventCreatedSuccess,
+                ),
                 backgroundColor: Colors.green,
               ),
             );
@@ -47,10 +51,18 @@ class EventFormView extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: AppColors.darkBackground,
-          appBar: AppAppBar(
-            title: isEditing
-                ? EventStrings.editEvent
-                : EventStrings.createEvent,
+          appBar: AppBar(
+            backgroundColor: AppColors.darkSurface,
+            foregroundColor: AppColors.darkTextPrimary,
+            centerTitle: false,
+            title: Text(
+              isEditing ? EventStrings.editEvent : EventStrings.newEvent,
+              style: const TextStyle(
+                color: AppColors.darkTextPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
           body: const EventFormContent(),
           bottomNavigationBar: _EventFormBottomBar(
@@ -89,35 +101,17 @@ class _EventFormBottomBar extends StatelessWidget {
         16,
         max(16.0, MediaQuery.of(context).padding.bottom),
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: AppButton(
-              label: 'Cancelar',
-              variant: AppButtonVariant.outline,
-              isLoading: false,
-              onPressed: isLoading ? null : () => context.pop(),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            flex: 2,
-            child: AppButton(
-              label: isEditing
-                  ? EventStrings.updateEvent
-                  : EventStrings.publishEvent,
-              isLoading: isLoading,
-              icon: Icons.send_outlined,
-              onPressed: isLoading
-                  ? null
-                  : () {
-                      final cubit = context.read<EventFormCubit>();
-                      final event = cubit.buildEventToSave();
-                      if (event != null) cubit.saveEvent(event);
-                    },
-            ),
-          ),
-        ],
+      child: AppButton(
+        label: isEditing ? EventStrings.updateEvent : EventStrings.publishEvent,
+        isLoading: isLoading,
+        icon: Icons.send_outlined,
+        onPressed: isLoading
+            ? null
+            : () {
+                final cubit = context.read<EventFormCubit>();
+                final event = cubit.buildEventToSave();
+                if (event != null) cubit.saveEvent(event);
+              },
       ),
     );
   }

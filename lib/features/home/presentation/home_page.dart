@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/home/presentation/cubit/home_cubit.dart';
@@ -8,8 +9,8 @@ import 'package:rideglory/features/home/presentation/widgets/home_events_section
 import 'package:rideglory/features/home/presentation/widgets/home_garage_section.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_header.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_view_all_events_button.dart';
-import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/shared/widgets/home_bottom_navigation_bar.dart';
+import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
+import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -26,9 +27,26 @@ class HomePage extends StatelessWidget {
 class _HomeScaffold extends StatelessWidget {
   const _HomeScaffold();
 
+  Future<void> _showExitConfirmation(BuildContext context) async {
+    await ConfirmationDialog.show(
+      context: context,
+      title: AppStrings.exitAppTitle,
+      content: AppStrings.exitAppMessage,
+      cancelLabel: AppStrings.cancel,
+      confirmLabel: AppStrings.exit,
+      dialogType: DialogType.warning,
+      onConfirm: () => SystemNavigator.pop(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (bool didPop, _) {
+        if (!didPop) _showExitConfirmation(context);
+      },
+      child: Scaffold(
       backgroundColor: AppColors.darkBackground,
       body: SafeArea(
         bottom: false,
@@ -73,20 +91,6 @@ class _HomeScaffold extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: HomeBottomNavigationBar(
-        currentIndex: 0,
-        showNotificationBadge: true,
-        onTap: (index) {
-          switch (index) {
-            case 1:
-              context.pushNamed(AppRoutes.garage);
-            case 3:
-              context.pushNamed(AppRoutes.events);
-            case 4:
-              break;
-          }
-        },
-        onAddTap: () => context.pushNamed(AppRoutes.createEvent),
       ),
     );
   }

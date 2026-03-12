@@ -10,8 +10,14 @@ import 'package:rideglory/core/theme/app_colors.dart';
 class RouteMapPreview extends StatefulWidget {
   final String? meetingPoint;
   final String? destination;
+  final VoidCallback? onViewMapTap;
 
-  const RouteMapPreview({super.key, this.meetingPoint, this.destination});
+  const RouteMapPreview({
+    super.key,
+    this.meetingPoint,
+    this.destination,
+    this.onViewMapTap,
+  });
 
   @override
   State<RouteMapPreview> createState() => _RouteMapPreviewState();
@@ -213,6 +219,57 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                         ),
                       ),
                     ],
+                  ),
+                ),
+              if (widget.onViewMapTap != null)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Center(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: widget.onViewMapTap,
+                        borderRadius: BorderRadius.circular(24),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.map_outlined,
+                                size: 20,
+                                color: Colors.white,
+                              ),
+                              const SizedBox(width: 8),
+                              const Text(
+                                'Ver en mapa',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               if (_isLoading)

@@ -4,6 +4,7 @@ abstract class AppRoutes {
 
   // Home route
   static const String home = '/home';
+  static const String profile = '/profile';
 
   // Authentication routes
   static const String login = '/login';

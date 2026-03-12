@@ -21,11 +21,9 @@ import 'package:rideglory/features/events/presentation/detail/widgets/event_deta
 import 'package:rideglory/features/events/presentation/detail/widgets/event_registration_status_card.dart';
 import 'package:rideglory/features/events/presentation/shared/dialogs/cancel_registration_dialog.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
 import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
 import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
 import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
-import 'package:rideglory/shared/widgets/rich_text_viewer.dart';
 
 class EventDetailPage extends StatelessWidget {
   final EventDetailPageParams params;
@@ -248,26 +246,12 @@ class _EventDetailViewState extends State<_EventDetailView> {
                                     context,
                                     registration,
                                   ),
-                              onViewRecommendations:
-                                  _currentEvent.recommendations != null
-                                      ? () => _showRecommendations(context)
-                                      : null,
                             ),
                           );
                         },
                         orElse: () => const SizedBox.shrink(),
                       );
                     },
-                  ),
-                if (isOwner && _currentEvent.recommendations != null)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-                    child: AppButton(
-                      onPressed: () => _showRecommendations(context),
-                      icon: Icons.tips_and_updates_outlined,
-                      label: EventStrings.viewRecommendations,
-                      variant: AppButtonVariant.outline,
-                    ),
                   ),
                 const SizedBox(height: 100),
               ],
@@ -313,38 +297,6 @@ class _EventDetailViewState extends State<_EventDetailView> {
       context: context,
       onCancel: () =>
           context.read<EventDetailCubit>().cancelRegistration(registration.id!),
-    );
-  }
-
-  void _showRecommendations(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => DraggableScrollableSheet(
-        initialChildSize: 0.6,
-        expand: false,
-        builder: (_, controller) => Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                EventStrings.viewRecommendations,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const Divider(),
-              Expanded(
-                child: SingleChildScrollView(
-                  controller: controller,
-                  child: RichTextViewer(
-                    content: _currentEvent.recommendations ?? '',
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 

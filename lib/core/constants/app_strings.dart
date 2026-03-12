@@ -18,6 +18,9 @@ abstract class AppStrings {
   static const String back = 'Volver';
   static const String continue_ = 'Continuar';
   static const String exit = 'Salir';
+  static const String exitAppTitle = 'Salir de la aplicación';
+  static const String exitAppMessage =
+      '¿Estás seguro de que deseas salir de Rideglory?';
 
   // Errors
   static const String errorOccurred = 'Ocurrió un error';

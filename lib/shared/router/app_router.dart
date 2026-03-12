@@ -22,6 +22,7 @@ import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import '../../features/authentication/application/auth_cubit.dart';
 import '../../features/authentication/login/presentation/login_view.dart';
 import '../../features/authentication/signup/presentation/signup_view.dart';
+import '../../features/profile/presentation/profile_page.dart';
 import '../../features/maintenance/presentation/detail/maintenance_detail_page.dart';
 import '../../features/maintenance/presentation/form/maintenance_form_page.dart';
 import '../../features/maintenance/presentation/list/maintenances/maintenances_page.dart';
@@ -29,6 +30,7 @@ import '../../features/splash/presentation/splash_screen.dart';
 import '../../features/vehicles/presentation/form/vehicle_form_page.dart';
 import '../../features/vehicles/presentation/garage/garage_page.dart';
 import '../../features/vehicles/presentation/views/vehicle_onboarding_view.dart';
+import '../widgets/main_shell.dart';
 import 'app_routes.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -100,20 +102,57 @@ class AppRouter {
         },
       ),
 
-      // Home route
-      GoRoute(
-        path: AppRoutes.home,
-        name: AppRoutes.home,
-        builder: (context, state) => const HomePage(),
-      ),
-
-      // Vehicle routes
-      GoRoute(
-        path: AppRoutes.garage,
-        name: AppRoutes.garage,
-        builder: (context, state) {
-          return const GaragePage();
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return MainShell(
+            navigationShell: navigationShell,
+            showNotificationBadge: true,
+          );
         },
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.home,
+                name: AppRoutes.home,
+                builder: (context, state) => const HomePage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.garage,
+                name: AppRoutes.garage,
+                builder: (context, state) => const GaragePage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.events,
+                name: AppRoutes.events,
+                builder: (context, state) => const EventsPage(),
+              ),
+              GoRoute(
+                path: AppRoutes.myEvents,
+                name: AppRoutes.myEvents,
+                builder: (context, state) =>
+                    const EventsPage(showMyEvents: true),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.profile,
+                name: AppRoutes.profile,
+                builder: (context, state) => const ProfilePage(),
+              ),
+            ],
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoutes.createVehicle,
@@ -165,17 +204,6 @@ class AppRouter {
         },
       ),
 
-      // Events routes
-      GoRoute(
-        path: AppRoutes.events,
-        name: AppRoutes.events,
-        builder: (context, state) => const EventsPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.myEvents,
-        name: AppRoutes.myEvents,
-        builder: (context, state) => const EventsPage(showMyEvents: true),
-      ),
       GoRoute(
         path: AppRoutes.createEvent,
         name: AppRoutes.createEvent,
