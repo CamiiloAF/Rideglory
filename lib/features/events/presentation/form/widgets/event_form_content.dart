@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:rideglory/core/domain/result_state.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
+import 'package:rideglory/features/events/presentation/form/widgets/event_form_cover_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/event_form_section_card.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_basic_info_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_date_time_section.dart';
@@ -68,6 +68,10 @@ class EventFormContent extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                EventFormCoverSection(
+                  imageUrl: innerCubit.editingEvent?.imageUrl,
+                ),
+                const SizedBox(height: 24),
                 EventFormSectionCard(
                   icon: Icons.info_outline,
                   title: EventStrings.basicInfo,
@@ -88,10 +92,10 @@ class EventFormContent extends StatelessWidget {
                   child: EventFormDetailsSection(),
                 ),
                 const SizedBox(height: 16),
-                const EventFormSectionCard(
+                EventFormSectionCard(
                   icon: Icons.route_outlined,
-                  title: EventStrings.locations,
-                  child: EventFormLocationsSection(),
+                  title: EventStrings.routeAndMap,
+                  child: const EventFormLocationsSection(),
                 ),
                 const SizedBox(height: 16),
                 EventFormSectionCard(

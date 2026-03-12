@@ -2,6 +2,7 @@ import 'dart:math' show max;
 
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
@@ -37,11 +38,45 @@ class EventDetailCTABar extends StatelessWidget {
       ),
       padding: EdgeInsets.fromLTRB(16, 12, 16, max(16.0, bottomPadding)),
       child: notRegistered
-          ? AppButton(
-              label: 'Inscribirse ahora',
-              icon: Icons.how_to_reg_outlined,
-              isFullWidth: true,
-              onPressed: onRegister,
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        EventStrings.totalParticipation,
+                        style: TextStyle(
+                          color: AppColors.darkTextSecondary,
+                          fontSize: 12,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        event.isFree
+                            ? EventStrings.free
+                            : '${(event.price ?? 0).toStringAsFixed(2)}€',
+                        style: const TextStyle(
+                          color: AppColors.darkTextPrimary,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  flex: 2,
+                  child: AppButton(
+                    label: EventStrings.registerMe,
+                    isFullWidth: true,
+                    onPressed: onRegister,
+                  ),
+                ),
+              ],
             )
           : _RegistrationStatusBadge(registration: registration!),
     );

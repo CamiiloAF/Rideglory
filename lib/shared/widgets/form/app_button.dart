@@ -24,8 +24,8 @@ class AppButton extends StatelessWidget {
     this.icon,
     this.isFullWidth = true,
     this.padding = const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-    this.width,
-    this.height,
+    this.width = 32,
+    this.height = 48,
   });
 
   Color get _backgroundColor {

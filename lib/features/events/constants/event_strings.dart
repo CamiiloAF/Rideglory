@@ -75,6 +75,47 @@ class EventStrings {
   // Save button
   static const String saveEvent = 'Guardar Evento';
   static const String updateEvent = 'Actualizar Evento';
+  static const String publishEvent = 'Publicar evento';
+
+  // Event form V1 (cover, labels)
+  static const String addEventCover = 'Agregar portada del evento';
+  static const String addEventCoverHint =
+      'Una imagen impactante atrae a más motociclistas. Formatos: JPG, PNG.';
+  static const String uploadImage = 'Subir imagen';
+  static const String generateWithAI = 'Generar con IA';
+  static const String originCity = 'Ciudad de origen';
+  static const String dateRangeLabel = 'Fecha (rango)';
+  static const String routeAndMap = 'Ruta y mapa';
+  static const String meetingPointPreview = 'Vista previa del punto de encuentro';
+  static const String viewOnMap = 'Ver en mapa';
+  static const String multiBrandLabel = 'Multimarca';
+  static const String multiBrandAllowAny =
+      'Permitir motos de cualquier fabricante';
+  static const String orSelectBrands = 'O seleccionar marcas específicas';
+  static const String registrationPriceOptional =
+      'Precio de inscripción (opcional)';
+  static const String descriptionAndRecommendations =
+      'Descripción y recomendaciones';
+  static const String descriptionHint =
+      'Cuéntanos de qué trata esta rodada, el ritmo, qué equipo llevar y qué esperar...';
+  static String difficultyLevel(int level, int total) =>
+      'Nivel ${_difficultyLabel(level)} ($level/$total)';
+  static String _difficultyLabel(int level) {
+    switch (level) {
+      case 1:
+        return 'Fácil';
+      case 2:
+        return 'Moderado';
+      case 3:
+        return 'Intermedio';
+      case 4:
+        return 'Difícil';
+      case 5:
+        return 'Muy difícil';
+      default:
+        return 'Intermedio';
+    }
+  }
 
   // Messages
   static const String eventCreatedSuccess = 'Evento creado exitosamente';
@@ -101,7 +142,18 @@ class EventStrings {
   static const String filterByFreeOnly = 'Solo eventos gratuitos';
   static const String filterByMultiBrand = 'Solo multimarca';
 
-  // Detail & actions
+  // Detail & actions (Event Detail V1)
+  static const String aboutTheRide = 'Sobre la rodada';
+  static const String organizedBy = 'Organizado por';
+  static const String organizerPlaceholder = 'el creador';
+  static const String finalDestination = 'DESTINO FINAL';
+  static const String totalParticipation = 'Total participación';
+  static const String registerMe = 'Inscribirme';
+  static const String viewMap = 'Ver mapa';
+  static const String creatorRecommendations = 'RECOMENDACIONES DEL CREADOR';
+  static const String allowedBrandsTitle = 'Marcas Permitidas';
+  static const String allBrandsChip = '+ Todas';
+  static const String comingSoonPill = 'PRÓXIMAMENTE';
   static const String joinEvent = 'Inscribirse';
   static const String editRegistration = 'Editar inscripción';
   static const String cancelRegistration = 'Cancelar inscripción';
@@ -110,6 +162,13 @@ class EventStrings {
   static const String openInMaps = 'Abrir en Google Maps';
   static const String meetingPointLabel = 'Punto de encuentro';
   static const String destinationLabel = 'Destino';
+  static const String comingSoon = 'Próximamente';
+  static const String eventLiveNow = 'EN VIVO';
+  static const String eventHasStartedTitle = 'Evento en curso';
+  static const String eventHasStartedDescription =
+      'La rodada ha comenzado. Sigue la ubicación en tiempo real de todos los participantes y no te pierdas nada.';
+  static const String followRideLive = 'Seguir rodada en vivo';
+  static const String eventFinished = 'Finalizado';
   static const String dateLabel = 'Fecha';
   static const String timeLabel = 'Hora de encuentro';
   static const String priceLabel = 'Precio';

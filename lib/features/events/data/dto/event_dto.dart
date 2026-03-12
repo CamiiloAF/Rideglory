@@ -6,6 +6,7 @@ part 'event_dto.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 @EventDifficultyConverter()
+@EventStateConverter()
 class EventDto extends EventModel {
   const EventDto({
     required super.id,
@@ -26,6 +27,7 @@ class EventDto extends EventModel {
     super.imageUrl,
     super.createdDate,
     super.updatedDate,
+    super.state = EventState.scheduled,
   });
 
   factory EventDto.fromJson(Map<String, dynamic> json) =>
@@ -46,7 +48,6 @@ extension EventModelExtension on EventModel {
     difficulty: difficulty,
     meetingPoint: meetingPoint,
     destination: destination,
-
     meetingTime: meetingTime,
     eventType: eventType,
     allowedBrands: allowedBrands,
@@ -55,5 +56,6 @@ extension EventModelExtension on EventModel {
     imageUrl: imageUrl,
     createdDate: createdDate,
     updatedDate: updatedDate,
+    state: state,
   ).toJson();
 }

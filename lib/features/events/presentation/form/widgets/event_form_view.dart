@@ -105,9 +105,9 @@ class _EventFormBottomBar extends StatelessWidget {
             child: AppButton(
               label: isEditing
                   ? EventStrings.updateEvent
-                  : EventStrings.saveEvent,
+                  : EventStrings.publishEvent,
               isLoading: isLoading,
-              icon: Icons.save_outlined,
+              icon: Icons.send_outlined,
               onPressed: isLoading
                   ? null
                   : () {

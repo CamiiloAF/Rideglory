@@ -49,7 +49,13 @@ class MaintenanceStrings {
   static const String totalCost = 'Costo total';
   static const String serviceNotes = 'Notas de servicio';
   static const String estimatedDate = 'Fecha estimada';
-  static String performedOn(String date) => 'Realizado el $date';
+  static const String suggested = 'Sugerido';
+  static const String routine = 'Rutina';
+  static String performedOn(String date) => 'Completado el $date';
+  static const String alertByMileage = 'Por kilometraje';
+  static const String alertByDate = 'Por fecha';
+  static const String mileageAlertBefore = '500 km antes';
+  static const String dateAlertBefore = '7 días antes';
 
   // Status
   static const String urgent = 'Urgente';

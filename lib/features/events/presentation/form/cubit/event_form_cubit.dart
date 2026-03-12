@@ -78,6 +78,7 @@ class EventFormCubit extends Cubit<ResultState<EventModel>> {
       allowedBrands: allowedBrands,
       price: price,
       recommendations: formData[EventFormFields.recommendations] as String?,
+      state: _editingEvent?.state ?? EventState.scheduled,
     );
   }
 }
