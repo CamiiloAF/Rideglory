@@ -1,7 +1,7 @@
 ---
 description: Estándares de código de Rideglory (Flutter/Dart)
 globs: **/*.dart
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Estándares de Código — Rideglory

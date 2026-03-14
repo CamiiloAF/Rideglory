@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
+import 'package:rideglory/features/events/presentation/list/widgets/event_filter_chip.dart';
 
 class EventTypeFilterChips extends StatelessWidget {
   const EventTypeFilterChips({super.key});
@@ -11,25 +13,25 @@ class EventTypeFilterChips extends StatelessWidget {
     final cubit = context.watch<EventsCubit>();
     final selectedTypes = cubit.filters.types;
 
-    return Container(
-      height: 50,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+    return SizedBox(
+      height: 42,
       child: ListView(
         scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
-          _FilterChip(
-            label: 'Todos',
+          EventFilterChip(
+            label: EventStrings.filterAll,
             isSelected: selectedTypes.isEmpty,
             onTap: () {
               cubit.updateFilters(cubit.filters.copyWith(types: {}));
             },
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 10),
           ...EventType.values.map((type) {
             final isSelected = selectedTypes.contains(type);
             return Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: _FilterChip(
+              padding: const EdgeInsets.only(right: 10),
+              child: EventFilterChip(
                 label: type.label,
                 isSelected: isSelected,
                 onTap: () {
@@ -45,44 +47,6 @@ class EventTypeFilterChips extends StatelessWidget {
             );
           }),
         ],
-      ),
-    );
-  }
-}
-
-class _FilterChip extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _FilterChip({
-    required this.label,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        decoration: BoxDecoration(
-          color: isSelected ? Colors.white : Colors.transparent,
-          borderRadius: BorderRadius.circular(25),
-          border: Border.all(
-            color: isSelected ? Colors.white : Colors.grey[700]!,
-            width: 1.5,
-          ),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: isSelected ? Colors.black : Colors.white,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-            fontSize: 14,
-          ),
-        ),
       ),
     );
   }

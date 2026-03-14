@@ -1,6 +1,5 @@
 /// Events feature string constants
-class EventStrings {
-  EventStrings._();
+abstract class EventStrings {
 
   // Page titles
   static const String events = 'Eventos';
@@ -109,8 +108,7 @@ class EventStrings {
       'Descripción y recomendaciones';
   static const String descriptionHint =
       'Cuéntanos de qué trata esta rodada, el ritmo, qué equipo llevar y qué esperar...';
-  static String difficultyLevel(int level, int total) =>
-      'Nivel ${_difficultyLabel(level)} ($level/$total)';
+  static String difficultyLevel(int level) => _difficultyLabel(level);
   static String _difficultyLabel(int level) {
     switch (level) {
       case 1:
@@ -146,6 +144,7 @@ class EventStrings {
   static const String filters = 'Filtros';
   static const String applyFilters = 'Aplicar filtros';
   static const String clearFilters = 'Limpiar filtros';
+  static const String filterAll = 'Todos';
   static const String filterByType = 'Tipo de evento';
   static const String filterByDifficulty = 'Dificultad';
   static const String filterByCity = 'Ciudad';
@@ -182,6 +181,8 @@ class EventStrings {
   static const String dateLabel = 'Fecha';
   static const String priceLabel = 'Precio';
   static const String free = 'Gratuito';
+  static const String eventCardPriceFree = 'Gratis';
+  static const String eventCardMyEvent = 'Mi evento';
   static const String difficultyLabel = 'Dificultad';
   static const String typeLabel = 'Tipo';
   static const String organizer = 'Organizador';
