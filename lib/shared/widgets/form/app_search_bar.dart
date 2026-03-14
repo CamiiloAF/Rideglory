@@ -20,8 +20,12 @@ class AppSearchBar extends StatelessWidget {
     final theme = Theme.of(context);
 
     final fillColor = darkMode ? AppColors.darkSurfaceHighest : Colors.white;
-    final borderColor = darkMode ? theme.colorScheme.primary : Colors.grey[300]!;
-    final hintColor = darkMode ? AppColors.darkTextSecondary : Colors.grey[600]!;
+    final borderColor = darkMode
+        ? theme.colorScheme.primary
+        : Colors.grey[300]!;
+    final hintColor = darkMode
+        ? AppColors.darkTextSecondary
+        : Colors.grey[600]!;
     final textColor = darkMode ? AppColors.darkTextPrimary : Colors.black;
     final iconColor = darkMode ? AppColors.darkInputIcon : Colors.grey[600]!;
 

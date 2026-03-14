@@ -55,7 +55,7 @@ class EventFormDifficultySection extends StatelessWidget {
                     const SizedBox(width: 12),
                     Flexible(
                       child: Text(
-                        EventStrings.difficultyLevel(selected.value, 5),
+                        EventStrings.difficultyLevel(selected.value),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(

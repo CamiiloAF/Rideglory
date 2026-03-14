@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/services/auth_service.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
@@ -25,7 +25,6 @@ class EventsDataView extends StatelessWidget {
 
     return Column(
       children: [
-        // Search bar with filter button
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
           child: Row(
@@ -40,25 +39,23 @@ class EventsDataView extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              // Filter button
-              Container(
+              SizedBox(
                 width: 48,
                 height: 48,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1A1A1A),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: const Color(0xFF2A2A2A), width: 1),
-                ),
                 child: Material(
-                  color: Colors.transparent,
+                  color: context.colorScheme.primary,
+                  borderRadius: BorderRadius.circular(14),
                   child: InkWell(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(14),
                     onTap: () => _showFilters(context),
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        Icon(Icons.tune, color: Colors.grey[400], size: 24),
-                        // Active filters indicator
+                        Icon(
+                          Icons.tune_rounded,
+                          color: context.colorScheme.onPrimary,
+                          size: 24,
+                        ),
                         if (context.watch<EventsCubit>().filters.hasFilters)
                           Positioned(
                             right: 8,
@@ -67,7 +64,7 @@ class EventsDataView extends StatelessWidget {
                               width: 8,
                               height: 8,
                               decoration: BoxDecoration(
-                                color: AppColors.primary,
+                                color: context.colorScheme.onPrimary,
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -80,6 +77,7 @@ class EventsDataView extends StatelessWidget {
             ],
           ),
         ),
+        const SizedBox(height: 8),
         const EventTypeFilterChips(),
         const SizedBox(height: 8),
         events.isEmpty
@@ -94,6 +92,9 @@ class EventsDataView extends StatelessWidget {
                       final event = events[i];
                       final isOwner = event.ownerId == currentUserId;
                       return EventCard(
+                        key: event.id != null
+                            ? ValueKey(event.id)
+                            : ObjectKey(event),
                         event: event,
                         isOwner: isOwner,
                         onTap: () async {
