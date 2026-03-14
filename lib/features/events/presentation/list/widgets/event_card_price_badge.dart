@@ -18,7 +18,7 @@ class EventCardPriceBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: context.colorScheme.primary.withOpacity(0.35),
+            color: context.colorScheme.primary.withValues(alpha: 0.35),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),

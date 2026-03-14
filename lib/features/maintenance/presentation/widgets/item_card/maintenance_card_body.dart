@@ -109,7 +109,7 @@ class MaintenanceCardBody extends StatelessWidget {
                         const SizedBox(height: 12),
                         Row(
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.speed_outlined,
                               size: 16,
                               color: AppColors.primary,

@@ -35,7 +35,7 @@ class _MaintenanceFormViewState extends State<MaintenanceFormView> {
           state.whenOrNull(
             data: (maintenance) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
+                const SnackBar(
                   content: Text(AppStrings.savedSuccessfully),
                   backgroundColor: Colors.green,
                 ),

@@ -19,7 +19,7 @@ class MainBottomNavigationBar extends StatelessWidget {
         color: const Color(0xFF1A1A1A),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 20,
             offset: const Offset(0, -4),
           ),

@@ -26,7 +26,7 @@ class VehicleRepositoryImpl implements VehicleRepository {
   getVehiclesByUserId() async {
     final userId = _authService.currentUser?.uid;
     if (userId == null) {
-      throw DomainException(message: 'No user is currently authenticated.');
+      throw const DomainException(message: 'No user is currently authenticated.');
     }
 
     return executeService(
@@ -54,7 +54,7 @@ class VehicleRepositoryImpl implements VehicleRepository {
   ) async {
     final userId = _authService.currentUser?.uid;
     if (userId == null) {
-      throw DomainException(message: 'No user is currently authenticated.');
+      throw const DomainException(message: 'No user is currently authenticated.');
     }
 
     final now = DateTime.now();
@@ -83,7 +83,7 @@ class VehicleRepositoryImpl implements VehicleRepository {
     VehicleModel vehicle,
   ) async {
     if (vehicle.id == null) {
-      throw DomainException(message: 'Vehicle ID is required for update.');
+      throw const DomainException(message: 'Vehicle ID is required for update.');
     }
 
     final updatedVehicle = vehicle.copyWith(updatedDate: DateTime.now());

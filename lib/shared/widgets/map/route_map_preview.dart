@@ -194,7 +194,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                   mapToolbarEnabled: false,
                 )
               else
-                Center(
+                const Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -203,7 +203,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                         size: 48,
                         color: AppColors.textTertiary,
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Text(
                         'Vista previa del mapa',
                         style: TextStyle(
@@ -248,16 +248,16 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                               ),
                             ],
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.map_outlined,
                                 size: 20,
                                 color: Colors.white,
                               ),
-                              const SizedBox(width: 8),
-                              const Text(
+                              SizedBox(width: 8),
+                              Text(
                                 'Ver en mapa',
                                 style: TextStyle(
                                   color: Colors.white,
@@ -279,7 +279,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                   child: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.85),
+                      color: Colors.white.withValues(alpha: 0.85),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: const SizedBox(

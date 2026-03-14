@@ -77,7 +77,7 @@ class _MaintenanceFiltersBottomSheetState
                     isFullWidth: false,
                     onPressed: () {
                       setState(() {
-                        _filters = MaintenanceFilters().copyWith(
+                        _filters = const MaintenanceFilters().copyWith(
                           vehicleIds: _filters.vehicleIds,
                         );
                       });
@@ -94,7 +94,7 @@ class _MaintenanceFiltersBottomSheetState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Sort by
-                  FilterSectionTitle(MaintenanceStrings.sortBy),
+                  const FilterSectionTitle(MaintenanceStrings.sortBy),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -114,7 +114,7 @@ class _MaintenanceFiltersBottomSheetState
                         selectedColor: AppColors.primary,
                         backgroundColor: AppColors.darkSurfaceHighest,
                         checkmarkColor: Colors.white,
-                        side: BorderSide(color: AppColors.darkBorder),
+                        side: const BorderSide(color: AppColors.darkBorder),
                         onSelected: (selected) {
                           setState(() {
                             _filters = _filters.copyWith(sortBy: option);
@@ -126,7 +126,7 @@ class _MaintenanceFiltersBottomSheetState
                   const SizedBox(height: 24),
 
                   // Maintenance types
-                  FilterSectionTitle(MaintenanceStrings.maintenanceTypes),
+                  const FilterSectionTitle(MaintenanceStrings.maintenanceTypes),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -146,7 +146,7 @@ class _MaintenanceFiltersBottomSheetState
                         selectedColor: AppColors.primary,
                         backgroundColor: AppColors.darkSurfaceHighest,
                         checkmarkColor: Colors.white,
-                        side: BorderSide(color: AppColors.darkBorder),
+                        side: const BorderSide(color: AppColors.darkBorder),
                         onSelected: (selected) {
                           setState(() {
                             final newTypes = List<MaintenanceType>.from(
@@ -167,9 +167,9 @@ class _MaintenanceFiltersBottomSheetState
 
                   // Urgent only
                   SwitchListTile(
-                    title: Text(
+                    title: const Text(
                       MaintenanceStrings.urgentOnly,
-                      style: const TextStyle(color: AppColors.darkTextPrimary),
+                      style: TextStyle(color: AppColors.darkTextPrimary),
                     ),
                     subtitle: const Text(
                       MaintenanceStrings.urgentOnlyDescription,
@@ -188,7 +188,7 @@ class _MaintenanceFiltersBottomSheetState
                   const SizedBox(height: 16),
 
                   // Date range
-                  FilterSectionTitle(MaintenanceStrings.dateRange),
+                  const FilterSectionTitle(MaintenanceStrings.dateRange),
                   const SizedBox(height: 8),
                   Row(
                     children: [
@@ -269,7 +269,7 @@ class _MaintenanceFiltersBottomSheetState
           // Actions
           Container(
             padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: AppColors.darkSurface,
               border: Border(top: BorderSide(color: AppColors.darkBorder)),
             ),

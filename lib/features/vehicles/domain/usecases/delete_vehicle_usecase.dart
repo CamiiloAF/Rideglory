@@ -24,7 +24,7 @@ class DeleteVehicleUseCase {
       },
       (maintenances) async {
         // Delete each maintenance
-        for (var maintenance in maintenances) {
+        for (final maintenance in maintenances) {
           if (maintenance.id != null) {
             await _maintenanceRepository.deleteMaintenance(maintenance.id!);
           }

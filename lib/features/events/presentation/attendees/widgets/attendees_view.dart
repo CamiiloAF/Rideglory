@@ -17,7 +17,7 @@ class AttendeesView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppAppBar(title: EventStrings.attendees),
+      appBar: const AppAppBar(title: EventStrings.attendees),
       body:
           BlocBuilder<
             AttendeesCubit,

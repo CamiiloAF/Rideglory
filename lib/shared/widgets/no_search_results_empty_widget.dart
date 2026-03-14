@@ -7,9 +7,7 @@ class NoSearchResultsEmptyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark =
-        Theme.of(context).brightness == Brightness.dark ||
-        Theme.of(context).scaffoldBackgroundColor.value < 0xFF808080;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Center(
       child: Padding(

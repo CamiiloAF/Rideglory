@@ -14,7 +14,7 @@ class HomeEventDefaultBackground extends StatelessWidget {
           colors: [Color(0xFF2D1A0A), Color(0xFF1A0D05)],
         ),
       ),
-      child: Center(
+      child: const Center(
         child: Icon(
           Icons.landscape_outlined,
           size: 60,

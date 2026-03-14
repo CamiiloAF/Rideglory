@@ -17,12 +17,12 @@ class HomeEventsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(20, 0, 20, 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 HomeStrings.upcomingRides,
                 style: TextStyle(
                   color: AppColors.darkTextPrimary,
@@ -30,7 +30,7 @@ class HomeEventsSection extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              const Icon(
+              Icon(
                 Icons.tune_outlined,
                 color: AppColors.darkTextSecondary,
                 size: 20,

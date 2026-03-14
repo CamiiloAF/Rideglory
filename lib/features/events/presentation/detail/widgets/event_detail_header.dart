@@ -73,7 +73,7 @@ class EventDetailHeader extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  EventDetailOrganizerRow(
+                  const EventDetailOrganizerRow(
                     organizerName: EventStrings.organizerPlaceholder,
                   ),
                   const SizedBox(height: 10),
@@ -125,7 +125,7 @@ class EventDetailHeader extends StatelessWidget {
       return Image.network(
         event.imageUrl!,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => _placeholder(),
+        errorBuilder: (_, _, _) => _placeholder(),
       );
     }
     return _placeholder();
@@ -212,7 +212,7 @@ class EventDetailOrganizerRow extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
               children: [
-                TextSpan(text: '${EventStrings.organizedBy} '),
+                const TextSpan(text: '${EventStrings.organizedBy} '),
                 TextSpan(
                   text: organizerName,
                   // style: const TextStyle(decoration: TextDecoration.underline),

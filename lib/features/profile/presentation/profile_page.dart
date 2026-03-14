@@ -33,7 +33,7 @@ class ProfilePage extends StatelessWidget {
       },
       child: Scaffold(
       backgroundColor: AppColors.darkBackground,
-      appBar: AppAppBar(title: ProfileStrings.profile),
+      appBar: const AppAppBar(title: ProfileStrings.profile),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),

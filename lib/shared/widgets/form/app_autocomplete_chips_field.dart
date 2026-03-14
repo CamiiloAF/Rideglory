@@ -98,7 +98,7 @@ class _AppAutocompleteChipsFieldState extends State<AppAutocompleteChipsField> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: _filteredSuggestions.length,
                 separatorBuilder: (_, _) =>
-                    Divider(height: 1, color: AppColors.darkBorder),
+                    const Divider(height: 1, color: AppColors.darkBorder),
                 itemBuilder: (_, i) => InkWell(
                   onTap: () => _addChip(_filteredSuggestions[i], field),
                   borderRadius: BorderRadius.circular(8),

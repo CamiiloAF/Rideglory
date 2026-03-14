@@ -100,12 +100,12 @@ class EventFormCubit extends Cubit<ResultState<EventModel>> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: Text(AppStrings.accept),
+            child: const Text(AppStrings.accept),
           ),
           if (isPermanentlyDenied)
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: Text(EventStrings.openSettings),
+              child: const Text(EventStrings.openSettings),
             ),
         ],
       ),

@@ -65,7 +65,7 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
           'status': RegistrationStatus.cancelled.name,
           'updatedDate': DateTime.now().toIso8601String(),
         });
-        return Nothing();
+        return const Nothing();
       },
     );
   }
@@ -96,7 +96,7 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
     final userId = _authService.currentUser?.uid;
     if (userId == null) {
       return Future.value(
-        Left(DomainException(message: 'No user is currently authenticated.')),
+        const Left(DomainException(message: 'No user is currently authenticated.')),
       );
     }
 
@@ -123,7 +123,7 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
     final userId = _authService.currentUser?.uid;
     if (userId == null) {
       return Future.value(
-        Left(DomainException(message: 'No user is currently authenticated.')),
+        const Left(DomainException(message: 'No user is currently authenticated.')),
       );
     }
 

@@ -44,25 +44,25 @@ class EventCardHeader extends StatelessWidget {
         if (value == 'delete') onDelete?.call();
       },
       itemBuilder: (_) => [
-        PopupMenuItem(
+        const PopupMenuItem(
           value: 'edit',
           child: Row(
             children: [
-              const Icon(Icons.edit_outlined),
-              const SizedBox(width: 8),
+              Icon(Icons.edit_outlined),
+              SizedBox(width: 8),
               Text(EventStrings.edit),
             ],
           ),
         ),
-        PopupMenuItem(
+        const PopupMenuItem(
           value: 'delete',
           child: Row(
             children: [
-              const Icon(Icons.delete_outline, color: AppColors.error),
-              const SizedBox(width: 8),
+              Icon(Icons.delete_outline, color: AppColors.error),
+              SizedBox(width: 8),
               Text(
                 EventStrings.delete,
-                style: const TextStyle(color: AppColors.error),
+                style: TextStyle(color: AppColors.error),
               ),
             ],
           ),

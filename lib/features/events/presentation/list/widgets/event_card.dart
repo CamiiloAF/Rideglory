@@ -70,8 +70,8 @@ class _EventCardState extends State<EventCard> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.black.withOpacity(0.1),
-                        Colors.black.withOpacity(0.5),
+                        Colors.black.withValues(alpha: 0.1),
+                        Colors.black.withValues(alpha: 0.5),
                       ],
                       stops: const [0.4, 1.0],
                     ),

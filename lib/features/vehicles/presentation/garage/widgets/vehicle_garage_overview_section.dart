@@ -58,7 +58,7 @@ class VehicleGarageOverviewSection extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 16),
-            Expanded(
+            const Expanded(
               child: VehicleGarageOverviewItem(
                 icon: Icons.access_time_outlined,
                 label: VehicleStrings.lastRide,

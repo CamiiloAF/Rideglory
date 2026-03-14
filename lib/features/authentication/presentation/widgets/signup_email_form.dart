@@ -129,11 +129,11 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
             ]),
           ),
           const SizedBox(height: 24),
-          AppCheckbox(
+          const AppCheckbox(
             name: AuthFormFields.acceptTerms,
             title: '',
             initialValue: false,
-            customTitle: const SignupTermsText(),
+            customTitle: SignupTermsText(),
           ),
           const SizedBox(height: 24),
           BlocBuilder<AuthCubit, AuthState>(

@@ -86,7 +86,7 @@ class _EventFormBottomBar extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.darkSurface,
-        border: Border(top: BorderSide(color: AppColors.darkBorder)),
+        border: const Border(top: BorderSide(color: AppColors.darkBorder)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.3),

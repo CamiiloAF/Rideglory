@@ -7,6 +7,7 @@ part 'event_registration_dto.g.dart';
 class EventRegistrationDto extends EventRegistrationModel {
   @JsonKey(defaultValue: '')
   @override
+  // ignore: overridden_fields -- DTO needs default for JSON deserialization
   final String eventName;
 
   const EventRegistrationDto({

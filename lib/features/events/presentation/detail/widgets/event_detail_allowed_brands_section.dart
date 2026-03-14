@@ -17,9 +17,9 @@ class EventDetailAllowedBrandsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           EventStrings.allowedBrandsTitle,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.darkTextPrimary,
             fontSize: 18,
             fontWeight: FontWeight.w800,

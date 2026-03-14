@@ -149,33 +149,33 @@ class _EventDetailViewState extends State<_EventDetailView> {
                   }
                 },
                 itemBuilder: (context) => [
-                  PopupMenuItem(
+                  const PopupMenuItem(
                     value: 'edit',
                     child: Row(
                       children: [
-                        const Icon(Icons.edit_outlined),
-                        const SizedBox(width: 12),
+                        Icon(Icons.edit_outlined),
+                        SizedBox(width: 12),
                         Text(EventStrings.edit),
                       ],
                     ),
                   ),
-                  PopupMenuItem(
+                  const PopupMenuItem(
                     value: 'attendees',
                     child: Row(
                       children: [
-                        const Icon(Icons.people_outline),
-                        const SizedBox(width: 12),
+                        Icon(Icons.people_outline),
+                        SizedBox(width: 12),
                         Text(EventStrings.viewAttendees),
                       ],
                     ),
                   ),
-                  PopupMenuItem(
+                  const PopupMenuItem(
                     value: 'delete',
                     child: Row(
                       children: [
-                        const Icon(Icons.delete_outline, color: Colors.red),
-                        const SizedBox(width: 12),
-                        Text(EventStrings.delete, style: const TextStyle(color: Colors.red)),
+                        Icon(Icons.delete_outline, color: Colors.red),
+                        SizedBox(width: 12),
+                        Text(EventStrings.delete, style: TextStyle(color: Colors.red)),
                       ],
                     ),
                   ),

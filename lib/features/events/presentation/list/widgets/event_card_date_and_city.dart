@@ -16,8 +16,8 @@ class EventCardDateAndCity extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final iconColor = colorScheme.onSurface.withOpacity(0.6);
-    final textColor = colorScheme.onSurface.withOpacity(0.7);
+    final iconColor = colorScheme.onSurface.withValues(alpha: 0.6);
+    final textColor = colorScheme.onSurface.withValues(alpha: 0.7);
 
     return Row(
       children: [

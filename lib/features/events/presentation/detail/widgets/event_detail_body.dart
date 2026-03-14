@@ -20,7 +20,7 @@ class EventDetailBody extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _SectionTitle(EventStrings.aboutTheRide),
+          const _SectionTitle(EventStrings.aboutTheRide),
           const SizedBox(height: 8),
           RichTextViewer(content: event.description),
           const SizedBox(height: 20),

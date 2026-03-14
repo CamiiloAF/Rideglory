@@ -51,7 +51,7 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFieldLabel(
+              const TextFieldLabel(
                 labelText: EventStrings.dateRange,
                 isRequired: true,
               ),
@@ -85,7 +85,7 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  TextFieldLabel(
+                  const TextFieldLabel(
                     labelText: EventStrings.startDate,
                     isRequired: true,
                   ),
@@ -109,7 +109,7 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
             },
           ),
         const SizedBox(height: 16),
-        AppDatePicker(
+        const AppDatePicker(
           fieldName: EventFormFields.meetingTime,
           labelText: EventStrings.meetingTime,
           inputType: InputType.time,
