@@ -5,7 +5,6 @@ import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_form_fields.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
@@ -79,16 +78,11 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
             VehicleFormFields.year: state.vehicle!.year?.toString(),
             VehicleFormFields.currentMileage: state.vehicle!.currentMileage
                 .toString(),
-            VehicleFormFields.distanceUnit: state.vehicle!.distanceUnit,
-            VehicleFormFields.vehicleType: state.vehicle!.vehicleType,
             VehicleFormFields.licensePlate: state.vehicle!.licensePlate,
             VehicleFormFields.vin: state.vehicle!.vin,
             VehicleFormFields.purchaseDate: state.vehicle!.purchaseDate,
           }
-        : {
-            VehicleFormFields.distanceUnit: DistanceUnit.kilometers,
-            VehicleFormFields.vehicleType: VehicleType.motorcycle,
-          };
+        : <String, dynamic>{};
   }
 
   void _saveVehicle() {

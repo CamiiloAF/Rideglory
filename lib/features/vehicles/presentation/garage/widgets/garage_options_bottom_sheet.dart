@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
+import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_delete_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
 class GarageOptionsBottomSheet extends StatelessWidget {
@@ -14,14 +16,44 @@ class GarageOptionsBottomSheet extends StatelessWidget {
   final VehicleModel vehicle;
 
   static void show(BuildContext context, VehicleModel vehicle) {
+    final vehicleCubit = context.read<VehicleCubit>();
+    final deleteCubit = getIt<VehicleDeleteCubit>()..reset();
     showModalBottomSheet(
       context: context,
       backgroundColor: AppColors.darkSurface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder: (bottomSheetContext) =>
-          GarageOptionsBottomSheet(vehicle: vehicle),
+      builder: (bottomSheetContext) => BlocProvider<VehicleCubit>.value(
+        value: vehicleCubit,
+        child: BlocProvider<VehicleDeleteCubit>.value(
+          value: deleteCubit,
+          child: BlocListener<VehicleDeleteCubit, VehicleDeleteState>(
+            listener: (ctx, state) {
+              state.whenOrNull(
+                success: (_) {
+                  Navigator.pop(ctx);
+                  ScaffoldMessenger.of(ctx).showSnackBar(
+                    const SnackBar(
+                      content: Text(VehicleStrings.vehicleDeleted),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                },
+                error: (message) {
+                  ScaffoldMessenger.of(ctx).showSnackBar(
+                    SnackBar(
+                      content: Text(message),
+                      backgroundColor: ctx.colorScheme.error,
+                    ),
+                  );
+                },
+              );
+            },
+            child: GarageOptionsBottomSheet(vehicle: vehicle),
+          ),
+        ),
+      ),
     );
   }
 
@@ -70,7 +102,11 @@ class GarageOptionsBottomSheet extends StatelessWidget {
             ),
             onTap: () {
               Navigator.pop(context);
-              context.read<VehicleCubit>().deleteVehicleLocally(vehicle.id!);
+              final vehicleCubit = context.read<VehicleCubit>();
+              context.read<VehicleDeleteCubit>().deleteVehicle(
+                vehicle.id!,
+                availableVehicles: vehicleCubit.availableVehicles,
+              );
             },
           ),
           const SizedBox(height: 16),

@@ -87,6 +87,7 @@ class EventFormBasicInfoSection extends StatelessWidget {
           name: EventFormFields.city,
           labelText: EventStrings.eventCity,
           suffixIcon: const Icon(Icons.search),
+          suggestionsPrefixIcon: Icons.category,
           isRequired: true,
           hintText: EventStrings.eventCityHint,
           suggestions: ColombiaCitiesData.search,

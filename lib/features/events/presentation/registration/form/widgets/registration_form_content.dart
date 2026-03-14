@@ -62,7 +62,9 @@ class RegistrationFormContent extends StatelessWidget {
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.firstName,
-          decoration: const InputDecoration(labelText: RegistrationStrings.firstName),
+          decoration: const InputDecoration(
+            labelText: RegistrationStrings.firstName,
+          ),
           textCapitalization: TextCapitalization.words,
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(
@@ -77,7 +79,9 @@ class RegistrationFormContent extends StatelessWidget {
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.lastName,
-          decoration: const InputDecoration(labelText: RegistrationStrings.lastName),
+          decoration: const InputDecoration(
+            labelText: RegistrationStrings.lastName,
+          ),
           textCapitalization: TextCapitalization.words,
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(
@@ -104,7 +108,9 @@ class RegistrationFormContent extends StatelessWidget {
         FormBuilderDateTimePicker(
           name: RegistrationFormFields.birthDate,
           inputType: InputType.date,
-          decoration: const InputDecoration(labelText: RegistrationStrings.birthDate),
+          decoration: const InputDecoration(
+            labelText: RegistrationStrings.birthDate,
+          ),
           lastDate: DateTime.now(),
           validator: FormBuilderValidators.required(
             errorText: RegistrationStrings.birthDateRequired,
@@ -113,7 +119,9 @@ class RegistrationFormContent extends StatelessWidget {
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.phone,
-          decoration: const InputDecoration(labelText: RegistrationStrings.phone),
+          decoration: const InputDecoration(
+            labelText: RegistrationStrings.phone,
+          ),
           keyboardType: TextInputType.phone,
           validator: FormBuilderValidators.required(
             errorText: RegistrationStrings.phoneRequired,
@@ -122,7 +130,9 @@ class RegistrationFormContent extends StatelessWidget {
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.email,
-          decoration: const InputDecoration(labelText: RegistrationStrings.email),
+          decoration: const InputDecoration(
+            labelText: RegistrationStrings.email,
+          ),
           keyboardType: TextInputType.emailAddress,
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(
@@ -166,7 +176,9 @@ class RegistrationFormContent extends StatelessWidget {
         const SizedBox(height: 12),
         FormBuilderDropdown<BloodType>(
           name: RegistrationFormFields.bloodType,
-          decoration: const InputDecoration(labelText: RegistrationStrings.bloodType),
+          decoration: const InputDecoration(
+            labelText: RegistrationStrings.bloodType,
+          ),
           items: BloodType.values
               .map(
                 (type) =>

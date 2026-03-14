@@ -37,9 +37,7 @@ class SelectedVehicleCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
-                vehicle.vehicleType == VehicleType.motorcycle
-                    ? Icons.two_wheeler_rounded
-                    : Icons.directions_car_rounded,
+                Icons.two_wheeler_rounded,
                 color: context.colorScheme.primary,
                 size: 24,
               ),

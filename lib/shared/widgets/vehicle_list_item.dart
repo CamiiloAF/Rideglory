@@ -53,9 +53,7 @@ class VehicleListItem extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
-                      vehicle.vehicleType == VehicleType.motorcycle
-                          ? Icons.motorcycle_rounded
-                          : Icons.directions_car_rounded,
+                      Icons.motorcycle_rounded,
                       color: isSelected ? Colors.white : context.primaryColor,
                       size: 24,
                     ),

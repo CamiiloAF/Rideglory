@@ -7,7 +7,6 @@ import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/core/services/image_storage_service.dart';
-import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/add_vehicle_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/update_vehicle_usecase.dart';
@@ -43,6 +42,10 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
     }
   }
 
+  void clearLocalImage() {
+    emit(state.copyWith(localImagePath: null));
+  }
+
   Future<void> saveVehicle(VehicleModel vehicle) async {
     emit(state.copyWith(vehicleResult: const ResultState.loading()));
 
@@ -74,10 +77,13 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
         ),
       );
     } catch (e) {
+      final message = e is DomainException
+          ? e.message
+          : e.toString();
       emit(
         state.copyWith(
           vehicleResult: ResultState.error(
-            error: DomainException(message: e.toString()),
+            error: DomainException(message: message),
           ),
         ),
       );
@@ -143,10 +149,6 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
                   ) ??
                   0
             : 0,
-        distanceUnit: formData[VehicleFormFields.distanceUnit] as DistanceUnit,
-        vehicleType:
-            formData[VehicleFormFields.vehicleType] as VehicleType? ??
-            VehicleType.motorcycle,
         licensePlate:
             (formData[VehicleFormFields.licensePlate] as String?)?.isEmpty ??
                 true

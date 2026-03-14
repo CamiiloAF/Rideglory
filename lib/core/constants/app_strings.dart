@@ -28,6 +28,14 @@ abstract class AppStrings {
   static const String tryAgain = 'Intentar nuevamente';
   static const String noInternet = 'Sin conexión a internet';
 
+  // Image upload errors
+  static const String imageUploadFailed =
+      'No se pudo subir la imagen. Revisa tu conexión e intenta de nuevo.';
+  static const String imageUploadCancelled =
+      'La subida de la imagen fue cancelada.';
+  static const String imageUploadNotFound =
+      'No se pudo completar la subida. Intenta de nuevo en unos segundos.';
+
   // Empty states
   static const String noData = 'No hay datos';
   static const String noResults = 'No se encontraron resultados';

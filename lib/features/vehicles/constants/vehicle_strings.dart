@@ -58,7 +58,7 @@ class VehicleStrings {
   static const String vehicleBrandHint = 'Ej. Yamaha';
   static const String vehicleModelHint = 'Ej. MT-07';
   static const String vehicleYearHint = 'Ej. 2022';
-  static const String vehiclePlateHint = 'ABC-123';
+  static const String vehiclePlateHint = 'Ej. ABC123';
   static const String vehicleVinHint = '17 caracteres';
 
   // Image upload
@@ -94,27 +94,25 @@ class VehicleStrings {
   static const String nameRequired = 'El nombre es requerido';
   static const String vehicleTypeRequired = 'El tipo de vehículo es requerido';
   static const String brandRequired = 'La marca es requerida';
+  static const String brandMustBeFromList =
+      'Selecciona una marca de la lista de sugerencias';
   static const String yearRequired = 'El año es requerido';
   static const String minCharacters = 'Mínimo 3 caracteres';
   static const String invalidYear = 'Año inválido';
 
   // Additional form fields
   static const String purchaseDate = 'Fecha de compra';
+  static const String purchaseDateHint = 'Ej. 24/12/2025';
 
   // Vehicle types
   static const String car = 'Carro';
   static const String motorcycle = 'Moto';
 
-  // Units
-  static const String kilometers = 'Kilómetros';
-  static const String miles = 'Millas';
-
   // Garage V1 Design Strings
-  static const String quickInfo = 'INFO RÁPIDA';
-  static const String licensePlateLabel = 'PLACA';
-  static const String currentMileageLabel = 'KILOMETRAJE ACTUAL';
-  static const String fullSpecs = 'ESPECIFICACIONES COMPLETAS';
-  static const String garageOverview = 'RESUMEN DEL GARAJE';
+  static const String quickInfo = 'Info rápida';
+  static const String currentMileageLabel = 'Kilometraje actual';
+  static const String fullSpecs = 'Especificaciones completas';
+  static const String garageOverview = 'Resumen del garaje';
   static const String total = 'TOTAL';
   static const String lastRide = 'ÚLTIMO VIAJE';
   static const String allVehicles = 'Todos';

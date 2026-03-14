@@ -43,6 +43,7 @@ class HomeVehicleInfoRow extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
+                  // TODO: Add the next oil change mileage
                   '${HomeStrings.nextOilChange} ${vehicle.currentMileage + 500} km',
                   style: const TextStyle(
                     color: AppColors.primary,

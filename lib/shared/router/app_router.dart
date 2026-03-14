@@ -117,7 +117,7 @@ class AppRouter {
                 builder: (context, state) => const GaragePage(),
               ),
             ],
-          ),
+          ), 
           StatefulShellBranch(
             routes: [
               GoRoute(
