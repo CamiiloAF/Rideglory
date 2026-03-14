@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
-import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
-import 'package:rideglory/features/vehicles/presentation/widgets/vehicle_image_picker.dart';
+import 'package:rideglory/core/data/colombia_motos_brands_data.dart';
+import 'package:rideglory/shared/widgets/form/app_image_picker.dart';
+import 'package:rideglory/shared/widgets/form/app_autocomplete_field.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
 import 'package:rideglory/shared/widgets/form/app_date_picker.dart';
-import 'package:rideglory/shared/widgets/form/app_dropdown.dart';
+import 'package:rideglory/shared/widgets/form/app_mileage_field.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
-import 'package:rideglory/shared/widgets/form/mileages_and_unit_fields.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_form_fields.dart';
@@ -38,22 +36,23 @@ class VehicleForm extends StatelessWidget {
       builder: (context, state) {
         return FormBuilder(
           key: formKey,
-          initialValue:
-              initialValue ??
-              {
-                VehicleFormFields.distanceUnit: DistanceUnit.kilometers,
-                VehicleFormFields.vehicleType: VehicleType.motorcycle,
-              },
+          initialValue: initialValue ?? <String, dynamic>{},
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              VehicleImagePicker(
+              AppImagePicker(
                 imageUrl: state.vehicle?.imageUrl,
-                localImage: state.localImagePath != null
-                    ? XFile(state.localImagePath!)
-                    : null,
+                localImagePath: state.localImagePath,
                 onPickImage: () =>
                     context.read<VehicleFormCubit>().pickImageLocally(),
+                onClearTap: state.localImagePath != null
+                    ? () => context.read<VehicleFormCubit>().clearLocalImage()
+                    : null,
+                title: VehicleStrings.uploadPhoto,
+                hint: VehicleStrings.selectImage,
+                uploadButtonLabel: VehicleStrings.uploadPhoto,
+                showGenerateWithAI: false,
+                labelText: VehicleStrings.vehiclePhoto,
               ),
               const SizedBox(height: 24),
               AppTextField(
@@ -74,34 +73,26 @@ class VehicleForm extends StatelessWidget {
                 ]),
               ),
               const SizedBox(height: 16),
-
-              AppDropdown<VehicleType>(
-                name: VehicleFormFields.vehicleType,
-                labelText: VehicleStrings.vehicleType,
-                validator: FormBuilderValidators.required(
-                  errorText: VehicleStrings.vehicleTypeRequired,
-                ),
-                prefixIcon: const Icon(Icons.category),
-                items: VehicleType.values
-                    .map(
-                      (type) => DropdownMenuItem(
-                        value: type,
-                        child: Text(type.label),
-                      ),
-                    )
-                    .toList(),
-              ),
-              const SizedBox(height: 16),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Expanded(
-                    child: AppTextField(
+                  Expanded(
+                    child: AppAutocompleteField(
                       name: VehicleFormFields.brand,
                       labelText: VehicleStrings.vehicleBrand,
                       hintText: VehicleStrings.vehicleBrandHint,
-                      prefixIcon: Icons.local_offer,
-                      textInputAction: TextInputAction.next,
+                      suggestionsPrefixIcon: Icons.category,
+                      suggestions: ColombiaMotosBrandsData.search,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return null;
+                        }
+                        const allowed = ColombiaMotosBrandsData.brands;
+                        final match = allowed.any((b) => b == value.trim());
+                        return match
+                            ? null
+                            : VehicleStrings.brandMustBeFromList;
+                      },
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -143,10 +134,9 @@ class VehicleForm extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              const MileagesAndUnitFields(
-                validatorsType: MileageValidatorsType.currentMileage,
-                mileageFieldName: VehicleFormFields.currentMileage,
-                distanceUnitFieldName: VehicleFormFields.distanceUnit,
+              const AppMileageField(
+                name: VehicleFormFields.currentMileage,
+                labelText: VehicleStrings.currentMileageLabel,
                 textInputAction: TextInputAction.next,
               ),
               const SizedBox(height: 16),
@@ -156,6 +146,8 @@ class VehicleForm extends StatelessWidget {
                 labelText: VehicleStrings.vehiclePlate,
                 hintText: VehicleStrings.vehiclePlateHint,
                 prefixIcon: Icons.confirmation_number,
+                maxLength: 6,
+                textCapitalization: TextCapitalization.characters,
                 textInputAction: TextInputAction.next,
               ),
               const SizedBox(height: 16),
@@ -173,6 +165,8 @@ class VehicleForm extends StatelessWidget {
                 fieldName: VehicleFormFields.purchaseDate,
                 labelText: VehicleStrings.purchaseDate,
                 lastDate: DateTime.now(),
+                hintText: VehicleStrings.purchaseDateHint,
+                prefixIcon: const Icon(Icons.calendar_today),
               ),
               const SizedBox(height: 16),
 

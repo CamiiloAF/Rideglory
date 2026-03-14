@@ -29,7 +29,7 @@ class VehicleQuickInfoSection extends StatelessWidget {
             Expanded(
               child: VehicleInfoCard(
                 icon: Icons.subtitles_outlined, // License Plate icon equivalent
-                label: VehicleStrings.licensePlateLabel,
+                label: VehicleStrings.vehiclePlate,
                 value: vehicle.licensePlate ?? '-',
               ),
             ),

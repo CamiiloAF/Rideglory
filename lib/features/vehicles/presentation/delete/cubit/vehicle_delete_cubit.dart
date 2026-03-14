@@ -20,37 +20,14 @@ class VehicleDeleteCubit extends Cubit<VehicleDeleteState> {
     String vehicleId, {
     required List<VehicleModel> availableVehicles,
   }) async {
-    // Check if this is the last vehicle
-    if (availableVehicles.length == 1) {
-      emit(
-        const VehicleDeleteState.errorLastVehicle(
-          message:
-              'No puedes eliminar tu único vehículo. Una cuenta debe tener al menos un vehículo registrado.',
-        ),
-      );
-      return;
-    }
-
     emit(const VehicleDeleteState.loading());
 
     final result = await _deleteVehicleUseCase(vehicleId);
 
     result.fold(
       (error) => emit(VehicleDeleteState.error(message: error.message)),
-      (_) async {
-        // Check if deleted vehicle was the main vehicle
-        final currentVehicle = _vehicleCubit.currentVehicle;
-        if (currentVehicle?.id == vehicleId) {
-          // Get remaining vehicles after deletion
-          final remainingVehicles = availableVehicles
-              .where((v) => v.id != vehicleId)
-              .toList();
-
-          if (remainingVehicles.isNotEmpty) {
-            // Select the first remaining vehicle as new main
-            await _vehicleCubit.setMainVehicle(remainingVehicles.first.id!);
-          }
-        }
+      (_) {
+        _vehicleCubit.deleteVehicleLocally(vehicleId);
         emit(VehicleDeleteState.success(deletedId: vehicleId));
       },
     );

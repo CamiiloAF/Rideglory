@@ -273,7 +273,7 @@ class VehicleCard extends StatelessWidget {
                     InfoChip(
                       icon: Icons.speed_rounded,
                       label:
-                          '${vehicle.currentMileage} ${vehicle.distanceUnit.label}',
+                          '${vehicle.currentMileage} km',
                       color: AppColors.primary,
                     ),
                     if (vehicle.year != null)
@@ -299,10 +299,8 @@ class VehicleCard extends StatelessWidget {
   }
 
   Widget _buildPlaceholderIcon() {
-    return Icon(
-      vehicle.vehicleType == VehicleType.motorcycle
-          ? Icons.two_wheeler_rounded
-          : Icons.directions_car_rounded,
+    return const Icon(
+      Icons.two_wheeler_rounded,
       color: AppColors.primary,
       size: 28,
     );

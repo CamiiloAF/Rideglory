@@ -4,6 +4,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 
+import '../constants/app_strings.dart';
+import '../exceptions/domain_exception.dart';
+
 @injectable
 class ImageStorageService {
   ImageStorageService(this._storage);
@@ -34,9 +37,32 @@ class ImageStorageService {
     required String storagePath,
   }) async {
     final file = File(image.path);
+    if (!file.existsSync()) {
+      throw const DomainException(message: AppStrings.imageUploadFailed);
+    }
     final ref = _storage.ref().child(storagePath);
-    final uploadTask = await ref.putFile(file);
-    return uploadTask.ref.getDownloadURL();
+    try {
+      await ref.putFile(file);
+      return ref.getDownloadURL();
+    } on FirebaseException catch (e) {
+      throw DomainException(message: _userMessageForStorageException(e));
+    }
+  }
+
+  /// Maps Firebase Storage error codes to user-facing messages.
+  String _userMessageForStorageException(FirebaseException e) {
+    final code = e.code.toLowerCase();
+    if (code.contains('cancel')) {
+      return AppStrings.imageUploadCancelled;
+    }
+    if (code.contains('object-not-found') ||
+        code.contains('not-found') ||
+        code.contains('unauthenticated') ||
+        code.contains('unauthorized') ||
+        code.contains('bucket-not-found')) {
+      return AppStrings.imageUploadNotFound;
+    }
+    return AppStrings.imageUploadFailed;
   }
 
   Future<void> deleteImage(String imageUrl) async {

@@ -19,23 +19,13 @@ class HomeEventsSection extends StatelessWidget {
       children: [
         const Padding(
           padding: EdgeInsets.fromLTRB(20, 0, 20, 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                HomeStrings.upcomingRides,
-                style: TextStyle(
-                  color: AppColors.darkTextPrimary,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              Icon(
-                Icons.tune_outlined,
-                color: AppColors.darkTextSecondary,
-                size: 20,
-              ),
-            ],
+          child: Text(
+            HomeStrings.upcomingRides,
+            style: TextStyle(
+              color: AppColors.darkTextPrimary,
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
         events.isEmpty

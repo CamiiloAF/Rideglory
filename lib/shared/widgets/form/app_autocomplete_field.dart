@@ -9,7 +9,7 @@ class AppAutocompleteField extends StatefulWidget {
     required this.name,
     required this.labelText,
     required this.suggestions,
-    this.prefixIcon,
+    required this.suggestionsPrefixIcon,
     this.isRequired = false,
     this.validator,
     this.hintText,
@@ -20,7 +20,7 @@ class AppAutocompleteField extends StatefulWidget {
   final String name;
   final String labelText;
   final List<String> Function(String query) suggestions;
-  final IconData? prefixIcon;
+  final IconData suggestionsPrefixIcon;
   final bool isRequired;
   final String? Function(String?)? validator;
   final String? hintText;
@@ -91,6 +91,7 @@ class _AppAutocompleteFieldState extends State<AppAutocompleteField> {
         link: _layerLink,
         suggestions: _filteredSuggestions,
         onSelect: (val) => _select(val, field),
+        prefixIcon: widget.suggestionsPrefixIcon,
       ),
     );
     Overlay.of(context).insert(_overlayEntry!);
@@ -127,8 +128,11 @@ class _AppAutocompleteFieldState extends State<AppAutocompleteField> {
                 decoration: InputDecoration(
                   hintText: widget.hintText,
                   errorText: field.errorText,
-                  prefixIcon: widget.prefixIcon != null
-                      ? Icon(widget.prefixIcon, color: AppColors.darkInputIcon)
+                  prefixIcon: widget.suggestionsPrefixIcon != null
+                      ? Icon(
+                          widget.suggestionsPrefixIcon,
+                          color: AppColors.darkInputIcon,
+                        )
                       : null,
                   suffixIcon: _controller.text.isNotEmpty
                       ? IconButton(
@@ -157,12 +161,13 @@ class _SuggestionsOverlay extends StatelessWidget {
     required this.link,
     required this.suggestions,
     required this.onSelect,
+    required this.prefixIcon,
   });
 
   final LayerLink link;
   final List<String> suggestions;
   final void Function(String) onSelect;
-
+  final IconData prefixIcon;
   static const double _maxHeight = 280;
   static const double _width = 300;
 
@@ -209,11 +214,7 @@ class _SuggestionsOverlay extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        const Icon(
-                          Icons.location_on_outlined,
-                          size: 16,
-                          color: AppColors.primary,
-                        ),
+                        Icon(prefixIcon, color: AppColors.primary),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(

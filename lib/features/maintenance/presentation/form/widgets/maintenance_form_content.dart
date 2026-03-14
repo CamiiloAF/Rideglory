@@ -13,6 +13,7 @@ import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/widgets/form/app_date_picker.dart';
 import 'package:rideglory/shared/widgets/form/app_dropdown.dart';
+import 'package:rideglory/shared/widgets/form/app_mileage_field.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 
 class MaintenanceFormContent extends StatefulWidget {
@@ -76,7 +77,6 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
 
     return {
       MaintenanceFormFields.date: DateTime.now(),
-      MaintenanceFormFields.distanceUnit: DistanceUnit.kilometers,
       MaintenanceFormFields.type: MaintenanceType.oilChange,
       MaintenanceFormFields.receiveAlert: false,
       MaintenanceFormFields.receiveMileageAlert: false,
@@ -226,21 +226,10 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
             const SizedBox(height: 20),
 
             // 5. Kilometraje Actual
-            AppTextField(
+            const AppMileageField(
               name: MaintenanceFormFields.currentMileage,
               labelText: MaintenanceStrings.maintenanceMileage,
-              isRequired: true,
-              suffixText: 'KM',
-              suffixStyle: context.textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: context.colorScheme.onSurfaceVariant,
-              ),
-              keyboardType: TextInputType.number,
               textInputAction: TextInputAction.next,
-              validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(),
-                FormBuilderValidators.numeric(),
-              ]),
             ),
             const SizedBox(height: 20),
 
@@ -364,12 +353,11 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  const AppTextField(
+                  const AppMileageField(
                     name: MaintenanceFormFields.nextMaintenanceMileage,
                     labelText: MaintenanceStrings.nextMaintenanceMileageLabel,
+                    isRequired: false,
                     hintText: 'Ej: 15000',
-                    suffixText: 'KM',
-                    keyboardType: TextInputType.number,
                   ),
                 ],
               ),
