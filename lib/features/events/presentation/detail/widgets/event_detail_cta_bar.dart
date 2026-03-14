@@ -27,7 +27,7 @@ class EventDetailCTABar extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.darkSurface,
-        border: Border(top: BorderSide(color: AppColors.darkBorder)),
+        border: const Border(top: BorderSide(color: AppColors.darkBorder)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.3),
@@ -46,7 +46,7 @@ class EventDetailCTABar extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         EventStrings.totalParticipation,
                         style: TextStyle(
                           color: AppColors.darkTextSecondary,

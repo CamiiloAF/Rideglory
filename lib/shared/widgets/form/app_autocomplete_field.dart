@@ -196,7 +196,7 @@ class _SuggestionsOverlay extends StatelessWidget {
               physics: const BouncingScrollPhysics(),
               itemCount: suggestions.length,
               separatorBuilder: (_, _) =>
-                  Divider(height: 1, color: AppColors.darkBorder),
+                  const Divider(height: 1, color: AppColors.darkBorder),
               itemBuilder: (_, i) {
                 final value = suggestions[i];
                 return InkWell(

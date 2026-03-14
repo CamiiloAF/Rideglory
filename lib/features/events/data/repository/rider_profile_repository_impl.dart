@@ -22,7 +22,7 @@ class RiderProfileRepositoryImpl implements RiderProfileRepository {
     final userId = _authService.currentUser?.uid;
     if (userId == null) {
       return Future.value(
-        Left(DomainException(message: 'No user is currently authenticated.')),
+        const Left(DomainException(message: 'No user is currently authenticated.')),
       );
     }
 

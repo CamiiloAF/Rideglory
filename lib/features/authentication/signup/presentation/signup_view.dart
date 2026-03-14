@@ -42,7 +42,7 @@ class _SignupViewState extends State<SignupView> {
           if (state.isAuthenticatedWithVehicles) {
             context.pushReplacementNamed(AppRoutes.maintenances);
           } else if (state.isAuthenticatedWithoutVehicles) {
-            context.pushReplacementNamed(AppRoutes.vehicleOnboarding);
+            context.pushReplacementNamed(AppRoutes.home);
           } else if (state.hasError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

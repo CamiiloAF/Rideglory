@@ -74,7 +74,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurface.withOpacity(0.3),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -167,7 +167,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                       ),
                       const SizedBox(height: 16),
                       // City filter
-                      AppTextField(
+                      const AppTextField(
                         name: EventFilterFormFields.city,
                         labelText: EventStrings.filterByCity,
                         prefixIcon: Icons.location_city_outlined,
@@ -204,11 +204,11 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                       ),
                       const SizedBox(height: 16),
                       // Boolean filters
-                      AppCheckbox(
+                      const AppCheckbox(
                         name: EventFilterFormFields.freeOnly,
                         title: EventStrings.filterByFreeOnly,
                       ),
-                      AppCheckbox(
+                      const AppCheckbox(
                         name: EventFilterFormFields.multiBrandOnly,
                         title: EventStrings.filterByMultiBrand,
                       ),

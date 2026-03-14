@@ -107,7 +107,7 @@ class _DifficultyPicker extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               EventStrings.difficulty,
               style: TextStyle(
                 color: AppColors.darkTextSecondary,
@@ -169,7 +169,7 @@ class _DifficultyPicker extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 6, left: 4),
                 child: Text(
                   field.errorText!,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.darkTextSecondary,
                     fontSize: 12,
                   ),
@@ -199,7 +199,7 @@ class _EventTypePicker extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               EventStrings.eventType,
               style: TextStyle(
                 color: AppColors.darkTextSecondary,
@@ -254,7 +254,7 @@ class _EventTypePicker extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 6, left: 4),
                 child: Text(
                   field.errorText!,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: AppColors.darkTextSecondary,
                     fontSize: 12,
                   ),

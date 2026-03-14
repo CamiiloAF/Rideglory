@@ -17,7 +17,7 @@ class AttendeeActionButton extends StatelessWidget {
     return FilledButton.tonal(
       onPressed: onPressed,
       style: FilledButton.styleFrom(
-        backgroundColor: color.withOpacity(0.15),
+        backgroundColor: color.withValues(alpha: 0.15),
         foregroundColor: color,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         textStyle: Theme.of(context).textTheme.labelSmall,

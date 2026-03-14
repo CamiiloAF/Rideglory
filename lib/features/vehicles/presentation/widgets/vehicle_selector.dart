@@ -57,7 +57,7 @@ class VehicleSelector extends StatelessWidget {
                   child: DropdownButton<VehicleModel>(
                     value: currentVehicle,
                     isExpanded: true,
-                    hint: Text(VehicleStrings.selectVehicle),
+                    hint: const Text(VehicleStrings.selectVehicle),
                     items: vehicles.map((vehicle) {
                       return DropdownMenuItem<VehicleModel>(
                         value: vehicle,

@@ -95,7 +95,7 @@ class VehicleForm extends StatelessWidget {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
+                  const Expanded(
                     child: AppTextField(
                       name: VehicleFormFields.brand,
                       labelText: VehicleStrings.vehicleBrand,
@@ -134,7 +134,7 @@ class VehicleForm extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              AppTextField(
+              const AppTextField(
                 name: VehicleFormFields.model,
                 labelText: VehicleStrings.vehicleModel,
                 hintText: VehicleStrings.vehicleModelHint,
@@ -143,7 +143,7 @@ class VehicleForm extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              MileagesAndUnitFields(
+              const MileagesAndUnitFields(
                 validatorsType: MileageValidatorsType.currentMileage,
                 mileageFieldName: VehicleFormFields.currentMileage,
                 distanceUnitFieldName: VehicleFormFields.distanceUnit,
@@ -151,7 +151,7 @@ class VehicleForm extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              AppTextField(
+              const AppTextField(
                 name: VehicleFormFields.licensePlate,
                 labelText: VehicleStrings.vehiclePlate,
                 hintText: VehicleStrings.vehiclePlateHint,
@@ -160,7 +160,7 @@ class VehicleForm extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              AppTextField(
+              const AppTextField(
                 name: VehicleFormFields.vin,
                 labelText: VehicleStrings.vehicleVin,
                 hintText: VehicleStrings.vehicleVinHint,

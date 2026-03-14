@@ -81,7 +81,7 @@ class EventsDataView extends StatelessWidget {
         const EventTypeFilterChips(),
         const SizedBox(height: 8),
         events.isEmpty
-            ? NoSearchResultsEmptyWidget()
+            ? const NoSearchResultsEmptyWidget()
             : Expanded(
                 child: RefreshIndicator(
                   onRefresh: () => context.read<EventsCubit>().fetchEvents(),

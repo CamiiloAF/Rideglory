@@ -24,7 +24,7 @@ class LoginSocialRow extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            Expanded(
+            const Expanded(
               child: LoginSocialButton(
                 label: AuthStrings.appleLabel,
                 icon: Icons.apple,

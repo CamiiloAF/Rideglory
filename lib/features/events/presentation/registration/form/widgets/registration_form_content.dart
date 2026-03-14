@@ -58,11 +58,11 @@ class RegistrationFormContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4),
-        FormSectionHeader(title: RegistrationStrings.personalInfo),
+        const FormSectionHeader(title: RegistrationStrings.personalInfo),
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.firstName,
-          decoration: InputDecoration(labelText: RegistrationStrings.firstName),
+          decoration: const InputDecoration(labelText: RegistrationStrings.firstName),
           textCapitalization: TextCapitalization.words,
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(
@@ -77,7 +77,7 @@ class RegistrationFormContent extends StatelessWidget {
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.lastName,
-          decoration: InputDecoration(labelText: RegistrationStrings.lastName),
+          decoration: const InputDecoration(labelText: RegistrationStrings.lastName),
           textCapitalization: TextCapitalization.words,
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(
@@ -92,7 +92,7 @@ class RegistrationFormContent extends StatelessWidget {
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.identificationNumber,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: RegistrationStrings.identificationNumber,
           ),
           keyboardType: TextInputType.number,
@@ -104,7 +104,7 @@ class RegistrationFormContent extends StatelessWidget {
         FormBuilderDateTimePicker(
           name: RegistrationFormFields.birthDate,
           inputType: InputType.date,
-          decoration: InputDecoration(labelText: RegistrationStrings.birthDate),
+          decoration: const InputDecoration(labelText: RegistrationStrings.birthDate),
           lastDate: DateTime.now(),
           validator: FormBuilderValidators.required(
             errorText: RegistrationStrings.birthDateRequired,
@@ -113,7 +113,7 @@ class RegistrationFormContent extends StatelessWidget {
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.phone,
-          decoration: InputDecoration(labelText: RegistrationStrings.phone),
+          decoration: const InputDecoration(labelText: RegistrationStrings.phone),
           keyboardType: TextInputType.phone,
           validator: FormBuilderValidators.required(
             errorText: RegistrationStrings.phoneRequired,
@@ -122,7 +122,7 @@ class RegistrationFormContent extends StatelessWidget {
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.email,
-          decoration: InputDecoration(labelText: RegistrationStrings.email),
+          decoration: const InputDecoration(labelText: RegistrationStrings.email),
           keyboardType: TextInputType.emailAddress,
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(
@@ -136,7 +136,7 @@ class RegistrationFormContent extends StatelessWidget {
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.residenceCity,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: RegistrationStrings.residenceCity,
           ),
           textCapitalization: TextCapitalization.words,
@@ -145,11 +145,11 @@ class RegistrationFormContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        FormSectionHeader(title: RegistrationStrings.medicalInfo),
+        const FormSectionHeader(title: RegistrationStrings.medicalInfo),
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.eps,
-          decoration: InputDecoration(labelText: RegistrationStrings.eps),
+          decoration: const InputDecoration(labelText: RegistrationStrings.eps),
           textCapitalization: TextCapitalization.words,
           validator: FormBuilderValidators.required(
             errorText: RegistrationStrings.epsRequired,
@@ -158,7 +158,7 @@ class RegistrationFormContent extends StatelessWidget {
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.medicalInsurance,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: RegistrationStrings.medicalInsurance,
           ),
           textCapitalization: TextCapitalization.words,
@@ -166,7 +166,7 @@ class RegistrationFormContent extends StatelessWidget {
         const SizedBox(height: 12),
         FormBuilderDropdown<BloodType>(
           name: RegistrationFormFields.bloodType,
-          decoration: InputDecoration(labelText: RegistrationStrings.bloodType),
+          decoration: const InputDecoration(labelText: RegistrationStrings.bloodType),
           items: BloodType.values
               .map(
                 (type) =>
@@ -178,11 +178,11 @@ class RegistrationFormContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        FormSectionHeader(title: RegistrationStrings.emergencyContact),
+        const FormSectionHeader(title: RegistrationStrings.emergencyContact),
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.emergencyContactName,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: RegistrationStrings.emergencyContactName,
           ),
           textCapitalization: TextCapitalization.words,
@@ -193,7 +193,7 @@ class RegistrationFormContent extends StatelessWidget {
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.emergencyContactPhone,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: RegistrationStrings.emergencyContactPhone,
           ),
           keyboardType: TextInputType.phone,
@@ -206,7 +206,7 @@ class RegistrationFormContent extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Expanded(
+            const Expanded(
               child: FormSectionHeader(title: RegistrationStrings.vehicleInfo),
             ),
             AppTextButton(
@@ -221,7 +221,7 @@ class RegistrationFormContent extends StatelessWidget {
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.vehicleBrand,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: RegistrationStrings.vehicleBrand,
           ),
           textCapitalization: TextCapitalization.words,
@@ -232,7 +232,7 @@ class RegistrationFormContent extends StatelessWidget {
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.vehicleReference,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: RegistrationStrings.vehicleReference,
           ),
           textCapitalization: TextCapitalization.words,
@@ -243,7 +243,7 @@ class RegistrationFormContent extends StatelessWidget {
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.licensePlate,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: RegistrationStrings.licensePlate,
           ),
           textCapitalization: TextCapitalization.characters,
@@ -254,7 +254,7 @@ class RegistrationFormContent extends StatelessWidget {
         const SizedBox(height: 12),
         FormBuilderTextField(
           name: RegistrationFormFields.vin,
-          decoration: InputDecoration(labelText: RegistrationStrings.vin),
+          decoration: const InputDecoration(labelText: RegistrationStrings.vin),
           textCapitalization: TextCapitalization.characters,
         ),
         const SizedBox(height: 32),

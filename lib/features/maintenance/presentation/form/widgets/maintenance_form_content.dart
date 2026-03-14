@@ -245,12 +245,12 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
             const SizedBox(height: 20),
 
             // 6. Costo del Mantenimiento
-            AppTextField(
+            const AppTextField(
               name: MaintenanceFormFields.cost,
               labelText: MaintenanceStrings.maintenanceCost,
               prefixIcon: Icons.attach_money,
               hintText: '0.00',
-              keyboardType: const TextInputType.numberWithOptions(
+              keyboardType: TextInputType.numberWithOptions(
                 decimal: true,
               ),
               textInputAction: TextInputAction.next,
@@ -258,7 +258,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
             const SizedBox(height: 20),
 
             // 7. Notas / Observaciones
-            AppTextField(
+            const AppTextField(
               name: MaintenanceFormFields.notes,
               labelText: MaintenanceStrings.maintenanceNotes,
               hintText: 'Detalles adicionales sobre el trabajo realizado...',
@@ -364,7 +364,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  AppTextField(
+                  const AppTextField(
                     name: MaintenanceFormFields.nextMaintenanceMileage,
                     labelText: MaintenanceStrings.nextMaintenanceMileageLabel,
                     hintText: 'Ej: 15000',

@@ -29,7 +29,6 @@ import '../../features/maintenance/presentation/list/maintenances/maintenances_p
 import '../../features/splash/presentation/splash_screen.dart';
 import '../../features/vehicles/presentation/form/vehicle_form_page.dart';
 import '../../features/vehicles/presentation/garage/garage_page.dart';
-import '../../features/vehicles/presentation/views/vehicle_onboarding_view.dart';
 import '../widgets/main_shell.dart';
 import 'app_routes.dart';
 
@@ -90,15 +89,6 @@ class AppRouter {
         name: AppRoutes.signup,
         builder: (context, state) {
           return const SignupView();
-        },
-      ),
-
-      // Onboarding routes
-      GoRoute(
-        path: AppRoutes.vehicleOnboarding,
-        name: AppRoutes.vehicleOnboarding,
-        builder: (context, state) {
-          return const VehicleOnboardingView();
         },
       ),
 

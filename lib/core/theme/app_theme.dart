@@ -167,7 +167,7 @@ class AppTheme {
             return const BorderSide(color: AppColors.primary, width: 2);
           }
           if (states.contains(WidgetState.disabled)) {
-            return BorderSide(color: AppColors.border, width: 1.5);
+            return const BorderSide(color: AppColors.border, width: 1.5);
           }
           return const BorderSide(color: AppColors.border, width: 1.5);
         }),

@@ -35,7 +35,7 @@ class EventFormBasicInfoSection extends StatelessWidget {
           suffixIcon: !isEditing
               ? Builder(
                   builder: (context) => IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.info_outline,
                       color: AppColors.darkInputIcon,
                     ),
@@ -43,9 +43,9 @@ class EventFormBasicInfoSection extends StatelessWidget {
                       final scaffoldMessenger = ScaffoldMessenger.of(context);
                       scaffoldMessenger.hideCurrentSnackBar();
                       scaffoldMessenger.showSnackBar(
-                        SnackBar(
+                        const SnackBar(
                           content: Text(EventStrings.eventNameCannotBeModified),
-                          duration: const Duration(seconds: 3),
+                          duration: Duration(seconds: 3),
                           behavior: SnackBarBehavior.floating,
                         ),
                       );
@@ -86,7 +86,7 @@ class EventFormBasicInfoSection extends StatelessWidget {
         AppAutocompleteField(
           name: EventFormFields.city,
           labelText: EventStrings.eventCity,
-          suffixIcon: Icon(Icons.search),
+          suffixIcon: const Icon(Icons.search),
           isRequired: true,
           hintText: EventStrings.eventCityHint,
           suggestions: ColombiaCitiesData.search,

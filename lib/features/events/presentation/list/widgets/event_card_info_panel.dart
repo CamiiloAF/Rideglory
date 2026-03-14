@@ -53,7 +53,7 @@ class EventCardInfoPanel extends StatelessWidget {
                       size: 17,
                       color: i < event.difficulty.value
                           ? context.colorScheme.primary
-                          : context.colorScheme.primary.withOpacity(0.22),
+                          : context.colorScheme.primary.withValues(alpha: 0.22),
                     ),
                   ),
                 ),

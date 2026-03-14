@@ -90,7 +90,7 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
     bool isSuccess = false;
     VehicleModel? firstVehicleSaved;
 
-    for (var vehicle in vehicles) {
+    for (final vehicle in vehicles) {
       final result = await _addVehicleUseCase(vehicle);
       final hasError = result.fold((error) {
         emit(state.copyWith(vehicleResult: ResultState.error(error: error)));

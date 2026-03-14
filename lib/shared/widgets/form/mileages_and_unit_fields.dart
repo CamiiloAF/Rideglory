@@ -34,7 +34,7 @@ class MileagesAndUnitFields extends StatefulWidget {
 class _MileagesAndUnitFieldsState extends State<MileagesAndUnitFields> {
   @override
   Widget build(BuildContext context) {
-    final labelText = MaintenanceStrings.currentMileage;
+    const labelText = MaintenanceStrings.currentMileage;
 
     if (!widget.showUnitDropdown) {
       return Column(

@@ -33,7 +33,7 @@ class EventDetailDestinationCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   EventStrings.finalDestination,
                   style: TextStyle(
                     color: AppColors.darkTextSecondary,

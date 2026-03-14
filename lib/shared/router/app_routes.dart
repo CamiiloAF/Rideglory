@@ -10,9 +10,6 @@ abstract class AppRoutes {
   static const String login = '/login';
   static const String signup = '/signup';
 
-  // Onboarding routes
-  static const String vehicleOnboarding = '/onboarding/vehicle';
-
   // Vehicle routes
   static const String garage = '/garage';
   static const String createVehicle = '/vehicles/create';

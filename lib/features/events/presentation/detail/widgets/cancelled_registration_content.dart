@@ -15,7 +15,7 @@ class CancelledRegistrationContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
+        const Row(
           children: [
             RegistrationStatusChip(status: RegistrationStatus.cancelled),
           ],

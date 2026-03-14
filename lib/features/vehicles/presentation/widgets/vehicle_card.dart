@@ -61,7 +61,7 @@ class VehicleCard extends StatelessWidget {
                             ? Image.network(
                                 vehicle.imageUrl!,
                                 fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) =>
+                                errorBuilder: (_, _, _) =>
                                     _buildPlaceholderIcon(),
                               )
                             : _buildPlaceholderIcon(),

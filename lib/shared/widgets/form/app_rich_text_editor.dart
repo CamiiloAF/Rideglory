@@ -95,7 +95,7 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
             iconButtonSelectedData: IconButtonData(
               color: colorScheme.onPrimary,
             ),
-            iconButtonUnselectedData: IconButtonData(
+            iconButtonUnselectedData: const IconButtonData(
               color: AppColors.darkTextSecondary,
             ),
           ),
@@ -129,9 +129,9 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
               child: Column(
                 children: [
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: AppColors.darkSurfaceHighest,
-                      borderRadius: const BorderRadius.vertical(
+                      borderRadius: BorderRadius.vertical(
                         top: Radius.circular(8),
                       ),
                     ),
@@ -276,7 +276,7 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: field.hasError
                       ? theme.colorScheme.error
-                      : theme.colorScheme.onSurface.withOpacity(0.6),
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
             ],

@@ -30,10 +30,8 @@ class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormBuilderState>();
 
   void _onAuthStateChanged(BuildContext context, AuthState state) {
-    if (state.isAuthenticatedWithVehicles) {
+    if (state.isAuthenticatedWithVehicles || state.isAuthenticatedWithoutVehicles) {
       context.pushReplacementNamed(AppRoutes.home);
-    } else if (state.isAuthenticatedWithoutVehicles) {
-      context.pushReplacementNamed(AppRoutes.vehicleOnboarding);
     } else if (state.hasError) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

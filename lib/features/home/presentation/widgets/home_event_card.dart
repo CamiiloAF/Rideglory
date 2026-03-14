@@ -7,7 +7,6 @@ import 'package:rideglory/features/home/presentation/widgets/home_event_default_
 import 'package:rideglory/features/home/presentation/widgets/home_event_difficulty_badge.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_event_gradient_overlay.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_event_view_details_button.dart';
-import 'package:rideglory/features/home/constants/home_strings.dart';
 
 class HomeEventCard extends StatelessWidget {
   const HomeEventCard({super.key, required this.event, required this.onTap});

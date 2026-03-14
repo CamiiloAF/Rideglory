@@ -19,9 +19,9 @@ class EventDetailMeetingPointSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           EventStrings.meetingPointLabel,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppColors.darkTextPrimary,
             fontSize: 19,
             fontWeight: FontWeight.w800,
@@ -43,7 +43,7 @@ class EventDetailMeetingPointSection extends StatelessWidget {
                 height: 168,
                 width: double.infinity,
                 color: _mapPlaceholderBackground,
-                child: Center(
+                child: const Center(
                   child: Icon(
                     Icons.place,
                     color: AppColors.primary,
@@ -60,9 +60,9 @@ class EventDetailMeetingPointSection extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             EventStrings.meetingPointLabel,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppColors.darkTextPrimary,
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
@@ -71,7 +71,7 @@ class EventDetailMeetingPointSection extends StatelessWidget {
                           const SizedBox(height: 4),
                           Text(
                             location,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: AppColors.darkTextSecondary,
                               fontSize: 13,
                             ),
@@ -87,23 +87,23 @@ class EventDetailMeetingPointSection extends StatelessWidget {
                         child: InkWell(
                           onTap: onViewMap,
                           borderRadius: BorderRadius.circular(10),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(
                               horizontal: 16,
                               vertical: 12,
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.send,
                                   color: Colors.white,
                                   size: 18,
                                 ),
-                                const SizedBox(width: 8),
+                                SizedBox(width: 8),
                                 Text(
                                   EventStrings.viewMap,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 13,
                                     fontWeight: FontWeight.w700,

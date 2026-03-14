@@ -160,7 +160,7 @@ class AuthCubit extends Cubit<AuthState> {
     } on AuthException catch (e) {
       emit(AuthState.error(e.message));
     } catch (e) {
-      emit(AuthState.error(AuthStrings.failedToSignOut));
+      emit(const AuthState.error(AuthStrings.failedToSignOut));
     }
   }
 

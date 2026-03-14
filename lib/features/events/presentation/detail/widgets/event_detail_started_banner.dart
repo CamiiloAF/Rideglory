@@ -34,7 +34,7 @@ class EventDetailStartedBanner extends StatelessWidget {
                     color: AppColors.primary.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Text(
+                  child: const Text(
                     EventStrings.eventLiveNow,
                     style: TextStyle(
                       color: AppColors.primary,

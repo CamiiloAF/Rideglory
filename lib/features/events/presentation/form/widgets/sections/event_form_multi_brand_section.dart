@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/core/data/colombia_motos_brands_data.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/event_form_section_card.dart';
-import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 
 class EventFormMultiBrandSection extends StatelessWidget {
   const EventFormMultiBrandSection({super.key});
@@ -27,7 +25,7 @@ class EventFormMultiBrandSection extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Flexible(child: Text(EventStrings.multiBrandAllowAny)),
+                  const Flexible(child: Text(EventStrings.multiBrandAllowAny)),
                   Switch(
                     value: isMultiBrand,
                     onChanged: (v) => isField.didChange(v),
@@ -132,8 +130,8 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
                   physics: const BouncingScrollPhysics(),
                   padding: EdgeInsets.zero,
                   itemCount: _filtered.length,
-                  separatorBuilder: (_, __) =>
-                      Divider(height: 1, color: AppColors.darkBorder),
+                  separatorBuilder: (_, _) =>
+                      const Divider(height: 1, color: AppColors.darkBorder),
                   itemBuilder: (_, i) => InkWell(
                     onTap: () => _add(_filtered[i]),
                     child: Padding(
@@ -187,7 +185,7 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
           child: TextFormField(
             controller: _controller,
             onChanged: _onChanged,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: EventStrings.searchBrandsPlaceholder,
               suffixIcon: Icon(Icons.search, color: AppColors.darkInputIcon),
             ),

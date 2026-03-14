@@ -43,7 +43,7 @@ class EventRepositoryImpl implements EventRepository {
     final userId = _authService.currentUser?.uid;
     if (userId == null) {
       return Future.value(
-        Left(DomainException(message: 'No user is currently authenticated.')),
+        const Left(DomainException(message: 'No user is currently authenticated.')),
       );
     }
 
@@ -69,7 +69,7 @@ class EventRepositoryImpl implements EventRepository {
         final doc = await _firestore.collection(_collectionName).doc(id).get();
 
         if (!doc.exists || doc.data() == null) {
-          throw DomainException(message: 'Evento no encontrado.');
+          throw const DomainException(message: 'Evento no encontrado.');
         }
 
         return EventDto.fromJson(doc.data()!).copyWith(id: doc.id);
@@ -118,7 +118,7 @@ class EventRepositoryImpl implements EventRepository {
     return executeService(
       function: () async {
         await _firestore.collection(_collectionName).doc(id).delete();
-        return Nothing();
+        return const Nothing();
       },
     );
   }

@@ -17,7 +17,7 @@ class MyRegistrationsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppAppBar(title: RegistrationStrings.myRegistrations),
+      appBar: const AppAppBar(title: RegistrationStrings.myRegistrations),
       body:
           BlocBuilder<
             MyRegistrationsCubit,
@@ -82,7 +82,7 @@ class MyRegistrationsView extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(RegistrationStrings.errorLoadingRegistrations),
+                      const Text(RegistrationStrings.errorLoadingRegistrations),
                       const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: () => context
