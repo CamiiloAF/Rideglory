@@ -6,7 +6,7 @@ import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/authentication/constants/auth_strings.dart';
-import 'package:rideglory/features/events/constants/registration_strings.dart';
+import 'package:rideglory/features/event_registration/constants/registration_strings.dart';
 import 'package:rideglory/features/profile/constants/profile_strings.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';

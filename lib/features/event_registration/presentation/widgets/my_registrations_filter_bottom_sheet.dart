@@ -1,86 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
+import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
 import 'package:rideglory/shared/widgets/form/app_text_button.dart';
 
-class AttendeesFilterBottomSheet extends StatefulWidget {
-  final Set<RegistrationStatus> initialStatuses;
-
-  const AttendeesFilterBottomSheet({
+class MyRegistrationsFilterBottomSheet extends StatefulWidget {
+  const MyRegistrationsFilterBottomSheet({
     super.key,
-    required this.initialStatuses,
+    required this.cubitContext,
   });
 
-  static Future<Set<RegistrationStatus>?> show({
-    required BuildContext context,
-    required Set<RegistrationStatus> initialStatuses,
-  }) {
-    return showModalBottomSheet<Set<RegistrationStatus>>(
+  final BuildContext cubitContext;
+
+  static Future<void> show({required BuildContext context}) {
+    return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => AttendeesFilterBottomSheet(
-        initialStatuses: initialStatuses,
-      ),
+      builder: (_) => MyRegistrationsFilterBottomSheet(cubitContext: context),
     );
   }
 
   @override
-  State<AttendeesFilterBottomSheet> createState() =>
-      _AttendeesFilterBottomSheetState();
+  State<MyRegistrationsFilterBottomSheet> createState() =>
+      _MyRegistrationsFilterBottomSheetState();
 }
 
-class _AttendeesFilterBottomSheetState
-    extends State<AttendeesFilterBottomSheet> {
+class _MyRegistrationsFilterBottomSheetState
+    extends State<MyRegistrationsFilterBottomSheet> {
   late Set<RegistrationStatus> _selected;
-
-  static const _pendingGroup = {
-    RegistrationStatus.pending,
-    RegistrationStatus.readyForEdit,
-  };
-
-  bool get _pendingSelected =>
-      _pendingGroup.every((s) => _selected.contains(s));
-
-  bool get _approvedSelected => _selected.contains(RegistrationStatus.approved);
-  bool get _rejectedSelected => _selected.contains(RegistrationStatus.rejected);
 
   @override
   void initState() {
     super.initState();
-    _selected = Set.from(widget.initialStatuses);
-  }
-
-  void _togglePending(bool selected) {
-    setState(() {
-      if (selected) {
-        _selected.addAll(_pendingGroup);
-      } else {
-        _selected.removeAll(_pendingGroup);
-      }
-    });
-  }
-
-  void _toggleApproved(bool selected) {
-    setState(() {
-      if (selected) {
-        _selected.add(RegistrationStatus.approved);
-      } else {
-        _selected.remove(RegistrationStatus.approved);
-      }
-    });
-  }
-
-  void _toggleRejected(bool selected) {
-    setState(() {
-      if (selected) {
-        _selected.add(RegistrationStatus.rejected);
-      } else {
-        _selected.remove(RegistrationStatus.rejected);
-      }
-    });
+    _selected = Set.from(
+      widget.cubitContext.read<MyRegistrationsCubit>().statusFilter,
+    );
   }
 
   @override
@@ -123,6 +81,10 @@ class _AttendeesFilterBottomSheetState
                     label: EventStrings.clearFilters,
                     onPressed: () {
                       setState(() => _selected.clear());
+                      widget.cubitContext
+                          .read<MyRegistrationsCubit>()
+                          .clearFilters();
+                      Navigator.of(context).pop();
                     },
                   ),
                 ],
@@ -146,25 +108,22 @@ class _AttendeesFilterBottomSheetState
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
-                      children: [
-                        FilterChip(
-                          label: const Text(EventStrings.pending),
-                          selected: _pendingSelected,
-                          onSelected: (_) => _togglePending(!_pendingSelected),
-                        ),
-                        FilterChip(
-                          label: const Text(EventStrings.approved),
-                          selected: _approvedSelected,
-                          onSelected: (_) =>
-                              _toggleApproved(!_approvedSelected),
-                        ),
-                        FilterChip(
-                          label: const Text(EventStrings.rejected),
-                          selected: _rejectedSelected,
-                          onSelected: (_) =>
-                              _toggleRejected(!_rejectedSelected),
-                        ),
-                      ],
+                      children: RegistrationStatus.values.map((status) {
+                        final selected = _selected.contains(status);
+                        return FilterChip(
+                          label: Text(status.label),
+                          selected: selected,
+                          onSelected: (_) {
+                            setState(() {
+                              if (selected) {
+                                _selected.remove(status);
+                              } else {
+                                _selected.add(status);
+                              }
+                            });
+                          },
+                        );
+                      }).toList(),
                     ),
                   ],
                 ),
@@ -179,7 +138,12 @@ class _AttendeesFilterBottomSheetState
               ),
               child: AppButton(
                 label: EventStrings.applyFilters,
-                onPressed: () => Navigator.of(context).pop(_selected),
+                onPressed: () {
+                  widget.cubitContext
+                      .read<MyRegistrationsCubit>()
+                      .updateStatusFilter(_selected);
+                  Navigator.of(context).pop();
+                },
               ),
             ),
           ],

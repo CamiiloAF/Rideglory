@@ -2,10 +2,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
-import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
-import 'package:rideglory/features/events/domain/use_cases/cancel_event_registration_use_case.dart';
+import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/event_registration/domain/use_cases/cancel_event_registration_use_case.dart';
+import 'package:rideglory/features/event_registration/domain/use_cases/get_my_registration_for_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_event_by_id_use_case.dart';
-import 'package:rideglory/features/events/domain/use_cases/get_my_registration_for_event_use_case.dart';
 
 part 'event_detail_state.dart';
 part 'event_detail_cubit.freezed.dart';
