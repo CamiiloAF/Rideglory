@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
-import 'package:rideglory/features/events/presentation/attendees/widgets/attendee_card.dart';
+import 'package:rideglory/features/events/presentation/attendees/attendees_cubit.dart';
+import 'package:rideglory/features/events/presentation/attendees/widgets/attendee_pending_request_card.dart';
+import 'package:rideglory/features/events/presentation/attendees/widgets/attendee_processed_item.dart';
+import 'package:rideglory/features/events/presentation/registration/detail/registration_detail_extra.dart';
+import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
+import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 
 class AttendeesList extends StatelessWidget {
   final List<EventRegistrationModel> registrations;
@@ -14,34 +23,155 @@ class AttendeesList extends StatelessWidget {
     required this.event,
   });
 
+  static bool _isPending(EventRegistrationModel r) =>
+      r.status == RegistrationStatus.pending ||
+      r.status == RegistrationStatus.readyForEdit;
+
+  static bool _isProcessed(EventRegistrationModel r) =>
+      r.status == RegistrationStatus.approved ||
+      r.status == RegistrationStatus.rejected;
+
   @override
   Widget build(BuildContext context) {
-    return Column(
+    final colorScheme = context.colorScheme;
+    final textTheme = context.textTheme;
+    final pending = registrations.where(_isPending).toList();
+    final processed = registrations.where(_isProcessed).toList();
+
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       children: [
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
+        if (pending.isNotEmpty) ...[
+          Row(
             children: [
               Text(
-                '${registrations.length} ${EventStrings.attendeesCount}',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withValues(alpha: 0.6),
+                EventStrings.newRequestsSection,
+                style: textTheme.titleSmall?.copyWith(
+                  color: colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: colorScheme.primary,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  EventStrings.pendingCountBadge(pending.length),
+                  style: textTheme.labelSmall?.copyWith(
+                    color: colorScheme.onPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ],
           ),
-        ),
-        Expanded(
-          child: ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: registrations.length,
-            separatorBuilder: (_, _) => const Divider(height: 1),
-            itemBuilder: (context, index) =>
-                AttendeeCard(registration: registrations[index]),
+          const SizedBox(height: 12),
+          ...pending.map(
+            (r) => Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: AttendeePendingRequestCard(
+                registration: r,
+                onTap: () => context.pushNamed(
+                  AppRoutes.registrationDetail,
+                  extra: RegistrationDetailExtra(
+                    registration: r,
+                    onApprove: r.id != null
+                        ? (detailContext) => ConfirmationDialog.show(
+                              context: detailContext,
+                              title: EventStrings.approveRegistration,
+                              content: EventStrings.approveConfirmMessage(
+                                r.firstName,
+                              ),
+                              dialogType: DialogType.warning,
+                              confirmLabel: EventStrings.approveRegistration,
+                              onConfirm: () {
+                                detailContext
+                                    .read<AttendeesCubit>()
+                                    .approveRegistration(r.id!);
+                                if (detailContext.mounted) {
+                                  detailContext.pop();
+                                }
+                              },
+                            )
+                        : null,
+                    onReject: r.id != null
+                        ? (detailContext) => ConfirmationDialog.show(
+                              context: detailContext,
+                              title: EventStrings.rejectRegistration,
+                              content: EventStrings.rejectConfirmMessage(
+                                r.firstName,
+                              ),
+                              dialogType: DialogType.warning,
+                              confirmLabel: EventStrings.rejectRegistration,
+                              onConfirm: () {
+                                detailContext
+                                    .read<AttendeesCubit>()
+                                    .rejectRegistration(r.id!);
+                                if (detailContext.mounted) {
+                                  detailContext.pop();
+                                }
+                              },
+                            )
+                        : null,
+                  ),
+                ),
+              ),
+            ),
           ),
+          const SizedBox(height: 24),
+        ],
+        Row(
+          children: [
+            Text(
+              EventStrings.processedSection,
+              style: textTheme.titleSmall?.copyWith(
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Spacer(),
+            TextButton(
+              onPressed: processed.isEmpty ? null : () {},
+              child: Text(
+                EventStrings.allWithCount(processed.length),
+                style: textTheme.labelMedium?.copyWith(
+                  color: colorScheme.primary,
+                ),
+              ),
+            ),
+          ],
         ),
+        const SizedBox(height: 12),
+        if (processed.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24),
+            child: Text(
+              EventStrings.noAttendees,
+              style: textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+            ),
+          )
+        else
+          ...processed.map(
+            (r) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: AttendeeProcessedItem(
+                registration: r,
+                onTap: () => context.pushNamed(
+                  AppRoutes.registrationDetail,
+                  extra: RegistrationDetailExtra(registration: r),
+                ),
+                onOptionsPressed: () {},
+              ),
+            ),
+          ),
       ],
     );
   }

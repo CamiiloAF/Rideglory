@@ -71,7 +71,9 @@ class EventFormCubit extends Cubit<ResultState<EventModel>> {
     if (file == null) return;
 
     _selectedCoverFile = file;
-    emit(state);
+    // Force UI rebuild even though ResultState itself did not change
+    emit(const ResultState.loading());
+    emit(const ResultState.initial());
   }
 
   Future<bool> _requestPhotoPermission() async {
@@ -118,7 +120,8 @@ class EventFormCubit extends Cubit<ResultState<EventModel>> {
 
   void clearCoverImage() {
     _selectedCoverFile = null;
-    emit(state);
+    emit(const ResultState.loading());
+    emit(const ResultState.initial());
   }
 
   /// Returns the current cover image URL to display: from selected file path
@@ -143,13 +146,10 @@ class EventFormCubit extends Cubit<ResultState<EventModel>> {
         eventId: eventToSave.id!,
         localImagePath: path,
       );
-      final updated = uploadResult.fold(
-        (error) {
-          emit(ResultState.error(error: error));
-          return null;
-        },
-        (imageUrl) => eventToSave.copyWith(imageUrl: imageUrl),
-      );
+      final updated = uploadResult.fold((error) {
+        emit(ResultState.error(error: error));
+        return null;
+      }, (imageUrl) => eventToSave.copyWith(imageUrl: imageUrl));
       if (updated == null) return;
       final updateResult = await _updateEventUseCase(updated);
       updateResult.fold(
@@ -162,29 +162,25 @@ class EventFormCubit extends Cubit<ResultState<EventModel>> {
     if (!isEditing && hasNewCover && path != null) {
       final eventWithoutImage = eventToSave.copyWith(imageUrl: null);
       final addResult = await _addEventUseCase(eventWithoutImage);
-      final created = addResult.fold(
-        (error) {
-          emit(ResultState.error(error: error));
-          return null;
-        },
-        (e) => e,
-      );
+      final created = addResult.fold((error) {
+        emit(ResultState.error(error: error));
+        return null;
+      }, (e) => e);
       if (created == null || created.id == null) return;
       final uploadResult = await _uploadEventImageUseCase(
         eventId: created.id!,
         localImagePath: path,
       );
-      uploadResult.fold(
-        (error) => emit(ResultState.error(error: error)),
-        (imageUrl) async {
-          final withImage = created.copyWith(imageUrl: imageUrl);
-          final updateResult = await _updateEventUseCase(withImage);
-          updateResult.fold(
-            (error) => emit(ResultState.error(error: error)),
-            (event) => emit(ResultState.data(data: event)),
-          );
-        },
-      );
+      uploadResult.fold((error) => emit(ResultState.error(error: error)), (
+        imageUrl,
+      ) async {
+        final withImage = created.copyWith(imageUrl: imageUrl);
+        final updateResult = await _updateEventUseCase(withImage);
+        updateResult.fold(
+          (error) => emit(ResultState.error(error: error)),
+          (event) => emit(ResultState.data(data: event)),
+        );
+      });
       return;
     }
 
@@ -206,10 +202,12 @@ class EventFormCubit extends Cubit<ResultState<EventModel>> {
 
     final dateRange = formData[EventFormFields.dateRange] as DateTimeRange?;
 
-    final isMultiBrand = formData[EventFormFields.isMultiBrand] as bool? ?? true;
+    final isMultiBrand =
+        formData[EventFormFields.isMultiBrand] as bool? ?? true;
     final allowedBrands = isMultiBrand
         ? <String>[]
-        : (formData[EventFormFields.allowedBrands] as List<String>? ?? <String>[]);
+        : (formData[EventFormFields.allowedBrands] as List<String>? ??
+              <String>[]);
 
     final priceStr = formData[EventFormFields.price] as String?;
     final price = priceStr != null && priceStr.isNotEmpty

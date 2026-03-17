@@ -13,11 +13,13 @@ class EventDetailCTABar extends StatelessWidget {
     required this.event,
     required this.registration,
     required this.onRegister,
+    this.onRegistrationStatusTap,
   });
 
   final EventModel event;
   final EventRegistrationModel? registration;
   final VoidCallback onRegister;
+  final void Function(EventRegistrationModel)? onRegistrationStatusTap;
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +80,24 @@ class EventDetailCTABar extends StatelessWidget {
                 ),
               ],
             )
-          : _RegistrationStatusBadge(registration: registration!),
+          : _buildRegisteredContent(registration!),
     );
+  }
+
+  Widget _buildRegisteredContent(EventRegistrationModel registration) {
+    final badge = _RegistrationStatusBadge(registration: registration);
+    final isTappable = onRegistrationStatusTap != null &&
+        (registration.status == RegistrationStatus.pending ||
+            registration.status == RegistrationStatus.approved ||
+            registration.status == RegistrationStatus.readyForEdit);
+    if (isTappable) {
+      return InkWell(
+        onTap: () => onRegistrationStatusTap!(registration),
+        borderRadius: BorderRadius.circular(8),
+        child: badge,
+      );
+    }
+    return badge;
   }
 }
 

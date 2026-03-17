@@ -108,4 +108,9 @@ class AppColors {
   static const Color maintenanceUrgent = error;
   static const Color maintenanceWarning = warning;
   static const Color maintenanceOk = success;
+
+  /// Yellow background for license plate tag (detail/forms)
+  static const Color licensePlateTagBackground = Color(0xFFFBBF24);
+  /// Dark text on license plate tag
+  static const Color licensePlateTagText = Color(0xFF1F2937);
 }

@@ -128,12 +128,6 @@ class _AppAutocompleteFieldState extends State<AppAutocompleteField> {
                 decoration: InputDecoration(
                   hintText: widget.hintText,
                   errorText: field.errorText,
-                  prefixIcon: widget.suggestionsPrefixIcon != null
-                      ? Icon(
-                          widget.suggestionsPrefixIcon,
-                          color: AppColors.darkInputIcon,
-                        )
-                      : null,
                   suffixIcon: _controller.text.isNotEmpty
                       ? IconButton(
                           icon: const Icon(Icons.clear, size: 18),

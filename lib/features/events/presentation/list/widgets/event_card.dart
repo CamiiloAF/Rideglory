@@ -58,9 +58,13 @@ class _EventCardState extends State<EventCard> {
           child: Stack(
             children: [
               Positioned.fill(
-                child: Image.asset(
-                  'assets/images/event.jpeg',
+                child: Image.network(
+                  widget.event.imageUrl ?? '',
                   fit: BoxFit.fill,
+                  errorBuilder: (_, _, _) => Image.asset(
+                    'assets/images/event.jpeg', //TODO: Add placeholder image
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
               Positioned.fill(

@@ -27,6 +27,7 @@ class AppTextField extends StatelessWidget {
   final void Function(String?)? onFieldSubmitted;
   final FocusNode? focusNode;
   final TextCapitalization? textCapitalization;
+  final bool readonly;
 
   const AppTextField({
     super.key,
@@ -53,6 +54,7 @@ class AppTextField extends StatelessWidget {
     this.onFieldSubmitted,
     this.focusNode,
     this.textCapitalization,
+    this.readonly = false,
   });
 
   @override
@@ -82,6 +84,7 @@ class AppTextField extends StatelessWidget {
           maxLength: maxLength,
           keyboardType: keyboardType,
           enabled: enabled,
+          readOnly: readonly,
           onChanged: onChanged,
           validator: validator != null
               ? FormBuilderValidators.compose([validator!])

@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 
 class RegistrationDetailInfoRow extends StatelessWidget {
+  const RegistrationDetailInfoRow(this.label, this.value, {super.key, this.valueWidget});
+
   final String label;
   final String value;
-
-  const RegistrationDetailInfoRow(this.label, this.value, {super.key});
+  /// When non-null, shown instead of [value] (e.g. license plate tag).
+  final Widget? valueWidget;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
@@ -20,18 +23,20 @@ class RegistrationDetailInfoRow extends StatelessWidget {
             child: Text(
               label,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
           ),
           Expanded(
             flex: 3,
-            child: Text(
-              value,
-              style: theme.textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+            child: valueWidget ??
+                Text(
+                  value,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
           ),
         ],
       ),
