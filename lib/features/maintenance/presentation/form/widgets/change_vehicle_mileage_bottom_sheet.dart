@@ -106,7 +106,8 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                   Expanded(
                     child: AppButton(
                       label: MaintenanceStrings.saveOnly,
-                      variant: AppButtonVariant.outline,
+                      variant: AppButtonVariant.primary,
+                      style: AppButtonStyle.outlined,
                       onPressed: () {
                         saveMaintenance(maintenanceToSave);
                         Navigator.of(context).pop();

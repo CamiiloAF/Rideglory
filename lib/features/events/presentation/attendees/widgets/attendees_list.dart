@@ -9,9 +9,8 @@ import 'package:rideglory/features/event_registration/presentation/registration_
 import 'package:rideglory/features/events/presentation/attendees/attendees_cubit.dart';
 import 'package:rideglory/features/events/presentation/attendees/widgets/attendee_pending_request_card.dart';
 import 'package:rideglory/features/events/presentation/attendees/widgets/attendee_processed_item.dart';
+import 'package:rideglory/features/events/presentation/attendees/attendee_action_confirmation.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
-import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 
 class AttendeesList extends StatelessWidget {
   final List<EventRegistrationModel> registrations;
@@ -38,141 +37,136 @@ class AttendeesList extends StatelessWidget {
     final pending = registrations.where(_isPending).toList();
     final processed = registrations.where(_isProcessed).toList();
 
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      children: [
-        if (pending.isNotEmpty) ...[
+    return RefreshIndicator(
+      onRefresh: () => context.read<AttendeesCubit>().fetchAttendees(event.id!),
+      child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        children: [
+          if (pending.isNotEmpty) ...[
+            Row(
+              children: [
+                Text(
+                  EventStrings.newRequestsSection,
+                  style: textTheme.titleSmall?.copyWith(
+                    color: colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primary,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    EventStrings.pendingCountBadge(pending.length),
+                    style: textTheme.labelSmall?.copyWith(
+                      color: colorScheme.onPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            ...pending.map(
+              (registration) => Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: AttendeePendingRequestCard(
+                  registration: registration,
+                  onTap: () => context.pushNamed(
+                    AppRoutes.registrationDetail,
+                    extra: RegistrationDetailExtra(
+                      registration: registration,
+                      onApprove: registration.id != null
+                          ? (detailContext) =>
+                                AttendeeActionConfirmation.showApprove(
+                                  detailContext,
+                                  firstName: registration.firstName,
+                                  onConfirm: () {
+                                    context
+                                        .read<AttendeesCubit>()
+                                        .approveRegistration(registration.id!);
+                                    if (detailContext.mounted) {
+                                      detailContext.pop();
+                                    }
+                                  },
+                                )
+                          : null,
+                      onReject: registration.id != null
+                          ? (detailContext) =>
+                                AttendeeActionConfirmation.showReject(
+                                  detailContext,
+                                  firstName: registration.firstName,
+                                  onConfirm: () {
+                                    context
+                                        .read<AttendeesCubit>()
+                                        .rejectRegistration(registration.id!);
+                                    if (detailContext.mounted) {
+                                      detailContext.pop();
+                                    }
+                                  },
+                                )
+                          : null,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+          ],
           Row(
             children: [
               Text(
-                EventStrings.newRequestsSection,
+                EventStrings.processedSection,
                 style: textTheme.titleSmall?.copyWith(
-                  color: colorScheme.primary,
+                  color: colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: colorScheme.primary,
-                  borderRadius: BorderRadius.circular(8),
-                ),
+              const Spacer(),
+              TextButton(
+                onPressed: processed.isEmpty ? null : () {},
                 child: Text(
-                  EventStrings.pendingCountBadge(pending.length),
-                  style: textTheme.labelSmall?.copyWith(
-                    color: colorScheme.onPrimary,
-                    fontWeight: FontWeight.bold,
+                  EventStrings.allWithCount(processed.length),
+                  style: textTheme.labelMedium?.copyWith(
+                    color: colorScheme.primary,
                   ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 12),
-          ...pending.map(
-            (r) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: AttendeePendingRequestCard(
-                registration: r,
-                onTap: () => context.pushNamed(
-                  AppRoutes.registrationDetail,
-                  extra: RegistrationDetailExtra(
-                    registration: r,
-                    onApprove: r.id != null
-                        ? (detailContext) => ConfirmationDialog.show(
-                              context: detailContext,
-                              title: EventStrings.approveRegistration,
-                              content: EventStrings.approveConfirmMessage(
-                                r.firstName,
-                              ),
-                              dialogType: DialogType.warning,
-                              confirmLabel: EventStrings.approveRegistration,
-                              onConfirm: () {
-                                detailContext
-                                    .read<AttendeesCubit>()
-                                    .approveRegistration(r.id!);
-                                if (detailContext.mounted) {
-                                  detailContext.pop();
-                                }
-                              },
-                            )
-                        : null,
-                    onReject: r.id != null
-                        ? (detailContext) => ConfirmationDialog.show(
-                              context: detailContext,
-                              title: EventStrings.rejectRegistration,
-                              content: EventStrings.rejectConfirmMessage(
-                                r.firstName,
-                              ),
-                              dialogType: DialogType.warning,
-                              confirmLabel: EventStrings.rejectRegistration,
-                              onConfirm: () {
-                                detailContext
-                                    .read<AttendeesCubit>()
-                                    .rejectRegistration(r.id!);
-                                if (detailContext.mounted) {
-                                  detailContext.pop();
-                                }
-                              },
-                            )
-                        : null,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-        ],
-        Row(
-          children: [
-            Text(
-              EventStrings.processedSection,
-              style: textTheme.titleSmall?.copyWith(
-                color: colorScheme.onSurface,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Spacer(),
-            TextButton(
-              onPressed: processed.isEmpty ? null : () {},
+          if (processed.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24),
               child: Text(
-                EventStrings.allWithCount(processed.length),
-                style: textTheme.labelMedium?.copyWith(
-                  color: colorScheme.primary,
+                EventStrings.noAttendees,
+                style: textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+            )
+          else
+            ...processed.map(
+              (r) => Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: AttendeeProcessedItem(
+                  registration: r,
+                  onTap: () => context.pushNamed(
+                    AppRoutes.registrationDetail,
+                    extra: RegistrationDetailExtra(registration: r),
+                  ),
+                  onOptionsPressed: () {},
                 ),
               ),
             ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        if (processed.isEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24),
-            child: Text(
-              EventStrings.noAttendees,
-              style: textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-          )
-        else
-          ...processed.map(
-            (r) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: AttendeeProcessedItem(
-                registration: r,
-                onTap: () => context.pushNamed(
-                  AppRoutes.registrationDetail,
-                  extra: RegistrationDetailExtra(registration: r),
-                ),
-                onOptionsPressed: () {},
-              ),
-            ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }

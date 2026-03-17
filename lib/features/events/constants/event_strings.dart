@@ -1,6 +1,5 @@
 /// Events feature string constants
 abstract class EventStrings {
-
   // Page titles
   static const String events = 'Eventos';
   static const String myEvents = 'Mis Eventos';
@@ -215,6 +214,7 @@ abstract class EventStrings {
   static const String approveRegistration = 'Aprobar';
   static const String rejectRegistration = 'Rechazar';
   static const String setReadyForEdit = 'Habilitar edición';
+  static const String contactAttendee = 'Contactar';
   static const String callAttendee = 'Llamar';
   static const String emailAttendee = 'Enviar correo';
   static const String whatsappAttendee = 'WhatsApp';

@@ -73,7 +73,8 @@ class _MaintenanceFiltersBottomSheetState
                 if (_filters.hasActiveFilters)
                   AppButton(
                     label: AppStrings.clear,
-                    variant: AppButtonVariant.text,
+                    variant: AppButtonVariant.primary,
+                    style: AppButtonStyle.text,
                     isFullWidth: false,
                     onPressed: () {
                       setState(() {
@@ -278,7 +279,8 @@ class _MaintenanceFiltersBottomSheetState
                 Expanded(
                   child: AppButton(
                     label: AppStrings.cancel,
-                    variant: AppButtonVariant.outline,
+                    variant: AppButtonVariant.primary,
+                    style: AppButtonStyle.outlined,
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),

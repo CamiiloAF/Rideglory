@@ -8,10 +8,7 @@ import 'package:rideglory/shared/widgets/form/app_text_button.dart';
 class AttendeesFilterBottomSheet extends StatefulWidget {
   final Set<RegistrationStatus> initialStatuses;
 
-  const AttendeesFilterBottomSheet({
-    super.key,
-    required this.initialStatuses,
-  });
+  const AttendeesFilterBottomSheet({super.key, required this.initialStatuses});
 
   static Future<Set<RegistrationStatus>?> show({
     required BuildContext context,
@@ -21,9 +18,8 @@ class AttendeesFilterBottomSheet extends StatefulWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => AttendeesFilterBottomSheet(
-        initialStatuses: initialStatuses,
-      ),
+      builder: (_) =>
+          AttendeesFilterBottomSheet(initialStatuses: initialStatuses),
     );
   }
 

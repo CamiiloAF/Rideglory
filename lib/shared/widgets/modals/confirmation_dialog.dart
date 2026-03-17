@@ -76,7 +76,8 @@ class ConfirmationDialog {
                         onPressed: onCancel != null
                             ? () => onCancel(dialogContext)
                             : () => Navigator.of(dialogContext).pop(false),
-                        variant: AppButtonVariant.outline,
+                        variant: AppButtonVariant.primary,
+                        style: AppButtonStyle.outlined,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                     ),
