@@ -79,21 +79,24 @@ class EventRepositoryImpl implements EventRepository {
 
   @override
   Future<Either<DomainException, EventModel>> addEvent(EventModel event) {
-    final now = DateTime.now();
-    final userId = _authService.currentUser?.uid ?? event.ownerId;
-    final eventWithMeta = event.copyWith(
-      ownerId: userId,
-      createdDate: now,
-      updatedDate: now,
-    );
-
     return executeService(
       function: () async {
-        final docRef = _firestore
-            .collection(_collectionName)
-            .doc(eventWithMeta.id);
+        final now = DateTime.now();
+        final userId = _authService.currentUser?.uid ?? event.ownerId;
+
+        // Always generate a new document ID for created events so we can
+        // reliably upload a cover image afterwards.
+        final docRef = _firestore.collection(_collectionName).doc();
+
+        final eventWithMeta = event.copyWith(
+          id: docRef.id,
+          ownerId: userId,
+          createdDate: now,
+          updatedDate: now,
+        );
+
         await docRef.set(eventWithMeta.toJson());
-        return eventWithMeta.copyWith(id: docRef.id);
+        return eventWithMeta;
       },
     );
   }

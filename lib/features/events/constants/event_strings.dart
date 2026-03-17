@@ -151,6 +151,7 @@ abstract class EventStrings {
   static const String filterByDateRange = 'Rango de fechas';
   static const String filterByFreeOnly = 'Solo eventos gratuitos';
   static const String filterByMultiBrand = 'Solo multimarca';
+  static const String filterByStatus = 'Estado';
 
   // Detail & actions (Event Detail V1)
   static const String aboutTheRide = 'Sobre la rodada';
@@ -209,6 +210,7 @@ abstract class EventStrings {
 
   // Attendees
   static const String attendees = 'Inscritos';
+  static const String participants = 'Participantes';
   static const String attendeesCount = 'personas inscritas';
   static const String approveRegistration = 'Aprobar';
   static const String rejectRegistration = 'Rechazar';
@@ -217,6 +219,27 @@ abstract class EventStrings {
   static const String emailAttendee = 'Enviar correo';
   static const String whatsappAttendee = 'WhatsApp';
   static const String noAttendees = 'No hay inscritos aún';
+  static const String newRequestsSection = 'NUEVAS SOLICITUDES';
+  static const String pendingBadgeSuffix = 'PENDIENTES';
+  static const String processedSection = 'YA PROCESADOS';
+  static const String allProcessed = 'Todos';
+  static const String approvedBadge = 'APROBADO';
+  static const String rejectedBadge = 'RECHAZADO';
+  static const String searchAttendees = 'Buscar participantes';
+  static const String filterAttendees = 'Filtrar participantes';
+  static String pendingCountBadge(int count) => '$count $pendingBadgeSuffix';
+  static String allWithCount(int count) => '$allProcessed ($count)';
+  static String timeAgoHours(int hours) => 'Hace ${hours}h';
+  static String timeAgoMinutes(int minutes) => 'Hace ${minutes}m';
+  static String timeAgoDays(int days) => 'Hace ${days}d';
+  static String formatTimeAgo(DateTime? date) {
+    if (date == null) return '';
+    final now = DateTime.now();
+    final diff = now.difference(date);
+    if (diff.inDays > 0) return timeAgoDays(diff.inDays);
+    if (diff.inHours > 0) return timeAgoHours(diff.inHours);
+    return timeAgoMinutes(diff.inMinutes.clamp(0, 59));
+  }
 
   // Cancel confirmation
   static const String cancelRegistrationTitle = 'Cancelar inscripción';

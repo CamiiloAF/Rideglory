@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
@@ -33,20 +35,37 @@ class AttendeesCubit extends Cubit<ResultState<List<EventRegistrationModel>>> {
     );
   }
 
-  Future<void> approveRegistration(String registrationId) async {
-    final result = await _approveUseCase(registrationId);
-    result.fold(
-      (error) => null,
-      (_) => _eventId != null ? fetchAttendees(_eventId!) : null,
+  void _updateRegistrationStatusLocally(
+    String registrationId,
+    RegistrationStatus status,
+  ) {
+    state.maybeWhen(
+      data: (list) {
+        final index = list.indexWhere((r) => r.id == registrationId);
+        if (index < 0) return;
+        final updated = list[index].copyWith(status: status);
+        final newList =
+            List<EventRegistrationModel>.from(list)..[index] = updated;
+        emit(ResultState.data(data: newList));
+      },
+      orElse: () {},
     );
   }
 
-  Future<void> rejectRegistration(String registrationId) async {
-    final result = await _rejectUseCase(registrationId);
-    result.fold(
-      (error) => null,
-      (_) => _eventId != null ? fetchAttendees(_eventId!) : null,
+  Future<void> approveRegistration(String registrationId) async {
+    _updateRegistrationStatusLocally(
+      registrationId,
+      RegistrationStatus.approved,
     );
+    unawaited(_approveUseCase(registrationId));
+  }
+
+  Future<void> rejectRegistration(String registrationId) async {
+    _updateRegistrationStatusLocally(
+      registrationId,
+      RegistrationStatus.rejected,
+    );
+    unawaited(_rejectUseCase(registrationId));
   }
 
   Future<void> setReadyForEdit(String registrationId) async {

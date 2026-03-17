@@ -6,6 +6,7 @@ import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/authentication/constants/auth_strings.dart';
+import 'package:rideglory/features/events/constants/registration_strings.dart';
 import 'package:rideglory/features/profile/constants/profile_strings.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
@@ -38,6 +39,25 @@ class ProfilePage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(
+                Icons.event_note_outlined,
+                color: context.colorScheme.primary,
+              ),
+              title: Text(
+                RegistrationStrings.myRegistrations,
+                style: TextStyle(
+                  color: context.colorScheme.onSurface,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              trailing: Icon(
+                Icons.chevron_right_rounded,
+                color: context.colorScheme.onSurfaceVariant,
+              ),
+              onTap: () => context.pushNamed(AppRoutes.myRegistrations),
+            ),
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: Icon(Icons.logout_outlined, color: context.errorColor),

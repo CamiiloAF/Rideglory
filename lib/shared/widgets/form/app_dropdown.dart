@@ -7,6 +7,7 @@ class AppDropdown<T> extends StatelessWidget {
     super.key,
     required this.name,
     this.labelText,
+    this.hintText,
     this.validator,
     required this.items,
     this.isRequired = false,
@@ -16,6 +17,7 @@ class AppDropdown<T> extends StatelessWidget {
 
   final String name;
   final String? labelText;
+  final String? hintText;
   final FormFieldValidator<T>? validator;
   final List<DropdownMenuItem<T>> items;
   final bool isRequired;
@@ -36,6 +38,7 @@ class AppDropdown<T> extends StatelessWidget {
           name: name,
           decoration: InputDecoration(
             border: const OutlineInputBorder(),
+            hintText: hintText,
             prefixIcon: prefixIcon,
           ),
           validator: validator,

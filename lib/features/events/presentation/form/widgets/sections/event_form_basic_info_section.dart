@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:rideglory/core/data/colombia_cities_data.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
-import 'package:rideglory/shared/widgets/form/app_autocomplete_field.dart';
+import 'package:rideglory/shared/widgets/form/app_city_autocomplete.dart';
 import 'package:rideglory/shared/widgets/form/app_rich_text_editor.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 
@@ -31,7 +30,7 @@ class EventFormBasicInfoSection extends StatelessWidget {
           labelText: EventStrings.eventName,
           hintText: EventStrings.eventNameHint,
           isRequired: true,
-          enabled: !isEditing,
+          readonly: isEditing,
           suffixIcon: !isEditing
               ? Builder(
                   builder: (context) => IconButton(
@@ -83,14 +82,11 @@ class EventFormBasicInfoSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        AppAutocompleteField(
+        AppCityAutocomplete(
           name: EventFormFields.city,
           labelText: EventStrings.eventCity,
-          suffixIcon: const Icon(Icons.search),
-          suggestionsPrefixIcon: Icons.category,
-          isRequired: true,
           hintText: EventStrings.eventCityHint,
-          suggestions: ColombiaCitiesData.search,
+          isRequired: true,
           validator: (value) {
             if (value == null || value.isEmpty) {
               return EventStrings.cityRequired;

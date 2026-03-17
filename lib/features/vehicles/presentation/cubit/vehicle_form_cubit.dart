@@ -50,7 +50,11 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
     emit(state.copyWith(vehicleResult: const ResultState.loading()));
 
     try {
-      String? imageUrl = vehicle.imageUrl;
+      // When editing, keep the existing image URL unless the user explicitly picks a new image.
+      // The form model built in [buildVehicleToSave] does not carry over imageUrl,
+      // so we must base it on the original vehicle in state.
+      String? imageUrl =
+          state.isEditing ? state.vehicle?.imageUrl : vehicle.imageUrl;
 
       // Upload image if a new one was picked
       if (state.localImagePath != null) {

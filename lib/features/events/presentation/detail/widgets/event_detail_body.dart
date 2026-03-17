@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_allowed_brands_section.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_destination_card.dart';
+import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_header_info.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_meeting_point_section.dart';
+import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_section_title.dart';
 import 'package:rideglory/shared/widgets/rich_text_viewer.dart';
 
 class EventDetailBody extends StatelessWidget {
@@ -20,7 +21,9 @@ class EventDetailBody extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _SectionTitle(EventStrings.aboutTheRide),
+          EventDetailHeaderInfo(event: event),
+          const SizedBox(height: 24),
+          const EventDetailSectionTitle(title: EventStrings.aboutTheRide),
           const SizedBox(height: 8),
           RichTextViewer(content: event.description),
           const SizedBox(height: 20),
@@ -33,25 +36,6 @@ class EventDetailBody extends StatelessWidget {
           const SizedBox(height: 24),
           EventDetailAllowedBrandsSection(event: event),
         ],
-      ),
-    );
-  }
-}
-
-class _SectionTitle extends StatelessWidget {
-  const _SectionTitle(this.title);
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: const TextStyle(
-        color: AppColors.darkTextPrimary,
-        fontSize: 18,
-        fontWeight: FontWeight.w800,
-        letterSpacing: -0.2,
       ),
     );
   }

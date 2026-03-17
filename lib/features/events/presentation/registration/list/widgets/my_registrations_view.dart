@@ -3,13 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/registration_strings.dart';
-import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/events/domain/model/registration_with_event.dart';
 import 'package:rideglory/features/events/presentation/registration/list/my_registrations_cubit.dart';
-import 'package:rideglory/features/events/presentation/registration/list/widgets/registration_card.dart';
+import 'package:rideglory/features/events/presentation/registration/list/widgets/my_registrations_data_view.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/shared/widgets/empty_state_widget.dart';
+import 'package:rideglory/shared/widgets/form/app_button.dart';
 
 class MyRegistrationsView extends StatelessWidget {
   const MyRegistrationsView({super.key});
@@ -17,85 +19,54 @@ class MyRegistrationsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.darkBackground,
       appBar: const AppAppBar(title: RegistrationStrings.myRegistrations),
-      body:
-          BlocBuilder<
-            MyRegistrationsCubit,
-            ResultState<List<EventRegistrationModel>>
-          >(
-            builder: (context, state) {
-              return state.when(
-                initial: () => const SizedBox.shrink(),
-                loading: () => const Center(child: CircularProgressIndicator()),
-                data: (registrations) => RefreshIndicator(
-                  onRefresh: () => context
-                      .read<MyRegistrationsCubit>()
-                      .fetchMyRegistrations(),
-                  child: ListView.separated(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: registrations.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 8),
-                    itemBuilder: (context, index) {
-                      final registration = registrations[index];
-                      return RegistrationCard(
-                        registration: registration,
-                        onViewDetails: () => context.pushNamed(
-                          AppRoutes.registrationDetail,
-                          extra: (
-                            registration,
-                            registration.id != null
-                                ? () async => context
-                                      .read<MyRegistrationsCubit>()
-                                      .cancelRegistration(registration.id!)
-                                : null,
+      body: SafeArea(
+        child:
+            BlocBuilder<
+              MyRegistrationsCubit,
+              ResultState<List<RegistrationWithEvent>>
+            >(
+              builder: (context, state) {
+                final cubit = context.read<MyRegistrationsCubit>();
+                return state.when(
+                  initial: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  data: (items) => MyRegistrationsDataView(items: items),
+                  empty: () => EmptyStateWidget(
+                    icon: Icons.event_busy_outlined,
+                    title: RegistrationStrings.noRegistrations,
+                    description: RegistrationStrings.noRegistrationsDescription,
+                    actionButtonText: RegistrationStrings.goToEvents,
+                    showButtonIcon: false,
+                    onActionPressed: () => context.pushNamed(AppRoutes.events),
+                    onRefresh: () => cubit.fetchMyRegistrations(),
+                  ),
+                  error: (error) => Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            RegistrationStrings.errorLoadingRegistrations,
+                            textAlign: TextAlign.center,
                           ),
-                        ),
-                        onViewEvent: () async {
-                          final result = await context
-                              .pushNamed<EventRegistrationModel?>(
-                                AppRoutes.eventDetailById,
-                                extra: registration.eventId,
-                              );
-
-                          if (result != null && context.mounted) {
-                            context
-                                .read<MyRegistrationsCubit>()
-                                .onChangeRegistration(result);
-                          }
-                        },
-                      );
-                    },
-                  ),
-                ),
-                empty: () => EmptyStateWidget(
-                  icon: Icons.event_busy_outlined,
-                  title: RegistrationStrings.noRegistrations,
-                  description: RegistrationStrings.noRegistrationsDescription,
-                  actionButtonText: RegistrationStrings.goToEvents,
-                  showButtonIcon: false,
-                  onActionPressed: () => context.pushNamed(AppRoutes.events),
-                  onRefresh: () => context
-                      .read<MyRegistrationsCubit>()
-                      .fetchMyRegistrations(),
-                ),
-                error: (error) => Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(RegistrationStrings.errorLoadingRegistrations),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () => context
-                            .read<MyRegistrationsCubit>()
-                            .fetchMyRegistrations(),
-                        child: const Text(AppStrings.retry),
+                          const SizedBox(height: 16),
+                          AppButton(
+                            label: AppStrings.retry,
+                            onPressed: () => cubit.fetchMyRegistrations(),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
+                );
+              },
+            ),
+      ),
     );
   }
 }

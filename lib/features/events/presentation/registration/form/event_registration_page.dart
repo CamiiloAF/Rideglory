@@ -47,7 +47,7 @@ class _RegistrationFormView extends StatelessWidget {
       appBar: AppAppBar(
         title: isEditing
             ? RegistrationStrings.editRegistration
-            : RegistrationStrings.registrationForm,
+            : RegistrationStrings.registrationPageTitle,
       ),
       body:
           BlocListener<

@@ -7,9 +7,9 @@ import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
 import 'package:rideglory/shared/widgets/form/app_checkbox.dart';
+import 'package:rideglory/shared/widgets/form/app_city_autocomplete.dart';
 import 'package:rideglory/shared/widgets/form/app_date_picker.dart';
 import 'package:rideglory/shared/widgets/form/app_text_button.dart';
-import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 
 class EventFiltersBottomSheet extends StatefulWidget {
   const EventFiltersBottomSheet({super.key, required this.cubitContext});
@@ -167,10 +167,10 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                       ),
                       const SizedBox(height: 16),
                       // City filter
-                      const AppTextField(
+                      AppCityAutocomplete(
                         name: EventFilterFormFields.city,
                         labelText: EventStrings.filterByCity,
-                        prefixIcon: Icons.location_city_outlined,
+                        isRequired: false,
                       ),
                       const SizedBox(height: 16),
                       // Date range

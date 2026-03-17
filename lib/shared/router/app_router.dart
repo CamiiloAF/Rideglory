@@ -13,6 +13,7 @@ import 'package:rideglory/features/events/presentation/form/event_form_page.dart
 import 'package:rideglory/features/events/presentation/list/events_page.dart';
 import 'package:rideglory/features/events/presentation/registration/form/event_registration_page.dart';
 import 'package:rideglory/features/events/presentation/registration/list/my_registrations_page.dart';
+import 'package:rideglory/features/events/presentation/registration/detail/registration_detail_extra.dart';
 import 'package:rideglory/features/events/presentation/registration/detail/registration_detail_page.dart';
 import 'package:rideglory/features/events/presentation/detail/event_detail_by_id_page.dart';
 import 'package:rideglory/features/home/presentation/home_page.dart';
@@ -117,7 +118,7 @@ class AppRouter {
                 builder: (context, state) => const GaragePage(),
               ),
             ],
-          ), 
+          ),
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -245,11 +246,12 @@ class AppRouter {
         path: AppRoutes.registrationDetail,
         name: AppRoutes.registrationDetail,
         builder: (context, state) {
-          final extra =
-              state.extra as (EventRegistrationModel, Future<bool> Function()?);
+          final extra = state.extra as RegistrationDetailExtra;
           return RegistrationDetailPage(
-            registration: extra.$1,
-            onCancelRegistration: extra.$2,
+            registration: extra.registration,
+            onCancelRegistration: extra.onCancelRegistration,
+            onApprove: extra.onApprove,
+            onReject: extra.onReject,
           );
         },
       ),
