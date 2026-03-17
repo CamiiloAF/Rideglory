@@ -5,16 +5,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
-import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/event_registration/presentation/event_registration_page.dart';
+import 'package:rideglory/features/event_registration/presentation/my_registrations_page.dart';
+import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
+import 'package:rideglory/features/event_registration/presentation/registration_detail_page.dart';
 import 'package:rideglory/features/events/presentation/attendees/attendees_page.dart';
 import 'package:rideglory/features/events/presentation/detail/event_detail_page.dart';
 import 'package:rideglory/features/events/presentation/detail/params.dart';
 import 'package:rideglory/features/events/presentation/form/event_form_page.dart';
 import 'package:rideglory/features/events/presentation/list/events_page.dart';
-import 'package:rideglory/features/events/presentation/registration/form/event_registration_page.dart';
-import 'package:rideglory/features/events/presentation/registration/list/my_registrations_page.dart';
-import 'package:rideglory/features/events/presentation/registration/detail/registration_detail_extra.dart';
-import 'package:rideglory/features/events/presentation/registration/detail/registration_detail_page.dart';
 import 'package:rideglory/features/events/presentation/detail/event_detail_by_id_page.dart';
 import 'package:rideglory/features/home/presentation/home_page.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
@@ -248,10 +248,7 @@ class AppRouter {
         builder: (context, state) {
           final extra = state.extra as RegistrationDetailExtra;
           return RegistrationDetailPage(
-            registration: extra.registration,
-            onCancelRegistration: extra.onCancelRegistration,
-            onApprove: extra.onApprove,
-            onReject: extra.onReject,
+            params: extra,
           );
         },
       ),

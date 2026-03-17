@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/domain/result_state.dart';
-import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
-import 'package:rideglory/features/events/domain/use_cases/approve_registration_use_case.dart';
-import 'package:rideglory/features/events/domain/use_cases/get_event_registrations_use_case.dart';
-import 'package:rideglory/features/events/domain/use_cases/reject_registration_use_case.dart';
-import 'package:rideglory/features/events/domain/use_cases/set_registration_ready_for_edit_use_case.dart';
+import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/event_registration/domain/use_cases/approve_registration_use_case.dart';
+import 'package:rideglory/features/event_registration/domain/use_cases/get_event_registrations_use_case.dart';
+import 'package:rideglory/features/event_registration/domain/use_cases/reject_registration_use_case.dart';
+import 'package:rideglory/features/event_registration/domain/use_cases/set_registration_ready_for_edit_use_case.dart';
 
 class AttendeesCubit extends Cubit<ResultState<List<EventRegistrationModel>>> {
   AttendeesCubit(
