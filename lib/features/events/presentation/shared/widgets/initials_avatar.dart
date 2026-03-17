@@ -26,13 +26,18 @@ class InitialsAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-    final resolvedBackground = backgroundColor ?? AppColors.primary;
-    final resolvedTextStyle = textStyle ??
-        context.textTheme.titleSmall?.copyWith(
-          color: colorScheme.onPrimary,
-          fontWeight: FontWeight.bold,
-        );
+    final resolvedBackground = backgroundColor ?? AppColors.primaryDark;
+    final baseStyle = context.textTheme.titleMedium?.copyWith(
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+    ) ?? const TextStyle(
+      color: Colors.white,
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    final resolvedTextStyle = textStyle ?? baseStyle.copyWith(
+      fontSize: radius * 0.6,
+    );
 
     return CircleAvatar(
       radius: radius,

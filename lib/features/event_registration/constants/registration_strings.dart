@@ -124,9 +124,16 @@ abstract class RegistrationStrings {
   // Detail page
   static const String registrationDetail = 'Detalle de inscripción';
   static const String registrationDetailTitle = 'Detalle de Registro';
+  static const String requestDetailsTitle = 'Detalle de solicitud';
   static const String eventInfo = 'Información del evento';
   static const String inscriptionDate = 'Fecha de inscripción';
+  static const String appliedOnPrefix = 'Inscrito el ';
   static const String errorLoadingEvent = 'Error al cargar el evento';
+
+  // Detail page section titles (card headers)
+  static const String sectionPersonalInfo = 'Datos personales';
+  static const String sectionHealthSafety = 'Salud y seguridad';
+  static const String sectionVehicleDetails = 'Datos del vehículo';
 
   // Detail page labels (design)
   static const String fullNameLabel = 'Nombres Completos';
@@ -136,8 +143,14 @@ abstract class RegistrationStrings {
   static const String epsOrInsuranceLabel = 'EPS / Seguro';
   static const String brandModelLabel = 'Marca / Modelo';
   static const String cityLabel = 'Ciudad';
+  static const String motorcycleLabel = 'Motocicleta';
+  static const String plateLabel = 'Placa';
 
   // Detail page actions
   static const String reject = 'Rechazar';
   static const String approve = 'Aprobar';
+  static const String cancelRegistration = 'Cancelar inscripción';
+  static const String contactLabel = 'Contactar';
+  static const String callLabel = 'Llamar';
+  static const String whatsappLabel = 'WhatsApp';
 }

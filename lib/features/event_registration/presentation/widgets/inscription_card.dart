@@ -44,8 +44,8 @@ class InscriptionCard extends StatelessWidget {
     final dateTime = event != null
         ? '${DateFormat('d MMM yyyy', 'es').format(event.startDate)} • ${DateFormat('hh:mm a', 'es').format(event.meetingTime)}'
         : registration.createdDate != null
-            ? DateFormat('d MMM yyyy', 'es').format(registration.createdDate!)
-            : '';
+        ? DateFormat('d MMM yyyy', 'es').format(registration.createdDate!)
+        : '';
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -142,7 +142,8 @@ class InscriptionCard extends StatelessWidget {
                       child: AppButton(
                         label: RegistrationStrings.details,
                         icon: Icons.visibility_outlined,
-                        variant: AppButtonVariant.outline,
+                        variant: AppButtonVariant.primary,
+                        style: AppButtonStyle.outlined,
                         onPressed: onDetails,
                         isFullWidth: true,
                         height: 36,
@@ -172,10 +173,7 @@ class InscriptionCard extends StatelessWidget {
 }
 
 class _SecondaryActionButton extends StatelessWidget {
-  const _SecondaryActionButton({
-    required this.status,
-    required this.onPressed,
-  });
+  const _SecondaryActionButton({required this.status, required this.onPressed});
 
   final RegistrationStatus status;
   final VoidCallback onPressed;
@@ -185,6 +183,7 @@ class _SecondaryActionButton extends StatelessWidget {
     String label;
     IconData icon;
     AppButtonVariant variant;
+    AppButtonStyle style = AppButtonStyle.filled;
     switch (status) {
       case RegistrationStatus.approved:
         label = RegistrationStrings.myRegistration;
@@ -194,22 +193,26 @@ class _SecondaryActionButton extends StatelessWidget {
       case RegistrationStatus.pending:
         label = RegistrationStrings.viewDetail;
         icon = Icons.visibility_outlined;
-        variant = AppButtonVariant.outline;
+        variant = AppButtonVariant.primary;
+        style = AppButtonStyle.outlined;
         break;
       case RegistrationStatus.readyForEdit:
         label = EventStrings.edit;
         icon = Icons.edit_outlined;
-        variant = AppButtonVariant.outline;
+        variant = AppButtonVariant.primary;
+        style = AppButtonStyle.outlined;
         break;
       case RegistrationStatus.rejected:
         label = RegistrationStrings.reason;
         icon = Icons.info_outline;
-        variant = AppButtonVariant.outline;
+        variant = AppButtonVariant.primary;
+        style = AppButtonStyle.outlined;
         break;
       case RegistrationStatus.cancelled:
         label = RegistrationStrings.reRegister;
         icon = Icons.refresh;
-        variant = AppButtonVariant.outline;
+        variant = AppButtonVariant.primary;
+        style = AppButtonStyle.outlined;
         break;
     }
 
@@ -217,6 +220,7 @@ class _SecondaryActionButton extends StatelessWidget {
       label: label,
       icon: icon,
       variant: variant,
+      style: style,
       onPressed: onPressed,
       isFullWidth: true,
       height: 36,
