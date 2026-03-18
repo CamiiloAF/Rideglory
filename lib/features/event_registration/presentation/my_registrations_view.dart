@@ -50,7 +50,7 @@ class MyRegistrationsView extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
+                          const Text(
                             RegistrationStrings.errorLoadingRegistrations,
                             textAlign: TextAlign.center,
                           ),

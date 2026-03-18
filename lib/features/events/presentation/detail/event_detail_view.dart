@@ -11,6 +11,7 @@ import 'package:rideglory/features/event_registration/domain/model/event_registr
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/delete/cubit/event_delete_cubit.dart';
 import 'package:rideglory/features/events/presentation/detail/cubit/event_detail_cubit.dart';
+import 'package:rideglory/features/events/presentation/detail/params.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_body.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_cta_bar.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_header.dart';
@@ -244,7 +245,10 @@ class EventDetailViewState extends State<EventDetailView> {
   ) async {
     final result = await context.pushNamed<EventRegistrationModel?>(
       AppRoutes.eventRegistration,
-      extra: {'event': currentEvent, 'registration': registration},
+      extra: EventRegistrationParams(
+        event: currentEvent,
+        registration: registration,
+      ),
     );
     if (result != null && context.mounted) {
       context.read<EventDetailCubit>().updateRegistration(result);

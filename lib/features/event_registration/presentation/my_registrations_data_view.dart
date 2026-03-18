@@ -7,19 +7,17 @@ import 'package:rideglory/features/event_registration/domain/model/registration_
 import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/inscription_card.dart';
-import 'package:rideglory/features/event_registration/presentation/widgets/my_registrations_filter_bottom_sheet.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
+import 'package:rideglory/features/event_registration/presentation/widgets/my_registrations_filter_bottom_sheet.dart';
+import 'package:rideglory/features/events/presentation/detail/params.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 import 'package:rideglory/shared/widgets/no_search_results_empty_widget.dart';
 
 class MyRegistrationsDataView extends StatelessWidget {
   const MyRegistrationsDataView({super.key, required this.items});
 
   final List<RegistrationWithEvent> items;
-
-  Future<void> _showFilters(BuildContext context) async {
-    await MyRegistrationsFilterBottomSheet.show(context: context);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,45 +30,12 @@ class MyRegistrationsDataView extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                child: GestureDetector(
-                  onTap: () => _showFilters(context),
-                  child: Container(
-                    height: 48,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: context.colorScheme.surface,
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: context.colorScheme.outline.withValues(
-                          alpha: 0.5,
-                        ),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.tune_rounded,
-                          color: context.colorScheme.onSurface,
-                          size: 24,
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          cubit.hasFilters
-                              ? _filterSummary(cubit.statusFilter)
-                              : EventStrings.filterAll,
-                          style: context.bodyMedium?.copyWith(
-                            color: context.colorScheme.onSurface,
-                          ),
-                        ),
-                        const Spacer(),
-                        Icon(
-                          Icons.keyboard_arrow_down_rounded,
-                          color: context.colorScheme.onSurfaceVariant,
-                          size: 24,
-                        ),
-                      ],
-                    ),
-                  ),
+                child: AppTextField(
+                  name: 'search',
+                  hintText: EventStrings.filterAll,
+                  prefixIcon: Icons.search_rounded,
+                  textCapitalization: TextCapitalization.none,
+                  onChanged: (value) => cubit.updateSearchQuery(value ?? ''),
                 ),
               ),
               const SizedBox(width: 12),
@@ -125,10 +90,26 @@ class MyRegistrationsDataView extends StatelessWidget {
                       final item = items[index];
                       return InscriptionCard(
                         item: item,
-                        onDetails: () => context.pushNamed(
+                        onTap: () => context.pushNamed(
                           AppRoutes.eventDetailById,
                           extra: item.registration.eventId,
                         ),
+                        onDetails: () {
+                          final ev = item.event;
+                          if (ev != null) {
+                            context.pushNamed(
+                              AppRoutes.registrationDetail,
+                              extra: RegistrationDetailExtra(
+                                registration: item.registration,
+                              ),
+                            );
+                          } else {
+                            context.pushNamed(
+                              AppRoutes.eventDetailById,
+                              extra: item.registration.eventId,
+                            );
+                          }
+                        },
                         onSecondaryAction:
                             item.registration.status ==
                                 RegistrationStatus.readyForEdit
@@ -143,10 +124,8 @@ class MyRegistrationsDataView extends StatelessWidget {
     );
   }
 
-  String _filterSummary(Set<RegistrationStatus> statuses) {
-    if (statuses.isEmpty) return EventStrings.filterAll;
-    if (statuses.length == 1) return statuses.first.label;
-    return '${statuses.length} estados';
+  Future<void> _showFilters(BuildContext context) async {
+    await MyRegistrationsFilterBottomSheet.show(context: context);
   }
 
   Future<void> _onSecondaryAction(
@@ -172,14 +151,19 @@ class MyRegistrationsDataView extends StatelessWidget {
       case RegistrationStatus.pending:
         context.pushNamed(
           AppRoutes.registrationDetail,
-          extra: RegistrationDetailExtra(registration: registration),
+          extra: RegistrationDetailExtra(
+            registration: registration,
+          ),
         );
         break;
       case RegistrationStatus.readyForEdit:
         if (event != null) {
           final result = await context.pushNamed<EventRegistrationModel?>(
             AppRoutes.eventRegistration,
-            extra: {'event': event, 'registration': registration},
+            extra: EventRegistrationParams(
+              event: event,
+              registration: registration,
+            ),
           );
           if (result != null && context.mounted) {
             cubit.onChangeRegistration(result);
@@ -194,14 +178,16 @@ class MyRegistrationsDataView extends StatelessWidget {
       case RegistrationStatus.rejected:
         context.pushNamed(
           AppRoutes.registrationDetail,
-          extra: RegistrationDetailExtra(registration: registration),
+          extra: RegistrationDetailExtra(
+            registration: registration,
+          ),
         );
         break;
       case RegistrationStatus.cancelled:
         if (event != null) {
           final result = await context.pushNamed<EventRegistrationModel?>(
             AppRoutes.eventRegistration,
-            extra: {'event': event, 'registration': null},
+            extra: EventRegistrationParams(event: event, registration: null),
           );
           if (result != null && context.mounted) {
             cubit.onChangeRegistration(result);

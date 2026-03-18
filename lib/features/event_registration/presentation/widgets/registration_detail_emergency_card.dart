@@ -8,10 +8,12 @@ class RegistrationDetailEmergencyCard extends StatelessWidget {
     super.key,
     required this.contactName,
     required this.contactPhone,
+    this.showPhoneButton = true,
   });
 
   final String contactName;
   final String contactPhone;
+   final bool showPhoneButton;
 
   @override
   Widget build(BuildContext context) {
@@ -50,19 +52,20 @@ class RegistrationDetailEmergencyCard extends StatelessWidget {
               ],
             ),
           ),
-          Material(
-            color: AppColors.darkSurface,
-            borderRadius: BorderRadius.circular(24),
-            child: InkWell(
-              onTap: () => UrlLauncherHelper.openPhone(contactPhone),
+          if (showPhoneButton)
+            Material(
+              color: AppColors.darkSurface,
               borderRadius: BorderRadius.circular(24),
-              child: const SizedBox(
-                width: 48,
-                height: 48,
-                child: Icon(Icons.call_rounded, color: AppColors.success),
+              child: InkWell(
+                onTap: () => UrlLauncherHelper.openPhone(contactPhone),
+                borderRadius: BorderRadius.circular(24),
+                child: const SizedBox(
+                  width: 48,
+                  height: 48,
+                  child: Icon(Icons.call_rounded, color: AppColors.success),
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
