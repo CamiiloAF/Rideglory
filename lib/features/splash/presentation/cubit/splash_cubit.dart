@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rideglory/core/permissions/location_permission_handler.dart';
 import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/core/services/vehicle_preferences_service.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
@@ -20,6 +21,7 @@ class SplashCubit extends Cubit<SplashState> {
     emit(const SplashLoading());
 
     try {
+      await LocationPermissionHandler.requestOnceOnFirstSplashOpen();
       await Future.delayed(const Duration(milliseconds: 1500));
 
       // Check if user is authenticated
