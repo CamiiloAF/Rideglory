@@ -91,9 +91,7 @@ class VehicleCubit extends Cubit<VehicleState> {
     bool shouldUpdateMainVehicle = false,
   }) {
     final current = currentVehicle;
-    if (current != null && current.id == updatedVehicle.id) {
-      emit(VehicleLoaded(updatedVehicle));
-    }
+    final isEditingCurrent = current != null && current.id == updatedVehicle.id;
 
     if (shouldUpdateMainVehicle) {
       if (!_availableVehicles.contains(updatedVehicle)) {
@@ -103,10 +101,19 @@ class VehicleCubit extends Cubit<VehicleState> {
       setMainVehicle(updatedVehicle.id!);
     }
 
-    // Also update in available vehicles
     _availableVehicles = _availableVehicles.map((v) {
       return v.id == updatedVehicle.id ? updatedVehicle : v;
     }).toList();
+
+    // Always emit to refresh listeners (garage & home),
+    // keeping the current selected vehicle if any.
+    if (isEditingCurrent) {
+      emit(VehicleLoaded(updatedVehicle));
+    } else if (current != null) {
+      emit(VehicleLoaded(current));
+    } else if (_availableVehicles.isNotEmpty) {
+      emit(VehicleLoaded(_availableVehicles.first));
+    }
   }
 
   Future<void> setMainVehicle(String vehicleId) async {
@@ -140,6 +147,9 @@ class VehicleCubit extends Cubit<VehicleState> {
 
     if (_availableVehicles.length == 1) {
       setCurrentVehicle(vehicle);
+    } else {
+      final current = currentVehicle ?? vehicle;
+      emit(VehicleLoaded(current));
     }
   }
 

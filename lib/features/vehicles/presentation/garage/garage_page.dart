@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
@@ -30,9 +29,7 @@ class _GaragePageState extends State<GaragePage> {
       onPopInvokedWithResult: (bool didPop, _) {
         if (!didPop) context.goNamed(AppRoutes.home);
       },
-      child: BlocProvider.value(
-        value: getIt<VehicleCubit>(),
-        child: Scaffold(
+      child: Scaffold(
           backgroundColor: const Color(
             0xFF1C1209,
           ), // Deeper contrast matching theme
@@ -98,6 +95,10 @@ class _GaragePageState extends State<GaragePage> {
                   0,
                   (sum, v) => sum + v.currentMileage,
                 );
+
+                final vehicleCubit = context.read<VehicleCubit>();
+                final mainVehicleId = vehicleCubit.currentVehicle?.id;
+                final canToggleMain = totalVehicles > 1;
 
                 return SingleChildScrollView(
                   child: Column(
@@ -196,6 +197,17 @@ class _GaragePageState extends State<GaragePage> {
                             currentVehicle,
                           );
                         },
+                        isMainVehicle: currentVehicle.id != null &&
+                            currentVehicle.id == mainVehicleId,
+                        onMainVehicleChanged: canToggleMain &&
+                                currentVehicle.id != null
+                            ? (value) {
+                                if (value) {
+                                  vehicleCubit
+                                      .setMainVehicle(currentVehicle.id!);
+                                }
+                              }
+                            : null,
                       ),
                     ],
                   ),
@@ -204,7 +216,6 @@ class _GaragePageState extends State<GaragePage> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }

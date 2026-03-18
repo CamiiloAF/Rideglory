@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
 class VehicleDetailHeader extends StatelessWidget {
@@ -9,11 +10,15 @@ class VehicleDetailHeader extends StatelessWidget {
     required this.vehicle,
     required this.onAddVehicle,
     required this.onOptionsTap,
+    required this.isMainVehicle,
+    this.onMainVehicleChanged,
   });
 
   final VehicleModel vehicle;
   final VoidCallback onAddVehicle;
   final VoidCallback onOptionsTap;
+  final bool isMainVehicle;
+  final ValueChanged<bool>? onMainVehicleChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +53,35 @@ class VehicleDetailHeader extends StatelessWidget {
                 _getBrandAndModel(),
                 style: context.bodyLarge?.copyWith(color: Colors.grey[400]),
               ),
+
+              if (onMainVehicleChanged != null) ...[
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.star_rounded,
+                      size: 18,
+                      color: isMainVehicle
+                          ? AppColors.primary
+                          : Colors.white.withValues(alpha: 0.4),
+                    ),
+
+                    const SizedBox(width: 6),
+                    Text(
+                      VehicleStrings.mainVehicle,
+                      style: context.bodyMedium?.copyWith(
+                        color: Colors.white.withValues(alpha: 0.8),
+                      ),
+                    ),
+                    const Spacer(),
+                    Switch.adaptive(
+                      value: isMainVehicle,
+                      activeTrackColor: AppColors.primary,
+                      onChanged: onMainVehicleChanged,
+                    ),
+                  ],
+                ),
+              ],
             ],
           ),
         ),
