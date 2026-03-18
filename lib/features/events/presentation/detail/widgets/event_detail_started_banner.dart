@@ -4,17 +4,14 @@ import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
 
 class EventDetailStartedBanner extends StatelessWidget {
-  const EventDetailStartedBanner({
-    super.key,
-    this.onFollowLive,
-  });
+  const EventDetailStartedBanner({super.key, this.onFollowLive});
 
   final VoidCallback? onFollowLive;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 20),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(20),
@@ -29,7 +26,10 @@ class EventDetailStartedBanner extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.primary.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(20),
@@ -50,17 +50,17 @@ class EventDetailStartedBanner extends StatelessWidget {
             Text(
               EventStrings.eventHasStartedTitle,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
               EventStrings.eventHasStartedDescription,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    height: 1.4,
-                  ),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                height: 1.4,
+              ),
             ),
             if (onFollowLive != null) ...[
               const SizedBox(height: 16),

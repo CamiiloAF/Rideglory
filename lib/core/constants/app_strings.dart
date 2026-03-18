@@ -17,6 +17,7 @@ abstract class AppStrings {
   static const String retry = 'Reintentar';
   static const String back = 'Volver';
   static const String continue_ = 'Continuar';
+  static const String openSettings = 'Abrir ajustes';
   static const String exit = 'Salir';
   static const String exitAppTitle = 'Salir de la aplicación';
   static const String exitAppMessage =
@@ -27,6 +28,11 @@ abstract class AppStrings {
   static String errorMessage(String message) => 'Error: $message';
   static const String tryAgain = 'Intentar nuevamente';
   static const String noInternet = 'Sin conexión a internet';
+
+  // Permissions
+  static const String locationPermissionTitle = 'Permiso de ubicación';
+  static const String locationPermissionMapRequiredMessage =
+      'Necesitamos acceso a tu ubicación para mostrar tu posición y seguir la rodada en vivo. Puedes continuar usando la app sin este permiso, pero el mapa en vivo no estará disponible.';
 
   // Image upload errors
   static const String imageUploadFailed =

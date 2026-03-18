@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/core/utils/initials.dart';
 
 class InitialsAvatar extends StatelessWidget {
   const InitialsAvatar({
@@ -17,12 +18,6 @@ class InitialsAvatar extends StatelessWidget {
   final double radius;
   final Color? backgroundColor;
   final TextStyle? textStyle;
-
-  static String _buildInitials(String firstName, String lastName) {
-    final first = firstName.isNotEmpty ? firstName[0] : '';
-    final last = lastName.isNotEmpty ? lastName[0] : '';
-    return '${first.toUpperCase()}${last.toUpperCase()}';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +38,7 @@ class InitialsAvatar extends StatelessWidget {
       radius: radius,
       backgroundColor: resolvedBackground,
       child: Text(
-        _buildInitials(firstName, lastName),
+        Initials.buildInitials(firstName: firstName, lastName: lastName),
         style: resolvedTextStyle,
       ),
     );

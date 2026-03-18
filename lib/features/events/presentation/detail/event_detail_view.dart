@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/permissions/location_permission_handler.dart';
 import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
@@ -172,9 +176,9 @@ class EventDetailViewState extends State<EventDetailView> {
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
                   titlePadding: const EdgeInsets.only(bottom: 12),
-                  title: Text(
+                  title: const Text(
                     EventStrings.eventDetail,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.darkTextPrimary,
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
@@ -193,11 +197,26 @@ class EventDetailViewState extends State<EventDetailView> {
                   children: [
                     if (currentEvent.state == EventState.inProgress ||
                         currentEvent.state == EventState.finished)
-                      EventDetailStartedBanner(
-                        onFollowLive:
-                            currentEvent.state == EventState.inProgress
-                            ? () {}
-                            : null,
+                      BlocBuilder<EventDetailCubit, EventDetailState>(
+                        builder: (context, state) {
+                          return state.registrationResult.maybeWhen(
+                            data: (registration) {
+                              final isApproved = registration?.status ==
+                                  RegistrationStatus.approved;
+                              if (!isApproved) return const SizedBox.shrink();
+
+                              return EventDetailStartedBanner(
+                                onFollowLive:
+                                    currentEvent.state == EventState.inProgress
+                                        ? () {
+                                            unawaited(_onFollowLivePressed());
+                                          }
+                                        : null,
+                              );
+                            },
+                            orElse: () => const SizedBox.shrink(),
+                          );
+                        },
                       ),
                     EventDetailBody(
                       event: currentEvent,
@@ -252,6 +271,35 @@ class EventDetailViewState extends State<EventDetailView> {
     );
     if (result != null && context.mounted) {
       context.read<EventDetailCubit>().updateRegistration(result);
+    }
+  }
+
+  Future<void> _onFollowLivePressed() async {
+    final result = await LocationPermissionHandler.request();
+
+    if (result == LocationPermissionResult.granted) {
+      if (!mounted) return;
+      await context.pushNamed(
+        AppRoutes.liveMap,
+        extra: currentEvent,
+      );
+      return;
+    }
+
+    if (!mounted) return;
+
+    final openSettings = await ConfirmationDialog.show(
+      context: context,
+      title: AppStrings.locationPermissionTitle,
+      content: AppStrings.locationPermissionMapRequiredMessage,
+      cancelLabel: AppStrings.continue_,
+      confirmLabel: AppStrings.openSettings,
+      dialogType: DialogType.warning,
+      isDismissible: true,
+    );
+
+    if (openSettings == true) {
+      await LocationPermissionHandler.openSettings();
     }
   }
 

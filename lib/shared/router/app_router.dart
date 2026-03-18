@@ -15,6 +15,8 @@ import 'package:rideglory/features/events/presentation/detail/params.dart';
 import 'package:rideglory/features/events/presentation/form/event_form_page.dart';
 import 'package:rideglory/features/events/presentation/list/events_page.dart';
 import 'package:rideglory/features/events/presentation/detail/event_detail_by_id_page.dart';
+import 'package:rideglory/features/events/presentation/tracking/live_map_page.dart';
+import 'package:rideglory/features/events/presentation/tracking/participants/participants_placeholder_page.dart';
 import 'package:rideglory/features/home/presentation/home_page.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
@@ -232,6 +234,22 @@ class AppRouter {
         },
       ),
       GoRoute(
+        path: AppRoutes.liveMap,
+        name: AppRoutes.liveMap,
+        builder: (context, state) {
+          final event = state.extra as EventModel;
+          return LiveMapPage(event: event);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.participants,
+        name: AppRoutes.participants,
+        builder: (context, state) {
+          final event = state.extra as EventModel;
+          return ParticipantsPlaceholderPage(event: event);
+        },
+      ),
+      GoRoute(
         path: AppRoutes.myRegistrations,
         name: AppRoutes.myRegistrations,
         builder: (context, state) => const MyRegistrationsPage(),
@@ -241,9 +259,7 @@ class AppRouter {
         name: AppRoutes.registrationDetail,
         builder: (context, state) {
           final extra = state.extra as RegistrationDetailExtra;
-          return RegistrationDetailPage(
-            params: extra,
-          );
+          return RegistrationDetailPage(params: extra);
         },
       ),
       GoRoute(
