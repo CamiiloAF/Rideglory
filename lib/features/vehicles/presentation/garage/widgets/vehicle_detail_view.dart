@@ -15,6 +15,8 @@ class VehicleDetailView extends StatelessWidget {
     required this.totalMileage,
     required this.onAddVehicle,
     required this.onOptionsTap,
+    required this.isMainVehicle,
+    this.onMainVehicleChanged,
   });
 
   final VehicleModel vehicle;
@@ -23,6 +25,8 @@ class VehicleDetailView extends StatelessWidget {
   final int totalMileage;
   final VoidCallback onAddVehicle;
   final VoidCallback onOptionsTap;
+  final bool isMainVehicle;
+  final ValueChanged<bool>? onMainVehicleChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +47,8 @@ class VehicleDetailView extends StatelessWidget {
                 vehicle: vehicle,
                 onAddVehicle: onAddVehicle,
                 onOptionsTap: onOptionsTap,
+                isMainVehicle: isMainVehicle,
+                onMainVehicleChanged: onMainVehicleChanged,
               ),
               const SizedBox(height: 32),
               VehicleQuickInfoSection(vehicle: vehicle),

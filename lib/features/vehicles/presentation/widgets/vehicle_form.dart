@@ -18,14 +18,12 @@ class VehicleForm extends StatelessWidget {
   const VehicleForm({
     super.key,
     this.formKey,
-    this.isLoading = false,
     this.isEditing = false,
     this.initialValue,
     this.onSave,
   });
 
   final GlobalKey<FormBuilderState>? formKey;
-  final bool isLoading;
   final bool isEditing;
   final Map<String, dynamic>? initialValue;
   final VoidCallback? onSave;
@@ -172,11 +170,16 @@ class VehicleForm extends StatelessWidget {
 
               if (onSave != null) ...[
                 const SizedBox(height: 24),
-                AppButton(
-                  onPressed: isLoading ? null : onSave,
-                  label: isEditing
-                      ? VehicleStrings.editVehicle
-                      : VehicleStrings.saveVehicle,
+                BlocBuilder<VehicleFormCubit, VehicleFormState>(
+                  builder: (context, state) {
+                    final isLoading = state.isLoading;
+                    return AppButton(
+                      onPressed: isLoading ? null : onSave,
+                      label: isEditing
+                          ? VehicleStrings.editVehicle
+                          : VehicleStrings.saveVehicle,
+                    );
+                  },
                 ),
                 const SizedBox(height: 16),
               ],

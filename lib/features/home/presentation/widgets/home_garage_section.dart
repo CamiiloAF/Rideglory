@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/home/constants/home_strings.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_empty_garage_card.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_garage_card.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
 class HomeGarageSection extends StatelessWidget {
@@ -14,6 +16,9 @@ class HomeGarageSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final vehicleFromCubit = context.watch<VehicleCubit>().currentVehicle;
+    final effectiveVehicle = vehicleFromCubit ?? vehicle;
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
       child: Column(
@@ -45,8 +50,8 @@ class HomeGarageSection extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          vehicle != null
-              ? HomeGarageCard(vehicle: vehicle!)
+          effectiveVehicle != null
+              ? HomeGarageCard(vehicle: effectiveVehicle)
               : const HomeEmptyGarageCard(),
         ],
       ),

@@ -140,22 +140,17 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
             ? VehicleStrings.editVehicle
             : VehicleStrings.addVehicle,
       ),
-      body: BlocConsumer<VehicleFormCubit, VehicleFormState>(
+      body: BlocListener<VehicleFormCubit, VehicleFormState>(
         listener: _listener,
-        builder: (context, state) {
-          final isLoading = state.isLoading;
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: VehicleForm(
-              formKey: context.read<VehicleFormCubit>().formKey,
-              initialValue: _getInitialValues(),
-              isEditing: isEditing,
-              onSave: _saveVehicle,
-              isLoading: isLoading,
-            ),
-          );
-        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: VehicleForm(
+            formKey: context.read<VehicleFormCubit>().formKey,
+            initialValue: _getInitialValues(),
+            isEditing: isEditing,
+            onSave: _saveVehicle,
+          ),
+        ),
       ),
     );
   }
