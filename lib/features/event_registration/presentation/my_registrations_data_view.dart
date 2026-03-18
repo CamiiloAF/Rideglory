@@ -32,7 +32,7 @@ class MyRegistrationsDataView extends StatelessWidget {
               Expanded(
                 child: AppTextField(
                   name: 'search',
-                  hintText: EventStrings.filterAll,
+                  hintText: EventStrings.searchRegistrations,
                   prefixIcon: Icons.search_rounded,
                   textCapitalization: TextCapitalization.none,
                   onChanged: (value) => cubit.updateSearchQuery(value ?? ''),
@@ -151,9 +151,7 @@ class MyRegistrationsDataView extends StatelessWidget {
       case RegistrationStatus.pending:
         context.pushNamed(
           AppRoutes.registrationDetail,
-          extra: RegistrationDetailExtra(
-            registration: registration,
-          ),
+          extra: RegistrationDetailExtra(registration: registration),
         );
         break;
       case RegistrationStatus.readyForEdit:
@@ -178,9 +176,7 @@ class MyRegistrationsDataView extends StatelessWidget {
       case RegistrationStatus.rejected:
         context.pushNamed(
           AppRoutes.registrationDetail,
-          extra: RegistrationDetailExtra(
-            registration: registration,
-          ),
+          extra: RegistrationDetailExtra(registration: registration),
         );
         break;
       case RegistrationStatus.cancelled:
