@@ -78,7 +78,7 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
               FormBuilderValidators.email(errorText: context.l10n.auth_invalidEmail),
             ]),
           ),
-          SizedBox(height: 16),
+          AppSpacing.gapLg,
           AppPasswordTextField(
             name: AuthFormFields.password,
             hintText: context.l10n.auth_passwordMinStitch,
@@ -103,7 +103,7 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
               ),
             ]),
           ),
-          SizedBox(height: 16),
+          AppSpacing.gapLg,
           AppPasswordTextField(
             name: AuthFormFields.confirmPassword,
             hintText: context.l10n.auth_confirmYourPassword,
@@ -125,14 +125,14 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
               },
             ]),
           ),
-          SizedBox(height: 24),
+          AppSpacing.gapXxl,
           const AppCheckbox(
             name: AuthFormFields.acceptTerms,
             title: '',
             initialValue: false,
             customTitle: SignupTermsText(),
           ),
-          SizedBox(height: 24),
+          AppSpacing.gapXxl,
           BlocBuilder<AuthCubit, AuthState>(
             builder: (context, state) {
               return AppButton(

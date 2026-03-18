@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class AttendeeProcessedItem extends StatelessWidget {
   final EventRegistrationModel registration;
@@ -64,7 +63,7 @@ class AttendeeProcessedItem extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(width: 12),
+              AppSpacing.hGapMd,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,7 +76,7 @@ class AttendeeProcessedItem extends StatelessWidget {
                         color: colorScheme.onSurface,
                       ),
                     ),
-                    SizedBox(height: 4),
+                    AppSpacing.gapXxs,
                     Text(
                       vehicleText,
                       style: textTheme.bodySmall?.copyWith(

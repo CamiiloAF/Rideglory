@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class FabOption extends StatelessWidget {
   final IconData icon;
@@ -26,7 +27,7 @@ class FabOption extends StatelessWidget {
             child: Text(label, style: Theme.of(context).textTheme.bodyMedium),
           ),
         ),
-        SizedBox(width: 12),
+        AppSpacing.hGapMd,
         FloatingActionButton.small(
           onPressed: onPressed,
           heroTag: label,

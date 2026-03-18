@@ -5,6 +5,7 @@ import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_garage_overview_section.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_quick_info_section.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_maintenance_history_section.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleDetailView extends StatelessWidget {
   const VehicleDetailView({
@@ -50,19 +51,19 @@ class VehicleDetailView extends StatelessWidget {
                 isMainVehicle: isMainVehicle,
                 onMainVehicleChanged: onMainVehicleChanged,
               ),
-              SizedBox(height: 32),
+              AppSpacing.gapXxxl,
               VehicleQuickInfoSection(vehicle: vehicle),
-              SizedBox(height: 32),
+              AppSpacing.gapXxxl,
               VehicleFullSpecsSection(vehicle: vehicle),
-              SizedBox(height: 32),
+              AppSpacing.gapXxxl,
               VehicleMaintenanceHistorySection(vehicle: vehicle),
-              SizedBox(height: 32),
+              AppSpacing.gapXxxl,
               VehicleGarageOverviewSection(
                 totalVehicles: totalVehicles,
                 totalMileage: totalMileage,
               ),
               // Bottom padding for the navigation bar
-              SizedBox(height: 32),
+              AppSpacing.gapXxxl,
             ],
           ),
         ),

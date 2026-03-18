@@ -25,9 +25,9 @@ class RegistrationStatusContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(children: [RegistrationStatusChip(status: status)]),
-        SizedBox(height: 8),
+        AppSpacing.gapSm,
         Text(description, style: theme.textTheme.bodySmall),
-        if (onEdit != null || onCancel != null) SizedBox(height: 12),
+        if (onEdit != null || onCancel != null) AppSpacing.gapMd,
         if (onEdit != null)
           AppButton(
             label: context.l10n.event_editRegistration,
@@ -35,7 +35,7 @@ class RegistrationStatusContent extends StatelessWidget {
             icon: Icons.edit_outlined,
           ),
         if (onCancel != null) ...[
-          SizedBox(height: 8),
+          AppSpacing.gapSm,
           AppTextButton(
             label: context.l10n.event_cancelRegistration,
             onPressed: onCancel,

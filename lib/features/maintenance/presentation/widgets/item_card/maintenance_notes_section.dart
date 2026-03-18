@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenanceNotesSection extends StatelessWidget {
   final MaintenanceModel maintenance;
@@ -21,7 +22,7 @@ class MaintenanceNotesSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Icon(Icons.notes_rounded, size: 16, color: Colors.grey[600]),
-            SizedBox(width: 8),
+            AppSpacing.hGapSm,
             Expanded(
               child: Text(
                 maintenance.notes!,

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleDetailHeader extends StatelessWidget {
   const VehicleDetailHeader({
@@ -55,7 +54,7 @@ class VehicleDetailHeader extends StatelessWidget {
               ),
 
               if (onMainVehicleChanged != null) ...[
-                SizedBox(height: 8),
+                AppSpacing.gapSm,
                 Row(
                   children: [
                     Icon(
@@ -66,7 +65,7 @@ class VehicleDetailHeader extends StatelessWidget {
                           : Colors.white.withValues(alpha: 0.4),
                     ),
 
-                    SizedBox(width: 6),
+                    AppSpacing.hGapXs,
                     Text(
                       context.l10n.vehicle_mainVehicle,
                       style: context.bodyMedium?.copyWith(

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/di/injection.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/domain/use_cases/get_maintenances_by_vehicle_id_use_case.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class HomeVehicleInfoRow extends StatelessWidget {
   const HomeVehicleInfoRow({super.key, required this.vehicle});
@@ -57,7 +56,7 @@ class HomeVehicleInfoRow extends StatelessWidget {
               fontWeight: FontWeight.w700,
             ),
           ),
-          SizedBox(height: 6),
+          AppSpacing.gapXs,
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
@@ -75,7 +74,7 @@ class HomeVehicleInfoRow extends StatelessWidget {
                   color: context.colorScheme.primary,
                   size: 13,
                 ),
-                SizedBox(width: 4),
+                AppSpacing.hGapXxs,
                 FutureBuilder<int?>(
                   future: _loadNextOilChangeMileage(),
                   builder: (context, snapshot) {

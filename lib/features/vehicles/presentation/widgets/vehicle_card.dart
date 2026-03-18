@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
@@ -65,7 +63,7 @@ class VehicleCard extends StatelessWidget {
                             : _buildPlaceholderIcon(context),
                       ),
                     ),
-                    SizedBox(width: 14),
+                    AppSpacing.hGapMd,
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,7 +101,7 @@ class VehicleCard extends StatelessWidget {
                                             .colorScheme
                                             .onSurfaceVariant,
                                       ),
-                                      SizedBox(width: 4),
+                                      AppSpacing.hGapXxs,
                                       Text(
                                         'Archivado',
                                         style: TextStyle(
@@ -121,7 +119,7 @@ class VehicleCard extends StatelessWidget {
                           ),
                           if (vehicle.brand != null ||
                               vehicle.model != null) ...[
-                            SizedBox(height: 4),
+                            AppSpacing.gapXxs,
                             Text(
                               [
                                 vehicle.brand,
@@ -158,7 +156,7 @@ class VehicleCard extends StatelessWidget {
                                   size: 20,
                                   color: context.colorScheme.onSurface,
                                 ),
-                                SizedBox(width: 12),
+                                AppSpacing.hGapMd,
                                 Text(
                                   context.l10n.edit,
                                   style: TextStyle(
@@ -178,7 +176,7 @@ class VehicleCard extends StatelessWidget {
                                     size: 20,
                                     color: context.colorScheme.onSurface,
                                   ),
-                                  SizedBox(width: 12),
+                                  AppSpacing.hGapMd,
                                   Text(
                                     context
                                         .l10n
@@ -200,7 +198,7 @@ class VehicleCard extends StatelessWidget {
                                     size: 20,
                                     color: context.colorScheme.onSurface,
                                   ),
-                                  SizedBox(width: 12),
+                                  AppSpacing.hGapMd,
                                   Text(
                                     context.l10n.vehicle_archiveVehicle,
                                     style: TextStyle(
@@ -220,7 +218,7 @@ class VehicleCard extends StatelessWidget {
                                     size: 20,
                                     color: context.colorScheme.onSurface,
                                   ),
-                                  SizedBox(width: 12),
+                                  AppSpacing.hGapMd,
                                   Text(
                                     context.l10n.vehicle_unarchiveVehicle,
                                     style: TextStyle(
@@ -239,7 +237,7 @@ class VehicleCard extends StatelessWidget {
                                   size: 20,
                                   color: context.colorScheme.error,
                                 ),
-                                SizedBox(width: 12),
+                                AppSpacing.hGapMd,
                                 Text(
                                   context.l10n.delete,
                                   style: TextStyle(
@@ -268,7 +266,7 @@ class VehicleCard extends StatelessWidget {
                       ),
                   ],
                 ),
-                SizedBox(height: 16),
+                AppSpacing.gapLg,
                 // Info chips section
                 Wrap(
                   spacing: 8,

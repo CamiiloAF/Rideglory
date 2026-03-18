@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
@@ -70,7 +68,7 @@ class VehicleSelectorChip extends StatelessWidget {
                   size: 16,
                   color: hasSelection ? Colors.white : context.colorScheme.primary,
                 ),
-                SizedBox(width: 6),
+                AppSpacing.hGapXs,
                 Text(
                   label,
                   style: context.bodyMedium?.copyWith(
@@ -81,7 +79,7 @@ class VehicleSelectorChip extends StatelessWidget {
                   ),
                 ),
                 if (hasSelection) ...[
-                  SizedBox(width: 6),
+                  AppSpacing.hGapXs,
                   Icon(
                     Icons.arrow_drop_down,
                     size: 14,

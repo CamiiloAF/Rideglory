@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class AppAutocompleteChipsField extends StatefulWidget {
   const AppAutocompleteChipsField({
@@ -117,7 +118,7 @@ class _AppAutocompleteChipsFieldState extends State<AppAutocompleteChipsField> {
                           size: 16,
                           color: cs.primary,
                         ),
-                        const SizedBox(width: 8),
+                        AppSpacing.hGapSm,
                         Expanded(
                           child: Text(
                             _filteredSuggestions[i],
@@ -191,7 +192,7 @@ class _AppAutocompleteChipsFieldState extends State<AppAutocompleteChipsField> {
               ),
             ),
             if (chips.isNotEmpty) ...[
-              const SizedBox(height: 12),
+              AppSpacing.gapMd,
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
@@ -219,7 +220,7 @@ class _AppAutocompleteChipsFieldState extends State<AppAutocompleteChipsField> {
                             fontSize: 13,
                           ),
                         ),
-                        const SizedBox(width: 6),
+                        AppSpacing.hGapXs,
                         GestureDetector(
                           onTap: () => _removeChip(entry.key, field),
                           child: Icon(

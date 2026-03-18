@@ -46,7 +46,7 @@ class VehicleForm extends StatelessWidget {
                 showGenerateWithAI: false,
                 labelText: context.l10n.vehicle_vehiclePhoto,
               ),
-              SizedBox(height: 24),
+              AppSpacing.gapXxl,
               AppTextField(
                 name: VehicleFormFields.name,
                 labelText: context.l10n.vehicle_vehicleName,
@@ -64,7 +64,7 @@ class VehicleForm extends StatelessWidget {
                   ),
                 ]),
               ),
-              SizedBox(height: 16),
+              AppSpacing.gapLg,
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -87,7 +87,7 @@ class VehicleForm extends StatelessWidget {
                       },
                     ),
                   ),
-                  SizedBox(width: 12),
+                  AppSpacing.hGapMd,
                   Expanded(
                     child: AppTextField(
                       name: VehicleFormFields.year,
@@ -116,7 +116,7 @@ class VehicleForm extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 16),
+              AppSpacing.gapLg,
               AppTextField(
                 name: VehicleFormFields.model,
                 labelText: context.l10n.vehicle_vehicleModel,
@@ -124,14 +124,14 @@ class VehicleForm extends StatelessWidget {
                 prefixIcon: Icons.style,
                 textInputAction: TextInputAction.next,
               ),
-              SizedBox(height: 16),
+              AppSpacing.gapLg,
 
               AppMileageField(
                 name: VehicleFormFields.currentMileage,
                 labelText: context.l10n.vehicle_currentMileageLabel,
                 textInputAction: TextInputAction.next,
               ),
-              SizedBox(height: 16),
+              AppSpacing.gapLg,
 
               AppTextField(
                 name: VehicleFormFields.licensePlate,
@@ -142,7 +142,7 @@ class VehicleForm extends StatelessWidget {
                 textCapitalization: TextCapitalization.characters,
                 textInputAction: TextInputAction.next,
               ),
-              SizedBox(height: 16),
+              AppSpacing.gapLg,
 
               AppTextField(
                 name: VehicleFormFields.vin,
@@ -151,7 +151,7 @@ class VehicleForm extends StatelessWidget {
                 prefixIcon: Icons.pin,
                 textInputAction: TextInputAction.done,
               ),
-              SizedBox(height: 16),
+              AppSpacing.gapLg,
 
               AppDatePicker(
                 fieldName: VehicleFormFields.purchaseDate,
@@ -160,10 +160,10 @@ class VehicleForm extends StatelessWidget {
                 hintText: context.l10n.vehicle_purchaseDateHint,
                 prefixIcon: Icon(Icons.calendar_today),
               ),
-              SizedBox(height: 16),
+              AppSpacing.gapLg,
 
               if (onSave != null) ...[
-                SizedBox(height: 24),
+                AppSpacing.gapXxl,
                 BlocBuilder<VehicleFormCubit, VehicleFormState>(
                   builder: (context, state) {
                     final isLoading = state.isLoading;
@@ -175,7 +175,7 @@ class VehicleForm extends StatelessWidget {
                     );
                   },
                 ),
-                SizedBox(height: 16),
+                AppSpacing.gapLg,
               ],
             ],
           ),

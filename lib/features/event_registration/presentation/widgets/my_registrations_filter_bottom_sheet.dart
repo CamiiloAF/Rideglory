@@ -103,7 +103,7 @@ class _MyRegistrationsFilterBottomSheetState
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    AppSpacing.gapSm,
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,

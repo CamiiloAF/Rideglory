@@ -4,6 +4,7 @@ import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_info_card.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleQuickInfoSection extends StatelessWidget {
   const VehicleQuickInfoSection({super.key, required this.vehicle});
@@ -23,7 +24,7 @@ class VehicleQuickInfoSection extends StatelessWidget {
             color: Colors.grey[500],
           ),
         ),
-        SizedBox(height: 16),
+        AppSpacing.gapLg,
         Row(
           children: [
             Expanded(
@@ -33,7 +34,7 @@ class VehicleQuickInfoSection extends StatelessWidget {
                 value: vehicle.licensePlate ?? '-',
               ),
             ),
-            SizedBox(width: 16),
+            AppSpacing.hGapLg,
             Expanded(
               child: VehicleInfoCard(
                 icon: Icons.speed, // Mileage icon equivalent

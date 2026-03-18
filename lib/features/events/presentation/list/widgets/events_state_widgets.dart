@@ -9,7 +9,7 @@ class EventsLoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: CircularProgressIndicator());
+    return AppLoadingIndicator(variant: AppLoadingIndicatorVariant.page);
   }
 }
 
@@ -34,18 +34,18 @@ class EventsErrorWidget extends StatelessWidget {
             size: 64,
             color: Theme.of(context).colorScheme.error,
           ),
-          SizedBox(height: 16),
+          AppSpacing.gapLg,
           Text(
             context.l10n.event_errorLoadingEvents,
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          SizedBox(height: 8),
+          AppSpacing.gapSm,
           Text(
             message,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall,
           ),
-          SizedBox(height: 16),
+          AppSpacing.gapLg,
           AppButton(
             label: 'Reintentar',
             onPressed: onRefresh,

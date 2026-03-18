@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventCardMeetingTimeAndBrands extends StatelessWidget {
   final String formattedTime;
@@ -32,7 +33,7 @@ class EventCardMeetingTimeAndBrands extends StatelessWidget {
     return Row(
       children: [
         Icon(Icons.access_time_outlined, size: _iconSize, color: iconColor),
-        SizedBox(width: 4),
+        AppSpacing.hGapXxs,
         Text(
           '${context.l10n.event_meetingTimePrefix}$formattedTime',
           style: theme.textTheme.bodySmall?.copyWith(color: textColor),
@@ -44,7 +45,7 @@ class EventCardMeetingTimeAndBrands extends StatelessWidget {
             size: _iconSize,
             color: colorScheme.secondary,
           ),
-          SizedBox(width: 4),
+          AppSpacing.hGapXxs,
           Text(
             allowedBrandsText(context),
             style: theme.textTheme.labelSmall?.copyWith(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class AppBottomSheet<T> extends StatelessWidget {
   final String title;
@@ -54,7 +55,7 @@ class AppBottomSheet<T> extends StatelessWidget {
                   ),
                 ),
                 if (description != null) ...[
-                  const SizedBox(height: 4),
+                  AppSpacing.gapXxs,
                   Text(description!, style: context.bodyMedium),
                 ],
               ],

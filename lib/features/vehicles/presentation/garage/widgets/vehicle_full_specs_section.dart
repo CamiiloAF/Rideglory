@@ -4,6 +4,7 @@ import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_spec_row.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleFullSpecsSection extends StatelessWidget {
   const VehicleFullSpecsSection({super.key, required this.vehicle});
@@ -23,7 +24,7 @@ class VehicleFullSpecsSection extends StatelessWidget {
             color: Colors.grey[500],
           ),
         ),
-        SizedBox(height: 16),
+        AppSpacing.gapLg,
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
           child: Column(

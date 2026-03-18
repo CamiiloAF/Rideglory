@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class HomeSubMenuOption extends StatelessWidget {
   const HomeSubMenuOption({
@@ -31,7 +30,7 @@ class HomeSubMenuOption extends StatelessWidget {
               ),
               child: Icon(icon, color: context.colorScheme.primary, size: 22),
             ),
-            SizedBox(width: 16),
+            AppSpacing.hGapLg,
             Text(
               label,
               style: TextStyle(

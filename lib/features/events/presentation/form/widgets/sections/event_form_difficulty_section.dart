@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/event_form_section_card.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventFormDifficultySection extends StatelessWidget {
   const EventFormDifficultySection({super.key});
@@ -53,7 +52,7 @@ class EventFormDifficultySection extends StatelessWidget {
                         );
                       }),
                     ),
-                    SizedBox(width: 12),
+                    AppSpacing.hGapMd,
                     Flexible(
                       child: Text(
                         context.l10n.event_difficultyLevel(
@@ -70,7 +69,7 @@ class EventFormDifficultySection extends StatelessWidget {
                   ],
                 ),
                 if (field.hasError) ...[
-                  SizedBox(height: 6),
+                  AppSpacing.gapXs,
                   Text(
                     field.errorText!,
                     style: Theme.of(

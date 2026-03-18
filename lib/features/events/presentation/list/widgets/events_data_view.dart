@@ -37,7 +37,7 @@ class EventsDataView extends StatelessWidget {
                   darkMode: true,
                 ),
               ),
-              SizedBox(width: 12),
+              AppSpacing.hGapMd,
               SizedBox(
                 width: 48,
                 height: 48,
@@ -76,9 +76,9 @@ class EventsDataView extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 8),
+        AppSpacing.gapSm,
         const EventTypeFilterChips(),
-        SizedBox(height: 8),
+        AppSpacing.gapSm,
         events.isEmpty
             ? const NoSearchResultsEmptyWidget()
             : Expanded(

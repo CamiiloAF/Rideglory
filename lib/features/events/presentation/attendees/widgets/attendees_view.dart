@@ -31,7 +31,7 @@ class AttendeesView extends StatelessWidget {
         builder: (context, state) {
           return state.when(
             initial: () => const SizedBox.shrink(),
-            loading: () => Center(child: CircularProgressIndicator()),
+            loading: () => AppLoadingIndicator(variant: AppLoadingIndicatorVariant.page),
             data: (registrations) =>
                 AttendeesDataView(registrations: registrations, event: event),
             empty: () => Center(
@@ -43,7 +43,7 @@ class AttendeesView extends StatelessWidget {
                     size: 64,
                     color: colorScheme.onSurfaceVariant,
                   ),
-                  SizedBox(height: 16),
+                  AppSpacing.gapLg,
                   Text(
                     context.l10n.event_noAttendees,
                     style: context.textTheme.titleMedium
@@ -64,7 +64,7 @@ class AttendeesView extends StatelessWidget {
                           ?.copyWith(color: colorScheme.onSurface),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 16),
+                    AppSpacing.gapLg,
                     AppButton(
                       label: context.l10n.retry,
                       onPressed: () => context

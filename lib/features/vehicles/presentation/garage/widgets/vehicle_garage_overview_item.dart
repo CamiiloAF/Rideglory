@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleGarageOverviewItem extends StatelessWidget {
   const VehicleGarageOverviewItem({
@@ -32,7 +31,7 @@ class VehicleGarageOverviewItem extends StatelessWidget {
             ),
             child: Icon(icon, color: context.colorScheme.primary, size: 20),
           ),
-          SizedBox(width: 12),
+          AppSpacing.hGapMd,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +43,7 @@ class VehicleGarageOverviewItem extends StatelessWidget {
                     letterSpacing: 0.5,
                   ),
                 ),
-                SizedBox(height: 4),
+                AppSpacing.gapXxs,
                 Text(
                   value,
                   style: context.bodyLarge?.copyWith(

@@ -138,7 +138,7 @@ class EventDetailViewState extends State<EventDetailView> {
                           child: Row(
                             children: [
                               Icon(Icons.edit_outlined),
-                              SizedBox(width: 12),
+                              AppSpacing.hGapMd,
                               Text(context.l10n.event_edit),
                             ],
                           ),
@@ -148,7 +148,7 @@ class EventDetailViewState extends State<EventDetailView> {
                           child: Row(
                             children: [
                               Icon(Icons.people_outline),
-                              SizedBox(width: 12),
+                              AppSpacing.hGapMd,
                               Text(context.l10n.event_viewAttendees),
                             ],
                           ),
@@ -158,7 +158,7 @@ class EventDetailViewState extends State<EventDetailView> {
                           child: Row(
                             children: [
                               Icon(Icons.delete_outline, color: Colors.red),
-                              SizedBox(width: 12),
+                              AppSpacing.hGapMd,
                               Text(
                                 context.l10n.event_delete,
                                 style: TextStyle(color: Colors.red),
@@ -220,7 +220,7 @@ class EventDetailViewState extends State<EventDetailView> {
                         // TODO: open maps with event.meetingPoint
                       },
                     ),
-                    SizedBox(height: 100),
+                    AppSpacing.gap100,
                   ],
                 ),
               ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class SplashBrandContent extends StatelessWidget {
   const SplashBrandContent({super.key});
@@ -27,7 +26,7 @@ class SplashBrandContent extends StatelessWidget {
                 color: context.colorScheme.primary,
               ),
             ),
-            SizedBox(height: 40),
+            AppSpacing.gap40,
             RichText(
               text: TextSpan(
                 children: [
@@ -47,7 +46,7 @@ class SplashBrandContent extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 10),
+            AppSpacing.gapSm,
             Text(
               context.l10n.splash_tagline,
               style: context.textTheme.bodyMedium?.copyWith(

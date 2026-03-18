@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventCardDateAndCity extends StatelessWidget {
   final String formattedDate;
@@ -22,14 +23,14 @@ class EventCardDateAndCity extends StatelessWidget {
     return Row(
       children: [
         Icon(Icons.calendar_today_outlined, size: _iconSize, color: iconColor),
-        SizedBox(width: 4),
+        AppSpacing.hGapXxs,
         Text(
           formattedDate,
           style: theme.textTheme.bodySmall?.copyWith(color: textColor),
         ),
-        SizedBox(width: 12),
+        AppSpacing.hGapMd,
         Icon(Icons.location_on_outlined, size: _iconSize, color: iconColor),
-        SizedBox(width: 4),
+        AppSpacing.hGapXxs,
         Text(
           city,
           style: theme.textTheme.bodySmall?.copyWith(color: textColor),

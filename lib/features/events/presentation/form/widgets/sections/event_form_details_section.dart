@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/core/data/colombia_motos_brands_data.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
@@ -50,12 +49,12 @@ class _EventFormDetailsSectionState extends State<EventFormDetailsSection> {
           labels: _difficultyLabels,
           onChanged: (level) => setState(() => _selectedDifficulty = level),
         ),
-        SizedBox(height: 24),
+        AppSpacing.gapXxl,
         _EventTypePicker(
           selected: _selectedEventType,
           onChanged: (type) => setState(() => _selectedEventType = type),
         ),
-        SizedBox(height: 24),
+        AppSpacing.gapXxl,
         AppAutocompleteChipsField(
           name: EventFormFields.allowedBrands,
           labelText: context.l10n.event_allowedBrands,
@@ -66,7 +65,7 @@ class _EventFormDetailsSectionState extends State<EventFormDetailsSection> {
           initialValue:
               context.read<EventFormCubit>().editingEvent?.allowedBrands ?? [],
         ),
-        SizedBox(height: 16),
+        AppSpacing.gapLg,
         AppTextField(
           name: EventFormFields.price,
           labelText: context.l10n.event_price,
@@ -114,7 +113,7 @@ class _DifficultyPicker extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(height: 10),
+            AppSpacing.gapSm,
             Row(
               children: [
                 Row(
@@ -141,7 +140,7 @@ class _DifficultyPicker extends StatelessWidget {
                     );
                   }),
                 ),
-                SizedBox(width: 12),
+                AppSpacing.hGapMd,
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
@@ -206,7 +205,7 @@ class _EventTypePicker extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            SizedBox(height: 10),
+            AppSpacing.gapSm,
             Wrap(
               spacing: 8,
               runSpacing: 8,

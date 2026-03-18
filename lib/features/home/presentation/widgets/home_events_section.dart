@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_empty_events_card.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_event_card.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class HomeEventsSection extends StatelessWidget {
   const HomeEventsSection({super.key, required this.events});
@@ -40,7 +39,7 @@ class HomeEventsSection extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   itemCount: events.length,
-                  separatorBuilder: (_, _) => SizedBox(width: 12),
+                  separatorBuilder: (_, _) => AppSpacing.hGapMd,
                   itemBuilder: (context, index) {
                     final event = events[index];
                     return HomeEventCard(

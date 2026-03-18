@@ -128,7 +128,7 @@ class _LiveMapPageState extends State<LiveMapPage> {
                     child: SizedBox(
                       width: 24,
                       height: 24,
-                      child: CircularProgressIndicator(strokeWidth: 2),
+                      child: AppLoadingIndicator(variant: AppLoadingIndicatorVariant.inline),
                     ),
                   ),
                 Positioned(
@@ -150,7 +150,7 @@ class _LiveMapPageState extends State<LiveMapPage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           MapZoomControls(controller: controller),
-                          SizedBox(height: 12),
+                          AppSpacing.gapMd,
                           MyLocationButton(
                             isEnabled: controller != null,
                             onTap: controller == null

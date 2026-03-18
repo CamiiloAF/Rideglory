@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:rideglory/core/data/colombia_motos_brands_data.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/event_form_section_card.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventFormMultiBrandSection extends StatelessWidget {
   const EventFormMultiBrandSection({super.key});
@@ -34,7 +33,7 @@ class EventFormMultiBrandSection extends StatelessWidget {
               ),
 
               if (!isMultiBrand) ...[
-                SizedBox(height: 16),
+                AppSpacing.gapLg,
 
                 Text(
                   context.l10n.event_selectBrands.toUpperCase(),
@@ -44,7 +43,7 @@ class EventFormMultiBrandSection extends StatelessWidget {
                     letterSpacing: 0.8,
                   ),
                 ),
-                SizedBox(height: 12),
+                AppSpacing.gapMd,
                 FormBuilderField<List<String>>(
                   name: EventFormFields.allowedBrands,
                   builder: (listField) => _BrandChipsInline(
@@ -146,7 +145,7 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
                             size: 16,
                             color: context.colorScheme.primary,
                           ),
-                          SizedBox(width: 8),
+                          AppSpacing.hGapSm,
                           Expanded(
                             child: Text(
                               _filtered[i],
@@ -192,7 +191,7 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
           ),
         ),
         if (chips.isNotEmpty) ...[
-          SizedBox(height: 12),
+          AppSpacing.gapMd,
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -217,7 +216,7 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
                         fontSize: 13,
                       ),
                     ),
-                    SizedBox(width: 6),
+                    AppSpacing.hGapXs,
                     GestureDetector(
                       onTap: () => _remove(entry.key),
                       child: Icon(

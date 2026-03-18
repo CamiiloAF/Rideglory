@@ -159,7 +159,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                       maintenance: _maintenance,
                       vehicle: vehicle,
                     ),
-                SizedBox(height: 24),
+                AppSpacing.gapXxl,
                 Row(
                   children: [
                     Expanded(
@@ -170,7 +170,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                         icon: Icons.speed,
                       ),
                     ),
-                    SizedBox(width: 16),
+                    AppSpacing.hGapLg,
                     Expanded(
                       child: MaintenanceInfoTile(
                         label: context.l10n.maintenance_totalCost,
@@ -182,14 +182,14 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                     ),
                   ],
                 ),
-                SizedBox(height: 24),
+                AppSpacing.gapXxl,
                 if (_maintenance.notes != null &&
                     _maintenance.notes!.isNotEmpty) ...[
                   MaintenanceSectionHeader(
                     title: context.l10n.maintenance_serviceNotes,
                     icon: Icons.description_outlined,
                   ),
-                  SizedBox(height: 12),
+                  AppSpacing.gapMd,
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
@@ -206,7 +206,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 24),
+                  AppSpacing.gapXxl,
                 ],
                 if (_maintenance.nextMaintenanceDate != null ||
                     _maintenance.nextMaintenanceMileage != null) ...[
@@ -216,7 +216,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                         title: context.l10n.maintenance_nextMaintenance,
                         icon: Icons.event_repeat_outlined,
                       ),
-                      SizedBox(width: 8),
+                      AppSpacing.hGapSm,
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 10,
@@ -239,7 +239,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 12),
+                  AppSpacing.gapMd,
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
@@ -264,7 +264,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                                     letterSpacing: 0.8,
                                   ),
                                 ),
-                                SizedBox(height: 8),
+                                AppSpacing.gapSm,
                                 Text(
                                   DateFormat('dd MMM, yyyy')
                                       .format(_maintenance.nextMaintenanceDate!),
@@ -298,7 +298,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                                     letterSpacing: 0.8,
                                   ),
                                 ),
-                                SizedBox(height: 8),
+                                AppSpacing.gapSm,
                                 Text(
                                   '${numberFormat.format(_maintenance.nextMaintenanceMileage)} km',
                                   style: context.titleMedium?.copyWith(
@@ -313,14 +313,14 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 24),
+                  AppSpacing.gapXxl,
                 ],
                 if (_maintenance.receiveAlert) ...[
                   MaintenanceSectionHeader(
                     title: context.l10n.maintenance_alertsConfiguration,
                     icon: Icons.notifications_active_outlined,
                   ),
-                  SizedBox(height: 12),
+                  AppSpacing.gapMd,
                   if (!_maintenance.receiveMileageAlert &&
                       !_maintenance.receiveDateAlert)
                     Container(
@@ -338,7 +338,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                             color: Theme.of(context).colorScheme.primary,
                             size: 24,
                           ),
-                          SizedBox(width: 16),
+                          AppSpacing.hGapLg,
                           Expanded(
                             child: Text(
                               context.l10n.maintenance_alertsActivatedDesc,
@@ -368,7 +368,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                           ),
                         if (_maintenance.receiveMileageAlert &&
                             _maintenance.receiveDateAlert)
-                          SizedBox(width: 12),
+                          AppSpacing.hGapMd,
                         if (_maintenance.receiveDateAlert ||
                             _maintenance.nextMaintenanceDate != null)
                           Expanded(

@@ -117,7 +117,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      AppSpacing.gapSm,
                       Wrap(
                         spacing: 8,
                         children: EventType.values.map((type) {
@@ -135,7 +135,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                           );
                         }).toList(),
                       ),
-                      SizedBox(height: 16),
+                      AppSpacing.gapLg,
                       // Difficulty filter
                       Text(
                         context.l10n.event_filterByDifficulty,
@@ -143,7 +143,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      AppSpacing.gapSm,
                       Wrap(
                         spacing: 8,
                         children: EventDifficulty.values.map((diff) {
@@ -161,14 +161,14 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                           );
                         }).toList(),
                       ),
-                      SizedBox(height: 16),
+                      AppSpacing.gapLg,
                       // City filter
                       AppCityAutocomplete(
                         name: EventFilterFormFields.city,
                         labelText: context.l10n.event_filterByCity,
                         isRequired: false,
                       ),
-                      SizedBox(height: 16),
+                      AppSpacing.gapLg,
                       // Date range
                       Text(
                         context.l10n.event_filterByDateRange,
@@ -176,7 +176,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      SizedBox(height: 8),
+                      AppSpacing.gapSm,
                       Row(
                         children: [
                           Expanded(
@@ -187,7 +187,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                               lastDate: DateTime(2030),
                             ),
                           ),
-                          SizedBox(width: 12),
+                          AppSpacing.hGapMd,
                           Expanded(
                             child: AppDatePicker(
                               fieldName: EventFilterFormFields.endDate,
@@ -198,7 +198,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 16),
+                      AppSpacing.gapLg,
                       // Boolean filters
                       AppCheckbox(
                         name: EventFilterFormFields.freeOnly,
@@ -208,7 +208,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                         name: EventFilterFormFields.multiBrandOnly,
                         title: context.l10n.event_filterByMultiBrand,
                       ),
-                      SizedBox(height: 24),
+                      AppSpacing.gapXxl,
                     ],
                   ),
                 ),

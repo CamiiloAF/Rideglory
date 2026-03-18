@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/home/presentation/cubit/home_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -23,7 +22,7 @@ class HomeEmptyGarageCard extends StatelessWidget {
       child: Column(
         children: [
           Icon(Icons.two_wheeler, size: 48, color: context.colorScheme.outlineVariant),
-          SizedBox(height: 8),
+          AppSpacing.gapSm,
           Text(
             context.l10n.home_emptyGarage,
             style: TextStyle(
@@ -35,7 +34,7 @@ class HomeEmptyGarageCard extends StatelessWidget {
             context.l10n.home_emptyGarageDescription,
             style: TextStyle(color: context.colorScheme.onSurfaceVariant, fontSize: 12),
           ),
-          SizedBox(height: 16),
+          AppSpacing.gapLg,
           AppButton(
             label: context.l10n.home_addVehicle,
             onPressed: () async {

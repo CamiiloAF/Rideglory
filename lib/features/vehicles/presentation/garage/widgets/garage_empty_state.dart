@@ -18,14 +18,14 @@ class GarageEmptyState extends StatelessWidget {
             size: 80,
             color: context.colorScheme.onSurfaceVariant,
           ),
-          SizedBox(height: 16),
+          AppSpacing.gapLg,
           Text(
             context.l10n.vehicle_noVehicles,
             style: context.titleMedium?.copyWith(
               color: context.colorScheme.onSurfaceVariant,
             ),
           ),
-          SizedBox(height: 24),
+          AppSpacing.gapXxl,
           AppButton(
             onPressed: () => context.pushNamed(AppRoutes.createVehicle),
             icon: Icons.add,

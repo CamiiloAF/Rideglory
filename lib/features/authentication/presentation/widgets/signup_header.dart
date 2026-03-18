@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 /// Header widget for signup view with title and subtitle
 class SignupHeader extends StatelessWidget {
@@ -28,7 +29,7 @@ class SignupHeader extends StatelessWidget {
           isEmailMode ? emailModeTitle : socialModeTitle,
           style: context.displayLarge,
         ),
-        SizedBox(height: 8),
+        AppSpacing.gapSm,
         Text(
           isEmailMode ? emailModeSubtitle : socialModeSubtitle,
           style: context.bodyLarge?.copyWith(color: AppColors.textSecondary),

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/registration_with_event.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -84,7 +82,7 @@ class InscriptionCard extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(width: 12),
+            AppSpacing.hGapMd,
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,7 +101,7 @@ class InscriptionCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      SizedBox(width: 8),
+                      AppSpacing.hGapSm,
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 6,
@@ -124,7 +122,7 @@ class InscriptionCard extends StatelessWidget {
                     ],
                   ),
                   if (dateTime.isNotEmpty) ...[
-                    SizedBox(height: 4),
+                    AppSpacing.gapXxs,
                     Row(
                       children: [
                         Icon(
@@ -132,7 +130,7 @@ class InscriptionCard extends StatelessWidget {
                           size: 14,
                           color: colorScheme.onSurfaceVariant,
                         ),
-                        SizedBox(width: 4),
+                        AppSpacing.hGapXxs,
                         Text(
                           dateTime,
                           style: context.bodySmall?.copyWith(
@@ -142,7 +140,7 @@ class InscriptionCard extends StatelessWidget {
                       ],
                     ),
                   ],
-                  SizedBox(height: 10),
+                  AppSpacing.gapSm,
                   Row(
                     children: [
                       Expanded(
@@ -160,7 +158,7 @@ class InscriptionCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(width: 8),
+                      AppSpacing.hGapSm,
                       if (onSecondaryAction != null)
                         Expanded(
                           child: _SecondaryActionButton(

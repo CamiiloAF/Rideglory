@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenance_list.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_header_view.dart';
@@ -75,7 +73,7 @@ class MaintenancesDataWidget extends StatelessWidget {
                           color: context.colorScheme.primary,
                           size: 18,
                         ),
-                        SizedBox(width: 8),
+                        AppSpacing.hGapSm,
                         Text(
                           context.l10n.maintenance_filter,
                           style: context.bodyMedium?.copyWith(

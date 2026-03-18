@@ -90,9 +90,9 @@ class _LoginViewState extends State<LoginView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(height: 160),
+                  AppSpacing.gap100,
                   const LoginHeading(),
-                  SizedBox(height: 28),
+                  AppSpacing.gapXxxl,
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: FormBuilder(
@@ -101,23 +101,23 @@ class _LoginViewState extends State<LoginView> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           const LoginEmailField(),
-                          SizedBox(height: 18),
+                          AppSpacing.gapLg,
                           LoginPasswordField(
                             onSubmitted: () => _handleLogin(context),
                           ),
-                          SizedBox(height: 20),
+                          AppSpacing.gapXl,
                           LoginSignInButton(
                             onPressed: () => _handleLogin(context),
                           ),
-                          SizedBox(height: 24),
+                          AppSpacing.gapXxl,
                           const LoginDivider(),
-                          SizedBox(height: 20),
+                          AppSpacing.gapXl,
                           const LoginSocialRow(),
-                          SizedBox(height: 28),
+                          AppSpacing.gapXxxl,
                           LoginRegisterLink(
                             onTap: () => context.push(AppRoutes.signup),
                           ),
-                          SizedBox(height: 40),
+                          AppSpacing.gap40,
                         ],
                       ),
                     ),

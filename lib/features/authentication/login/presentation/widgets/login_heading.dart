@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class LoginHeading extends StatelessWidget {
   const LoginHeading({super.key});
@@ -16,7 +17,7 @@ class LoginHeading extends StatelessWidget {
             color: context.colorScheme.onSurface,
           ),
         ),
-        SizedBox(height: 6),
+        AppSpacing.gapXs,
         Text(
           context.l10n.auth_loginSubtitleStitch,
           textAlign: TextAlign.center,

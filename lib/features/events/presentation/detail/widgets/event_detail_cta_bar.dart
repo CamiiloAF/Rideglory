@@ -1,7 +1,6 @@
 import 'dart:math' show max;
 
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -57,7 +56,7 @@ class EventDetailCTABar extends StatelessWidget {
                           fontSize: 12,
                         ),
                       ),
-                      SizedBox(height: 2),
+                      AppSpacing.gapXxs,
                       Text(
                         event.isFree
                             ? context.l10n.event_free
@@ -71,7 +70,7 @@ class EventDetailCTABar extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(width: 16),
+                AppSpacing.hGapLg,
                 Expanded(
                   flex: 2,
                   child: AppButton(
@@ -138,7 +137,7 @@ class _RegistrationStatusBadge extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.check_circle_outline, color: _color, size: 20),
-          SizedBox(width: 8),
+          AppSpacing.hGapSm,
           Text(
             _label,
             style: TextStyle(

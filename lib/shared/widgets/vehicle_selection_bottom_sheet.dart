@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/shared/widgets/vehicle_list_item.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleSelectionBottomSheet extends StatelessWidget {
   final String? subtitle;
@@ -86,7 +84,7 @@ class VehicleSelectionBottomSheet extends StatelessWidget {
                   ),
                 ),
                 if (subtitle != null) ...[
-                  const SizedBox(height: 4),
+                  AppSpacing.gapXxs,
                   Text(
                     subtitle!,
                     style: textTheme.bodyMedium?.copyWith(

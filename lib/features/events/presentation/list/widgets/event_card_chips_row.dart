@@ -3,6 +3,7 @@ import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/difficulty_chip.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/event_card_price_chip.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/event_type_chip.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventCardChipsRow extends StatelessWidget {
   final EventType eventType;
@@ -23,7 +24,7 @@ class EventCardChipsRow extends StatelessWidget {
     return Row(
       children: [
         EventTypeChip(eventType: eventType),
-        SizedBox(width: 8),
+        AppSpacing.hGapSm,
         DifficultyChip(difficulty: difficulty),
         Spacer(),
         EventCardPriceChip(isFree: isFree, price: price),

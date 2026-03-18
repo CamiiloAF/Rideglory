@@ -37,7 +37,7 @@ class MyRegistrationsDataView extends StatelessWidget {
                   onChanged: (value) => cubit.updateSearchQuery(value ?? ''),
                 ),
               ),
-              SizedBox(width: 12),
+              AppSpacing.hGapMd,
               SizedBox(
                 width: 48,
                 height: 48,
@@ -76,7 +76,7 @@ class MyRegistrationsDataView extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 8),
+        AppSpacing.gapSm,
         items.isEmpty
             ? const Expanded(child: NoSearchResultsEmptyWidget())
             : Expanded(

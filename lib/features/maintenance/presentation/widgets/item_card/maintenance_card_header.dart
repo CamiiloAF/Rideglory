@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenanceCardHeader extends StatelessWidget {
   final MaintenanceModel maintenance;
@@ -37,7 +38,7 @@ class MaintenanceCardHeader extends StatelessWidget {
           ),
           child: Icon(typeIcon, color: Colors.white, size: 28),
         ),
-        SizedBox(width: 16),
+        AppSpacing.hGapLg,
 
         Expanded(
           child: Column(
@@ -50,7 +51,7 @@ class MaintenanceCardHeader extends StatelessWidget {
                   letterSpacing: -0.5,
                 ),
               ),
-              SizedBox(height: 4),
+              AppSpacing.gapXxs,
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 10,
@@ -71,7 +72,7 @@ class MaintenanceCardHeader extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(width: 12),
+        AppSpacing.hGapMd,
         // Badge de alerta
         if (maintenance.receiveAlert && isUrgent)
           Container(

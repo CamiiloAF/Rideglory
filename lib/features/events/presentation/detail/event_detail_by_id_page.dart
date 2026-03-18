@@ -98,12 +98,12 @@ class _EventDetailByIdPageState extends State<EventDetailByIdPage> {
                         size: 48,
                         color: context.colorScheme.onSurfaceVariant,
                       ),
-                      SizedBox(height: 12),
+                      AppSpacing.gapMd,
                       Text(
                         context.l10n.registration_errorLoadingEvent,
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
-                      SizedBox(height: 16),
+                      AppSpacing.gapLg,
                       AppButton(
                         label: context.l10n.retry,
                         onPressed: () => context

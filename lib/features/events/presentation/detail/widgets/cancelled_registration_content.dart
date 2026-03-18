@@ -20,12 +20,12 @@ class CancelledRegistrationContent extends StatelessWidget {
             RegistrationStatusChip(status: RegistrationStatus.cancelled),
           ],
         ),
-        SizedBox(height: 8),
+        AppSpacing.gapSm,
         Text(
           context.l10n.event_cancelledDescription,
           style: theme.textTheme.bodySmall,
         ),
-        SizedBox(height: 12),
+        AppSpacing.gapMd,
         AppButton(
           label: context.l10n.event_joinEvent,
           onPressed: onRegister,

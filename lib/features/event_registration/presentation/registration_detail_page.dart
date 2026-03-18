@@ -40,7 +40,7 @@ class RegistrationDetailPage extends StatelessWidget {
                 whatsappLabel: context.l10n.registration_whatsappLabel,
                 alignment: Alignment.center,
               ),
-            SizedBox(height: 8),
+            AppSpacing.gapSm,
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
@@ -72,7 +72,7 @@ class RegistrationDetailPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 12),
+                  AppSpacing.gapMd,
                   RegistrationDetailSectionCard(
                     icon: Icons.medical_services_outlined,
                     title: context.l10n.registration_sectionHealthSafety,
@@ -94,7 +94,7 @@ class RegistrationDetailPage extends StatelessWidget {
                           value: registration.bloodType.label,
                           valueColor: context.colorScheme.error,
                         ),
-                        SizedBox(height: 8),
+                        AppSpacing.gapSm,
                         Text(
                           context.l10n.registration_emergencyContact,
                           style: context.textTheme.titleSmall?.copyWith(
@@ -110,14 +110,14 @@ class RegistrationDetailPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 12),
+                  AppSpacing.gapMd,
                   RegistrationDetailSectionCard(
                     icon: Icons.two_wheeler_outlined,
                     title: context.l10n.registration_sectionVehicleDetails,
                     initiallyExpanded: true,
                     child: _VehicleDetailContent(registration: registration),
                   ),
-                  SizedBox(height: 100),
+                  AppSpacing.gap100,
                 ],
               ),
             ),
@@ -157,7 +157,7 @@ class _VehicleDetailContent extends StatelessWidget {
             color: colorScheme.onSurfaceVariant,
           ),
         ),
-        SizedBox(width: 16),
+        AppSpacing.hGapLg,
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,7 +168,7 @@ class _VehicleDetailContent extends StatelessWidget {
                   color: colorScheme.onSurfaceVariant,
                 ),
               ),
-              SizedBox(height: 4),
+              AppSpacing.gapXxs,
               Text(
                 vehicleModel,
                 style: textTheme.titleSmall?.copyWith(
@@ -176,7 +176,7 @@ class _VehicleDetailContent extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(height: 4),
+              AppSpacing.gapXxs,
               Row(
                 children: [
                   Text(

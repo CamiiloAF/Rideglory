@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/authentication/presentation/widgets/social_login_button.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class SignupSocialButtons extends StatelessWidget {
   final VoidCallback onEmailModeToggle;
@@ -23,7 +24,7 @@ class SignupSocialButtons extends StatelessWidget {
               isLoading: isLoading,
               onPressed: onEmailModeToggle,
             ),
-            SizedBox(height: 12),
+            AppSpacing.gapMd,
             SocialLoginButton(
               type: SocialLoginType.google,
               isLoading: isLoading,
@@ -31,7 +32,7 @@ class SignupSocialButtons extends StatelessWidget {
                 context.read<AuthCubit>().signInWithGoogle();
               },
             ),
-            SizedBox(height: 12),
+            AppSpacing.gapMd,
             SocialLoginButton(
               type: SocialLoginType.apple,
               isLoading: isLoading,
@@ -39,7 +40,7 @@ class SignupSocialButtons extends StatelessWidget {
                 context.read<AuthCubit>().signInWithApple();
               },
             ),
-            SizedBox(height: 32),
+            AppSpacing.gapXxxl,
 
             // Divider with "Already have account?" text
             Row(
@@ -59,7 +60,7 @@ class SignupSocialButtons extends StatelessWidget {
                 Expanded(child: Container(height: 1, color: Colors.grey[200])),
               ],
             ),
-            SizedBox(height: 24),
+            AppSpacing.gapXxl,
 
             // Sign in link
             Center(

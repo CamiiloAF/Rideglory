@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class RegistrationFormSectionCard extends StatelessWidget {
   const RegistrationFormSectionCard({
@@ -32,7 +31,7 @@ class RegistrationFormSectionCard extends StatelessWidget {
           Row(
             children: [
               Icon(icon, color: primary, size: 22),
-              SizedBox(width: 10),
+              AppSpacing.hGapSm,
               Expanded(
                 child: Text(
                   title,
@@ -44,12 +43,12 @@ class RegistrationFormSectionCard extends StatelessWidget {
                 ),
               ),
               if (trailing != null) ...[
-                SizedBox(width: 8),
+                AppSpacing.hGapSm,
                 trailing!,
               ],
             ],
           ),
-          SizedBox(height: 16),
+          AppSpacing.gapLg,
           child,
         ],
       ),

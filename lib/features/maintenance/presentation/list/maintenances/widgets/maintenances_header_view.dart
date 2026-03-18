@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_summary_header.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/vehicle_selector_chip.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/maintenances_cubit.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenancesHeaderView extends StatelessWidget {
   final Future<void> Function() onFilterPressed;
@@ -54,7 +53,7 @@ class MaintenancesHeaderView extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 16),
+        AppSpacing.gapLg,
         BlocBuilder<MaintenancesCubit, ResultState<List<MaintenanceModel>>>(
           builder: (context, state) {
             final cubit = context.read<MaintenancesCubit>();

@@ -93,7 +93,7 @@ class EventFormContent extends StatelessWidget {
                 );
               },
             ),
-            SizedBox(height: 24),
+            AppSpacing.gapXxl,
             EventFormBasicInfoSection(
               isEditing: cubit.isEditing,
               descriptionInitialValue: cubit.editingEvent?.description,
@@ -101,26 +101,26 @@ class EventFormContent extends StatelessWidget {
                 // TODO: Implement AI suggestions
               },
             ),
-            SizedBox(height: 24),
+            AppSpacing.gapXxl,
             const EventFormDateTimeSection(),
-            SizedBox(height: 24),
+            AppSpacing.gapXxl,
             const EventFormDifficultySection(),
-            SizedBox(height: 24),
+            AppSpacing.gapXxl,
             FormSectionTitle(
               title: context.l10n.event_routeAndMap,
               icon: Icons.route_outlined,
             ),
-            SizedBox(height: 16),
+            AppSpacing.gapLg,
             const EventFormLocationsSection(),
-            SizedBox(height: 24),
+            AppSpacing.gapXxl,
             FormSectionTitle(
               title: context.l10n.event_eventType,
               icon: Icons.category_outlined,
             ),
             const EventFormEventTypeSection(),
-            SizedBox(height: 24),
+            AppSpacing.gapXxl,
             const EventFormMultiBrandSection(),
-            SizedBox(height: 24),
+            AppSpacing.gapXxl,
             AppTextField(
               name: EventFormFields.price,
               labelText: context.l10n.event_price,

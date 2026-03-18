@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 enum MaintenanceAction { edit, delete }
 
@@ -54,7 +53,7 @@ class MaintenanceOptionsBottomSheet extends StatelessWidget {
               Navigator.pop(context, MaintenanceAction.delete);
             },
           ),
-          SizedBox(height: 16),
+          AppSpacing.gapLg,
         ],
       ),
     );

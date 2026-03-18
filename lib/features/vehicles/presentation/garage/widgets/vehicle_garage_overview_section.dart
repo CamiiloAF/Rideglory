@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_garage_overview_item.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleGarageOverviewSection extends StatelessWidget {
   const VehicleGarageOverviewSection({
@@ -47,7 +46,7 @@ class VehicleGarageOverviewSection extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 16),
+        AppSpacing.gapLg,
         Row(
           children: [
             Expanded(
@@ -57,7 +56,7 @@ class VehicleGarageOverviewSection extends StatelessWidget {
                 value: '${NumberFormat('#,###').format(totalMileage)} km',
               ),
             ),
-            SizedBox(width: 16),
+            AppSpacing.hGapLg,
             Expanded(
               child: VehicleGarageOverviewItem(
                 icon: Icons.access_time_outlined,

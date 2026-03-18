@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 const Color _mapPlaceholderBackground = Color(0xFF1F2B3B);
 
@@ -29,7 +28,7 @@ class EventDetailMeetingPointSection extends StatelessWidget {
             letterSpacing: -0.2,
           ),
         ),
-        SizedBox(height: 14),
+        AppSpacing.gapMd,
         Container(
           decoration: BoxDecoration(
             color: context.colorScheme.surfaceContainerHighest,
@@ -69,7 +68,7 @@ class EventDetailMeetingPointSection extends StatelessWidget {
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-                          SizedBox(height: 4),
+                          AppSpacing.gapXxs,
                           Text(
                             location,
                             style: TextStyle(
@@ -81,7 +80,7 @@ class EventDetailMeetingPointSection extends StatelessWidget {
                       ),
                     ),
                     if (onViewMap != null) ...[
-                      SizedBox(width: 12),
+                      AppSpacing.hGapMd,
                       Material(
                         color: context.colorScheme.primary,
                         borderRadius: BorderRadius.circular(10),
@@ -101,7 +100,7 @@ class EventDetailMeetingPointSection extends StatelessWidget {
                                   color: Colors.white,
                                   size: 18,
                                 ),
-                                SizedBox(width: 8),
+                                AppSpacing.hGapSm,
                                 Text(
                                   context.l10n.event_viewMap,
                                   style: TextStyle(

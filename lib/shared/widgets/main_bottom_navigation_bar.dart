@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MainBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
@@ -43,7 +44,7 @@ class MainBottomNavigationBar extends StatelessWidget {
             isActive: currentIndex == 1,
             onTap: () => onTap(1),
           ),
-          const SizedBox(width: 64), // Space for FAB
+          AppSpacing.hGapXl, // Space for FAB
           _NavItem(
             icon: Icons.garage_outlined,
             activeIcon: Icons.garage,
@@ -94,7 +95,7 @@ class _NavItem extends StatelessWidget {
               color: isActive ? cs.primary : cs.onSurfaceVariant,
               size: 24,
             ),
-            const SizedBox(height: 4),
+            AppSpacing.gapXxs,
             Text(
               label,
               style: TextStyle(

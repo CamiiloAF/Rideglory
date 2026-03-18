@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_difficulty_flames.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_organizer_row.dart';
@@ -49,7 +48,7 @@ class EventDetailHeaderInfo extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 12),
+        AppSpacing.gapMd,
         Text(
           event.name,
           style: TextStyle(
@@ -59,11 +58,11 @@ class EventDetailHeaderInfo extends StatelessWidget {
             height: 1.15,
           ),
         ),
-        SizedBox(height: 8),
+        AppSpacing.gapSm,
         EventDetailOrganizerRow(
           organizerName: context.l10n.event_organizerPlaceholder,
         ),
-        SizedBox(height: 12),
+        AppSpacing.gapMd,
         Row(
           children: [
             DetailPill(
@@ -75,7 +74,7 @@ class EventDetailHeaderInfo extends StatelessWidget {
               ).shortLabel,
               variant: DetailPillVariant.primary,
             ),
-            SizedBox(width: 12),
+            AppSpacing.hGapMd,
             DetailPill(
               leading: Icon(
                 Icons.two_wheeler,
@@ -87,7 +86,7 @@ class EventDetailHeaderInfo extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 12),
+        AppSpacing.gapMd,
         DetailPill(
           leading: Icon(
             Icons.access_time,

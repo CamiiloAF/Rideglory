@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenanceCardBody extends StatelessWidget {
   final MaintenanceModel maintenance;
@@ -69,7 +68,7 @@ class MaintenanceCardBody extends StatelessWidget {
                     ),
                     child: Icon(typeIcon, color: context.colorScheme.primary, size: 28),
                   ),
-                  SizedBox(width: 16),
+                  AppSpacing.hGapLg,
 
                   // Info Section
                   Expanded(
@@ -99,14 +98,14 @@ class MaintenanceCardBody extends StatelessWidget {
                             ],
                           ],
                         ),
-                        SizedBox(height: 4),
+                        AppSpacing.gapXxs,
                         Text(
                           dateFormat.format(maintenance.date),
                           style: context.bodyMedium?.copyWith(
                             color: Colors.grey[500],
                           ),
                         ),
-                        SizedBox(height: 12),
+                        AppSpacing.gapMd,
                         Row(
                           children: [
                             Icon(
@@ -114,7 +113,7 @@ class MaintenanceCardBody extends StatelessWidget {
                               size: 16,
                               color: context.colorScheme.primary,
                             ),
-                            SizedBox(width: 4),
+                            AppSpacing.hGapXxs,
                             Text(
                               '${numberFormat.format(maintenance.maintanceMileage)} km',
                               style: context.bodySmall?.copyWith(

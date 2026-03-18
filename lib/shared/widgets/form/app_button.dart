@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 enum AppButtonVariant { primary, secondary, danger, success }
 
@@ -78,11 +79,8 @@ class AppButton extends StatelessWidget {
                   ? SizedBox(
                       width: 20,
                       height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          foregroundColor,
-                        ),
+                      child: AppLoadingIndicator(
+                        variant: AppLoadingIndicatorVariant.inline,
                       ),
                     )
                   : Row(
@@ -91,7 +89,7 @@ class AppButton extends StatelessWidget {
                       children: [
                         if (icon != null) ...[
                           Icon(icon, color: foregroundColor, size: 20),
-                          const SizedBox(width: 8),
+                          AppSpacing.hGapSm,
                         ],
                         Flexible(
                           child: Text(

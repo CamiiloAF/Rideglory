@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleInfoChip extends StatelessWidget {
   final VehicleModel vehicle;
@@ -22,13 +23,13 @@ class VehicleInfoChip extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(_vehicleIcon, size: 16, color: Colors.grey[700]),
-          SizedBox(width: 8),
+          AppSpacing.hGapSm,
           Text(
             vehicle.name,
             style: context.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
           ),
           if (vehicle.brand != null) ...[
-            SizedBox(width: 4),
+            AppSpacing.hGapXxs,
             Text('• ${vehicle.brand}', style: context.bodySmall),
           ],
         ],

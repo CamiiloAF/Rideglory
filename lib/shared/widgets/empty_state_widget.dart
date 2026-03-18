@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/shared/widgets/container_pull_to_refresh.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 /// A reusable empty state widget that can be used across features
 /// to show when lists or data are empty.
@@ -62,7 +63,7 @@ class EmptyStateWidget extends StatelessWidget {
                 ),
                 child: Icon(icon, size: iconSize, color: iconColor),
               ),
-              const SizedBox(height: 24),
+              AppSpacing.gapXxl,
 
               // Title
               Text(
@@ -75,7 +76,7 @@ class EmptyStateWidget extends StatelessWidget {
 
               // Description (if provided)
               if (description != null) ...[
-                const SizedBox(height: 12),
+                AppSpacing.gapMd,
                 Text(
                   description!,
                   style: context.bodyMedium?.copyWith(height: 1.5),
@@ -84,7 +85,7 @@ class EmptyStateWidget extends StatelessWidget {
               ],
 
               if (actionButtonText != null && onActionPressed != null) ...[
-                const SizedBox(height: 32),
+                AppSpacing.gapXxxl,
                 AppButton(
                   label: actionButtonText!,
                   onPressed: onActionPressed,

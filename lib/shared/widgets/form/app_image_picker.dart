@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 /// Reusable image picker section for event cover, vehicle photo, etc.
 /// [title] and [hint] are shown in the empty state. [uploadButtonLabel] is the
@@ -56,7 +57,7 @@ class AppImagePicker extends StatelessWidget {
               letterSpacing: 0.5,
             ),
           ),
-          const SizedBox(height: 8),
+          AppSpacing.gapSm,
         ],
         GestureDetector(
           onTap: onPickImage,
@@ -142,7 +143,7 @@ class AppImagePicker extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 20),
+                          AppSpacing.gapXl,
                           Text(
                             title,
                             textAlign: TextAlign.center,
@@ -152,7 +153,7 @@ class AppImagePicker extends StatelessWidget {
                             ),
                           ),
                           if (hint != null) ...[
-                            const SizedBox(height: 8),
+                            AppSpacing.gapSm,
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 16,
@@ -166,7 +167,7 @@ class AppImagePicker extends StatelessWidget {
                               ),
                             ),
                           ],
-                          const SizedBox(height: 24),
+                          AppSpacing.gapXxl,
                           Row(
                             children: [
                               Expanded(
@@ -178,7 +179,7 @@ class AppImagePicker extends StatelessWidget {
                                 ),
                               ),
                               if (showGenerateWithAI) ...[
-                                const SizedBox(width: 12),
+                                AppSpacing.hGapMd,
                                 Expanded(
                                   child: _OutlinePrimaryButton(
                                     label:
@@ -234,7 +235,7 @@ class _OutlinePrimaryButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(icon, size: 20, color: colorScheme.primary),
-              const SizedBox(width: 8),
+              AppSpacing.hGapSm,
               Flexible(
                 child: Text(
                   label,

@@ -8,6 +8,7 @@ import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/authentication/presentation/widgets/signup_email_form.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class SignupView extends StatefulWidget {
   const SignupView({super.key});
@@ -62,7 +63,7 @@ class _SignupViewState extends State<SignupView> {
                   color: context.colorScheme.onSurface,
                 ),
               ),
-              SizedBox(height: 8),
+              AppSpacing.gapSm,
               Text(
                 context.l10n.auth_registerSubtitle,
                 style: context.textTheme.bodyMedium?.copyWith(
@@ -70,9 +71,9 @@ class _SignupViewState extends State<SignupView> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              SizedBox(height: 32),
+              AppSpacing.gapXxxl,
               SignupEmailForm(formKey: _formKey, onBack: _navigateToLogin),
-              SizedBox(height: 20),
+              AppSpacing.gapXl,
               Center(
                 child: RichText(
                   text: TextSpan(
@@ -96,7 +97,7 @@ class _SignupViewState extends State<SignupView> {
                   ),
                 ),
               ),
-              SizedBox(height: 32),
+              AppSpacing.gapXxxl,
             ],
           ),
         ),
