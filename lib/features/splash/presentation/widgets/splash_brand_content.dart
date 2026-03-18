@@ -18,7 +18,7 @@ class SplashBrandContent extends StatelessWidget {
               width: 100,
               height: 100,
               decoration: BoxDecoration(
-                color: AppColors.darkSurface,
+                color: context.colorScheme.surface,
                 borderRadius: BorderRadius.circular(24),
               ),
               child: Icon(
@@ -27,7 +27,7 @@ class SplashBrandContent extends StatelessWidget {
                 color: context.colorScheme.primary,
               ),
             ),
-            const SizedBox(height: 40),
+            SizedBox(height: 40),
             RichText(
               text: TextSpan(
                 children: [
@@ -47,7 +47,7 @@ class SplashBrandContent extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             Text(
               SplashStrings.tagline,
               style: context.textTheme.bodyMedium?.copyWith(

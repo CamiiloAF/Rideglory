@@ -8,6 +8,7 @@ import 'package:rideglory/features/home/presentation/widgets/home_vehicle_placeh
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class HomeGarageCard extends StatelessWidget {
   const HomeGarageCard({super.key, required this.vehicle});
@@ -22,9 +23,9 @@ class HomeGarageCard extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.darkSurface,
+          color: context.colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.darkBorder),
+          border: Border.all(color: context.colorScheme.outlineVariant),
         ),
         clipBehavior: Clip.hardEdge,
         child: Column(

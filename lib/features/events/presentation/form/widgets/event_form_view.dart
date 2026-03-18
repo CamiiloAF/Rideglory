@@ -10,7 +10,7 @@ import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/event_form_content.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventFormView extends StatelessWidget {
   const EventFormView({super.key});
@@ -52,13 +52,13 @@ class EventFormView extends StatelessWidget {
         return Scaffold(
           backgroundColor: AppColors.darkBackground,
           appBar: AppBar(
-            backgroundColor: AppColors.darkSurface,
-            foregroundColor: AppColors.darkTextPrimary,
+            backgroundColor: context.colorScheme.surface,
+            foregroundColor: context.colorScheme.onSurface,
             centerTitle: false,
             title: Text(
               isEditing ? EventStrings.editEvent : EventStrings.newEvent,
-              style: const TextStyle(
-                color: AppColors.darkTextPrimary,
+              style: TextStyle(
+                color: context.colorScheme.onSurface,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -85,8 +85,10 @@ class _EventFormBottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
-        border: const Border(top: BorderSide(color: AppColors.darkBorder)),
+        color: context.colorScheme.surface,
+        border: Border(
+          top: BorderSide(color: context.colorScheme.outlineVariant),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.3),

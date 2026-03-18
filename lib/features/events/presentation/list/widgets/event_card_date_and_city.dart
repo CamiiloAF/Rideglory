@@ -22,14 +22,14 @@ class EventCardDateAndCity extends StatelessWidget {
     return Row(
       children: [
         Icon(Icons.calendar_today_outlined, size: _iconSize, color: iconColor),
-        const SizedBox(width: 4),
+        SizedBox(width: 4),
         Text(
           formattedDate,
           style: theme.textTheme.bodySmall?.copyWith(color: textColor),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Icon(Icons.location_on_outlined, size: _iconSize, color: iconColor),
-        const SizedBox(width: 4),
+        SizedBox(width: 4),
         Text(
           city,
           style: theme.textTheme.bodySmall?.copyWith(color: textColor),

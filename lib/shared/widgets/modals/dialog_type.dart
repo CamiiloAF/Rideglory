@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/design_system/foundation/theme/app_colors_extension.dart';
 
 enum DialogType {
   confirmation,
@@ -26,17 +26,18 @@ enum DialogType {
   }
 
   Color get color {
+    final palette = AppColorsExtension.rideglory();
     switch (this) {
       case DialogType.confirmation:
-        return AppColors.info;
+        return palette.info;
       case DialogType.information:
-        return AppColors.info;
+        return palette.info;
       case DialogType.warning:
-        return AppColors.warning;
+        return palette.warning;
       case DialogType.success:
-        return AppColors.success;
+        return palette.success;
       case DialogType.error:
-        return AppColors.error;
+        return palette.error;
     }
   }
 }

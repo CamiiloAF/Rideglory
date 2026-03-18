@@ -4,7 +4,7 @@ import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
-import 'package:rideglory/shared/widgets/detail_pill.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenanceDetailHeader extends StatelessWidget {
   const MaintenanceDetailHeader({
@@ -41,7 +41,7 @@ class MaintenanceDetailHeader extends StatelessWidget {
           width: 72,
           height: 72,
           decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.2),
+            color: context.colorScheme.primary.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Icon(
@@ -50,7 +50,7 @@ class MaintenanceDetailHeader extends StatelessWidget {
             color: theme.colorScheme.primary,
           ),
         ),
-        const SizedBox(width: 16),
+        SizedBox(width: 16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +62,7 @@ class MaintenanceDetailHeader extends StatelessWidget {
                   color: theme.colorScheme.onSurface,
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 MaintenanceStrings.performedOn(
                   DateFormat('dd MMM, yyyy').format(maintenance.date),
@@ -71,7 +71,7 @@ class MaintenanceDetailHeader extends StatelessWidget {
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
@@ -100,7 +100,7 @@ class MaintenanceDetailHeader extends StatelessWidget {
                             size: 16,
                             color: theme.colorScheme.onSurface,
                           ),
-                          const SizedBox(width: 6),
+                          SizedBox(width: 6),
                           Text(
                             _vehicleDisplayName().toUpperCase(),
                             style: theme.textTheme.labelMedium?.copyWith(

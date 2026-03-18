@@ -5,7 +5,7 @@ import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventDetailCTABar extends StatelessWidget {
   const EventDetailCTABar({
@@ -28,8 +28,10 @@ class EventDetailCTABar extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
-        border: const Border(top: BorderSide(color: AppColors.darkBorder)),
+        color: context.colorScheme.surface,
+        border: Border(
+          top: BorderSide(color: context.colorScheme.outlineVariant),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.3),
@@ -48,20 +50,20 @@ class EventDetailCTABar extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         EventStrings.totalParticipation,
                         style: TextStyle(
-                          color: AppColors.darkTextSecondary,
+                          color: context.colorScheme.onSurfaceVariant,
                           fontSize: 12,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: 2),
                       Text(
                         event.isFree
                             ? EventStrings.free
                             : '${(event.price ?? 0).toStringAsFixed(2)}€',
-                        style: const TextStyle(
-                          color: AppColors.darkTextPrimary,
+                        style: TextStyle(
+                          color: context.colorScheme.onSurface,
                           fontSize: 20,
                           fontWeight: FontWeight.w800,
                         ),
@@ -69,7 +71,7 @@ class EventDetailCTABar extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
                 Expanded(
                   flex: 2,
                   child: AppButton(
@@ -136,7 +138,7 @@ class _RegistrationStatusBadge extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.check_circle_outline, color: _color, size: 20),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Text(
             _label,
             style: TextStyle(

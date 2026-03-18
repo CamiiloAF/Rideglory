@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/item_card/maintenance_card_body.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
-import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
-import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
-import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenanceCardContent extends StatelessWidget {
   final MaintenanceModel maintenance;
@@ -73,7 +71,7 @@ class MaintenanceCardContent extends StatelessWidget {
           color: Colors.red,
           borderRadius: BorderRadius.circular(24),
         ),
-        child: const Column(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.delete_outline, color: Colors.white, size: 32),

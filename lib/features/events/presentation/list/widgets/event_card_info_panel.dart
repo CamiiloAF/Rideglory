@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventCardInfoPanel extends StatelessWidget {
   final EventModel event;
@@ -41,7 +41,7 @@ class EventCardInfoPanel extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Padding(
                 padding: const EdgeInsets.only(top: 3),
                 child: Row(
@@ -60,7 +60,7 @@ class EventCardInfoPanel extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          SizedBox(height: 10),
           Row(
             children: [
               Icon(
@@ -68,7 +68,7 @@ class EventCardInfoPanel extends StatelessWidget {
                 size: 14,
                 color: context.colorScheme.onSurfaceVariant,
               ),
-              const SizedBox(width: 6),
+              SizedBox(width: 6),
               Text(
                 '${dateFormatter.format(event.startDate)} • ${timeFormatter.format(event.meetingTime)}',
                 style: context.bodySmall?.copyWith(
@@ -77,7 +77,7 @@ class EventCardInfoPanel extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
           Row(
             children: [
               Icon(
@@ -85,7 +85,7 @@ class EventCardInfoPanel extends StatelessWidget {
                 size: 14,
                 color: context.colorScheme.onSurfaceVariant,
               ),
-              const SizedBox(width: 6),
+              SizedBox(width: 6),
               Expanded(
                 child: Text(
                   event.city,
@@ -98,7 +98,7 @@ class EventCardInfoPanel extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          SizedBox(height: 14),
           AppButton(
             label: EventStrings.joinEvent,
             onPressed: onTap,

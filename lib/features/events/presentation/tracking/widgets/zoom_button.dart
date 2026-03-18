@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class ZoomButton extends StatelessWidget {
   const ZoomButton({
@@ -23,7 +24,7 @@ class ZoomButton extends StatelessWidget {
         height: 48,
         child: Icon(
           icon,
-          color: isEnabled ? AppColors.primary : AppColors.darkTextSecondary,
+          color: isEnabled ? context.colorScheme.primary : context.colorScheme.onSurfaceVariant,
         ),
       ),
     );

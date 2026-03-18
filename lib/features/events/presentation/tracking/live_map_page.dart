@@ -16,9 +16,7 @@ import 'package:rideglory/features/events/presentation/tracking/widgets/my_locat
 import 'package:rideglory/features/events/presentation/tracking/widgets/rider_telemetry_panel.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/sos_button.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/shared/widgets/app_app_bar.dart';
-import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
-import 'package:rideglory/shared/widgets/modals/info_dialog.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class LiveMapPage extends StatefulWidget {
   const LiveMapPage({super.key, required this.event});
@@ -111,7 +109,7 @@ class _LiveMapPageState extends State<LiveMapPage> {
             onPressed: () {
               context.pushNamed(AppRoutes.participants, extra: event);
             },
-            icon: const Icon(Icons.group),
+            icon: Icon(Icons.group),
           ),
         ],
       ),
@@ -127,19 +125,19 @@ class _LiveMapPageState extends State<LiveMapPage> {
                         _mapController.value = controller,
                   )
                 else
-                  const Center(
+                  Center(
                     child: SizedBox(
                       width: 24,
                       height: 24,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     ),
                   ),
-                const Positioned(
+                Positioned(
                   left: 16,
                   top: 16,
                   child: EventDetailChip(
                     label: '${MapStrings.activeRidersChip} 5',
-                    color: AppColors.success,
+                    color: context.appColors.success,
                     isSolid: true,
                   ),
                 ),
@@ -153,7 +151,7 @@ class _LiveMapPageState extends State<LiveMapPage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           MapZoomControls(controller: controller),
-                          const SizedBox(height: 12),
+                          SizedBox(height: 12),
                           MyLocationButton(
                             isEnabled: controller != null,
                             onTap: controller == null

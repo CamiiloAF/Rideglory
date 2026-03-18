@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class ChangeVehicleMileageBottomSheet extends StatelessWidget {
   const ChangeVehicleMileageBottomSheet({
@@ -36,20 +36,20 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.speed, size: 28),
-                  const SizedBox(width: 8),
+                  Icon(Icons.speed, size: 28),
+                  SizedBox(width: 8),
                   Text(
                     MaintenanceStrings.updateMileage,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Text(
                 MaintenanceStrings.mileageGreaterThanCurrent,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -72,7 +72,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -93,14 +93,14 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Text(
                 MaintenanceStrings.updateVehicleMileageQuestion,
                 style: Theme.of(
                   context,
                 ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
@@ -114,7 +114,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                       },
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: AppButton(
                       label: MaintenanceStrings.update,

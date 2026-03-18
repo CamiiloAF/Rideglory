@@ -10,9 +10,8 @@ import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/event_card.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/event_filters_bottom_sheet.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/event_type_filter_chips.dart';
-import 'package:rideglory/shared/widgets/no_search_results_empty_widget.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/shared/widgets/form/app_search_bar.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventsDataView extends StatelessWidget {
   final List<EventModel> events;
@@ -38,7 +37,7 @@ class EventsDataView extends StatelessWidget {
                   darkMode: true,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               SizedBox(
                 width: 48,
                 height: 48,
@@ -77,9 +76,9 @@ class EventsDataView extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         const EventTypeFilterChips(),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         events.isEmpty
             ? const NoSearchResultsEmptyWidget()
             : Expanded(

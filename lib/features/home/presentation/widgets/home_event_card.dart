@@ -7,6 +7,7 @@ import 'package:rideglory/features/home/presentation/widgets/home_event_default_
 import 'package:rideglory/features/home/presentation/widgets/home_event_difficulty_badge.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_event_gradient_overlay.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_event_view_details_button.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class HomeEventCard extends StatelessWidget {
   const HomeEventCard({super.key, required this.event, required this.onTap});
@@ -24,8 +25,8 @@ class HomeEventCard extends StatelessWidget {
         width: 230,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: AppColors.darkSurface,
-          border: Border.all(color: AppColors.darkBorder),
+          color: context.colorScheme.surface,
+          border: Border.all(color: context.colorScheme.outlineVariant),
         ),
         clipBehavior: Clip.hardEdge,
         child: Stack(
@@ -49,13 +50,13 @@ class HomeEventCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   HomeEventDifficultyBadge(difficulty: event.difficulty),
-                  const SizedBox(height: 80),
+                  SizedBox(height: 80),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         event.name.toUpperCase(),
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
@@ -68,25 +69,25 @@ class HomeEventCard extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 6),
+                      SizedBox(height: 6),
                       Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.calendar_today,
                             size: 12,
                             color: Colors.white70,
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: 4),
                           Text(
                             dateFormat.format(event.startDate),
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white70,
                               fontSize: 11,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       const HomeEventViewDetailsButton(),
                     ],
                   ),

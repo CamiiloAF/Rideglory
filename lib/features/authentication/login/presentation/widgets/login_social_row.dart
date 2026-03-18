@@ -23,7 +23,7 @@ class LoginSocialRow extends StatelessWidget {
                     : () => context.read<AuthCubit>().signInWithGoogle(),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             const Expanded(
               child: LoginSocialButton(
                 label: AuthStrings.appleLabel,

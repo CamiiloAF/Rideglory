@@ -26,7 +26,7 @@ class EventTypeFilterChips extends StatelessWidget {
               cubit.updateFilters(cubit.filters.copyWith(types: {}));
             },
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: 10),
           ...EventType.values.map((type) {
             final isSelected = selectedTypes.contains(type);
             return Padding(

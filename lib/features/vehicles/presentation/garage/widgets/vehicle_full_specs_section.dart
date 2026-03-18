@@ -23,7 +23,7 @@ class VehicleFullSpecsSection extends StatelessWidget {
             color: Colors.grey[500],
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
           child: Column(

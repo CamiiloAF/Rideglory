@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/live_map_widget.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/zoom_button.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class MapZoomControls extends StatelessWidget {
   const MapZoomControls({
@@ -15,9 +16,9 @@ class MapZoomControls extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.darkSurfaceHighest,
+        color: context.colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.darkBorder),
+        border: Border.all(color: context.colorScheme.outlineVariant),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.25),
@@ -33,7 +34,7 @@ class MapZoomControls extends StatelessWidget {
             icon: Icons.add,
             onTap: controller == null ? null : () => controller!.zoomIn(),
           ),
-          Container(height: 1, color: AppColors.darkBorder),
+          Container(height: 1, color: context.colorScheme.outlineVariant),
           ZoomButton(
             icon: Icons.remove,
             onTap: controller == null ? null : () => controller!.zoomOut(),

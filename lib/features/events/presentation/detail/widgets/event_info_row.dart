@@ -21,7 +21,7 @@ class EventInfoRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, size: 18, color: theme.colorScheme.primary),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

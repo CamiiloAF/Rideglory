@@ -9,9 +9,7 @@ import 'package:rideglory/features/event_registration/domain/model/registration_
 import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
 import 'package:rideglory/features/event_registration/presentation/my_registrations_data_view.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/shared/widgets/app_app_bar.dart';
-import 'package:rideglory/shared/widgets/empty_state_widget.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MyRegistrationsView extends StatelessWidget {
   const MyRegistrationsView({super.key});
@@ -31,9 +29,9 @@ class MyRegistrationsView extends StatelessWidget {
                 final cubit = context.read<MyRegistrationsCubit>();
                 return state.when(
                   initial: () =>
-                      const Center(child: CircularProgressIndicator()),
+                      Center(child: CircularProgressIndicator()),
                   loading: () =>
-                      const Center(child: CircularProgressIndicator()),
+                      Center(child: CircularProgressIndicator()),
                   data: (items) => MyRegistrationsDataView(items: items),
                   empty: () => EmptyStateWidget(
                     icon: Icons.event_busy_outlined,
@@ -54,7 +52,7 @@ class MyRegistrationsView extends StatelessWidget {
                             RegistrationStrings.errorLoadingRegistrations,
                             textAlign: TextAlign.center,
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16),
                           AppButton(
                             label: AppStrings.retry,
                             onPressed: () => cubit.fetchMyRegistrations(),

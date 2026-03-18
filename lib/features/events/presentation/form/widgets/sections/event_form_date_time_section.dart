@@ -3,8 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
-import 'package:rideglory/shared/widgets/form/app_date_picker.dart';
-import 'package:rideglory/shared/widgets/form/text_field_label.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventFormDateTimeSection extends StatefulWidget {
   const EventFormDateTimeSection({super.key});
@@ -46,7 +45,7 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
             });
           },
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         if (_isMultiDay)
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,7 +107,7 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
               );
             },
           ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         const AppDatePicker(
           fieldName: EventFormFields.meetingTime,
           labelText: EventStrings.meetingTime,

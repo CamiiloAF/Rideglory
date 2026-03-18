@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
 class VehicleListItem extends StatelessWidget {
@@ -17,10 +17,12 @@ class VehicleListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = context.colorScheme;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Material(
-        color: Colors.transparent,
+        color: cs.surface.withOpacity(0),
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(16),
@@ -30,26 +32,27 @@ class VehicleListItem extends StatelessWidget {
                   ? LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: AppColors.primaryGradient,
+                      colors: context.appColors.primaryGradient,
                     )
                   : null,
-              color: isSelected ? null : AppColors.darkSurface,
+              color: isSelected ? null : cs.surface,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isSelected ? Colors.transparent : AppColors.darkBorder,
+                color:
+                    isSelected ? cs.surface.withOpacity(0) : cs.outlineVariant,
                 width: 1.5,
               ),
               boxShadow: isSelected
                   ? [
                       BoxShadow(
-                        color: AppColors.primaryShadow(opacity: 0.45),
+                        color: cs.primary.withOpacity(0.45),
                         blurRadius: 18,
                         offset: const Offset(0, 6),
                       ),
                     ]
                   : [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.35),
+                        color: cs.background.withOpacity(0.35),
                         blurRadius: 14,
                         offset: const Offset(0, 4),
                       ),
@@ -63,13 +66,13 @@ class VehicleListItem extends StatelessWidget {
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? Colors.black.withValues(alpha: 0.25)
-                          : AppColors.primary.withValues(alpha: .08),
+                          ? cs.background.withOpacity(0.25)
+                          : cs.primary.withOpacity(0.08),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
                       Icons.motorcycle_rounded,
-                      color: isSelected ? Colors.white : AppColors.primary,
+                      color: isSelected ? cs.onPrimary : cs.primary,
                       size: 24,
                     ),
                   ),
@@ -83,8 +86,8 @@ class VehicleListItem extends StatelessWidget {
                           style: context.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: isSelected
-                                ? Colors.white
-                                : AppColors.darkTextPrimary,
+                                ? cs.onPrimary
+                                : cs.onSurface,
                           ),
                         ),
                         if (vehicle.brand != null || vehicle.model != null) ...[
@@ -96,8 +99,8 @@ class VehicleListItem extends StatelessWidget {
                             ].where((e) => e != null).join(' '),
                             style: context.bodySmall?.copyWith(
                               color: isSelected
-                                  ? Colors.white70
-                                  : AppColors.darkTextSecondary,
+                                  ? cs.onPrimary.withOpacity(0.7)
+                                  : cs.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -107,8 +110,8 @@ class VehicleListItem extends StatelessWidget {
                             vehicle.licensePlate!,
                             style: context.labelSmall?.copyWith(
                               color: isSelected
-                                  ? Colors.white60
-                                  : AppColors.darkTextSecondary,
+                                  ? cs.onPrimary.withOpacity(0.6)
+                                  : cs.onSurfaceVariant,
                             ),
                           ),
                         ],
@@ -116,9 +119,9 @@ class VehicleListItem extends StatelessWidget {
                     ),
                   ),
                   if (isSelected)
-                    const Icon(
+                    Icon(
                       Icons.check_circle_rounded,
-                      color: Colors.white,
+                      color: cs.onPrimary,
                       size: 22,
                     ),
                 ],

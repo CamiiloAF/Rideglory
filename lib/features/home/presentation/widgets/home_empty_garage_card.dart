@@ -5,7 +5,7 @@ import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/home/constants/home_strings.dart';
 import 'package:rideglory/features/home/presentation/cubit/home_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class HomeEmptyGarageCard extends StatelessWidget {
   const HomeEmptyGarageCard({super.key});
@@ -16,26 +16,26 @@ class HomeEmptyGarageCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: context.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.darkBorder),
+        border: Border.all(color: context.colorScheme.outlineVariant),
       ),
       child: Column(
         children: [
-          const Icon(Icons.two_wheeler, size: 48, color: AppColors.darkBorder),
-          const SizedBox(height: 8),
-          const Text(
+          Icon(Icons.two_wheeler, size: 48, color: context.colorScheme.outlineVariant),
+          SizedBox(height: 8),
+          Text(
             HomeStrings.emptyGarage,
             style: TextStyle(
-              color: AppColors.darkTextPrimary,
+              color: context.colorScheme.onSurface,
               fontWeight: FontWeight.w600,
             ),
           ),
-          const Text(
+          Text(
             HomeStrings.emptyGarageDescription,
-            style: TextStyle(color: AppColors.darkTextSecondary, fontSize: 12),
+            style: TextStyle(color: context.colorScheme.onSurfaceVariant, fontSize: 12),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           AppButton(
             label: HomeStrings.addVehicle,
             onPressed: () async {

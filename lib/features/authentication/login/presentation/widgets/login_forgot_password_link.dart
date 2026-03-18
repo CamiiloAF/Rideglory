@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/authentication/constants/auth_strings.dart';
-import 'package:rideglory/shared/widgets/form/app_text_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class LoginForgotPasswordLink extends StatelessWidget {
   const LoginForgotPasswordLink({super.key});

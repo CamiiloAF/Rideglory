@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class EventDetailSectionTitle extends StatelessWidget {
   const EventDetailSectionTitle({super.key, required this.title});
@@ -10,8 +11,8 @@ class EventDetailSectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: const TextStyle(
-        color: AppColors.darkTextPrimary,
+      style: TextStyle(
+        color: context.colorScheme.onSurface,
         fontSize: 18,
         fontWeight: FontWeight.w800,
         letterSpacing: -0.2,

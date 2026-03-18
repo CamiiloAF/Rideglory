@@ -11,13 +11,7 @@ import 'package:rideglory/features/event_registration/presentation/cubit/registr
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_form_section_card.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
-import 'package:rideglory/shared/widgets/form/app_city_autocomplete.dart';
-import 'package:rideglory/shared/widgets/form/app_date_picker.dart';
-import 'package:rideglory/shared/widgets/form/app_dropdown.dart';
-import 'package:rideglory/shared/widgets/form/app_text_button.dart';
-import 'package:rideglory/shared/widgets/form/app_text_field.dart';
-import 'package:rideglory/shared/widgets/vehicle_selection_bottom_sheet.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class RegistrationFormContent extends StatelessWidget {
   final EventModel event;
@@ -71,7 +65,7 @@ class RegistrationFormContent extends StatelessWidget {
                   ),
                 ]),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               AppTextField(
                 name: RegistrationFormFields.lastName,
                 labelText: RegistrationStrings.lastName,
@@ -88,7 +82,7 @@ class RegistrationFormContent extends StatelessWidget {
                   ),
                 ]),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -118,7 +112,7 @@ class RegistrationFormContent extends StatelessWidget {
                       ]),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: AppDatePicker(
                       fieldName: RegistrationFormFields.birthDate,
@@ -130,7 +124,7 @@ class RegistrationFormContent extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               AppTextField(
                 name: RegistrationFormFields.phone,
                 labelText: RegistrationStrings.phone,
@@ -155,7 +149,7 @@ class RegistrationFormContent extends StatelessWidget {
                   ),
                 ]),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               AppCityAutocomplete(
                 name: RegistrationFormFields.residenceCity,
                 labelText: RegistrationStrings.residenceCity,
@@ -168,7 +162,7 @@ class RegistrationFormContent extends StatelessWidget {
                   return null;
                 },
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               AppTextField(
                 name: RegistrationFormFields.email,
                 labelText: RegistrationStrings.email,
@@ -187,7 +181,7 @@ class RegistrationFormContent extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
         RegistrationFormSectionCard(
           icon: Icons.medical_services_outlined,
           title: RegistrationStrings.medicalInfo,
@@ -209,7 +203,7 @@ class RegistrationFormContent extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: AppDropdown<BloodType>(
                       name: RegistrationFormFields.bloodType,
@@ -231,7 +225,7 @@ class RegistrationFormContent extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               AppTextField(
                 name: RegistrationFormFields.medicalInsurance,
                 labelText: RegistrationStrings.medicalInsurance,
@@ -241,7 +235,7 @@ class RegistrationFormContent extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
         RegistrationFormSectionCard(
           icon: Icons.phone_outlined,
           title: RegistrationStrings.emergencyContactRequired,
@@ -258,7 +252,7 @@ class RegistrationFormContent extends StatelessWidget {
                   errorText: RegistrationStrings.emergencyContactNameRequired,
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               AppTextField(
                 name: RegistrationFormFields.emergencyContactPhone,
                 labelText: RegistrationStrings.emergencyContactPhone,
@@ -289,7 +283,7 @@ class RegistrationFormContent extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
         RegistrationFormSectionCard(
           icon: Icons.two_wheeler_outlined,
           title: RegistrationStrings.vehicleData,
@@ -318,7 +312,7 @@ class RegistrationFormContent extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: AppTextField(
                       name: RegistrationFormFields.vehicleReference,
@@ -333,7 +327,7 @@ class RegistrationFormContent extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -349,7 +343,7 @@ class RegistrationFormContent extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: AppTextField(
                       name: RegistrationFormFields.vin,
@@ -363,7 +357,7 @@ class RegistrationFormContent extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 32),
+        SizedBox(height: 32),
         BlocBuilder<RegistrationFormCubit, ResultState<EventRegistrationModel>>(
           builder: (context, state) {
             final isLoading = state is Loading;
@@ -378,7 +372,7 @@ class RegistrationFormContent extends StatelessWidget {
                   onPressed: isLoading ? null : cubit.saveRegistration,
                   isLoading: isLoading,
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 AppTextButton(
                   label: AppStrings.cancel,
                   onPressed: () => context.pop(),
@@ -388,7 +382,7 @@ class RegistrationFormContent extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(height: 32),
+        SizedBox(height: 32),
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class SosButton extends StatelessWidget {
   const SosButton({
@@ -22,7 +23,7 @@ class SosButton extends StatelessWidget {
           width: 56,
           height: 56,
           decoration: BoxDecoration(
-            color: AppColors.error,
+            color: context.colorScheme.error,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(

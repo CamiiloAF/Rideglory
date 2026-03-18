@@ -4,7 +4,7 @@ import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
-import 'package:rideglory/shared/widgets/vehicle_selection_bottom_sheet.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleSelectorChip extends StatelessWidget {
   final String? selectedVehicleId;
@@ -53,13 +53,13 @@ class VehicleSelectorChip extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             decoration: BoxDecoration(
               color: hasSelection
-                  ? AppColors.primary
-                  : AppColors.darkSurfaceHighest,
+                  ? context.colorScheme.primary
+                  : context.colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: hasSelection
-                    ? AppColors.primaryDark
-                    : AppColors.darkBorder,
+                    ? context.colorScheme.primary
+                    : context.colorScheme.outlineVariant,
               ),
             ),
             child: Row(
@@ -68,9 +68,9 @@ class VehicleSelectorChip extends StatelessWidget {
                 Icon(
                   Icons.directions_car_outlined,
                   size: 16,
-                  color: hasSelection ? Colors.white : AppColors.primary,
+                  color: hasSelection ? Colors.white : context.colorScheme.primary,
                 ),
-                const SizedBox(width: 6),
+                SizedBox(width: 6),
                 Text(
                   label,
                   style: context.bodyMedium?.copyWith(
@@ -81,8 +81,8 @@ class VehicleSelectorChip extends StatelessWidget {
                   ),
                 ),
                 if (hasSelection) ...[
-                  const SizedBox(width: 6),
-                  const Icon(
+                  SizedBox(width: 6),
+                  Icon(
                     Icons.arrow_drop_down,
                     size: 14,
                     color: Colors.white,

@@ -22,13 +22,13 @@ class VehicleInfoChip extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(_vehicleIcon, size: 16, color: Colors.grey[700]),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
           Text(
             vehicle.name,
             style: context.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
           ),
           if (vehicle.brand != null) ...[
-            const SizedBox(width: 4),
+            SizedBox(width: 4),
             Text('• ${vehicle.brand}', style: context.bodySmall),
           ],
         ],

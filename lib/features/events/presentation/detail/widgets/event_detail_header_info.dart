@@ -5,7 +5,7 @@ import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_difficulty_flames.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_organizer_row.dart';
-import 'package:rideglory/shared/widgets/detail_pill.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventDetailHeaderInfo extends StatelessWidget {
   const EventDetailHeaderInfo({super.key, required this.event});
@@ -36,12 +36,12 @@ class EventDetailHeaderInfo extends StatelessWidget {
             vertical: 6,
           ),
           decoration: BoxDecoration(
-            color: AppColors.primary,
+            color: context.colorScheme.primary,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text(
             _badgeLabel,
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontSize: 11,
               fontWeight: FontWeight.w800,
@@ -49,21 +49,21 @@ class EventDetailHeaderInfo extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Text(
           event.name,
-          style: const TextStyle(
-            color: AppColors.darkTextPrimary,
+          style: TextStyle(
+            color: context.colorScheme.onSurface,
             fontSize: 26,
             fontWeight: FontWeight.w800,
             height: 1.15,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         const EventDetailOrganizerRow(
           organizerName: EventStrings.organizerPlaceholder,
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Row(
           children: [
             DetailPill(
@@ -75,11 +75,11 @@ class EventDetailHeaderInfo extends StatelessWidget {
               ).shortLabel,
               variant: DetailPillVariant.primary,
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             DetailPill(
-              leading: const Icon(
+              leading: Icon(
                 Icons.two_wheeler,
-                color: AppColors.primary,
+                color: context.colorScheme.primary,
                 size: 18,
               ),
               label: event.eventType.label.toUpperCase(),
@@ -87,11 +87,11 @@ class EventDetailHeaderInfo extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         DetailPill(
-          leading: const Icon(
+          leading: Icon(
             Icons.access_time,
-            color: AppColors.primary,
+            color: context.colorScheme.primary,
             size: 18,
           ),
           subtitle: 'HORA',

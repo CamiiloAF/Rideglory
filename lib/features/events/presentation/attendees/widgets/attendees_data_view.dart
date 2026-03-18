@@ -5,7 +5,7 @@ import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/attendees/widgets/attendees_filter_bottom_sheet.dart';
 import 'package:rideglory/features/events/presentation/attendees/widgets/attendees_list.dart';
-import 'package:rideglory/shared/widgets/form/app_search_bar.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class AttendeesDataView extends StatefulWidget {
   final List<EventRegistrationModel> registrations;
@@ -61,7 +61,7 @@ class _AttendeesDataViewState extends State<AttendeesDataView> {
                   darkMode: true,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               SizedBox(
                 width: 48,
                 height: 48,
@@ -100,7 +100,7 @@ class _AttendeesDataViewState extends State<AttendeesDataView> {
             ],
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Expanded(
           child: AttendeesList(
             registrations: _filteredRegistrations,

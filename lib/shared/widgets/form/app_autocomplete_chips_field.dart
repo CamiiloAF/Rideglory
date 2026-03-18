@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class AppAutocompleteChipsField extends StatefulWidget {
   const AppAutocompleteChipsField({
@@ -69,6 +70,8 @@ class _AppAutocompleteChipsFieldState extends State<AppAutocompleteChipsField> {
   }
 
   void _showOverlay(FormFieldState<List<String>> field) {
+    final cs = context.colorScheme;
+
     _removeOverlay();
     _overlayEntry = OverlayEntry(
       builder: (_) => Positioned(
@@ -78,15 +81,15 @@ class _AppAutocompleteChipsFieldState extends State<AppAutocompleteChipsField> {
           showWhenUnlinked: false,
           offset: const Offset(0, 56),
           child: Material(
-            color: Colors.transparent,
+            color: cs.surface.withOpacity(0),
             child: Container(
               decoration: BoxDecoration(
-                color: AppColors.darkSurface,
+                color: cs.surface,
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppColors.darkBorder),
+                border: Border.all(color: cs.outlineVariant),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.3),
+                    color: cs.onSurface.withOpacity(0.3),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
@@ -98,7 +101,7 @@ class _AppAutocompleteChipsFieldState extends State<AppAutocompleteChipsField> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: _filteredSuggestions.length,
                 separatorBuilder: (_, _) =>
-                    const Divider(height: 1, color: AppColors.darkBorder),
+                    Divider(height: 1, color: cs.outlineVariant),
                 itemBuilder: (_, i) => InkWell(
                   onTap: () => _addChip(_filteredSuggestions[i], field),
                   borderRadius: BorderRadius.circular(8),
@@ -109,17 +112,17 @@ class _AppAutocompleteChipsFieldState extends State<AppAutocompleteChipsField> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.two_wheeler,
                           size: 16,
-                          color: AppColors.primary,
+                          color: cs.primary,
                         ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             _filteredSuggestions[i],
-                            style: const TextStyle(
-                              color: AppColors.darkTextPrimary,
+                            style: TextStyle(
+                              color: cs.onSurface,
                               fontSize: 14,
                             ),
                           ),
@@ -144,6 +147,9 @@ class _AppAutocompleteChipsFieldState extends State<AppAutocompleteChipsField> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = context.colorScheme;
+    final inputIconColor = context.appColors.inputIcon;
+
     return FormBuilderField<List<String>>(
       name: widget.name,
       initialValue: widget.initialValue ?? [],
@@ -170,11 +176,11 @@ class _AppAutocompleteChipsFieldState extends State<AppAutocompleteChipsField> {
                   helperText: widget.helperText,
                   helperMaxLines: 2,
                   prefixIcon: widget.prefixIcon != null
-                      ? Icon(widget.prefixIcon, color: AppColors.darkInputIcon)
+                      ? Icon(widget.prefixIcon, color: inputIconColor)
                       : null,
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.add_circle_outline),
-                    color: AppColors.primary,
+                    color: cs.primary,
                     tooltip: 'Agregar marca',
                     onPressed: () {
                       final text = _controller.text.trim();
@@ -196,10 +202,10 @@ class _AppAutocompleteChipsFieldState extends State<AppAutocompleteChipsField> {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withValues(alpha: 0.15),
+                      color: cs.primary.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: AppColors.primary.withValues(alpha: 0.4),
+                        color: cs.primary.withValues(alpha: 0.4),
                       ),
                     ),
                     child: Row(
@@ -207,8 +213,8 @@ class _AppAutocompleteChipsFieldState extends State<AppAutocompleteChipsField> {
                       children: [
                         Text(
                           entry.value,
-                          style: const TextStyle(
-                            color: AppColors.primary,
+                          style: TextStyle(
+                            color: cs.primary,
                             fontWeight: FontWeight.w600,
                             fontSize: 13,
                           ),
@@ -216,10 +222,10 @@ class _AppAutocompleteChipsFieldState extends State<AppAutocompleteChipsField> {
                         const SizedBox(width: 6),
                         GestureDetector(
                           onTap: () => _removeChip(entry.key, field),
-                          child: const Icon(
+                          child: Icon(
                             Icons.close,
                             size: 14,
-                            color: AppColors.primary,
+                            color: cs.primary,
                           ),
                         ),
                       ],

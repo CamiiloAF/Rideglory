@@ -6,6 +6,7 @@ import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/event_form_section_card.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class EventFormDifficultySection extends StatelessWidget {
   const EventFormDifficultySection({super.key});
@@ -52,14 +53,14 @@ class EventFormDifficultySection extends StatelessWidget {
                         );
                       }),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: 12),
                     Flexible(
                       child: Text(
                         EventStrings.difficultyLevel(selected.value),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AppColors.darkTextPrimary,
+                          color: context.colorScheme.onSurface,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -67,7 +68,7 @@ class EventFormDifficultySection extends StatelessWidget {
                   ],
                 ),
                 if (field.hasError) ...[
-                  const SizedBox(height: 6),
+                  SizedBox(height: 6),
                   Text(
                     field.errorText!,
                     style: Theme.of(

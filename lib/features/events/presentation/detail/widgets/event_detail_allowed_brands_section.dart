@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class EventDetailAllowedBrandsSection extends StatelessWidget {
   const EventDetailAllowedBrandsSection({super.key, required this.event});
@@ -17,16 +18,16 @@ class EventDetailAllowedBrandsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           EventStrings.allowedBrandsTitle,
           style: TextStyle(
-            color: AppColors.darkTextPrimary,
+            color: context.colorScheme.onSurface,
             fontSize: 18,
             fontWeight: FontWeight.w800,
             letterSpacing: -0.2,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Wrap(
           spacing: 10,
           runSpacing: 10,
@@ -40,12 +41,12 @@ class EventDetailAllowedBrandsSection extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.transparent,
                     borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: AppColors.primary, width: 1.5),
+                    border: Border.all(color: context.colorScheme.primary, width: 1.5),
                   ),
                   child: Text(
                     label,
-                    style: const TextStyle(
-                      color: AppColors.primary,
+                    style: TextStyle(
+                      color: context.colorScheme.primary,
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
                     ),

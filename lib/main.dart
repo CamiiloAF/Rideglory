@@ -9,7 +9,7 @@ import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/shared/router/app_router.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
-import 'package:rideglory/core/theme/app_theme.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 import 'firebase_options.dart';
 

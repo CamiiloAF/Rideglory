@@ -26,11 +26,11 @@ class RiderTelemetryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const bg = AppColors.darkSurfaceHighest;
-    const border = AppColors.darkBorder;
+    final bg = context.colorScheme.surfaceContainerHighest;
+    final border = context.colorScheme.outlineVariant;
     final batteryColor = batteryPercent >= 30
-        ? AppColors.success
-        : AppColors.warning;
+        ? context.appColors.success
+        : context.appColors.warning;
 
     return Container(
       width: MediaQuery.of(context).size.width * 0.85,
@@ -55,12 +55,12 @@ class RiderTelemetryCard extends StatelessWidget {
                       height: 56,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppColors.primary.withValues(alpha: 0.20),
+                        color: context.colorScheme.primary.withValues(alpha: 0.20),
                         border: Border.all(
-                          color: AppColors.primary.withValues(alpha: 0.45),
+                          color: context.colorScheme.primary.withValues(alpha: 0.45),
                         ),
                       ),
-                      child: Icon(Icons.person, color: AppColors.primary),
+                      child: Icon(Icons.person, color: context.colorScheme.primary),
                     ),
                     Positioned(
                       right: 2,
@@ -70,14 +70,14 @@ class RiderTelemetryCard extends StatelessWidget {
                         height: 12,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: isActive ? AppColors.success : border,
+                          color: isActive ? context.appColors.success : border,
                           border: Border.all(color: bg, width: 2),
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,20 +95,20 @@ class RiderTelemetryCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const SizedBox(width: 10),
+                          SizedBox(width: 10),
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 10,
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.primary.withValues(alpha: 0.18),
+                              color: context.colorScheme.primary.withValues(alpha: 0.18),
                               borderRadius: BorderRadius.circular(999),
                             ),
                             child: Text(
                               roleLabel.toUpperCase(),
                               style: context.labelSmall?.copyWith(
-                                color: AppColors.primary,
+                                color: context.colorScheme.primary,
                                 fontWeight: FontWeight.w900,
                                 letterSpacing: 0.6,
                               ),
@@ -116,7 +116,7 @@ class RiderTelemetryCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         deviceLabel,
                         maxLines: 1,
@@ -130,7 +130,7 @@ class RiderTelemetryCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Row(
               children: [
                 TelemetryMetric(
@@ -138,13 +138,13 @@ class RiderTelemetryCard extends StatelessWidget {
                   value: '${speedKmh}km/h',
                   icon: Icons.speed,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 TelemetryMetric(
                   label: MapStrings.distance,
                   value: '${distanceMeters}m',
                   icon: Icons.route,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 TelemetryMetric(
                   label: MapStrings.battery,
                   value: '$batteryPercent%',

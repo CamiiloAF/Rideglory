@@ -23,9 +23,9 @@ class EventCardChipsRow extends StatelessWidget {
     return Row(
       children: [
         EventTypeChip(eventType: eventType),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         DifficultyChip(difficulty: difficulty),
-        const Spacer(),
+        Spacer(),
         EventCardPriceChip(isFree: isFree, price: price),
       ],
     );

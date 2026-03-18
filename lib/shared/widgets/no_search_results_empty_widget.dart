@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 // TODO Update strings
@@ -7,7 +8,7 @@ class NoSearchResultsEmptyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cs = context.colorScheme;
 
     return Center(
       child: Padding(
@@ -18,21 +19,21 @@ class NoSearchResultsEmptyWidget extends StatelessWidget {
             Icon(
               Icons.search_off_rounded,
               size: 80,
-              color: isDark ? Colors.grey[700] : Colors.grey[400],
+              color: cs.onSurfaceVariant,
             ),
             const SizedBox(height: 16),
             Text(
               'No se encontraron resultados',
               style: context.titleMedium?.copyWith(
                 fontWeight: FontWeight.w600,
-                color: isDark ? Colors.grey[300] : null,
+                color: cs.onSurfaceVariant,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               'Intenta ajustar los filtros o la búsqueda',
               style: context.bodyMedium?.copyWith(
-                color: isDark ? Colors.grey[500] : null,
+                color: cs.onSurfaceVariant,
               ),
               textAlign: TextAlign.center,
             ),

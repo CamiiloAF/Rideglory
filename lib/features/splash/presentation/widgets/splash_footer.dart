@@ -34,7 +34,7 @@ class SplashFooter extends StatelessWidget {
                     color: context.colorScheme.error,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 GestureDetector(
                   onTap: onRetry,
                   child: Text(
@@ -71,11 +71,11 @@ class SplashFooter extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Container(
                   height: 3,
                   decoration: BoxDecoration(
-                    color: AppColors.darkSurfaceHighest,
+                    color: context.colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(2),
                   ),
                   child: AnimatedBuilder(
@@ -95,12 +95,12 @@ class SplashFooter extends StatelessWidget {
                   ),
                 ),
               ],
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               Center(
                 child: Text(
                   SplashStrings.versionLabel,
                   style: context.textTheme.labelSmall?.copyWith(
-                    color: AppColors.darkBorder,
+                    color: context.colorScheme.outlineVariant,
                     fontSize: 10,
                     letterSpacing: 2.0,
                   ),

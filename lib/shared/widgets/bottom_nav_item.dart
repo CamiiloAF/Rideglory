@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class BottomNavItem extends StatelessWidget {
   const BottomNavItem({
@@ -19,6 +20,7 @@ class BottomNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = context.colorScheme;
     return InkWell(
       onTap: onTap,
       child: SizedBox(
@@ -29,14 +31,14 @@ class BottomNavItem extends StatelessWidget {
           children: [
             Icon(
               isActive ? activeIcon : icon,
-              color: isActive ? AppColors.primary : Colors.grey[500],
+              color: isActive ? cs.primary : cs.onSurfaceVariant,
               size: 24,
             ),
             const SizedBox(height: 3),
             Text(
               label,
               style: TextStyle(
-                color: isActive ? AppColors.primary : Colors.grey[500],
+                color: isActive ? cs.primary : cs.onSurfaceVariant,
                 fontSize: 11,
                 fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
               ),

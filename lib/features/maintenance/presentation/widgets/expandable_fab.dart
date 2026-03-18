@@ -97,7 +97,7 @@ class _ExpandableFabState extends State<ExpandableFab>
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     FadeTransition(
                       opacity: _animation,
                       child: SlideTransition(
@@ -116,7 +116,7 @@ class _ExpandableFabState extends State<ExpandableFab>
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     FadeTransition(
                       opacity: _animation,
                       child: SlideTransition(
@@ -133,7 +133,7 @@ class _ExpandableFabState extends State<ExpandableFab>
                         ),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                   ],
                 )
               : const SizedBox.shrink(),

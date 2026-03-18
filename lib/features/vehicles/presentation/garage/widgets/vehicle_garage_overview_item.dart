@@ -26,13 +26,13 @@ class VehicleGarageOverviewItem extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: Color(0xFF3A3A3C),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: AppColors.primary, size: 20),
+            child: Icon(icon, color: context.colorScheme.primary, size: 20),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +44,7 @@ class VehicleGarageOverviewItem extends StatelessWidget {
                     letterSpacing: 0.5,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: 4),
                 Text(
                   value,
                   style: context.bodyLarge?.copyWith(

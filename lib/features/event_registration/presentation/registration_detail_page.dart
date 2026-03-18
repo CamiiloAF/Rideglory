@@ -11,8 +11,7 @@ import 'package:rideglory/features/event_registration/presentation/widgets/regis
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_detail_info_row.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_detail_section_card.dart';
 import 'package:rideglory/core/services/auth_service.dart';
-import 'package:rideglory/shared/widgets/app_app_bar.dart';
-import 'package:rideglory/shared/widgets/contact_popup_menu_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class RegistrationDetailPage extends StatelessWidget {
   const RegistrationDetailPage({super.key, required this.params});
@@ -41,7 +40,7 @@ class RegistrationDetailPage extends StatelessWidget {
                 whatsappLabel: RegistrationStrings.whatsappLabel,
                 alignment: Alignment.center,
               ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
@@ -73,7 +72,7 @@ class RegistrationDetailPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   RegistrationDetailSectionCard(
                     icon: Icons.medical_services_outlined,
                     title: RegistrationStrings.sectionHealthSafety,
@@ -93,9 +92,9 @@ class RegistrationDetailPage extends StatelessWidget {
                         RegistrationDetailInfoRow(
                           label: RegistrationStrings.bloodTypeLabel,
                           value: registration.bloodType.label,
-                          valueColor: AppColors.error,
+                          valueColor: context.colorScheme.error,
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8),
                         Text(
                           RegistrationStrings.emergencyContact,
                           style: context.textTheme.titleSmall?.copyWith(
@@ -111,14 +110,14 @@ class RegistrationDetailPage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   RegistrationDetailSectionCard(
                     icon: Icons.two_wheeler_outlined,
                     title: RegistrationStrings.sectionVehicleDetails,
                     initiallyExpanded: true,
                     child: _VehicleDetailContent(registration: registration),
                   ),
-                  const SizedBox(height: 100),
+                  SizedBox(height: 100),
                 ],
               ),
             ),
@@ -149,7 +148,7 @@ class _VehicleDetailContent extends StatelessWidget {
           width: 64,
           height: 64,
           decoration: BoxDecoration(
-            color: AppColors.darkSurfaceHighest,
+            color: context.colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
@@ -158,7 +157,7 @@ class _VehicleDetailContent extends StatelessWidget {
             color: colorScheme.onSurfaceVariant,
           ),
         ),
-        const SizedBox(width: 16),
+        SizedBox(width: 16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -169,7 +168,7 @@ class _VehicleDetailContent extends StatelessWidget {
                   color: colorScheme.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Text(
                 vehicleModel,
                 style: textTheme.titleSmall?.copyWith(
@@ -177,7 +176,7 @@ class _VehicleDetailContent extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Row(
                 children: [
                   Text(
@@ -192,13 +191,13 @@ class _VehicleDetailContent extends StatelessWidget {
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.licensePlateTagBackground,
+                      color: context.appColors.licensePlateTagBackground,
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
                       registration.licensePlate,
                       style: textTheme.labelMedium?.copyWith(
-                        color: AppColors.licensePlateTagText,
+                        color: context.appColors.licensePlateTagText,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

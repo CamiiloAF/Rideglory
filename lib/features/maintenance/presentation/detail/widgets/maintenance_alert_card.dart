@@ -23,10 +23,10 @@ class MaintenanceAlertCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: context.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isOn ? AppColors.primary : AppColors.darkBorder,
+          color: isOn ? context.colorScheme.primary : context.colorScheme.outlineVariant,
           width: isOn ? 1.5 : 1,
         ),
       ),
@@ -47,7 +47,7 @@ class MaintenanceAlertCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Text(
             label,
             style: context.bodySmall?.copyWith(
@@ -56,7 +56,7 @@ class MaintenanceAlertCard extends StatelessWidget {
               letterSpacing: 0.8,
             ),
           ),
-          const SizedBox(height: 4),
+          SizedBox(height: 4),
           Text(
             value,
             style: context.titleMedium?.copyWith(
@@ -64,7 +64,7 @@ class MaintenanceAlertCard extends StatelessWidget {
               color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
-          const SizedBox(height: 2),
+          SizedBox(height: 2),
           Text(
             subtitle,
             style: context.bodySmall?.copyWith(

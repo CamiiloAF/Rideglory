@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/shared/widgets/container_pull_to_refresh.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenancesLoadingWidget extends StatelessWidget {
   final Future<void> Function() onRefresh;
@@ -10,7 +10,7 @@ class MaintenancesLoadingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ContainerPullToRefresh(
       onRefresh: onRefresh,
-      child: const Center(child: CircularProgressIndicator()),
+      child: Center(child: CircularProgressIndicator()),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class EventCardPriceChip extends StatelessWidget {
   final bool isFree;
@@ -16,13 +17,13 @@ class EventCardPriceChip extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
         decoration: BoxDecoration(
-          color: AppColors.eventFree.withValues(alpha: 0.15),
+          color: context.appColors.eventFree.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
           EventStrings.free,
           style: theme.textTheme.labelSmall?.copyWith(
-            color: AppColors.eventFree,
+            color: context.appColors.eventFree,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -32,13 +33,13 @@ class EventCardPriceChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: AppColors.eventPaid.withValues(alpha: 0.15),
+        color: context.appColors.eventPaid.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         '\$${price!.toStringAsFixed(0)}',
         style: theme.textTheme.labelSmall?.copyWith(
-          color: AppColors.eventPaid,
+          color: context.appColors.eventPaid,
           fontWeight: FontWeight.bold,
         ),
       ),

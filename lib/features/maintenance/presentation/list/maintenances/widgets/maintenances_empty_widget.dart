@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/shared/widgets/container_pull_to_refresh.dart';
-import 'package:rideglory/shared/widgets/empty_state_widget.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenancesEmptyWidget extends StatelessWidget {
   final Future<void> Function() onRefresh;

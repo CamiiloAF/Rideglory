@@ -27,10 +27,10 @@ class VehicleSpecRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(icon, color: AppColors.primary, size: 20),
-          const SizedBox(width: 16),
+          Icon(icon, color: context.colorScheme.primary, size: 20),
+          SizedBox(width: 16),
           Text(label, style: context.bodyMedium?.copyWith(color: Colors.white)),
-          const Spacer(),
+          Spacer(),
           Text(
             value,
             style: context.bodyMedium?.copyWith(

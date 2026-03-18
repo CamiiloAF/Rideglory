@@ -10,12 +10,9 @@ import 'package:rideglory/features/vehicles/constants/vehicle_form_fields.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
-import 'package:rideglory/shared/widgets/app_app_bar.dart';
-import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
-import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
-import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 
 import '../widgets/vehicle_form.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleFormPage extends StatelessWidget {
   final VehicleModel? vehicle;

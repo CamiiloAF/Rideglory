@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/shared/widgets/registration_status_chip.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class CancelledRegistrationContent extends StatelessWidget {
   final VoidCallback onRegister;
@@ -15,17 +15,17 @@ class CancelledRegistrationContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const Row(
+        Row(
           children: [
             RegistrationStatusChip(status: RegistrationStatus.cancelled),
           ],
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(
           EventStrings.cancelledDescription,
           style: theme.textTheme.bodySmall,
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         AppButton(
           label: EventStrings.joinEvent,
           onPressed: onRegister,

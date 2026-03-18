@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/shared/widgets/registration_status_chip.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
-import 'package:rideglory/shared/widgets/form/app_text_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class RegistrationStatusContent extends StatelessWidget {
   final RegistrationStatus status;
@@ -26,9 +25,9 @@ class RegistrationStatusContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(children: [RegistrationStatusChip(status: status)]),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(description, style: theme.textTheme.bodySmall),
-        if (onEdit != null || onCancel != null) const SizedBox(height: 12),
+        if (onEdit != null || onCancel != null) SizedBox(height: 12),
         if (onEdit != null)
           AppButton(
             label: EventStrings.editRegistration,
@@ -36,7 +35,7 @@ class RegistrationStatusContent extends StatelessWidget {
             icon: Icons.edit_outlined,
           ),
         if (onCancel != null) ...[
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           AppTextButton(
             label: EventStrings.cancelRegistration,
             onPressed: onCancel,

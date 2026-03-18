@@ -9,8 +9,7 @@ import 'package:rideglory/features/home/presentation/widgets/home_events_section
 import 'package:rideglory/features/home/presentation/widgets/home_garage_section.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_header.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_view_all_events_button.dart';
-import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
-import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -52,17 +51,17 @@ class _HomeScaffold extends StatelessWidget {
         bottom: false,
         child: BlocBuilder<HomeCubit, HomeState>(
           builder: (context, state) => RefreshIndicator(
-            color: AppColors.primary,
-            backgroundColor: AppColors.darkSurface,
+            color: context.colorScheme.primary,
+            backgroundColor: context.colorScheme.surface,
             onRefresh: () => context.read<HomeCubit>().loadHomeData(),
             child: CustomScrollView(
               slivers: [
                 const SliverToBoxAdapter(child: HomeHeader()),
                 if (state is HomeLoading)
-                  const SliverFillRemaining(
+                  SliverFillRemaining(
                     child: Center(
                       child: CircularProgressIndicator(
-                        color: AppColors.primary,
+                        color: context.colorScheme.primary,
                       ),
                     ),
                   )
@@ -79,8 +78,8 @@ class _HomeScaffold extends StatelessWidget {
                     child: Center(
                       child: Text(
                         state.message,
-                        style: const TextStyle(
-                          color: AppColors.darkTextSecondary,
+                        style: TextStyle(
+                          color: context.colorScheme.onSurfaceVariant,
                         ),
                       ),
                     ),

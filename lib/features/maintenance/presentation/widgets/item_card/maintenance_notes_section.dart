@@ -21,7 +21,7 @@ class MaintenanceNotesSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Icon(Icons.notes_rounded, size: 16, color: Colors.grey[600]),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Expanded(
               child: Text(
                 maintenance.notes!,

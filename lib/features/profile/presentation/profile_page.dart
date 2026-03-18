@@ -10,11 +10,8 @@ import 'package:rideglory/features/event_registration/constants/registration_str
 import 'package:rideglory/features/profile/constants/profile_strings.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
-import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
-import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
-import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});

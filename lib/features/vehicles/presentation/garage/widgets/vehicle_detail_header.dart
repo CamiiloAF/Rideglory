@@ -44,7 +44,7 @@ class VehicleDetailHeader extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.more_vert, color: Colors.grey),
+                    icon: Icon(Icons.more_vert, color: Colors.grey),
                     onPressed: onOptionsTap,
                   ),
                 ],
@@ -55,28 +55,28 @@ class VehicleDetailHeader extends StatelessWidget {
               ),
 
               if (onMainVehicleChanged != null) ...[
-                const SizedBox(height: 8),
+                SizedBox(height: 8),
                 Row(
                   children: [
                     Icon(
                       Icons.star_rounded,
                       size: 18,
                       color: isMainVehicle
-                          ? AppColors.primary
+                          ? context.colorScheme.primary
                           : Colors.white.withValues(alpha: 0.4),
                     ),
 
-                    const SizedBox(width: 6),
+                    SizedBox(width: 6),
                     Text(
                       VehicleStrings.mainVehicle,
                       style: context.bodyMedium?.copyWith(
                         color: Colors.white.withValues(alpha: 0.8),
                       ),
                     ),
-                    const Spacer(),
+                    Spacer(),
                     Switch.adaptive(
                       value: isMainVehicle,
-                      activeTrackColor: AppColors.primary,
+                      activeTrackColor: context.colorScheme.primary,
                       onChanged: onMainVehicleChanged,
                     ),
                   ],
@@ -92,17 +92,17 @@ class VehicleDetailHeader extends StatelessWidget {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: AppColors.primary,
+              color: context.colorScheme.primary,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.3),
+                  color: context.colorScheme.primary.withValues(alpha: 0.3),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
               ],
             ),
-            child: const Icon(Icons.add, color: Colors.white, size: 32),
+            child: Icon(Icons.add, color: Colors.white, size: 32),
           ),
         ),
       ],

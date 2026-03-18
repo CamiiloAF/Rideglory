@@ -10,7 +10,12 @@ class LoginDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Expanded(child: Divider(color: AppColors.darkBorder, height: 1)),
+        Expanded(
+          child: Divider(
+            color: context.colorScheme.outlineVariant,
+            height: 1,
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
@@ -20,7 +25,12 @@ class LoginDivider extends StatelessWidget {
             ),
           ),
         ),
-        const Expanded(child: Divider(color: AppColors.darkBorder, height: 1)),
+        Expanded(
+          child: Divider(
+            color: context.colorScheme.outlineVariant,
+            height: 1,
+          ),
+        ),
       ],
     );
   }

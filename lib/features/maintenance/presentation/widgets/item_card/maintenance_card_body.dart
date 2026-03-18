@@ -44,9 +44,9 @@ class MaintenanceCardBody extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: context.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.darkBorder, width: 1),
+        border: Border.all(color: context.colorScheme.outlineVariant, width: 1),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
@@ -67,9 +67,9 @@ class MaintenanceCardBody extends StatelessWidget {
                       color: const Color(0xFF332A24), // Dark orange/brownish
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Icon(typeIcon, color: AppColors.primary, size: 28),
+                    child: Icon(typeIcon, color: context.colorScheme.primary, size: 28),
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: 16),
 
                   // Info Section
                   Expanded(
@@ -88,33 +88,33 @@ class MaintenanceCardBody extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                             if (maintenance.cost != null) ...[
-                              const Spacer(),
+                              Spacer(),
                               Text(
                                 currencyFormat.format(maintenance.cost),
                                 style: context.bodySmall?.copyWith(
-                                  color: AppColors.darkTextSecondary,
+                                  color: context.colorScheme.onSurfaceVariant,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ],
                           ],
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(
                           dateFormat.format(maintenance.date),
                           style: context.bodyMedium?.copyWith(
                             color: Colors.grey[500],
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        SizedBox(height: 12),
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.speed_outlined,
                               size: 16,
-                              color: AppColors.primary,
+                              color: context.colorScheme.primary,
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: 4),
                             Text(
                               '${numberFormat.format(maintenance.maintanceMileage)} km',
                               style: context.bodySmall?.copyWith(

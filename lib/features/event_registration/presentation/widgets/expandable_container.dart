@@ -43,7 +43,7 @@ class _ExpandableContainerState extends State<ExpandableContainer> {
             children: [
               if (widget.leading != null) ...[
                 widget.leading!,
-                const SizedBox(width: 10),
+                SizedBox(width: 10),
               ],
               Expanded(child: widget.title),
               AnimatedRotation(

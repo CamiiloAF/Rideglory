@@ -30,9 +30,9 @@ class _RiderTelemetryPanelState extends State<RiderTelemetryPanel> {
       curve: Curves.easeOutCubic,
       height: height,
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: context.colorScheme.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        border: Border.all(color: AppColors.darkBorder),
+        border: Border.all(color: context.colorScheme.outlineVariant),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.35),
@@ -55,7 +55,7 @@ class _RiderTelemetryPanelState extends State<RiderTelemetryPanel> {
                       color: context.colorScheme.onSurface,
                     ),
                   ),
-                  const Spacer(),
+                  Spacer(),
                   IconButton(
                     onPressed: () => setState(() => _isExpanded = !_isExpanded),
                     icon: Icon(
@@ -68,12 +68,12 @@ class _RiderTelemetryPanelState extends State<RiderTelemetryPanel> {
                 ],
               ),
               if (_isExpanded) ...[
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 Expanded(
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: _mockRiders.length,
-                    separatorBuilder: (_, _) => const SizedBox(width: 12),
+                    separatorBuilder: (_, _) => SizedBox(width: 12),
                     itemBuilder: (context, index) {
                       final rider = _mockRiders[index];
                       return RiderTelemetryCard(

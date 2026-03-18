@@ -35,7 +35,7 @@ class VehicleDetailView extends StatelessWidget {
       children: [
         // Details Bottom Sheet
         Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: Color(0xFF1C1C1E), // Darker surface matching the mockup
             borderRadius: BorderRadius.vertical(top: Radius.circular(36)),
           ),
@@ -50,19 +50,19 @@ class VehicleDetailView extends StatelessWidget {
                 isMainVehicle: isMainVehicle,
                 onMainVehicleChanged: onMainVehicleChanged,
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
               VehicleQuickInfoSection(vehicle: vehicle),
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
               VehicleFullSpecsSection(vehicle: vehicle),
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
               VehicleMaintenanceHistorySection(vehicle: vehicle),
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
               VehicleGarageOverviewSection(
                 totalVehicles: totalVehicles,
                 totalMileage: totalMileage,
               ),
               // Bottom padding for the navigation bar
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
             ],
           ),
         ),

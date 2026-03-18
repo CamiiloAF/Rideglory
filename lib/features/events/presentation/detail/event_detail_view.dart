@@ -23,9 +23,7 @@ import 'package:rideglory/features/events/presentation/detail/widgets/event_deta
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
 import 'package:rideglory/features/events/presentation/shared/dialogs/cancel_registration_dialog.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
-import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
-import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventDetailView extends StatefulWidget {
   const EventDetailView({
@@ -88,10 +86,10 @@ class EventDetailViewState extends State<EventDetailView> {
                 expandedHeight: MediaQuery.of(context).size.height * 0.8,
                 pinned: true,
                 stretch: true,
-                backgroundColor: AppColors.darkSurface,
-                foregroundColor: AppColors.darkTextPrimary,
+                backgroundColor: context.colorScheme.surface,
+                foregroundColor: context.colorScheme.onSurface,
                 leading: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  icon: Icon(Icons.arrow_back_ios_new_rounded),
                   onPressed: () {
                     if (!widget.isFromEventDetailByIdPage) {
                       context.pop(currentEvent);
@@ -104,7 +102,7 @@ class EventDetailViewState extends State<EventDetailView> {
                 title: null,
                 actions: [
                   IconButton(
-                    icon: const Icon(Icons.share_outlined),
+                    icon: Icon(Icons.share_outlined),
                     onPressed: () {
                       // TODO: share event
                     },
@@ -176,10 +174,10 @@ class EventDetailViewState extends State<EventDetailView> {
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
                   titlePadding: const EdgeInsets.only(bottom: 12),
-                  title: const Text(
+                  title: Text(
                     EventStrings.eventDetail,
                     style: TextStyle(
-                      color: AppColors.darkTextPrimary,
+                      color: context.colorScheme.onSurface,
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
                     ),
@@ -224,7 +222,7 @@ class EventDetailViewState extends State<EventDetailView> {
                         // TODO: open maps with event.meetingPoint
                       },
                     ),
-                    const SizedBox(height: 100),
+                    SizedBox(height: 100),
                   ],
                 ),
               ),
@@ -327,7 +325,7 @@ class EventDetailViewState extends State<EventDetailView> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               ListTile(
-                leading: const Icon(Icons.info_outline_rounded),
+                leading: Icon(Icons.info_outline_rounded),
                 title: const Text(RegistrationStrings.viewDetail),
                 onTap: () {
                   Navigator.of(sheetContext).pop();
@@ -338,7 +336,7 @@ class EventDetailViewState extends State<EventDetailView> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.cancel_outlined),
+                leading: Icon(Icons.cancel_outlined),
                 title: const Text(EventStrings.cancelRegistration),
                 onTap: () {
                   Navigator.of(sheetContext).pop();

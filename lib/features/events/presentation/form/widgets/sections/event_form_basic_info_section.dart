@@ -4,9 +4,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
-import 'package:rideglory/shared/widgets/form/app_city_autocomplete.dart';
-import 'package:rideglory/shared/widgets/form/app_rich_text_editor.dart';
-import 'package:rideglory/shared/widgets/form/app_text_field.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventFormBasicInfoSection extends StatelessWidget {
   const EventFormBasicInfoSection({
@@ -34,9 +32,9 @@ class EventFormBasicInfoSection extends StatelessWidget {
           suffixIcon: !isEditing
               ? Builder(
                   builder: (context) => IconButton(
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.info_outline,
-                      color: AppColors.darkInputIcon,
+                      color: context.appColors.inputIcon,
                     ),
                     onPressed: () {
                       final scaffoldMessenger = ScaffoldMessenger.of(context);
@@ -63,7 +61,7 @@ class EventFormBasicInfoSection extends StatelessWidget {
             ),
           ]),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         AppRichTextEditor(
           name: EventFormFields.description,
           labelText: EventStrings.descriptionAndRecommendations,
@@ -81,7 +79,7 @@ class EventFormBasicInfoSection extends StatelessWidget {
             errorText: EventStrings.descriptionRequired,
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         AppCityAutocomplete(
           name: EventFormFields.city,
           labelText: EventStrings.eventCity,

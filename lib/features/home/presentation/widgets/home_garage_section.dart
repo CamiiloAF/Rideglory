@@ -8,6 +8,7 @@ import 'package:rideglory/features/home/presentation/widgets/home_garage_card.da
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class HomeGarageSection extends StatelessWidget {
   const HomeGarageSection({super.key, this.vehicle});
@@ -27,20 +28,20 @@ class HomeGarageSection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 HomeStrings.myGarage,
                 style: TextStyle(
-                  color: AppColors.darkTextPrimary,
+                  color: context.colorScheme.onSurface,
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               GestureDetector(
                 onTap: () => context.goNamed(AppRoutes.garage),
-                child: const Text(
+                child: Text(
                   'VER TODO',
                   style: TextStyle(
-                    color: AppColors.primary,
+                    color: context.colorScheme.primary,
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     letterSpacing: 1,
@@ -49,7 +50,7 @@ class HomeGarageSection extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           effectiveVehicle != null
               ? HomeGarageCard(vehicle: effectiveVehicle)
               : const HomeEmptyGarageCard(),

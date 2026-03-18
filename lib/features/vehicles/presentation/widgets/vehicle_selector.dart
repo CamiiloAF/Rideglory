@@ -45,13 +45,13 @@ class VehicleSelector extends StatelessWidget {
                   color: const Color(0xFF6366F1).withValues(alpha: .1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.directions_car,
                   color: Color(0xFF6366F1),
                   size: 20,
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<VehicleModel>(

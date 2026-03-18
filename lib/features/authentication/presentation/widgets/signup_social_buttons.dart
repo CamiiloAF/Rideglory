@@ -23,7 +23,7 @@ class SignupSocialButtons extends StatelessWidget {
               isLoading: isLoading,
               onPressed: onEmailModeToggle,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             SocialLoginButton(
               type: SocialLoginType.google,
               isLoading: isLoading,
@@ -31,7 +31,7 @@ class SignupSocialButtons extends StatelessWidget {
                 context.read<AuthCubit>().signInWithGoogle();
               },
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             SocialLoginButton(
               type: SocialLoginType.apple,
               isLoading: isLoading,
@@ -39,7 +39,7 @@ class SignupSocialButtons extends StatelessWidget {
                 context.read<AuthCubit>().signInWithApple();
               },
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
 
             // Divider with "Already have account?" text
             Row(
@@ -59,7 +59,7 @@ class SignupSocialButtons extends StatelessWidget {
                 Expanded(child: Container(height: 1, color: Colors.grey[200])),
               ],
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
 
             // Sign in link
             Center(

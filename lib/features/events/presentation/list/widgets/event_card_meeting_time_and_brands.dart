@@ -32,19 +32,19 @@ class EventCardMeetingTimeAndBrands extends StatelessWidget {
     return Row(
       children: [
         Icon(Icons.access_time_outlined, size: _iconSize, color: iconColor),
-        const SizedBox(width: 4),
+        SizedBox(width: 4),
         Text(
           '${EventStrings.meetingTimePrefix}$formattedTime',
           style: theme.textTheme.bodySmall?.copyWith(color: textColor),
         ),
-        const Spacer(),
+        Spacer(),
         if (!isMultiBrand) ...[
           Icon(
             Icons.shield_outlined,
             size: _iconSize,
             color: colorScheme.secondary,
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(
             allowedBrandsText,
             style: theme.textTheme.labelSmall?.copyWith(

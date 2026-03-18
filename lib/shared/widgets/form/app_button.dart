@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 enum AppButtonVariant { primary, secondary, danger, success }
@@ -32,42 +32,42 @@ class AppButton extends StatelessWidget {
     this.height = 48,
   });
 
-  Color get _variantColor {
-    switch (variant) {
-      case AppButtonVariant.primary:
-        return AppColors.primary;
-      case AppButtonVariant.secondary:
-        return AppColors.secondary;
-      case AppButtonVariant.danger:
-        return AppColors.error;
-      case AppButtonVariant.success:
-        return AppColors.success;
-    }
-  }
-
-  Color get _backgroundColor =>
-      style == AppButtonStyle.filled ? _variantColor : Colors.transparent;
-
-  Color get _foregroundColor =>
-      style == AppButtonStyle.filled ? Colors.white : _variantColor;
-
-  Color get _borderColor =>
-      style == AppButtonStyle.outlined ? _variantColor : Colors.transparent;
-
-  bool get _hasBorder => style == AppButtonStyle.outlined;
-
   @override
   Widget build(BuildContext context) {
+    final cs = context.colorScheme;
+    final appColors = context.appColors;
+
+    final variantColor = switch (variant) {
+      AppButtonVariant.primary => cs.primary,
+      AppButtonVariant.secondary => cs.secondary,
+      AppButtonVariant.danger => cs.error,
+      AppButtonVariant.success => appColors.success,
+    };
+
+    final backgroundColor = style == AppButtonStyle.filled
+        ? variantColor
+        : cs.surface.withOpacity(0);
+
+    final foregroundColor = style == AppButtonStyle.filled
+        ? cs.onPrimary
+        : variantColor;
+
+    final borderColor = style == AppButtonStyle.outlined
+        ? variantColor
+        : cs.surface.withOpacity(0);
+
+    final hasBorder = style == AppButtonStyle.outlined;
+
     final buttonWidget = Container(
       width: isFullWidth ? double.infinity : width,
       height: height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: _backgroundColor,
-        border: Border.all(color: _borderColor, width: _hasBorder ? 1.5 : 0),
+        color: backgroundColor,
+        border: Border.all(color: borderColor, width: hasBorder ? 1.5 : 0),
       ),
       child: Material(
-        color: Colors.transparent,
+        color: cs.surface.withOpacity(0),
         child: InkWell(
           onTap: onPressed == null || isLoading ? null : onPressed,
           borderRadius: BorderRadius.circular(8),
@@ -81,7 +81,7 @@ class AppButton extends StatelessWidget {
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
                         valueColor: AlwaysStoppedAnimation<Color>(
-                          _foregroundColor,
+                          foregroundColor,
                         ),
                       ),
                     )
@@ -90,14 +90,14 @@ class AppButton extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         if (icon != null) ...[
-                          Icon(icon, color: _foregroundColor, size: 20),
+                          Icon(icon, color: foregroundColor, size: 20),
                           const SizedBox(width: 8),
                         ],
                         Flexible(
                           child: Text(
                             label,
                             style: context.labelLarge?.copyWith(
-                              color: _foregroundColor,
+                              color: foregroundColor,
                               letterSpacing: 0.3,
                             ),
                             textAlign: TextAlign.center,

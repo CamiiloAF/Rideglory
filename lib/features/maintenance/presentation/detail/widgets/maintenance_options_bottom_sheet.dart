@@ -11,7 +11,7 @@ class MaintenanceOptionsBottomSheet extends StatelessWidget {
   static Future<MaintenanceAction?> show(BuildContext context) {
     return showModalBottomSheet<MaintenanceAction>(
       context: context,
-      backgroundColor: AppColors.darkSurface,
+      backgroundColor: context.colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
@@ -35,7 +35,7 @@ class MaintenanceOptionsBottomSheet extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.edit, color: Colors.white),
+            leading: Icon(Icons.edit, color: Colors.white),
             title: Text(
               MaintenanceStrings.editMaintenance,
               style: context.bodyLarge?.copyWith(color: Colors.white),
@@ -45,7 +45,7 @@ class MaintenanceOptionsBottomSheet extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.delete, color: Colors.red),
+            leading: Icon(Icons.delete, color: Colors.red),
             title: Text(
               MaintenanceStrings.deleteMaintenance,
               style: context.bodyLarge?.copyWith(color: Colors.red),
@@ -54,7 +54,7 @@ class MaintenanceOptionsBottomSheet extends StatelessWidget {
               Navigator.pop(context, MaintenanceAction.delete);
             },
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
         ],
       ),
     );

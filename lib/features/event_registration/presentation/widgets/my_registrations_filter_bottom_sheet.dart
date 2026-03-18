@@ -4,8 +4,7 @@ import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
-import 'package:rideglory/shared/widgets/form/app_text_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MyRegistrationsFilterBottomSheet extends StatefulWidget {
   const MyRegistrationsFilterBottomSheet({
@@ -104,7 +103,7 @@ class _MyRegistrationsFilterBottomSheetState
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,

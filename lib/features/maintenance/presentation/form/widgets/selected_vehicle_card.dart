@@ -42,7 +42,7 @@ class SelectedVehicleCard extends StatelessWidget {
                 size: 24,
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +55,7 @@ class SelectedVehicleCard extends StatelessWidget {
                       letterSpacing: 0.5,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 4),
                   Text(
                     vehicle.name,
                     style: context.textTheme.titleMedium?.copyWith(
@@ -63,7 +63,7 @@ class SelectedVehicleCard extends StatelessWidget {
                     ),
                   ),
                   if (vehicle.brand != null || vehicle.model != null) ...[
-                    const SizedBox(height: 2),
+                    SizedBox(height: 2),
                     Text(
                       [
                         vehicle.brand,
@@ -77,7 +77,7 @@ class SelectedVehicleCard extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Icon(
               Icons.chevron_right_rounded,
               color: context.colorScheme.onSurfaceVariant,

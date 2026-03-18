@@ -37,7 +37,7 @@ class MaintenanceCardHeader extends StatelessWidget {
           ),
           child: Icon(typeIcon, color: Colors.white, size: 28),
         ),
-        const SizedBox(width: 16),
+        SizedBox(width: 16),
 
         Expanded(
           child: Column(
@@ -50,7 +50,7 @@ class MaintenanceCardHeader extends StatelessWidget {
                   letterSpacing: -0.5,
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4),
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 10,
@@ -71,7 +71,7 @@ class MaintenanceCardHeader extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         // Badge de alerta
         if (maintenance.receiveAlert && isUrgent)
           Container(
@@ -80,7 +80,7 @@ class MaintenanceCardHeader extends StatelessWidget {
               color: const Color(0xFFFEF2F2),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.notifications_active_rounded,
               color: Color(0xFFEF4444),
               size: 20,

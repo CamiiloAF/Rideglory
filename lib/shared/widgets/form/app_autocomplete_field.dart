@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/shared/widgets/form/text_field_label.dart';
 
 class AppAutocompleteField extends StatefulWidget {
@@ -131,7 +132,7 @@ class _AppAutocompleteFieldState extends State<AppAutocompleteField> {
                   suffixIcon: _controller.text.isNotEmpty
                       ? IconButton(
                           icon: const Icon(Icons.clear, size: 18),
-                          color: AppColors.darkInputIcon,
+                          color: context.appColors.inputIcon,
                           onPressed: () {
                             _controller.clear();
                             field.didChange(null);
@@ -167,6 +168,8 @@ class _SuggestionsOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = context.colorScheme;
+
     return Positioned(
       width: _width,
       child: CompositedTransformFollower(
@@ -174,16 +177,16 @@ class _SuggestionsOverlay extends StatelessWidget {
         showWhenUnlinked: false,
         offset: const Offset(0, 56),
         child: Material(
-          color: Colors.transparent,
+          color: cs.surface.withOpacity(0),
           child: Container(
             constraints: const BoxConstraints(maxHeight: _maxHeight),
             decoration: BoxDecoration(
-              color: AppColors.darkSurface,
+              color: cs.surface,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: AppColors.darkBorder),
+              border: Border.all(color: cs.outlineVariant),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.3),
+                  color: cs.onSurface.withOpacity(0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
@@ -195,7 +198,7 @@ class _SuggestionsOverlay extends StatelessWidget {
               physics: const BouncingScrollPhysics(),
               itemCount: suggestions.length,
               separatorBuilder: (_, _) =>
-                  const Divider(height: 1, color: AppColors.darkBorder),
+                  Divider(height: 1, color: cs.outlineVariant),
               itemBuilder: (_, i) {
                 final value = suggestions[i];
                 return InkWell(
@@ -208,13 +211,13 @@ class _SuggestionsOverlay extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        Icon(prefixIcon, color: AppColors.primary),
+                        Icon(prefixIcon, color: cs.primary),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
                             value,
-                            style: const TextStyle(
-                              color: AppColors.darkTextPrimary,
+                            style: TextStyle(
+                              color: cs.onSurface,
                               fontSize: 14,
                             ),
                           ),
