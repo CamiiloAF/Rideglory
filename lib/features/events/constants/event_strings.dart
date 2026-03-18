@@ -144,6 +144,7 @@ abstract class EventStrings {
   static const String applyFilters = 'Aplicar filtros';
   static const String clearFilters = 'Limpiar filtros';
   static const String filterAll = 'Todos';
+  static const String searchRegistrations = 'Buscar inscripciones';
   static const String filterByType = 'Tipo de evento';
   static const String filterByDifficulty = 'Dificultad';
   static const String filterByCity = 'Ciudad';
@@ -190,7 +191,6 @@ abstract class EventStrings {
   static const String openToAllBrands = 'Abierto a todos';
 
   // Status labels
-  // TODO USAR ESTO
   static const String pending = 'Pendiente';
   static const String approved = 'Aprobado';
   static const String rejected = 'Rechazado';
