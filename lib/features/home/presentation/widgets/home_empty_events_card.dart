@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/home/constants/home_strings.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class HomeEmptyEventsCard extends StatelessWidget {
   const HomeEmptyEventsCard({super.key});
@@ -11,28 +12,28 @@ class HomeEmptyEventsCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: context.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.darkBorder),
+        border: Border.all(color: context.colorScheme.outlineVariant),
       ),
-      child: const Column(
+      child: Column(
         children: [
           Icon(
             Icons.calendar_today_outlined,
             size: 48,
-            color: AppColors.darkBorder,
+            color: context.colorScheme.outlineVariant,
           ),
           SizedBox(height: 8),
           Text(
             HomeStrings.emptyEvents,
             style: TextStyle(
-              color: AppColors.darkTextPrimary,
+              color: context.colorScheme.onSurface,
               fontWeight: FontWeight.w600,
             ),
           ),
           Text(
             HomeStrings.emptyEventsDescription,
-            style: TextStyle(color: AppColors.darkTextSecondary, fontSize: 12),
+            style: TextStyle(color: context.colorScheme.onSurfaceVariant, fontSize: 12),
             textAlign: TextAlign.center,
           ),
         ],

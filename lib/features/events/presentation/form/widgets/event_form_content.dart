@@ -15,7 +15,7 @@ import 'package:rideglory/features/events/presentation/form/widgets/sections/eve
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_event_type_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_locations_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_multi_brand_section.dart';
-import 'package:rideglory/shared/widgets/form/app_text_field.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventFormContent extends StatelessWidget {
   const EventFormContent({super.key});
@@ -93,7 +93,7 @@ class EventFormContent extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             EventFormBasicInfoSection(
               isEditing: cubit.isEditing,
               descriptionInitialValue: cubit.editingEvent?.description,
@@ -101,26 +101,26 @@ class EventFormContent extends StatelessWidget {
                 // TODO: Implement AI suggestions
               },
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             const EventFormDateTimeSection(),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             const EventFormDifficultySection(),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             const FormSectionTitle(
               title: EventStrings.routeAndMap,
               icon: Icons.route_outlined,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             const EventFormLocationsSection(),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             const FormSectionTitle(
               title: EventStrings.eventType,
               icon: Icons.category_outlined,
             ),
             const EventFormEventTypeSection(),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             const EventFormMultiBrandSection(),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             AppTextField(
               name: EventFormFields.price,
               labelText: EventStrings.price,

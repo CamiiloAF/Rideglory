@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class HomeSubMenuOption extends StatelessWidget {
   const HomeSubMenuOption({
@@ -25,22 +26,22 @@ class HomeSubMenuOption extends StatelessWidget {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.15),
+                color: context.colorScheme.primary.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: AppColors.primary, size: 22),
+              child: Icon(icon, color: context.colorScheme.primary, size: 22),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             Text(
               label,
-              style: const TextStyle(
-                color: AppColors.darkTextPrimary,
+              style: TextStyle(
+                color: context.colorScheme.onSurface,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const Spacer(),
-            const Icon(Icons.chevron_right, color: AppColors.darkTextSecondary),
+            Spacer(),
+            Icon(Icons.chevron_right, color: context.colorScheme.onSurfaceVariant),
           ],
         ),
       ),

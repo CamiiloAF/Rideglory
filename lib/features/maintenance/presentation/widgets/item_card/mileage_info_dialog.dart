@@ -39,7 +39,7 @@ class MileageInfoDialog extends StatelessWidget {
             ),
             child: Icon(Icons.speed_rounded, size: 32, color: typeColor),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           Text(
             MaintenanceStrings.currentMileage,
             style: context.titleMedium?.copyWith(
@@ -47,7 +47,7 @@ class MileageInfoDialog extends StatelessWidget {
               letterSpacing: 0.3,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(

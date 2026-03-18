@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/shared/widgets/vehicle_list_item.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
@@ -25,7 +26,7 @@ class VehicleSelectionBottomSheet extends StatelessWidget {
     return showModalBottomSheet<VehicleModel>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: context.colorScheme.surface.withOpacity(0),
       builder: (_) => VehicleSelectionBottomSheet(
         subtitle: subtitle,
         vehicles: vehicles,
@@ -37,19 +38,20 @@ class VehicleSelectionBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final cs = context.colorScheme;
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: cs.surface,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         border: Border.all(
-          color: AppColors.darkBorder,
+          color: cs.outlineVariant,
         ),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            color: Colors.black54,
+            color: cs.background.withOpacity(0.35),
             blurRadius: 20,
-            offset: Offset(0, -8),
+            offset: const Offset(0, -8),
           ),
         ],
       ),
@@ -65,7 +67,7 @@ class VehicleSelectionBottomSheet extends StatelessWidget {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: AppColors.darkBorder.withValues(alpha: 0.7),
+            color: cs.outlineVariant.withOpacity(0.7),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -80,7 +82,7 @@ class VehicleSelectionBottomSheet extends StatelessWidget {
                   VehicleStrings.selectVehicle,
                   style: textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w700,
-                    color: AppColors.darkTextPrimary,
+                    color: cs.onSurface,
                   ),
                 ),
                 if (subtitle != null) ...[
@@ -88,7 +90,7 @@ class VehicleSelectionBottomSheet extends StatelessWidget {
                   Text(
                     subtitle!,
                     style: textTheme.bodyMedium?.copyWith(
-                      color: AppColors.darkTextSecondary,
+                      color: cs.onSurfaceVariant,
                     ),
                   ),
                 ],

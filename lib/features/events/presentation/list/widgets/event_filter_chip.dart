@@ -23,7 +23,7 @@ class EventFilterChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? context.colorScheme.primary
-              : AppColors.darkSurfaceHighest,
+              : context.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(22),
         ),
         child: Center(

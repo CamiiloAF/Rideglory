@@ -3,8 +3,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/form_section_title.dart';
-import 'package:rideglory/shared/widgets/form/app_text_field.dart';
-import 'package:rideglory/shared/widgets/map/route_map_preview.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventFormLocationsSection extends StatefulWidget {
   const EventFormLocationsSection({super.key});
@@ -36,7 +35,7 @@ class _EventFormLocationsSectionState extends State<EventFormLocationsSection> {
             setState(() => _meetingPoint = value);
           },
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
 
         AppTextField(
           name: EventFormFields.destination,
@@ -51,7 +50,7 @@ class _EventFormLocationsSectionState extends State<EventFormLocationsSection> {
             setState(() => _destination = value);
           },
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
         FormSectionTitle(
           title: EventStrings.meetingPointPreview.toUpperCase(),
           icon: Icons.map_outlined,

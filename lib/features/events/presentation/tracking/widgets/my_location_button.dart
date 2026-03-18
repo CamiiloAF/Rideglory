@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class MyLocationButton extends StatelessWidget {
   const MyLocationButton({
@@ -15,9 +16,9 @@ class MyLocationButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: AppColors.darkSurfaceHighest,
+        color: context.colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.darkBorder),
+        border: Border.all(color: context.colorScheme.outlineVariant),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.25),
@@ -34,7 +35,7 @@ class MyLocationButton extends StatelessWidget {
           height: 48,
           child: Icon(
             Icons.my_location,
-            color: isEnabled ? AppColors.primary : AppColors.darkTextSecondary,
+            color: isEnabled ? context.colorScheme.primary : context.colorScheme.onSurfaceVariant,
           ),
         ),
       ),

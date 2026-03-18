@@ -11,8 +11,7 @@ import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/my_registrations_filter_bottom_sheet.dart';
 import 'package:rideglory/features/events/presentation/detail/params.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/shared/widgets/form/app_text_field.dart';
-import 'package:rideglory/shared/widgets/no_search_results_empty_widget.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MyRegistrationsDataView extends StatelessWidget {
   const MyRegistrationsDataView({super.key, required this.items});
@@ -38,7 +37,7 @@ class MyRegistrationsDataView extends StatelessWidget {
                   onChanged: (value) => cubit.updateSearchQuery(value ?? ''),
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               SizedBox(
                 width: 48,
                 height: 48,
@@ -77,7 +76,7 @@ class MyRegistrationsDataView extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         items.isEmpty
             ? const Expanded(child: NoSearchResultsEmptyWidget())
             : Expanded(

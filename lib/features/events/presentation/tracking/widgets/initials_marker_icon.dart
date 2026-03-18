@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/core/utils/initials.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 abstract class InitialsMarkerIcon {
   static Future<BitmapDescriptor> create({
     required String firstName,
     required String lastName,
+    required ColorScheme colorScheme,
     double size = 96,
     Color? backgroundColor,
     Color? borderColor,
@@ -19,8 +21,8 @@ abstract class InitialsMarkerIcon {
     final canvas = Canvas(recorder);
     final radius = size / 2.0;
 
-    final resolvedBorder = borderColor ?? AppColors.primary;
-    final bgPaint = Paint()..color = backgroundColor ?? AppColors.primaryDark;
+    final resolvedBorder = borderColor ?? colorScheme.primary;
+    final bgPaint = Paint()..color = backgroundColor ?? colorScheme.primary;
     final glowPaint = Paint()
       ..color = resolvedBorder.withValues(alpha: 0.30)
       ..maskFilter = const ui.MaskFilter.blur(ui.BlurStyle.normal, 10);

@@ -23,9 +23,9 @@ class TelemetryMetric extends StatelessWidget {
         height: 66,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
-          color: AppColors.darkSurface,
+          color: context.colorScheme.surface,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.darkBorder),
+          border: Border.all(color: context.colorScheme.outlineVariant),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,7 +40,7 @@ class TelemetryMetric extends StatelessWidget {
                 fontWeight: FontWeight.w900,
               ),
             ),
-            const Spacer(),
+            Spacer(),
             Row(
               children: [
                 Icon(
@@ -48,7 +48,7 @@ class TelemetryMetric extends StatelessWidget {
                   size: 16,
                   color: valueColor ?? context.colorScheme.onSurface,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     value,

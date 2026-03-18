@@ -14,7 +14,7 @@ class EventCardPriceBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: isFree ? AppColors.eventFree : context.colorScheme.primary,
+        color: isFree ? context.appColors.eventFree : context.colorScheme.primary,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(

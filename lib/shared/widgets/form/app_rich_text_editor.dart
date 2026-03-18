@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/shared/widgets/form/text_field_label.dart';
 
 class AppRichTextEditor extends StatefulWidget {
@@ -88,6 +89,7 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final cs = context.colorScheme;
 
     final toolbarToggleStyleButtonOptions =
         QuillToolbarToggleStyleButtonOptions(
@@ -95,8 +97,8 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
             iconButtonSelectedData: IconButtonData(
               color: colorScheme.onPrimary,
             ),
-            iconButtonUnselectedData: const IconButtonData(
-              color: AppColors.darkTextSecondary,
+            iconButtonUnselectedData: IconButtonData(
+              color: cs.onSurfaceVariant,
             ),
           ),
         );
@@ -117,7 +119,7 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
             ],
             Container(
               decoration: BoxDecoration(
-                color: AppColors.darkSurfaceHighest,
+                color: cs.surfaceContainerHighest,
                 border: Border.all(
                   color: field.hasError
                       ? colorScheme.error
@@ -129,8 +131,8 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
               child: Column(
                 children: [
                   Container(
-                    decoration: const BoxDecoration(
-                      color: AppColors.darkSurfaceHighest,
+                    decoration: BoxDecoration(
+                      color: cs.surfaceContainerHighest,
                       borderRadius: BorderRadius.vertical(
                         top: Radius.circular(8),
                       ),
@@ -225,7 +227,7 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
                           top: 8,
                           right: 8,
                           child: Material(
-                            color: Colors.transparent,
+                            color: colorScheme.surface.withOpacity(0),
                             child: InkWell(
                               onTap: widget.onAiSuggest,
                               borderRadius: BorderRadius.circular(4),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 enum DetailPillVariant {
   overlay,
@@ -22,27 +23,27 @@ class DetailPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final cs = context.colorScheme;
     final isOverlay = variant == DetailPillVariant.overlay;
 
     final backgroundColor = isOverlay
-        ? Colors.black.withValues(alpha: 0.4)
-        : AppColors.primary.withValues(alpha: 0.25);
+        ? cs.background.withOpacity(0.4)
+        : cs.primary.withOpacity(0.25);
 
     final border = isOverlay
         ? Border.all(
-            color: Colors.white.withValues(alpha: 0.2),
+            color: cs.onSurface.withOpacity(0.2),
             width: 1,
           )
         : null;
 
     final labelColor = isOverlay
-        ? Colors.white.withValues(alpha: 0.95)
-        : theme.colorScheme.primary;
+        ? cs.onSurface.withOpacity(0.95)
+        : cs.primary;
 
     final subtitleColor = isOverlay
-        ? Colors.white.withValues(alpha: 0.85)
-        : theme.colorScheme.onSurfaceVariant;
+        ? cs.onSurface.withOpacity(0.85)
+        : cs.onSurfaceVariant;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -74,7 +75,7 @@ class DetailPill extends StatelessWidget {
                       label,
                       style: TextStyle(
                         color: isOverlay
-                            ? Colors.white.withValues(alpha: 0.98)
+                            ? cs.onSurface.withOpacity(0.98)
                             : labelColor,
                         fontSize: 14,
                         fontWeight: FontWeight.w700,

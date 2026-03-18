@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenancesPageAppBar extends StatelessWidget
     implements PreferredSizeWidget {
@@ -26,7 +26,7 @@ class MaintenancesPageAppBar extends StatelessWidget
         Stack(
           children: [
             IconButton(
-              icon: const Icon(Icons.filter_list_rounded),
+              icon: Icon(Icons.filter_list_rounded),
               onPressed: onFilterPressed,
               tooltip: MaintenanceStrings.filters,
             ),
@@ -36,7 +36,7 @@ class MaintenancesPageAppBar extends StatelessWidget
                 top: 8,
                 child: Container(
                   padding: const EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Color(0xFF6366F1),
                     shape: BoxShape.circle,
                   ),
@@ -46,7 +46,7 @@ class MaintenancesPageAppBar extends StatelessWidget
                   ),
                   child: Text(
                     '$activeFilterCount',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
@@ -58,7 +58,7 @@ class MaintenancesPageAppBar extends StatelessWidget
           ],
         ),
         IconButton(
-          icon: const Icon(Icons.directions_car_outlined),
+          icon: Icon(Icons.directions_car_outlined),
           onPressed: onVehiclesPressed,
           tooltip: MaintenanceStrings.myVehicles,
         ),

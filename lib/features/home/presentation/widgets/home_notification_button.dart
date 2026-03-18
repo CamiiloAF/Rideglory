@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class HomeNotificationButton extends StatelessWidget {
   const HomeNotificationButton({super.key, required this.showBadge});
@@ -15,13 +16,13 @@ class HomeNotificationButton extends StatelessWidget {
           width: 44,
           height: 44,
           decoration: BoxDecoration(
-            color: AppColors.darkSurface,
+            color: context.colorScheme.surface,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.darkBorder),
+            border: Border.all(color: context.colorScheme.outlineVariant),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.notifications_outlined,
-            color: AppColors.darkTextPrimary,
+            color: context.colorScheme.onSurface,
             size: 22,
           ),
         ),
@@ -32,8 +33,8 @@ class HomeNotificationButton extends StatelessWidget {
             child: Container(
               width: 10,
               height: 10,
-              decoration: const BoxDecoration(
-                color: AppColors.primary,
+              decoration: BoxDecoration(
+                color: context.colorScheme.primary,
                 shape: BoxShape.circle,
               ),
             ),

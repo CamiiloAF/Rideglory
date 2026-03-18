@@ -10,9 +10,6 @@ import 'package:rideglory/features/maintenance/domain/model/maintenance_model.da
 import 'package:rideglory/features/maintenance/presentation/delete/cubit/maintenance_delete_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_options_bottom_sheet.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/shared/widgets/app_app_bar.dart';
-import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
-import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_info_tile.dart';
 import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_section_header.dart';
@@ -20,6 +17,7 @@ import 'package:rideglory/features/maintenance/presentation/detail/widgets/maint
 import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_detail_header.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenanceDetailPage extends StatelessWidget {
   const MaintenanceDetailPage({super.key, required this.maintenance});
@@ -133,11 +131,11 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
             leading: BackButton(onPressed: _popWithResult),
             actions: [
               IconButton(
-                icon: const Icon(Icons.share_outlined),
+                icon: Icon(Icons.share_outlined),
                 onPressed: () {},
               ),
               IconButton(
-                icon: const Icon(Icons.more_vert),
+                icon: Icon(Icons.more_vert),
                 onPressed: _showOptions,
               ),
             ],
@@ -162,7 +160,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                       maintenance: _maintenance,
                       vehicle: vehicle,
                     ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 Row(
                   children: [
                     Expanded(
@@ -173,7 +171,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                         icon: Icons.speed,
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    SizedBox(width: 16),
                     Expanded(
                       child: MaintenanceInfoTile(
                         label: MaintenanceStrings.totalCost,
@@ -185,21 +183,21 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 if (_maintenance.notes != null &&
                     _maintenance.notes!.isNotEmpty) ...[
                   const MaintenanceSectionHeader(
                     title: MaintenanceStrings.serviceNotes,
                     icon: Icons.description_outlined,
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AppColors.darkSurface,
+                      color: context.colorScheme.surface,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.darkBorder),
+                      border: Border.all(color: context.colorScheme.outlineVariant),
                     ),
                     child: Text(
                       _maintenance.notes!,
@@ -209,7 +207,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                 ],
                 if (_maintenance.nextMaintenanceDate != null ||
                     _maintenance.nextMaintenanceMileage != null) ...[
@@ -219,7 +217,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                         title: MaintenanceStrings.nextMaintenance,
                         icon: Icons.event_repeat_outlined,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 10,
@@ -242,14 +240,14 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AppColors.darkSurface,
+                      color: context.colorScheme.surface,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.darkBorder),
+                      border: Border.all(color: context.colorScheme.outlineVariant),
                     ),
                     child: Row(
                       children: [
@@ -267,7 +265,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                                     letterSpacing: 0.8,
                                   ),
                                 ),
-                                const SizedBox(height: 8),
+                                SizedBox(height: 8),
                                 Text(
                                   DateFormat('dd MMM, yyyy')
                                       .format(_maintenance.nextMaintenanceDate!),
@@ -285,7 +283,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                           Container(
                             width: 1,
                             height: 48,
-                            color: AppColors.darkBorder,
+                            color: context.colorScheme.outlineVariant,
                           ),
                         if (_maintenance.nextMaintenanceMileage != null)
                           Expanded(
@@ -301,7 +299,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                                     letterSpacing: 0.8,
                                   ),
                                 ),
-                                const SizedBox(height: 8),
+                                SizedBox(height: 8),
                                 Text(
                                   '${numberFormat.format(_maintenance.nextMaintenanceMileage)} km',
                                   style: context.titleMedium?.copyWith(
@@ -316,23 +314,23 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                 ],
                 if (_maintenance.receiveAlert) ...[
                   const MaintenanceSectionHeader(
                     title: MaintenanceStrings.alertsConfiguration,
                     icon: Icons.notifications_active_outlined,
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: 12),
                   if (!_maintenance.receiveMileageAlert &&
                       !_maintenance.receiveDateAlert)
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.darkSurface,
+                        color: context.colorScheme.surface,
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppColors.darkBorder),
+                        border: Border.all(color: context.colorScheme.outlineVariant),
                       ),
                       child: Row(
                         children: [
@@ -341,7 +339,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                             color: Theme.of(context).colorScheme.primary,
                             size: 24,
                           ),
-                          const SizedBox(width: 16),
+                          SizedBox(width: 16),
                           Expanded(
                             child: Text(
                               MaintenanceStrings.alertsActivatedDesc,
@@ -371,7 +369,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                           ),
                         if (_maintenance.receiveMileageAlert &&
                             _maintenance.receiveDateAlert)
-                          const SizedBox(width: 12),
+                          SizedBox(width: 12),
                         if (_maintenance.receiveDateAlert ||
                             _maintenance.nextMaintenanceDate != null)
                           Expanded(

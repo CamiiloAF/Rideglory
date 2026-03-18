@@ -12,7 +12,7 @@ class EventCardMyEventBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: AppColors.primaryGradient,
+          colors: context.appColors.primaryGradient,
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -26,7 +26,7 @@ class EventCardMyEventBadge extends StatelessWidget {
             size: 13,
             color: context.colorScheme.onPrimary,
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: 4),
           Text(
             EventStrings.eventCardMyEvent.toUpperCase(),
             style: context.labelSmall?.copyWith(

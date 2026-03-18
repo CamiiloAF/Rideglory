@@ -6,6 +6,7 @@ import 'package:rideglory/features/home/constants/home_strings.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_empty_events_card.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_event_card.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class HomeEventsSection extends StatelessWidget {
   const HomeEventsSection({super.key, required this.events});
@@ -17,19 +18,19 @@ class HomeEventsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.fromLTRB(20, 0, 20, 12),
           child: Text(
             HomeStrings.upcomingRides,
             style: TextStyle(
-              color: AppColors.darkTextPrimary,
+              color: context.colorScheme.onSurface,
               fontSize: 18,
               fontWeight: FontWeight.w700,
             ),
           ),
         ),
         events.isEmpty
-            ? const Padding(
+            ? Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: HomeEmptyEventsCard(),
               )
@@ -39,7 +40,7 @@ class HomeEventsSection extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   itemCount: events.length,
-                  separatorBuilder: (_, _) => const SizedBox(width: 12),
+                  separatorBuilder: (_, _) => SizedBox(width: 12),
                   itemBuilder: (context, index) {
                     final event = events[index];
                     return HomeEventCard(

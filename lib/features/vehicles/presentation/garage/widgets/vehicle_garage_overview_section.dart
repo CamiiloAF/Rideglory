@@ -34,7 +34,7 @@ class VehicleGarageOverviewSection extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               decoration: BoxDecoration(
-                color: AppColors.primary,
+                color: context.colorScheme.primary,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -47,7 +47,7 @@ class VehicleGarageOverviewSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         Row(
           children: [
             Expanded(
@@ -57,7 +57,7 @@ class VehicleGarageOverviewSection extends StatelessWidget {
                 value: '${NumberFormat('#,###').format(totalMileage)} km',
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             const Expanded(
               child: VehicleGarageOverviewItem(
                 icon: Icons.access_time_outlined,

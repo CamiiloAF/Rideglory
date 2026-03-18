@@ -34,7 +34,7 @@ class EventFormMultiBrandSection extends StatelessWidget {
               ),
 
               if (!isMultiBrand) ...[
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
 
                 Text(
                   EventStrings.selectBrands.toUpperCase(),
@@ -44,7 +44,7 @@ class EventFormMultiBrandSection extends StatelessWidget {
                     letterSpacing: 0.8,
                   ),
                 ),
-                const SizedBox(height: 12),
+                SizedBox(height: 12),
                 FormBuilderField<List<String>>(
                   name: EventFormFields.allowedBrands,
                   builder: (listField) => _BrandChipsInline(
@@ -114,9 +114,9 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
               child: Container(
                 constraints: const BoxConstraints(maxHeight: 220),
                 decoration: BoxDecoration(
-                  color: AppColors.darkSurface,
+                  color: context.colorScheme.surface,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.darkBorder),
+                  border: Border.all(color: context.colorScheme.outlineVariant),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.3),
@@ -131,7 +131,7 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
                   padding: EdgeInsets.zero,
                   itemCount: _filtered.length,
                   separatorBuilder: (_, _) =>
-                      const Divider(height: 1, color: AppColors.darkBorder),
+                      Divider(height: 1, color: context.colorScheme.outlineVariant),
                   itemBuilder: (_, i) => InkWell(
                     onTap: () => _add(_filtered[i]),
                     child: Padding(
@@ -141,17 +141,17 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.two_wheeler,
                             size: 16,
-                            color: AppColors.primary,
+                            color: context.colorScheme.primary,
                           ),
-                          const SizedBox(width: 8),
+                          SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               _filtered[i],
-                              style: const TextStyle(
-                                color: AppColors.darkTextPrimary,
+                              style: TextStyle(
+                                color: context.colorScheme.onSurface,
                                 fontSize: 14,
                               ),
                             ),
@@ -185,14 +185,14 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
           child: TextFormField(
             controller: _controller,
             onChanged: _onChanged,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               hintText: EventStrings.searchBrandsPlaceholder,
-              suffixIcon: Icon(Icons.search, color: AppColors.darkInputIcon),
+              suffixIcon: Icon(Icons.search, color: context.appColors.inputIcon),
             ),
           ),
         ),
         if (chips.isNotEmpty) ...[
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -203,7 +203,7 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryDark.withValues(alpha: 0.9),
+                  color: context.colorScheme.primary.withValues(alpha: 0.9),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -211,16 +211,16 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
                   children: [
                     Text(
                       entry.value,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
                       ),
                     ),
-                    const SizedBox(width: 6),
+                    SizedBox(width: 6),
                     GestureDetector(
                       onTap: () => _remove(entry.key),
-                      child: const Icon(
+                      child: Icon(
                         Icons.close,
                         size: 14,
                         color: Colors.white,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class EventDetailDifficultyFlames extends StatelessWidget {
   const EventDetailDifficultyFlames({super.key, required this.level});
@@ -18,7 +19,7 @@ class EventDetailDifficultyFlames extends StatelessWidget {
             Icons.local_fire_department,
             size: 16,
             color: filled
-                ? AppColors.primary
+                ? context.colorScheme.primary
                 : Colors.white.withValues(alpha: 0.35),
           ),
         );

@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 /// A widget that shows a Google Map preview with origin and destination markers.
 /// It geocodes address strings into coordinates and renders a GoogleMap.
@@ -162,6 +163,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
   @override
   Widget build(BuildContext context) {
     final hasCoordsToShow = _origin != null || _dest != null;
+    final cs = context.colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,8 +173,8 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
           height: 200,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.border),
-            color: AppColors.surfaceGray,
+            border: Border.all(color: cs.outlineVariant),
+            color: cs.surfaceContainerHighest,
           ),
           clipBehavior: Clip.antiAlias,
           child: Stack(
@@ -194,27 +196,27 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                   mapToolbarEnabled: false,
                 )
               else
-                const Center(
+                Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
                         Icons.map_outlined,
                         size: 48,
-                        color: AppColors.textTertiary,
+                        color: cs.onSurfaceVariant,
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Text(
                         'Vista previa del mapa',
                         style: TextStyle(
-                          color: AppColors.textTertiary,
+                          color: cs.onSurfaceVariant,
                           fontSize: 13,
                         ),
                       ),
                       Text(
                         'Ingresa las dirección para ver la ruta',
                         style: TextStyle(
-                          color: AppColors.textTertiary,
+                          color: cs.onSurfaceVariant,
                           fontSize: 11,
                         ),
                       ),
@@ -228,7 +230,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                   bottom: 0,
                   child: Center(
                     child: Material(
-                      color: Colors.transparent,
+                      color: cs.surface.withOpacity(0),
                       child: InkWell(
                         onTap: widget.onViewMapTap,
                         borderRadius: BorderRadius.circular(24),
@@ -238,29 +240,29 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                             vertical: 12,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.primary,
+                            color: cs.primary,
                             borderRadius: BorderRadius.circular(24),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.3),
+                                color: cs.onSurface.withOpacity(0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
                             ],
                           ),
-                          child: const Row(
+                          child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
                                 Icons.map_outlined,
                                 size: 20,
-                                color: Colors.white,
+                                color: cs.onPrimary,
                               ),
                               SizedBox(width: 8),
                               Text(
                                 'Ver en mapa',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: cs.onPrimary,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 14,
                                 ),
@@ -279,7 +281,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                   child: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.85),
+                      color: cs.surface.withOpacity(0.85),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: const SizedBox(

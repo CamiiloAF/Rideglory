@@ -8,16 +8,16 @@ class EventCardTypeChip extends StatelessWidget {
 
   const EventCardTypeChip({super.key, required this.eventType});
 
-  static Color _colorFor(EventType type) {
+  static Color _colorFor(BuildContext context, EventType type) {
     switch (type) {
       case EventType.offRoad:
-        return AppColors.eventOffRoad;
+        return context.appColors.eventOffRoad;
       case EventType.onRoad:
-        return AppColors.eventOnRoad;
+        return context.appColors.eventOnRoad;
       case EventType.exhibition:
-        return AppColors.eventExhibition;
+        return context.appColors.eventExhibition;
       case EventType.charitable:
-        return AppColors.eventCharitable;
+        return context.appColors.eventCharitable;
     }
   }
 
@@ -26,7 +26,7 @@ class EventCardTypeChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: _colorFor(eventType),
+        color: _colorFor(context, eventType),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(

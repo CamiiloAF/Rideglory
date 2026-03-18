@@ -38,7 +38,7 @@ class RegistrationDetailHeader extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           Text(
             registration.fullName,
             style: textTheme.titleLarge?.copyWith(
@@ -48,7 +48,7 @@ class RegistrationDetailHeader extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           if (dateText.isNotEmpty) ...[
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text(
               dateText,
               style: textTheme.bodySmall?.copyWith(

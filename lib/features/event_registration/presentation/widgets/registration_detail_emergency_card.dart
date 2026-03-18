@@ -24,9 +24,9 @@ class RegistrationDetailEmergencyCard extends StatelessWidget {
       margin: const EdgeInsets.only(top: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.darkSurfaceHighest,
+        color: context.colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.darkBorder),
+        border: Border.all(color: context.colorScheme.outlineVariant),
       ),
       child: Row(
         children: [
@@ -42,7 +42,7 @@ class RegistrationDetailEmergencyCard extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 2),
+                SizedBox(height: 2),
                 Text(
                   contactPhone,
                   style: textTheme.bodySmall?.copyWith(
@@ -54,15 +54,15 @@ class RegistrationDetailEmergencyCard extends StatelessWidget {
           ),
           if (showPhoneButton)
             Material(
-              color: AppColors.darkSurface,
+              color: context.colorScheme.surface,
               borderRadius: BorderRadius.circular(24),
               child: InkWell(
                 onTap: () => UrlLauncherHelper.openPhone(contactPhone),
                 borderRadius: BorderRadius.circular(24),
-                child: const SizedBox(
+                child: SizedBox(
                   width: 48,
                   height: 48,
-                  child: Icon(Icons.call_rounded, color: AppColors.success),
+                  child: Icon(Icons.call_rounded, color: context.appColors.success),
                 ),
               ),
             ),

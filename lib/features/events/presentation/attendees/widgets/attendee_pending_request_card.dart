@@ -7,7 +7,7 @@ import 'package:rideglory/features/event_registration/domain/model/event_registr
 import 'package:rideglory/features/events/presentation/attendees/attendees_cubit.dart';
 import 'package:rideglory/features/events/presentation/attendees/attendee_action_confirmation.dart';
 import 'package:rideglory/features/events/presentation/shared/widgets/initials_avatar.dart';
-import 'package:rideglory/shared/widgets/approve_reject_bar.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class AttendeePendingRequestCard extends StatelessWidget {
   final EventRegistrationModel registration;
@@ -29,7 +29,7 @@ class AttendeePendingRequestCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: context.colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -53,7 +53,7 @@ class AttendeePendingRequestCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +65,7 @@ class AttendeePendingRequestCard extends StatelessWidget {
                             color: colorScheme.onSurface,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Row(
                           children: [
                             Icon(
@@ -73,7 +73,7 @@ class AttendeePendingRequestCard extends StatelessWidget {
                               size: 14,
                               color: colorScheme.onSurfaceVariant,
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: 4),
                             Expanded(
                               child: Text(
                                 vehicleText,
@@ -98,7 +98,7 @@ class AttendeePendingRequestCard extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           ApproveRejectBar(
             rejectLabel: EventStrings.rejectRegistration,
             approveLabel: EventStrings.approveRegistration,

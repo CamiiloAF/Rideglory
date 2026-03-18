@@ -27,13 +27,13 @@ class VehicleInfoCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, color: AppColors.primary, size: 18),
-              const SizedBox(width: 8),
+              Icon(icon, color: context.colorScheme.primary, size: 18),
+              SizedBox(width: 8),
               Expanded(
                 child: Text(
                   label.toUpperCase(),
                   style: context.labelSmall?.copyWith(
-                    color: AppColors.primary,
+                    color: context.colorScheme.primary,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 0.5,
                   ),
@@ -43,7 +43,7 @@ class VehicleInfoCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           Text(
             value,
             style: context.titleMedium?.copyWith(

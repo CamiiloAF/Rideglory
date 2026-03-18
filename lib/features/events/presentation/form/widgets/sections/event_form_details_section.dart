@@ -8,8 +8,7 @@ import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
-import 'package:rideglory/shared/widgets/form/app_autocomplete_chips_field.dart';
-import 'package:rideglory/shared/widgets/form/app_text_field.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventFormDetailsSection extends StatefulWidget {
   const EventFormDetailsSection({super.key});
@@ -51,12 +50,12 @@ class _EventFormDetailsSectionState extends State<EventFormDetailsSection> {
           labels: _difficultyLabels,
           onChanged: (level) => setState(() => _selectedDifficulty = level),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
         _EventTypePicker(
           selected: _selectedEventType,
           onChanged: (type) => setState(() => _selectedEventType = type),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: 24),
         AppAutocompleteChipsField(
           name: EventFormFields.allowedBrands,
           labelText: EventStrings.allowedBrands,
@@ -67,7 +66,7 @@ class _EventFormDetailsSectionState extends State<EventFormDetailsSection> {
           initialValue:
               context.read<EventFormCubit>().editingEvent?.allowedBrands ?? [],
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         AppTextField(
           name: EventFormFields.price,
           labelText: EventStrings.price,
@@ -107,15 +106,15 @@ class _DifficultyPicker extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               EventStrings.difficulty,
               style: TextStyle(
-                color: AppColors.darkTextSecondary,
+                color: context.colorScheme.onSurfaceVariant,
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             Row(
               children: [
                 Row(
@@ -133,8 +132,8 @@ class _DifficultyPicker extends StatelessWidget {
                           Icons.local_fire_department,
                           size: 34,
                           color: filled
-                              ? AppColors.primary
-                              : AppColors.darkTextSecondary.withValues(
+                              ? context.colorScheme.primary
+                              : context.colorScheme.onSurfaceVariant.withValues(
                                   alpha: 0.3,
                                 ),
                         ),
@@ -142,20 +141,20 @@ class _DifficultyPicker extends StatelessWidget {
                     );
                   }),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
                     vertical: 5,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.1),
+                    color: context.colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     labels[selected] ?? '',
-                    style: const TextStyle(
-                      color: AppColors.primary,
+                    style: TextStyle(
+                      color: context.colorScheme.primary,
                       fontWeight: FontWeight.w700,
                       fontSize: 12,
                     ),
@@ -169,8 +168,8 @@ class _DifficultyPicker extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 6, left: 4),
                 child: Text(
                   field.errorText!,
-                  style: const TextStyle(
-                    color: AppColors.darkTextSecondary,
+                  style: TextStyle(
+                    color: context.colorScheme.onSurfaceVariant,
                     fontSize: 12,
                   ),
                 ),
@@ -199,15 +198,15 @@ class _EventTypePicker extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               EventStrings.eventType,
               style: TextStyle(
-                color: AppColors.darkTextSecondary,
+                color: context.colorScheme.onSurfaceVariant,
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -226,13 +225,13 @@ class _EventTypePicker extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? AppColors.primary
-                          : AppColors.darkSurfaceHighest,
+                          ? context.colorScheme.primary
+                          : context.colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: isSelected
-                            ? AppColors.primary
-                            : AppColors.darkBorder,
+                            ? context.colorScheme.primary
+                            : context.colorScheme.outlineVariant,
                       ),
                     ),
                     child: Text(
@@ -240,7 +239,7 @@ class _EventTypePicker extends StatelessWidget {
                       style: TextStyle(
                         color: isSelected
                             ? Colors.white
-                            : AppColors.darkTextSecondary,
+                            : context.colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
                       ),
@@ -254,8 +253,8 @@ class _EventTypePicker extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 6, left: 4),
                 child: Text(
                   field.errorText!,
-                  style: const TextStyle(
-                    color: AppColors.darkTextSecondary,
+                  style: TextStyle(
+                    color: context.colorScheme.onSurfaceVariant,
                     fontSize: 12,
                   ),
                 ),

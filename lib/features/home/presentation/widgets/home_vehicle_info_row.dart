@@ -5,6 +5,7 @@ import 'package:rideglory/features/home/constants/home_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/domain/use_cases/get_maintenances_by_vehicle_id_use_case.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class HomeVehicleInfoRow extends StatelessWidget {
   const HomeVehicleInfoRow({super.key, required this.vehicle});
@@ -50,31 +51,31 @@ class HomeVehicleInfoRow extends StatelessWidget {
         children: [
           Text(
             vehicle.name,
-            style: const TextStyle(
-              color: AppColors.darkTextPrimary,
+            style: TextStyle(
+              color: context.colorScheme.onSurface,
               fontSize: 16,
               fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: 6),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.15),
+              color: context.colorScheme.primary.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: AppColors.primary.withValues(alpha: 0.4),
+                color: context.colorScheme.primary.withValues(alpha: 0.4),
               ),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
+                Icon(
                   Icons.timer_outlined,
-                  color: AppColors.primary,
+                  color: context.colorScheme.primary,
                   size: 13,
                 ),
-                const SizedBox(width: 4),
+                SizedBox(width: 4),
                 FutureBuilder<int?>(
                   future: _loadNextOilChangeMileage(),
                   builder: (context, snapshot) {
@@ -85,8 +86,8 @@ class HomeVehicleInfoRow extends StatelessWidget {
 
                     return Text(
                       text,
-                      style: const TextStyle(
-                        color: AppColors.primary,
+                      style: TextStyle(
+                        color: context.colorScheme.primary,
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.3,

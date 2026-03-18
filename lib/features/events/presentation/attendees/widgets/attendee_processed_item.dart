@@ -23,7 +23,7 @@ class AttendeeProcessedItem extends StatelessWidget {
   }
 
   static Color _avatarBackgroundColor(BuildContext context) {
-    return AppColors.darkSurfaceHighest;
+    return context.colorScheme.surfaceContainerHighest;
   }
 
   @override
@@ -38,12 +38,12 @@ class AttendeeProcessedItem extends StatelessWidget {
         ? EventStrings.approvedBadge
         : EventStrings.rejectedBadge;
     final statusColor =
-        isApproved ? AppColors.success : colorScheme.error;
+        isApproved ? context.appColors.success : colorScheme.error;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: context.colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Material(
@@ -64,7 +64,7 @@ class AttendeeProcessedItem extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,7 +77,7 @@ class AttendeeProcessedItem extends StatelessWidget {
                         color: colorScheme.onSurface,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Text(
                       vehicleText,
                       style: textTheme.bodySmall?.copyWith(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 const Color _mapPlaceholderBackground = Color(0xFF1F2B3B);
 
@@ -19,21 +20,21 @@ class EventDetailMeetingPointSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           EventStrings.meetingPointLabel,
           style: TextStyle(
-            color: AppColors.darkTextPrimary,
+            color: context.colorScheme.onSurface,
             fontSize: 19,
             fontWeight: FontWeight.w800,
             letterSpacing: -0.2,
           ),
         ),
-        const SizedBox(height: 14),
+        SizedBox(height: 14),
         Container(
           decoration: BoxDecoration(
-            color: AppColors.darkSurfaceHighest,
+            color: context.colorScheme.surfaceContainerHighest,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: AppColors.darkBorder),
+            border: Border.all(color: context.colorScheme.outlineVariant),
           ),
           clipBehavior: Clip.antiAlias,
           child: Column(
@@ -43,10 +44,10 @@ class EventDetailMeetingPointSection extends StatelessWidget {
                 height: 168,
                 width: double.infinity,
                 color: _mapPlaceholderBackground,
-                child: const Center(
+                child: Center(
                   child: Icon(
                     Icons.place,
-                    color: AppColors.primary,
+                    color: context.colorScheme.primary,
                     size: 56,
                   ),
                 ),
@@ -60,19 +61,19 @@ class EventDetailMeetingPointSection extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             EventStrings.meetingPointLabel,
                             style: TextStyle(
-                              color: AppColors.darkTextPrimary,
+                              color: context.colorScheme.onSurface,
                               fontSize: 14,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: 4),
                           Text(
                             location,
-                            style: const TextStyle(
-                              color: AppColors.darkTextSecondary,
+                            style: TextStyle(
+                              color: context.colorScheme.onSurfaceVariant,
                               fontSize: 13,
                             ),
                           ),
@@ -80,14 +81,14 @@ class EventDetailMeetingPointSection extends StatelessWidget {
                       ),
                     ),
                     if (onViewMap != null) ...[
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Material(
-                        color: AppColors.primary,
+                        color: context.colorScheme.primary,
                         borderRadius: BorderRadius.circular(10),
                         child: InkWell(
                           onTap: onViewMap,
                           borderRadius: BorderRadius.circular(10),
-                          child: const Padding(
+                          child: Padding(
                             padding: EdgeInsets.symmetric(
                               horizontal: 16,
                               vertical: 12,

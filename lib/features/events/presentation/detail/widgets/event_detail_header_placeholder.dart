@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class EventDetailHeaderPlaceholder extends StatelessWidget {
   const EventDetailHeaderPlaceholder({super.key});
@@ -12,8 +13,8 @@ class EventDetailHeaderPlaceholder extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppColors.primary.withValues(alpha: 0.4),
-            AppColors.darkSurface,
+            context.colorScheme.primary.withValues(alpha: 0.4),
+            context.colorScheme.surface,
           ],
         ),
       ),

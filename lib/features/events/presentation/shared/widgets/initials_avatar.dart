@@ -21,11 +21,11 @@ class InitialsAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final resolvedBackground = backgroundColor ?? AppColors.primaryDark;
+    final resolvedBackground = backgroundColor ?? context.colorScheme.primary;
     final baseStyle = context.textTheme.titleMedium?.copyWith(
       color: Colors.white,
       fontWeight: FontWeight.bold,
-    ) ?? const TextStyle(
+    ) ?? TextStyle(
       color: Colors.white,
       fontWeight: FontWeight.bold,
       fontSize: 16,

@@ -44,7 +44,7 @@ class MaintenanceDatesSection extends StatelessWidget {
               size: 16,
               color: Colors.grey[600],
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 8),
             Text(
               'Realizado: ${_formatDate(maintenance.date)}',
               style: context.bodySmall?.copyWith(fontWeight: FontWeight.w500),
@@ -52,7 +52,7 @@ class MaintenanceDatesSection extends StatelessWidget {
           ],
         ),
         if (maintenance.nextMaintenanceDate != null) ...[
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Row(
             children: [
               Icon(
@@ -62,7 +62,7 @@ class MaintenanceDatesSection extends StatelessWidget {
                     ? const Color(0xFFEF4444)
                     : Colors.grey[600],
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 'Próximo: ${_formatDate(maintenance.nextMaintenanceDate!)}',
                 style: context.bodySmall?.copyWith(
@@ -73,7 +73,7 @@ class MaintenanceDatesSection extends StatelessWidget {
                 ),
               ),
               if (daysUntilNext != null) ...[
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Text(
                   '($daysUntilNext días)',
                   style: context.bodySmall?.copyWith(

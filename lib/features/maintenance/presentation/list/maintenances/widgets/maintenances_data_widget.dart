@@ -4,8 +4,8 @@ import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenance_list.dart';
-import 'package:rideglory/shared/widgets/no_search_results_empty_widget.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_header_view.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenancesDataWidget extends StatelessWidget {
   final List<MaintenanceModel> maintenances;
@@ -64,18 +64,18 @@ class MaintenancesDataWidget extends StatelessWidget {
                       vertical: 8,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.darkSurfaceHighest,
+                      color: context.colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: AppColors.darkBorder, width: 1),
+                      border: Border.all(color: context.colorScheme.outlineVariant, width: 1),
                     ),
                     child: Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.tune,
-                          color: AppColors.primary,
+                          color: context.colorScheme.primary,
                           size: 18,
                         ),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         Text(
                           MaintenanceStrings.filter,
                           style: context.bodyMedium?.copyWith(

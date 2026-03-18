@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class EventFormSectionCard extends StatelessWidget {
   const EventFormSectionCard({
@@ -17,9 +18,9 @@ class EventFormSectionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: context.colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.darkBorder),
+        border: Border.all(color: context.colorScheme.outlineVariant),
       ),
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -27,13 +28,13 @@ class EventFormSectionCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, color: AppColors.darkTextPrimary, size: 22),
-              const SizedBox(width: 10),
+              Icon(icon, color: context.colorScheme.onSurface, size: 22),
+              SizedBox(width: 10),
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
-                    color: AppColors.darkTextPrimary,
+                  style: TextStyle(
+                    color: context.colorScheme.onSurface,
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                   ),

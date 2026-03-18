@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class EventDetailOrganizerRow extends StatelessWidget {
   const EventDetailOrganizerRow({
@@ -18,7 +19,7 @@ class EventDetailOrganizerRow extends StatelessWidget {
           width: 22,
           height: 22,
           decoration: BoxDecoration(
-            color: AppColors.primary,
+            color: context.colorScheme.primary,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
@@ -28,14 +29,14 @@ class EventDetailOrganizerRow extends StatelessWidget {
               ),
             ],
           ),
-          child: const Icon(Icons.check, color: Colors.white, size: 14),
+          child: Icon(Icons.check, color: Colors.white, size: 14),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Expanded(
           child: RichText(
             text: TextSpan(
-              style: const TextStyle(
-                color: AppColors.primary,
+              style: TextStyle(
+                color: context.colorScheme.primary,
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),

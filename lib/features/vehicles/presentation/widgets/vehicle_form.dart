@@ -4,15 +4,10 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
 import 'package:rideglory/core/data/colombia_motos_brands_data.dart';
-import 'package:rideglory/shared/widgets/form/app_image_picker.dart';
-import 'package:rideglory/shared/widgets/form/app_autocomplete_field.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
-import 'package:rideglory/shared/widgets/form/app_date_picker.dart';
-import 'package:rideglory/shared/widgets/form/app_mileage_field.dart';
-import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_form_fields.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleForm extends StatelessWidget {
   const VehicleForm({
@@ -52,7 +47,7 @@ class VehicleForm extends StatelessWidget {
                 showGenerateWithAI: false,
                 labelText: VehicleStrings.vehiclePhoto,
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: 24),
               AppTextField(
                 name: VehicleFormFields.name,
                 labelText: VehicleStrings.vehicleName,
@@ -70,7 +65,7 @@ class VehicleForm extends StatelessWidget {
                   ),
                 ]),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -93,7 +88,7 @@ class VehicleForm extends StatelessWidget {
                       },
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                   Expanded(
                     child: AppTextField(
                       name: VehicleFormFields.year,
@@ -122,7 +117,7 @@ class VehicleForm extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               const AppTextField(
                 name: VehicleFormFields.model,
                 labelText: VehicleStrings.vehicleModel,
@@ -130,14 +125,14 @@ class VehicleForm extends StatelessWidget {
                 prefixIcon: Icons.style,
                 textInputAction: TextInputAction.next,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               const AppMileageField(
                 name: VehicleFormFields.currentMileage,
                 labelText: VehicleStrings.currentMileageLabel,
                 textInputAction: TextInputAction.next,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               const AppTextField(
                 name: VehicleFormFields.licensePlate,
@@ -148,7 +143,7 @@ class VehicleForm extends StatelessWidget {
                 textCapitalization: TextCapitalization.characters,
                 textInputAction: TextInputAction.next,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               const AppTextField(
                 name: VehicleFormFields.vin,
@@ -157,19 +152,19 @@ class VehicleForm extends StatelessWidget {
                 prefixIcon: Icons.pin,
                 textInputAction: TextInputAction.done,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               AppDatePicker(
                 fieldName: VehicleFormFields.purchaseDate,
                 labelText: VehicleStrings.purchaseDate,
                 lastDate: DateTime.now(),
                 hintText: VehicleStrings.purchaseDateHint,
-                prefixIcon: const Icon(Icons.calendar_today),
+                prefixIcon: Icon(Icons.calendar_today),
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
 
               if (onSave != null) ...[
-                const SizedBox(height: 24),
+                SizedBox(height: 24),
                 BlocBuilder<VehicleFormCubit, VehicleFormState>(
                   builder: (context, state) {
                     final isLoading = state.isLoading;
@@ -181,7 +176,7 @@ class VehicleForm extends StatelessWidget {
                     );
                   },
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
               ],
             ],
           ),

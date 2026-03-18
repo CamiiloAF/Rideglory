@@ -23,7 +23,7 @@ class VehicleQuickInfoSection extends StatelessWidget {
             color: Colors.grey[500],
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         Row(
           children: [
             Expanded(
@@ -33,7 +33,7 @@ class VehicleQuickInfoSection extends StatelessWidget {
                 value: vehicle.licensePlate ?? '-',
               ),
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16),
             Expanded(
               child: VehicleInfoCard(
                 icon: Icons.speed, // Mileage icon equivalent

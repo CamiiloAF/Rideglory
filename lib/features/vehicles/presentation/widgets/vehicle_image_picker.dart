@@ -30,16 +30,16 @@ class VehicleImagePicker extends StatelessWidget {
             letterSpacing: 0.5,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         GestureDetector(
           onTap: onPickImage,
           child: Container(
             width: double.infinity,
             height: 160,
             decoration: BoxDecoration(
-              color: AppColors.darkSurface,
+              color: context.colorScheme.surface,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: AppColors.darkBorder),
+              border: Border.all(color: context.colorScheme.outlineVariant),
             ),
             child: _buildContent(context),
           ),
@@ -83,14 +83,14 @@ class VehicleImagePicker extends StatelessWidget {
           size: 36,
           color: context.colorScheme.primary,
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(
           VehicleStrings.uploadPhoto,
           style: context.textTheme.bodyMedium?.copyWith(
             color: context.colorScheme.primary,
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           VehicleStrings.selectImage,
           style: context.textTheme.bodySmall?.copyWith(
@@ -111,8 +111,8 @@ class VehicleImagePicker extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.edit_outlined, size: 14, color: Colors.white),
-          const SizedBox(width: 4),
+          Icon(Icons.edit_outlined, size: 14, color: Colors.white),
+          SizedBox(width: 4),
           Text(
             VehicleStrings.changePhoto,
             style: context.textTheme.labelSmall?.copyWith(color: Colors.white),

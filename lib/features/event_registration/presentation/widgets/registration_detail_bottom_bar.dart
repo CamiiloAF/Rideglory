@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/event_registration/constants/registration_strings.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
-import 'package:rideglory/shared/widgets/approve_reject_bar.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class RegistrationDetailBottomBar extends StatelessWidget {
   const RegistrationDetailBottomBar({super.key, required this.params});
@@ -18,8 +17,10 @@ class RegistrationDetailBottomBar extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
-        border: const Border(top: BorderSide(color: AppColors.darkBorder)),
+        color: context.colorScheme.surface,
+        border: Border(
+          top: BorderSide(color: context.colorScheme.outlineVariant),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.3),

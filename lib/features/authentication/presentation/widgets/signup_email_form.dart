@@ -6,10 +6,7 @@ import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/authentication/constants/auth_form_fields.dart';
 import 'package:rideglory/features/authentication/constants/auth_strings.dart';
 import 'package:rideglory/features/authentication/signup/presentation/widgets/signup_terms_text.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
-import 'package:rideglory/shared/widgets/form/app_checkbox.dart';
-import 'package:rideglory/shared/widgets/form/app_password_text_field.dart';
-import 'package:rideglory/shared/widgets/form/app_text_field.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 /// Email/password signup form — colors via theme, strings via AuthStrings.
 class SignupEmailForm extends StatefulWidget {
@@ -81,7 +78,7 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
               FormBuilderValidators.email(errorText: AuthStrings.invalidEmail),
             ]),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           AppPasswordTextField(
             name: AuthFormFields.password,
             hintText: AuthStrings.passwordMinStitch,
@@ -106,7 +103,7 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
               ),
             ]),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           AppPasswordTextField(
             name: AuthFormFields.confirmPassword,
             hintText: AuthStrings.confirmYourPassword,
@@ -128,14 +125,14 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
               },
             ]),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           const AppCheckbox(
             name: AuthFormFields.acceptTerms,
             title: '',
             initialValue: false,
             customTitle: SignupTermsText(),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           BlocBuilder<AuthCubit, AuthState>(
             builder: (context, state) {
               return AppButton(

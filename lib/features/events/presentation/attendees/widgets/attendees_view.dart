@@ -9,8 +9,7 @@ import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/attendees/attendees_cubit.dart';
 import 'package:rideglory/features/events/presentation/attendees/widgets/attendees_data_view.dart';
-import 'package:rideglory/shared/widgets/app_app_bar.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class AttendeesView extends StatelessWidget {
   final EventModel event;
@@ -24,7 +23,7 @@ class AttendeesView extends StatelessWidget {
       appBar: AppAppBar(
         title: EventStrings.participants,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+          icon: Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => context.pop(),
           color: colorScheme.primary,
         ),
@@ -33,7 +32,7 @@ class AttendeesView extends StatelessWidget {
         builder: (context, state) {
           return state.when(
             initial: () => const SizedBox.shrink(),
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => Center(child: CircularProgressIndicator()),
             data: (registrations) =>
                 AttendeesDataView(registrations: registrations, event: event),
             empty: () => Center(
@@ -45,7 +44,7 @@ class AttendeesView extends StatelessWidget {
                     size: 64,
                     color: colorScheme.onSurfaceVariant,
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   Text(
                     EventStrings.noAttendees,
                     style: context.textTheme.titleMedium
@@ -66,7 +65,7 @@ class AttendeesView extends StatelessWidget {
                           ?.copyWith(color: colorScheme.onSurface),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     AppButton(
                       label: AppStrings.retry,
                       onPressed: () => context

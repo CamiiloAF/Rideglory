@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class MainBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
@@ -16,10 +17,10 @@ class MainBottomNavigationBar extends StatelessWidget {
     return Container(
       height: 72,
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1A),
+        color: context.colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
+            color: context.appColors.shadowMedium,
             blurRadius: 20,
             offset: const Offset(0, -4),
           ),
@@ -80,6 +81,7 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = context.colorScheme;
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -89,14 +91,14 @@ class _NavItem extends StatelessWidget {
           children: [
             Icon(
               isActive ? activeIcon : icon,
-              color: isActive ? AppColors.primary : Colors.grey[500],
+              color: isActive ? cs.primary : cs.onSurfaceVariant,
               size: 24,
             ),
             const SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(
-                color: isActive ? AppColors.primary : Colors.grey[500],
+                color: isActive ? cs.primary : cs.onSurfaceVariant,
                 fontSize: 12,
                 fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
               ),

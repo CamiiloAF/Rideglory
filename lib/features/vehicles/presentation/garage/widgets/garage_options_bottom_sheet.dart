@@ -20,7 +20,7 @@ class GarageOptionsBottomSheet extends StatelessWidget {
     final deleteCubit = getIt<VehicleDeleteCubit>()..reset();
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.darkSurface,
+      backgroundColor: context.colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
@@ -73,7 +73,7 @@ class GarageOptionsBottomSheet extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.edit, color: Colors.white),
+            leading: Icon(Icons.edit, color: Colors.white),
             title: Text(
               VehicleStrings.editVehicle,
               style: context.bodyLarge?.copyWith(color: Colors.white),
@@ -84,7 +84,7 @@ class GarageOptionsBottomSheet extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.build, color: AppColors.primary),
+            leading: Icon(Icons.build, color: context.colorScheme.primary),
             title: Text(
               VehicleStrings.addMaintenance,
               style: context.bodyLarge?.copyWith(color: Colors.white),
@@ -95,7 +95,7 @@ class GarageOptionsBottomSheet extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.delete, color: Colors.red),
+            leading: Icon(Icons.delete, color: Colors.red),
             title: Text(
               VehicleStrings.deleteVehicle,
               style: context.bodyLarge?.copyWith(color: Colors.red),
@@ -109,7 +109,7 @@ class GarageOptionsBottomSheet extends StatelessWidget {
               );
             },
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
         ],
       ),
     );

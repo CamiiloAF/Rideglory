@@ -26,7 +26,7 @@ class FabOption extends StatelessWidget {
             child: Text(label, style: Theme.of(context).textTheme.bodyMedium),
           ),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         FloatingActionButton.small(
           onPressed: onPressed,
           heroTag: label,

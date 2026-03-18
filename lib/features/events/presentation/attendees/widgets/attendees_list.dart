@@ -52,7 +52,7 @@ class AttendeesList extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
@@ -72,7 +72,7 @@ class AttendeesList extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             ...pending.map(
               (registration) => Padding(
                 padding: const EdgeInsets.only(bottom: 12),
@@ -117,7 +117,7 @@ class AttendeesList extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
           ],
           Row(
             children: [
@@ -128,7 +128,7 @@ class AttendeesList extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const Spacer(),
+              Spacer(),
               TextButton(
                 onPressed: processed.isEmpty ? null : () {},
                 child: Text(
@@ -140,7 +140,7 @@ class AttendeesList extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: 12),
           if (processed.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),

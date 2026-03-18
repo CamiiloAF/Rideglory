@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/authentication/constants/auth_strings.dart';
-import 'package:rideglory/shared/widgets/form/app_text_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class LoginRegisterLink extends StatelessWidget {
   final VoidCallback onTap;

@@ -21,9 +21,9 @@ class RegistrationFormSectionCard extends StatelessWidget {
     final primary = context.colorScheme.primary;
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: context.colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.darkBorder),
+        border: Border.all(color: context.colorScheme.outlineVariant),
       ),
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -32,7 +32,7 @@ class RegistrationFormSectionCard extends StatelessWidget {
           Row(
             children: [
               Icon(icon, color: primary, size: 22),
-              const SizedBox(width: 10),
+              SizedBox(width: 10),
               Expanded(
                 child: Text(
                   title,
@@ -44,12 +44,12 @@ class RegistrationFormSectionCard extends StatelessWidget {
                 ),
               ),
               if (trailing != null) ...[
-                const SizedBox(width: 8),
+                SizedBox(width: 8),
                 trailing!,
               ],
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           child,
         ],
       ),

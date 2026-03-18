@@ -6,7 +6,7 @@ import 'package:rideglory/features/events/presentation/detail/widgets/event_deta
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_header_info.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_meeting_point_section.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_section_title.dart';
-import 'package:rideglory/shared/widgets/rich_text_viewer.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventDetailBody extends StatelessWidget {
   const EventDetailBody({super.key, required this.event, this.onViewMap});
@@ -22,18 +22,18 @@ class EventDetailBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           EventDetailHeaderInfo(event: event),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           const EventDetailSectionTitle(title: EventStrings.aboutTheRide),
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           RichTextViewer(content: event.description),
-          const SizedBox(height: 20),
+          SizedBox(height: 20),
           EventDetailDestinationCard(destination: event.destination),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           EventDetailMeetingPointSection(
             location: event.meetingPoint,
             onViewMap: onViewMap,
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
           EventDetailAllowedBrandsSection(event: event),
         ],
       ),

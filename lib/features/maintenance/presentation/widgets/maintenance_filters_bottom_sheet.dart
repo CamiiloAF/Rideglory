@@ -8,7 +8,7 @@ import 'package:rideglory/features/maintenance/domain/model/maintenance_model.da
 import 'package:rideglory/features/maintenance/presentation/widgets/filter_section_title.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenanceFiltersBottomSheet extends StatefulWidget {
   final MaintenanceFilters initialFilters;
@@ -38,8 +38,8 @@ class _MaintenanceFiltersBottomSheetState
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.darkSurface,
+      decoration: BoxDecoration(
+        color: context.colorScheme.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -51,7 +51,7 @@ class _MaintenanceFiltersBottomSheetState
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: AppColors.darkBorder,
+              color: context.colorScheme.outlineVariant,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -66,7 +66,7 @@ class _MaintenanceFiltersBottomSheetState
                     MaintenanceStrings.filters,
                     style: context.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: AppColors.darkTextPrimary,
+                      color: context.colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -96,7 +96,7 @@ class _MaintenanceFiltersBottomSheetState
                 children: [
                   // Sort by
                   const FilterSectionTitle(MaintenanceStrings.sortBy),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
@@ -108,14 +108,15 @@ class _MaintenanceFiltersBottomSheetState
                           style: TextStyle(
                             color: isSelected
                                 ? Colors.white
-                                : AppColors.darkTextSecondary,
+                                : context.colorScheme.onSurfaceVariant,
                           ),
                         ),
                         selected: isSelected,
-                        selectedColor: AppColors.primary,
-                        backgroundColor: AppColors.darkSurfaceHighest,
+                        selectedColor: context.colorScheme.primary,
+                        backgroundColor: context.colorScheme.surfaceContainerHighest,
                         checkmarkColor: Colors.white,
-                        side: const BorderSide(color: AppColors.darkBorder),
+                        side:
+                            BorderSide(color: context.colorScheme.outlineVariant),
                         onSelected: (selected) {
                           setState(() {
                             _filters = _filters.copyWith(sortBy: option);
@@ -124,11 +125,11 @@ class _MaintenanceFiltersBottomSheetState
                       );
                     }).toList(),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
 
                   // Maintenance types
                   const FilterSectionTitle(MaintenanceStrings.maintenanceTypes),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
@@ -140,14 +141,15 @@ class _MaintenanceFiltersBottomSheetState
                           style: TextStyle(
                             color: isSelected
                                 ? Colors.white
-                                : AppColors.darkTextSecondary,
+                                : context.colorScheme.onSurfaceVariant,
                           ),
                         ),
                         selected: isSelected,
-                        selectedColor: AppColors.primary,
-                        backgroundColor: AppColors.darkSurfaceHighest,
+                        selectedColor: context.colorScheme.primary,
+                        backgroundColor: context.colorScheme.surfaceContainerHighest,
                         checkmarkColor: Colors.white,
-                        side: const BorderSide(color: AppColors.darkBorder),
+                        side:
+                            BorderSide(color: context.colorScheme.outlineVariant),
                         onSelected: (selected) {
                           setState(() {
                             final newTypes = List<MaintenanceType>.from(
@@ -164,17 +166,17 @@ class _MaintenanceFiltersBottomSheetState
                       );
                     }).toList(),
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
 
                   // Urgent only
                   SwitchListTile(
-                    title: const Text(
+                    title: Text(
                       MaintenanceStrings.urgentOnly,
-                      style: TextStyle(color: AppColors.darkTextPrimary),
+                      style: TextStyle(color: context.colorScheme.onSurface),
                     ),
-                    subtitle: const Text(
+                    subtitle: Text(
                       MaintenanceStrings.urgentOnlyDescription,
-                      style: TextStyle(color: AppColors.darkTextSecondary),
+                      style: TextStyle(color: context.colorScheme.onSurfaceVariant),
                     ),
                     value: _filters.showUrgentOnly ?? false,
                     onChanged: (value) {
@@ -186,30 +188,32 @@ class _MaintenanceFiltersBottomSheetState
                     },
                     contentPadding: EdgeInsets.zero,
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
 
                   // Date range
                   const FilterSectionTitle(MaintenanceStrings.dateRange),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Row(
                     children: [
                       Expanded(
                         child: OutlinedButton.icon(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.calendar_today,
                             size: 18,
-                            color: AppColors.primary,
+                            color: context.colorScheme.primary,
                           ),
                           label: Text(
                             _filters.startDate != null
                                 ? _filters.startDate!.toFormattedString()
                                 : MaintenanceStrings.startDate,
-                            style: const TextStyle(
-                              color: AppColors.darkTextPrimary,
+                            style: TextStyle(
+                              color: context.colorScheme.onSurface,
                             ),
                           ),
                           style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: AppColors.darkBorder),
+                            side: BorderSide(
+                              color: context.colorScheme.outlineVariant,
+                            ),
                           ),
                           onPressed: () async {
                             final date = await showDatePicker(
@@ -226,24 +230,26 @@ class _MaintenanceFiltersBottomSheetState
                           },
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: OutlinedButton.icon(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.calendar_today,
                             size: 18,
-                            color: AppColors.primary,
+                            color: context.colorScheme.primary,
                           ),
                           label: Text(
                             _filters.endDate != null
                                 ? _filters.endDate!.toFormattedString()
                                 : MaintenanceStrings.endDate,
-                            style: const TextStyle(
-                              color: AppColors.darkTextPrimary,
+                            style: TextStyle(
+                              color: context.colorScheme.onSurface,
                             ),
                           ),
                           style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: AppColors.darkBorder),
+                            side: BorderSide(
+                              color: context.colorScheme.outlineVariant,
+                            ),
                           ),
                           onPressed: () async {
                             final date = await showDatePicker(
@@ -270,9 +276,9 @@ class _MaintenanceFiltersBottomSheetState
           // Actions
           Container(
             padding: const EdgeInsets.all(24),
-            decoration: const BoxDecoration(
-              color: AppColors.darkSurface,
-              border: Border(top: BorderSide(color: AppColors.darkBorder)),
+            decoration: BoxDecoration(
+              color: context.colorScheme.surface,
+              border: Border(top: BorderSide(color: context.colorScheme.outlineVariant)),
             ),
             child: Row(
               children: [
@@ -284,7 +290,7 @@ class _MaintenanceFiltersBottomSheetState
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Expanded(
                   child: AppButton(
                     label: AppStrings.apply,

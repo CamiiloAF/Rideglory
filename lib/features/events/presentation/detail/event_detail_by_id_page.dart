@@ -13,7 +13,7 @@ import 'package:rideglory/features/events/domain/use_cases/get_event_by_id_use_c
 import 'package:rideglory/features/events/presentation/detail/cubit/event_detail_cubit.dart';
 import 'package:rideglory/features/events/presentation/detail/event_detail_page.dart';
 import 'package:rideglory/features/events/presentation/detail/params.dart';
-import 'package:rideglory/shared/widgets/app_app_bar.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventDetailByIdPage extends StatefulWidget {
   final String eventId;
@@ -65,7 +65,11 @@ class _EventDetailByIdPageState extends State<EventDetailByIdPage> {
               initial: () => _shell(context, const SizedBox.shrink()),
               loading: () => _shell(
                 context,
-                const Center(child: CircularProgressIndicator()),
+                Center(
+                  child: AppLoadingIndicator(
+                    variant: AppLoadingIndicatorVariant.inline,
+                  ),
+                ),
               ),
               data: (event) => EventDetailPage(
                 params: EventDetailPageParams(
@@ -91,22 +95,25 @@ class _EventDetailByIdPageState extends State<EventDetailByIdPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.error_outline,
                         size: 48,
-                        color: Colors.grey,
+                        color: context.colorScheme.onSurfaceVariant,
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12),
                       Text(
                         RegistrationStrings.errorLoadingEvent,
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
+                      SizedBox(height: 16),
+                      AppButton(
+                        label: AppStrings.retry,
                         onPressed: () => context
                             .read<EventDetailCubit>()
                             .loadEvent(widget.eventId),
-                        child: const Text(AppStrings.retry),
+                        variant: AppButtonVariant.primary,
+                        style: AppButtonStyle.filled,
+                        isFullWidth: false,
                       ),
                     ],
                   ),

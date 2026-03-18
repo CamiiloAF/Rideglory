@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
-import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
-import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 abstract final class AttendeeActionConfirmation {
   AttendeeActionConfirmation._();

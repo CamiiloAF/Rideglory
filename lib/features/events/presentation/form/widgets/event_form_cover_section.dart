@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
-import 'package:rideglory/shared/widgets/form/app_image_picker.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventFormCoverSection extends StatelessWidget {
   const EventFormCoverSection({

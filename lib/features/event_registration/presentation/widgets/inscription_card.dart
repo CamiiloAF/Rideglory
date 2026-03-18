@@ -6,7 +6,7 @@ import 'package:rideglory/features/event_registration/constants/registration_str
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/registration_with_event.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class InscriptionCard extends StatelessWidget {
   const InscriptionCard({
@@ -22,17 +22,20 @@ class InscriptionCard extends StatelessWidget {
   final VoidCallback? onSecondaryAction;
   final VoidCallback onTap;
 
-  static Color _statusBackgroundColor(RegistrationStatus status) {
+  Color _statusBackgroundColor(
+    BuildContext context,
+    RegistrationStatus status,
+  ) {
     switch (status) {
       case RegistrationStatus.approved:
-        return AppColors.success;
+        return context.appColors.success;
       case RegistrationStatus.pending:
       case RegistrationStatus.readyForEdit:
-        return AppColors.warning;
+        return context.appColors.warning;
       case RegistrationStatus.rejected:
-        return AppColors.error;
+        return context.colorScheme.error;
       case RegistrationStatus.cancelled:
-        return AppColors.darkTextSecondary;
+        return context.colorScheme.onSurfaceVariant;
     }
   }
 
@@ -56,9 +59,9 @@ class InscriptionCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppColors.darkSurface,
+          color: context.colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: AppColors.darkBorder),
+          border: Border.all(color: context.colorScheme.outlineVariant),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +76,7 @@ class InscriptionCard extends StatelessWidget {
                 errorBuilder: (_, __, ___) => Container(
                   width: 88,
                   height: 88,
-                  color: AppColors.darkSurfaceHighest,
+                  color: context.colorScheme.surfaceContainerHighest,
                   child: Icon(
                     Icons.event_outlined,
                     color: colorScheme.onSurfaceVariant,
@@ -82,7 +85,7 @@ class InscriptionCard extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,14 +104,14 @@ class InscriptionCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 6,
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: _statusBackgroundColor(status),
+                          color: _statusBackgroundColor(context, status),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
@@ -122,7 +125,7 @@ class InscriptionCard extends StatelessWidget {
                     ],
                   ),
                   if (dateTime.isNotEmpty) ...[
-                    const SizedBox(height: 4),
+                    SizedBox(height: 4),
                     Row(
                       children: [
                         Icon(
@@ -130,7 +133,7 @@ class InscriptionCard extends StatelessWidget {
                           size: 14,
                           color: colorScheme.onSurfaceVariant,
                         ),
-                        const SizedBox(width: 4),
+                        SizedBox(width: 4),
                         Text(
                           dateTime,
                           style: context.bodySmall?.copyWith(
@@ -140,7 +143,7 @@ class InscriptionCard extends StatelessWidget {
                       ],
                     ),
                   ],
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
                   Row(
                     children: [
                       Expanded(
@@ -158,7 +161,7 @@ class InscriptionCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: 8),
                       if (onSecondaryAction != null)
                         Expanded(
                           child: _SecondaryActionButton(

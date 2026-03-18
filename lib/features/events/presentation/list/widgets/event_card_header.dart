@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class EventCardHeader extends StatelessWidget {
   final String eventName;
@@ -32,12 +33,12 @@ class EventCardHeader extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        if (isOwner) _buildPopupMenu(),
+        if (isOwner) _buildPopupMenu(context),
       ],
     );
   }
 
-  Widget _buildPopupMenu() {
+  Widget _buildPopupMenu(BuildContext context) {
     return PopupMenuButton<String>(
       onSelected: (value) {
         if (value == 'edit') onEdit?.call();
@@ -54,15 +55,15 @@ class EventCardHeader extends StatelessWidget {
             ],
           ),
         ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'delete',
           child: Row(
             children: [
-              Icon(Icons.delete_outline, color: AppColors.error),
+              Icon(Icons.delete_outline, color: context.colorScheme.error),
               SizedBox(width: 8),
               Text(
                 EventStrings.delete,
-                style: TextStyle(color: AppColors.error),
+                style: TextStyle(color: context.colorScheme.error),
               ),
             ],
           ),

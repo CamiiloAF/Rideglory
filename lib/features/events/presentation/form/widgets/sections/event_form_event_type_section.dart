@@ -5,6 +5,7 @@ import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class EventFormEventTypeSection extends StatelessWidget {
   const EventFormEventTypeSection({super.key});
@@ -23,7 +24,7 @@ class EventFormEventTypeSection extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -40,12 +41,12 @@ class EventFormEventTypeSection extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: isSelected
                           ? colorScheme.primary
-                          : AppColors.darkSurface,
+                          : context.colorScheme.surface,
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: isSelected
                             ? colorScheme.primary
-                            : AppColors.darkBorder,
+                            : context.colorScheme.outlineVariant,
                       ),
                     ),
                     child: Text(
@@ -61,7 +62,7 @@ class EventFormEventTypeSection extends StatelessWidget {
               }).toList(),
             ),
             if (field.hasError) ...[
-              const SizedBox(height: 6),
+              SizedBox(height: 6),
               Text(
                 field.errorText!,
                 style: Theme.of(

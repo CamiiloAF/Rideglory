@@ -42,7 +42,7 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
                   context.pushNamed(AppRoutes.maintenances, extra: vehicle.id);
                 },
                 style: TextButton.styleFrom(
-                  foregroundColor: AppColors.primary,
+                  foregroundColor: context.colorScheme.primary,
                   padding: EdgeInsets.zero,
                   minimumSize: const Size(50, 30),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -50,14 +50,14 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
                 child: Text(
                   VehicleStrings.seeAll,
                   style: context.bodyMedium?.copyWith(
-                    color: AppColors.primary,
+                    color: context.colorScheme.primary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           BlocBuilder<
             VehicleMaintenancesCubit,
             ResultState<List<MaintenanceModel>>
@@ -92,7 +92,7 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
                   child: Column(
                     children: [
                       Icon(Icons.history, color: Colors.grey[600], size: 40),
-                      const SizedBox(height: 12),
+                      SizedBox(height: 12),
                       Text(
                         MaintenanceStrings.noRecordsYet,
                         style: context.bodyMedium?.copyWith(
@@ -174,12 +174,12 @@ class _MaintenanceRecordCard extends StatelessWidget {
                   child: Center(
                     child: Icon(
                       _getMaintenanceIcon(maintenance.type),
-                      color: AppColors.primary,
+                      color: context.colorScheme.primary,
                       size: 24,
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,7 +193,7 @@ class _MaintenanceRecordCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         '${DateFormat('dd \'de\' MMM, yyyy').format(maintenance.date)} • ${NumberFormat('#,###').format(maintenance.maintanceMileage)} km',
                         style: context.bodyMedium?.copyWith(
@@ -205,7 +205,7 @@ class _MaintenanceRecordCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Icon(Icons.chevron_right, color: Colors.grey[500]),
               ],
             ),
@@ -247,8 +247,8 @@ class _LoadingState extends StatelessWidget {
             color: const Color(0xFF262628),
             borderRadius: BorderRadius.circular(16),
           ),
-          child: const Center(
-            child: CircularProgressIndicator(color: AppColors.primary),
+          child: Center(
+            child: CircularProgressIndicator(color: context.colorScheme.primary),
           ),
         ),
       ),

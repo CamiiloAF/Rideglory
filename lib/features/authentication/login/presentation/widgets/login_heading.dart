@@ -16,7 +16,7 @@ class LoginHeading extends StatelessWidget {
             color: context.colorScheme.onSurface,
           ),
         ),
-        const SizedBox(height: 6),
+        SizedBox(height: 6),
         Text(
           AuthStrings.loginSubtitleStitch,
           textAlign: TextAlign.center,

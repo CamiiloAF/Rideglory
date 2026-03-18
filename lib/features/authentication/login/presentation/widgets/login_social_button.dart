@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class LoginSocialButton extends StatelessWidget {
   final String label;
@@ -16,21 +15,17 @@ class LoginSocialButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton.icon(
+    return AppButton(
       onPressed: onPressed,
-      style: OutlinedButton.styleFrom(
-        backgroundColor: AppColors.darkSurfaceHighest,
-        foregroundColor: context.colorScheme.onSurface,
-        disabledForegroundColor: context.colorScheme.onSurface.withValues(
-          alpha: 0.4,
-        ),
-        side: const BorderSide(color: AppColors.darkBorder, width: 1.5),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        padding: const EdgeInsets.symmetric(vertical: 13),
-        textStyle: context.textTheme.titleSmall,
+      label: label,
+      icon: icon,
+      variant: AppButtonVariant.primary,
+      style: AppButtonStyle.outlined,
+      isFullWidth: true,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 24,
+        vertical: 13,
       ),
-      icon: Icon(icon, size: 20),
-      label: Text(label),
     );
   }
 }

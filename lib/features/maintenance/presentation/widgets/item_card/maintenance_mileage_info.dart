@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
-import 'package:rideglory/shared/widgets/info_chip.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/item_card/info_chip_tooltip.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/item_card/maintenance_progress_bar.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenanceMileageInfo extends StatelessWidget {
   final MaintenanceModel maintenance;
@@ -35,7 +35,7 @@ class MaintenanceMileageInfo extends StatelessWidget {
       ),
       child: Column(
         children: [
-          const SizedBox(height: 8),
+          SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -68,12 +68,12 @@ class MaintenanceMileageInfo extends StatelessWidget {
             ],
           ),
           if (progressPercent != null) ...[
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             MaintenanceProgressBar(
               typeColor: typeColor,
               progressPercent: progressPercent!,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               remainingDistance != null
                   ? MaintenanceStrings.remainingDistance(

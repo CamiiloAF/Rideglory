@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class NoRegistrationContent extends StatelessWidget {
   final EventModel event;
@@ -25,7 +25,7 @@ class NoRegistrationContent extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4),
         Text(
           event.isFree
               ? EventStrings.free
@@ -34,7 +34,7 @@ class NoRegistrationContent extends StatelessWidget {
             color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         AppButton(
           label: EventStrings.joinEvent,
           onPressed: onRegister,

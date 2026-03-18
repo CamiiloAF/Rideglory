@@ -28,7 +28,7 @@ class SignupHeader extends StatelessWidget {
           isEmailMode ? emailModeTitle : socialModeTitle,
           style: context.displayLarge,
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8),
         Text(
           isEmailMode ? emailModeSubtitle : socialModeSubtitle,
           style: context.bodyLarge?.copyWith(color: AppColors.textSecondary),

@@ -36,9 +36,9 @@ class _GaragePageState extends State<GaragePage> {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            leading: const Padding(
+            leading: Padding(
               padding: EdgeInsets.all(12),
-              child: Icon(Icons.two_wheeler, color: AppColors.primary),
+              child: Icon(Icons.two_wheeler, color: context.colorScheme.primary),
             ),
             title: Text(
               VehicleStrings.myGarage,
@@ -56,9 +56,9 @@ class _GaragePageState extends State<GaragePage> {
                   shape: BoxShape.circle,
                 ),
                 child: IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.notifications_none,
-                    color: AppColors.primary,
+                    color: context.colorScheme.primary,
                   ),
                   onPressed: () {},
                 ),
@@ -70,8 +70,8 @@ class _GaragePageState extends State<GaragePage> {
             child: BlocBuilder<VehicleCubit, VehicleState>(
               builder: (context, state) {
                 if (state is VehicleInitial) {
-                  return const Center(
-                    child: CircularProgressIndicator(color: AppColors.primary),
+                  return Center(
+                    child: CircularProgressIndicator(color: context.colorScheme.primary),
                   );
                 }
 
@@ -147,7 +147,7 @@ class _GaragePageState extends State<GaragePage> {
                                       : null,
                                 ),
                                 child: !hasImage
-                                    ? const Center(
+                                    ? Center(
                                         child: Icon(
                                           Icons.motorcycle,
                                           size: 80,
@@ -172,7 +172,7 @@ class _GaragePageState extends State<GaragePage> {
                             height: 4,
                             decoration: BoxDecoration(
                               color: i == vehicleIndex
-                                  ? AppColors.primary
+                                  ? context.colorScheme.primary
                                   : Colors.white.withValues(alpha: 0.3),
                               borderRadius: BorderRadius.circular(2),
                             ),
@@ -180,7 +180,7 @@ class _GaragePageState extends State<GaragePage> {
                         ),
                       ),
 
-                      const SizedBox(height: 24),
+                      SizedBox(height: 24),
 
                       // Detail View updates dynamically
                       VehicleDetailView(

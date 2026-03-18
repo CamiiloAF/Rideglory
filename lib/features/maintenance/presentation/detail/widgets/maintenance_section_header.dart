@@ -16,7 +16,7 @@ class MaintenanceSectionHeader extends StatelessWidget {
     return Row(
       children: [
         Icon(icon, color: Colors.grey[400], size: 24),
-        const SizedBox(width: 8),
+        SizedBox(width: 8),
         Text(
           title,
           style: context.titleMedium?.copyWith(

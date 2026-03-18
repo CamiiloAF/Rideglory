@@ -17,7 +17,7 @@ import 'package:rideglory/features/authentication/login/presentation/widgets/log
 import 'package:rideglory/features/authentication/login/presentation/widgets/login_sign_in_button.dart';
 import 'package:rideglory/features/authentication/login/presentation/widgets/login_social_row.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -91,9 +91,9 @@ class _LoginViewState extends State<LoginView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 160),
+                  SizedBox(height: 160),
                   const LoginHeading(),
-                  const SizedBox(height: 28),
+                  SizedBox(height: 28),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: FormBuilder(
@@ -102,23 +102,23 @@ class _LoginViewState extends State<LoginView> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           const LoginEmailField(),
-                          const SizedBox(height: 18),
+                          SizedBox(height: 18),
                           LoginPasswordField(
                             onSubmitted: () => _handleLogin(context),
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: 20),
                           LoginSignInButton(
                             onPressed: () => _handleLogin(context),
                           ),
-                          const SizedBox(height: 24),
+                          SizedBox(height: 24),
                           const LoginDivider(),
-                          const SizedBox(height: 20),
+                          SizedBox(height: 20),
                           const LoginSocialRow(),
-                          const SizedBox(height: 28),
+                          SizedBox(height: 28),
                           LoginRegisterLink(
                             onTap: () => context.push(AppRoutes.signup),
                           ),
-                          const SizedBox(height: 40),
+                          SizedBox(height: 40),
                         ],
                       ),
                     ),

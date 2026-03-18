@@ -63,7 +63,7 @@ class _SignupViewState extends State<SignupView> {
                   color: context.colorScheme.onSurface,
                 ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Text(
                 AuthStrings.registerSubtitle,
                 style: context.textTheme.bodyMedium?.copyWith(
@@ -71,9 +71,9 @@ class _SignupViewState extends State<SignupView> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
               SignupEmailForm(formKey: _formKey, onBack: _navigateToLogin),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               Center(
                 child: RichText(
                   text: TextSpan(
@@ -97,7 +97,7 @@ class _SignupViewState extends State<SignupView> {
                   ),
                 ),
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: 32),
             ],
           ),
         ),

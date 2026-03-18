@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 enum AppTextButtonVariant { primary, muted, danger }
 
@@ -23,19 +24,16 @@ class AppTextButton extends StatelessWidget {
     this.visualDensity,
   });
 
-  Color get _foregroundColor {
-    switch (variant) {
-      case AppTextButtonVariant.primary:
-        return AppColors.primary;
-      case AppTextButtonVariant.muted:
-        return Colors.grey[600]!;
-      case AppTextButtonVariant.danger:
-        return Colors.red;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final cs = context.colorScheme;
+
+    final foregroundColor = switch (variant) {
+      AppTextButtonVariant.primary => cs.primary,
+      AppTextButtonVariant.muted => cs.onSurfaceVariant,
+      AppTextButtonVariant.danger => cs.error,
+    };
+
     if (icon != null) {
       return TextButton.icon(
         onPressed: onPressed == null || isLoading ? null : onPressed,
@@ -45,13 +43,13 @@ class AppTextButton extends StatelessWidget {
                 height: iconSize,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(_foregroundColor),
+                  valueColor: AlwaysStoppedAnimation<Color>(foregroundColor),
                 ),
               )
-            : Icon(icon, size: iconSize),
+            : Icon(icon, size: iconSize, color: foregroundColor),
         label: Text(label),
         style: TextButton.styleFrom(
-          foregroundColor: _foregroundColor,
+          foregroundColor: foregroundColor,
           visualDensity: visualDensity,
         ),
       );
@@ -60,7 +58,7 @@ class AppTextButton extends StatelessWidget {
     return TextButton(
       onPressed: onPressed == null || isLoading ? null : onPressed,
       style: TextButton.styleFrom(
-        foregroundColor: _foregroundColor,
+        foregroundColor: foregroundColor,
         visualDensity: visualDensity,
       ),
       child: isLoading
@@ -69,7 +67,7 @@ class AppTextButton extends StatelessWidget {
               height: 16,
               child: CircularProgressIndicator(
                 strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(_foregroundColor),
+                valueColor: AlwaysStoppedAnimation<Color>(foregroundColor),
               ),
             )
           : Text(label),

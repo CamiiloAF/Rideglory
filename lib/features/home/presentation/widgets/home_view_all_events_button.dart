@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/home/constants/home_strings.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class HomeViewAllEventsButton extends StatelessWidget {
   const HomeViewAllEventsButton({super.key});
@@ -17,17 +18,17 @@ class HomeViewAllEventsButton extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
-            color: AppColors.darkSurface,
+            color: context.colorScheme.surface,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: AppColors.darkBorder),
+            border: Border.all(color: context.colorScheme.outlineVariant),
           ),
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 HomeStrings.viewAllEvents,
                 style: TextStyle(
-                  color: AppColors.darkTextSecondary,
+                  color: context.colorScheme.onSurfaceVariant,
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 1,
@@ -36,7 +37,7 @@ class HomeViewAllEventsButton extends StatelessWidget {
               SizedBox(width: 6),
               Icon(
                 Icons.expand_more,
-                color: AppColors.darkTextSecondary,
+                color: context.colorScheme.onSurfaceVariant,
                 size: 16,
               ),
             ],

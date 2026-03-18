@@ -33,7 +33,7 @@ class MaintenancesHeaderView extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Container(
             decoration: BoxDecoration(
-              color: AppColors.darkSurfaceHighest,
+              color: context.colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(16),
             ),
             child: TextField(
@@ -42,9 +42,9 @@ class MaintenancesHeaderView extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: MaintenanceStrings.searchMaintenances,
                 hintStyle: context.bodyMedium?.copyWith(
-                  color: AppColors.darkTextSecondary,
+                  color: context.colorScheme.onSurfaceVariant,
                 ),
-                prefixIcon: const Icon(Icons.search, color: AppColors.primary),
+                prefixIcon: Icon(Icons.search, color: context.colorScheme.primary),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -54,7 +54,7 @@ class MaintenancesHeaderView extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         BlocBuilder<MaintenancesCubit, ResultState<List<MaintenanceModel>>>(
           builder: (context, state) {
             final cubit = context.read<MaintenancesCubit>();

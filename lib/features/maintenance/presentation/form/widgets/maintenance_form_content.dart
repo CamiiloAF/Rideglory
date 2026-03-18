@@ -11,10 +11,7 @@ import 'package:rideglory/features/maintenance/presentation/form/widgets/change_
 import 'package:rideglory/features/maintenance/presentation/form/widgets/save_maintenance_button.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
-import 'package:rideglory/shared/widgets/form/app_date_picker.dart';
-import 'package:rideglory/shared/widgets/form/app_dropdown.dart';
-import 'package:rideglory/shared/widgets/form/app_mileage_field.dart';
-import 'package:rideglory/shared/widgets/form/app_text_field.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenanceFormContent extends StatefulWidget {
   const MaintenanceFormContent({super.key});
@@ -163,7 +160,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                 ),
               ]),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // 2. Tipo de Mantenimiento
             AppDropdown<MaintenanceType>(
@@ -180,7 +177,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                   )
                   .toList(),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // 3. Vehículo
             AppDropdown<String>(
@@ -213,7 +210,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                 }
               },
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // 4. Fecha de Servicio
             AppDatePicker(
@@ -223,7 +220,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
               isRequired: true,
               hintText: 'mm/dd/yyyy',
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // 5. Kilometraje Actual
             const AppMileageField(
@@ -231,7 +228,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
               labelText: MaintenanceStrings.maintenanceMileage,
               textInputAction: TextInputAction.next,
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // 6. Costo del Mantenimiento
             const AppTextField(
@@ -244,7 +241,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
               ),
               textInputAction: TextInputAction.next,
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
 
             // 7. Notas / Observaciones
             const AppTextField(
@@ -255,7 +252,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
               minLines: 3,
               textInputAction: TextInputAction.done,
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
 
             // 8. Alertas de próximo servicio
             Container(
@@ -278,7 +275,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
 
                   // Alerta por Fecha
                   Row(
@@ -288,7 +285,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                         color: context.colorScheme.primary,
                         size: 20,
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           MaintenanceStrings.dateAlert,
@@ -309,16 +306,16 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   AppDatePicker(
                     fieldName: MaintenanceFormFields.nextMaintenanceDate,
                     labelText: MaintenanceStrings.nextMaintenanceDate,
                     firstDate: DateTime.now(),
                     hintText: 'mm/dd/yyyy',
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
 
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.symmetric(vertical: 12),
                     child: Divider(height: 1),
                   ),
@@ -331,7 +328,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                         color: context.colorScheme.primary,
                         size: 20,
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           MaintenanceStrings.mileageAlert,
@@ -352,7 +349,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   const AppMileageField(
                     name: MaintenanceFormFields.nextMaintenanceMileage,
                     labelText: MaintenanceStrings.nextMaintenanceMileageLabel,
@@ -362,11 +359,11 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                 ],
               ),
             ),
-            const SizedBox(height: 40),
+            SizedBox(height: 40),
 
             // Botón de guardado
             SaveMaintenanceButton(onSave: _saveMaintenance),
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
           ],
         ),
       ),

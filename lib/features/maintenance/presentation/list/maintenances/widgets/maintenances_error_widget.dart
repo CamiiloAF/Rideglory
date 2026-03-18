@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
-import 'package:rideglory/shared/widgets/container_pull_to_refresh.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenancesErrorWidget extends StatelessWidget {
   final String error;

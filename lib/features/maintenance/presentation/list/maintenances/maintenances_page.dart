@@ -15,12 +15,12 @@ import 'package:rideglory/features/maintenance/presentation/list/maintenances/wi
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_empty_widget.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_error_widget.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_loading_widget.dart';
-import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/expandable_fab.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters_bottom_sheet.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenancesPage extends StatelessWidget {
   final String? initialVehicleId;
@@ -142,7 +142,7 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
       appBar: AppAppBar(
         title: MaintenanceStrings.maintenances,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back),
           onPressed: () {
             if (context.canPop()) {
               context.pop();

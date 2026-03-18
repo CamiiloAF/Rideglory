@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
-import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
-import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenanceCardActionsMenu extends StatelessWidget {
   final VoidCallback? onEdit;

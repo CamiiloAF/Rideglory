@@ -5,9 +5,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/authentication/constants/auth_form_fields.dart';
 import 'package:rideglory/features/authentication/constants/auth_strings.dart';
-import 'package:rideglory/shared/widgets/form/app_text_field.dart';
-import 'package:rideglory/shared/widgets/form/app_password_text_field.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class LoginEmailForm extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
@@ -44,7 +42,7 @@ class LoginEmailForm extends StatelessWidget {
               FormBuilderValidators.email(errorText: AuthStrings.invalidEmail),
             ]),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 16),
           AppPasswordTextField(
             name: AuthFormFields.password,
             labelText: AuthStrings.password,
@@ -61,7 +59,7 @@ class LoginEmailForm extends StatelessWidget {
               ),
             ]),
           ),
-          const SizedBox(height: 24),
+          SizedBox(height: 24),
 
           // Sign in button
           BlocBuilder<AuthCubit, AuthState>(

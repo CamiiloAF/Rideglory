@@ -9,7 +9,7 @@ import 'package:rideglory/features/event_registration/presentation/cubit/registr
 import 'package:rideglory/features/event_registration/presentation/registration_form_view.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/detail/params.dart';
-import 'package:rideglory/shared/widgets/app_app_bar.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventRegistrationPage extends StatelessWidget {
   const EventRegistrationPage({super.key, required this.params});

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 
 class HomeEventDefaultBackground extends StatelessWidget {
   const HomeEventDefaultBackground({super.key});
@@ -7,18 +8,18 @@ class HomeEventDefaultBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [Color(0xFF2D1A0A), Color(0xFF1A0D05)],
         ),
       ),
-      child: const Center(
+      child: Center(
         child: Icon(
           Icons.landscape_outlined,
           size: 60,
-          color: AppColors.darkBorder,
+          color: context.colorScheme.outlineVariant,
         ),
       ),
     );

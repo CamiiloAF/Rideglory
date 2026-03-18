@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventDetailStartedBanner extends StatelessWidget {
   const EventDetailStartedBanner({super.key, this.onFollowLive});
@@ -16,9 +16,9 @@ class EventDetailStartedBanner extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: AppColors.darkSurface,
+          color: context.colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: AppColors.darkBorder),
+          border: Border.all(color: context.colorScheme.outlineVariant),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,13 +31,13 @@ class EventDetailStartedBanner extends StatelessWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withValues(alpha: 0.2),
+                    color: context.colorScheme.primary.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: const Text(
+                  child: Text(
                     EventStrings.eventLiveNow,
                     style: TextStyle(
-                      color: AppColors.primary,
+                      color: context.colorScheme.primary,
                       fontSize: 12,
                       fontWeight: FontWeight.w700,
                       letterSpacing: 0.5,
@@ -46,7 +46,7 @@ class EventDetailStartedBanner extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             Text(
               EventStrings.eventHasStartedTitle,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -54,7 +54,7 @@ class EventDetailStartedBanner extends StatelessWidget {
                 color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               EventStrings.eventHasStartedDescription,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -63,7 +63,7 @@ class EventDetailStartedBanner extends StatelessWidget {
               ),
             ),
             if (onFollowLive != null) ...[
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,
                 child: AppButton(

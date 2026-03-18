@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/shared/widgets/bottom_nav_add_button.dart';
 import 'package:rideglory/shared/widgets/bottom_nav_item.dart';
 
@@ -21,10 +23,10 @@ class HomeBottomNavigationBar extends StatelessWidget {
     return Container(
       height: 72 + MediaQuery.of(context).padding.bottom,
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1A),
+        color: context.colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.4),
+            color: context.appColors.shadowMedium,
             blurRadius: 20,
             offset: const Offset(0, -4),
           ),

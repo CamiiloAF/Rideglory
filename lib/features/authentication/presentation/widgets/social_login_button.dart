@@ -91,7 +91,7 @@ class _SocialLoginButtonState extends State<SocialLoginButton> {
                   )
                 else ...[
                   Icon(icon, color: textColor, size: 20),
-                  const SizedBox(width: 12),
+                  SizedBox(width: 12),
                 ],
                 Expanded(
                   child: Text(
@@ -103,7 +103,7 @@ class _SocialLoginButtonState extends State<SocialLoginButton> {
                     ),
                   ),
                 ),
-                if (!widget.isLoading) const SizedBox(width: 20),
+                if (!widget.isLoading) SizedBox(width: 20),
               ],
             ),
           ),

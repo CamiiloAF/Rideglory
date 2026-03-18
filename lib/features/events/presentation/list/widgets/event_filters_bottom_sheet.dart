@@ -5,11 +5,7 @@ import 'package:rideglory/features/events/constants/event_filter_form_fields.dar
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
-import 'package:rideglory/shared/widgets/form/app_checkbox.dart';
-import 'package:rideglory/shared/widgets/form/app_city_autocomplete.dart';
-import 'package:rideglory/shared/widgets/form/app_date_picker.dart';
-import 'package:rideglory/shared/widgets/form/app_text_button.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventFiltersBottomSheet extends StatefulWidget {
   const EventFiltersBottomSheet({super.key, required this.cubitContext});
@@ -121,7 +117,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Wrap(
                         spacing: 8,
                         children: EventType.values.map((type) {
@@ -139,7 +135,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                           );
                         }).toList(),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       // Difficulty filter
                       Text(
                         EventStrings.filterByDifficulty,
@@ -147,7 +143,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Wrap(
                         spacing: 8,
                         children: EventDifficulty.values.map((diff) {
@@ -165,14 +161,14 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                           );
                         }).toList(),
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       // City filter
                       AppCityAutocomplete(
                         name: EventFilterFormFields.city,
                         labelText: EventStrings.filterByCity,
                         isRequired: false,
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       // Date range
                       Text(
                         EventStrings.filterByDateRange,
@@ -180,7 +176,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: 8),
                       Row(
                         children: [
                           Expanded(
@@ -191,7 +187,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                               lastDate: DateTime(2030),
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          SizedBox(width: 12),
                           Expanded(
                             child: AppDatePicker(
                               fieldName: EventFilterFormFields.endDate,
@@ -202,7 +198,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
+                      SizedBox(height: 16),
                       // Boolean filters
                       const AppCheckbox(
                         name: EventFilterFormFields.freeOnly,
@@ -212,7 +208,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                         name: EventFilterFormFields.multiBrandOnly,
                         title: EventStrings.filterByMultiBrand,
                       ),
-                      const SizedBox(height: 24),
+                      SizedBox(height: 24),
                     ],
                   ),
                 ),

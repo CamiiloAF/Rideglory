@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
 
 /// Reusable image picker section for event cover, vehicle photo, etc.
@@ -41,7 +42,7 @@ class AppImagePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final cs = context.colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
     return Column(
@@ -51,7 +52,7 @@ class AppImagePicker extends StatelessWidget {
           Text(
             labelText!,
             style: textTheme.labelMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
+              color: cs.onSurfaceVariant,
               letterSpacing: 0.5,
             ),
           ),
@@ -62,10 +63,10 @@ class AppImagePicker extends StatelessWidget {
           child: Container(
             width: double.infinity,
             decoration: BoxDecoration(
-              color: AppColors.darkSurface,
+              color: cs.surface,
               borderRadius: BorderRadius.circular(8),
               border: _hasImage
-                  ? Border.all(color: AppColors.darkBorder)
+                  ? Border.all(color: cs.outlineVariant)
                   : null,
             ),
             child: _hasImage
@@ -93,16 +94,16 @@ class AppImagePicker extends StatelessWidget {
                           top: 8,
                           right: 8,
                           child: Material(
-                            color: Colors.black54,
+                            color: cs.onSurface.withOpacity(0.25),
                             borderRadius: BorderRadius.circular(20),
                             child: InkWell(
                               onTap: onClearTap,
                               borderRadius: BorderRadius.circular(20),
-                              child: const Padding(
-                                padding: EdgeInsets.all(8),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
                                 child: Icon(
                                   Icons.close,
-                                  color: Colors.white,
+                                  color: cs.onSurfaceVariant,
                                   size: 20,
                                 ),
                               ),
@@ -130,14 +131,14 @@ class AppImagePicker extends StatelessWidget {
                                 height: 100,
                                 child: CustomPaint(
                                   painter: _DashedOvalPainter(
-                                    color: colorScheme.primary,
+                                    color: cs.primary,
                                   ),
                                 ),
                               ),
                               Icon(
                                 Icons.add_a_photo,
                                 size: 48,
-                                color: colorScheme.primary,
+                                color: cs.primary,
                               ),
                             ],
                           ),
@@ -146,7 +147,7 @@ class AppImagePicker extends StatelessWidget {
                             title,
                             textAlign: TextAlign.center,
                             style: textTheme.titleLarge?.copyWith(
-                              color: colorScheme.primary,
+                              color: cs.primary,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -160,7 +161,7 @@ class AppImagePicker extends StatelessWidget {
                                 hint!,
                                 textAlign: TextAlign.center,
                                 style: textTheme.bodySmall?.copyWith(
-                                  color: AppColors.darkTextSecondary,
+                                  color: cs.onSurfaceVariant,
                                 ),
                               ),
                             ),
@@ -184,7 +185,7 @@ class AppImagePicker extends StatelessWidget {
                                         generateWithAILabel ?? 'Generar con IA',
                                     icon: Icons.auto_awesome,
                                     onPressed: onGenerateWithAITap,
-                                    colorScheme: colorScheme,
+                                    colorScheme: cs,
                                   ),
                                 ),
                               ],
@@ -217,7 +218,7 @@ class _OutlinePrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
+      color: colorScheme.surface.withOpacity(0),
       child: InkWell(
         onTap: onPressed,
         borderRadius: BorderRadius.circular(8),
