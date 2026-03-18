@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/authentication/constants/auth_form_fields.dart';
-import 'package:rideglory/features/authentication/constants/auth_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class LoginPasswordField extends StatelessWidget {
   final VoidCallback onSubmitted;
@@ -13,15 +13,15 @@ class LoginPasswordField extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppPasswordTextField(
       name: AuthFormFields.password,
-      labelText: AuthStrings.passwordLabel,
-      hintText: AuthStrings.passwordHint,
+      labelText: context.l10n.auth_passwordLabel,
+      hintText: context.l10n.auth_passwordHint,
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (_) => onSubmitted(),
       validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText: AuthStrings.passwordRequired),
+        FormBuilderValidators.required(errorText: context.l10n.auth_passwordRequired),
         FormBuilderValidators.minLength(
           6,
-          errorText: AuthStrings.passwordMinLength,
+          errorText: context.l10n.auth_passwordMinLength,
         ),
       ]),
     );

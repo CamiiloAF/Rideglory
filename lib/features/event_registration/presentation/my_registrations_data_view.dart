@@ -7,11 +7,11 @@ import 'package:rideglory/features/event_registration/domain/model/registration_
 import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/inscription_card.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/my_registrations_filter_bottom_sheet.dart';
 import 'package:rideglory/features/events/presentation/detail/params.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MyRegistrationsDataView extends StatelessWidget {
   const MyRegistrationsDataView({super.key, required this.items});
@@ -31,7 +31,7 @@ class MyRegistrationsDataView extends StatelessWidget {
               Expanded(
                 child: AppTextField(
                   name: 'search',
-                  hintText: EventStrings.searchRegistrations,
+                  hintText: context.l10n.event_searchRegistrations,
                   prefixIcon: Icons.search_rounded,
                   textCapitalization: TextCapitalization.none,
                   onChanged: (value) => cubit.updateSearchQuery(value ?? ''),

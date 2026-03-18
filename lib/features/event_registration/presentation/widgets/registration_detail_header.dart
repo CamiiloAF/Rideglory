@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/event_registration/constants/registration_strings.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/shared/widgets/initials_avatar.dart';
 import 'package:rideglory/features/events/presentation/shared/widgets/registration_status_chip.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class RegistrationDetailHeader extends StatelessWidget {
   const RegistrationDetailHeader({super.key, required this.registration});
@@ -16,7 +16,7 @@ class RegistrationDetailHeader extends StatelessWidget {
     final colorScheme = context.colorScheme;
     final textTheme = context.textTheme;
     final dateText = registration.createdDate != null
-        ? '${RegistrationStrings.appliedOnPrefix}${DateFormat('d MMM yyyy', 'es').format(registration.createdDate!)}'
+        ? '${context.l10n.registration_appliedOnPrefix}${DateFormat('d MMM yyyy', 'es').format(registration.createdDate!)}'
         : '';
 
     return Padding(

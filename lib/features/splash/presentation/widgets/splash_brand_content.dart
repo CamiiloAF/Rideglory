@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/splash/constants/splash_strings.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class SplashBrandContent extends StatelessWidget {
   const SplashBrandContent({super.key});
@@ -32,13 +32,13 @@ class SplashBrandContent extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: SplashStrings.appNameRide,
+                    text: context.l10n.splash_appNameRide,
                     style: context.textTheme.displayLarge?.copyWith(
                       color: context.colorScheme.onSurface,
                     ),
                   ),
                   TextSpan(
-                    text: SplashStrings.appNameGlory,
+                    text: context.l10n.splash_appNameGlory,
                     style: context.textTheme.displayLarge?.copyWith(
                       fontStyle: FontStyle.italic,
                       color: context.colorScheme.primary,
@@ -49,7 +49,7 @@ class SplashBrandContent extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text(
-              SplashStrings.tagline,
+              context.l10n.splash_tagline,
               style: context.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w500,
                 color: context.colorScheme.onSurfaceVariant,

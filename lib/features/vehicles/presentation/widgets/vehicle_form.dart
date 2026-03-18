@@ -4,10 +4,9 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
 import 'package:rideglory/core/data/colombia_motos_brands_data.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
-import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_form_fields.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class VehicleForm extends StatelessWidget {
   const VehicleForm({
@@ -41,27 +40,27 @@ class VehicleForm extends StatelessWidget {
                 onClearTap: state.localImagePath != null
                     ? () => context.read<VehicleFormCubit>().clearLocalImage()
                     : null,
-                title: VehicleStrings.uploadPhoto,
-                hint: VehicleStrings.selectImage,
-                uploadButtonLabel: VehicleStrings.uploadPhoto,
+                title: context.l10n.vehicle_uploadPhoto,
+                hint: context.l10n.vehicle_selectImage,
+                uploadButtonLabel: context.l10n.vehicle_uploadPhoto,
                 showGenerateWithAI: false,
-                labelText: VehicleStrings.vehiclePhoto,
+                labelText: context.l10n.vehicle_vehiclePhoto,
               ),
               SizedBox(height: 24),
               AppTextField(
                 name: VehicleFormFields.name,
-                labelText: VehicleStrings.vehicleName,
+                labelText: context.l10n.vehicle_vehicleName,
                 isRequired: true,
-                hintText: VehicleStrings.vehicleNameHint,
+                hintText: context.l10n.vehicle_vehicleNameHint,
                 prefixIcon: Icons.label,
                 textInputAction: TextInputAction.next,
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(
-                    errorText: VehicleStrings.nameRequired,
+                    errorText: context.l10n.vehicle_nameRequired,
                   ),
                   FormBuilderValidators.minLength(
                     3,
-                    errorText: VehicleStrings.minCharacters,
+                    errorText: context.l10n.vehicle_minCharacters,
                   ),
                 ]),
               ),
@@ -72,8 +71,8 @@ class VehicleForm extends StatelessWidget {
                   Expanded(
                     child: AppAutocompleteField(
                       name: VehicleFormFields.brand,
-                      labelText: VehicleStrings.vehicleBrand,
-                      hintText: VehicleStrings.vehicleBrandHint,
+                      labelText: context.l10n.vehicle_vehicleBrand,
+                      hintText: context.l10n.vehicle_vehicleBrandHint,
                       suggestionsPrefixIcon: Icons.category,
                       suggestions: ColombiaMotosBrandsData.search,
                       validator: (value) {
@@ -84,7 +83,7 @@ class VehicleForm extends StatelessWidget {
                         final match = allowed.any((b) => b == value.trim());
                         return match
                             ? null
-                            : VehicleStrings.brandMustBeFromList;
+                            : context.l10n.vehicle_brandMustBeFromList;
                       },
                     ),
                   ),
@@ -92,24 +91,24 @@ class VehicleForm extends StatelessWidget {
                   Expanded(
                     child: AppTextField(
                       name: VehicleFormFields.year,
-                      labelText: VehicleStrings.vehicleYear,
-                      hintText: VehicleStrings.vehicleYearHint,
+                      labelText: context.l10n.vehicle_vehicleYear,
+                      hintText: context.l10n.vehicle_vehicleYearHint,
                       prefixIcon: Icons.calendar_today,
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.numeric(
-                          errorText: AppStrings.mustBeNumber,
+                          errorText: context.l10n.mustBeNumber,
                           checkNullOrEmpty: false,
                         ),
                         FormBuilderValidators.min(
                           1900,
-                          errorText: VehicleStrings.invalidYear,
+                          errorText: context.l10n.vehicle_invalidYear,
                           checkNullOrEmpty: false,
                         ),
                         FormBuilderValidators.max(
                           DateTime.now().year,
-                          errorText: VehicleStrings.invalidYear,
+                          errorText: context.l10n.vehicle_invalidYear,
                           checkNullOrEmpty: false,
                         ),
                       ]),
@@ -118,26 +117,26 @@ class VehicleForm extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 16),
-              const AppTextField(
+              AppTextField(
                 name: VehicleFormFields.model,
-                labelText: VehicleStrings.vehicleModel,
-                hintText: VehicleStrings.vehicleModelHint,
+                labelText: context.l10n.vehicle_vehicleModel,
+                hintText: context.l10n.vehicle_vehicleModelHint,
                 prefixIcon: Icons.style,
                 textInputAction: TextInputAction.next,
               ),
               SizedBox(height: 16),
 
-              const AppMileageField(
+              AppMileageField(
                 name: VehicleFormFields.currentMileage,
-                labelText: VehicleStrings.currentMileageLabel,
+                labelText: context.l10n.vehicle_currentMileageLabel,
                 textInputAction: TextInputAction.next,
               ),
               SizedBox(height: 16),
 
-              const AppTextField(
+              AppTextField(
                 name: VehicleFormFields.licensePlate,
-                labelText: VehicleStrings.vehiclePlate,
-                hintText: VehicleStrings.vehiclePlateHint,
+                labelText: context.l10n.vehicle_vehiclePlate,
+                hintText: context.l10n.vehicle_vehiclePlateHint,
                 prefixIcon: Icons.confirmation_number,
                 maxLength: 6,
                 textCapitalization: TextCapitalization.characters,
@@ -145,10 +144,10 @@ class VehicleForm extends StatelessWidget {
               ),
               SizedBox(height: 16),
 
-              const AppTextField(
+              AppTextField(
                 name: VehicleFormFields.vin,
-                labelText: VehicleStrings.vehicleVin,
-                hintText: VehicleStrings.vehicleVinHint,
+                labelText: context.l10n.vehicle_vehicleVin,
+                hintText: context.l10n.vehicle_vehicleVinHint,
                 prefixIcon: Icons.pin,
                 textInputAction: TextInputAction.done,
               ),
@@ -156,9 +155,9 @@ class VehicleForm extends StatelessWidget {
 
               AppDatePicker(
                 fieldName: VehicleFormFields.purchaseDate,
-                labelText: VehicleStrings.purchaseDate,
+                labelText: context.l10n.vehicle_purchaseDate,
                 lastDate: DateTime.now(),
-                hintText: VehicleStrings.purchaseDateHint,
+                hintText: context.l10n.vehicle_purchaseDateHint,
                 prefixIcon: Icon(Icons.calendar_today),
               ),
               SizedBox(height: 16),
@@ -171,8 +170,8 @@ class VehicleForm extends StatelessWidget {
                     return AppButton(
                       onPressed: isLoading ? null : onSave,
                       label: isEditing
-                          ? VehicleStrings.editVehicle
-                          : VehicleStrings.saveVehicle,
+                          ? context.l10n.vehicle_editVehicle
+                          : context.l10n.vehicle_saveVehicle,
                     );
                   },
                 ),

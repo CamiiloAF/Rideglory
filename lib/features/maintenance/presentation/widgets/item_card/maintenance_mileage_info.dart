@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/item_card/info_chip_tooltip.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/item_card/maintenance_progress_bar.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MaintenanceMileageInfo extends StatelessWidget {
   final MaintenanceModel maintenance;
@@ -41,7 +41,7 @@ class MaintenanceMileageInfo extends StatelessWidget {
             children: [
               InfoChip(
                 icon: Icons.build_rounded,
-                label: MaintenanceStrings.maintenance,
+                label: context.l10n.maintenance_maintenance,
                 value: maintenance.maintanceMileage.toStringAsFixed(0),
                 color: const Color(0xFF64748B),
               ),
@@ -53,7 +53,7 @@ class MaintenanceMileageInfo extends StatelessWidget {
                   children: [
                     InfoChip(
                       icon: Icons.flag_rounded,
-                      label: MaintenanceStrings.next,
+                      label: context.l10n.maintenance_next,
                       value:
                           maintenance.nextMaintenanceMileage!.toStringAsFixed(0),
                       color: typeColor,
@@ -76,11 +76,11 @@ class MaintenanceMileageInfo extends StatelessWidget {
             SizedBox(height: 8),
             Text(
               remainingDistance != null
-                  ? MaintenanceStrings.remainingDistance(
+                  ? context.l10n.maintenance_remainingDistance(
                       remainingDistance.toStringAsFixed(0),
                       'km', // TODO: Add distance unit
                     )
-                  : MaintenanceStrings.calculateRemainingDistance,
+                  : context.l10n.maintenance_calculateRemainingDistance,
               style: context.labelSmall?.copyWith(
                 color: remainingDistance != null && remainingDistance <= 0
                     ? const Color(0xFFEF4444)

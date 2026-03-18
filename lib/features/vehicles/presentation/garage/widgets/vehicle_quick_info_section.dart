@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_info_card.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class VehicleQuickInfoSection extends StatelessWidget {
   const VehicleQuickInfoSection({super.key, required this.vehicle});
@@ -16,7 +16,7 @@ class VehicleQuickInfoSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          VehicleStrings.quickInfo.toUpperCase(),
+          context.l10n.vehicle_quickInfo.toUpperCase(),
           style: context.labelMedium?.copyWith(
             fontWeight: FontWeight.bold,
             letterSpacing: 1.5,
@@ -29,7 +29,7 @@ class VehicleQuickInfoSection extends StatelessWidget {
             Expanded(
               child: VehicleInfoCard(
                 icon: Icons.subtitles_outlined, // License Plate icon equivalent
-                label: VehicleStrings.vehiclePlate,
+                label: context.l10n.vehicle_vehiclePlate,
                 value: vehicle.licensePlate ?? '-',
               ),
             ),
@@ -37,7 +37,7 @@ class VehicleQuickInfoSection extends StatelessWidget {
             Expanded(
               child: VehicleInfoCard(
                 icon: Icons.speed, // Mileage icon equivalent
-                label: VehicleStrings.currentMileageLabel,
+                label: context.l10n.vehicle_currentMileageLabel,
                 value:
                     '${NumberFormat('#,###').format(vehicle.currentMileage)} km',
               ),

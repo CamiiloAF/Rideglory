@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_summary_header.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/vehicle_selector_chip.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/maintenances_cubit.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MaintenancesHeaderView extends StatelessWidget {
   final Future<void> Function() onFilterPressed;
@@ -40,7 +40,7 @@ class MaintenancesHeaderView extends StatelessWidget {
               onChanged: onSearchChanged,
               style: context.bodyMedium?.copyWith(color: Colors.white),
               decoration: InputDecoration(
-                hintText: MaintenanceStrings.searchMaintenances,
+                hintText: context.l10n.maintenance_searchMaintenances,
                 hintStyle: context.bodyMedium?.copyWith(
                   color: context.colorScheme.onSurfaceVariant,
                 ),

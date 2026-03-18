@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class AttendeeProcessedItem extends StatelessWidget {
   final EventRegistrationModel registration;
@@ -35,8 +35,8 @@ class AttendeeProcessedItem extends StatelessWidget {
     final isApproved =
         registration.status == RegistrationStatus.approved;
     final statusLabel = isApproved
-        ? EventStrings.approvedBadge
-        : EventStrings.rejectedBadge;
+        ? context.l10n.event_approvedBadge
+        : context.l10n.event_rejectedBadge;
     final statusColor =
         isApproved ? context.appColors.success : colorScheme.error;
 

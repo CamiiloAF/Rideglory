@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
-import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class VehicleCard extends StatelessWidget {
   final VehicleModel vehicle;
@@ -64,7 +62,7 @@ class VehicleCard extends StatelessWidget {
                                 errorBuilder: (_, _, _) =>
                                     _buildPlaceholderIcon(context),
                               )
-x                            : _buildPlaceholderIcon(context),
+                            : _buildPlaceholderIcon(context),
                       ),
                     ),
                     SizedBox(width: 14),
@@ -90,7 +88,9 @@ x                            : _buildPlaceholderIcon(context),
                                     vertical: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: context.colorScheme.surfaceContainerHighest,
+                                    color: context
+                                        .colorScheme
+                                        .surfaceContainerHighest,
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Row(
@@ -144,7 +144,9 @@ x                            : _buildPlaceholderIcon(context),
                         color: context.colorScheme.surfaceContainerHighest,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
-                          side: BorderSide(color: context.colorScheme.outlineVariant),
+                          side: BorderSide(
+                            color: context.colorScheme.outlineVariant,
+                          ),
                         ),
                         itemBuilder: (context) => [
                           PopupMenuItem(
@@ -158,7 +160,7 @@ x                            : _buildPlaceholderIcon(context),
                                 ),
                                 SizedBox(width: 12),
                                 Text(
-                                  AppStrings.edit,
+                                  context.l10n.edit,
                                   style: TextStyle(
                                     color: context.colorScheme.onSurface,
                                   ),
@@ -178,7 +180,9 @@ x                            : _buildPlaceholderIcon(context),
                                   ),
                                   SizedBox(width: 12),
                                   Text(
-                                    MaintenanceStrings.addMaintenanceAction,
+                                    context
+                                        .l10n
+                                        .maintenance_addMaintenanceAction,
                                     style: TextStyle(
                                       color: context.colorScheme.onSurface,
                                     ),
@@ -198,7 +202,7 @@ x                            : _buildPlaceholderIcon(context),
                                   ),
                                   SizedBox(width: 12),
                                   Text(
-                                    VehicleStrings.archiveVehicle,
+                                    context.l10n.vehicle_archiveVehicle,
                                     style: TextStyle(
                                       color: context.colorScheme.onSurface,
                                     ),
@@ -218,7 +222,7 @@ x                            : _buildPlaceholderIcon(context),
                                   ),
                                   SizedBox(width: 12),
                                   Text(
-                                    VehicleStrings.unarchiveVehicle,
+                                    context.l10n.vehicle_unarchiveVehicle,
                                     style: TextStyle(
                                       color: context.colorScheme.onSurface,
                                     ),
@@ -237,7 +241,7 @@ x                            : _buildPlaceholderIcon(context),
                                 ),
                                 SizedBox(width: 12),
                                 Text(
-                                  AppStrings.delete,
+                                  context.l10n.delete,
                                   style: TextStyle(
                                     color: context.colorScheme.error,
                                   ),
@@ -272,8 +276,7 @@ x                            : _buildPlaceholderIcon(context),
                   children: [
                     InfoChip(
                       icon: Icons.speed_rounded,
-                      label:
-                          '${vehicle.currentMileage} km',
+                      label: '${vehicle.currentMileage} km',
                       color: context.colorScheme.primary,
                     ),
                     if (vehicle.year != null)

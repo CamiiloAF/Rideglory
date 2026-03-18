@@ -3,10 +3,10 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/event_form_section_card.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventFormDifficultySection extends StatelessWidget {
   const EventFormDifficultySection({super.key});
@@ -17,14 +17,14 @@ class EventFormDifficultySection extends StatelessWidget {
 
     return EventFormSectionCard(
       icon: Icons.local_fire_department,
-      title: EventStrings.rideDifficulty,
+      title: context.l10n.event_rideDifficulty,
       child: Padding(
         padding: const EdgeInsets.only(top: 16),
         child: FormBuilderField<EventDifficulty>(
           name: EventFormFields.difficulty,
 
           validator: FormBuilderValidators.required(
-            errorText: EventStrings.difficultyRequired,
+            errorText: context.l10n.event_difficultyRequired,
           ),
           builder: (field) {
             final selected = field.value ?? EventDifficulty.one;
@@ -56,7 +56,9 @@ class EventFormDifficultySection extends StatelessWidget {
                     SizedBox(width: 12),
                     Flexible(
                       child: Text(
-                        EventStrings.difficultyLevel(selected.value),
+                        context.l10n.event_difficultyLevel(
+                          selected.value.toString(),
+                        ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(

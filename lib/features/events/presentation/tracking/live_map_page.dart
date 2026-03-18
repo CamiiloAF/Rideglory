@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/permissions/location_permission_handler.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
-import 'package:rideglory/features/events/presentation/tracking/constants/map_strings.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_chip.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/live_map_widget.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/map_zoom_controls.dart';
@@ -17,6 +15,7 @@ import 'package:rideglory/features/events/presentation/tracking/widgets/rider_te
 import 'package:rideglory/features/events/presentation/tracking/widgets/sos_button.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class LiveMapPage extends StatefulWidget {
   const LiveMapPage({super.key, required this.event});
@@ -53,8 +52,8 @@ class _LiveMapPageState extends State<LiveMapPage> {
       if (!mounted) return;
       await InfoDialog.show(
         context: context,
-        title: AppStrings.locationPermissionTitle,
-        content: AppStrings.locationPermissionMapRequiredMessage,
+        title: context.l10n.locationPermissionTitle,
+        content: context.l10n.locationPermissionMapRequiredMessage,
         type: DialogType.warning,
       );
       if (mounted) context.pop();
@@ -136,7 +135,7 @@ class _LiveMapPageState extends State<LiveMapPage> {
                   left: 16,
                   top: 16,
                   child: EventDetailChip(
-                    label: '${MapStrings.activeRidersChip} 5',
+                    label: '${context.l10n.map_activeRidersChip} 5',
                     color: context.appColors.success,
                     isSolid: true,
                   ),
@@ -166,7 +165,7 @@ class _LiveMapPageState extends State<LiveMapPage> {
                 Positioned(
                   right: 16,
                   bottom: 120,
-                  child: SosButton(label: MapStrings.sos, onPressed: () {}),
+                  child: SosButton(label: context.l10n.map_sos, onPressed: () {}),
                 ),
                 Positioned(
                   left: 0,

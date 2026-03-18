@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class CancelRegistrationDialog {
   /// Muestra el diálogo de confirmación para cancelar una inscripción
@@ -17,10 +16,10 @@ class CancelRegistrationDialog {
 
     await ConfirmationDialog.show(
       context: context,
-      title: EventStrings.cancelRegistrationTitle,
-      content: EventStrings.cancelRegistrationMessage,
+      title: context.l10n.event_cancelRegistrationTitle,
+      content: context.l10n.event_cancelRegistrationMessage,
       dialogType: DialogType.warning,
-      confirmLabel: AppStrings.accept,
+      confirmLabel: context.l10n.accept,
       confirmType: DialogActionType.danger,
       onConfirm: () {
         confirmed = true;
@@ -33,8 +32,8 @@ class CancelRegistrationDialog {
 
     if (success && showSuccessMessage && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(EventStrings.cancelRegistrationSuccess),
+        SnackBar(
+          content: Text(context.l10n.event_cancelRegistrationSuccess),
           backgroundColor: Colors.green,
         ),
       );
@@ -52,10 +51,10 @@ class CancelRegistrationDialog {
   }) async {
     await ConfirmationDialog.show(
       context: context,
-      title: EventStrings.cancelRegistrationTitle,
-      content: EventStrings.cancelRegistrationMessage,
+      title: context.l10n.event_cancelRegistrationTitle,
+      content: context.l10n.event_cancelRegistrationMessage,
       dialogType: DialogType.warning,
-      confirmLabel: AppStrings.accept,
+      confirmLabel: context.l10n.accept,
       confirmType: DialogActionType.danger,
       onConfirm: onConfirm,
     );

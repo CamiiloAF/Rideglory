@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventDetailOrganizerRow extends StatelessWidget {
   const EventDetailOrganizerRow({
@@ -41,7 +41,7 @@ class EventDetailOrganizerRow extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
               children: [
-                const TextSpan(text: '${EventStrings.organizedBy} '),
+                TextSpan(text: '${context.l10n.event_organizedBy} '),
                 TextSpan(
                   text: organizerName,
                 ),

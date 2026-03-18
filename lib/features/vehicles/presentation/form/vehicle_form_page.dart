@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_form_fields.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
@@ -13,6 +11,7 @@ import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubi
 
 import '../widgets/vehicle_form.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class VehicleFormPage extends StatelessWidget {
   final VehicleModel? vehicle;
@@ -50,10 +49,10 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
     if (state.isEditing && state.vehicle?.isArchived == true) {
       await ConfirmationDialog.show(
         context: context,
-        title: VehicleStrings.archivedVehicle,
-        content: VehicleStrings.archivedVehicleMessage,
-        cancelLabel: AppStrings.cancel,
-        confirmLabel: AppStrings.continue_,
+        title: context.l10n.vehicle_archivedVehicle,
+        content: context.l10n.vehicle_archivedVehicleMessage,
+        cancelLabel: context.l10n.cancel,
+        confirmLabel: context.l10n.continue_,
         confirmType: DialogActionType.primary,
         dialogType: DialogType.confirmation,
         onCancel: (dialogContext) {
@@ -109,8 +108,8 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
           SnackBar(
             content: Text(
               state.isEditing
-                  ? AppStrings.updatedSuccessfully
-                  : AppStrings.savedSuccessfully,
+                  ? context.l10n.updatedSuccessfully
+                  : context.l10n.savedSuccessfully,
             ),
             backgroundColor: Colors.green,
           ),
@@ -134,8 +133,8 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
       backgroundColor: context.colorScheme.surface,
       appBar: AppAppBar(
         title: isEditing
-            ? VehicleStrings.editVehicle
-            : VehicleStrings.addVehicle,
+            ? context.l10n.vehicle_editVehicle
+            : context.l10n.vehicle_addVehicle,
       ),
       body: BlocListener<VehicleFormCubit, VehicleFormState>(
         listener: _listener,

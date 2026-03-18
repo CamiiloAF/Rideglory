@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_form_fields.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/form/cubit/maintenance_form_cubit.dart';
@@ -12,6 +11,7 @@ import 'package:rideglory/features/maintenance/presentation/form/widgets/save_ma
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MaintenanceFormContent extends StatefulWidget {
   const MaintenanceFormContent({super.key});
@@ -146,17 +146,17 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
             // 1. Nombre del Mantenimiento
             AppTextField(
               name: MaintenanceFormFields.name,
-              labelText: MaintenanceStrings.maintenanceName,
+              labelText: context.l10n.maintenance_maintenanceName,
               isRequired: true,
               hintText: 'Ej: Cambio de aceite sintético',
               textInputAction: TextInputAction.next,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.required(
-                  errorText: MaintenanceStrings.nameRequired,
+                  errorText: context.l10n.maintenance_nameRequired,
                 ),
                 FormBuilderValidators.minLength(
                   3,
-                  errorText: MaintenanceStrings.minCharacters,
+                  errorText: context.l10n.maintenance_minCharacters,
                 ),
               ]),
             ),
@@ -165,10 +165,10 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
             // 2. Tipo de Mantenimiento
             AppDropdown<MaintenanceType>(
               name: MaintenanceFormFields.type,
-              labelText: MaintenanceStrings.maintenanceType,
+              labelText: context.l10n.maintenance_maintenanceType,
               isRequired: true,
               validator: FormBuilderValidators.required(
-                errorText: MaintenanceStrings.typeRequired,
+                errorText: context.l10n.maintenance_typeRequired,
               ),
               items: MaintenanceType.values
                   .map(
@@ -182,10 +182,10 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
             // 3. Vehículo
             AppDropdown<String>(
               name: MaintenanceFormFields.vehicleId,
-              labelText: MaintenanceStrings.vehicle,
+              labelText: context.l10n.maintenance_vehicle,
               isRequired: true,
               validator: FormBuilderValidators.required(
-                errorText: MaintenanceStrings.selectVehicle,
+                errorText: context.l10n.maintenance_selectVehicle,
               ),
               items: context
                   .read<VehicleCubit>()
@@ -216,24 +216,24 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
             AppDatePicker(
               fieldName: MaintenanceFormFields.date,
               lastDate: DateTime.now(),
-              labelText: MaintenanceStrings.maintenanceDateLabel,
+              labelText: context.l10n.maintenance_maintenanceDateLabel,
               isRequired: true,
               hintText: 'mm/dd/yyyy',
             ),
             SizedBox(height: 20),
 
             // 5. Kilometraje Actual
-            const AppMileageField(
+            AppMileageField(
               name: MaintenanceFormFields.currentMileage,
-              labelText: MaintenanceStrings.maintenanceMileage,
+              labelText: context.l10n.maintenance_maintenanceMileage,
               textInputAction: TextInputAction.next,
             ),
             SizedBox(height: 20),
 
             // 6. Costo del Mantenimiento
-            const AppTextField(
+            AppTextField(
               name: MaintenanceFormFields.cost,
-              labelText: MaintenanceStrings.maintenanceCost,
+              labelText: context.l10n.maintenance_maintenanceCost,
               prefixIcon: Icons.attach_money,
               hintText: '0.00',
               keyboardType: TextInputType.numberWithOptions(
@@ -244,9 +244,9 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
             SizedBox(height: 20),
 
             // 7. Notas / Observaciones
-            const AppTextField(
+            AppTextField(
               name: MaintenanceFormFields.notes,
-              labelText: MaintenanceStrings.maintenanceNotes,
+              labelText: context.l10n.maintenance_maintenanceNotes,
               hintText: 'Detalles adicionales sobre el trabajo realizado...',
               maxLines: 4,
               minLines: 3,
@@ -270,7 +270,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    MaintenanceStrings.alertsConfiguration,
+                    context.l10n.maintenance_alertsConfiguration,
                     style: context.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -288,7 +288,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                       SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          MaintenanceStrings.dateAlert,
+                          context.l10n.maintenance_dateAlert,
                           style: context.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -309,7 +309,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                   SizedBox(height: 16),
                   AppDatePicker(
                     fieldName: MaintenanceFormFields.nextMaintenanceDate,
-                    labelText: MaintenanceStrings.nextMaintenanceDate,
+                    labelText: context.l10n.maintenance_nextMaintenanceDate,
                     firstDate: DateTime.now(),
                     hintText: 'mm/dd/yyyy',
                   ),
@@ -331,7 +331,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                       SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          MaintenanceStrings.mileageAlert,
+                          context.l10n.maintenance_mileageAlert,
                           style: context.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -350,9 +350,9 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                     ],
                   ),
                   SizedBox(height: 16),
-                  const AppMileageField(
+                  AppMileageField(
                     name: MaintenanceFormFields.nextMaintenanceMileage,
-                    labelText: MaintenanceStrings.nextMaintenanceMileageLabel,
+                    labelText: context.l10n.maintenance_nextMaintenanceMileageLabel,
                     isRequired: false,
                     hintText: 'Ej: 15000',
                   ),

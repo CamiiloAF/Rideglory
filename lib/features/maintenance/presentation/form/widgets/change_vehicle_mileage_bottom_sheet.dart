@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class ChangeVehicleMileageBottomSheet extends StatelessWidget {
   const ChangeVehicleMileageBottomSheet({
@@ -39,14 +39,14 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                   Icon(Icons.speed, size: 28),
                   SizedBox(width: 8),
                   Text(
-                    MaintenanceStrings.updateMileage,
+                    context.l10n.maintenance_updateMileage,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],
               ),
               SizedBox(height: 12),
               Text(
-                MaintenanceStrings.mileageGreaterThanCurrent,
+                context.l10n.maintenance_mileageGreaterThanCurrent,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               SizedBox(height: 16),
@@ -62,7 +62,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          MaintenanceStrings.current,
+                          context.l10n.maintenance_current,
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         Text(
@@ -77,7 +77,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          MaintenanceStrings.maintenanceLabel,
+                          context.l10n.maintenance_maintenanceLabel,
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         Text(
@@ -95,7 +95,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
               ),
               SizedBox(height: 16),
               Text(
-                MaintenanceStrings.updateVehicleMileageQuestion,
+                context.l10n.maintenance_updateVehicleMileageQuestion,
                 style: Theme.of(
                   context,
                 ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
@@ -105,7 +105,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                 children: [
                   Expanded(
                     child: AppButton(
-                      label: MaintenanceStrings.saveOnly,
+                      label: context.l10n.maintenance_saveOnly,
                       variant: AppButtonVariant.primary,
                       style: AppButtonStyle.outlined,
                       onPressed: () {
@@ -117,7 +117,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                   SizedBox(width: 12),
                   Expanded(
                     child: AppButton(
-                      label: MaintenanceStrings.update,
+                      label: context.l10n.maintenance_update,
                       icon: Icons.check,
                       variant: AppButtonVariant.primary,
                       onPressed: () {

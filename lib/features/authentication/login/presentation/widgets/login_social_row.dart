@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
-import 'package:rideglory/features/authentication/constants/auth_strings.dart';
 import 'package:rideglory/features/authentication/login/presentation/widgets/login_social_button.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class LoginSocialRow extends StatelessWidget {
   const LoginSocialRow({super.key});
@@ -16,7 +16,7 @@ class LoginSocialRow extends StatelessWidget {
           children: [
             Expanded(
               child: LoginSocialButton(
-                label: AuthStrings.googleLabel,
+                label: context.l10n.auth_googleLabel,
                 icon: Icons.g_mobiledata_rounded,
                 onPressed: isLoading
                     ? null
@@ -24,9 +24,9 @@ class LoginSocialRow extends StatelessWidget {
               ),
             ),
             SizedBox(width: 12),
-            const Expanded(
+            Expanded(
               child: LoginSocialButton(
-                label: AuthStrings.appleLabel,
+                label: context.l10n.auth_appleLabel,
                 icon: Icons.apple,
                 onPressed: null, // TODO: implement Apple sign-in
               ),

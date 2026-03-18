@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/services/auth_service.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/event_card.dart';
@@ -12,6 +11,7 @@ import 'package:rideglory/features/events/presentation/list/widgets/event_filter
 import 'package:rideglory/features/events/presentation/list/widgets/event_type_filter_chips.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventsDataView extends StatelessWidget {
   final List<EventModel> events;
@@ -30,7 +30,7 @@ class EventsDataView extends StatelessWidget {
             children: [
               Expanded(
                 child: AppSearchBar(
-                  hintText: EventStrings.searchEvents,
+                  hintText: context.l10n.event_searchEvents,
                   onSearchChanged: (query) =>
                       context.read<EventsCubit>().updateSearchQuery(query),
                   padding: EdgeInsets.zero,

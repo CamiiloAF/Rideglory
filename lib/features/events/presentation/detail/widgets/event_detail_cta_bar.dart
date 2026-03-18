@@ -2,10 +2,10 @@ import 'dart:math' show max;
 
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventDetailCTABar extends StatelessWidget {
   const EventDetailCTABar({
@@ -51,7 +51,7 @@ class EventDetailCTABar extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        EventStrings.totalParticipation,
+                        context.l10n.event_totalParticipation,
                         style: TextStyle(
                           color: context.colorScheme.onSurfaceVariant,
                           fontSize: 12,
@@ -60,7 +60,7 @@ class EventDetailCTABar extends StatelessWidget {
                       SizedBox(height: 2),
                       Text(
                         event.isFree
-                            ? EventStrings.free
+                            ? context.l10n.event_free
                             : '${(event.price ?? 0).toStringAsFixed(2)}€',
                         style: TextStyle(
                           color: context.colorScheme.onSurface,
@@ -75,7 +75,7 @@ class EventDetailCTABar extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: AppButton(
-                    label: EventStrings.registerMe,
+                    label: context.l10n.event_registerMe,
                     isFullWidth: true,
                     onPressed: onRegister,
                   ),

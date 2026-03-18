@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/attendees/attendees_cubit.dart';
 import 'package:rideglory/features/events/presentation/attendees/widgets/attendees_data_view.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class AttendeesView extends StatelessWidget {
   final EventModel event;
@@ -21,7 +20,7 @@ class AttendeesView extends StatelessWidget {
     final colorScheme = context.colorScheme;
     return Scaffold(
       appBar: AppAppBar(
-        title: EventStrings.participants,
+        title: context.l10n.event_participants,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => context.pop(),
@@ -46,7 +45,7 @@ class AttendeesView extends StatelessWidget {
                   ),
                   SizedBox(height: 16),
                   Text(
-                    EventStrings.noAttendees,
+                    context.l10n.event_noAttendees,
                     style: context.textTheme.titleMedium
                         ?.copyWith(color: colorScheme.onSurface),
                   ),
@@ -67,7 +66,7 @@ class AttendeesView extends StatelessWidget {
                     ),
                     SizedBox(height: 16),
                     AppButton(
-                      label: AppStrings.retry,
+                      label: context.l10n.retry,
                       onPressed: () => context
                           .read<AttendeesCubit>()
                           .fetchAttendees(event.id!),

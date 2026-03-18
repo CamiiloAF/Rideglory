@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
 import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class InfoDialog {
   static Future<void> show({
     required BuildContext context,
     required String title,
     required String content,
-    String buttonLabel = AppStrings.accept,
+    String? buttonLabel,
     DialogType type = DialogType.information,
   }) {
+    final resolvedButtonLabel = buttonLabel ?? context.l10n.accept;
     return showDialog<void>(
       context: context,
       builder: (dialogContext) => Dialog(
@@ -58,7 +59,7 @@ class InfoDialog {
                   vertical: 16,
                 ),
                 child: AppButton(
-                  label: buttonLabel,
+                  label: resolvedButtonLabel,
                   onPressed: () => Navigator.of(dialogContext).pop(),
                   variant: AppButtonVariant.primary,
                   padding: const EdgeInsets.symmetric(vertical: 12),

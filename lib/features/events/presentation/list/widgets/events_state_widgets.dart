@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 // TODO mejorar widgets y reutilizar los existentes
 
@@ -36,7 +36,7 @@ class EventsErrorWidget extends StatelessWidget {
           ),
           SizedBox(height: 16),
           Text(
-            EventStrings.errorLoadingEvents,
+            context.l10n.event_errorLoadingEvents,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           SizedBox(height: 8),

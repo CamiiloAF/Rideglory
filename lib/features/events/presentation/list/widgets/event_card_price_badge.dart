@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventCardPriceBadge extends StatelessWidget {
   final bool isFree;
@@ -26,7 +26,7 @@ class EventCardPriceBadge extends StatelessWidget {
       ),
       child: Text(
         isFree
-            ? EventStrings.eventCardPriceFree
+            ? context.l10n.event_eventCardPriceFree
             : '\$${price?.toStringAsFixed(0) ?? '0'}',
         style: context.labelSmall?.copyWith(
           color: context.colorScheme.onPrimary,

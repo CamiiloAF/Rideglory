@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MaintenancesErrorWidget extends StatelessWidget {
   final String error;
@@ -16,7 +16,7 @@ class MaintenancesErrorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ContainerPullToRefresh(
       onRefresh: onRefresh,
-      child: Center(child: Text(AppStrings.errorMessage(error.toString()))),
+      child: Center(child: Text(context.l10n.errorMessage(error.toString()))),
     );
   }
 }

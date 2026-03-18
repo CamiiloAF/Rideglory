@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class VehicleDetailHeader extends StatelessWidget {
   const VehicleDetailHeader({
@@ -68,7 +68,7 @@ class VehicleDetailHeader extends StatelessWidget {
 
                     SizedBox(width: 6),
                     Text(
-                      VehicleStrings.mainVehicle,
+                      context.l10n.vehicle_mainVehicle,
                       style: context.bodyMedium?.copyWith(
                         color: Colors.white.withValues(alpha: 0.8),
                       ),

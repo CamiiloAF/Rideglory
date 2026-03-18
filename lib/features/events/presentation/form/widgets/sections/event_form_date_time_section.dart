@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventFormDateTimeSection extends StatefulWidget {
   const EventFormDateTimeSection({super.key});
@@ -32,7 +32,7 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
       children: [
         FormBuilderSwitch(
           name: EventFormFields.isMultiDay,
-          title: const Text(EventStrings.isMultiDay),
+          title: Text(context.l10n.event_isMultiDay),
           decoration: const InputDecoration(
             contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           ),
@@ -50,8 +50,8 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const TextFieldLabel(
-                labelText: EventStrings.dateRange,
+              TextFieldLabel(
+                labelText: context.l10n.event_dateRange,
                 isRequired: true,
               ),
               FormBuilderDateRangePicker(
@@ -61,12 +61,12 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
                 decoration: const InputDecoration(border: OutlineInputBorder()),
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(
-                    errorText: EventStrings.dateRangeRequired,
+                    errorText: context.l10n.event_dateRangeRequired,
                   ),
                   (value) {
                     if (value != null &&
                         value.start.isAtSameMomentAs(value.end)) {
-                      return EventStrings.startDateMustBeBeforeEndDate;
+                      return context.l10n.event_startDateMustBeBeforeEndDate;
                     }
                     return null;
                   },
@@ -78,14 +78,14 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
           FormBuilderField<DateTimeRange>(
             name: EventFormFields.dateRange,
             validator: FormBuilderValidators.required(
-              errorText: EventStrings.startDateRequired,
+              errorText: context.l10n.event_startDateRequired,
             ),
             builder: (field) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const TextFieldLabel(
-                    labelText: EventStrings.startDate,
+                  TextFieldLabel(
+                    labelText: context.l10n.event_startDate,
                     isRequired: true,
                   ),
                   FormBuilderDateTimePicker(
@@ -108,9 +108,9 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
             },
           ),
         SizedBox(height: 16),
-        const AppDatePicker(
+        AppDatePicker(
           fieldName: EventFormFields.meetingTime,
-          labelText: EventStrings.meetingTime,
+          labelText: context.l10n.event_meetingTime,
           inputType: InputType.time,
         ),
       ],

@@ -3,14 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/permissions/location_permission_handler.dart';
 import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
-import 'package:rideglory/features/event_registration/constants/registration_strings.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/delete/cubit/event_delete_cubit.dart';
@@ -24,6 +21,7 @@ import 'package:rideglory/features/event_registration/presentation/registration_
 import 'package:rideglory/features/events/presentation/shared/dialogs/cancel_registration_dialog.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventDetailView extends StatefulWidget {
   const EventDetailView({
@@ -69,8 +67,8 @@ class EventDetailViewState extends State<EventDetailView> {
                 state.whenOrNull(
                   data: (_) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(EventStrings.eventDeletedSuccess),
+                      SnackBar(
+                        content: Text(context.l10n.event_eventDeletedSuccess),
                         backgroundColor: Colors.green,
                       ),
                     );
@@ -135,34 +133,34 @@ class EventDetailViewState extends State<EventDetailView> {
                         }
                       },
                       itemBuilder: (context) => [
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'edit',
                           child: Row(
                             children: [
                               Icon(Icons.edit_outlined),
                               SizedBox(width: 12),
-                              Text(EventStrings.edit),
+                              Text(context.l10n.event_edit),
                             ],
                           ),
                         ),
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'attendees',
                           child: Row(
                             children: [
                               Icon(Icons.people_outline),
                               SizedBox(width: 12),
-                              Text(EventStrings.viewAttendees),
+                              Text(context.l10n.event_viewAttendees),
                             ],
                           ),
                         ),
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 'delete',
                           child: Row(
                             children: [
                               Icon(Icons.delete_outline, color: Colors.red),
                               SizedBox(width: 12),
                               Text(
-                                EventStrings.delete,
+                                context.l10n.event_delete,
                                 style: TextStyle(color: Colors.red),
                               ),
                             ],
@@ -175,7 +173,7 @@ class EventDetailViewState extends State<EventDetailView> {
                   centerTitle: true,
                   titlePadding: const EdgeInsets.only(bottom: 12),
                   title: Text(
-                    EventStrings.eventDetail,
+                    context.l10n.event_eventDetail,
                     style: TextStyle(
                       color: context.colorScheme.onSurface,
                       fontSize: 18,
@@ -288,10 +286,10 @@ class EventDetailViewState extends State<EventDetailView> {
 
     final openSettings = await ConfirmationDialog.show(
       context: context,
-      title: AppStrings.locationPermissionTitle,
-      content: AppStrings.locationPermissionMapRequiredMessage,
-      cancelLabel: AppStrings.continue_,
-      confirmLabel: AppStrings.openSettings,
+      title: context.l10n.locationPermissionTitle,
+      content: context.l10n.locationPermissionMapRequiredMessage,
+      cancelLabel: context.l10n.continue_,
+      confirmLabel: context.l10n.openSettings,
       dialogType: DialogType.warning,
       isDismissible: true,
     );
@@ -326,7 +324,7 @@ class EventDetailViewState extends State<EventDetailView> {
             children: [
               ListTile(
                 leading: Icon(Icons.info_outline_rounded),
-                title: const Text(RegistrationStrings.viewDetail),
+                title: Text(context.l10n.registration_viewDetail),
                 onTap: () {
                   Navigator.of(sheetContext).pop();
                   context.pushNamed(
@@ -337,7 +335,7 @@ class EventDetailViewState extends State<EventDetailView> {
               ),
               ListTile(
                 leading: Icon(Icons.cancel_outlined),
-                title: const Text(EventStrings.cancelRegistration),
+                title: Text(context.l10n.event_cancelRegistration),
                 onTap: () {
                   Navigator.of(sheetContext).pop();
                   confirmCancelRegistration(context, registration);
@@ -364,8 +362,8 @@ class EventDetailViewState extends State<EventDetailView> {
   Future<void> confirmDelete(BuildContext context) async {
     await ConfirmationDialog.show(
       context: context,
-      title: EventStrings.deleteEvent,
-      content: EventStrings.deleteEventMessage,
+      title: context.l10n.event_deleteEvent,
+      content: context.l10n.event_deleteEventMessage,
       dialogType: DialogType.warning,
       confirmLabel: 'Eliminar',
       confirmType: DialogActionType.danger,

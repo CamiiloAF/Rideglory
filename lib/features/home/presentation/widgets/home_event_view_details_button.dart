@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/features/home/constants/home_strings.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class HomeEventViewDetailsButton extends StatelessWidget {
   const HomeEventViewDetailsButton({super.key});
@@ -16,7 +16,7 @@ class HomeEventViewDetailsButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            HomeStrings.viewDetails,
+            context.l10n.home_viewDetails,
             style: TextStyle(
               color: Colors.black87,
               fontSize: 11,

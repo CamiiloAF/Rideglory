@@ -4,8 +4,8 @@ import 'package:rideglory/core/data/colombia_motos_brands_data.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/event_form_section_card.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventFormMultiBrandSection extends StatelessWidget {
   const EventFormMultiBrandSection({super.key});
@@ -18,14 +18,14 @@ class EventFormMultiBrandSection extends StatelessWidget {
         final isMultiBrand = isField.value ?? true;
         return EventFormSectionCard(
           icon: Icons.two_wheeler,
-          title: EventStrings.multiBrandLabel,
+          title: context.l10n.event_multiBrandLabel,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Flexible(child: Text(EventStrings.multiBrandAllowAny)),
+                  Flexible(child: Text(context.l10n.event_multiBrandAllowAny)),
                   Switch(
                     value: isMultiBrand,
                     onChanged: (v) => isField.didChange(v),
@@ -37,7 +37,7 @@ class EventFormMultiBrandSection extends StatelessWidget {
                 SizedBox(height: 16),
 
                 Text(
-                  EventStrings.selectBrands.toUpperCase(),
+                  context.l10n.event_selectBrands.toUpperCase(),
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
                     color: context.colorScheme.primary,
                     fontWeight: FontWeight.w600,
@@ -186,7 +186,7 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
             controller: _controller,
             onChanged: _onChanged,
             decoration: InputDecoration(
-              hintText: EventStrings.searchBrandsPlaceholder,
+              hintText: context.l10n.event_searchBrandsPlaceholder,
               suffixIcon: Icon(Icons.search, color: context.appColors.inputIcon),
             ),
           ),

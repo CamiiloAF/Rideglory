@@ -5,7 +5,7 @@ import 'package:rideglory/features/maintenance/domain/model/maintenance_model.da
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/maintenances_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/fab_option.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class ExpandableFab extends StatefulWidget {
   const ExpandableFab({super.key});
@@ -80,7 +80,7 @@ class _ExpandableFabState extends State<ExpandableFab>
                         ).animate(_animation),
                         child: FabOption(
                           icon: Icons.build,
-                          label: MaintenanceStrings.addMaintenance_,
+                          label: context.l10n.maintenance_addMaintenance_,
                           onPressed: () async {
                             _toggleFab();
                             final result = await context
@@ -107,10 +107,10 @@ class _ExpandableFabState extends State<ExpandableFab>
                         ).animate(_animation),
                         child: FabOption(
                           icon: Icons.history,
-                          label: MaintenanceStrings.maintenanceHistory,
+                          label: context.l10n.maintenance_maintenanceHistory,
                           onPressed: () {
                             _handleOptionPressed(
-                              MaintenanceStrings.maintenanceHistory,
+                              context.l10n.maintenance_maintenanceHistory,
                             );
                           },
                         ),
@@ -126,9 +126,9 @@ class _ExpandableFabState extends State<ExpandableFab>
                         ).animate(_animation),
                         child: FabOption(
                           icon: Icons.notifications_active,
-                          label: MaintenanceStrings.reminders,
+                          label: context.l10n.maintenance_reminders,
                           onPressed: () {
-                            _handleOptionPressed(MaintenanceStrings.reminders);
+                            _handleOptionPressed(context.l10n.maintenance_reminders);
                           },
                         ),
                       ),

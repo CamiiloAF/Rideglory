@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/go_router.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/domain/use_cases/get_maintenance_list_use_case.dart';
 import 'package:rideglory/features/maintenance/presentation/delete/cubit/maintenance_delete_cubit.dart';
@@ -21,6 +19,7 @@ import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MaintenancesPage extends StatelessWidget {
   final String? initialVehicleId;
@@ -140,7 +139,7 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
       appBar: AppAppBar(
-        title: MaintenanceStrings.maintenances,
+        title: context.l10n.maintenance_maintenances,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -167,9 +166,9 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
               state.whenOrNull(
                 success: (deletedId) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
+                    SnackBar(
                       content: Text(
-                        MaintenanceStrings.maintenanceDeletedSuccessfully,
+                        context.l10n.maintenance_maintenanceDeletedSuccessfully,
                       ),
                       backgroundColor: Colors.green,
                     ),
@@ -181,7 +180,7 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
                 error: (message) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(AppStrings.errorMessage(message)),
+                      content: Text(context.l10n.errorMessage(message)),
                       backgroundColor: Colors.red,
                     ),
                   );

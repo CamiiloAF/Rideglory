@@ -7,11 +7,10 @@ import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
-import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/cubit/vehicle_maintenances_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class VehicleMaintenanceHistorySection extends StatelessWidget {
   const VehicleMaintenanceHistorySection({super.key, required this.vehicle});
@@ -31,7 +30,7 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                VehicleStrings.maintenanceHistory,
+                context.l10n.vehicle_maintenanceHistory,
                 style: context.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -48,7 +47,7 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
                 child: Text(
-                  VehicleStrings.seeAll,
+                  context.l10n.vehicle_seeAll,
                   style: context.bodyMedium?.copyWith(
                     color: context.colorScheme.primary,
                     fontWeight: FontWeight.bold,
@@ -77,7 +76,7 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
                   ),
                   child: Center(
                     child: Text(
-                      MaintenanceStrings.errorLoadingRecords,
+                      context.l10n.maintenance_errorLoadingRecords,
                       style: context.bodyMedium?.copyWith(color: Colors.white),
                     ),
                   ),
@@ -94,7 +93,7 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
                       Icon(Icons.history, color: Colors.grey[600], size: 40),
                       SizedBox(height: 12),
                       Text(
-                        MaintenanceStrings.noRecordsYet,
+                        context.l10n.maintenance_noRecordsYet,
                         style: context.bodyMedium?.copyWith(
                           color: Colors.grey[400],
                         ),

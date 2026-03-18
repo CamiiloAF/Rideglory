@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/form/cubit/maintenance_form_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/form/widgets/maintenance_form_content.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MaintenanceFormView extends StatefulWidget {
   const MaintenanceFormView({super.key});
@@ -27,16 +26,16 @@ class _MaintenanceFormViewState extends State<MaintenanceFormView> {
       backgroundColor: context.colorScheme.surface,
       appBar: AppAppBar(
         title: isEditing
-            ? MaintenanceStrings.editRecord
-            : MaintenanceStrings.newRecord,
+            ? context.l10n.maintenance_editRecord
+            : context.l10n.maintenance_newRecord,
       ),
       body: BlocListener<MaintenanceFormCubit, ResultState<MaintenanceModel>>(
         listener: (context, state) {
           state.whenOrNull(
             data: (maintenance) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(AppStrings.savedSuccessfully),
+                SnackBar(
+                  content: Text(context.l10n.savedSuccessfully),
                   backgroundColor: Colors.green,
                 ),
               );
@@ -45,7 +44,7 @@ class _MaintenanceFormViewState extends State<MaintenanceFormView> {
             error: (error) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(AppStrings.errorMessage(error.message)),
+                  content: Text(context.l10n.errorMessage(error.message)),
                   backgroundColor: Colors.red,
                 ),
               );

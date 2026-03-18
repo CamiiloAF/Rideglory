@@ -4,11 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_delete_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class GarageOptionsBottomSheet extends StatelessWidget {
   const GarageOptionsBottomSheet({super.key, required this.vehicle});
@@ -34,8 +34,8 @@ class GarageOptionsBottomSheet extends StatelessWidget {
                 success: (_) {
                   Navigator.pop(ctx);
                   ScaffoldMessenger.of(ctx).showSnackBar(
-                    const SnackBar(
-                      content: Text(VehicleStrings.vehicleDeleted),
+                    SnackBar(
+                      content: Text(context.l10n.vehicle_vehicleDeleted),
                       backgroundColor: Colors.green,
                     ),
                   );
@@ -75,7 +75,7 @@ class GarageOptionsBottomSheet extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.edit, color: Colors.white),
             title: Text(
-              VehicleStrings.editVehicle,
+              context.l10n.vehicle_editVehicle,
               style: context.bodyLarge?.copyWith(color: Colors.white),
             ),
             onTap: () {
@@ -86,7 +86,7 @@ class GarageOptionsBottomSheet extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.build, color: context.colorScheme.primary),
             title: Text(
-              VehicleStrings.addMaintenance,
+              context.l10n.vehicle_addMaintenance,
               style: context.bodyLarge?.copyWith(color: Colors.white),
             ),
             onTap: () {
@@ -97,7 +97,7 @@ class GarageOptionsBottomSheet extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.delete, color: Colors.red),
             title: Text(
-              VehicleStrings.deleteVehicle,
+              context.l10n.vehicle_deleteVehicle,
               style: context.bodyLarge?.copyWith(color: Colors.red),
             ),
             onTap: () {

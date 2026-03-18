@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
-import 'package:rideglory/features/authentication/constants/auth_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class LoginSignInButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -16,7 +16,7 @@ class LoginSignInButton extends StatelessWidget {
         return SizedBox(
           height: 50,
           child: AppButton(
-            label: AuthStrings.signInButton,
+            label: context.l10n.auth_signInButton,
             onPressed: onPressed,
             isLoading: state.isLoading,
           ),

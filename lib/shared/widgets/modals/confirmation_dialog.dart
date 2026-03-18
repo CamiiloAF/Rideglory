@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
 import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
 import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class ConfirmationDialog {
   static Future<bool?> show({
@@ -12,12 +12,15 @@ class ConfirmationDialog {
     required String content,
     VoidCallback? onConfirm,
     void Function(BuildContext dialogContext)? onCancel,
-    String cancelLabel = AppStrings.cancel,
-    String confirmLabel = AppStrings.confirm,
+    String? cancelLabel,
+    String? confirmLabel,
     DialogActionType confirmType = DialogActionType.primary,
     DialogType dialogType = DialogType.confirmation,
     bool isDismissible = false,
   }) {
+    final resolvedCancelLabel = cancelLabel ?? context.l10n.cancel;
+    final resolvedConfirmLabel = confirmLabel ?? context.l10n.confirm;
+
     return showDialog<bool>(
       context: context,
       barrierDismissible: isDismissible,
@@ -72,7 +75,7 @@ class ConfirmationDialog {
                   children: [
                     Expanded(
                       child: AppButton(
-                        label: cancelLabel,
+                        label: resolvedCancelLabel,
                         onPressed: onCancel != null
                             ? () => onCancel(dialogContext)
                             : () => Navigator.of(dialogContext).pop(false),
@@ -84,7 +87,7 @@ class ConfirmationDialog {
                     const SizedBox(width: 12),
                     Expanded(
                       child: AppButton(
-                        label: confirmLabel,
+                        label: resolvedConfirmLabel,
                         onPressed: () {
                           Navigator.of(dialogContext).pop(true);
                           if (onConfirm != null) {

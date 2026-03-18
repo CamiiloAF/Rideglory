@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/delete/cubit/event_delete_cubit.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
@@ -12,6 +10,7 @@ import 'package:rideglory/features/events/presentation/list/widgets/events_data_
 import 'package:rideglory/features/events/presentation/list/widgets/events_state_widgets.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventsPageView extends StatelessWidget {
   final bool showMyEvents;
@@ -29,8 +28,8 @@ class EventsPageView extends StatelessWidget {
                 state.whenOrNull(
                   data: (eventId) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(EventStrings.eventDeletedSuccess),
+                      SnackBar(
+                        content: Text(context.l10n.event_eventDeletedSuccess),
                         backgroundColor: Colors.green,
                       ),
                     );
@@ -39,7 +38,7 @@ class EventsPageView extends StatelessWidget {
                   error: (error) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(AppStrings.errorMessage(error.message)),
+                        content: Text(context.l10n.errorMessage(error.message)),
                         backgroundColor: Colors.red,
                       ),
                     );
@@ -59,9 +58,9 @@ class EventsPageView extends StatelessWidget {
                 ),
                 empty: () => EmptyStateWidget(
                   icon: Icons.event_outlined,
-                  title: EventStrings.noEvents,
-                  description: EventStrings.noEventsDescription,
-                  actionButtonText: EventStrings.createEvent,
+                  title: context.l10n.event_noEvents,
+                  description: context.l10n.event_noEventsDescription,
+                  actionButtonText: context.l10n.event_createEvent,
                   onActionPressed: () => _navigateToCreate(context),
                   onRefresh: () => eventsCubit.fetchEvents(),
                 ),

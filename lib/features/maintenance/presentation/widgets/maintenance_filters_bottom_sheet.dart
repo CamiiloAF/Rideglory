@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/filter_section_title.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MaintenanceFiltersBottomSheet extends StatefulWidget {
   final MaintenanceFilters initialFilters;
@@ -63,7 +62,7 @@ class _MaintenanceFiltersBottomSheetState
               children: [
                 Expanded(
                   child: Text(
-                    MaintenanceStrings.filters,
+                    context.l10n.maintenance_filters,
                     style: context.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: context.colorScheme.onSurface,
@@ -72,7 +71,7 @@ class _MaintenanceFiltersBottomSheetState
                 ),
                 if (_filters.hasActiveFilters)
                   AppButton(
-                    label: AppStrings.clear,
+                    label: context.l10n.clear,
                     variant: AppButtonVariant.primary,
                     style: AppButtonStyle.text,
                     isFullWidth: false,
@@ -95,7 +94,7 @@ class _MaintenanceFiltersBottomSheetState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Sort by
-                  const FilterSectionTitle(MaintenanceStrings.sortBy),
+                  FilterSectionTitle(context.l10n.maintenance_sortBy),
                   SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -104,7 +103,7 @@ class _MaintenanceFiltersBottomSheetState
                       final isSelected = _filters.sortBy == option;
                       return FilterChip(
                         label: Text(
-                          option.label,
+                          option.label(context),
                           style: TextStyle(
                             color: isSelected
                                 ? Colors.white
@@ -128,7 +127,7 @@ class _MaintenanceFiltersBottomSheetState
                   SizedBox(height: 24),
 
                   // Maintenance types
-                  const FilterSectionTitle(MaintenanceStrings.maintenanceTypes),
+                  FilterSectionTitle(context.l10n.maintenance_maintenanceTypes),
                   SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -171,11 +170,11 @@ class _MaintenanceFiltersBottomSheetState
                   // Urgent only
                   SwitchListTile(
                     title: Text(
-                      MaintenanceStrings.urgentOnly,
+                      context.l10n.maintenance_urgentOnly,
                       style: TextStyle(color: context.colorScheme.onSurface),
                     ),
                     subtitle: Text(
-                      MaintenanceStrings.urgentOnlyDescription,
+                      context.l10n.maintenance_urgentOnlyDescription,
                       style: TextStyle(color: context.colorScheme.onSurfaceVariant),
                     ),
                     value: _filters.showUrgentOnly ?? false,
@@ -191,7 +190,7 @@ class _MaintenanceFiltersBottomSheetState
                   SizedBox(height: 16),
 
                   // Date range
-                  const FilterSectionTitle(MaintenanceStrings.dateRange),
+                  FilterSectionTitle(context.l10n.maintenance_dateRange),
                   SizedBox(height: 8),
                   Row(
                     children: [
@@ -205,7 +204,7 @@ class _MaintenanceFiltersBottomSheetState
                           label: Text(
                             _filters.startDate != null
                                 ? _filters.startDate!.toFormattedString()
-                                : MaintenanceStrings.startDate,
+                                : context.l10n.maintenance_startDate,
                             style: TextStyle(
                               color: context.colorScheme.onSurface,
                             ),
@@ -241,7 +240,7 @@ class _MaintenanceFiltersBottomSheetState
                           label: Text(
                             _filters.endDate != null
                                 ? _filters.endDate!.toFormattedString()
-                                : MaintenanceStrings.endDate,
+                                : context.l10n.maintenance_endDate,
                             style: TextStyle(
                               color: context.colorScheme.onSurface,
                             ),
@@ -284,7 +283,7 @@ class _MaintenanceFiltersBottomSheetState
               children: [
                 Expanded(
                   child: AppButton(
-                    label: AppStrings.cancel,
+                    label: context.l10n.cancel,
                     variant: AppButtonVariant.primary,
                     style: AppButtonStyle.outlined,
                     onPressed: () => Navigator.pop(context),
@@ -293,7 +292,7 @@ class _MaintenanceFiltersBottomSheetState
                 SizedBox(width: 12),
                 Expanded(
                   child: AppButton(
-                    label: AppStrings.apply,
+                    label: context.l10n.apply,
                     variant: AppButtonVariant.primary,
                     onPressed: () => Navigator.pop(context, _filters),
                   ),

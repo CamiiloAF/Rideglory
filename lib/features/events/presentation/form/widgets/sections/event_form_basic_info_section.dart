@@ -3,8 +3,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventFormBasicInfoSection extends StatelessWidget {
   const EventFormBasicInfoSection({
@@ -25,8 +25,8 @@ class EventFormBasicInfoSection extends StatelessWidget {
       children: [
         AppTextField(
           name: EventFormFields.name,
-          labelText: EventStrings.eventName,
-          hintText: EventStrings.eventNameHint,
+          labelText: context.l10n.event_eventName,
+          hintText: context.l10n.event_eventNameHint,
           isRequired: true,
           readonly: isEditing,
           suffixIcon: !isEditing
@@ -40,8 +40,8 @@ class EventFormBasicInfoSection extends StatelessWidget {
                       final scaffoldMessenger = ScaffoldMessenger.of(context);
                       scaffoldMessenger.hideCurrentSnackBar();
                       scaffoldMessenger.showSnackBar(
-                        const SnackBar(
-                          content: Text(EventStrings.eventNameCannotBeModified),
+                        SnackBar(
+                          content: Text(context.l10n.event_eventNameCannotBeModified),
                           duration: Duration(seconds: 3),
                           behavior: SnackBarBehavior.floating,
                         ),
@@ -53,19 +53,19 @@ class EventFormBasicInfoSection extends StatelessWidget {
           textInputAction: TextInputAction.next,
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.required(
-              errorText: EventStrings.nameRequired,
+              errorText: context.l10n.event_nameRequired,
             ),
             FormBuilderValidators.minLength(
               3,
-              errorText: EventStrings.minCharacters,
+              errorText: context.l10n.event_minCharacters,
             ),
           ]),
         ),
         SizedBox(height: 16),
         AppRichTextEditor(
           name: EventFormFields.description,
-          labelText: EventStrings.descriptionAndRecommendations,
-          hintText: EventStrings.descriptionHint,
+          labelText: context.l10n.event_descriptionAndRecommendations,
+          hintText: context.l10n.event_descriptionHint,
           initialValue: descriptionInitialValue,
           isRequired: true,
           minLines: 8,
@@ -76,18 +76,18 @@ class EventFormBasicInfoSection extends StatelessWidget {
             )?.fields[EventFormFields.description]?.didChange(value);
           },
           validator: FormBuilderValidators.required(
-            errorText: EventStrings.descriptionRequired,
+            errorText: context.l10n.event_descriptionRequired,
           ),
         ),
         SizedBox(height: 16),
         AppCityAutocomplete(
           name: EventFormFields.city,
-          labelText: EventStrings.eventCity,
-          hintText: EventStrings.eventCityHint,
+          labelText: context.l10n.event_eventCity,
+          hintText: context.l10n.event_eventCityHint,
           isRequired: true,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return EventStrings.cityRequired;
+              return context.l10n.event_cityRequired;
             }
             return null;
           },

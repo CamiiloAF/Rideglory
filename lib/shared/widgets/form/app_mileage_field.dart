@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/shared/widgets/form/app_text_field.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 
 class AppMileageField extends StatelessWidget {
@@ -28,20 +28,24 @@ class AppMileageField extends StatelessWidget {
   final AutovalidateMode? autovalidateMode;
 
   /// Default validators for required current mileage (required, numeric, min 0).
-  static List<String? Function(String?)> defaultCurrentMileageValidators() =>
+  static List<String? Function(String?)> defaultCurrentMileageValidators(
+    BuildContext context,
+  ) =>
       [
-        FormBuilderValidators.required(errorText: AppStrings.required),
-        FormBuilderValidators.numeric(errorText: AppStrings.mustBeNumber),
+        FormBuilderValidators.required(errorText: context.l10n.required),
+        FormBuilderValidators.numeric(errorText: context.l10n.mustBeNumber),
         FormBuilderValidators.min(
           0,
-          errorText: AppStrings.mustBeGreaterThanZero,
+          errorText: context.l10n.mustBeGreaterThanZero,
         ),
       ];
 
   @override
   Widget build(BuildContext context) {
     final effectiveValidators = validators ??
-        (isRequired ? defaultCurrentMileageValidators() : <String? Function(String?)>[]);
+        (isRequired
+            ? defaultCurrentMileageValidators(context)
+            : <String? Function(String?)>[] );
 
     return AppTextField(
       name: name,

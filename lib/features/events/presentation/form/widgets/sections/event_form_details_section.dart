@@ -5,10 +5,10 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/core/data/colombia_motos_brands_data.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventFormDetailsSection extends StatefulWidget {
   const EventFormDetailsSection({super.key});
@@ -58,9 +58,9 @@ class _EventFormDetailsSectionState extends State<EventFormDetailsSection> {
         SizedBox(height: 24),
         AppAutocompleteChipsField(
           name: EventFormFields.allowedBrands,
-          labelText: EventStrings.allowedBrands,
-          hintText: EventStrings.allowedBrandsHint,
-          helperText: EventStrings.allowedBrandsHelper,
+          labelText: context.l10n.event_allowedBrands,
+          hintText: context.l10n.event_allowedBrandsHint,
+          helperText: context.l10n.event_allowedBrandsHelper,
           prefixIcon: Icons.shield_outlined,
           suggestions: ColombiaMotosBrandsData.search,
           initialValue:
@@ -69,12 +69,12 @@ class _EventFormDetailsSectionState extends State<EventFormDetailsSection> {
         SizedBox(height: 16),
         AppTextField(
           name: EventFormFields.price,
-          labelText: EventStrings.price,
+          labelText: context.l10n.event_price,
           prefixIcon: Icons.attach_money,
           keyboardType: TextInputType.number,
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.numeric(
-              errorText: EventStrings.invalidPrice,
+              errorText: context.l10n.event_invalidPrice,
               checkNullOrEmpty: false,
             ),
           ]),
@@ -100,14 +100,14 @@ class _DifficultyPicker extends StatelessWidget {
     return FormBuilderField<EventDifficulty>(
       name: EventFormFields.difficulty,
       validator: FormBuilderValidators.required(
-        errorText: EventStrings.difficultyRequired,
+        errorText: context.l10n.event_difficultyRequired,
       ),
       builder: (field) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              EventStrings.difficulty,
+              context.l10n.event_difficulty,
               style: TextStyle(
                 color: context.colorScheme.onSurfaceVariant,
                 fontSize: 12,
@@ -192,14 +192,14 @@ class _EventTypePicker extends StatelessWidget {
     return FormBuilderField<EventType>(
       name: EventFormFields.eventType,
       validator: FormBuilderValidators.required(
-        errorText: EventStrings.eventTypeRequired,
+        errorText: context.l10n.event_eventTypeRequired,
       ),
       builder: (field) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              EventStrings.eventType,
+              context.l10n.event_eventType,
               style: TextStyle(
                 color: context.colorScheme.onSurfaceVariant,
                 fontSize: 12,

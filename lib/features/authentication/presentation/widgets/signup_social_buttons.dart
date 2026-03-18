@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/authentication/presentation/widgets/social_login_button.dart';
-import 'package:rideglory/features/authentication/constants/auth_strings.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class SignupSocialButtons extends StatelessWidget {
   final VoidCallback onEmailModeToggle;
@@ -65,7 +65,7 @@ class SignupSocialButtons extends StatelessWidget {
             Center(
               child: RichText(
                 text: TextSpan(
-                  text: '${AuthStrings.signIn} ',
+                  text: '${context.l10n.auth_signIn} ',
                   style: TextStyle(
                     fontSize: 15,
                     color: Colors.grey[700],
@@ -75,8 +75,8 @@ class SignupSocialButtons extends StatelessWidget {
                     WidgetSpan(
                       child: GestureDetector(
                         onTap: () => context.pop(),
-                        child: const Text(
-                          AuthStrings.signInLink,
+                        child: Text(
+                          context.l10n.auth_signInLink,
                           style: TextStyle(
                             fontSize: 15,
                             color: Color(0xFF6366F1),

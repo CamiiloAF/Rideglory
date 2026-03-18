@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class AttendeesFilterBottomSheet extends StatefulWidget {
   final Set<RegistrationStatus> initialStatuses;
@@ -109,13 +109,13 @@ class _AttendeesFilterBottomSheetState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    EventStrings.filters,
+                    context.l10n.event_filters,
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   AppTextButton(
-                    label: EventStrings.clearFilters,
+                    label: context.l10n.event_clearFilters,
                     onPressed: () {
                       setState(() => _selected.clear());
                     },
@@ -132,7 +132,7 @@ class _AttendeesFilterBottomSheetState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      EventStrings.filterByStatus,
+                      context.l10n.event_filterByStatus,
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -143,18 +143,18 @@ class _AttendeesFilterBottomSheetState
                       runSpacing: 8,
                       children: [
                         FilterChip(
-                          label: const Text(EventStrings.pending),
+                          label: Text(context.l10n.event_pending),
                           selected: _pendingSelected,
                           onSelected: (_) => _togglePending(!_pendingSelected),
                         ),
                         FilterChip(
-                          label: const Text(EventStrings.approved),
+                          label: Text(context.l10n.event_approved),
                           selected: _approvedSelected,
                           onSelected: (_) =>
                               _toggleApproved(!_approvedSelected),
                         ),
                         FilterChip(
-                          label: const Text(EventStrings.rejected),
+                          label: Text(context.l10n.event_rejected),
                           selected: _rejectedSelected,
                           onSelected: (_) =>
                               _toggleRejected(!_rejectedSelected),
@@ -173,7 +173,7 @@ class _AttendeesFilterBottomSheetState
                 top: 8,
               ),
               child: AppButton(
-                label: EventStrings.applyFilters,
+                label: context.l10n.event_applyFilters,
                 onPressed: () => Navigator.of(context).pop(_selected),
               ),
             ),
