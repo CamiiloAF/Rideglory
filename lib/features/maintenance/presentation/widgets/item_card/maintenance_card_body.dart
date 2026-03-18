@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
-import 'package:rideglory/features/maintenance/presentation/widgets/item_card/item_card.dart';
-import 'package:rideglory/features/maintenance/presentation/widgets/item_card/maintenance_card_actions_menu.dart';
-import 'package:rideglory/features/maintenance/presentation/widgets/item_card/vehicle_info_chip.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
 class MaintenanceCardBody extends StatelessWidget {
@@ -37,72 +37,96 @@ class MaintenanceCardBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currencyFormat = NumberFormat.simpleCurrency(decimalDigits: 2);
+    final numberFormat = NumberFormat('#,###');
+    final dateFormat = DateFormat('MMM dd, yyyy');
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Colors.white, typeColor.withValues(alpha: 0.05)],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: typeColor.withValues(alpha: .1),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        color: AppColors.darkSurface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.darkBorder, width: 1),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(16),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
             onTap: onTap,
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(16),
             child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              padding: const EdgeInsets.all(16),
+              child: Row(
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: MaintenanceCardHeader(
-                          maintenance: maintenance,
-                          typeColor: typeColor,
-                          typeIcon: typeIcon,
-                          isUrgent: isUrgent,
+                  // Icon Container
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF332A24), // Dark orange/brownish
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(typeIcon, color: AppColors.primary, size: 28),
+                  ),
+                  const SizedBox(width: 16),
+
+                  // Info Section
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              maintenance.name,
+                              style: context.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            if (maintenance.cost != null) ...[
+                              const Spacer(),
+                              Text(
+                                currencyFormat.format(maintenance.cost),
+                                style: context.bodySmall?.copyWith(
+                                  color: AppColors.darkTextSecondary,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ],
                         ),
-                      ),
-                      if (onEdit != null || onDelete != null)
-                        MaintenanceCardActionsMenu(
-                          onEdit: onEdit,
-                          onDelete: onDelete,
+                        const SizedBox(height: 4),
+                        Text(
+                          dateFormat.format(maintenance.date),
+                          style: context.bodyMedium?.copyWith(
+                            color: Colors.grey[500],
+                          ),
                         ),
-                    ],
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.speed_outlined,
+                              size: 16,
+                              color: AppColors.primary,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${numberFormat.format(maintenance.maintanceMileage)} km',
+                              style: context.bodySmall?.copyWith(
+                                color: Colors.grey[400],
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  if (maintenanceVehicle != null) ...[
-                    const SizedBox(height: 12),
-                    VehicleInfoChip(vehicle: maintenanceVehicle!),
-                  ],
-                  const SizedBox(height: 20),
-                  MaintenanceMileageInfo(
-                    maintenance: maintenance,
-                    typeColor: typeColor,
-                    currentMileage: currentMileage,
-                    progressPercent: progressPercent,
-                    getRemainingDistance: getRemainingDistance,
-                  ),
-                  const SizedBox(height: 16),
-                  MaintenanceDatesSection(
-                    maintenance: maintenance,
-                    daysUntilNext: daysUntilNext,
-                  ),
-                  if (maintenance.notes != null &&
-                      maintenance.notes!.isNotEmpty)
-                    MaintenanceNotesSection(maintenance: maintenance),
                 ],
               ),
             ),

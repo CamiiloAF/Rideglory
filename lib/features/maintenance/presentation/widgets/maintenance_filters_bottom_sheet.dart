@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/filter_section_title.dart';
@@ -38,7 +39,7 @@ class _MaintenanceFiltersBottomSheetState
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.darkSurface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       child: Column(
@@ -50,7 +51,7 @@ class _MaintenanceFiltersBottomSheetState
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: AppColors.darkBorder,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -65,17 +66,21 @@ class _MaintenanceFiltersBottomSheetState
                     MaintenanceStrings.filters,
                     style: context.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: AppColors.darkTextPrimary,
                     ),
                   ),
                 ),
                 if (_filters.hasActiveFilters)
                   AppButton(
                     label: AppStrings.clear,
-                    variant: AppButtonVariant.text,
+                    variant: AppButtonVariant.primary,
+                    style: AppButtonStyle.text,
                     isFullWidth: false,
                     onPressed: () {
                       setState(() {
-                        _filters = const MaintenanceFilters();
+                        _filters = const MaintenanceFilters().copyWith(
+                          vehicleIds: _filters.vehicleIds,
+                        );
                       });
                     },
                   ),
@@ -90,7 +95,7 @@ class _MaintenanceFiltersBottomSheetState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Sort by
-                  FilterSectionTitle(MaintenanceStrings.sortBy),
+                  const FilterSectionTitle(MaintenanceStrings.sortBy),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -98,8 +103,19 @@ class _MaintenanceFiltersBottomSheetState
                     children: MaintenanceSortOption.values.map((option) {
                       final isSelected = _filters.sortBy == option;
                       return FilterChip(
-                        label: Text(option.label),
+                        label: Text(
+                          option.label,
+                          style: TextStyle(
+                            color: isSelected
+                                ? Colors.white
+                                : AppColors.darkTextSecondary,
+                          ),
+                        ),
                         selected: isSelected,
+                        selectedColor: AppColors.primary,
+                        backgroundColor: AppColors.darkSurfaceHighest,
+                        checkmarkColor: Colors.white,
+                        side: const BorderSide(color: AppColors.darkBorder),
                         onSelected: (selected) {
                           setState(() {
                             _filters = _filters.copyWith(sortBy: option);
@@ -111,7 +127,7 @@ class _MaintenanceFiltersBottomSheetState
                   const SizedBox(height: 24),
 
                   // Maintenance types
-                  FilterSectionTitle(MaintenanceStrings.maintenanceTypes),
+                  const FilterSectionTitle(MaintenanceStrings.maintenanceTypes),
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 8,
@@ -119,8 +135,19 @@ class _MaintenanceFiltersBottomSheetState
                     children: MaintenanceType.values.map((type) {
                       final isSelected = _filters.types.contains(type);
                       return FilterChip(
-                        label: Text(type.label),
+                        label: Text(
+                          type.label,
+                          style: TextStyle(
+                            color: isSelected
+                                ? Colors.white
+                                : AppColors.darkTextSecondary,
+                          ),
+                        ),
                         selected: isSelected,
+                        selectedColor: AppColors.primary,
+                        backgroundColor: AppColors.darkSurfaceHighest,
+                        checkmarkColor: Colors.white,
+                        side: const BorderSide(color: AppColors.darkBorder),
                         onSelected: (selected) {
                           setState(() {
                             final newTypes = List<MaintenanceType>.from(
@@ -139,44 +166,15 @@ class _MaintenanceFiltersBottomSheetState
                   ),
                   const SizedBox(height: 24),
 
-                  // Vehicles
-                  if (widget.availableVehicles.isNotEmpty) ...[
-                    FilterSectionTitle(MaintenanceStrings.myVehicles),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: widget.availableVehicles.map((vehicle) {
-                        final isSelected = _filters.vehicleIds.contains(
-                          vehicle.id,
-                        );
-                        return FilterChip(
-                          label: Text(vehicle.name),
-                          selected: isSelected,
-                          onSelected: (selected) {
-                            setState(() {
-                              final newIds = List<String>.from(
-                                _filters.vehicleIds,
-                              );
-                              if (selected && vehicle.id != null) {
-                                newIds.add(vehicle.id!);
-                              } else {
-                                newIds.remove(vehicle.id);
-                              }
-                              _filters = _filters.copyWith(vehicleIds: newIds);
-                            });
-                          },
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
-
                   // Urgent only
                   SwitchListTile(
-                    title: Text(MaintenanceStrings.urgentOnly),
+                    title: const Text(
+                      MaintenanceStrings.urgentOnly,
+                      style: TextStyle(color: AppColors.darkTextPrimary),
+                    ),
                     subtitle: const Text(
                       MaintenanceStrings.urgentOnlyDescription,
+                      style: TextStyle(color: AppColors.darkTextSecondary),
                     ),
                     value: _filters.showUrgentOnly ?? false,
                     onChanged: (value) {
@@ -191,17 +189,27 @@ class _MaintenanceFiltersBottomSheetState
                   const SizedBox(height: 16),
 
                   // Date range
-                  FilterSectionTitle(MaintenanceStrings.dateRange),
+                  const FilterSectionTitle(MaintenanceStrings.dateRange),
                   const SizedBox(height: 8),
                   Row(
                     children: [
                       Expanded(
                         child: OutlinedButton.icon(
-                          icon: const Icon(Icons.calendar_today, size: 18),
+                          icon: const Icon(
+                            Icons.calendar_today,
+                            size: 18,
+                            color: AppColors.primary,
+                          ),
                           label: Text(
                             _filters.startDate != null
                                 ? _filters.startDate!.toFormattedString()
                                 : MaintenanceStrings.startDate,
+                            style: const TextStyle(
+                              color: AppColors.darkTextPrimary,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: AppColors.darkBorder),
                           ),
                           onPressed: () async {
                             final date = await showDatePicker(
@@ -221,11 +229,21 @@ class _MaintenanceFiltersBottomSheetState
                       const SizedBox(width: 12),
                       Expanded(
                         child: OutlinedButton.icon(
-                          icon: const Icon(Icons.calendar_today, size: 18),
+                          icon: const Icon(
+                            Icons.calendar_today,
+                            size: 18,
+                            color: AppColors.primary,
+                          ),
                           label: Text(
                             _filters.endDate != null
                                 ? _filters.endDate!.toFormattedString()
                                 : MaintenanceStrings.endDate,
+                            style: const TextStyle(
+                              color: AppColors.darkTextPrimary,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: AppColors.darkBorder),
                           ),
                           onPressed: () async {
                             final date = await showDatePicker(
@@ -252,22 +270,17 @@ class _MaintenanceFiltersBottomSheetState
           // Actions
           Container(
             padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, -5),
-                ),
-              ],
+            decoration: const BoxDecoration(
+              color: AppColors.darkSurface,
+              border: Border(top: BorderSide(color: AppColors.darkBorder)),
             ),
             child: Row(
               children: [
                 Expanded(
                   child: AppButton(
                     label: AppStrings.cancel,
-                    variant: AppButtonVariant.outline,
+                    variant: AppButtonVariant.primary,
+                    style: AppButtonStyle.outlined,
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),

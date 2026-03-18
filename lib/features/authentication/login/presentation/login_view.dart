@@ -3,120 +3,125 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/features/authentication/application/auth_cubit.dart';
-import 'package:rideglory/features/authentication/presentation/widgets/social_login_button.dart';
-import 'package:rideglory/features/authentication/presentation/widgets/auth_text_with_link.dart';
-import 'package:rideglory/features/authentication/presentation/widgets/divider_with_text.dart';
-import 'package:rideglory/features/authentication/presentation/widgets/login_email_form.dart';
-import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
-import 'package:rideglory/features/authentication/constants/auth_strings.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/features/authentication/application/auth_cubit.dart';
+import 'package:rideglory/features/authentication/constants/auth_form_fields.dart';
+import 'package:rideglory/features/authentication/constants/auth_strings.dart';
+import 'package:rideglory/features/authentication/login/presentation/widgets/login_divider.dart';
+import 'package:rideglory/features/authentication/login/presentation/widgets/login_email_field.dart';
+import 'package:rideglory/features/authentication/login/presentation/widgets/login_heading.dart';
+import 'package:rideglory/features/authentication/login/presentation/widgets/login_password_field.dart';
+import 'package:rideglory/features/authentication/login/presentation/widgets/login_register_link.dart';
+import 'package:rideglory/features/authentication/login/presentation/widgets/login_sign_in_button.dart';
+import 'package:rideglory/features/authentication/login/presentation/widgets/login_social_row.dart';
+import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
 
-class LoginView extends StatelessWidget {
+class LoginView extends StatefulWidget {
   const LoginView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormBuilderState>();
+  State<LoginView> createState() => _LoginViewState();
+}
 
+class _LoginViewState extends State<LoginView> {
+  final _formKey = GlobalKey<FormBuilderState>();
+
+  void _onAuthStateChanged(BuildContext context, AuthState state) {
+    if (state.isAuthenticatedWithVehicles || state.isAuthenticatedWithoutVehicles) {
+      context.pushReplacementNamed(AppRoutes.home);
+    } else if (state.hasError) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(state.errorMessage ?? ''),
+          backgroundColor: context.colorScheme.error,
+        ),
+      );
+    }
+  }
+
+  void _handleLogin(BuildContext context) {
+    if (_formKey.currentState?.saveAndValidate() ?? false) {
+      final data = _formKey.currentState!.value;
+      context.read<AuthCubit>().signInWithEmail(
+        email: (data[AuthFormFields.email] as String).trim(),
+        password: data[AuthFormFields.password] as String,
+      );
+    }
+  }
+
+  void _showExitDialog(BuildContext context) {
+    ConfirmationDialog.show(
+      context: context,
+      title: AuthStrings.exitLoginTitle,
+      content: AuthStrings.exitLoginMessage,
+      onConfirm: () => SystemNavigator.pop(),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) return;
-        ConfirmationDialog.show(
-          context: context,
-          title: AuthStrings.exitLoginTitle,
-          content: AuthStrings.exitLoginMessage,
-          onConfirm: () => SystemNavigator.pop(),
-        );
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _showExitDialog(context);
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: BlocListener<AuthCubit, AuthState>(
-            listener: (context, state) {
-              if (state.isAuthenticatedWithVehicles) {
-                context.pushReplacementNamed(AppRoutes.maintenances);
-              } else if (state.isAuthenticatedWithoutVehicles) {
-                context.pushReplacementNamed(AppRoutes.vehicleOnboarding);
-              } else if (state.hasError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      state.errorMessage ?? AppStrings.errorOccurred,
-                    ),
-                    backgroundColor: context.errorColor,
-                  ),
-                );
-              }
-            },
+        backgroundColor: AppColors.darkBackground,
+        appBar: AppBar(
+          backgroundColor: AppColors.darkBackground,
+          elevation: 0,
+          surfaceTintColor: Colors.transparent,
+          title: Text(
+            AppStrings.appName.toUpperCase(),
+            style: context.textTheme.titleSmall?.copyWith(
+              color: context.colorScheme.onSurface,
+              letterSpacing: 2.0,
+            ),
+          ),
+          centerTitle: true,
+        ),
+        body: BlocListener<AuthCubit, AuthState>(
+          listener: _onAuthStateChanged,
+          child: SafeArea(
+            top: false,
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 40),
-                  // Header
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(AuthStrings.letsStart, style: context.displayLarge),
-                      const SizedBox(height: 8),
-                      Text(
-                        AuthStrings.loginSubtitle,
-                        style: context.bodyLarge?.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 48),
-
-                  // Email/Password Form
-                  LoginEmailForm(formKey: formKey),
-                  const SizedBox(height: 32),
-
-                  // Sign up section
-                  Center(
-                    child: AuthTextWithLink(
-                      text: '${AuthStrings.dontHaveAccount} ',
-                      linkText: AuthStrings.createAccountLink,
-                      onLinkTap: () => context.push(AppRoutes.signup),
-                    ),
-                  ),
-                  const SizedBox(height: 48),
-
-                  // Divider
-                  const DividerWithText(text: AuthStrings.orContinueWith),
-                  const SizedBox(height: 24),
-
-                  // Social Login Buttons
-                  BlocBuilder<AuthCubit, AuthState>(
-                    builder: (context, state) {
-                      final isLoading = state.isLoading;
-                      return Column(
+                  const SizedBox(height: 160),
+                  const LoginHeading(),
+                  const SizedBox(height: 28),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: FormBuilder(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          SocialLoginButton(
-                            type: SocialLoginType.google,
-                            isLoading: isLoading,
-                            onPressed: () {
-                              context.read<AuthCubit>().signInWithGoogle();
-                            },
+                          const LoginEmailField(),
+                          const SizedBox(height: 18),
+                          LoginPasswordField(
+                            onSubmitted: () => _handleLogin(context),
                           ),
-                          // const SizedBox(height: 12),
-                          // SocialLoginButton(
-                          //   type: SocialLoginType.apple,
-                          //   isLoading: isLoading,
-                          //   onPressed: () {
-                          //     context.read<AuthCubit>().signInWithApple();
-                          //   },
-                          // ),
+                          const SizedBox(height: 20),
+                          LoginSignInButton(
+                            onPressed: () => _handleLogin(context),
+                          ),
+                          const SizedBox(height: 24),
+                          const LoginDivider(),
+                          const SizedBox(height: 20),
+                          const LoginSocialRow(),
+                          const SizedBox(height: 28),
+                          LoginRegisterLink(
+                            onTap: () => context.push(AppRoutes.signup),
+                          ),
+                          const SizedBox(height: 40),
                         ],
-                      );
-                    },
+                      ),
+                    ),
                   ),
                 ],
               ),

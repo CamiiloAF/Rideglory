@@ -9,7 +9,7 @@ abstract class EventFormFields {
   static const String eventType = 'eventType';
   static const String meetingPoint = 'meetingPoint';
   static const String destination = 'destination';
+  static const String isMultiBrand = 'isMultiBrand';
   static const String allowedBrands = 'allowedBrands';
   static const String price = 'price';
-  static const String recommendations = 'recommendations';
 }

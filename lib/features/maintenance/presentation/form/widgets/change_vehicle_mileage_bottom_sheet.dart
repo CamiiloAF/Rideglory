@@ -66,7 +66,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         Text(
-                          '${currentMileage ?? 0} ${maintenanceToSave.distanceUnit.label}',
+                          '${currentMileage ?? 0}',
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
@@ -81,7 +81,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         Text(
-                          '${maintenanceToSave.maintanceMileage.toInt()} ${maintenanceToSave.distanceUnit.label}',
+                          '${maintenanceToSave.maintanceMileage.toInt()}',
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
                                 fontWeight: FontWeight.bold,
@@ -106,7 +106,8 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                   Expanded(
                     child: AppButton(
                       label: MaintenanceStrings.saveOnly,
-                      variant: AppButtonVariant.outline,
+                      variant: AppButtonVariant.primary,
+                      style: AppButtonStyle.outlined,
                       onPressed: () {
                         saveMaintenance(maintenanceToSave);
                         Navigator.of(context).pop();

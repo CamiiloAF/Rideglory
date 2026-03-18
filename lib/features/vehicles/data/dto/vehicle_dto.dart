@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
 part 'vehicle_dto.g.dart';
@@ -13,14 +12,12 @@ class VehicleDto extends VehicleModel {
     super.model,
     super.year,
     required super.currentMileage,
-    super.distanceUnit,
-    super.vehicleType,
     super.licensePlate,
     super.vin,
     super.purchaseDate,
+    super.imageUrl,
     super.createdDate,
     super.updatedDate,
-    super.isMainVehicle,
     super.isArchived,
   });
 
@@ -37,14 +34,12 @@ class VehicleDto extends VehicleModel {
       model: model,
       year: year,
       currentMileage: currentMileage,
-      distanceUnit: distanceUnit,
-      vehicleType: vehicleType,
       licensePlate: licensePlate,
       vin: vin,
       purchaseDate: purchaseDate,
+      imageUrl: imageUrl,
       createdDate: createdDate,
       updatedDate: updatedDate,
-      isMainVehicle: isMainVehicle,
       isArchived: isArchived,
     );
   }
@@ -52,20 +47,18 @@ class VehicleDto extends VehicleModel {
 
 extension VehicleModelExtension on VehicleModel {
   Map<String, dynamic> toJson() => VehicleDto(
-    id: id,
-    name: name,
-    brand: brand,
-    model: model,
-    year: year,
-    currentMileage: currentMileage,
-    distanceUnit: distanceUnit,
-    vehicleType: vehicleType,
-    licensePlate: licensePlate,
-    vin: vin,
-    purchaseDate: purchaseDate,
-    createdDate: createdDate,
-    updatedDate: updatedDate,
-    isMainVehicle: isMainVehicle,
-    isArchived: isArchived,
-  ).toJson();
+        id: id,
+        name: name,
+        brand: brand,
+        model: model,
+        year: year,
+        currentMileage: currentMileage,
+        licensePlate: licensePlate,
+        vin: vin,
+        purchaseDate: purchaseDate,
+        imageUrl: imageUrl,
+        createdDate: createdDate,
+        updatedDate: updatedDate,
+        isArchived: isArchived,
+      ).toJson();
 }

@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
-import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_form_fields.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
@@ -78,16 +78,11 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
             VehicleFormFields.year: state.vehicle!.year?.toString(),
             VehicleFormFields.currentMileage: state.vehicle!.currentMileage
                 .toString(),
-            VehicleFormFields.distanceUnit: state.vehicle!.distanceUnit,
-            VehicleFormFields.vehicleType: state.vehicle!.vehicleType,
             VehicleFormFields.licensePlate: state.vehicle!.licensePlate,
             VehicleFormFields.vin: state.vehicle!.vin,
             VehicleFormFields.purchaseDate: state.vehicle!.purchaseDate,
           }
-        : {
-            VehicleFormFields.distanceUnit: DistanceUnit.kilometers,
-            VehicleFormFields.vehicleType: VehicleType.motorcycle,
-          };
+        : <String, dynamic>{};
   }
 
   void _saveVehicle() {
@@ -109,22 +104,8 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
           context.read<VehicleCubit>().updateCurrentVehicleIfMatch(
             savedVehicle,
           );
-        }
-
-        // Set as current vehicle if checkbox was checked
-        final formData = context
-            .read<VehicleFormCubit>()
-            .formKey
-            .currentState
-            ?.value;
-        final setAsCurrent =
-            formData?[VehicleFormFields.setAsCurrent] as bool? ?? false;
-
-        if (setAsCurrent && savedVehicle.id != null) {
-          context.read<VehicleCubit>().updateCurrentVehicleIfMatch(
-            savedVehicle,
-            shouldUpdateMainVehicle: true,
-          );
+        } else {
+          context.read<VehicleCubit>().addVehicleLocally(savedVehicle);
         }
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -152,42 +133,24 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
     final state = context.read<VehicleFormCubit>().state;
     final isEditing = state.isEditing;
 
-    final mainVehicle = context.select(
-      (VehicleCubit cubit) => cubit.currentVehicle,
-    );
-
     return Scaffold(
+      backgroundColor: context.colorScheme.surface,
       appBar: AppAppBar(
         title: isEditing
             ? VehicleStrings.editVehicle
             : VehicleStrings.addVehicle,
       ),
-      body: BlocConsumer<VehicleFormCubit, VehicleFormState>(
+      body: BlocListener<VehicleFormCubit, VehicleFormState>(
         listener: _listener,
-        builder: (context, state) {
-          final isLoading = state.isLoading;
-
-          return Stack(
-            children: [
-              SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: VehicleForm(
-                  formKey: context.read<VehicleFormCubit>().formKey,
-                  initialValue: _getInitialValues(),
-                  isEditing: isEditing,
-                  onSave: _saveVehicle,
-                  isLoading: isLoading,
-                  isMainVehicle: mainVehicle == state.vehicle,
-                ),
-              ),
-              if (isLoading)
-                Container(
-                  color: Colors.black26,
-                  child: const Center(child: CircularProgressIndicator()),
-                ),
-            ],
-          );
-        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: VehicleForm(
+            formKey: context.read<VehicleFormCubit>().formKey,
+            initialValue: _getInitialValues(),
+            isEditing: isEditing,
+            onSave: _saveVehicle,
+          ),
+        ),
       ),
     );
   }

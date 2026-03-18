@@ -2,9 +2,11 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/domain/result_state.dart';
-import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
+import 'package:rideglory/core/exceptions/domain_exception.dart';
+import 'package:rideglory/core/services/image_storage_service.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/add_vehicle_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/update_vehicle_usecase.dart';
@@ -17,11 +19,15 @@ part 'vehicle_form_cubit.freezed.dart';
 class VehicleFormCubit extends Cubit<VehicleFormState> {
   final AddVehicleUseCase _addVehicleUseCase;
   final UpdateVehicleUseCase _updateVehicleUseCase;
+  final ImageStorageService _imageStorageService;
+
+  VehicleFormCubit(
+    this._addVehicleUseCase,
+    this._updateVehicleUseCase,
+    this._imageStorageService,
+  ) : super(VehicleFormState());
 
   final formKey = GlobalKey<FormBuilderState>();
-
-  VehicleFormCubit(this._addVehicleUseCase, this._updateVehicleUseCase)
-    : super(VehicleFormState());
 
   void initialize({VehicleModel? vehicle}) {
     if (vehicle != null) {
@@ -29,20 +35,63 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
     }
   }
 
+  Future<void> pickImageLocally() async {
+    final XFile? image = await _imageStorageService.pickImageFromGallery();
+    if (image != null) {
+      emit(state.copyWith(localImagePath: image.path));
+    }
+  }
+
+  void clearLocalImage() {
+    emit(state.copyWith(localImagePath: null));
+  }
+
   Future<void> saveVehicle(VehicleModel vehicle) async {
     emit(state.copyWith(vehicleResult: const ResultState.loading()));
 
-    final result = state.isEditing
-        ? await _updateVehicleUseCase(vehicle)
-        : await _addVehicleUseCase(vehicle);
+    try {
+      // When editing, keep the existing image URL unless the user explicitly picks a new image.
+      // The form model built in [buildVehicleToSave] does not carry over imageUrl,
+      // so we must base it on the original vehicle in state.
+      String? imageUrl =
+          state.isEditing ? state.vehicle?.imageUrl : vehicle.imageUrl;
 
-    result.fold(
-      (error) =>
-          emit(state.copyWith(vehicleResult: ResultState.error(error: error))),
-      (savedVehicle) => emit(
-        state.copyWith(vehicleResult: ResultState.data(data: savedVehicle)),
-      ),
-    );
+      // Upload image if a new one was picked
+      if (state.localImagePath != null) {
+        final imageName =
+            vehicle.id ?? 'new_${DateTime.now().millisecondsSinceEpoch}';
+        imageUrl = await _imageStorageService.uploadImage(
+          image: XFile(state.localImagePath!),
+          storagePath: 'vehicles/$imageName.jpg',
+        );
+      }
+
+      final vehicleToSave = vehicle.copyWith(imageUrl: imageUrl);
+
+      final result = state.isEditing
+          ? await _updateVehicleUseCase(vehicleToSave)
+          : await _addVehicleUseCase(vehicleToSave);
+
+      result.fold(
+        (error) => emit(
+          state.copyWith(vehicleResult: ResultState.error(error: error)),
+        ),
+        (savedVehicle) => emit(
+          state.copyWith(vehicleResult: ResultState.data(data: savedVehicle)),
+        ),
+      );
+    } catch (e) {
+      final message = e is DomainException
+          ? e.message
+          : e.toString();
+      emit(
+        state.copyWith(
+          vehicleResult: ResultState.error(
+            error: DomainException(message: message),
+          ),
+        ),
+      );
+    }
   }
 
   Future<void> addMultipleVehicles(List<VehicleModel> vehicles) async {
@@ -51,7 +100,7 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
     bool isSuccess = false;
     VehicleModel? firstVehicleSaved;
 
-    for (var vehicle in vehicles) {
+    for (final vehicle in vehicles) {
       final result = await _addVehicleUseCase(vehicle);
       final hasError = result.fold((error) {
         emit(state.copyWith(vehicleResult: ResultState.error(error: error)));
@@ -104,10 +153,6 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
                   ) ??
                   0
             : 0,
-        distanceUnit: formData[VehicleFormFields.distanceUnit] as DistanceUnit,
-        vehicleType:
-            formData[VehicleFormFields.vehicleType] as VehicleType? ??
-            VehicleType.motorcycle,
         licensePlate:
             (formData[VehicleFormFields.licensePlate] as String?)?.isEmpty ??
                 true
@@ -127,7 +172,11 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
 
   void reset() {
     emit(
-      state.copyWith(vehicleResult: const ResultState.initial(), vehicle: null),
+      state.copyWith(
+        vehicleResult: const ResultState.initial(),
+        vehicle: null,
+        localImagePath: null,
+      ),
     );
   }
 }

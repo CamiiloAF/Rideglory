@@ -1,8 +1,6 @@
 /// Global string constants for the Rideglory app
 /// This file contains common strings used across the entire application
-class AppStrings {
-  AppStrings._();
-
+abstract class AppStrings {
   // App name
   static const String appName = 'Rideglory';
 
@@ -20,6 +18,9 @@ class AppStrings {
   static const String back = 'Volver';
   static const String continue_ = 'Continuar';
   static const String exit = 'Salir';
+  static const String exitAppTitle = 'Salir de la aplicación';
+  static const String exitAppMessage =
+      '¿Estás seguro de que deseas salir de Rideglory?';
 
   // Errors
   static const String errorOccurred = 'Ocurrió un error';
@@ -27,9 +28,18 @@ class AppStrings {
   static const String tryAgain = 'Intentar nuevamente';
   static const String noInternet = 'Sin conexión a internet';
 
+  // Image upload errors
+  static const String imageUploadFailed =
+      'No se pudo subir la imagen. Revisa tu conexión e intenta de nuevo.';
+  static const String imageUploadCancelled =
+      'La subida de la imagen fue cancelada.';
+  static const String imageUploadNotFound =
+      'No se pudo completar la subida. Intenta de nuevo en unos segundos.';
+
   // Empty states
   static const String noData = 'No hay datos';
   static const String noResults = 'No se encontraron resultados';
+  static const String notAvailable = 'N/A';
   static const String noSearchResults =
       'No se encontraron resultados para tu búsqueda';
 

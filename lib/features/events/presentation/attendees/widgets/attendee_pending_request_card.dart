@@ -1,0 +1,124 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/features/events/constants/event_strings.dart';
+import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/events/presentation/attendees/attendees_cubit.dart';
+import 'package:rideglory/features/events/presentation/attendees/attendee_action_confirmation.dart';
+import 'package:rideglory/features/events/presentation/shared/widgets/initials_avatar.dart';
+import 'package:rideglory/shared/widgets/approve_reject_bar.dart';
+
+class AttendeePendingRequestCard extends StatelessWidget {
+  final EventRegistrationModel registration;
+  final VoidCallback? onTap;
+
+  const AttendeePendingRequestCard({
+    super.key,
+    required this.registration,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.colorScheme;
+    final textTheme = context.textTheme;
+    final vehicleText =
+        '${registration.vehicleBrand} ${registration.vehicleReference}';
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.darkSurface,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onTap,
+              borderRadius: BorderRadius.circular(8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  InitialsAvatar(
+                    firstName: registration.firstName,
+                    lastName: registration.lastName,
+                    radius: 24,
+                    backgroundColor: colorScheme.primary,
+                    textStyle: textTheme.titleSmall?.copyWith(
+                      color: colorScheme.onPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          registration.fullName,
+                          style: textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: colorScheme.onSurface,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.two_wheeler_rounded,
+                              size: 14,
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                vehicleText,
+                                style: textTheme.bodySmall?.copyWith(
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    EventStrings.formatTimeAgo(registration.createdDate),
+                    style: textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          ApproveRejectBar(
+            rejectLabel: EventStrings.rejectRegistration,
+            approveLabel: EventStrings.approveRegistration,
+            onReject: () => AttendeeActionConfirmation.showReject(
+              context,
+              firstName: registration.firstName,
+              onConfirm: () => context
+                  .read<AttendeesCubit>()
+                  .rejectRegistration(registration.id!),
+            ),
+            onApprove: () => AttendeeActionConfirmation.showApprove(
+              context,
+              firstName: registration.firstName,
+              onConfirm: () => context
+                  .read<AttendeesCubit>()
+                  .approveRegistration(registration.id!),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

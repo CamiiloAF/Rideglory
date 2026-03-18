@@ -1,4 +1,4 @@
-import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 
 class RiderProfileModel {
   final String? id;

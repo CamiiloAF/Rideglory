@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 
-enum AppButtonVariant { primary, secondary, outline, text, danger }
+enum AppButtonVariant { primary, secondary, danger, success }
+
+enum AppButtonStyle { filled, outlined, text }
 
 class AppButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
   final AppButtonVariant variant;
+  final AppButtonStyle style;
   final bool isLoading;
   final IconData? icon;
   final bool isFullWidth;
@@ -20,61 +23,38 @@ class AppButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.variant = AppButtonVariant.primary,
+    this.style = AppButtonStyle.filled,
     this.isLoading = false,
     this.icon,
     this.isFullWidth = true,
     this.padding = const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
     this.width,
-    this.height,
+    this.height = 48,
   });
 
-  Color get _backgroundColor {
+  Color get _variantColor {
     switch (variant) {
       case AppButtonVariant.primary:
         return AppColors.primary;
       case AppButtonVariant.secondary:
         return AppColors.secondary;
       case AppButtonVariant.danger:
-        return Colors.red;
-      case AppButtonVariant.outline:
-      case AppButtonVariant.text:
-        return Colors.transparent;
+        return AppColors.error;
+      case AppButtonVariant.success:
+        return AppColors.success;
     }
   }
 
-  Color get _foregroundColor {
-    switch (variant) {
-      case AppButtonVariant.primary:
-      case AppButtonVariant.secondary:
-      case AppButtonVariant.danger:
-        return Colors.white;
-      case AppButtonVariant.outline:
-      case AppButtonVariant.text:
-        return AppColors.primary;
-    }
-  }
+  Color get _backgroundColor =>
+      style == AppButtonStyle.filled ? _variantColor : Colors.transparent;
 
-  Color get _borderColor {
-    switch (variant) {
-      case AppButtonVariant.outline:
-        return AppColors.border;
-      default:
-        return Colors.transparent;
-    }
-  }
+  Color get _foregroundColor =>
+      style == AppButtonStyle.filled ? Colors.white : _variantColor;
 
-  BoxShadow? get _shadow {
-    if (variant == AppButtonVariant.primary ||
-        variant == AppButtonVariant.secondary ||
-        variant == AppButtonVariant.danger) {
-      return BoxShadow(
-        color: _backgroundColor.withValues(alpha: .3),
-        blurRadius: 12,
-        offset: const Offset(0, 4),
-      );
-    }
-    return null;
-  }
+  Color get _borderColor =>
+      style == AppButtonStyle.outlined ? _variantColor : Colors.transparent;
+
+  bool get _hasBorder => style == AppButtonStyle.outlined;
 
   @override
   Widget build(BuildContext context) {
@@ -82,19 +62,15 @@ class AppButton extends StatelessWidget {
       width: isFullWidth ? double.infinity : width,
       height: height,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         color: _backgroundColor,
-        border: Border.all(
-          color: _borderColor,
-          width: variant == AppButtonVariant.outline ? 1.5 : 0,
-        ),
-        boxShadow: _shadow != null ? [_shadow!] : null,
+        border: Border.all(color: _borderColor, width: _hasBorder ? 1.5 : 0),
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onPressed == null || isLoading ? null : onPressed,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           child: Padding(
             padding: padding,
             child: Center(

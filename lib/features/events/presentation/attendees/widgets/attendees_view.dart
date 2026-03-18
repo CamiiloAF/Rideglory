@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
-import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/attendees/attendees_cubit.dart';
-import 'package:rideglory/features/events/presentation/attendees/widgets/attendees_list.dart';
+import 'package:rideglory/features/events/presentation/attendees/widgets/attendees_data_view.dart';
 import 'package:rideglory/shared/widgets/app_app_bar.dart';
+import 'package:rideglory/shared/widgets/form/app_button.dart';
 
 class AttendeesView extends StatelessWidget {
   final EventModel event;
@@ -16,54 +19,68 @@ class AttendeesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = context.colorScheme;
     return Scaffold(
-      appBar: AppAppBar(title: EventStrings.attendees),
-      body:
-          BlocBuilder<
-            AttendeesCubit,
-            ResultState<List<EventRegistrationModel>>
-          >(
-            builder: (context, state) {
-              return state.when(
-                initial: () => const SizedBox.shrink(),
-                loading: () => const Center(child: CircularProgressIndicator()),
-                data: (registrations) =>
-                    AttendeesList(registrations: registrations, event: event),
-                empty: () => Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.people_outline,
-                        size: 64,
-                        color: Colors.grey,
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        EventStrings.noAttendees,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      ),
-                    ],
+      appBar: AppAppBar(
+        title: EventStrings.participants,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+          onPressed: () => context.pop(),
+          color: colorScheme.primary,
+        ),
+      ),
+      body: BlocBuilder<AttendeesCubit, ResultState<List<EventRegistrationModel>>>(
+        builder: (context, state) {
+          return state.when(
+            initial: () => const SizedBox.shrink(),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            data: (registrations) =>
+                AttendeesDataView(registrations: registrations, event: event),
+            empty: () => Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.people_outline,
+                    size: 64,
+                    color: colorScheme.onSurfaceVariant,
                   ),
-                ),
-                error: (error) => Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(error.message),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () => context
-                            .read<AttendeesCubit>()
-                            .fetchAttendees(event.id!),
-                        child: const Text(AppStrings.retry),
-                      ),
-                    ],
+                  const SizedBox(height: 16),
+                  Text(
+                    EventStrings.noAttendees,
+                    style: context.textTheme.titleMedium
+                        ?.copyWith(color: colorScheme.onSurface),
                   ),
+                ],
+              ),
+            ),
+            error: (error) => Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      error.message,
+                      style: context.textTheme.bodyMedium
+                          ?.copyWith(color: colorScheme.onSurface),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    AppButton(
+                      label: AppStrings.retry,
+                      onPressed: () => context
+                          .read<AttendeesCubit>()
+                          .fetchAttendees(event.id!),
+                      isFullWidth: false,
+                    ),
+                  ],
                 ),
-              );
-            },
-          ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

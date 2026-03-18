@@ -14,8 +14,12 @@ abstract class MaintenanceFormFields {
   static const String distanceUnit = 'distanceUnit';
 
   static const String receiveAlert = 'receiveAlert';
+  static const String receiveMileageAlert = 'receiveMileageAlert';
+  static const String receiveDateAlert = 'receiveDateAlert';
 
   static const String nextMaintenanceMileage = 'nextMaintenanceMileage';
 
   static const String vehicleId = 'vehicleId';
+
+  static const String cost = 'cost';
 }

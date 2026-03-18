@@ -21,7 +21,6 @@ class EmptyStateWidget extends StatelessWidget {
   /// Callback when action button is pressed
   final VoidCallback? onActionPressed;
 
-
   /// Icon size (defaults to 80)
   final double iconSize;
 
@@ -58,14 +57,10 @@ class EmptyStateWidget extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.1),
+                  color: iconColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  icon,
-                  size: iconSize,
-                  color: iconColor,
-                ),
+                child: Icon(icon, size: iconSize, color: iconColor),
               ),
               const SizedBox(height: 24),
 

@@ -24,7 +24,7 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
   getMaintenancesByUserId() async {
     final userId = _authService.currentUser?.uid;
     if (userId == null) {
-      throw DomainException(message: 'No user is currently authenticated.');
+      throw const DomainException(message: 'No user is currently authenticated.');
     }
 
     return executeService(
@@ -51,7 +51,7 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
   getMaintenancesByVehicleId(String vehicleId) async {
     final userId = _authService.currentUser?.uid;
     if (userId == null) {
-      throw DomainException(message: 'No user is currently authenticated.');
+      throw const DomainException(message: 'No user is currently authenticated.');
     }
 
     return executeService(
@@ -100,7 +100,7 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
       function: () async {
         await firestore.collection(_collectionName).doc(id).delete();
 
-        return Nothing();
+        return const Nothing();
       },
     );
   }

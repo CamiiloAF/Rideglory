@@ -31,12 +31,8 @@ class VehicleCubit extends Cubit<VehicleState> {
     return null;
   }
 
-  /// Get the main vehicle from available vehicles
-  VehicleModel? get mainVehicle {
-    return _availableVehicles.firstWhereOrNull((v) => v.isMainVehicle);
-  }
-
   int? get currentMileage => currentVehicle?.currentMileage;
+  List<VehicleModel> get availableVehicles => _availableVehicles;
 
   Future<void> setCurrentVehicle(VehicleModel vehicle) async {
     emit(VehicleLoaded(vehicle));
@@ -76,9 +72,6 @@ class VehicleCubit extends Cubit<VehicleState> {
       },
     );
 
-    // If no main vehicle found via use case, try to find one marked as main
-    vehicleToSelect ??= vehicles.firstWhereOrNull((v) => v.isMainVehicle);
-
     // Fall back to the first vehicle
     vehicleToSelect ??= vehicles.first;
 
@@ -98,9 +91,7 @@ class VehicleCubit extends Cubit<VehicleState> {
     bool shouldUpdateMainVehicle = false,
   }) {
     final current = currentVehicle;
-    if (current != null && current.id == updatedVehicle.id) {
-      emit(VehicleLoaded(updatedVehicle));
-    }
+    final isEditingCurrent = current != null && current.id == updatedVehicle.id;
 
     if (shouldUpdateMainVehicle) {
       if (!_availableVehicles.contains(updatedVehicle)) {
@@ -110,26 +101,27 @@ class VehicleCubit extends Cubit<VehicleState> {
       setMainVehicle(updatedVehicle.id!);
     }
 
-    // Also update in available vehicles
     _availableVehicles = _availableVehicles.map((v) {
       return v.id == updatedVehicle.id ? updatedVehicle : v;
     }).toList();
+
+    // Always emit to refresh listeners (garage & home),
+    // keeping the current selected vehicle if any.
+    if (isEditingCurrent) {
+      emit(VehicleLoaded(updatedVehicle));
+    } else if (current != null) {
+      emit(VehicleLoaded(current));
+    } else if (_availableVehicles.isNotEmpty) {
+      emit(VehicleLoaded(_availableVehicles.first));
+    }
   }
 
-  /// Set a vehicle as the main vehicle
-  /// This will save the main vehicle ID to the userMainVehicle collection
   Future<void> setMainVehicle(String vehicleId) async {
-    // Update local state
-    _availableVehicles = _availableVehicles.map((v) {
-      return v.copyWith(isMainVehicle: v.id == vehicleId);
-    }).toList();
-
     final mainVehicle = _availableVehicles.firstWhereOrNull(
       (v) => v.id == vehicleId,
     );
 
     if (mainVehicle != null) {
-      // Save to Firestore via use case
       final result = await _setMainVehicleUseCase(vehicleId);
 
       result.fold(
@@ -137,13 +129,8 @@ class VehicleCubit extends Cubit<VehicleState> {
           if (kDebugMode) {
             print('Error setting main vehicle: ${error.message}');
           }
-          // Revert local state on error
-          _availableVehicles = _availableVehicles.map((v) {
-            return v.copyWith(isMainVehicle: false);
-          }).toList();
         },
         (_) {
-          // Success - update current vehicle
           setCurrentVehicle(mainVehicle);
         },
       );
@@ -155,13 +142,14 @@ class VehicleCubit extends Cubit<VehicleState> {
     _availableVehicles = vehicles;
   }
 
-  /// Add a new vehicle to the available vehicles list without refetching
   void addVehicleLocally(VehicleModel vehicle) {
     _availableVehicles = [..._availableVehicles, vehicle];
 
-    // If it's the first vehicle or marked as main, set it as current
-    if (_availableVehicles.length == 1 || vehicle.isMainVehicle) {
+    if (_availableVehicles.length == 1) {
       setCurrentVehicle(vehicle);
+    } else {
+      final current = currentVehicle ?? vehicle;
+      emit(VehicleLoaded(current));
     }
   }
 
@@ -178,11 +166,7 @@ class VehicleCubit extends Cubit<VehicleState> {
       if (_availableVehicles.isEmpty) {
         await clearCurrentVehicle();
       } else {
-        // Select the main vehicle or the first one
-        final newVehicle =
-            _availableVehicles.firstWhereOrNull((v) => v.isMainVehicle) ??
-            _availableVehicles.first;
-        await setCurrentVehicle(newVehicle);
+        await setCurrentVehicle(_availableVehicles.first);
       }
     }
   }
@@ -197,7 +181,7 @@ class VehicleCubit extends Cubit<VehicleState> {
 
 extension _FirstWhereOrNullExt<T> on Iterable<T> {
   T? firstWhereOrNull(bool Function(T) test) {
-    for (var element in this) {
+    for (final element in this) {
       if (test(element)) return element;
     }
     return null;

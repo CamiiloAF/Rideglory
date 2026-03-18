@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/extensions/go_router.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/domain/use_cases/get_maintenance_list_use_case.dart';
@@ -13,25 +15,33 @@ import 'package:rideglory/features/maintenance/presentation/list/maintenances/wi
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_empty_widget.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_error_widget.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_loading_widget.dart';
-import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_page_app_bar.dart';
+import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/expandable_fab.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters_bottom_sheet.dart';
-import 'package:rideglory/features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
+import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/shared/widgets/app_drawer.dart';
 
 class MaintenancesPage extends StatelessWidget {
-  const MaintenancesPage({super.key});
+  final String? initialVehicleId;
+
+  const MaintenancesPage({super.key, this.initialVehicleId});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              MaintenancesCubit(getIt<GetMaintenanceListUseCase>())
-                ..fetchMaintenances(),
+          create: (context) {
+            final cubit = MaintenancesCubit(getIt<GetMaintenanceListUseCase>());
+            if (initialVehicleId != null) {
+              cubit.updateFilters(
+                MaintenanceFilters(vehicleIds: [initialVehicleId!]),
+              );
+            }
+            cubit.fetchMaintenances();
+            return cubit;
+          },
         ),
         BlocProvider(create: (context) => getIt<MaintenanceDeleteCubit>()),
       ],
@@ -52,7 +62,7 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
 
   Future<void> _showFiltersBottomSheet() async {
     final cubit = context.read<MaintenancesCubit>();
-    final vehicleListCubit = context.read<VehicleListCubit>();
+    final vehicleCubit = context.read<VehicleCubit>();
 
     final result = await showModalBottomSheet<MaintenanceFilters>(
       context: context,
@@ -60,12 +70,32 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
       backgroundColor: Colors.transparent,
       builder: (context) => MaintenanceFiltersBottomSheet(
         initialFilters: cubit.filters,
-        availableVehicles: vehicleListCubit.activeVehicles,
+        availableVehicles: vehicleCubit.availableVehicles
+            .where((v) => !v.isArchived)
+            .toList(),
       ),
     );
 
     if (result != null && mounted) {
       cubit.updateFilters(result);
+    }
+  }
+
+  Future<void> _onTap(MaintenanceModel maintenance) async {
+    if (maintenance.id != null) {
+      final result = await context.pushNamed<dynamic>(
+        AppRoutes.maintenanceDetail,
+        extra: maintenance,
+      );
+      if (mounted && result != null) {
+        if (result is MaintenanceModel) {
+          context.read<MaintenancesCubit>().updateMaintenanceLocally(result);
+        } else if (result is Map && result['action'] == 'deleted') {
+          context.read<MaintenancesCubit>().deleteMaintenanceLocally(
+            result['deletedId'] as String,
+          );
+        }
+      }
     }
   }
 
@@ -108,13 +138,20 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
         .activeFilterCount;
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
-      appBar: MaintenancesPageAppBar(
-        activeFilterCount: activeFilterCount,
-        onFilterPressed: _showFiltersBottomSheet,
-        onVehiclesPressed: () => context.pushNamed(AppRoutes.vehicles),
+      backgroundColor: AppColors.darkBackground,
+      appBar: AppAppBar(
+        title: MaintenanceStrings.maintenances,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            if (context.canPop()) {
+              context.pop();
+              return;
+            }
+            context.goAndClearStack(AppRoutes.home);
+          },
+        ),
       ),
-      drawer: const AppDrawer(currentRoute: AppRoutes.maintenances),
       floatingActionButton: _showExpandedFab ? const ExpandableFab() : null,
       body: MultiBlocListener(
         listeners: [
@@ -171,9 +208,11 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
                   onSearchChanged: (value) {
                     context.read<MaintenancesCubit>().updateSearchQuery(value);
                   },
-                  onTap: _onEdit,
+                  onTap: _onTap,
                   onEdit: _onEdit,
                   onDelete: _onDelete,
+                  onFilterPressed: _showFiltersBottomSheet,
+                  activeFilterCount: activeFilterCount,
                 ),
                 orElse: () => MaintenancesLoadingWidget(onRefresh: _onRefresh),
               ),

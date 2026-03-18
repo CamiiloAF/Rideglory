@@ -1,80 +1,134 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
-import 'package:rideglory/features/events/presentation/list/widgets/event_card_chips_row.dart';
-import 'package:rideglory/features/events/presentation/list/widgets/event_card_date_and_city.dart';
-import 'package:rideglory/features/events/presentation/list/widgets/event_card_header.dart';
-import 'package:rideglory/features/events/presentation/list/widgets/event_card_meeting_time_and_brands.dart';
+import 'package:rideglory/features/events/presentation/list/widgets/event_card_constants.dart';
+import 'package:rideglory/features/events/presentation/list/widgets/event_card_expand_toggle.dart';
+import 'package:rideglory/features/events/presentation/list/widgets/event_card_info_panel.dart';
+import 'package:rideglory/features/events/presentation/list/widgets/event_card_my_event_badge.dart';
+import 'package:rideglory/features/events/presentation/list/widgets/event_card_price_badge.dart';
+import 'package:rideglory/features/events/presentation/list/widgets/event_card_type_chip.dart';
 
-class EventCard extends StatelessWidget {
+class EventCard extends StatefulWidget {
   final EventModel event;
   final VoidCallback onTap;
   final bool isOwner;
-  final VoidCallback? onEdit;
-  final VoidCallback? onDelete;
 
   const EventCard({
     super.key,
     required this.event,
     required this.onTap,
     this.isOwner = false,
-    this.onEdit,
-    this.onDelete,
   });
 
-  static final _dateFormatter = DateFormat('d MMM yyyy', 'es');
-  static final _timeFormatter = DateFormat('h:mm a');
+  @override
+  State<EventCard> createState() => _EventCardState();
+}
+
+class _EventCardState extends State<EventCard> {
+  bool _isExpanded = false;
+
+  @override
+  void didUpdateWidget(covariant EventCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.event.id != widget.event.id && _isExpanded) {
+      _isExpanded = false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        height: eventCardHeight,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.shadowDark,
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Stack(
             children: [
-              EventCardHeader(
-                eventName: event.name,
-                isOwner: isOwner,
-                onEdit: onEdit,
-                onDelete: onDelete,
+              Positioned.fill(
+                child: Image.network(
+                  widget.event.imageUrl ?? '',
+                  fit: BoxFit.fill,
+                  errorBuilder: (_, _, _) => Image.asset(
+                    'assets/images/event.jpeg', //TODO: Add placeholder image
+                    fit: BoxFit.fill,
+                  ),
+                ),
               ),
-              const SizedBox(height: 8),
-              EventCardChipsRow(
-                eventType: event.eventType,
-                difficulty: event.difficulty,
-                isFree: event.isFree,
-                price: event.price,
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.black.withValues(alpha: 0.1),
+                        Colors.black.withValues(alpha: 0.5),
+                      ],
+                      stops: const [0.4, 1.0],
+                    ),
+                  ),
+                ),
               ),
-              const SizedBox(height: 10),
-              EventCardDateAndCity(
-                formattedDate: _formatDateRange(),
-                city: event.city,
+              Positioned(
+                top: 14,
+                left: 14,
+                child: EventCardTypeChip(eventType: widget.event.eventType),
               ),
-              const SizedBox(height: 6),
-              EventCardMeetingTimeAndBrands(
-                formattedTime: _timeFormatter.format(event.meetingTime),
-                isMultiBrand: event.isMultiBrand,
-                allowedBrands: event.allowedBrands,
+              Positioned(
+                top: 14,
+                right: 14,
+                child: EventCardPriceBadge(
+                  isFree: widget.event.isFree,
+                  price: widget.event.price,
+                ),
+              ),
+              if (widget.isOwner)
+                AnimatedPositioned(
+                  duration: const Duration(milliseconds: 280),
+                  curve: Curves.easeInOut,
+                  bottom: _isExpanded ? eventCardInfoPanelHeight + 12 : 14,
+                  left: 14,
+                  child: const EventCardMyEventBadge(),
+                ),
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 280),
+                curve: Curves.easeInOut,
+                bottom: _isExpanded ? eventCardInfoPanelHeight + 12 : 14,
+                right: 14,
+                child: EventCardExpandToggle(
+                  isExpanded: _isExpanded,
+                  onTap: () => setState(() => _isExpanded = !_isExpanded),
+                ),
+              ),
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 280),
+                curve: Curves.easeInOut,
+                bottom: _isExpanded ? 0 : -eventCardInfoPanelHeight,
+                left: 0,
+                right: 0,
+                height: eventCardInfoPanelHeight,
+                child: EventCardInfoPanel(
+                  event: widget.event,
+                  onTap: widget.onTap,
+                ),
               ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  String _formatDateRange() {
-    final start = _dateFormatter.format(event.startDate);
-    if (event.endDate != null && event.endDate != event.startDate) {
-      return '$start – ${_dateFormatter.format(event.endDate!)}';
-    }
-    return start;
   }
 }

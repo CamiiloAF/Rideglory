@@ -8,6 +8,9 @@ class AppTextField extends StatelessWidget {
   final String? labelText;
   final IconData? prefixIcon;
   final Widget? suffixIcon;
+  final String? suffixText;
+  final TextStyle? suffixStyle;
+  final int? maxLength;
   final String? Function(String?)? validator;
   final String? initialValue;
   final int? maxLines;
@@ -23,6 +26,8 @@ class AppTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final void Function(String?)? onFieldSubmitted;
   final FocusNode? focusNode;
+  final TextCapitalization? textCapitalization;
+  final bool readonly;
 
   const AppTextField({
     super.key,
@@ -30,6 +35,9 @@ class AppTextField extends StatelessWidget {
     this.labelText,
     this.prefixIcon,
     this.suffixIcon,
+    this.suffixText,
+    this.suffixStyle,
+    this.maxLength,
     this.validator,
     this.initialValue,
     this.maxLines = 1,
@@ -45,6 +53,8 @@ class AppTextField extends StatelessWidget {
     this.textInputAction,
     this.onFieldSubmitted,
     this.focusNode,
+    this.textCapitalization,
+    this.readonly = false,
   });
 
   @override
@@ -52,24 +62,29 @@ class AppTextField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (labelText != null)
+          TextFieldLabel(labelText: labelText!, isRequired: isRequired),
         FormBuilderTextField(
           name: name,
           decoration: InputDecoration(
-            border: const OutlineInputBorder(),
             prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
             suffixIcon: suffixIcon,
+            suffixText: suffixText,
+            suffixStyle: suffixStyle,
             hintText: hintText,
             helperText: helperText,
             helperMaxLines: 3,
-            label: labelText != null
-                ? TextFieldLabel(labelText: labelText!, isRequired: isRequired)
-                : null,
+            counterText: maxLength != null
+                ? ''
+                : null, // Hide counter when maxLength is set
           ),
           initialValue: initialValue,
           maxLines: maxLines,
           minLines: minLines,
+          maxLength: maxLength,
           keyboardType: keyboardType,
           enabled: enabled,
+          readOnly: readonly,
           onChanged: onChanged,
           validator: validator != null
               ? FormBuilderValidators.compose([validator!])
@@ -79,6 +94,8 @@ class AppTextField extends StatelessWidget {
           textInputAction: textInputAction,
           onSubmitted: onFieldSubmitted,
           focusNode: focusNode,
+          textCapitalization:
+              textCapitalization ?? TextCapitalization.sentences,
         ),
       ],
     );

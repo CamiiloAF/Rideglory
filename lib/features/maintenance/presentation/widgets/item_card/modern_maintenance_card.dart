@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
-import 'package:rideglory/features/vehicles/presentation/list/cubit/vehicle_list_cubit.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/item_card/maintenance_card_content.dart';
 
@@ -61,44 +59,42 @@ class ModernMaintenanceCard extends StatelessWidget {
             ? vehicleState.vehicle.currentMileage
             : null;
 
-        return BlocBuilder<VehicleListCubit, ResultState<List<VehicleModel>>>(
-          builder: (context, vehicleListState) {
-            VehicleModel? maintenanceVehicle;
-            if (maintenance.vehicleId != null &&
-                vehicleListState is Data<List<VehicleModel>>) {
-              try {
-                maintenanceVehicle = vehicleListState.data.firstWhere(
-                  (v) => v.id == maintenance.vehicleId,
-                );
-              } catch (e) {
-                // Vehicle not found
-              }
-            }
-
-            final daysUntilNext = maintenance.nextMaintenanceDate
-                ?.difference(DateTime.now())
-                .inDays;
-
-            final progressPercent = _getProgressPercent(currentMileage);
-            final isUrgent =
-                (daysUntilNext != null && daysUntilNext < 10) ||
-                (progressPercent != null && progressPercent >= 0.95);
-
-            return MaintenanceCardContent(
-              maintenance: maintenance,
-              maintenanceVehicle: maintenanceVehicle,
-              typeColor: _typeColor,
-              typeIcon: _typeIcon,
-              currentMileage: currentMileage,
-              progressPercent: progressPercent,
-              isUrgent: isUrgent,
-              daysUntilNext: daysUntilNext,
-              getRemainingDistance: _getRemainingDistance,
-              onTap: onTap,
-              onEdit: onEdit,
-              onDelete: onDelete,
+        final availableVehicles = context
+            .read<VehicleCubit>()
+            .availableVehicles;
+        VehicleModel? maintenanceVehicle;
+        if (maintenance.vehicleId != null) {
+          try {
+            maintenanceVehicle = availableVehicles.firstWhere(
+              (v) => v.id == maintenance.vehicleId,
             );
-          },
+          } catch (e) {
+            // Vehicle not found
+          }
+        }
+
+        final daysUntilNext = maintenance.nextMaintenanceDate
+            ?.difference(DateTime.now())
+            .inDays;
+
+        final progressPercent = _getProgressPercent(currentMileage);
+        final isUrgent =
+            (daysUntilNext != null && daysUntilNext < 10) ||
+            (progressPercent != null && progressPercent >= 0.95);
+
+        return MaintenanceCardContent(
+          maintenance: maintenance,
+          maintenanceVehicle: maintenanceVehicle,
+          typeColor: _typeColor,
+          typeIcon: _typeIcon,
+          currentMileage: currentMileage,
+          progressPercent: progressPercent,
+          isUrgent: isUrgent,
+          daysUntilNext: daysUntilNext,
+          getRemainingDistance: _getRemainingDistance,
+          onTap: onTap,
+          onEdit: onEdit,
+          onDelete: onDelete,
         );
       },
     );

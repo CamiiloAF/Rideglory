@@ -84,11 +84,14 @@ class AppDialog extends StatelessWidget {
     }
 
     return actions.map((action) {
-      final variant = action.type == DialogActionType.danger
+      final isPrimary = action.type == DialogActionType.primary;
+      final isDanger = action.type == DialogActionType.danger;
+      final variant = isDanger
           ? AppButtonVariant.danger
-          : action.type == DialogActionType.primary
-          ? AppButtonVariant.primary
-          : AppButtonVariant.outline;
+          : AppButtonVariant.primary;
+      final style = isPrimary || isDanger
+          ? AppButtonStyle.filled
+          : AppButtonStyle.outlined;
 
       return Expanded(
         child: Padding(
@@ -97,6 +100,7 @@ class AppDialog extends StatelessWidget {
             label: action.label,
             onPressed: action.onPressed,
             variant: variant,
+            style: style,
             padding: const EdgeInsets.symmetric(vertical: 12),
           ),
         ),

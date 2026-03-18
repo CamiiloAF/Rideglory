@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenance_list.dart';
 import 'package:rideglory/shared/widgets/no_search_results_empty_widget.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
-import 'package:rideglory/shared/widgets/form/app_search_bar.dart';
+import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_header_view.dart';
 
 class MaintenancesDataWidget extends StatelessWidget {
   final List<MaintenanceModel> maintenances;
@@ -12,6 +14,8 @@ class MaintenancesDataWidget extends StatelessWidget {
   final Future<void> Function(MaintenanceModel) onTap;
   final Future<void> Function(MaintenanceModel) onEdit;
   final void Function(MaintenanceModel) onDelete;
+  final Future<void> Function() onFilterPressed;
+  final int activeFilterCount;
 
   const MaintenancesDataWidget({
     super.key,
@@ -21,6 +25,8 @@ class MaintenancesDataWidget extends StatelessWidget {
     required this.onTap,
     required this.onEdit,
     required this.onDelete,
+    required this.onFilterPressed,
+    required this.activeFilterCount,
   });
 
   @override
@@ -29,9 +35,60 @@ class MaintenancesDataWidget extends StatelessWidget {
       onRefresh: onRefresh,
       child: Column(
         children: [
-          AppSearchBar(
-            hintText: MaintenanceStrings.searchMaintenances,
+          MaintenancesHeaderView(
             onSearchChanged: onSearchChanged,
+            onFilterPressed: onFilterPressed,
+            activeFilterCount: activeFilterCount,
+            maintenances: maintenances,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    MaintenanceStrings.recentRecords,
+                    style: context.titleMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: onFilterPressed,
+                  borderRadius: BorderRadius.circular(14),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.darkSurfaceHighest,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: AppColors.darkBorder, width: 1),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.tune,
+                          color: AppColors.primary,
+                          size: 18,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          MaintenanceStrings.filter,
+                          style: context.bodyMedium?.copyWith(
+                            color: Colors.white.withValues(alpha: 0.85),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           Expanded(
             child: maintenances.isEmpty

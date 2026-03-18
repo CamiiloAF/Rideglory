@@ -7,34 +7,43 @@ class AppDropdown<T> extends StatelessWidget {
     super.key,
     required this.name,
     this.labelText,
+    this.hintText,
     this.validator,
     required this.items,
     this.isRequired = false,
     this.prefixIcon,
+    this.onChanged,
   });
 
   final String name;
   final String? labelText;
+  final String? hintText;
   final FormFieldValidator<T>? validator;
   final List<DropdownMenuItem<T>> items;
   final bool isRequired;
   final Widget? prefixIcon;
+  final ValueChanged<T?>? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (labelText != null)
+          TextFieldLabel(
+            labelText: labelText!,
+            isRequired: isRequired,
+          ),
         FormBuilderDropdown<T>(
           name: name,
           decoration: InputDecoration(
-            label: labelText != null
-                ? TextFieldLabel(labelText: labelText!, isRequired: isRequired)
-                : null,
             border: const OutlineInputBorder(),
+            hintText: hintText,
             prefixIcon: prefixIcon,
           ),
           validator: validator,
           items: items,
+          onChanged: onChanged,
         ),
       ],
     );

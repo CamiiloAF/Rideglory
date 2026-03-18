@@ -9,10 +9,6 @@ abstract class VehicleFormFields {
 
   static const String currentMileage = 'currentMileage';
 
-  static const String distanceUnit = 'distanceUnit';
-
-  static const String vehicleType = 'vehicleType';
-
   static const String licensePlate = 'licensePlate';
 
   static const String vin = 'vin';

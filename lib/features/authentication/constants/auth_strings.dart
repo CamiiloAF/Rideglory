@@ -1,8 +1,40 @@
 /// Authentication feature string constants
-class AuthStrings {
-  AuthStrings._();
+abstract class AuthStrings {
+  // Login
+  static const String loginTitle = 'Bienvenido';
+  static const String loginSubtitleStitch = 'Acelera tu experiencia';
+  static const String emailLabel = 'Correo electrónico';
+  static const String emailHint = 'nombre@ejemplo.com';
+  static const String passwordLabel = 'Contraseña';
+  static const String passwordHint = 'Mínimo 8 caracteres';
+  static const String forgotPassword = '¿Olvidaste tu contraseña?';
+  static const String signInButton = 'Iniciar sesión';
+  static const String orContinueWithStitch = 'O continúa con';
+  static const String noAccountQuestion = '¿No tienes una cuenta?';
+  static const String registerFreeLink = 'Regístrate gratis';
+  static const String googleLabel = 'Google';
+  static const String appleLabel = 'Apple';
+  static const String signingInLabel = 'Iniciando sesión...';
 
-  // Page titles and headers
+  // Sign Up (Stitch)
+  static const String registerTitle = 'Únete a la comunidad';
+  static const String registerSubtitle =
+      'Crea tu cuenta para empezar a rodar con nosotros.';
+  static const String registerSignInQuestion = '¿Ya tienes una cuenta?';
+  static const String registerSignInLink = 'Inicia sesión';
+  static const String nameField = 'Nombre completo';
+  static const String nameHint = 'Ej. Juan Pérez';
+  static const String passwordMinStitch = 'Mínimo 8 caracteres';
+  static const String createAccountButton = 'Crear cuenta';
+  static const String termsPrefix = 'Acepto los ';
+  static const String termsOf = 'Términos';
+  static const String termsAnd = ' y ';
+  static const String termsConditions = 'Condiciones';
+  static const String termsAnd2 = ' y la ';
+  static const String termsPrivacy = 'Política de Privacidad';
+  static const String termsSuffix = ' de MotoConnect.';
+
+  // ── Legacy / other screens ────────────────────────────────────────────────
   static const String letsStart = 'Comencemos';
   static const String loginSubtitle =
       'Inicia sesión o crea una cuenta para gestionar tus vehículos';

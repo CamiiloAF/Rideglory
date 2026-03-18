@@ -5,9 +5,12 @@ class VehicleStrings {
   // Page titles
   static const String vehicles = 'Vehículos';
   static const String myVehicles = 'Mis Vehículos';
-  static const String addVehicle = 'Agregar Vehículo';
-  static const String editVehicle = 'Editar Vehículo';
-  static const String deleteVehicle = 'Eliminar Vehículo';
+  static const String myGarage = 'Mi Garaje';
+  static const String addVehicle = 'Agregar vehículo';
+  static const String saveVehicle = 'Guardar vehículo';
+  static const String editVehicle = 'Editar vehículo';
+  static const String deleteVehicle = 'Eliminar vehículo';
+  static const String addMaintenance = 'Agregar mantenimiento';
 
   // Actions
   static const String selectVehicle = 'Seleccionar vehículo';
@@ -51,12 +54,18 @@ class VehicleStrings {
   static const String vehicleVin = 'VIN';
 
   // Hints
-  static const String vehicleNameHint = 'ej., Mi Auto, Camioneta Familiar';
-  static const String vehicleBrandHint = 'ej., Toyota';
-  static const String vehicleModelHint = 'ej., Camry';
-  static const String vehicleYearHint = 'ej., 2020';
-  static const String vehiclePlateHint = 'ej., ABC-1234';
-  static const String vehicleVinHint = 'Número de Identificación del Vehículo';
+  static const String vehicleNameHint = 'Ej. Mi moto negra';
+  static const String vehicleBrandHint = 'Ej. Yamaha';
+  static const String vehicleModelHint = 'Ej. MT-07';
+  static const String vehicleYearHint = 'Ej. 2022';
+  static const String vehiclePlateHint = 'Ej. ABC123';
+  static const String vehicleVinHint = '17 caracteres';
+
+  // Image upload
+  static const String vehiclePhoto = 'Foto del vehículo';
+  static const String uploadPhoto = 'Subir foto';
+  static const String selectImage = 'Seleccionar imagen';
+  static const String changePhoto = 'Cambiar foto';
 
   // View states
   static const String viewArchived = 'Ver archivados';
@@ -85,18 +94,30 @@ class VehicleStrings {
   static const String nameRequired = 'El nombre es requerido';
   static const String vehicleTypeRequired = 'El tipo de vehículo es requerido';
   static const String brandRequired = 'La marca es requerida';
+  static const String brandMustBeFromList =
+      'Selecciona una marca de la lista de sugerencias';
   static const String yearRequired = 'El año es requerido';
   static const String minCharacters = 'Mínimo 3 caracteres';
   static const String invalidYear = 'Año inválido';
 
   // Additional form fields
   static const String purchaseDate = 'Fecha de compra';
+  static const String purchaseDateHint = 'Ej. 24/12/2025';
 
   // Vehicle types
   static const String car = 'Carro';
   static const String motorcycle = 'Moto';
 
-  // Units
-  static const String kilometers = 'Kilómetros';
-  static const String miles = 'Millas';
+  // Garage V1 Design Strings
+  static const String quickInfo = 'Info rápida';
+  static const String currentMileageLabel = 'Kilometraje actual';
+  static const String fullSpecs = 'Especificaciones completas';
+  static const String garageOverview = 'Resumen del garaje';
+  static const String total = 'TOTAL';
+  static const String lastRide = 'ÚLTIMO VIAJE';
+  static const String allVehicles = 'Todos';
+
+  // Garage V1 Maintenance History
+  static const String maintenanceHistory = 'Historial de Registros';
+  static const String seeAll = 'Ver todos';
 }

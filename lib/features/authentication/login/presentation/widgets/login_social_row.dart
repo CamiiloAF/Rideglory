@@ -1,0 +1,39 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/features/authentication/application/auth_cubit.dart';
+import 'package:rideglory/features/authentication/constants/auth_strings.dart';
+import 'package:rideglory/features/authentication/login/presentation/widgets/login_social_button.dart';
+
+class LoginSocialRow extends StatelessWidget {
+  const LoginSocialRow({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
+        final isLoading = state.isLoading;
+        return Row(
+          children: [
+            Expanded(
+              child: LoginSocialButton(
+                label: AuthStrings.googleLabel,
+                icon: Icons.g_mobiledata_rounded,
+                onPressed: isLoading
+                    ? null
+                    : () => context.read<AuthCubit>().signInWithGoogle(),
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Expanded(
+              child: LoginSocialButton(
+                label: AuthStrings.appleLabel,
+                icon: Icons.apple,
+                onPressed: null, // TODO: implement Apple sign-in
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
