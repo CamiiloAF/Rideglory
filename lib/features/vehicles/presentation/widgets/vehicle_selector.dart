@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class VehicleSelector extends StatelessWidget {
   const VehicleSelector({super.key});
@@ -57,7 +57,7 @@ class VehicleSelector extends StatelessWidget {
                   child: DropdownButton<VehicleModel>(
                     value: currentVehicle,
                     isExpanded: true,
-                    hint: const Text(VehicleStrings.selectVehicle),
+                    hint: Text(context.l10n.vehicle_selectVehicle),
                     items: vehicles.map((vehicle) {
                       return DropdownMenuItem<VehicleModel>(
                         value: vehicle,

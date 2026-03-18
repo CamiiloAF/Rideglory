@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MaintenanceDetailHeader extends StatelessWidget {
   const MaintenanceDetailHeader({
@@ -64,7 +64,7 @@ class MaintenanceDetailHeader extends StatelessWidget {
               ),
               SizedBox(height: 4),
               Text(
-                MaintenanceStrings.performedOn(
+                context.l10n.maintenance_performedOn(
                   DateFormat('dd MMM, yyyy').format(maintenance.date),
                 ),
                 style: theme.textTheme.bodyLarge?.copyWith(
@@ -82,7 +82,7 @@ class MaintenanceDetailHeader extends StatelessWidget {
                       size: 18,
                       color: theme.colorScheme.primary,
                     ),
-                    label: MaintenanceStrings.routine.toUpperCase(),
+                    label: context.l10n.maintenance_routine.toUpperCase(),
                     variant: DetailPillVariant.primary,
                   ),
                   if (_vehicleDisplayName().isNotEmpty)

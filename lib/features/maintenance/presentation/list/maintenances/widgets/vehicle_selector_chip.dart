@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class VehicleSelectorChip extends StatelessWidget {
   final String? selectedVehicleId;
@@ -27,7 +27,7 @@ class VehicleSelectorChip extends StatelessWidget {
             .toList();
 
         final hasSelection = selectedVehicleId != null;
-        String label = MaintenanceStrings.allVehicles;
+        String label = context.l10n.maintenance_allVehicles;
         if (hasSelection) {
           try {
             label = availableVehicles

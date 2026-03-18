@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/authentication/constants/auth_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class LoginRegisterLink extends StatelessWidget {
   final VoidCallback onTap;
@@ -13,14 +13,14 @@ class LoginRegisterLink extends StatelessWidget {
     return Column(
       children: [
         Text(
-          AuthStrings.noAccountQuestion,
+          context.l10n.auth_noAccountQuestion,
           style: context.textTheme.bodySmall?.copyWith(
             color: context.colorScheme.onSurfaceVariant,
           ),
           textAlign: TextAlign.center,
         ),
         AppTextButton(
-          label: AuthStrings.registerFreeLink,
+          label: context.l10n.auth_registerFreeLink,
           onPressed: onTap,
           visualDensity: VisualDensity.compact,
         ),

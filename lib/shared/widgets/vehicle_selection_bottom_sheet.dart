@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/shared/widgets/vehicle_list_item.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class VehicleSelectionBottomSheet extends StatelessWidget {
   final String? subtitle;
@@ -79,7 +79,7 @@ class VehicleSelectionBottomSheet extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  VehicleStrings.selectVehicle,
+                  context.l10n.vehicle_selectVehicle,
                   style: textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w700,
                     color: cs.onSurface,

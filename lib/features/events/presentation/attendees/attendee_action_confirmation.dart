@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 abstract final class AttendeeActionConfirmation {
   AttendeeActionConfirmation._();
@@ -12,10 +12,10 @@ abstract final class AttendeeActionConfirmation {
   }) =>
       ConfirmationDialog.show(
         context: context,
-        title: EventStrings.approveRegistration,
-        content: EventStrings.approveConfirmMessage(firstName),
+        title: context.l10n.event_approveRegistration,
+        content: context.l10n.event_approveConfirmMessage(firstName),
         dialogType: DialogType.warning,
-        confirmLabel: EventStrings.approveRegistration,
+        confirmLabel: context.l10n.event_approveRegistration,
         onConfirm: onConfirm,
       );
 
@@ -26,10 +26,10 @@ abstract final class AttendeeActionConfirmation {
   }) =>
       ConfirmationDialog.show(
         context: context,
-        title: EventStrings.rejectRegistration,
-        content: EventStrings.rejectConfirmMessage(firstName),
+        title: context.l10n.event_rejectRegistration,
+        content: context.l10n.event_rejectConfirmMessage(firstName),
         dialogType: DialogType.warning,
-        confirmLabel: EventStrings.rejectRegistration,
+        confirmLabel: context.l10n.event_rejectRegistration,
         onConfirm: onConfirm,
       );
 }

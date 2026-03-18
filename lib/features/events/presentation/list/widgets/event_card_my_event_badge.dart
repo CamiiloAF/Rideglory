@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventCardMyEventBadge extends StatelessWidget {
   const EventCardMyEventBadge({super.key});
@@ -28,7 +28,7 @@ class EventCardMyEventBadge extends StatelessWidget {
           ),
           SizedBox(width: 4),
           Text(
-            EventStrings.eventCardMyEvent.toUpperCase(),
+            context.l10n.event_eventCardMyEvent.toUpperCase(),
             style: context.labelSmall?.copyWith(
               color: context.colorScheme.onPrimary,
               fontWeight: FontWeight.bold,

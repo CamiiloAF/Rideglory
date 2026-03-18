@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventCardMeetingTimeAndBrands extends StatelessWidget {
   final String formattedTime;
@@ -15,8 +15,8 @@ class EventCardMeetingTimeAndBrands extends StatelessWidget {
 
   static const double _iconSize = 14.0;
 
-  String get allowedBrandsText {
-    if (allowedBrands.isEmpty) return EventStrings.allBrands;
+  String allowedBrandsText(BuildContext context) {
+    if (allowedBrands.isEmpty) return context.l10n.event_allBrands;
     if (allowedBrands.length == 1) return allowedBrands.first;
     return allowedBrands.take(2).join(', ') +
         (allowedBrands.length > 2 ? ', +${allowedBrands.length - 2}' : '');
@@ -34,7 +34,7 @@ class EventCardMeetingTimeAndBrands extends StatelessWidget {
         Icon(Icons.access_time_outlined, size: _iconSize, color: iconColor),
         SizedBox(width: 4),
         Text(
-          '${EventStrings.meetingTimePrefix}$formattedTime',
+          '${context.l10n.event_meetingTimePrefix}$formattedTime',
           style: theme.textTheme.bodySmall?.copyWith(color: textColor),
         ),
         Spacer(),
@@ -46,7 +46,7 @@ class EventCardMeetingTimeAndBrands extends StatelessWidget {
           ),
           SizedBox(width: 4),
           Text(
-            allowedBrandsText,
+            allowedBrandsText(context),
             style: theme.textTheme.labelSmall?.copyWith(
               color: colorScheme.secondary,
             ),

@@ -1,10 +1,9 @@
 import 'dart:io';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 
-import '../constants/app_strings.dart';
+import '../l10n/rideglory_l10n.dart';
 import '../exceptions/domain_exception.dart';
 
 @injectable
@@ -38,7 +37,9 @@ class ImageStorageService {
   }) async {
     final file = File(image.path);
     if (!file.existsSync()) {
-      throw const DomainException(message: AppStrings.imageUploadFailed);
+      throw DomainException(
+        message: RidegloryL10n.current.imageUploadFailed,
+      );
     }
     final ref = _storage.ref().child(storagePath);
     try {
@@ -53,16 +54,16 @@ class ImageStorageService {
   String _userMessageForStorageException(FirebaseException e) {
     final code = e.code.toLowerCase();
     if (code.contains('cancel')) {
-      return AppStrings.imageUploadCancelled;
+      return RidegloryL10n.current.imageUploadCancelled;
     }
     if (code.contains('object-not-found') ||
         code.contains('not-found') ||
         code.contains('unauthenticated') ||
         code.contains('unauthorized') ||
         code.contains('bucket-not-found')) {
-      return AppStrings.imageUploadNotFound;
+      return RidegloryL10n.current.imageUploadNotFound;
     }
-    return AppStrings.imageUploadFailed;
+    return RidegloryL10n.current.imageUploadFailed;
   }
 
   Future<void> deleteImage(String imageUrl) async {

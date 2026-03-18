@@ -6,7 +6,7 @@ import 'package:rideglory/core/exceptions/auth_exception.dart';
 import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/initialize_authenticated_user_vehicles_usecase.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
-import 'package:rideglory/features/authentication/constants/auth_strings.dart';
+import 'package:rideglory/core/l10n/rideglory_l10n.dart';
 
 part 'auth_state.dart';
 
@@ -160,7 +160,7 @@ class AuthCubit extends Cubit<AuthState> {
     } on AuthException catch (e) {
       emit(AuthState.error(e.message));
     } catch (e) {
-      emit(const AuthState.error(AuthStrings.failedToSignOut));
+      emit(AuthState.error(RidegloryL10n.current.auth_failedToSignOut));
     }
   }
 

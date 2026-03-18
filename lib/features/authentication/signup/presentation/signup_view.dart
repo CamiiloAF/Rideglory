@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
-import 'package:rideglory/features/authentication/constants/auth_strings.dart';
 import 'package:rideglory/features/authentication/presentation/widgets/signup_email_form.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class SignupView extends StatefulWidget {
   const SignupView({super.key});
@@ -46,7 +45,7 @@ class _SignupViewState extends State<SignupView> {
           } else if (state.hasError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.errorMessage ?? AppStrings.errorOccurred),
+                content: Text(state.errorMessage ?? context.l10n.errorOccurred),
                 backgroundColor: context.colorScheme.error,
               ),
             );
@@ -58,14 +57,14 @@ class _SignupViewState extends State<SignupView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AuthStrings.registerTitle,
+                context.l10n.auth_registerTitle,
                 style: context.textTheme.displaySmall?.copyWith(
                   color: context.colorScheme.onSurface,
                 ),
               ),
               SizedBox(height: 8),
               Text(
-                AuthStrings.registerSubtitle,
+                context.l10n.auth_registerSubtitle,
                 style: context.textTheme.bodyMedium?.copyWith(
                   color: context.colorScheme.primary,
                   fontWeight: FontWeight.w500,
@@ -77,7 +76,7 @@ class _SignupViewState extends State<SignupView> {
               Center(
                 child: RichText(
                   text: TextSpan(
-                    text: '${AuthStrings.registerSignInQuestion} ',
+                    text: '${context.l10n.auth_registerSignInQuestion} ',
                     style: context.textTheme.bodySmall?.copyWith(
                       color: context.colorScheme.onSurfaceVariant,
                     ),
@@ -86,7 +85,7 @@ class _SignupViewState extends State<SignupView> {
                         child: GestureDetector(
                           onTap: _navigateToLogin,
                           child: Text(
-                            AuthStrings.registerSignInLink,
+                            context.l10n.auth_registerSignInLink,
                             style: context.textTheme.labelMedium?.copyWith(
                               color: context.colorScheme.primary,
                             ),

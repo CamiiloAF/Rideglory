@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/splash/constants/splash_strings.dart';
 import 'package:rideglory/features/splash/presentation/cubit/splash_cubit.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class SplashFooter extends StatelessWidget {
   final Animation<double> progressAnimation;
@@ -29,7 +29,7 @@ class SplashFooter extends StatelessWidget {
             children: [
               if (isError) ...[
                 Text(
-                  '${SplashStrings.errorPrefix}${state.message}',
+                  '${context.l10n.splash_errorPrefix}${state.message}',
                   style: context.textTheme.bodySmall?.copyWith(
                     color: context.colorScheme.error,
                   ),
@@ -38,7 +38,7 @@ class SplashFooter extends StatelessWidget {
                 GestureDetector(
                   onTap: onRetry,
                   child: Text(
-                    SplashStrings.retryLabel,
+                    context.l10n.splash_retryLabel,
                     style: context.textTheme.labelSmall?.copyWith(
                       color: context.colorScheme.primary,
                       letterSpacing: 1.2,
@@ -50,7 +50,7 @@ class SplashFooter extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      SplashStrings.initializingLabel,
+                      context.l10n.splash_initializingLabel,
                       style: context.textTheme.labelSmall?.copyWith(
                         color: context.colorScheme.onSurfaceVariant,
                         fontSize: 10,
@@ -98,7 +98,7 @@ class SplashFooter extends StatelessWidget {
               SizedBox(height: 20),
               Center(
                 child: Text(
-                  SplashStrings.versionLabel,
+                  context.l10n.splash_versionLabel,
                   style: context.textTheme.labelSmall?.copyWith(
                     color: context.colorScheme.outlineVariant,
                     fontSize: 10,

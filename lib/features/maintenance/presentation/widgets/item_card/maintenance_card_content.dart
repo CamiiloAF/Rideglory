@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/item_card/maintenance_card_body.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MaintenanceCardContent extends StatelessWidget {
   final MaintenanceModel maintenance;
@@ -46,10 +45,10 @@ class MaintenanceCardContent extends StatelessWidget {
 
         await ConfirmationDialog.show(
           context: context,
-          title: MaintenanceStrings.deleteMaintenance,
-          content: MaintenanceStrings.deleteMaintenanceMessage,
-          cancelLabel: AppStrings.cancel,
-          confirmLabel: AppStrings.delete,
+          title: context.l10n.maintenance_deleteMaintenance,
+          content: context.l10n.maintenance_deleteMaintenanceMessage,
+          cancelLabel: context.l10n.cancel,
+          confirmLabel: context.l10n.delete,
           confirmType: DialogActionType.danger,
           dialogType: DialogType.warning,
           onConfirm: () {
@@ -77,7 +76,7 @@ class MaintenanceCardContent extends StatelessWidget {
             Icon(Icons.delete_outline, color: Colors.white, size: 32),
             SizedBox(height: 4),
             Text(
-              AppStrings.delete,
+              context.l10n.delete,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,

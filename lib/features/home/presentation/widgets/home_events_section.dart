@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
-import 'package:rideglory/features/home/constants/home_strings.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_empty_events_card.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_event_card.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class HomeEventsSection extends StatelessWidget {
   const HomeEventsSection({super.key, required this.events});
@@ -21,7 +21,7 @@ class HomeEventsSection extends StatelessWidget {
         Padding(
           padding: EdgeInsets.fromLTRB(20, 0, 20, 12),
           child: Text(
-            HomeStrings.upcomingRides,
+            context.l10n.home_upcomingRides,
             style: TextStyle(
               color: context.colorScheme.onSurface,
               fontSize: 18,

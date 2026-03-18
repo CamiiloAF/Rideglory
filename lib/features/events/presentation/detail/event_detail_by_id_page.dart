@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
-import 'package:rideglory/features/event_registration/constants/registration_strings.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/cancel_event_registration_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/get_my_registration_for_event_use_case.dart';
@@ -14,6 +11,7 @@ import 'package:rideglory/features/events/presentation/detail/cubit/event_detail
 import 'package:rideglory/features/events/presentation/detail/event_detail_page.dart';
 import 'package:rideglory/features/events/presentation/detail/params.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventDetailByIdPage extends StatefulWidget {
   final String eventId;
@@ -29,7 +27,7 @@ class _EventDetailByIdPageState extends State<EventDetailByIdPage> {
 
   Widget _shell(BuildContext context, Widget body) {
     return Scaffold(
-      appBar: const AppAppBar(title: EventStrings.eventDetail),
+      appBar: AppAppBar(title: context.l10n.event_eventDetail),
       body: body,
     );
   }
@@ -84,7 +82,7 @@ class _EventDetailByIdPageState extends State<EventDetailByIdPage> {
                 context,
                 Center(
                   child: Text(
-                    RegistrationStrings.errorLoadingEvent,
+                    context.l10n.registration_errorLoadingEvent,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
@@ -102,12 +100,12 @@ class _EventDetailByIdPageState extends State<EventDetailByIdPage> {
                       ),
                       SizedBox(height: 12),
                       Text(
-                        RegistrationStrings.errorLoadingEvent,
+                        context.l10n.registration_errorLoadingEvent,
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
                       SizedBox(height: 16),
                       AppButton(
-                        label: AppStrings.retry,
+                        label: context.l10n.retry,
                         onPressed: () => context
                             .read<EventDetailCubit>()
                             .loadEvent(widget.eventId),

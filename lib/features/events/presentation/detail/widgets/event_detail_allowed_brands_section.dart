@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventDetailAllowedBrandsSection extends StatelessWidget {
   const EventDetailAllowedBrandsSection({super.key, required this.event});
@@ -12,14 +12,14 @@ class EventDetailAllowedBrandsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final labels = event.isMultiBrand || event.allowedBrands.isEmpty
-        ? [EventStrings.allBrandsChip]
+        ? [context.l10n.event_allBrandsChip]
         : event.allowedBrands;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          EventStrings.allowedBrandsTitle,
+          context.l10n.event_allowedBrandsTitle,
           style: TextStyle(
             color: context.colorScheme.onSurface,
             fontSize: 18,

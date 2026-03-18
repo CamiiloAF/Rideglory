@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventFormCoverSection extends StatelessWidget {
   const EventFormCoverSection({
@@ -25,12 +25,12 @@ class EventFormCoverSection extends StatelessWidget {
       localImagePath: localImagePath,
       onPickImage: onUploadTap,
       onClearTap: onClearTap,
-      title: EventStrings.addEventCover,
-      hint: EventStrings.addEventCoverHint,
-      uploadButtonLabel: EventStrings.uploadImage,
+      title: context.l10n.event_addEventCover,
+      hint: context.l10n.event_addEventCoverHint,
+      uploadButtonLabel: context.l10n.event_uploadImage,
       showGenerateWithAI: true,
       onGenerateWithAITap: onGenerateWithAITap,
-      generateWithAILabel: EventStrings.generateWithAI,
+      generateWithAILabel: context.l10n.event_generateWithAI,
     );
   }
 }

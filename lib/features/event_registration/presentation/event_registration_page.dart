@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
-import 'package:rideglory/features/event_registration/constants/registration_strings.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/presentation/cubit/registration_form_cubit.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_form_view.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/detail/params.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventRegistrationPage extends StatelessWidget {
   const EventRegistrationPage({super.key, required this.params});
@@ -43,8 +43,8 @@ class _RegistrationFormScaffold extends StatelessWidget {
     return Scaffold(
       appBar: AppAppBar(
         title: isEditing
-            ? RegistrationStrings.editRegistration
-            : RegistrationStrings.registrationPageTitle,
+            ? context.l10n.registration_editRegistration
+            : context.l10n.registration_registrationPageTitle,
       ),
       body: BlocListener<RegistrationFormCubit,
           ResultState<EventRegistrationModel>>(
@@ -55,8 +55,8 @@ class _RegistrationFormScaffold extends StatelessWidget {
                 SnackBar(
                   content: Text(
                     isEditing
-                        ? RegistrationStrings.registrationUpdatedSuccess
-                        : RegistrationStrings.registrationSentSuccess,
+                        ? context.l10n.registration_registrationUpdatedSuccess
+                        : context.l10n.registration_registrationSentSuccess,
                   ),
                   backgroundColor: Colors.green,
                 ),

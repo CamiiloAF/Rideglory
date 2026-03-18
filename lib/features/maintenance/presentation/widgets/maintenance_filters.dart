@@ -1,5 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MaintenanceFilters {
   final String? searchQuery;
@@ -64,14 +65,14 @@ class MaintenanceFilters {
 enum MaintenanceSortOption { nextMaintenance, date, name }
 
 extension MaintenanceSortOptionExt on MaintenanceSortOption {
-  String get label {
+  String label(BuildContext context) {
     switch (this) {
       case MaintenanceSortOption.nextMaintenance:
-        return MaintenanceStrings.sortByNextMaintenance;
+        return context.l10n.maintenance_sortByNextMaintenance;
       case MaintenanceSortOption.date:
-        return MaintenanceStrings.sortByDate;
+        return context.l10n.maintenance_sortByDate;
       case MaintenanceSortOption.name:
-        return MaintenanceStrings.sortByName;
+        return context.l10n.maintenance_sortByName;
     }
   }
 }

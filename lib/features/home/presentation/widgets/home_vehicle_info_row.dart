@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/home/constants/home_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/domain/use_cases/get_maintenances_by_vehicle_id_use_case.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class HomeVehicleInfoRow extends StatelessWidget {
   const HomeVehicleInfoRow({super.key, required this.vehicle});
@@ -81,8 +81,8 @@ class HomeVehicleInfoRow extends StatelessWidget {
                   builder: (context, snapshot) {
                     final nextMileage = snapshot.data;
                     final text = nextMileage != null
-                        ? '${HomeStrings.nextOilChange} $nextMileage km'
-                        : HomeStrings.nextOilChange;
+                        ? '${context.l10n.home_nextOilChange} $nextMileage km'
+                        : context.l10n.home_nextOilChange;
 
                     return Text(
                       text,

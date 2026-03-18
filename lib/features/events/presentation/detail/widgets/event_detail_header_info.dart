@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_difficulty_flames.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_organizer_row.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventDetailHeaderInfo extends StatelessWidget {
   const EventDetailHeaderInfo({super.key, required this.event});
 
   final EventModel event;
 
-  String get _badgeLabel {
+  String _badgeLabel(BuildContext context) {
     switch (event.state) {
       case EventState.scheduled:
-        return EventStrings.comingSoonPill;
+        return context.l10n.event_comingSoonPill;
       case EventState.inProgress:
-        return EventStrings.eventLiveNow;
+        return context.l10n.event_eventLiveNow;
       case EventState.cancelled:
         return event.state.label.toUpperCase();
       case EventState.finished:
-        return EventStrings.eventFinished.toUpperCase();
+        return context.l10n.event_eventFinished.toUpperCase();
     }
   }
 
@@ -40,7 +40,7 @@ class EventDetailHeaderInfo extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text(
-            _badgeLabel,
+            _badgeLabel(context),
             style: TextStyle(
               color: Colors.white,
               fontSize: 11,
@@ -60,8 +60,8 @@ class EventDetailHeaderInfo extends StatelessWidget {
           ),
         ),
         SizedBox(height: 8),
-        const EventDetailOrganizerRow(
-          organizerName: EventStrings.organizerPlaceholder,
+        EventDetailOrganizerRow(
+          organizerName: context.l10n.event_organizerPlaceholder,
         ),
         SizedBox(height: 12),
         Row(

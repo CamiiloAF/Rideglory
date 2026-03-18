@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_spec_row.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class VehicleFullSpecsSection extends StatelessWidget {
   const VehicleFullSpecsSection({super.key, required this.vehicle});
@@ -16,7 +16,7 @@ class VehicleFullSpecsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          VehicleStrings.fullSpecs.toUpperCase(),
+          context.l10n.vehicle_fullSpecs.toUpperCase(),
           style: context.labelMedium?.copyWith(
             fontWeight: FontWeight.bold,
             letterSpacing: 1.5,
@@ -30,17 +30,17 @@ class VehicleFullSpecsSection extends StatelessWidget {
             children: [
               VehicleSpecRow(
                 icon: Icons.calendar_today_outlined,
-                label: VehicleStrings.vehicleYear,
+                label: context.l10n.vehicle_vehicleYear,
                 value: vehicle.year?.toString() ?? '-',
               ),
               VehicleSpecRow(
                 icon: Icons.verified_user_outlined, // VIN icon equivalent
-                label: VehicleStrings.vehicleVin,
+                label: context.l10n.vehicle_vehicleVin,
                 value: vehicle.vin ?? '-',
               ),
               VehicleSpecRow(
                 icon: Icons.shopping_cart_outlined, // Cart icon equivalent
-                label: VehicleStrings.purchaseDate,
+                label: context.l10n.vehicle_purchaseDate,
                 value: vehicle.purchaseDate != null
                     ? DateFormat.yMMMMd().format(vehicle.purchaseDate!)
                     : '-',

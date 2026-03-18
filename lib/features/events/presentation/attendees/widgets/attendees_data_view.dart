@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/attendees/widgets/attendees_filter_bottom_sheet.dart';
 import 'package:rideglory/features/events/presentation/attendees/widgets/attendees_list.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class AttendeesDataView extends StatefulWidget {
   final List<EventRegistrationModel> registrations;
@@ -54,7 +54,7 @@ class _AttendeesDataViewState extends State<AttendeesDataView> {
             children: [
               Expanded(
                 child: AppSearchBar(
-                  hintText: EventStrings.searchAttendees,
+                  hintText: context.l10n.event_searchAttendees,
                   onSearchChanged: (query) =>
                       setState(() => _searchQuery = query),
                   padding: EdgeInsets.zero,

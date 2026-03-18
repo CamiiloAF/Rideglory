@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class VehicleImagePicker extends StatelessWidget {
   final String? imageUrl;
@@ -24,7 +24,7 @@ class VehicleImagePicker extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          VehicleStrings.vehiclePhoto,
+          context.l10n.vehicle_vehiclePhoto,
           style: context.textTheme.labelMedium?.copyWith(
             color: context.colorScheme.onSurfaceVariant,
             letterSpacing: 0.5,
@@ -85,14 +85,14 @@ class VehicleImagePicker extends StatelessWidget {
         ),
         SizedBox(height: 8),
         Text(
-          VehicleStrings.uploadPhoto,
+          context.l10n.vehicle_uploadPhoto,
           style: context.textTheme.bodyMedium?.copyWith(
             color: context.colorScheme.primary,
           ),
         ),
         SizedBox(height: 4),
         Text(
-          VehicleStrings.selectImage,
+          context.l10n.vehicle_selectImage,
           style: context.textTheme.bodySmall?.copyWith(
             color: context.colorScheme.onSurfaceVariant,
           ),
@@ -114,7 +114,7 @@ class VehicleImagePicker extends StatelessWidget {
           Icon(Icons.edit_outlined, size: 14, color: Colors.white),
           SizedBox(width: 4),
           Text(
-            VehicleStrings.changePhoto,
+            context.l10n.vehicle_changePhoto,
             style: context.textTheme.labelSmall?.copyWith(color: Colors.white),
           ),
         ],

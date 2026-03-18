@@ -5,13 +5,10 @@ import 'package:rideglory/core/extensions/go_router.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
-import 'package:rideglory/features/authentication/constants/auth_strings.dart';
-import 'package:rideglory/features/event_registration/constants/registration_strings.dart';
-import 'package:rideglory/features/profile/constants/profile_strings.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -31,7 +28,7 @@ class ProfilePage extends StatelessWidget {
       },
       child: Scaffold(
       backgroundColor: AppColors.darkBackground,
-      appBar: const AppAppBar(title: ProfileStrings.profile),
+      appBar: AppAppBar(title: context.l10n.profile_profile),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
@@ -43,7 +40,7 @@ class ProfilePage extends StatelessWidget {
                 color: context.colorScheme.primary,
               ),
               title: Text(
-                RegistrationStrings.myRegistrations,
+                context.l10n.registration_myRegistrations,
                 style: TextStyle(
                   color: context.colorScheme.onSurface,
                   fontWeight: FontWeight.w500,
@@ -59,7 +56,7 @@ class ProfilePage extends StatelessWidget {
               contentPadding: EdgeInsets.zero,
               leading: Icon(Icons.logout_outlined, color: context.errorColor),
               title: Text(
-                AuthStrings.logout,
+                context.l10n.auth_logout,
                 style: TextStyle(
                   color: context.errorColor,
                   fontWeight: FontWeight.w600,
@@ -68,10 +65,10 @@ class ProfilePage extends StatelessWidget {
               onTap: () {
                 ConfirmationDialog.show(
                   context: context,
-                  title: AuthStrings.logoutConfirmTitle,
-                  content: AuthStrings.logoutConfirmMessage,
-                  cancelLabel: AppStrings.cancel,
-                  confirmLabel: AuthStrings.logout,
+                  title: context.l10n.auth_logoutConfirmTitle,
+                  content: context.l10n.auth_logoutConfirmMessage,
+                  cancelLabel: context.l10n.cancel,
+                  confirmLabel: context.l10n.auth_logout,
                   confirmType: DialogActionType.danger,
                   dialogType: DialogType.warning,
                   onConfirm: () => _logout(context),

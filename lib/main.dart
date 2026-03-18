@@ -8,8 +8,9 @@ import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dar
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/shared/router/app_router.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/l10n/app_localizations.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 import 'firebase_options.dart';
 
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp.router(
         routerConfig: AppRouter.appRouter,
-        title: AppStrings.appName,
+        title: context.l10n.appName,
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.dark,
@@ -46,9 +47,10 @@ class MyApp extends StatelessWidget {
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
+          AppLocalizations.delegate,
           FlutterQuillLocalizations.delegate,
         ],
-        supportedLocales: const [Locale('es'), Locale('en')],
+        supportedLocales: const [Locale('es')],
       ),
     );
   }

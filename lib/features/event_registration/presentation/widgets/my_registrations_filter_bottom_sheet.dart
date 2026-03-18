@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MyRegistrationsFilterBottomSheet extends StatefulWidget {
   const MyRegistrationsFilterBottomSheet({
@@ -71,13 +71,13 @@ class _MyRegistrationsFilterBottomSheetState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    EventStrings.filters,
+                    context.l10n.event_filters,
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   AppTextButton(
-                    label: EventStrings.clearFilters,
+                    label: context.l10n.event_clearFilters,
                     onPressed: () {
                       setState(() => _selected.clear());
                       widget.cubitContext
@@ -98,7 +98,7 @@ class _MyRegistrationsFilterBottomSheetState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      EventStrings.filterByStatus,
+                      context.l10n.event_filterByStatus,
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -136,7 +136,7 @@ class _MyRegistrationsFilterBottomSheetState
                 top: 8,
               ),
               child: AppButton(
-                label: EventStrings.applyFilters,
+                label: context.l10n.event_applyFilters,
                 onPressed: () {
                   widget.cubitContext
                       .read<MyRegistrationsCubit>()

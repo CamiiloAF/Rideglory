@@ -3,14 +3,13 @@ import 'dart:math' show max;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/event_form_content.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventFormView extends StatelessWidget {
   const EventFormView({super.key});
@@ -26,8 +25,8 @@ class EventFormView extends StatelessWidget {
               SnackBar(
                 content: Text(
                   isEditing
-                      ? EventStrings.eventUpdatedSuccess
-                      : EventStrings.eventCreatedSuccess,
+                      ? context.l10n.event_eventUpdatedSuccess
+                      : context.l10n.event_eventCreatedSuccess,
                 ),
                 backgroundColor: Colors.green,
               ),
@@ -37,7 +36,7 @@ class EventFormView extends StatelessWidget {
           error: (error) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(AppStrings.errorMessage(error.message)),
+                content: Text(context.l10n.errorMessage(error.message)),
                 backgroundColor: Colors.red,
               ),
             );
@@ -56,7 +55,7 @@ class EventFormView extends StatelessWidget {
             foregroundColor: context.colorScheme.onSurface,
             centerTitle: false,
             title: Text(
-              isEditing ? EventStrings.editEvent : EventStrings.newEvent,
+              isEditing ? context.l10n.event_editEvent : context.l10n.event_newEvent,
               style: TextStyle(
                 color: context.colorScheme.onSurface,
                 fontSize: 18,
@@ -104,7 +103,7 @@ class _EventFormBottomBar extends StatelessWidget {
         max(16.0, MediaQuery.of(context).padding.bottom),
       ),
       child: AppButton(
-        label: isEditing ? EventStrings.updateEvent : EventStrings.publishEvent,
+        label: isEditing ? context.l10n.event_updateEvent : context.l10n.event_publishEvent,
         isLoading: isLoading,
         icon: Icons.send_outlined,
         onPressed: isLoading

@@ -3,9 +3,9 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventFormEventTypeSection extends StatelessWidget {
   const EventFormEventTypeSection({super.key});
@@ -17,7 +17,7 @@ class EventFormEventTypeSection extends StatelessWidget {
     return FormBuilderField<EventType>(
       name: EventFormFields.eventType,
       validator: FormBuilderValidators.required(
-        errorText: EventStrings.eventTypeRequired,
+        errorText: context.l10n.event_eventTypeRequired,
       ),
       builder: (field) {
         final selected = field.value ?? EventType.onRoad;

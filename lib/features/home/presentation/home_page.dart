@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/home/presentation/cubit/home_cubit.dart';
@@ -10,6 +9,7 @@ import 'package:rideglory/features/home/presentation/widgets/home_garage_section
 import 'package:rideglory/features/home/presentation/widgets/home_header.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_view_all_events_button.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -29,10 +29,10 @@ class _HomeScaffold extends StatelessWidget {
   Future<void> _showExitConfirmation(BuildContext context) async {
     await ConfirmationDialog.show(
       context: context,
-      title: AppStrings.exitAppTitle,
-      content: AppStrings.exitAppMessage,
-      cancelLabel: AppStrings.cancel,
-      confirmLabel: AppStrings.exit,
+      title: context.l10n.exitAppTitle,
+      content: context.l10n.exitAppMessage,
+      cancelLabel: context.l10n.cancel,
+      confirmLabel: context.l10n.exit,
       dialogType: DialogType.warning,
       onConfirm: () => SystemNavigator.pop(),
     );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MaintenancesEmptyWidget extends StatelessWidget {
   final Future<void> Function() onRefresh;
@@ -18,9 +18,9 @@ class MaintenancesEmptyWidget extends StatelessWidget {
       onRefresh: onRefresh,
       child: EmptyStateWidget(
         icon: Icons.build_circle_outlined,
-        title: MaintenanceStrings.noMaintenances,
-        description: MaintenanceStrings.noMaintenancesDescription,
-        actionButtonText: MaintenanceStrings.addMaintenance,
+        title: context.l10n.maintenance_noMaintenances,
+        description: context.l10n.maintenance_noMaintenancesDescription,
+        actionButtonText: context.l10n.maintenance_addMaintenance,
         onActionPressed: onActionPressed,
       ),
     );

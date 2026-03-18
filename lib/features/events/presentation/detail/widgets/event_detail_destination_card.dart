@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventDetailDestinationCard extends StatelessWidget {
   const EventDetailDestinationCard({super.key, required this.destination});
@@ -35,7 +35,7 @@ class EventDetailDestinationCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  EventStrings.finalDestination,
+                  context.l10n.event_finalDestination,
                   style: TextStyle(
                     color: context.colorScheme.onSurfaceVariant,
                     fontSize: 12,

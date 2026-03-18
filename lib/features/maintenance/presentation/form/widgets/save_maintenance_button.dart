@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/domain/result_state.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/form/cubit/maintenance_form_cubit.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class SaveMaintenanceButton extends StatelessWidget {
   final VoidCallback onSave;
@@ -17,7 +17,7 @@ class SaveMaintenanceButton extends StatelessWidget {
       builder: (context, state) {
         final isLoading = state is Loading;
         return AppButton(
-          label: MaintenanceStrings.saveMaintenance,
+          label: context.l10n.maintenance_saveMaintenance,
           icon: Icons.save,
           variant: AppButtonVariant.primary,
           isLoading: isLoading,

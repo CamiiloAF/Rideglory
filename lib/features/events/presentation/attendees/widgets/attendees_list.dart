@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
@@ -11,6 +10,7 @@ import 'package:rideglory/features/events/presentation/attendees/widgets/attende
 import 'package:rideglory/features/events/presentation/attendees/widgets/attendee_processed_item.dart';
 import 'package:rideglory/features/events/presentation/attendees/attendee_action_confirmation.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class AttendeesList extends StatelessWidget {
   final List<EventRegistrationModel> registrations;
@@ -46,7 +46,7 @@ class AttendeesList extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  EventStrings.newRequestsSection,
+                  context.l10n.event_newRequestsSection,
                   style: textTheme.titleSmall?.copyWith(
                     color: colorScheme.primary,
                     fontWeight: FontWeight.bold,
@@ -63,7 +63,7 @@ class AttendeesList extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    EventStrings.pendingCountBadge(pending.length),
+                    context.l10n.event_pendingCountBadge(pending.length),
                     style: textTheme.labelSmall?.copyWith(
                       color: colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,
@@ -122,7 +122,7 @@ class AttendeesList extends StatelessWidget {
           Row(
             children: [
               Text(
-                EventStrings.processedSection,
+                context.l10n.event_processedSection,
                 style: textTheme.titleSmall?.copyWith(
                   color: colorScheme.onSurface,
                   fontWeight: FontWeight.bold,
@@ -132,7 +132,7 @@ class AttendeesList extends StatelessWidget {
               TextButton(
                 onPressed: processed.isEmpty ? null : () {},
                 child: Text(
-                  EventStrings.allWithCount(processed.length),
+                  context.l10n.event_allWithCount(processed.length),
                   style: textTheme.labelMedium?.copyWith(
                     color: colorScheme.primary,
                   ),
@@ -145,7 +145,7 @@ class AttendeesList extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: Text(
-                EventStrings.noAttendees,
+                context.l10n.event_noAttendees,
                 style: textTheme.bodyMedium?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),

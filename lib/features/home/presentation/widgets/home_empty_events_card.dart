@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/home/constants/home_strings.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class HomeEmptyEventsCard extends StatelessWidget {
   const HomeEmptyEventsCard({super.key});
@@ -25,14 +25,14 @@ class HomeEmptyEventsCard extends StatelessWidget {
           ),
           SizedBox(height: 8),
           Text(
-            HomeStrings.emptyEvents,
+            context.l10n.home_emptyEvents,
             style: TextStyle(
               color: context.colorScheme.onSurface,
               fontWeight: FontWeight.w600,
             ),
           ),
           Text(
-            HomeStrings.emptyEventsDescription,
+            context.l10n.home_emptyEventsDescription,
             style: TextStyle(color: context.colorScheme.onSurfaceVariant, fontSize: 12),
             textAlign: TextAlign.center,
           ),

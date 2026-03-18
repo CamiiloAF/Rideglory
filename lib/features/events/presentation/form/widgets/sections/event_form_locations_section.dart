@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/form_section_title.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventFormLocationsSection extends StatefulWidget {
   const EventFormLocationsSection({super.key});
@@ -24,12 +24,12 @@ class _EventFormLocationsSectionState extends State<EventFormLocationsSection> {
       children: [
         AppTextField(
           name: EventFormFields.meetingPoint,
-          hintText: EventStrings.meetingPoint,
+          hintText: context.l10n.event_meetingPoint,
           isRequired: true,
           prefixIcon: Icons.radio_button_unchecked,
           textInputAction: TextInputAction.next,
           validator: FormBuilderValidators.required(
-            errorText: EventStrings.meetingPointRequired,
+            errorText: context.l10n.event_meetingPointRequired,
           ),
           onChanged: (value) {
             setState(() => _meetingPoint = value);
@@ -39,12 +39,12 @@ class _EventFormLocationsSectionState extends State<EventFormLocationsSection> {
 
         AppTextField(
           name: EventFormFields.destination,
-          hintText: EventStrings.finalDestination,
+          hintText: context.l10n.event_finalDestination,
           isRequired: true,
           prefixIcon: Icons.location_on_outlined,
           textInputAction: TextInputAction.next,
           validator: FormBuilderValidators.required(
-            errorText: EventStrings.destinationRequired,
+            errorText: context.l10n.event_destinationRequired,
           ),
           onChanged: (value) {
             setState(() => _destination = value);
@@ -52,7 +52,7 @@ class _EventFormLocationsSectionState extends State<EventFormLocationsSection> {
         ),
         SizedBox(height: 24),
         FormSectionTitle(
-          title: EventStrings.meetingPointPreview.toUpperCase(),
+          title: context.l10n.event_meetingPointPreview.toUpperCase(),
           icon: Icons.map_outlined,
         ),
         RouteMapPreview(

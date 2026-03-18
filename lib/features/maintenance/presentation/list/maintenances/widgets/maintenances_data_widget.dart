@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenance_list.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_header_view.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MaintenancesDataWidget extends StatelessWidget {
   final List<MaintenanceModel> maintenances;
@@ -47,7 +47,7 @@ class MaintenancesDataWidget extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    MaintenanceStrings.recentRecords,
+                    context.l10n.maintenance_recentRecords,
                     style: context.titleMedium?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.w800,
@@ -77,7 +77,7 @@ class MaintenancesDataWidget extends StatelessWidget {
                         ),
                         SizedBox(width: 8),
                         Text(
-                          MaintenanceStrings.filter,
+                          context.l10n.maintenance_filter,
                           style: context.bodyMedium?.copyWith(
                             color: Colors.white.withValues(alpha: 0.85),
                             fontWeight: FontWeight.w700,

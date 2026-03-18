@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_empty_state.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_options_bottom_sheet.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_detail_view.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class GaragePage extends StatefulWidget {
@@ -41,7 +41,7 @@ class _GaragePageState extends State<GaragePage> {
               child: Icon(Icons.two_wheeler, color: context.colorScheme.primary),
             ),
             title: Text(
-              VehicleStrings.myGarage,
+              context.l10n.vehicle_myGarage,
               style: context.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,

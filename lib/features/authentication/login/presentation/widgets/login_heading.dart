@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/authentication/constants/auth_strings.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class LoginHeading extends StatelessWidget {
   const LoginHeading({super.key});
@@ -10,7 +10,7 @@ class LoginHeading extends StatelessWidget {
     return Column(
       children: [
         Text(
-          AuthStrings.loginTitle,
+          context.l10n.auth_loginTitle,
           textAlign: TextAlign.center,
           style: context.textTheme.displayMedium?.copyWith(
             color: context.colorScheme.onSurface,
@@ -18,7 +18,7 @@ class LoginHeading extends StatelessWidget {
         ),
         SizedBox(height: 6),
         Text(
-          AuthStrings.loginSubtitleStitch,
+          context.l10n.auth_loginSubtitleStitch,
           textAlign: TextAlign.center,
           style: context.textTheme.bodyMedium?.copyWith(
             color: context.colorScheme.primary,

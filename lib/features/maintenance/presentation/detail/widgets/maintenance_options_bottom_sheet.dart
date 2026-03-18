@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 enum MaintenanceAction { edit, delete }
 
@@ -37,7 +37,7 @@ class MaintenanceOptionsBottomSheet extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.edit, color: Colors.white),
             title: Text(
-              MaintenanceStrings.editMaintenance,
+              context.l10n.maintenance_editMaintenance,
               style: context.bodyLarge?.copyWith(color: Colors.white),
             ),
             onTap: () {
@@ -47,7 +47,7 @@ class MaintenanceOptionsBottomSheet extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.delete, color: Colors.red),
             title: Text(
-              MaintenanceStrings.deleteMaintenance,
+              context.l10n.maintenance_deleteMaintenance,
               style: context.bodyLarge?.copyWith(color: Colors.red),
             ),
             onTap: () {

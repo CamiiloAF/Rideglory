@@ -2,9 +2,9 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/event_registration/constants/registration_strings.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class RegistrationDetailBottomBar extends StatelessWidget {
   const RegistrationDetailBottomBar({super.key, required this.params});
@@ -36,7 +36,7 @@ class RegistrationDetailBottomBar extends StatelessWidget {
           children: [
             if (params.onCancelRegistration != null)
               AppButton(
-                label: RegistrationStrings.cancelRegistration,
+                label: context.l10n.registration_cancelRegistration,
                 variant: AppButtonVariant.danger,
                 onPressed: () async {
                   final ok = await params.onCancelRegistration!();
@@ -49,8 +49,8 @@ class RegistrationDetailBottomBar extends StatelessWidget {
             else if (params.onReject != null && params.onApprove != null)
               Expanded(
                 child: ApproveRejectBar(
-                  rejectLabel: RegistrationStrings.reject,
-                  approveLabel: RegistrationStrings.approve,
+                  rejectLabel: context.l10n.registration_reject,
+                  approveLabel: context.l10n.registration_approve,
                   onReject: () => params.onReject!(context),
                   onApprove: () => params.onApprove!(context),
                 ),
@@ -58,7 +58,7 @@ class RegistrationDetailBottomBar extends StatelessWidget {
             else ...[
               if (params.onReject != null)
                 AppButton(
-                  label: RegistrationStrings.reject,
+                  label: context.l10n.registration_reject,
                   variant: AppButtonVariant.danger,
                   icon: Icons.close_rounded,
                   onPressed: () => params.onReject!(context),
@@ -66,7 +66,7 @@ class RegistrationDetailBottomBar extends StatelessWidget {
                 ),
               if (params.onApprove != null)
                 AppButton(
-                  label: RegistrationStrings.approve,
+                  label: context.l10n.registration_approve,
                   variant: AppButtonVariant.primary,
                   icon: Icons.check_rounded,
                   onPressed: () => params.onApprove!(context),

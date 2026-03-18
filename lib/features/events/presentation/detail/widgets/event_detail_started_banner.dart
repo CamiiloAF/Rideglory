@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventDetailStartedBanner extends StatelessWidget {
   const EventDetailStartedBanner({super.key, this.onFollowLive});
@@ -35,7 +35,7 @@ class EventDetailStartedBanner extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    EventStrings.eventLiveNow,
+                    context.l10n.event_eventLiveNow,
                     style: TextStyle(
                       color: context.colorScheme.primary,
                       fontSize: 12,
@@ -48,7 +48,7 @@ class EventDetailStartedBanner extends StatelessWidget {
             ),
             SizedBox(height: 12),
             Text(
-              EventStrings.eventHasStartedTitle,
+              context.l10n.event_eventHasStartedTitle,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.onSurface,
@@ -56,7 +56,7 @@ class EventDetailStartedBanner extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              EventStrings.eventHasStartedDescription,
+              context.l10n.event_eventHasStartedDescription,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
                 height: 1.4,
@@ -67,7 +67,7 @@ class EventDetailStartedBanner extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: AppButton(
-                  label: EventStrings.followRideLive,
+                  label: context.l10n.event_followRideLive,
                   icon: Icons.sensors,
                   onPressed: onFollowLive,
                 ),

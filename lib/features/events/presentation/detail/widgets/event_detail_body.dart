@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_allowed_brands_section.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_destination_card.dart';
@@ -7,6 +6,7 @@ import 'package:rideglory/features/events/presentation/detail/widgets/event_deta
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_meeting_point_section.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_section_title.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventDetailBody extends StatelessWidget {
   const EventDetailBody({super.key, required this.event, this.onViewMap});
@@ -23,7 +23,7 @@ class EventDetailBody extends StatelessWidget {
         children: [
           EventDetailHeaderInfo(event: event),
           SizedBox(height: 24),
-          const EventDetailSectionTitle(title: EventStrings.aboutTheRide),
+          EventDetailSectionTitle(title: context.l10n.event_aboutTheRide),
           SizedBox(height: 8),
           RichTextViewer(content: event.description),
           SizedBox(height: 20),

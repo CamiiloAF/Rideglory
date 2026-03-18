@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/event_registration/constants/registration_form_fields.dart';
-import 'package:rideglory/features/event_registration/constants/registration_strings.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/presentation/cubit/registration_form_cubit.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_form_section_card.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class RegistrationFormContent extends StatelessWidget {
   final EventModel event;
@@ -28,7 +27,7 @@ class RegistrationFormContent extends StatelessWidget {
     if (vehicles.isEmpty) return;
     final selected = await VehicleSelectionBottomSheet.show(
       context: context,
-      subtitle: RegistrationStrings.selectVehicleToPreload,
+      subtitle: context.l10n.registration_selectVehicleToPreload,
       vehicles: vehicles,
     );
     if (selected != null && context.mounted) {
@@ -45,40 +44,40 @@ class RegistrationFormContent extends StatelessWidget {
       children: [
         RegistrationFormSectionCard(
           icon: Icons.person_outline,
-          title: RegistrationStrings.personalData,
+          title: context.l10n.registration_personalData,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               AppTextField(
                 name: RegistrationFormFields.firstName,
-                labelText: RegistrationStrings.firstName,
-                hintText: RegistrationStrings.firstNameHint,
+                labelText: context.l10n.registration_firstName,
+                hintText: context.l10n.registration_firstNameHint,
                 isRequired: true,
                 textCapitalization: TextCapitalization.words,
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(
-                    errorText: RegistrationStrings.firstNameRequired,
+                    errorText: context.l10n.registration_firstNameRequired,
                   ),
                   FormBuilderValidators.minLength(
                     2,
-                    errorText: RegistrationStrings.minCharacters,
+                    errorText: context.l10n.registration_minCharacters,
                   ),
                 ]),
               ),
               SizedBox(height: 12),
               AppTextField(
                 name: RegistrationFormFields.lastName,
-                labelText: RegistrationStrings.lastName,
-                hintText: RegistrationStrings.lastNameHint,
+                labelText: context.l10n.registration_lastName,
+                hintText: context.l10n.registration_lastNameHint,
                 isRequired: true,
                 textCapitalization: TextCapitalization.words,
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(
-                    errorText: RegistrationStrings.lastNameRequired,
+                    errorText: context.l10n.registration_lastNameRequired,
                   ),
                   FormBuilderValidators.minLength(
                     2,
-                    errorText: RegistrationStrings.minCharacters,
+                    errorText: context.l10n.registration_minCharacters,
                   ),
                 ]),
               ),
@@ -89,25 +88,25 @@ class RegistrationFormContent extends StatelessWidget {
                   Expanded(
                     child: AppTextField(
                       name: RegistrationFormFields.identificationNumber,
-                      labelText: RegistrationStrings.identificationNumber,
-                      hintText: RegistrationStrings.identificationHint,
+                      labelText: context.l10n.registration_identificationNumber,
+                      hintText: context.l10n.registration_identificationHint,
                       isRequired: true,
                       keyboardType: TextInputType.number,
                       maxLength: 10,
                       validator: FormBuilderValidators.compose([
                         FormBuilderValidators.required(
-                          errorText: RegistrationStrings.idRequired,
+                          errorText: context.l10n.registration_idRequired,
                         ),
                         FormBuilderValidators.numeric(
-                          errorText: RegistrationStrings.idInvalidLength,
+                          errorText: context.l10n.registration_idInvalidLength,
                         ),
                         FormBuilderValidators.minLength(
                           6,
-                          errorText: RegistrationStrings.idInvalidLength,
+                          errorText: context.l10n.registration_idInvalidLength,
                         ),
                         FormBuilderValidators.maxLength(
                           10,
-                          errorText: RegistrationStrings.idInvalidLength,
+                          errorText: context.l10n.registration_idInvalidLength,
                         ),
                       ]),
                     ),
@@ -116,10 +115,10 @@ class RegistrationFormContent extends StatelessWidget {
                   Expanded(
                     child: AppDatePicker(
                       fieldName: RegistrationFormFields.birthDate,
-                      labelText: RegistrationStrings.birthDate,
+                      labelText: context.l10n.registration_birthDate,
                       isRequired: true,
                       lastDate: DateTime.now(),
-                      hintText: RegistrationStrings.birthDateHint,
+                      hintText: context.l10n.registration_birthDateHint,
                     ),
                   ),
                 ],
@@ -127,37 +126,37 @@ class RegistrationFormContent extends StatelessWidget {
               SizedBox(height: 12),
               AppTextField(
                 name: RegistrationFormFields.phone,
-                labelText: RegistrationStrings.phone,
-                hintText: RegistrationStrings.phoneHint,
+                labelText: context.l10n.registration_phone,
+                hintText: context.l10n.registration_phoneHint,
                 isRequired: true,
                 keyboardType: TextInputType.phone,
                 maxLength: 10,
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(
-                    errorText: RegistrationStrings.phoneRequired,
+                    errorText: context.l10n.registration_phoneRequired,
                   ),
                   FormBuilderValidators.numeric(
-                    errorText: RegistrationStrings.phoneInvalidLength,
+                    errorText: context.l10n.registration_phoneInvalidLength,
                   ),
                   FormBuilderValidators.minLength(
                     10,
-                    errorText: RegistrationStrings.phoneInvalidLength,
+                    errorText: context.l10n.registration_phoneInvalidLength,
                   ),
                   FormBuilderValidators.maxLength(
                     10,
-                    errorText: RegistrationStrings.phoneInvalidLength,
+                    errorText: context.l10n.registration_phoneInvalidLength,
                   ),
                 ]),
               ),
               SizedBox(height: 12),
               AppCityAutocomplete(
                 name: RegistrationFormFields.residenceCity,
-                labelText: RegistrationStrings.residenceCity,
-                hintText: RegistrationStrings.residenceCityHint,
+                labelText: context.l10n.registration_residenceCity,
+                hintText: context.l10n.registration_residenceCityHint,
                 isRequired: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return RegistrationStrings.residenceCityRequired;
+                    return context.l10n.registration_residenceCityRequired;
                   }
                   return null;
                 },
@@ -165,16 +164,16 @@ class RegistrationFormContent extends StatelessWidget {
               SizedBox(height: 12),
               AppTextField(
                 name: RegistrationFormFields.email,
-                labelText: RegistrationStrings.email,
-                hintText: RegistrationStrings.emailHint,
+                labelText: context.l10n.registration_email,
+                hintText: context.l10n.registration_emailHint,
                 isRequired: true,
                 keyboardType: TextInputType.emailAddress,
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(
-                    errorText: RegistrationStrings.emailRequired,
+                    errorText: context.l10n.registration_emailRequired,
                   ),
                   FormBuilderValidators.email(
-                    errorText: RegistrationStrings.emailInvalid,
+                    errorText: context.l10n.registration_emailInvalid,
                   ),
                 ]),
               ),
@@ -184,7 +183,7 @@ class RegistrationFormContent extends StatelessWidget {
         SizedBox(height: 24),
         RegistrationFormSectionCard(
           icon: Icons.medical_services_outlined,
-          title: RegistrationStrings.medicalInfo,
+          title: context.l10n.registration_medicalInfo,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -194,12 +193,12 @@ class RegistrationFormContent extends StatelessWidget {
                   Expanded(
                     child: AppTextField(
                       name: RegistrationFormFields.eps,
-                      labelText: RegistrationStrings.eps,
-                      hintText: RegistrationStrings.epsHint,
+                      labelText: context.l10n.registration_eps,
+                      hintText: context.l10n.registration_epsHint,
                       isRequired: true,
                       textCapitalization: TextCapitalization.words,
                       validator: FormBuilderValidators.required(
-                        errorText: RegistrationStrings.epsRequired,
+                        errorText: context.l10n.registration_epsRequired,
                       ),
                     ),
                   ),
@@ -207,11 +206,11 @@ class RegistrationFormContent extends StatelessWidget {
                   Expanded(
                     child: AppDropdown<BloodType>(
                       name: RegistrationFormFields.bloodType,
-                      labelText: RegistrationStrings.bloodType,
-                      hintText: RegistrationStrings.bloodTypeHint,
+                      labelText: context.l10n.registration_bloodType,
+                      hintText: context.l10n.registration_bloodTypeHint,
                       isRequired: true,
                       validator: FormBuilderValidators.required(
-                        errorText: RegistrationStrings.bloodTypeRequired,
+                        errorText: context.l10n.registration_bloodTypeRequired,
                       ),
                       items: BloodType.values
                           .map(
@@ -228,8 +227,8 @@ class RegistrationFormContent extends StatelessWidget {
               SizedBox(height: 12),
               AppTextField(
                 name: RegistrationFormFields.medicalInsurance,
-                labelText: RegistrationStrings.medicalInsurance,
-                hintText: RegistrationStrings.medicalInsuranceHint,
+                labelText: context.l10n.registration_medicalInsurance,
+                hintText: context.l10n.registration_medicalInsuranceHint,
                 textCapitalization: TextCapitalization.words,
               ),
             ],
@@ -238,45 +237,45 @@ class RegistrationFormContent extends StatelessWidget {
         SizedBox(height: 24),
         RegistrationFormSectionCard(
           icon: Icons.phone_outlined,
-          title: RegistrationStrings.emergencyContactRequired,
+          title: context.l10n.registration_emergencyContactRequired,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               AppTextField(
                 name: RegistrationFormFields.emergencyContactName,
-                labelText: RegistrationStrings.emergencyContactName,
-                hintText: RegistrationStrings.emergencyContactNameHint,
+                labelText: context.l10n.registration_emergencyContactName,
+                hintText: context.l10n.registration_emergencyContactNameHint,
                 isRequired: true,
                 textCapitalization: TextCapitalization.words,
                 validator: FormBuilderValidators.required(
-                  errorText: RegistrationStrings.emergencyContactNameRequired,
+                  errorText: context.l10n.registration_emergencyContactNameRequired,
                 ),
               ),
               SizedBox(height: 12),
               AppTextField(
                 name: RegistrationFormFields.emergencyContactPhone,
-                labelText: RegistrationStrings.emergencyContactPhone,
-                hintText: RegistrationStrings.emergencyContactPhoneHint,
+                labelText: context.l10n.registration_emergencyContactPhone,
+                hintText: context.l10n.registration_emergencyContactPhoneHint,
                 isRequired: true,
                 keyboardType: TextInputType.phone,
                 maxLength: 10,
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(
-                    errorText: RegistrationStrings.emergencyContactPhoneRequired,
+                    errorText: context.l10n.registration_emergencyContactPhoneRequired,
                   ),
                   FormBuilderValidators.numeric(
                     errorText:
-                        RegistrationStrings.emergencyContactPhoneInvalidLength,
+                        context.l10n.registration_emergencyContactPhoneInvalidLength,
                   ),
                   FormBuilderValidators.minLength(
                     10,
                     errorText:
-                        RegistrationStrings.emergencyContactPhoneInvalidLength,
+                        context.l10n.registration_emergencyContactPhoneInvalidLength,
                   ),
                   FormBuilderValidators.maxLength(
                     10,
                     errorText:
-                        RegistrationStrings.emergencyContactPhoneInvalidLength,
+                        context.l10n.registration_emergencyContactPhoneInvalidLength,
                   ),
                 ]),
               ),
@@ -286,9 +285,9 @@ class RegistrationFormContent extends StatelessWidget {
         SizedBox(height: 24),
         RegistrationFormSectionCard(
           icon: Icons.two_wheeler_outlined,
-          title: RegistrationStrings.vehicleData,
+          title: context.l10n.registration_vehicleData,
           trailing: AppTextButton(
-            label: RegistrationStrings.preloadFromVehicle,
+            label: context.l10n.registration_preloadFromVehicle,
             onPressed: () => _preloadFromVehicle(context),
             icon: Icons.motorcycle_rounded,
             iconSize: 16,
@@ -303,12 +302,12 @@ class RegistrationFormContent extends StatelessWidget {
                   Expanded(
                     child: AppTextField(
                       name: RegistrationFormFields.vehicleBrand,
-                      labelText: RegistrationStrings.vehicleBrand,
-                      hintText: RegistrationStrings.vehicleBrandHint,
+                      labelText: context.l10n.registration_vehicleBrand,
+                      hintText: context.l10n.registration_vehicleBrandHint,
                       isRequired: true,
                       textCapitalization: TextCapitalization.words,
                       validator: FormBuilderValidators.required(
-                        errorText: RegistrationStrings.vehicleBrandRequired,
+                        errorText: context.l10n.registration_vehicleBrandRequired,
                       ),
                     ),
                   ),
@@ -316,12 +315,12 @@ class RegistrationFormContent extends StatelessWidget {
                   Expanded(
                     child: AppTextField(
                       name: RegistrationFormFields.vehicleReference,
-                      labelText: RegistrationStrings.vehicleReference,
-                      hintText: RegistrationStrings.vehicleReferenceHint,
+                      labelText: context.l10n.registration_vehicleReference,
+                      hintText: context.l10n.registration_vehicleReferenceHint,
                       isRequired: true,
                       textCapitalization: TextCapitalization.words,
                       validator: FormBuilderValidators.required(
-                        errorText: RegistrationStrings.vehicleReferenceRequired,
+                        errorText: context.l10n.registration_vehicleReferenceRequired,
                       ),
                     ),
                   ),
@@ -334,12 +333,12 @@ class RegistrationFormContent extends StatelessWidget {
                   Expanded(
                     child: AppTextField(
                       name: RegistrationFormFields.licensePlate,
-                      labelText: RegistrationStrings.licensePlate,
-                      hintText: RegistrationStrings.licensePlateHint,
+                      labelText: context.l10n.registration_licensePlate,
+                      hintText: context.l10n.registration_licensePlateHint,
                       isRequired: true,
                       textCapitalization: TextCapitalization.characters,
                       validator: FormBuilderValidators.required(
-                        errorText: RegistrationStrings.licensePlateRequired,
+                        errorText: context.l10n.registration_licensePlateRequired,
                       ),
                     ),
                   ),
@@ -347,8 +346,8 @@ class RegistrationFormContent extends StatelessWidget {
                   Expanded(
                     child: AppTextField(
                       name: RegistrationFormFields.vin,
-                      labelText: RegistrationStrings.vin,
-                      hintText: RegistrationStrings.vinHint,
+                      labelText: context.l10n.registration_vin,
+                      hintText: context.l10n.registration_vinHint,
                       textCapitalization: TextCapitalization.characters,
                     ),
                   ),
@@ -367,14 +366,14 @@ class RegistrationFormContent extends StatelessWidget {
               children: [
                 AppButton(
                   label: isEditing
-                      ? RegistrationStrings.updateRegistration
-                      : RegistrationStrings.sendRegistration,
+                      ? context.l10n.registration_updateRegistration
+                      : context.l10n.registration_sendRegistration,
                   onPressed: isLoading ? null : cubit.saveRegistration,
                   isLoading: isLoading,
                 ),
                 SizedBox(height: 12),
                 AppTextButton(
-                  label: AppStrings.cancel,
+                  label: context.l10n.cancel,
                   onPressed: () => context.pop(),
                   variant: AppTextButtonVariant.muted,
                 ),

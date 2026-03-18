@@ -4,15 +4,14 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/use_cases/add_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/upload_event_image_use_case.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 @injectable
 class EventFormCubit extends Cubit<ResultState<EventModel>> {
@@ -91,23 +90,23 @@ class EventFormCubit extends Cubit<ResultState<EventModel>> {
     required bool isPermanentlyDenied,
   }) async {
     final message = isPermanentlyDenied
-        ? EventStrings.photoPermissionPermanentlyDenied
-        : EventStrings.photoPermissionDenied;
+        ? context.l10n.event_photoPermissionPermanentlyDenied
+        : context.l10n.event_photoPermissionDenied;
 
     final openSettings = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text(EventStrings.uploadImage),
+        title: Text(context.l10n.event_uploadImage),
         content: Text(message),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text(AppStrings.accept),
+            child: Text(context.l10n.accept),
           ),
           if (isPermanentlyDenied)
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text(EventStrings.openSettings),
+              child: Text(context.l10n.event_openSettings),
             ),
         ],
       ),

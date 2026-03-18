@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
 import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 enum DialogActionType { primary, secondary, danger }
 
@@ -65,16 +65,16 @@ class AppDialog extends StatelessWidget {
         ],
       ),
       content: Text(content, style: context.bodyMedium?.copyWith(height: 1.5)),
-      actions: _buildActions(),
+      actions: _buildActions(context),
       actionsPadding: const EdgeInsets.all(16),
     );
   }
 
-  List<Widget> _buildActions() {
+  List<Widget> _buildActions(BuildContext context) {
     if (actions.isEmpty) {
       return [
         AppButton(
-          label: AppStrings.accept,
+          label: context.l10n.accept,
           onPressed: () => Navigator.of(_getContext()).pop(),
           variant: AppButtonVariant.primary,
           isFullWidth: false,

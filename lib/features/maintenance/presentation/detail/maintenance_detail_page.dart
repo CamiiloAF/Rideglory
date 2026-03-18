@@ -5,12 +5,10 @@ import 'package:intl/intl.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/delete/cubit/maintenance_delete_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_options_bottom_sheet.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_info_tile.dart';
 import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_section_header.dart';
 import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_alert_card.dart';
@@ -18,6 +16,7 @@ import 'package:rideglory/features/maintenance/presentation/detail/widgets/maint
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MaintenanceDetailPage extends StatelessWidget {
   const MaintenanceDetailPage({super.key, required this.maintenance});
@@ -73,9 +72,9 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
     } else if (action == MaintenanceAction.delete && mounted) {
       final confirm = await ConfirmationDialog.show(
         context: context,
-        title: MaintenanceStrings.deleteMaintenance,
-        content: MaintenanceStrings.deleteMaintenanceMessage,
-        confirmLabel: AppStrings.delete,
+        title: context.l10n.maintenance_deleteMaintenance,
+        content: context.l10n.maintenance_deleteMaintenanceMessage,
+        confirmLabel: context.l10n.delete,
         confirmType: DialogActionType.danger,
       );
       if (confirm == true && mounted) {
@@ -99,9 +98,9 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
         state.whenOrNull(
           success: (deletedId) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
+              SnackBar(
                 content: Text(
-                  MaintenanceStrings.maintenanceDeletedSuccessfully,
+                  context.l10n.maintenance_maintenanceDeletedSuccessfully,
                 ),
                 backgroundColor: Colors.green,
               ),
@@ -111,7 +110,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
           error: (message) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(AppStrings.errorMessage(message)),
+                content: Text(context.l10n.errorMessage(message)),
                 backgroundColor: Colors.red,
               ),
             );
@@ -127,7 +126,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
         child: Scaffold(
           backgroundColor: AppColors.darkBackground,
           appBar: AppAppBar(
-            title: MaintenanceStrings.maintenanceDetail,
+            title: context.l10n.maintenance_maintenanceDetail,
             leading: BackButton(onPressed: _popWithResult),
             actions: [
               IconButton(
@@ -165,7 +164,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                   children: [
                     Expanded(
                       child: MaintenanceInfoTile(
-                        label: MaintenanceStrings.mileage,
+                        label: context.l10n.maintenance_mileage,
                         value:
                             '${numberFormat.format(_maintenance.maintanceMileage)} km',
                         icon: Icons.speed,
@@ -174,10 +173,10 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                     SizedBox(width: 16),
                     Expanded(
                       child: MaintenanceInfoTile(
-                        label: MaintenanceStrings.totalCost,
+                        label: context.l10n.maintenance_totalCost,
                         value: _maintenance.cost != null
                             ? currencyFormat.format(_maintenance.cost)
-                            : AppStrings.notAvailable,
+                            : context.l10n.notAvailable,
                         icon: Icons.attach_money,
                       ),
                     ),
@@ -186,8 +185,8 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                 SizedBox(height: 24),
                 if (_maintenance.notes != null &&
                     _maintenance.notes!.isNotEmpty) ...[
-                  const MaintenanceSectionHeader(
-                    title: MaintenanceStrings.serviceNotes,
+                  MaintenanceSectionHeader(
+                    title: context.l10n.maintenance_serviceNotes,
                     icon: Icons.description_outlined,
                   ),
                   SizedBox(height: 12),
@@ -213,8 +212,8 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                     _maintenance.nextMaintenanceMileage != null) ...[
                   Row(
                     children: [
-                      const MaintenanceSectionHeader(
-                        title: MaintenanceStrings.nextMaintenance,
+                      MaintenanceSectionHeader(
+                        title: context.l10n.maintenance_nextMaintenance,
                         icon: Icons.event_repeat_outlined,
                       ),
                       SizedBox(width: 8),
@@ -230,7 +229,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          MaintenanceStrings.suggested.toUpperCase(),
+                          context.l10n.maintenance_suggested.toUpperCase(),
                           style: context.labelSmall?.copyWith(
                             color: Theme.of(context).colorScheme.primary,
                             fontWeight: FontWeight.w700,
@@ -257,7 +256,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  MaintenanceStrings.estimatedDate.toUpperCase(),
+                                  context.l10n.maintenance_estimatedDate.toUpperCase(),
                                   style: context.bodySmall?.copyWith(
                                     color: Theme.of(context)
                                         .colorScheme.onSurfaceVariant,
@@ -291,7 +290,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  MaintenanceStrings.mileage.toUpperCase(),
+                                  context.l10n.maintenance_mileage.toUpperCase(),
                                   style: context.bodySmall?.copyWith(
                                     color: Theme.of(context)
                                         .colorScheme.onSurfaceVariant,
@@ -317,8 +316,8 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                   SizedBox(height: 24),
                 ],
                 if (_maintenance.receiveAlert) ...[
-                  const MaintenanceSectionHeader(
-                    title: MaintenanceStrings.alertsConfiguration,
+                  MaintenanceSectionHeader(
+                    title: context.l10n.maintenance_alertsConfiguration,
                     icon: Icons.notifications_active_outlined,
                   ),
                   SizedBox(height: 12),
@@ -342,7 +341,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                           SizedBox(width: 16),
                           Expanded(
                             child: Text(
-                              MaintenanceStrings.alertsActivatedDesc,
+                              context.l10n.maintenance_alertsActivatedDesc,
                               style: context.bodyMedium?.copyWith(
                                 color: Theme.of(context).colorScheme.onSurface,
                               ),
@@ -359,11 +358,11 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                           Expanded(
                             child: MaintenanceAlertCard(
                               icon: Icons.speed,
-                              label: MaintenanceStrings.alertByMileage.toUpperCase(),
+                              label: context.l10n.maintenance_alertByMileage.toUpperCase(),
                               value: _maintenance.nextMaintenanceMileage != null
                                   ? '${numberFormat.format(_maintenance.nextMaintenanceMileage)} km'
                                   : '-',
-                              subtitle: MaintenanceStrings.mileageAlertBefore,
+                              subtitle: context.l10n.maintenance_mileageAlertBefore,
                               isOn: _maintenance.receiveMileageAlert,
                             ),
                           ),
@@ -375,12 +374,12 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                           Expanded(
                             child: MaintenanceAlertCard(
                               icon: Icons.calendar_month_outlined,
-                              label: MaintenanceStrings.alertByDate.toUpperCase(),
+                              label: context.l10n.maintenance_alertByDate.toUpperCase(),
                               value: _maintenance.nextMaintenanceDate != null
                                   ? DateFormat('dd MMM, yyyy')
                                       .format(_maintenance.nextMaintenanceDate!)
                                   : '-',
-                              subtitle: MaintenanceStrings.dateAlertBefore,
+                              subtitle: context.l10n.maintenance_dateAlertBefore,
                               isOn: _maintenance.receiveDateAlert,
                             ),
                           ),

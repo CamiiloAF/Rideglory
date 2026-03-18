@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/features/authentication/constants/auth_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class LoginForgotPasswordLink extends StatelessWidget {
   const LoginForgotPasswordLink({super.key});
@@ -8,7 +8,7 @@ class LoginForgotPasswordLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppTextButton(
-      label: AuthStrings.forgotPassword,
+      label: context.l10n.auth_forgotPassword,
       onPressed: () {
         // TODO: implement forgot password navigation
       },

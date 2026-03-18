@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/home/constants/home_strings.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class HomeViewAllEventsButton extends StatelessWidget {
   const HomeViewAllEventsButton({super.key});
@@ -26,7 +26,7 @@ class HomeViewAllEventsButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                HomeStrings.viewAllEvents,
+                context.l10n.home_viewAllEvents,
                 style: TextStyle(
                   color: context.colorScheme.onSurfaceVariant,
                   fontSize: 11,

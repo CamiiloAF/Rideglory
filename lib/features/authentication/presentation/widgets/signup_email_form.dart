@@ -4,9 +4,9 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/authentication/constants/auth_form_fields.dart';
-import 'package:rideglory/features/authentication/constants/auth_strings.dart';
 import 'package:rideglory/features/authentication/signup/presentation/widgets/signup_terms_text.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 /// Email/password signup form — colors via theme, strings via AuthStrings.
 class SignupEmailForm extends StatefulWidget {
@@ -44,7 +44,7 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
       if (acceptedTerms != true) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text(AuthStrings.acceptTermsError),
+            content: Text(context.l10n.auth_acceptTermsError),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -66,53 +66,53 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
         children: [
           AppTextField(
             name: AuthFormFields.email,
-            hintText: AuthStrings.emailHint,
+            hintText: context.l10n.auth_emailHint,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
             focusNode: _emailFocusNode,
             onFieldSubmitted: (_) => _passwordFocusNode.requestFocus(),
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(
-                errorText: AuthStrings.emailRequired,
+                errorText: context.l10n.auth_emailRequired,
               ),
-              FormBuilderValidators.email(errorText: AuthStrings.invalidEmail),
+              FormBuilderValidators.email(errorText: context.l10n.auth_invalidEmail),
             ]),
           ),
           SizedBox(height: 16),
           AppPasswordTextField(
             name: AuthFormFields.password,
-            hintText: AuthStrings.passwordMinStitch,
+            hintText: context.l10n.auth_passwordMinStitch,
             textInputAction: TextInputAction.next,
             focusNode: _passwordFocusNode,
             onFieldSubmitted: (_) => _confirmPasswordFocusNode.requestFocus(),
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(
-                errorText: AuthStrings.passwordRequired,
+                errorText: context.l10n.auth_passwordRequired,
               ),
               FormBuilderValidators.minLength(
                 8,
-                errorText: AuthStrings.passwordMinLength8,
+                errorText: context.l10n.auth_passwordMinLength8,
               ),
               FormBuilderValidators.match(
                 RegExp(r'[A-Z]'),
-                errorText: AuthStrings.passwordNeedsUppercase,
+                errorText: context.l10n.auth_passwordNeedsUppercase,
               ),
               FormBuilderValidators.match(
                 RegExp(r'[0-9]'),
-                errorText: AuthStrings.passwordNeedsNumber,
+                errorText: context.l10n.auth_passwordNeedsNumber,
               ),
             ]),
           ),
           SizedBox(height: 16),
           AppPasswordTextField(
             name: AuthFormFields.confirmPassword,
-            hintText: AuthStrings.confirmYourPassword,
+            hintText: context.l10n.auth_confirmYourPassword,
             textInputAction: TextInputAction.done,
             focusNode: _confirmPasswordFocusNode,
             onFieldSubmitted: (_) => _handleEmailSignup(context),
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(
-                errorText: AuthStrings.confirmPasswordRequired,
+                errorText: context.l10n.auth_confirmPasswordRequired,
               ),
               (value) {
                 final password = widget
@@ -120,7 +120,7 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
                     .currentState
                     ?.fields[AuthFormFields.password]
                     ?.value;
-                if (value != password) return AuthStrings.passwordsDoNotMatch;
+                if (value != password) return context.l10n.auth_passwordsDoNotMatch;
                 return null;
               },
             ]),
@@ -139,7 +139,7 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
                 onPressed: state.isLoading
                     ? null
                     : () => _handleEmailSignup(context),
-                label: AuthStrings.createAccountButton,
+                label: context.l10n.auth_createAccountButton,
               );
             },
           ),

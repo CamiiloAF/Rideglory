@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/authentication/constants/auth_strings.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class SignupTermsText extends StatelessWidget {
   const SignupTermsText({super.key});
@@ -18,15 +18,15 @@ class SignupTermsText extends StatelessWidget {
 
     return RichText(
       text: TextSpan(
-        text: AuthStrings.termsPrefix,
+        text: context.l10n.auth_termsPrefix,
         style: baseStyle,
         children: [
-          TextSpan(text: AuthStrings.termsOf, style: accentStyle),
-          TextSpan(text: AuthStrings.termsAnd, style: baseStyle),
-          TextSpan(text: AuthStrings.termsConditions, style: accentStyle),
-          TextSpan(text: AuthStrings.termsAnd2, style: baseStyle),
-          TextSpan(text: AuthStrings.termsPrivacy, style: accentStyle),
-          TextSpan(text: AuthStrings.termsSuffix, style: baseStyle),
+          TextSpan(text: context.l10n.auth_termsOf, style: accentStyle),
+          TextSpan(text: context.l10n.auth_termsAnd, style: baseStyle),
+          TextSpan(text: context.l10n.auth_termsConditions, style: accentStyle),
+          TextSpan(text: context.l10n.auth_termsAnd2, style: baseStyle),
+          TextSpan(text: context.l10n.auth_termsPrivacy, style: accentStyle),
+          TextSpan(text: context.l10n.auth_termsSuffix, style: baseStyle),
         ],
       ),
     );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/design_system/design_system.dart';
-import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class GarageEmptyState extends StatelessWidget {
   const GarageEmptyState({super.key});
@@ -20,7 +20,7 @@ class GarageEmptyState extends StatelessWidget {
           ),
           SizedBox(height: 16),
           Text(
-            VehicleStrings.noVehicles,
+            context.l10n.vehicle_noVehicles,
             style: context.titleMedium?.copyWith(
               color: context.colorScheme.onSurfaceVariant,
             ),
@@ -29,7 +29,7 @@ class GarageEmptyState extends StatelessWidget {
           AppButton(
             onPressed: () => context.pushNamed(AppRoutes.createVehicle),
             icon: Icons.add,
-            label: VehicleStrings.addVehicle,
+            label: context.l10n.vehicle_addVehicle,
             variant: AppButtonVariant.primary,
             style: AppButtonStyle.filled,
             isFullWidth: false,

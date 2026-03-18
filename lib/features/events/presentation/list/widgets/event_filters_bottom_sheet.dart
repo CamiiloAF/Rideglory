@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:rideglory/features/events/constants/event_filter_form_fields.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventFiltersBottomSheet extends StatefulWidget {
   const EventFiltersBottomSheet({super.key, required this.cubitContext});
@@ -81,13 +81,13 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      EventStrings.filters,
+                      context.l10n.event_filters,
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     AppTextButton(
-                      label: EventStrings.clearFilters,
+                      label: context.l10n.event_clearFilters,
                       onPressed: () {
                         setState(() {
                           _selectedTypes.clear();
@@ -112,7 +112,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                     children: [
                       // Event type filter
                       Text(
-                        EventStrings.filterByType,
+                        context.l10n.event_filterByType,
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -138,7 +138,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                       SizedBox(height: 16),
                       // Difficulty filter
                       Text(
-                        EventStrings.filterByDifficulty,
+                        context.l10n.event_filterByDifficulty,
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -165,13 +165,13 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                       // City filter
                       AppCityAutocomplete(
                         name: EventFilterFormFields.city,
-                        labelText: EventStrings.filterByCity,
+                        labelText: context.l10n.event_filterByCity,
                         isRequired: false,
                       ),
                       SizedBox(height: 16),
                       // Date range
                       Text(
-                        EventStrings.filterByDateRange,
+                        context.l10n.event_filterByDateRange,
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -182,7 +182,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                           Expanded(
                             child: AppDatePicker(
                               fieldName: EventFilterFormFields.startDate,
-                              labelText: EventStrings.startDate,
+                              labelText: context.l10n.event_startDate,
                               firstDate: DateTime(2020),
                               lastDate: DateTime(2030),
                             ),
@@ -191,7 +191,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                           Expanded(
                             child: AppDatePicker(
                               fieldName: EventFilterFormFields.endDate,
-                              labelText: EventStrings.endDate,
+                              labelText: context.l10n.event_endDate,
                               firstDate: DateTime(2020),
                               lastDate: DateTime(2030),
                             ),
@@ -200,13 +200,13 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                       ),
                       SizedBox(height: 16),
                       // Boolean filters
-                      const AppCheckbox(
+                      AppCheckbox(
                         name: EventFilterFormFields.freeOnly,
-                        title: EventStrings.filterByFreeOnly,
+                        title: context.l10n.event_filterByFreeOnly,
                       ),
-                      const AppCheckbox(
+                      AppCheckbox(
                         name: EventFilterFormFields.multiBrandOnly,
-                        title: EventStrings.filterByMultiBrand,
+                        title: context.l10n.event_filterByMultiBrand,
                       ),
                       SizedBox(height: 24),
                     ],
@@ -222,7 +222,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                   top: 8,
                 ),
                 child: AppButton(
-                  label: EventStrings.applyFilters,
+                  label: context.l10n.event_applyFilters,
                   onPressed: () {
                     _formKey.currentState?.save();
                     final values = _formKey.currentState?.value ?? {};

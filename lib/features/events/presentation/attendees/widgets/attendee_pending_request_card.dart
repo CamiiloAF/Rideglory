@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/attendees/attendees_cubit.dart';
 import 'package:rideglory/features/events/presentation/attendees/attendee_action_confirmation.dart';
 import 'package:rideglory/features/events/presentation/shared/widgets/initials_avatar.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class AttendeePendingRequestCard extends StatelessWidget {
   final EventRegistrationModel registration;
@@ -89,7 +89,25 @@ class AttendeePendingRequestCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    EventStrings.formatTimeAgo(registration.createdDate),
+                    (() {
+                      final createdDate = registration.createdDate;
+                      if (createdDate == null) return '';
+                      final now = DateTime.now();
+                      final diff = now.difference(createdDate);
+                      if (diff.inDays > 0) {
+                        return context.l10n.event_timeAgoDays(
+                          diff.inDays,
+                        );
+                      }
+                      if (diff.inHours > 0) {
+                        return context.l10n.event_timeAgoHours(
+                          diff.inHours,
+                        );
+                      }
+                      return context.l10n.event_timeAgoMinutes(
+                        diff.inMinutes.clamp(0, 59),
+                      );
+                    })(),
                     style: textTheme.bodySmall?.copyWith(
                       color: colorScheme.onSurfaceVariant,
                     ),
@@ -100,8 +118,8 @@ class AttendeePendingRequestCard extends StatelessWidget {
           ),
           SizedBox(height: 12),
           ApproveRejectBar(
-            rejectLabel: EventStrings.rejectRegistration,
-            approveLabel: EventStrings.approveRegistration,
+            rejectLabel: context.l10n.event_rejectRegistration,
+            approveLabel: context.l10n.event_approveRegistration,
             onReject: () => AttendeeActionConfirmation.showReject(
               context,
               firstName: registration.firstName,

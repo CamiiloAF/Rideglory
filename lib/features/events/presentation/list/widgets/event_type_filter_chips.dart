@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/event_filter_chip.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventTypeFilterChips extends StatelessWidget {
   const EventTypeFilterChips({super.key});
@@ -20,7 +20,7 @@ class EventTypeFilterChips extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           EventFilterChip(
-            label: EventStrings.filterAll,
+            label: context.l10n.event_filterAll,
             isSelected: selectedTypes.isEmpty,
             onTap: () {
               cubit.updateFilters(cubit.filters.copyWith(types: {}));

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MaintenanceCardActionsMenu extends StatelessWidget {
   final VoidCallback? onEdit;
@@ -16,24 +15,24 @@ class MaintenanceCardActionsMenu extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       itemBuilder: (context) => [
         if (onEdit != null)
-          const PopupMenuItem(
+          PopupMenuItem(
             value: 'edit',
             child: Row(
               children: [
                 Icon(Icons.edit_outlined, size: 20),
                 SizedBox(width: 12),
-                Text(AppStrings.edit),
+                Text(context.l10n.edit),
               ],
             ),
           ),
         if (onDelete != null)
-          const PopupMenuItem(
+          PopupMenuItem(
             value: 'delete',
             child: Row(
               children: [
                 Icon(Icons.delete_outline, size: 20, color: Colors.red),
                 SizedBox(width: 12),
-                Text(AppStrings.delete, style: TextStyle(color: Colors.red)),
+                Text(context.l10n.delete, style: TextStyle(color: Colors.red)),
               ],
             ),
           ),
@@ -44,10 +43,10 @@ class MaintenanceCardActionsMenu extends StatelessWidget {
         } else if (value == 'delete') {
           ConfirmationDialog.show(
             context: context,
-            title: MaintenanceStrings.deleteMaintenance,
-            content: MaintenanceStrings.deleteMaintenanceMessage,
-            cancelLabel: AppStrings.cancel,
-            confirmLabel: AppStrings.delete,
+            title: context.l10n.maintenance_deleteMaintenance,
+            content: context.l10n.maintenance_deleteMaintenanceMessage,
+            cancelLabel: context.l10n.cancel,
+            confirmLabel: context.l10n.delete,
             confirmType: DialogActionType.danger,
             dialogType: DialogType.warning,
             onConfirm: () => onDelete?.call(),

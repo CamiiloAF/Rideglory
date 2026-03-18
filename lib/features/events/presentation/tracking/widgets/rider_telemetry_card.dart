@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/events/presentation/tracking/constants/map_strings.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/telemetry_metric.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class RiderTelemetryCard extends StatelessWidget {
   const RiderTelemetryCard({
@@ -134,19 +134,19 @@ class RiderTelemetryCard extends StatelessWidget {
             Row(
               children: [
                 TelemetryMetric(
-                  label: MapStrings.speed,
+                  label: context.l10n.map_speed,
                   value: '${speedKmh}km/h',
                   icon: Icons.speed,
                 ),
                 SizedBox(width: 8),
                 TelemetryMetric(
-                  label: MapStrings.distance,
+                  label: context.l10n.map_distance,
                   value: '${distanceMeters}m',
                   icon: Icons.route,
                 ),
                 SizedBox(width: 8),
                 TelemetryMetric(
-                  label: MapStrings.battery,
+                  label: context.l10n.map_battery,
                   value: '$batteryPercent%',
                   icon: Icons.battery_full,
                   valueColor: batteryColor,

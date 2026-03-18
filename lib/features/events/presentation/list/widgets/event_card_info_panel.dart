@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventCardInfoPanel extends StatelessWidget {
   final EventModel event;
@@ -100,7 +100,7 @@ class EventCardInfoPanel extends StatelessWidget {
           ),
           SizedBox(height: 14),
           AppButton(
-            label: EventStrings.joinEvent,
+            label: context.l10n.event_joinEvent,
             onPressed: onTap,
           ),
         ],

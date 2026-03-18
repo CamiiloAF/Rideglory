@@ -4,8 +4,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/authentication/constants/auth_form_fields.dart';
-import 'package:rideglory/features/authentication/constants/auth_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class LoginEmailForm extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
@@ -30,32 +30,32 @@ class LoginEmailForm extends StatelessWidget {
         children: [
           AppTextField(
             name: AuthFormFields.email,
-            labelText: AuthStrings.email,
-            hintText: AuthStrings.enterEmail,
+            labelText: context.l10n.auth_email,
+            hintText: context.l10n.auth_enterEmail,
             prefixIcon: Icons.email_rounded,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(
-                errorText: AuthStrings.emailRequired,
+                errorText: context.l10n.auth_emailRequired,
               ),
-              FormBuilderValidators.email(errorText: AuthStrings.invalidEmail),
+              FormBuilderValidators.email(errorText: context.l10n.auth_invalidEmail),
             ]),
           ),
           SizedBox(height: 16),
           AppPasswordTextField(
             name: AuthFormFields.password,
-            labelText: AuthStrings.password,
-            hintText: AuthStrings.enterPassword,
+            labelText: context.l10n.auth_password,
+            hintText: context.l10n.auth_enterPassword,
             textInputAction: TextInputAction.done,
             onFieldSubmitted: (_) => _handleEmailLogin(context),
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(
-                errorText: AuthStrings.passwordRequired,
+                errorText: context.l10n.auth_passwordRequired,
               ),
               FormBuilderValidators.minLength(
                 6,
-                errorText: AuthStrings.passwordMinLength,
+                errorText: context.l10n.auth_passwordMinLength,
               ),
             ]),
           ),
@@ -68,7 +68,7 @@ class LoginEmailForm extends StatelessWidget {
                 onPressed: state.isLoading
                     ? null
                     : () => _handleEmailLogin(context),
-                label: AuthStrings.signIn,
+                label: context.l10n.auth_signIn,
               );
             },
           ),

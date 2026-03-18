@@ -4,7 +4,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/event_form_cover_section.dart';
@@ -16,6 +15,7 @@ import 'package:rideglory/features/events/presentation/form/widgets/sections/eve
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_locations_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_multi_brand_section.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class EventFormContent extends StatelessWidget {
   const EventFormContent({super.key});
@@ -106,15 +106,15 @@ class EventFormContent extends StatelessWidget {
             SizedBox(height: 24),
             const EventFormDifficultySection(),
             SizedBox(height: 24),
-            const FormSectionTitle(
-              title: EventStrings.routeAndMap,
+            FormSectionTitle(
+              title: context.l10n.event_routeAndMap,
               icon: Icons.route_outlined,
             ),
             SizedBox(height: 16),
             const EventFormLocationsSection(),
             SizedBox(height: 24),
-            const FormSectionTitle(
-              title: EventStrings.eventType,
+            FormSectionTitle(
+              title: context.l10n.event_eventType,
               icon: Icons.category_outlined,
             ),
             const EventFormEventTypeSection(),
@@ -123,13 +123,13 @@ class EventFormContent extends StatelessWidget {
             SizedBox(height: 24),
             AppTextField(
               name: EventFormFields.price,
-              labelText: EventStrings.price,
-              hintText: EventStrings.priceHint,
+              labelText: context.l10n.event_price,
+              hintText: context.l10n.event_priceHint,
               prefixIcon: Icons.attach_money,
               keyboardType: TextInputType.number,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.numeric(
-                  errorText: EventStrings.invalidPrice,
+                  errorText: context.l10n.event_invalidPrice,
                   checkNullOrEmpty: false,
                 ),
               ]),

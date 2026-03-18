@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class NoRegistrationContent extends StatelessWidget {
   final EventModel event;
@@ -20,7 +20,7 @@ class NoRegistrationContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          EventStrings.joinEvent,
+          context.l10n.event_joinEvent,
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -28,7 +28,7 @@ class NoRegistrationContent extends StatelessWidget {
         SizedBox(height: 4),
         Text(
           event.isFree
-              ? EventStrings.free
+              ? context.l10n.event_free
               : '\$${event.price!.toStringAsFixed(0)}',
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
@@ -36,7 +36,7 @@ class NoRegistrationContent extends StatelessWidget {
         ),
         SizedBox(height: 12),
         AppButton(
-          label: EventStrings.joinEvent,
+          label: context.l10n.event_joinEvent,
           onPressed: onRegister,
           icon: Icons.how_to_reg_outlined,
         ),

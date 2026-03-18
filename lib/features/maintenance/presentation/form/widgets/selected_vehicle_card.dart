@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class SelectedVehicleCard extends StatelessWidget {
   final VehicleModel vehicle;
@@ -48,7 +48,7 @@ class SelectedVehicleCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    MaintenanceStrings.vehicle,
+                    context.l10n.maintenance_vehicle,
                     style: context.textTheme.labelSmall?.copyWith(
                       color: context.colorScheme.onSurfaceVariant,
                       fontWeight: FontWeight.w600,

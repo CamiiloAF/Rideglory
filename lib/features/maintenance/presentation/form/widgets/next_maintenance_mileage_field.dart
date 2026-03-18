@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:rideglory/features/maintenance/constants/maintenance_strings.dart';
-import 'package:rideglory/core/constants/app_strings.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class NextMaintenanceMileageField extends StatefulWidget {
   final int? currentMileage;
@@ -27,7 +26,7 @@ class _NextMaintenanceMileageFieldState
   Widget build(BuildContext context) {
     return AppTextField(
       name: 'nextMaintenanceMileage',
-      labelText: MaintenanceStrings.nextMaintenanceMileage,
+      labelText: context.l10n.maintenance_nextMaintenanceMileage,
       keyboardType: TextInputType.number,
       prefixIcon: Icons.speed,
       suffixText: 'km',
@@ -43,14 +42,14 @@ class _NextMaintenanceMileageFieldState
       },
       validator: _shouldValidate
           ? FormBuilderValidators.compose([
-              FormBuilderValidators.numeric(errorText: AppStrings.mustBeNumber),
+              FormBuilderValidators.numeric(errorText: context.l10n.mustBeNumber),
               (value) {
                 if (value == null || value.isEmpty) return null;
                 final mileage = int.tryParse(value);
                 if (mileage != null &&
                     widget.currentMileage != null &&
                     mileage <= widget.currentMileage!) {
-                  return '${AppStrings.mustBeGreaterThan} ${MaintenanceStrings.currentMileage} (${widget.currentMileage})';
+                  return '${context.l10n.mustBeGreaterThan} ${context.l10n.maintenance_currentMileage} (${widget.currentMileage})';
                 }
                 return null;
               },
