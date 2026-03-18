@@ -12,21 +12,22 @@ class TextFieldLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!isRequired) {
-      return Text(labelText);
-    }
+    final colorScheme = Theme.of(context).colorScheme;
 
-    return Text.rich(
-      TextSpan(
-        text: labelText,
-        style: const TextStyle(color: Color(0xFF374151)),
-        children: const [
-          TextSpan(
-            text: ' *',
-            style: TextStyle(color: Colors.red),
-          ),
-        ],
-      ),
-    );
+    final child = !isRequired
+        ? Text(labelText)
+        : Text.rich(
+            TextSpan(
+              text: labelText,
+              children: [
+                TextSpan(
+                  text: ' *',
+                  style: TextStyle(color: colorScheme.error),
+                ),
+              ],
+            ),
+          );
+
+    return Padding(padding: const EdgeInsets.only(bottom: 6), child: child);
   }
 }

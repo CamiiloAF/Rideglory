@@ -19,7 +19,5 @@ abstract class MaintenanceRepository {
     MaintenanceModel maintenance,
   );
 
-  Future<Either<DomainException, Nothing>> deleteMaintenance(
-    String id,
-  );
+  Future<Either<DomainException, Nothing>> deleteMaintenance(String id);
 }

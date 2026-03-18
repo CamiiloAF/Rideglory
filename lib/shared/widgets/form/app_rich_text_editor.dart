@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/shared/widgets/form/text_field_label.dart';
 
 class AppRichTextEditor extends StatefulWidget {
   final String name;
@@ -14,6 +16,9 @@ class AppRichTextEditor extends StatefulWidget {
   final int minLines;
   final ValueChanged<String>? onChanged;
 
+  /// When set, an "IA" toolbar button is shown for AI suggestions. Not implemented yet.
+  final VoidCallback? onAiSuggest;
+
   const AppRichTextEditor({
     super.key,
     required this.name,
@@ -25,6 +30,7 @@ class AppRichTextEditor extends StatefulWidget {
     this.initialValue,
     this.minLines = 5,
     this.onChanged,
+    this.onAiSuggest,
   });
 
   @override
@@ -81,12 +87,16 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
     final toolbarToggleStyleButtonOptions =
         QuillToolbarToggleStyleButtonOptions(
           iconTheme: QuillIconTheme(
             iconButtonSelectedData: IconButtonData(
-              color: theme.colorScheme.onPrimary,
+              color: colorScheme.onPrimary,
+            ),
+            iconButtonUnselectedData: const IconButtonData(
+              color: AppColors.darkTextSecondary,
             ),
           ),
         );
@@ -100,31 +110,29 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (widget.labelText != null) ...[
-              Text(
-                widget.isRequired ? '${widget.labelText} *' : widget.labelText!,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onSurface.withOpacity(0.6),
-                ),
+              TextFieldLabel(
+                labelText: widget.labelText!,
+                isRequired: widget.isRequired,
               ),
-              const SizedBox(height: 8),
             ],
             Container(
               decoration: BoxDecoration(
+                color: AppColors.darkSurfaceHighest,
                 border: Border.all(
                   color: field.hasError
-                      ? theme.colorScheme.error
-                      : theme.colorScheme.outline,
+                      ? colorScheme.error
+                      : colorScheme.primary,
+                  width: field.hasError ? 1.5 : 1,
                 ),
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
                 children: [
-                  // Barra de herramientas
                   Container(
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.surfaceContainerHighest,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(4),
+                    decoration: const BoxDecoration(
+                      color: AppColors.darkSurfaceHighest,
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(8),
                       ),
                     ),
                     padding: const EdgeInsets.symmetric(
@@ -186,26 +194,77 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
                       ),
                     ),
                   ),
-                  // Editor
-                  Container(
-                    constraints: BoxConstraints(
-                      minHeight: widget.minLines * 24.0,
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    child: Focus(
-                      onFocusChange: (hasFocus) {
-                        if (!hasFocus) {
-                          // Guardar el contenido cuando se pierde el foco
-                          field.didChange(_getJsonContent());
-                        }
-                      },
-                      child: QuillEditor(
-                        controller: _controller,
-                        focusNode: _focusNode,
-
-                        scrollController: ScrollController(),
+                  Stack(
+                    alignment: Alignment.centerRight,
+                    children: [
+                      Container(
+                        constraints: BoxConstraints(
+                          minHeight: widget.minLines * 24.0,
+                        ),
+                        padding: EdgeInsets.fromLTRB(
+                          16,
+                          16,
+                          widget.onAiSuggest != null ? 48 : 16,
+                          16,
+                        ),
+                        child: Focus(
+                          onFocusChange: (hasFocus) {
+                            if (!hasFocus) {
+                              field.didChange(_getJsonContent());
+                            }
+                          },
+                          child: QuillEditor(
+                            controller: _controller,
+                            focusNode: _focusNode,
+                            scrollController: ScrollController(),
+                          ),
+                        ),
                       ),
-                    ),
+                      if (widget.onAiSuggest != null)
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: widget.onAiSuggest,
+                              borderRadius: BorderRadius.circular(4),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: colorScheme.primary,
+                                    width: 1,
+                                  ),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.auto_awesome,
+                                      size: 18,
+                                      color: colorScheme.primary,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      'IA',
+                                      style: TextStyle(
+                                        color: colorScheme.primary,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                 ],
               ),
@@ -217,7 +276,7 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: field.hasError
                       ? theme.colorScheme.error
-                      : theme.colorScheme.onSurface.withOpacity(0.6),
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
             ],

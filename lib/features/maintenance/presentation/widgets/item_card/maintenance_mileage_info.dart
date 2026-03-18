@@ -42,8 +42,7 @@ class MaintenanceMileageInfo extends StatelessWidget {
               InfoChip(
                 icon: Icons.build_rounded,
                 label: MaintenanceStrings.maintenance,
-                value:
-                    '${maintenance.maintanceMileage.toStringAsFixed(0)} ${maintenance.distanceUnit.label}',
+                value: maintenance.maintanceMileage.toStringAsFixed(0),
                 color: const Color(0xFF64748B),
               ),
               if (maintenance.nextMaintenanceMileage != null)
@@ -56,7 +55,7 @@ class MaintenanceMileageInfo extends StatelessWidget {
                       icon: Icons.flag_rounded,
                       label: MaintenanceStrings.next,
                       value:
-                          '${maintenance.nextMaintenanceMileage!.toStringAsFixed(0)} ${maintenance.distanceUnit.label}',
+                          maintenance.nextMaintenanceMileage!.toStringAsFixed(0),
                       color: typeColor,
                       tooltip: InfoChipTooltip(
                         typeColor: typeColor,
@@ -79,7 +78,7 @@ class MaintenanceMileageInfo extends StatelessWidget {
               remainingDistance != null
                   ? MaintenanceStrings.remainingDistance(
                       remainingDistance.toStringAsFixed(0),
-                      maintenance.distanceUnit.label,
+                      'km', // TODO: Add distance unit
                     )
                   : MaintenanceStrings.calculateRemainingDistance,
               style: context.labelSmall?.copyWith(

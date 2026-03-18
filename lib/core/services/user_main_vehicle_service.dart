@@ -79,7 +79,7 @@ class UserMainVehicleService {
       function: () async {
         final userId = _authService.currentUser?.uid;
         if (userId == null) {
-          throw DomainException(message: 'No user is currently authenticated');
+          throw const DomainException(message: 'No user is currently authenticated');
         }
 
         final userMainVehicle = UserMainVehicleModel(

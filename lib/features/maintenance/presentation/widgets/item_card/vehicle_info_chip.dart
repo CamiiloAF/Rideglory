@@ -7,11 +7,7 @@ class VehicleInfoChip extends StatelessWidget {
 
   const VehicleInfoChip({super.key, required this.vehicle});
 
-  IconData get _vehicleIcon {
-    return vehicle.vehicleType == VehicleType.car
-        ? Icons.directions_car_rounded
-        : Icons.two_wheeler_rounded;
-  }
+  IconData get _vehicleIcon => Icons.two_wheeler_rounded;
 
   @override
   Widget build(BuildContext context) {

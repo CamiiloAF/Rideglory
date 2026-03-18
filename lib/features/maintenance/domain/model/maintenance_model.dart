@@ -28,11 +28,13 @@ class MaintenanceModel {
   final DateTime date;
   final DateTime? nextMaintenanceDate;
   final int maintanceMileage;
-  final DistanceUnit distanceUnit;
   final bool receiveAlert;
+  final bool receiveMileageAlert;
+  final bool receiveDateAlert;
   final int? nextMaintenanceMileage;
   final DateTime? createdDate;
   final DateTime? updatedDate;
+  final double? cost;
 
   MaintenanceModel({
     this.id,
@@ -44,11 +46,13 @@ class MaintenanceModel {
     required this.date,
     this.nextMaintenanceDate,
     required this.maintanceMileage,
-    required this.distanceUnit,
     required this.receiveAlert,
+    this.receiveMileageAlert = false,
+    this.receiveDateAlert = false,
     this.nextMaintenanceMileage,
     this.createdDate,
     this.updatedDate,
+    this.cost,
   });
 
   MaintenanceModel copyWith({
@@ -61,11 +65,14 @@ class MaintenanceModel {
     int? maintanceMileage,
     DistanceUnit? distanceUnit,
     bool? receiveAlert,
+    bool? receiveMileageAlert,
+    bool? receiveDateAlert,
     int? nextMaintenanceMileage,
     String? userId,
     String? vehicleId,
     DateTime? createdDate,
     DateTime? updatedDate,
+    double? cost,
   }) {
     return MaintenanceModel(
       id: id ?? this.id,
@@ -77,12 +84,14 @@ class MaintenanceModel {
       date: date ?? this.date,
       nextMaintenanceDate: nextMaintenanceDate ?? this.nextMaintenanceDate,
       maintanceMileage: maintanceMileage ?? this.maintanceMileage,
-      distanceUnit: distanceUnit ?? this.distanceUnit,
       receiveAlert: receiveAlert ?? this.receiveAlert,
+      receiveMileageAlert: receiveMileageAlert ?? this.receiveMileageAlert,
+      receiveDateAlert: receiveDateAlert ?? this.receiveDateAlert,
       nextMaintenanceMileage:
           nextMaintenanceMileage ?? this.nextMaintenanceMileage,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
+      cost: cost ?? this.cost,
     );
   }
 }

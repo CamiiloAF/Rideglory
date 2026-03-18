@@ -6,11 +6,11 @@ import '../../../../core/exceptions/domain_exception.dart';
 import '../models/vehicle_model.dart';
 
 /// Use case to initialize authenticated user's vehicles
-/// 
+///
 /// This use case:
 /// 1. Loads all vehicles for the current user
 /// 2. Returns the list for pre-setting in VehicleCubit
-/// 
+///
 /// Call this after successful login/signup in AuthCubit
 @injectable
 class InitializeAuthenticatedUserVehiclesUseCase {

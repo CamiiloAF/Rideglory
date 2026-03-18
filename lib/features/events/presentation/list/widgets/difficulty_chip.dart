@@ -14,7 +14,7 @@ class DifficultyChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: AppColors.difficultyChip.withOpacity(0.12),
+        color: AppColors.difficultyChip.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text('🌶' * difficulty.value, style: theme.textTheme.labelSmall),

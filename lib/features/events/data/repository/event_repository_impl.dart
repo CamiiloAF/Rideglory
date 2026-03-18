@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/domain/nothing.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
@@ -11,10 +14,11 @@ import 'package:rideglory/features/events/domain/repository/event_repository.dar
 
 @Injectable(as: EventRepository)
 class EventRepositoryImpl implements EventRepository {
-  EventRepositoryImpl(this._firestore, this._authService);
+  EventRepositoryImpl(this._firestore, this._authService, this._storage);
 
   final FirebaseFirestore _firestore;
   final AuthService _authService;
+  final FirebaseStorage _storage;
 
   static const _collectionName = 'events';
 
@@ -39,7 +43,7 @@ class EventRepositoryImpl implements EventRepository {
     final userId = _authService.currentUser?.uid;
     if (userId == null) {
       return Future.value(
-        Left(DomainException(message: 'No user is currently authenticated.')),
+        const Left(DomainException(message: 'No user is currently authenticated.')),
       );
     }
 
@@ -65,7 +69,7 @@ class EventRepositoryImpl implements EventRepository {
         final doc = await _firestore.collection(_collectionName).doc(id).get();
 
         if (!doc.exists || doc.data() == null) {
-          throw DomainException(message: 'Evento no encontrado.');
+          throw const DomainException(message: 'Evento no encontrado.');
         }
 
         return EventDto.fromJson(doc.data()!).copyWith(id: doc.id);
@@ -75,21 +79,24 @@ class EventRepositoryImpl implements EventRepository {
 
   @override
   Future<Either<DomainException, EventModel>> addEvent(EventModel event) {
-    final now = DateTime.now();
-    final userId = _authService.currentUser?.uid ?? event.ownerId;
-    final eventWithMeta = event.copyWith(
-      ownerId: userId,
-      createdDate: now,
-      updatedDate: now,
-    );
-
     return executeService(
       function: () async {
-        final docRef = _firestore
-            .collection(_collectionName)
-            .doc(eventWithMeta.id);
+        final now = DateTime.now();
+        final userId = _authService.currentUser?.uid ?? event.ownerId;
+
+        // Always generate a new document ID for created events so we can
+        // reliably upload a cover image afterwards.
+        final docRef = _firestore.collection(_collectionName).doc();
+
+        final eventWithMeta = event.copyWith(
+          id: docRef.id,
+          ownerId: userId,
+          createdDate: now,
+          updatedDate: now,
+        );
+
         await docRef.set(eventWithMeta.toJson());
-        return eventWithMeta.copyWith(id: docRef.id);
+        return eventWithMeta;
       },
     );
   }
@@ -114,7 +121,22 @@ class EventRepositoryImpl implements EventRepository {
     return executeService(
       function: () async {
         await _firestore.collection(_collectionName).doc(id).delete();
-        return Nothing();
+        return const Nothing();
+      },
+    );
+  }
+
+  @override
+  Future<Either<DomainException, String>> uploadEventImage({
+    required String eventId,
+    required String localImagePath,
+  }) {
+    return executeService(
+      function: () async {
+        final file = File(localImagePath);
+        final ref = _storage.ref().child('events/$eventId/cover.jpg');
+        final uploadTask = await ref.putFile(file);
+        return uploadTask.ref.getDownloadURL();
       },
     );
   }

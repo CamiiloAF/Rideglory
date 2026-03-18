@@ -33,12 +33,27 @@ class VehicleListItem extends StatelessWidget {
                       colors: AppColors.primaryGradient,
                     )
                   : null,
-              color: isSelected ? null : AppColors.backgroundGray,
+              color: isSelected ? null : AppColors.darkSurface,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isSelected ? Colors.transparent : AppColors.border,
+                color: isSelected ? Colors.transparent : AppColors.darkBorder,
                 width: 1.5,
               ),
+              boxShadow: isSelected
+                  ? [
+                      BoxShadow(
+                        color: AppColors.primaryShadow(opacity: 0.45),
+                        blurRadius: 18,
+                        offset: const Offset(0, 6),
+                      ),
+                    ]
+                  : [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.35),
+                        blurRadius: 14,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
             ),
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -48,15 +63,13 @@ class VehicleListItem extends StatelessWidget {
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? AppColors.overlayMedium
-                          : AppColors.primary.withValues(alpha: .1),
+                          ? Colors.black.withValues(alpha: 0.25)
+                          : AppColors.primary.withValues(alpha: .08),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
-                      vehicle.vehicleType == VehicleType.motorcycle
-                          ? Icons.motorcycle_rounded
-                          : Icons.directions_car_rounded,
-                      color: isSelected ? Colors.white : context.primaryColor,
+                      Icons.motorcycle_rounded,
+                      color: isSelected ? Colors.white : AppColors.primary,
                       size: 24,
                     ),
                   ),
@@ -71,19 +84,20 @@ class VehicleListItem extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             color: isSelected
                                 ? Colors.white
-                                : AppColors.textPrimary,
+                                : AppColors.darkTextPrimary,
                           ),
                         ),
                         if (vehicle.brand != null || vehicle.model != null) ...[
                           const SizedBox(height: 4),
                           Text(
-                            [vehicle.brand, vehicle.model]
-                                .where((e) => e != null)
-                                .join(' '),
+                            [
+                              vehicle.brand,
+                              vehicle.model,
+                            ].where((e) => e != null).join(' '),
                             style: context.bodySmall?.copyWith(
                               color: isSelected
                                   ? Colors.white70
-                                  : AppColors.textSecondary,
+                                  : AppColors.darkTextSecondary,
                             ),
                           ),
                         ],
@@ -94,7 +108,7 @@ class VehicleListItem extends StatelessWidget {
                             style: context.labelSmall?.copyWith(
                               color: isSelected
                                   ? Colors.white60
-                                  : AppColors.textSecondary,
+                                  : AppColors.darkTextSecondary,
                             ),
                           ),
                         ],

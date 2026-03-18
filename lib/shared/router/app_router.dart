@@ -5,27 +5,31 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
-import 'package:rideglory/features/events/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/event_registration/presentation/event_registration_page.dart';
+import 'package:rideglory/features/event_registration/presentation/my_registrations_page.dart';
+import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
+import 'package:rideglory/features/event_registration/presentation/registration_detail_page.dart';
 import 'package:rideglory/features/events/presentation/attendees/attendees_page.dart';
 import 'package:rideglory/features/events/presentation/detail/event_detail_page.dart';
+import 'package:rideglory/features/events/presentation/detail/params.dart';
 import 'package:rideglory/features/events/presentation/form/event_form_page.dart';
 import 'package:rideglory/features/events/presentation/list/events_page.dart';
-import 'package:rideglory/features/events/presentation/registration/form/event_registration_page.dart';
-import 'package:rideglory/features/events/presentation/registration/list/my_registrations_page.dart';
-import 'package:rideglory/features/events/presentation/registration/detail/registration_detail_page.dart';
 import 'package:rideglory/features/events/presentation/detail/event_detail_by_id_page.dart';
+import 'package:rideglory/features/home/presentation/home_page.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
 import '../../features/authentication/application/auth_cubit.dart';
 import '../../features/authentication/login/presentation/login_view.dart';
 import '../../features/authentication/signup/presentation/signup_view.dart';
+import '../../features/profile/presentation/profile_page.dart';
+import '../../features/maintenance/presentation/detail/maintenance_detail_page.dart';
 import '../../features/maintenance/presentation/form/maintenance_form_page.dart';
 import '../../features/maintenance/presentation/list/maintenances/maintenances_page.dart';
 import '../../features/splash/presentation/splash_screen.dart';
 import '../../features/vehicles/presentation/form/vehicle_form_page.dart';
-import '../../features/vehicles/presentation/list/vehicle_list_page.dart';
-import '../../features/vehicles/presentation/views/vehicle_onboarding_view.dart';
+import '../../features/vehicles/presentation/garage/garage_page.dart';
+import '../widgets/main_shell.dart';
 import 'app_routes.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -43,20 +47,15 @@ class AppRouter {
       final isOnAuthPage =
           state.matchedLocation == AppRoutes.login ||
           state.matchedLocation == AppRoutes.signup;
-      final isOnOnboarding =
-          state.matchedLocation == AppRoutes.vehicleOnboarding;
 
       // Allow access to splash and auth pages
       if (isOnSplash || isOnAuthPage) {
         return null;
       }
 
-      // If user is authenticated without vehicles, redirect to onboarding
+      // Discard empty vehicle restriction: allow access to app directly
       if (isAuthenticatedWithoutVehicles) {
-        if (isOnOnboarding) {
-          return null; // Allow onboarding route
-        }
-        return AppRoutes.vehicleOnboarding;
+        return AppRoutes.home;
       }
 
       // Protect authenticated routes
@@ -93,22 +92,57 @@ class AppRouter {
         },
       ),
 
-      // Onboarding routes
-      GoRoute(
-        path: AppRoutes.vehicleOnboarding,
-        name: AppRoutes.vehicleOnboarding,
-        builder: (context, state) {
-          return const VehicleOnboardingView();
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return MainShell(
+            navigationShell: navigationShell,
+            showNotificationBadge: true,
+          );
         },
-      ),
-
-      // Vehicle routes
-      GoRoute(
-        path: AppRoutes.vehicles,
-        name: AppRoutes.vehicles,
-        builder: (context, state) {
-          return const VehicleListPage();
-        },
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.home,
+                name: AppRoutes.home,
+                builder: (context, state) => const HomePage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.garage,
+                name: AppRoutes.garage,
+                builder: (context, state) => const GaragePage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.events,
+                name: AppRoutes.events,
+                builder: (context, state) => const EventsPage(),
+              ),
+              GoRoute(
+                path: AppRoutes.myEvents,
+                name: AppRoutes.myEvents,
+                builder: (context, state) =>
+                    const EventsPage(showMyEvents: true),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.profile,
+                name: AppRoutes.profile,
+                builder: (context, state) => const ProfilePage(),
+              ),
+            ],
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoutes.createVehicle,
@@ -131,7 +165,8 @@ class AppRouter {
         path: AppRoutes.maintenances,
         name: AppRoutes.maintenances,
         builder: (context, state) {
-          return const MaintenancesPage();
+          final initialVehicleId = state.extra as String?;
+          return MaintenancesPage(initialVehicleId: initialVehicleId);
         },
       ),
       GoRoute(
@@ -150,18 +185,15 @@ class AppRouter {
           return MaintenanceFormPage(maintenance: maintenance);
         },
       ),
+      GoRoute(
+        path: AppRoutes.maintenanceDetail,
+        name: AppRoutes.maintenanceDetail,
+        builder: (context, state) {
+          final maintenance = state.extra as MaintenanceModel;
+          return MaintenanceDetailPage(maintenance: maintenance);
+        },
+      ),
 
-      // Events routes
-      GoRoute(
-        path: AppRoutes.events,
-        name: AppRoutes.events,
-        builder: (context, state) => const EventsPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.myEvents,
-        name: AppRoutes.myEvents,
-        builder: (context, state) => const EventsPage(showMyEvents: true),
-      ),
       GoRoute(
         path: AppRoutes.createEvent,
         name: AppRoutes.createEvent,
@@ -180,20 +212,15 @@ class AppRouter {
         name: AppRoutes.eventDetail,
         builder: (context, state) {
           final event = state.extra as EventModel;
-          return EventDetailPage(event: event);
+          return EventDetailPage(params: EventDetailPageParams(event: event));
         },
       ),
       GoRoute(
         path: AppRoutes.eventRegistration,
         name: AppRoutes.eventRegistration,
         builder: (context, state) {
-          final extra = state.extra as Map<String, dynamic>;
-          final event = extra['event'] as EventModel;
-          final registration = extra['registration'] as EventRegistrationModel?;
-          return EventRegistrationPage(
-            event: event,
-            existingRegistration: registration,
-          );
+          final params = state.extra as EventRegistrationParams;
+          return EventRegistrationPage(params: params);
         },
       ),
       GoRoute(
@@ -213,11 +240,9 @@ class AppRouter {
         path: AppRoutes.registrationDetail,
         name: AppRoutes.registrationDetail,
         builder: (context, state) {
-          final extra =
-              state.extra as (EventRegistrationModel, Future<bool> Function()?);
+          final extra = state.extra as RegistrationDetailExtra;
           return RegistrationDetailPage(
-            registration: extra.$1,
-            onCancelRegistration: extra.$2,
+            params: extra,
           );
         },
       ),

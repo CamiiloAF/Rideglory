@@ -6,7 +6,7 @@ import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
 import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 
 class ConfirmationDialog {
-  static Future<void> show({
+  static Future<bool?> show({
     required BuildContext context,
     required String title,
     required String content,
@@ -18,7 +18,7 @@ class ConfirmationDialog {
     DialogType dialogType = DialogType.confirmation,
     bool isDismissible = false,
   }) {
-    return showDialog(
+    return showDialog<bool>(
       context: context,
       barrierDismissible: isDismissible,
       builder: (dialogContext) => Dialog(
@@ -76,7 +76,8 @@ class ConfirmationDialog {
                         onPressed: onCancel != null
                             ? () => onCancel(dialogContext)
                             : () => Navigator.of(dialogContext).pop(false),
-                        variant: AppButtonVariant.outline,
+                        variant: AppButtonVariant.primary,
+                        style: AppButtonStyle.outlined,
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                     ),

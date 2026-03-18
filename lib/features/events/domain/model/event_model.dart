@@ -9,18 +9,29 @@ enum EventType {
 }
 
 enum EventDifficulty {
-  one(1, 'Fácil 🌶'),
-  two(2, 'Moderado 🌶🌶'),
-  three(3, 'Intermedio 🌶🌶🌶'),
-  four(4, 'Difícil 🌶🌶🌶🌶'),
-  five(5, 'Muy difícil 🌶🌶🌶🌶🌶');
+  one(1, 'Fácil 🌶', 'FÁCIL'),
+  two(2, 'Moderado 🌶🌶', 'MODERADO'),
+  three(3, 'Intermedio 🌶🌶🌶', 'MEDIA'),
+  four(4, 'Difícil 🌶🌶🌶🌶', 'DIFÍCIL'),
+  five(5, 'Muy difícil 🌶🌶🌶🌶🌶', 'MUY DIFÍCIL');
 
   final int value;
   final String label;
-  const EventDifficulty(this.value, this.label);
+  final String shortLabel;
+  const EventDifficulty(this.value, this.label, this.shortLabel);
 
   static EventDifficulty fromValue(int value) => EventDifficulty.values
       .firstWhere((e) => e.value == value, orElse: () => EventDifficulty.one);
+}
+
+enum EventState {
+  scheduled('Programado'),
+  inProgress('En curso'),
+  cancelled('Cancelado'),
+  finished('Finalizado');
+
+  final String label;
+  const EventState(this.label);
 }
 
 class EventModel {
@@ -37,10 +48,11 @@ class EventModel {
   final DateTime meetingTime;
   final EventType eventType;
   final List<String> allowedBrands;
-  final double? price;
-  final String? recommendations;
+  final int? price;
+  final String? imageUrl;
   final DateTime? createdDate;
   final DateTime? updatedDate;
+  final EventState state;
 
   const EventModel({
     this.id,
@@ -57,9 +69,10 @@ class EventModel {
     required this.eventType,
     this.allowedBrands = const [],
     this.price,
-    this.recommendations,
+    this.imageUrl,
     this.createdDate,
     this.updatedDate,
+    this.state = EventState.scheduled,
   });
 
   bool get isFree => price == null || price == 0;
@@ -82,10 +95,11 @@ class EventModel {
     DateTime? meetingTime,
     EventType? eventType,
     List<String>? allowedBrands,
-    double? price,
-    String? recommendations,
+    int? price,
+    String? imageUrl,
     DateTime? createdDate,
     DateTime? updatedDate,
+    EventState? state,
   }) {
     return EventModel(
       id: id ?? this.id,
@@ -98,14 +112,14 @@ class EventModel {
       difficulty: difficulty ?? this.difficulty,
       meetingPoint: meetingPoint ?? this.meetingPoint,
       destination: destination ?? this.destination,
-
       meetingTime: meetingTime ?? this.meetingTime,
       eventType: eventType ?? this.eventType,
       allowedBrands: allowedBrands ?? this.allowedBrands,
       price: price ?? this.price,
-      recommendations: recommendations ?? this.recommendations,
+      imageUrl: imageUrl ?? this.imageUrl,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
+      state: state ?? this.state,
     );
   }
 

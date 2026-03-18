@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/features/vehicles/constants/vehicle_strings.dart';
 import 'package:rideglory/shared/widgets/vehicle_list_item.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
@@ -34,10 +36,22 @@ class VehicleSelectionBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      decoration: BoxDecoration(
+        color: AppColors.darkSurface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        border: Border.all(
+          color: AppColors.darkBorder,
+        ),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black54,
+            blurRadius: 20,
+            offset: Offset(0, -8),
+          ),
+        ],
       ),
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -51,7 +65,7 @@ class VehicleSelectionBottomSheet extends StatelessWidget {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: AppColors.darkBorder.withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -62,19 +76,20 @@ class VehicleSelectionBottomSheet extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Seleccionar vehículo',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1F2937),
+                Text(
+                  VehicleStrings.selectVehicle,
+                  style: textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.darkTextPrimary,
                   ),
                 ),
                 if (subtitle != null) ...[
                   const SizedBox(height: 4),
                   Text(
                     subtitle!,
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: AppColors.darkTextSecondary,
+                    ),
                   ),
                 ],
               ],
