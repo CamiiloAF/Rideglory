@@ -14,11 +14,13 @@ class InscriptionCard extends StatelessWidget {
     required this.item,
     required this.onDetails,
     required this.onSecondaryAction,
+    required this.onTap,
   });
 
   final RegistrationWithEvent item;
   final VoidCallback onDetails;
   final VoidCallback? onSecondaryAction;
+  final VoidCallback onTap;
 
   static Color _statusBackgroundColor(RegistrationStatus status) {
     switch (status) {
@@ -47,126 +49,130 @@ class InscriptionCard extends StatelessWidget {
         ? DateFormat('d MMM yyyy', 'es').format(registration.createdDate!)
         : '';
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.darkSurface,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.darkBorder),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              event?.imageUrl ?? '',
-              width: 88,
-              height: 88,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppColors.darkSurface,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppColors.darkBorder),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.network(
+                event?.imageUrl ?? '',
                 width: 88,
                 height: 88,
-                color: AppColors.darkSurfaceHighest,
-                child: Icon(
-                  Icons.event_outlined,
-                  color: colorScheme.onSurfaceVariant,
-                  size: 32,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  width: 88,
+                  height: 88,
+                  color: AppColors.darkSurfaceHighest,
+                  child: Icon(
+                    Icons.event_outlined,
+                    color: colorScheme.onSurfaceVariant,
+                    size: 32,
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        registration.eventName,
-                        style: context.titleSmall?.copyWith(
-                          color: colorScheme.onSurface,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 2,
-                      ),
-                      decoration: BoxDecoration(
-                        color: _statusBackgroundColor(status),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        status.label.toUpperCase(),
-                        style: context.labelSmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                if (dateTime.isNotEmpty) ...[
-                  const SizedBox(height: 4),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
-                        Icons.calendar_today_outlined,
-                        size: 14,
-                        color: colorScheme.onSurfaceVariant,
+                      Expanded(
+                        child: Text(
+                          registration.eventName,
+                          style: context.titleSmall?.copyWith(
+                            color: colorScheme.onSurface,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                      const SizedBox(width: 4),
-                      Text(
-                        dateTime,
-                        style: context.bodySmall?.copyWith(
-                          color: colorScheme.onSurfaceVariant,
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _statusBackgroundColor(status),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          status.label.toUpperCase(),
+                          style: context.labelSmall?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ],
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Expanded(
-                      child: AppButton(
-                        label: RegistrationStrings.details,
-                        icon: Icons.visibility_outlined,
-                        variant: AppButtonVariant.primary,
-                        style: AppButtonStyle.outlined,
-                        onPressed: onDetails,
-                        isFullWidth: true,
-                        height: 36,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 8,
+                  if (dateTime.isNotEmpty) ...[
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.calendar_today_outlined,
+                          size: 14,
+                          color: colorScheme.onSurfaceVariant,
                         ),
-                      ),
+                        const SizedBox(width: 4),
+                        Text(
+                          dateTime,
+                          style: context.bodySmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 8),
-                    if (onSecondaryAction != null)
+                  ],
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
                       Expanded(
-                        child: _SecondaryActionButton(
-                          status: status,
-                          onPressed: onSecondaryAction!,
+                        child: AppButton(
+                          label: RegistrationStrings.details,
+                          icon: Icons.visibility_outlined,
+                          variant: AppButtonVariant.primary,
+                          style: AppButtonStyle.outlined,
+                          onPressed: onDetails,
+                          isFullWidth: true,
+                          height: 36,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 8,
+                          ),
                         ),
                       ),
-                  ],
-                ),
-              ],
+                      const SizedBox(width: 8),
+                      if (onSecondaryAction != null)
+                        Expanded(
+                          child: _SecondaryActionButton(
+                            status: status,
+                            onPressed: onSecondaryAction!,
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

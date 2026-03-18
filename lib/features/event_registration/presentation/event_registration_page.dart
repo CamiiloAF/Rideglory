@@ -8,26 +8,23 @@ import 'package:rideglory/features/event_registration/domain/model/event_registr
 import 'package:rideglory/features/event_registration/presentation/cubit/registration_form_cubit.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_form_view.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
+import 'package:rideglory/features/events/presentation/detail/params.dart';
 import 'package:rideglory/shared/widgets/app_app_bar.dart';
 
 class EventRegistrationPage extends StatelessWidget {
-  final EventModel event;
-  final EventRegistrationModel? existingRegistration;
+  const EventRegistrationPage({super.key, required this.params});
 
-  const EventRegistrationPage({
-    super.key,
-    required this.event,
-    this.existingRegistration,
-  });
+  final EventRegistrationParams params;
 
   @override
   Widget build(BuildContext context) {
+    final event = params.event;
     return BlocProvider(
       create: (_) => getIt<RegistrationFormCubit>()
         ..initialize(
           eventId: event.id!,
           eventName: event.name,
-          existingRegistration: existingRegistration,
+          existingRegistration: params.registration,
         ),
       child: _RegistrationFormScaffold(event: event),
     );

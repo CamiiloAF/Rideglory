@@ -13,3 +13,13 @@ class EventDetailPageParams {
     this.isFromEventDetailByIdPage = false,
   });
 }
+
+class EventRegistrationParams {
+  const EventRegistrationParams({
+    required this.event,
+    this.registration,
+  });
+
+  final EventModel event;
+  final EventRegistrationModel? registration;
+}

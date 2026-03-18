@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
-import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/presentation/event_registration_page.dart';
 import 'package:rideglory/features/event_registration/presentation/my_registrations_page.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
@@ -220,13 +219,8 @@ class AppRouter {
         path: AppRoutes.eventRegistration,
         name: AppRoutes.eventRegistration,
         builder: (context, state) {
-          final extra = state.extra as Map<String, dynamic>;
-          final event = extra['event'] as EventModel;
-          final registration = extra['registration'] as EventRegistrationModel?;
-          return EventRegistrationPage(
-            event: event,
-            existingRegistration: registration,
-          );
+          final params = state.extra as EventRegistrationParams;
+          return EventRegistrationPage(params: params);
         },
       ),
       GoRoute(

@@ -22,6 +22,7 @@ class MyRegistrationsCubit
   List<EventRegistrationModel> _registrations = [];
   Map<String, EventModel> _eventByEventId = {};
   Set<RegistrationStatus> _statusFilter = const {};
+  String _searchQuery = '';
 
   Set<RegistrationStatus> get statusFilter => _statusFilter;
 
@@ -65,6 +66,11 @@ class MyRegistrationsCubit
     _emitFiltered();
   }
 
+  void updateSearchQuery(String query) {
+    _searchQuery = query.trim();
+    _emitFiltered();
+  }
+
   void _emitFiltered() {
     var list = _registrations
         .map(
@@ -78,6 +84,16 @@ class MyRegistrationsCubit
       list = list
           .where((e) => _statusFilter.contains(e.registration.status))
           .toList();
+    }
+    if (_searchQuery.isNotEmpty) {
+      final q = _searchQuery.toLowerCase();
+      list = list.where((e) {
+        final registration = e.registration;
+        final event = e.event;
+        final fullName = registration.fullName.toLowerCase();
+        final eventName = event?.name.toLowerCase() ?? '';
+        return fullName.contains(q) || eventName.contains(q);
+      }).toList();
     }
     if (_registrations.isEmpty) {
       emit(const ResultState.empty());

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/event_registration/constants/registration_strings.dart';
@@ -9,6 +10,7 @@ import 'package:rideglory/features/event_registration/presentation/widgets/regis
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_detail_header.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_detail_info_row.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_detail_section_card.dart';
+import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/shared/widgets/app_app_bar.dart';
 import 'package:rideglory/shared/widgets/contact_popup_menu_button.dart';
 
@@ -20,6 +22,8 @@ class RegistrationDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final registration = params.registration;
+    final currentUserId = getIt<AuthService>().currentUser?.uid;
+    final isOwner = registration.userId == currentUserId;
 
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
@@ -29,13 +33,14 @@ class RegistrationDetailPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             RegistrationDetailHeader(registration: registration),
-            ContactPopupMenuButton(
-              phone: registration.phone,
-              contactLabel: RegistrationStrings.contactLabel,
-              callLabel: RegistrationStrings.callLabel,
-              whatsappLabel: RegistrationStrings.whatsappLabel,
-              alignment: Alignment.center,
-            ),
+            if (!isOwner)
+              ContactPopupMenuButton(
+                phone: registration.phone,
+                contactLabel: RegistrationStrings.contactLabel,
+                callLabel: RegistrationStrings.callLabel,
+                whatsappLabel: RegistrationStrings.whatsappLabel,
+                alignment: Alignment.center,
+              ),
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -101,6 +106,7 @@ class RegistrationDetailPage extends StatelessWidget {
                         RegistrationDetailEmergencyCard(
                           contactName: registration.emergencyContactName,
                           contactPhone: registration.emergencyContactPhone,
+                          showPhoneButton: !isOwner,
                         ),
                       ],
                     ),
