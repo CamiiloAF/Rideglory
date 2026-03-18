@@ -1,13 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_event_default_background.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_event_difficulty_badge.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_event_gradient_overlay.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_event_view_details_button.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class HomeEventCard extends StatelessWidget {
   const HomeEventCard({super.key, required this.event, required this.onTap});
@@ -50,7 +49,7 @@ class HomeEventCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   HomeEventDifficultyBadge(difficulty: event.difficulty),
-                  SizedBox(height: 80),
+                  AppSpacing.gapXxxl,
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -69,7 +68,7 @@ class HomeEventCard extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      SizedBox(height: 6),
+                      AppSpacing.gapXs,
                       Row(
                         children: [
                           Icon(
@@ -77,7 +76,7 @@ class HomeEventCard extends StatelessWidget {
                             size: 12,
                             color: Colors.white70,
                           ),
-                          SizedBox(width: 4),
+                          AppSpacing.hGapXxs,
                           Text(
                             dateFormat.format(event.startDate),
                             style: TextStyle(
@@ -87,7 +86,7 @@ class HomeEventCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 8),
+                      AppSpacing.gapSm,
                       const HomeEventViewDetailsButton(),
                     ],
                   ),

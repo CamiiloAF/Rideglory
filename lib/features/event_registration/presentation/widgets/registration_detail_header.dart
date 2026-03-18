@@ -5,6 +5,7 @@ import 'package:rideglory/features/event_registration/domain/model/event_registr
 import 'package:rideglory/features/events/presentation/shared/widgets/initials_avatar.dart';
 import 'package:rideglory/features/events/presentation/shared/widgets/registration_status_chip.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class RegistrationDetailHeader extends StatelessWidget {
   const RegistrationDetailHeader({super.key, required this.registration});
@@ -38,7 +39,7 @@ class RegistrationDetailHeader extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 20),
+          AppSpacing.gapXl,
           Text(
             registration.fullName,
             style: textTheme.titleLarge?.copyWith(
@@ -48,7 +49,7 @@ class RegistrationDetailHeader extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           if (dateText.isNotEmpty) ...[
-            SizedBox(height: 4),
+            AppSpacing.gapXxs,
             Text(
               dateText,
               style: textTheme.bodySmall?.copyWith(

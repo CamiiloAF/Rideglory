@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleListItem extends StatelessWidget {
   final VehicleModel vehicle;
@@ -76,7 +75,7 @@ class VehicleListItem extends StatelessWidget {
                       size: 24,
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  AppSpacing.hGapLg,
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,7 +90,7 @@ class VehicleListItem extends StatelessWidget {
                           ),
                         ),
                         if (vehicle.brand != null || vehicle.model != null) ...[
-                          const SizedBox(height: 4),
+                          AppSpacing.gapXxs,
                           Text(
                             [
                               vehicle.brand,
@@ -105,7 +104,7 @@ class VehicleListItem extends StatelessWidget {
                           ),
                         ],
                         if (vehicle.licensePlate != null) ...[
-                          const SizedBox(height: 2),
+                          AppSpacing.gapXxs,
                           Text(
                             vehicle.licensePlate!,
                             style: context.labelSmall?.copyWith(

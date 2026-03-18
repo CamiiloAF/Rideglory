@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/shared/helpers/url_launcher_helper.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class ContactPopupMenuButton extends StatelessWidget {
   const ContactPopupMenuButton({
@@ -51,7 +52,7 @@ class ContactPopupMenuButton extends StatelessWidget {
                   size: 20,
                   color: colorScheme.onSurface,
                 ),
-                const SizedBox(width: 12),
+                AppSpacing.hGapMd,
                 Text(callLabel),
               ],
             ),
@@ -65,7 +66,7 @@ class ContactPopupMenuButton extends StatelessWidget {
                   size: 20,
                   color: colorScheme.onSurface,
                 ),
-                const SizedBox(width: 12),
+                AppSpacing.hGapMd,
                 Text(whatsappLabel),
               ],
             ),
@@ -81,14 +82,14 @@ class ContactPopupMenuButton extends StatelessWidget {
                 size: 20,
                 color: colorScheme.primary,
               ),
-              const SizedBox(width: 8),
+              AppSpacing.hGapSm,
               Text(
                 contactLabel,
                 style: textTheme.labelLarge?.copyWith(
                   color: colorScheme.primary,
                 ),
               ),
-              const SizedBox(width: 4),
+              AppSpacing.hGapXxs,
               Icon(
                 Icons.arrow_drop_down_rounded,
                 color: colorScheme.primary,

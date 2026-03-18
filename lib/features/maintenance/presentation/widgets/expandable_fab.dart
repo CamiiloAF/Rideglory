@@ -6,6 +6,7 @@ import 'package:rideglory/features/maintenance/presentation/list/maintenances/ma
 import 'package:rideglory/features/maintenance/presentation/widgets/fab_option.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class ExpandableFab extends StatefulWidget {
   const ExpandableFab({super.key});
@@ -97,7 +98,7 @@ class _ExpandableFabState extends State<ExpandableFab>
                         ),
                       ),
                     ),
-                    SizedBox(height: 12),
+                    AppSpacing.gapMd,
                     FadeTransition(
                       opacity: _animation,
                       child: SlideTransition(
@@ -116,7 +117,7 @@ class _ExpandableFabState extends State<ExpandableFab>
                         ),
                       ),
                     ),
-                    SizedBox(height: 12),
+                    AppSpacing.gapMd,
                     FadeTransition(
                       opacity: _animation,
                       child: SlideTransition(
@@ -133,7 +134,7 @@ class _ExpandableFabState extends State<ExpandableFab>
                         ),
                       ),
                     ),
-                    SizedBox(height: 12),
+                    AppSpacing.gapMd,
                   ],
                 )
               : const SizedBox.shrink(),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class SelectedVehicleCard extends StatelessWidget {
   final VehicleModel vehicle;
@@ -42,7 +43,7 @@ class SelectedVehicleCard extends StatelessWidget {
                 size: 24,
               ),
             ),
-            SizedBox(width: 16),
+            AppSpacing.hGapLg,
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +56,7 @@ class SelectedVehicleCard extends StatelessWidget {
                       letterSpacing: 0.5,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  AppSpacing.gapXxs,
                   Text(
                     vehicle.name,
                     style: context.textTheme.titleMedium?.copyWith(
@@ -63,7 +64,7 @@ class SelectedVehicleCard extends StatelessWidget {
                     ),
                   ),
                   if (vehicle.brand != null || vehicle.model != null) ...[
-                    SizedBox(height: 2),
+                    AppSpacing.gapXxs,
                     Text(
                       [
                         vehicle.brand,
@@ -77,7 +78,7 @@ class SelectedVehicleCard extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(width: 12),
+            AppSpacing.hGapMd,
             Icon(
               Icons.chevron_right_rounded,
               color: context.colorScheme.onSurfaceVariant,

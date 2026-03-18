@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 enum AppTextButtonVariant { primary, muted, danger }
 
@@ -41,9 +42,8 @@ class AppTextButton extends StatelessWidget {
             ? SizedBox(
                 width: iconSize,
                 height: iconSize,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(foregroundColor),
+                child: AppLoadingIndicator(
+                  variant: AppLoadingIndicatorVariant.inline,
                 ),
               )
             : Icon(icon, size: iconSize, color: foregroundColor),
@@ -65,9 +65,8 @@ class AppTextButton extends StatelessWidget {
           ? SizedBox(
               width: 16,
               height: 16,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(foregroundColor),
+              child: AppLoadingIndicator(
+                variant: AppLoadingIndicatorVariant.inline,
               ),
             )
           : Text(label),

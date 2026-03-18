@@ -37,19 +37,19 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
               Row(
                 children: [
                   Icon(Icons.speed, size: 28),
-                  SizedBox(width: 8),
+                  AppSpacing.hGapSm,
                   Text(
                     context.l10n.maintenance_updateMileage,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ],
               ),
-              SizedBox(height: 12),
+              AppSpacing.gapMd,
               Text(
                 context.l10n.maintenance_mileageGreaterThanCurrent,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
-              SizedBox(height: 16),
+              AppSpacing.gapLg,
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -72,7 +72,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 8),
+                    AppSpacing.gapSm,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -93,14 +93,14 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 16),
+              AppSpacing.gapLg,
               Text(
                 context.l10n.maintenance_updateVehicleMileageQuestion,
                 style: Theme.of(
                   context,
                 ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
               ),
-              SizedBox(height: 16),
+              AppSpacing.gapLg,
               Row(
                 children: [
                   Expanded(
@@ -114,7 +114,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                       },
                     ),
                   ),
-                  SizedBox(width: 12),
+                  AppSpacing.hGapMd,
                   Expanded(
                     child: AppButton(
                       label: context.l10n.maintenance_update,

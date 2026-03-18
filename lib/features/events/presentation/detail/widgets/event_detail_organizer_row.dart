@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventDetailOrganizerRow extends StatelessWidget {
   const EventDetailOrganizerRow({
@@ -31,7 +30,7 @@ class EventDetailOrganizerRow extends StatelessWidget {
           ),
           child: Icon(Icons.check, color: Colors.white, size: 14),
         ),
-        SizedBox(width: 8),
+        AppSpacing.hGapSm,
         Expanded(
           child: RichText(
             text: TextSpan(

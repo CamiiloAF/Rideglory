@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_empty_state.dart';
@@ -11,6 +9,7 @@ import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class GaragePage extends StatefulWidget {
   const GaragePage({super.key});
@@ -71,7 +70,7 @@ class _GaragePageState extends State<GaragePage> {
               builder: (context, state) {
                 if (state is VehicleInitial) {
                   return Center(
-                    child: CircularProgressIndicator(color: context.colorScheme.primary),
+                    child: AppLoadingIndicator(variant: AppLoadingIndicatorVariant.inline),
                   );
                 }
 
@@ -180,7 +179,7 @@ class _GaragePageState extends State<GaragePage> {
                         ),
                       ),
 
-                      SizedBox(height: 24),
+                      AppSpacing.gapXxl,
 
                       // Detail View updates dynamically
                       VehicleDetailView(

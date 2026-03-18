@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleInfoCard extends StatelessWidget {
   const VehicleInfoCard({
@@ -28,7 +27,7 @@ class VehicleInfoCard extends StatelessWidget {
           Row(
             children: [
               Icon(icon, color: context.colorScheme.primary, size: 18),
-              SizedBox(width: 8),
+              AppSpacing.hGapSm,
               Expanded(
                 child: Text(
                   label.toUpperCase(),
@@ -43,7 +42,7 @@ class VehicleInfoCard extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 12),
+          AppSpacing.gapMd,
           Text(
             value,
             style: context.titleMedium?.copyWith(

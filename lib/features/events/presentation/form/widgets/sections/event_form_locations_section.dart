@@ -35,7 +35,7 @@ class _EventFormLocationsSectionState extends State<EventFormLocationsSection> {
             setState(() => _meetingPoint = value);
           },
         ),
-        SizedBox(height: 16),
+        AppSpacing.gapLg,
 
         AppTextField(
           name: EventFormFields.destination,
@@ -50,7 +50,7 @@ class _EventFormLocationsSectionState extends State<EventFormLocationsSection> {
             setState(() => _destination = value);
           },
         ),
-        SizedBox(height: 24),
+        AppSpacing.gapXxl,
         FormSectionTitle(
           title: context.l10n.event_meetingPointPreview.toUpperCase(),
           icon: Icons.map_outlined,

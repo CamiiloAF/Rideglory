@@ -5,6 +5,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/shared/widgets/form/text_field_label.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class AppRichTextEditor extends StatefulWidget {
   final String name;
@@ -188,7 +189,7 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
                             controller: _controller,
                             options: toolbarToggleStyleButtonOptions,
                           ),
-                          const SizedBox(width: 8),
+                          AppSpacing.hGapSm,
                           QuillToolbarClearFormatButton(
                             controller: _controller,
                           ),
@@ -251,7 +252,7 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
                                       size: 18,
                                       color: colorScheme.primary,
                                     ),
-                                    const SizedBox(width: 4),
+                                    AppSpacing.hGapXxs,
                                     Text(
                                       'IA',
                                       style: TextStyle(
@@ -272,7 +273,7 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
               ),
             ),
             if (widget.helperText != null || field.errorText != null) ...[
-              const SizedBox(height: 8),
+              AppSpacing.gapSm,
               Text(
                 field.errorText ?? widget.helperText!,
                 style: theme.textTheme.bodySmall?.copyWith(

@@ -20,7 +20,7 @@ class MaintenanceCardActionsMenu extends StatelessWidget {
             child: Row(
               children: [
                 Icon(Icons.edit_outlined, size: 20),
-                SizedBox(width: 12),
+                AppSpacing.hGapMd,
                 Text(context.l10n.edit),
               ],
             ),
@@ -31,7 +31,7 @@ class MaintenanceCardActionsMenu extends StatelessWidget {
             child: Row(
               children: [
                 Icon(Icons.delete_outline, size: 20, color: Colors.red),
-                SizedBox(width: 12),
+                AppSpacing.hGapMd,
                 Text(context.l10n.delete, style: TextStyle(color: Colors.red)),
               ],
             ),

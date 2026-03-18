@@ -45,7 +45,7 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
             });
           },
         ),
-        SizedBox(height: 16),
+        AppSpacing.gapLg,
         if (_isMultiDay)
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,7 +107,7 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
               );
             },
           ),
-        SizedBox(height: 16),
+        AppSpacing.gapLg,
         AppDatePicker(
           fieldName: EventFormFields.meetingTime,
           labelText: context.l10n.event_meetingTime,

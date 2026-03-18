@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/splash/presentation/cubit/splash_cubit.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class SplashFooter extends StatelessWidget {
   final Animation<double> progressAnimation;
@@ -34,7 +33,7 @@ class SplashFooter extends StatelessWidget {
                     color: context.colorScheme.error,
                   ),
                 ),
-                SizedBox(height: 8),
+                AppSpacing.gapSm,
                 GestureDetector(
                   onTap: onRetry,
                   child: Text(
@@ -71,7 +70,7 @@ class SplashFooter extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 8),
+                AppSpacing.gapSm,
                 Container(
                   height: 3,
                   decoration: BoxDecoration(
@@ -95,7 +94,7 @@ class SplashFooter extends StatelessWidget {
                   ),
                 ),
               ],
-              SizedBox(height: 20),
+              AppSpacing.gapXl,
               Center(
                 child: Text(
                   context.l10n.splash_versionLabel,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleSpecRow extends StatelessWidget {
   const VehicleSpecRow({
@@ -28,7 +27,7 @@ class VehicleSpecRow extends StatelessWidget {
       child: Row(
         children: [
           Icon(icon, color: context.colorScheme.primary, size: 20),
-          SizedBox(width: 16),
+          AppSpacing.hGapLg,
           Text(label, style: context.bodyMedium?.copyWith(color: Colors.white)),
           Spacer(),
           Text(

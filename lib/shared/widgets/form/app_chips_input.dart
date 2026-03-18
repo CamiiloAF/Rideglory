@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class AppChipsInput extends StatefulWidget {
   final String name;
@@ -96,7 +97,7 @@ class _AppChipsInputState extends State<AppChipsInput> {
               },
             ),
             if (chips.isNotEmpty) ...[
-              const SizedBox(height: 12),
+              AppSpacing.gapMd,
               Wrap(
                 spacing: 8,
                 runSpacing: 8,

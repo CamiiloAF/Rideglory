@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 // TODO Update strings
 class NoSearchResultsEmptyWidget extends StatelessWidget {
@@ -21,7 +20,7 @@ class NoSearchResultsEmptyWidget extends StatelessWidget {
               size: 80,
               color: cs.onSurfaceVariant,
             ),
-            const SizedBox(height: 16),
+            AppSpacing.gapLg,
             Text(
               'No se encontraron resultados',
               style: context.titleMedium?.copyWith(
@@ -29,7 +28,7 @@ class NoSearchResultsEmptyWidget extends StatelessWidget {
                 color: cs.onSurfaceVariant,
               ),
             ),
-            const SizedBox(height: 8),
+            AppSpacing.gapSm,
             Text(
               'Intenta ajustar los filtros o la búsqueda',
               style: context.bodyMedium?.copyWith(

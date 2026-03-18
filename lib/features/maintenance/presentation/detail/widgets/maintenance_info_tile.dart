@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenanceInfoTile extends StatelessWidget {
   const MaintenanceInfoTile({
@@ -34,7 +33,7 @@ class MaintenanceInfoTile extends StatelessWidget {
               letterSpacing: 0.8,
             ),
           ),
-          SizedBox(height: 8),
+          AppSpacing.gapSm,
           Text(
             value,
             style: context.titleLarge?.copyWith(

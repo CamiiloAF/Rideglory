@@ -5,6 +5,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 /// A widget that shows a Google Map preview with origin and destination markers.
 /// It geocodes address strings into coordinates and renders a GoogleMap.
@@ -168,7 +169,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 12),
+        AppSpacing.gapMd,
         Container(
           height: 200,
           decoration: BoxDecoration(
@@ -205,7 +206,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                         size: 48,
                         color: cs.onSurfaceVariant,
                       ),
-                      const SizedBox(height: 8),
+                      AppSpacing.gapSm,
                       Text(
                         'Vista previa del mapa',
                         style: TextStyle(
@@ -258,7 +259,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                                 size: 20,
                                 color: cs.onPrimary,
                               ),
-                              SizedBox(width: 8),
+                              AppSpacing.hGapSm,
                               Text(
                                 'Ver en mapa',
                                 style: TextStyle(
@@ -287,7 +288,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                     child: const SizedBox(
                       width: 16,
                       height: 16,
-                      child: CircularProgressIndicator(strokeWidth: 2),
+                      child: AppLoadingIndicator(variant: AppLoadingIndicatorVariant.inline),
                     ),
                   ),
                 ),

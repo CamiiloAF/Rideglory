@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
@@ -61,7 +60,7 @@ class EventFormBasicInfoSection extends StatelessWidget {
             ),
           ]),
         ),
-        SizedBox(height: 16),
+        AppSpacing.gapLg,
         AppRichTextEditor(
           name: EventFormFields.description,
           labelText: context.l10n.event_descriptionAndRecommendations,
@@ -79,7 +78,7 @@ class EventFormBasicInfoSection extends StatelessWidget {
             errorText: context.l10n.event_descriptionRequired,
           ),
         ),
-        SizedBox(height: 16),
+        AppSpacing.gapLg,
         AppCityAutocomplete(
           name: EventFormFields.city,
           labelText: context.l10n.event_eventCity,

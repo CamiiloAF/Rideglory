@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MileageInfoDialog extends StatelessWidget {
   final Color typeColor;
@@ -39,7 +40,7 @@ class MileageInfoDialog extends StatelessWidget {
             ),
             child: Icon(Icons.speed_rounded, size: 32, color: typeColor),
           ),
-          SizedBox(height: 16),
+          AppSpacing.gapLg,
           Text(
             context.l10n.maintenance_currentMileage,
             style: context.titleMedium?.copyWith(
@@ -47,7 +48,7 @@ class MileageInfoDialog extends StatelessWidget {
               letterSpacing: 0.3,
             ),
           ),
-          SizedBox(height: 8),
+          AppSpacing.gapSm,
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(

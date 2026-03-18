@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
@@ -46,7 +45,7 @@ class EventDetailStartedBanner extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 12),
+            AppSpacing.gapMd,
             Text(
               context.l10n.event_eventHasStartedTitle,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -54,7 +53,7 @@ class EventDetailStartedBanner extends StatelessWidget {
                 color: Theme.of(context).colorScheme.onSurface,
               ),
             ),
-            SizedBox(height: 8),
+            AppSpacing.gapSm,
             Text(
               context.l10n.event_eventHasStartedDescription,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -63,7 +62,7 @@ class EventDetailStartedBanner extends StatelessWidget {
               ),
             ),
             if (onFollowLive != null) ...[
-              SizedBox(height: 16),
+              AppSpacing.gapLg,
               SizedBox(
                 width: double.infinity,
                 child: AppButton(

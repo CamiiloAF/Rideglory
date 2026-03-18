@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventFormSectionCard extends StatelessWidget {
   const EventFormSectionCard({
@@ -29,7 +28,7 @@ class EventFormSectionCard extends StatelessWidget {
           Row(
             children: [
               Icon(icon, color: context.colorScheme.onSurface, size: 22),
-              SizedBox(width: 10),
+              AppSpacing.hGapSm,
               Expanded(
                 child: Text(
                   title,

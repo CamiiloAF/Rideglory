@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/authentication/login/presentation/widgets/login_social_button.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class LoginSocialRow extends StatelessWidget {
   const LoginSocialRow({super.key});
@@ -23,7 +24,7 @@ class LoginSocialRow extends StatelessWidget {
                     : () => context.read<AuthCubit>().signInWithGoogle(),
               ),
             ),
-            SizedBox(width: 12),
+            AppSpacing.hGapMd,
             Expanded(
               child: LoginSocialButton(
                 label: context.l10n.auth_appleLabel,

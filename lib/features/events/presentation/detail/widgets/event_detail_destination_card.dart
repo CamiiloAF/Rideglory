@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventDetailDestinationCard extends StatelessWidget {
   const EventDetailDestinationCard({super.key, required this.destination});
@@ -29,7 +28,7 @@ class EventDetailDestinationCard extends StatelessWidget {
             ),
             child: Icon(Icons.place, color: context.colorScheme.primary, size: 26),
           ),
-          SizedBox(width: 14),
+          AppSpacing.hGapMd,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +42,7 @@ class EventDetailDestinationCard extends StatelessWidget {
                     letterSpacing: 0.6,
                   ),
                 ),
-                SizedBox(height: 4),
+                AppSpacing.gapXxs,
                 Text(
                   destination,
                   style: TextStyle(

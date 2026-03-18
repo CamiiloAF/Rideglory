@@ -61,7 +61,7 @@ class _AttendeesDataViewState extends State<AttendeesDataView> {
                   darkMode: true,
                 ),
               ),
-              SizedBox(width: 12),
+              AppSpacing.hGapMd,
               SizedBox(
                 width: 48,
                 height: 48,
@@ -100,7 +100,7 @@ class _AttendeesDataViewState extends State<AttendeesDataView> {
             ],
           ),
         ),
-        SizedBox(height: 8),
+        AppSpacing.gapSm,
         Expanded(
           child: AttendeesList(
             registrations: _filteredRegistrations,

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/date_extensions.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/filter_section_title.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters.dart';
@@ -95,7 +93,7 @@ class _MaintenanceFiltersBottomSheetState
                 children: [
                   // Sort by
                   FilterSectionTitle(context.l10n.maintenance_sortBy),
-                  SizedBox(height: 8),
+                  AppSpacing.gapSm,
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
@@ -124,11 +122,11 @@ class _MaintenanceFiltersBottomSheetState
                       );
                     }).toList(),
                   ),
-                  SizedBox(height: 24),
+                  AppSpacing.gapXxl,
 
                   // Maintenance types
                   FilterSectionTitle(context.l10n.maintenance_maintenanceTypes),
-                  SizedBox(height: 8),
+                  AppSpacing.gapSm,
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
@@ -165,7 +163,7 @@ class _MaintenanceFiltersBottomSheetState
                       );
                     }).toList(),
                   ),
-                  SizedBox(height: 24),
+                  AppSpacing.gapXxl,
 
                   // Urgent only
                   SwitchListTile(
@@ -187,11 +185,11 @@ class _MaintenanceFiltersBottomSheetState
                     },
                     contentPadding: EdgeInsets.zero,
                   ),
-                  SizedBox(height: 16),
+                  AppSpacing.gapLg,
 
                   // Date range
                   FilterSectionTitle(context.l10n.maintenance_dateRange),
-                  SizedBox(height: 8),
+                  AppSpacing.gapSm,
                   Row(
                     children: [
                       Expanded(
@@ -229,7 +227,7 @@ class _MaintenanceFiltersBottomSheetState
                           },
                         ),
                       ),
-                      SizedBox(width: 12),
+                      AppSpacing.hGapMd,
                       Expanded(
                         child: OutlinedButton.icon(
                           icon: Icon(
@@ -289,7 +287,7 @@ class _MaintenanceFiltersBottomSheetState
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
-                SizedBox(width: 12),
+                AppSpacing.hGapMd,
                 Expanded(
                   child: AppButton(
                     label: context.l10n.apply,

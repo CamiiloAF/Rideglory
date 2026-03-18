@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -50,7 +49,7 @@ class MaintenanceDetailHeader extends StatelessWidget {
             color: theme.colorScheme.primary,
           ),
         ),
-        SizedBox(width: 16),
+        AppSpacing.hGapLg,
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,7 +61,7 @@ class MaintenanceDetailHeader extends StatelessWidget {
                   color: theme.colorScheme.onSurface,
                 ),
               ),
-              SizedBox(height: 4),
+              AppSpacing.gapXxs,
               Text(
                 context.l10n.maintenance_performedOn(
                   DateFormat('dd MMM, yyyy').format(maintenance.date),
@@ -71,7 +70,7 @@ class MaintenanceDetailHeader extends StatelessWidget {
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
-              SizedBox(height: 12),
+              AppSpacing.gapMd,
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
@@ -100,7 +99,7 @@ class MaintenanceDetailHeader extends StatelessWidget {
                             size: 16,
                             color: theme.colorScheme.onSurface,
                           ),
-                          SizedBox(width: 6),
+                          AppSpacing.hGapXs,
                           Text(
                             _vehicleDisplayName().toUpperCase(),
                             style: theme.textTheme.labelMedium?.copyWith(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenanceAlertCard extends StatelessWidget {
   const MaintenanceAlertCard({
@@ -47,7 +46,7 @@ class MaintenanceAlertCard extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 8),
+          AppSpacing.gapSm,
           Text(
             label,
             style: context.bodySmall?.copyWith(
@@ -56,7 +55,7 @@ class MaintenanceAlertCard extends StatelessWidget {
               letterSpacing: 0.8,
             ),
           ),
-          SizedBox(height: 4),
+          AppSpacing.gapXxs,
           Text(
             value,
             style: context.titleMedium?.copyWith(
@@ -64,7 +63,7 @@ class MaintenanceAlertCard extends StatelessWidget {
               color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
-          SizedBox(height: 2),
+          AppSpacing.gapXxs,
           Text(
             subtitle,
             style: context.bodySmall?.copyWith(

@@ -41,7 +41,7 @@ class EventCardInfoPanel extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              SizedBox(width: 10),
+              AppSpacing.hGapSm,
               Padding(
                 padding: const EdgeInsets.only(top: 3),
                 child: Row(
@@ -60,7 +60,7 @@ class EventCardInfoPanel extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 10),
+          AppSpacing.gapSm,
           Row(
             children: [
               Icon(
@@ -68,7 +68,7 @@ class EventCardInfoPanel extends StatelessWidget {
                 size: 14,
                 color: context.colorScheme.onSurfaceVariant,
               ),
-              SizedBox(width: 6),
+              AppSpacing.hGapXs,
               Text(
                 '${dateFormatter.format(event.startDate)} • ${timeFormatter.format(event.meetingTime)}',
                 style: context.bodySmall?.copyWith(
@@ -77,7 +77,7 @@ class EventCardInfoPanel extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 6),
+          AppSpacing.gapXs,
           Row(
             children: [
               Icon(
@@ -85,7 +85,7 @@ class EventCardInfoPanel extends StatelessWidget {
                 size: 14,
                 color: context.colorScheme.onSurfaceVariant,
               ),
-              SizedBox(width: 6),
+              AppSpacing.hGapXs,
               Expanded(
                 child: Text(
                   event.city,
@@ -98,7 +98,7 @@ class EventCardInfoPanel extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 14),
+          AppSpacing.gapMd,
           AppButton(
             label: context.l10n.event_joinEvent,
             onPressed: onTap,

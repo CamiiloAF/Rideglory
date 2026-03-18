@@ -64,7 +64,7 @@ class RegistrationFormContent extends StatelessWidget {
                   ),
                 ]),
               ),
-              SizedBox(height: 12),
+              AppSpacing.gapMd,
               AppTextField(
                 name: RegistrationFormFields.lastName,
                 labelText: context.l10n.registration_lastName,
@@ -81,7 +81,7 @@ class RegistrationFormContent extends StatelessWidget {
                   ),
                 ]),
               ),
-              SizedBox(height: 12),
+              AppSpacing.gapMd,
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -111,7 +111,7 @@ class RegistrationFormContent extends StatelessWidget {
                       ]),
                     ),
                   ),
-                  SizedBox(width: 12),
+                  AppSpacing.hGapMd,
                   Expanded(
                     child: AppDatePicker(
                       fieldName: RegistrationFormFields.birthDate,
@@ -123,7 +123,7 @@ class RegistrationFormContent extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 12),
+              AppSpacing.gapMd,
               AppTextField(
                 name: RegistrationFormFields.phone,
                 labelText: context.l10n.registration_phone,
@@ -148,7 +148,7 @@ class RegistrationFormContent extends StatelessWidget {
                   ),
                 ]),
               ),
-              SizedBox(height: 12),
+              AppSpacing.gapMd,
               AppCityAutocomplete(
                 name: RegistrationFormFields.residenceCity,
                 labelText: context.l10n.registration_residenceCity,
@@ -161,7 +161,7 @@ class RegistrationFormContent extends StatelessWidget {
                   return null;
                 },
               ),
-              SizedBox(height: 12),
+              AppSpacing.gapMd,
               AppTextField(
                 name: RegistrationFormFields.email,
                 labelText: context.l10n.registration_email,
@@ -180,7 +180,7 @@ class RegistrationFormContent extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 24),
+        AppSpacing.gapXxl,
         RegistrationFormSectionCard(
           icon: Icons.medical_services_outlined,
           title: context.l10n.registration_medicalInfo,
@@ -202,7 +202,7 @@ class RegistrationFormContent extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(width: 12),
+                  AppSpacing.hGapMd,
                   Expanded(
                     child: AppDropdown<BloodType>(
                       name: RegistrationFormFields.bloodType,
@@ -224,7 +224,7 @@ class RegistrationFormContent extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 12),
+              AppSpacing.gapMd,
               AppTextField(
                 name: RegistrationFormFields.medicalInsurance,
                 labelText: context.l10n.registration_medicalInsurance,
@@ -234,7 +234,7 @@ class RegistrationFormContent extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 24),
+        AppSpacing.gapXxl,
         RegistrationFormSectionCard(
           icon: Icons.phone_outlined,
           title: context.l10n.registration_emergencyContactRequired,
@@ -251,7 +251,7 @@ class RegistrationFormContent extends StatelessWidget {
                   errorText: context.l10n.registration_emergencyContactNameRequired,
                 ),
               ),
-              SizedBox(height: 12),
+              AppSpacing.gapMd,
               AppTextField(
                 name: RegistrationFormFields.emergencyContactPhone,
                 labelText: context.l10n.registration_emergencyContactPhone,
@@ -282,7 +282,7 @@ class RegistrationFormContent extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 24),
+        AppSpacing.gapXxl,
         RegistrationFormSectionCard(
           icon: Icons.two_wheeler_outlined,
           title: context.l10n.registration_vehicleData,
@@ -311,7 +311,7 @@ class RegistrationFormContent extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(width: 12),
+                  AppSpacing.hGapMd,
                   Expanded(
                     child: AppTextField(
                       name: RegistrationFormFields.vehicleReference,
@@ -326,7 +326,7 @@ class RegistrationFormContent extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 12),
+              AppSpacing.gapMd,
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -342,7 +342,7 @@ class RegistrationFormContent extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(width: 12),
+                  AppSpacing.hGapMd,
                   Expanded(
                     child: AppTextField(
                       name: RegistrationFormFields.vin,
@@ -356,7 +356,7 @@ class RegistrationFormContent extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 32),
+        AppSpacing.gapXxxl,
         BlocBuilder<RegistrationFormCubit, ResultState<EventRegistrationModel>>(
           builder: (context, state) {
             final isLoading = state is Loading;
@@ -371,7 +371,7 @@ class RegistrationFormContent extends StatelessWidget {
                   onPressed: isLoading ? null : cubit.saveRegistration,
                   isLoading: isLoading,
                 ),
-                SizedBox(height: 12),
+                AppSpacing.gapMd,
                 AppTextButton(
                   label: context.l10n.cancel,
                   onPressed: () => context.pop(),
@@ -381,7 +381,7 @@ class RegistrationFormContent extends StatelessWidget {
             );
           },
         ),
-        SizedBox(height: 32),
+        AppSpacing.gapXxxl,
       ],
     );
   }

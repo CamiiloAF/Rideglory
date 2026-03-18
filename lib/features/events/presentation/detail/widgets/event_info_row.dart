@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventInfoRow extends StatelessWidget {
   final IconData icon;
@@ -21,7 +22,7 @@ class EventInfoRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, size: 18, color: theme.colorScheme.primary),
-        SizedBox(width: 8),
+        AppSpacing.hGapSm,
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

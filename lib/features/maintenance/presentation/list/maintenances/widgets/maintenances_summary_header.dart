@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenancesSummaryHeader extends StatelessWidget {
   final List<MaintenanceModel> maintenances;
@@ -40,7 +39,7 @@ class MaintenancesSummaryHeader extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 12),
+          AppSpacing.gapMd,
           Row(
             children: [
               Expanded(
@@ -55,7 +54,7 @@ class MaintenancesSummaryHeader extends StatelessWidget {
                       : null,
                 ),
               ),
-              SizedBox(width: 12),
+              AppSpacing.hGapMd,
               Expanded(
                 child: _SummaryCard(
                   icon: Icons.event_repeat_outlined,
@@ -99,7 +98,7 @@ class _SummaryCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: context.colorScheme.primary, size: 20),
-          SizedBox(width: 10),
+          AppSpacing.hGapSm,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,7 +110,7 @@ class _SummaryCard extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(height: 6),
+                AppSpacing.gapXs,
                 Text(
                   value,
                   style: context.titleMedium?.copyWith(
@@ -121,7 +120,7 @@ class _SummaryCard extends StatelessWidget {
                   ),
                 ),
                 if (subtitle != null) ...[
-                  SizedBox(height: 4),
+                  AppSpacing.gapXxs,
                   Text(
                     subtitle!,
                     style: context.bodySmall?.copyWith(

@@ -35,7 +35,7 @@ class MaintenanceMileageInfo extends StatelessWidget {
       ),
       child: Column(
         children: [
-          SizedBox(height: 8),
+          AppSpacing.gapSm,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -68,12 +68,12 @@ class MaintenanceMileageInfo extends StatelessWidget {
             ],
           ),
           if (progressPercent != null) ...[
-            SizedBox(height: 12),
+            AppSpacing.gapMd,
             MaintenanceProgressBar(
               typeColor: typeColor,
               progressPercent: progressPercent!,
             ),
-            SizedBox(height: 8),
+            AppSpacing.gapSm,
             Text(
               remainingDistance != null
                   ? context.l10n.maintenance_remainingDistance(

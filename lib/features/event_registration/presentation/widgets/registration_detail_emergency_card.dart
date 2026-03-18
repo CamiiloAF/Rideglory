@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/shared/helpers/url_launcher_helper.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class RegistrationDetailEmergencyCard extends StatelessWidget {
   const RegistrationDetailEmergencyCard({
@@ -42,7 +41,7 @@ class RegistrationDetailEmergencyCard extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(height: 2),
+                AppSpacing.gapXxs,
                 Text(
                   contactPhone,
                   style: textTheme.bodySmall?.copyWith(

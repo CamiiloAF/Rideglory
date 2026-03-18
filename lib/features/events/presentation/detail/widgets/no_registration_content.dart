@@ -25,7 +25,7 @@ class NoRegistrationContent extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 4),
+        AppSpacing.gapXxs,
         Text(
           event.isFree
               ? context.l10n.event_free
@@ -34,7 +34,7 @@ class NoRegistrationContent extends StatelessWidget {
             color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
         ),
-        SizedBox(height: 12),
+        AppSpacing.gapMd,
         AppButton(
           label: context.l10n.event_joinEvent,
           onPressed: onRegister,

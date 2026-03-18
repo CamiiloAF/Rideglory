@@ -4,6 +4,7 @@ import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/event_filter_chip.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventTypeFilterChips extends StatelessWidget {
   const EventTypeFilterChips({super.key});
@@ -26,7 +27,7 @@ class EventTypeFilterChips extends StatelessWidget {
               cubit.updateFilters(cubit.filters.copyWith(types: {}));
             },
           ),
-          SizedBox(width: 10),
+          AppSpacing.hGapSm,
           ...EventType.values.map((type) {
             final isSelected = selectedTypes.contains(type);
             return Padding(

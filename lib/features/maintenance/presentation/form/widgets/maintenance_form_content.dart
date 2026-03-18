@@ -160,7 +160,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                 ),
               ]),
             ),
-            SizedBox(height: 20),
+            AppSpacing.gapXl,
 
             // 2. Tipo de Mantenimiento
             AppDropdown<MaintenanceType>(
@@ -177,7 +177,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                   )
                   .toList(),
             ),
-            SizedBox(height: 20),
+            AppSpacing.gapXl,
 
             // 3. Vehículo
             AppDropdown<String>(
@@ -210,7 +210,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                 }
               },
             ),
-            SizedBox(height: 20),
+            AppSpacing.gapXl,
 
             // 4. Fecha de Servicio
             AppDatePicker(
@@ -220,7 +220,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
               isRequired: true,
               hintText: 'mm/dd/yyyy',
             ),
-            SizedBox(height: 20),
+            AppSpacing.gapXl,
 
             // 5. Kilometraje Actual
             AppMileageField(
@@ -228,7 +228,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
               labelText: context.l10n.maintenance_maintenanceMileage,
               textInputAction: TextInputAction.next,
             ),
-            SizedBox(height: 20),
+            AppSpacing.gapXl,
 
             // 6. Costo del Mantenimiento
             AppTextField(
@@ -241,7 +241,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
               ),
               textInputAction: TextInputAction.next,
             ),
-            SizedBox(height: 20),
+            AppSpacing.gapXl,
 
             // 7. Notas / Observaciones
             AppTextField(
@@ -252,7 +252,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
               minLines: 3,
               textInputAction: TextInputAction.done,
             ),
-            SizedBox(height: 32),
+            AppSpacing.gapXxxl,
 
             // 8. Alertas de próximo servicio
             Container(
@@ -275,7 +275,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  AppSpacing.gapXl,
 
                   // Alerta por Fecha
                   Row(
@@ -285,7 +285,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                         color: context.colorScheme.primary,
                         size: 20,
                       ),
-                      SizedBox(width: 12),
+                      AppSpacing.hGapMd,
                       Expanded(
                         child: Text(
                           context.l10n.maintenance_dateAlert,
@@ -306,14 +306,14 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  AppSpacing.gapLg,
                   AppDatePicker(
                     fieldName: MaintenanceFormFields.nextMaintenanceDate,
                     labelText: context.l10n.maintenance_nextMaintenanceDate,
                     firstDate: DateTime.now(),
                     hintText: 'mm/dd/yyyy',
                   ),
-                  SizedBox(height: 8),
+                  AppSpacing.gapSm,
 
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 12),
@@ -328,7 +328,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                         color: context.colorScheme.primary,
                         size: 20,
                       ),
-                      SizedBox(width: 12),
+                      AppSpacing.hGapMd,
                       Expanded(
                         child: Text(
                           context.l10n.maintenance_mileageAlert,
@@ -349,7 +349,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  AppSpacing.gapLg,
                   AppMileageField(
                     name: MaintenanceFormFields.nextMaintenanceMileage,
                     labelText: context.l10n.maintenance_nextMaintenanceMileageLabel,
@@ -359,11 +359,11 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                 ],
               ),
             ),
-            SizedBox(height: 40),
+            AppSpacing.gap40,
 
             // Botón de guardado
             SaveMaintenanceButton(onSave: _saveMaintenance),
-            SizedBox(height: 24),
+            AppSpacing.gapXxl,
           ],
         ),
       ),

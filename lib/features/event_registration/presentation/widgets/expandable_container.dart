@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class ExpandableContainer extends StatefulWidget {
   const ExpandableContainer({
@@ -43,7 +44,7 @@ class _ExpandableContainerState extends State<ExpandableContainer> {
             children: [
               if (widget.leading != null) ...[
                 widget.leading!,
-                SizedBox(width: 10),
+                AppSpacing.hGapSm,
               ],
               Expanded(child: widget.title),
               AnimatedRotation(

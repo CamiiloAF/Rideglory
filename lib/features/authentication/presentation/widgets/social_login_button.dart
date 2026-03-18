@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 /// Button type for social login
 enum SocialLoginType { google, apple, email }
@@ -84,14 +85,13 @@ class _SocialLoginButtonState extends State<SocialLoginButton> {
                   SizedBox(
                     width: 20,
                     height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(textColor),
+                    child: AppLoadingIndicator(
+                      variant: AppLoadingIndicatorVariant.inline,
                     ),
                   )
                 else ...[
                   Icon(icon, color: textColor, size: 20),
-                  SizedBox(width: 12),
+                  AppSpacing.hGapMd,
                 ],
                 Expanded(
                   child: Text(
@@ -103,7 +103,7 @@ class _SocialLoginButtonState extends State<SocialLoginButton> {
                     ),
                   ),
                 ),
-                if (!widget.isLoading) SizedBox(width: 20),
+                if (!widget.isLoading) AppSpacing.hGapXl,
               ],
             ),
           ),

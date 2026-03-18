@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class DifficultyChip extends StatelessWidget {
   final EventDifficulty difficulty;

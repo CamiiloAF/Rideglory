@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class FormSectionTitle extends StatelessWidget {
   const FormSectionTitle({super.key, required this.title, this.icon});
@@ -14,7 +13,7 @@ class FormSectionTitle extends StatelessWidget {
       children: [
         if (icon != null) ...[
           Icon(icon, color: context.colorScheme.onSurface, size: 20),
-          SizedBox(width: 8),
+          AppSpacing.hGapSm,
         ],
         Text(
           title,

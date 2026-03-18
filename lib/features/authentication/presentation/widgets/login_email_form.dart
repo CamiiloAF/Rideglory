@@ -42,7 +42,7 @@ class LoginEmailForm extends StatelessWidget {
               FormBuilderValidators.email(errorText: context.l10n.auth_invalidEmail),
             ]),
           ),
-          SizedBox(height: 16),
+          AppSpacing.gapLg,
           AppPasswordTextField(
             name: AuthFormFields.password,
             labelText: context.l10n.auth_password,
@@ -59,7 +59,7 @@ class LoginEmailForm extends StatelessWidget {
               ),
             ]),
           ),
-          SizedBox(height: 24),
+          AppSpacing.gapXxl,
 
           // Sign in button
           BlocBuilder<AuthCubit, AuthState>(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 /// Widget para la sección de fechas del mantenimiento
 class MaintenanceDatesSection extends StatelessWidget {
@@ -44,7 +45,7 @@ class MaintenanceDatesSection extends StatelessWidget {
               size: 16,
               color: Colors.grey[600],
             ),
-            SizedBox(width: 8),
+            AppSpacing.hGapSm,
             Text(
               'Realizado: ${_formatDate(context, maintenance.date)}',
               style: context.bodySmall?.copyWith(fontWeight: FontWeight.w500),
@@ -52,7 +53,7 @@ class MaintenanceDatesSection extends StatelessWidget {
           ],
         ),
         if (maintenance.nextMaintenanceDate != null) ...[
-          SizedBox(height: 8),
+          AppSpacing.gapSm,
           Row(
             children: [
               Icon(
@@ -62,7 +63,7 @@ class MaintenanceDatesSection extends StatelessWidget {
                     ? const Color(0xFFEF4444)
                     : Colors.grey[600],
               ),
-              SizedBox(width: 8),
+              AppSpacing.hGapSm,
               Text(
                 'Próximo: ${_formatDate(context, maintenance.nextMaintenanceDate!)}',
                 style: context.bodySmall?.copyWith(
@@ -73,7 +74,7 @@ class MaintenanceDatesSection extends StatelessWidget {
                 ),
               ),
               if (daysUntilNext != null) ...[
-                SizedBox(width: 8),
+                AppSpacing.hGapSm,
                 Text(
                   '($daysUntilNext días)',
                   style: context.bodySmall?.copyWith(

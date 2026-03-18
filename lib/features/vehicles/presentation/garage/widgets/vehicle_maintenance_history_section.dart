@@ -4,13 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/cubit/vehicle_maintenances_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleMaintenanceHistorySection extends StatelessWidget {
   const VehicleMaintenanceHistorySection({super.key, required this.vehicle});
@@ -56,7 +55,7 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 16),
+          AppSpacing.gapLg,
           BlocBuilder<
             VehicleMaintenancesCubit,
             ResultState<List<MaintenanceModel>>
@@ -91,7 +90,7 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
                   child: Column(
                     children: [
                       Icon(Icons.history, color: Colors.grey[600], size: 40),
-                      SizedBox(height: 12),
+                      AppSpacing.gapMd,
                       Text(
                         context.l10n.maintenance_noRecordsYet,
                         style: context.bodyMedium?.copyWith(
@@ -178,7 +177,7 @@ class _MaintenanceRecordCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 16),
+                AppSpacing.hGapLg,
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,7 +191,7 @@ class _MaintenanceRecordCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      SizedBox(height: 4),
+                      AppSpacing.gapXxs,
                       Text(
                         '${DateFormat('dd \'de\' MMM, yyyy').format(maintenance.date)} • ${NumberFormat('#,###').format(maintenance.maintanceMileage)} km',
                         style: context.bodyMedium?.copyWith(
@@ -204,7 +203,7 @@ class _MaintenanceRecordCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(width: 12),
+                AppSpacing.hGapMd,
                 Icon(Icons.chevron_right, color: Colors.grey[500]),
               ],
             ),
@@ -247,7 +246,7 @@ class _LoadingState extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
           ),
           child: Center(
-            child: CircularProgressIndicator(color: context.colorScheme.primary),
+            child: AppLoadingIndicator(variant: AppLoadingIndicatorVariant.inline),
           ),
         ),
       ),

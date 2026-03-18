@@ -3,6 +3,7 @@ import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
 import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 enum DialogActionType { primary, secondary, danger }
 
@@ -55,7 +56,7 @@ class AppDialog extends StatelessWidget {
       title: Row(
         children: [
           Icon(_getIcon(), color: _getIconColor(), size: 28),
-          const SizedBox(width: 12),
+          AppSpacing.hGapMd,
           Expanded(
             child: Text(
               title,

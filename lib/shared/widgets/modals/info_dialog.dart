@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
-import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class InfoDialog {
   static Future<void> show({
@@ -32,7 +30,7 @@ class InfoDialog {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Icon(type.icon, color: type.color, size: 28),
-                        const SizedBox(width: 12),
+                        AppSpacing.hGapMd,
                         Expanded(
                           child: Text(
                             title,
@@ -43,7 +41,7 @@ class InfoDialog {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    AppSpacing.gapLg,
                     // Content
                     Text(
                       content,

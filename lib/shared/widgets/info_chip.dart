@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class InfoChip extends StatelessWidget {
   final IconData icon;
@@ -32,7 +33,7 @@ class InfoChip extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(icon, size: 15, color: color),
-            const SizedBox(width: 5),
+            AppSpacing.hGapXxs,
             Text(
               label,
               style: TextStyle(
@@ -51,7 +52,7 @@ class InfoChip extends StatelessWidget {
     return Row(
       children: [
         Icon(icon, size: 20, color: color),
-        const SizedBox(width: 8),
+        AppSpacing.hGapSm,
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -63,7 +64,7 @@ class InfoChip extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                if (tooltip != null) ...[const SizedBox(width: 4), tooltip!],
+                if (tooltip != null) ...[AppSpacing.hGapXxs, tooltip!],
               ],
             ),
             Text(

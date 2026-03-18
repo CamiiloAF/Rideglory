@@ -2,9 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleImagePicker extends StatelessWidget {
   final String? imageUrl;
@@ -30,7 +29,7 @@ class VehicleImagePicker extends StatelessWidget {
             letterSpacing: 0.5,
           ),
         ),
-        SizedBox(height: 8),
+        AppSpacing.gapSm,
         GestureDetector(
           onTap: onPickImage,
           child: Container(
@@ -83,14 +82,14 @@ class VehicleImagePicker extends StatelessWidget {
           size: 36,
           color: context.colorScheme.primary,
         ),
-        SizedBox(height: 8),
+        AppSpacing.gapSm,
         Text(
           context.l10n.vehicle_uploadPhoto,
           style: context.textTheme.bodyMedium?.copyWith(
             color: context.colorScheme.primary,
           ),
         ),
-        SizedBox(height: 4),
+        AppSpacing.gapXxs,
         Text(
           context.l10n.vehicle_selectImage,
           style: context.textTheme.bodySmall?.copyWith(
@@ -112,7 +111,7 @@ class VehicleImagePicker extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.edit_outlined, size: 14, color: Colors.white),
-          SizedBox(width: 4),
+          AppSpacing.hGapXxs,
           Text(
             context.l10n.vehicle_changePhoto,
             style: context.textTheme.labelSmall?.copyWith(color: Colors.white),

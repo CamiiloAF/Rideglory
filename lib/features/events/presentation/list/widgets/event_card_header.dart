@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class EventCardHeader extends StatelessWidget {
   final String eventName;
@@ -50,7 +49,7 @@ class EventCardHeader extends StatelessWidget {
           child: Row(
             children: [
               Icon(Icons.edit_outlined),
-              SizedBox(width: 8),
+              AppSpacing.hGapSm,
               Text(context.l10n.event_edit),
             ],
           ),
@@ -60,7 +59,7 @@ class EventCardHeader extends StatelessWidget {
           child: Row(
             children: [
               Icon(Icons.delete_outline, color: context.colorScheme.error),
-              SizedBox(width: 8),
+              AppSpacing.hGapSm,
               Text(
                 context.l10n.event_delete,
                 style: TextStyle(color: context.colorScheme.error),

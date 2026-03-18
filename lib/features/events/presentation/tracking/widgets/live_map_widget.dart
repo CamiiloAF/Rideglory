@@ -3,9 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/initials_marker_icon.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 typedef LiveMapReadyCallback = void Function(LiveMapController controller);
 

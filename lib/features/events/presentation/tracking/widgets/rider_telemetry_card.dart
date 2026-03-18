@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/telemetry_metric.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class RiderTelemetryCard extends StatelessWidget {
   const RiderTelemetryCard({
@@ -77,7 +76,7 @@ class RiderTelemetryCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(width: 12),
+                AppSpacing.hGapMd,
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,7 +94,7 @@ class RiderTelemetryCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SizedBox(width: 10),
+                          AppSpacing.hGapSm,
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 10,
@@ -116,7 +115,7 @@ class RiderTelemetryCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 4),
+                      AppSpacing.gapXxs,
                       Text(
                         deviceLabel,
                         maxLines: 1,
@@ -130,7 +129,7 @@ class RiderTelemetryCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            AppSpacing.gapSm,
             Row(
               children: [
                 TelemetryMetric(
@@ -138,13 +137,13 @@ class RiderTelemetryCard extends StatelessWidget {
                   value: '${speedKmh}km/h',
                   icon: Icons.speed,
                 ),
-                SizedBox(width: 8),
+                AppSpacing.hGapSm,
                 TelemetryMetric(
                   label: context.l10n.map_distance,
                   value: '${distanceMeters}m',
                   icon: Icons.route,
                 ),
-                SizedBox(width: 8),
+                AppSpacing.hGapSm,
                 TelemetryMetric(
                   label: context.l10n.map_battery,
                   value: '$batteryPercent%',

@@ -11,6 +11,7 @@ import 'package:rideglory/features/events/presentation/attendees/widgets/attende
 import 'package:rideglory/features/events/presentation/attendees/attendee_action_confirmation.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class AttendeesList extends StatelessWidget {
   final List<EventRegistrationModel> registrations;
@@ -52,7 +53,7 @@ class AttendeesList extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(width: 8),
+                AppSpacing.hGapSm,
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
@@ -72,7 +73,7 @@ class AttendeesList extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 12),
+            AppSpacing.gapMd,
             ...pending.map(
               (registration) => Padding(
                 padding: const EdgeInsets.only(bottom: 12),
@@ -117,7 +118,7 @@ class AttendeesList extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 24),
+            AppSpacing.gapXxl,
           ],
           Row(
             children: [
@@ -140,7 +141,7 @@ class AttendeesList extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 12),
+          AppSpacing.gapMd,
           if (processed.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),

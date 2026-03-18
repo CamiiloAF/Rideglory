@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/attendees/attendees_cubit.dart';
 import 'package:rideglory/features/events/presentation/attendees/attendee_action_confirmation.dart';
@@ -53,7 +51,7 @@ class AttendeePendingRequestCard extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(width: 12),
+                  AppSpacing.hGapMd,
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +63,7 @@ class AttendeePendingRequestCard extends StatelessWidget {
                             color: colorScheme.onSurface,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        AppSpacing.gapXxs,
                         Row(
                           children: [
                             Icon(
@@ -73,7 +71,7 @@ class AttendeePendingRequestCard extends StatelessWidget {
                               size: 14,
                               color: colorScheme.onSurfaceVariant,
                             ),
-                            SizedBox(width: 4),
+                            AppSpacing.hGapXxs,
                             Expanded(
                               child: Text(
                                 vehicleText,
@@ -116,7 +114,7 @@ class AttendeePendingRequestCard extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 12),
+          AppSpacing.gapMd,
           ApproveRejectBar(
             rejectLabel: context.l10n.event_rejectRegistration,
             approveLabel: context.l10n.event_approveRegistration,

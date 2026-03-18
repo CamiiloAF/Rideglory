@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class HomeEventViewDetailsButton extends StatelessWidget {
   const HomeEventViewDetailsButton({super.key});
@@ -23,7 +24,7 @@ class HomeEventViewDetailsButton extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-          SizedBox(width: 4),
+          AppSpacing.hGapXxs,
           Icon(Icons.arrow_forward, size: 12, color: Colors.black87),
         ],
       ),

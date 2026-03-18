@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
-import 'package:rideglory/shared/widgets/modals/app_dialog.dart';
-import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class ConfirmationDialog {
   static Future<bool?> show({
@@ -45,7 +42,7 @@ class ConfirmationDialog {
                           color: dialogType.color,
                           size: 28,
                         ),
-                        const SizedBox(width: 12),
+                        AppSpacing.hGapMd,
                         Expanded(
                           child: Text(
                             title,
@@ -56,7 +53,7 @@ class ConfirmationDialog {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                    AppSpacing.gapLg,
                     // Content
                     Text(
                       content,
@@ -84,7 +81,7 @@ class ConfirmationDialog {
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    AppSpacing.hGapMd,
                     Expanded(
                       child: AppButton(
                         label: resolvedConfirmLabel,

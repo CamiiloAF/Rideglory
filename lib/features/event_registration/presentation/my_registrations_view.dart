@@ -28,9 +28,9 @@ class MyRegistrationsView extends StatelessWidget {
                 final cubit = context.read<MyRegistrationsCubit>();
                 return state.when(
                   initial: () =>
-                      Center(child: CircularProgressIndicator()),
+                      AppLoadingIndicator(variant: AppLoadingIndicatorVariant.page),
                   loading: () =>
-                      Center(child: CircularProgressIndicator()),
+                      AppLoadingIndicator(variant: AppLoadingIndicatorVariant.page),
                   data: (items) => MyRegistrationsDataView(items: items),
                   empty: () => EmptyStateWidget(
                     icon: Icons.event_busy_outlined,
@@ -51,7 +51,7 @@ class MyRegistrationsView extends StatelessWidget {
                             context.l10n.registration_errorLoadingRegistrations,
                             textAlign: TextAlign.center,
                           ),
-                          SizedBox(height: 16),
+                          AppSpacing.gapLg,
                           AppButton(
                             label: context.l10n.retry,
                             onPressed: () => cubit.fetchMyRegistrations(),

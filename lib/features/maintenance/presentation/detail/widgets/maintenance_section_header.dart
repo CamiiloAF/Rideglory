@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenanceSectionHeader extends StatelessWidget {
   const MaintenanceSectionHeader({
@@ -16,7 +17,7 @@ class MaintenanceSectionHeader extends StatelessWidget {
     return Row(
       children: [
         Icon(icon, color: Colors.grey[400], size: 24),
-        SizedBox(width: 8),
+        AppSpacing.hGapSm,
         Text(
           title,
           style: context.titleMedium?.copyWith(
