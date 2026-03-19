@@ -51,6 +51,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get openSettings => 'Abrir ajustes';
 
   @override
+  String get generateWithAI => 'Generar con IA';
+
+  @override
+  String get photoPermissionTitle => 'Permiso de galería';
+
+  @override
+  String get photoPermissionDenied =>
+      'Se necesita acceso a la galería para elegir una imagen.';
+
+  @override
+  String get photoPermissionPermanentlyDenied =>
+      'El acceso a la galería está desactivado. Actívalo en Ajustes para subir una imagen.';
+
+  @override
   String get exit => 'Salir';
 
   @override
@@ -92,6 +106,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get noResults => 'No se encontraron resultados';
+
+  @override
+  String get noSearchResultsHint => 'Intenta ajustar los filtros o la búsqueda';
 
   @override
   String get notAvailable => 'N/A';
@@ -513,19 +530,19 @@ class AppLocalizationsEs extends AppLocalizations {
       'La fecha de inicio debe ser anterior a la fecha de fin';
 
   @override
-  String get event_difficultyOne => '🌶 Fácil';
+  String get event_difficultyOne => 'Fácil';
 
   @override
-  String get event_difficultyTwo => '🌶🌶 Moderado';
+  String get event_difficultyTwo => 'Moderado';
 
   @override
-  String get event_difficultyThree => '🌶🌶🌶 Intermedio';
+  String get event_difficultyThree => 'Intermedio';
 
   @override
-  String get event_difficultyFour => '🌶🌶🌶🌶 Difícil';
+  String get event_difficultyFour => 'Difícil';
 
   @override
-  String get event_difficultyFive => '🌶🌶🌶🌶🌶 Muy difícil';
+  String get event_difficultyFive => 'Muy difícil';
 
   @override
   String get event_offRoad => 'Off-Road';
@@ -2035,12 +2052,12 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String event_difficultyLevel(String level) {
     String _temp0 = intl.Intl.selectLogic(level, {
-      '1': '\'🌶 Fácil\'',
-      '2': '\'🌶🌶 Moderado\'',
-      '3': '\'🌶🌶🌶 Intermedio\'',
-      '4': '\'🌶🌶🌶🌶 Difícil\'',
-      '5': '\'🌶🌶🌶🌶🌶 Muy difícil\'',
-      'other': '\'🌶🌶🌶 Intermedio\'',
+      '1': 'Fácil',
+      '2': 'Moderado',
+      '3': 'Intermedio',
+      '4': 'Difícil',
+      '5': 'Muy difícil',
+      'other': 'Intermedio',
     });
     return '$_temp0';
   }

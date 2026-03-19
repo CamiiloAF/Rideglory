@@ -22,7 +22,8 @@ plugins {
     // START: FlutterFire Configuration
     id("com.google.gms.google-services") version("4.3.15") apply false
     // END: FlutterFire Configuration
-    id("org.jetbrains.kotlin.android") version "2.1.0" apply false
+    // Flutter/AGP require a newer Kotlin Gradle plugin.
+    id("org.jetbrains.kotlin.android") version "2.2.21" apply false
 }
 
 include(":app")

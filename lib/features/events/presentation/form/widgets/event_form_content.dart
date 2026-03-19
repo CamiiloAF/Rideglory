@@ -85,8 +85,7 @@ class EventFormContent extends StatelessWidget {
                   localImagePath: innerCubit.hasLocalCoverImage
                       ? innerCubit.displayCoverImageUrl
                       : null,
-                  onUploadTap: () =>
-                      innerCubit.pickCoverImageFromGallery(context),
+                  onUploadTap: () => innerCubit.pickCoverImageFromGallery(),
                   onClearTap: innerCubit.hasLocalCoverImage
                       ? innerCubit.clearCoverImage
                       : null,

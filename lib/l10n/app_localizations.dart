@@ -178,6 +178,30 @@ abstract class AppLocalizations {
   /// **'Abrir ajustes'**
   String get openSettings;
 
+  /// No description provided for @generateWithAI.
+  ///
+  /// In es, this message translates to:
+  /// **'Generar con IA'**
+  String get generateWithAI;
+
+  /// No description provided for @photoPermissionTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Permiso de galería'**
+  String get photoPermissionTitle;
+
+  /// No description provided for @photoPermissionDenied.
+  ///
+  /// In es, this message translates to:
+  /// **'Se necesita acceso a la galería para elegir una imagen.'**
+  String get photoPermissionDenied;
+
+  /// No description provided for @photoPermissionPermanentlyDenied.
+  ///
+  /// In es, this message translates to:
+  /// **'El acceso a la galería está desactivado. Actívalo en Ajustes para subir una imagen.'**
+  String get photoPermissionPermanentlyDenied;
+
   /// No description provided for @exit.
   ///
   /// In es, this message translates to:
@@ -255,6 +279,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No se encontraron resultados'**
   String get noResults;
+
+  /// No description provided for @noSearchResultsHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Intenta ajustar los filtros o la búsqueda'**
+  String get noSearchResultsHint;
 
   /// No description provided for @notAvailable.
   ///
@@ -1069,31 +1099,31 @@ abstract class AppLocalizations {
   /// No description provided for @event_difficultyOne.
   ///
   /// In es, this message translates to:
-  /// **'🌶 Fácil'**
+  /// **'Fácil'**
   String get event_difficultyOne;
 
   /// No description provided for @event_difficultyTwo.
   ///
   /// In es, this message translates to:
-  /// **'🌶🌶 Moderado'**
+  /// **'Moderado'**
   String get event_difficultyTwo;
 
   /// No description provided for @event_difficultyThree.
   ///
   /// In es, this message translates to:
-  /// **'🌶🌶🌶 Intermedio'**
+  /// **'Intermedio'**
   String get event_difficultyThree;
 
   /// No description provided for @event_difficultyFour.
   ///
   /// In es, this message translates to:
-  /// **'🌶🌶🌶🌶 Difícil'**
+  /// **'Difícil'**
   String get event_difficultyFour;
 
   /// No description provided for @event_difficultyFive.
   ///
   /// In es, this message translates to:
-  /// **'🌶🌶🌶🌶🌶 Muy difícil'**
+  /// **'Muy difícil'**
   String get event_difficultyFive;
 
   /// No description provided for @event_offRoad.
@@ -3949,7 +3979,7 @@ abstract class AppLocalizations {
   /// No description provided for @event_difficultyLevel.
   ///
   /// In es, this message translates to:
-  /// **'{level, select, 1{\'🌶 Fácil\'} 2{\'🌶🌶 Moderado\'} 3{\'🌶🌶🌶 Intermedio\'} 4{\'🌶🌶🌶🌶 Difícil\'} 5{\'🌶🌶🌶🌶🌶 Muy difícil\'} other{\'🌶🌶🌶 Intermedio\'}}'**
+  /// **'{level, select, 1{Fácil} 2{Moderado} 3{Intermedio} 4{Difícil} 5{Muy difícil} other{Intermedio}}'**
   String event_difficultyLevel(String level);
 }
 
