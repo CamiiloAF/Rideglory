@@ -15,7 +15,7 @@ class AppButton extends StatelessWidget {
   final bool isLoading;
   final IconData? icon;
   final bool isFullWidth;
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
   final double? width;
   final double? height;
 
@@ -28,7 +28,7 @@ class AppButton extends StatelessWidget {
     this.isLoading = false,
     this.icon,
     this.isFullWidth = true,
-    this.padding = const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+    this.padding,
     this.width,
     this.height = 48,
   });
@@ -73,7 +73,12 @@ class AppButton extends StatelessWidget {
           onTap: onPressed == null || isLoading ? null : onPressed,
           borderRadius: BorderRadius.circular(8),
           child: Padding(
-            padding: padding,
+            padding:
+                padding ??
+                EdgeInsets.symmetric(
+                  vertical: AppSize.sm,
+                  horizontal: AppSize.md,
+                ),
             child: Center(
               child: isLoading
                   ? SizedBox(

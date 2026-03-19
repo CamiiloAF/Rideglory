@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp.router(
         routerConfig: AppRouter.appRouter,
-        title: context.l10n.appName,
+        onGenerateTitle: (context) => context.l10n.appName,
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.dark,

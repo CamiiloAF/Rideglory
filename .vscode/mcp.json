@@ -6,6 +6,21 @@
       "headers": {
         "X-Goog-Api-Key": "AQ.Ab8RN6JyAnhpqSPr-urCgedSeCIrlPqygZaJ729uYjwJVXFS-A"
       }
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${input:github_mcp_pat}"
+      }
     }
-  }
+  },
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "github_mcp_pat",
+      "description": "GitHub Personal Access Token (needs repo + security_events to read alerts)",
+      "password": true
+    }
+  ]
 }

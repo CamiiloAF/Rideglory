@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
@@ -11,7 +10,6 @@ import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/use_cases/add_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/upload_event_image_use_case.dart';
-import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 @injectable
 class EventFormCubit extends Cubit<ResultState<EventModel>> {
@@ -43,21 +41,8 @@ class EventFormCubit extends Cubit<ResultState<EventModel>> {
   }
 
   /// Picks an image from the device gallery. Handles permission request and
-  /// shows a dialog if access is denied, with option to open app settings.
-  Future<void> pickCoverImageFromGallery(BuildContext context) async {
-    final permission = await _requestPhotoPermission();
-    if (!context.mounted) return;
-
-    if (permission == false) {
-      final isPermanentlyDenied = await _isPhotoPermissionPermanentlyDenied();
-      if (!context.mounted) return;
-      await _showPermissionDeniedDialog(
-        context,
-        isPermanentlyDenied: isPermanentlyDenied,
-      );
-      return;
-    }
-
+  /// (permission and settings redirect are handled by `AppImagePicker`).
+  Future<void> pickCoverImageFromGallery() async {
     final picker = ImagePicker();
     final file = await picker.pickImage(
       source: ImageSource.gallery,
@@ -66,55 +51,12 @@ class EventFormCubit extends Cubit<ResultState<EventModel>> {
       imageQuality: 85,
     );
 
-    if (!context.mounted) return;
     if (file == null) return;
 
     _selectedCoverFile = file;
     // Force UI rebuild even though ResultState itself did not change
     emit(const ResultState.loading());
     emit(const ResultState.initial());
-  }
-
-  Future<bool> _requestPhotoPermission() async {
-    final status = await Permission.photos.request();
-    return status.isGranted || status.isLimited;
-  }
-
-  Future<bool> _isPhotoPermissionPermanentlyDenied() async {
-    final status = await Permission.photos.status;
-    return status.isPermanentlyDenied;
-  }
-
-  Future<void> _showPermissionDeniedDialog(
-    BuildContext context, {
-    required bool isPermanentlyDenied,
-  }) async {
-    final message = isPermanentlyDenied
-        ? context.l10n.event_photoPermissionPermanentlyDenied
-        : context.l10n.event_photoPermissionDenied;
-
-    final openSettings = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(context.l10n.event_uploadImage),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(context.l10n.accept),
-          ),
-          if (isPermanentlyDenied)
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(context.l10n.event_openSettings),
-            ),
-        ],
-      ),
-    );
-
-    if (openSettings == true) {
-      await openAppSettings();
-    }
   }
 
   void clearCoverImage() {

@@ -14,6 +14,10 @@
   "back": "Volver",
   "continue_": "Continuar",
   "openSettings": "Abrir ajustes",
+  "generateWithAI": "Generar con IA",
+  "photoPermissionTitle": "Permiso de galería",
+  "photoPermissionDenied": "Se necesita acceso a la galería para elegir una imagen.",
+  "photoPermissionPermanentlyDenied": "El acceso a la galería está desactivado. Actívalo en Ajustes para subir una imagen.",
   "exit": "Salir",
   "exitAppTitle": "Salir de la aplicación",
   "exitAppMessage": "¿Estás seguro de que deseas salir de Rideglory?",
@@ -27,6 +31,7 @@
   "imageUploadNotFound": "No se pudo completar la subida. Intenta de nuevo en unos segundos.",
   "noData": "No hay datos",
   "noResults": "No se encontraron resultados",
+  "noSearchResultsHint": "Intenta ajustar los filtros o la búsqueda",
   "notAvailable": "N/A",
   "noSearchResults": "No se encontraron resultados para tu búsqueda",
   "loading": "Cargando...",
@@ -167,11 +172,11 @@
   "event_priceHint": "0 para evento gratuito",
   "event_freeEvent": "Evento gratuito",
   "event_startDateMustBeBeforeEndDate": "La fecha de inicio debe ser anterior a la fecha de fin",
-  "event_difficultyOne": "🌶 Fácil",
-  "event_difficultyTwo": "🌶🌶 Moderado",
-  "event_difficultyThree": "🌶🌶🌶 Intermedio",
-  "event_difficultyFour": "🌶🌶🌶🌶 Difícil",
-  "event_difficultyFive": "🌶🌶🌶🌶🌶 Muy difícil",
+  "event_difficultyOne": "Fácil",
+  "event_difficultyTwo": "Moderado",
+  "event_difficultyThree": "Intermedio",
+  "event_difficultyFour": "Difícil",
+  "event_difficultyFive": "Muy difícil",
   "event_offRoad": "Off-Road",
   "event_onRoad": "On-Road",
   "event_exhibition": "Exhibición",
@@ -698,7 +703,7 @@
       "unit": {}
     }
   },
-  "event_difficultyLevel": "{level, select, 1{'🌶 Fácil'} 2{'🌶🌶 Moderado'} 3{'🌶🌶🌶 Intermedio'} 4{'🌶🌶🌶🌶 Difícil'} 5{'🌶🌶🌶🌶🌶 Muy difícil'} other{'🌶🌶🌶 Intermedio'}}",
+  "event_difficultyLevel": "{level, select, 1{Fácil} 2{Moderado} 3{Intermedio} 4{Difícil} 5{Muy difícil} other{Intermedio}}",
   "@event_difficultyLevel": {
     "placeholders": {
       "level": {}

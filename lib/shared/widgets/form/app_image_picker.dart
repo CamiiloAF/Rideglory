@@ -1,10 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
+import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/shared/widgets/modals/info_dialog.dart';
 
 /// Reusable image picker section for event cover, vehicle photo, etc.
 /// [title] and [hint] are shown in the empty state. [uploadButtonLabel] is the
@@ -24,6 +29,11 @@ class AppImagePicker extends StatelessWidget {
     this.onGenerateWithAITap,
     this.generateWithAILabel,
     this.labelText,
+    this.guardPhotoPermission = true,
+    this.permissionDialogTitle,
+    this.permissionDeniedMessage,
+    this.permissionPermanentlyDeniedMessage,
+    this.openSettingsLabel,
   });
 
   final String? imageUrl;
@@ -37,9 +47,89 @@ class AppImagePicker extends StatelessWidget {
   final VoidCallback? onGenerateWithAITap;
   final String? generateWithAILabel;
   final String? labelText;
+  final bool guardPhotoPermission;
+  final String? permissionDialogTitle;
+  final String? permissionDeniedMessage;
+  final String? permissionPermanentlyDeniedMessage;
+  final String? openSettingsLabel;
 
   bool get _hasImage =>
       localImagePath != null || (imageUrl != null && imageUrl!.isNotEmpty);
+
+  Permission get _galleryPermission {
+    if (Platform.isIOS) return Permission.photos;
+    // On modern Android this maps to READ_MEDIA_IMAGES; on older versions it
+    // falls back to legacy storage permission.
+    return Permission.photos;
+  }
+
+  Future<bool> _requestPhotoPermission() async {
+    final status = await _galleryPermission.request();
+    return status.isGranted || status.isLimited;
+  }
+
+  Future<bool> _isPhotoPermissionPermanentlyDenied() async {
+    final status = await _galleryPermission.status;
+    return status.isPermanentlyDenied;
+  }
+
+  Future<void> _showPermissionDeniedDialog(
+    BuildContext context, {
+    required bool isPermanentlyDenied,
+  }) async {
+    final title = permissionDialogTitle ?? context.l10n.photoPermissionTitle;
+    final message = isPermanentlyDenied
+        ? (permissionPermanentlyDeniedMessage ??
+              context.l10n.photoPermissionPermanentlyDenied)
+        : (permissionDeniedMessage ?? context.l10n.photoPermissionDenied);
+
+    if (!isPermanentlyDenied) {
+      await InfoDialog.show(
+        context: context,
+        title: title,
+        content: message,
+        type: DialogType.warning,
+      );
+      return;
+    }
+
+    final openSettings = await ConfirmationDialog.show(
+      context: context,
+      title: title,
+      content: message,
+      cancelLabel: context.l10n.accept,
+      confirmLabel: openSettingsLabel ?? context.l10n.openSettings,
+      confirmType: DialogActionType.primary,
+      dialogType: DialogType.warning,
+      isDismissible: true,
+    );
+
+    if (openSettings == true) {
+      await openAppSettings();
+    }
+  }
+
+  Future<void> _handlePickImageTap(BuildContext context) async {
+    if (onPickImage == null) return;
+    if (!guardPhotoPermission) {
+      onPickImage?.call();
+      return;
+    }
+
+    final granted = await _requestPhotoPermission();
+    if (!context.mounted) return;
+    if (granted) {
+      onPickImage?.call();
+      return;
+    }
+
+    final permanentlyDenied = await _isPhotoPermissionPermanentlyDenied();
+    if (!context.mounted) return;
+    await _showPermissionDeniedDialog(
+      context,
+      isPermanentlyDenied: permanentlyDenied,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,15 +150,13 @@ class AppImagePicker extends StatelessWidget {
           AppSpacing.gapSm,
         ],
         GestureDetector(
-          onTap: onPickImage,
+          onTap: () => _handlePickImageTap(context),
           child: Container(
             width: double.infinity,
             decoration: BoxDecoration(
               color: cs.surface,
               borderRadius: BorderRadius.circular(8),
-              border: _hasImage
-                  ? Border.all(color: cs.outlineVariant)
-                  : null,
+              border: _hasImage ? Border.all(color: cs.outlineVariant) : null,
             ),
             child: _hasImage
                 ? Stack(
@@ -175,7 +263,7 @@ class AppImagePicker extends StatelessWidget {
                                   label: uploadButtonLabel,
                                   variant: AppButtonVariant.primary,
                                   icon: Icons.upload,
-                                  onPressed: onPickImage,
+                                  onPressed: () => _handlePickImageTap(context),
                                 ),
                               ),
                               if (showGenerateWithAI) ...[
@@ -183,7 +271,8 @@ class AppImagePicker extends StatelessWidget {
                                 Expanded(
                                   child: _OutlinePrimaryButton(
                                     label:
-                                        generateWithAILabel ?? 'Generar con IA',
+                                        generateWithAILabel ??
+                                        context.l10n.generateWithAI,
                                     icon: Icons.auto_awesome,
                                     onPressed: onGenerateWithAITap,
                                     colorScheme: cs,
