@@ -41,7 +41,7 @@ class EventFormBasicInfoSection extends StatelessWidget {
                       scaffoldMessenger.showSnackBar(
                         SnackBar(
                           content: Text(context.l10n.event_eventNameCannotBeModified),
-                          duration: Duration(seconds: 3),
+                          duration: const Duration(seconds: 3),
                           behavior: SnackBarBehavior.floating,
                         ),
                       );

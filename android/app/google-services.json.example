@@ -1,45 +1,45 @@
 {
   "project_info": {
-    "project_number": "1073521363686",
-    "project_id": "rideglory-f7383",
-    "storage_bucket": "rideglory-f7383.firebasestorage.app"
+    "project_number": "YOUR_PROJECT_NUMBER",
+    "project_id": "YOUR_PROJECT_ID",
+    "storage_bucket": "YOUR_STORAGE_BUCKET"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1073521363686:android:d978a65130d04ab01c8927",
+        "mobilesdk_app_id": "YOUR_ANDROID_APP_ID",
         "android_client_info": {
           "package_name": "com.camiloagudelo.rideglory"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1073521363686-ialjtdhvridmkubkoh5klmalbjajll9l.apps.googleusercontent.com",
+          "client_id": "YOUR_ANDROID_OAUTH_CLIENT_ID",
           "client_type": 1,
           "android_info": {
             "package_name": "com.camiloagudelo.rideglory",
-            "certificate_hash": "48b23114231b966b49c71913c3aa458b4dd25208"
+            "certificate_hash": "YOUR_ANDROID_SHA1"
           }
         },
         {
-          "client_id": "1073521363686-c32enmeab94l3ac58abtenpc87b7n5s8.apps.googleusercontent.com",
+          "client_id": "YOUR_WEB_OAUTH_CLIENT_ID",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB1KXYl-tih16M96IchyhH4jkbmIwf1LKw"
+          "current_key": "YOUR_ANDROID_API_KEY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1073521363686-c32enmeab94l3ac58abtenpc87b7n5s8.apps.googleusercontent.com",
+              "client_id": "YOUR_WEB_OAUTH_CLIENT_ID",
               "client_type": 3
             },
             {
-              "client_id": "1073521363686-e59ppbu316185di37689f57ikelle2j7.apps.googleusercontent.com",
+              "client_id": "YOUR_IOS_OAUTH_CLIENT_ID",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.camiloagudelo.rideglory"

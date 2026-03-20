@@ -43,7 +43,7 @@ class VehicleDetailHeader extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.more_vert, color: Colors.grey),
+                    icon: const Icon(Icons.more_vert, color: Colors.grey),
                     onPressed: onOptionsTap,
                   ),
                 ],
@@ -72,7 +72,7 @@ class VehicleDetailHeader extends StatelessWidget {
                         color: Colors.white.withValues(alpha: 0.8),
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Switch.adaptive(
                       value: isMainVehicle,
                       activeTrackColor: context.colorScheme.primary,
@@ -101,7 +101,7 @@ class VehicleDetailHeader extends StatelessWidget {
                 ),
               ],
             ),
-            child: Icon(Icons.add, color: Colors.white, size: 32),
+            child: const Icon(Icons.add, color: Colors.white, size: 32),
           ),
         ),
       ],

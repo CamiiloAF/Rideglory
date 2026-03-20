@@ -130,11 +130,11 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
             leading: BackButton(onPressed: _popWithResult),
             actions: [
               IconButton(
-                icon: Icon(Icons.share_outlined),
+                icon: const Icon(Icons.share_outlined),
                 onPressed: () {},
               ),
               IconButton(
-                icon: Icon(Icons.more_vert),
+                icon: const Icon(Icons.more_vert),
                 onPressed: _showOptions,
               ),
             ],

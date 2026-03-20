@@ -9,7 +9,7 @@ class EventsLoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppLoadingIndicator(variant: AppLoadingIndicatorVariant.page);
+    return const AppLoadingIndicator(variant: AppLoadingIndicatorVariant.page);
   }
 }
 

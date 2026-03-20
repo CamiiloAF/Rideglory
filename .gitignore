@@ -43,6 +43,14 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/android/local.properties
+
+# Local secrets and environment files
+.env
+.env.*
+.vscode/mcp.local.json
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
 
 # Generated files
 **.config.dart

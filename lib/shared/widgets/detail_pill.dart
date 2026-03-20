@@ -27,7 +27,7 @@ class DetailPill extends StatelessWidget {
     final isOverlay = variant == DetailPillVariant.overlay;
 
     final backgroundColor = isOverlay
-        ? cs.background.withOpacity(0.4)
+        ? cs.surface.withOpacity(0.4)
         : cs.primary.withOpacity(0.25);
 
     final border = isOverlay

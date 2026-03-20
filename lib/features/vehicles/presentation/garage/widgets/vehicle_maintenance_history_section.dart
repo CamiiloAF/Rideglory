@@ -245,7 +245,7 @@ class _LoadingState extends StatelessWidget {
             color: const Color(0xFF262628),
             borderRadius: BorderRadius.circular(16),
           ),
-          child: Center(
+          child: const Center(
             child: AppLoadingIndicator(variant: AppLoadingIndicatorVariant.inline),
           ),
         ),

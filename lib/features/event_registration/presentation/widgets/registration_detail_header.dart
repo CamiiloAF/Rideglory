@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/shared/widgets/initials_avatar.dart';
 import 'package:rideglory/features/events/presentation/shared/widgets/registration_status_chip.dart';

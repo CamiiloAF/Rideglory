@@ -40,7 +40,7 @@ class EventDetailHeaderInfo extends StatelessWidget {
           ),
           child: Text(
             _badgeLabel(context),
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 11,
               fontWeight: FontWeight.w800,

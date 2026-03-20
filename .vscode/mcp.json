@@ -1,26 +1,16 @@
 {
-  "servers": {
+  "mcpServers": {
     "stitch": {
-      "type": "http",
       "url": "https://stitch.googleapis.com/mcp",
       "headers": {
-        "X-Goog-Api-Key": "AQ.Ab8RN6JyAnhpqSPr-urCgedSeCIrlPqygZaJ729uYjwJVXFS-A"
+        "X-Goog-Api-Key": "${env:STITCH_API_KEY}"
       }
     },
     "github": {
-      "type": "http",
       "url": "https://api.githubcopilot.com/mcp/",
       "headers": {
-        "Authorization": "Bearer ${input:github_mcp_pat}"
+        "Authorization": "Bearer ${env:GITHUB_MCP_PAT}"
       }
     }
-  },
-  "inputs": [
-    {
-      "type": "promptString",
-      "id": "github_mcp_pat",
-      "description": "GitHub Personal Access Token (needs repo + security_events to read alerts)",
-      "password": true
-    }
-  ]
+  }
 }

@@ -134,7 +134,7 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
                   Container(
                     decoration: BoxDecoration(
                       color: cs.surfaceContainerHighest,
-                      borderRadius: BorderRadius.vertical(
+                      borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(8),
                       ),
                     ),

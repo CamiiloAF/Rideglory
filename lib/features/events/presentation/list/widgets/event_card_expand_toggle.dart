@@ -26,7 +26,7 @@ class EventCardExpandToggle extends StatelessWidget {
           turns: isExpanded ? 0.5 : 0.0,
           duration: const Duration(milliseconds: 280),
           curve: Curves.easeInOut,
-          child: Icon(
+          child: const Icon(
             Icons.keyboard_arrow_up_rounded,
             size: 20,
             color: Colors.white,

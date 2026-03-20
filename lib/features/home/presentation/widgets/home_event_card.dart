@@ -55,7 +55,7 @@ class HomeEventCard extends StatelessWidget {
                     children: [
                       Text(
                         event.name.toUpperCase(),
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
@@ -71,7 +71,7 @@ class HomeEventCard extends StatelessWidget {
                       AppSpacing.gapXs,
                       Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.calendar_today,
                             size: 12,
                             color: Colors.white70,
@@ -79,7 +79,7 @@ class HomeEventCard extends StatelessWidget {
                           AppSpacing.hGapXxs,
                           Text(
                             dateFormat.format(event.startDate),
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white70,
                               fontSize: 11,
                             ),

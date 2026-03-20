@@ -36,7 +36,7 @@ class _GaragePageState extends State<GaragePage> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: Padding(
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               child: Icon(Icons.two_wheeler, color: context.colorScheme.primary),
             ),
             title: Text(
@@ -69,7 +69,7 @@ class _GaragePageState extends State<GaragePage> {
             child: BlocBuilder<VehicleCubit, VehicleState>(
               builder: (context, state) {
                 if (state is VehicleInitial) {
-                  return Center(
+                  return const Center(
                     child: AppLoadingIndicator(variant: AppLoadingIndicatorVariant.inline),
                   );
                 }
@@ -146,7 +146,7 @@ class _GaragePageState extends State<GaragePage> {
                                       : null,
                                 ),
                                 child: !hasImage
-                                    ? Center(
+                                    ? const Center(
                                         child: Icon(
                                           Icons.motorcycle,
                                           size: 80,

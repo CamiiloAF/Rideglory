@@ -39,7 +39,7 @@ class HomeSubMenuOption extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Icon(Icons.chevron_right, color: context.colorScheme.onSurfaceVariant),
           ],
         ),

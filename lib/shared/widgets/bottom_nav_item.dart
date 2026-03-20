@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
 class BottomNavItem extends StatelessWidget {

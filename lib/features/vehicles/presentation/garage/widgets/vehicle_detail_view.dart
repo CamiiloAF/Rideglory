@@ -36,7 +36,7 @@ class VehicleDetailView extends StatelessWidget {
       children: [
         // Details Bottom Sheet
         Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Color(0xFF1C1C1E), // Darker surface matching the mockup
             borderRadius: BorderRadius.vertical(top: Radius.circular(36)),
           ),

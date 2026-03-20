@@ -75,13 +75,13 @@ class AppButton extends StatelessWidget {
           child: Padding(
             padding:
                 padding ??
-                EdgeInsets.symmetric(
+                const EdgeInsets.symmetric(
                   vertical: AppSize.sm,
                   horizontal: AppSize.md,
                 ),
             child: Center(
               child: isLoading
-                  ? SizedBox(
+                  ? const SizedBox(
                       width: 20,
                       height: 20,
                       child: AppLoadingIndicator(

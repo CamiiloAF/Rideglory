@@ -47,7 +47,7 @@ class VehicleSelectionBottomSheet extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: cs.background.withOpacity(0.35),
+            color: cs.surface.withOpacity(0.35),
             blurRadius: 20,
             offset: const Offset(0, -8),
           ),

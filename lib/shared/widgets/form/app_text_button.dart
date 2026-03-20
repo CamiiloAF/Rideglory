@@ -42,7 +42,7 @@ class AppTextButton extends StatelessWidget {
             ? SizedBox(
                 width: iconSize,
                 height: iconSize,
-                child: AppLoadingIndicator(
+                child: const AppLoadingIndicator(
                   variant: AppLoadingIndicatorVariant.inline,
                 ),
               )
@@ -62,7 +62,7 @@ class AppTextButton extends StatelessWidget {
         visualDensity: visualDensity,
       ),
       child: isLoading
-          ? SizedBox(
+          ? const SizedBox(
               width: 16,
               height: 16,
               child: AppLoadingIndicator(

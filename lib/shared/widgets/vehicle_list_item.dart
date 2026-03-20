@@ -51,7 +51,7 @@ class VehicleListItem extends StatelessWidget {
                     ]
                   : [
                       BoxShadow(
-                        color: cs.background.withOpacity(0.35),
+                        color: cs.surface.withOpacity(0.35),
                         blurRadius: 14,
                         offset: const Offset(0, 4),
                       ),
@@ -65,7 +65,7 @@ class VehicleListItem extends StatelessWidget {
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? cs.background.withOpacity(0.25)
+                          ? cs.surface.withOpacity(0.25)
                           : cs.primary.withOpacity(0.08),
                       borderRadius: BorderRadius.circular(12),
                     ),
