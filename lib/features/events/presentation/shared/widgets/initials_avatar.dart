@@ -24,7 +24,7 @@ class InitialsAvatar extends StatelessWidget {
     final baseStyle = context.textTheme.titleMedium?.copyWith(
       color: Colors.white,
       fontWeight: FontWeight.bold,
-    ) ?? TextStyle(
+    ) ?? const TextStyle(
       color: Colors.white,
       fontWeight: FontWeight.bold,
       fontSize: 16,

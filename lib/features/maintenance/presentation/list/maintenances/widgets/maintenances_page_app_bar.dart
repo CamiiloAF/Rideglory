@@ -26,7 +26,7 @@ class MaintenancesPageAppBar extends StatelessWidget
         Stack(
           children: [
             IconButton(
-              icon: Icon(Icons.filter_list_rounded),
+              icon: const Icon(Icons.filter_list_rounded),
               onPressed: onFilterPressed,
               tooltip: context.l10n.maintenance_filters,
             ),
@@ -36,7 +36,7 @@ class MaintenancesPageAppBar extends StatelessWidget
                 top: 8,
                 child: Container(
                   padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Color(0xFF6366F1),
                     shape: BoxShape.circle,
                   ),
@@ -46,7 +46,7 @@ class MaintenancesPageAppBar extends StatelessWidget
                   ),
                   child: Text(
                     '$activeFilterCount',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
@@ -58,7 +58,7 @@ class MaintenancesPageAppBar extends StatelessWidget
           ],
         ),
         IconButton(
-          icon: Icon(Icons.directions_car_outlined),
+          icon: const Icon(Icons.directions_car_outlined),
           onPressed: onVehiclesPressed,
           tooltip: context.l10n.maintenance_myVehicles,
         ),

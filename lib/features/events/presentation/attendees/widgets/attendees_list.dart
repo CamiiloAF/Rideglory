@@ -129,7 +129,7 @@ class AttendeesList extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               TextButton(
                 onPressed: processed.isEmpty ? null : () {},
                 child: Text(

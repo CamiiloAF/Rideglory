@@ -11,7 +11,7 @@ class EventDetailHeaderOverlayGradient extends StatelessWidget {
       bottom: 0,
       child: Container(
         height: 300,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

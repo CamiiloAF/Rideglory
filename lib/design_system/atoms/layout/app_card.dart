@@ -26,7 +26,7 @@ class AppCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = context.colorScheme;
-    final radius = Radius.circular(AppRadius.sm);
+    const radius = Radius.circular(AppRadius.sm);
 
     final border = variant == AppCardVariant.outlined
         ? Border.all(color: cs.outlineVariant, width: 1.5)

@@ -78,7 +78,7 @@ class SignupSocialButtons extends StatelessWidget {
                         onTap: () => context.pop(),
                         child: Text(
                           context.l10n.auth_signInLink,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 15,
                             color: Color(0xFF6366F1),
                             fontWeight: FontWeight.bold,

@@ -18,14 +18,14 @@ class HomeEventViewDetailsButton extends StatelessWidget {
         children: [
           Text(
             context.l10n.home_viewDetails,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.black87,
               fontSize: 11,
               fontWeight: FontWeight.w600,
             ),
           ),
           AppSpacing.hGapXxs,
-          Icon(Icons.arrow_forward, size: 12, color: Colors.black87),
+          const Icon(Icons.arrow_forward, size: 12, color: Colors.black87),
         ],
       ),
     );

@@ -21,7 +21,7 @@ class ParticipantsPlaceholderPage extends StatelessWidget {
         backgroundColor: context.colorScheme.surface,
         foregroundColor: context.colorScheme.onSurface,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => context.pop(),
         ),
         centerTitle: true,
@@ -29,7 +29,7 @@ class ParticipantsPlaceholderPage extends StatelessWidget {
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.all(24),
+          padding: const EdgeInsets.all(24),
           child: Text(
             context.l10n.map_participantsPlaceholder,
             textAlign: TextAlign.center,

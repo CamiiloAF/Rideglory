@@ -63,7 +63,7 @@ class _EventDetailByIdPageState extends State<EventDetailByIdPage> {
               initial: () => _shell(context, const SizedBox.shrink()),
               loading: () => _shell(
                 context,
-                Center(
+                const Center(
                   child: AppLoadingIndicator(
                     variant: AppLoadingIndicatorVariant.inline,
                   ),

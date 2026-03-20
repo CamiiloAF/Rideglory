@@ -34,7 +34,7 @@ class MaintenanceOptionsBottomSheet extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.edit, color: Colors.white),
+            leading: const Icon(Icons.edit, color: Colors.white),
             title: Text(
               context.l10n.maintenance_editMaintenance,
               style: context.bodyLarge?.copyWith(color: Colors.white),
@@ -44,7 +44,7 @@ class MaintenanceOptionsBottomSheet extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.delete, color: Colors.red),
+            leading: const Icon(Icons.delete, color: Colors.red),
             title: Text(
               context.l10n.maintenance_deleteMaintenance,
               style: context.bodyLarge?.copyWith(color: Colors.red),

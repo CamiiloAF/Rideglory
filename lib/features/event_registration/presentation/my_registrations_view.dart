@@ -28,9 +28,9 @@ class MyRegistrationsView extends StatelessWidget {
                 final cubit = context.read<MyRegistrationsCubit>();
                 return state.when(
                   initial: () =>
-                      AppLoadingIndicator(variant: AppLoadingIndicatorVariant.page),
+                      const AppLoadingIndicator(variant: AppLoadingIndicatorVariant.page),
                   loading: () =>
-                      AppLoadingIndicator(variant: AppLoadingIndicatorVariant.page),
+                      const AppLoadingIndicator(variant: AppLoadingIndicatorVariant.page),
                   data: (items) => MyRegistrationsDataView(items: items),
                   empty: () => EmptyStateWidget(
                     icon: Icons.event_busy_outlined,

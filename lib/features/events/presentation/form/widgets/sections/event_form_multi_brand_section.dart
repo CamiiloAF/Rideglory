@@ -210,7 +210,7 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
                   children: [
                     Text(
                       entry.value,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
@@ -219,7 +219,7 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
                     AppSpacing.hGapXs,
                     GestureDetector(
                       onTap: () => _remove(entry.key),
-                      child: Icon(
+                      child: const Icon(
                         Icons.close,
                         size: 14,
                         color: Colors.white,

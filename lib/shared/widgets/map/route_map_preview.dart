@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
 /// A widget that shows a Google Map preview with origin and destination markers.

@@ -25,7 +25,7 @@ class VehicleGarageOverviewItem extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Color(0xFF3A3A3C),
               shape: BoxShape.circle,
             ),

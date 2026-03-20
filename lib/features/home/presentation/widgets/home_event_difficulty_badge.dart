@@ -17,7 +17,7 @@ class HomeEventDifficultyBadge extends StatelessWidget {
       ),
       child: Text(
         difficulty.label.split(' ').first.toUpperCase(),
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
           fontSize: 10,
           fontWeight: FontWeight.w700,

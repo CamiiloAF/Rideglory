@@ -17,7 +17,17 @@ import 'firebase_options.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  final firebaseOptions = DefaultFirebaseOptions.currentPlatform;
+  if (firebaseOptions.apiKey.isEmpty ||
+      firebaseOptions.appId.isEmpty ||
+      firebaseOptions.messagingSenderId.isEmpty ||
+      firebaseOptions.projectId.isEmpty) {
+    throw StateError(
+      'Missing Firebase configuration. Pass required values using --dart-define.',
+    );
+  }
+
+  await Firebase.initializeApp(options: firebaseOptions);
   await initializeDateFormatting();
 
   configureDependencies();

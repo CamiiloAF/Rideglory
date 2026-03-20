@@ -84,7 +84,7 @@ class _RiderTelemetryPanelState extends State<RiderTelemetryPanel> {
                       color: context.colorScheme.onSurface,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   IconButton(
                     onPressed: () => setState(() => _isExpanded = !_isExpanded),
                     icon: Icon(

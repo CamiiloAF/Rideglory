@@ -236,7 +236,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
               labelText: context.l10n.maintenance_maintenanceCost,
               prefixIcon: Icons.attach_money,
               hintText: '0.00',
-              keyboardType: TextInputType.numberWithOptions(
+              keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
               textInputAction: TextInputAction.next,
@@ -315,7 +315,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                   ),
                   AppSpacing.gapSm,
 
-                  Padding(
+                  const Padding(
                     padding: EdgeInsets.symmetric(vertical: 12),
                     child: Divider(height: 1),
                   ),

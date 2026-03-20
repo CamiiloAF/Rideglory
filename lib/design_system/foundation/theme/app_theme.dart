@@ -63,7 +63,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: colorScheme.background,
+      scaffoldBackgroundColor: colorScheme.surface,
       textTheme: textTheme,
       extensions: <ThemeExtension<dynamic>>[
         AppColorsExtension.rideglory(),
@@ -71,7 +71,7 @@ class AppTheme {
 
       // AppBar theme
       appBarTheme: AppBarTheme(
-        backgroundColor: colorScheme.background,
+        backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.onSurface,
         elevation: 0,
         centerTitle: false,
@@ -254,7 +254,7 @@ class AppTheme {
       // Bottom sheet theme
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: colorScheme.surface,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
       ),
@@ -270,7 +270,7 @@ class AppTheme {
       error: AppColors.error,
       surface: AppColors.darkSurface,
     ).copyWith(
-      background: AppColors.darkBackground,
+      surface: AppColors.darkBackground,
       onSurface: AppColors.darkTextPrimary,
       onSurfaceVariant: AppColors.darkTextSecondary,
       outline: AppColors.darkBorder,
@@ -314,7 +314,7 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: colorScheme.background,
+      scaffoldBackgroundColor: colorScheme.surface,
       textTheme: textTheme,
       extensions: <ThemeExtension<dynamic>>[
         AppColorsExtension.rideglory(),
@@ -322,7 +322,7 @@ class AppTheme {
 
       // AppBar
       appBarTheme: AppBarTheme(
-        backgroundColor: colorScheme.background,
+        backgroundColor: colorScheme.surface,
         foregroundColor: colorScheme.onSurface,
         elevation: 0,
         centerTitle: true,

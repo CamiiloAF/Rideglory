@@ -80,7 +80,7 @@ class VehicleSelectorChip extends StatelessWidget {
                 ),
                 if (hasSelection) ...[
                   AppSpacing.hGapXs,
-                  Icon(
+                  const Icon(
                     Icons.arrow_drop_down,
                     size: 14,
                     color: Colors.white,

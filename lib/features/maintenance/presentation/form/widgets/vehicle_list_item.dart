@@ -101,7 +101,7 @@ class VehicleListItem extends StatelessWidget {
                         color: AppColors.overlayMedium,
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.check_rounded,
                         color: Colors.white,
                         size: 20,

@@ -48,7 +48,7 @@ class EventCardHeader extends StatelessWidget {
           value: 'edit',
           child: Row(
             children: [
-              Icon(Icons.edit_outlined),
+              const Icon(Icons.edit_outlined),
               AppSpacing.hGapSm,
               Text(context.l10n.event_edit),
             ],

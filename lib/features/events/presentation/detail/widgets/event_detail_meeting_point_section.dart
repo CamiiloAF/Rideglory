@@ -88,14 +88,14 @@ class EventDetailMeetingPointSection extends StatelessWidget {
                           onTap: onViewMap,
                           borderRadius: BorderRadius.circular(10),
                           child: Padding(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 16,
                               vertical: 12,
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.send,
                                   color: Colors.white,
                                   size: 18,
@@ -103,7 +103,7 @@ class EventDetailMeetingPointSection extends StatelessWidget {
                                 AppSpacing.hGapSm,
                                 Text(
                                   context.l10n.event_viewMap,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 13,
                                     fontWeight: FontWeight.w700,

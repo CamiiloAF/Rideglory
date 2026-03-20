@@ -87,7 +87,7 @@ class MaintenanceCardBody extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                             if (maintenance.cost != null) ...[
-                              Spacer(),
+                              const Spacer(),
                               Text(
                                 currencyFormat.format(maintenance.cost),
                                 style: context.bodySmall?.copyWith(

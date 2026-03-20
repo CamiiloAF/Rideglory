@@ -81,7 +81,7 @@ class MaintenanceCardHeader extends StatelessWidget {
               color: const Color(0xFFFEF2F2),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
+            child: const Icon(
               Icons.notifications_active_rounded,
               color: Color(0xFFEF4444),
               size: 20,

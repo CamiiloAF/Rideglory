@@ -108,7 +108,7 @@ class _LiveMapPageState extends State<LiveMapPage> {
             onPressed: () {
               context.pushNamed(AppRoutes.participants, extra: event);
             },
-            icon: Icon(Icons.group),
+            icon: const Icon(Icons.group),
           ),
         ],
       ),
@@ -124,7 +124,7 @@ class _LiveMapPageState extends State<LiveMapPage> {
                         _mapController.value = controller,
                   )
                 else
-                  Center(
+                  const Center(
                     child: SizedBox(
                       width: 24,
                       height: 24,

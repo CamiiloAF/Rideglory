@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleInfoChip extends StatelessWidget {

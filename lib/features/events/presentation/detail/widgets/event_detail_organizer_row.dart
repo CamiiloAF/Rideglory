@@ -28,7 +28,7 @@ class EventDetailOrganizerRow extends StatelessWidget {
               ),
             ],
           ),
-          child: Icon(Icons.check, color: Colors.white, size: 14),
+          child: const Icon(Icons.check, color: Colors.white, size: 14),
         ),
         AppSpacing.hGapSm,
         Expanded(

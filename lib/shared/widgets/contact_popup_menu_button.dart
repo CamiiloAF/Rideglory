@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
 import 'package:rideglory/shared/helpers/url_launcher_helper.dart';
 import 'package:rideglory/design_system/design_system.dart';
 

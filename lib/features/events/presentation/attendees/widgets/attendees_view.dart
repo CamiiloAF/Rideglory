@@ -22,7 +22,7 @@ class AttendeesView extends StatelessWidget {
       appBar: AppAppBar(
         title: context.l10n.event_participants,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
           onPressed: () => context.pop(),
           color: colorScheme.primary,
         ),
@@ -31,7 +31,7 @@ class AttendeesView extends StatelessWidget {
         builder: (context, state) {
           return state.when(
             initial: () => const SizedBox.shrink(),
-            loading: () => AppLoadingIndicator(variant: AppLoadingIndicatorVariant.page),
+            loading: () => const AppLoadingIndicator(variant: AppLoadingIndicatorVariant.page),
             data: (registrations) =>
                 AttendeesDataView(registrations: registrations, event: event),
             empty: () => Center(

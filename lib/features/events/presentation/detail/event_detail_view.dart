@@ -87,7 +87,7 @@ class EventDetailViewState extends State<EventDetailView> {
                 backgroundColor: context.colorScheme.surface,
                 foregroundColor: context.colorScheme.onSurface,
                 leading: IconButton(
-                  icon: Icon(Icons.arrow_back_ios_new_rounded),
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded),
                   onPressed: () {
                     if (!widget.isFromEventDetailByIdPage) {
                       context.pop(currentEvent);
@@ -100,7 +100,7 @@ class EventDetailViewState extends State<EventDetailView> {
                 title: null,
                 actions: [
                   IconButton(
-                    icon: Icon(Icons.share_outlined),
+                    icon: const Icon(Icons.share_outlined),
                     onPressed: () {
                       // TODO: share event
                     },
@@ -137,7 +137,7 @@ class EventDetailViewState extends State<EventDetailView> {
                           value: 'edit',
                           child: Row(
                             children: [
-                              Icon(Icons.edit_outlined),
+                              const Icon(Icons.edit_outlined),
                               AppSpacing.hGapMd,
                               Text(context.l10n.event_edit),
                             ],
@@ -147,7 +147,7 @@ class EventDetailViewState extends State<EventDetailView> {
                           value: 'attendees',
                           child: Row(
                             children: [
-                              Icon(Icons.people_outline),
+                              const Icon(Icons.people_outline),
                               AppSpacing.hGapMd,
                               Text(context.l10n.event_viewAttendees),
                             ],
@@ -157,11 +157,11 @@ class EventDetailViewState extends State<EventDetailView> {
                           value: 'delete',
                           child: Row(
                             children: [
-                              Icon(Icons.delete_outline, color: Colors.red),
+                              const Icon(Icons.delete_outline, color: Colors.red),
                               AppSpacing.hGapMd,
                               Text(
                                 context.l10n.event_delete,
-                                style: TextStyle(color: Colors.red),
+                                style: const TextStyle(color: Colors.red),
                               ),
                             ],
                           ),
@@ -323,7 +323,7 @@ class EventDetailViewState extends State<EventDetailView> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               ListTile(
-                leading: Icon(Icons.info_outline_rounded),
+                leading: const Icon(Icons.info_outline_rounded),
                 title: Text(context.l10n.registration_viewDetail),
                 onTap: () {
                   Navigator.of(sheetContext).pop();
@@ -334,7 +334,7 @@ class EventDetailViewState extends State<EventDetailView> {
                 },
               ),
               ListTile(
-                leading: Icon(Icons.cancel_outlined),
+                leading: const Icon(Icons.cancel_outlined),
                 title: Text(context.l10n.event_cancelRegistration),
                 onTap: () {
                   Navigator.of(sheetContext).pop();

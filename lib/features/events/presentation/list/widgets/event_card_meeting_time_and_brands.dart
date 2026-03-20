@@ -38,7 +38,7 @@ class EventCardMeetingTimeAndBrands extends StatelessWidget {
           '${context.l10n.event_meetingTimePrefix}$formattedTime',
           style: theme.textTheme.bodySmall?.copyWith(color: textColor),
         ),
-        Spacer(),
+        const Spacer(),
         if (!isMultiBrand) ...[
           Icon(
             Icons.shield_outlined,

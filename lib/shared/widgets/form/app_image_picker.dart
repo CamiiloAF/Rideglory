@@ -2,14 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/shared/widgets/form/app_button.dart';
 import 'package:rideglory/design_system/design_system.dart';
-import 'package:rideglory/shared/widgets/modals/confirmation_dialog.dart';
-import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
-import 'package:rideglory/shared/widgets/modals/info_dialog.dart';
 
 /// Reusable image picker section for event cover, vehicle photo, etc.
 /// [title] and [hint] are shown in the empty state. [uploadButtonLabel] is the

@@ -29,7 +29,7 @@ class VehicleSpecRow extends StatelessWidget {
           Icon(icon, color: context.colorScheme.primary, size: 20),
           AppSpacing.hGapLg,
           Text(label, style: context.bodyMedium?.copyWith(color: Colors.white)),
-          Spacer(),
+          const Spacer(),
           Text(
             value,
             style: context.bodyMedium?.copyWith(

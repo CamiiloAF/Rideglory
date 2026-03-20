@@ -73,11 +73,11 @@ class MaintenanceCardContent extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.delete_outline, color: Colors.white, size: 32),
+            const Icon(Icons.delete_outline, color: Colors.white, size: 32),
             AppSpacing.gapXxs,
             Text(
               context.l10n.delete,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),

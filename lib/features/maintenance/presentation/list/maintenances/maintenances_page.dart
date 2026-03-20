@@ -141,7 +141,7 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
       appBar: AppAppBar(
         title: context.l10n.maintenance_maintenances,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             if (context.canPop()) {
               context.pop();

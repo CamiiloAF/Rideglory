@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:rideglory/core/config/app_env.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -15,6 +16,10 @@ import 'package:flutter/foundation.dart'
 /// );
 /// ```
 class DefaultFirebaseOptions {
+  static String _value(String? enviedValue, String dartDefineKey) {
+    return enviedValue ?? String.fromEnvironment(dartDefineKey);
+  }
+
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
       throw UnsupportedError(
@@ -49,24 +54,37 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyB1KXYl-tih16M96IchyhH4jkbmIwf1LKw',
-    appId: '1:1073521363686:android:d978a65130d04ab01c8927',
-    messagingSenderId: '1073521363686',
-    projectId: 'rideglory-f7383',
-    storageBucket: 'rideglory-f7383.firebasestorage.app',
+  static FirebaseOptions get android => FirebaseOptions(
+    apiKey: _value(AppEnv.firebaseAndroidApiKey, 'FIREBASE_ANDROID_API_KEY'),
+    appId: _value(AppEnv.firebaseAndroidAppId, 'FIREBASE_ANDROID_APP_ID'),
+    messagingSenderId: _value(
+      AppEnv.firebaseMessagingSenderId,
+      'FIREBASE_MESSAGING_SENDER_ID',
+    ),
+    projectId: _value(AppEnv.firebaseProjectId, 'FIREBASE_PROJECT_ID'),
+    storageBucket: _value(
+      AppEnv.firebaseStorageBucket,
+      'FIREBASE_STORAGE_BUCKET',
+    ),
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCqMVbNUYSmcsfox3mBzltio5dEHoxoD3U',
-    appId: '1:1073521363686:ios:53f771a533e578f31c8927',
-    messagingSenderId: '1073521363686',
-    projectId: 'rideglory-f7383',
-    storageBucket: 'rideglory-f7383.firebasestorage.app',
-    androidClientId:
-        '1073521363686-ialjtdhvridmkubkoh5klmalbjajll9l.apps.googleusercontent.com',
-    iosClientId:
-        '1073521363686-e59ppbu316185di37689f57ikelle2j7.apps.googleusercontent.com',
-    iosBundleId: 'com.camiloagudelo.rideglory',
+  static FirebaseOptions get ios => FirebaseOptions(
+    apiKey: _value(AppEnv.firebaseIosApiKey, 'FIREBASE_IOS_API_KEY'),
+    appId: _value(AppEnv.firebaseIosAppId, 'FIREBASE_IOS_APP_ID'),
+    messagingSenderId: _value(
+      AppEnv.firebaseMessagingSenderId,
+      'FIREBASE_MESSAGING_SENDER_ID',
+    ),
+    projectId: _value(AppEnv.firebaseProjectId, 'FIREBASE_PROJECT_ID'),
+    storageBucket: _value(
+      AppEnv.firebaseStorageBucket,
+      'FIREBASE_STORAGE_BUCKET',
+    ),
+    androidClientId: _value(
+      AppEnv.firebaseAndroidClientId,
+      'FIREBASE_ANDROID_CLIENT_ID',
+    ),
+    iosClientId: _value(AppEnv.firebaseIosClientId, 'FIREBASE_IOS_CLIENT_ID'),
+    iosBundleId: _value(AppEnv.firebaseIosBundleId, 'FIREBASE_IOS_BUNDLE_ID'),
   );
 }

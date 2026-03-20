@@ -18,7 +18,7 @@ class HomeEventsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.fromLTRB(20, 0, 20, 12),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
           child: Text(
             context.l10n.home_upcomingRides,
             style: TextStyle(
@@ -29,7 +29,7 @@ class HomeEventsSection extends StatelessWidget {
           ),
         ),
         events.isEmpty
-            ? Padding(
+            ? const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: HomeEmptyEventsCard(),
               )

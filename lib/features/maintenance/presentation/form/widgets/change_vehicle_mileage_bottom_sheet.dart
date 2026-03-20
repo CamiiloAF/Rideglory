@@ -36,7 +36,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Icon(Icons.speed, size: 28),
+                  const Icon(Icons.speed, size: 28),
                   AppSpacing.hGapSm,
                   Text(
                     context.l10n.maintenance_updateMileage,

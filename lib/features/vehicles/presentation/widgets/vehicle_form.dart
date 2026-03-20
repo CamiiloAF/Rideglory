@@ -158,7 +158,7 @@ class VehicleForm extends StatelessWidget {
                 labelText: context.l10n.vehicle_purchaseDate,
                 lastDate: DateTime.now(),
                 hintText: context.l10n.vehicle_purchaseDateHint,
-                prefixIcon: Icon(Icons.calendar_today),
+                prefixIcon: const Icon(Icons.calendar_today),
               ),
               AppSpacing.gapLg,
 

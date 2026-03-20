@@ -82,7 +82,7 @@ class _SocialLoginButtonState extends State<SocialLoginButton> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (widget.isLoading)
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                     height: 20,
                     child: AppLoadingIndicator(

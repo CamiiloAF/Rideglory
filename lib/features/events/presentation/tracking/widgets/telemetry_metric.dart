@@ -39,7 +39,7 @@ class TelemetryMetric extends StatelessWidget {
                 fontWeight: FontWeight.w900,
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Row(
               children: [
                 Icon(

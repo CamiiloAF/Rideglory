@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/di/injection.dart';
-import 'package:rideglory/core/extensions/theme_extensions.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_detail_bottom_bar.dart';
