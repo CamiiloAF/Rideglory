@@ -7,5 +7,7 @@ abstract class EventDetailState with _$EventDetailState {
   const factory EventDetailState({
     required ResultState<EventRegistrationModel?> registrationResult,
     required ResultState<EventModel> eventResult,
+    /// Set after a successful start/stop event mutation; cleared by the UI listener.
+    ResultState<EventModel>? lastUpdatedEventResult,
   }) = _EventDetailState;
 }

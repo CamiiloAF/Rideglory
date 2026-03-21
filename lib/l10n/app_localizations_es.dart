@@ -416,6 +416,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_delete => 'Eliminar';
 
   @override
+  String get event_startEvent => 'Iniciar evento';
+
+  @override
+  String get event_stopEvent => 'Detener evento';
+
+  @override
+  String get event_stopEventConfirmTitle => '¿Finalizar rodada?';
+
+  @override
+  String get event_stopEventConfirmMessage =>
+      'Se cerrará el seguimiento en vivo para todos los participantes.';
+
+  @override
   String get event_meetingTimePrefix => 'Encuentro: ';
 
   @override
@@ -983,6 +996,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get map_distance => 'Distancia';
+
+  @override
+  String get map_distanceFromYou => 'Desde ti';
 
   @override
   String get map_battery => 'Batería';

@@ -49,5 +49,11 @@
 	<string>Rideglory necesita acceso a tus fotos para elegir la portada del evento.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Rideglory usa tu ubicación para mostrar tu posición y seguir la rodada en vivo.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Rideglory necesita acceso a la ubicación en segundo plano para compartir tu posición durante la rodada aunque cambies de app o bloquees la pantalla.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+	</array>
 </dict>
 </plist>

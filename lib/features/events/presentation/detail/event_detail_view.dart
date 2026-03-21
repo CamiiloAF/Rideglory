@@ -7,7 +7,6 @@ import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/permissions/location_permission_handler.dart';
 import 'package:rideglory/core/services/auth_service.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/delete/cubit/event_delete_cubit.dart';
@@ -16,6 +15,7 @@ import 'package:rideglory/features/events/presentation/detail/params.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_body.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_cta_bar.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_header.dart';
+import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_owner_lifecycle_bar.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_started_banner.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
 import 'package:rideglory/features/events/presentation/shared/dialogs/cancel_registration_dialog.dart';
@@ -74,6 +74,26 @@ class EventDetailViewState extends State<EventDetailView> {
                     );
                     context.pop(true);
                   },
+                );
+              },
+            ),
+            BlocListener<EventDetailCubit, EventDetailState>(
+              listenWhen: (previous, current) =>
+                  previous.lastUpdatedEventResult !=
+                  current.lastUpdatedEventResult,
+              listener: (context, state) {
+                state.lastUpdatedEventResult?.maybeWhen(
+                  data: (updated) {
+                    setState(() => currentEvent = updated);
+                    context.read<EventDetailCubit>().clearLastUpdatedEvent();
+                  },
+                  error: (e) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(e.message)));
+                    context.read<EventDetailCubit>().clearLastUpdatedEvent();
+                  },
+                  orElse: () {},
                 );
               },
             ),
@@ -157,7 +177,10 @@ class EventDetailViewState extends State<EventDetailView> {
                           value: 'delete',
                           child: Row(
                             children: [
-                              const Icon(Icons.delete_outline, color: Colors.red),
+                              const Icon(
+                                Icons.delete_outline,
+                                color: Colors.red,
+                              ),
                               AppSpacing.hGapMd,
                               Text(
                                 context.l10n.event_delete,
@@ -192,28 +215,42 @@ class EventDetailViewState extends State<EventDetailView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     if (currentEvent.state == EventState.inProgress ||
-                        currentEvent.state == EventState.finished)
-                      BlocBuilder<EventDetailCubit, EventDetailState>(
-                        builder: (context, state) {
-                          return state.registrationResult.maybeWhen(
-                            data: (registration) {
-                              final isApproved = registration?.status ==
-                                  RegistrationStatus.approved;
-                              if (!isApproved) return const SizedBox.shrink();
+                        currentEvent.state == EventState.finished) ...[
+                      if (isOwner)
+                        EventDetailStartedBanner(
+                          onFollowLive:
+                              currentEvent.state == EventState.inProgress
+                                  ? () {
+                                      unawaited(_onFollowLivePressed());
+                                    }
+                                  : null,
+                        )
+                      else
+                        BlocBuilder<EventDetailCubit, EventDetailState>(
+                          builder: (context, state) {
+                            return state.registrationResult.maybeWhen(
+                              data: (registration) {
+                                final isApproved =
+                                    registration?.status ==
+                                    RegistrationStatus.approved;
+                                if (!isApproved) {
+                                  return const SizedBox.shrink();
+                                }
 
-                              return EventDetailStartedBanner(
-                                onFollowLive:
-                                    currentEvent.state == EventState.inProgress
-                                        ? () {
-                                            unawaited(_onFollowLivePressed());
-                                          }
-                                        : null,
-                              );
-                            },
-                            orElse: () => const SizedBox.shrink(),
-                          );
-                        },
-                      ),
+                                return EventDetailStartedBanner(
+                                  onFollowLive: currentEvent.state ==
+                                          EventState.inProgress
+                                      ? () {
+                                          unawaited(_onFollowLivePressed());
+                                        }
+                                      : null,
+                                );
+                              },
+                              orElse: () => const SizedBox.shrink(),
+                            );
+                          },
+                        ),
+                    ],
                     EventDetailBody(
                       event: currentEvent,
                       onViewMap: () {
@@ -227,8 +264,32 @@ class EventDetailViewState extends State<EventDetailView> {
             ],
           ),
         ),
-        bottomNavigationBar: !isOwner
-            ? BlocBuilder<EventDetailCubit, EventDetailState>(
+        bottomNavigationBar: isOwner
+            ? (currentEvent.state == EventState.scheduled ||
+                      currentEvent.state == EventState.inProgress
+                  ? BlocBuilder<EventDetailCubit, EventDetailState>(
+                      buildWhen: (previous, current) =>
+                          previous.lastUpdatedEventResult !=
+                          current.lastUpdatedEventResult,
+                      builder: (context, state) {
+                        final loading =
+                            state.lastUpdatedEventResult?.maybeWhen(
+                              loading: () => true,
+                              orElse: () => false,
+                            ) ??
+                            false;
+                        return EventDetailOwnerLifecycleBar(
+                          event: currentEvent,
+                          isLoading: loading,
+                          onStart: () => context
+                              .read<EventDetailCubit>()
+                              .startEvent(currentEvent),
+                          onStop: () => _confirmStopEvent(context),
+                        );
+                      },
+                    )
+                  : null)
+            : BlocBuilder<EventDetailCubit, EventDetailState>(
                 builder: (context, state) {
                   return state.registrationResult.maybeWhen(
                     data: (registration) => EventDetailCTABar(
@@ -248,8 +309,7 @@ class EventDetailViewState extends State<EventDetailView> {
                     orElse: () => const SizedBox.shrink(),
                   );
                 },
-              )
-            : null,
+              ),
       ),
     );
   }
@@ -275,10 +335,7 @@ class EventDetailViewState extends State<EventDetailView> {
 
     if (result == LocationPermissionResult.granted) {
       if (!mounted) return;
-      await context.pushNamed(
-        AppRoutes.liveMap,
-        extra: currentEvent,
-      );
+      await context.pushNamed(AppRoutes.liveMap, extra: currentEvent);
       return;
     }
 
@@ -356,6 +413,21 @@ class EventDetailViewState extends State<EventDetailView> {
       context: context,
       onCancel: () =>
           context.read<EventDetailCubit>().cancelRegistration(registration.id!),
+    );
+  }
+
+  Future<void> _confirmStopEvent(BuildContext context) async {
+    await ConfirmationDialog.show(
+      context: context,
+      title: context.l10n.event_stopEventConfirmTitle,
+      content: context.l10n.event_stopEventConfirmMessage,
+      dialogType: DialogType.warning,
+      confirmLabel: context.l10n.event_stopEvent,
+      confirmType: DialogActionType.danger,
+      isDismissible: true,
+      onConfirm: () {
+        context.read<EventDetailCubit>().stopEvent(currentEvent);
+      },
     );
   }
 
