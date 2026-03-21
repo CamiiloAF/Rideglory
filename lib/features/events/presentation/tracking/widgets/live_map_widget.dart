@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rideglory/features/events/domain/model/rider_tracking_model.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/initials_marker_icon.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
@@ -13,10 +14,12 @@ class LiveMapWidget extends StatefulWidget {
     super.key,
     required this.onMapReady,
     required this.initialCameraPosition,
+    required this.riders,
   });
 
   final LiveMapReadyCallback onMapReady;
   final CameraPosition initialCameraPosition;
+  final List<RiderTrackingModel> riders;
 
   @override
   State<LiveMapWidget> createState() => _LiveMapWidgetState();
@@ -30,23 +33,51 @@ class _LiveMapWidgetState extends State<LiveMapWidget> {
   @override
   void initState() {
     super.initState();
-    unawaited(_loadMarkerIcons());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      unawaited(_loadMarkerIcons());
+    });
+  }
+
+  @override
+  void didUpdateWidget(LiveMapWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_riderSignature(oldWidget.riders) != _riderSignature(widget.riders)) {
+      setState(() {
+        _iconsLoaded = false;
+        _iconsById.clear();
+      });
+      unawaited(_loadMarkerIcons());
+    }
+  }
+
+  String _riderSignature(List<RiderTrackingModel> riders) {
+    return riders
+        .map((r) => '${r.userId}:${r.firstName}:${r.lastName}:${r.role.name}')
+        .join('|');
   }
 
   Future<void> _loadMarkerIcons() async {
-    final futures = _mockRiders.map((riders) async {
+    if (widget.riders.isEmpty) {
+      if (!mounted) return;
+      setState(() {
+        _iconsLoaded = true;
+      });
+      return;
+    }
+
+    final futures = widget.riders.map((rider) async {
+      final isLead = rider.role == RiderTrackingRole.lead;
       final icon = await InitialsMarkerIcon.create(
-        firstName: riders.firstName,
-        lastName: riders.lastName,
+        firstName: rider.firstName,
+        lastName: rider.lastName,
         colorScheme: context.colorScheme,
-        size: riders.isLead ? 60 : 56,
-        backgroundColor: riders.isLead
-            ? context.colorScheme.primary
-            : context.colorScheme.primary,
+        size: isLead ? 60 : 56,
+        backgroundColor: context.colorScheme.primary,
         borderColor: context.colorScheme.primary,
-        highlight: riders.isLead,
+        highlight: isLead,
       );
-      return MapEntry(riders.id, icon);
+      return MapEntry(rider.userId, icon);
     });
 
     final entries = await Future.wait(futures);
@@ -61,10 +92,7 @@ class _LiveMapWidgetState extends State<LiveMapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final target = widget.initialCameraPosition.target;
-    final markers = _iconsLoaded
-        ? _buildRiderMarkers(target)
-        : const <Marker>{};
+    final markers = _iconsLoaded ? _buildRiderMarkers() : const <Marker>{};
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(0),
@@ -85,84 +113,20 @@ class _LiveMapWidgetState extends State<LiveMapWidget> {
     );
   }
 
-  Set<Marker> _buildRiderMarkers(LatLng target) {
-    return _mockRiders.map((r) {
-      final position = LatLng(
-        target.latitude + r.offsetLat,
-        target.longitude + r.offsetLng,
-      );
-      final icon = _iconsById[r.id];
+  Set<Marker> _buildRiderMarkers() {
+    return widget.riders.map((r) {
+      final position = LatLng(r.latitude, r.longitude);
+      final icon = _iconsById[r.userId];
 
       return Marker(
-        markerId: MarkerId(r.id),
+        markerId: MarkerId(r.userId),
         position: position,
-        infoWindow: InfoWindow(
-          title: '${r.firstName} ${r.lastName} (${r.role})',
-        ),
-        icon: icon!,
+        infoWindow: InfoWindow(title: '${r.firstName} ${r.lastName}'.trim()),
+        icon: icon ?? BitmapDescriptor.defaultMarker,
       );
     }).toSet();
   }
 }
-
-class RiderMarkerData {
-  const RiderMarkerData({
-    required this.id,
-    required this.firstName,
-    required this.lastName,
-    required this.role,
-    required this.isLead,
-    required this.offsetLat,
-    required this.offsetLng,
-  });
-
-  final String id;
-  final String firstName;
-  final String lastName;
-  final String role;
-  final bool isLead;
-  final double offsetLat;
-  final double offsetLng;
-}
-
-const List<RiderMarkerData> _mockRiders = [
-  RiderMarkerData(
-    id: 'lead',
-    firstName: 'Alex',
-    lastName: 'Rivera',
-    role: 'Lead',
-    isLead: true,
-    offsetLat: 0.00020,
-    offsetLng: 0.00025,
-  ),
-  RiderMarkerData(
-    id: 'rider-1',
-    firstName: 'Mark',
-    lastName: 'Thompson',
-    role: 'Rider',
-    isLead: false,
-    offsetLat: -0.00018,
-    offsetLng: 0.00032,
-  ),
-  RiderMarkerData(
-    id: 'rider-2',
-    firstName: 'Sarah',
-    lastName: 'Jenkins',
-    role: 'Rider',
-    isLead: false,
-    offsetLat: 0.00034,
-    offsetLng: -0.00014,
-  ),
-  RiderMarkerData(
-    id: 'rider-3',
-    firstName: 'Maria',
-    lastName: 'Garcia',
-    role: 'Rider',
-    isLead: false,
-    offsetLat: -0.00030,
-    offsetLng: -0.00022,
-  ),
-];
 
 class LiveMapController {
   LiveMapController(this._controller);

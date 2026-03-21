@@ -874,6 +874,30 @@ abstract class AppLocalizations {
   /// **'Eliminar'**
   String get event_delete;
 
+  /// No description provided for @event_startEvent.
+  ///
+  /// In es, this message translates to:
+  /// **'Iniciar evento'**
+  String get event_startEvent;
+
+  /// No description provided for @event_stopEvent.
+  ///
+  /// In es, this message translates to:
+  /// **'Detener evento'**
+  String get event_stopEvent;
+
+  /// No description provided for @event_stopEventConfirmTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Finalizar rodada?'**
+  String get event_stopEventConfirmTitle;
+
+  /// No description provided for @event_stopEventConfirmMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Se cerrará el seguimiento en vivo para todos los participantes.'**
+  String get event_stopEventConfirmMessage;
+
   /// No description provided for @event_meetingTimePrefix.
   ///
   /// In es, this message translates to:
@@ -1971,6 +1995,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Distancia'**
   String get map_distance;
+
+  /// No description provided for @map_distanceFromYou.
+  ///
+  /// In es, this message translates to:
+  /// **'Desde ti'**
+  String get map_distanceFromYou;
 
   /// No description provided for @map_battery.
   ///

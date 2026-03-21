@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/features/events/domain/model/event_model.dart';
-import 'package:rideglory/features/events/presentation/tracking/widgets/rider_telemetry_card.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/features/events/presentation/tracking/cubit/live_tracking_cubit.dart';
+import 'package:rideglory/features/events/presentation/tracking/widgets/rider_telemetry_riders_content.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
 class RiderTelemetryPanel extends StatefulWidget {
-  const RiderTelemetryPanel({
-    super.key,
-    required this.event,
-  });
-
-  final EventModel event;
+  const RiderTelemetryPanel({super.key});
 
   @override
   State<RiderTelemetryPanel> createState() => _RiderTelemetryPanelState();
@@ -23,36 +19,6 @@ class _RiderTelemetryPanelState extends State<RiderTelemetryPanel> {
   Widget build(BuildContext context) {
     final mqHeight = MediaQuery.of(context).size.height;
     final height = _isExpanded ? mqHeight * 0.27 : mqHeight * 0.1;
-
-    final mockRiders = <_MockRider>[
-      _MockRider(
-        name: context.l10n.map_mockRiderAlex,
-        roleLabel: context.l10n.map_riderLead,
-        deviceLabel: context.l10n.map_mockDeviceGarmin1040,
-        speedKmh: 45,
-        distanceMeters: 200,
-        batteryPercent: 85,
-        isActive: true,
-      ),
-      _MockRider(
-        name: context.l10n.map_mockRiderMarkThompson,
-        roleLabel: context.l10n.map_riderRole,
-        deviceLabel: context.l10n.map_mockDeviceGarmin530,
-        speedKmh: 42,
-        distanceMeters: 420,
-        batteryPercent: 62,
-        isActive: true,
-      ),
-      _MockRider(
-        name: context.l10n.map_mockRiderSarahJenkins,
-        roleLabel: context.l10n.map_riderRole,
-        deviceLabel: context.l10n.map_mockDeviceWahooElemnt,
-        speedKmh: 38,
-        distanceMeters: 510,
-        batteryPercent: 44,
-        isActive: true,
-      ),
-    ];
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 220),
@@ -99,20 +65,12 @@ class _RiderTelemetryPanelState extends State<RiderTelemetryPanel> {
               if (_isExpanded) ...[
                 AppSpacing.gapMd,
                 Expanded(
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: mockRiders.length,
-                    separatorBuilder: (_, _) => AppSpacing.hGapMd,
-                    itemBuilder: (context, index) {
-                      final rider = mockRiders[index];
-                      return RiderTelemetryCard(
-                        name: rider.name,
-                        roleLabel: rider.roleLabel,
-                        deviceLabel: rider.deviceLabel,
-                        speedKmh: rider.speedKmh,
-                        distanceMeters: rider.distanceMeters,
-                        batteryPercent: rider.batteryPercent,
-                        isActive: rider.isActive,
+                  child: BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
+                    builder: (context, state) {
+                      return RiderTelemetryRidersContent(
+                        ridersResult: state.ridersResult,
+                        currentUserLatitude: state.currentUserLatitude,
+                        currentUserLongitude: state.currentUserLongitude,
                       );
                     },
                   ),
@@ -124,24 +82,4 @@ class _RiderTelemetryPanelState extends State<RiderTelemetryPanel> {
       ),
     );
   }
-}
-
-class _MockRider {
-  const _MockRider({
-    required this.name,
-    required this.roleLabel,
-    required this.deviceLabel,
-    required this.speedKmh,
-    required this.distanceMeters,
-    required this.batteryPercent,
-    required this.isActive,
-  });
-
-  final String name;
-  final String roleLabel;
-  final String deviceLabel;
-  final int speedKmh;
-  final int distanceMeters;
-  final int batteryPercent;
-  final bool isActive;
 }

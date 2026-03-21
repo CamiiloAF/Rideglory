@@ -5,6 +5,7 @@ import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/cancel_event_registration_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/get_my_registration_for_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_event_by_id_use_case.dart';
+import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
 import 'package:rideglory/features/events/presentation/delete/cubit/event_delete_cubit.dart';
 import 'package:rideglory/features/events/presentation/detail/cubit/event_detail_cubit.dart';
 import 'package:rideglory/features/events/presentation/detail/event_detail_view.dart';
@@ -25,6 +26,7 @@ class EventDetailPage extends StatelessWidget {
               getIt<GetMyRegistrationForEventUseCase>(),
               getIt<CancelEventRegistrationUseCase>(),
               getIt<GetEventByIdUseCase>(),
+              getIt<UpdateEventUseCase>(),
             )..loadMyRegistration(params.event.id!),
           ),
         BlocProvider(create: (_) => getIt<EventDeleteCubit>()),
