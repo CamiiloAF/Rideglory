@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/exceptions/auth_exception.dart';
 import 'package:rideglory/core/services/auth_service.dart';
+import 'package:rideglory/features/users/domain/model/user_model.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/initialize_authenticated_user_vehicles_usecase.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/core/l10n/rideglory_l10n.dart';
@@ -36,22 +39,25 @@ class AuthCubit extends Cubit<AuthState> {
 
   /// Sign up with email and password
   Future<void> signUpWithEmail({
+    required String fullName,
     required String email,
     required String password,
   }) async {
     emit(const AuthState.loading());
 
     final result = await _authService.signUpWithEmail(
+      fullName: fullName,
       email: email,
       password: password,
     );
 
     await result.fold(
       (failure) async => emit(AuthState.error(failure.message)),
-      (user) async {
-        if (user != null) {
+      (authUser) async {
+        if (authUser.firebaseUser.uid.isNotEmpty) {
+          await _printFirebaseToken(authUser.firebaseUser);
           // Wait for vehicles to sync before emitting auth state
-          await _syncAuthenticatedUserVehicles();
+          await _syncAuthenticatedUserVehicles(appUser: authUser.apiUser);
         } else {
           emit(
             const AuthState.error(
@@ -79,6 +85,7 @@ class AuthCubit extends Cubit<AuthState> {
       (failure) async => emit(AuthState.error(failure.message)),
       (user) async {
         if (user != null) {
+          await _printFirebaseToken(user);
           // Wait for vehicles to sync before emitting auth state
           await _syncAuthenticatedUserVehicles();
         } else {
@@ -99,10 +106,11 @@ class AuthCubit extends Cubit<AuthState> {
     final result = await _authService.signInWithGoogle();
     await result.fold(
       (failure) async => emit(AuthState.error(failure.message)),
-      (user) async {
-        if (user != null) {
+      (authUser) async {
+        if (authUser.firebaseUser.uid.isNotEmpty) {
+          await _printFirebaseToken(authUser.firebaseUser);
           // Wait for vehicles to sync before emitting auth state
-          await _syncAuthenticatedUserVehicles();
+          await _syncAuthenticatedUserVehicles(appUser: authUser.apiUser);
         } else {
           emit(const AuthState.error('Google sign-in failed'));
         }
@@ -128,7 +136,7 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
-  Future<void> _syncAuthenticatedUserVehicles() async {
+  Future<void> _syncAuthenticatedUserVehicles({UserModel? appUser}) async {
     final vehicleResult = await _initializeAuthenticatedUserVehiclesUseCase();
 
     vehicleResult.fold(
@@ -139,7 +147,12 @@ class AuthCubit extends Cubit<AuthState> {
         // If vehicles couldn't be loaded, treat as empty (redirect to home anyway)
         final currentUser = _authService.currentUser;
         if (currentUser != null) {
-          emit(AuthState.authenticated(currentUser));
+          emit(
+            AuthState.authenticated(
+              currentUser,
+              appUser: appUser ?? _authService.currentApiUser,
+            ),
+          );
         }
       },
       (vehicles) {
@@ -147,9 +160,29 @@ class AuthCubit extends Cubit<AuthState> {
         if (currentUser == null) return;
 
         _vehicleCubit.loadSavedVehicle(vehicles);
-        emit(AuthState.authenticated(currentUser));
+        emit(
+          AuthState.authenticated(
+            currentUser,
+            appUser: appUser ?? _authService.currentApiUser,
+          ),
+        );
       },
     );
+  }
+
+  Future<void> _printFirebaseToken(User user) async {
+    if (!kDebugMode) return;
+
+    try {
+      final token = await user.getIdToken();
+      if (token == null || token.isEmpty) {
+        log('Firebase token is empty for user: ${user.uid}');
+        return;
+      }
+      log('Firebase token: $token');
+    } catch (error) {
+      log('Failed to get Firebase token: $error');
+    }
   }
 
   /// Sign out

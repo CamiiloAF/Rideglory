@@ -24,12 +24,14 @@ class SignupEmailForm extends StatefulWidget {
 }
 
 class _SignupEmailFormState extends State<SignupEmailForm> {
+  final _fullNameFocusNode = FocusNode();
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
 
   @override
   void dispose() {
+    _fullNameFocusNode.dispose();
     _emailFocusNode.dispose();
     _passwordFocusNode.dispose();
     _confirmPasswordFocusNode.dispose();
@@ -52,6 +54,7 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
       }
 
       context.read<AuthCubit>().signUpWithEmail(
+        fullName: (formData[AuthFormFields.fullName] as String).trim(),
         email: (formData[AuthFormFields.email] as String).trim(),
         password: formData[AuthFormFields.password] as String,
       );
@@ -65,6 +68,23 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
       child: Column(
         children: [
           AppTextField(
+            name: AuthFormFields.fullName,
+            hintText: context.l10n.auth_nameHint,
+            textInputAction: TextInputAction.next,
+            focusNode: _fullNameFocusNode,
+            onFieldSubmitted: (_) => _emailFocusNode.requestFocus(),
+            validator: FormBuilderValidators.compose([
+              FormBuilderValidators.required(
+                errorText: context.l10n.auth_nameRequired,
+              ),
+              FormBuilderValidators.minLength(
+                3,
+                errorText: context.l10n.event_minCharacters,
+              ),
+            ]),
+          ),
+          AppSpacing.gapLg,
+          AppTextField(
             name: AuthFormFields.email,
             hintText: context.l10n.auth_emailHint,
             keyboardType: TextInputType.emailAddress,
@@ -75,7 +95,9 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
               FormBuilderValidators.required(
                 errorText: context.l10n.auth_emailRequired,
               ),
-              FormBuilderValidators.email(errorText: context.l10n.auth_invalidEmail),
+              FormBuilderValidators.email(
+                errorText: context.l10n.auth_invalidEmail,
+              ),
             ]),
           ),
           AppSpacing.gapLg,
@@ -120,7 +142,9 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
                     .currentState
                     ?.fields[AuthFormFields.password]
                     ?.value;
-                if (value != password) return context.l10n.auth_passwordsDoNotMatch;
+                if (value != password) {
+                  return context.l10n.auth_passwordsDoNotMatch;
+                }
                 return null;
               },
             ]),

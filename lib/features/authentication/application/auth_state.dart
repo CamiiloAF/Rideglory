@@ -11,11 +11,14 @@ sealed class AuthState {
   const factory AuthState.loading() = _Loading;
 
   /// Authenticated state with user
-  const factory AuthState.authenticated(User user) = _Authenticated;
+  const factory AuthState.authenticated(User user, {UserModel? appUser}) =
+      _Authenticated;
 
   /// Authenticated state but without vehicles (needs onboarding)
-  const factory AuthState.authenticatedWithoutVehicles(User user) =
-      _AuthenticatedWithoutVehicles;
+  const factory AuthState.authenticatedWithoutVehicles(
+    User user, {
+    UserModel? appUser,
+  }) = _AuthenticatedWithoutVehicles;
 
   /// Unauthenticated state
   const factory AuthState.unauthenticated() = _Unauthenticated;
@@ -52,6 +55,12 @@ sealed class AuthState {
       : this is _AuthenticatedWithoutVehicles
       ? (this as _AuthenticatedWithoutVehicles).user
       : null;
+
+  UserModel? get currentApiUser => this is _Authenticated
+      ? (this as _Authenticated).appUser
+      : this is _AuthenticatedWithoutVehicles
+      ? (this as _AuthenticatedWithoutVehicles).appUser
+      : null;
 }
 
 /// Initial state
@@ -67,15 +76,17 @@ class _Loading extends AuthState {
 /// Authenticated state
 class _Authenticated extends AuthState {
   final User user;
+  final UserModel? appUser;
 
-  const _Authenticated(this.user);
+  const _Authenticated(this.user, {this.appUser});
 }
 
 /// Authenticated state but without vehicles (needs onboarding)
 class _AuthenticatedWithoutVehicles extends AuthState {
   final User user;
+  final UserModel? appUser;
 
-  const _AuthenticatedWithoutVehicles(this.user);
+  const _AuthenticatedWithoutVehicles(this.user, {this.appUser});
 }
 
 /// Unauthenticated state
