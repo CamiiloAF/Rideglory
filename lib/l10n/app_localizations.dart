@@ -403,7 +403,7 @@ abstract class AppLocalizations {
   /// No description provided for @auth_emailHint.
   ///
   /// In es, this message translates to:
-  /// **'nombre@ejemplo.com'**
+  /// **'correo@ejemplo.com'**
   String get auth_emailHint;
 
   /// No description provided for @auth_passwordLabel.
@@ -501,6 +501,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Ej. Juan Pérez'**
   String get auth_nameHint;
+
+  /// No description provided for @auth_nameRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'El nombre completo es requerido'**
+  String get auth_nameRequired;
 
   /// No description provided for @auth_passwordMinStitch.
   ///

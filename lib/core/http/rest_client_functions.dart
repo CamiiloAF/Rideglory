@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -15,13 +18,23 @@ Future<ApiResult<T>> handlerExceptionHttp<T>({
   try {
     final apiResult = await function();
     return ApiResult.success(data: apiResult);
+  } on DioException catch (dioException) {
+    if (kDebugMode) {
+      log('Error in DioException type: ${dioException.type}');
+      log('Error in DioException message: ${dioException.message}');
+      log('Error in DioException response: ${dioException.response?.data}');
+    }
+
+    return ApiResult.failure(
+      dataException: DomainException(
+        message: _getDioErrorMessage(dioException),
+      ),
+    );
   } on FirebaseAuthException catch (firebaseException) {
     if (kDebugMode) {
-      print('Error in FirebaseAuth code: ${firebaseException.code}');
-      print('Error in FirebaseAuth message: ${firebaseException.message}');
-      print(
-        'Error in FirebaseAuth stackTrace: ${firebaseException.stackTrace}',
-      );
+      log('Error in FirebaseAuth code: ${firebaseException.code}');
+      log('Error in FirebaseAuth message: ${firebaseException.message}');
+      log('Error in FirebaseAuth stackTrace: ${firebaseException.stackTrace}');
     }
 
     return ApiResult.failure(
@@ -31,9 +44,9 @@ Future<ApiResult<T>> handlerExceptionHttp<T>({
     );
   } on PlatformException catch (platformException) {
     if (kDebugMode) {
-      print('Error in PlatformException code: ${platformException.code}');
-      print('Error in PlatformException message: ${platformException.message}');
-      print('Error in PlatformException details: ${platformException.details}');
+      log('Error in PlatformException code: ${platformException.code}');
+      log('Error in PlatformException message: ${platformException.message}');
+      log('Error in PlatformException details: ${platformException.details}');
     }
 
     return ApiResult.failure(
@@ -41,16 +54,85 @@ Future<ApiResult<T>> handlerExceptionHttp<T>({
         message: _getPlatformExceptionErrorMessage(platformException.code),
       ),
     );
+  } on DomainException catch (domainException) {
+    return ApiResult.failure(dataException: domainException);
   } catch (error) {
     if (kDebugMode) {
       if (error is Error) {
         print(error.stackTrace);
       }
-      print('Error in Service Exception: $error}');
+      log('Error in Service Exception: $error}');
     }
     return ApiResult.failure(
       dataException: const DomainException(message: _genericErrorMessage),
     );
+  }
+}
+
+String _getDioErrorMessage(DioException exception) {
+  final responseMessage = _extractResponseMessage(exception.response?.data);
+  if (responseMessage != null && responseMessage.isNotEmpty) {
+    return responseMessage;
+  }
+
+  switch (exception.type) {
+    case DioExceptionType.connectionTimeout:
+    case DioExceptionType.sendTimeout:
+    case DioExceptionType.receiveTimeout:
+      return 'La solicitud tardó demasiado. Revisa tu conexión e intenta de nuevo.';
+    case DioExceptionType.connectionError:
+      return 'No pudimos conectarnos al servidor. Revisa tu conexión a internet.';
+    case DioExceptionType.badCertificate:
+      return 'No pudimos validar la conexión segura con el servidor.';
+    case DioExceptionType.cancel:
+      return 'La solicitud fue cancelada.';
+    case DioExceptionType.badResponse:
+      return _getHttpStatusErrorMessage(exception.response?.statusCode);
+    case DioExceptionType.unknown:
+      return _genericErrorMessage;
+  }
+}
+
+String? _extractResponseMessage(Object? responseData) {
+  if (responseData is String) {
+    return responseData;
+  }
+
+  if (responseData is Map<String, dynamic>) {
+    final message = responseData['message'];
+    if (message is String) {
+      return message;
+    }
+    if (message is List) {
+      return message.whereType<String>().join('\n');
+    }
+
+    final error = responseData['error'];
+    if (error is String) {
+      return error;
+    }
+  }
+
+  return null;
+}
+
+String _getHttpStatusErrorMessage(int? statusCode) {
+  switch (statusCode) {
+    case 400:
+      return 'La información enviada no es válida.';
+    case 401:
+      return 'Tu sesión expiró. Inicia sesión nuevamente.';
+    case 403:
+      return 'No tienes permisos para realizar esta acción.';
+    case 404:
+      return 'No encontramos la información solicitada.';
+    case 409:
+      return 'Ya existe un registro con esta información.';
+    default:
+      if (statusCode != null && statusCode >= 500 && statusCode < 600) {
+        return _genericErrorMessage;
+      }
+      return _genericErrorMessage;
   }
 }
 

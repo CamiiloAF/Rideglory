@@ -170,7 +170,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get auth_emailLabel => 'Correo electrónico';
 
   @override
-  String get auth_emailHint => 'nombre@ejemplo.com';
+  String get auth_emailHint => 'correo@ejemplo.com';
 
   @override
   String get auth_passwordLabel => 'Contraseña';
@@ -220,6 +220,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get auth_nameHint => 'Ej. Juan Pérez';
+
+  @override
+  String get auth_nameRequired => 'El nombre completo es requerido';
 
   @override
   String get auth_passwordMinStitch => 'Mínimo 8 caracteres';

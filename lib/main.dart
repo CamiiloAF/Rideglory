@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/core/config/api_remote_config.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
@@ -28,6 +30,7 @@ Future<void> main() async {
   }
 
   await Firebase.initializeApp(options: firebaseOptions);
+  await ApiRemoteConfig.initialize(FirebaseRemoteConfig.instance);
   await initializeDateFormatting();
 
   configureDependencies();
