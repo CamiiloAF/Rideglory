@@ -6,8 +6,6 @@ import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
-import 'package:rideglory/features/events/presentation/form/cubit/event_form_image_cubit.dart';
-import 'package:rideglory/features/events/presentation/form/widgets/event_form_cover_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/form_section_title.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_basic_info_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_date_time_section.dart';
@@ -17,6 +15,8 @@ import 'package:rideglory/features/events/presentation/form/widgets/sections/eve
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_multi_brand_section.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/shared/cubits/form_image_cubit.dart';
+import 'package:rideglory/shared/widgets/form/form_image_section.dart';
 
 class EventFormContent extends StatelessWidget {
   const EventFormContent({super.key});
@@ -76,22 +76,26 @@ class EventFormContent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BlocBuilder<EventFormImageCubit, ResultState<EventFormImageData>>(
+            BlocBuilder<FormImageCubit, ResultState<FormImageData>>(
               builder: (context, state) {
                 final imageData = state.whenOrNull(data: (data) => data);
-                return EventFormCoverSection(
+                return FormImageSection(
                   imageUrl: imageData?.hasLocalImage == true
                       ? null
                       : imageData?.displayImageUrl,
                   localImagePath: imageData?.hasLocalImage == true
                       ? imageData?.displayImageUrl
                       : null,
-                  onUploadTap: () => context
-                      .read<EventFormImageCubit>()
-                      .pickCoverImageFromGallery(),
+                  onPickImage: () =>
+                      context.read<FormImageCubit>().pickImageFromGallery(),
                   onClearTap: imageData?.hasLocalImage == true
-                      ? context.read<EventFormImageCubit>().clearLocalCoverImage
+                      ? context.read<FormImageCubit>().clearLocalImage
                       : null,
+                  title: context.l10n.event_addEventCover,
+                  hint: context.l10n.event_addEventCoverHint,
+                  uploadButtonLabel: context.l10n.event_uploadImage,
+                  showGenerateWithAI: true,
+                  generateWithAILabel: context.l10n.event_generateWithAI,
                 );
               },
             ),

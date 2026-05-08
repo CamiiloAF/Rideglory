@@ -1,17 +1,18 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/services/vehicle_preferences_service.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/get_main_vehicle_id_usecase.dart';
+import 'package:rideglory/features/vehicles/domain/usecases/get_vehicles_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/set_main_vehicle_usecase.dart';
 
-part 'vehicle_state.dart';
-
 @singleton
-class VehicleCubit extends Cubit<VehicleState> {
+class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
   final VehiclePreferencesService _preferencesService;
   final GetMainVehicleIdUseCase _getMainVehicleIdUseCase;
+  final GetMyVehiclesUseCase _getMyVehiclesUseCase;
   final SetMainVehicleUseCase _setMainVehicleUseCase;
 
   /// List of all available vehicles for the current user
@@ -20,13 +21,14 @@ class VehicleCubit extends Cubit<VehicleState> {
   VehicleCubit(
     this._preferencesService,
     this._getMainVehicleIdUseCase,
+    this._getMyVehiclesUseCase,
     this._setMainVehicleUseCase,
-  ) : super(const VehicleInitial());
+  ) : super(const ResultState.initial());
 
   VehicleModel? get currentVehicle {
     final currentState = state;
-    if (currentState is VehicleLoaded) {
-      return currentState.vehicle;
+    if (currentState is Data<List<VehicleModel>>) {
+      return currentState.data.first;
     }
     return null;
   }
@@ -34,8 +36,17 @@ class VehicleCubit extends Cubit<VehicleState> {
   int? get currentMileage => currentVehicle?.currentMileage;
   List<VehicleModel> get availableVehicles => _availableVehicles;
 
+  Future<void> fetchMyVehicles() async {
+    emit(const ResultState.loading());
+    final result = await _getMyVehiclesUseCase();
+    await result.fold(
+      (error) async => emit(ResultState.error(error: error)),
+      (vehicles) async => loadSavedVehicle(vehicles),
+    );
+  }
+
   Future<void> setCurrentVehicle(VehicleModel vehicle) async {
-    emit(VehicleLoaded(vehicle));
+    emit(ResultState.data(data: [vehicle]));
     if (vehicle.id != null) {
       await _preferencesService.saveSelectedVehicleId(vehicle.id!);
     }
@@ -46,7 +57,7 @@ class VehicleCubit extends Cubit<VehicleState> {
     _availableVehicles = vehicles;
 
     if (vehicles.isEmpty) {
-      emit(const VehicleEmpty());
+      emit(const ResultState.empty());
       return;
     }
 
@@ -81,7 +92,9 @@ class VehicleCubit extends Cubit<VehicleState> {
   void updateMileage(int newMileage) {
     final vehicle = currentVehicle;
     if (vehicle != null) {
-      emit(VehicleLoaded(vehicle.copyWith(currentMileage: newMileage)));
+      emit(
+        ResultState.data(data: [vehicle.copyWith(currentMileage: newMileage)]),
+      );
     }
   }
 
@@ -108,11 +121,11 @@ class VehicleCubit extends Cubit<VehicleState> {
     // Always emit to refresh listeners (garage & home),
     // keeping the current selected vehicle if any.
     if (isEditingCurrent) {
-      emit(VehicleLoaded(updatedVehicle));
+      emit(ResultState.data(data: [updatedVehicle]));
     } else if (current != null) {
-      emit(VehicleLoaded(current));
+      emit(ResultState.data(data: [current]));
     } else if (_availableVehicles.isNotEmpty) {
-      emit(VehicleLoaded(_availableVehicles.first));
+      emit(ResultState.data(data: [_availableVehicles.first]));
     }
   }
 
@@ -149,7 +162,7 @@ class VehicleCubit extends Cubit<VehicleState> {
       setCurrentVehicle(vehicle);
     } else {
       final current = currentVehicle ?? vehicle;
-      emit(VehicleLoaded(current));
+      emit(ResultState.data(data: [current]));
     }
   }
 
@@ -173,7 +186,7 @@ class VehicleCubit extends Cubit<VehicleState> {
 
   /// Clear the current vehicle and remove from preferences
   Future<void> clearCurrentVehicle() async {
-    emit(const VehicleEmpty());
+    emit(const ResultState.empty());
     await _preferencesService.clearSelectedVehicleId();
     _availableVehicles = [];
   }

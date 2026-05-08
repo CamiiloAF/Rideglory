@@ -1422,6 +1422,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_noVehicles => 'No tienes vehículos registrados';
 
   @override
+  String get vehicle_noVehiclesDescription =>
+      'Crea tu primer vehículo y empieza a registrar sus mantenimientos';
+
+  @override
   String get vehicle_noVehiclesAvailable => 'No hay vehículos disponibles';
 
   @override
@@ -1552,6 +1556,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get vehicle_brandRequired => 'La marca es requerida';
+
+  @override
+  String get vehicle_modelRequired => 'El modelo es requerido';
 
   @override
   String get vehicle_brandMustBeFromList =>
@@ -2017,6 +2024,9 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get home_emptyEventsDescription =>
       'Explora el catálogo de eventos disponibles';
+
+  @override
+  String get appfields_mileageRequired => 'El kilometraje es requerido';
 
   @override
   String event_pendingCountBadge(Object count) {

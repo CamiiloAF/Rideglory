@@ -5,12 +5,14 @@ class LoginSocialButton extends StatelessWidget {
   final String label;
   final IconData icon;
   final VoidCallback? onPressed;
+  final bool isLoading;
 
   const LoginSocialButton({
     super.key,
     required this.label,
     required this.icon,
     required this.onPressed,
+    this.isLoading = false,
   });
 
   @override
@@ -21,6 +23,7 @@ class LoginSocialButton extends StatelessWidget {
       icon: icon,
       variant: AppButtonVariant.primary,
       style: AppButtonStyle.outlined,
+      isLoading: isLoading,
       isFullWidth: true,
       padding: const EdgeInsets.symmetric(
         horizontal: 24,

@@ -21,7 +21,7 @@ class SaveMaintenanceButton extends StatelessWidget {
           icon: Icons.save,
           variant: AppButtonVariant.primary,
           isLoading: isLoading,
-          onPressed: isLoading ? null : onSave,
+          onPressed: onSave,
         );
       },
     );

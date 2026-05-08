@@ -5,12 +5,12 @@ import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/domain/repository/vehicle_repository.dart';
 
 @injectable
-class GetVehiclesUseCase {
+class GetMyVehiclesUseCase {
   final VehicleRepository _repository;
 
-  GetVehiclesUseCase(this._repository);
+  GetMyVehiclesUseCase(this._repository);
 
   Future<Either<DomainException, List<VehicleModel>>> call() {
-    return _repository.getVehiclesByUserId();
+    return _repository.getMyVehicles();
   }
 }

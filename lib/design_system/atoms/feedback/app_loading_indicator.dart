@@ -14,6 +14,7 @@ class AppLoadingIndicator extends StatelessWidget {
     this.variant = AppLoadingIndicatorVariant.page,
     this.size = 24,
     this.strokeWidth = 2.5,
+    this.color,
   });
 
   /// Inline variant size in logical pixels.
@@ -24,15 +25,21 @@ class AppLoadingIndicator extends StatelessWidget {
 
   final AppLoadingIndicatorVariant variant;
 
+  /// Spinner stroke color. Defaults to [ColorScheme.onSurface] when null so the
+  /// ring stays readable on surfaces; pass an explicit [color] when shown on
+  /// a saturated fill (e.g. primary buttons pass [ColorScheme.onPrimary]).
+  final Color? color;
+
   Widget _buildIndicator(BuildContext context, {required bool centered}) {
     final cs = context.colorScheme;
+    final strokeColor = color ?? cs.onSurface;
 
     final indicator = SizedBox(
       width: size,
       height: size,
       child: CircularProgressIndicator(
         strokeWidth: strokeWidth,
-        valueColor: AlwaysStoppedAnimation<Color>(cs.primary),
+        valueColor: AlwaysStoppedAnimation<Color>(strokeColor),
       ),
     );
 

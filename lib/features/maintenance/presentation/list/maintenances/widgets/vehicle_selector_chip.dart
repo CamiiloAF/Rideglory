@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
@@ -16,7 +18,7 @@ class VehicleSelectorChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<VehicleCubit, VehicleState>(
+    return BlocBuilder<VehicleCubit, ResultState<List<VehicleModel>>>(
       builder: (context, state) {
         final availableVehicles = context
             .read<VehicleCubit>()

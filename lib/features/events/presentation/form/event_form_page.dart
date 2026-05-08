@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/services/image_storage_service.dart';
+import 'package:rideglory/shared/cubits/form_image_cubit.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
-import 'package:rideglory/features/events/presentation/form/cubit/event_form_image_cubit.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/event_form_view.dart';
 
 class EventFormPage extends StatelessWidget {
@@ -17,7 +18,7 @@ class EventFormPage extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) =>
-              getIt<EventFormImageCubit>()
+              FormImageCubit(getIt<ImageStorageService>())
                 ..initialize(remoteImageUrl: event?.imageUrl),
         ),
         BlocProvider(

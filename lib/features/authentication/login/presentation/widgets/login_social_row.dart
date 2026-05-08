@@ -19,9 +19,9 @@ class LoginSocialRow extends StatelessWidget {
               child: LoginSocialButton(
                 label: context.l10n.auth_googleLabel,
                 icon: Icons.g_mobiledata_rounded,
-                onPressed: isLoading
-                    ? null
-                    : () => context.read<AuthCubit>().signInWithGoogle(),
+                isLoading: isLoading,
+                onPressed: () =>
+                    context.read<AuthCubit>().signInWithGoogle(),
               ),
             ),
             AppSpacing.hGapMd,

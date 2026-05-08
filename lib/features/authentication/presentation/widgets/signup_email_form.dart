@@ -160,10 +160,9 @@ class _SignupEmailFormState extends State<SignupEmailForm> {
           BlocBuilder<AuthCubit, AuthState>(
             builder: (context, state) {
               return AppButton(
-                onPressed: state.isLoading
-                    ? null
-                    : () => _handleEmailSignup(context),
+                onPressed: () => _handleEmailSignup(context),
                 label: context.l10n.auth_createAccountButton,
+                isLoading: state.isLoading,
               );
             },
           ),

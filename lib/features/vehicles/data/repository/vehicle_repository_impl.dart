@@ -17,8 +17,7 @@ class VehicleRepositoryImpl implements VehicleRepository {
   final FirebaseStorage _storage;
 
   @override
-  Future<Either<DomainException, List<VehicleModel>>>
-  getVehiclesByUserId() async {
+  Future<Either<DomainException, List<VehicleModel>>> getMyVehicles() async {
     return executeService(
       function: () async {
         final vehicles = await _vehicleService.getMyVehicles();

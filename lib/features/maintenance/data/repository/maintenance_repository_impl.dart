@@ -51,6 +51,8 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
   @override
   Future<Either<DomainException, List<MaintenanceModel>>>
   getMaintenancesByVehicleId(String vehicleId) async {
+    // TODO: Implement this method
+    return Right([]);
     final userId = _authService.currentUser?.id;
     if (userId == null) {
       throw const DomainException(

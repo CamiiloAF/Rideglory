@@ -37,9 +37,7 @@ class _SignupViewState extends State<SignupView> {
       ),
       body: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
-          if (state.isAuthenticatedWithVehicles) {
-            context.pushReplacementNamed(AppRoutes.maintenances);
-          } else if (state.isAuthenticatedWithoutVehicles) {
+          if (state.isAuthenticated) {
             context.pushReplacementNamed(AppRoutes.home);
           } else if (state.hasError) {
             ScaffoldMessenger.of(context).showSnackBar(

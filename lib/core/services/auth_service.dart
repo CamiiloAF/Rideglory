@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rideglory/core/services/models/authenticated_user.dart';
 import 'package:rideglory/core/services/user_storage_service.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
 import 'package:rideglory/features/users/domain/repository/user_repository.dart';
@@ -173,6 +174,20 @@ class AuthService {
     return Right(storedUser.id);
   }
 
+  Future<Either<DomainException, UserModel?>> loadCurrentUser() {
+    return executeService<UserModel?>(
+      function: () async {
+        final firebaseUser = _firebaseAuth.currentUser;
+        if (firebaseUser == null) {
+          _currentUser = null;
+          return null;
+        }
+
+        return _loadStoredUser(firebaseUser.uid);
+      },
+    );
+  }
+
   Future<Either<DomainException, Unit>> sendPasswordResetEmail(
     String email,
   ) async {
@@ -249,16 +264,4 @@ class AuthService {
 
     return 'Rider';
   }
-}
-
-class AuthenticatedUser {
-  const AuthenticatedUser({
-    required this.firebaseUser,
-    required this.isNewUser,
-    this.user,
-  });
-
-  final User firebaseUser;
-  final UserModel? user;
-  final bool isNewUser;
 }
