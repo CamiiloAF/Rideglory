@@ -7,4 +7,6 @@ abstract class UserRepository {
     required String fullName,
     required String email,
   });
+
+  Future<Either<DomainException, UserModel>> getCurrentUser();
 }

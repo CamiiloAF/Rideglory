@@ -23,7 +23,7 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
     EventRegistrationModel registration,
   ) {
     final now = DateTime.now();
-    final userId = _authService.currentUser?.uid ?? registration.userId;
+    final userId = _authService.currentUser?.id ?? registration.userId;
     final regWithMeta = registration.copyWith(
       userId: userId,
       status: RegistrationStatus.pending,
@@ -93,10 +93,12 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
   @override
   Future<Either<DomainException, List<EventRegistrationModel>>>
   getMyRegistrations() {
-    final userId = _authService.currentUser?.uid;
+    final userId = _authService.currentUser?.id;
     if (userId == null) {
       return Future.value(
-        const Left(DomainException(message: 'No user is currently authenticated.')),
+        const Left(
+          DomainException(message: 'No user is currently authenticated.'),
+        ),
       );
     }
 
@@ -120,10 +122,12 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
   @override
   Future<Either<DomainException, EventRegistrationModel?>>
   getMyRegistrationForEvent(String eventId) {
-    final userId = _authService.currentUser?.uid;
+    final userId = _authService.currentUser?.id;
     if (userId == null) {
       return Future.value(
-        const Left(DomainException(message: 'No user is currently authenticated.')),
+        const Left(
+          DomainException(message: 'No user is currently authenticated.'),
+        ),
       );
     }
 

@@ -11,14 +11,11 @@ sealed class AuthState {
   const factory AuthState.loading() = _Loading;
 
   /// Authenticated state with user
-  const factory AuthState.authenticated(User user, {UserModel? appUser}) =
-      _Authenticated;
+  const factory AuthState.authenticated(UserModel? user) = _Authenticated;
 
   /// Authenticated state but without vehicles (needs onboarding)
-  const factory AuthState.authenticatedWithoutVehicles(
-    User user, {
-    UserModel? appUser,
-  }) = _AuthenticatedWithoutVehicles;
+  const factory AuthState.authenticatedWithoutVehicles(UserModel? user) =
+      _AuthenticatedWithoutVehicles;
 
   /// Unauthenticated state
   const factory AuthState.unauthenticated() = _Unauthenticated;
@@ -49,17 +46,18 @@ sealed class AuthState {
   /// Get error message if any
   String? get errorMessage => this is _Error ? (this as _Error).message : null;
 
-  /// Get current user if authenticated (with or without vehicles)
-  User? get currentUser => this is _Authenticated
+  /// Get the Firebase user if authenticated (for internal auth operations)
+  User? get firebaseUser => this is _Authenticated
+      ? (this as _Authenticated).firebaseUser
+      : this is _AuthenticatedWithoutVehicles
+      ? (this as _AuthenticatedWithoutVehicles).firebaseUser
+      : null;
+
+  /// Get the API user if authenticated
+  UserModel? get currentUser => this is _Authenticated
       ? (this as _Authenticated).user
       : this is _AuthenticatedWithoutVehicles
       ? (this as _AuthenticatedWithoutVehicles).user
-      : null;
-
-  UserModel? get currentApiUser => this is _Authenticated
-      ? (this as _Authenticated).appUser
-      : this is _AuthenticatedWithoutVehicles
-      ? (this as _AuthenticatedWithoutVehicles).appUser
       : null;
 }
 
@@ -75,18 +73,16 @@ class _Loading extends AuthState {
 
 /// Authenticated state
 class _Authenticated extends AuthState {
-  final User user;
-  final UserModel? appUser;
+  final UserModel? user;
 
-  const _Authenticated(this.user, {this.appUser});
+  const _Authenticated(this.user);
 }
 
 /// Authenticated state but without vehicles (needs onboarding)
 class _AuthenticatedWithoutVehicles extends AuthState {
-  final User user;
-  final UserModel? appUser;
+  final UserModel? user;
 
-  const _AuthenticatedWithoutVehicles(this.user, {this.appUser});
+  const _AuthenticatedWithoutVehicles(this.user);
 }
 
 /// Unauthenticated state

@@ -1,63 +1,38 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/domain/nothing.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/core/http/rest_client_functions.dart';
-import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/features/events/data/dto/event_dto.dart';
+import 'package:rideglory/features/events/data/service/event_service.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
+import 'package:rideglory/features/events/domain/model/upload_event_image_request.dart';
 import 'package:rideglory/features/events/domain/repository/event_repository.dart';
 
 @Injectable(as: EventRepository)
 class EventRepositoryImpl implements EventRepository {
-  EventRepositoryImpl(this._firestore, this._authService, this._storage);
+  EventRepositoryImpl(this._eventService, this._storage);
 
-  final FirebaseFirestore _firestore;
-  final AuthService _authService;
+  final EventService _eventService;
   final FirebaseStorage _storage;
-
-  static const _collectionName = 'events';
 
   @override
   Future<Either<DomainException, List<EventModel>>> getEvents() {
     return executeService(
       function: () async {
-        final snapshot = await _firestore
-            .collection(_collectionName)
-            .orderBy('startDate', descending: false)
-            .get();
-
-        return snapshot.docs
-            .map((e) => EventDto.fromJson(e.data()).copyWith(id: e.id))
-            .toList();
+        return _eventService.getEvents();
       },
     );
   }
 
   @override
   Future<Either<DomainException, List<EventModel>>> getMyEvents() {
-    final userId = _authService.currentUser?.uid;
-    if (userId == null) {
-      return Future.value(
-        const Left(DomainException(message: 'No user is currently authenticated.')),
-      );
-    }
-
     return executeService(
       function: () async {
-        final snapshot = await _firestore
-            .collection(_collectionName)
-            .where('ownerId', isEqualTo: userId)
-            .orderBy('startDate', descending: false)
-            .get();
-
-        return snapshot.docs
-            .map((e) => EventDto.fromJson(e.data()).copyWith(id: e.id))
-            .toList();
+        return _eventService.getMyEvents();
       },
     );
   }
@@ -66,52 +41,33 @@ class EventRepositoryImpl implements EventRepository {
   Future<Either<DomainException, EventModel>> getEventById(String id) {
     return executeService(
       function: () async {
-        final doc = await _firestore.collection(_collectionName).doc(id).get();
-
-        if (!doc.exists || doc.data() == null) {
-          throw const DomainException(message: 'Evento no encontrado.');
-        }
-
-        return EventDto.fromJson(doc.data()!).copyWith(id: doc.id);
+        return _eventService.getEventById(id);
       },
     );
   }
 
   @override
-  Future<Either<DomainException, EventModel>> addEvent(EventModel event) {
+  Future<Either<DomainException, EventModel>> createEvent(EventModel event) {
     return executeService(
       function: () async {
-        final now = DateTime.now();
-        final userId = _authService.currentUser?.uid ?? event.ownerId;
-
-        // Always generate a new document ID for created events so we can
-        // reliably upload a cover image afterwards.
-        final docRef = _firestore.collection(_collectionName).doc();
-
-        final eventWithMeta = event.copyWith(
-          id: docRef.id,
-          ownerId: userId,
-          createdDate: now,
-          updatedDate: now,
-        );
-
-        await docRef.set(eventWithMeta.toJson());
-        return eventWithMeta;
+        return _eventService.createEvent(event.toJson());
       },
     );
   }
 
   @override
   Future<Either<DomainException, EventModel>> updateEvent(EventModel event) {
-    final updatedEvent = event.copyWith(updatedDate: DateTime.now());
+    if (event.id == null) {
+      return Future.value(
+        const Left(
+          DomainException(message: 'Event ID is required for update.'),
+        ),
+      );
+    }
 
     return executeService(
       function: () async {
-        await _firestore
-            .collection(_collectionName)
-            .doc(updatedEvent.id)
-            .update(updatedEvent.toJson());
-        return updatedEvent;
+        return _eventService.updateEvent(event.id!, event.toJson());
       },
     );
   }
@@ -120,21 +76,23 @@ class EventRepositoryImpl implements EventRepository {
   Future<Either<DomainException, Nothing>> deleteEvent(String id) {
     return executeService(
       function: () async {
-        await _firestore.collection(_collectionName).doc(id).delete();
+        await _eventService.deleteEvent(id);
         return const Nothing();
       },
     );
   }
 
   @override
-  Future<Either<DomainException, String>> uploadEventImage({
-    required String eventId,
-    required String localImagePath,
-  }) {
+  Future<Either<DomainException, String>> uploadEventImage(
+    UploadEventImageRequest request,
+  ) {
     return executeService(
       function: () async {
-        final file = File(localImagePath);
-        final ref = _storage.ref().child('events/$eventId/cover.jpg');
+        final folder =
+            request.eventId ??
+            '${request.ownerId ?? 'anonymous'}-${DateTime.now().microsecondsSinceEpoch}';
+        final file = File(request.localImagePath);
+        final ref = _storage.ref().child('events/$folder/cover.jpg');
         final uploadTask = await ref.putFile(file);
         return uploadTask.ref.getDownloadURL();
       },

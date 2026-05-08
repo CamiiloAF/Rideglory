@@ -6,6 +6,7 @@ part 'event_dto.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 @EventDifficultyConverter()
+@EventTypeConverter()
 @EventStateConverter()
 class EventDto extends EventModel {
   const EventDto({
@@ -24,8 +25,8 @@ class EventDto extends EventModel {
     super.allowedBrands = const [],
     super.price,
     super.imageUrl,
-    super.createdDate,
-    super.updatedDate,
+    @JsonKey(name: 'createdAt') super.createdDate,
+    @JsonKey(name: 'updatedAt') super.updatedDate,
     super.state = EventState.scheduled,
   });
 

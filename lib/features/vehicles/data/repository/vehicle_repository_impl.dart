@@ -1,49 +1,28 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/core/http/rest_client_functions.dart';
-import 'package:rideglory/core/services/auth_service.dart';
-import 'package:rideglory/features/vehicles/data/dto/vehicle_dto.dart';
+import 'package:rideglory/features/vehicles/data/service/vehicle_service.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/domain/repository/vehicle_repository.dart';
 
 @Injectable(as: VehicleRepository)
 class VehicleRepositoryImpl implements VehicleRepository {
-  VehicleRepositoryImpl(this.firestore, this._authService, this._storage);
+  VehicleRepositoryImpl(this._vehicleService, this._storage);
 
-  final FirebaseFirestore firestore;
-  final AuthService _authService;
+  final VehicleService _vehicleService;
   final FirebaseStorage _storage;
-
-  static const _collectionName = 'vehicles';
 
   @override
   Future<Either<DomainException, List<VehicleModel>>>
   getVehiclesByUserId() async {
-    final userId = _authService.currentUser?.uid;
-    if (userId == null) {
-      throw const DomainException(message: 'No user is currently authenticated.');
-    }
-
     return executeService(
       function: () async {
-        final doc = await firestore
-            .collection(_collectionName)
-            .where('userId', isEqualTo: userId)
-            .orderBy('createdDate', descending: true)
-            .get();
-
-        if (doc.docs.isNotEmpty) {
-          return doc.docs
-              .map((e) => VehicleDto.fromJson(e.data()).toModel())
-              .toList();
-        } else {
-          return [];
-        }
+        final vehicles = await _vehicleService.getMyVehicles();
+        return vehicles.map((vehicle) => vehicle.toModel()).toList();
       },
     );
   }
@@ -52,28 +31,9 @@ class VehicleRepositoryImpl implements VehicleRepository {
   Future<Either<DomainException, VehicleModel>> addVehicle(
     VehicleModel vehicle,
   ) async {
-    final userId = _authService.currentUser?.uid;
-    if (userId == null) {
-      throw const DomainException(message: 'No user is currently authenticated.');
-    }
-
-    final now = DateTime.now();
-    final vehicleId = firestore.collection(_collectionName).doc().id;
-
-    final vehicleWithMetadata = vehicle.copyWith(
-      id: vehicleId,
-      createdDate: now,
-      updatedDate: now,
-    );
-
     return executeService(
       function: () async {
-        final docData = vehicleWithMetadata.toJson();
-        docData['userId'] = userId;
-
-        await firestore.collection(_collectionName).doc(vehicleId).set(docData);
-
-        return vehicleWithMetadata;
+        return _vehicleService.createMyVehicle(_vehicleRequest(vehicle));
       },
     );
   }
@@ -83,19 +43,19 @@ class VehicleRepositoryImpl implements VehicleRepository {
     VehicleModel vehicle,
   ) async {
     if (vehicle.id == null) {
-      throw const DomainException(message: 'Vehicle ID is required for update.');
+      throw const DomainException(
+        message: 'Vehicle ID is required for update.',
+      );
     }
 
     final updatedVehicle = vehicle.copyWith(updatedDate: DateTime.now());
 
     return executeService(
       function: () async {
-        await firestore
-            .collection(_collectionName)
-            .doc(updatedVehicle.id)
-            .update(updatedVehicle.toJson());
-
-        return updatedVehicle;
+        return _vehicleService.updateVehicle(
+          updatedVehicle.id!,
+          _vehicleRequest(updatedVehicle),
+        );
       },
     );
   }
@@ -104,7 +64,7 @@ class VehicleRepositoryImpl implements VehicleRepository {
   Future<Either<DomainException, void>> deleteVehicle(String id) async {
     return executeService(
       function: () async {
-        await firestore.collection(_collectionName).doc(id).delete();
+        await _vehicleService.deleteVehicle(id);
       },
     );
   }
@@ -122,5 +82,20 @@ class VehicleRepositoryImpl implements VehicleRepository {
         return uploadTask.ref.getDownloadURL();
       },
     );
+  }
+
+  Map<String, dynamic> _vehicleRequest(VehicleModel vehicle) {
+    return {
+      'name': vehicle.name,
+      'brand': vehicle.brand,
+      'model': vehicle.model,
+      'year': vehicle.year,
+      'currentMileage': vehicle.currentMileage,
+      'licensePlate': vehicle.licensePlate,
+      'vin': vehicle.vin,
+      'purchaseDate': vehicle.purchaseDate?.toIso8601String(),
+      'imageUrl': vehicle.imageUrl,
+      'isArchived': vehicle.isArchived,
+    }..removeWhere((_, value) => value == null);
   }
 }

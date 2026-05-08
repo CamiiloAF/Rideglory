@@ -5,11 +5,11 @@ import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/repository/event_repository.dart';
 
 @injectable
-class AddEventUseCase {
-  AddEventUseCase(this._eventRepository);
+class CreateEventUseCase {
+  CreateEventUseCase(this._eventRepository);
 
   final EventRepository _eventRepository;
 
   Future<Either<DomainException, EventModel>> call(EventModel event) =>
-      _eventRepository.addEvent(event);
+      _eventRepository.createEvent(event);
 }

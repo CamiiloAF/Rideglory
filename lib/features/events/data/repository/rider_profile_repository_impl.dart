@@ -19,10 +19,12 @@ class RiderProfileRepositoryImpl implements RiderProfileRepository {
 
   @override
   Future<Either<DomainException, RiderProfileModel?>> getMyRiderProfile() {
-    final userId = _authService.currentUser?.uid;
+    final userId = _authService.currentUser?.id;
     if (userId == null) {
       return Future.value(
-        const Left(DomainException(message: 'No user is currently authenticated.')),
+        const Left(
+          DomainException(message: 'No user is currently authenticated.'),
+        ),
       );
     }
 
@@ -44,7 +46,7 @@ class RiderProfileRepositoryImpl implements RiderProfileRepository {
   Future<Either<DomainException, RiderProfileModel>> saveRiderProfile(
     RiderProfileModel profile,
   ) {
-    final userId = _authService.currentUser?.uid ?? profile.userId;
+    final userId = _authService.currentUser?.id ?? profile.userId;
     final updated = profile.copyWith(
       userId: userId,
       updatedDate: DateTime.now(),

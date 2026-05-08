@@ -12,8 +12,7 @@ class HomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final authState = context.watch<AuthCubit>().state;
     final userName =
-        authState.currentApiUser?.fullName ??
-        authState.currentUser?.displayName ??
+        authState.currentUser?.fullName ??
         authState.currentUser?.email?.split('@').first ??
         'Rider';
 

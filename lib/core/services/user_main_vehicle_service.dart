@@ -1,10 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/core/http/rest_client_functions.dart';
 import 'package:rideglory/core/services/auth_service.dart';
-import 'package:rideglory/features/vehicles/data/dto/user_main_vehicle_dto.dart';
+import 'package:rideglory/core/services/vehicle_preferences_service.dart';
 import 'package:rideglory/features/vehicles/domain/models/user_main_vehicle_model.dart';
 
 /// Service to manage user's main vehicle preference
@@ -13,12 +12,10 @@ import 'package:rideglory/features/vehicles/domain/models/user_main_vehicle_mode
 /// with userId and mainVehicleId fields
 @injectable
 class UserMainVehicleService {
-  final FirebaseFirestore _firestore;
   final AuthService _authService;
+  final VehiclePreferencesService _vehiclePreferencesService;
 
-  static const _collectionName = 'userMainVehicle';
-
-  UserMainVehicleService(this._firestore, this._authService);
+  UserMainVehicleService(this._authService, this._vehiclePreferencesService);
 
   /// Get the main vehicle preference for the current user
   /// Returns Either with DomainException on failure or UserMainVehicleModel
@@ -26,23 +23,21 @@ class UserMainVehicleService {
   getMainVehicle() async {
     return executeService<UserMainVehicleModel?>(
       function: () async {
-        final userId = _authService.currentUser?.uid;
+        final userId = _authService.currentUser?.id;
         if (userId == null) {
           return null;
         }
 
-        final doc = await _firestore
-            .collection(_collectionName)
-            .doc(userId)
-            .get();
-
-        if (doc.exists) {
-          final data = doc.data();
-          if (data != null) {
-            return UserMainVehicleDto.fromJson(data).toModel();
-          }
+        final mainVehicleId = await _vehiclePreferencesService
+            .getSelectedVehicleId();
+        if (mainVehicleId == null) {
+          return null;
         }
-        return null;
+
+        return UserMainVehicleModel(
+          userId: userId,
+          mainVehicleId: mainVehicleId,
+        );
       },
     );
   }
@@ -52,20 +47,12 @@ class UserMainVehicleService {
   Future<Either<DomainException, String?>> getMainVehicleId() async {
     return executeService<String?>(
       function: () async {
-        final userId = _authService.currentUser?.uid;
+        final userId = _authService.currentUser?.id;
         if (userId == null) {
           return null;
         }
 
-        final doc = await _firestore
-            .collection(_collectionName)
-            .doc(userId)
-            .get();
-
-        if (doc.exists) {
-          return doc.data()?['mainVehicleId'] as String?;
-        }
-        return null;
+        return _vehiclePreferencesService.getSelectedVehicleId();
       },
     );
   }
@@ -77,9 +64,11 @@ class UserMainVehicleService {
   ) async {
     return executeService<UserMainVehicleModel>(
       function: () async {
-        final userId = _authService.currentUser?.uid;
+        final userId = _authService.currentUser?.id;
         if (userId == null) {
-          throw const DomainException(message: 'No user is currently authenticated');
+          throw const DomainException(
+            message: 'No user is currently authenticated',
+          );
         }
 
         final userMainVehicle = UserMainVehicleModel(
@@ -88,9 +77,7 @@ class UserMainVehicleService {
           updatedAt: DateTime.now(),
         );
 
-        final data = userMainVehicle.toJson();
-
-        await _firestore.collection(_collectionName).doc(userId).set(data);
+        await _vehiclePreferencesService.saveSelectedVehicleId(vehicleId);
 
         return userMainVehicle;
       },

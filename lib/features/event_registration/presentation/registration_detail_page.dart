@@ -19,7 +19,7 @@ class RegistrationDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final registration = params.registration;
-    final currentUserId = getIt<AuthService>().currentUser?.uid;
+    final currentUserId = getIt<AuthService>().currentUser?.id;
     final isOwner = registration.userId == currentUserId;
 
     return Scaffold(
@@ -56,7 +56,8 @@ class RegistrationDetailPage extends StatelessWidget {
                           showDivider: false,
                         ),
                         RegistrationDetailInfoRow(
-                          label: context.l10n.registration_identificationIdLabel,
+                          label:
+                              context.l10n.registration_identificationIdLabel,
                           value: registration.identificationNumber,
                         ),
                         RegistrationDetailInfoRow(

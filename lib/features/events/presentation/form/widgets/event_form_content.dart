@@ -6,6 +6,7 @@ import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
+import 'package:rideglory/features/events/presentation/form/cubit/event_form_image_cubit.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/event_form_cover_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/form_section_title.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_basic_info_section.dart';
@@ -75,19 +76,21 @@ class EventFormContent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BlocBuilder<EventFormCubit, ResultState<EventModel>>(
+            BlocBuilder<EventFormImageCubit, ResultState<EventFormImageData>>(
               builder: (context, state) {
-                final innerCubit = context.read<EventFormCubit>();
+                final imageData = state.whenOrNull(data: (data) => data);
                 return EventFormCoverSection(
-                  imageUrl: innerCubit.hasLocalCoverImage
+                  imageUrl: imageData?.hasLocalImage == true
                       ? null
-                      : innerCubit.displayCoverImageUrl,
-                  localImagePath: innerCubit.hasLocalCoverImage
-                      ? innerCubit.displayCoverImageUrl
+                      : imageData?.displayImageUrl,
+                  localImagePath: imageData?.hasLocalImage == true
+                      ? imageData?.displayImageUrl
                       : null,
-                  onUploadTap: () => innerCubit.pickCoverImageFromGallery(),
-                  onClearTap: innerCubit.hasLocalCoverImage
-                      ? innerCubit.clearCoverImage
+                  onUploadTap: () => context
+                      .read<EventFormImageCubit>()
+                      .pickCoverImageFromGallery(),
+                  onClearTap: imageData?.hasLocalImage == true
+                      ? context.read<EventFormImageCubit>().clearLocalCoverImage
                       : null,
                 );
               },
