@@ -14,7 +14,7 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider<SplashCubit>(
       create: (context) => getIt<SplashCubit>()..initialize(),
       child: const _SplashContent(),
     );
@@ -54,20 +54,18 @@ class _SplashContentState extends State<_SplashContent>
     super.dispose();
   }
 
-  void _handleNavigation() async {
+  void _handleNavigation(BuildContext context, SplashState state) async {
     if (_hasNavigated) return;
 
-    final splashState = context.read<SplashCubit>().state;
+    if (state is SplashLoading || state is SplashInitial) return;
 
-    if (splashState is SplashLoading || splashState is SplashInitial) return;
-
-    if (splashState is SplashUnauthenticated) {
+    if (state is SplashUnauthenticated) {
       _hasNavigated = true;
       if (mounted) context.pushReplacementNamed(AppRoutes.login);
       return;
     }
 
-    if (splashState is SplashAuthenticated) {
+    if (state is SplashAuthenticated) {
       _hasNavigated = true;
       if (mounted) context.pushReplacementNamed(AppRoutes.home);
       return;
@@ -83,12 +81,8 @@ class _SplashContentState extends State<_SplashContent>
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<SplashCubit, SplashState>(
-          listener: (context, state) => _handleNavigation(),
-        ),
-      ],
+    return BlocListener<SplashCubit, SplashState>(
+      listener: _handleNavigation,
       child: Scaffold(
         backgroundColor: AppColors.darkBackground,
         body: SafeArea(

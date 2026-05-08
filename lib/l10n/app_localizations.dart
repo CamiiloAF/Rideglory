@@ -2812,6 +2812,12 @@ abstract class AppLocalizations {
   /// **'No tienes vehículos registrados'**
   String get vehicle_noVehicles;
 
+  /// No description provided for @vehicle_noVehiclesDescription.
+  ///
+  /// In es, this message translates to:
+  /// **'Crea tu primer vehículo y empieza a registrar sus mantenimientos'**
+  String get vehicle_noVehiclesDescription;
+
   /// No description provided for @vehicle_noVehiclesAvailable.
   ///
   /// In es, this message translates to:
@@ -3063,6 +3069,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'La marca es requerida'**
   String get vehicle_brandRequired;
+
+  /// No description provided for @vehicle_modelRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'El modelo es requerido'**
+  String get vehicle_modelRequired;
 
   /// No description provided for @vehicle_brandMustBeFromList.
   ///
@@ -3951,6 +3963,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Explora el catálogo de eventos disponibles'**
   String get home_emptyEventsDescription;
+
+  /// No description provided for @appfields_mileageRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'El kilometraje es requerido'**
+  String get appfields_mileageRequired;
 
   /// No description provided for @event_pendingCountBadge.
   ///

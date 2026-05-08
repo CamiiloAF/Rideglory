@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
@@ -53,11 +54,12 @@ class ModernMaintenanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<VehicleCubit, VehicleState>(
+    return BlocBuilder<VehicleCubit, ResultState<List<VehicleModel>>>(
       builder: (context, vehicleState) {
-        final currentMileage = vehicleState is VehicleLoaded
-            ? vehicleState.vehicle.currentMileage
-            : null;
+        final currentMileage = vehicleState.maybeWhen(
+          data: (data) => data.first.currentMileage,
+          orElse: () => null,
+        );
 
         final availableVehicles = context
             .read<VehicleCubit>()

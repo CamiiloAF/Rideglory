@@ -458,6 +458,7 @@
   "vehicle_vehicleArchived": "archivado",
   "vehicle_vehicleUnarchived": "desarchivado",
   "vehicle_noVehicles": "No tienes vehículos registrados",
+  "vehicle_noVehiclesDescription": "Crea tu primer vehículo y empieza a registrar sus mantenimientos",
   "vehicle_noVehiclesAvailable": "No hay vehículos disponibles",
   "vehicle_noArchivedVehicles": "No hay vehículos archivados",
   "vehicle_mainVehicle": "Vehículo principal",
@@ -500,6 +501,7 @@
   "vehicle_nameRequired": "El nombre es requerido",
   "vehicle_vehicleTypeRequired": "El tipo de vehículo es requerido",
   "vehicle_brandRequired": "La marca es requerida",
+  "vehicle_modelRequired": "El modelo es requerido",
   "vehicle_brandMustBeFromList": "Selecciona una marca de la lista de sugerencias",
   "vehicle_yearRequired": "El año es requerido",
   "vehicle_minCharacters": "Mínimo 3 caracteres",
@@ -648,6 +650,7 @@
   "home_emptyGarageDescription": "Agrega tu primera moto para comenzar",
   "home_emptyEvents": "Sin rodadas próximas",
   "home_emptyEventsDescription": "Explora el catálogo de eventos disponibles",
+  "appfields_mileageRequired": "El kilometraje es requerido",
   "event_pendingCountBadge": "{count} PENDIENTES",
   "@event_pendingCountBadge": {
     "placeholders": {

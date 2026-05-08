@@ -43,7 +43,7 @@ class EventDetailOwnerLifecycleBar extends StatelessWidget {
             label: context.l10n.event_startEvent,
             isFullWidth: true,
             isLoading: isLoading,
-            onPressed: isLoading ? null : onStart,
+            onPressed: onStart,
           ),
         EventState.inProgress => AppButton(
             label: context.l10n.event_stopEvent,
@@ -51,7 +51,7 @@ class EventDetailOwnerLifecycleBar extends StatelessWidget {
             isLoading: isLoading,
             variant: AppButtonVariant.danger,
             style: AppButtonStyle.filled,
-            onPressed: isLoading ? null : onStop,
+            onPressed: onStop,
           ),
         EventState.finished => const SizedBox.shrink(),
         EventState.cancelled => const SizedBox.shrink(),

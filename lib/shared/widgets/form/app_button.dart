@@ -79,11 +79,12 @@ class AppButton extends StatelessWidget {
                 ),
             child: Center(
               child: isLoading
-                  ? const SizedBox(
+                  ? SizedBox(
                       width: 20,
                       height: 20,
                       child: AppLoadingIndicator(
                         variant: AppLoadingIndicatorVariant.inline,
+                        color: foregroundColor,
                       ),
                     )
                   : Row(

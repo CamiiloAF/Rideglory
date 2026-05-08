@@ -5,7 +5,6 @@ import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/delete/cubit/event_delete_cubit.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
-import 'package:rideglory/features/events/presentation/list/widgets/events_data_view.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/events_state_widgets.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -50,9 +49,11 @@ class EventsPageView extends StatelessWidget {
             builder: (context, state) {
               final eventsCubit = context.read<EventsCubit>();
               return state.maybeWhen(
-                loading: () => const EventsLoadingWidget(),
-                error: (error) => EventsErrorWidget(
+                loading: () => const PageLoadingStateWidget(),
+                error: (error) => PageErrorStateWidget(
+                  title: context.l10n.event_errorLoadingEvents,
                   message: error.message,
+                  onRetry: () => eventsCubit.fetchEvents(),
                   onRefresh: () => eventsCubit.fetchEvents(),
                 ),
                 empty: () => EmptyStateWidget(
@@ -64,7 +65,7 @@ class EventsPageView extends StatelessWidget {
                   onRefresh: () => eventsCubit.fetchEvents(),
                 ),
                 data: (events) => EventsDataView(events: events),
-                orElse: () => const EventsLoadingWidget(),
+                orElse: () => const PageLoadingStateWidget(),
               );
             },
           ),

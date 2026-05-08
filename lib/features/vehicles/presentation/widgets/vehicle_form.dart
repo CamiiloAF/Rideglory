@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/shared/cubits/form_image_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
 import 'package:rideglory/core/data/colombia_motos_brands_data.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_form_fields.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/shared/widgets/form/form_image_section.dart';
 
 class VehicleForm extends StatelessWidget {
   const VehicleForm({
@@ -28,23 +31,33 @@ class VehicleForm extends StatelessWidget {
       builder: (context, state) {
         return FormBuilder(
           key: formKey,
-          initialValue: initialValue ?? <String, dynamic>{},
+          autovalidateMode: AutovalidateMode.onUnfocus,
+          initialValue: initialValue ?? const <String, dynamic>{},
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              AppImagePicker(
-                imageUrl: state.vehicle?.imageUrl,
-                localImagePath: state.localImagePath,
-                onPickImage: () =>
-                    context.read<VehicleFormCubit>().pickImageLocally(),
-                onClearTap: state.localImagePath != null
-                    ? () => context.read<VehicleFormCubit>().clearLocalImage()
-                    : null,
-                title: context.l10n.vehicle_uploadPhoto,
-                hint: context.l10n.vehicle_selectImage,
-                uploadButtonLabel: context.l10n.vehicle_uploadPhoto,
-                showGenerateWithAI: false,
-                labelText: context.l10n.vehicle_vehiclePhoto,
+              BlocBuilder<FormImageCubit, ResultState<FormImageData>>(
+                builder: (context, imageState) {
+                  final imageData = imageState.whenOrNull(data: (data) => data);
+                  return FormImageSection(
+                    imageUrl: imageData?.hasLocalImage == true
+                        ? null
+                        : imageData?.displayImageUrl,
+                    localImagePath: imageData?.hasLocalImage == true
+                        ? imageData?.displayImageUrl
+                        : null,
+                    onPickImage: () =>
+                        context.read<FormImageCubit>().pickImageFromGallery(),
+                    onClearTap: imageData?.hasLocalImage == true
+                        ? context.read<FormImageCubit>().clearLocalImage
+                        : null,
+                    title: context.l10n.vehicle_uploadPhoto,
+                    hint: context.l10n.vehicle_selectImage,
+                    uploadButtonLabel: context.l10n.vehicle_uploadPhoto,
+                    showGenerateWithAI: false,
+                    labelText: context.l10n.vehicle_vehiclePhoto,
+                  );
+                },
               ),
               AppSpacing.gapXxl,
               AppTextField(
@@ -72,19 +85,25 @@ class VehicleForm extends StatelessWidget {
                     child: AppAutocompleteField(
                       name: VehicleFormFields.brand,
                       labelText: context.l10n.vehicle_vehicleBrand,
+                      isRequired: true,
                       hintText: context.l10n.vehicle_vehicleBrandHint,
                       suggestionsPrefixIcon: Icons.category,
                       suggestions: ColombiaMotosBrandsData.search,
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return null;
-                        }
-                        const allowed = ColombiaMotosBrandsData.brands;
-                        final match = allowed.any((b) => b == value.trim());
-                        return match
-                            ? null
-                            : context.l10n.vehicle_brandMustBeFromList;
-                      },
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(
+                          errorText: context.l10n.vehicle_brandRequired,
+                        ),
+                        (value) {
+                          if (value == null || value.trim().isEmpty) {
+                            return null;
+                          }
+                          const allowed = ColombiaMotosBrandsData.brands;
+                          final match = allowed.any((b) => b == value.trim());
+                          return match
+                              ? null
+                              : context.l10n.vehicle_brandMustBeFromList;
+                        },
+                      ]),
                     ),
                   ),
                   AppSpacing.hGapMd,
@@ -92,11 +111,15 @@ class VehicleForm extends StatelessWidget {
                     child: AppTextField(
                       name: VehicleFormFields.year,
                       labelText: context.l10n.vehicle_vehicleYear,
+                      isRequired: true,
                       hintText: context.l10n.vehicle_vehicleYearHint,
                       prefixIcon: Icons.calendar_today,
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
                       validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(
+                          errorText: context.l10n.vehicle_yearRequired,
+                        ),
                         FormBuilderValidators.numeric(
                           errorText: context.l10n.mustBeNumber,
                           checkNullOrEmpty: false,
@@ -107,7 +130,7 @@ class VehicleForm extends StatelessWidget {
                           checkNullOrEmpty: false,
                         ),
                         FormBuilderValidators.max(
-                          DateTime.now().year,
+                          DateTime.now().year + 2,
                           errorText: context.l10n.vehicle_invalidYear,
                           checkNullOrEmpty: false,
                         ),
@@ -122,6 +145,12 @@ class VehicleForm extends StatelessWidget {
                 labelText: context.l10n.vehicle_vehicleModel,
                 hintText: context.l10n.vehicle_vehicleModelHint,
                 prefixIcon: Icons.style,
+                isRequired: true,
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.required(
+                    errorText: context.l10n.vehicle_modelRequired,
+                  ),
+                ]),
                 textInputAction: TextInputAction.next,
               ),
               AppSpacing.gapLg,
@@ -168,7 +197,8 @@ class VehicleForm extends StatelessWidget {
                   builder: (context, state) {
                     final isLoading = state.isLoading;
                     return AppButton(
-                      onPressed: isLoading ? null : onSave,
+                      onPressed: onSave,
+                      isLoading: isLoading,
                       label: isEditing
                           ? context.l10n.vehicle_editVehicle
                           : context.l10n.vehicle_saveVehicle,

@@ -65,10 +65,9 @@ class LoginEmailForm extends StatelessWidget {
           BlocBuilder<AuthCubit, AuthState>(
             builder: (context, state) {
               return AppButton(
-                onPressed: state.isLoading
-                    ? null
-                    : () => _handleEmailLogin(context),
+                onPressed: () => _handleEmailLogin(context),
                 label: context.l10n.auth_signIn,
+                isLoading: state.isLoading,
               );
             },
           ),

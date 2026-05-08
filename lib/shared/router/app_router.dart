@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
@@ -41,10 +41,8 @@ class AppRouter {
     navigatorKey: _rootNavigatorKey,
     initialLocation: AppRoutes.splash,
     redirect: (BuildContext context, GoRouterState state) {
-      final authCubit = context.read<AuthCubit>();
-      final isAuthenticated = authCubit.state.isAuthenticatedWithVehicles;
-      final isAuthenticatedWithoutVehicles =
-          authCubit.state.isAuthenticatedWithoutVehicles;
+      final isAuthenticated = FirebaseAuth.instance.currentUser != null;
+
       final isOnSplash = state.matchedLocation == AppRoutes.splash;
       final isOnAuthPage =
           state.matchedLocation == AppRoutes.login ||
@@ -53,11 +51,6 @@ class AppRouter {
       // Allow access to splash and auth pages
       if (isOnSplash || isOnAuthPage) {
         return null;
-      }
-
-      // Discard empty vehicle restriction: allow access to app directly
-      if (isAuthenticatedWithoutVehicles) {
-        return AppRoutes.home;
       }
 
       // Protect authenticated routes

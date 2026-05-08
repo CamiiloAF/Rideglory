@@ -214,10 +214,7 @@ class _SuggestionsOverlay extends StatelessWidget {
                         Expanded(
                           child: Text(
                             value,
-                            style: TextStyle(
-                              color: cs.onSurface,
-                              fontSize: 14,
-                            ),
+                            style: TextStyle(color: cs.onSurface, fontSize: 14),
                           ),
                         ),
                       ],

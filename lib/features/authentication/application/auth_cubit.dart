@@ -6,31 +6,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/exceptions/auth_exception.dart';
 import 'package:rideglory/core/services/auth_service.dart';
-import 'package:rideglory/features/users/domain/model/user_model.dart';
-import 'package:rideglory/features/vehicles/domain/usecases/initialize_authenticated_user_vehicles_usecase.dart';
-import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/core/l10n/rideglory_l10n.dart';
+import 'package:rideglory/features/users/domain/model/user_model.dart';
 
 part 'auth_state.dart';
 
 @singleton
 class AuthCubit extends Cubit<AuthState> {
   final AuthService _authService;
-  final InitializeAuthenticatedUserVehiclesUseCase
-  _initializeAuthenticatedUserVehiclesUseCase;
-  final VehicleCubit _vehicleCubit;
 
-  AuthCubit(
-    this._authService,
-    this._initializeAuthenticatedUserVehiclesUseCase,
-    this._vehicleCubit,
-  ) : super(const AuthState.initial());
+  AuthCubit(this._authService) : super(const AuthState.initial());
 
   void checkAuthState() {
     final user = _authService.currentUser;
     if (user != null) {
-      emit(const AuthState.loading());
-      _syncAuthenticatedUserVehicles();
+      emit(AuthState.authenticated(user));
     } else {
       emit(const AuthState.unauthenticated());
     }
@@ -54,7 +44,7 @@ class AuthCubit extends Cubit<AuthState> {
       (authUser) async {
         if (authUser.firebaseUser.uid.isNotEmpty) {
           await _printFirebaseToken(authUser.firebaseUser);
-          await _syncAuthenticatedUserVehicles(user: authUser.user);
+          emit(AuthState.authenticated(authUser.user));
         } else {
           emit(
             const AuthState.error(
@@ -82,7 +72,7 @@ class AuthCubit extends Cubit<AuthState> {
       (firebaseUser) async {
         if (firebaseUser != null) {
           await _printFirebaseToken(firebaseUser);
-          await _syncAuthenticatedUserVehicles();
+          emit(AuthState.authenticated(_authService.currentUser));
         } else {
           emit(
             const AuthState.error(
@@ -103,7 +93,7 @@ class AuthCubit extends Cubit<AuthState> {
       (authUser) async {
         if (authUser.firebaseUser.uid.isNotEmpty) {
           await _printFirebaseToken(authUser.firebaseUser);
-          await _syncAuthenticatedUserVehicles(user: authUser.user);
+          emit(AuthState.authenticated(authUser.user));
         } else {
           emit(const AuthState.error('Google sign-in failed'));
         }
@@ -119,33 +109,10 @@ class AuthCubit extends Cubit<AuthState> {
       (failure) async => emit(AuthState.error(failure.message)),
       (firebaseUser) async {
         if (firebaseUser != null) {
-          await _syncAuthenticatedUserVehicles();
+          emit(AuthState.authenticated(_authService.currentUser));
         } else {
           emit(const AuthState.error('Apple sign-in failed'));
         }
-      },
-    );
-  }
-
-  Future<void> _syncAuthenticatedUserVehicles({UserModel? user}) async {
-    final vehicleResult = await _initializeAuthenticatedUserVehiclesUseCase();
-
-    vehicleResult.fold(
-      (error) {
-        if (kDebugMode) {
-          print('Failed to load vehicles: ${error.message}');
-        }
-        final firebaseUser = _authService.currentUser;
-        if (firebaseUser != null) {
-          emit(AuthState.authenticated(user ?? _authService.currentUser));
-        }
-      },
-      (vehicles) {
-        final firebaseUser = _authService.currentUser;
-        if (firebaseUser == null) return;
-
-        _vehicleCubit.loadSavedVehicle(vehicles);
-        emit(AuthState.authenticated(user ?? _authService.currentUser));
       },
     );
   }
@@ -181,15 +148,5 @@ class AuthCubit extends Cubit<AuthState> {
 
     await _authService.sendPasswordResetEmail(email);
     emit(const AuthState.passwordResetEmailSent());
-  }
-
-  /// Sync authenticated user's vehicles and pre-set selected vehicle.
-  ///
-  /// Only works if user is authenticated. Fails silently if user is not logged in.
-  Future<void> syncAuthenticatedUserVehicles() async {
-    if (_authService.currentUser == null) {
-      return;
-    }
-    await _syncAuthenticatedUserVehicles();
   }
 }

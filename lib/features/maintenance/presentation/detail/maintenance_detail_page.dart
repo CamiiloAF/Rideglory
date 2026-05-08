@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/delete/cubit/maintenance_delete_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_options_bottom_sheet.dart';
@@ -139,7 +140,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
           ),
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
-            child: BlocBuilder<VehicleCubit, VehicleState>(
+            child: BlocBuilder<VehicleCubit, ResultState<List<VehicleModel>>>(
               builder: (context, vehicleState) {
                 VehicleModel? vehicle;
                 if (_maintenance.vehicleId != null) {

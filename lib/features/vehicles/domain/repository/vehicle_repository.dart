@@ -3,7 +3,7 @@ import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
 abstract class VehicleRepository {
-  Future<Either<DomainException, List<VehicleModel>>> getVehiclesByUserId();
+  Future<Either<DomainException, List<VehicleModel>>> getMyVehicles();
 
   Future<Either<DomainException, VehicleModel>> addVehicle(
     VehicleModel vehicle,

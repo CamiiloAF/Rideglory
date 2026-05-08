@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/services/image_storage_service.dart';
+import 'package:rideglory/shared/cubits/form_image_cubit.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_form_fields.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
@@ -19,9 +21,18 @@ class VehicleFormPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          getIt.get<VehicleFormCubit>()..initialize(vehicle: vehicle),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              FormImageCubit(getIt<ImageStorageService>())
+                ..initialize(remoteImageUrl: vehicle?.imageUrl),
+        ),
+        BlocProvider(
+          create: (context) =>
+              getIt.get<VehicleFormCubit>()..initialize(vehicle: vehicle),
+        ),
+      ],
       child: const _VehicleFormView(),
     );
   }
@@ -35,9 +46,15 @@ class _VehicleFormView extends StatefulWidget {
 }
 
 class _VehicleFormViewState extends State<_VehicleFormView> {
+  late final Map<String, dynamic> _initialValues;
+  late final bool _isEditing;
+
   @override
   void initState() {
     super.initState();
+    final state = context.read<VehicleFormCubit>().state;
+    _isEditing = state.isEditing;
+    _initialValues = _buildInitialValues(state);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkArchivedVehicle();
     });
@@ -62,9 +79,7 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
     }
   }
 
-  Map<String, dynamic> _getInitialValues() {
-    final state = context.read<VehicleFormCubit>().state;
-
+  Map<String, dynamic> _buildInitialValues(VehicleFormState state) {
     return state.isEditing
         ? {
             VehicleFormFields.name: state.vehicle!.name,
@@ -82,13 +97,17 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
 
   void _saveVehicle() {
     final cubit = context.read<VehicleFormCubit>();
+    final imageCubit = context.read<FormImageCubit>();
     final vehicleToSave = cubit.buildVehicleToSave();
 
     if (vehicleToSave == null) {
       return;
     }
 
-    cubit.saveVehicle(vehicleToSave);
+    cubit.saveVehicle(
+      vehicleToSave,
+      localImagePath: imageCubit.selectedLocalImagePath,
+    );
   }
 
   void _listener(BuildContext context, VehicleFormState state) {
@@ -125,13 +144,10 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.read<VehicleFormCubit>().state;
-    final isEditing = state.isEditing;
-
     return Scaffold(
       backgroundColor: context.colorScheme.surface,
       appBar: AppAppBar(
-        title: isEditing
+        title: _isEditing
             ? context.l10n.vehicle_editVehicle
             : context.l10n.vehicle_addVehicle,
       ),
@@ -141,8 +157,8 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
           padding: const EdgeInsets.all(16),
           child: VehicleForm(
             formKey: context.read<VehicleFormCubit>().formKey,
-            initialValue: _getInitialValues(),
-            isEditing: isEditing,
+            initialValue: _initialValues,
+            isEditing: _isEditing,
             onSave: _saveVehicle,
           ),
         ),

@@ -368,7 +368,7 @@ class RegistrationFormContent extends StatelessWidget {
                   label: isEditing
                       ? context.l10n.registration_updateRegistration
                       : context.l10n.registration_sendRegistration,
-                  onPressed: isLoading ? null : cubit.saveRegistration,
+                  onPressed: cubit.saveRegistration,
                   isLoading: isLoading,
                 ),
                 AppSpacing.gapMd,

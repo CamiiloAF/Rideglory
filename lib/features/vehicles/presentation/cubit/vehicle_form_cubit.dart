@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -35,90 +36,77 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
     }
   }
 
-  Future<void> pickImageLocally() async {
-    final XFile? image = await _imageStorageService.pickImageFromGallery();
-    if (image != null) {
-      emit(state.copyWith(localImagePath: image.path));
-    }
-  }
-
-  void clearLocalImage() {
-    emit(state.copyWith(localImagePath: null));
-  }
-
-  Future<void> saveVehicle(VehicleModel vehicle) async {
+  Future<void> saveVehicle(
+    VehicleModel vehicle, {
+    String? localImagePath,
+  }) async {
     emit(state.copyWith(vehicleResult: const ResultState.loading()));
 
-    try {
-      // When editing, keep the existing image URL unless the user explicitly picks a new image.
-      // The form model built in [buildVehicleToSave] does not carry over imageUrl,
-      // so we must base it on the original vehicle in state.
-      String? imageUrl =
-          state.isEditing ? state.vehicle?.imageUrl : vehicle.imageUrl;
+    final result = state.isEditing
+        ? await _saveExistingVehicle(
+            vehicle,
+            localImagePath: localImagePath,
+          )
+        : await _createNewVehicle(
+            vehicle,
+            localImagePath: localImagePath,
+          );
 
-      // Upload image if a new one was picked
-      if (state.localImagePath != null) {
+    result.fold(
+      (error) => emit(state.copyWith(vehicleResult: ResultState.error(error: error))),
+      (savedVehicle) => emit(
+        state.copyWith(vehicleResult: ResultState.data(data: savedVehicle)),
+      ),
+    );
+  }
+
+  Future<Either<DomainException, VehicleModel>> _saveExistingVehicle(
+    VehicleModel vehicle, {
+    String? localImagePath,
+  }) async {
+    final vehicleWithImageResult = await _buildVehicleWithImage(
+      vehicle,
+      localImagePath: localImagePath,
+    );
+
+    return vehicleWithImageResult.fold(Left.new, _updateVehicleUseCase.call);
+  }
+
+  Future<Either<DomainException, VehicleModel>> _createNewVehicle(
+    VehicleModel vehicle, {
+    String? localImagePath,
+  }) async {
+    final vehicleWithImageResult = await _buildVehicleWithImage(
+      vehicle,
+      localImagePath: localImagePath,
+    );
+
+    return vehicleWithImageResult.fold(Left.new, _addVehicleUseCase.call);
+  }
+
+  Future<Either<DomainException, VehicleModel>> _buildVehicleWithImage(
+    VehicleModel vehicle, {
+    String? localImagePath,
+  }) async {
+    try {
+      // Keep existing remote image while editing when no new local image is selected.
+      var imageUrl = state.isEditing ? state.vehicle?.imageUrl : vehicle.imageUrl;
+
+      if (localImagePath != null) {
         final imageName =
             vehicle.id ?? 'new_${DateTime.now().millisecondsSinceEpoch}';
         imageUrl = await _imageStorageService.uploadImage(
-          image: XFile(state.localImagePath!),
+          image: XFile(localImagePath),
           storagePath: 'vehicles/$imageName.jpg',
         );
       }
 
-      final vehicleToSave = vehicle.copyWith(imageUrl: imageUrl);
-
-      final result = state.isEditing
-          ? await _updateVehicleUseCase(vehicleToSave)
-          : await _addVehicleUseCase(vehicleToSave);
-
-      result.fold(
-        (error) => emit(
-          state.copyWith(vehicleResult: ResultState.error(error: error)),
-        ),
-        (savedVehicle) => emit(
-          state.copyWith(vehicleResult: ResultState.data(data: savedVehicle)),
-        ),
-      );
-    } catch (e) {
-      final message = e is DomainException
-          ? e.message
-          : e.toString();
-      emit(
-        state.copyWith(
-          vehicleResult: ResultState.error(
-            error: DomainException(message: message),
-          ),
-        ),
-      );
-    }
-  }
-
-  Future<void> addMultipleVehicles(List<VehicleModel> vehicles) async {
-    emit(state.copyWith(vehicleResult: const ResultState.loading()));
-
-    bool isSuccess = false;
-    VehicleModel? firstVehicleSaved;
-
-    for (final vehicle in vehicles) {
-      final result = await _addVehicleUseCase(vehicle);
-      final hasError = result.fold((error) {
-        emit(state.copyWith(vehicleResult: ResultState.error(error: error)));
-        return true;
-      }, (_) => false);
-
-      if (hasError) return;
-
-      firstVehicleSaved ??= vehicle;
-      isSuccess = true;
-    }
-
-    if (isSuccess) {
-      emit(
-        state.copyWith(
-          vehicleResult: ResultState.data(data: firstVehicleSaved!),
-        ),
-      );
+      return Right(vehicle.copyWith(imageUrl: imageUrl));
+    } catch (error) {
+      if (error is DomainException) {
+        return Left(error);
+      }
+      return Left(DomainException(message: error.toString()));
     }
   }
 
@@ -133,26 +121,14 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
       final vehicleToSave = VehicleModel(
         id: state.isEditing ? state.vehicle!.id : null,
         name: formData[VehicleFormFields.name] as String,
-        brand: (formData[VehicleFormFields.brand] as String?)?.isEmpty ?? true
-            ? null
-            : formData[VehicleFormFields.brand] as String?,
-        model: (formData[VehicleFormFields.model] as String?)?.isEmpty ?? true
-            ? null
-            : formData[VehicleFormFields.model] as String?,
-        year:
-            formData[VehicleFormFields.year] != null &&
-                (formData[VehicleFormFields.year] as String).isNotEmpty
-            ? int.tryParse(formData[VehicleFormFields.year] as String)
-            : null,
+        brand: formData[VehicleFormFields.brand] as String,
+        model: formData[VehicleFormFields.model] as String,
+        year: int.tryParse(formData[VehicleFormFields.year] as String),
         currentMileage:
-            formData[VehicleFormFields.currentMileage] != null &&
-                (formData[VehicleFormFields.currentMileage] as String)
-                    .isNotEmpty
-            ? int.tryParse(
-                    formData[VehicleFormFields.currentMileage] as String,
-                  ) ??
-                  0
-            : 0,
+            int.tryParse(
+              formData[VehicleFormFields.currentMileage] as String,
+            ) ??
+            0,
         licensePlate:
             (formData[VehicleFormFields.licensePlate] as String?)?.isEmpty ??
                 true

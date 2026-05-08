@@ -73,7 +73,10 @@ class _SocialLoginButtonState extends State<SocialLoginButton> {
         color: backgroundColor,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
-          onTap: widget.isLoading ? null : widget.onPressed,
+          onTap: () {
+            if (widget.isLoading) return;
+            widget.onPressed();
+          },
           borderRadius: BorderRadius.circular(12),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
@@ -81,11 +84,12 @@ class _SocialLoginButtonState extends State<SocialLoginButton> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (widget.isLoading)
-                  const SizedBox(
+                  SizedBox(
                     width: 20,
                     height: 20,
                     child: AppLoadingIndicator(
                       variant: AppLoadingIndicatorVariant.inline,
+                      color: textColor,
                     ),
                   )
                 else ...[

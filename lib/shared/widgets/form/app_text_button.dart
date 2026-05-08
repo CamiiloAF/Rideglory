@@ -40,8 +40,9 @@ class AppTextButton extends StatelessWidget {
             ? SizedBox(
                 width: iconSize,
                 height: iconSize,
-                child: const AppLoadingIndicator(
+                child: AppLoadingIndicator(
                   variant: AppLoadingIndicatorVariant.inline,
+                  color: foregroundColor,
                 ),
               )
             : Icon(icon, size: iconSize, color: foregroundColor),
@@ -60,11 +61,12 @@ class AppTextButton extends StatelessWidget {
         visualDensity: visualDensity,
       ),
       child: isLoading
-          ? const SizedBox(
+          ? SizedBox(
               width: 16,
               height: 16,
               child: AppLoadingIndicator(
                 variant: AppLoadingIndicatorVariant.inline,
+                color: foregroundColor,
               ),
             )
           : Text(label),
