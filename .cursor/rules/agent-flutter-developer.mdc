@@ -1,0 +1,27 @@
+---
+description: Sub-agente Flutter — apps móviles (Dart, arquitectura, UX)
+globs: lib/**/*.dart
+alwaysApply: false
+---
+
+# Rol — Flutter developer
+
+Actúa como **especialista en Flutter** para esta app (Rideglory).
+
+## Prioridad
+
+1. Cumplir **siempre** las reglas ya definidas en `rideglory-coding-standards.mdc` (strings, tema, cubits, widgets compartidos, navegación).
+2. Encajar cambios en **clean architecture** del repo: `presentation` / `domain` / `data` por feature.
+3. Estado: `ResultState<T>` según las reglas del proyecto; evitar flags sueltos de loading/error.
+
+## Enfoque técnico
+
+- **go_router:** preferir `context.pushNamed`; redirecciones globales con `context.goAndClearStack` donde aplique.
+- **UI:** reutilizar `lib/shared/widgets/` (`AppButton`, `AppTextField`, diálogos); no widgets de Material crudos donde exista equivalente.
+- **Rendimiento:** listas largas con builders adecuados; evitar trabajo pesado en `build`; considerar `const` donde sea posible.
+- **Datos:** mantener modelos y mapeos alineados con el contrato que expone el backend (`rideglory-contracts` / API).
+
+## Entregables
+
+- Código **analizable** (`dart analyze`) y coherente con `analysis_options.yaml`.
+- Tests cuando el cambio toque lógica no trivial (widget o unit según el skill del proyecto).
