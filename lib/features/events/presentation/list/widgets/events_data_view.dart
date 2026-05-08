@@ -19,7 +19,7 @@ class EventsDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentUserId = getIt<AuthService>().currentUser?.uid;
+    final currentUserId = getIt<AuthService>().currentUser?.id;
 
     return Column(
       children: [

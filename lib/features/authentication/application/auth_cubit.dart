@@ -26,7 +26,6 @@ class AuthCubit extends Cubit<AuthState> {
     this._vehicleCubit,
   ) : super(const AuthState.initial());
 
-  /// Check if user is logged in
   void checkAuthState() {
     final user = _authService.currentUser;
     if (user != null) {
@@ -37,7 +36,6 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  /// Sign up with email and password
   Future<void> signUpWithEmail({
     required String fullName,
     required String email,
@@ -56,8 +54,7 @@ class AuthCubit extends Cubit<AuthState> {
       (authUser) async {
         if (authUser.firebaseUser.uid.isNotEmpty) {
           await _printFirebaseToken(authUser.firebaseUser);
-          // Wait for vehicles to sync before emitting auth state
-          await _syncAuthenticatedUserVehicles(appUser: authUser.apiUser);
+          await _syncAuthenticatedUserVehicles(user: authUser.user);
         } else {
           emit(
             const AuthState.error(
@@ -69,7 +66,6 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
-  /// Sign in with email and password
   Future<void> signInWithEmail({
     required String email,
     required String password,
@@ -83,10 +79,9 @@ class AuthCubit extends Cubit<AuthState> {
 
     await result.fold(
       (failure) async => emit(AuthState.error(failure.message)),
-      (user) async {
-        if (user != null) {
-          await _printFirebaseToken(user);
-          // Wait for vehicles to sync before emitting auth state
+      (firebaseUser) async {
+        if (firebaseUser != null) {
+          await _printFirebaseToken(firebaseUser);
           await _syncAuthenticatedUserVehicles();
         } else {
           emit(
@@ -99,7 +94,6 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
-  /// Sign in with Google
   Future<void> signInWithGoogle() async {
     emit(const AuthState.loading());
 
@@ -109,8 +103,7 @@ class AuthCubit extends Cubit<AuthState> {
       (authUser) async {
         if (authUser.firebaseUser.uid.isNotEmpty) {
           await _printFirebaseToken(authUser.firebaseUser);
-          // Wait for vehicles to sync before emitting auth state
-          await _syncAuthenticatedUserVehicles(appUser: authUser.apiUser);
+          await _syncAuthenticatedUserVehicles(user: authUser.user);
         } else {
           emit(const AuthState.error('Google sign-in failed'));
         }
@@ -118,16 +111,14 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
-  /// Sign in with Apple
   Future<void> signInWithApple() async {
     emit(const AuthState.loading());
 
     final result = await _authService.signInWithApple();
     await result.fold(
       (failure) async => emit(AuthState.error(failure.message)),
-      (user) async {
-        if (user != null) {
-          // Wait for vehicles to sync before emitting auth state
+      (firebaseUser) async {
+        if (firebaseUser != null) {
           await _syncAuthenticatedUserVehicles();
         } else {
           emit(const AuthState.error('Apple sign-in failed'));
@@ -136,7 +127,7 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
-  Future<void> _syncAuthenticatedUserVehicles({UserModel? appUser}) async {
+  Future<void> _syncAuthenticatedUserVehicles({UserModel? user}) async {
     final vehicleResult = await _initializeAuthenticatedUserVehiclesUseCase();
 
     vehicleResult.fold(
@@ -144,28 +135,17 @@ class AuthCubit extends Cubit<AuthState> {
         if (kDebugMode) {
           print('Failed to load vehicles: ${error.message}');
         }
-        // If vehicles couldn't be loaded, treat as empty (redirect to home anyway)
-        final currentUser = _authService.currentUser;
-        if (currentUser != null) {
-          emit(
-            AuthState.authenticated(
-              currentUser,
-              appUser: appUser ?? _authService.currentApiUser,
-            ),
-          );
+        final firebaseUser = _authService.currentUser;
+        if (firebaseUser != null) {
+          emit(AuthState.authenticated(user ?? _authService.currentUser));
         }
       },
       (vehicles) {
-        final currentUser = _authService.currentUser;
-        if (currentUser == null) return;
+        final firebaseUser = _authService.currentUser;
+        if (firebaseUser == null) return;
 
         _vehicleCubit.loadSavedVehicle(vehicles);
-        emit(
-          AuthState.authenticated(
-            currentUser,
-            appUser: appUser ?? _authService.currentApiUser,
-          ),
-        );
+        emit(AuthState.authenticated(user ?? _authService.currentUser));
       },
     );
   }
@@ -185,7 +165,6 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  /// Sign out
   Future<void> signOut() async {
     try {
       await _authService.signOut();
@@ -197,7 +176,6 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  /// Send password reset email
   Future<void> sendPasswordResetEmail(String email) async {
     emit(const AuthState.loading());
 
@@ -206,9 +184,6 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   /// Sync authenticated user's vehicles and pre-set selected vehicle.
-  ///
-  /// This is public and can be called from any screen (splash, home, etc.)
-  /// to sync vehicles for the currently authenticated user.
   ///
   /// Only works if user is authenticated. Fails silently if user is not logged in.
   Future<void> syncAuthenticatedUserVehicles() async {

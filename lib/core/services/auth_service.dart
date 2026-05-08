@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rideglory/core/services/user_storage_service.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
 import 'package:rideglory/features/users/domain/repository/user_repository.dart';
 
@@ -14,18 +15,19 @@ class AuthService {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
   final UserRepository _userRepository;
-  UserModel? _currentApiUser;
+  final UserStorageService _userStorageService;
+  UserModel? _currentUser;
 
-  AuthService(this._firebaseAuth, this._googleSignIn, this._userRepository);
+  AuthService(
+    this._firebaseAuth,
+    this._googleSignIn,
+    this._userRepository,
+    this._userStorageService,
+  );
+  UserModel? get currentUser => _currentUser;
 
-  /// Get the current authenticated user
-  User? get currentUser => _firebaseAuth.currentUser;
-  UserModel? get currentApiUser => _currentApiUser;
-
-  /// Stream of authentication state changes
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
-  /// Sign up with email and password
   Future<Either<DomainException, AuthenticatedUser>> signUpWithEmail({
     required String fullName,
     required String email,
@@ -45,22 +47,18 @@ class AuthService {
         await firebaseUser.updateDisplayName(fullName);
         await firebaseUser.reload();
 
-        final apiUser = await _registerApiUser(
-          fullName: fullName,
-          email: email,
-        );
-        _currentApiUser = apiUser;
+        final user = await _registerApiUser(fullName: fullName, email: email);
+        await _cacheUser(firebaseUser.uid, user);
 
         return AuthenticatedUser(
           firebaseUser: _firebaseAuth.currentUser ?? firebaseUser,
-          apiUser: apiUser,
+          user: user,
           isNewUser: true,
         );
       },
     );
   }
 
-  /// Sign in with email and password
   Future<Either<DomainException, User?>> signInWithEmail({
     required String email,
     required String password,
@@ -71,12 +69,16 @@ class AuthService {
           email: email,
           password: password,
         );
-        return userCredential.user;
+        final firebaseUser = userCredential.user;
+        if (firebaseUser != null) {
+          await _loadStoredUser(firebaseUser.uid);
+        }
+
+        return firebaseUser;
       },
     );
   }
 
-  /// Sign in with Google
   Future<Either<DomainException, AuthenticatedUser>> signInWithGoogle() async {
     return executeService<AuthenticatedUser>(
       function: () async {
@@ -103,7 +105,7 @@ class AuthService {
         }
 
         final isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
-        UserModel? apiUser;
+        UserModel? user;
         if (isNewUser) {
           final email = firebaseUser.email;
           if (email == null || email.isEmpty) {
@@ -112,59 +114,65 @@ class AuthService {
             );
           }
 
-          apiUser = await _registerApiUser(
+          user = await _registerApiUser(
             fullName: _resolveFullName(firebaseUser),
             email: email,
           );
-          _currentApiUser = apiUser;
+          await _cacheUser(firebaseUser.uid, user);
+        } else {
+          user = await _loadStoredUser(firebaseUser.uid);
         }
 
         return AuthenticatedUser(
           firebaseUser: firebaseUser,
-          apiUser: apiUser,
+          user: user,
           isNewUser: isNewUser,
         );
       },
     );
   }
 
-  /// Sign in with Apple
   Future<Either<DomainException, User?>> signInWithApple() async {
     // TODO: Implement Apple sign-in when sign_in_with_apple is enabled
     return const Left(
       DomainException(message: 'Apple sign-in is not yet implemented'),
     );
-    // return executeService<User?>(
-    //   function: () async {
-    //     final credential = await SignInWithApple.getAppleIDCredential(
-    //       scopes: const [],
-    //     );
-    //
-    //     final oauthCredential = OAuthProvider('apple.com').credential(
-    //       idToken: credential.identityToken,
-    //       accessToken: credential.authorizationCode,
-    //     );
-    //
-    //     final userCredential = await _firebaseAuth.signInWithCredential(
-    //       oauthCredential,
-    //     );
-    //     return userCredential.user;
-    //   },
-    // );
   }
 
-  /// Sign out
   Future<Either<DomainException, Unit>> signOut() async {
     return executeService<Unit>(
       function: () async {
         await Future.wait([_firebaseAuth.signOut(), _googleSignIn.signOut()]);
-        _currentApiUser = null;
+        _currentUser = null;
         return unit;
       },
     );
   }
 
-  /// Send password reset email
+  Future<Either<DomainException, String>> getCurrentUserId() async {
+    final cachedUser = _currentUser;
+    if (cachedUser != null) {
+      return Right(cachedUser.id);
+    }
+
+    final firebaseUser = _firebaseAuth.currentUser;
+    if (firebaseUser == null) {
+      return const Left(DomainException(message: 'No hay una sesión activa.'));
+    }
+
+    final storedUser = await _loadStoredUser(firebaseUser.uid);
+    if (storedUser == null) {
+      return const Left(
+        DomainException(
+          message:
+              'No encontramos la información local del usuario. Cierra sesión e inicia de nuevo.',
+        ),
+      );
+    }
+
+    return Right(storedUser.id);
+  }
+
   Future<Either<DomainException, Unit>> sendPasswordResetEmail(
     String email,
   ) async {
@@ -176,23 +184,21 @@ class AuthService {
     );
   }
 
-  /// Update user email
   Future<Either<DomainException, Unit>> updateEmail(String newEmail) async {
     return executeService<Unit>(
       function: () async {
-        await currentUser?.verifyBeforeUpdateEmail(newEmail);
+        await _firebaseAuth.currentUser?.verifyBeforeUpdateEmail(newEmail);
         return unit;
       },
     );
   }
 
-  /// Update user password
   Future<Either<DomainException, Unit>> updatePassword(
     String newPassword,
   ) async {
     return executeService<Unit>(
       function: () async {
-        await currentUser?.updatePassword(newPassword);
+        await _firebaseAuth.currentUser?.updatePassword(newPassword);
         return unit;
       },
     );
@@ -208,6 +214,26 @@ class AuthService {
     );
 
     return result.fold((failure) => throw failure, (user) => user);
+  }
+
+  Future<void> _cacheUser(String firebaseUid, UserModel user) async {
+    _currentUser = user;
+    await _userStorageService.saveUser(firebaseUid: firebaseUid, user: user);
+  }
+
+  Future<UserModel?> _loadStoredUser(String firebaseUid) async {
+    final stored = await _userStorageService.getUser(firebaseUid);
+    if (stored != null) {
+      _currentUser = stored;
+      return stored;
+    }
+
+    final result = await _userRepository.getCurrentUser();
+    final apiUser = result.fold((_) => null, (u) => u);
+    if (apiUser != null) {
+      await _cacheUser(firebaseUid, apiUser);
+    }
+    return apiUser;
   }
 
   String _resolveFullName(User user) {
@@ -229,10 +255,10 @@ class AuthenticatedUser {
   const AuthenticatedUser({
     required this.firebaseUser,
     required this.isNewUser,
-    this.apiUser,
+    this.user,
   });
 
   final User firebaseUser;
-  final UserModel? apiUser;
+  final UserModel? user;
   final bool isNewUser;
 }

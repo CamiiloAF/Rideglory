@@ -16,8 +16,8 @@ class VehicleDto extends VehicleModel {
     super.vin,
     super.purchaseDate,
     super.imageUrl,
-    super.createdDate,
-    super.updatedDate,
+    super.createdAt,
+    super.updatedAt,
     super.isArchived,
   });
 
@@ -38,8 +38,8 @@ class VehicleDto extends VehicleModel {
       vin: vin,
       purchaseDate: purchaseDate,
       imageUrl: imageUrl,
-      createdDate: createdDate,
-      updatedDate: updatedDate,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
       isArchived: isArchived,
     );
   }
@@ -47,18 +47,18 @@ class VehicleDto extends VehicleModel {
 
 extension VehicleModelExtension on VehicleModel {
   Map<String, dynamic> toJson() => VehicleDto(
-        id: id,
-        name: name,
-        brand: brand,
-        model: model,
-        year: year,
-        currentMileage: currentMileage,
-        licensePlate: licensePlate,
-        vin: vin,
-        purchaseDate: purchaseDate,
-        imageUrl: imageUrl,
-        createdDate: createdDate,
-        updatedDate: updatedDate,
-        isArchived: isArchived,
-      ).toJson();
+    id: id,
+    name: name,
+    brand: brand,
+    model: model,
+    year: year,
+    currentMileage: currentMileage,
+    licensePlate: licensePlate,
+    vin: vin,
+    purchaseDate: purchaseDate,
+    imageUrl: imageUrl,
+    createdAt: createdAt,
+    updatedAt: updatedAt,
+    isArchived: isArchived,
+  ).toJson();
 }

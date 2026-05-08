@@ -9,8 +9,8 @@ class VehicleModel {
   final String? vin;
   final DateTime? purchaseDate;
   final String? imageUrl;
-  final DateTime? createdDate;
-  final DateTime? updatedDate;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
   final bool isArchived;
 
   const VehicleModel({
@@ -24,8 +24,8 @@ class VehicleModel {
     this.vin,
     this.purchaseDate,
     this.imageUrl,
-    this.createdDate,
-    this.updatedDate,
+    this.createdAt,
+    this.updatedAt,
     this.isArchived = false,
   });
 
@@ -55,8 +55,8 @@ class VehicleModel {
       vin: vin ?? this.vin,
       purchaseDate: purchaseDate ?? this.purchaseDate,
       imageUrl: imageUrl ?? this.imageUrl,
-      createdDate: createdDate ?? this.createdDate,
-      updatedDate: updatedDate ?? this.updatedDate,
+      createdAt: createdDate ?? this.createdAt,
+      updatedAt: updatedDate ?? this.updatedAt,
       isArchived: isArchived ?? this.isArchived,
     );
   }

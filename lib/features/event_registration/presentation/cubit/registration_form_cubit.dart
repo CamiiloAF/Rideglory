@@ -173,7 +173,7 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
     if (!(formKey.currentState?.saveAndValidate() ?? false)) return null;
 
     final formData = formKey.currentState!.value;
-    final userId = _authService.currentUser?.uid ?? '';
+    final userId = _authService.currentUser?.id ?? '';
 
     return EventRegistrationModel(
       id: _editingRegistration?.id,

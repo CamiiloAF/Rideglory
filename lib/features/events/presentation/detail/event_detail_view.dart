@@ -48,7 +48,7 @@ class EventDetailViewState extends State<EventDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUserId = getIt<AuthService>().currentUser?.uid;
+    final currentUserId = getIt<AuthService>().currentUser?.id;
     final isOwner = currentEvent.ownerId == currentUserId;
 
     return PopScope(
@@ -220,10 +220,10 @@ class EventDetailViewState extends State<EventDetailView> {
                         EventDetailStartedBanner(
                           onFollowLive:
                               currentEvent.state == EventState.inProgress
-                                  ? () {
-                                      unawaited(_onFollowLivePressed());
-                                    }
-                                  : null,
+                              ? () {
+                                  unawaited(_onFollowLivePressed());
+                                }
+                              : null,
                         )
                       else
                         BlocBuilder<EventDetailCubit, EventDetailState>(
@@ -238,7 +238,8 @@ class EventDetailViewState extends State<EventDetailView> {
                                 }
 
                                 return EventDetailStartedBanner(
-                                  onFollowLive: currentEvent.state ==
+                                  onFollowLive:
+                                      currentEvent.state ==
                                           EventState.inProgress
                                       ? () {
                                           unawaited(_onFollowLivePressed());

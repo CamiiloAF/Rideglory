@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:rideglory/core/domain/nothing.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
+import 'package:rideglory/features/events/domain/model/upload_event_image_request.dart';
 
 abstract class EventRepository {
   Future<Either<DomainException, List<EventModel>>> getEvents();
@@ -10,14 +11,13 @@ abstract class EventRepository {
 
   Future<Either<DomainException, EventModel>> getEventById(String id);
 
-  Future<Either<DomainException, EventModel>> addEvent(EventModel event);
+  Future<Either<DomainException, EventModel>> createEvent(EventModel event);
 
   Future<Either<DomainException, EventModel>> updateEvent(EventModel event);
 
   Future<Either<DomainException, Nothing>> deleteEvent(String id);
 
-  Future<Either<DomainException, String>> uploadEventImage({
-    required String eventId,
-    required String localImagePath,
-  });
+  Future<Either<DomainException, String>> uploadEventImage(
+    UploadEventImageRequest request,
+  );
 }

@@ -22,9 +22,11 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
   @override
   Future<Either<DomainException, List<MaintenanceModel>>>
   getMaintenancesByUserId() async {
-    final userId = _authService.currentUser?.uid;
+    final userId = _authService.currentUser?.id;
     if (userId == null) {
-      throw const DomainException(message: 'No user is currently authenticated.');
+      throw const DomainException(
+        message: 'No user is currently authenticated.',
+      );
     }
 
     return executeService(
@@ -49,9 +51,11 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
   @override
   Future<Either<DomainException, List<MaintenanceModel>>>
   getMaintenancesByVehicleId(String vehicleId) async {
-    final userId = _authService.currentUser?.uid;
+    final userId = _authService.currentUser?.id;
     if (userId == null) {
-      throw const DomainException(message: 'No user is currently authenticated.');
+      throw const DomainException(
+        message: 'No user is currently authenticated.',
+      );
     }
 
     return executeService(
@@ -79,7 +83,7 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
   ) async {
     final now = DateTime.now();
     final maintenanceWithDates = maintenance.copyWith(
-      userId: _authService.currentUser?.uid ?? maintenance.userId,
+      userId: _authService.currentUser?.id ?? maintenance.userId,
       createdDate: now,
       updatedDate: now,
     );

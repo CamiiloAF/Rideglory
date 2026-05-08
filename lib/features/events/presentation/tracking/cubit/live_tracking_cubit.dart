@@ -18,6 +18,7 @@ import 'package:rideglory/features/events/domain/use_cases/stop_tracking_use_cas
 import 'package:rideglory/features/events/domain/use_cases/update_location_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/watch_active_riders_use_case.dart';
 import 'package:rideglory/features/events/presentation/tracking/tracking_location_settings.dart';
+import 'package:rideglory/features/users/domain/model/user_model.dart';
 
 part 'live_tracking_state.dart';
 part 'live_tracking_cubit.freezed.dart';
@@ -75,9 +76,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
       emit(
         state.copyWith(
           ridersResult: const ResultState.error(
-            error: DomainException(
-              message: EventStrings.trackingEventMissing,
-            ),
+            error: DomainException(message: EventStrings.trackingEventMissing),
           ),
         ),
       );
@@ -118,7 +117,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     if (user == null) {
       return;
     }
-    _userId = user.uid;
+    _userId = user.id;
 
     final trackingPermission =
         await LocationPermissionHandler.requestForLiveTracking();
@@ -126,9 +125,8 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
       emit(
         state.copyWith(
           ridersResult: state.ridersResult.maybeMap(
-            data: (d) => ResultState<List<RiderTrackingModel>>.data(
-              data: d.data,
-            ),
+            data: (d) =>
+                ResultState<List<RiderTrackingModel>>.data(data: d.data),
             orElse: () => const ResultState.error(
               error: DomainException(message: EventStrings.trackingStartFailed),
             ),
@@ -160,9 +158,8 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
       emit(
         state.copyWith(
           ridersResult: state.ridersResult.maybeMap(
-            data: (d) => ResultState<List<RiderTrackingModel>>.data(
-              data: d.data,
-            ),
+            data: (d) =>
+                ResultState<List<RiderTrackingModel>>.data(data: d.data),
             orElse: () => const ResultState.error(
               error: DomainException(message: EventStrings.trackingStartFailed),
             ),
@@ -173,12 +170,12 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     }
 
     final battery = await _readBatteryPercent();
-    final role = user.uid == _eventOwnerId
+    final role = user.id == _eventOwnerId
         ? RiderTrackingRole.lead
         : RiderTrackingRole.rider;
 
     final initial = RiderTrackingModel(
-      userId: user.uid,
+      userId: user.id,
       firstName: firstName,
       lastName: lastName,
       role: role,
@@ -203,11 +200,12 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
           state.copyWith(
             isTracking: false,
             ridersResult: state.ridersResult.maybeMap(
-              data: (d) => ResultState<List<RiderTrackingModel>>.data(
-                data: d.data,
-              ),
+              data: (d) =>
+                  ResultState<List<RiderTrackingModel>>.data(data: d.data),
               orElse: () => const ResultState.error(
-                error: DomainException(message: EventStrings.trackingStartFailed),
+                error: DomainException(
+                  message: EventStrings.trackingStartFailed,
+                ),
               ),
             ),
           ),
@@ -238,61 +236,61 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     }
 
     _positionSubscription?.cancel();
-    _positionSubscription = Geolocator.getPositionStream(
-      locationSettings: TrackingLocationSettings.positionStream(
-        geolocatorPermission: geolocatorPermission,
-      ),
-    ).listen((position) async {
-      if (_lastLatitude != null && _lastLongitude != null) {
-        final delta = Geolocator.distanceBetween(
-          _lastLatitude!,
-          _lastLongitude!,
-          position.latitude,
-          position.longitude,
-        );
-        _accumulatedDistanceMeters += delta;
-      }
-      _lastLatitude = position.latitude;
-      _lastLongitude = position.longitude;
-
-      final now = DateTime.now();
-      if (_lastFirebasePush != null &&
-          now.difference(_lastFirebasePush!) <
-              const Duration(seconds: 4)) {
-        emit(
-          state.copyWith(
-            totalDistanceMeters: _accumulatedDistanceMeters,
-            currentUserLatitude: position.latitude,
-            currentUserLongitude: position.longitude,
+    _positionSubscription =
+        Geolocator.getPositionStream(
+          locationSettings: TrackingLocationSettings.positionStream(
+            geolocatorPermission: geolocatorPermission,
           ),
-        );
-        return;
-      }
-      _lastFirebasePush = now;
+        ).listen((position) async {
+          if (_lastLatitude != null && _lastLongitude != null) {
+            final delta = Geolocator.distanceBetween(
+              _lastLatitude!,
+              _lastLongitude!,
+              position.latitude,
+              position.longitude,
+            );
+            _accumulatedDistanceMeters += delta;
+          }
+          _lastLatitude = position.latitude;
+          _lastLongitude = position.longitude;
 
-      final battery = await _readBatteryPercent();
+          final now = DateTime.now();
+          if (_lastFirebasePush != null &&
+              now.difference(_lastFirebasePush!) < const Duration(seconds: 4)) {
+            emit(
+              state.copyWith(
+                totalDistanceMeters: _accumulatedDistanceMeters,
+                currentUserLatitude: position.latitude,
+                currentUserLongitude: position.longitude,
+              ),
+            );
+            return;
+          }
+          _lastFirebasePush = now;
 
-      final request = UpdateLocationRequest(
-        eventId: _eventId,
-        userId: uid,
-        latitude: position.latitude,
-        longitude: position.longitude,
-        speedKmh: _speedKmh(position),
-        distanceMeters: _accumulatedDistanceMeters,
-        batteryPercent: battery,
-      );
+          final battery = await _readBatteryPercent();
 
-      final result = await _updateLocationUseCase(request);
-      result.fold((_) {}, (_) {
-        emit(
-          state.copyWith(
-            totalDistanceMeters: _accumulatedDistanceMeters,
-            currentUserLatitude: position.latitude,
-            currentUserLongitude: position.longitude,
-          ),
-        );
-      });
-    });
+          final request = UpdateLocationRequest(
+            eventId: _eventId,
+            userId: uid,
+            latitude: position.latitude,
+            longitude: position.longitude,
+            speedKmh: _speedKmh(position),
+            distanceMeters: _accumulatedDistanceMeters,
+            batteryPercent: battery,
+          );
+
+          final result = await _updateLocationUseCase(request);
+          result.fold((_) {}, (_) {
+            emit(
+              state.copyWith(
+                totalDistanceMeters: _accumulatedDistanceMeters,
+                currentUserLatitude: position.latitude,
+                currentUserLongitude: position.longitude,
+              ),
+            );
+          });
+        });
   }
 
   Future<int> _readBatteryPercent() async {
@@ -307,8 +305,8 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     return EventStrings.trackingDefaultDeviceLabel;
   }
 
-  String _firstNameFromAuth(User user) {
-    final display = user.displayName;
+  String _firstNameFromAuth(UserModel user) {
+    final display = user.fullName;
     if (display != null && display.trim().isNotEmpty) {
       final parts = display.trim().split(RegExp(r'\s+'));
       return parts.first;
@@ -320,8 +318,8 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     return 'Rider';
   }
 
-  String _lastNameFromAuth(User user) {
-    final display = user.displayName;
+  String _lastNameFromAuth(UserModel user) {
+    final display = user.fullName;
     if (display != null && display.trim().isNotEmpty) {
       final parts = display.trim().split(RegExp(r'\s+'));
       if (parts.length > 1) {

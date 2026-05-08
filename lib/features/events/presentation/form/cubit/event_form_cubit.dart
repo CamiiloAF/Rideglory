@@ -1,133 +1,59 @@
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/domain/result_state.dart';
-import 'package:rideglory/core/services/auth_service.dart';
+import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
-import 'package:rideglory/features/events/domain/use_cases/add_event_use_case.dart';
+import 'package:rideglory/features/events/domain/model/upload_event_image_request.dart';
+import 'package:rideglory/features/events/domain/use_cases/create_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/upload_event_image_use_case.dart';
+import 'package:rideglory/features/users/domain/use_cases/get_current_user_id_use_case.dart';
 
 @injectable
 class EventFormCubit extends Cubit<ResultState<EventModel>> {
   EventFormCubit(
-    this._addEventUseCase,
+    this._createEventUseCase,
     this._updateEventUseCase,
     this._uploadEventImageUseCase,
-    this._authService,
+    this._getCurrentUserIdUseCase,
   ) : super(const ResultState.initial());
 
   final formKey = GlobalKey<FormBuilderState>();
 
-  final AddEventUseCase _addEventUseCase;
+  final CreateEventUseCase _createEventUseCase;
   final UpdateEventUseCase _updateEventUseCase;
   final UploadEventImageUseCase _uploadEventImageUseCase;
-  final AuthService _authService;
+  final GetCurrentUserIdUseCase _getCurrentUserIdUseCase;
 
   EventModel? _editingEvent;
-  XFile? _selectedCoverFile;
 
   bool get isEditing => _editingEvent != null;
   EventModel? get editingEvent => _editingEvent;
-  XFile? get selectedCoverFile => _selectedCoverFile;
 
   void initialize({EventModel? event}) {
     _editingEvent = event;
-    _selectedCoverFile = null;
     emit(const ResultState.initial());
   }
 
-  /// Picks an image from the device gallery. Handles permission request and
-  /// (permission and settings redirect are handled by `AppImagePicker`).
-  Future<void> pickCoverImageFromGallery() async {
-    final picker = ImagePicker();
-    final file = await picker.pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 1920,
-      maxHeight: 1920,
-      imageQuality: 85,
-    );
-
-    if (file == null) return;
-
-    _selectedCoverFile = file;
-    // Force UI rebuild even though ResultState itself did not change
+  Future<void> saveEvent(
+    EventModel eventToSave, {
+    String? localCoverImagePath,
+  }) async {
     emit(const ResultState.loading());
-    emit(const ResultState.initial());
-  }
-
-  void clearCoverImage() {
-    _selectedCoverFile = null;
-    emit(const ResultState.loading());
-    emit(const ResultState.initial());
-  }
-
-  /// Returns the current cover image URL to display: from selected file path
-  /// (when user picked a new image) or from the editing event.
-  String? get displayCoverImageUrl {
-    if (_selectedCoverFile != null) return _selectedCoverFile!.path;
-    return _editingEvent?.imageUrl;
-  }
-
-  /// True when the cover is a local file (selected from gallery), so the UI
-  /// should use Image.file instead of Image.network.
-  bool get hasLocalCoverImage => _selectedCoverFile != null;
-
-  Future<void> saveEvent(EventModel eventToSave) async {
-    emit(const ResultState.loading());
-
-    final hasNewCover = _selectedCoverFile != null;
-    final path = _selectedCoverFile?.path;
-
-    if (isEditing && hasNewCover && path != null && eventToSave.id != null) {
-      final uploadResult = await _uploadEventImageUseCase(
-        eventId: eventToSave.id!,
-        localImagePath: path,
-      );
-      final updated = uploadResult.fold((error) {
-        emit(ResultState.error(error: error));
-        return null;
-      }, (imageUrl) => eventToSave.copyWith(imageUrl: imageUrl));
-      if (updated == null) return;
-      final updateResult = await _updateEventUseCase(updated);
-      updateResult.fold(
-        (error) => emit(ResultState.error(error: error)),
-        (event) => emit(ResultState.data(data: event)),
-      );
-      return;
-    }
-
-    if (!isEditing && hasNewCover && path != null) {
-      final eventWithoutImage = eventToSave.copyWith(imageUrl: null);
-      final addResult = await _addEventUseCase(eventWithoutImage);
-      final created = addResult.fold((error) {
-        emit(ResultState.error(error: error));
-        return null;
-      }, (e) => e);
-      if (created == null || created.id == null) return;
-      final uploadResult = await _uploadEventImageUseCase(
-        eventId: created.id!,
-        localImagePath: path,
-      );
-      uploadResult.fold((error) => emit(ResultState.error(error: error)), (
-        imageUrl,
-      ) async {
-        final withImage = created.copyWith(imageUrl: imageUrl);
-        final updateResult = await _updateEventUseCase(withImage);
-        updateResult.fold(
-          (error) => emit(ResultState.error(error: error)),
-          (event) => emit(ResultState.data(data: event)),
-        );
-      });
-      return;
-    }
 
     final result = isEditing
-        ? await _updateEventUseCase(eventToSave)
-        : await _addEventUseCase(eventToSave);
+        ? await _saveExistingEvent(
+            eventToSave,
+            localCoverImagePath: localCoverImagePath,
+          )
+        : await _createNewEvent(
+            eventToSave,
+            localCoverImagePath: localCoverImagePath,
+          );
 
     result.fold(
       (error) => emit(ResultState.error(error: error)),
@@ -135,11 +61,63 @@ class EventFormCubit extends Cubit<ResultState<EventModel>> {
     );
   }
 
-  EventModel? buildEventToSave() {
+  Future<Either<DomainException, EventModel>> _saveExistingEvent(
+    EventModel eventToSave, {
+    String? localCoverImagePath,
+  }) async {
+    if (localCoverImagePath == null) {
+      return _updateEventUseCase(eventToSave);
+    }
+
+    final eventId = eventToSave.id;
+    if (eventId == null) {
+      return const Left(
+        DomainException(message: 'Event ID is required for update.'),
+      );
+    }
+
+    final uploadResult = await _uploadEventImageUseCase(
+      UploadEventImageRequest(
+        eventId: eventId,
+        localImagePath: localCoverImagePath,
+      ),
+    );
+
+    return uploadResult.fold(
+      Left.new,
+      (imageUrl) =>
+          _updateEventUseCase(eventToSave.copyWith(imageUrl: imageUrl)),
+    );
+  }
+
+  Future<Either<DomainException, EventModel>> _createNewEvent(
+    EventModel eventToSave, {
+    String? localCoverImagePath,
+  }) async {
+    if (localCoverImagePath == null) {
+      return _createEventUseCase(eventToSave);
+    }
+
+    final uploadResult = await _uploadEventImageUseCase(
+      UploadEventImageRequest(
+        ownerId: eventToSave.ownerId,
+        localImagePath: localCoverImagePath,
+      ),
+    );
+
+    return uploadResult.fold(
+      Left.new,
+      (imageUrl) =>
+          _createEventUseCase(eventToSave.copyWith(imageUrl: imageUrl)),
+    );
+  }
+
+  Future<EventModel?> buildEventToSave() async {
     if (!(formKey.currentState?.saveAndValidate() ?? false)) return null;
 
     final formData = formKey.currentState!.value;
-    final userId = _authService.currentUser?.uid ?? '';
+    final userId = await _resolveOwnerId();
+    if (userId == null) return null;
 
     final dateRange = formData[EventFormFields.dateRange] as DateTimeRange?;
 
@@ -155,13 +133,9 @@ class EventFormCubit extends Cubit<ResultState<EventModel>> {
         ? int.tryParse(priceStr)
         : null;
 
-    final imageUrl = _selectedCoverFile != null
-        ? null
-        : _editingEvent?.imageUrl;
-
     return EventModel(
       id: _editingEvent?.id,
-      ownerId: _editingEvent?.ownerId ?? userId,
+      ownerId: userId,
       name: formData[EventFormFields.name] as String,
       description: formData[EventFormFields.description] as String,
       city: formData[EventFormFields.city] as String,
@@ -174,8 +148,20 @@ class EventFormCubit extends Cubit<ResultState<EventModel>> {
       eventType: formData[EventFormFields.eventType] as EventType,
       allowedBrands: allowedBrands,
       price: price,
-      imageUrl: imageUrl,
+      imageUrl: _editingEvent?.imageUrl,
       state: _editingEvent?.state ?? EventState.scheduled,
     );
+  }
+
+  Future<String?> _resolveOwnerId() async {
+    if (_editingEvent?.ownerId != null) {
+      return _editingEvent!.ownerId;
+    }
+
+    final result = await _getCurrentUserIdUseCase();
+    return result.fold((error) {
+      emit(ResultState.error(error: error));
+      return null;
+    }, (userId) => userId);
   }
 }
