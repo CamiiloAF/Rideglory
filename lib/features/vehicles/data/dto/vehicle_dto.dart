@@ -1,9 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:rideglory/core/http/api_date_time.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
 part 'vehicle_dto.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(converters: apiJsonDateTimeConverters)
 class VehicleDto extends VehicleModel {
   const VehicleDto({
     super.id,
@@ -19,6 +20,7 @@ class VehicleDto extends VehicleModel {
     super.createdAt,
     super.updatedAt,
     super.isArchived,
+    super.isMainVehicle = false,
   });
 
   factory VehicleDto.fromJson(Map<String, dynamic> json) =>
@@ -41,6 +43,7 @@ class VehicleDto extends VehicleModel {
       createdAt: createdAt,
       updatedAt: updatedAt,
       isArchived: isArchived,
+      isMainVehicle: isMainVehicle,
     );
   }
 }
@@ -60,5 +63,6 @@ extension VehicleModelExtension on VehicleModel {
     createdAt: createdAt,
     updatedAt: updatedAt,
     isArchived: isArchived,
+    isMainVehicle: isMainVehicle,
   ).toJson();
 }

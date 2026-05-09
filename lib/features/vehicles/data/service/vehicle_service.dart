@@ -15,6 +15,9 @@ abstract class VehicleService {
   @GET(ApiRoutes.myVehicles)
   Future<List<VehicleDto>> getMyVehicles();
 
+  @PUT('${ApiRoutes.myVehicles}/{vehicleId}/main')
+  Future<VehicleDto> setMyMainVehicle(@Path('vehicleId') String vehicleId);
+
   @POST(ApiRoutes.myVehicles)
   Future<VehicleDto> createMyVehicle(@Body() Map<String, dynamic> request);
 

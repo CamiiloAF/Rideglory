@@ -1,10 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:rideglory/core/http/api_date_time.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/domain/model/rider_profile_model.dart';
 
 part 'rider_profile_dto.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(converters: apiJsonDateTimeConverters)
 class RiderProfileDto extends RiderProfileModel {
   const RiderProfileDto({
     required super.id,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/features/users/data/dto/user_dto.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
@@ -45,7 +46,7 @@ class UserStorageService {
       'fullName': user.fullName,
       'email': user.email,
       'identificationNumber': user.identificationNumber,
-      'birthDate': user.birthDate?.toIso8601String(),
+      'birthDate': user.birthDate?.toApiIso8601String(),
       'phone': user.phone,
       'residenceCity': user.residenceCity,
       'eps': user.eps,
@@ -54,8 +55,8 @@ class UserStorageService {
       'emergencyContactName': user.emergencyContactName,
       'emergencyContactPhone': user.emergencyContactPhone,
       'isDeleted': user.isDeleted,
-      'createdAt': user.createdAt?.toIso8601String(),
-      'updatedAt': user.updatedAt?.toIso8601String(),
+      'createdAt': user.createdAt?.toApiIso8601String(),
+      'updatedAt': user.updatedAt?.toApiIso8601String(),
     };
   }
 }

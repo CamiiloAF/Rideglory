@@ -1,9 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:rideglory/core/http/api_date_time.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 
 part 'maintenance_dto.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(converters: apiJsonDateTimeConverters)
 class MaintenanceDto extends MaintenanceModel {
   MaintenanceDto({
     required super.id,
@@ -27,7 +28,11 @@ class MaintenanceDto extends MaintenanceModel {
   factory MaintenanceDto.fromJson(Map<String, dynamic> json) =>
       _$MaintenanceDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$MaintenanceDtoToJson(this);
+  Map<String, dynamic> toJson() {
+    final json = _$MaintenanceDtoToJson(this);
+    json['date'] = apiEncodeRequiredDateTime(date);
+    return json;
+  }
 }
 
 extension MaintenanceModelExtension on MaintenanceModel {

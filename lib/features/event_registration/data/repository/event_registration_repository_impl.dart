@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/domain/nothing.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
+import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/core/http/rest_client_functions.dart';
 import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/features/event_registration/data/dto/event_registration_dto.dart';
@@ -63,7 +64,7 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
       function: () async {
         await _firestore.collection(_collectionName).doc(id).update({
           'status': RegistrationStatus.cancelled.name,
-          'updatedDate': DateTime.now().toIso8601String(),
+          'updatedDate': DateTime.now().toApiIso8601String(),
         });
         return const Nothing();
       },
@@ -176,7 +177,7 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
       function: () async {
         final now = DateTime.now();
         await _firestore.collection(_collectionName).doc(registrationId).update(
-          {'status': status.name, 'updatedDate': now.toIso8601String()},
+          {'status': status.name, 'updatedDate': now.toApiIso8601String()},
         );
 
         final doc = await _firestore

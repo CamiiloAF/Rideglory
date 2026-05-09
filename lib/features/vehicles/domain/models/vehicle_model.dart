@@ -12,6 +12,7 @@ class VehicleModel {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final bool isArchived;
+  final bool isMainVehicle;
 
   const VehicleModel({
     this.id,
@@ -27,6 +28,7 @@ class VehicleModel {
     this.createdAt,
     this.updatedAt,
     this.isArchived = false,
+    this.isMainVehicle = false,
   });
 
   VehicleModel copyWith({
@@ -43,6 +45,7 @@ class VehicleModel {
     DateTime? createdDate,
     DateTime? updatedDate,
     bool? isArchived,
+    bool? isMainVehicle,
   }) {
     return VehicleModel(
       id: id ?? this.id,
@@ -55,9 +58,10 @@ class VehicleModel {
       vin: vin ?? this.vin,
       purchaseDate: purchaseDate ?? this.purchaseDate,
       imageUrl: imageUrl ?? this.imageUrl,
-      createdAt: createdDate ?? this.createdAt,
-      updatedAt: updatedDate ?? this.updatedAt,
+      createdAt: createdDate ?? createdAt,
+      updatedAt: updatedDate ?? updatedAt,
       isArchived: isArchived ?? this.isArchived,
+      isMainVehicle: isMainVehicle ?? this.isMainVehicle,
     );
   }
 
