@@ -10,20 +10,33 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
 class GarageOptionsBottomSheet extends StatelessWidget {
-  const GarageOptionsBottomSheet({super.key, required this.vehicle});
+  const GarageOptionsBottomSheet({
+    super.key,
+    required this.vehicle,
+    required this.parentContext,
+    required this.deleteCubit,
+    this.onGarageListUpdatedLocally,
+  });
 
   final VehicleModel vehicle;
+  final BuildContext parentContext;
+  final VehicleDeleteCubit deleteCubit;
+  final void Function([VehicleModel? focusVehicle])? onGarageListUpdatedLocally;
 
-  static void show(BuildContext context, VehicleModel vehicle) {
-    final vehicleCubit = context.read<VehicleCubit>();
+  static void show(
+    BuildContext parentContext,
+    VehicleModel vehicle, {
+    void Function([VehicleModel? focusVehicle])? onGarageListUpdatedLocally,
+  }) {
+    final vehicleCubit = parentContext.read<VehicleCubit>();
     final deleteCubit = getIt<VehicleDeleteCubit>()..reset();
     showModalBottomSheet(
-      context: context,
-      backgroundColor: context.colorScheme.surface,
+      context: parentContext,
+      backgroundColor: parentContext.colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder: (bottomSheetContext) => BlocProvider<VehicleCubit>.value(
+      builder: (sheetContext) => BlocProvider<VehicleCubit>.value(
         value: vehicleCubit,
         child: BlocProvider<VehicleDeleteCubit>.value(
           value: deleteCubit,
@@ -31,13 +44,13 @@ class GarageOptionsBottomSheet extends StatelessWidget {
             listener: (ctx, state) {
               state.whenOrNull(
                 success: (_) {
-                  Navigator.pop(ctx);
-                  ScaffoldMessenger.of(ctx).showSnackBar(
+                  ScaffoldMessenger.of(parentContext).showSnackBar(
                     SnackBar(
-                      content: Text(context.l10n.vehicle_vehicleDeleted),
+                      content: Text(parentContext.l10n.vehicle_vehicleDeleted),
                       backgroundColor: Colors.green,
                     ),
                   );
+                  onGarageListUpdatedLocally?.call();
                 },
                 error: (message) {
                   ScaffoldMessenger.of(ctx).showSnackBar(
@@ -49,7 +62,12 @@ class GarageOptionsBottomSheet extends StatelessWidget {
                 },
               );
             },
-            child: GarageOptionsBottomSheet(vehicle: vehicle),
+            child: GarageOptionsBottomSheet(
+              vehicle: vehicle,
+              parentContext: parentContext,
+              onGarageListUpdatedLocally: onGarageListUpdatedLocally,
+              deleteCubit: deleteCubit,
+            ),
           ),
         ),
       ),
@@ -77,9 +95,15 @@ class GarageOptionsBottomSheet extends StatelessWidget {
               context.l10n.vehicle_editVehicle,
               style: context.bodyLarge?.copyWith(color: Colors.white),
             ),
-            onTap: () {
+            onTap: () async {
               Navigator.pop(context);
-              context.pushNamed(AppRoutes.editVehicle, extra: vehicle);
+              final result = await GoRouter.of(
+                parentContext,
+              ).pushNamed(AppRoutes.editVehicle, extra: vehicle);
+              if (!parentContext.mounted || result == null) return;
+              onGarageListUpdatedLocally?.call(
+                result is VehicleModel ? result : null,
+              );
             },
           ),
           ListTile(
@@ -90,7 +114,10 @@ class GarageOptionsBottomSheet extends StatelessWidget {
             ),
             onTap: () {
               Navigator.pop(context);
-              context.pushNamed(AppRoutes.createMaintenance, extra: vehicle);
+              parentContext.pushNamed(
+                AppRoutes.createMaintenance,
+                extra: vehicle,
+              );
             },
           ),
           ListTile(
@@ -99,12 +126,26 @@ class GarageOptionsBottomSheet extends StatelessWidget {
               context.l10n.vehicle_deleteVehicle,
               style: context.bodyLarge?.copyWith(color: Colors.red),
             ),
-            onTap: () {
+            onTap: () async {
               Navigator.pop(context);
-              final vehicleCubit = context.read<VehicleCubit>();
-              context.read<VehicleDeleteCubit>().deleteVehicle(
+              final confirm = await ConfirmationDialog.show(
+                context: parentContext,
+                title: parentContext.l10n.vehicle_deleteVehicle,
+                content: parentContext.l10n.vehicle_deleteVehicleConfirmContent(
+                  vehicle.name,
+                ),
+                cancelLabel: parentContext.l10n.cancel,
+                confirmLabel: parentContext.l10n.delete,
+                confirmType: DialogActionType.danger,
+                dialogType: DialogType.warning,
+                isDismissible: true,
+              );
+              if (confirm != true || !parentContext.mounted) return;
+              deleteCubit.deleteVehicle(
                 vehicle.id!,
-                availableVehicles: vehicleCubit.availableVehicles,
+                availableVehicles: parentContext
+                    .read<VehicleCubit>()
+                    .availableVehicles,
               );
             },
           ),

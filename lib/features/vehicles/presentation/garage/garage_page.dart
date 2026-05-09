@@ -21,7 +21,9 @@ class GaragePage extends StatelessWidget {
       },
       child: Builder(
         builder: (context) {
-          return GaragePageView(loadVehicles: () => _loadMyVehicles(context));
+          return GaragePageView(
+            loadVehicles: () => _loadMyVehicles(context),
+          );
         },
       ),
     );
