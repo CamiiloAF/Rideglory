@@ -1,10 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:rideglory/core/http/api_date_time.dart';
 import 'package:rideglory/features/events/data/dto/event_dto_converters.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 
 part 'event_dto.g.dart';
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, converters: apiJsonDateTimeConverters)
 @EventDifficultyConverter()
 @EventTypeConverter()
 @EventStateConverter()
@@ -33,7 +34,12 @@ class EventDto extends EventModel {
   factory EventDto.fromJson(Map<String, dynamic> json) =>
       _$EventDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$EventDtoToJson(this);
+  Map<String, dynamic> toJson() {
+    final json = _$EventDtoToJson(this);
+    json['startDate'] = apiEncodeRequiredDateTime(startDate);
+    json['meetingTime'] = apiEncodeRequiredDateTime(meetingTime);
+    return json;
+  }
 }
 
 extension EventModelExtension on EventModel {

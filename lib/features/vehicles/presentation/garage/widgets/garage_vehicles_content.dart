@@ -39,7 +39,6 @@ class GarageVehiclesContent extends StatelessWidget {
     );
 
     final vehicleCubit = context.read<VehicleCubit>();
-    final mainVehicleId = vehicleCubit.currentVehicle?.id;
     final canToggleMain = totalVehicles > 1;
 
     return SingleChildScrollView(
@@ -123,8 +122,7 @@ class GarageVehiclesContent extends StatelessWidget {
             onOptionsTap: () {
               GarageOptionsBottomSheet.show(context, currentVehicle);
             },
-            isMainVehicle:
-                currentVehicle.id != null && currentVehicle.id == mainVehicleId,
+            isMainVehicle: currentVehicle.isMainVehicle,
             onMainVehicleChanged: canToggleMain && currentVehicle.id != null
                 ? (value) {
                     if (value) {

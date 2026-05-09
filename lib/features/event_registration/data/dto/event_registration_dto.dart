@@ -1,9 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:rideglory/core/http/api_date_time.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 
 part 'event_registration_dto.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(converters: apiJsonDateTimeConverters)
 class EventRegistrationDto extends EventRegistrationModel {
   @JsonKey(defaultValue: '')
   @override
@@ -39,7 +40,11 @@ class EventRegistrationDto extends EventRegistrationModel {
   factory EventRegistrationDto.fromJson(Map<String, dynamic> json) =>
       _$EventRegistrationDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$EventRegistrationDtoToJson(this);
+  Map<String, dynamic> toJson() {
+    final json = _$EventRegistrationDtoToJson(this);
+    json['birthDate'] = apiEncodeRequiredDateTime(birthDate);
+    return json;
+  }
 }
 
 extension EventRegistrationModelExtension on EventRegistrationModel {

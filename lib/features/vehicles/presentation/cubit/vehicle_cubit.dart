@@ -2,28 +2,23 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/domain/result_state.dart';
-import 'package:rideglory/core/services/vehicle_preferences_service.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
-import 'package:rideglory/features/vehicles/domain/usecases/get_main_vehicle_id_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/get_vehicles_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/set_main_vehicle_usecase.dart';
 
+// TODO REVISAR Y MEJORAR ESTO
 @singleton
 class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
-  final VehiclePreferencesService _preferencesService;
-  final GetMainVehicleIdUseCase _getMainVehicleIdUseCase;
+  VehicleCubit(
+    this._getMyVehiclesUseCase,
+    this._setMainVehicleUseCase,
+  ) : super(const ResultState.initial());
+
   final GetMyVehiclesUseCase _getMyVehiclesUseCase;
   final SetMainVehicleUseCase _setMainVehicleUseCase;
 
   /// List of all available vehicles for the current user
   List<VehicleModel> _availableVehicles = [];
-
-  VehicleCubit(
-    this._preferencesService,
-    this._getMainVehicleIdUseCase,
-    this._getMyVehiclesUseCase,
-    this._setMainVehicleUseCase,
-  ) : super(const ResultState.initial());
 
   VehicleModel? get currentVehicle {
     final currentState = state;
@@ -47,12 +42,8 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
 
   Future<void> setCurrentVehicle(VehicleModel vehicle) async {
     emit(ResultState.data(data: [vehicle]));
-    if (vehicle.id != null) {
-      await _preferencesService.saveSelectedVehicleId(vehicle.id!);
-    }
   }
 
-  /// Load saved vehicle from a list of vehicles and store the list
   Future<void> loadSavedVehicle(List<VehicleModel> vehicles) async {
     _availableVehicles = vehicles;
 
@@ -61,32 +52,16 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
       return;
     }
 
-    // Try to get the main vehicle ID from the use case
-    final mainVehicleIdResult = await _getMainVehicleIdUseCase();
-
     VehicleModel? vehicleToSelect;
-
-    // First, try to find the main vehicle by ID from the use case
-    mainVehicleIdResult.fold(
-      (error) {
-        // Silently handle error
-        if (kDebugMode) {
-          print('Error getting main vehicle: ${error.message}');
-        }
-      },
-      (mainVehicleId) {
-        if (mainVehicleId != null) {
-          vehicleToSelect = vehicles.firstWhereOrNull(
-            (v) => v.id == mainVehicleId,
-          );
-        }
-      },
-    );
-
-    // Fall back to the first vehicle
+    for (final v in vehicles) {
+      if (v.isMainVehicle) {
+        vehicleToSelect = v;
+        break;
+      }
+    }
     vehicleToSelect ??= vehicles.first;
 
-    await setCurrentVehicle(vehicleToSelect!);
+    await setCurrentVehicle(vehicleToSelect);
   }
 
   void updateMileage(int newMileage) {
@@ -118,8 +93,6 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
       return v.id == updatedVehicle.id ? updatedVehicle : v;
     }).toList();
 
-    // Always emit to refresh listeners (garage & home),
-    // keeping the current selected vehicle if any.
     if (isEditingCurrent) {
       emit(ResultState.data(data: [updatedVehicle]));
     } else if (current != null) {
@@ -143,8 +116,15 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
             print('Error setting main vehicle: ${error.message}');
           }
         },
-        (_) {
-          setCurrentVehicle(mainVehicle);
+        (updated) {
+          _availableVehicles = _availableVehicles
+              .map(
+                (v) => v.copyWith(isMainVehicle: v.id == updated.id),
+              )
+              .toList();
+          setCurrentVehicle(
+            updated.copyWith(isMainVehicle: true),
+          );
         },
       );
     }
@@ -174,20 +154,24 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
         .where((v) => v.id != vehicleId)
         .toList();
 
-    // If the deleted vehicle was the current one, select another
     if (wasCurrentVehicle) {
       if (_availableVehicles.isEmpty) {
         await clearCurrentVehicle();
       } else {
-        await setCurrentVehicle(_availableVehicles.first);
+        VehicleModel? next;
+        for (final v in _availableVehicles) {
+          if (v.isMainVehicle) {
+            next = v;
+            break;
+          }
+        }
+        await setCurrentVehicle(next ?? _availableVehicles.first);
       }
     }
   }
 
-  /// Clear the current vehicle and remove from preferences
   Future<void> clearCurrentVehicle() async {
     emit(const ResultState.empty());
-    await _preferencesService.clearSelectedVehicleId();
     _availableVehicles = [];
   }
 }

@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
+import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/core/http/rest_client_functions.dart';
 import 'package:rideglory/features/vehicles/data/service/vehicle_service.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
@@ -22,6 +23,17 @@ class VehicleRepositoryImpl implements VehicleRepository {
       function: () async {
         final vehicles = await _vehicleService.getMyVehicles();
         return vehicles.map((vehicle) => vehicle.toModel()).toList();
+      },
+    );
+  }
+
+  @override
+  Future<Either<DomainException, VehicleModel>> setMainVehicle(
+    String vehicleId,
+  ) async {
+    return executeService(
+      function: () async {
+        return await _vehicleService.setMyMainVehicle(vehicleId);
       },
     );
   }
@@ -92,7 +104,7 @@ class VehicleRepositoryImpl implements VehicleRepository {
       'currentMileage': vehicle.currentMileage,
       'licensePlate': vehicle.licensePlate,
       'vin': vehicle.vin,
-      'purchaseDate': vehicle.purchaseDate?.toIso8601String(),
+      'purchaseDate': vehicle.purchaseDate?.toApiIso8601String(),
       'imageUrl': vehicle.imageUrl,
       'isArchived': vehicle.isArchived,
     }..removeWhere((_, value) => value == null);

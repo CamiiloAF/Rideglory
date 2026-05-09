@@ -1,3 +1,4 @@
+import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
 
 class UserDto extends UserModel {
@@ -45,7 +46,7 @@ class UserDto extends UserModel {
       'fullName': fullName,
       'email': email,
       'identificationNumber': identificationNumber,
-      'birthDate': birthDate?.toIso8601String(),
+      'birthDate': birthDate?.toApiIso8601String(),
       'phone': phone,
       'residenceCity': residenceCity,
       'eps': eps,
@@ -54,8 +55,8 @@ class UserDto extends UserModel {
       'emergencyContactName': emergencyContactName,
       'emergencyContactPhone': emergencyContactPhone,
       'isDeleted': isDeleted,
-      'createdAt': createdAt?.toIso8601String(),
-      'updatedAt': updatedAt?.toIso8601String(),
+      'createdAt': createdAt?.toApiIso8601String(),
+      'updatedAt': updatedAt?.toApiIso8601String(),
     };
   }
 }

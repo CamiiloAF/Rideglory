@@ -139,6 +139,7 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
             : formData[VehicleFormFields.vin] as String?,
         purchaseDate: formData[VehicleFormFields.purchaseDate] as DateTime?,
         isArchived: wasArchived ? false : (state.vehicle?.isArchived ?? false),
+        isMainVehicle: state.vehicle?.isMainVehicle ?? false,
       );
       return vehicleToSave;
     } else {
