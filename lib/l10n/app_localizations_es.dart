@@ -1407,6 +1407,11 @@ class AppLocalizationsEs extends AppLocalizations {
       'Esta acción eliminará todos los mantenimientos asociados a este vehículo y no se podrá deshacer.';
 
   @override
+  String vehicle_deleteVehicleConfirmContent(String vehicleName) {
+    return '¿Estás seguro de que deseas eliminar «$vehicleName»?\n\nEsta acción eliminará todos los mantenimientos asociados a este vehículo y no se podrá deshacer.';
+  }
+
+  @override
   String get vehicle_vehicleDeleted => 'Vehículo eliminado exitosamente';
 
   @override

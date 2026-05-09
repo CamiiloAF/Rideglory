@@ -1,14 +1,21 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:shimmer/shimmer.dart';
+
+const double _kFormImagePreviewAspectRatio = 16 / 9;
 
 /// Reusable image picker section for event cover, vehicle photo, etc.
 /// [title] and [hint] are shown in the empty state. [uploadButtonLabel] is the
 /// primary action. When [showGenerateWithAI] is true, a second outline button
 /// is shown and [onGenerateWithAITap] / [generateWithAILabel] are used.
+///
+/// Remote previews use a fixed aspect ratio so layout does not jump; loading
+/// states show a shimmer placeholder.
 class AppImagePicker extends StatelessWidget {
   const AppImagePicker({
     super.key,
@@ -157,18 +164,48 @@ class AppImagePicker extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: SizedBox(
-                          width: double.infinity,
+                        child: AspectRatio(
+                          aspectRatio: _kFormImagePreviewAspectRatio,
                           child: localImagePath != null
                               ? Image.file(
                                   File(localImagePath!),
                                   fit: BoxFit.cover,
                                   width: double.infinity,
+                                  height: double.infinity,
                                 )
-                              : Image.network(
-                                  imageUrl!,
+                              : CachedNetworkImage(
+                                  imageUrl: imageUrl!,
                                   fit: BoxFit.cover,
                                   width: double.infinity,
+                                  height: double.infinity,
+                                  fadeInDuration: const Duration(
+                                    milliseconds: 200,
+                                  ),
+                                  placeholder: (context, url) =>
+                                      Shimmer.fromColors(
+                                        baseColor: cs.surfaceContainerHighest,
+                                        highlightColor: cs.primary.withValues(
+                                          alpha: 0.14,
+                                        ),
+                                        period: const Duration(
+                                          milliseconds: 1200,
+                                        ),
+                                        child: ColoredBox(
+                                          color: cs.surfaceContainerHighest,
+                                          child: const SizedBox.expand(),
+                                        ),
+                                      ),
+                                  errorWidget: (context, url, error) =>
+                                      ColoredBox(
+                                        color: cs.surfaceContainerHighest,
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.broken_image_outlined,
+                                            size: 48,
+                                            color: cs.onSurfaceVariant,
+                                          ),
+                                        ),
+                                      ),
                                 ),
                         ),
                       ),

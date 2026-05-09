@@ -453,6 +453,14 @@
   "vehicle_unarchiveVehicle": "Desarchivar",
   "vehicle_deleteVehicleMessage": "¿Estás seguro de que deseas eliminar",
   "vehicle_deleteVehicleWarning": "Esta acción eliminará todos los mantenimientos asociados a este vehículo y no se podrá deshacer.",
+  "vehicle_deleteVehicleConfirmContent": "¿Estás seguro de que deseas eliminar «{vehicleName}»?\n\nEsta acción eliminará todos los mantenimientos asociados a este vehículo y no se podrá deshacer.",
+  "@vehicle_deleteVehicleConfirmContent": {
+    "placeholders": {
+      "vehicleName": {
+        "type": "String"
+      }
+    }
+  },
   "vehicle_vehicleDeleted": "Vehículo eliminado exitosamente",
   "vehicle_vehicleSetAsMain": "establecido como vehículo principal",
   "vehicle_vehicleArchived": "archivado",

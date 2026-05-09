@@ -22,13 +22,58 @@ class GaragePageView extends StatefulWidget {
 
 class _GaragePageViewState extends State<GaragePageView> {
   int _currentIndex = 0;
+  late final PageController _pageController;
+
+  /// Keeps carousel index valid after local cubit updates (create/edit/delete).
+  /// [focusVehicle] aligns the PageView when we know which row changed (API returns it).
+  void _syncGaragePageIndex([VehicleModel? focusVehicle]) {
+    if (!mounted) return;
+    final vehicles = context
+        .read<VehicleCubit>()
+        .availableVehicles
+        .where((v) => !v.isArchived)
+        .toList();
+
+    int newIndex = _currentIndex;
+    if (vehicles.isEmpty) {
+      newIndex = 0;
+    } else {
+      if (newIndex >= vehicles.length) {
+        newIndex = vehicles.length - 1;
+      }
+      final focusId = focusVehicle?.id;
+      if (focusId != null) {
+        final i = vehicles.indexWhere((v) => v.id == focusId);
+        if (i >= 0) newIndex = i;
+      }
+    }
+
+    setState(() => _currentIndex = newIndex);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_pageController.hasClients) return;
+      _pageController.jumpToPage(newIndex);
+    });
+  }
+
+  Future<void> _pushCreateVehicleThenSync() async {
+    final result = await context.pushNamed(AppRoutes.createVehicle);
+    if (!mounted || result == null) return;
+    _syncGaragePageIndex(result is VehicleModel ? result : null);
+  }
 
   @override
   void initState() {
     super.initState();
+    _pageController = PageController(initialPage: _currentIndex);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.loadVehicles();
     });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -85,16 +130,17 @@ class _GaragePageViewState extends State<GaragePageView> {
                 title: context.l10n.vehicle_noVehicles,
                 description: context.l10n.vehicle_noVehiclesDescription,
                 actionButtonText: context.l10n.vehicle_addVehicle,
-                onActionPressed: () =>
-                    context.pushNamed(AppRoutes.createVehicle),
+                onActionPressed: _pushCreateVehicleThenSync,
               ),
               data: (_) => GarageVehiclesContent(
+                pageController: _pageController,
                 currentIndex: _currentIndex,
                 onIndexChanged: (index) {
                   setState(() {
                     _currentIndex = index;
                   });
                 },
+                onGarageListUpdatedLocally: _syncGaragePageIndex,
               ),
               orElse: () => const PageLoadingStateWidget(),
             );

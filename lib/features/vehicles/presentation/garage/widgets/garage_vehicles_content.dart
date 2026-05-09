@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
+import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_empty_state.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_options_bottom_sheet.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_detail_view.dart';
@@ -12,12 +13,17 @@ import 'package:rideglory/shared/router/app_routes.dart';
 class GarageVehiclesContent extends StatelessWidget {
   const GarageVehiclesContent({
     super.key,
+    required this.pageController,
     required this.currentIndex,
     required this.onIndexChanged,
+    required this.onGarageListUpdatedLocally,
   });
 
+  final PageController pageController;
   final int currentIndex;
   final ValueChanged<int> onIndexChanged;
+  /// Sync carousel index after VehicleCubit was updated locally (no API refetch).
+  final void Function([VehicleModel? focusVehicle]) onGarageListUpdatedLocally;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +32,9 @@ class GarageVehiclesContent extends StatelessWidget {
     }).toList();
 
     if (vehicles.isEmpty) {
-      return const GarageEmptyState();
+      return GarageEmptyState(
+        onVehicleSavedLocally: onGarageListUpdatedLocally,
+      );
     }
 
     final totalVehicles = vehicles.length;
@@ -47,6 +55,7 @@ class GarageVehiclesContent extends StatelessWidget {
           SizedBox(
             height: 260,
             child: PageView.builder(
+              controller: pageController,
               itemCount: totalVehicles,
               onPageChanged: onIndexChanged,
               itemBuilder: (context, index) {
@@ -116,11 +125,19 @@ class GarageVehiclesContent extends StatelessWidget {
             index: vehicleIndex,
             totalVehicles: totalVehicles,
             totalMileage: totalMileage,
-            onAddVehicle: () {
-              context.pushNamed(AppRoutes.createVehicle);
+            onAddVehicle: () async {
+              final result = await context.pushNamed(AppRoutes.createVehicle);
+              if (!context.mounted || result == null) return;
+              onGarageListUpdatedLocally(
+                result is VehicleModel ? result : null,
+              );
             },
             onOptionsTap: () {
-              GarageOptionsBottomSheet.show(context, currentVehicle);
+              GarageOptionsBottomSheet.show(
+                context,
+                currentVehicle,
+                onGarageListUpdatedLocally: onGarageListUpdatedLocally,
+              );
             },
             isMainVehicle: currentVehicle.isMainVehicle,
             onMainVehicleChanged: canToggleMain && currentVehicle.id != null

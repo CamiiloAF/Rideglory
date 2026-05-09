@@ -2782,6 +2782,12 @@ abstract class AppLocalizations {
   /// **'Esta acción eliminará todos los mantenimientos asociados a este vehículo y no se podrá deshacer.'**
   String get vehicle_deleteVehicleWarning;
 
+  /// No description provided for @vehicle_deleteVehicleConfirmContent.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Estás seguro de que deseas eliminar «{vehicleName}»?\n\nEsta acción eliminará todos los mantenimientos asociados a este vehículo y no se podrá deshacer.'**
+  String vehicle_deleteVehicleConfirmContent(String vehicleName);
+
   /// No description provided for @vehicle_vehicleDeleted.
   ///
   /// In es, this message translates to:
