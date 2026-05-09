@@ -13,7 +13,7 @@ class ProfilePage extends StatelessWidget {
 
   Future<void> _logout(BuildContext context) async {
     context.read<AuthCubit>().signOut();
-    context.read<VehicleCubit>().clearCurrentVehicle();
+    context.read<VehicleCubit>().clearVehicles();
     context.goAndClearStack(AppRoutes.login);
   }
 

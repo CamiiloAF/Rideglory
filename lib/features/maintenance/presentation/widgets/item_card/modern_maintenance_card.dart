@@ -55,23 +55,21 @@ class ModernMaintenanceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<VehicleCubit, ResultState<List<VehicleModel>>>(
-      builder: (context, vehicleState) {
-        final currentMileage = vehicleState.maybeWhen(
-          data: (data) => data.first.currentMileage,
-          orElse: () => null,
-        );
-
+      builder: (context, _) {
         final availableVehicles = context
             .read<VehicleCubit>()
             .availableVehicles;
         VehicleModel? maintenanceVehicle;
+        int? currentMileage;
         if (maintenance.vehicleId != null) {
           try {
-            maintenanceVehicle = availableVehicles.firstWhere(
-              (v) => v.id == maintenance.vehicleId,
+            final matchedVehicle = availableVehicles.firstWhere(
+              (vehicle) => vehicle.id == maintenance.vehicleId,
             );
-          } catch (e) {
-            // Vehicle not found
+            maintenanceVehicle = matchedVehicle;
+            currentMileage = matchedVehicle.currentMileage;
+          } catch (_) {
+            maintenanceVehicle = null;
           }
         }
 

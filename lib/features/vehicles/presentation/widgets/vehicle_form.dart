@@ -178,6 +178,7 @@ class VehicleForm extends StatelessWidget {
                 labelText: context.l10n.vehicle_vehicleVin,
                 hintText: context.l10n.vehicle_vehicleVinHint,
                 prefixIcon: Icons.pin,
+                maxLength: 17,
                 textInputAction: TextInputAction.done,
               ),
               AppSpacing.gapLg,

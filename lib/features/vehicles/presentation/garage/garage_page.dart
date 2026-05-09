@@ -21,8 +21,12 @@ class GaragePage extends StatelessWidget {
       },
       child: Builder(
         builder: (context) {
+          final extra = GoRouterState.of(context).extra;
+          final openWithVehicleId =
+              extra is String && extra.isNotEmpty ? extra : null;
           return GaragePageView(
             loadVehicles: () => _loadMyVehicles(context),
+            openWithVehicleId: openWithVehicleId,
           );
         },
       ),
