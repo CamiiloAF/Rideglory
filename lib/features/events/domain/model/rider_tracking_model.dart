@@ -34,7 +34,7 @@ class RiderTrackingModel {
   final String firstName;
   final String lastName;
 
-  /// Role in the live tracking session (stored as string in Firestore).
+  /// Role in the live tracking session (serialized as string).
   final RiderTrackingRole role;
   final double latitude;
   final double longitude;
