@@ -436,6 +436,8 @@
   "maintenance_searchMaintenances": "Buscar por nombre del mantenimiento",
   "maintenance_allVehicles": "Todos los vehículos",
   "maintenance_recentRecords": "Registros recientes",
+  "maintenance_lastService": "Último servicio",
+  "maintenance_nextService": "Próximo servicio",
   "maintenance_filter": "Filtrar",
   "vehicle_vehicles": "Vehículos",
   "vehicle_myVehicles": "Mis Vehículos",

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_delete_cubit.dart';
@@ -16,17 +17,23 @@ class GarageOptionsBottomSheet extends StatelessWidget {
     required this.parentContext,
     required this.deleteCubit,
     this.onGarageListUpdatedLocally,
+    this.onMaintenanceCreated,
+    this.onMaintenanceRefreshRequested,
   });
 
   final VehicleModel vehicle;
   final BuildContext parentContext;
   final VehicleDeleteCubit deleteCubit;
   final void Function([VehicleModel? focusVehicle])? onGarageListUpdatedLocally;
+  final ValueChanged<MaintenanceModel>? onMaintenanceCreated;
+  final ValueChanged<String>? onMaintenanceRefreshRequested;
 
   static void show(
     BuildContext parentContext,
     VehicleModel vehicle, {
     void Function([VehicleModel? focusVehicle])? onGarageListUpdatedLocally,
+    ValueChanged<MaintenanceModel>? onMaintenanceCreated,
+    ValueChanged<String>? onMaintenanceRefreshRequested,
   }) {
     final vehicleCubit = parentContext.read<VehicleCubit>();
     final deleteCubit = getIt<VehicleDeleteCubit>()..reset();
@@ -66,6 +73,8 @@ class GarageOptionsBottomSheet extends StatelessWidget {
               vehicle: vehicle,
               parentContext: parentContext,
               onGarageListUpdatedLocally: onGarageListUpdatedLocally,
+              onMaintenanceCreated: onMaintenanceCreated,
+              onMaintenanceRefreshRequested: onMaintenanceRefreshRequested,
               deleteCubit: deleteCubit,
             ),
           ),
@@ -112,12 +121,18 @@ class GarageOptionsBottomSheet extends StatelessWidget {
               context.l10n.vehicle_addMaintenance,
               style: context.bodyLarge?.copyWith(color: Colors.white),
             ),
-            onTap: () {
+            onTap: () async {
               Navigator.pop(context);
-              parentContext.pushNamed(
+              final result = await parentContext.pushNamed<dynamic>(
                 AppRoutes.createMaintenance,
                 extra: vehicle,
               );
+              if (!parentContext.mounted || result == null) return;
+              if (result is MaintenanceModel) {
+                onMaintenanceCreated?.call(result);
+              } else if (vehicle.id != null) {
+                onMaintenanceRefreshRequested?.call(vehicle.id!);
+              }
             },
           ),
           ListTile(

@@ -1,7 +1,9 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 enum MaintenanceType {
+  @JsonValue('OIL_CHANGE')
   oilChange('Cambio de aceite'),
+  @JsonValue('PREVENTIVE')
   preventive('Mantenimiento preventivo');
 
   final String label;

@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/exceptions/domain_exception.dart';
-import '../model/maintenance_model.dart';
+import '../model/maintenance_user_list_aggregate.dart';
 import '../repository/maintenance_repository.dart';
 
 @injectable
@@ -11,7 +11,7 @@ class GetMaintenanceListUseCase {
 
   final MaintenanceRepository maintenanceRepository;
 
-  Future<Either<DomainException, List<MaintenanceModel>>> execute() async {
+  Future<Either<DomainException, MaintenanceUserListAggregate>> execute() async {
     return await maintenanceRepository.getMaintenancesByUserId();
   }
 }

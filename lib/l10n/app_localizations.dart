@@ -2680,6 +2680,18 @@ abstract class AppLocalizations {
   /// **'Registros recientes'**
   String get maintenance_recentRecords;
 
+  /// No description provided for @maintenance_lastService.
+  ///
+  /// In es, this message translates to:
+  /// **'Último servicio'**
+  String get maintenance_lastService;
+
+  /// No description provided for @maintenance_nextService.
+  ///
+  /// In es, this message translates to:
+  /// **'Próximo servicio'**
+  String get maintenance_nextService;
+
   /// No description provided for @maintenance_filter.
   ///
   /// In es, this message translates to:

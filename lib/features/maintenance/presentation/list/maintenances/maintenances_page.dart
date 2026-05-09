@@ -110,9 +110,7 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
   }
 
   void _onDelete(MaintenanceModel maintenance) {
-    if (maintenance.id != null) {
-      context.read<MaintenanceDeleteCubit>().deleteMaintenance(maintenance.id!);
-    }
+    context.read<MaintenanceDeleteCubit>().deleteMaintenance(maintenance);
   }
 
   Future<void> _onAddMaintenance() async {
@@ -202,6 +200,8 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
                 ),
                 data: (maintenances) => MaintenancesDataWidget(
                   maintenances: maintenances,
+                  maintenanceSummary:
+                      context.read<MaintenancesCubit>().summaryForHeader(),
                   onRefresh: _onRefresh,
                   onSearchChanged: (value) {
                     context.read<MaintenancesCubit>().updateSearchQuery(value);

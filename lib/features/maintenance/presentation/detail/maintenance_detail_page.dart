@@ -77,9 +77,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
         confirmType: DialogActionType.danger,
       );
       if (confirm == true && mounted) {
-        context.read<MaintenanceDeleteCubit>().deleteMaintenance(
-          _maintenance.id!,
-        );
+        context.read<MaintenanceDeleteCubit>().deleteMaintenance(_maintenance);
       }
     }
   }

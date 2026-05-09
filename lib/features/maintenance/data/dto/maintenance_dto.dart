@@ -1,57 +1,68 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:rideglory/core/http/api_date_time.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 
 part 'maintenance_dto.g.dart';
 
 @JsonSerializable(converters: apiJsonDateTimeConverters)
-class MaintenanceDto extends MaintenanceModel {
-  MaintenanceDto({
-    required super.id,
-    required super.name,
-    required super.type,
-    required super.date,
-    required super.maintanceMileage,
-    required super.receiveAlert,
-    required super.receiveMileageAlert,
-    required super.receiveDateAlert,
-    required super.notes,
-    required super.nextMaintenanceDate,
-    required super.nextMaintenanceMileage,
-    required super.userId,
-    required super.vehicleId,
-    required super.createdDate,
-    required super.updatedDate,
-    super.cost,
+class MaintenanceDto {
+  const MaintenanceDto({
+    required this.id,
+    required this.userId,
+    required this.vehicleId,
+    required this.name,
+    required this.type,
+    this.notes,
+    required this.date,
+    this.nextMaintenanceDate,
+    required this.maintanceMileage,
+    required this.receiveAlert,
+    required this.receiveMileageAlert,
+    required this.receiveDateAlert,
+    this.nextMaintenanceMileage,
+    this.cost,
+    this.createdAt,
+    this.updatedAt,
   });
 
   factory MaintenanceDto.fromJson(Map<String, dynamic> json) =>
       _$MaintenanceDtoFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    final json = _$MaintenanceDtoToJson(this);
-    json['date'] = apiEncodeRequiredDateTime(date);
-    return json;
-  }
-}
+  Map<String, dynamic> toJson() => _$MaintenanceDtoToJson(this);
 
-extension MaintenanceModelExtension on MaintenanceModel {
-  Map<String, dynamic> toJson() => MaintenanceDto(
-    id: id,
-    name: name,
-    type: type,
-    date: date,
-    maintanceMileage: maintanceMileage,
-    receiveAlert: receiveAlert,
-    receiveMileageAlert: receiveMileageAlert,
-    receiveDateAlert: receiveDateAlert,
-    notes: notes,
-    nextMaintenanceDate: nextMaintenanceDate,
-    nextMaintenanceMileage: nextMaintenanceMileage,
-    userId: userId,
-    vehicleId: vehicleId,
-    createdDate: createdDate,
-    updatedDate: updatedDate,
-    cost: cost,
-  ).toJson();
+  final String id;
+  final String userId;
+  final String vehicleId;
+  final String name;
+  final MaintenanceType type;
+  final String? notes;
+  final DateTime date;
+  final DateTime? nextMaintenanceDate;
+  final int maintanceMileage;
+  final bool receiveAlert;
+  final bool receiveMileageAlert;
+  final bool receiveDateAlert;
+  final int? nextMaintenanceMileage;
+  final double? cost;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+
+  MaintenanceModel toModel() => MaintenanceModel(
+        id: id,
+        userId: userId,
+        vehicleId: vehicleId,
+        name: name,
+        type: type,
+        notes: notes,
+        date: date,
+        nextMaintenanceDate: nextMaintenanceDate,
+        maintanceMileage: maintanceMileage,
+        receiveAlert: receiveAlert,
+        receiveMileageAlert: receiveMileageAlert,
+        receiveDateAlert: receiveDateAlert,
+        nextMaintenanceMileage: nextMaintenanceMileage,
+        cost: cost,
+        createdDate: createdAt,
+        updatedDate: updatedAt,
+      );
 }

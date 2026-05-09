@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_detail_header.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_full_specs_section.dart';
@@ -17,6 +18,9 @@ class VehicleDetailView extends StatelessWidget {
     required this.onAddVehicle,
     required this.onOptionsTap,
     required this.isMainVehicle,
+    required this.maintenanceRefreshTick,
+    required this.onPendingMaintenanceConsumed,
+    this.pendingCreatedMaintenance,
     this.onMainVehicleChanged,
   });
 
@@ -27,6 +31,9 @@ class VehicleDetailView extends StatelessWidget {
   final VoidCallback onAddVehicle;
   final VoidCallback onOptionsTap;
   final bool isMainVehicle;
+  final int maintenanceRefreshTick;
+  final MaintenanceModel? pendingCreatedMaintenance;
+  final void Function(String vehicleId) onPendingMaintenanceConsumed;
   final ValueChanged<bool>? onMainVehicleChanged;
 
   @override
@@ -56,7 +63,12 @@ class VehicleDetailView extends StatelessWidget {
               AppSpacing.gapXxxl,
               VehicleFullSpecsSection(vehicle: vehicle),
               AppSpacing.gapXxxl,
-              VehicleMaintenanceHistorySection(vehicle: vehicle),
+              VehicleMaintenanceHistorySection(
+                vehicle: vehicle,
+                maintenanceRefreshTick: maintenanceRefreshTick,
+                pendingCreatedMaintenance: pendingCreatedMaintenance,
+                onPendingMaintenanceConsumed: onPendingMaintenanceConsumed,
+              ),
               AppSpacing.gapXxxl,
               VehicleGarageOverviewSection(
                 totalVehicles: totalVehicles,
