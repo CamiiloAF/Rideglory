@@ -6,7 +6,7 @@ part 'rider_tracking_dto.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 @RiderTrackingRoleConverter()
-@TrackingFirestoreDateTimeConverter()
+@TrackingDateTimeConverter()
 class RiderTrackingDto extends RiderTrackingModel {
   const RiderTrackingDto({
     required super.userId,
@@ -28,16 +28,6 @@ class RiderTrackingDto extends RiderTrackingModel {
 
   Map<String, dynamic> toJson() => _$RiderTrackingDtoToJson(this);
 
-  factory RiderTrackingDto.fromFirestore(
-    Map<String, dynamic> data,
-    String documentId,
-  ) {
-    final json = Map<String, dynamic>.from(data);
-    json['userId'] = json['userId'] as String? ?? documentId;
-    return RiderTrackingDto.fromJson(json);
-  }
-
-  /// Ensures Firestore partial documents deserialize like the previous manual [fromFirestore].
   static Map<String, dynamic> _normalizeTrackingJson(Map<String, dynamic> json) {
     final m = Map<String, dynamic>.from(json);
     m['firstName'] ??= '';
