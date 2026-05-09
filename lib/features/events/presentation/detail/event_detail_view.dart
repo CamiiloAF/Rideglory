@@ -3,10 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/permissions/location_permission_handler.dart';
-import 'package:rideglory/core/services/auth_service.dart';
+import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/delete/cubit/event_delete_cubit.dart';
@@ -48,7 +47,7 @@ class EventDetailViewState extends State<EventDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUserId = getIt<AuthService>().currentUser?.id;
+    final currentUserId = context.watch<AuthCubit>().state.currentUser?.id;
     final isOwner = currentEvent.ownerId == currentUserId;
 
     return PopScope(

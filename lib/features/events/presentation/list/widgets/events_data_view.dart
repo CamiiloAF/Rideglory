@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/core/di/injection.dart';
-import 'package:rideglory/core/services/auth_service.dart';
+import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/event_card.dart';
@@ -19,7 +18,7 @@ class EventsDataView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentUserId = getIt<AuthService>().currentUser?.id;
+    final currentUserId = context.watch<AuthCubit>().state.currentUser?.id;
 
     return Column(
       children: [
