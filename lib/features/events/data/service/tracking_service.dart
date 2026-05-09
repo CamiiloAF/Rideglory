@@ -15,7 +15,7 @@ class TrackingService {
   }) async {
     await _dio.post<void>(
       ApiRoutes.eventTrackingStartSession(eventId),
-      {'rider': rider.toJson()},
+      data: {'rider': rider.toJson()},
     );
   }
 
@@ -25,7 +25,7 @@ class TrackingService {
   }) async {
     await _dio.post<void>(
       ApiRoutes.eventTrackingStopSession(eventId),
-      {'userId': userId},
+      data: {'userId': userId},
     );
   }
 

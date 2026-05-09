@@ -19,9 +19,6 @@ class TrackingDateTimeConverter extends JsonConverter<DateTime, Object?> {
     if (json == null) {
       return DateTime.now();
     }
-    if (json is Timestamp) {
-      return json.toDate();
-    }
     if (json is DateTime) {
       return json;
     }
