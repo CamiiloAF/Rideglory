@@ -12,9 +12,16 @@ import 'package:rideglory/shared/widgets/states/page_error_state_widget.dart';
 import 'package:rideglory/shared/widgets/states/page_loading_state_widget.dart';
 
 class GaragePageView extends StatefulWidget {
-  const GaragePageView({super.key, required this.loadVehicles});
+  const GaragePageView({
+    super.key,
+    required this.loadVehicles,
+    this.openWithVehicleId,
+  });
 
   final Future<void> Function() loadVehicles;
+
+  /// When opening the garage from home (or deep link), scroll to this vehicle.
+  final String? openWithVehicleId;
 
   @override
   State<GaragePageView> createState() => _GaragePageViewState();
@@ -23,6 +30,7 @@ class GaragePageView extends StatefulWidget {
 class _GaragePageViewState extends State<GaragePageView> {
   int _currentIndex = 0;
   late final PageController _pageController;
+  bool _appliedRouteVehicleFocus = false;
 
   /// Keeps carousel index valid after local cubit updates (create/edit/delete).
   /// [focusVehicle] aligns the PageView when we know which row changed (API returns it).
@@ -65,8 +73,49 @@ class _GaragePageViewState extends State<GaragePageView> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentIndex);
+    if (widget.openWithVehicleId == null) {
+      _appliedRouteVehicleFocus = true;
+    }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       widget.loadVehicles();
+    });
+  }
+
+  @override
+  void didUpdateWidget(GaragePageView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.openWithVehicleId != oldWidget.openWithVehicleId) {
+      _appliedRouteVehicleFocus =
+          widget.openWithVehicleId == null;
+    }
+  }
+
+  /// Aligns carousel + cubit selection when arriving with [GaragePageView.openWithVehicleId].
+  void _applyOpenWithVehicleIdIfNeeded() {
+    if (_appliedRouteVehicleFocus) return;
+    final id = widget.openWithVehicleId;
+    if (id == null) {
+      _appliedRouteVehicleFocus = true;
+      return;
+    }
+    if (!mounted) return;
+    final vehicles = context
+        .read<VehicleCubit>()
+        .availableVehicles
+        .where((vehicle) => !vehicle.isArchived)
+        .toList();
+    final index = vehicles.indexWhere((vehicle) => vehicle.id == id);
+    if (index < 0) {
+      _appliedRouteVehicleFocus = true;
+      return;
+    }
+    _appliedRouteVehicleFocus = true;
+    final vehicle = vehicles[index];
+    context.read<VehicleCubit>().selectVehicle(vehicle);
+    setState(() => _currentIndex = index);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_pageController.hasClients) return;
+      _pageController.jumpToPage(index);
     });
   }
 
@@ -132,16 +181,20 @@ class _GaragePageViewState extends State<GaragePageView> {
                 actionButtonText: context.l10n.vehicle_addVehicle,
                 onActionPressed: _pushCreateVehicleThenSync,
               ),
-              data: (_) => GarageVehiclesContent(
-                pageController: _pageController,
-                currentIndex: _currentIndex,
-                onIndexChanged: (index) {
-                  setState(() {
-                    _currentIndex = index;
-                  });
-                },
-                onGarageListUpdatedLocally: _syncGaragePageIndex,
-              ),
+              data: (_) {
+                WidgetsBinding.instance
+                    .addPostFrameCallback((_) => _applyOpenWithVehicleIdIfNeeded());
+                return GarageVehiclesContent(
+                  pageController: _pageController,
+                  currentIndex: _currentIndex,
+                  onIndexChanged: (index) {
+                    setState(() {
+                      _currentIndex = index;
+                    });
+                  },
+                  onGarageListUpdatedLocally: _syncGaragePageIndex,
+                );
+              },
               orElse: () => const PageLoadingStateWidget(),
             );
           },

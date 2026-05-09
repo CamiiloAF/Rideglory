@@ -84,9 +84,9 @@ class VehicleSelector extends StatelessWidget {
                         ),
                       );
                     }).toList(),
-                    onChanged: (vehicle) async {
+                    onChanged: (vehicle) {
                       if (vehicle != null) {
-                        await vehicleCubit.setCurrentVehicle(vehicle);
+                        vehicleCubit.selectVehicle(vehicle);
                       }
                     },
                   ),

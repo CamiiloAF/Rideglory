@@ -49,6 +49,7 @@ La app usa **gen-l10n** de Flutter con **`intl`**. La plantilla está en **`lib/
 - Debe seguir una arquitectura limpia separada por capas: presentation, data, domain
 - Constantes de campos de formulario → `lib/features/<feature>/constants/<feature>_form_fields.dart`
 - Evita agregar comentarios muy obvios (p. ej. no documentar que `LoginSocialButton` es el botón social si el nombre de la clase ya lo indica).
+- **Nombres de variables locales:** evita identificadores de una sola letra genéricos (`v`, `e`, `x`, …). Prefiere nombres que describan el dominio (`vehicle`, `matchedVehicle`, `element`, `event`, `entry`, …). Excepciones razonables: índices en bucles muy cortos (`i`, `j`), coordenadas matemáticas (`x`, `y`), o parámetros anónimos triviales donde el tipo ya es explícito y la lectura no pierde claridad.
 - **Textos de botones:** siempre en sentence case — primera letra mayúscula, el resto en minúscula.
   - ✅ `'Iniciar sesión'` `'Crear cuenta'` `'Regístrate gratis'`
   - ❌ `'INICIAR SESIÓN'` `'Crear Cuenta'` `'REGÍSTRATE GRATIS'`

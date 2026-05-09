@@ -66,9 +66,40 @@ class VehicleModel {
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is VehicleModel && id == other.id;
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is VehicleModel &&
+            id == other.id &&
+            name == other.name &&
+            brand == other.brand &&
+            model == other.model &&
+            year == other.year &&
+            currentMileage == other.currentMileage &&
+            licensePlate == other.licensePlate &&
+            vin == other.vin &&
+            purchaseDate == other.purchaseDate &&
+            imageUrl == other.imageUrl &&
+            createdAt == other.createdAt &&
+            updatedAt == other.updatedAt &&
+            isArchived == other.isArchived &&
+            isMainVehicle == other.isMainVehicle;
+  }
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode => Object.hash(
+    id,
+    name,
+    brand,
+    model,
+    year,
+    currentMileage,
+    licensePlate,
+    vin,
+    purchaseDate,
+    imageUrl,
+    createdAt,
+    updatedAt,
+    isArchived,
+    isMainVehicle,
+  );
 }

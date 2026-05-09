@@ -113,11 +113,8 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
   void _listener(BuildContext context, VehicleFormState state) {
     state.vehicleResult.whenOrNull(
       data: (savedVehicle) {
-        // Update the current vehicle in VehicleCubit if it was edited
         if (state.isEditing) {
-          context.read<VehicleCubit>().updateCurrentVehicleIfMatch(
-            savedVehicle,
-          );
+          context.read<VehicleCubit>().applySavedVehicleEdit(savedVehicle);
         } else {
           context.read<VehicleCubit>().addVehicleLocally(savedVehicle);
         }
