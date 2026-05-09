@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/features/maintenance/domain/model/maintenance_list_summary.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
+import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenance_summary_card.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
 class MaintenancesSummaryHeader extends StatelessWidget {
+  const MaintenancesSummaryHeader({
+    super.key,
+    required this.maintenances,
+    this.maintenanceSummary,
+  });
+
   final List<MaintenanceModel> maintenances;
+  final MaintenanceListSummary? maintenanceSummary;
 
-  const MaintenancesSummaryHeader({super.key, required this.maintenances});
-
-  MaintenanceModel? _getLastService() {
+  MaintenanceModel? _lastFromList() {
     if (maintenances.isEmpty) return null;
     final sorted = [...maintenances]..sort((a, b) => b.date.compareTo(a.date));
     return sorted.first;
   }
 
-  DateTime? _getNextServiceDate() {
+  DateTime? _nextFromList() {
     final now = DateTime.now();
     final candidates =
         maintenances
@@ -28,11 +36,16 @@ class MaintenancesSummaryHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateShort = DateFormat('MMM dd');
+    final locale = Localizations.localeOf(context);
+    final dateShort = DateFormat.MMMd(locale.toString());
     final numberFormat = NumberFormat('#,###');
+    final l10n = context.l10n;
 
-    final lastService = _getLastService();
-    final nextServiceDate = _getNextServiceDate();
+    final lastFromList = _lastFromList();
+    final lastDate = maintenanceSummary?.lastServiceDate ?? lastFromList?.date;
+    final lastMileage =
+        maintenanceSummary?.lastServiceMileage ?? lastFromList?.maintanceMileage;
+    final nextDate = maintenanceSummary?.nextServiceDate ?? _nextFromList();
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
@@ -43,93 +56,26 @@ class MaintenancesSummaryHeader extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: _SummaryCard(
+                child: MaintenanceSummaryCard(
                   icon: Icons.calendar_today_outlined,
-                  label: 'Last service',
-                  value: lastService != null
-                      ? dateShort.format(lastService.date)
-                      : '—',
-                  subtitle: lastService != null
-                      ? '${numberFormat.format(lastService.maintanceMileage)} km'
+                  label: l10n.maintenance_lastService,
+                  value: lastDate != null ? dateShort.format(lastDate) : '—',
+                  subtitle: lastMileage != null
+                      ? '${numberFormat.format(lastMileage)} ${l10n.maintenance_km}'
                       : null,
                 ),
               ),
               AppSpacing.hGapMd,
               Expanded(
-                child: _SummaryCard(
+                child: MaintenanceSummaryCard(
                   icon: Icons.event_repeat_outlined,
-                  label: 'Next service',
-                  value: nextServiceDate != null
-                      ? dateShort.format(nextServiceDate)
-                      : 'Estimated',
+                  label: l10n.maintenance_nextService,
+                  value: nextDate != null
+                      ? dateShort.format(nextDate)
+                      : l10n.maintenance_estimatedDate,
                 ),
               ),
             ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SummaryCard extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final String? subtitle;
-
-  const _SummaryCard({
-    required this.icon,
-    required this.label,
-    required this.value,
-    this.subtitle,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: context.colorScheme.surface,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: context.colorScheme.outlineVariant),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: context.colorScheme.primary, size: 20),
-          AppSpacing.hGapSm,
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: context.bodySmall?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.7),
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                AppSpacing.gapXs,
-                Text(
-                  value,
-                  style: context.titleMedium?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.2,
-                  ),
-                ),
-                if (subtitle != null) ...[
-                  AppSpacing.gapXxs,
-                  Text(
-                    subtitle!,
-                    style: context.bodySmall?.copyWith(
-                      color: Colors.white.withValues(alpha: 0.7),
-                    ),
-                  ),
-                ],
-              ],
-            ),
           ),
         ],
       ),

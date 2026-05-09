@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/features/maintenance/domain/model/maintenance_list_summary.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/domain/use_cases/get_maintenance_list_use_case.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters.dart';
@@ -10,20 +11,28 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
 
   final GetMaintenanceListUseCase _getMaintenancesUseCase;
   List<MaintenanceModel> _allMaintenances = [];
+  Map<String, MaintenanceListSummary> _summariesByVehicleId = {};
   MaintenanceFilters _filters = const MaintenanceFilters();
   String _searchQuery = '';
 
   MaintenanceFilters get filters => _filters;
   String get searchQuery => _searchQuery;
 
+  /// Backend-computed summary when exactly one vehicle is selected in filters.
+  MaintenanceListSummary? summaryForHeader() {
+    if (_filters.vehicleIds.length != 1) return null;
+    return _summariesByVehicleId[_filters.vehicleIds.first];
+  }
+
   Future<void> fetchMaintenances() async {
     emit(const ResultState.loading());
     final result = await _getMaintenancesUseCase.execute();
 
-    result.fold((error) => emit(ResultState.error(error: error)), (
-      maintenances,
-    ) {
-      _allMaintenances = maintenances;
+    result.fold((error) => emit(ResultState.error(error: error)), (aggregate) {
+      _allMaintenances = aggregate.items;
+      _summariesByVehicleId = Map<String, MaintenanceListSummary>.from(
+        aggregate.summariesByVehicleId,
+      );
       _applyFiltersAndEmit();
     });
   }
@@ -41,6 +50,8 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
   /// Add a new maintenance to the local list without refetching from Firebase
   void addMaintenanceLocally(MaintenanceModel maintenance) {
     _allMaintenances = [..._allMaintenances, maintenance];
+    final vid = maintenance.vehicleId;
+    if (vid != null) _summariesByVehicleId.remove(vid);
     _applyFiltersAndEmit();
   }
 
@@ -55,15 +66,27 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
         updatedMaintenance,
         ..._allMaintenances.sublist(index + 1),
       ];
+      final vid = updatedMaintenance.vehicleId;
+      if (vid != null) _summariesByVehicleId.remove(vid);
       _applyFiltersAndEmit();
     }
   }
 
   /// Remove a maintenance from the local list without refetching from Firebase
   void deleteMaintenanceLocally(String maintenanceId) {
+    String? affectedVehicleId;
+    for (final m in _allMaintenances) {
+      if (m.id == maintenanceId) {
+        affectedVehicleId = m.vehicleId;
+        break;
+      }
+    }
     _allMaintenances = _allMaintenances
         .where((m) => m.id != maintenanceId)
         .toList();
+    if (affectedVehicleId != null) {
+      _summariesByVehicleId.remove(affectedVehicleId);
+    }
     _applyFiltersAndEmit();
   }
 

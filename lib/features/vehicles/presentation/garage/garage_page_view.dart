@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_vehicles_content.dart';
@@ -31,6 +32,8 @@ class _GaragePageViewState extends State<GaragePageView> {
   int _currentIndex = 0;
   late final PageController _pageController;
   bool _appliedRouteVehicleFocus = false;
+  int _maintenanceRefreshTick = 0;
+  final Map<String, MaintenanceModel> _pendingMaintenanceByVehicleId = {};
 
   /// Keeps carousel index valid after local cubit updates (create/edit/delete).
   /// [focusVehicle] aligns the PageView when we know which row changed (API returns it).
@@ -67,6 +70,29 @@ class _GaragePageViewState extends State<GaragePageView> {
     final result = await context.pushNamed(AppRoutes.createVehicle);
     if (!mounted || result == null) return;
     _syncGaragePageIndex(result is VehicleModel ? result : null);
+  }
+
+  void _onMaintenanceCreated(MaintenanceModel maintenance) {
+    final vehicleId = maintenance.vehicleId;
+    if (vehicleId == null) return;
+    setState(() {
+      _maintenanceRefreshTick += 1;
+      _pendingMaintenanceByVehicleId[vehicleId] = maintenance;
+    });
+  }
+
+  void _onPendingMaintenanceConsumed(String vehicleId) {
+    if (!_pendingMaintenanceByVehicleId.containsKey(vehicleId)) return;
+    setState(() {
+      _pendingMaintenanceByVehicleId.remove(vehicleId);
+    });
+  }
+
+  void _onMaintenanceRefreshRequested(String vehicleId) {
+    setState(() {
+      _maintenanceRefreshTick += 1;
+      _pendingMaintenanceByVehicleId.remove(vehicleId);
+    });
   }
 
   @override
@@ -187,12 +213,17 @@ class _GaragePageViewState extends State<GaragePageView> {
                 return GarageVehiclesContent(
                   pageController: _pageController,
                   currentIndex: _currentIndex,
+                  maintenanceRefreshTick: _maintenanceRefreshTick,
+                  pendingMaintenanceByVehicleId: _pendingMaintenanceByVehicleId,
                   onIndexChanged: (index) {
                     setState(() {
                       _currentIndex = index;
                     });
                   },
                   onGarageListUpdatedLocally: _syncGaragePageIndex,
+                  onMaintenanceCreated: _onMaintenanceCreated,
+                  onMaintenanceRefreshRequested: _onMaintenanceRefreshRequested,
+                  onPendingMaintenanceConsumed: _onPendingMaintenanceConsumed,
                 );
               },
               orElse: () => const PageLoadingStateWidget(),

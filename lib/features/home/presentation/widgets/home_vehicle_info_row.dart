@@ -20,8 +20,8 @@ class HomeVehicleInfoRow extends StatelessWidget {
 
     return result.fold(
       (_) => null,
-      (maintenances) {
-        final oilMaintenances = maintenances
+      (page) {
+        final oilMaintenances = page.items
             .where((m) => m.type == MaintenanceType.oilChange)
             .toList();
 

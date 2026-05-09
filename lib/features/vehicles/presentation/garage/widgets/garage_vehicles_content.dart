@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_empty_state.dart';
@@ -17,6 +18,11 @@ class GarageVehiclesContent extends StatelessWidget {
     required this.currentIndex,
     required this.onIndexChanged,
     required this.onGarageListUpdatedLocally,
+    required this.maintenanceRefreshTick,
+    required this.onMaintenanceCreated,
+    required this.onMaintenanceRefreshRequested,
+    required this.pendingMaintenanceByVehicleId,
+    required this.onPendingMaintenanceConsumed,
   });
 
   final PageController pageController;
@@ -24,6 +30,11 @@ class GarageVehiclesContent extends StatelessWidget {
   final ValueChanged<int> onIndexChanged;
   /// Sync carousel index after VehicleCubit was updated locally (no API refetch).
   final void Function([VehicleModel? focusVehicle]) onGarageListUpdatedLocally;
+  final int maintenanceRefreshTick;
+  final ValueChanged<MaintenanceModel> onMaintenanceCreated;
+  final ValueChanged<String> onMaintenanceRefreshRequested;
+  final Map<String, MaintenanceModel> pendingMaintenanceByVehicleId;
+  final void Function(String vehicleId) onPendingMaintenanceConsumed;
 
   @override
   Widget build(BuildContext context) {
@@ -137,9 +148,15 @@ class GarageVehiclesContent extends StatelessWidget {
                 context,
                 currentVehicle,
                 onGarageListUpdatedLocally: onGarageListUpdatedLocally,
+                onMaintenanceCreated: onMaintenanceCreated,
+                onMaintenanceRefreshRequested: onMaintenanceRefreshRequested,
               );
             },
             isMainVehicle: currentVehicle.isMainVehicle,
+            maintenanceRefreshTick: maintenanceRefreshTick,
+            pendingCreatedMaintenance:
+                pendingMaintenanceByVehicleId[currentVehicle.id],
+            onPendingMaintenanceConsumed: onPendingMaintenanceConsumed,
             onMainVehicleChanged: canToggleMain && currentVehicle.id != null
                 ? (value) {
                     if (value) {

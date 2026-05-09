@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/features/maintenance/domain/model/maintenance_list_summary.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenance_list.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_header_view.dart';
@@ -7,6 +8,7 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MaintenancesDataWidget extends StatelessWidget {
   final List<MaintenanceModel> maintenances;
+  final MaintenanceListSummary? maintenanceSummary;
   final Future<void> Function() onRefresh;
   final Function(String) onSearchChanged;
   final Future<void> Function(MaintenanceModel) onTap;
@@ -18,6 +20,7 @@ class MaintenancesDataWidget extends StatelessWidget {
   const MaintenancesDataWidget({
     super.key,
     required this.maintenances,
+    this.maintenanceSummary,
     required this.onRefresh,
     required this.onSearchChanged,
     required this.onTap,
@@ -38,6 +41,7 @@ class MaintenancesDataWidget extends StatelessWidget {
             onFilterPressed: onFilterPressed,
             activeFilterCount: activeFilterCount,
             maintenances: maintenances,
+            maintenanceSummary: maintenanceSummary,
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),

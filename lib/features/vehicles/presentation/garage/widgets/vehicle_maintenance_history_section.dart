@@ -12,108 +12,147 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleMaintenanceHistorySection extends StatelessWidget {
-  const VehicleMaintenanceHistorySection({super.key, required this.vehicle});
+  const VehicleMaintenanceHistorySection({
+    super.key,
+    required this.vehicle,
+    required this.maintenanceRefreshTick,
+    this.pendingCreatedMaintenance,
+    this.onPendingMaintenanceConsumed,
+  });
 
   final VehicleModel vehicle;
+  final int maintenanceRefreshTick;
+  final MaintenanceModel? pendingCreatedMaintenance;
+  final void Function(String vehicleId)? onPendingMaintenanceConsumed;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      key: ValueKey(vehicle.id),
+      key: ValueKey('${vehicle.id}-$maintenanceRefreshTick'),
       create: (context) =>
           getIt<VehicleMaintenancesCubit>()..fetchMaintenances(vehicle.id!),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Builder(
+        builder: (sectionContext) {
+          final createdMaintenance = pendingCreatedMaintenance;
+          if (createdMaintenance != null &&
+              createdMaintenance.vehicleId == vehicle.id) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!sectionContext.mounted) return;
+              sectionContext
+                  .read<VehicleMaintenancesCubit>()
+                  .addMaintenanceLocally(
+                    createdMaintenance,
+                    vehicleId: vehicle.id!,
+                  );
+              onPendingMaintenanceConsumed?.call(vehicle.id!);
+            });
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                context.l10n.vehicle_maintenanceHistory,
-                style: context.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  context.pushNamed(AppRoutes.maintenances, extra: vehicle.id);
-                },
-                style: TextButton.styleFrom(
-                  foregroundColor: context.colorScheme.primary,
-                  padding: EdgeInsets.zero,
-                  minimumSize: const Size(50, 30),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                child: Text(
-                  context.l10n.vehicle_seeAll,
-                  style: context.bodyMedium?.copyWith(
-                    color: context.colorScheme.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          AppSpacing.gapLg,
-          BlocBuilder<
-            VehicleMaintenancesCubit,
-            ResultState<List<MaintenanceModel>>
-          >(
-            builder: (context, state) {
-              return state.when(
-                initial: () => const _LoadingState(),
-                loading: () => const _LoadingState(),
-                error: (error) => Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF2C241E),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: Colors.red.withValues(alpha: 0.3),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    context.l10n.vehicle_maintenanceHistory,
+                    style: context.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
-                  child: Center(
+                  TextButton(
+                    onPressed: () {
+                      context.pushNamed(
+                        AppRoutes.maintenances,
+                        extra: vehicle.id,
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: context.colorScheme.primary,
+                      padding: EdgeInsets.zero,
+                      minimumSize: const Size(50, 30),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
                     child: Text(
-                      context.l10n.maintenance_errorLoadingRecords,
-                      style: context.bodyMedium?.copyWith(color: Colors.white),
+                      context.l10n.vehicle_seeAll,
+                      style: context.bodyMedium?.copyWith(
+                        color: context.colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-                empty: () => Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF2C2C2E),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    children: [
-                      Icon(Icons.history, color: Colors.grey[600], size: 40),
-                      AppSpacing.gapMd,
-                      Text(
-                        context.l10n.maintenance_noRecordsYet,
-                        style: context.bodyMedium?.copyWith(
-                          color: Colors.grey[400],
+                ],
+              ),
+              AppSpacing.gapLg,
+              BlocBuilder<
+                VehicleMaintenancesCubit,
+                ResultState<List<MaintenanceModel>>
+              >(
+                builder: (context, state) {
+                  return state.when(
+                    initial: () => const _LoadingState(),
+                    loading: () => const _LoadingState(),
+                    error: (error) => Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2C241E),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: Colors.red.withValues(alpha: 0.3),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                data: (maintenances) {
-                  // Show max 3 records
-                  final items = maintenances.take(3).toList();
+                      child: Center(
+                        child: Text(
+                          context.l10n.maintenance_errorLoadingRecords,
+                          style: context.bodyMedium?.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    empty: () => Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2C2C2E),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.history,
+                            color: Colors.grey[600],
+                            size: 40,
+                          ),
+                          AppSpacing.gapMd,
+                          Text(
+                            context.l10n.maintenance_noRecordsYet,
+                            style: context.bodyMedium?.copyWith(
+                              color: Colors.grey[400],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    data: (maintenances) {
+                      // Show max 3 records
+                      final items = maintenances.take(3).toList();
 
-                  return Column(
-                    children: items.map((maintenance) {
-                      return _MaintenanceRecordCard(maintenance: maintenance);
-                    }).toList(),
+                      return Column(
+                        children: items.map((maintenance) {
+                          return _MaintenanceRecordCard(
+                            maintenance: maintenance,
+                          );
+                        }).toList(),
+                      );
+                    },
                   );
                 },
-              );
-            },
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -246,7 +285,9 @@ class _LoadingState extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
           ),
           child: const Center(
-            child: AppLoadingIndicator(variant: AppLoadingIndicatorVariant.inline),
+            child: AppLoadingIndicator(
+              variant: AppLoadingIndicatorVariant.inline,
+            ),
           ),
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/features/maintenance/domain/model/maintenance_list_summary.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_summary_header.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/vehicle_selector_chip.dart';
@@ -13,6 +14,7 @@ class MaintenancesHeaderView extends StatelessWidget {
   final int activeFilterCount;
   final Function(String) onSearchChanged;
   final List<MaintenanceModel> maintenances;
+  final MaintenanceListSummary? maintenanceSummary;
 
   const MaintenancesHeaderView({
     super.key,
@@ -20,6 +22,7 @@ class MaintenancesHeaderView extends StatelessWidget {
     required this.activeFilterCount,
     required this.onSearchChanged,
     required this.maintenances,
+    this.maintenanceSummary,
   });
 
   @override
@@ -76,7 +79,10 @@ class MaintenancesHeaderView extends StatelessWidget {
           },
         ),
 
-        MaintenancesSummaryHeader(maintenances: maintenances),
+        MaintenancesSummaryHeader(
+          maintenances: maintenances,
+          maintenanceSummary: maintenanceSummary,
+        ),
       ],
     );
   }

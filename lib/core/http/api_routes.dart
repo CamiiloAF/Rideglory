@@ -6,4 +6,5 @@ abstract final class ApiRoutes {
   static const myVehicles = '/vehicles/my';
   static const events = '/events';
   static const myEvents = '/events/my';
+  static const maintenances = '/maintenances';
 }

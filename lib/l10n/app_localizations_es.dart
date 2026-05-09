@@ -1354,6 +1354,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_recentRecords => 'Registros recientes';
 
   @override
+  String get maintenance_lastService => 'Último servicio';
+
+  @override
+  String get maintenance_nextService => 'Próximo servicio';
+
+  @override
   String get maintenance_filter => 'Filtrar';
 
   @override

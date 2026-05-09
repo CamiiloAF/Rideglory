@@ -17,9 +17,9 @@ class VehicleMaintenancesCubit
     final result = await _getMaintenancesByVehicleIdUseCase.execute(vehicleId);
 
     result.fold((error) => emit(ResultState.error(error: error)), (
-      maintenances,
+      page,
     ) {
-      // Sort from newest to oldest date
+      final maintenances = [...page.items];
       maintenances.sort((a, b) => b.date.compareTo(a.date));
       if (maintenances.isEmpty) {
         emit(const ResultState.empty());
@@ -27,6 +27,30 @@ class VehicleMaintenancesCubit
         emit(ResultState.data(data: maintenances));
       }
     });
+  }
+
+  /// Inserts the new maintenance locally when possible.
+  /// Falls back to API reload if we cannot safely mutate current state.
+  void addMaintenanceLocally(
+    MaintenanceModel maintenance, {
+    required String vehicleId,
+  }) {
+    state.when(
+      initial: () => fetchMaintenances(vehicleId),
+      loading: () => fetchMaintenances(vehicleId),
+      error: (_) => fetchMaintenances(vehicleId),
+      empty: () => emit(ResultState.data(data: [maintenance])),
+      data: (maintenances) {
+        final exists = maintenances.any((m) => m.id == maintenance.id);
+        if (exists) {
+          updateMaintenanceLocally(maintenance);
+          return;
+        }
+        final updatedList = [...maintenances, maintenance]
+          ..sort((a, b) => b.date.compareTo(a.date));
+        emit(ResultState.data(data: updatedList));
+      },
+    );
   }
 
   void updateMaintenanceLocally(MaintenanceModel updatedMaintenance) {
