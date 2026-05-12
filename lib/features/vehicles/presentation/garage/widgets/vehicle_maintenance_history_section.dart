@@ -62,26 +62,15 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  TextButton(
+                  AppTextButton(
+                    label: context.l10n.vehicle_seeAll,
                     onPressed: () {
                       context.pushNamed(
                         AppRoutes.maintenances,
                         extra: vehicle.id,
                       );
                     },
-                    style: TextButton.styleFrom(
-                      foregroundColor: context.colorScheme.primary,
-                      padding: EdgeInsets.zero,
-                      minimumSize: const Size(50, 30),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    child: Text(
-                      context.l10n.vehicle_seeAll,
-                      style: context.bodyMedium?.copyWith(
-                        color: context.colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    visualDensity: VisualDensity.compact,
                   ),
                 ],
               ),

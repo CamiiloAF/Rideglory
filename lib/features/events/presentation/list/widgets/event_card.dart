@@ -68,7 +68,7 @@ class _EventCardState extends State<EventCard> {
               Positioned.fill(
                 child: hasImageUrl
                     ? Image.network(
-                        imageUrl!,
+                        imageUrl,
                         fit: BoxFit.fill,
                         errorBuilder: (_, _, _) =>
                             Image.asset(_eventPlaceholderAsset, fit: BoxFit.fill),

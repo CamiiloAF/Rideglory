@@ -7,6 +7,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/config/api_remote_config.dart';
 import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
+import 'package:rideglory/features/profile/presentation/cubits/profile_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
           create: (context) =>
               getIt.get<MyRegistrationsCubit>()..fetchMyRegistrations(),
         ),
+        BlocProvider(create: (context) => getIt.get<ProfileCubit>()),
       ],
       child: MaterialApp.router(
         routerConfig: AppRouter.appRouter,
