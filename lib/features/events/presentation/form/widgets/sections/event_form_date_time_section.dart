@@ -15,17 +15,28 @@ class EventFormDateTimeSection extends StatefulWidget {
 
 class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
   bool _isMultiDay = false;
+  bool _didLoadInitialValue = false;
 
   @override
-  void initState() {
-    //TODO FIX EDIT MULTIDATE
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_didLoadInitialValue) {
+      return;
+    }
+
+    final formValue = FormBuilder.of(context)?.instantValue;
+    _isMultiDay = formValue?[EventFormFields.isMultiDay] == true;
+    _didLoadInitialValue = true;
   }
 
   @override
   Widget build(BuildContext context) {
     final firstDate = DateTime.now();
     final lastDate = firstDate.add(Duration(days: 365 + (365 / 2).round()));
+    final isMultiDayFromForm =
+        FormBuilder.of(context)?.instantValue[EventFormFields.isMultiDay] ==
+        true;
+    final isMultiDay = isMultiDayFromForm || _isMultiDay;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,7 +57,7 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
           },
         ),
         AppSpacing.gapLg,
-        if (_isMultiDay)
+        if (isMultiDay)
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

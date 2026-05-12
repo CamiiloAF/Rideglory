@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/item_card/mileage_info_dialog.dart';
 
@@ -21,7 +22,7 @@ class InfoChipTooltip extends StatelessWidget {
       builder: (context) => MileageInfoDialog(
         typeColor: typeColor,
         currentMileage: currentMileage,
-        distanceUnitLabel: 'km', // TODO: Add distance unit
+        distanceUnitLabel: context.l10n.maintenance_km,
       ),
     );
   }
@@ -29,7 +30,7 @@ class InfoChipTooltip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: 'Ver kilometraje actual del vehículo',
+      message: context.l10n.maintenance_currentMileage,
       preferBelow: false,
       child: Material(
         color: Colors.transparent,

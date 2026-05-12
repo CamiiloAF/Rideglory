@@ -31,6 +31,9 @@ sealed class AuthState {
   /// Check if has error
   bool get hasError => this is _Error;
 
+  /// Check if password reset email was sent
+  bool get isPasswordResetEmailSent => this is _PasswordResetEmailSent;
+
   /// Get error message if any
   String? get errorMessage => this is _Error ? (this as _Error).message : null;
 

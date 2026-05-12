@@ -146,7 +146,10 @@ class AuthCubit extends Cubit<AuthState> {
   Future<void> sendPasswordResetEmail(String email) async {
     emit(const AuthState.loading());
 
-    await _authService.sendPasswordResetEmail(email);
-    emit(const AuthState.passwordResetEmailSent());
+    final result = await _authService.sendPasswordResetEmail(email);
+    result.fold(
+      (failure) => emit(AuthState.error(failure.message)),
+      (_) => emit(const AuthState.passwordResetEmailSent()),
+    );
   }
 }
