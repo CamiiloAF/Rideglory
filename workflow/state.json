@@ -29,11 +29,11 @@
         "permission_handler"
       ],
       "additions": [
-        "mocktail: ^1.0.4 (dev — Iteration 1)",
-        "bloc_test: ^10.0.0 (dev — Iteration 1)",
-        "network_image_mock: ^2.1.1 (dev — Iteration 1)",
-        "file_picker: ^8.0.0 (prod — Iteration 3a)",
-        "firebase_messaging: ^15.0.0 (prod — Iteration 6a)"
+        "mocktail: ^1.0.4 (dev \u2014 Iteration 1)",
+        "bloc_test: ^10.0.0 (dev \u2014 Iteration 1)",
+        "network_image_mock: ^2.1.1 (dev \u2014 Iteration 1)",
+        "file_picker: ^8.0.0 (prod \u2014 Iteration 3a)",
+        "firebase_messaging: ^15.0.0 (prod \u2014 Iteration 6a)"
       ]
     },
     "assumptions": [
@@ -56,15 +56,15 @@
       "Pencil single-machine dependency (Track P): Stitch reference images must be copied to docs/design/stitch-references/ before Track P."
     ],
     "deferred": [
-      "SOAT push reminders (30-day / 7-day) — requires FCM from Iteration 6a; scheduled post-6b.",
-      "Profile photo upload — profilePhotoUrl not in current Prisma schema; deferred post-6b.",
-      "Organizer SOS dismiss — only the SOS sender can cancel in v1; organizer dismiss deferred to v2.",
-      "AI event recommendations Claude narrative explanations (v2) — deterministic scoring sufficient for launch.",
-      "Authentication Clean Architecture refactor — auth works via AuthService; no user-visible value.",
-      "Mandatory documents beyond SOAT (tecno, other) — DTO and schema extensible but only SOAT in v1.",
-      "Web version, admin dashboard, payments, social feed — explicitly out of scope per PRD section 10.",
-      "Multi-language support (English) — ARB is Spanish-only.",
-      "CI/CD IPA build + App Store submission — APK build only in DevOps track; IPA deferred until distribution target confirmed."
+      "SOAT push reminders (30-day / 7-day) \u2014 requires FCM from Iteration 6a; scheduled post-6b.",
+      "Profile photo upload \u2014 profilePhotoUrl not in current Prisma schema; deferred post-6b.",
+      "Organizer SOS dismiss \u2014 only the SOS sender can cancel in v1; organizer dismiss deferred to v2.",
+      "AI event recommendations Claude narrative explanations (v2) \u2014 deterministic scoring sufficient for launch.",
+      "Authentication Clean Architecture refactor \u2014 auth works via AuthService; no user-visible value.",
+      "Mandatory documents beyond SOAT (tecno, other) \u2014 DTO and schema extensible but only SOAT in v1.",
+      "Web version, admin dashboard, payments, social feed \u2014 explicitly out of scope per PRD section 10.",
+      "Multi-language support (English) \u2014 ARB is Spanish-only.",
+      "CI/CD IPA build + App Store submission \u2014 APK build only in DevOps track; IPA deferred until distribution target confirmed."
     ]
   },
   "iterations": [
@@ -79,8 +79,18 @@
       "title": "Test Infrastructure + Profile Feature Completion",
       "goal": "Establish a working test suite for critical existing features and complete the profile page stub so the rider experience is coherent end-to-end.",
       "status": "active",
-      "stories": ["HU-TEST-01a", "HU-TEST-01b", "HU-TEST-01c", "HU-PROFILE-01", "HU-REFACTOR-01"],
-      "agents": ["frontend", "qa", "tech_lead"],
+      "stories": [
+        "HU-TEST-01a",
+        "HU-TEST-01b",
+        "HU-TEST-01c",
+        "HU-PROFILE-01",
+        "HU-REFACTOR-01"
+      ],
+      "agents": [
+        "frontend",
+        "qa",
+        "tech_lead"
+      ],
       "complexity": "M",
       "dependsOn": []
     },
@@ -89,78 +99,155 @@
       "title": "Event Discovery Filters + Attendee Profile Links",
       "goal": "Wire the existing filter bottom sheet to real backend query parameters and enable riders to navigate to other riders' profiles from the attendee list.",
       "status": "planned",
-      "stories": ["HU-EVENT-FILTER-01", "HU-EVENT-FILTER-02", "HU-ATTENDEE-PROFILE-01"],
-      "agents": ["backend", "frontend", "qa"],
+      "stories": [
+        "HU-EVENT-FILTER-01",
+        "HU-EVENT-FILTER-02",
+        "HU-ATTENDEE-PROFILE-01"
+      ],
+      "agents": [
+        "backend",
+        "frontend",
+        "qa"
+      ],
       "complexity": "M",
-      "dependsOn": [1]
+      "dependsOn": [
+        1
+      ]
     },
     {
       "id": 31,
       "title": "SOAT Backend Infrastructure + Flutter Domain/Data Stub (3a)",
       "goal": "Build the complete backend infrastructure for SOAT document management (Prisma schema, REST endpoints, Claude Haiku AI extraction) and implement Flutter domain and data layers.",
       "status": "planned",
-      "stories": ["HU-SOAT-01a", "HU-SOAT-01b", "HU-SOAT-01c"],
-      "agents": ["backend", "frontend", "qa"],
+      "stories": [
+        "HU-SOAT-01a",
+        "HU-SOAT-01b",
+        "HU-SOAT-01c"
+      ],
+      "agents": [
+        "backend",
+        "frontend",
+        "qa"
+      ],
       "complexity": "L",
-      "dependsOn": [1]
+      "dependsOn": [
+        1
+      ]
     },
     {
       "id": 32,
       "title": "SOAT Full Flutter UI + Garage Status Badges (3b)",
       "goal": "Implement the complete multi-step SOAT upload UI and the visual expiration status badge on vehicle cards throughout the garage.",
       "status": "planned",
-      "stories": ["HU-SOAT-01d", "HU-SOAT-01e", "HU-SOAT-01f"],
-      "agents": ["design", "frontend", "qa"],
+      "stories": [
+        "HU-SOAT-01d",
+        "HU-SOAT-01e",
+        "HU-SOAT-01f"
+      ],
+      "agents": [
+        "design",
+        "frontend",
+        "qa"
+      ],
       "complexity": "M",
-      "dependsOn": [31, 100]
+      "dependsOn": [
+        31,
+        100
+      ]
     },
     {
       "id": 4,
       "title": "AI Event Cover Image Generation",
       "goal": "Wire the existing 'Generar portada con IA' button to a backend endpoint using Claude Haiku + Unsplash API to generate relevant event cover images.",
       "status": "planned",
-      "stories": ["HU-AI-01a", "HU-AI-01b"],
-      "agents": ["backend", "frontend", "qa"],
+      "stories": [
+        "HU-AI-01a",
+        "HU-AI-01b"
+      ],
+      "agents": [
+        "backend",
+        "frontend",
+        "qa"
+      ],
       "complexity": "M",
-      "dependsOn": ["3a"]
+      "dependsOn": [
+        "3a"
+      ]
     },
     {
       "id": 5,
       "title": "AI Event Recommendations",
       "goal": "Populate the existing recommendations section on the home dashboard with personalized event suggestions from a new backend scoring endpoint.",
       "status": "planned",
-      "stories": ["HU-AI-02a", "HU-AI-02b"],
-      "agents": ["backend", "frontend", "qa"],
+      "stories": [
+        "HU-AI-02a",
+        "HU-AI-02b"
+      ],
+      "agents": [
+        "backend",
+        "frontend",
+        "qa"
+      ],
       "complexity": "M",
-      "dependsOn": [2, 4]
+      "dependsOn": [
+        2,
+        4
+      ]
     },
     {
       "id": 61,
       "title": "Push Notifications (FCM) (6a)",
       "goal": "Integrate Firebase Cloud Messaging to deliver push notifications for all 5 registration and event-status triggers with correct deep-link routing for all 3 app states.",
       "status": "planned",
-      "stories": ["HU-PUSH-01a", "HU-PUSH-01b", "HU-PUSH-01c", "HU-PUSH-01d"],
-      "agents": ["backend", "frontend", "qa"],
+      "stories": [
+        "HU-PUSH-01a",
+        "HU-PUSH-01b",
+        "HU-PUSH-01c",
+        "HU-PUSH-01d"
+      ],
+      "agents": [
+        "backend",
+        "frontend",
+        "qa"
+      ],
       "complexity": "L",
-      "dependsOn": [5]
+      "dependsOn": [
+        5
+      ]
     },
     {
       "id": 62,
       "title": "SOS Real-Time Alert (6b)",
       "goal": "Add SOS emergency broadcast to the live tracking session with a persistent top-anchor red banner overlay visible to all riders in the same event session.",
       "status": "planned",
-      "stories": ["HU-SOS-01a", "HU-SOS-01b", "HU-SOS-01c"],
-      "agents": ["backend", "frontend", "qa"],
+      "stories": [
+        "HU-SOS-01a",
+        "HU-SOS-01b",
+        "HU-SOS-01c"
+      ],
+      "agents": [
+        "backend",
+        "frontend",
+        "qa"
+      ],
       "complexity": "M",
-      "dependsOn": [61]
+      "dependsOn": [
+        61
+      ]
     },
     {
       "id": 100,
       "title": "Design System in Pencil (Track P)",
       "goal": "Establish Pencil as the source of truth for all Rideglory UI by migrating all existing screen flows into pencil-new.pen with design tokens defined as variables.",
       "status": "planned",
-      "stories": ["HU-DESIGN-01a", "HU-DESIGN-01b", "HU-DESIGN-01c"],
-      "agents": ["design"],
+      "stories": [
+        "HU-DESIGN-01a",
+        "HU-DESIGN-01b",
+        "HU-DESIGN-01c"
+      ],
+      "agents": [
+        "design"
+      ],
       "complexity": "M",
       "dependsOn": [],
       "parallel": true,
@@ -172,7 +259,9 @@
       "goal": "Deliver a GitHub Actions pipeline running dart analyze + flutter test on every push to iter-N branches and every PR to main, with an optional APK build job on version tags.",
       "status": "planned",
       "stories": [],
-      "agents": ["devops"],
+      "agents": [
+        "devops"
+      ],
       "complexity": "S",
       "dependsOn": [],
       "parallel": true,
@@ -180,19 +269,51 @@
     }
   ],
   "agents": {
-    "po": { "status": "idle", "lastAction": "2026-05-12T02:00:00Z", "focus": "iter-1 scope and stories" },
-    "architect": { "status": "idle", "lastAction": "2026-05-12T03:00:00Z", "focus": "iter-1 contracts + ADRs (no backend changes)" },
-    "design": { "status": "idle", "lastAction": "2026-05-12T04:00:00Z", "focus": "iter-1 profile page — 4 states designed" },
-    "backend": { "status": "idle", "lastAction": null, "focus": null },
-    "frontend": { "status": "idle", "lastAction": "2026-05-12T05:00:00Z", "focus": "iter-1 US-1-1 test infra + US-1-4 profile page — done" },
-    "qa": { "status": "idle", "lastAction": "2026-05-12T12:00:00Z", "focus": "iter-1 phase complete — test catalog, blockers fixed, all tests pass" },
-    "tech_lead": { "status": "idle", "lastAction": null, "focus": null },
-    "devops": { "status": "idle", "lastAction": null, "focus": null }
+    "po": {
+      "status": "idle",
+      "lastAction": "2026-05-12T02:00:00Z",
+      "focus": "iter-1 scope and stories"
+    },
+    "architect": {
+      "status": "idle",
+      "lastAction": "2026-05-12T03:00:00Z",
+      "focus": "iter-1 contracts + ADRs (no backend changes)"
+    },
+    "design": {
+      "status": "idle",
+      "lastAction": "2026-05-12T04:00:00Z",
+      "focus": "iter-1 profile page \u2014 4 states designed"
+    },
+    "backend": {
+      "status": "idle",
+      "lastAction": null,
+      "focus": null
+    },
+    "frontend": {
+      "status": "idle",
+      "lastAction": "2026-05-12T05:00:00Z",
+      "focus": "iter-1 US-1-1 test infra + US-1-4 profile page \u2014 done"
+    },
+    "qa": {
+      "status": "idle",
+      "lastAction": "2026-05-12T12:00:00Z",
+      "focus": "iter-1 phase complete \u2014 test catalog, blockers fixed, all tests pass"
+    },
+    "tech_lead": {
+      "status": "idle",
+      "lastAction": null,
+      "focus": null
+    },
+    "devops": {
+      "status": "idle",
+      "lastAction": "2026-05-12T16:45:00Z",
+      "focus": "iter-1 CI/CD pipeline complete \u2014 analyze-and-test gate + build-apk job"
+    }
   },
   "tasks": [
     {
       "id": "T-0-1",
-      "title": "Framework ready — run /solo-plan to plan iterations from the PRD",
+      "title": "Framework ready \u2014 run /solo-plan to plan iterations from the PRD",
       "agent": "po",
       "status": "done",
       "iteration": 0,
@@ -249,7 +370,7 @@
       "agent": "qa",
       "status": "done",
       "iteration": 1,
-      "story": "QA gate — all US-1-* stories",
+      "story": "QA gate \u2014 all US-1-* stories",
       "updatedAt": "2026-05-12T12:00:00Z"
     },
     {
@@ -333,7 +454,7 @@
       "phase": "architect",
       "agent": "architect",
       "at": "2026-05-12T03:00:30Z",
-      "detail": "Architect phase complete — feature arch (Profile cubit/use case) + no API contract changes confirmed for iter-1"
+      "detail": "Architect phase complete \u2014 feature arch (Profile cubit/use case) + no API contract changes confirmed for iter-1"
     },
     {
       "type": "design_iteration",
@@ -341,7 +462,7 @@
       "phase": "design",
       "agent": "design",
       "at": "2026-05-12T04:00:00Z",
-      "detail": "Profile page designed — 4 states (loading shimmer, data with vehicle, empty no vehicle, error + retry). styles.css baseline established."
+      "detail": "Profile page designed \u2014 4 states (loading shimmer, data with vehicle, empty no vehicle, error + retry). styles.css baseline established."
     },
     {
       "type": "phase_complete",
@@ -349,7 +470,7 @@
       "phase": "design",
       "agent": "design",
       "at": "2026-05-12T04:00:30Z",
-      "detail": "Profile page — 4 ResultState mockups (loading, data, empty, error); styles.css design baseline created"
+      "detail": "Profile page \u2014 4 ResultState mockups (loading, data, empty, error); styles.css design baseline created"
     },
     {
       "type": "phase_complete",
@@ -357,7 +478,7 @@
       "phase": "backend",
       "agent": "system",
       "at": "2026-05-12T04:05:00Z",
-      "detail": "Backend skipped — no rideglory-api changes required for iter-1. GET /users/me sufficient."
+      "detail": "Backend skipped \u2014 no rideglory-api changes required for iter-1. GET /users/me sufficient."
     },
     {
       "type": "frontend_complete",
@@ -373,7 +494,7 @@
       "phase": "frontend",
       "agent": "frontend",
       "at": "2026-05-12T05:00:30Z",
-      "detail": "Profile page complete (US-1-4) — ProfileCubit, GetMyProfileUseCase, 3 widgets, 4 ResultState branches, 5 l10n keys, initials helper; test infra dirs created (US-1-1); dart analyze zero new errors in new code"
+      "detail": "Profile page complete (US-1-4) \u2014 ProfileCubit, GetMyProfileUseCase, 3 widgets, 4 ResultState branches, 5 l10n keys, initials helper; test infra dirs created (US-1-1); dart analyze zero new errors in new code"
     },
     {
       "type": "phase_complete",
@@ -381,7 +502,15 @@
       "phase": "qa",
       "agent": "qa",
       "at": "2026-05-12T12:00:00Z",
-      "detail": "QA sign-off complete — all acceptance criteria verified. Test infrastructure (US-1-1): mocktail, bloc_test configured; test dirs created. ProfileCubit tests (US-1-4): 4 blocTests pass (initial, loading→data, loading→error, reset). All 5 flutter tests pass. dart analyze passes (zero new violations). Blockers fixed: onChanged parameter, network_image_mock conflict, build_runner. US-1-2 and US-1-3 deferred to Iter-2 per PO scope. US-1-5 pending tech_lead."
+      "detail": "QA sign-off complete \u2014 all acceptance criteria verified. Test infrastructure (US-1-1): mocktail, bloc_test configured; test dirs created. ProfileCubit tests (US-1-4): 4 blocTests pass (initial, loading\u2192data, loading\u2192error, reset). All 5 flutter tests pass. dart analyze passes (zero new violations). Blockers fixed: onChanged parameter, network_image_mock conflict, build_runner. US-1-2 and US-1-3 deferred to Iter-2 per PO scope. US-1-5 pending tech_lead."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 1,
+      "phase": "devops",
+      "agent": "devops",
+      "at": "2026-05-12T16:45:00Z",
+      "detail": "GitHub Actions CI/CD pipeline complete (`.github/workflows/ci.yml`). Jobs: analyze-and-test (dart analyze + flutter test gate on every push/PR), build-apk (APK build on version tags). Deployment documentation (docs/DEPLOY.md) includes secrets setup, Firebase config injection, release process, and troubleshooting. Ready for Iteration 2."
     }
   ]
 }
