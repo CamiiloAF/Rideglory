@@ -2,7 +2,7 @@
   "project": "rideglory",
   "prdPath": "docs/PRD.md",
   "planStatus": "approved",
-  "currentIteration": 1,
+  "currentIteration": 3,
   "existingSystem": {
     "basePath": "/Users/cami/Developer/Personal/Rideglory",
     "flutter": "lib/",
@@ -113,6 +113,19 @@
       "dependsOn": [
         1
       ]
+    },
+    {
+      "id": 3,
+      "title": "Design System in Pencil",
+      "goal": "All screen flows documented in pencil-new.pen with design token variables; hard gate for Iteration 4b SOAT UI.",
+      "agents": [
+        "design"
+      ],
+      "complexity": "M",
+      "dependsOn": [],
+      "status": "active",
+      "branch": "iter-3",
+      "startedAt": "2026-05-12T21:58:32Z"
     },
     {
       "id": 31,
@@ -302,7 +315,7 @@
     "tech_lead": {
       "status": "idle",
       "lastAction": "2026-05-12T18:00:00Z",
-      "focus": "iter-1 PR #8 reviewed and approved — 6 blocking issues fixed, code-review-iter1.md produced"
+      "focus": "iter-1 PR #8 reviewed and approved \u2014 6 blocking issues fixed, code-review-iter1.md produced"
     },
     "devops": {
       "status": "idle",
@@ -526,7 +539,7 @@
       "phase": "tech_lead",
       "agent": "tech_lead",
       "at": "2026-05-12T18:00:00Z",
-      "detail": "PR #8 reviewed. 6 blocking issues fixed inline: _ProfileContent extracted to profile_content.dart (one-widget-per-file), print() → log() in rest_client_functions.dart, 2x TextButton → AppTextButton, unnecessary_non_null_assertion removed, unused_import removed. dart analyze: 0 warnings/errors. flutter test: 5/5. Approved."
+      "detail": "PR #8 reviewed. 6 blocking issues fixed inline: _ProfileContent extracted to profile_content.dart (one-widget-per-file), print() \u2192 log() in rest_client_functions.dart, 2x TextButton \u2192 AppTextButton, unnecessary_non_null_assertion removed, unused_import removed. dart analyze: 0 warnings/errors. flutter test: 5/5. Approved."
     },
     {
       "type": "phase_complete",
@@ -534,7 +547,7 @@
       "phase": "tech_lead",
       "agent": "tech_lead",
       "at": "2026-05-12T18:00:00Z",
-      "detail": "approved — 6 blocking issues fixed; dart analyze 0 warnings; flutter test 5/5; code-review-iter1.md produced"
+      "detail": "approved \u2014 6 blocking issues fixed; dart analyze 0 warnings; flutter test 5/5; code-review-iter1.md produced"
     },
     {
       "type": "design_iteration",
@@ -542,7 +555,7 @@
       "phase": "design",
       "agent": "design",
       "at": "2026-05-12T08:00:00Z",
-      "detail": "Track P design complete — 8 flows surveyed from stitch references and mapped to pencil-new.pen existing frames; 9 design tokens set as Pencil variables; SOAT upload flow designed: 6 screens in Pencil (section 09, frame MOMzL) + 6 HTML mockups in docs/design/html-mockups/iter-3/; all UI copy, l10n keys, and component hierarchies documented in design.md."
+      "detail": "Track P design complete \u2014 8 flows surveyed from stitch references and mapped to pencil-new.pen existing frames; 9 design tokens set as Pencil variables; SOAT upload flow designed: 6 screens in Pencil (section 09, frame MOMzL) + 6 HTML mockups in docs/design/html-mockups/iter-3/; all UI copy, l10n keys, and component hierarchies documented in design.md."
     },
     {
       "type": "phase_complete",
