@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 
 import 'package:battery_plus/battery_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,6 +11,7 @@ import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/core/permissions/location_permission_handler.dart';
 import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
+import 'package:rideglory/features/events/domain/model/rider_profile_model.dart';
 import 'package:rideglory/features/events/domain/model/rider_tracking_model.dart';
 import 'package:rideglory/features/events/domain/model/update_location_request.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_rider_profile_use_case.dart';
@@ -64,11 +66,12 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
   StreamSubscription<Position>? _positionSubscription;
   StreamSubscription<User?>? _authSubscription;
   final Battery _battery = Battery();
+  Timer? _ridersReconnectTimer;
 
   double? _lastLatitude;
   double? _lastLongitude;
   double _accumulatedDistanceMeters = 0;
-  DateTime? _lastFirebasePush;
+  DateTime? _lastBackendPush;
   String? _userId;
 
   Future<void> start() async {
@@ -92,22 +95,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
       }
     });
 
-    _ridersSubscription = _watchActiveRidersUseCase(_eventId).listen(
-      (riders) {
-        emit(state.copyWith(ridersResult: ResultState.data(data: riders)));
-      },
-      onError: (_) {
-        emit(
-          state.copyWith(
-            ridersResult: const ResultState.error(
-              error: DomainException(
-                message: EventStrings.trackingLoadRidersFailed,
-              ),
-            ),
-          ),
-        );
-      },
-    );
+    _subscribeToRiders();
 
     await _startSharingMyLocation();
   }
@@ -142,12 +130,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     final profileResult = await _getRiderProfileUseCase();
     final profile = profileResult.fold((_) => null, (p) => p);
 
-    final firstName = profile?.firstName?.trim().isNotEmpty == true
-        ? profile!.firstName!.trim()
-        : _firstNameFromAuth(user);
-    final lastName = profile?.lastName?.trim().isNotEmpty == true
-        ? profile!.lastName!.trim()
-        : _lastNameFromAuth(user);
+    final trackingFullName = _trackingFullName(profile, user);
 
     Position position;
     try {
@@ -176,8 +159,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
 
     final initial = RiderTrackingModel(
       userId: user.id,
-      firstName: firstName,
-      lastName: lastName,
+      fullName: trackingFullName,
       role: role,
       latitude: position.latitude,
       longitude: position.longitude,
@@ -193,6 +175,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
       eventId: _eventId,
       initialData: initial,
     );
+    developer.log('Live tracking start result: $startResult');
 
     startResult.fold(
       (_) {
@@ -215,7 +198,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
         _accumulatedDistanceMeters = 0;
         _lastLatitude = position.latitude;
         _lastLongitude = position.longitude;
-        _lastFirebasePush = DateTime.now();
+        _lastBackendPush = DateTime.now();
         emit(
           state.copyWith(
             isTracking: true,
@@ -255,8 +238,8 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
           _lastLongitude = position.longitude;
 
           final now = DateTime.now();
-          if (_lastFirebasePush != null &&
-              now.difference(_lastFirebasePush!) < const Duration(seconds: 4)) {
+          if (_lastBackendPush != null &&
+              now.difference(_lastBackendPush!) < const Duration(seconds: 4)) {
             emit(
               state.copyWith(
                 totalDistanceMeters: _accumulatedDistanceMeters,
@@ -266,7 +249,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
             );
             return;
           }
-          _lastFirebasePush = now;
+          _lastBackendPush = now;
 
           final battery = await _readBatteryPercent();
 
@@ -305,28 +288,20 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     return EventStrings.trackingDefaultDeviceLabel;
   }
 
-  String _firstNameFromAuth(UserModel user) {
-    final display = user.fullName;
-    if (display != null && display.trim().isNotEmpty) {
-      final parts = display.trim().split(RegExp(r'\s+'));
-      return parts.first;
+  String _trackingFullName(RiderProfileModel? profile, UserModel user) {
+    final fromProfile = profile?.fullName?.trim();
+    if (fromProfile != null && fromProfile.isNotEmpty) {
+      return fromProfile;
+    }
+    final authName = user.fullName?.trim();
+    if (authName != null && authName.isNotEmpty) {
+      return authName;
     }
     final email = user.email;
     if (email != null && email.contains('@')) {
       return email.split('@').first;
     }
     return 'Rider';
-  }
-
-  String _lastNameFromAuth(UserModel user) {
-    final display = user.fullName;
-    if (display != null && display.trim().isNotEmpty) {
-      final parts = display.trim().split(RegExp(r'\s+'));
-      if (parts.length > 1) {
-        return parts.sublist(1).join(' ');
-      }
-    }
-    return '';
   }
 
   double _speedKmh(Position position) {
@@ -345,6 +320,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     _positionSubscription = null;
     await _ridersSubscription?.cancel();
     _ridersSubscription = null;
+    _ridersReconnectTimer?.cancel();
 
     final uid = _userId;
     final wasTracking = state.isTracking;
@@ -370,6 +346,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
 
   @override
   Future<void> close() async {
+    _ridersReconnectTimer?.cancel();
     await _authSubscription?.cancel();
     await _ridersSubscription?.cancel();
     await _positionSubscription?.cancel();
@@ -378,5 +355,40 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
       await _stopTrackingUseCase(eventId: _eventId, userId: uid);
     }
     return super.close();
+  }
+
+  void _scheduleRidersResubscribe() {
+    _ridersReconnectTimer?.cancel();
+    _ridersReconnectTimer = Timer(const Duration(seconds: 2), () {
+      if (isClosed) {
+        return;
+      }
+      _subscribeToRiders();
+    });
+  }
+
+  Future<void> _subscribeToRiders() async {
+    await _ridersSubscription?.cancel();
+    _ridersSubscription = _watchActiveRidersUseCase(_eventId).listen(
+      (riders) {
+        developer.log('Live tracking riders emission: ${riders.length}');
+        _ridersReconnectTimer?.cancel();
+        emit(state.copyWith(ridersResult: ResultState.data(data: riders)));
+      },
+      onError: (error) {
+        developer.log('Live tracking riders stream error: $error');
+        _scheduleRidersResubscribe();
+        emit(
+          state.copyWith(
+            ridersResult: const ResultState.error(
+              error: DomainException(
+                message: EventStrings.trackingLoadRidersFailed,
+              ),
+            ),
+          ),
+        );
+      },
+      onDone: _scheduleRidersResubscribe,
+    );
   }
 }

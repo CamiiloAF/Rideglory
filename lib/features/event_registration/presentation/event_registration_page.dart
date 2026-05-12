@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
 import 'package:rideglory/features/event_registration/presentation/cubit/registration_form_cubit.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_form_view.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
@@ -51,6 +52,9 @@ class _RegistrationFormScaffold extends StatelessWidget {
         listener: (context, state) {
           state.whenOrNull(
             data: (registration) {
+              context.read<MyRegistrationsCubit>().onChangeRegistration(
+                registration,
+              );
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(

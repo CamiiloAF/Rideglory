@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/registration_with_event.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -44,10 +44,8 @@ class InscriptionCard extends StatelessWidget {
     final status = registration.status;
 
     final dateTime = event != null
-        ? '${DateFormat('d MMM yyyy', 'es').format(event.startDate)} • ${DateFormat('hh:mm a', 'es').format(event.meetingTime)}'
-        : registration.createdDate != null
-        ? DateFormat('d MMM yyyy', 'es').format(registration.createdDate!)
-        : '';
+        ? '${event.startDate.formattedDate} • ${event.meetingTime.formattedTime}'
+        : registration.createdAt?.formattedDate ?? '';
 
     return InkWell(
       onTap: onTap,

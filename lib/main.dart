@@ -6,6 +6,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/config/api_remote_config.dart';
+import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
@@ -49,6 +50,10 @@ class MyApp extends StatelessWidget {
           create: (context) => getIt.get<AuthCubit>()..checkAuthState(),
         ),
         BlocProvider(create: (context) => getIt.get<VehicleCubit>()),
+        BlocProvider(
+          create: (context) =>
+              getIt.get<MyRegistrationsCubit>()..fetchMyRegistrations(),
+        ),
       ],
       child: MaterialApp.router(
         routerConfig: AppRouter.appRouter,

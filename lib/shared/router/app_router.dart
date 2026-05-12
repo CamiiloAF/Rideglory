@@ -58,6 +58,26 @@ class AppRouter {
         return AppRoutes.login;
       }
 
+      final isEventRegistration =
+          state.matchedLocation == AppRoutes.eventRegistration;
+      if (isEventRegistration) {
+        final extra = state.extra;
+        if (extra is EventRegistrationParams) {
+          final currentUserId = getIt<AuthCubit>().state.currentUser?.id;
+          final event = extra.event;
+          if (currentUserId != null && event.ownerId == currentUserId) {
+            final eventId = event.id;
+            if (eventId != null) {
+              return Uri(
+                path: AppRoutes.eventDetailById,
+                queryParameters: {'id': eventId},
+              ).toString();
+            }
+            return AppRoutes.events;
+          }
+        }
+      }
+
       return null; // No redirect needed
     },
     refreshListenable: GoRouterRefreshStream(getIt.get<AuthCubit>().stream),
@@ -259,7 +279,9 @@ class AppRouter {
         path: AppRoutes.eventDetailById,
         name: AppRoutes.eventDetailById,
         builder: (context, state) {
-          final eventId = state.extra as String;
+          final eventIdFromQuery = state.uri.queryParameters['id'];
+          final eventIdFromExtra = state.extra is String ? state.extra as String : null;
+          final eventId = eventIdFromQuery ?? eventIdFromExtra ?? '';
           return EventDetailByIdPage(eventId: eventId);
         },
       ),

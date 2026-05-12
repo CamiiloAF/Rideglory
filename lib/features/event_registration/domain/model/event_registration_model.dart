@@ -1,8 +1,16 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:rideglory/features/event_registration/domain/model/vehicle_summary_model.dart';
+
 enum RegistrationStatus {
+  @JsonValue('PENDING')
   pending('Pendiente'),
+  @JsonValue('APPROVED')
   approved('Aprobado'),
+  @JsonValue('REJECTED')
   rejected('Rechazado'),
+  @JsonValue('CANCELLED')
   cancelled('Cancelado'),
+  @JsonValue('READY_FOR_EDIT')
   readyForEdit('Listo para editar');
 
   final String label;
@@ -10,13 +18,21 @@ enum RegistrationStatus {
 }
 
 enum BloodType {
+  @JsonValue('A_POSITIVE')
   aPositive('A+'),
+  @JsonValue('A_NEGATIVE')
   aNegative('A-'),
+  @JsonValue('B_POSITIVE')
   bPositive('B+'),
+  @JsonValue('B_NEGATIVE')
   bNegative('B-'),
+  @JsonValue('AB_POSITIVE')
   abPositive('AB+'),
+  @JsonValue('AB_NEGATIVE')
   abNegative('AB-'),
+  @JsonValue('O_POSITIVE')
   oPositive('O+'),
+  @JsonValue('O_NEGATIVE')
   oNegative('O-');
 
   final String label;
@@ -31,8 +47,7 @@ class EventRegistrationModel {
   final RegistrationStatus status;
 
   // Personal info
-  final String firstName;
-  final String lastName;
+  final String fullName;
   final String identificationNumber;
   final DateTime birthDate;
   final String phone;
@@ -49,13 +64,11 @@ class EventRegistrationModel {
   final String emergencyContactPhone;
 
   // Vehicle info
-  final String vehicleBrand;
-  final String vehicleReference;
-  final String licensePlate;
-  final String? vin;
+  final String? vehicleId;
+  final VehicleSummaryModel? vehicleSummary;
 
-  final DateTime? createdDate;
-  final DateTime? updatedDate;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   const EventRegistrationModel({
     this.id,
@@ -63,8 +76,7 @@ class EventRegistrationModel {
     required this.eventName,
     required this.userId,
     this.status = RegistrationStatus.pending,
-    required this.firstName,
-    required this.lastName,
+    required this.fullName,
     required this.identificationNumber,
     required this.birthDate,
     required this.phone,
@@ -75,15 +87,11 @@ class EventRegistrationModel {
     required this.bloodType,
     required this.emergencyContactName,
     required this.emergencyContactPhone,
-    required this.vehicleBrand,
-    required this.vehicleReference,
-    required this.licensePlate,
-    this.vin,
-    this.createdDate,
-    this.updatedDate,
+    this.vehicleId,
+    this.vehicleSummary,
+    this.createdAt,
+    this.updatedAt,
   });
-
-  String get fullName => '$firstName $lastName';
 
   String get registrationTitle => 'Inscripción al evento $eventName';
 
@@ -93,8 +101,7 @@ class EventRegistrationModel {
     String? eventName,
     String? userId,
     RegistrationStatus? status,
-    String? firstName,
-    String? lastName,
+    String? fullName,
     String? identificationNumber,
     DateTime? birthDate,
     String? phone,
@@ -105,12 +112,10 @@ class EventRegistrationModel {
     BloodType? bloodType,
     String? emergencyContactName,
     String? emergencyContactPhone,
-    String? vehicleBrand,
-    String? vehicleReference,
-    String? licensePlate,
-    String? vin,
-    DateTime? createdDate,
-    DateTime? updatedDate,
+    String? vehicleId,
+    VehicleSummaryModel? vehicleSummary,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return EventRegistrationModel(
       id: id ?? this.id,
@@ -118,8 +123,7 @@ class EventRegistrationModel {
       eventName: eventName ?? this.eventName,
       userId: userId ?? this.userId,
       status: status ?? this.status,
-      firstName: firstName ?? this.firstName,
-      lastName: lastName ?? this.lastName,
+      fullName: fullName ?? this.fullName,
       identificationNumber: identificationNumber ?? this.identificationNumber,
       birthDate: birthDate ?? this.birthDate,
       phone: phone ?? this.phone,
@@ -131,12 +135,10 @@ class EventRegistrationModel {
       emergencyContactName: emergencyContactName ?? this.emergencyContactName,
       emergencyContactPhone:
           emergencyContactPhone ?? this.emergencyContactPhone,
-      vehicleBrand: vehicleBrand ?? this.vehicleBrand,
-      vehicleReference: vehicleReference ?? this.vehicleReference,
-      licensePlate: licensePlate ?? this.licensePlate,
-      vin: vin ?? this.vin,
-      createdDate: createdDate ?? this.createdDate,
-      updatedDate: updatedDate ?? this.updatedDate,
+      vehicleId: vehicleId ?? this.vehicleId,
+      vehicleSummary: vehicleSummary ?? this.vehicleSummary,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 

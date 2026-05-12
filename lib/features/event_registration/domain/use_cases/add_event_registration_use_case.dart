@@ -11,6 +11,10 @@ class AddEventRegistrationUseCase {
   final EventRegistrationRepository _registrationRepository;
 
   Future<Either<DomainException, EventRegistrationModel>> call(
-    EventRegistrationModel registration,
-  ) => _registrationRepository.addRegistration(registration);
+    EventRegistrationModel registration, {
+    bool saveToProfile = false,
+  }) => _registrationRepository.addRegistration(
+    registration,
+    saveToProfile: saveToProfile,
+  );
 }

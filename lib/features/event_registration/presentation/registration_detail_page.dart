@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/di/injection.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_detail_bottom_bar.dart';
@@ -7,7 +8,6 @@ import 'package:rideglory/features/event_registration/presentation/widgets/regis
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_detail_header.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_detail_info_row.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_detail_section_card.dart';
-import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
@@ -19,8 +19,8 @@ class RegistrationDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final registration = params.registration;
-    final currentUserId = getIt<AuthService>().currentUser?.id;
-    final isOwner = registration.userId == currentUserId;
+    final currentUserId = context.watch<AuthCubit>().state.currentUser?.id;
+    final isRegistrantViewer = registration.userId == currentUserId;
 
     return Scaffold(
       backgroundColor: AppColors.darkBackground,
@@ -30,7 +30,7 @@ class RegistrationDetailPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             RegistrationDetailHeader(registration: registration),
-            if (!isOwner)
+            if (!isRegistrantViewer)
               ContactPopupMenuButton(
                 phone: registration.phone,
                 contactLabel: context.l10n.registration_contactLabel,
@@ -104,7 +104,7 @@ class RegistrationDetailPage extends StatelessWidget {
                         RegistrationDetailEmergencyCard(
                           contactName: registration.emergencyContactName,
                           contactPhone: registration.emergencyContactPhone,
-                          showPhoneButton: !isOwner,
+                          showPhoneButton: !isRegistrantViewer,
                         ),
                       ],
                     ),
@@ -138,7 +138,9 @@ class _VehicleDetailContent extends StatelessWidget {
     final colorScheme = context.colorScheme;
     final textTheme = context.textTheme;
     final vehicleModel =
-        '${registration.vehicleBrand} ${registration.vehicleReference}';
+        registration.vehicleSummary?.displayName.isNotEmpty == true
+        ? registration.vehicleSummary!.displayName
+        : context.l10n.notAvailable;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,7 +196,8 @@ class _VehicleDetailContent extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
-                      registration.licensePlate,
+                      registration.vehicleSummary?.licensePlate ??
+                          context.l10n.notAvailable,
                       style: textTheme.labelMedium?.copyWith(
                         color: context.appColors.licensePlateTagText,
                         fontWeight: FontWeight.w600,

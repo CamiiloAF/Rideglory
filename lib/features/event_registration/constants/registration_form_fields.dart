@@ -1,6 +1,5 @@
 abstract class RegistrationFormFields {
-  static const String firstName = 'firstName';
-  static const String lastName = 'lastName';
+  static const String fullName = 'fullName';
   static const String identificationNumber = 'identificationNumber';
   static const String birthDate = 'birthDate';
   static const String phone = 'phone';
@@ -11,8 +10,6 @@ abstract class RegistrationFormFields {
   static const String bloodType = 'bloodType';
   static const String emergencyContactName = 'emergencyContactName';
   static const String emergencyContactPhone = 'emergencyContactPhone';
-  static const String vehicleBrand = 'vehicleBrand';
-  static const String vehicleReference = 'vehicleReference';
-  static const String licensePlate = 'licensePlate';
-  static const String vin = 'vin';
+  static const String vehicleId = 'vehicleId';
+  static const String saveToProfile = 'saveToProfile';
 }

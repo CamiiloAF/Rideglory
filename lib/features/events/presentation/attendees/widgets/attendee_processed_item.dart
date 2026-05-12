@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/utils/initials.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -15,10 +16,8 @@ class AttendeeProcessedItem extends StatelessWidget {
     this.onOptionsPressed,
   });
 
-  static String _initials(EventRegistrationModel r) {
-    final first = r.firstName.isNotEmpty ? r.firstName[0] : '';
-    final last = r.lastName.isNotEmpty ? r.lastName[0] : '';
-    return '${first.toUpperCase()}${last.toUpperCase()}';
+  static String _initials(EventRegistrationModel rider) {
+    return Initials.buildFromFullName(rider.fullName);
   }
 
   static Color _avatarBackgroundColor(BuildContext context) {
@@ -30,7 +29,9 @@ class AttendeeProcessedItem extends StatelessWidget {
     final colorScheme = context.colorScheme;
     final textTheme = context.textTheme;
     final vehicleText =
-        '${registration.vehicleBrand} ${registration.vehicleReference}';
+        registration.vehicleSummary?.displayName.isNotEmpty == true
+        ? registration.vehicleSummary!.displayName
+        : context.l10n.notAvailable;
     final isApproved =
         registration.status == RegistrationStatus.approved;
     final statusLabel = isApproved

@@ -1,41 +1,61 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rideglory/core/http/api_date_time.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/event_registration/data/dto/vehicle_summary_dto.dart';
 
 part 'event_registration_dto.g.dart';
 
 @JsonSerializable(converters: apiJsonDateTimeConverters)
-class EventRegistrationDto extends EventRegistrationModel {
-  @JsonKey(defaultValue: '')
-  @override
-  // ignore: overridden_fields -- DTO needs default for JSON deserialization
-  final String eventName;
-
+class EventRegistrationDto {
   const EventRegistrationDto({
-    required super.id,
-    required super.eventId,
-    required this.eventName,
-    required super.userId,
-    required super.status,
-    required super.firstName,
-    required super.lastName,
-    required super.identificationNumber,
-    required super.birthDate,
-    required super.phone,
-    required super.email,
-    required super.residenceCity,
-    required super.eps,
-    super.medicalInsurance,
-    required super.bloodType,
-    required super.emergencyContactName,
-    required super.emergencyContactPhone,
-    required super.vehicleBrand,
-    required super.vehicleReference,
-    required super.licensePlate,
-    super.vin,
-    super.createdDate,
-    super.updatedDate,
-  }) : super(eventName: eventName);
+    this.id,
+    required this.eventId,
+    this.eventName = '',
+    required this.userId,
+    this.status = RegistrationStatus.pending,
+    required this.fullName,
+    required this.identificationNumber,
+    required this.birthDate,
+    required this.phone,
+    required this.email,
+    required this.residenceCity,
+    required this.eps,
+    this.medicalInsurance,
+    required this.bloodType,
+    required this.emergencyContactName,
+    required this.emergencyContactPhone,
+    this.vehicleId,
+    this.vehicleSummary,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  final String? id;
+  final String eventId;
+  @JsonKey(defaultValue: '')
+  final String eventName;
+  final String userId;
+  final RegistrationStatus status;
+
+  final String fullName;
+  final String identificationNumber;
+  final DateTime birthDate;
+  final String phone;
+  final String email;
+  final String residenceCity;
+
+  final String eps;
+  final String? medicalInsurance;
+  final BloodType bloodType;
+
+  final String emergencyContactName;
+  final String emergencyContactPhone;
+
+  final String? vehicleId;
+  final VehicleSummaryDto? vehicleSummary;
+
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   factory EventRegistrationDto.fromJson(Map<String, dynamic> json) =>
       _$EventRegistrationDtoFromJson(json);
@@ -45,17 +65,14 @@ class EventRegistrationDto extends EventRegistrationModel {
     json['birthDate'] = apiEncodeRequiredDateTime(birthDate);
     return json;
   }
-}
 
-extension EventRegistrationModelExtension on EventRegistrationModel {
-  Map<String, dynamic> toJson() => EventRegistrationDto(
+  EventRegistrationModel toModel() => EventRegistrationModel(
     id: id,
     eventId: eventId,
     eventName: eventName,
     userId: userId,
     status: status,
-    firstName: firstName,
-    lastName: lastName,
+    fullName: fullName,
     identificationNumber: identificationNumber,
     birthDate: birthDate,
     phone: phone,
@@ -66,11 +83,42 @@ extension EventRegistrationModelExtension on EventRegistrationModel {
     bloodType: bloodType,
     emergencyContactName: emergencyContactName,
     emergencyContactPhone: emergencyContactPhone,
-    vehicleBrand: vehicleBrand,
-    vehicleReference: vehicleReference,
-    licensePlate: licensePlate,
-    vin: vin,
-    createdDate: createdDate,
-    updatedDate: updatedDate,
-  ).toJson();
+    vehicleId: vehicleId,
+    vehicleSummary: vehicleSummary?.toModel(),
+    createdAt: createdAt,
+    updatedAt: updatedAt,
+  );
+}
+
+extension EventRegistrationModelToDto on EventRegistrationModel {
+  EventRegistrationDto toDto() => EventRegistrationDto(
+    id: id,
+    eventId: eventId,
+    eventName: eventName,
+    userId: userId,
+    status: status,
+    fullName: fullName,
+    identificationNumber: identificationNumber,
+    birthDate: birthDate,
+    phone: phone,
+    email: email,
+    residenceCity: residenceCity,
+    eps: eps,
+    medicalInsurance: medicalInsurance,
+    bloodType: bloodType,
+    emergencyContactName: emergencyContactName,
+    emergencyContactPhone: emergencyContactPhone,
+    vehicleId: vehicleId,
+    vehicleSummary: vehicleSummary == null
+        ? null
+        : VehicleSummaryDto(
+            id: vehicleSummary!.id,
+            brand: vehicleSummary!.brand,
+            model: vehicleSummary!.model,
+            licensePlate: vehicleSummary!.licensePlate,
+            vin: vehicleSummary!.vin,
+          ),
+    createdAt: createdAt,
+    updatedAt: updatedAt,
+  );
 }
