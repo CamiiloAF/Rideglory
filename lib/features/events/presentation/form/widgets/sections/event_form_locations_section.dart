@@ -52,7 +52,7 @@ class _EventFormLocationsSectionState extends State<EventFormLocationsSection> {
           validator: FormBuilderValidators.required(
             errorText: context.l10n.event_meetingPointRequired,
           ),
-          onChanged: (value) {
+          onFieldSubmitted: (value) {
             setState(() => _meetingPoint = value?.trim());
           },
         ),
@@ -68,7 +68,7 @@ class _EventFormLocationsSectionState extends State<EventFormLocationsSection> {
           validator: FormBuilderValidators.required(
             errorText: context.l10n.event_destinationRequired,
           ),
-          onChanged: (value) {
+          onFieldSubmitted: (value) {
             setState(() => _destination = value?.trim());
           },
         ),
