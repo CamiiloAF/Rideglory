@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rideglory/core/extensions/date_extensions.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/features/maintenance/domain/model/maintenance_list_summary.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenance_summary_card.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -36,12 +38,10 @@ class MaintenancesSummaryHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final numberFormat = NumberFormat('#,###');
-    final l10n = context.l10n;
 
     final lastFromList = _lastFromList();
-    final lastDate = maintenanceSummary?.lastServiceDate ?? lastFromList?.date;
-    final lastMileage =
-        maintenanceSummary?.lastServiceMileage ?? lastFromList?.maintanceMileage;
+    final lastService =
+        maintenanceSummary?.lastServiceDate ?? lastFromList?.date;
     final nextDate = maintenanceSummary?.nextServiceDate ?? _nextFromList();
 
     return Padding(
@@ -56,9 +56,9 @@ class MaintenancesSummaryHeader extends StatelessWidget {
                 child: MaintenanceSummaryCard(
                   icon: Icons.calendar_today_outlined,
                   label: 'Last service',
-                  value: lastService?.date.formattedDate ?? '—',
+                  value: lastService?.formattedDate ?? '—',
                   subtitle: lastService != null
-                      ? '${numberFormat.format(lastService.maintanceMileage)} km'
+                      ? '${numberFormat.format(maintenanceSummary?.lastServiceMileage)} km'
                       : null,
                 ),
               ),
@@ -67,7 +67,7 @@ class MaintenancesSummaryHeader extends StatelessWidget {
                 child: MaintenanceSummaryCard(
                   icon: Icons.event_repeat_outlined,
                   label: 'Next service',
-                  value: nextServiceDate?.formattedDate ?? 'Estimated',
+                  value: nextDate?.formattedDate ?? 'Estimated',
                 ),
               ),
             ],

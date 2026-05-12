@@ -2,6 +2,7 @@ abstract final class ApiRoutes {
   static const signUp = '/users/sign-up';
   static const me = '/users/me';
   static const home = '/home';
+  static const maintenances = '/maintenances';
   static const vehicles = '/vehicles';
   static const myVehicles = '/vehicles/my';
   static const events = '/events';
