@@ -1,9 +1,9 @@
-# Iteration 2 Checkpoint — QA Phase Complete
+# Iteration 2 Checkpoint — DevOps Phase Complete
 
 **Iteration:** 2  
-**Phase:** qa (complete)  
-**Timestamp:** 2026-05-12T23:00:00Z  
-**Next Phase:** devops
+**Phase:** devops (complete)  
+**Timestamp:** 2026-05-12T23:15:00Z  
+**Next Phase:** pr
 
 ---
 
@@ -128,9 +128,9 @@ Widget test execution is blocked by pre-existing compilation errors in maintenan
 | Backend | ✅ done | backend.md, 8 unit tests pass |
 | Frontend | ✅ done | frontend.md, 118 build outputs |
 | QA | ✅ done | qa.md, qa.json, 56 test cases |
-| DevOps | ⏳ next | — |
+| DevOps | ✅ done | devops.md, devops.json, .github/workflows/ci.yml |
 
-**Ready for:** DevOps phase (GitHub Actions CI/CD integration)
+**Ready for:** PR phase (create pull request to main)
 
 ---
 
@@ -146,5 +146,15 @@ Widget test execution is blocked by pre-existing compilation errors in maintenan
 
 ---
 
-*Checkpoint created: 2026-05-12T23:00:00Z*  
-*Next: /solo-devops to run CI/CD integration*
+*Checkpoint updated: 2026-05-12T23:15:00Z*  
+*Next: /iter 2 pr to create pull request to main*
+
+---
+
+## DevOps Phase Notes
+
+All Iteration 2 work is committed locally (`commit 9a3998e`), but GitHub push protection is blocking the push due to a pre-existing secret in commit 5e90019. The secret (GCP API key in .vscode/mcp.json) was added earlier in iter-2 before devops phase. I've fixed the current state to use environment variables.
+
+**Action Required**: Allowlist the secret via GitHub's secret scanning console or remove it from history via git filter-branch.
+
+GitHub Unblock Link: https://github.com/CamiiloAF/Rideglory/security/secret-scanning/unblock-secret/3Dc03bgZOYGSTQSWClSQ2vP3dpR

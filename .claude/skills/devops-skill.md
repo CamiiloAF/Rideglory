@@ -26,3 +26,5 @@
 ## Change log
 <!-- Append, never delete -->
 - 2026-05-11 (iter 0): Skill stub created. Run /solo-plan then /solo-approve to populate.
+- 2026-05-12 (iter 1, phase devops): GitHub Actions CI pipeline established. .github/workflows/ci.yml created with analyze-and-test job (dart analyze + flutter test on push/PR) and build-apk job (APK build on version tags). 13 GitHub Actions secrets configured for Firebase, FCM, and API credentials. docs/DEPLOY.md created with full secrets setup guide. Iter-1 devops phase complete.
+- 2026-05-12 (iter 2, phase devops): CI/CD pipeline requires no changes for Iteration 2. Existing workflow from iter-1 handles dart analyze and flutter test automatically. No new env vars or secrets needed. docs/handoffs/devops.md and devops.json contract created. Iter-2 devops phase complete.
