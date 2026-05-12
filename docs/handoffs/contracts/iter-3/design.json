@@ -4,8 +4,11 @@
   "agent": "design",
   "status": "pass",
   "updatedAt": "2026-05-12T08:00:00Z",
-  "summary": "8 flows documented in Pencil (pencil-new.pen section '09 — SOAT Upload Flow'). Design tokens set as Pencil variables. SOAT upload flow designed end-to-end: 6 screens in Pencil + 6 HTML mockups. Hard gate for Iteration 3b unlocked.",
-  "metrics": { "tokens": 85000, "costUsd": 0.09 },
+  "summary": "8 flows documented in Pencil (pencil-new.pen section '09 \u2014 SOAT Upload Flow'). Design tokens set as Pencil variables. SOAT upload flow designed end-to-end: 6 screens in Pencil + 6 HTML mockups. Hard gate for Iteration 3b unlocked.",
+  "metrics": {
+    "tokens": 85000,
+    "costUsd": 0.09
+  },
   "artifacts": [
     "docs/handoffs/design.md",
     "docs/design/html-mockups/iter-3/soat-vehicle-card.html",
@@ -19,12 +22,48 @@
     "workflow/state.json"
   ],
   "screens": [
-    { "name": "soat-vehicle-card", "story": "US-3-4", "type": "NEW", "file": "docs/design/html-mockups/iter-3/soat-vehicle-card.html", "pencilId": "Na3V5" },
-    { "name": "soat-upload-entry", "story": "US-3-4", "type": "NEW", "file": "docs/design/html-mockups/iter-3/soat-upload-entry.html", "pencilId": "wzejY" },
-    { "name": "soat-upload-progress", "story": "US-3-4", "type": "NEW", "file": "docs/design/html-mockups/iter-3/soat-upload-progress.html", "pencilId": "ATME9" },
-    { "name": "soat-confirmation", "story": "US-3-4", "type": "NEW", "file": "docs/design/html-mockups/iter-3/soat-confirmation.html", "pencilId": "N2jvyA" },
-    { "name": "soat-manual-entry", "story": "US-3-4", "type": "NEW", "file": "docs/design/html-mockups/iter-3/soat-manual-entry.html", "pencilId": "Q1cZ7g" },
-    { "name": "soat-success", "story": "US-3-4", "type": "NEW", "file": "docs/design/html-mockups/iter-3/soat-success.html", "pencilId": "DMXj1" }
+    {
+      "name": "soat-vehicle-card",
+      "story": "US-3-4",
+      "type": "NEW",
+      "file": "docs/design/html-mockups/iter-3/soat-vehicle-card.html",
+      "pencilId": "Na3V5"
+    },
+    {
+      "name": "soat-upload-entry",
+      "story": "US-3-4",
+      "type": "NEW",
+      "file": "docs/design/html-mockups/iter-3/soat-upload-entry.html",
+      "pencilId": "wzejY"
+    },
+    {
+      "name": "soat-upload-progress",
+      "story": "US-3-4",
+      "type": "NEW",
+      "file": "docs/design/html-mockups/iter-3/soat-upload-progress.html",
+      "pencilId": "ATME9"
+    },
+    {
+      "name": "soat-confirmation",
+      "story": "US-3-4",
+      "type": "NEW",
+      "file": "docs/design/html-mockups/iter-3/soat-confirmation.html",
+      "pencilId": "N2jvyA"
+    },
+    {
+      "name": "soat-manual-entry",
+      "story": "US-3-4",
+      "type": "NEW",
+      "file": "docs/design/html-mockups/iter-3/soat-manual-entry.html",
+      "pencilId": "Q1cZ7g"
+    },
+    {
+      "name": "soat-success",
+      "story": "US-3-4",
+      "type": "NEW",
+      "file": "docs/design/html-mockups/iter-3/soat-success.html",
+      "pencilId": "DMXj1"
+    }
   ],
   "pencilVariables": {
     "primary-orange": "#f98c1f",
@@ -38,26 +77,99 @@
     "error-color": "#CF6679"
   },
   "l10nKeys": [
-    { "key": "vehicle_soatBadgeValid", "value": "SOAT vigente" },
-    { "key": "vehicle_soatBadgeExpiring", "value": "Vence en {days} días" },
-    { "key": "vehicle_soatBadgeExpired", "value": "SOAT vencido" },
-    { "key": "vehicle_uploadSoat", "value": "Subir SOAT" },
-    { "key": "soat_selectPdf", "value": "Seleccionar PDF" },
-    { "key": "soat_aiLoading", "value": "Extrayendo información con IA..." },
-    { "key": "soat_confirmData", "value": "Confirmar datos" },
-    { "key": "soat_enterManually", "value": "Ingresar manualmente" },
-    { "key": "soat_save", "value": "Guardar" },
-    { "key": "soat_success", "value": "SOAT registrado exitosamente" },
-    { "key": "soat_expiryDate", "value": "Fecha de vencimiento" },
-    { "key": "soat_policyNumber", "value": "Número de póliza" },
-    { "key": "soat_insurer", "value": "Aseguradora" }
+    {
+      "key": "vehicle_soatBadgeValid",
+      "value": "SOAT vigente"
+    },
+    {
+      "key": "vehicle_soatBadgeExpiring",
+      "value": "Vence en {days} d\u00edas"
+    },
+    {
+      "key": "vehicle_soatBadgeExpired",
+      "value": "SOAT vencido"
+    },
+    {
+      "key": "vehicle_uploadSoat",
+      "value": "Subir SOAT"
+    },
+    {
+      "key": "soat_selectPdf",
+      "value": "Seleccionar PDF"
+    },
+    {
+      "key": "soat_aiLoading",
+      "value": "Extrayendo informaci\u00f3n con IA..."
+    },
+    {
+      "key": "soat_confirmData",
+      "value": "Confirmar datos"
+    },
+    {
+      "key": "soat_enterManually",
+      "value": "Ingresar manualmente"
+    },
+    {
+      "key": "soat_save",
+      "value": "Guardar"
+    },
+    {
+      "key": "soat_success",
+      "value": "SOAT registrado exitosamente"
+    },
+    {
+      "key": "soat_expiryDate",
+      "value": "Fecha de vencimiento"
+    },
+    {
+      "key": "soat_policyNumber",
+      "value": "N\u00famero de p\u00f3liza"
+    },
+    {
+      "key": "soat_insurer",
+      "value": "Aseguradora"
+    }
   ],
   "qualityGates": [
-    { "name": "design_tokens_in_pencil", "status": "pass", "notes": "9 tokens set as Pencil variables in pencil-new.pen" },
-    { "name": "soat_flow_complete", "status": "pass", "notes": "6 screens designed: vehicle-card, upload-entry, upload-progress, confirmation, manual-entry, success" },
-    { "name": "html_mockups_present", "status": "pass", "notes": "6 HTML mockups in docs/design/html-mockups/iter-3/" },
-    { "name": "spanish_copy_only", "status": "pass", "notes": "All UI labels in Spanish, sentence case buttons" },
-    { "name": "iter_3b_gate", "status": "pass", "notes": "SOAT flow designed — Iteration 3b (Flutter UI) can proceed" },
-    { "name": "8_flows_inventoried", "status": "pass", "notes": "Screen inventory covers all 8 flows + SOAT in design.md" }
+    {
+      "name": "design_tokens_in_pencil",
+      "status": "pass",
+      "notes": "9 tokens set as Pencil variables in pencil-new.pen"
+    },
+    {
+      "name": "soat_flow_complete",
+      "status": "pass",
+      "notes": "6 screens designed: vehicle-card, upload-entry, upload-progress, confirmation, manual-entry, success"
+    },
+    {
+      "name": "html_mockups_present",
+      "status": "pass",
+      "notes": "6 HTML mockups in docs/design/html-mockups/iter-3/"
+    },
+    {
+      "name": "spanish_copy_only",
+      "status": "pass",
+      "notes": "All UI labels in Spanish, sentence case buttons"
+    },
+    {
+      "name": "iter_3b_gate",
+      "status": "pass",
+      "notes": "SOAT flow designed \u2014 Iteration 3b (Flutter UI) can proceed"
+    },
+    {
+      "name": "8_flows_inventoried",
+      "status": "pass",
+      "notes": "Screen inventory covers all 8 flows + SOAT in design.md"
+    },
+    {
+      "name": "design_coverage_complete",
+      "status": "pass",
+      "notes": "8 flows + SOAT upload flow fully documented in Pencil and design.md"
+    },
+    {
+      "name": "required_artifacts_present",
+      "status": "pass",
+      "notes": "design.md, 6 HTML mockups, design.json contract, design-skill.md all present"
+    }
   ]
 }
