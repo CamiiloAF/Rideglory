@@ -17,7 +17,7 @@
 | Phase | Agent | Status |
 |-------|-------|--------|
 | po_scope | po | complete |
-| architect | architect | pending |
+| architect | architect | complete |
 | design | design | pending |
 | backend | backend | pending |
 | frontend | frontend | pending |
@@ -27,7 +27,7 @@
 | tech_lead | tech_lead | pending |
 | po_close | po | pending |
 
-**Last completed phase:** po_scope (3 user stories, 50 acceptance criteria, 10 tasks, 9 l10n keys)
-**Next phase:** architect
+**Last completed phase:** architect (ADR-3: no EventsState refactor; backend contracts + frontend spec + DI scope)
+**Next phase:** design
 
 *Last closed: Iteration 1 (PR #8 merged, tech_lead approved)*

@@ -276,8 +276,8 @@
     },
     "architect": {
       "status": "idle",
-      "lastAction": "2026-05-12T03:00:00Z",
-      "focus": "iter-1 contracts + ADRs (no backend changes)"
+      "lastAction": "2026-05-12T20:00:00Z",
+      "focus": "iter-2 — event filter backend wire-up + rider profile page; ADR-3: no EventsState freezed refactor"
     },
     "design": {
       "status": "idle",
@@ -395,7 +395,7 @@
       "id": "T-2-1",
       "title": "Backend: implement GET /events and GET /events/upcoming filter parameter forwarding (type, dateFrom, dateTo, city)",
       "agent": "backend",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 2,
       "story": "US-2-1",
       "updatedAt": "2026-05-12T19:30:00Z"
@@ -404,7 +404,7 @@
       "id": "T-2-2",
       "title": "Backend: implement Prisma WHERE logic for event filters (type, date range, city) with unit tests",
       "agent": "backend",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 2,
       "story": "US-2-1",
       "updatedAt": "2026-05-12T19:30:00Z"
@@ -413,7 +413,7 @@
       "id": "T-2-3",
       "title": "Frontend: refactor EventsCubit to EventsState with eventsResult and activeFilter fields; implement applyFilters() and clearFilters()",
       "agent": "frontend",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 2,
       "story": "US-2-1, US-2-2",
       "updatedAt": "2026-05-12T19:30:00Z"
@@ -422,7 +422,7 @@
       "id": "T-2-4",
       "title": "Frontend: wire event filter bottom sheet to EventsCubit.applyFilters(); add date range picker and active filter badge",
       "agent": "frontend",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 2,
       "story": "US-2-1, US-2-2",
       "updatedAt": "2026-05-12T19:30:00Z"
@@ -431,7 +431,7 @@
       "id": "T-2-5",
       "title": "Frontend: implement RiderProfilePage (read-only) with GetUserByIdUseCase call and ResultState branches",
       "agent": "frontend",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 2,
       "story": "US-2-3",
       "updatedAt": "2026-05-12T19:30:00Z"
@@ -440,7 +440,7 @@
       "id": "T-2-6",
       "title": "Frontend: wire attendee list tap handlers to navigate to RiderProfilePage; register rider_profile route in app_router",
       "agent": "frontend",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 2,
       "story": "US-2-3",
       "updatedAt": "2026-05-12T19:30:00Z"
@@ -449,7 +449,7 @@
       "id": "T-2-7",
       "title": "Frontend: add 9 new Spanish localization keys to app_es.arb (event filter UI + rider profile UI)",
       "agent": "frontend",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 2,
       "story": "US-2-1, US-2-2, US-2-3",
       "updatedAt": "2026-05-12T19:30:00Z"
@@ -458,7 +458,7 @@
       "id": "T-2-8",
       "title": "QA: unit tests for EventsCubit filter logic (applyFilters, clearFilters, state transitions); tests for GetUserByIdUseCase",
       "agent": "qa",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 2,
       "story": "US-2-1, US-2-2, US-2-3",
       "updatedAt": "2026-05-12T19:30:00Z"
@@ -467,7 +467,7 @@
       "id": "T-2-9",
       "title": "QA: widget tests for filter empty state, filter badge count, RiderProfilePage (loading/data/error), attendee list navigation",
       "agent": "qa",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 2,
       "story": "US-2-1, US-2-2, US-2-3",
       "updatedAt": "2026-05-12T19:30:00Z"
@@ -476,7 +476,7 @@
       "id": "T-2-10",
       "title": "QA gate: run dart analyze + flutter test; verify all filter branches and profile page states covered; check build_runner passes",
       "agent": "qa",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 2,
       "story": "QA gate — all US-2-* stories",
       "updatedAt": "2026-05-12T19:30:00Z"
@@ -648,6 +648,22 @@
       "agent": "po",
       "at": "2026-05-12T19:30:01Z",
       "detail": "Iter-2 PO scope complete: 3 user stories (filters + clear + attendee profiles), 50 acceptance criteria, backend gap risk scoped in, 9 l10n keys, 10 tasks created, ready for Architect"
+    },
+    {
+      "type": "architect_plan",
+      "iteration": 2,
+      "phase": "architect",
+      "agent": "architect",
+      "at": "2026-05-12T20:00:00Z",
+      "detail": "ADR-3: no EventsState freezed refactor (brownfield-safe). Backend: GET /events + /events/upcoming get 4 query params; new GET /users/:id. Frontend: EventService @Query params, GetUserByIdUseCase, RiderProfileCubit, RiderProfilePage, route registered. 9 l10n keys. No CI changes."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 2,
+      "phase": "architect",
+      "agent": "architect",
+      "at": "2026-05-12T20:00:01Z",
+      "detail": "Architect phase complete — feature arch + API contracts defined; ADR-3 documented; slim handoffs for backend/frontend/devops/qa written"
     }
   ]
 }

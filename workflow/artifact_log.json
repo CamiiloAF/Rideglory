@@ -948,6 +948,25 @@
         "docs/handoffs/po.md",
         "workflow/state.json"
       ]
+    },
+    {
+      "at": "2026-05-12T19:25:03Z",
+      "iteration": 2,
+      "phase": "architect",
+      "agent": "architect",
+      "action": "update",
+      "paths": [
+        "claude/skills/architect-skill.md",
+        "docs/architecture/DIAGRAMS.md",
+        "docs/handoffs/architect-for-backend.md",
+        "docs/handoffs/architect-for-devops.md",
+        "docs/handoffs/architect-for-frontend.md",
+        "docs/handoffs/architect-for-qa.md",
+        "docs/handoffs/architect.md",
+        "docs/handoffs/contracts/iter-2/architect.json",
+        "docs/handoffs/iteration_checkpoint.md",
+        "workflow/state.json"
+      ]
     }
   ]
 }

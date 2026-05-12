@@ -23,6 +23,27 @@
 ## Gotchas and learnings
 <!-- Things discovered during execution that future iterations should know -->
 
+## Technical context
+
+- Flutter Clean Architecture: domain (pure Dart) / data (DTOs, Retrofit, repositories) / presentation (Cubit, pages, widgets)
+- State: `ResultState<T>` freezed union (initial/loading/data/empty/error). Simple cubits: `Cubit<ResultState<T>>`. Complex multi-result state: `@freezed` state class with multiple `ResultState<T>` fields.
+- DI: GetIt + Injectable. `@singleton`, `@lazySingleton`, `@injectable`. Cubits at root via root `MultiBlocProvider` (global) or page-level `BlocProvider` (scoped).
+- Retrofit: annotated service interfaces, code-generated `.g.dart`. `@Query` for optional URL params.
+- `executeService()` in `rest_client_functions.dart` wraps all HTTP calls → `Either<DomainException, T>`.
+- `UserDto extends UserModel` — DTO inherits domain model (brownfield pattern; works but not ideal).
+- `EventFilters` is a plain Dart class (not freezed). `EventsCubit` extends `Cubit<ResultState<List<EventModel>>>` — DO NOT refactor to freezed state unless there is a multi-field coordination requirement.
+
+## Gotchas and learnings
+
+- Iter-1: `injection.config.dart` must be manually patched when `@injectable` annotation is added and build_runner is not re-run (DI won't register).
+- Iter-1: `UserDto extends UserModel` — passing `UserDto` directly to repository works because it IS a `UserModel`.
+- Iter-2: Existing event filter UI is already fully wired (`updateFilters`, `clearFilters` called in `EventFiltersBottomSheet`). The only gap is backend forwarding. Avoid freezed refactors unless forced by multi-cubit coordination.
+- Filter badge logic: use `EventFilters.hasFilters` getter which already checks all fields.
+- `AttendeesList` shows both pending (org workflow) and processed (approved/rejected) riders. Rider profile tap belongs on processed items only (approved riders going on the ride).
+- `GET /users/:id` endpoint does not exist in rideglory-api yet — backend must create it.
+
 ## Change log
 <!-- Append, never delete -->
 - 2026-05-11 (iter 0): Skill stub created. Run /solo-plan then /solo-approve to populate.
+- 2026-05-12 (iter 1): ADR-1 (ProfileCubit as lazySingleton in root MBP), ADR-2 (no backend changes for iter-1). Defined GetMyProfileUseCase, 5 l10n keys, initials helper.
+- 2026-05-12 (iter 2): ADR-3 (no EventsState freezed refactor — brownfield-safe). Defined GET /events filter params contract, GET /users/:id new endpoint, GetUserByIdUseCase, RiderProfileCubit, RiderProfilePage, route. 9 l10n keys. Handoffs for backend/frontend/devops/qa written.
