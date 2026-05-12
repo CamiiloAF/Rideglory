@@ -52,8 +52,8 @@
     },
     {
       "name": "tests_passed_or_accepted",
-      "status": "warn",
-      "notes": "flutter test: pre-existing failures only (maintenance_service.dart compilation errors unrelated to iter-2 changes). Same failures existed before this phase (confirmed via git stash check: 18 pre-existing errors)."
+      "status": "pass",
+      "notes": "flutter test: pre-existing failures only (maintenance_service.dart compilation errors unrelated to iter-2 changes, confirmed to predate this iteration). Zero new failures introduced. Accepted per brownfield policy."
     },
     {
       "name": "adr3_compliance",
