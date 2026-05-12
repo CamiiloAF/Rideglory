@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/domain/result_state.dart';
@@ -19,6 +20,7 @@ import 'package:rideglory/features/events/presentation/detail/widgets/event_deta
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_started_banner.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
 import 'package:rideglory/features/events/presentation/shared/dialogs/cancel_registration_dialog.dart';
+import 'package:rideglory/shared/helpers/map_launcher_helper.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
@@ -121,9 +123,7 @@ class EventDetailViewState extends State<EventDetailView> {
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.share_outlined),
-                    onPressed: () {
-                      // TODO: share event
-                    },
+                    onPressed: () => unawaited(_shareEvent(context)),
                   ),
                   if (isOwner)
                     PopupMenuButton<String>(
@@ -248,9 +248,8 @@ class EventDetailViewState extends State<EventDetailView> {
                     ],
                     EventDetailBody(
                       event: currentEvent,
-                      onViewMap: () {
-                        // TODO: open maps with event.meetingPoint
-                      },
+                      onViewMap: () =>
+                          unawaited(_openMeetingPointInMap(currentEvent.meetingPoint)),
                     ),
                     AppSpacing.gap100,
                   ],
@@ -352,6 +351,32 @@ class EventDetailViewState extends State<EventDetailView> {
     }
   }
 
+  Future<void> _shareEvent(BuildContext context) async {
+    final encodedMeetingPoint = Uri.encodeComponent(currentEvent.meetingPoint);
+    final eventSummary = [
+      currentEvent.name,
+      currentEvent.city,
+      '${context.l10n.event_meetingPointLabel}: ${currentEvent.meetingPoint}',
+      '${context.l10n.event_viewOnMap}: https://www.google.com/maps/search/?api=1&query=$encodedMeetingPoint',
+    ].join('\n');
+
+    await Clipboard.setData(ClipboardData(text: eventSummary));
+    if (!context.mounted) {
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(context.l10n.savedSuccessfully),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
+  Future<void> _openMeetingPointInMap(String meetingPoint) async {
+    await MapLauncherHelper.openSearchByAddress(meetingPoint);
+  }
+
   Future<void> _showPendingRegistrationBottomSheet(
     BuildContext context,
     EventRegistrationModel registration,
@@ -442,7 +467,7 @@ class EventDetailViewState extends State<EventDetailView> {
       title: context.l10n.event_deleteEvent,
       content: context.l10n.event_deleteEventMessage,
       dialogType: DialogType.warning,
-      confirmLabel: 'Eliminar',
+      confirmLabel: context.l10n.event_delete,
       confirmType: DialogActionType.danger,
       onConfirm: () {
         if (currentEvent.id != null) {

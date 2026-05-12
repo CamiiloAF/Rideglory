@@ -3208,6 +3208,36 @@ abstract class AppLocalizations {
   /// **'Perfil'**
   String get profile_profile;
 
+  /// No description provided for @profile_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Mi perfil'**
+  String get profile_title;
+
+  /// No description provided for @profile_mainVehicle.
+  ///
+  /// In es, this message translates to:
+  /// **'Vehículo principal'**
+  String get profile_mainVehicle;
+
+  /// No description provided for @profile_noVehicle.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin vehículos'**
+  String get profile_noVehicle;
+
+  /// No description provided for @profile_errorRetry.
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get profile_errorRetry;
+
+  /// No description provided for @profile_loadingError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cargar tu perfil'**
+  String get profile_loadingError;
+
   /// No description provided for @registration_registrationPageTitle.
   ///
   /// In es, this message translates to:
@@ -3481,31 +3511,13 @@ abstract class AppLocalizations {
   /// No description provided for @registration_selectVehicleToPreload.
   ///
   /// In es, this message translates to:
-  /// **'Selecciona un vehículo para precargar la información'**
+  /// **'Selecciona un vehículo'**
   String get registration_selectVehicleToPreload;
-
-  /// No description provided for @registration_clearForm.
-  ///
-  /// In es, this message translates to:
-  /// **'Limpiar formulario'**
-  String get registration_clearForm;
-
-  /// No description provided for @registration_clearFormConfirmTitle.
-  ///
-  /// In es, this message translates to:
-  /// **'Limpiar formulario'**
-  String get registration_clearFormConfirmTitle;
-
-  /// No description provided for @registration_clearFormConfirmBody.
-  ///
-  /// In es, this message translates to:
-  /// **'Se borrarán todos los datos ingresados. ¿Deseas continuar?'**
-  String get registration_clearFormConfirmBody;
 
   /// No description provided for @registration_vehicleBrandNotAllowed.
   ///
   /// In es, this message translates to:
-  /// **'La marca seleccionada no está permitida para este evento'**
+  /// **'La marca seleccionada no está permitida para este evento. Las marcas pemitidas son'**
   String get registration_vehicleBrandNotAllowed;
 
   /// No description provided for @registration_vehicleEmptyStateTitle.

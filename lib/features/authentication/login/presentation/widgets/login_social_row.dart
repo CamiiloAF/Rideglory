@@ -29,7 +29,10 @@ class LoginSocialRow extends StatelessWidget {
               child: LoginSocialButton(
                 label: context.l10n.auth_appleLabel,
                 icon: Icons.apple,
-                onPressed: null, // TODO: implement Apple sign-in
+                isLoading: isLoading,
+                onPressed: isLoading
+                    ? null
+                    : () => context.read<AuthCubit>().signInWithApple(),
               ),
             ),
           ],

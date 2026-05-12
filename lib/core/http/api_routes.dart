@@ -2,13 +2,13 @@ abstract final class ApiRoutes {
   static const signUp = '/users/sign-up';
   static const me = '/users/me';
   static const home = '/home';
+  static const maintenances = '/maintenances';
   static const vehicles = '/vehicles';
   static const myVehicles = '/vehicles/my';
   static const events = '/events';
   static const myEvents = '/events/my';
   static const tracking = '/tracking';
   static const trackingWs = '$tracking/ws';
-  static const maintenances = '/maintenances';
   static const registrations = '/registrations';
   static const myRegistrations = '$registrations/me';
   static const placesAutocomplete = '/places/autocomplete';

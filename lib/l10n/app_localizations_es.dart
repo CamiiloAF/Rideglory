@@ -1630,6 +1630,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get profile_profile => 'Perfil';
 
   @override
+  String get profile_title => 'Mi perfil';
+
+  @override
+  String get profile_mainVehicle => 'Vehículo principal';
+
+  @override
+  String get profile_noVehicle => 'Sin vehículos';
+
+  @override
+  String get profile_errorRetry => 'Reintentar';
+
+  @override
+  String get profile_loadingError => 'No pudimos cargar tu perfil';
+
+  @override
   String get registration_registrationPageTitle => 'Inscripción al Evento';
 
   @override
@@ -1766,22 +1781,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_preloadFromVehicle => 'Precargar vehículo';
 
   @override
-  String get registration_selectVehicleToPreload =>
-      'Selecciona un vehículo para precargar la información';
-
-  @override
-  String get registration_clearForm => 'Limpiar formulario';
-
-  @override
-  String get registration_clearFormConfirmTitle => 'Limpiar formulario';
-
-  @override
-  String get registration_clearFormConfirmBody =>
-      'Se borrarán todos los datos ingresados. ¿Deseas continuar?';
+  String get registration_selectVehicleToPreload => 'Selecciona un vehículo';
 
   @override
   String get registration_vehicleBrandNotAllowed =>
-      'La marca seleccionada no está permitida para este evento';
+      'La marca seleccionada no está permitida para este evento. Las marcas pemitidas son';
 
   @override
   String get registration_vehicleEmptyStateTitle =>

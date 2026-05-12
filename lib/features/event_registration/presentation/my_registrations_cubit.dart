@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/registration_with_event.dart';
@@ -7,6 +8,7 @@ import 'package:rideglory/features/event_registration/domain/use_cases/get_my_re
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_event_by_id_use_case.dart';
 
+@injectable
 class MyRegistrationsCubit
     extends Cubit<ResultState<List<RegistrationWithEvent>>> {
   MyRegistrationsCubit(

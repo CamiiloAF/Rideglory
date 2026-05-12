@@ -136,9 +136,10 @@ class AuthService {
   }
 
   Future<Either<DomainException, User?>> signInWithApple() async {
-    // TODO: Implement Apple sign-in when sign_in_with_apple is enabled
     return const Left(
-      DomainException(message: 'Apple sign-in is not yet implemented'),
+      DomainException(
+        message: 'Apple sign-in no está disponible en esta versión',
+      ),
     );
   }
 

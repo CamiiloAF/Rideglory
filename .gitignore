@@ -49,6 +49,7 @@ app.*.map.json
 .env
 .env.*
 .vscode/mcp.local.json
+.vscode/mcp.json
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 

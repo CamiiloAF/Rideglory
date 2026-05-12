@@ -104,7 +104,11 @@ class EventFormContent extends StatelessWidget {
               isEditing: cubit.isEditing,
               descriptionInitialValue: cubit.editingEvent?.description,
               onAiSuggest: () {
-                // TODO: Implement AI suggestions
+                InfoDialog.show(
+                  context: context,
+                  title: context.l10n.event_generateWithAI,
+                  content: context.l10n.event_comingSoon,
+                );
               },
             ),
             AppSpacing.gapXxl,
