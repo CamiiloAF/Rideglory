@@ -1,0 +1,44 @@
+{
+  "iteration": 1,
+  "phase": "design",
+  "agent": "design",
+  "status": "pass",
+  "completedAt": "2026-05-12T04:00:00Z",
+  "screens": [
+    { "name": "profile_loading", "story": "US-1-4", "type": "NEW", "file": "docs/design/html-mockups/iter-1/profile_loading.html" },
+    { "name": "profile_data", "story": "US-1-4", "type": "NEW", "file": "docs/design/html-mockups/iter-1/profile_data.html" },
+    { "name": "profile_empty", "story": "US-1-4", "type": "NEW", "file": "docs/design/html-mockups/iter-1/profile_empty.html" },
+    { "name": "profile_error", "story": "US-1-4", "type": "NEW", "file": "docs/design/html-mockups/iter-1/profile_error.html" }
+  ],
+  "designTokens": {
+    "primary": "#f98c1f",
+    "darkBackground": "#111111",
+    "surface": "#1C1C1C",
+    "border": "#2E2E2E",
+    "onSurface": "#FFFFFF",
+    "onSurfaceVariant": "#9E9E9E",
+    "error": "#CF6679",
+    "font": "Space Grotesk",
+    "borderRadius": "8px",
+    "touchTarget": "44px"
+  },
+  "l10nKeys": [
+    { "key": "profile_title", "value": "Mi perfil" },
+    { "key": "profile_mainVehicle", "value": "Vehículo principal" },
+    { "key": "profile_noVehicle", "value": "Sin vehículos" },
+    { "key": "profile_errorRetry", "value": "Reintentar" },
+    { "key": "profile_loadingError", "value": "No pudimos cargar tu perfil" }
+  ],
+  "newWidgets": [
+    "lib/features/profile/presentation/widgets/profile_header.dart",
+    "lib/features/profile/presentation/widgets/profile_main_vehicle_card.dart",
+    "lib/features/profile/presentation/widgets/profile_actions_list.dart"
+  ],
+  "qualityGates": [
+    { "name": "required_artifacts_present", "status": "pass", "notes": "styles.css + 4 HTML mockups created at docs/design/html-mockups/iter-1/" },
+    { "name": "design_coverage_complete", "status": "pass", "notes": "All 4 ResultState branches covered: loading, data, empty (no vehicle), error" },
+    { "name": "l10n_keys_defined", "status": "pass", "notes": "5 profile_ keys defined, matching architect-for-frontend.md requirements" },
+    { "name": "no_flutter_code", "status": "pass", "notes": "Design outputs are HTML/CSS mockups only — no Dart files" },
+    { "name": "spanish_copy_only", "status": "pass", "notes": "All UI labels in Spanish with sentence case buttons" }
+  ]
+}

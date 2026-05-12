@@ -90,9 +90,26 @@ Stitch references: `/Users/cami/Downloads/stitch_rideglory/` — copy to `docs/d
 
 ---
 
+## Screen inventory
+
+| Screen | Iteration | Mockup path | States |
+|--------|-----------|-------------|--------|
+| Profile | 1 | `docs/design/html-mockups/iter-1/profile_*.html` | loading, data, empty (no vehicle), error |
+
+## Locked design decisions (iter-1)
+
+- Avatar: `CircleAvatar` 80×80px, bg `#f98c1f`, fg `#111111`, initials from `initialsFromName()` helper
+- No profile photo upload (deferred post-6b) — initials avatar only in v1
+- Vehicle section empty state: inline "Sin vehículos" text in dashed border container (NOT full EmptyStateWidget — keeps layout compact for single-field empty)
+- Error state: full-screen centered when no cached data; error-banner style when cached data exists (pattern to reuse in future iterations)
+- Shimmer skeleton: circle + two text bars + block (vehicle) + two action rows — no spinner
+- `styles.css` at `docs/design/html-mockups/iter-1/shared/styles.css` — copy forward for iter-2+
+
 ## Gotchas and learnings
 
-<!-- Append during iterations -->
+- Profile page is a brownfield REWRITE (existing stub had raw ListTiles with no profile data). Mark future profile changes as UPDATE.
+- `VehicleCubit` is separate from `ProfileCubit` — vehicle empty state is independent of profile load error. Design must handle both cubits separately.
+- Bottom nav: Perfil tab = index 3, active color `#f98c1f`.
 
 ---
 
@@ -100,3 +117,4 @@ Stitch references: `/Users/cami/Downloads/stitch_rideglory/` — copy to `docs/d
 
 - 2026-05-11 (iter 0): Skill stub created.
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
+- 2026-05-12 (iter 1): Screen inventory added. Profile page designed (4 states). styles.css baseline established. Locked decisions documented.
