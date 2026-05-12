@@ -1,24 +1,33 @@
-# Iteration checkpoint
+# Iteration checkpoint (in-flight)
 
-## Status: idle
+**Purpose:** Human-readable resume trail. After each phase completes, update this file in the same session as `workflow/state.json` → `phase_complete`. Powers `/resume-iter`.
 
-No active iteration checkpoint. Run **`/iter N`** or **`/resume-iter`** to continue work.
+---
 
-When an iteration closes, the PO overwrites this section and sets **Last closed** below.
+## Status: active — Iteration 1
 
-*Last closed: planning session (2026-05-12) — plan awaiting approval*
+**Goal:** Test Infrastructure + Profile Feature Completion
+
+| Phase | Agent | Status |
+|-------|-------|--------|
+| po_scope | po | done |
+| architect | architect | pending |
+| design | design | pending |
+| backend | backend | pending |
+| frontend | frontend | pending |
+| qa | qa | pending |
+| devops | devops | pending |
+| pr | system | pending |
+| tech_lead | tech_lead | pending |
+| po_close | po | pending |
+
+**Last completed phase:** po_scope
+**Next phase:** architect
+
+*Started: 2026-05-12T01:30:00Z*
 
 ---
 
 ## Last planning session (2026-05-12)
 
-| Agent | Status |
-|-------|--------|
-| Agent 0 — Scanner (haiku) | done ✓ |
-| Agent 1 — PO: iteration proposal | done ✓ |
-| Agent 2 — Architect: stack review | done ✓ |
-| Agent 3 — Plan Reviewer: UX + quality | done ✓ |
-| Agent 4 — PO: final plan synthesis | done ✓ |
-| Orchestrator: workflow state merge | done ✓ |
-
-Plan status: **AWAITING HUMAN APPROVAL**
+Plan status: **APPROVED** — iter-1 branch created. Full /iter 1 run starting.

@@ -89,7 +89,10 @@ Commands: `dart analyze`, `flutter test`, `dart run build_runner build --delete-
 
 ## Gotchas and learnings
 
-<!-- Things discovered during execution — append here -->
+- **Iteration 1 scope split pattern:** Stories were split along agent lines (qa owns test infra + cubit + widget tests; frontend owns the profile page; tech_lead owns code review). This keeps agent context tight and avoids cross-agent merge conflicts.
+- **ProfileCubit DI scope decision:** When a cubit aggregates data from another cubit already in the root MultiBlocProvider (VehicleCubit), register the new cubit as @lazySingleton in the same root provider rather than @injectable at the page level. This prevents redundant fetches across screens.
+- **Test stub first, tests later:** For integration tests, creating stub files with empty group blocks in Iteration 1 satisfies the CI requirement while deferring actual E2E test logic to the iteration where the feature stabilizes. Document this pattern explicitly so qa agents in later iterations know where to fill in the bodies.
+- **Code review runs before frontend in iter 1:** Having tech_lead run the code review and produce the findings doc before frontend implements the profile page ensures the profile page is written against a clean codebase and avoids the review flagging profile-page issues in the same pass.
 
 ---
 
@@ -97,3 +100,4 @@ Commands: `dart analyze`, `flutter test`, `dart run build_runner build --delete-
 
 - 2026-05-11 (iter 0): Skill stub created.
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
+- 2026-05-12 (iter 1): Iteration 1 scoped — 5 user stories (test infra, cubit tests, widget tests, profile page, code review); 6 tasks added; QA gate task included; phase contract written.
