@@ -3511,31 +3511,13 @@ abstract class AppLocalizations {
   /// No description provided for @registration_selectVehicleToPreload.
   ///
   /// In es, this message translates to:
-  /// **'Selecciona un vehículo para precargar la información'**
+  /// **'Selecciona un vehículo'**
   String get registration_selectVehicleToPreload;
-
-  /// No description provided for @registration_clearForm.
-  ///
-  /// In es, this message translates to:
-  /// **'Limpiar formulario'**
-  String get registration_clearForm;
-
-  /// No description provided for @registration_clearFormConfirmTitle.
-  ///
-  /// In es, this message translates to:
-  /// **'Limpiar formulario'**
-  String get registration_clearFormConfirmTitle;
-
-  /// No description provided for @registration_clearFormConfirmBody.
-  ///
-  /// In es, this message translates to:
-  /// **'Se borrarán todos los datos ingresados. ¿Deseas continuar?'**
-  String get registration_clearFormConfirmBody;
 
   /// No description provided for @registration_vehicleBrandNotAllowed.
   ///
   /// In es, this message translates to:
-  /// **'La marca seleccionada no está permitida para este evento'**
+  /// **'La marca seleccionada no está permitida para este evento. Las marcas pemitidas son'**
   String get registration_vehicleBrandNotAllowed;
 
   /// No description provided for @registration_vehicleEmptyStateTitle.

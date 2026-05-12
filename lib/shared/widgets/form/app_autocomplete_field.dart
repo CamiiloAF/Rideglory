@@ -156,7 +156,11 @@ class _AppAutocompleteFieldState extends State<AppAutocompleteField> {
           validator: widget.validator,
           builder: (field) {
             if (_controller.text.isEmpty && field.value != null) {
-              _controller.text = field.value!;
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted && _controller.text.isEmpty && field.value != null) {
+                  _controller.text = field.value!;
+                }
+              });
             }
             return CompositedTransformTarget(
               link: _layerLink,
