@@ -511,6 +511,14 @@
       "agent": "devops",
       "at": "2026-05-12T16:45:00Z",
       "detail": "GitHub Actions CI/CD pipeline complete (`.github/workflows/ci.yml`). Jobs: analyze-and-test (dart analyze + flutter test gate on every push/PR), build-apk (APK build on version tags). Deployment documentation (docs/DEPLOY.md) includes secrets setup, Firebase config injection, release process, and troubleshooting. Ready for Iteration 2."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 1,
+      "phase": "pr",
+      "agent": "system",
+      "at": "2026-05-12T17:00:00Z",
+      "detail": "PR #8 opened: https://github.com/CamiiloAF/Rideglory/pull/8"
     }
   ]
 }
