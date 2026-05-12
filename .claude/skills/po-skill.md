@@ -93,6 +93,9 @@ Commands: `dart analyze`, `flutter test`, `dart run build_runner build --delete-
 - **ProfileCubit DI scope decision:** When a cubit aggregates data from another cubit already in the root MultiBlocProvider (VehicleCubit), register the new cubit as @lazySingleton in the same root provider rather than @injectable at the page level. This prevents redundant fetches across screens.
 - **Test stub first, tests later:** For integration tests, creating stub files with empty group blocks in Iteration 1 satisfies the CI requirement while deferring actual E2E test logic to the iteration where the feature stabilizes. Document this pattern explicitly so qa agents in later iterations know where to fill in the bodies.
 - **Code review runs before frontend in iter 1:** Having tech_lead run the code review and produce the findings doc before frontend implements the profile page ensures the profile page is written against a clean codebase and avoids the review flagging profile-page issues in the same pass.
+- **Pure design iterations have no architect phase:** When an iteration has zero Flutter code and zero backend changes (Track P / Design System), the architect phase should be skipped explicitly in the checkpoint. Only design and qa are active. State this clearly in the handoff so no agent waits for an architect who will never run.
+- **Hard gate story pattern:** When an iteration's output is a prerequisite for a future iteration's frontend work, encode the gate as a dedicated story (US-3-3: SOAT flow in Pencil) with specific testable acceptance criteria. The QA gate story (US-3-5) then verifies the gate condition is met. This prevents "design is done enough" ambiguity.
+- **Design QA story scope:** For design-only iterations, the QA story must confirm: (1) all Pencil sections present, (2) design tokens set, (3) required flow frames present, (4) dart analyze + flutter test still pass (baseline green check, even though no Flutter code changed). The last check catches accidental regressions from file moves or git branch operations.
 
 ---
 
@@ -101,3 +104,4 @@ Commands: `dart analyze`, `flutter test`, `dart run build_runner build --delete-
 - 2026-05-11 (iter 0): Skill stub created.
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
 - 2026-05-12 (iter 1): Iteration 1 scoped — 5 user stories (test infra, cubit tests, widget tests, profile page, code review); 6 tasks added; QA gate task included; phase contract written.
+- 2026-05-12 (iter 3): Iteration 3 scoped — pure design iteration (Track P promoted); 5 user stories covering Pencil screen flows, design tokens, SOAT flow design, design.md handoff, QA gate; architect phase explicitly skipped; hard gate for iter-3b documented.

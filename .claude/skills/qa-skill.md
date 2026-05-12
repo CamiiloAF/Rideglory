@@ -156,7 +156,11 @@ Mock library: `mocktail`. Cubit test library: `bloc_test`. Network image mock: `
 
 ## Gotchas and learnings
 
-<!-- Append during iterations -->
+### Iter 3 (Design-only iteration)
+- **Design QA is artifact verification, not code testing.** No dart analyze or flutter test gates exist for design-only iterations. Instead, verify deliverables against acceptance criteria using manual inspection: check files exist, read key sections, spot-check for visual correctness (dark theme, Spanish text, correct tokens).
+- **HTML mockups as primary deliverable.** When PNG exports are deferred, HTML mockups with embedded CSS can serve as the spec. Verify dark theme (#0D0D0D bg, #f98c1f primary), correct font (Space Grotesk), and all UI labels in Spanish sentence case.
+- **Design contract structure.** Unlike code QA contracts, design QA contracts use `qualityGates` to track artifact completeness, not test pass rates. Gates should cover: all_acs_pass, no_blocking_bugs, artifact_complete, tokens_verified, flow_complete, hard_gate_cleared.
+- **Hard gates block downstream work.** Iteration 3b (Flutter UI) was blocked until Iteration 3 (design) QA sign-off. Ensure hard gates are explicitly tested and documented in the contract.
 
 ---
 
@@ -172,3 +176,11 @@ Mock library: `mocktail`. Cubit test library: `bloc_test`. Network image mock: `
   * US-1-5 (code review cleanup) pending tech_lead completion.
   * Test catalog created in docs/handoffs/qa.md with 14 test cases (all pass criteria verified).
   * Phase contract written: docs/handoffs/contracts/iter-1/qa.json.
+- 2026-05-12 (iter 3): QA phase complete (design-only iteration).
+  * All 5 ACs verified (US-3-1 through US-3-5): 8 flows in Pencil, 9 design tokens set, SOAT upload flow complete (6 screens + 4 badge variants), design.md handoff complete.
+  * Artifact verification (no code testing): 6 HTML mockups reviewed for dark theme, Spanish UI text, correct color tokens.
+  * dart analyze baseline: 2 pre-existing errors (Iter 2 user profile missing), no new errors from design iteration.
+  * flutter test baseline: 5/5 tests pass, no new failures.
+  * Hard gate for Iteration 3b (Flutter SOAT UI) CLEARED.
+  * Test catalog created in docs/handoffs/qa.md with 35 test cases across 5 US.
+  * Phase contract written: docs/handoffs/contracts/iter-3/qa.json.
