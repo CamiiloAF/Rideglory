@@ -10,9 +10,9 @@
 
 - **Brownfield app with a solid core.** Authentication, vehicles, events, event registration, maintenance, and live tracking are largely implemented. The 9 feature folders, 17 cubits, 15+ pages, and 40+ API endpoints are operational. Remaining work is high-value additions (SOAT, AI, notifications, SOS) and a critical quality deficit (0% test coverage).
 - **Test infrastructure ships first.** The entire plan rests on a working test suite. Iteration 1 establishes `mocktail`, `bloc_test`, and `network_image_mock`; writes unit and widget tests for the most critical existing cubits and pages; and completes the profile feature stub that currently shows riders an empty page.
-- **Features are sequenced by full-stack dependency.** Event filters and attendee profile links (Iter 2) complete existing UI. SOAT (Iters 3a/3b) is the largest new full-stack feature and sets the Claude API pattern reused by AI cover generation (Iter 4) and recommendations (Iter 5). Push notifications and SOS (Iters 6a/6b) come last as the highest-integration-risk items.
-- **Two large iterations are split for delivery safety.** SOAT is split into 3a (infrastructure) and 3b (full UI). FCM + SOS is split into 6a (push notifications) and 6b (SOS real-time alert). Each half is independently shippable with green CI.
-- **Two parallel tracks run without blocking Flutter delivery.** Track P (Pencil design system) must complete before Iteration 3b begins. Track DevOps (GitHub Actions CI) runs alongside Iteration 2 so automated checks are in place from Iteration 3 onward.
+- **Features are sequenced by full-stack dependency.** Event filters and attendee profile links (Iter 2) complete existing UI. SOAT (Iters 4a/4b) is the largest new full-stack feature and sets the Claude API pattern reused by AI cover generation (Iter 5) and recommendations (Iter 6). Push notifications and SOS (Iters 7a/7b) come last as the highest-integration-risk items.
+- **Two large iterations are split for delivery safety.** SOAT is split into 4a (infrastructure) and 4b (full UI). FCM + SOS is split into 7a (push notifications) and 7b (SOS real-time alert). Each half is independently shippable with green CI.
+- **Design system ships before feature UI.** Iteration 3 executes the Pencil design system — all screen flows documented with design tokens from 320 Stitch reference images at `docs/design/stitch-references/` — before any SOAT UI begins. This ensures Iteration 4b has complete specs. Track DevOps (GitHub Actions CI) runs alongside Iteration 2 so automated checks are in place from Iteration 3 onward.
 
 ---
 
@@ -22,26 +22,28 @@
 |------|-------|------|--------|-----------|------------|
 | 1 | Test Infrastructure + Profile Feature + Code Review | Working test suite + complete profile page + codebase cleanup | frontend, qa, tech_lead | M | — |
 | 2 | Event Discovery Filters + Attendee Profile Links | Filter events by type/date/city; tap riders into profile | backend, frontend, qa | M | 1 |
-| 3a | SOAT Backend + Domain/Data Infrastructure | Backend endpoints, Claude Haiku extraction, Flutter domain + data layers | backend, frontend, qa | L | 1 |
-| 3b | SOAT Full Flutter UI | Multi-step upload flow + garage status badges | design, frontend, qa | M | 3a, P |
-| 4 | AI Event Cover Image Generation | Wire existing button to Unsplash + Claude Haiku backend | backend, frontend, qa | M | 3a |
-| 5 | AI Event Recommendations | Populate dashboard recommendations card from scoring endpoint | backend, frontend, qa | M | 2, 4 |
-| 6a | Push Notifications (FCM) | firebase_messaging + device token registration + 5 FCM triggers + deep-link routing | backend, frontend, qa | L | 5 |
-| 6b | SOS Real-Time Alert | SOS WebSocket message type + overlay banner + backend broadcast | backend, frontend, qa | M | 6a |
-| P | Design System in Pencil | All screen flows in pencil-new.pen with design token variables | design | M | — (parallel) |
+| **3** | **Design System in Pencil** | All screen flows in pencil-new.pen with design token variables; seeded from 320 Stitch references | design | M | — |
+| 4a | SOAT Backend + Domain/Data Infrastructure | Backend endpoints, Claude Haiku extraction, Flutter domain + data layers | backend, frontend, qa | L | 1 |
+| 4b | SOAT Full Flutter UI | Multi-step upload flow + garage status badges | design, frontend, qa | M | 4a, 3 |
+| 5 | AI Event Cover Image Generation | Wire existing button to Unsplash + Claude Haiku backend | backend, frontend, qa | M | 4a |
+| 6 | AI Event Recommendations | Populate dashboard recommendations card from scoring endpoint | backend, frontend, qa | M | 2, 5 |
+| 7a | Push Notifications (FCM) | firebase_messaging + device token registration + 5 FCM triggers + deep-link routing | backend, frontend, qa | L | 6 |
+| 7b | SOS Real-Time Alert | SOS WebSocket message type + overlay banner + backend broadcast | backend, frontend, qa | M | 7a |
 | DevOps | CI/CD Pipeline | GitHub Actions: dart analyze + flutter test + APK build | devops | S | — (parallel with 2) |
 
 ---
 
 ## Parallel Tracks
 
-### Track P — Design System in Pencil (HU-DESIGN-01)
+### Track P — Design System in Pencil → now Iteration 3
 
-Runs alongside Iterations 1 through 3a. The design agent works independently on `pencil-new.pen`, importing all existing screen flows (8 flows, ~30 screens) and defining design tokens (color `#f98c1f`, dark background `#0D0D0D`, Space Grotesk font, 8px border radius) as Pencil variables. No Flutter code is touched.
+**Promoted to Iteration 3.** The design agent opens `pencil-new.pen`, reads all 320 Stitch reference images from `docs/design/stitch-references/` to seed initial screen designs, and documents all 8 existing flows with design token variables.
 
-**Hard gate:** The SOAT upload flow (file picker entry, upload progress, AI extraction loading, confirmation form, manual entry fallback) must be designed in Pencil before Iteration 3b frontend work begins. The frontend agent must not implement the SOAT UI without Pencil specs.
+**Stitch references:** 320 images at `docs/design/stitch-references/` (copied from `/Users/cami/Downloads/stitch_rideglory_imagenes_unificadas/`). Grouped by flow: splash, dashboard, events, event detail, create event, maintenance, vehicles, profile, tracking. The design agent reads these images as visual ground truth before opening Pencil.
 
-**Deliverables:** `pencil-new.pen` (all 8 flows), `docs/handoffs/design.md` (variable keys and section names), exported screenshots in `docs/design/screenshots/<flow>.png`.
+**Hard gate (unchanged):** Iteration 4b (SOAT Full Flutter UI) must not begin until Iteration 3 is merged. Design tokens and SOAT upload flow screens must exist in Pencil before the frontend agent starts 4b.
+
+**Deliverables:** `pencil-new.pen` (all 8 flows + SOAT upload flow), `docs/handoffs/design.md` (variable keys and section names), exported screenshots in `docs/design/screenshots/<flow>.png`, HTML mockups for SOAT upload flow in `docs/design/html-mockups/iter-3/`.
 
 ### Track DevOps — CI/CD Pipeline
 
