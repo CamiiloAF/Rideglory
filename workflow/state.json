@@ -1,0 +1,222 @@
+{
+  "project": "rideglory",
+  "prdPath": "docs/PRD.md",
+  "planStatus": "awaiting_approval",
+  "currentIteration": 0,
+  "existingSystem": {
+    "basePath": "/Users/cami/Developer/Personal/Rideglory",
+    "flutter": "lib/",
+    "backend": "/Users/cami/Developer/Personal/rideglory-api",
+    "notes": "Brownfield Flutter mobile app. Clean Architecture (domain/data/presentation). BLoC/Cubit state management. Firebase Auth + Firestore + Storage. rideglory-api is a separate NestJS microservices repo."
+  },
+  "plan": {
+    "generatedAt": "2026-05-12T00:00:00Z",
+    "runMode": "FRESH",
+    "proposedStack": {
+      "existing": [
+        "Flutter",
+        "Firebase (Auth, Storage, Remote Config)",
+        "rideglory-api NestJS",
+        "Dio/Retrofit",
+        "BLoC/Cubit",
+        "go_router",
+        "GetIt/Injectable",
+        "freezed/json_serializable",
+        "google_maps_flutter",
+        "web_socket_channel",
+        "shared_preferences",
+        "image_picker",
+        "permission_handler"
+      ],
+      "additions": [
+        "mocktail: ^1.0.4 (dev — Iteration 1)",
+        "bloc_test: ^10.0.0 (dev — Iteration 1)",
+        "network_image_mock: ^2.1.1 (dev — Iteration 1)",
+        "file_picker: ^8.0.0 (prod — Iteration 3a)",
+        "firebase_messaging: ^15.0.0 (prod — Iteration 6a)"
+      ]
+    },
+    "assumptions": [
+      "GET /users/me returns fullName, email, and userId at minimum. profilePhotoUrl is absent from the current Prisma User model and is not expected in Iteration 1.",
+      "Unsplash free developer tier (50 req/hour) is sufficient for pilot usage. Backend returns 503 on rate limit.",
+      "go_router v17 extra-based navigation can be extended with by-id route variants without a full router rewrite.",
+      "TrackingWsClient auto-reconnect logic is unaffected by SOS message type additions.",
+      "Apple Developer account has push notifications enabled for the app bundle ID. APNs p8 key is available before Iteration 6a.",
+      "ClaudeService in rideglory-api (created in Iteration 3a) uses Anthropic Node.js SDK and is reused in Iteration 4 without modification.",
+      "Stitch reference images at /Users/cami/Downloads/stitch_rideglory/ are copied to docs/design/stitch-references/ before Track P begins.",
+      "Claude Haiku per-request cost for SOAT extraction is acceptable without rate limiting given the pilot rider base."
+    ],
+    "risks": [
+      "Event filter backend gap (Iteration 2 blocker): GET /events does not pass filter params to events-ms today. Backend changes are in scope for Iteration 2.",
+      "go_router extra non-serializability from FCM payloads (Iteration 6a): NotificationNavigator + by-id route pattern required for terminated-app deep links.",
+      "Claude Haiku PDF extraction reliability (Iteration 3a): Variable accuracy mitigated by confirmation step, low-confidence warning banner, and manual entry fallback.",
+      "FCM on iOS APNs configuration (Iteration 6a): APNs key + Xcode capability must be confirmed before Iteration 6a begins.",
+      "Firebase Storage PDF access from backend (Iteration 3a): Backend uses Admin SDK path-based access; Storage IAM permissions must allow the service account to read.",
+      "EventFormCubit state refactor cross-iteration regression (Iteration 4): Existing EventFormCubit tests must be updated after freezed class conversion.",
+      "Pencil single-machine dependency (Track P): Stitch reference images must be copied to docs/design/stitch-references/ before Track P."
+    ],
+    "deferred": [
+      "SOAT push reminders (30-day / 7-day) — requires FCM from Iteration 6a; scheduled post-6b.",
+      "Profile photo upload — profilePhotoUrl not in current Prisma schema; deferred post-6b.",
+      "Organizer SOS dismiss — only the SOS sender can cancel in v1; organizer dismiss deferred to v2.",
+      "AI event recommendations Claude narrative explanations (v2) — deterministic scoring sufficient for launch.",
+      "Authentication Clean Architecture refactor — auth works via AuthService; no user-visible value.",
+      "Mandatory documents beyond SOAT (tecno, other) — DTO and schema extensible but only SOAT in v1.",
+      "Web version, admin dashboard, payments, social feed — explicitly out of scope per PRD section 10.",
+      "Multi-language support (English) — ARB is Spanish-only.",
+      "CI/CD IPA build + App Store submission — APK build only in DevOps track; IPA deferred until distribution target confirmed."
+    ]
+  },
+  "iterations": [
+    {
+      "id": 0,
+      "goal": "Framework: PRD, agents, handoffs, workflow, dashboard, CLI commands",
+      "status": "done",
+      "notes": "Run /solo-plan to define product iterations. Framework installed from Claude-cami reference."
+    },
+    {
+      "id": 1,
+      "title": "Test Infrastructure + Profile Feature Completion",
+      "goal": "Establish a working test suite for critical existing features and complete the profile page stub so the rider experience is coherent end-to-end.",
+      "status": "not_started",
+      "stories": ["HU-TEST-01a", "HU-TEST-01b", "HU-TEST-01c", "HU-PROFILE-01"],
+      "agents": ["frontend", "qa"],
+      "complexity": "M",
+      "dependsOn": []
+    },
+    {
+      "id": 2,
+      "title": "Event Discovery Filters + Attendee Profile Links",
+      "goal": "Wire the existing filter bottom sheet to real backend query parameters and enable riders to navigate to other riders' profiles from the attendee list.",
+      "status": "not_started",
+      "stories": ["HU-EVENT-FILTER-01", "HU-EVENT-FILTER-02", "HU-ATTENDEE-PROFILE-01"],
+      "agents": ["backend", "frontend", "qa"],
+      "complexity": "M",
+      "dependsOn": [1]
+    },
+    {
+      "id": "3a",
+      "title": "SOAT Backend Infrastructure + Flutter Domain/Data Stub",
+      "goal": "Build the complete backend infrastructure for SOAT document management (Prisma schema, REST endpoints, Claude Haiku AI extraction) and implement Flutter domain and data layers.",
+      "status": "not_started",
+      "stories": ["HU-SOAT-01a", "HU-SOAT-01b", "HU-SOAT-01c"],
+      "agents": ["backend", "frontend", "qa"],
+      "complexity": "L",
+      "dependsOn": [1]
+    },
+    {
+      "id": "3b",
+      "title": "SOAT Full Flutter UI + Garage Status Badges",
+      "goal": "Implement the complete multi-step SOAT upload UI and the visual expiration status badge on vehicle cards throughout the garage.",
+      "status": "not_started",
+      "stories": ["HU-SOAT-01d", "HU-SOAT-01e", "HU-SOAT-01f"],
+      "agents": ["design", "frontend", "qa"],
+      "complexity": "M",
+      "dependsOn": ["3a", "P"]
+    },
+    {
+      "id": 4,
+      "title": "AI Event Cover Image Generation",
+      "goal": "Wire the existing 'Generar portada con IA' button to a backend endpoint using Claude Haiku + Unsplash API to generate relevant event cover images.",
+      "status": "not_started",
+      "stories": ["HU-AI-01a", "HU-AI-01b"],
+      "agents": ["backend", "frontend", "qa"],
+      "complexity": "M",
+      "dependsOn": ["3a"]
+    },
+    {
+      "id": 5,
+      "title": "AI Event Recommendations",
+      "goal": "Populate the existing recommendations section on the home dashboard with personalized event suggestions from a new backend scoring endpoint.",
+      "status": "not_started",
+      "stories": ["HU-AI-02a", "HU-AI-02b"],
+      "agents": ["backend", "frontend", "qa"],
+      "complexity": "M",
+      "dependsOn": [2, 4]
+    },
+    {
+      "id": "6a",
+      "title": "Push Notifications (FCM)",
+      "goal": "Integrate Firebase Cloud Messaging to deliver push notifications for all 5 registration and event-status triggers with correct deep-link routing for all 3 app states.",
+      "status": "not_started",
+      "stories": ["HU-PUSH-01a", "HU-PUSH-01b", "HU-PUSH-01c", "HU-PUSH-01d"],
+      "agents": ["backend", "frontend", "qa"],
+      "complexity": "L",
+      "dependsOn": [5]
+    },
+    {
+      "id": "6b",
+      "title": "SOS Real-Time Alert",
+      "goal": "Add SOS emergency broadcast to the live tracking session with a persistent top-anchor red banner overlay visible to all riders in the same event session.",
+      "status": "not_started",
+      "stories": ["HU-SOS-01a", "HU-SOS-01b", "HU-SOS-01c"],
+      "agents": ["backend", "frontend", "qa"],
+      "complexity": "M",
+      "dependsOn": ["6a"]
+    },
+    {
+      "id": "P",
+      "title": "Design System in Pencil (HU-DESIGN-01)",
+      "goal": "Establish Pencil as the source of truth for all Rideglory UI by migrating all existing screen flows into pencil-new.pen with design tokens defined as variables.",
+      "status": "not_started",
+      "stories": ["HU-DESIGN-01a", "HU-DESIGN-01b", "HU-DESIGN-01c"],
+      "agents": ["design"],
+      "complexity": "M",
+      "dependsOn": [],
+      "parallel": true,
+      "notes": "Runs alongside Iterations 1 through 3a. Must complete SOAT upload flow screens before Iteration 3b frontend begins. Hard gate: 3b depends on P."
+    },
+    {
+      "id": "DevOps",
+      "title": "CI/CD Pipeline",
+      "goal": "Deliver a GitHub Actions pipeline running dart analyze + flutter test on every push to iter-N branches and every PR to main, with an optional APK build job on version tags.",
+      "status": "not_started",
+      "stories": [],
+      "agents": ["devops"],
+      "complexity": "S",
+      "dependsOn": [],
+      "parallel": true,
+      "notes": "Runs in parallel with Iteration 2. CI gate is automated from Iteration 3 onward. Delivers .github/workflows/flutter-ci.yml."
+    }
+  ],
+  "agents": {
+    "po": { "status": "idle", "lastAction": null, "focus": null },
+    "architect": { "status": "idle", "lastAction": null, "focus": null },
+    "design": { "status": "idle", "lastAction": null, "focus": null },
+    "backend": { "status": "idle", "lastAction": null, "focus": null },
+    "frontend": { "status": "idle", "lastAction": null, "focus": null },
+    "qa": { "status": "idle", "lastAction": null, "focus": null },
+    "tech_lead": { "status": "idle", "lastAction": null, "focus": null },
+    "devops": { "status": "idle", "lastAction": null, "focus": null }
+  },
+  "tasks": [
+    {
+      "id": "T-0-1",
+      "title": "Framework ready — run /solo-plan to plan iterations from the PRD",
+      "agent": "po",
+      "status": "done",
+      "iteration": 0,
+      "updatedAt": "2026-05-11T00:00:00Z"
+    }
+  ],
+  "events": [
+    {
+      "at": "2026-05-11T00:00:00Z",
+      "type": "framework_baseline",
+      "agent": "system",
+      "detail": "Clean workflow state for Rideglory (Flutter brownfield). Existing system detected: lib/ (Flutter app) + rideglory-api (NestJS backend). No product plan until /solo-plan. Run /solo-plan to begin."
+    },
+    {
+      "at": "2026-05-12T00:01:00Z",
+      "type": "planning_session_started",
+      "agent": "orchestrator",
+      "detail": "FRESH planning run started. RUN_MODE=FRESH (docs/PLAN.md did not exist). Brownfield=true. No design handoffs. No prior mockups. Spawning Scanner agent (haiku)."
+    },
+    {
+      "at": "2026-05-12T00:30:00Z",
+      "type": "plan_drafted",
+      "agent": "po",
+      "detail": "Final plan drafted by PO synthesis agent. 8 product iterations (1, 2, 3a, 3b, 4, 5, 6a, 6b) + 2 parallel tracks (P: Pencil design, DevOps: CI/CD). planStatus set to awaiting_approval. Run /solo-approve to proceed."
+    }
+  ]
+}
