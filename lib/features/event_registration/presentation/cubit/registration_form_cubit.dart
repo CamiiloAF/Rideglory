@@ -35,9 +35,11 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
   EventRegistrationModel? _editingRegistration;
   RiderProfileModel? _riderProfile;
   bool _saveToProfile = false;
+  bool _preloadedFromProfile = false;
 
   bool get isEditing => _editingRegistration != null;
   bool get saveToProfile => _saveToProfile;
+  bool get isPreloadedFromProfile => _preloadedFromProfile;
 
   void toggleSaveToProfile([bool? value]) {
     _saveToProfile = value ?? !_saveToProfile;
@@ -149,6 +151,8 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
   void preloadFromRiderProfile() {
     if (_riderProfile == null) return;
     final profile = _riderProfile!;
+    _preloadedFromProfile = true;
+    emit(const ResultState.initial());
     formKey.currentState?.patchValue({
       if (profile.fullName.isNotBlank)
         RegistrationFormFields.fullName: profile.fullName,

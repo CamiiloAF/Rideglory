@@ -37,7 +37,7 @@ class HomeGarageSection extends StatelessWidget {
               ),
               AppTextButton(
                 label: context.l10n.vehicle_seeAll,
-                onPressed: () => context.pushNamed(AppRoutes.garage),
+                onPressed: () => context.go(AppRoutes.garage),
               ),
             ],
           ),
