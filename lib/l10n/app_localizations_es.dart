@@ -1630,6 +1630,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get profile_profile => 'Perfil';
 
   @override
+  String get profile_title => 'Mi perfil';
+
+  @override
+  String get profile_mainVehicle => 'Vehículo principal';
+
+  @override
+  String get profile_noVehicle => 'Sin vehículos';
+
+  @override
+  String get profile_errorRetry => 'Reintentar';
+
+  @override
+  String get profile_loadingError => 'No pudimos cargar tu perfil';
+
+  @override
   String get registration_registrationPageTitle => 'Inscripción al Evento';
 
   @override
