@@ -22,7 +22,9 @@ class AttendeePendingRequestCard extends StatelessWidget {
     final colorScheme = context.colorScheme;
     final textTheme = context.textTheme;
     final vehicleText =
-        '${registration.vehicleBrand} ${registration.vehicleReference}';
+        registration.vehicleSummary?.displayName.isNotEmpty == true
+        ? registration.vehicleSummary!.displayName
+        : context.l10n.notAvailable;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -42,8 +44,7 @@ class AttendeePendingRequestCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   InitialsAvatar(
-                    firstName: registration.firstName,
-                    lastName: registration.lastName,
+                    fullName: registration.fullName,
                     radius: 24,
                     backgroundColor: colorScheme.primary,
                     textStyle: textTheme.titleSmall?.copyWith(
@@ -88,19 +89,15 @@ class AttendeePendingRequestCard extends StatelessWidget {
                   ),
                   Text(
                     (() {
-                      final createdDate = registration.createdDate;
-                      if (createdDate == null) return '';
+                      final createdAt = registration.createdAt;
+                      if (createdAt == null) return '';
                       final now = DateTime.now();
-                      final diff = now.difference(createdDate);
+                      final diff = now.difference(createdAt);
                       if (diff.inDays > 0) {
-                        return context.l10n.event_timeAgoDays(
-                          diff.inDays,
-                        );
+                        return context.l10n.event_timeAgoDays(diff.inDays);
                       }
                       if (diff.inHours > 0) {
-                        return context.l10n.event_timeAgoHours(
-                          diff.inHours,
-                        );
+                        return context.l10n.event_timeAgoHours(diff.inHours);
                       }
                       return context.l10n.event_timeAgoMinutes(
                         diff.inMinutes.clamp(0, 59),
@@ -120,14 +117,14 @@ class AttendeePendingRequestCard extends StatelessWidget {
             approveLabel: context.l10n.event_approveRegistration,
             onReject: () => AttendeeActionConfirmation.showReject(
               context,
-              firstName: registration.firstName,
+              participantName: registration.fullName,
               onConfirm: () => context
                   .read<AttendeesCubit>()
                   .rejectRegistration(registration.id!),
             ),
             onApprove: () => AttendeeActionConfirmation.showApprove(
               context,
-              firstName: registration.firstName,
+              participantName: registration.fullName,
               onConfirm: () => context
                   .read<AttendeesCubit>()
                   .approveRegistration(registration.id!),

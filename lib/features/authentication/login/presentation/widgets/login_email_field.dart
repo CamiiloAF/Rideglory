@@ -14,9 +14,12 @@ class LoginEmailField extends StatelessWidget {
       labelText: context.l10n.auth_emailLabel,
       hintText: context.l10n.auth_emailHint,
       keyboardType: TextInputType.emailAddress,
+      textCapitalization: TextCapitalization.none,
       textInputAction: TextInputAction.next,
       validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText: context.l10n.auth_emailRequired),
+        FormBuilderValidators.required(
+          errorText: context.l10n.auth_emailRequired,
+        ),
         FormBuilderValidators.email(errorText: context.l10n.auth_invalidEmail),
       ]),
     );

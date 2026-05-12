@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_event_default_background.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_event_difficulty_badge.dart';
@@ -16,8 +16,6 @@ class HomeEventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat('dd MMM, yyyy', 'es');
-
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -78,7 +76,7 @@ class HomeEventCard extends StatelessWidget {
                           ),
                           AppSpacing.hGapXxs,
                           Text(
-                            dateFormat.format(event.startDate),
+                            event.startDate.formattedDate,
                             style: const TextStyle(
                               color: Colors.white70,
                               fontSize: 11,

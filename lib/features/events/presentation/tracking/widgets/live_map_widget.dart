@@ -53,7 +53,7 @@ class _LiveMapWidgetState extends State<LiveMapWidget> {
 
   String _riderSignature(List<RiderTrackingModel> riders) {
     return riders
-        .map((r) => '${r.userId}:${r.firstName}:${r.lastName}:${r.role.name}')
+        .map((r) => '${r.userId}:${r.fullName}:${r.role.name}')
         .join('|');
   }
 
@@ -69,8 +69,7 @@ class _LiveMapWidgetState extends State<LiveMapWidget> {
     final futures = widget.riders.map((rider) async {
       final isLead = rider.role == RiderTrackingRole.lead;
       final icon = await InitialsMarkerIcon.create(
-        firstName: rider.firstName,
-        lastName: rider.lastName,
+        fullName: rider.fullName,
         colorScheme: context.colorScheme,
         size: isLead ? 60 : 56,
         backgroundColor: context.colorScheme.primary,
@@ -114,14 +113,14 @@ class _LiveMapWidgetState extends State<LiveMapWidget> {
   }
 
   Set<Marker> _buildRiderMarkers() {
-    return widget.riders.map((r) {
-      final position = LatLng(r.latitude, r.longitude);
-      final icon = _iconsById[r.userId];
+    return widget.riders.map((rider) {
+      final position = LatLng(rider.latitude, rider.longitude);
+      final icon = _iconsById[rider.userId];
 
       return Marker(
-        markerId: MarkerId(r.userId),
+        markerId: MarkerId(rider.userId),
         position: position,
-        infoWindow: InfoWindow(title: '${r.firstName} ${r.lastName}'.trim()),
+        infoWindow: InfoWindow(title: rider.fullName.trim()),
         icon: icon ?? BitmapDescriptor.defaultMarker,
       );
     }).toSet();

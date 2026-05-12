@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:rideglory/core/extensions/l10n_extensions.dart';
-import 'package:rideglory/features/maintenance/domain/model/maintenance_list_summary.dart';
+import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenance_summary_card.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -36,8 +35,6 @@ class MaintenancesSummaryHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = Localizations.localeOf(context);
-    final dateShort = DateFormat.MMMd(locale.toString());
     final numberFormat = NumberFormat('#,###');
     final l10n = context.l10n;
 
@@ -58,10 +55,10 @@ class MaintenancesSummaryHeader extends StatelessWidget {
               Expanded(
                 child: MaintenanceSummaryCard(
                   icon: Icons.calendar_today_outlined,
-                  label: l10n.maintenance_lastService,
-                  value: lastDate != null ? dateShort.format(lastDate) : '—',
-                  subtitle: lastMileage != null
-                      ? '${numberFormat.format(lastMileage)} ${l10n.maintenance_km}'
+                  label: 'Last service',
+                  value: lastService?.date.formattedDate ?? '—',
+                  subtitle: lastService != null
+                      ? '${numberFormat.format(lastService.maintanceMileage)} km'
                       : null,
                 ),
               ),
@@ -69,10 +66,8 @@ class MaintenancesSummaryHeader extends StatelessWidget {
               Expanded(
                 child: MaintenanceSummaryCard(
                   icon: Icons.event_repeat_outlined,
-                  label: l10n.maintenance_nextService,
-                  value: nextDate != null
-                      ? dateShort.format(nextDate)
-                      : l10n.maintenance_estimatedDate,
+                  label: 'Next service',
+                  value: nextServiceDate?.formattedDate ?? 'Estimated',
                 ),
               ),
             ],

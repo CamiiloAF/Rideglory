@@ -1,2 +1,11 @@
 #include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"
 #include "Generated.xcconfig"
+
+// Run the C preprocessor on Info.plist so the dev-only ATS exception guarded
+// by `#ifdef RIDEGLORY_DEV_ATS` is included in Debug builds and stripped from
+// Release/Profile. `-traditional` keeps `//` inside the plist (e.g. DOCTYPE
+// URLs) from being treated as C++ comments; `-P` removes line markers so the
+// final plist stays as valid XML.
+INFOPLIST_PREPROCESS = YES
+INFOPLIST_PREPROCESSOR_DEFINITIONS = $(inherited) RIDEGLORY_DEV_ATS=1
+INFOPLIST_OTHER_PREPROCESSOR_FLAGS = -traditional -P

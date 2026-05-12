@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/registration_with_event.dart';
 import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
@@ -93,12 +94,13 @@ class MyRegistrationsDataView extends StatelessWidget {
                           extra: item.registration.eventId,
                         ),
                         onDetails: () {
-                          final ev = item.event;
-                          if (ev != null) {
+                          final event = item.event;
+                          if (event != null) {
                             context.pushNamed(
                               AppRoutes.registrationDetail,
                               extra: RegistrationDetailExtra(
                                 registration: item.registration,
+                                eventOwnerId: event.ownerId,
                               ),
                             );
                           } else {
@@ -140,6 +142,7 @@ class MyRegistrationsDataView extends StatelessWidget {
           AppRoutes.registrationDetail,
           extra: RegistrationDetailExtra(
             registration: registration,
+            eventOwnerId: event?.ownerId,
             onCancelRegistration: registration.id != null
                 ? () async => cubit.cancelRegistration(registration.id!)
                 : null,
@@ -149,11 +152,23 @@ class MyRegistrationsDataView extends StatelessWidget {
       case RegistrationStatus.pending:
         context.pushNamed(
           AppRoutes.registrationDetail,
-          extra: RegistrationDetailExtra(registration: registration),
+          extra: RegistrationDetailExtra(
+            registration: registration,
+            eventOwnerId: event?.ownerId,
+          ),
         );
         break;
       case RegistrationStatus.readyForEdit:
         if (event != null) {
+          final currentUserId =
+              context.read<AuthCubit>().state.currentUser?.id;
+          if (currentUserId != null && event.ownerId == currentUserId) {
+            context.pushNamed(
+              AppRoutes.eventDetailById,
+              extra: registration.eventId,
+            );
+            break;
+          }
           final result = await context.pushNamed<EventRegistrationModel?>(
             AppRoutes.eventRegistration,
             extra: EventRegistrationParams(
@@ -174,11 +189,24 @@ class MyRegistrationsDataView extends StatelessWidget {
       case RegistrationStatus.rejected:
         context.pushNamed(
           AppRoutes.registrationDetail,
-          extra: RegistrationDetailExtra(registration: registration),
+          extra: RegistrationDetailExtra(
+            registration: registration,
+            eventOwnerId: event?.ownerId,
+          ),
         );
         break;
       case RegistrationStatus.cancelled:
         if (event != null) {
+          final currentUserId =
+              context.read<AuthCubit>().state.currentUser?.id;
+          if (currentUserId != null &&
+              event.ownerId == currentUserId) {
+            context.pushNamed(
+              AppRoutes.eventDetailById,
+              extra: registration.eventId,
+            );
+            break;
+          }
           final result = await context.pushNamed<EventRegistrationModel?>(
             AppRoutes.eventRegistration,
             extra: EventRegistrationParams(event: event, registration: null),
