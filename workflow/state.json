@@ -310,7 +310,7 @@
     "qa": {
       "status": "idle",
       "lastAction": "2026-05-12T12:00:00Z",
-      "focus": "iter-1 phase complete \u2014 test catalog, blockers fixed, all tests pass"
+      "focus": "iter-3 phase complete \u2014 design artifact verification, all 5 ACs pass, iter-3b gate cleared"
     },
     "tech_lead": {
       "status": "idle",
@@ -564,6 +564,14 @@
       "agent": "design",
       "at": "2026-05-12T08:00:00Z",
       "detail": "8 flows documented in Pencil, design tokens set, SOAT upload flow designed (6 HTML mockups)"
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 3,
+      "phase": "qa",
+      "agent": "qa",
+      "at": "2026-05-12T12:00:00Z",
+      "detail": "5 ACs pass (US-3-1 through US-3-5). All design artifacts verified: 8 flows in Pencil, 9 design tokens set, SOAT flow complete (6 screens + 4 badge variants), design.md handoff complete. Hard gate for Iteration 3b (Flutter SOAT UI) CLEARED. dart analyze and flutter test baseline green (no regression)."
     }
   ]
 }
