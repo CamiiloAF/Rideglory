@@ -58,9 +58,9 @@ void main() {
     blocTest<ProfileCubit, ResultState<UserModel>>(
       'emits [loading, error] when fetchProfile fails',
       build: () {
-        final exception = DomainException(message: 'Network error');
+        const exception = DomainException(message: 'Network error');
         when(() => mockGetMyProfileUseCase.call())
-            .thenAnswer((_) async => Left(exception));
+            .thenAnswer((_) async => const Left(exception));
         return profileCubit;
       },
       act: (cubit) => cubit.fetchProfile(),
