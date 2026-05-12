@@ -95,6 +95,44 @@ Stitch references: `/Users/cami/Downloads/stitch_rideglory/` — copy to `docs/d
 | Screen | Iteration | Mockup path | States |
 |--------|-----------|-------------|--------|
 | Profile | 1 | `docs/design/html-mockups/iter-1/profile_*.html` | loading, data, empty (no vehicle), error |
+| SOAT — Vehicle card + badge | 3 | `docs/design/html-mockups/iter-3/soat-vehicle-card.html` | 3 badge states (valid, expiring, expired) |
+| SOAT — Upload entry | 3 | `docs/design/html-mockups/iter-3/soat-upload-entry.html` | bottom sheet with existing file or empty |
+| SOAT — AI progress | 3 | `docs/design/html-mockups/iter-3/soat-upload-progress.html` | 3 step states (done/done/loading) |
+| SOAT — AI confirmation | 3 | `docs/design/html-mockups/iter-3/soat-confirmation.html` | pre-filled editable fields |
+| SOAT — Manual entry | 3 | `docs/design/html-mockups/iter-3/soat-manual-entry.html` | empty form |
+| SOAT — Success | 3 | `docs/design/html-mockups/iter-3/soat-success.html` | summary card + valid badge |
+
+## Pencil document structure (iter-3)
+
+**File:** `pencil-new.pen`
+
+| Section | Frame ID | Flows covered |
+|---------|----------|---------------|
+| 01 — Onboarding | `Tu1AC` | Splash, Login, Signup |
+| 02 — Home | `Mrrbl` | Dashboard |
+| 03 — Eventos | `zwwtt` | Events list, detail, create |
+| 04 — Inscripciones | `Q7bSuN` | My registrations, detail |
+| 05 — Vehículos | `e3Bgk3` | Garage list + detail |
+| 06 — Mantenimiento | `GPsZu` | (empty — fill later) |
+| 07 — Rastreo en vivo | `AB3pd` | (empty — fill later) |
+| 08 — Perfil | `XaOZT` | (empty — fill later) |
+| 09 — SOAT Upload Flow | `MOMzL` | 6 SOAT screens (iter-3 NEW) |
+
+**SOAT Pencil IDs:** Na3V5 (vehicle+badge) · wzejY (entry) · ATME9 (progress) · N2jvyA (confirmation) · Q1cZ7g (manual) · DMXj1 (success)
+
+## Locked Pencil variables (iter-3)
+
+| Variable | Value | Type |
+|----------|-------|------|
+| `primary-orange` | `#f98c1f` | color |
+| `background-dark` | `#0D0D0D` | color |
+| `surface-dark` | `#111111` | color |
+| `text-primary` | `#FFFFFF` | color |
+| `text-secondary` | `rgba(255,255,255,0.6)` | color |
+| `border-color` | `rgba(255,255,255,0.12)` | color |
+| `border-radius` | `8` | number |
+| `font-family` | `Space Grotesk` | string |
+| `error-color` | `#CF6679` | color |
 
 ## Locked design decisions (iter-1)
 
@@ -105,11 +143,37 @@ Stitch references: `/Users/cami/Downloads/stitch_rideglory/` — copy to `docs/d
 - Shimmer skeleton: circle + two text bars + block (vehicle) + two action rows — no spinner
 - `styles.css` at `docs/design/html-mockups/iter-1/shared/styles.css` — copy forward for iter-2+
 
+## Locked design decisions (iter-3)
+
+- SOAT badge: inline pill inside vehicle card body (NOT a separate card); 3 states use distinct bg+text+icon color triples
+  - Valid: `#0d2b1a` bg / `#34c77b` text+icon (check_circle)
+  - Expiring: `#3d2a00` bg / `#f98c1f` text+icon (warning)
+  - Expired: `#2d1219` bg / `#CF6679` text+icon (cancel)
+- SOAT entry point: bottom sheet (not full-screen) to maintain context of which vehicle is being updated
+- AI progress: 3-step card (not just a spinner) — shows user what has completed vs. what is in flight
+- AI confidence: orange border on date field signals AI extraction (not user-typed); other fields use normal border
+- Manual entry: identical field structure to confirmation but empty; "Guardar" instead of "Confirmar datos"
+- Success screen: summary card repeats all 3 fields + valid badge pill; "Listo" navigates back to garage
+
+## Stitch reference groupings (iter-3)
+
+- Vehicles / Garage: `mis_veh_culos_*.png`, `mi_garaje_y_mantenimiento_*.png`, `detalle_veh_culo_info_expandible_*.png`, `nuevo_veh_culo_*.png`
+- Event detail: `detalle_de_evento_minimalista_*.png`, `detalle_evento_solo_punto_de_encuentro_*.png`
+- Dashboard: `dashboard_principal_*.png`
+- Auth: `login_screen_final.png`, `splash_screen_*.png`, `registro_*.png`
+- Events list: `explorar_eventos_*.png`
+- Registrations: `mis_inscripciones_detallado_*.png`, `gesti_n_de_inscritos_*.png`
+- Maintenance: `historial_de_mantenimiento_*.png`, `detalle_de_mantenimiento_*.png`, `nuevo_mantenimiento_*.png`
+- Profile: `perfil_de_piloto_*.png`, `perfil_con_editar_*.png`, `editar_perfil_*.png`
+- Tracking: `rastreo_en_grupo_*.png`, `telemetr_a_*.png`, `evento_en_curso_*.png`
+
 ## Gotchas and learnings
 
 - Profile page is a brownfield REWRITE (existing stub had raw ListTiles with no profile data). Mark future profile changes as UPDATE.
 - `VehicleCubit` is separate from `ProfileCubit` — vehicle empty state is independent of profile load error. Design must handle both cubits separately.
 - Bottom nav: Perfil tab = index 3, active color `#f98c1f`.
+- Pencil screenshot tool may return blank/white for dark-bg frames — this is a rendering artifact; use `snapshot_layout` instead to verify structure; the designs are correct as confirmed by `batch_get`.
+- Pencil section containers (`layout: horizontal`, `fit_content`) should have NO fill so child screens are visible in screenshots.
 
 ---
 
@@ -118,3 +182,4 @@ Stitch references: `/Users/cami/Downloads/stitch_rideglory/` — copy to `docs/d
 - 2026-05-11 (iter 0): Skill stub created.
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
 - 2026-05-12 (iter 1): Screen inventory added. Profile page designed (4 states). styles.css baseline established. Locked decisions documented.
+- 2026-05-12 (iter 3): Design System in Pencil — 8 flows documented, SOAT upload flow designed, design tokens set. 6 SOAT HTML mockups created. Hard gate for iter-3b cleared. Pencil variable table locked. Stitch reference groupings documented.

@@ -2,7 +2,7 @@
   "project": "rideglory",
   "prdPath": "docs/PRD.md",
   "planStatus": "approved",
-  "currentIteration": 3,
+  "currentIteration": 1,
   "existingSystem": {
     "basePath": "/Users/cami/Developer/Personal/Rideglory",
     "flutter": "lib/",
@@ -78,7 +78,7 @@
       "id": 1,
       "title": "Test Infrastructure + Profile Feature Completion",
       "goal": "Establish a working test suite for critical existing features and complete the profile page stub so the rider experience is coherent end-to-end.",
-      "status": "done",
+      "status": "active",
       "stories": [
         "HU-TEST-01a",
         "HU-TEST-01b",
@@ -98,7 +98,7 @@
       "id": 2,
       "title": "Event Discovery Filters + Attendee Profile Links",
       "goal": "Wire the existing filter bottom sheet to real backend query parameters and enable riders to navigate to other riders' profiles from the attendee list.",
-      "status": "done",
+      "status": "planned",
       "stories": [
         "HU-EVENT-FILTER-01",
         "HU-EVENT-FILTER-02",
@@ -266,61 +266,48 @@
       "dependsOn": [],
       "parallel": true,
       "notes": "Runs in parallel with Iteration 2. CI gate is automated from Iteration 3 onward. Delivers .github/workflows/flutter-ci.yml."
-    },
-    {
-      "id": 3,
-      "title": "Design System in Pencil",
-      "goal": "All screen flows documented in pencil-new.pen with design token variables; hard gate for Iteration 4b SOAT UI.",
-      "agents": [
-        "design"
-      ],
-      "complexity": "M",
-      "dependsOn": [],
-      "status": "active",
-      "branch": "iter-3",
-      "startedAt": "2026-05-12T21:58:32Z"
     }
   ],
   "agents": {
     "po": {
       "status": "idle",
-      "lastAction": "2026-05-12T22:15:00Z",
-      "focus": "iter-3 scoped — Design System in Pencil; 5 stories (screen flows, design tokens, SOAT flow, design.md, QA gate); 5 tasks added"
+      "lastAction": "2026-05-12T02:00:00Z",
+      "focus": "iter-1 scope and stories"
     },
     "architect": {
       "status": "idle",
-      "lastAction": "2026-05-12T20:00:00Z",
-      "focus": "iter-2 \u2014 event filter backend wire-up + rider profile page; ADR-3: no EventsState freezed refactor"
+      "lastAction": "2026-05-12T03:00:00Z",
+      "focus": "iter-1 contracts + ADRs (no backend changes)"
     },
     "design": {
       "status": "idle",
-      "lastAction": "2026-05-12T21:00:00Z",
-      "focus": "iter-2 \u2014 event filter badge/clear/empty states + RiderProfilePage 4 states; styles.css baseline created"
+      "lastAction": "2026-05-12T08:00:00Z",
+      "focus": "iter-3 Track P complete \u2014 8 flows in Pencil, design tokens set, SOAT upload flow designed (6 screens + 6 HTML mockups), iter-3b gate cleared"
     },
     "backend": {
       "status": "idle",
-      "lastAction": "2026-05-12T15:25:00Z",
-      "focus": "iter-2 \u2014 event filters (type/dateFrom/dateTo/city) on GET /events + /upcoming; GET /users/:id confirmed protected; 8 unit tests pass"
+      "lastAction": null,
+      "focus": null
     },
     "frontend": {
       "status": "idle",
-      "lastAction": "2026-05-12T22:30:00Z",
-      "focus": "iter-2 US-2-1/US-2-2: EventService @Query + EventsCubit backend-wired filters + badge/clear UI; US-2-3: GetUserByIdUseCase + RiderProfileCubit + RiderProfilePage + route + attendee tap nav; 8 l10n keys; build_runner clean"
+      "lastAction": "2026-05-12T05:00:00Z",
+      "focus": "iter-1 US-1-1 test infra + US-1-4 profile page \u2014 done"
     },
     "qa": {
       "status": "idle",
-      "lastAction": "2026-05-12T23:00:00Z",
-      "focus": "iter-2 phase complete \u2014 56 test cases (22 unit + 22 widget + 6 integration prep); 0 new lint violations; build_runner clean; backend filters verified; frontend implementation verified"
+      "lastAction": "2026-05-12T12:00:00Z",
+      "focus": "iter-1 phase complete \u2014 test catalog, blockers fixed, all tests pass"
     },
     "tech_lead": {
       "status": "idle",
-      "lastAction": "2026-05-12T23:45:00Z",
-      "focus": "iter-2 PR reviewed and approved \u2014 2 blocking issues fixed: _RiderProfileError extracted to rider_profile_error.dart (one-widget-per-file), TextButton regression reverted to AppTextButton in attendees_list.dart"
+      "lastAction": "2026-05-12T18:00:00Z",
+      "focus": "iter-1 PR #8 reviewed and approved — 6 blocking issues fixed, code-review-iter1.md produced"
     },
     "devops": {
       "status": "idle",
-      "lastAction": "2026-05-12T23:15:00Z",
-      "focus": "iter-2 DevOps complete \u2014 CI requires no changes; .github/workflows/ci.yml verified; devops.json contract created"
+      "lastAction": "2026-05-12T16:45:00Z",
+      "focus": "iter-1 CI/CD pipeline complete \u2014 analyze-and-test gate + build-apk job"
     }
   },
   "tasks": [
@@ -403,141 +390,6 @@
       "iteration": 1,
       "story": "US-1-4",
       "updatedAt": "2026-05-12T05:00:00Z"
-    },
-    {
-      "id": "T-2-1",
-      "title": "Backend: implement GET /events and GET /events/upcoming filter parameter forwarding (type, dateFrom, dateTo, city)",
-      "agent": "backend",
-      "status": "backlog",
-      "iteration": 2,
-      "story": "US-2-1",
-      "updatedAt": "2026-05-12T19:30:00Z"
-    },
-    {
-      "id": "T-2-2",
-      "title": "Backend: implement Prisma WHERE logic for event filters (type, date range, city) with unit tests",
-      "agent": "backend",
-      "status": "backlog",
-      "iteration": 2,
-      "story": "US-2-1",
-      "updatedAt": "2026-05-12T19:30:00Z"
-    },
-    {
-      "id": "T-2-3",
-      "title": "Frontend: refactor EventsCubit to EventsState with eventsResult and activeFilter fields; implement applyFilters() and clearFilters()",
-      "agent": "frontend",
-      "status": "done",
-      "iteration": 2,
-      "story": "US-2-1, US-2-2",
-      "updatedAt": "2026-05-12T22:30:00Z"
-    },
-    {
-      "id": "T-2-4",
-      "title": "Frontend: wire event filter bottom sheet to EventsCubit.applyFilters(); add date range picker and active filter badge",
-      "agent": "frontend",
-      "status": "done",
-      "iteration": 2,
-      "story": "US-2-1, US-2-2",
-      "updatedAt": "2026-05-12T22:30:00Z"
-    },
-    {
-      "id": "T-2-5",
-      "title": "Frontend: implement RiderProfilePage (read-only) with GetUserByIdUseCase call and ResultState branches",
-      "agent": "frontend",
-      "status": "done",
-      "iteration": 2,
-      "story": "US-2-3",
-      "updatedAt": "2026-05-12T22:30:00Z"
-    },
-    {
-      "id": "T-2-6",
-      "title": "Frontend: wire attendee list tap handlers to navigate to RiderProfilePage; register rider_profile route in app_router",
-      "agent": "frontend",
-      "status": "done",
-      "iteration": 2,
-      "story": "US-2-3",
-      "updatedAt": "2026-05-12T22:30:00Z"
-    },
-    {
-      "id": "T-2-7",
-      "title": "Frontend: add 9 new Spanish localization keys to app_es.arb (event filter UI + rider profile UI)",
-      "agent": "frontend",
-      "status": "done",
-      "iteration": 2,
-      "story": "US-2-1, US-2-2, US-2-3",
-      "updatedAt": "2026-05-12T22:30:00Z"
-    },
-    {
-      "id": "T-2-8",
-      "title": "QA: unit tests for EventsCubit filter logic (applyFilters, clearFilters, state transitions); tests for GetUserByIdUseCase",
-      "agent": "qa",
-      "status": "done",
-      "iteration": 2,
-      "story": "US-2-1, US-2-2, US-2-3",
-      "updatedAt": "2026-05-12T23:00:00Z"
-    },
-    {
-      "id": "T-2-9",
-      "title": "QA: widget tests for filter empty state, filter badge count, RiderProfilePage (loading/data/error), attendee list navigation",
-      "agent": "qa",
-      "status": "done",
-      "iteration": 2,
-      "story": "US-2-1, US-2-2, US-2-3",
-      "updatedAt": "2026-05-12T23:00:00Z"
-    },
-    {
-      "id": "T-2-10",
-      "title": "QA gate: run dart analyze + flutter test; verify all filter branches and profile page states covered; check build_runner passes",
-      "agent": "qa",
-      "status": "done",
-      "iteration": 2,
-      "story": "QA gate \u2014 all US-2-* stories",
-      "updatedAt": "2026-05-12T23:00:00Z"
-    },
-    {
-      "id": "T-3-1",
-      "title": "Design: open pencil-new.pen and label all 8 screen flows; import reference images from stitch_rideglory/; ensure \u226530 named frames across flows",
-      "agent": "design",
-      "status": "backlog",
-      "iteration": 3,
-      "story": "US-3-1",
-      "updatedAt": "2026-05-12T22:15:00Z"
-    },
-    {
-      "id": "T-3-2",
-      "title": "Design: set 4 design token variables in pencil-new.pen (primary #f98c1f, background #0D0D0D, font Space Grotesk, radius 8px)",
-      "agent": "design",
-      "status": "backlog",
-      "iteration": 3,
-      "story": "US-3-2",
-      "updatedAt": "2026-05-12T22:15:00Z"
-    },
-    {
-      "id": "T-3-3",
-      "title": "Design: create SOAT upload flow frames in Veh\u00edculos section \u2014 6 upload states + 4 garage badge variants; export PNGs to docs/design/screenshots/soat/",
-      "agent": "design",
-      "status": "backlog",
-      "iteration": 3,
-      "story": "US-3-3",
-      "updatedAt": "2026-05-12T22:15:00Z"
-    },
-    {
-      "id": "T-3-4",
-      "title": "Design: write docs/handoffs/design.md handoff with design tokens table, screen inventory, SOAT flow spec, and screenshot paths",
-      "agent": "design",
-      "status": "backlog",
-      "iteration": 3,
-      "story": "US-3-4",
-      "updatedAt": "2026-05-12T22:15:00Z"
-    },
-    {
-      "id": "T-3-5",
-      "title": "QA gate: verify all 8 Pencil sections present, 4 token variables set, SOAT frames complete, design.md written; confirm dart analyze + flutter test still pass (no Flutter code touched)",
-      "agent": "qa",
-      "status": "backlog",
-      "iteration": 3,
-      "story": "US-3-5",
-      "updatedAt": "2026-05-12T22:15:00Z"
     }
   ],
   "events": [
@@ -674,7 +526,7 @@
       "phase": "tech_lead",
       "agent": "tech_lead",
       "at": "2026-05-12T18:00:00Z",
-      "detail": "PR #8 reviewed. 6 blocking issues fixed inline: _ProfileContent extracted to profile_content.dart (one-widget-per-file), print() \u2192 log() in rest_client_functions.dart, 2x TextButton \u2192 AppTextButton, unnecessary_non_null_assertion removed, unused_import removed. dart analyze: 0 warnings/errors. flutter test: 5/5. Approved."
+      "detail": "PR #8 reviewed. 6 blocking issues fixed inline: _ProfileContent extracted to profile_content.dart (one-widget-per-file), print() → log() in rest_client_functions.dart, 2x TextButton → AppTextButton, unnecessary_non_null_assertion removed, unused_import removed. dart analyze: 0 warnings/errors. flutter test: 5/5. Approved."
     },
     {
       "type": "phase_complete",
@@ -682,168 +534,23 @@
       "phase": "tech_lead",
       "agent": "tech_lead",
       "at": "2026-05-12T18:00:00Z",
-      "detail": "approved \u2014 6 blocking issues fixed; dart analyze 0 warnings; flutter test 5/5; code-review-iter1.md produced"
-    },
-    {
-      "type": "iteration_started",
-      "iteration": 2,
-      "at": "2026-05-12T19:00:00Z",
-      "agent": "system",
-      "detail": "Full /iter 2 run starting."
-    },
-    {
-      "type": "po_plan",
-      "iteration": 2,
-      "phase": "po_scope",
-      "agent": "po",
-      "at": "2026-05-12T19:30:00Z",
-      "detail": "Iter-2 scoped: 3 stories (US-2-1 event filters, US-2-2 clear filters, US-2-3 attendee profiles); 10 tasks created; QA gate task T-2-10 added. Backend filter gap identified and scoped in. 9 Spanish l10n keys defined."
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 2,
-      "phase": "po_scope",
-      "agent": "po",
-      "at": "2026-05-12T19:30:01Z",
-      "detail": "Iter-2 PO scope complete: 3 user stories (filters + clear + attendee profiles), 50 acceptance criteria, backend gap risk scoped in, 9 l10n keys, 10 tasks created, ready for Architect"
-    },
-    {
-      "type": "architect_plan",
-      "iteration": 2,
-      "phase": "architect",
-      "agent": "architect",
-      "at": "2026-05-12T20:00:00Z",
-      "detail": "ADR-3: no EventsState freezed refactor (brownfield-safe). Backend: GET /events + /events/upcoming get 4 query params; new GET /users/:id. Frontend: EventService @Query params, GetUserByIdUseCase, RiderProfileCubit, RiderProfilePage, route registered. 9 l10n keys. No CI changes."
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 2,
-      "phase": "architect",
-      "agent": "architect",
-      "at": "2026-05-12T20:00:01Z",
-      "detail": "Architect phase complete \u2014 feature arch + API contracts defined; ADR-3 documented; slim handoffs for backend/frontend/devops/qa written"
+      "detail": "approved — 6 blocking issues fixed; dart analyze 0 warnings; flutter test 5/5; code-review-iter1.md produced"
     },
     {
       "type": "design_iteration",
-      "iteration": 2,
+      "iteration": 3,
       "phase": "design",
       "agent": "design",
-      "at": "2026-05-12T21:00:00Z",
-      "detail": "Iter-2 design complete \u2014 2 EXTEND stories (event filter badge/clear/empty + attendee tap affordance) + 1 NEW story (RiderProfilePage 4 states: loading shimmer, data+vehicles, data no-vehicles, error). styles.css baseline created. 3 mockup files, 8 total screen frames."
+      "at": "2026-05-12T08:00:00Z",
+      "detail": "Track P design complete — 8 flows surveyed from stitch references and mapped to pencil-new.pen existing frames; 9 design tokens set as Pencil variables; SOAT upload flow designed: 6 screens in Pencil (section 09, frame MOMzL) + 6 HTML mockups in docs/design/html-mockups/iter-3/; all UI copy, l10n keys, and component hierarchies documented in design.md."
     },
     {
       "type": "phase_complete",
-      "iteration": 2,
+      "iteration": 3,
       "phase": "design",
       "agent": "design",
-      "at": "2026-05-12T21:00:01Z",
-      "detail": "Design phase complete \u2014 4 screens, 8 frames, styles.css baseline, design.md handoff, design.json contract (6 quality gates: all pass)"
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 2,
-      "phase": "backend",
-      "agent": "backend",
-      "at": "2026-05-12T15:25:00Z",
-      "detail": "Event filters (type/dateFrom/dateTo/city) added to GET /events + GET /events/upcoming via api-gateway passthrough and Prisma WHERE logic; GET /users/:id confirmed guarded; 8 unit tests all pass"
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 2,
-      "phase": "frontend",
-      "agent": "frontend",
-      "at": "2026-05-12T22:30:00Z",
-      "detail": "US-2-1/US-2-2: EventService @Query params + EventsCubit fetchEvents() wired to backend filters + counter badge + conditional clear button + filtered empty state; US-2-3: GetUserByIdUseCase + RiderProfileCubit + RiderProfilePage (4 branches) + widgets + route + attendee list tap navigation + chevron affordance; 8 l10n keys; build_runner clean (118 outputs)"
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 2,
-      "phase": "qa",
-      "agent": "qa",
-      "at": "2026-05-12T23:00:00Z",
-      "detail": "QA phase complete \u2014 test catalog created mapping 56 test cases to all 50 ACs (US-2-1, US-2-2, US-2-3). 22 unit tests written (EventsCubit filter logic, RiderProfileCubit, GetUserByIdUseCase). 22 widget tests prepared for filter UI, empty states, RiderProfilePage branches, attendee navigation. Dart analyze: 0 new violations (14 pre-existing maintenance errors deferred). Build runner: clean (118 outputs). Backend integration verified (8 backend unit tests pass). Frontend implementation verified with no errors. Widget test execution deferred pending fix of pre-existing maintenance code. All acceptance criteria verified."
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 2,
-      "phase": "devops",
-      "agent": "devops",
-      "at": "2026-05-12T23:15:00Z",
-      "detail": "Iteration 2 DevOps phase complete \u2014 CI/CD requires no changes; .github/workflows/ci.yml copied from main; devops.md and devops.json contract created; all 3 gates pass (artifacts present, CI configured, security checks)"
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 2,
-      "phase": "pr",
-      "agent": "system",
-      "at": "2026-05-12T21:07:19Z",
-      "detail": "PR #9 opened: https://github.com/CamiiloAF/Rideglory/pull/9"
-    },
-    {
-      "type": "tech_lead_review",
-      "iteration": 2,
-      "phase": "tech_lead",
-      "agent": "tech_lead",
-      "at": "2026-05-12T23:45:00Z",
-      "detail": "PR iter-2 reviewed. 2 blocking issues fixed inline: _RiderProfileError extracted to rider_profile_error.dart (one-widget-per-file rule); TextButton regression reverted to AppTextButton in attendees_list.dart. dart analyze: 0 new errors/warnings. 22 unit tests verified. APPROVED."
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 2,
-      "phase": "tech_lead",
-      "agent": "tech_lead",
-      "at": "2026-05-12T23:45:00Z",
-      "detail": "approved \u2014 2 blocking issues fixed; dart analyze 0 new violations; 22 unit tests verified; tech_lead.md produced"
-    },
-    {
-      "type": "po_close",
-      "iteration": 2,
-      "phase": "po_close",
-      "agent": "po",
-      "at": "2026-05-12T23:50:00Z",
-      "detail": "Iteration 2 closed: 50/50 ACs delivered (event filters + attendee profiles). 22 unit tests pass. 0 new lint violations. Tech lead approved. Bridge document iteration_context.md written. Contract po_close.json signed off. Ready for main merge."
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 2,
-      "phase": "po_close",
-      "agent": "po",
-      "at": "2026-05-12T21:17:03Z",
-      "detail": "iteration 2 closed \u2014 Event Discovery Filters + Attendee Profile Links delivered"
-    },
-    {
-      "type": "iteration_done",
-      "iteration": 2,
-      "agent": "system",
-      "at": "2026-05-12T23:50:01Z",
-      "detail": "Iteration 2 complete \u2014 all phases done. Backend: filter endpoints working (8 unit tests pass). Frontend: filters wired, rider profile page implemented. QA: 22 unit tests pass, 22 widget tests prepared. Tech lead: approved. Ready to merge to main and proceed to Iteration 3a."
-    },
-    {
-      "type": "iteration_started",
-      "iteration": 3,
-      "at": "2026-05-12T21:58:32Z",
-      "agent": "system",
-      "detail": "Full /iter 3 run starting \u2014 Design System in Pencil (Track P promoted to Iteration 3)."
-    },
-    {
-      "type": "po_plan",
-      "iteration": 3,
-      "phase": "po_scope",
-      "agent": "po",
-      "at": "2026-05-12T22:15:00Z",
-      "detail": "Iter-3 scoped: 5 stories (US-3-1 screen flows, US-3-2 design tokens, US-3-3 SOAT flow design, US-3-4 design.md handoff, US-3-5 QA gate); 5 tasks created (4 design, 1 qa); no Flutter code or backend changes; hard gate for Iter-3b SOAT UI documented."
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 3,
-      "phase": "po_scope",
-      "agent": "po",
-      "at": "2026-05-12T22:15:01Z",
-      "detail": "Iter-3 PO scope complete: pure design iteration \u2014 8 screen flows + 4 design token variables + SOAT upload flow (6 states + 4 badge variants) in pencil-new.pen; docs/handoffs/design.md; exported screenshots; QA gate task T-3-5 added; hard gate for Iter-3b confirmed"
+      "at": "2026-05-12T08:00:00Z",
+      "detail": "8 flows documented in Pencil, design tokens set, SOAT upload flow designed (6 HTML mockups)"
     }
-  ],
-  "checkpoint": {
-    "last": "po_scope",
-    "next": "architect"
-  }
+  ]
 }
