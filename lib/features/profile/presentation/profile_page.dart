@@ -5,9 +5,7 @@ import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/profile/presentation/cubits/profile_cubit.dart';
-import 'package:rideglory/features/profile/presentation/widgets/profile_actions_list.dart';
-import 'package:rideglory/features/profile/presentation/widgets/profile_header.dart';
-import 'package:rideglory/features/profile/presentation/widgets/profile_main_vehicle_card.dart';
+import 'package:rideglory/features/profile/presentation/widgets/profile_content.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/shared/widgets/states/page_error_state_widget.dart';
@@ -43,7 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
               return state.when(
                 initial: () => const PageLoadingStateWidget(),
                 loading: () => const PageLoadingStateWidget(),
-                data: (user) => _ProfileContent(user: user),
+                data: (user) => ProfileContent(user: user),
                 empty: () => EmptyStateWidget(
                   icon: Icons.person_off_outlined,
                   title: context.l10n.profile_loadingError,
@@ -59,27 +57,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _ProfileContent extends StatelessWidget {
-  const _ProfileContent({required this.user});
-
-  final UserModel user;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(20),
-      children: [
-        ProfileHeader(user: user),
-        const SizedBox(height: 24),
-        const ProfileMainVehicleCard(),
-        const SizedBox(height: 24),
-        const Divider(),
-        const ProfileActionsList(),
-      ],
     );
   }
 }

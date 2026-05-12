@@ -301,8 +301,8 @@
     },
     "tech_lead": {
       "status": "idle",
-      "lastAction": null,
-      "focus": null
+      "lastAction": "2026-05-12T18:00:00Z",
+      "focus": "iter-1 PR #8 reviewed and approved — 6 blocking issues fixed, code-review-iter1.md produced"
     },
     "devops": {
       "status": "idle",
@@ -359,10 +359,10 @@
       "id": "T-1-5",
       "title": "Code review and cleanup: dart analyze, remove print calls, fix lint violations, remove dead code, produce docs/architecture/code-review-iter1.md",
       "agent": "tech_lead",
-      "status": "backlog",
+      "status": "done",
       "iteration": 1,
       "story": "US-1-5",
-      "updatedAt": "2026-05-12T02:00:00Z"
+      "updatedAt": "2026-05-12T18:00:00Z"
     },
     {
       "id": "T-1-6",
@@ -519,6 +519,22 @@
       "agent": "system",
       "at": "2026-05-12T17:00:00Z",
       "detail": "PR #8 opened: https://github.com/CamiiloAF/Rideglory/pull/8"
+    },
+    {
+      "type": "tech_lead_review",
+      "iteration": 1,
+      "phase": "tech_lead",
+      "agent": "tech_lead",
+      "at": "2026-05-12T18:00:00Z",
+      "detail": "PR #8 reviewed. 6 blocking issues fixed inline: _ProfileContent extracted to profile_content.dart (one-widget-per-file), print() → log() in rest_client_functions.dart, 2x TextButton → AppTextButton, unnecessary_non_null_assertion removed, unused_import removed. dart analyze: 0 warnings/errors. flutter test: 5/5. Approved."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 1,
+      "phase": "tech_lead",
+      "agent": "tech_lead",
+      "at": "2026-05-12T18:00:00Z",
+      "detail": "approved — 6 blocking issues fixed; dart analyze 0 warnings; flutter test 5/5; code-review-iter1.md produced"
     }
   ]
 }

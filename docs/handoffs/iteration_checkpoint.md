@@ -17,12 +17,12 @@
 | frontend | frontend | done | 2026-05-12T05:00Z |
 | qa | qa | done | 2026-05-12T12:00Z |
 | devops | devops | done | 2026-05-12T16:45Z |
-| tech_lead | tech_lead | pending | — |
+| tech_lead | tech_lead | done | 2026-05-12T18:00Z |
 | pr | system | pending | — |
 | po_close | po | pending | — |
 
-**Last completed phase:** devops
-**Next phase:** pr (open PR from iter-1 → main)
+**Last completed phase:** tech_lead
+**Next phase:** po_close
 
 *Started: 2026-05-12T01:30:00Z*
 

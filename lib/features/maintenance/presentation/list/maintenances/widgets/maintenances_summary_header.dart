@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rideglory/core/extensions/date_extensions.dart';
-import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_list_summary.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenance_summary_card.dart';

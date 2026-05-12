@@ -141,7 +141,16 @@ Commands: `dart analyze --no-summary`, `grep -rn "print(" lib/`, `dart fix --app
 
 ## Gotchas and learnings
 
-<!-- Append during iterations -->
+### Iteration 1 (2026-05-12)
+
+- **One-widget-per-file is strictly enforced for private widgets too.** `_ProfileContent` inside `profile_page.dart` is a violation even if it's never referenced externally. Extract every secondary widget to its own file.
+- **`print()` inside `kDebugMode` guards still violates US-1-5.** Replace with `log()` from `dart:developer`.
+- **`TextButton` is blocked even with custom padding override.** Use `AppTextButton(visualDensity: VisualDensity.compact)` instead.
+- **`OutlinedButton.icon` is acceptable when `AppButton` can't cover icon + dynamic text label** (e.g., date-picker triggers). Document rationale in-code with a comment.
+- **`dart analyze` in this project uses `--fatal-warnings` by default** — the `exit code 2` from analyze means warnings were found. Target is zero warnings, not just zero errors.
+- **`dart analyze --no-summary` does not exist in this version of the Dart SDK.** Use `dart analyze` directly.
+- **`flutter gen-l10n` can run standalone** even when `build_runner` is broken — ARB keys can be added and localization regenerated independently.
+- **Pre-existing `withOpacity` deprecations are info-level** and should be batched in a dedicated cleanup iteration, not fixed one by one during feature reviews (too much churn in shared widgets).
 
 ---
 
@@ -149,3 +158,4 @@ Commands: `dart analyze --no-summary`, `grep -rn "print(" lib/`, `dart fix --app
 
 - 2026-05-11 (iter 0): Skill stub created.
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
+- 2026-05-12 (iter 1): Gotchas and learnings appended after PR #8 review. 6 blocking issues fixed.

@@ -59,7 +59,7 @@ Future<ApiResult<T>> handlerExceptionHttp<T>({
   } catch (error) {
     if (kDebugMode) {
       if (error is Error) {
-        print(error.stackTrace);
+        log('Stack trace: ${error.stackTrace}');
       }
       log('Error in Service Exception: $error}');
     }
