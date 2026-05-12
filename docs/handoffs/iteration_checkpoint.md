@@ -14,15 +14,15 @@
 | architect | architect | done |
 | design | design | done |
 | backend | backend | done (skipped — no API changes) |
-| frontend | frontend | in progress |
+| frontend | frontend | done |
 | qa | qa | pending |
 | devops | devops | pending |
 | pr | system | pending |
 | tech_lead | tech_lead | pending |
 | po_close | po | pending |
 
-**Last completed phase:** backend (pass-through)
-**Next phase:** frontend
+**Last completed phase:** frontend
+**Next phase:** qa
 
 *Started: 2026-05-12T01:30:00Z*
 

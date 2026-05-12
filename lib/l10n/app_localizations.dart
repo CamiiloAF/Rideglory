@@ -3208,6 +3208,36 @@ abstract class AppLocalizations {
   /// **'Perfil'**
   String get profile_profile;
 
+  /// No description provided for @profile_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Mi perfil'**
+  String get profile_title;
+
+  /// No description provided for @profile_mainVehicle.
+  ///
+  /// In es, this message translates to:
+  /// **'Vehículo principal'**
+  String get profile_mainVehicle;
+
+  /// No description provided for @profile_noVehicle.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin vehículos'**
+  String get profile_noVehicle;
+
+  /// No description provided for @profile_errorRetry.
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get profile_errorRetry;
+
+  /// No description provided for @profile_loadingError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cargar tu perfil'**
+  String get profile_loadingError;
+
   /// No description provided for @registration_registrationPageTitle.
   ///
   /// In es, this message translates to:

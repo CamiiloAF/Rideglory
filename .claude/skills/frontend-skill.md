@@ -117,3 +117,25 @@ Commands: `dart analyze`, `flutter test`, `dart run build_runner build --delete-
 
 - 2026-05-11 (iter 0): Skill stub created.
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
+
+---
+
+## Iteration 1 learnings (2026-05-12)
+
+### build_runner / mockito conflict
+`network_image_mock: ^2.1.1` pulls in `mockito 5.6.5`. The project overrides `analyzer: ^8.0.0` which breaks the mockito builder compilation inside build_runner. The DI config (`injection.config.dart`) must be manually patched when adding new `@injectable`/`@lazySingleton` classes until this conflict is resolved. Use import alias `_i<number>` matching existing patterns; pick numbers > 2000 to avoid collisions with future generated output.
+
+### Manual DI pattern
+When adding `@lazySingleton` classes that can't be auto-generated:
+1. Add import with unique alias (`_i2001`, `_i2002`, ...) before the `GetItInjectableX` extension.
+2. Register with `gh.lazySingleton<_iXXX.TheClass>(() => _iXXX.TheClass(gh<_iYYY.Dependency>()))` before `return this`.
+3. Add `@injectable` use cases as `gh.factory<...>`.
+
+### l10n without build_runner
+Run `flutter gen-l10n` as a standalone command (not via build_runner) to regenerate localization files. The `generate: true` in pubspec.yaml / flutter section makes this work independently.
+
+### ProfileCubit scope
+`@lazySingleton` is correct for `ProfileCubit` — it persists profile data across tab switches. Call `reset()` on logout to clear state. Place in root `MultiBlocProvider` in `main.dart` so it's available inside and outside the shell route.
+
+### Initials helper
+`initialsFromName(String?)` is in `lib/core/utils/initials.dart`. The existing `Initials.buildFromFullName` static method also exists — prefer the top-level function for parity with the architect spec and future attendee list usage.
