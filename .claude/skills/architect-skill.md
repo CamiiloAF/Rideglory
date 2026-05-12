@@ -86,6 +86,10 @@ Commands: `dart analyze`, `flutter test`, `dart run build_runner build --delete-
 ## Gotchas and learnings
 
 <!-- Append during iterations -->
+- 2026-05-12 (iter-1): Iteration 1 is intentionally backend-free. Architect handoff is light — main work is confirming `GET /users/me` shape and writing the `ProfileCubit` DI ADR. Always check `lib/features/<feature>/` for existing service/repository before declaring a new endpoint.
+- 2026-05-12 (iter-1): `UserModel` already exists with rich rider profile fields (eps, bloodType, emergency contacts). No need to add fields for the profile page — current model is over-specified, not under.
+- 2026-05-12 (iter-1): Stub `profile_page.dart` is a `StatelessWidget` with only `ListTile` actions; full rewrite needed for header + main vehicle + ResultState branches. Frontend should keep existing logout + my-registrations actions when rewriting.
+- 2026-05-12 (iter-1): Reusable initials helper belongs in `lib/core/utils/` not in the profile feature — Iteration 2 attendee list will reuse it.
 
 ---
 
@@ -93,3 +97,4 @@ Commands: `dart analyze`, `flutter test`, `dart run build_runner build --delete-
 
 - 2026-05-11 (iter 0): Skill stub created.
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
+- 2026-05-12 (iter-1): Architect phase complete. Confirmed no backend changes. Defined ProfileCubit DI scope (ADR-1, lazySingleton in root MultiBlocProvider). Confirmed no photo upload v1 (ADR-2). New artifacts: GetMyProfileUseCase + ProfileCubit + initials helper. l10n keys with `profile_` prefix. DIAGRAMS.md initialized with profile fetch sequence.
