@@ -11,7 +11,7 @@
 | Phase | Agent | Status |
 |-------|-------|--------|
 | po_scope | po | done |
-| architect | architect | pending |
+| architect | architect | done |
 | design | design | pending |
 | backend | backend | pending |
 | frontend | frontend | pending |
@@ -21,8 +21,8 @@
 | tech_lead | tech_lead | pending |
 | po_close | po | pending |
 
-**Last completed phase:** po_scope
-**Next phase:** architect
+**Last completed phase:** architect
+**Next phase:** design
 
 *Started: 2026-05-12T01:30:00Z*
 
