@@ -1,30 +1,30 @@
-# Iteration checkpoint — Iteration 1
+# Iteration checkpoint — Iteration 3
 
 **Purpose:** Human-readable resume trail. After each phase completes, update this file in the same session as `workflow/state.json` → `phase_complete`. Powers `/resume-iter`.
 
 ---
 
-## Status: active — Iteration 1
+## Status: active — Iteration 3
 
-**Goal:** Test Infrastructure + Profile Feature Completion
+**Goal:** Design System in Pencil — all screen flows in pencil-new.pen with design token variables
 
 | Phase | Agent | Status | Completed |
 |-------|-------|--------|-----------|
-| po_scope | po | done | 2026-05-12T02:00Z |
-| architect | architect | done | 2026-05-12T03:00Z |
-| design | design | done | 2026-05-12T04:00Z |
-| backend | backend | done (skipped — no API changes) | 2026-05-12T04:05Z |
-| frontend | frontend | done | 2026-05-12T05:00Z |
-| qa | qa | done | 2026-05-12T12:00Z |
-| devops | devops | done | 2026-05-12T16:45Z |
-| tech_lead | tech_lead | done | 2026-05-12T18:00Z |
-| pr | system | pending | — |
-| po_close | po | pending | — |
+| po_scope | po | ✅ done | 2026-05-12T22:15:01Z |
+| architect | architect | — (skip expected) | — |
+| design | design | ⏳ next | — |
+| backend | backend | — (skip expected) | — |
+| frontend | frontend | — (skip expected) | — |
+| qa | qa | — | — |
+| devops | devops | — (skip expected) | — |
+| pr | system | — | — |
+| tech_lead | tech_lead | — | — |
+| po_close | po | — | — |
 
-**Last completed phase:** tech_lead
-**Next phase:** po_close
+**Last completed phase:** po_scope
+**Next phase:** architect
 
-*Started: 2026-05-12T01:30:00Z*
+*Started: 2026-05-12T21:58:32Z*
 
 ---
 
