@@ -301,8 +301,8 @@
     },
     "tech_lead": {
       "status": "idle",
-      "lastAction": "2026-05-12T18:00:00Z",
-      "focus": "iter-1 PR #8 reviewed and approved \u2014 6 blocking issues fixed, code-review-iter1.md produced"
+      "lastAction": "2026-05-12T23:45:00Z",
+      "focus": "iter-2 PR reviewed and approved \u2014 2 blocking issues fixed: _RiderProfileError extracted to rider_profile_error.dart (one-widget-per-file), TextButton regression reverted to AppTextButton in attendees_list.dart"
     },
     "devops": {
       "status": "idle",
@@ -720,10 +720,26 @@
       "agent": "system",
       "at": "2026-05-12T21:07:19Z",
       "detail": "PR body written to docs/PULL_REQUEST_BODY_ITER_2.md; push blocked by pre-existing secret, unblock required"
+    },
+    {
+      "type": "tech_lead_review",
+      "iteration": 2,
+      "phase": "tech_lead",
+      "agent": "tech_lead",
+      "at": "2026-05-12T23:45:00Z",
+      "detail": "PR iter-2 reviewed. 2 blocking issues fixed inline: _RiderProfileError extracted to rider_profile_error.dart (one-widget-per-file rule); TextButton regression reverted to AppTextButton in attendees_list.dart. dart analyze: 0 new errors/warnings. 22 unit tests verified. APPROVED."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 2,
+      "phase": "tech_lead",
+      "agent": "tech_lead",
+      "at": "2026-05-12T23:45:00Z",
+      "detail": "approved — 2 blocking issues fixed; dart analyze 0 new violations; 22 unit tests verified; tech_lead.md produced"
     }
   ],
   "checkpoint": {
-    "last": "devops",
-    "next": "pr"
+    "last": "tech_lead",
+    "next": "po_close"
   }
 }

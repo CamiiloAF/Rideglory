@@ -26,3 +26,5 @@
 ## Change log
 <!-- Append, never delete -->
 - 2026-05-11 (iter 0): Skill stub created. Run /solo-plan then /solo-approve to populate.
+- 2026-05-12 (iter 1): PR #8 reviewed. 6 blocking issues fixed: _ProfileContent extracted (one-widget-per-file), print() → log(), 2x TextButton → AppTextButton, unnecessary_non_null_assertion, unused_import. Approved.
+- 2026-05-12 (iter 2): PR iter-2 reviewed. 2 blocking issues fixed inline: (1) _RiderProfileError private widget in rider_profile_page.dart violated one-widget-per-file — extracted to rider_profile_error.dart; (2) iter-2 diff introduced TextButton regression in attendees_list.dart replacing pre-existing AppTextButton — reverted. dart analyze: 0 new errors/warnings. 22 unit tests verified. APPROVED. Gotcha: always diff against main to catch regressions from pre-existing correct code.
