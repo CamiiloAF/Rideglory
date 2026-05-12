@@ -12,7 +12,7 @@ class HomeViewAllEventsButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       child: GestureDetector(
-        onTap: () => context.goNamed(AppRoutes.events),
+        onTap: () => context.pushNamed(AppRoutes.events),
         child: Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 14),

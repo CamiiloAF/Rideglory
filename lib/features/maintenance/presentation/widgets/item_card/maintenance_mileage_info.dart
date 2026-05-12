@@ -77,7 +77,7 @@ class MaintenanceMileageInfo extends StatelessWidget {
               remainingDistance != null
                   ? context.l10n.maintenance_remainingDistance(
                       remainingDistance.toStringAsFixed(0),
-                      'km', // TODO: Add distance unit
+                      context.l10n.maintenance_km,
                     )
                   : context.l10n.maintenance_calculateRemainingDistance,
               style: context.labelSmall?.copyWith(
