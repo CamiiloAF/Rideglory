@@ -104,12 +104,13 @@ Wait for PO agent. Verify `docs/handoffs/po.md` exists. Run quality gates:
 
 ---
 
-## Phase 2 — Architect | model: sonnet
-<!-- Upgraded to opus: iteration 1, new auth/WebSocket/cross-cutting patterns, or incomplete prior handoff (restore iter.md.opus-backup). -->
+## Phase 2 — Architect | model: opus (iter 1 or novel patterns) / sonnet (iter 2+ extending existing features)
+<!-- Use opus when: iteration 1, new auth/WebSocket/cross-cutting patterns, or if iter 1 architect handoff was incomplete.
+     Use sonnet when: extending an existing feature (vehicles, events, etc.) with established patterns. -->
 
 Spawn an Agent with:
-- **description:** `"[Architect / sonnet] — iter $ARGUMENTS Flutter feature architecture + API contracts"`
-- **model:** `"sonnet"`
+- **description:** `"[Architect / opus] — iter $ARGUMENTS Flutter feature architecture + API contracts"`
+- **model:** `"opus"`
 - **prompt:**
 
 ```
