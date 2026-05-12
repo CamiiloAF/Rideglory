@@ -18,29 +18,19 @@
   ],
   "qualityGates": [
     {
-      "name": "dart_analyze_passes",
+      "name": "required_artifacts_present",
       "status": "pass",
-      "notes": "dart analyze executed successfully with zero new violations in iter-1 code. 2 pre-existing warnings, 34 pre-existing info-level violations (withOpacity deprecation, unused imports) are deferred to tech_lead cleanup."
+      "notes": "docs/handoffs/qa.md, ProfileCubit test file, test directory tree, and QA contract all present."
     },
     {
-      "name": "flutter_test_passes",
+      "name": "tests_passed_or_accepted",
       "status": "pass",
-      "notes": "flutter test executed successfully. 5/5 tests pass: 1 placeholder test, 4 ProfileCubit blocTests (initial state, loading→data success, loading→error failure, reset). No test failures."
+      "notes": "dart analyze: zero new violations. flutter test: 5/5 pass (1 placeholder + 4 ProfileCubit blocTests). Pre-existing warnings deferred to tech_lead."
     },
     {
       "name": "acceptance_criteria_verified",
       "status": "pass",
-      "notes": "US-1-1 (test infrastructure): ✓ mocktail and bloc_test in dev_dependencies, test directory tree created, flutter pub get resolves cleanly. US-1-4 (ProfileCubit + Profile page): ✓ ProfileCubit lazySingleton registered, GetMyProfileUseCase exists, profile page covers all 4 ResultState branches (loading, data, error, and implicit initial). All new UI strings in app_es.arb with profile_ prefix. No hardcoded Spanish."
-    },
-    {
-      "name": "blockers_resolved",
-      "status": "pass",
-      "notes": "BLOCKER 1 (onChanged parameter): Fixed by changing to onFieldSubmitted in event_form_locations_section.dart. BLOCKER 2 (mockito conflict): Resolved by removing network_image_mock from pubspec.yaml. BLOCKER 3 (build_runner): Succeeded after pubspec cleanup."
-    },
-    {
-      "name": "code_generation_successful",
-      "status": "pass",
-      "notes": "dart run build_runner build --delete-conflicting-outputs executed successfully. All freezed, json_serializable, injectable, envied, retrofit generators produced output. No stale code generation errors."
+      "notes": "US-1-1: mocktail+bloc_test in dev_dependencies, test dirs created. US-1-4: ProfileCubit lazySingleton, 4 ResultState branches, all strings in ARB."
     }
   ]
 }
