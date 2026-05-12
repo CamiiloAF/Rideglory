@@ -281,8 +281,8 @@
     },
     "design": {
       "status": "idle",
-      "lastAction": "2026-05-12T04:00:00Z",
-      "focus": "iter-1 profile page — 4 states designed"
+      "lastAction": "2026-05-12T21:00:00Z",
+      "focus": "iter-2 — event filter badge/clear/empty states + RiderProfilePage 4 states; styles.css baseline created"
     },
     "backend": {
       "status": "idle",
@@ -664,6 +664,22 @@
       "agent": "architect",
       "at": "2026-05-12T20:00:01Z",
       "detail": "Architect phase complete — feature arch + API contracts defined; ADR-3 documented; slim handoffs for backend/frontend/devops/qa written"
+    },
+    {
+      "type": "design_iteration",
+      "iteration": 2,
+      "phase": "design",
+      "agent": "design",
+      "at": "2026-05-12T21:00:00Z",
+      "detail": "Iter-2 design complete — 2 EXTEND stories (event filter badge/clear/empty + attendee tap affordance) + 1 NEW story (RiderProfilePage 4 states: loading shimmer, data+vehicles, data no-vehicles, error). styles.css baseline created. 3 mockup files, 8 total screen frames."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 2,
+      "phase": "design",
+      "agent": "design",
+      "at": "2026-05-12T21:00:01Z",
+      "detail": "Design phase complete — 4 screens, 8 frames, styles.css baseline, design.md handoff, design.json contract (6 quality gates: all pass)"
     }
   ]
 }

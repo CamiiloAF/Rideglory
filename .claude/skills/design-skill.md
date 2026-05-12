@@ -26,3 +26,4 @@
 ## Change log
 <!-- Append, never delete -->
 - 2026-05-11 (iter 0): Skill stub created. Run /solo-plan then /solo-approve to populate.
+- 2026-05-12 (iter 2): Design phase complete. 3 stories: US-2-1 (EXTEND event filter badge/empty), US-2-2 (EXTEND clear filters conditional), US-2-3 (NEW RiderProfilePage). 4 screens × 8 frames. styles.css baseline established at docs/design/html-mockups/iter-2/shared/styles.css. Key decisions: ADR-3 brownfield compliance (badge count from EventFilters plain class, not EventsState freezed); filtered empty state uses "No hay eventos con estos filtros" + outline "Limpiar filtros" button; RiderProfilePage is read-only (no edit affordances in any state). Next design iteration should reuse iter-2 styles.css verbatim and extend only what changes.
