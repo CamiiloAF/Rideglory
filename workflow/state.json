@@ -29,11 +29,11 @@
         "permission_handler"
       ],
       "additions": [
-        "mocktail: ^1.0.4 (dev — Iteration 1)",
-        "bloc_test: ^10.0.0 (dev — Iteration 1)",
-        "network_image_mock: ^2.1.1 (dev — Iteration 1)",
-        "file_picker: ^8.0.0 (prod — Iteration 3a)",
-        "firebase_messaging: ^15.0.0 (prod — Iteration 6a)"
+        "mocktail: ^1.0.4 (dev \u2014 Iteration 1)",
+        "bloc_test: ^10.0.0 (dev \u2014 Iteration 1)",
+        "network_image_mock: ^2.1.1 (dev \u2014 Iteration 1)",
+        "file_picker: ^8.0.0 (prod \u2014 Iteration 3a)",
+        "firebase_messaging: ^15.0.0 (prod \u2014 Iteration 6a)"
       ]
     },
     "assumptions": [
@@ -56,15 +56,15 @@
       "Pencil single-machine dependency (Track P): Stitch reference images must be copied to docs/design/stitch-references/ before Track P."
     ],
     "deferred": [
-      "SOAT push reminders (30-day / 7-day) — requires FCM from Iteration 6a; scheduled post-6b.",
-      "Profile photo upload — profilePhotoUrl not in current Prisma schema; deferred post-6b.",
-      "Organizer SOS dismiss — only the SOS sender can cancel in v1; organizer dismiss deferred to v2.",
-      "AI event recommendations Claude narrative explanations (v2) — deterministic scoring sufficient for launch.",
-      "Authentication Clean Architecture refactor — auth works via AuthService; no user-visible value.",
-      "Mandatory documents beyond SOAT (tecno, other) — DTO and schema extensible but only SOAT in v1.",
-      "Web version, admin dashboard, payments, social feed — explicitly out of scope per PRD section 10.",
-      "Multi-language support (English) — ARB is Spanish-only.",
-      "CI/CD IPA build + App Store submission — APK build only in DevOps track; IPA deferred until distribution target confirmed."
+      "SOAT push reminders (30-day / 7-day) \u2014 requires FCM from Iteration 6a; scheduled post-6b.",
+      "Profile photo upload \u2014 profilePhotoUrl not in current Prisma schema; deferred post-6b.",
+      "Organizer SOS dismiss \u2014 only the SOS sender can cancel in v1; organizer dismiss deferred to v2.",
+      "AI event recommendations Claude narrative explanations (v2) \u2014 deterministic scoring sufficient for launch.",
+      "Authentication Clean Architecture refactor \u2014 auth works via AuthService; no user-visible value.",
+      "Mandatory documents beyond SOAT (tecno, other) \u2014 DTO and schema extensible but only SOAT in v1.",
+      "Web version, admin dashboard, payments, social feed \u2014 explicitly out of scope per PRD section 10.",
+      "Multi-language support (English) \u2014 ARB is Spanish-only.",
+      "CI/CD IPA build + App Store submission \u2014 APK build only in DevOps track; IPA deferred until distribution target confirmed."
     ]
   },
   "iterations": [
@@ -272,22 +272,22 @@
     "po": {
       "status": "idle",
       "lastAction": "2026-05-12T19:45:00Z",
-      "focus": "iter-2 scope — filters, clear filters, attendee profiles"
+      "focus": "iter-2 scope \u2014 filters, clear filters, attendee profiles"
     },
     "architect": {
       "status": "idle",
       "lastAction": "2026-05-12T20:00:00Z",
-      "focus": "iter-2 — event filter backend wire-up + rider profile page; ADR-3: no EventsState freezed refactor"
+      "focus": "iter-2 \u2014 event filter backend wire-up + rider profile page; ADR-3: no EventsState freezed refactor"
     },
     "design": {
       "status": "idle",
       "lastAction": "2026-05-12T21:00:00Z",
-      "focus": "iter-2 — event filter badge/clear/empty states + RiderProfilePage 4 states; styles.css baseline created"
+      "focus": "iter-2 \u2014 event filter badge/clear/empty states + RiderProfilePage 4 states; styles.css baseline created"
     },
     "backend": {
       "status": "idle",
       "lastAction": "2026-05-12T15:25:00Z",
-      "focus": "iter-2 — event filters (type/dateFrom/dateTo/city) on GET /events + /upcoming; GET /users/:id confirmed protected; 8 unit tests pass"
+      "focus": "iter-2 \u2014 event filters (type/dateFrom/dateTo/city) on GET /events + /upcoming; GET /users/:id confirmed protected; 8 unit tests pass"
     },
     "frontend": {
       "status": "idle",
@@ -297,23 +297,23 @@
     "qa": {
       "status": "idle",
       "lastAction": "2026-05-12T23:00:00Z",
-      "focus": "iter-2 phase complete — 56 test cases (22 unit + 22 widget + 6 integration prep); 0 new lint violations; build_runner clean; backend filters verified; frontend implementation verified"
+      "focus": "iter-2 phase complete \u2014 56 test cases (22 unit + 22 widget + 6 integration prep); 0 new lint violations; build_runner clean; backend filters verified; frontend implementation verified"
     },
     "tech_lead": {
       "status": "idle",
       "lastAction": "2026-05-12T18:00:00Z",
-      "focus": "iter-1 PR #8 reviewed and approved — 6 blocking issues fixed, code-review-iter1.md produced"
+      "focus": "iter-1 PR #8 reviewed and approved \u2014 6 blocking issues fixed, code-review-iter1.md produced"
     },
     "devops": {
       "status": "idle",
       "lastAction": "2026-05-12T23:15:00Z",
-      "focus": "iter-2 DevOps complete — CI requires no changes; .github/workflows/ci.yml verified; devops.json contract created"
+      "focus": "iter-2 DevOps complete \u2014 CI requires no changes; .github/workflows/ci.yml verified; devops.json contract created"
     }
   },
   "tasks": [
     {
       "id": "T-0-1",
-      "title": "Framework ready — run /solo-plan to plan iterations from the PRD",
+      "title": "Framework ready \u2014 run /solo-plan to plan iterations from the PRD",
       "agent": "po",
       "status": "done",
       "iteration": 0,
@@ -370,7 +370,7 @@
       "agent": "qa",
       "status": "done",
       "iteration": 1,
-      "story": "QA gate — all US-1-* stories",
+      "story": "QA gate \u2014 all US-1-* stories",
       "updatedAt": "2026-05-12T12:00:00Z"
     },
     {
@@ -478,7 +478,7 @@
       "agent": "qa",
       "status": "done",
       "iteration": 2,
-      "story": "QA gate — all US-2-* stories",
+      "story": "QA gate \u2014 all US-2-* stories",
       "updatedAt": "2026-05-12T23:00:00Z"
     }
   ],
@@ -544,7 +544,7 @@
       "phase": "architect",
       "agent": "architect",
       "at": "2026-05-12T03:00:30Z",
-      "detail": "Architect phase complete — feature arch (Profile cubit/use case) + no API contract changes confirmed for iter-1"
+      "detail": "Architect phase complete \u2014 feature arch (Profile cubit/use case) + no API contract changes confirmed for iter-1"
     },
     {
       "type": "design_iteration",
@@ -552,7 +552,7 @@
       "phase": "design",
       "agent": "design",
       "at": "2026-05-12T04:00:00Z",
-      "detail": "Profile page designed — 4 states (loading shimmer, data with vehicle, empty no vehicle, error + retry). styles.css baseline established."
+      "detail": "Profile page designed \u2014 4 states (loading shimmer, data with vehicle, empty no vehicle, error + retry). styles.css baseline established."
     },
     {
       "type": "phase_complete",
@@ -560,7 +560,7 @@
       "phase": "design",
       "agent": "design",
       "at": "2026-05-12T04:00:30Z",
-      "detail": "Profile page — 4 ResultState mockups (loading, data, empty, error); styles.css design baseline created"
+      "detail": "Profile page \u2014 4 ResultState mockups (loading, data, empty, error); styles.css design baseline created"
     },
     {
       "type": "phase_complete",
@@ -568,7 +568,7 @@
       "phase": "backend",
       "agent": "system",
       "at": "2026-05-12T04:05:00Z",
-      "detail": "Backend skipped — no rideglory-api changes required for iter-1. GET /users/me sufficient."
+      "detail": "Backend skipped \u2014 no rideglory-api changes required for iter-1. GET /users/me sufficient."
     },
     {
       "type": "frontend_complete",
@@ -584,7 +584,7 @@
       "phase": "frontend",
       "agent": "frontend",
       "at": "2026-05-12T05:00:30Z",
-      "detail": "Profile page complete (US-1-4) — ProfileCubit, GetMyProfileUseCase, 3 widgets, 4 ResultState branches, 5 l10n keys, initials helper; test infra dirs created (US-1-1); dart analyze zero new errors in new code"
+      "detail": "Profile page complete (US-1-4) \u2014 ProfileCubit, GetMyProfileUseCase, 3 widgets, 4 ResultState branches, 5 l10n keys, initials helper; test infra dirs created (US-1-1); dart analyze zero new errors in new code"
     },
     {
       "type": "phase_complete",
@@ -592,7 +592,7 @@
       "phase": "qa",
       "agent": "qa",
       "at": "2026-05-12T12:00:00Z",
-      "detail": "QA sign-off complete — all acceptance criteria verified. Test infrastructure (US-1-1): mocktail, bloc_test configured; test dirs created. ProfileCubit tests (US-1-4): 4 blocTests pass (initial, loading→data, loading→error, reset). All 5 flutter tests pass. dart analyze passes (zero new violations). Blockers fixed: onChanged parameter, network_image_mock conflict, build_runner. US-1-2 and US-1-3 deferred to Iter-2 per PO scope. US-1-5 pending tech_lead."
+      "detail": "QA sign-off complete \u2014 all acceptance criteria verified. Test infrastructure (US-1-1): mocktail, bloc_test configured; test dirs created. ProfileCubit tests (US-1-4): 4 blocTests pass (initial, loading\u2192data, loading\u2192error, reset). All 5 flutter tests pass. dart analyze passes (zero new violations). Blockers fixed: onChanged parameter, network_image_mock conflict, build_runner. US-1-2 and US-1-3 deferred to Iter-2 per PO scope. US-1-5 pending tech_lead."
     },
     {
       "type": "phase_complete",
@@ -616,7 +616,7 @@
       "phase": "tech_lead",
       "agent": "tech_lead",
       "at": "2026-05-12T18:00:00Z",
-      "detail": "PR #8 reviewed. 6 blocking issues fixed inline: _ProfileContent extracted to profile_content.dart (one-widget-per-file), print() → log() in rest_client_functions.dart, 2x TextButton → AppTextButton, unnecessary_non_null_assertion removed, unused_import removed. dart analyze: 0 warnings/errors. flutter test: 5/5. Approved."
+      "detail": "PR #8 reviewed. 6 blocking issues fixed inline: _ProfileContent extracted to profile_content.dart (one-widget-per-file), print() \u2192 log() in rest_client_functions.dart, 2x TextButton \u2192 AppTextButton, unnecessary_non_null_assertion removed, unused_import removed. dart analyze: 0 warnings/errors. flutter test: 5/5. Approved."
     },
     {
       "type": "phase_complete",
@@ -624,7 +624,7 @@
       "phase": "tech_lead",
       "agent": "tech_lead",
       "at": "2026-05-12T18:00:00Z",
-      "detail": "approved — 6 blocking issues fixed; dart analyze 0 warnings; flutter test 5/5; code-review-iter1.md produced"
+      "detail": "approved \u2014 6 blocking issues fixed; dart analyze 0 warnings; flutter test 5/5; code-review-iter1.md produced"
     },
     {
       "type": "iteration_started",
@@ -663,7 +663,7 @@
       "phase": "architect",
       "agent": "architect",
       "at": "2026-05-12T20:00:01Z",
-      "detail": "Architect phase complete — feature arch + API contracts defined; ADR-3 documented; slim handoffs for backend/frontend/devops/qa written"
+      "detail": "Architect phase complete \u2014 feature arch + API contracts defined; ADR-3 documented; slim handoffs for backend/frontend/devops/qa written"
     },
     {
       "type": "design_iteration",
@@ -671,7 +671,7 @@
       "phase": "design",
       "agent": "design",
       "at": "2026-05-12T21:00:00Z",
-      "detail": "Iter-2 design complete — 2 EXTEND stories (event filter badge/clear/empty + attendee tap affordance) + 1 NEW story (RiderProfilePage 4 states: loading shimmer, data+vehicles, data no-vehicles, error). styles.css baseline created. 3 mockup files, 8 total screen frames."
+      "detail": "Iter-2 design complete \u2014 2 EXTEND stories (event filter badge/clear/empty + attendee tap affordance) + 1 NEW story (RiderProfilePage 4 states: loading shimmer, data+vehicles, data no-vehicles, error). styles.css baseline created. 3 mockup files, 8 total screen frames."
     },
     {
       "type": "phase_complete",
@@ -679,7 +679,7 @@
       "phase": "design",
       "agent": "design",
       "at": "2026-05-12T21:00:01Z",
-      "detail": "Design phase complete — 4 screens, 8 frames, styles.css baseline, design.md handoff, design.json contract (6 quality gates: all pass)"
+      "detail": "Design phase complete \u2014 4 screens, 8 frames, styles.css baseline, design.md handoff, design.json contract (6 quality gates: all pass)"
     },
     {
       "type": "phase_complete",
@@ -703,7 +703,7 @@
       "phase": "qa",
       "agent": "qa",
       "at": "2026-05-12T23:00:00Z",
-      "detail": "QA phase complete — test catalog created mapping 56 test cases to all 50 ACs (US-2-1, US-2-2, US-2-3). 22 unit tests written (EventsCubit filter logic, RiderProfileCubit, GetUserByIdUseCase). 22 widget tests prepared for filter UI, empty states, RiderProfilePage branches, attendee navigation. Dart analyze: 0 new violations (14 pre-existing maintenance errors deferred). Build runner: clean (118 outputs). Backend integration verified (8 backend unit tests pass). Frontend implementation verified with no errors. Widget test execution deferred pending fix of pre-existing maintenance code. All acceptance criteria verified."
+      "detail": "QA phase complete \u2014 test catalog created mapping 56 test cases to all 50 ACs (US-2-1, US-2-2, US-2-3). 22 unit tests written (EventsCubit filter logic, RiderProfileCubit, GetUserByIdUseCase). 22 widget tests prepared for filter UI, empty states, RiderProfilePage branches, attendee navigation. Dart analyze: 0 new violations (14 pre-existing maintenance errors deferred). Build runner: clean (118 outputs). Backend integration verified (8 backend unit tests pass). Frontend implementation verified with no errors. Widget test execution deferred pending fix of pre-existing maintenance code. All acceptance criteria verified."
     },
     {
       "type": "phase_complete",
@@ -711,7 +711,15 @@
       "phase": "devops",
       "agent": "devops",
       "at": "2026-05-12T23:15:00Z",
-      "detail": "Iteration 2 DevOps phase complete — CI/CD requires no changes; .github/workflows/ci.yml copied from main; devops.md and devops.json contract created; all 3 gates pass (artifacts present, CI configured, security checks)"
+      "detail": "Iteration 2 DevOps phase complete \u2014 CI/CD requires no changes; .github/workflows/ci.yml copied from main; devops.md and devops.json contract created; all 3 gates pass (artifacts present, CI configured, security checks)"
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 2,
+      "phase": "pr",
+      "agent": "system",
+      "at": "2026-05-12T21:07:19Z",
+      "detail": "PR body written to docs/PULL_REQUEST_BODY_ITER_2.md; push blocked by pre-existing secret, unblock required"
     }
   ],
   "checkpoint": {
