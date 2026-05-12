@@ -286,8 +286,8 @@
     },
     "backend": {
       "status": "idle",
-      "lastAction": null,
-      "focus": null
+      "lastAction": "2026-05-12T15:25:00Z",
+      "focus": "iter-2 — event filters (type/dateFrom/dateTo/city) on GET /events + /upcoming; GET /users/:id confirmed protected; 8 unit tests pass"
     },
     "frontend": {
       "status": "idle",
@@ -680,6 +680,18 @@
       "agent": "design",
       "at": "2026-05-12T21:00:01Z",
       "detail": "Design phase complete — 4 screens, 8 frames, styles.css baseline, design.md handoff, design.json contract (6 quality gates: all pass)"
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 2,
+      "phase": "backend",
+      "agent": "backend",
+      "at": "2026-05-12T15:25:00Z",
+      "detail": "Event filters (type/dateFrom/dateTo/city) added to GET /events + GET /events/upcoming via api-gateway passthrough and Prisma WHERE logic; GET /users/:id confirmed guarded; 8 unit tests all pass"
     }
-  ]
+  ],
+  "checkpoint": {
+    "last": "backend",
+    "next": "frontend"
+  }
 }

@@ -19,7 +19,7 @@
 | po_scope | po | complete |
 | architect | architect | complete |
 | design | design | complete |
-| backend | backend | pending |
+| backend | backend | complete |
 | frontend | frontend | pending |
 | qa | qa | pending |
 | devops | devops | pending |
@@ -27,7 +27,7 @@
 | tech_lead | tech_lead | pending |
 | po_close | po | pending |
 
-**Last completed phase:** design (2 EXTEND + 1 NEW story; 4 screens, 8 frames; styles.css baseline; design.json contract all-pass)
-**Next phase:** backend
+**Last completed phase:** backend (event filters on GET /events + /upcoming; Prisma WHERE logic; GET /users/:id confirmed guarded; 8 unit tests pass; backend.json contract all-pass)
+**Next phase:** frontend
 
 *Last closed: Iteration 1 (PR #8 merged, tech_lead approved)*

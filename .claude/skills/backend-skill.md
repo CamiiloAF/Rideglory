@@ -26,3 +26,4 @@
 ## Change log
 <!-- Append, never delete -->
 - 2026-05-11 (iter 0): Skill stub created. Run /solo-plan then /solo-approve to populate.
+- 2026-05-12 (iter 2): Backend phase complete. Key learnings: (1) rideglory-api uses TCP MessagePattern between api-gateway and microservices — filter params must be forwarded as payload objects, not HTTP query strings at the microservice level. (2) PrismaClient is extended directly by each service. (3) Unit tests require `import 'reflect-metadata'` first and must mock `config` module (env validation runs at import time), `generated/prisma`, and `@prisma/adapter-pg`. (4) When building Prisma WHERE with both gte and lte on the same field, build a single `startDate: { gte, lte }` object — spreading them separately causes key collision. (5) Global `FirebaseAuthGuard` via APP_GUARD protects all routes unless decorated with @Public(). (6) `GET /users/:id` was already implemented and protected — confirmed, no changes needed.
