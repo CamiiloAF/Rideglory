@@ -1014,16 +1014,17 @@
       ]
     },
     {
-      "at": "2026-05-12T22:02:56Z",
+      "at": "2026-05-12T22:23:37Z",
       "iteration": 3,
-      "phase": "po_scope",
-      "agent": "po",
+      "phase": "design",
+      "agent": "design",
       "action": "update",
       "paths": [
-        "claude/skills/po-skill.md",
-        "docs/handoffs/contracts/iter-3/po_scope.json",
+        "claude/skills/design-skill.md",
+        "docs/design",
+        "docs/handoffs/contracts/iter-3/design.json",
+        "docs/handoffs/design.md",
         "docs/handoffs/iteration_checkpoint.md",
-        "docs/handoffs/po.md",
         "workflow/state.json"
       ]
     }
