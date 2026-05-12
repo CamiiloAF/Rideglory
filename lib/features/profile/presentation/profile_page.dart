@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/core/extensions/go_router.dart';
-import 'package:rideglory/features/authentication/application/auth_cubit.dart';
-import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
-import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/features/profile/presentation/cubits/profile_cubit.dart';
+import 'package:rideglory/features/profile/presentation/widgets/profile_content.dart';
+import 'package:rideglory/features/users/domain/model/user_model.dart';
+import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/shared/widgets/states/page_error_state_widget.dart';
+import 'package:rideglory/shared/widgets/states/page_loading_state_widget.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
-  Future<void> _logout(BuildContext context) async {
-    context.read<AuthCubit>().signOut();
-    context.read<VehicleCubit>().clearVehicles();
-    context.goAndClearStack(AppRoutes.login);
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ProfileCubit>().fetchProfile();
   }
 
   @override
@@ -25,57 +33,29 @@ class ProfilePage extends StatelessWidget {
         if (!didPop) context.goNamed(AppRoutes.home);
       },
       child: Scaffold(
-      backgroundColor: AppColors.darkBackground,
-      appBar: AppAppBar(title: context.l10n.profile_profile),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(20),
-          children: [
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Icon(
-                Icons.event_note_outlined,
-                color: context.colorScheme.primary,
-              ),
-              title: Text(
-                context.l10n.registration_myRegistrations,
-                style: TextStyle(
-                  color: context.colorScheme.onSurface,
-                  fontWeight: FontWeight.w500,
+        backgroundColor: AppColors.darkBackground,
+        appBar: AppAppBar(title: context.l10n.profile_title),
+        body: SafeArea(
+          child: BlocBuilder<ProfileCubit, ResultState<UserModel>>(
+            builder: (context, state) {
+              return state.when(
+                initial: () => const PageLoadingStateWidget(),
+                loading: () => const PageLoadingStateWidget(),
+                data: (user) => ProfileContent(user: user),
+                empty: () => EmptyStateWidget(
+                  icon: Icons.person_off_outlined,
+                  title: context.l10n.profile_loadingError,
                 ),
-              ),
-              trailing: Icon(
-                Icons.chevron_right_rounded,
-                color: context.colorScheme.onSurfaceVariant,
-              ),
-              onTap: () => context.pushNamed(AppRoutes.myRegistrations),
-            ),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: Icon(Icons.logout_outlined, color: context.errorColor),
-              title: Text(
-                context.l10n.auth_logout,
-                style: TextStyle(
-                  color: context.errorColor,
-                  fontWeight: FontWeight.w600,
+                error: (error) => PageErrorStateWidget(
+                  title: context.l10n.profile_loadingError,
+                  message: error.message,
+                  onRetry: () async =>
+                      context.read<ProfileCubit>().fetchProfile(),
                 ),
-              ),
-              onTap: () {
-                ConfirmationDialog.show(
-                  context: context,
-                  title: context.l10n.auth_logoutConfirmTitle,
-                  content: context.l10n.auth_logoutConfirmMessage,
-                  cancelLabel: context.l10n.cancel,
-                  confirmLabel: context.l10n.auth_logout,
-                  confirmType: DialogActionType.danger,
-                  dialogType: DialogType.warning,
-                  onConfirm: () => _logout(context),
-                );
-              },
-            ),
-          ],
+              );
+            },
+          ),
         ),
-      ),
       ),
     );
   }

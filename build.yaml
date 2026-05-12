@@ -7,4 +7,6 @@ targets:
           auto_register: true
           # Generates config for all environments
           # Omit this line if you want to generate for specific environments
+      mockito|mockBuilder:
+        enabled: false
 

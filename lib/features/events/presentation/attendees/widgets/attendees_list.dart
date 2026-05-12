@@ -133,14 +133,9 @@ class AttendeesList extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              TextButton(
+              AppTextButton(
+                label: context.l10n.event_allWithCount(processed.length),
                 onPressed: processed.isEmpty ? null : () {},
-                child: Text(
-                  context.l10n.event_allWithCount(processed.length),
-                  style: textTheme.labelMedium?.copyWith(
-                    color: colorScheme.primary,
-                  ),
-                ),
               ),
             ],
           ),
