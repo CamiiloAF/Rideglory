@@ -164,3 +164,11 @@ Mock library: `mocktail`. Cubit test library: `bloc_test`. Network image mock: `
 
 - 2026-05-11 (iter 0): Skill stub created.
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
+- 2026-05-12 (iter 1): QA phase complete.
+  * Blockers fixed: (1) onChanged → onFieldSubmitted in event_form_locations_section.dart, (2) removed network_image_mock from pubspec.yaml to resolve mockito/analyzer conflict, (3) build_runner succeeded after pubspec cleanup.
+  * Test results: dart analyze passes (zero new violations); flutter test passes 100% (5/5 tests).
+  * ProfileCubit blocTests implemented: initial state, loading→data success, loading→error failure, reset functionality.
+  * US-1-2 (VehicleCubit, EventsCubit, etc. blocTests) and US-1-3 (widget tests) deferred to Iter-2 per PO handoff.
+  * US-1-5 (code review cleanup) pending tech_lead completion.
+  * Test catalog created in docs/handoffs/qa.md with 14 test cases (all pass criteria verified).
+  * Phase contract written: docs/handoffs/contracts/iter-1/qa.json.

@@ -35,7 +35,7 @@
     },
     {
       "name": "tests_passed_or_accepted",
-      "status": "accepted",
+      "status": "warn",
       "notes": "No new test failures introduced. Pre-existing widget_test.dart stub failure (counter smoke test) and event_form_locations_section.dart errors were present before this iteration. build_runner broken due to mockito vs analyzer ^8.0.0 conflict — QA to resolve."
     }
   ]
