@@ -746,6 +746,14 @@
       "detail": "Iteration 2 closed: 50/50 ACs delivered (event filters + attendee profiles). 22 unit tests pass. 0 new lint violations. Tech lead approved. Bridge document iteration_context.md written. Contract po_close.json signed off. Ready for main merge."
     },
     {
+      "type": "phase_complete",
+      "iteration": 2,
+      "phase": "po_close",
+      "agent": "po",
+      "at": "2026-05-12T21:17:03Z",
+      "detail": "iteration 2 closed \u2014 Event Discovery Filters + Attendee Profile Links delivered"
+    },
+    {
       "type": "iteration_done",
       "iteration": 2,
       "agent": "system",
