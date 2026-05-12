@@ -1,6 +1,11 @@
-import 'package:rideglory/core/extensions/date_extensions.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:rideglory/core/http/api_date_time.dart';
+import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
 
+part 'user_dto.g.dart';
+
+@JsonSerializable(converters: apiJsonDateTimeConverters)
 class UserDto extends UserModel {
   const UserDto({
     required super.id,
@@ -20,51 +25,26 @@ class UserDto extends UserModel {
     super.updatedAt,
   });
 
-  factory UserDto.fromJson(Map<String, dynamic> json) {
-    return UserDto(
-      id: json['id'] as String,
-      fullName: json['fullName'] as String?,
-      email: json['email'] as String?,
-      identificationNumber: json['identificationNumber'] as String?,
-      birthDate: _dateTimeFromJson(json['birthDate']),
-      phone: json['phone'] as String?,
-      residenceCity: json['residenceCity'] as String?,
-      eps: json['eps'] as String?,
-      medicalInsurance: json['medicalInsurance'] as String?,
-      bloodType: json['bloodType'] as String?,
-      emergencyContactName: json['emergencyContactName'] as String?,
-      emergencyContactPhone: json['emergencyContactPhone'] as String?,
-      isDeleted: json['isDeleted'] as bool? ?? false,
-      createdAt: _dateTimeFromJson(json['createdAt']),
-      updatedAt: _dateTimeFromJson(json['updatedAt']),
-    );
-  }
+  factory UserDto.fromJson(Map<String, dynamic> json) =>
+      _$UserDtoFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'fullName': fullName,
-      'email': email,
-      'identificationNumber': identificationNumber,
-      'birthDate': birthDate?.toApiIso8601String(),
-      'phone': phone,
-      'residenceCity': residenceCity,
-      'eps': eps,
-      'medicalInsurance': medicalInsurance,
-      'bloodType': bloodType,
-      'emergencyContactName': emergencyContactName,
-      'emergencyContactPhone': emergencyContactPhone,
-      'isDeleted': isDeleted,
-      'createdAt': createdAt?.toApiIso8601String(),
-      'updatedAt': updatedAt?.toApiIso8601String(),
-    };
-  }
-}
+  factory UserDto.fromModel(UserModel model) => UserDto(
+    id: model.id,
+    fullName: model.fullName,
+    email: model.email,
+    identificationNumber: model.identificationNumber,
+    birthDate: model.birthDate,
+    phone: model.phone,
+    residenceCity: model.residenceCity,
+    eps: model.eps,
+    medicalInsurance: model.medicalInsurance,
+    bloodType: model.bloodType,
+    emergencyContactName: model.emergencyContactName,
+    emergencyContactPhone: model.emergencyContactPhone,
+    isDeleted: model.isDeleted,
+    createdAt: model.createdAt,
+    updatedAt: model.updatedAt,
+  );
 
-DateTime? _dateTimeFromJson(Object? value) {
-  if (value is String && value.isNotEmpty) {
-    return DateTime.tryParse(value);
-  }
-
-  return null;
+  Map<String, dynamic> toJson() => _$UserDtoToJson(this);
 }

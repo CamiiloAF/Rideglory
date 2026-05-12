@@ -10,8 +10,7 @@ class RiderProfileDto extends RiderProfileModel {
   const RiderProfileDto({
     required super.id,
     required super.userId,
-    super.firstName,
-    super.lastName,
+    super.fullName,
     super.identificationNumber,
     super.birthDate,
     super.phone,
@@ -35,8 +34,7 @@ extension RiderProfileModelExtension on RiderProfileModel {
   Map<String, dynamic> toJson() => RiderProfileDto(
     id: id,
     userId: userId,
-    firstName: firstName,
-    lastName: lastName,
+    fullName: fullName,
     identificationNumber: identificationNumber,
     birthDate: birthDate,
     phone: phone,

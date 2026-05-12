@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:rideglory/features/events/domain/model/rider_tracking_model.dart';
 
@@ -12,16 +11,13 @@ class RiderTrackingRoleConverter extends JsonConverter<RiderTrackingRole, String
   String toJson(RiderTrackingRole object) => object.name;
 }
 
-class TrackingFirestoreDateTimeConverter extends JsonConverter<DateTime, Object?> {
-  const TrackingFirestoreDateTimeConverter();
+class TrackingDateTimeConverter extends JsonConverter<DateTime, Object?> {
+  const TrackingDateTimeConverter();
 
   @override
   DateTime fromJson(Object? json) {
     if (json == null) {
       return DateTime.now();
-    }
-    if (json is Timestamp) {
-      return json.toDate();
     }
     if (json is DateTime) {
       return json;
@@ -36,5 +32,5 @@ class TrackingFirestoreDateTimeConverter extends JsonConverter<DateTime, Object?
   }
 
   @override
-  Object toJson(DateTime object) => Timestamp.fromDate(object);
+  Object toJson(DateTime object) => object.toIso8601String();
 }

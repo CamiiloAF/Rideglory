@@ -1,71 +1,69 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/domain/nothing.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
-import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/core/http/rest_client_functions.dart';
-import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/features/event_registration/data/dto/event_registration_dto.dart';
+import 'package:rideglory/features/event_registration/data/service/registration_service.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/domain/repository/event_registration_repository.dart';
 
 @Injectable(as: EventRegistrationRepository)
 class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
-  EventRegistrationRepositoryImpl(this._firestore, this._authService);
+  EventRegistrationRepositoryImpl(this._service);
 
-  final FirebaseFirestore _firestore;
-  final AuthService _authService;
-
-  static const _collectionName = 'event_registrations';
+  final RegistrationService _service;
 
   @override
   Future<Either<DomainException, EventRegistrationModel>> addRegistration(
-    EventRegistrationModel registration,
-  ) {
-    final now = DateTime.now();
-    final userId = _authService.currentUser?.id ?? registration.userId;
-    final regWithMeta = registration.copyWith(
-      userId: userId,
-      status: RegistrationStatus.pending,
-      createdDate: now,
-      updatedDate: now,
-    );
-
+    EventRegistrationModel registration, {
+    bool saveToProfile = false,
+  }) {
     return executeService(
       function: () async {
-        final docRef = _firestore.collection(_collectionName).doc();
-        await docRef.set(regWithMeta.toJson());
-        return regWithMeta.copyWith(id: docRef.id);
+        final dto = await _service.create(
+          eventId: registration.eventId,
+          body: registration.toDto().toJson(),
+          saveToProfile: saveToProfile,
+        );
+        return dto.toModel();
       },
     );
   }
 
   @override
   Future<Either<DomainException, EventRegistrationModel>> updateRegistration(
-    EventRegistrationModel registration,
-  ) {
-    final updated = registration.copyWith(updatedDate: DateTime.now());
+    EventRegistrationModel registration, {
+    bool saveToProfile = false,
+  }) {
+    final id = registration.id;
+    if (id == null || id.isEmpty) {
+      return Future.value(
+        const Left(
+          DomainException(message: 'Registration id is required to update.'),
+        ),
+      );
+    }
 
     return executeService(
       function: () async {
-        await _firestore
-            .collection(_collectionName)
-            .doc(updated.id)
-            .update(updated.toJson());
-        return updated;
+        final dto = await _service.update(
+          registrationId: id,
+          body: registration.toDto().toJson(),
+          saveToProfile: saveToProfile,
+        );
+        return dto.toModel();
       },
     );
   }
 
   @override
-  Future<Either<DomainException, Nothing>> cancelRegistration(String id) {
+  Future<Either<DomainException, Nothing>> cancelRegistration(
+    String registrationId,
+  ) {
     return executeService(
       function: () async {
-        await _firestore.collection(_collectionName).doc(id).update({
-          'status': RegistrationStatus.cancelled.name,
-          'updatedDate': DateTime.now().toApiIso8601String(),
-        });
+        await _service.cancel(registrationId);
         return const Nothing();
       },
     );
@@ -76,17 +74,8 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
   getRegistrationsByEvent(String eventId) {
     return executeService(
       function: () async {
-        final snapshot = await _firestore
-            .collection(_collectionName)
-            .where('eventId', isEqualTo: eventId)
-            .orderBy('createdDate', descending: false)
-            .get();
-
-        return snapshot.docs
-            .map(
-              (e) => EventRegistrationDto.fromJson(e.data()).copyWith(id: e.id),
-            )
-            .toList();
+        final rows = await _service.findByEvent(eventId);
+        return rows.map((dto) => dto.toModel()).toList();
       },
     );
   }
@@ -94,28 +83,10 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
   @override
   Future<Either<DomainException, List<EventRegistrationModel>>>
   getMyRegistrations() {
-    final userId = _authService.currentUser?.id;
-    if (userId == null) {
-      return Future.value(
-        const Left(
-          DomainException(message: 'No user is currently authenticated.'),
-        ),
-      );
-    }
-
     return executeService(
       function: () async {
-        final snapshot = await _firestore
-            .collection(_collectionName)
-            .where('userId', isEqualTo: userId)
-            .orderBy('createdDate', descending: true)
-            .get();
-
-        return snapshot.docs
-            .map(
-              (e) => EventRegistrationDto.fromJson(e.data()).copyWith(id: e.id),
-            )
-            .toList();
+        final rows = await _service.findMyRegistrations();
+        return rows.map((dto) => dto.toModel()).toList();
       },
     );
   }
@@ -123,28 +94,10 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
   @override
   Future<Either<DomainException, EventRegistrationModel?>>
   getMyRegistrationForEvent(String eventId) {
-    final userId = _authService.currentUser?.id;
-    if (userId == null) {
-      return Future.value(
-        const Left(
-          DomainException(message: 'No user is currently authenticated.'),
-        ),
-      );
-    }
-
     return executeService(
       function: () async {
-        final snapshot = await _firestore
-            .collection(_collectionName)
-            .where('eventId', isEqualTo: eventId)
-            .where('userId', isEqualTo: userId)
-            .limit(1)
-            .get();
-
-        if (snapshot.docs.isEmpty) return null;
-
-        final doc = snapshot.docs.first;
-        return EventRegistrationDto.fromJson(doc.data()).copyWith(id: doc.id);
+        final dto = await _service.findMyRegistrationForEvent(eventId);
+        return dto?.toModel();
       },
     );
   }
@@ -153,40 +106,35 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
   Future<Either<DomainException, EventRegistrationModel>> approveRegistration(
     String registrationId,
   ) {
-    return _updateStatus(registrationId, RegistrationStatus.approved);
+    return executeService(
+      function: () async {
+        final dto = await _service.approve(registrationId);
+        return dto.toModel();
+      },
+    );
   }
 
   @override
   Future<Either<DomainException, EventRegistrationModel>> rejectRegistration(
     String registrationId,
   ) {
-    return _updateStatus(registrationId, RegistrationStatus.rejected);
+    return executeService(
+      function: () async {
+        final dto = await _service.reject(registrationId);
+        return dto.toModel();
+      },
+    );
   }
 
   @override
   Future<Either<DomainException, EventRegistrationModel>>
   setRegistrationReadyForEdit(String registrationId) {
-    return _updateStatus(registrationId, RegistrationStatus.readyForEdit);
-  }
-
-  Future<Either<DomainException, EventRegistrationModel>> _updateStatus(
-    String registrationId,
-    RegistrationStatus status,
-  ) {
     return executeService(
       function: () async {
-        final now = DateTime.now();
-        await _firestore.collection(_collectionName).doc(registrationId).update(
-          {'status': status.name, 'updatedDate': now.toApiIso8601String()},
-        );
-
-        final doc = await _firestore
-            .collection(_collectionName)
-            .doc(registrationId)
-            .get();
-
-        return EventRegistrationDto.fromJson(doc.data()!).copyWith(id: doc.id);
+        final dto = await _service.setReadyForEdit(registrationId);
+        return dto.toModel();
       },
     );
   }
+
 }

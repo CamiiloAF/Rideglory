@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -38,7 +39,6 @@ class MaintenanceCardBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final currencyFormat = NumberFormat.simpleCurrency(decimalDigits: 2);
     final numberFormat = NumberFormat('#,###');
-    final dateFormat = DateFormat('MMM dd, yyyy');
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -100,7 +100,7 @@ class MaintenanceCardBody extends StatelessWidget {
                         ),
                         AppSpacing.gapXxs,
                         Text(
-                          dateFormat.format(maintenance.date),
+                          maintenance.date.formattedDate,
                           style: context.bodyMedium?.copyWith(
                             color: Colors.grey[500],
                           ),

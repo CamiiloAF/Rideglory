@@ -1,6 +1,8 @@
 import 'dart:math' show max;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -13,15 +15,22 @@ class EventDetailCTABar extends StatelessWidget {
     required this.registration,
     required this.onRegister,
     this.onRegistrationStatusTap,
+    this.onFollowLive,
   });
 
   final EventModel event;
   final EventRegistrationModel? registration;
   final VoidCallback onRegister;
   final void Function(EventRegistrationModel)? onRegistrationStatusTap;
+  final VoidCallback? onFollowLive;
 
   @override
   Widget build(BuildContext context) {
+    final currentUserId = context.watch<AuthCubit>().state.currentUser?.id;
+    if (event.ownerId == currentUserId) {
+      return const SizedBox.shrink();
+    }
+
     final bottomPadding = MediaQuery.of(context).padding.bottom;
     final notRegistered = registration == null;
 
@@ -81,11 +90,26 @@ class EventDetailCTABar extends StatelessWidget {
                 ),
               ],
             )
-          : _buildRegisteredContent(registration!),
+          : _buildRegisteredContent(context, registration!),
     );
   }
 
-  Widget _buildRegisteredContent(EventRegistrationModel registration) {
+  Widget _buildRegisteredContent(
+    BuildContext context,
+    EventRegistrationModel registration,
+  ) {
+    final shouldShowFollowLive =
+        event.state == EventState.inProgress &&
+        registration.status == RegistrationStatus.approved &&
+        onFollowLive != null;
+    if (shouldShowFollowLive) {
+      return AppButton(
+        label: context.l10n.event_followRideLive,
+        isFullWidth: true,
+        onPressed: onFollowLive,
+      );
+    }
+
     final badge = _RegistrationStatusBadge(registration: registration);
     final isTappable = onRegistrationStatusTap != null &&
         (registration.status == RegistrationStatus.pending ||

@@ -11,7 +11,9 @@ import 'package:rideglory/features/users/domain/repository/user_repository.dart'
 import '../exceptions/domain_exception.dart';
 import '../http/rest_client_functions.dart';
 
-@injectable
+/// One shared instance: `currentUser` is in-memory; factories would leave
+/// `getIt<AuthService>().currentUser` null outside login/splash graph.
+@singleton
 class AuthService {
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;

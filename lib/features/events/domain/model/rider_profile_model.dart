@@ -3,8 +3,7 @@ import 'package:rideglory/features/event_registration/domain/model/event_registr
 class RiderProfileModel {
   final String? id;
   final String userId;
-  final String? firstName;
-  final String? lastName;
+  final String? fullName;
   final String? identificationNumber;
   final DateTime? birthDate;
   final String? phone;
@@ -20,8 +19,7 @@ class RiderProfileModel {
   const RiderProfileModel({
     this.id,
     required this.userId,
-    this.firstName,
-    this.lastName,
+    this.fullName,
     this.identificationNumber,
     this.birthDate,
     this.phone,
@@ -38,8 +36,7 @@ class RiderProfileModel {
   RiderProfileModel copyWith({
     String? id,
     String? userId,
-    String? firstName,
-    String? lastName,
+    String? fullName,
     String? identificationNumber,
     DateTime? birthDate,
     String? phone,
@@ -55,8 +52,7 @@ class RiderProfileModel {
     return RiderProfileModel(
       id: id ?? this.id,
       userId: userId ?? this.userId,
-      firstName: firstName ?? this.firstName,
-      lastName: lastName ?? this.lastName,
+      fullName: fullName ?? this.fullName,
       identificationNumber: identificationNumber ?? this.identificationNumber,
       birthDate: birthDate ?? this.birthDate,
       phone: phone ?? this.phone,

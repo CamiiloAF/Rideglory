@@ -3,6 +3,7 @@ import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_events_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_my_events_use_case.dart';
+import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
 
 class EventFilters {
   final Set<EventType> types;
@@ -54,15 +55,19 @@ class EventFilters {
 }
 
 class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
-  EventsCubit(GetEventsUseCase getEventsUseCase)
+  EventsCubit(GetEventsUseCase getEventsUseCase, this._updateEventUseCase)
     : _fetchFn = getEventsUseCase.call,
       super(const ResultState.initial());
 
-  EventsCubit.myEvents(GetMyEventsUseCase getMyEventsUseCase)
+  EventsCubit.myEvents(
+    GetMyEventsUseCase getMyEventsUseCase,
+    this._updateEventUseCase,
+  )
     : _fetchFn = getMyEventsUseCase.call,
       super(const ResultState.initial());
 
   final Future<dynamic> Function() _fetchFn;
+  final UpdateEventUseCase _updateEventUseCase;
 
   List<EventModel> _allEvents = [];
   EventFilters _filters = const EventFilters();
@@ -119,6 +124,17 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
     } else {
       _applyFiltersAndEmit();
     }
+  }
+
+  Future<void> startEvent(EventModel event) async {
+    final id = event.id;
+    if (id == null || id.isEmpty || event.state != EventState.scheduled) {
+      return;
+    }
+    final result = await _updateEventUseCase(
+      event.copyWith(state: EventState.inProgress),
+    );
+    result.fold((_) {}, (savedEvent) => updateEvent(savedEvent));
   }
 
   void _applyFiltersAndEmit() {

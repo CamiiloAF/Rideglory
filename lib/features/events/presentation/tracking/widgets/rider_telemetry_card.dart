@@ -32,7 +32,7 @@ class RiderTelemetryCard extends StatelessWidget {
         ? context.l10n.map_riderLead
         : context.l10n.map_riderRole;
 
-    final name = '${rider.firstName} ${rider.lastName}'.trim();
+    final name = rider.fullName.trim();
     final speedKmh = rider.speedKmh.round();
     final separationMeters = distanceFromCurrentUserMeters;
     final batteryValue = batteryPercent < 0

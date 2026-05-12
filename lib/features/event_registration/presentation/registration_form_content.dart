@@ -7,32 +7,118 @@ import 'package:rideglory/features/event_registration/constants/registration_for
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/presentation/cubit/registration_form_cubit.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_form_section_card.dart';
+import 'package:rideglory/features/event_registration/presentation/widgets/save_to_profile_checkbox.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
+import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
+import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/shared/widgets/form/form_focus_chain.dart';
 
-class RegistrationFormContent extends StatelessWidget {
+const _registrationFocusChainFields = <String>[
+  RegistrationFormFields.fullName,
+  RegistrationFormFields.identificationNumber,
+  RegistrationFormFields.phone,
+  RegistrationFormFields.residenceCity,
+  RegistrationFormFields.email,
+  RegistrationFormFields.eps,
+  RegistrationFormFields.bloodType,
+  RegistrationFormFields.medicalInsurance,
+  RegistrationFormFields.emergencyContactName,
+  RegistrationFormFields.emergencyContactPhone,
+  RegistrationFormFields.vehicleId,
+];
+
+class RegistrationFormContent extends StatefulWidget {
   final EventModel event;
 
   const RegistrationFormContent({super.key, required this.event});
 
-  Future<void> _preloadFromVehicle(BuildContext context) async {
-    final cubit = context.read<RegistrationFormCubit>();
-    final vehicles = context
-        .read<VehicleCubit>()
-        .availableVehicles
-        .where((v) => !v.isArchived)
-        .toList();
-    if (vehicles.isEmpty) return;
-    final selected = await VehicleSelectionBottomSheet.show(
+  @override
+  State<RegistrationFormContent> createState() =>
+      _RegistrationFormContentState();
+}
+
+class _RegistrationFormContentState extends State<RegistrationFormContent> {
+  late final FormFocusChain _focusChain = FormFocusChain(
+    _registrationFocusChainFields,
+  );
+
+  int _cityFieldGeneration = 0;
+
+  @override
+  void dispose() {
+    _focusChain.dispose();
+    super.dispose();
+  }
+
+  Future<void> _onClearForm() async {
+    await ConfirmationDialog.show(
       context: context,
-      subtitle: context.l10n.registration_selectVehicleToPreload,
-      vehicles: vehicles,
+      title: context.l10n.registration_clearFormConfirmTitle,
+      content: context.l10n.registration_clearFormConfirmBody,
+      confirmLabel: context.l10n.registration_clearForm,
+      confirmType: DialogActionType.danger,
+      onConfirm: () {
+        context.read<RegistrationFormCubit>().resetFormToEmpty();
+        setState(() => _cityFieldGeneration++);
+      },
     );
-    if (selected != null && context.mounted) {
-      cubit.preloadFromVehicle(selected);
+  }
+
+  Future<void> _openCreateVehicle(BuildContext context) async {
+    final savedVehicle = await context.pushNamed<VehicleModel>(
+      AppRoutes.createVehicle,
+    );
+    if (!context.mounted || savedVehicle == null) {
+      return;
     }
+    context.read<RegistrationFormCubit>().formKey.currentState?.fields[RegistrationFormFields.vehicleId]?.didChange(savedVehicle.id);
+  }
+
+  void _submitRegistration() {
+    final selectedVehicleId = context
+        .read<RegistrationFormCubit>()
+        .formKey
+        .currentState
+        ?.fields[RegistrationFormFields.vehicleId]
+        ?.value as String?;
+
+    final availableBrands = widget.event.allowedBrands
+        .map((brand) => brand.trim())
+        .where((brand) => brand.isNotEmpty && brand != '*')
+        .toList();
+
+    if (selectedVehicleId != null && availableBrands.isNotEmpty) {
+      VehicleModel? vehicle;
+      for (final currentVehicle in context.read<VehicleCubit>().availableVehicles) {
+        if (currentVehicle.id == selectedVehicleId) {
+          vehicle = currentVehicle;
+          break;
+        }
+      }
+      if (vehicle == null) {
+        context.read<RegistrationFormCubit>().saveRegistration();
+        return;
+      }
+      final selectedBrand = (vehicle.brand ?? '').trim().toLowerCase();
+      final isAllowed = availableBrands
+          .map((brand) => brand.toLowerCase())
+          .contains(selectedBrand);
+      if (!isAllowed) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '${context.l10n.registration_vehicleBrandNotAllowed}: ${availableBrands.join(', ')}',
+            ),
+          ),
+        );
+        return;
+      }
+    }
+
+    context.read<RegistrationFormCubit>().saveRegistration();
   }
 
   @override
@@ -49,14 +135,19 @@ class RegistrationFormContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               AppTextField(
-                name: RegistrationFormFields.firstName,
-                labelText: context.l10n.registration_firstName,
-                hintText: context.l10n.registration_firstNameHint,
+                name: RegistrationFormFields.fullName,
+                labelText: context.l10n.registration_fullName,
+                hintText: context.l10n.registration_fullNameHint,
                 isRequired: true,
                 textCapitalization: TextCapitalization.words,
+                focusNode: _focusChain.nodeFor(RegistrationFormFields.fullName),
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) => _focusChain.requestNextAfter(
+                  RegistrationFormFields.fullName,
+                ),
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(
-                    errorText: context.l10n.registration_firstNameRequired,
+                    errorText: context.l10n.registration_fullNameRequired,
                   ),
                   FormBuilderValidators.minLength(
                     2,
@@ -66,62 +157,46 @@ class RegistrationFormContent extends StatelessWidget {
               ),
               AppSpacing.gapMd,
               AppTextField(
-                name: RegistrationFormFields.lastName,
-                labelText: context.l10n.registration_lastName,
-                hintText: context.l10n.registration_lastNameHint,
+                name: RegistrationFormFields.identificationNumber,
+                labelText: context.l10n.registration_identificationNumber,
+                hintText: context.l10n.registration_identificationHint,
                 isRequired: true,
-                textCapitalization: TextCapitalization.words,
+                keyboardType: TextInputType.number,
+                maxLength: 10,
+                focusNode: _focusChain.nodeFor(
+                  RegistrationFormFields.identificationNumber,
+                ),
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) => _focusChain.requestNextAfter(
+                  RegistrationFormFields.identificationNumber,
+                ),
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(
-                    errorText: context.l10n.registration_lastNameRequired,
+                    errorText: context.l10n.registration_idRequired,
+                  ),
+                  FormBuilderValidators.numeric(
+                    errorText: context.l10n.registration_idInvalidLength,
                   ),
                   FormBuilderValidators.minLength(
-                    2,
-                    errorText: context.l10n.registration_minCharacters,
+                    6,
+                    errorText: context.l10n.registration_idInvalidLength,
+                  ),
+                  FormBuilderValidators.maxLength(
+                    10,
+                    errorText: context.l10n.registration_idInvalidLength,
                   ),
                 ]),
               ),
               AppSpacing.gapMd,
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: AppTextField(
-                      name: RegistrationFormFields.identificationNumber,
-                      labelText: context.l10n.registration_identificationNumber,
-                      hintText: context.l10n.registration_identificationHint,
-                      isRequired: true,
-                      keyboardType: TextInputType.number,
-                      maxLength: 10,
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(
-                          errorText: context.l10n.registration_idRequired,
-                        ),
-                        FormBuilderValidators.numeric(
-                          errorText: context.l10n.registration_idInvalidLength,
-                        ),
-                        FormBuilderValidators.minLength(
-                          6,
-                          errorText: context.l10n.registration_idInvalidLength,
-                        ),
-                        FormBuilderValidators.maxLength(
-                          10,
-                          errorText: context.l10n.registration_idInvalidLength,
-                        ),
-                      ]),
-                    ),
-                  ),
-                  AppSpacing.hGapMd,
-                  Expanded(
-                    child: AppDatePicker(
-                      fieldName: RegistrationFormFields.birthDate,
-                      labelText: context.l10n.registration_birthDate,
-                      isRequired: true,
-                      lastDate: DateTime.now(),
-                      hintText: context.l10n.registration_birthDateHint,
-                    ),
-                  ),
-                ],
+              AppDatePicker(
+                fieldName: RegistrationFormFields.birthDate,
+                labelText: context.l10n.registration_birthDate,
+                isRequired: true,
+                lastDate: DateTime.now(),
+                hintText: context.l10n.registration_birthDateHint,
+                focusNode: _focusChain.nodeFor(
+                  RegistrationFormFields.birthDate,
+                ),
               ),
               AppSpacing.gapMd,
               AppTextField(
@@ -131,6 +206,10 @@ class RegistrationFormContent extends StatelessWidget {
                 isRequired: true,
                 keyboardType: TextInputType.phone,
                 maxLength: 10,
+                focusNode: _focusChain.nodeFor(RegistrationFormFields.phone),
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) =>
+                    _focusChain.requestNextAfter(RegistrationFormFields.phone),
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(
                     errorText: context.l10n.registration_phoneRequired,
@@ -150,10 +229,18 @@ class RegistrationFormContent extends StatelessWidget {
               ),
               AppSpacing.gapMd,
               AppCityAutocomplete(
+                key: ValueKey<int>(_cityFieldGeneration),
                 name: RegistrationFormFields.residenceCity,
                 labelText: context.l10n.registration_residenceCity,
                 hintText: context.l10n.registration_residenceCityHint,
                 isRequired: true,
+                focusNode: _focusChain.nodeFor(
+                  RegistrationFormFields.residenceCity,
+                ),
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) => _focusChain.requestNextAfter(
+                  RegistrationFormFields.residenceCity,
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return context.l10n.registration_residenceCityRequired;
@@ -168,6 +255,10 @@ class RegistrationFormContent extends StatelessWidget {
                 hintText: context.l10n.registration_emailHint,
                 isRequired: true,
                 keyboardType: TextInputType.emailAddress,
+                focusNode: _focusChain.nodeFor(RegistrationFormFields.email),
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) =>
+                    _focusChain.requestNextAfter(RegistrationFormFields.email),
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(
                     errorText: context.l10n.registration_emailRequired,
@@ -197,6 +288,13 @@ class RegistrationFormContent extends StatelessWidget {
                       hintText: context.l10n.registration_epsHint,
                       isRequired: true,
                       textCapitalization: TextCapitalization.words,
+                      focusNode: _focusChain.nodeFor(
+                        RegistrationFormFields.eps,
+                      ),
+                      textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (_) => _focusChain.requestNextAfter(
+                        RegistrationFormFields.eps,
+                      ),
                       validator: FormBuilderValidators.required(
                         errorText: context.l10n.registration_epsRequired,
                       ),
@@ -209,6 +307,9 @@ class RegistrationFormContent extends StatelessWidget {
                       labelText: context.l10n.registration_bloodType,
                       hintText: context.l10n.registration_bloodTypeHint,
                       isRequired: true,
+                      focusNode: _focusChain.nodeFor(
+                        RegistrationFormFields.bloodType,
+                      ),
                       validator: FormBuilderValidators.required(
                         errorText: context.l10n.registration_bloodTypeRequired,
                       ),
@@ -220,6 +321,9 @@ class RegistrationFormContent extends StatelessWidget {
                             ),
                           )
                           .toList(),
+                      onChanged: (_) => _focusChain.requestNextAfter(
+                        RegistrationFormFields.bloodType,
+                      ),
                     ),
                   ),
                 ],
@@ -230,6 +334,13 @@ class RegistrationFormContent extends StatelessWidget {
                 labelText: context.l10n.registration_medicalInsurance,
                 hintText: context.l10n.registration_medicalInsuranceHint,
                 textCapitalization: TextCapitalization.words,
+                focusNode: _focusChain.nodeFor(
+                  RegistrationFormFields.medicalInsurance,
+                ),
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) => _focusChain.requestNextAfter(
+                  RegistrationFormFields.medicalInsurance,
+                ),
               ),
             ],
           ),
@@ -247,8 +358,16 @@ class RegistrationFormContent extends StatelessWidget {
                 hintText: context.l10n.registration_emergencyContactNameHint,
                 isRequired: true,
                 textCapitalization: TextCapitalization.words,
+                focusNode: _focusChain.nodeFor(
+                  RegistrationFormFields.emergencyContactName,
+                ),
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) => _focusChain.requestNextAfter(
+                  RegistrationFormFields.emergencyContactName,
+                ),
                 validator: FormBuilderValidators.required(
-                  errorText: context.l10n.registration_emergencyContactNameRequired,
+                  errorText:
+                      context.l10n.registration_emergencyContactNameRequired,
                 ),
               ),
               AppSpacing.gapMd,
@@ -259,23 +378,34 @@ class RegistrationFormContent extends StatelessWidget {
                 isRequired: true,
                 keyboardType: TextInputType.phone,
                 maxLength: 10,
+                focusNode: _focusChain.nodeFor(
+                  RegistrationFormFields.emergencyContactPhone,
+                ),
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) => _focusChain.requestNextAfter(
+                  RegistrationFormFields.emergencyContactPhone,
+                ),
                 validator: FormBuilderValidators.compose([
                   FormBuilderValidators.required(
-                    errorText: context.l10n.registration_emergencyContactPhoneRequired,
+                    errorText:
+                        context.l10n.registration_emergencyContactPhoneRequired,
                   ),
                   FormBuilderValidators.numeric(
-                    errorText:
-                        context.l10n.registration_emergencyContactPhoneInvalidLength,
+                    errorText: context
+                        .l10n
+                        .registration_emergencyContactPhoneInvalidLength,
                   ),
                   FormBuilderValidators.minLength(
                     10,
-                    errorText:
-                        context.l10n.registration_emergencyContactPhoneInvalidLength,
+                    errorText: context
+                        .l10n
+                        .registration_emergencyContactPhoneInvalidLength,
                   ),
                   FormBuilderValidators.maxLength(
                     10,
-                    errorText:
-                        context.l10n.registration_emergencyContactPhoneInvalidLength,
+                    errorText: context
+                        .l10n
+                        .registration_emergencyContactPhoneInvalidLength,
                   ),
                 ]),
               ),
@@ -286,74 +416,56 @@ class RegistrationFormContent extends StatelessWidget {
         RegistrationFormSectionCard(
           icon: Icons.two_wheeler_outlined,
           title: context.l10n.registration_vehicleData,
-          trailing: AppTextButton(
-            label: context.l10n.registration_preloadFromVehicle,
-            onPressed: () => _preloadFromVehicle(context),
-            icon: Icons.motorcycle_rounded,
-            iconSize: 16,
-            visualDensity: VisualDensity.compact,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: AppTextField(
-                      name: RegistrationFormFields.vehicleBrand,
-                      labelText: context.l10n.registration_vehicleBrand,
-                      hintText: context.l10n.registration_vehicleBrandHint,
-                      isRequired: true,
-                      textCapitalization: TextCapitalization.words,
-                      validator: FormBuilderValidators.required(
-                        errorText: context.l10n.registration_vehicleBrandRequired,
+          child: BlocBuilder<VehicleCubit, ResultState<List<VehicleModel>>>(
+            builder: (context, _) {
+              final availableVehicles = context
+                  .read<VehicleCubit>()
+                  .availableVehicles
+                  .where((vehicle) => !vehicle.isArchived)
+                  .toList();
+
+              if (availableVehicles.isEmpty) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      context.l10n.registration_vehicleEmptyStateTitle,
+                      style: context.bodyMedium?.copyWith(
+                        color: context.colorScheme.onSurfaceVariant,
                       ),
                     ),
-                  ),
-                  AppSpacing.hGapMd,
-                  Expanded(
-                    child: AppTextField(
-                      name: RegistrationFormFields.vehicleReference,
-                      labelText: context.l10n.registration_vehicleReference,
-                      hintText: context.l10n.registration_vehicleReferenceHint,
-                      isRequired: true,
-                      textCapitalization: TextCapitalization.words,
-                      validator: FormBuilderValidators.required(
-                        errorText: context.l10n.registration_vehicleReferenceRequired,
+                    AppSpacing.gapMd,
+                    AppButton(
+                      label: context.l10n.registration_createVehicleCta,
+                      onPressed: () => _openCreateVehicle(context),
+                      style: AppButtonStyle.outlined,
+                    ),
+                  ],
+                );
+              }
+
+              return AppDropdown<String>(
+                name: RegistrationFormFields.vehicleId,
+                labelText: context.l10n.registration_vehicleData,
+                hintText: context.l10n.registration_selectVehicleToPreload,
+                isRequired: true,
+                focusNode: _focusChain.nodeFor(RegistrationFormFields.vehicleId),
+                validator: FormBuilderValidators.required(
+                  errorText: context.l10n.registration_vehicleBrandRequired,
+                ),
+                items: availableVehicles
+                    .map(
+                      (vehicle) => DropdownMenuItem<String>(
+                        value: vehicle.id,
+                        child: Text(
+                          '${vehicle.brand ?? ''} ${vehicle.model ?? ''} ${vehicle.licensePlate ?? ''}'
+                              .trim(),
+                        ),
                       ),
-                    ),
-                  ),
-                ],
-              ),
-              AppSpacing.gapMd,
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: AppTextField(
-                      name: RegistrationFormFields.licensePlate,
-                      labelText: context.l10n.registration_licensePlate,
-                      hintText: context.l10n.registration_licensePlateHint,
-                      isRequired: true,
-                      textCapitalization: TextCapitalization.characters,
-                      validator: FormBuilderValidators.required(
-                        errorText: context.l10n.registration_licensePlateRequired,
-                      ),
-                    ),
-                  ),
-                  AppSpacing.hGapMd,
-                  Expanded(
-                    child: AppTextField(
-                      name: RegistrationFormFields.vin,
-                      labelText: context.l10n.registration_vin,
-                      hintText: context.l10n.registration_vinHint,
-                      textCapitalization: TextCapitalization.characters,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                    )
+                    .toList(),
+              );
+            },
           ),
         ),
         AppSpacing.gapXxxl,
@@ -364,11 +476,23 @@ class RegistrationFormContent extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                if (!isEditing) ...[
+                  AppButton(
+                    label: context.l10n.registration_clearForm,
+                    onPressed: _onClearForm,
+                    style: AppButtonStyle.outlined,
+                    isFullWidth: true,
+                    icon: Icons.clear,
+                  ),
+                  AppSpacing.gapMd,
+                ],
+                const SaveToProfileCheckbox(),
+                AppSpacing.gapMd,
                 AppButton(
                   label: isEditing
                       ? context.l10n.registration_updateRegistration
                       : context.l10n.registration_sendRegistration,
-                  onPressed: cubit.saveRegistration,
+                  onPressed: _submitRegistration,
                   isLoading: isLoading,
                 ),
                 AppSpacing.gapMd,

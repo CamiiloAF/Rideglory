@@ -34,4 +34,15 @@ abstract class AppEnv {
 
   @EnviedField(optional: true)
   static const String? firebaseIosBundleId = _AppEnv.firebaseIosBundleId;
+
+  /// Optional override for the local API base URL. When set, [ApiBaseUrlResolver]
+  /// uses this value instead of the platform-specific localhost defaults
+  /// (`10.0.2.2` for the Android emulator, `localhost` for iOS sim / web).
+  ///
+  /// Required when running on a **physical device** against a local backend:
+  /// point it at the Mac's LAN IP (e.g. `http://192.168.20.94:3000/api`) so the
+  /// device can reach the gateway over Wi-Fi. The same value also works for the
+  /// emulator/simulator, so you can leave it set during normal development.
+  @EnviedField(optional: true)
+  static const String? localApiBaseUrl = _AppEnv.localApiBaseUrl;
 }

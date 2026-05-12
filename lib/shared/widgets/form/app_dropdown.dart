@@ -13,6 +13,7 @@ class AppDropdown<T> extends StatelessWidget {
     this.isRequired = false,
     this.prefixIcon,
     this.onChanged,
+    this.focusNode,
   });
 
   final String name;
@@ -23,6 +24,7 @@ class AppDropdown<T> extends StatelessWidget {
   final bool isRequired;
   final Widget? prefixIcon;
   final ValueChanged<T?>? onChanged;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,7 @@ class AppDropdown<T> extends StatelessWidget {
           ),
         FormBuilderDropdown<T>(
           name: name,
+          focusNode: focusNode,
           decoration: InputDecoration(
             border: const OutlineInputBorder(),
             hintText: hintText,

@@ -22,19 +22,22 @@ class AttendeesList extends StatelessWidget {
     required this.event,
   });
 
-  static bool _isPending(EventRegistrationModel r) =>
-      r.status == RegistrationStatus.pending ||
-      r.status == RegistrationStatus.readyForEdit;
+  static bool _isPending(EventRegistrationModel registration) =>
+      registration.status == RegistrationStatus.pending ||
+      registration.status == RegistrationStatus.readyForEdit;
 
-  static bool _isProcessed(EventRegistrationModel r) =>
-      r.status == RegistrationStatus.approved ||
-      r.status == RegistrationStatus.rejected;
+  static bool _isProcessed(EventRegistrationModel registration) =>
+      registration.status == RegistrationStatus.approved ||
+      registration.status == RegistrationStatus.rejected;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colorScheme;
     final textTheme = context.textTheme;
-    final pending = registrations.where(_isPending).toList();
+    final pendingAll = registrations.where(_isPending).toList();
+    final pending = pendingAll
+        .where((registration) => registration.userId != event.ownerId)
+        .toList();
     final processed = registrations.where(_isProcessed).toList();
 
     return RefreshIndicator(
@@ -82,11 +85,12 @@ class AttendeesList extends StatelessWidget {
                     AppRoutes.registrationDetail,
                     extra: RegistrationDetailExtra(
                       registration: registration,
+                      eventOwnerId: event.ownerId,
                       onApprove: registration.id != null
                           ? (detailContext) =>
                                 AttendeeActionConfirmation.showApprove(
                                   detailContext,
-                                  firstName: registration.firstName,
+                                  participantName: registration.fullName,
                                   onConfirm: () {
                                     context
                                         .read<AttendeesCubit>()
@@ -101,7 +105,7 @@ class AttendeesList extends StatelessWidget {
                           ? (detailContext) =>
                                 AttendeeActionConfirmation.showReject(
                                   detailContext,
-                                  firstName: registration.firstName,
+                                  participantName: registration.fullName,
                                   onConfirm: () {
                                     context
                                         .read<AttendeesCubit>()
@@ -153,13 +157,16 @@ class AttendeesList extends StatelessWidget {
             )
           else
             ...processed.map(
-              (r) => Padding(
+              (registration) => Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: AttendeeProcessedItem(
-                  registration: r,
+                  registration: registration,
                   onTap: () => context.pushNamed(
                     AppRoutes.registrationDetail,
-                    extra: RegistrationDetailExtra(registration: r),
+                    extra: RegistrationDetailExtra(
+                      registration: registration,
+                      eventOwnerId: event.ownerId,
+                    ),
                   ),
                   onOptionsPressed: () {},
                 ),

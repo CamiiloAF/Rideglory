@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/events/presentation/shared/widgets/initials_avatar.dart';
 import 'package:rideglory/features/events/presentation/shared/widgets/registration_status_chip.dart';
@@ -15,8 +15,8 @@ class RegistrationDetailHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = context.colorScheme;
     final textTheme = context.textTheme;
-    final dateText = registration.createdDate != null
-        ? '${context.l10n.registration_appliedOnPrefix}${DateFormat('d MMM yyyy', 'es').format(registration.createdDate!)}'
+    final dateText = registration.createdAt != null
+        ? '${context.l10n.registration_appliedOnPrefix}${registration.createdAt!.formattedDate}'
         : '';
 
     return Padding(
@@ -27,11 +27,7 @@ class RegistrationDetailHeader extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             clipBehavior: Clip.none,
             children: [
-              InitialsAvatar(
-                firstName: registration.firstName,
-                lastName: registration.lastName,
-                radius: 48,
-              ),
+              InitialsAvatar(fullName: registration.fullName, radius: 48),
               Positioned(
                 bottom: -8,
                 child: RegistrationStatusChip(status: registration.status),
