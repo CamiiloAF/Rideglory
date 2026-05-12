@@ -100,7 +100,12 @@ Commands: `flutter pub get`, `dart run build_runner build --delete-conflicting-o
 
 ## Gotchas and learnings
 
-<!-- Append during iterations -->
+**Iteration 1:**
+- Base64 encoding Firebase config files required for GitHub Actions secret injection (binary plist files cannot be pasted directly)
+- `subosito/flutter-action@v2` with `cache: true` significantly speeds up CI runs by caching Flutter SDK and pub cache
+- Firebase config file injection must check for empty/missing secrets gracefully (use `if: secrets.GOOGLE_SERVICES_JSON != ''`)
+- APK build conditionally runs only on version tags matching `v*` to avoid building on every push
+- Code generation (`dart run build_runner build`) must run after `flutter pub get` but before `dart analyze`
 
 ---
 
@@ -108,3 +113,4 @@ Commands: `flutter pub get`, `dart run build_runner build --delete-conflicting-o
 
 - 2026-05-11 (iter 0): Skill stub created.
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
+- 2026-05-12 (iter 1): DevOps phase complete. GitHub Actions CI/CD pipeline implemented (`.github/workflows/ci.yml`), deployment documentation written (`docs/DEPLOY.md`), phase contract and handoff finalized. Secrets configuration guide and Firebase config injection instructions included.

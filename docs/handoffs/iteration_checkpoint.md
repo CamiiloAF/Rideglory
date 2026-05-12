@@ -16,13 +16,13 @@
 | backend | backend | done (skipped — no API changes) | 2026-05-12T04:05Z |
 | frontend | frontend | done | 2026-05-12T05:00Z |
 | qa | qa | done | 2026-05-12T12:00Z |
+| devops | devops | done | 2026-05-12T16:45Z |
 | tech_lead | tech_lead | pending | — |
-| devops | devops | pending | — |
 | pr | system | pending | — |
 | po_close | po | pending | — |
 
-**Last completed phase:** qa
-**Next phase:** tech_lead (code review cleanup — US-1-5)
+**Last completed phase:** devops
+**Next phase:** pr (open PR from iter-1 → main)
 
 *Started: 2026-05-12T01:30:00Z*
 
@@ -55,7 +55,32 @@
 
 ---
 
-## Tech Lead Checklist (US-1-5 — next phase)
+## DevOps Phase Summary (just completed)
+
+**Deliverables:**
+- ✓ `.github/workflows/ci.yml` (GitHub Actions CI/CD pipeline)
+- ✓ `docs/DEPLOY.md` (deployment guide with secrets setup, release process, troubleshooting)
+- ✓ `docs/handoffs/devops.md` (phase handoff)
+- ✓ `docs/handoffs/contracts/iter-1/devops.json` (phase contract)
+
+**Pipeline Features:**
+- **analyze-and-test job:** Runs on every push to `iter-*` and `main`, plus all PRs to `main`
+  - `flutter pub get` → `dart run build_runner build` → `dart analyze` → `flutter test`
+  - Fails on any linting violation or test failure
+  - Required status check for PR merge
+- **build-apk job:** Runs only on version tags matching `v*`
+  - Builds release APK and uploads artifact (30-day retention)
+
+**Secrets Configuration:**
+- 13 required GitHub Actions secrets documented (Firebase keys, OAuth clients, Firebase config files in base64)
+- Instructions for base64-encoding Firebase JSON/plist files
+- `.env` file injection from GitHub secrets
+
+**Status:** CI pipeline ready for Iteration 2. All secrets documentation in place. Next agent (tech_lead or PR reviewer) can enable branch protection rule requiring `analyze-and-test` status check.
+
+---
+
+## Tech Lead Checklist (US-1-5 — still pending)
 
 - [ ] Run `dart analyze` and fix/document violations
 - [ ] Remove `print()` calls from lib/
@@ -70,12 +95,17 @@
 
 ## What Comes Next
 
-**Immediate (after tech_lead signs off):**
-- Prepare for Iter-2: Event discovery filters + attendee profile links
+**Immediate:**
+- Tech Lead (US-1-5): Code review cleanup — dart analyze fixes, print() removal, BuildContext audit, code review documentation
+- PR: Open PR from `iter-1` → `main` (will be blocked until tech_lead completes cleanup)
+- PR Reviewer: Verify CI passes (analyze-and-test green checkmark) before approving
+
+**Post-PR:**
+- Merge to main
+- Begin Iteration 2: Event discovery filters + attendee profile links
 - QA: Write blocTest groups for VehicleCubit, EventsCubit, EventDetailCubit, MaintenancesCubit
 - QA: Write widget tests for vehicle garage, event list, event detail pages
 
-**Deferred:**
-- network_image_mock re-added post-analyzer resolution
-- Integration test logic filled in as features stabilize
-- CI/CD pipeline (Track DevOps)
+**Parallel Tracks:**
+- Design Track (P): Migrate all screen flows to Pencil design system (runs alongside Iter-2)
+- DevOps: CI pipeline now operational; enabled for all future iterations
