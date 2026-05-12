@@ -51,8 +51,7 @@ class TrackingRepositoryImpl implements TrackingRepository {
   }) {
     final riderDto = RiderTrackingDto(
       userId: initialData.userId,
-      firstName: initialData.firstName,
-      lastName: initialData.lastName,
+      fullName: initialData.fullName,
       role: initialData.role,
       latitude: initialData.latitude,
       longitude: initialData.longitude,

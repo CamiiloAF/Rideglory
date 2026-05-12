@@ -1594,6 +1594,12 @@ abstract class AppLocalizations {
   /// **'Seguir rodada en vivo'**
   String get event_followRideLive;
 
+  /// No description provided for @event_alreadyRegistered.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya estás inscrito en este evento'**
+  String get event_alreadyRegistered;
+
   /// No description provided for @event_eventFinished.
   ///
   /// In es, this message translates to:
@@ -3262,17 +3268,17 @@ abstract class AppLocalizations {
   /// **'Vehículo registrado'**
   String get registration_vehicleRegistered;
 
-  /// No description provided for @registration_firstName.
+  /// No description provided for @registration_fullName.
   ///
   /// In es, this message translates to:
-  /// **'Nombres'**
-  String get registration_firstName;
+  /// **'Nombre completo'**
+  String get registration_fullName;
 
-  /// No description provided for @registration_lastName.
+  /// No description provided for @registration_fullNameHint.
   ///
   /// In es, this message translates to:
-  /// **'Apellidos'**
-  String get registration_lastName;
+  /// **'Ej. Juan Carlos Pérez Rodríguez'**
+  String get registration_fullNameHint;
 
   /// No description provided for @registration_identificationNumber.
   ///
@@ -3358,17 +3364,11 @@ abstract class AppLocalizations {
   /// **'VIN (Serial)'**
   String get registration_vin;
 
-  /// No description provided for @registration_firstNameHint.
+  /// No description provided for @registration_fullNameRequired.
   ///
   /// In es, this message translates to:
-  /// **'Ej. Juan Carlos'**
-  String get registration_firstNameHint;
-
-  /// No description provided for @registration_lastNameHint.
-  ///
-  /// In es, this message translates to:
-  /// **'Ej. Pérez Rodriguez'**
-  String get registration_lastNameHint;
+  /// **'El nombre completo es requerido'**
+  String get registration_fullNameRequired;
 
   /// No description provided for @registration_identificationHint.
   ///
@@ -3478,6 +3478,36 @@ abstract class AppLocalizations {
   /// **'Limpiar formulario'**
   String get registration_clearForm;
 
+  /// No description provided for @registration_clearFormConfirmTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Limpiar formulario'**
+  String get registration_clearFormConfirmTitle;
+
+  /// No description provided for @registration_clearFormConfirmBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Se borrarán todos los datos ingresados. ¿Deseas continuar?'**
+  String get registration_clearFormConfirmBody;
+
+  /// No description provided for @registration_vehicleBrandNotAllowed.
+  ///
+  /// In es, this message translates to:
+  /// **'La marca seleccionada no está permitida para este evento'**
+  String get registration_vehicleBrandNotAllowed;
+
+  /// No description provided for @registration_vehicleEmptyStateTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'No tienes vehículos disponibles para esta inscripción.'**
+  String get registration_vehicleEmptyStateTitle;
+
+  /// No description provided for @registration_createVehicleCta.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear vehículo'**
+  String get registration_createVehicleCta;
+
   /// No description provided for @registration_sendRegistration.
   ///
   /// In es, this message translates to:
@@ -3489,6 +3519,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Actualizar inscripción'**
   String get registration_updateRegistration;
+
+  /// Checkbox label to opt-in to persist rider info to user profile after registering.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar mis datos para futuras inscripciones'**
+  String get registration_saveToProfile;
 
   /// No description provided for @registration_registrationSentSuccess.
   ///
@@ -3519,18 +3555,6 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Explora los eventos disponibles y únete a la aventura'**
   String get registration_noRegistrationsDescription;
-
-  /// No description provided for @registration_firstNameRequired.
-  ///
-  /// In es, this message translates to:
-  /// **'Los nombres son requeridos'**
-  String get registration_firstNameRequired;
-
-  /// No description provided for @registration_lastNameRequired.
-  ///
-  /// In es, this message translates to:
-  /// **'Los apellidos son requeridos'**
-  String get registration_lastNameRequired;
 
   /// No description provided for @registration_idRequired.
   ///

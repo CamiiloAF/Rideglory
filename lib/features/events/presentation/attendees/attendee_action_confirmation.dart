@@ -7,13 +7,13 @@ abstract final class AttendeeActionConfirmation {
 
   static Future<bool?> showApprove(
     BuildContext context, {
-    required String firstName,
+    required String participantName,
     required VoidCallback onConfirm,
   }) =>
       ConfirmationDialog.show(
         context: context,
         title: context.l10n.event_approveRegistration,
-        content: context.l10n.event_approveConfirmMessage(firstName),
+        content: context.l10n.event_approveConfirmMessage(participantName),
         dialogType: DialogType.warning,
         confirmLabel: context.l10n.event_approveRegistration,
         onConfirm: onConfirm,
@@ -21,13 +21,13 @@ abstract final class AttendeeActionConfirmation {
 
   static Future<bool?> showReject(
     BuildContext context, {
-    required String firstName,
+    required String participantName,
     required VoidCallback onConfirm,
   }) =>
       ConfirmationDialog.show(
         context: context,
         title: context.l10n.event_rejectRegistration,
-        content: context.l10n.event_rejectConfirmMessage(firstName),
+        content: context.l10n.event_rejectConfirmMessage(participantName),
         dialogType: DialogType.warning,
         confirmLabel: context.l10n.event_rejectRegistration,
         onConfirm: onConfirm,

@@ -7,6 +7,7 @@ import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/permissions/location_permission_handler.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/delete/cubit/event_delete_cubit.dart';
 import 'package:rideglory/features/events/presentation/detail/cubit/event_detail_cubit.dart';
@@ -237,13 +238,7 @@ class EventDetailViewState extends State<EventDetailView> {
                                 }
 
                                 return EventDetailStartedBanner(
-                                  onFollowLive:
-                                      currentEvent.state ==
-                                          EventState.inProgress
-                                      ? () {
-                                          unawaited(_onFollowLivePressed());
-                                        }
-                                      : null,
+                                  onFollowLive: null,
                                 );
                               },
                               orElse: () => const SizedBox.shrink(),
@@ -296,6 +291,7 @@ class EventDetailViewState extends State<EventDetailView> {
                       event: currentEvent,
                       registration: registration,
                       onRegister: () => navigateToRegistration(context, null),
+                      onFollowLive: () => unawaited(_onFollowLivePressed()),
                       onRegistrationStatusTap: (reg) {
                         if (reg.status == RegistrationStatus.pending ||
                             reg.status == RegistrationStatus.approved) {
@@ -386,7 +382,10 @@ class EventDetailViewState extends State<EventDetailView> {
                   Navigator.of(sheetContext).pop();
                   context.pushNamed(
                     AppRoutes.registrationDetail,
-                    extra: RegistrationDetailExtra(registration: registration),
+                    extra: RegistrationDetailExtra(
+                      registration: registration,
+                      eventOwnerId: currentEvent.ownerId,
+                    ),
                   );
                 },
               ),
@@ -409,10 +408,16 @@ class EventDetailViewState extends State<EventDetailView> {
     BuildContext context,
     EventRegistrationModel registration,
   ) async {
-    await CancelRegistrationDialog.show(
+    final cancelled = await CancelRegistrationDialog.show(
       context: context,
       onCancel: () =>
           context.read<EventDetailCubit>().cancelRegistration(registration.id!),
+    );
+    if (!cancelled || !context.mounted) {
+      return;
+    }
+    context.read<MyRegistrationsCubit>().onChangeRegistration(
+      registration.copyWith(status: RegistrationStatus.cancelled),
     );
   }
 

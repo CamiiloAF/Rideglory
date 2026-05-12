@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Debug-only network security config. Allows plaintext HTTP for any host so
+    the app can reach a dev gateway on localhost, 10.0.2.2 (Android emulator
+    host alias), or any LAN IP (e.g. the developer's Mac) from a physical
+    device. This file lives under src/debug/, so release builds are NOT
+    affected and continue to require HTTPS.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

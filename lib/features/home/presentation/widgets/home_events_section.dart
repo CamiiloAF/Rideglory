@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
+import 'package:rideglory/features/home/presentation/cubit/home_cubit.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_empty_events_card.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_event_card.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
@@ -44,10 +46,18 @@ class HomeEventsSection extends StatelessWidget {
                     final event = events[index];
                     return HomeEventCard(
                       event: event,
-                      onTap: () => context.pushNamed(
-                        AppRoutes.eventDetail,
-                        extra: event,
-                      ),
+                      onTap: () async {
+                        final result = await context.pushNamed<dynamic>(
+                          AppRoutes.eventDetail,
+                          extra: event,
+                        );
+                        if (!context.mounted) return;
+                        if (result is EventModel) {
+                          context.read<HomeCubit>().updateEvent(result);
+                        } else if (result == true && event.id != null) {
+                          context.read<HomeCubit>().removeEvent(event.id!);
+                        }
+                      },
                     );
                   },
                 ),

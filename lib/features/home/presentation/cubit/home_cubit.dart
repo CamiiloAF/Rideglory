@@ -27,4 +27,26 @@ class HomeCubit extends Cubit<HomeState> {
       ),
     );
   }
+
+  void updateEvent(EventModel event) {
+    final current = state;
+    if (current is! HomeLoaded) return;
+    final updated = current.upcomingEvents
+        .map((e) => e.id == event.id ? event : e)
+        .toList(growable: false);
+    emit(
+      HomeLoaded(mainVehicle: current.mainVehicle, upcomingEvents: updated),
+    );
+  }
+
+  void removeEvent(String eventId) {
+    final current = state;
+    if (current is! HomeLoaded) return;
+    final updated = current.upcomingEvents
+        .where((e) => e.id != eventId)
+        .toList(growable: false);
+    emit(
+      HomeLoaded(mainVehicle: current.mainVehicle, upcomingEvents: updated),
+    );
+  }
 }

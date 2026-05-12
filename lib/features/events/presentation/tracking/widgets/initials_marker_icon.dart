@@ -7,8 +7,7 @@ import 'package:rideglory/core/utils/initials.dart';
 
 abstract class InitialsMarkerIcon {
   static Future<BitmapDescriptor> create({
-    required String firstName,
-    required String lastName,
+    required String fullName,
     required ColorScheme colorScheme,
     double size = 96,
     Color? backgroundColor,
@@ -41,7 +40,7 @@ abstract class InitialsMarkerIcon {
     );
 
     final textSpan = TextSpan(
-      text: Initials.buildInitials(firstName: firstName, lastName: lastName),
+      text: Initials.buildFromFullName(fullName),
       style: TextStyle(
         color: Colors.white,
         fontWeight: FontWeight.bold,

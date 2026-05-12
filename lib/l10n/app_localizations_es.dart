@@ -791,6 +791,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_followRideLive => 'Seguir rodada en vivo';
 
   @override
+  String get event_alreadyRegistered => 'Ya estás inscrito en este evento';
+
+  @override
   String get event_eventFinished => 'Finalizado';
 
   @override
@@ -1657,10 +1660,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_vehicleRegistered => 'Vehículo registrado';
 
   @override
-  String get registration_firstName => 'Nombres';
+  String get registration_fullName => 'Nombre completo';
 
   @override
-  String get registration_lastName => 'Apellidos';
+  String get registration_fullNameHint => 'Ej. Juan Carlos Pérez Rodríguez';
 
   @override
   String get registration_identificationNumber => 'Identificación';
@@ -1705,10 +1708,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_vin => 'VIN (Serial)';
 
   @override
-  String get registration_firstNameHint => 'Ej. Juan Carlos';
-
-  @override
-  String get registration_lastNameHint => 'Ej. Pérez Rodriguez';
+  String get registration_fullNameRequired => 'El nombre completo es requerido';
 
   @override
   String get registration_identificationHint => 'CC/TI/CE';
@@ -1767,10 +1767,32 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_clearForm => 'Limpiar formulario';
 
   @override
+  String get registration_clearFormConfirmTitle => 'Limpiar formulario';
+
+  @override
+  String get registration_clearFormConfirmBody =>
+      'Se borrarán todos los datos ingresados. ¿Deseas continuar?';
+
+  @override
+  String get registration_vehicleBrandNotAllowed =>
+      'La marca seleccionada no está permitida para este evento';
+
+  @override
+  String get registration_vehicleEmptyStateTitle =>
+      'No tienes vehículos disponibles para esta inscripción.';
+
+  @override
+  String get registration_createVehicleCta => 'Crear vehículo';
+
+  @override
   String get registration_sendRegistration => 'Enviar inscripción';
 
   @override
   String get registration_updateRegistration => 'Actualizar inscripción';
+
+  @override
+  String get registration_saveToProfile =>
+      'Guardar mis datos para futuras inscripciones';
 
   @override
   String get registration_registrationSentSuccess =>
@@ -1790,12 +1812,6 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get registration_noRegistrationsDescription =>
       'Explora los eventos disponibles y únete a la aventura';
-
-  @override
-  String get registration_firstNameRequired => 'Los nombres son requeridos';
-
-  @override
-  String get registration_lastNameRequired => 'Los apellidos son requeridos';
 
   @override
   String get registration_idRequired =>

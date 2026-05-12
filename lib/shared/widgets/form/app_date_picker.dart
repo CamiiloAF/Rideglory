@@ -15,6 +15,9 @@ class AppDatePicker extends StatelessWidget {
     this.prefixIcon,
     this.inputType,
     this.enabled = true,
+    this.focusNode,
+    this.textInputAction,
+    this.onFieldSubmitted,
   });
 
   final String fieldName;
@@ -27,6 +30,9 @@ class AppDatePicker extends StatelessWidget {
   final Widget? prefixIcon;
   final InputType? inputType;
   final bool enabled;
+  final FocusNode? focusNode;
+  final TextInputAction? textInputAction;
+  final void Function(DateTime? value)? onFieldSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +47,9 @@ class AppDatePicker extends StatelessWidget {
           firstDate: firstDate,
           lastDate: lastDate,
           enabled: enabled,
+          focusNode: focusNode,
+          textInputAction: textInputAction,
+          onFieldSubmitted: onFieldSubmitted,
           decoration: InputDecoration(
             hintText: hintText,
             border: const OutlineInputBorder(),

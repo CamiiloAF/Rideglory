@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/delete/cubit/maintenance_delete_cubit.dart';
@@ -265,8 +266,8 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                                 ),
                                 AppSpacing.gapSm,
                                 Text(
-                                  DateFormat('dd MMM, yyyy')
-                                      .format(_maintenance.nextMaintenanceDate!),
+                                  _maintenance.nextMaintenanceDate!
+                                      .formattedDate,
                                   style: context.titleMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: Theme.of(context)
@@ -374,10 +375,9 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                             child: MaintenanceAlertCard(
                               icon: Icons.calendar_month_outlined,
                               label: context.l10n.maintenance_alertByDate.toUpperCase(),
-                              value: _maintenance.nextMaintenanceDate != null
-                                  ? DateFormat('dd MMM, yyyy')
-                                      .format(_maintenance.nextMaintenanceDate!)
-                                  : '-',
+                              value:
+                                  _maintenance.nextMaintenanceDate?.formattedDate ??
+                                  '-',
                               subtitle: context.l10n.maintenance_dateAlertBefore,
                               isOn: _maintenance.receiveDateAlert,
                             ),

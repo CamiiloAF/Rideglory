@@ -200,9 +200,8 @@ class _MaintenanceFiltersBottomSheetState
                             color: context.colorScheme.primary,
                           ),
                           label: Text(
-                            _filters.startDate != null
-                                ? _filters.startDate!.toFormattedString()
-                                : context.l10n.maintenance_startDate,
+                            _filters.startDate?.formattedDate ??
+                                context.l10n.maintenance_startDate,
                             style: TextStyle(
                               color: context.colorScheme.onSurface,
                             ),
@@ -236,9 +235,8 @@ class _MaintenanceFiltersBottomSheetState
                             color: context.colorScheme.primary,
                           ),
                           label: Text(
-                            _filters.endDate != null
-                                ? _filters.endDate!.toFormattedString()
-                                : context.l10n.maintenance_endDate,
+                            _filters.endDate?.formattedDate ??
+                                context.l10n.maintenance_endDate,
                             style: TextStyle(
                               color: context.colorScheme.onSurface,
                             ),

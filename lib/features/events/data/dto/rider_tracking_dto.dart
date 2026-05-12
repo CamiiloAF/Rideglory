@@ -10,8 +10,7 @@ part 'rider_tracking_dto.g.dart';
 class RiderTrackingDto extends RiderTrackingModel {
   const RiderTrackingDto({
     required super.userId,
-    required super.firstName,
-    required super.lastName,
+    required super.fullName,
     required super.role,
     required super.latitude,
     required super.longitude,
@@ -30,8 +29,11 @@ class RiderTrackingDto extends RiderTrackingModel {
 
   static Map<String, dynamic> _normalizeTrackingJson(Map<String, dynamic> json) {
     final m = Map<String, dynamic>.from(json);
-    m['firstName'] ??= '';
-    m['lastName'] ??= '';
+    m['fullName'] ??=
+        '${m['firstName'] ?? ''} ${m['lastName'] ?? ''}'.trim();
+    if ((m['fullName'] as String).isEmpty) {
+      m['fullName'] = '';
+    }
     m['latitude'] ??= 0;
     m['longitude'] ??= 0;
     m['speedKmh'] ??= 0;
@@ -46,8 +48,7 @@ class RiderTrackingDto extends RiderTrackingModel {
 extension RiderTrackingModelExtension on RiderTrackingModel {
   Map<String, dynamic> toJson() => RiderTrackingDto(
     userId: userId,
-    firstName: firstName,
-    lastName: lastName,
+    fullName: fullName,
     role: role,
     latitude: latitude,
     longitude: longitude,

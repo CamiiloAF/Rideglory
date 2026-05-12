@@ -32,8 +32,7 @@ class _AttendeesDataViewState extends State<AttendeesDataView> {
       final q = _searchQuery.toLowerCase();
       list = list.where((r) {
         final name = r.fullName.toLowerCase();
-        final vehicle =
-            '${r.vehicleBrand} ${r.vehicleReference}'.toLowerCase();
+        final vehicle = (r.vehicleSummary?.displayName ?? '').toLowerCase();
         return name.contains(q) || vehicle.contains(q);
       }).toList();
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
@@ -28,7 +29,6 @@ class MaintenancesSummaryHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateShort = DateFormat('MMM dd');
     final numberFormat = NumberFormat('#,###');
 
     final lastService = _getLastService();
@@ -46,9 +46,7 @@ class MaintenancesSummaryHeader extends StatelessWidget {
                 child: _SummaryCard(
                   icon: Icons.calendar_today_outlined,
                   label: 'Last service',
-                  value: lastService != null
-                      ? dateShort.format(lastService.date)
-                      : '—',
+                  value: lastService?.date.formattedDate ?? '—',
                   subtitle: lastService != null
                       ? '${numberFormat.format(lastService.maintanceMileage)} km'
                       : null,
@@ -59,9 +57,7 @@ class MaintenancesSummaryHeader extends StatelessWidget {
                 child: _SummaryCard(
                   icon: Icons.event_repeat_outlined,
                   label: 'Next service',
-                  value: nextServiceDate != null
-                      ? dateShort.format(nextServiceDate)
-                      : 'Estimated',
+                  value: nextServiceDate?.formattedDate ?? 'Estimated',
                 ),
               ),
             ],
