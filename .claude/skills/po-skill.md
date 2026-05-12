@@ -26,3 +26,4 @@
 ## Change log
 <!-- Append, never delete -->
 - 2026-05-11 (iter 0): Skill stub created. Run /solo-plan then /solo-approve to populate.
+- 2026-05-12 (iter 2): Scope defined — 3 stories (filters, clear, attendee profiles), 50 acceptance criteria, backend filter gap identified and scoped in.
