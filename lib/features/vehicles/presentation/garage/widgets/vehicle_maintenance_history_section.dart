@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
@@ -232,7 +233,7 @@ class _MaintenanceRecordCard extends StatelessWidget {
                       ),
                       AppSpacing.gapXxs,
                       Text(
-                        '${DateFormat('dd \'de\' MMM, yyyy').format(maintenance.date)} • ${NumberFormat('#,###').format(maintenance.maintanceMileage)} km',
+                        '${maintenance.date.formattedDate} • ${NumberFormat('#,###').format(maintenance.maintanceMileage)} km',
                         style: context.bodyMedium?.copyWith(
                           color: Colors.grey[400],
                         ),

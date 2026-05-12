@@ -12,6 +12,11 @@ class RegistrationDetailBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final registration = params.registration;
+    final ownerSuppressed = params.eventOwnerId != null &&
+        params.eventOwnerId == registration.userId;
+    final showCancel =
+        params.onCancelRegistration != null && !ownerSuppressed;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Container(
@@ -33,7 +38,7 @@ class RegistrationDetailBottomBar extends StatelessWidget {
         top: false,
         child: Row(
           children: [
-            if (params.onCancelRegistration != null)
+            if (showCancel)
               AppButton(
                 label: context.l10n.registration_cancelRegistration,
                 variant: AppButtonVariant.danger,

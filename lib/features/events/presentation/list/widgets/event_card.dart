@@ -11,13 +11,17 @@ import 'package:rideglory/features/events/presentation/list/widgets/event_card_t
 class EventCard extends StatefulWidget {
   final EventModel event;
   final VoidCallback onTap;
+  final VoidCallback? onStartEvent;
   final bool isOwner;
+  final bool isRegistered;
 
   const EventCard({
     super.key,
     required this.event,
     required this.onTap,
+    this.onStartEvent,
     this.isOwner = false,
+    this.isRegistered = false,
   });
 
   @override
@@ -123,6 +127,10 @@ class _EventCardState extends State<EventCard> {
                 child: EventCardInfoPanel(
                   event: widget.event,
                   onTap: widget.onTap,
+                  onStartEvent: widget.onStartEvent,
+                  isOwner: widget.isOwner,
+                  isRegistered: widget.isRegistered,
+                  showJoinButton: !widget.isOwner && !widget.isRegistered,
                 ),
               ),
             ],

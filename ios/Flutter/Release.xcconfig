@@ -1,2 +1,9 @@
 #include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"
 #include "Generated.xcconfig"
+
+// Preprocess Info.plist so the `#ifdef RIDEGLORY_DEV_ATS ... #endif` block in
+// Info.plist becomes a no-op in Release/Profile (the macro is intentionally not
+// defined here). Without this flag the literal `#ifdef` text would leak into
+// the final plist and break it.
+INFOPLIST_PREPROCESS = YES
+INFOPLIST_OTHER_PREPROCESSOR_FLAGS = -traditional -P

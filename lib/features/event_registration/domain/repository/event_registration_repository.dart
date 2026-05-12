@@ -5,14 +5,18 @@ import 'package:rideglory/features/event_registration/domain/model/event_registr
 
 abstract class EventRegistrationRepository {
   Future<Either<DomainException, EventRegistrationModel>> addRegistration(
-    EventRegistrationModel registration,
-  );
+    EventRegistrationModel registration, {
+    bool saveToProfile = false,
+  });
 
   Future<Either<DomainException, EventRegistrationModel>> updateRegistration(
-    EventRegistrationModel registration,
-  );
+    EventRegistrationModel registration, {
+    bool saveToProfile = false,
+  });
 
-  Future<Either<DomainException, Nothing>> cancelRegistration(String id);
+  Future<Either<DomainException, Nothing>> cancelRegistration(
+    String registrationId,
+  );
 
   Future<Either<DomainException, List<EventRegistrationModel>>>
   getRegistrationsByEvent(String eventId);

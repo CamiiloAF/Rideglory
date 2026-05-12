@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_difficulty_flames.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_organizer_row.dart';
@@ -94,7 +94,7 @@ class EventDetailHeaderInfo extends StatelessWidget {
             size: 18,
           ),
           subtitle: 'HORA',
-          label: '${DateFormat('HH:mm').format(event.meetingTime)}h',
+          label: event.meetingTime.formattedTime,
           variant: DetailPillVariant.primary,
         ),
       ],

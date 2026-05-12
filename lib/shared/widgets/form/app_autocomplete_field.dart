@@ -8,23 +8,31 @@ class AppAutocompleteField extends StatefulWidget {
     required this.name,
     required this.labelText,
     required this.suggestions,
+    this.remoteSuggestions,
     required this.suggestionsPrefixIcon,
     this.isRequired = false,
     this.validator,
     this.hintText,
     this.onSelected,
     this.suffixIcon,
+    this.focusNode,
+    this.textInputAction,
+    this.onFieldSubmitted,
   });
 
   final String name;
   final String labelText;
   final List<String> Function(String query) suggestions;
+  final Future<List<String>> Function(String query)? remoteSuggestions;
   final IconData suggestionsPrefixIcon;
   final bool isRequired;
   final String? Function(String?)? validator;
   final String? hintText;
   final void Function(String)? onSelected;
   final Widget? suffixIcon;
+  final FocusNode? focusNode;
+  final TextInputAction? textInputAction;
+  final void Function(String? value)? onFieldSubmitted;
 
   @override
   State<AppAutocompleteField> createState() => _AppAutocompleteFieldState();
@@ -32,29 +40,33 @@ class AppAutocompleteField extends StatefulWidget {
 
 class _AppAutocompleteFieldState extends State<AppAutocompleteField> {
   final TextEditingController _controller = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
+  FocusNode? _ownedFocusNode;
   List<String> _filteredSuggestions = [];
   bool _showDropdown = false;
+  int _queryVersion = 0;
   final LayerLink _layerLink = LayerLink();
   OverlayEntry? _overlayEntry;
+
+  FocusNode get _effectiveFocusNode =>
+      widget.focusNode ?? (_ownedFocusNode ??= FocusNode());
 
   @override
   void initState() {
     super.initState();
-    _focusNode.addListener(_onFocusChange);
+    _effectiveFocusNode.addListener(_onFocusChange);
   }
 
   @override
   void dispose() {
-    _focusNode.removeListener(_onFocusChange);
-    _focusNode.dispose();
+    _effectiveFocusNode.removeListener(_onFocusChange);
+    _ownedFocusNode?.dispose();
     _removeOverlay();
     _controller.dispose();
     super.dispose();
   }
 
   void _onFocusChange() {
-    if (!_focusNode.hasFocus) {
+    if (!_effectiveFocusNode.hasFocus) {
       Future<void>.delayed(const Duration(milliseconds: 200), () {
         if (mounted) _removeOverlay();
       });
@@ -73,6 +85,34 @@ class _AppAutocompleteFieldState extends State<AppAutocompleteField> {
     } else {
       _removeOverlay();
     }
+    if (widget.remoteSuggestions != null) {
+      _fetchRemoteSuggestions(value, field);
+    }
+  }
+
+  Future<void> _fetchRemoteSuggestions(
+    String query,
+    FormFieldState<String> field,
+  ) async {
+    final currentVersion = ++_queryVersion;
+    List<String> remoteResults;
+    try {
+      remoteResults = await widget.remoteSuggestions!(query);
+    } catch (_) {
+      remoteResults = const <String>[];
+    }
+    if (!mounted || currentVersion != _queryVersion) {
+      return;
+    }
+    setState(() {
+      _filteredSuggestions = remoteResults;
+      _showDropdown = remoteResults.isNotEmpty;
+    });
+    if (_showDropdown) {
+      _showOverlay(field);
+      return;
+    }
+    _removeOverlay();
   }
 
   void _select(String value, FormFieldState<String> field) {
@@ -122,7 +162,9 @@ class _AppAutocompleteFieldState extends State<AppAutocompleteField> {
               link: _layerLink,
               child: TextFormField(
                 controller: _controller,
-                focusNode: _focusNode,
+                focusNode: _effectiveFocusNode,
+                textInputAction: widget.textInputAction,
+                onFieldSubmitted: widget.onFieldSubmitted,
                 onChanged: (v) => _onChanged(v, field),
                 decoration: InputDecoration(
                   hintText: widget.hintText,
@@ -175,7 +217,7 @@ class _SuggestionsOverlay extends StatelessWidget {
         showWhenUnlinked: false,
         offset: const Offset(0, 56),
         child: Material(
-          color: cs.surface.withOpacity(0),
+          color: cs.surface.withValues(alpha: 0),
           child: Container(
             constraints: const BoxConstraints(maxHeight: _maxHeight),
             decoration: BoxDecoration(
@@ -184,7 +226,7 @@ class _SuggestionsOverlay extends StatelessWidget {
               border: Border.all(color: cs.outlineVariant),
               boxShadow: [
                 BoxShadow(
-                  color: cs.onSurface.withOpacity(0.3),
+                  color: cs.onSurface.withValues(alpha: 0.3),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),

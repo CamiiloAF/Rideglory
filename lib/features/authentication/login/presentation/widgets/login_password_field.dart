@@ -16,6 +16,7 @@ class LoginPasswordField extends StatelessWidget {
       labelText: context.l10n.auth_passwordLabel,
       hintText: context.l10n.auth_passwordHint,
       textInputAction: TextInputAction.done,
+      textCapitalization: TextCapitalization.none,
       onFieldSubmitted: (_) => onSubmitted(),
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: context.l10n.auth_passwordRequired),

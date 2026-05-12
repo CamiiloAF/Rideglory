@@ -1,3 +1,5 @@
+import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
+
 class UserModel {
   const UserModel({
     required this.id,
@@ -26,7 +28,7 @@ class UserModel {
   final String? residenceCity;
   final String? eps;
   final String? medicalInsurance;
-  final String? bloodType;
+  final BloodType? bloodType;
   final String? emergencyContactName;
   final String? emergencyContactPhone;
   final bool isDeleted;

@@ -4,6 +4,7 @@ import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/form_section_title.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/shared/widgets/form/app_place_autocomplete.dart';
 
 class EventFormLocationsSection extends StatefulWidget {
   const EventFormLocationsSection({super.key});
@@ -22,31 +23,33 @@ class _EventFormLocationsSectionState extends State<EventFormLocationsSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AppTextField(
+        AppPlaceAutocompleteField(
           name: EventFormFields.meetingPoint,
+          labelText: context.l10n.event_meetingPoint,
           hintText: context.l10n.event_meetingPoint,
+          placeType: PlaceAutocompleteType.establishment,
           isRequired: true,
-          prefixIcon: Icons.radio_button_unchecked,
           textInputAction: TextInputAction.next,
           validator: FormBuilderValidators.required(
             errorText: context.l10n.event_meetingPointRequired,
           ),
-          onChanged: (value) {
+          onSelected: (value) {
             setState(() => _meetingPoint = value);
           },
         ),
         AppSpacing.gapLg,
 
-        AppTextField(
+        AppPlaceAutocompleteField(
           name: EventFormFields.destination,
+          labelText: context.l10n.event_finalDestination,
           hintText: context.l10n.event_finalDestination,
+          placeType: PlaceAutocompleteType.establishment,
           isRequired: true,
-          prefixIcon: Icons.location_on_outlined,
           textInputAction: TextInputAction.next,
           validator: FormBuilderValidators.required(
             errorText: context.l10n.event_destinationRequired,
           ),
-          onChanged: (value) {
+          onSelected: (value) {
             setState(() => _destination = value);
           },
         ),
