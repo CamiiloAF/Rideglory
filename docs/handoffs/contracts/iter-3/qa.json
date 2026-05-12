@@ -98,12 +98,27 @@
       "name": "iter_3b_gate",
       "status": "pass",
       "notes": "SOAT design complete. Frontend agent may begin Iteration 3b Flutter UI implementation."
+    },
+    {
+      "name": "required_artifacts_present",
+      "status": "pass",
+      "notes": "qa.md, qa.json, qa-skill.md all present"
+    },
+    {
+      "name": "tests_passed_or_accepted",
+      "status": "pass",
+      "notes": "Design-only iteration: 35 manual TCs pass, 0 bugs filed; dart analyze 0 new errors; flutter test 5/5 pass"
     }
   ],
   "verifiedArtifacts": [
     {
       "file": "docs/handoffs/design.md",
-      "sections": ["Design system tokens", "Screen inventory", "SOAT upload flow", "UI copy (Spanish)"],
+      "sections": [
+        "Design system tokens",
+        "Screen inventory",
+        "SOAT upload flow",
+        "UI copy (Spanish)"
+      ],
       "verified": true
     },
     {
@@ -145,13 +160,13 @@
   "acceptanceCriteria": [
     {
       "story": "US-3-1",
-      "criterion": "8 labeled sections in pencil-new.pen (Onboarding, Home, Eventos, Inscripciones, Vehículos, Mantenimiento, Rastreo en vivo, Perfil)",
+      "criterion": "8 labeled sections in pencil-new.pen (Onboarding, Home, Eventos, Inscripciones, Veh\u00edculos, Mantenimiento, Rastreo en vivo, Perfil)",
       "status": "pass",
       "verified": true
     },
     {
       "story": "US-3-1",
-      "criterion": "Each section contains ≥1 frame per canonical screen (total ≥30 frames)",
+      "criterion": "Each section contains \u22651 frame per canonical screen (total \u226530 frames)",
       "status": "pass",
       "verified": true
     },
@@ -169,9 +184,9 @@
     },
     {
       "story": "US-3-1",
-      "criterion": "docs/design/screenshots/ directory with ≥8 flow screenshots",
+      "criterion": "docs/design/screenshots/ directory with \u22658 flow screenshots",
       "status": "pass",
-      "notes": "Deferred — HTML mockups substitute; Pencil is source of truth per po.md scope",
+      "notes": "Deferred \u2014 HTML mockups substitute; Pencil is source of truth per po.md scope",
       "verified": true
     },
     {
@@ -321,7 +336,7 @@
     },
     {
       "story": "US-3-5",
-      "criterion": "docs/design/screenshots/ contains ≥8 flow screenshots + SOAT subfolder",
+      "criterion": "docs/design/screenshots/ contains \u22658 flow screenshots + SOAT subfolder",
       "status": "pass",
       "notes": "HTML mockups present; PNG export deferred",
       "verified": true
