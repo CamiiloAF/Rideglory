@@ -8,6 +8,7 @@ abstract final class ApiRoutes {
   static const myEvents = '/events/my';
   static const tracking = '/tracking';
   static const trackingWs = '$tracking/ws';
+  static const maintenances = '/maintenances';
   static const registrations = '/registrations';
   static const myRegistrations = '$registrations/me';
   static const placesAutocomplete = '/places/autocomplete';
