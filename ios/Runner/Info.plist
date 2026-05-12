@@ -19,7 +19,6 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
-	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -55,5 +54,24 @@
 	<array>
 		<string>location</string>
 	</array>
+	<!--
+		The keys below are wrapped with a preprocessor guard and only kept on
+		Debug builds. The macro is defined in Debug.xcconfig and stripped from
+		Release/Profile via INFOPLIST_PREPROCESS in Release.xcconfig, so the
+		shipped plist contains no ATS exception and keeps the App Store-safe
+		default (HTTPS only). This block only exists to let iOS devices reach
+		the dev gateway on the host Mac LAN IP over plaintext HTTP.
+	-->
+#ifdef RIDEGLORY_DEV_ATS
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Rideglory necesita acceso a la red local solo en compilaciones de desarrollo para conectarse al backend que corre en tu Mac.</string>
+#endif
 </dict>
 </plist>

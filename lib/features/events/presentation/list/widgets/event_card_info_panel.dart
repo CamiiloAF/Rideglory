@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
@@ -7,18 +7,23 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 class EventCardInfoPanel extends StatelessWidget {
   final EventModel event;
   final VoidCallback onTap;
+  final VoidCallback? onStartEvent;
+  final bool isOwner;
+  final bool isRegistered;
+  final bool showJoinButton;
 
   const EventCardInfoPanel({
     super.key,
     required this.event,
     required this.onTap,
+    this.onStartEvent,
+    this.isOwner = false,
+    this.isRegistered = false,
+    this.showJoinButton = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    final dateFormatter = DateFormat('d MMM yyyy', 'es');
-    final timeFormatter = DateFormat('hh:mm a', 'es');
-
     return Container(
       color: context.colorScheme.surface,
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
@@ -69,7 +74,7 @@ class EventCardInfoPanel extends StatelessWidget {
               ),
               AppSpacing.hGapXs,
               Text(
-                '${dateFormatter.format(event.startDate)} • ${timeFormatter.format(event.meetingTime)}',
+                '${event.startDate.formattedDate} • ${event.meetingTime.formattedTime}',
                 style: context.bodySmall?.copyWith(
                   color: context.colorScheme.onSurfaceVariant,
                 ),
@@ -98,10 +103,33 @@ class EventCardInfoPanel extends StatelessWidget {
             ],
           ),
           AppSpacing.gapMd,
-          AppButton(
-            label: context.l10n.event_joinEvent,
-            onPressed: onTap,
-          ),
+          if (showJoinButton)
+            AppButton(
+              label: context.l10n.event_joinEvent,
+              onPressed: onTap,
+            )
+          else if (isOwner && event.state == EventState.scheduled)
+            AppButton(
+              label: context.l10n.event_startEvent,
+              isFullWidth: true,
+              onPressed: onStartEvent,
+            )
+          else if (!isOwner && isRegistered)
+            Text(
+              context.l10n.event_alreadyRegistered,
+              style: context.bodySmall?.copyWith(
+                color: context.colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
+              ),
+            )
+          else
+            Text(
+              context.l10n.event_eventCardMyEvent,
+              style: context.bodySmall?.copyWith(
+                color: context.colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
         ],
       ),
     );

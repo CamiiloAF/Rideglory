@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer' as developer;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:injectable/injectable.dart';
@@ -81,19 +82,39 @@ class TrackingWsClient {
     required String eventId,
     required String baseUrl,
   }) async {
-    if (_channel != null) {
+    final existingChannel = _channel;
+    if (existingChannel != null && _activeEventId == eventId) {
+      developer.log('Tracking WS already connected for event $eventId');
       return;
     }
+
+    if (existingChannel != null && _activeEventId != eventId) {
+      developer.log(
+        'Tracking WS reconnecting for new event. old=$_activeEventId new=$eventId',
+      );
+      await _disposeChannel();
+    }
+
     final token = await _firebaseAuth.currentUser?.getIdToken();
+    if (token == null || token.isEmpty) {
+      developer.log('Tracking WS aborted: no auth token.');
+      _ridersController.addError(StateError('No auth token for WS'));
+      return;
+    }
     final uri = _wsUri(baseUrl: baseUrl, eventId: eventId, token: token);
+    developer.log('Tracking WS connecting to $uri');
     final channel = WebSocketChannel.connect(uri);
     _channel = channel;
     _subscription = channel.stream.listen(
       _onMessage,
       onDone: _onDisconnected,
-      onError: (_) => _onDisconnected(),
+      onError: (error) {
+        developer.log('Tracking WS stream error: $error');
+        _onDisconnected();
+      },
       cancelOnError: true,
     );
+    developer.log('Tracking WS sending join for event $eventId');
     channel.sink.add(
       jsonEncode({'type': 'tracking.join', 'data': {'eventId': eventId}}),
     );
@@ -131,10 +152,12 @@ class TrackingWsClient {
     final type = decoded['type'];
     final data = decoded['data'];
     if (type == 'tracking.snapshot') {
+      developer.log('Tracking WS received snapshot event.');
       _handleSnapshot(data);
       return;
     }
     if (type == 'tracking.rider.updated') {
+      developer.log('Tracking WS received rider update event.');
       _handleRiderUpdated(data);
       return;
     }
@@ -197,6 +220,7 @@ class TrackingWsClient {
   }
 
   void _onDisconnected() {
+    developer.log('Tracking WS disconnected.');
     unawaited(_disposeChannel());
     if (_manualDisconnect) {
       return;

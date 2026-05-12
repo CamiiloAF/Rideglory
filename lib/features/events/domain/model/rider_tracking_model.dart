@@ -17,8 +17,7 @@ enum RiderTrackingRole {
 class RiderTrackingModel {
   const RiderTrackingModel({
     required this.userId,
-    required this.firstName,
-    required this.lastName,
+    required this.fullName,
     required this.role,
     required this.latitude,
     required this.longitude,
@@ -31,8 +30,7 @@ class RiderTrackingModel {
   });
 
   final String userId;
-  final String firstName;
-  final String lastName;
+  final String fullName;
 
   /// Role in the live tracking session (serialized as string).
   final RiderTrackingRole role;
@@ -47,8 +45,7 @@ class RiderTrackingModel {
 
   RiderTrackingModel copyWith({
     String? userId,
-    String? firstName,
-    String? lastName,
+    String? fullName,
     RiderTrackingRole? role,
     double? latitude,
     double? longitude,
@@ -61,8 +58,7 @@ class RiderTrackingModel {
   }) {
     return RiderTrackingModel(
       userId: userId ?? this.userId,
-      firstName: firstName ?? this.firstName,
-      lastName: lastName ?? this.lastName,
+      fullName: fullName ?? this.fullName,
       role: role ?? this.role,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,

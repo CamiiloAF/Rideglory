@@ -14,6 +14,9 @@ class AppCityAutocomplete extends StatelessWidget {
     this.validator,
     this.onSelected,
     this.suffixIcon,
+    this.focusNode,
+    this.textInputAction,
+    this.onFieldSubmitted,
   });
 
   static const String _defaultLabel = 'Ciudad';
@@ -27,6 +30,9 @@ class AppCityAutocomplete extends StatelessWidget {
   final String? Function(String?)? validator;
   final void Function(String)? onSelected;
   final Widget? suffixIcon;
+  final FocusNode? focusNode;
+  final TextInputAction? textInputAction;
+  final void Function(String? value)? onFieldSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +54,9 @@ class AppCityAutocomplete extends StatelessWidget {
       validator: effectiveValidator,
       onSelected: onSelected,
       suffixIcon: suffixIcon ?? const Icon(Icons.search),
+      focusNode: focusNode,
+      textInputAction: textInputAction,
+      onFieldSubmitted: onFieldSubmitted,
       suggestions: ColombiaCitiesData.search,
       suggestionsPrefixIcon: Icons.location_city_outlined,
     );
