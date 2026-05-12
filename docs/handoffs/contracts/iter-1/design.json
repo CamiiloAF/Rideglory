@@ -3,7 +3,19 @@
   "phase": "design",
   "agent": "design",
   "status": "pass",
-  "completedAt": "2026-05-12T04:00:00Z",
+  "updatedAt": "2026-05-12T04:00:00Z",
+  "summary": "Profile page designed: 4 HTML mockups (loading, data, empty, error) + shared styles.css design token baseline.",
+  "metrics": { "tokens": 46156, "costUsd": 0.05 },
+  "artifacts": [
+    "docs/handoffs/design.md",
+    "docs/design/html-mockups/iter-1/profile_loading.html",
+    "docs/design/html-mockups/iter-1/profile_data.html",
+    "docs/design/html-mockups/iter-1/profile_empty.html",
+    "docs/design/html-mockups/iter-1/profile_error.html",
+    "docs/design/html-mockups/iter-1/shared/styles.css",
+    "docs/handoffs/contracts/iter-1/design.json",
+    ".claude/skills/design-skill.md"
+  ],
   "screens": [
     { "name": "profile_loading", "story": "US-1-4", "type": "NEW", "file": "docs/design/html-mockups/iter-1/profile_loading.html" },
     { "name": "profile_data", "story": "US-1-4", "type": "NEW", "file": "docs/design/html-mockups/iter-1/profile_data.html" },

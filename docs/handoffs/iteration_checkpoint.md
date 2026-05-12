@@ -13,16 +13,16 @@
 | po_scope | po | done |
 | architect | architect | done |
 | design | design | done |
-| backend | backend | pending |
-| frontend | frontend | pending |
+| backend | backend | done (skipped — no API changes) |
+| frontend | frontend | in progress |
 | qa | qa | pending |
 | devops | devops | pending |
 | pr | system | pending |
 | tech_lead | tech_lead | pending |
 | po_close | po | pending |
 
-**Last completed phase:** design
-**Next phase:** backend
+**Last completed phase:** backend (pass-through)
+**Next phase:** frontend
 
 *Started: 2026-05-12T01:30:00Z*
 
