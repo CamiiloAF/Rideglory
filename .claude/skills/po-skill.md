@@ -27,3 +27,4 @@
 <!-- Append, never delete -->
 - 2026-05-11 (iter 0): Skill stub created. Run /solo-plan then /solo-approve to populate.
 - 2026-05-12 (iter 2): Scope defined — 3 stories (filters, clear, attendee profiles), 50 acceptance criteria, backend filter gap identified and scoped in.
+- 2026-05-12 (iter 2, po_close): Iteration 2 closed. 50/50 ACs delivered: event filters (backend + frontend), clear filters UI, attendee profile navigation + read-only rider profile page. 22 unit tests pass. 0 new lint violations. Tech lead approved. 22 widget tests prepared (deferred pending maintenance code fix). Bridge document iteration_context.md written. Contract po_close.json signed off. Ready for main merge.

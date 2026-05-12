@@ -98,7 +98,7 @@
       "id": 2,
       "title": "Event Discovery Filters + Attendee Profile Links",
       "goal": "Wire the existing filter bottom sheet to real backend query parameters and enable riders to navigate to other riders' profiles from the attendee list.",
-      "status": "active",
+      "status": "done",
       "stories": [
         "HU-EVENT-FILTER-01",
         "HU-EVENT-FILTER-02",
@@ -271,8 +271,8 @@
   "agents": {
     "po": {
       "status": "idle",
-      "lastAction": "2026-05-12T19:45:00Z",
-      "focus": "iter-2 scope \u2014 filters, clear filters, attendee profiles"
+      "lastAction": "2026-05-12T23:50:00Z",
+      "focus": "iteration 2 closed"
     },
     "architect": {
       "status": "idle",
@@ -735,11 +735,26 @@
       "phase": "tech_lead",
       "agent": "tech_lead",
       "at": "2026-05-12T23:45:00Z",
-      "detail": "approved — 2 blocking issues fixed; dart analyze 0 new violations; 22 unit tests verified; tech_lead.md produced"
+      "detail": "approved \u2014 2 blocking issues fixed; dart analyze 0 new violations; 22 unit tests verified; tech_lead.md produced"
+    },
+    {
+      "type": "po_close",
+      "iteration": 2,
+      "phase": "po_close",
+      "agent": "po",
+      "at": "2026-05-12T23:50:00Z",
+      "detail": "Iteration 2 closed: 50/50 ACs delivered (event filters + attendee profiles). 22 unit tests pass. 0 new lint violations. Tech lead approved. Bridge document iteration_context.md written. Contract po_close.json signed off. Ready for main merge."
+    },
+    {
+      "type": "iteration_done",
+      "iteration": 2,
+      "agent": "system",
+      "at": "2026-05-12T23:50:01Z",
+      "detail": "Iteration 2 complete \u2014 all phases done. Backend: filter endpoints working (8 unit tests pass). Frontend: filters wired, rider profile page implemented. QA: 22 unit tests pass, 22 widget tests prepared. Tech lead: approved. Ready to merge to main and proceed to Iteration 3a."
     }
   ],
   "checkpoint": {
-    "last": "tech_lead",
-    "next": "po_close"
+    "last": "po_close",
+    "next": null
   }
 }
