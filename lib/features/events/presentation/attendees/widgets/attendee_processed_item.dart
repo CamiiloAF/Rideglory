@@ -102,13 +102,19 @@ class AttendeeProcessedItem extends StatelessWidget {
                   ),
                 ),
               ),
-              IconButton(
-                icon: Icon(
-                  Icons.more_vert_rounded,
+              if (onTap != null)
+                Icon(
+                  Icons.chevron_right_rounded,
                   color: colorScheme.onSurfaceVariant,
+                )
+              else
+                IconButton(
+                  icon: Icon(
+                    Icons.more_vert_rounded,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                  onPressed: onOptionsPressed,
                 ),
-                onPressed: onOptionsPressed,
-              ),
             ],
           ),
         ),

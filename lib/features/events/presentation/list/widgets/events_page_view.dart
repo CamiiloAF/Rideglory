@@ -56,14 +56,26 @@ class EventsPageView extends StatelessWidget {
                   onRetry: () => eventsCubit.fetchEvents(),
                   onRefresh: () => eventsCubit.fetchEvents(),
                 ),
-                empty: () => EmptyStateWidget(
-                  icon: Icons.event_outlined,
-                  title: context.l10n.event_noEvents,
-                  description: context.l10n.event_noEventsDescription,
-                  actionButtonText: context.l10n.event_createEvent,
-                  onActionPressed: () => _navigateToCreate(context),
-                  onRefresh: () => eventsCubit.fetchEvents(),
-                ),
+                empty: () {
+                  final hasActiveFilters =
+                      eventsCubit.filters.hasFilters;
+                  return EmptyStateWidget(
+                    icon: Icons.search_off_outlined,
+                    title: hasActiveFilters
+                        ? context.l10n.event_noResultsFiltered
+                        : context.l10n.event_noEvents,
+                    description: hasActiveFilters
+                        ? null
+                        : context.l10n.event_noEventsDescription,
+                    actionButtonText: hasActiveFilters
+                        ? context.l10n.event_clearFilters
+                        : context.l10n.event_createEvent,
+                    onActionPressed: hasActiveFilters
+                        ? eventsCubit.clearFilters
+                        : () => _navigateToCreate(context),
+                    onRefresh: () => eventsCubit.fetchEvents(),
+                  );
+                },
                 data: (events) => EventsDataView(events: events),
                 orElse: () => const PageLoadingStateWidget(),
               );

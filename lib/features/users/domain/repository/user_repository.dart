@@ -9,4 +9,6 @@ abstract class UserRepository {
   });
 
   Future<Either<DomainException, UserModel>> getCurrentUser();
+
+  Future<Either<DomainException, UserModel>> getUserById(String userId);
 }

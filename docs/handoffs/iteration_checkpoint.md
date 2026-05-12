@@ -20,14 +20,14 @@
 | architect | architect | complete |
 | design | design | complete |
 | backend | backend | complete |
-| frontend | frontend | pending |
+| frontend | frontend | complete |
 | qa | qa | pending |
 | devops | devops | pending |
 | pr | system | pending |
 | tech_lead | tech_lead | pending |
 | po_close | po | pending |
 
-**Last completed phase:** backend (event filters on GET /events + /upcoming; Prisma WHERE logic; GET /users/:id confirmed guarded; 8 unit tests pass; backend.json contract all-pass)
-**Next phase:** frontend
+**Last completed phase:** frontend (EventService @Query + EventsCubit backend-wired + filter badge/clear/empty; RiderProfilePage + use case + cubit + widgets + route + attendee tap nav; 8 l10n keys; build_runner clean; frontend.json contract pass)
+**Next phase:** qa
 
 *Last closed: Iteration 1 (PR #8 merged, tech_lead approved)*

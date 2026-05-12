@@ -56,17 +56,29 @@ class EventFilters {
 
 class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
   EventsCubit(GetEventsUseCase getEventsUseCase, this._updateEventUseCase)
-    : _fetchFn = getEventsUseCase.call,
+    : _fetchFn = (({String? type, String? dateFrom, String? dateTo, String? city}) =>
+          getEventsUseCase(
+            type: type,
+            dateFrom: dateFrom,
+            dateTo: dateTo,
+            city: city,
+          )),
       super(const ResultState.initial());
 
   EventsCubit.myEvents(
     GetMyEventsUseCase getMyEventsUseCase,
     this._updateEventUseCase,
   )
-    : _fetchFn = getMyEventsUseCase.call,
+    : _fetchFn = (({String? type, String? dateFrom, String? dateTo, String? city}) =>
+          getMyEventsUseCase()),
       super(const ResultState.initial());
 
-  final Future<dynamic> Function() _fetchFn;
+  final Future<dynamic> Function({
+    String? type,
+    String? dateFrom,
+    String? dateTo,
+    String? city,
+  }) _fetchFn;
   final UpdateEventUseCase _updateEventUseCase;
 
   List<EventModel> _allEvents = [];
@@ -78,7 +90,13 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
 
   Future<void> fetchEvents() async {
     emit(const ResultState.loading());
-    final result = await _fetchFn();
+    final filters = _filters;
+    final result = await _fetchFn(
+      type: filters.types.isNotEmpty ? filters.types.first.name : null,
+      dateFrom: filters.startDate?.toIso8601String().substring(0, 10),
+      dateTo: filters.endDate?.toIso8601String().substring(0, 10),
+      city: filters.city,
+    );
 
     result.fold((error) => emit(ResultState.error(error: error)), (events) {
       _allEvents = events;
@@ -93,12 +111,12 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
 
   void updateFilters(EventFilters filters) {
     _filters = filters;
-    _applyFiltersAndEmit();
+    fetchEvents();
   }
 
   void clearFilters() {
     _filters = const EventFilters();
-    _applyFiltersAndEmit();
+    fetchEvents();
   }
 
   /// Adds a newly created event to the local list without re-fetching.

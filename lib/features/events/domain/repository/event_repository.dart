@@ -5,7 +5,12 @@ import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/model/upload_event_image_request.dart';
 
 abstract class EventRepository {
-  Future<Either<DomainException, List<EventModel>>> getEvents();
+  Future<Either<DomainException, List<EventModel>>> getEvents({
+    String? type,
+    String? dateFrom,
+    String? dateTo,
+    String? city,
+  });
 
   Future<Either<DomainException, List<EventModel>>> getMyEvents();
 

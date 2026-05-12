@@ -13,7 +13,12 @@ abstract class EventService {
   factory EventService(Dio dio) = _EventService;
 
   @GET(ApiRoutes.events)
-  Future<List<EventDto>> getEvents();
+  Future<List<EventDto>> getEvents({
+    @Query('type') String? type,
+    @Query('dateFrom') String? dateFrom,
+    @Query('dateTo') String? dateTo,
+    @Query('city') String? city,
+  });
 
   @GET(ApiRoutes.myEvents)
   Future<List<EventDto>> getMyEvents();
