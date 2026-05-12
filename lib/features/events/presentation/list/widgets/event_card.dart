@@ -29,6 +29,7 @@ class EventCard extends StatefulWidget {
 }
 
 class _EventCardState extends State<EventCard> {
+  static const String _eventPlaceholderAsset = 'assets/images/event.jpeg';
   bool _isExpanded = false;
 
   @override
@@ -41,6 +42,9 @@ class _EventCardState extends State<EventCard> {
 
   @override
   Widget build(BuildContext context) {
+    final imageUrl = widget.event.imageUrl?.trim();
+    final hasImageUrl = imageUrl != null && imageUrl.isNotEmpty;
+
     return GestureDetector(
       onTap: widget.onTap,
       child: Container(
@@ -62,14 +66,14 @@ class _EventCardState extends State<EventCard> {
           child: Stack(
             children: [
               Positioned.fill(
-                child: Image.network(
-                  widget.event.imageUrl ?? '',
-                  fit: BoxFit.fill,
-                  errorBuilder: (_, _, _) => Image.asset(
-                    'assets/images/event.jpeg', //TODO: Add placeholder image
-                    fit: BoxFit.fill,
-                  ),
-                ),
+                child: hasImageUrl
+                    ? Image.network(
+                        imageUrl!,
+                        fit: BoxFit.fill,
+                        errorBuilder: (_, _, _) =>
+                            Image.asset(_eventPlaceholderAsset, fit: BoxFit.fill),
+                      )
+                    : Image.asset(_eventPlaceholderAsset, fit: BoxFit.fill),
               ),
               Positioned.fill(
                 child: Container(

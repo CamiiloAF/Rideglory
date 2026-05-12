@@ -7,6 +7,7 @@ import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/authentication/constants/auth_form_fields.dart';
 import 'package:rideglory/features/authentication/login/presentation/widgets/login_divider.dart';
 import 'package:rideglory/features/authentication/login/presentation/widgets/login_email_field.dart';
+import 'package:rideglory/features/authentication/login/presentation/widgets/login_forgot_password_link.dart';
 import 'package:rideglory/features/authentication/login/presentation/widgets/login_heading.dart';
 import 'package:rideglory/features/authentication/login/presentation/widgets/login_password_field.dart';
 import 'package:rideglory/features/authentication/login/presentation/widgets/login_register_link.dart';
@@ -29,6 +30,13 @@ class _LoginViewState extends State<LoginView> {
   void _onAuthStateChanged(BuildContext context, AuthState state) {
     if (state.isAuthenticated) {
       context.pushReplacementNamed(AppRoutes.home);
+    } else if (state.isPasswordResetEmailSent) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(context.l10n.success),
+          backgroundColor: Colors.green,
+        ),
+      );
     } else if (state.hasError) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -47,6 +55,27 @@ class _LoginViewState extends State<LoginView> {
         password: data[AuthFormFields.password] as String,
       );
     }
+  }
+
+  void _handleForgotPassword(BuildContext context) {
+    final formState = _formKey.currentState;
+    if (formState == null) {
+      return;
+    }
+
+    formState.save();
+    final emailFieldState = formState.fields[AuthFormFields.email];
+    final isEmailValid = emailFieldState?.validate() ?? false;
+    if (!isEmailValid) {
+      return;
+    }
+
+    final email = (emailFieldState?.value as String?)?.trim();
+    if (email == null || email.isEmpty) {
+      return;
+    }
+
+    context.read<AuthCubit>().sendPasswordResetEmail(email);
   }
 
   void _showExitDialog(BuildContext context) {
@@ -103,6 +132,12 @@ class _LoginViewState extends State<LoginView> {
                           LoginPasswordField(
                             onSubmitted: () => _handleLogin(context),
                           ),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: LoginForgotPasswordLink(
+                              onPressed: () => _handleForgotPassword(context),
+                            ),
+                          ),
                           AppSpacing.gapXl,
                           LoginSignInButton(
                             onPressed: () => _handleLogin(context),
@@ -113,7 +148,7 @@ class _LoginViewState extends State<LoginView> {
                           const LoginSocialRow(),
                           AppSpacing.gapXxxl,
                           LoginRegisterLink(
-                            onTap: () => context.push(AppRoutes.signup),
+                            onTap: () => context.pushNamed(AppRoutes.signup),
                           ),
                           AppSpacing.gap40,
                         ],

@@ -16,7 +16,7 @@ class HomeGarageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.goNamed(AppRoutes.garage, extra: vehicle.id);
+        context.pushNamed(AppRoutes.garage, extra: vehicle.id);
       },
       child: Container(
         decoration: BoxDecoration(
