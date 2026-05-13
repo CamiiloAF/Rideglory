@@ -53,6 +53,9 @@ app.*.map.json
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 
+# Design exports
+images/
+
 # Generated files
 **.config.dart
 **.g.dart
