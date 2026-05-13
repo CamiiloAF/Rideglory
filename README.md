@@ -1,19 +1,62 @@
 # rideglory
 
-A new Flutter project.
+A Flutter mobile application for motorcycle riding events and community coordination.
+
+## What's Shipped
+
+| Feature | Status | Iteration | Details |
+|---------|--------|-----------|---------|
+| **Authentication** | Live | Framework | Email, Google, Apple sign-in via Firebase |
+| **Event Discovery** | Live | 1–2 | Browse events, filter by type/city/date, real-time tracking |
+| **Vehicle Garage** | Live | Framework | Add/manage/delete motorcycles, maintenance logging |
+| **User Profiles** | Live | 1 | Public rider profiles, attendee list navigation |
+| **AI Event Covers** | Live | 4 | Auto-generate event cover images via Claude Haiku + Unsplash |
+| **Design System** | Complete | 3 | Pencil UI toolkit with tokens, components, all screen flows |
+
+## Deployed Links
+
+- **GitHub:** [Rideglory repository](https://github.com/CamiiloAF/Rideglory)
+- **Backend API:** [rideglory-api repository](https://github.com/CamiiloAF/rideglory-api) (NestJS microservices)
+- **Product Documentation:** `/docs/` (PRD, architecture, iteration history)
+- **Latest Iteration:** [Iteration 4 Summary](/docs/ITERATION_SUMMARY_4.md) (AI Event Cover Generation)
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This is a brownfield Flutter project using Clean Architecture (domain/data/presentation layers), BLoC/Cubit for state management, and Firebase for authentication and backend integration.
 
-A few resources to get you started if this is your first Flutter project:
+### Quick Start
+```bash
+# Install dependencies
+flutter pub get
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+# Copy and configure environment variables
+cp .env.example .env
+# Edit .env with your Firebase and Maps credentials
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Copy Firebase config files (keep untracked locally)
+cp android/app/google-services.json.example android/app/google-services.json
+cp ios/Runner/GoogleService-Info.plist.example ios/Runner/GoogleService-Info.plist
+
+# Generate code
+dart run build_runner build --delete-conflicting-outputs
+
+# Run the app
+flutter run
+```
+
+### Development Commands
+```bash
+# Run tests
+flutter test
+
+# Check code style
+dart analyze
+
+# Format code
+dart format lib/
+```
+
+For detailed architecture and development guide, see [CLAUDE.md](CLAUDE.md).
 
 ## Security configuration
 
