@@ -1,113 +1,93 @@
-# Backend Handoff — Iteration 2
+# Backend handoff — Iteration 4
 
-**Phase:** backend | **Iteration:** 2 | **Status:** DONE  
-**Completed:** 2026-05-12T15:25:00Z
+**Date:** 2026-05-13
+**Status:** complete
+**Agent:** backend
 
 ---
 
-## Changes Implemented
+## Deliverable
 
-### 1. Event filter DTO — `rideglory-contracts`
+`POST /events/generate-cover` implemented and tested in `api-gateway`.
 
-**File:** `rideglory-contracts/src/events/dto/event-filter.dto.ts` (new)
+---
 
-Added three DTOs:
-- `EventFilterDto` — optional `type` (EventType enum), `dateFrom` (ISO 8601 string), `dateTo` (ISO 8601 string), `city` (string)
-- `FindAllEventsPayloadDto extends EventFilterDto` — payload for `findAllEvents` message pattern
-- `FindUpcomingEventsPayloadDto extends EventFilterDto` — payload for `findUpcomingEvents`, with optional `limit`
+## Files changed (rideglory-api)
 
-Exported from `rideglory-contracts/src/events/dto/index.ts`.
+| File | Action |
+|------|--------|
+| `api-gateway/src/common/claude.service.ts` | Created — Anthropic SDK wrapper, `generateSearchQuery()` |
+| `api-gateway/src/common/unsplash.service.ts` | Created — axios HTTP wrapper, `searchPhoto()`, 15 s timeout |
+| `api-gateway/src/events/dto/generate-cover.dto.ts` | Created — `GenerateCoverDto` with class-validator decorators |
+| `api-gateway/src/events/events.controller.ts` | Updated — `@Post('generate-cover')` endpoint added before `@Post()` |
+| `api-gateway/src/events/events.module.ts` | Updated — `ClaudeService` and `UnsplashService` registered as providers |
+| `api-gateway/.env.example` | Created — includes `ANTHROPIC_API_KEY` and `UNSPLASH_ACCESS_KEY` placeholders |
+| `api-gateway/src/events/generate-cover.spec.ts` | Created — 10 unit tests covering all required paths |
 
-### 2. API Gateway — `GET /events` and `GET /events/upcoming` filter passthrough
+---
 
-**File:** `api-gateway/src/events/events.controller.ts`
+## Endpoint contract
 
-- Added `@Query()` decorator to `findAll()`: accepts `EventFilterDto`, forwards to events-ms via `send('findAllEvents', filters)`
-- Added `@Query()` decorator to `findUpcoming()`: accepts `EventFilterDto`, forwards merged with `{ limit: 5 }` to events-ms via `send('findUpcomingEvents', { ...filters, limit: 5 })`
-- All params are optional; missing params pass empty object (backward compatible)
-
-### 3. Events Microservice controller
-
-**File:** `events-ms/src/events/events.controller.ts`
-
-- `findAllEvents` message handler now accepts `@Payload() filters: FindAllEventsPayloadDto` and passes to service
-- `findUpcomingEvents` message handler now accepts `@Payload() payload: FindUpcomingEventsPayloadDto`, destructures `{ limit, ...filters }`, passes both to service
-
-### 4. Events Microservice service — Prisma WHERE logic
-
-**File:** `events-ms/src/events/events.service.ts`
-
-`findAll(filters: EventFilterDto = {})`:
-- Constructs `startDate` filter combining `gte` (dateFrom) and `lte` (dateTo) in a single object to avoid key collision
-- Conditionally spreads `eventType`, `city` (ILIKE via Prisma `contains + insensitive`), and `startDate` filters
-- Empty `filters` object produces empty `where: {}` — returns all events (backward compatible)
-
-`findUpcoming(filters: EventFilterDto = {}, limit = 5)`:
-- `startDate.gte` uses `dateFrom` if provided, otherwise `new Date()` (current behavior preserved)
-- `startDate.lte` conditionally added if `dateTo` is present
-- `eventType` and `city` filters applied the same as `findAll`
-
-### 5. `GET /users/:id` — Already Implemented
-
-**File:** `api-gateway/src/users/users.controller.ts`
-
-The endpoint was already present:
-```typescript
-@Get(':id')
-findOne(@Param('id', ParseUUIDPipe) id: string) {
-  return this.usersService.send('findOneUser', { id });
-}
 ```
-Protected by global `FirebaseAuthGuard` (registered via `APP_GUARD` in `AuthModule`). No changes required.
+POST /api/events/generate-cover
+Authorization: Bearer <Firebase ID token>
+Content-Type: application/json
+
+Body:   { "title": string, "eventType": string, "city": string }
+
+200:    { "imageUrl": string, "source": "unsplash", "query": string }
+400:    Missing or empty field (class-validator enforced by global ValidationPipe)
+503:    Claude SDK error OR Unsplash axios error OR 15 s timeout exceeded
+```
 
 ---
 
-## Unit Tests
+## Architecture notes
 
-**File:** `events-ms/src/events/events.service.spec.ts` (new — 8 tests)
-
-| Test | Description |
-|------|-------------|
-| TC-1 | No filters — WHERE `{}`, returns all events (backward compat) |
-| TC-2 | Type-only filter — WHERE `{ eventType: 'OFF_ROAD' }` |
-| TC-3 | Date-range filter — WHERE `{ startDate: { gte, lte } }` combined correctly |
-| TC-4 | City-only filter — WHERE `{ city: { contains, mode: 'insensitive' } }` |
-| TC-5 | Combined (type + dateFrom + city) — all conditions ANDed |
-| TC-6 | `findUpcoming` no filters — `gte` uses current date, `take: 5` |
-| TC-7 | `findUpcoming` with type filter — `eventType` in WHERE |
-| TC-8 | `findUpcoming` with dateFrom — overrides default `now` as `gte` |
-
-All 8 tests pass.
+- `ClaudeService` and `UnsplashService` are registered in `EventsModule` as standard NestJS providers (no global module needed — only events endpoint uses them).
+- Firebase auth guard applies globally; the new endpoint is protected without extra decoration.
+- Axios timeout is set to `15_000 ms` via the `timeout` option in the axios GET call.
+- All external errors (Anthropic, axios network, axios timeout, empty Unsplash results) are mapped to `ServiceUnavailableException` (HTTP 503).
+- No env validation schema changes were needed — both new keys are read directly from `process.env` inside the services (consistent with `GOOGLE_PLACES_API_KEY` pattern).
 
 ---
 
-## No ENV Changes
+## Test results
 
-No new environment variables. No Prisma migration required (query-level changes only).
+```
+Test Suites: 1 passed, 1 total
+Tests:       10 passed, 10 total
+```
 
----
-
-## Security
-
-- All event filter endpoints protected by global `FirebaseAuthGuard` (Firebase ID token via `Authorization: Bearer`)
-- `GET /users/:id` was already protected by the same global guard
-- Filter params validated via class-validator decorators on `EventFilterDto`
-- `ParseUUIDPipe` on `/users/:id` prevents injection via malformed IDs
-
----
-
-## Files Changed
-
-**rideglory-api:**
-- `rideglory-contracts/src/events/dto/event-filter.dto.ts` — NEW
-- `rideglory-contracts/src/events/dto/index.ts` — export added
-- `api-gateway/src/events/events.controller.ts` — Query params on findAll + findUpcoming
-- `events-ms/src/events/events.controller.ts` — Payload types on message handlers
-- `events-ms/src/events/events.service.ts` — Prisma WHERE filter logic
-- `events-ms/src/events/events.service.spec.ts` — NEW (8 unit tests)
+Test coverage:
+1. Happy path — HTTP 200 `{ imageUrl, source: 'unsplash', query }` ✓
+2. Claude SDK throws — HTTP 503 ✓
+3. Unsplash axios throws — HTTP 503 ✓
+4. Unsplash 15 s timeout — HTTP 503 ✓
+5. Missing `title` in body — HTTP 400 (ValidationPipe) ✓
+6. Missing `eventType` in body — HTTP 400 ✓
+7. Missing `city` in body — HTTP 400 ✓
+8. ClaudeService unit — Anthropic SDK error → ServiceUnavailableException ✓
+9. UnsplashService unit — axios throws → ServiceUnavailableException ✓
+10. UnsplashService unit — empty results → ServiceUnavailableException ✓
 
 ---
 
-## Next Phase
+## New env vars required
 
-Frontend — implement `EventService` Retrofit `@Query` params, `GetUserByIdUseCase`, `RiderProfilePage`, attendee list tap navigation, filter bottom sheet wiring.
+| Variable | Where | Notes |
+|----------|-------|-------|
+| `ANTHROPIC_API_KEY` | api-gateway `.env` | Anthropic Console — never commit |
+| `UNSPLASH_ACCESS_KEY` | api-gateway `.env` | Unsplash Developer Dashboard — never commit |
+
+---
+
+## Handoff to frontend
+
+Frontend needs to call `POST /api/events/generate-cover` with `{ title, eventType, city }` from the event form. The response shape is `{ imageUrl: string, source: "unsplash", query: string }`. On HTTP 503 or network error, display Spanish error SnackBar per US-4-1 AC #7.
+
+---
+
+## Change log
+
+- 2026-05-13 (iter-4): Initial backend handoff. POST /events/generate-cover implemented. ClaudeService + UnsplashService created. 10 unit tests all pass. Zero lint errors in new code.

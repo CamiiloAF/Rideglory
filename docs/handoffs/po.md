@@ -1,249 +1,73 @@
-# Iteration 2 PO Handoff — Event Discovery Filters + Attendee Profile Links
+# PO handoff — Iteration 4
 
-**Generated:** 2026-05-12  
-**Iteration:** 2  
-**Status:** READY FOR ARCHITECT  
-**Stories:** HU-EVENT-FILTER-01, HU-EVENT-FILTER-02, HU-ATTENDEE-PROFILE-01  
-**Agents:** backend, frontend, qa
+**Date:** 2026-05-13
+**Status:** scope defined
 
 ---
 
-## Goal
+## Iteration goal
 
-Make event discovery fully functional by wiring the existing filter bottom sheet to real backend query parameters, and enable riders to tap into other riders' profiles from the event attendee list.
-
-## Why Now
-
-Event filters exist in the UI but are not connected to the backend — riders see all events with no way to narrow by type, date, or city. The attendee list has no navigation, making community discovery impossible. Both are completions of existing UI with no new architecture. **The backend filter gap is the only concrete risk** and is addressed in this iteration with explicit query parameter forwarding on `GET /events` and `GET /events/upcoming`.
+Wire the existing "Generar portada con IA" button in the event creation form to a backend endpoint that uses Claude Haiku to generate a search query and Unsplash to return a relevant cover image, so organizers can publish visually rich events without manual design work.
 
 ---
 
-## User Stories
+## Stories for this iteration
 
-### US-2-1: Event List Filters
-
-**Title:** Event list filters
-
-**Description:**  
-As a rider browsing events, I tap the filter icon on the event list and select event type, date range, and city so I see only the upcoming rides relevant to me.
-
-**Acceptance Criteria:**
-
-1. **Backend — `GET /events` and `GET /events/upcoming`:** Accept optional query parameters `type`, `dateFrom`, `dateTo`, and `city`.
-2. **Backend — parameter forwarding:** Both routes forward all filter parameters to the events-ms `findAllEvents` handler without modification.
-3. **Backend — Prisma WHERE logic:** `findAllEvents` applies `WHERE` conditions for each filter when the param is present:
-   - `eventType == type` (exact match, case-sensitive)
-   - `startDate >= dateFrom` (ISO 8601 date string, inclusive)
-   - `startDate <= dateTo` (ISO 8601 date string, inclusive)
-   - `city ILIKE city` (case-insensitive prefix match)
-4. **Backend — combined filters:** Multiple filters are ANDed together (e.g., `type=touring AND dateFrom=2026-05-20 AND city=Medell` returns only touring events in Medellín starting on or after May 20).
-5. **Backend — unit tests:** At least 5 test cases covering:
-   - Type-only filter
-   - Date-range-only filter
-   - City-only filter
-   - Combined filter (type + date + city)
-   - No filters (returns all events, confirming backward compatibility)
-6. **`EventsCubit` refactor:** The cubit state transitions from `Cubit<ResultState<List<EventModel>>>` to `Cubit<EventsState>` where `EventsState` is a `@freezed` class with two fields:
-   - `ResultState<List<EventModel>> eventsResult`
-   - `EventFilter? activeFilter` (a `@freezed` class with optional `type`, `dateFrom`, `dateTo`, `city` fields)
-7. **`EventsCubit.applyFilters()`:** New method that accepts optional `{EventType? type, DateTime? dateFrom, DateTime? dateTo, String? city}`. Converts `DateTime` fields to ISO 8601 strings and calls the `GetEventsUseCase` with the params. Emits `state.copyWith(activeFilter: filter, eventsResult: loading())` then `state.copyWith(eventsResult: data(...))` on success or `error(...)` on failure.
-8. **`EventsCubit.clearFilters()`:** New method that resets `activeFilter` to null and triggers a fresh fetch. Emits `state.copyWith(activeFilter: null, eventsResult: loading())` then the fresh result.
-9. **Filter UI wiring:** The event filter bottom sheet (existing widget in `lib/features/events/presentation/widgets/event_filters_bottom_sheet.dart` or similar) is wired to `context.read<EventsCubit>().applyFilters(...)` on the "Filtrar" button tap.
-10. **Date range picker:** Use `flutter_form_builder`'s `FormBuilderDateRangePicker` or wrap `showDateRangePicker` with the app's `ThemeData` (dark mode — no white Material calendar flash). The picker must not show a white Material theme even in dark mode.
-11. **Active filter badge:** An orange `Badge` widget with the count of active filters is displayed on the filter icon in the event list app bar (e.g., "3" for all three filter types applied, "1" for just type). Badge is hidden when no filters are active.
-12. **Filter clear UI:** A "Limpiar filtros" button (using `AppButton`) is visible in the filter bottom sheet only when at least one filter is active. Tapping it calls `EventsCubit.clearFilters()`.
-13. **Filtered empty state:** When `eventsResult` is `empty` AND `activeFilter` is non-null, the empty state widget shows "No hay eventos con estos filtros" and includes a "Limpiar filtros" button to reset.
-14. **All-events empty state:** When `eventsResult` is `empty` AND `activeFilter` is null, the empty state widget shows the original message (e.g., "No hay eventos próximos").
-15. **`EventFilter` model:** Define as a `@freezed` class in `lib/features/events/domain/models/event_filter.dart` with optional fields:
-    - `EventType? type`
-    - `DateTime? dateFrom`
-    - `DateTime? dateTo`
-    - `String? city`
-16. **`EventsState` model:** Define as a `@freezed` class in `lib/features/events/presentation/cubit/events_state.dart` with:
-    - `ResultState<List<EventModel>> eventsResult`
-    - `EventFilter? activeFilter`
-17. **`GetEventsUseCase` update:** Signature changes to accept optional params: `Future<Either<DomainException, List<EventModel>>> call({EventType? type, DateTime? dateFrom, DateTime? dateTo, String? city})`.
-18. **`EventService` (Retrofit) update:** Signature changes to accept optional query parameters:
-    ```dart
-    @GET('/events')
-    Future<List<EventDto>> getEvents({
-      @Query('type') String? type,
-      @Query('dateFrom') String? dateFrom,
-      @Query('dateTo') String? dateTo,
-      @Query('city') String? city,
-    });
-    ```
-    (Same for `/events/upcoming`.)
-19. **`EventsRepositoryImpl` update:** Converts `DateTime` to ISO 8601 string before passing to `EventService`.
-20. **Existing `EventsCubit` tests from Iteration 1 are updated** to work with the new `EventsState` structure. The tests must still verify initial state, loading, data, empty, and error branches — the structure changes but the behavior does not.
-21. **New unit tests for filter logic:**
-    - `EventsCubit.applyFilters()` with type-only, date-only, city-only, combined, and no params
-    - `EventsCubit.clearFilters()` resets `activeFilter` to null and triggers fetch
-22. **Widget tests:**
-    - Filter empty state (when `eventsResult == empty && activeFilter != null`) renders "No hay eventos con estos filtros"
-    - Filter badge count is correct (0 when `activeFilter == null`, 1–3 depending on how many of type/dateFrom/dateTo/city are non-null)
-    - Clear filters button is visible only when `activeFilter != null`
-23. **Build runner:** `dart run build_runner build --delete-conflicting-outputs` runs cleanly after `EventsState` and `EventFilter` freezed classes are added.
-24. **Linting:** `dart analyze` passes with zero violations.
-25. **Testing:** `flutter test` passes with 100% green tests.
+| ID | Story | Acceptance criteria | Primary agent |
+|----|-------|---------------------|---------------|
+| US-4-1 | As an event organizer filling out the event creation form, I want to tap "Generar portada con IA" and see a loading overlay while the app fetches a cover image based on the event title, type, and city, so that my event has an attractive visual without manual design work. | (1) The "Generar portada con IA" button exists in `EventFormPage` (UI entry point already implemented). (2) Tapping the button calls `EventFormCubit.generateCover(title, eventType, city)`. (3) While generation is in progress, a loading overlay (shimmer or low-opacity spinner) renders on the cover preview area (not a blank state). (4) Form "Publicar" button remains enabled during generation. (5) Backend receives `POST /events/generate-cover` with `{ title, eventType, city }` and returns `{ imageUrl, source: "unsplash", query }` on success. (6) On success, `EventFormCubit` emits `data(imageUrl)` and the preview updates with the fetched image. (7) On failure (503, network error), `EventFormCubit` emits `error(DomainException)`, a Spanish error SnackBar displays ("No pudimos generar la portada. Sube tu propia imagen."), and form returns to idle state. (8) The cover preview container has a fixed 16:9 aspect ratio (matching event list card) and uses `CachedNetworkImage` with `BoxFit.cover`. (9) All new UI copy uses `context.l10n.<key>` from `app_es.arb` (prefix `event_`). (10) `dart analyze` passes with zero violations; `flutter test` passes with 100% green tests. | frontend |
+| US-4-2 | As an organizer, after the cover is generated, I want to regenerate the image, accept it, or upload my own image, so that I stay in control of the event's visual presentation. | (1) After cover is generated and previewed, a "Regenerar" button is visible on the preview card. (2) Tapping "Regenerar" calls `EventFormCubit.generateCover(...)` again with the same title, type, and city. (3) While regenerating, a loading overlay appears over the **existing** preview image (not a blank state). (4) The "Subir imagen propia" button remains available at all times and does not conflict with AI generation. (5) Selecting a custom image replaces the generated URL in `EventFormState` without error. (6) The form can be submitted with: a generated AI image, a custom uploaded image, or no cover image (optional). (7) All three image sources coexist peacefully — no mode confusion. (8) Widget tests verify: idle state (button enabled), loading state (overlay visible, spinner), preview shown (image visible, regenerate button enabled), regenerate while preview visible (overlay over existing image, not blank). (9) `dart analyze` passes with zero violations; `flutter test` passes with 100% green tests. | frontend |
+| US-4-3 | As the dev team, I want the backend to accept event metadata, generate a search query via Claude Haiku, fetch a photo from Unsplash, and return the image URL to the Flutter app, so that the AI cover generation is end-to-end functional. | (1) `POST /events/generate-cover` in `api-gateway` accepts `{ title, eventType, city }`. (2) Uses existing `ClaudeService` (Iter 3a) to prompt Claude Haiku for 3–5 word English search query. (3) Calls `GET /search/photos?query={query}&per_page=1&orientation=landscape` on Unsplash API. (4) Returns HTTP 200 with `{ imageUrl, source: "unsplash", query }`. (5) Error handling: Claude fails or Unsplash fails → HTTP 503 with error message. Malformed request → HTTP 400. (6) 15-second timeout on Unsplash API call — if exceeded, return 503. (7) `UNSPLASH_ACCESS_KEY` in `.env.example` and CI secrets (never committed). (8) Unit tests: happy path (Claude query → Unsplash photo → URL), Claude fails (503), Unsplash fails (503), timeout (503), malformed request (400). (9) `npm run test` passes with 100% coverage; `npm run lint` passes with zero violations. | backend |
+| US-4-4 | As the dev team, I want `EventFormCubit` to track the cover generation state separately from the event form fields, so that the multi-step upload flow can emit independent states without losing existing form data. | (1) `EventFormCubit` state refactored to `@freezed EventFormState` class with: all existing form field state preserved, new field `ResultState<String> coverGenerationResult` (String = generated image URL). (2) `EventFormCubit.generateCover({required title, eventType, city})` method exists. (3) On call: emit `loading()`, call backend, on success emit `data(imageUrl)`, on error emit `error(DomainException)`. (4) Form fields never cleared during generation — existing data preserved. (5) `GetGenerateCoverUseCase` in `lib/features/events/domain/use_cases/`. (6) `EventCoverService` (Retrofit) in `lib/features/events/data/service/` with `POST /events/generate-cover` method. (7) `CoverGenerationDto` in `lib/features/events/data/dto/` with `@JsonSerializable()`: `imageUrl, source, query`. (8) Error mapping: HTTP 503 → `DomainException` with Spanish message. (9) `dart run build_runner build` runs cleanly after refactor. (10) Existing widget tests updated to reflect new `EventFormState`. (11) `dart analyze` passes with zero violations; `flutter test` passes with 100% green tests. | frontend |
 
 ---
 
-### US-2-2: Clear Filters
+## Assumptions and open questions
 
-**Title:** Clear filters
-
-**Description:**  
-As a rider, I can clear all active filters with one tap on the filter badge or in the bottom sheet so I return to the full event list without navigating away.
-
-**Acceptance Criteria:**
-
-1. **Single-tap clear option:** When filters are active, the filter badge or a dedicated clear button on the filter bottom sheet offers a one-tap clear action.
-2. **`EventsCubit.clearFilters()` wired:** Tapping the clear option calls `context.read<EventsCubit>().clearFilters()`.
-3. **State reset:** After clear, `state.activeFilter` is null and `state.eventsResult` is refreshed with all events.
-4. **Empty state update:** The empty state message switches back to "No hay eventos próximos" (or the original message) when filters are cleared.
-5. **Badge visibility:** The badge disappears when filters are cleared.
-6. **Widget test:** Clear filter action resets state and refreshes the list.
+- **Iteration 3a complete:** The backend ClaudeService is implemented and tested in Iteration 3a. The Anthropic SDK (Node.js) is integrated and working. This iteration reuses that pattern and adds a new endpoint in `api-gateway`.
+- **EventFormCubit already exists:** The event creation form and its cubit are already implemented (from earlier iterations). Refactoring to a `@freezed EventFormState` is a state-machine upgrade, not a full rewrite.
+- **Unsplash free tier sufficient:** The free Unsplash API tier allows 50 requests/hour. For pilot usage, this is adequate. If exceeded, the endpoint returns 503 gracefully.
+- **go_router `extra`-based navigation continues to work:** The existing event form submission logic and navigation are unchanged. The new `coverGenerationResult` field in the cubit state is orthogonal to form submission.
+- **16:9 aspect ratio matches event list cards:** Existing event list item cards use 16:9 aspect ratio for their cover images. The form preview uses the same ratio for visual consistency.
+- **No Pencil gate for Iteration 4:** Unlike Iteration 3b (SOAT UI), there is no hard dependency on Pencil design screens. The cover generation is a button + preview UI — design specs are documented in this PO. Design can optionally add a reference in `pencil-new.pen`, but it is not a blocker.
 
 ---
 
-### US-2-3: Attendee Profile Navigation
+## Out of scope (this iteration)
 
-**Title:** Attendee profile navigation
-
-**Description:**  
-As a rider viewing the attendee list of an event, I tap another rider's avatar or name and see their profile page (name, email, vehicles) so I can learn about other community members on the same ride.
-
-**Acceptance Criteria:**
-
-1. **`RiderProfilePage` new page:** Created at `lib/features/users/presentation/pages/rider_profile_page.dart`.
-2. **Route param:** The page accepts a `String userId` as route extra via `context.pushNamed()`.
-3. **Data fetching:** The page fetches the user via `GetUserByIdUseCase` (calls the existing `UserService.getUserById()` endpoint).
-4. **UI content:** Displays:
-   - Rider name (from `UserModel.fullName`)
-   - Rider email (from `UserModel.email`)
-   - List of vehicles (from `UserModel` or fetched separately if needed)
-5. **Read-only:** No edit affordances, no "Set as main vehicle" button, no delete button. Profile is display-only.
-6. **ResultState branches:**
-   - Loading: shimmer skeleton or loading indicator
-   - Data: name, email, vehicle list rendered
-   - Error: error banner with retry button
-   - Empty: should not occur (assume every user has a name and email)
-7. **Navigation:** Tapping a rider's avatar or name in the attendee list calls `context.pushNamed('rider_profile', extra: userId)`, which preserves the back button (unlike `goNamed`).
-8. **`AppRoutes.riderProfile` route:** Registered in `lib/shared/router/app_router.dart` with path `/events/attendees/rider/:userId` or similar. Accepts `userId` as a route parameter or extra.
-9. **`GetUserByIdUseCase` exists:** If not already present in `lib/features/users/domain/use_cases/`, create it following the standard pattern. Signature: `Future<Either<DomainException, UserModel>> call(String userId)`.
-10. **`UserRepositoryImpl.getUserById()`:** Implements the domain interface method to call `UserService.getUserById(userId)` and map the DTO to a domain model.
-11. **DI registration:** `GetUserByIdUseCase` is registered in `lib/core/di/injection.dart`.
-12. **Attendee list tap handler:** In the existing attendee list widget (e.g., `event_detail_page.dart` or a dedicated attendee list widget), each rider item has an `onTap` that calls `context.pushNamed('rider_profile', extra: userId)`.
-13. **New ARB keys:** (Populated in the next section — see localization.)
-    - `rider_profileTitle` — "Perfil del motorista" or similar
-    - `rider_noVehicles` — "Sin vehículos registrados" or similar
-    - `rider_errorRetry` — "Reintentar"
-14. **No hardcoded strings:** All user-visible text uses `context.l10n` keys from `app_es.arb`.
-15. **Widget tests:**
-    - `RiderProfilePage` in loading state shows shimmer
-    - Data state shows rider name, email, and vehicle list
-    - Error state shows error banner with retry button
-    - Tapping a rider in the attendee list navigates to the rider profile page
-16. **Integration test:** Rider A views event detail → taps a rider in the attendee list → navigates to the rider's profile page → sees their name, email, and vehicles → back button returns to attendee list.
-17. **Build runner:** `dart run build_runner build --delete-conflicting-outputs` runs cleanly.
-18. **Linting:** `dart analyze` passes with zero violations.
-19. **Testing:** `flutter test` passes with 100% green tests.
+- **Cover image caching:** Generated images are not locally cached. Fresh generation on every form open. Caching deferred to v2.
+- **Alternative image sources:** Only Unsplash in v1. Other photo APIs (Pexels, Pixabay) deferred.
+- **User-facing Claude prompt refinement:** The prompt is fixed. Future A/B testing of different prompts deferred.
+- **Exif metadata / photo credits:** Generated images are not inspected for credits or license. Unsplash credits not displayed in the app.
 
 ---
 
-## New Localization Keys
+## Task breakdown
 
-Add to `lib/l10n/app_es.arb` (Spanish only):
-
-```json
-{
-  "event_filterTitle": "Filtros de eventos",
-  "event_filterType": "Tipo de evento",
-  "event_filterDateRange": "Rango de fechas",
-  "event_filterCity": "Ciudad",
-  "event_clearFilters": "Limpiar filtros",
-  "event_noResultsFiltered": "No hay eventos con estos filtros",
-  "event_applyFilters": "Filtrar",
-  "rider_profileTitle": "Perfil del motorista",
-  "rider_noVehicles": "Sin vehículos registrados",
-  "rider_errorRetry": "Reintentar"
-}
-```
+| Task ID | Title | Agent | Story | Notes |
+|---------|-------|-------|-------|-------|
+| T-4-1 | Backend: implement `POST /events/generate-cover` endpoint (Claude + Unsplash) | backend | US-4-3 | Arch contract defines DTO shape; ClaudeService reuse from iter-3a |
+| T-4-2 | Backend: unit tests for cover endpoint (happy path + 3 error paths) | qa | US-4-3 | Tests must cover 200, 503, 400 responses |
+| T-4-3 | Frontend: refactor `EventFormCubit` to `@freezed EventFormState` with `coverGenerationResult` field | frontend | US-4-4 | Preserve all existing form fields; run build_runner after |
+| T-4-4 | Frontend: implement `GetGenerateCoverUseCase`, `EventCoverService`, `CoverGenerationDto` | frontend | US-4-4 | Retrofit + json_serializable code generation |
+| T-4-5 | Frontend: wire "Generar portada con IA" button to `EventFormCubit.generateCover()` | frontend | US-4-1, US-4-2 | Loading overlay on preview, spinner, regenerate button, custom image flow |
+| T-4-6 | Frontend: cover preview UI (16:9 aspect ratio, CachedNetworkImage, loading overlay) | frontend | US-4-1 | Do not blank preview during regenerate — overlay on top |
+| T-4-7 | Frontend: add ARB keys for cover generation UI copy | frontend | US-4-1, US-4-2 | Minimum 5 keys; prefix `event_` |
+| T-4-8 | Frontend: unit tests for `GetGenerateCoverUseCase` (happy path + error path 503) | qa | US-4-4 | Mock the backend; verify DTO mapping if applicable |
+| T-4-9 | Frontend: widget tests for `EventFormPage` cover generation (all states) | qa | US-4-1, US-4-2 | Button states, overlay, custom image flow |
+| T-4-10 | QA gate: verify all acceptance criteria, dart analyze + flutter test pass | qa | all | Gate story |
 
 ---
 
-## Backend Risk: Event Filter Gap
+## Next agent needs to know
 
-**Status:** Confirmed gap.
-
-**Details:**  
-- Current: `GET /events` and `GET /events/upcoming` do not accept or forward filter params (`type`, `dateFrom`, `dateTo`, `city`).
-- Impact: Frontend can dispatch filters but backend ignores them — riders always see all events.
-- Scope: Backend changes are **in scope for Iteration 2**. The architect will define the exact endpoint contracts (param names, types, WHERE logic) in `docs/handoffs/contracts/iter-2/backend_filter_contract.json`.
-
-**Mitigation:**  
-Backend agent will:
-1. Add query params to both routes in the api-gateway (pass-through to events-ms).
-2. Implement WHERE logic in events-ms `findAllEvents`.
-3. Write unit tests for all filter combinations.
+- **architect:** Review this PO handoff and confirm technical feasibility. Produce architecture contracts: (1) Backend DTO shape for `POST /events/generate-cover` request/response. (2) Frontend `EventFormState` freezed class structure, use case interface, and service interface. Document any ADRs or diagram updates needed. Hand off to backend, frontend, and qa agents.
+- **backend:** Your deliverable is `POST /events/generate-cover` endpoint in `api-gateway`. Accept `{ title, eventType, city }`, use the existing `ClaudeService` to generate an Unsplash search query, fetch a photo from Unsplash API, and return `{ imageUrl, source: "unsplash", query }`. Handle errors gracefully (503 on failure). Unit tests required for happy path and all error cases. See US-4-3 acceptance criteria for full spec.
+- **frontend:** Your deliverables are: (1) Refactor `EventFormCubit` state to `@freezed EventFormState` with `ResultState<String> coverGenerationResult`. (2) Implement `GetGenerateCoverUseCase`, `EventCoverService`, `CoverGenerationDto`. (3) Wire the "Generar portada con IA" button to `EventFormCubit.generateCover()`. (4) Build the cover preview UI with 16:9 aspect ratio, loading overlay (not blank state), and regenerate button. (5) Add ARB keys for all new UI copy (prefix `event_`). See US-4-1, US-4-2, US-4-4 for full specs. Existing EventFormPage tests must be updated to reflect the new state structure.
+- **qa:** Your deliverables are: (1) Backend unit tests for all 5 acceptance criteria of US-4-3 (happy path + 4 error paths). (2) Frontend unit tests for `GetGenerateCoverUseCase`. (3) Widget tests for the cover generation UI (all states per US-4-1 and US-4-2). (4) QA gate: verify all acceptance criteria pass, `dart analyze` and `flutter test` pass with 100% green, no regressions. See T-4-2, T-4-8, T-4-9, T-4-10 for task breakdown.
 
 ---
 
-## Scope Decisions
+## Change log
 
-### In Scope
-- Backend filter parameter forwarding (`GET /events`, `GET /events/upcoming`)
-- Prisma WHERE clause for each filter (type, date range, city)
-- `EventsCubit` state refactor to include active filter
-- Filter UI wiring (bottom sheet → `applyFilters()`)
-- Attendee list tap → navigate to `RiderProfilePage`
-- `RiderProfilePage` implementation (read-only display)
-- All new localization keys (Iteration 2 Spanish only)
-- Unit tests for filter logic and `RiderProfilePage` fetch
-- Widget tests for filter empty state and rider profile states
-
-### Out of Scope (Deferred)
-- Advanced filter UI (search-as-you-type city autocomplete, event type tags, calendar picker fancy styling)
-- Multi-language support (English); Spanish only for Iteration 2
-- Rider profile photo upload (no `User.profilePhotoUrl` field in current Prisma schema; deferred to post-6b)
-- Rider profile edit affordances
-- Event organizer's ability to see attendee details (organizer access control is handled elsewhere)
-- Favoriting or saving filters for quick re-apply
-
----
-
-## Acceptance Checklist
-
-Before handing off to Architect:
-
-- [ ] All 3 user stories written with full acceptance criteria
-- [ ] Backend gap (filter params) clearly documented and scoped
-- [ ] New localization keys listed and ready for ARB file
-- [ ] `EventsState` and `EventFilter` model shape defined
-- [ ] Scope boundaries clear (what is in, what is out)
-- [ ] No external dependencies or unknowns
-
-**Sign-off:** Ready for Architect phase. No open questions.
-
----
-
-## Next Phase: Architect
-
-The Architect will:
-1. Define the exact backend endpoint contracts and DTO shapes.
-2. Design the `EventsState` and `EventFilter` freezed classes.
-3. Update the `GetEventsUseCase` signature.
-4. Create ADRs for state refactoring decisions.
-5. Produce a handoff for backend and frontend agents.
-
-Run `/solo-architect` to proceed.
-
----
-
-## Related Documents
-
-- **docs/PRD.md** § Iteration 2 — Event Discovery Filters + Attendee Profile Links
-- **docs/PLAN.md** — Iteration 2 row and technical notes
-- **workflow/state.json** — tasks for Iteration 2
-- **docs/handoffs/iteration_context.md** — bridge from Iteration 1 to Iteration 2 (updated at closeout)
+- 2026-05-13: PO handoff for Iteration 4. Iteration 4 scopes AI Event Cover Image Generation. 4 user stories defined (US-4-1 through US-4-4). Full-stack feature: backend endpoint (Claude + Unsplash), frontend cubit refactor + UI, unit + widget + backend tests. Depends on Iteration 3a (ClaudeService pattern).

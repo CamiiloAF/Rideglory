@@ -1,190 +1,120 @@
-# Architect Handoff — Iteration 2
-# Event Discovery Filters + Attendee Profile Links
+# Architect handoff — Iteration 4
 
-**Generated:** 2026-05-12
-**Iteration:** 2
-**Phase:** architect
-**Status:** READY FOR BACKEND / FRONTEND / QA
+**Date:** 2026-05-13
+**Status:** done
 
----
-
-## Key Finding: Filters Already Exist Client-Side
-
-The existing `EventsCubit` already applies filters **locally** after fetching all events.
-`EventFilters` is a plain Dart class (not freezed) holding `types`, `difficulties`, `city`,
-`startDate`, `endDate`, `freeOnly`, `multiBrandOnly`.
-
-**The PO handoff asks for a full cubit refactor to `EventsState` (freezed). This is WRONG
-for the brownfield** — it would break all existing tests and UI without user value.
-
-**ADR-3 Decision:** Keep the existing `EventFilters` + `Cubit<ResultState<List<EventModel>>>`
-pattern. Add **backend forwarding only** for `type`, `dateFrom`, `dateTo`, `city`.
-No freezed state refactor. Existing filter UI is already wired to `cubit.updateFilters()`.
-
-Rationale:
-- The filter bottom sheet is already fully wired to `cubit.updateFilters()` and `cubit.clearFilters()`.
-- Filter badge and "Limpiar filtros" already exist in the UI.
-- The only gap is that `getEvents()` and `getMyEvents()` don't send params to the API.
-- A freezed refactor of `EventsState` would add ~200 lines of boilerplate with zero UX value.
+AI Event Cover Image Generation: full-stack feature wiring the existing "Generar portada con IA" button to a new backend endpoint that uses the existing ClaudeService (iter-3a pattern) to generate an Unsplash search query, then fetches a cover image and returns the URL to Flutter.
 
 ---
 
-## Story → Layer Map
+## Feature architecture decisions
 
-### US-2-1 + US-2-2: Event Filters (Backend Wire-Up)
-
-**Backend (rideglory-api)**
-- `GET /events` and `GET /events/upcoming`: accept `type?`, `dateFrom?`, `dateTo?`, `city?`
-- api-gateway passes params through to events-ms (no transform)
-- events-ms `findAllEvents`: adds Prisma WHERE clauses for each param present
-
-**Domain**
-- `EventRepository.getEvents({String? type, String? dateFrom, String? dateTo, String? city})`
-- `EventRepository.getMyEvents(...)` — same params (for consistency; currently unused in UI but future-proof)
-- `GetEventsUseCase.call({EventType? type, DateTime? dateFrom, DateTime? dateTo, String? city})`
-- Converts `DateTime` → ISO 8601 string, `EventType` → string value before forwarding
-
-**Data**
-- `EventService.getEvents(@Query params)` — Retrofit @Query annotations
-- `EventRepositoryImpl.getEvents()` — reads `EventFilters` → converts → calls service
-
-**Presentation**
-- `EventsCubit.fetchEvents()` — reads `_filters` and passes them to `GetEventsUseCase`
-- `EventsCubit.updateFilters()` now triggers a backend fetch (not just local re-filter)
-- Local post-filter still applied for `difficulties`, `freeOnly`, `multiBrandOnly` (no backend support for these)
-- Filter badge count = count of non-null/non-empty filter fields among: types, city, startDate, endDate, freeOnly, multiBrandOnly
+| Feature | Domain changes | Data changes | Presentation changes |
+|---------|----------------|--------------|----------------------|
+| events / form | New: `GetGenerateCoverUseCase` in `domain/use_cases/`. New: `EventCoverRepository` interface in `domain/repository/`. | New: `CoverGenerationDto` + `EventCoverService` (Retrofit `POST /events/generate-cover`) + `EventCoverRepositoryImpl`. | Refactor: `EventFormCubit` → extends `Cubit<EventFormState>` (freezed). New field: `ResultState<String> coverGenerationResult`. New method: `generateCover({title, eventType, city})`. Update `EventFormContent` to wire the existing `onGenerateWithAITap` callback. New: `CoverPreviewWidget` for 16:9 overlay. |
 
 ---
 
-### US-2-3: Attendee Profile Navigation
+## API contracts (rideglory-api changes)
 
-**Domain (new)**
-- `UserRepository.getUserById(String id)` — new method on existing abstract class
-- `GetUserByIdUseCase` at `lib/features/users/domain/use_cases/get_user_by_id_use_case.dart`
+| Method | Path | Auth | Request body | Success | Errors |
+|--------|------|------|--------------|---------|--------|
+| POST | `/events/generate-cover` | Firebase ID token (JWT bearer) | `{ title: string, eventType: string, city: string }` | 200 `{ imageUrl: string, source: "unsplash", query: string }` | 400 malformed body · 503 Claude or Unsplash failure |
 
-**Data (new)**
-- `UserService.getUserById(String id)` — `@GET('/users/{id}')` (confirm endpoint with backend)
-- `UserRepositoryImpl.getUserById(id)` — calls service, maps UserDto → UserModel (already compatible)
+**Implementation location:** `api-gateway/src/events/events.controller.ts` — add `@Post('generate-cover')` method. No microservice proxy needed; implement logic directly in `api-gateway` using `ClaudeService` (iter-3a pattern) and Axios/`axios` for Unsplash HTTP call.
 
-**Presentation (new)**
-- `RiderProfileCubit extends Cubit<ResultState<UserModel>>` at `lib/features/users/presentation/`
-- `RiderProfilePage` at `lib/features/users/presentation/pages/rider_profile_page.dart`
-- Navigation: `context.pushNamed(AppRoutes.riderProfile, extra: userId)` from `AttendeesList`
-- Route: `AppRoutes.riderProfile = '/events/attendees/rider-profile'`
+**Unsplash call:** `GET https://api.unsplash.com/search/photos?query={query}&per_page=1&orientation=landscape` with `Authorization: Client-ID ${UNSPLASH_ACCESS_KEY}`.
 
-**Attendee List change**
-- `AttendeeProcessedItem.onTap` navigates to rider profile (not registration detail)
-- `AttendeePendingRequestCard` — keep existing behavior (org workflow); optionally add profile tap
+**Claude prompt:** `"Generate a 3-5 word English search query for Unsplash to find a high-quality landscape photo for a motorcycle event. Event title: {title}. Event type: {eventType}. City: {city}. Return only the search query, nothing else."`
+
+**Timeout:** 15 s on Unsplash call (Promise.race). If exceeded, throw `ServiceUnavailableException`.
 
 ---
 
-## New Domain Models
+## New models and DTOs
 
-### EventFilter → Already exists as `EventFilters` plain class — no new model needed
-
-No `EventsState` freezed class needed (ADR-3).
-
-### No new event domain models
+| Name | Layer | File path | Notes |
+|------|-------|-----------|-------|
+| `CoverGenerationDto` | data | `lib/features/events/data/dto/cover_generation_dto.dart` | `@JsonSerializable()`. Fields: `imageUrl` (String), `source` (String), `query` (String). |
+| `EventCoverRepository` | domain | `lib/features/events/domain/repository/event_cover_repository.dart` | Abstract. Single method: `Future<Either<DomainException, String>> generateCover({required String title, required String eventType, required String city})`. Returns the `imageUrl` only (domain-clean). |
+| `GetGenerateCoverUseCase` | domain | `lib/features/events/domain/use_cases/get_generate_cover_use_case.dart` | `@injectable`. Delegates to `EventCoverRepository.generateCover()`. |
+| `EventCoverService` | data | `lib/features/events/data/service/event_cover_service.dart` | Retrofit. `@POST('/events/generate-cover')`. Returns `Future<CoverGenerationDto>`. |
+| `EventCoverRepositoryImpl` | data | `lib/features/events/data/repository/event_cover_repository_impl.dart` | `@Injectable(as: EventCoverRepository)`. Wraps `EventCoverService` with `executeService()`. Maps HTTP 503 to Spanish `DomainException`. Returns `Right(dto.imageUrl)`. |
+| `EventFormState` | presentation | `lib/features/events/presentation/form/cubit/event_form_cubit.dart` | `@freezed` class in same file as `EventFormCubit`. Fields: `ResultState<EventModel> saveResult`, `ResultState<String> coverGenerationResult`. |
 
 ---
 
-## New Files
+## ADRs (architectural decisions)
 
-```
-lib/features/users/domain/use_cases/get_user_by_id_use_case.dart
-lib/features/users/presentation/pages/rider_profile_page.dart
-lib/features/users/presentation/cubit/rider_profile_cubit.dart
-lib/features/users/presentation/widgets/rider_profile_content.dart
-lib/features/users/presentation/widgets/rider_profile_loading.dart
+### ADR-7 — EventFormCubit: split state into @freezed EventFormState
+**Status:** Accepted.
+**Context:** `EventFormCubit` previously extended `Cubit<ResultState<EventModel>>`, making it impossible to track cover generation state independently without clobbering form save state.
+**Decision:** Introduce `@freezed EventFormState` with two `ResultState` fields (`saveResult`, `coverGenerationResult`). `EventFormCubit` now extends `Cubit<EventFormState>`.
+**Consequence:** All existing `BlocBuilder<EventFormCubit, ResultState<EventModel>>` usages in `event_form_view.dart` and `event_form_page.dart` must be updated to use `state.saveResult`. Widget tests must be updated accordingly. `buildEventToSave()` logic is unchanged.
+
+### ADR-8 — Cover generation lives in EventFormCubit, not FormImageCubit
+**Status:** Accepted.
+**Context:** `FormImageCubit` is a shared cubit for generic image picking. Cover URL from AI is event-specific and needs access to form field values (title, eventType, city).
+**Decision:** `generateCover()` stays in `EventFormCubit`. On success, `EventFormCubit` updates `coverGenerationResult` to `data(imageUrl)`. The presentation layer then syncs this into `FormImageCubit` via `formImageCubit.setRemoteImageUrl(imageUrl)` — a new method to add to `FormImageCubit`.
+**Consequence:** `FormImageCubit` needs one new method: `void setRemoteImageUrl(String url)` — emits `data(FormImageData(remoteImageUrl: url))`. This keeps `FormImageCubit` generic while allowing the cover generation result to be reflected in the image preview.
+
+### ADR-9 — No new Flutter package additions for Iteration 4
+**Status:** Accepted.
+**Context:** `cached_network_image` is already a dependency (used in event list cards).
+**Decision:** Use existing `CachedNetworkImage` for the preview. No new pub.dev packages needed. Loading overlay uses a `Stack` with a semi-transparent `CircularProgressIndicator` over the existing preview.
+
+---
+
+## New API route constant (Flutter)
+
+Add to `lib/core/http/api_routes.dart`:
+```dart
+static const generateEventCover = '/events/generate-cover';
 ```
 
 ---
 
-## Changed Files
+## Environment variables
 
-```
-lib/features/users/domain/repository/user_repository.dart       (+getUserById)
-lib/features/users/data/repository/user_repository_impl.dart    (+getUserById)
-lib/features/users/data/service/user_service.dart               (+getUserById endpoint)
-lib/features/events/domain/repository/event_repository.dart     (+filter params)
-lib/features/events/data/service/event_service.dart             (+@Query params)
-lib/features/events/data/repository/event_repository_impl.dart  (+param forwarding)
-lib/features/events/domain/use_cases/get_events_use_case.dart   (+params)
-lib/features/events/presentation/list/events_cubit.dart         (fetch calls use case with filters)
-lib/shared/router/app_routes.dart                               (+riderProfile)
-lib/shared/router/app_router.dart                               (+riderProfile route)
-lib/l10n/app_es.arb                                             (+9 keys)
-```
+| Variable | Repo | Description |
+|----------|------|-------------|
+| `UNSPLASH_ACCESS_KEY` | rideglory-api | Unsplash API access key. Add to `.env.example` and CI secrets. Never commit actual value. |
 
 ---
 
-## API Contracts
+## Localization (l10n keys)
 
-### GET /events (updated)
-```
-Query params (all optional):
-  type       String   EventType raw value (e.g. "Off-Road", "On-Road")
-  dateFrom   String   ISO 8601 date "2026-05-01"
-  dateTo     String   ISO 8601 date "2026-06-30"
-  city       String   partial match, case-insensitive
+New keys in `lib/l10n/app_es.arb` (prefix `event_`):
 
-Existing response shape unchanged.
-```
+| Key | Spanish value |
+|-----|---------------|
+| `event_coverGenerating` | "Generando portada..." |
+| `event_coverGenerated` | "Portada generada" |
+| `event_coverGenerateError` | "No pudimos generar la portada. Sube tu propia imagen." |
+| `event_coverRegenerate` | "Regenerar" |
+| `event_coverGeneratingOverlay` | "Generando con IA..." |
 
-### GET /events/upcoming (updated) — same query params
-
-### GET /users/:id (new)
-```
-Path: /users/:id
-Auth: Firebase ID token (existing interceptor)
-Response: UserDto (same shape as GET /users/me)
-```
+Note: `event_generateWithAI` already exists (used in `EventFormContent`).
 
 ---
 
-## Localization Keys (app_es.arb additions)
+## Risks and open questions
 
-```json
-"event_filterTitle": "Filtros de eventos",
-"event_filterType": "Tipo de evento",
-"event_filterDateRange": "Rango de fechas",
-"event_filterCity": "Ciudad",
-"event_clearFilters": "Limpiar filtros",
-"event_noResultsFiltered": "No hay eventos con estos filtros",
-"event_applyFilters": "Filtrar",
-"rider_profileTitle": "Perfil del motorista",
-"rider_noVehicles": "Sin vehículos registrados",
-"rider_errorRetry": "Reintentar"
-```
-
-Note: `event_clearFilters` and `event_applyFilters` may already exist in `app_es.arb` — verify before adding to avoid duplicates.
+- **ClaudeService not implemented in iter-3a:** PO assumes ClaudeService exists from iter-3a. Backend verification shows no Claude/Anthropic files in `rideglory-api`. Backend agent must implement ClaudeService pattern (Anthropic Node.js SDK) as part of T-4-1 if it does not exist.
+- **EventFormState freezed refactor regression:** Existing `event_form_page.dart` and `event_form_view.dart` use `BlocBuilder<EventFormCubit, ResultState<EventModel>>` — all must be updated to `EventFormState` and use `state.saveResult`. Existing tests must be updated.
+- **FormImageCubit.setRemoteImageUrl coordination:** The presentation layer must call `formImageCubit.setRemoteImageUrl(imageUrl)` inside a `BlocListener` on `EventFormCubit` when `coverGenerationResult` transitions to `data(...)`.
 
 ---
 
-## ADR-3: No EventsState Freezed Refactor (Iter-2)
+## Next agent needs to know
 
-- The existing `EventsCubit<ResultState<List<EventModel>>>` is sufficient.
-- Adding a freezed `EventsState` wrapper for `activeFilter` would require updating all existing tests,
-  all `BlocBuilder` consumers, and all mock cubits — ~300 lines touched for zero UX gain.
-- `EventFilters` already has `hasFilters` getter for badge display.
-- Deferred to a dedicated refactor iteration if multiple cubits need coordinated state.
-
----
-
-## DI
-
-- `GetUserByIdUseCase` — `@injectable` (transient, no singleton needed)
-- `RiderProfileCubit` — created by `BlocProvider` at page level (not root MBP)
-- No changes to root `MultiBlocProvider`
+- **Backend:** Implement `POST /events/generate-cover` in `api-gateway/src/events/events.controller.ts`. Add `ClaudeService` (Anthropic SDK) + Unsplash HTTP call (axios). Add `UNSPLASH_ACCESS_KEY` to `.env.example`. See `docs/handoffs/architect-for-backend.md`.
+- **Frontend:** (1) Refactor `EventFormCubit` to `@freezed EventFormState`. (2) Add `GetGenerateCoverUseCase` + `EventCoverService` + `CoverGenerationDto` + `EventCoverRepositoryImpl`. (3) Add `setRemoteImageUrl()` to `FormImageCubit`. (4) Wire `onGenerateWithAITap` in `EventFormContent` to `EventFormCubit.generateCover()`. (5) Add `CoverPreviewWidget` with loading overlay. (6) Add 5 ARB keys. See `docs/handoffs/architect-for-frontend.md`.
+- **QA:** Backend unit tests (happy + 4 error paths) + Flutter unit tests for use case + widget tests for all cover generation states. See `docs/handoffs/architect-for-qa.md`.
+- **DevOps:** Add `UNSPLASH_ACCESS_KEY` to CI secrets. See `docs/handoffs/architect-for-devops.md`.
 
 ---
 
-## Build Runner
+## Change log
 
-Run after all changes:
-```bash
-dart run build_runner build --delete-conflicting-outputs
-```
-
-Triggers: `event_service.g.dart` (new @Query params), `user_service.g.dart` (new endpoint),
-`injection.config.dart` (new `GetUserByIdUseCase`).
+- 2026-05-13 (iter-4): Full architect handoff. AI Event Cover Image Generation. Backend: new `POST /events/generate-cover` endpoint in api-gateway. Frontend: EventFormState freezed refactor + new use case/service/DTO + cover preview UI. ADR-7 (freezed state split), ADR-8 (generateCover in EventFormCubit), ADR-9 (no new packages). UNSPLASH_ACCESS_KEY env var. 5 l10n keys.

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear evento — Estado inicial (portada vacía)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    body { font-family: var(--font-family); }
+    h1 { font-size: 14px; color: #999; margin-bottom: 8px; font-weight: 500; }
+  </style>
+</head>
+<body>
+  <h1>US-4-1 / US-4-2 — Crear evento: estado inicial (sin portada)</h1>
+
+  <div class="device">
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons">
+        <span>●●●</span>
+        <span>WiFi</span>
+        <span>🔋</span>
+      </div>
+    </div>
+
+    <!-- App bar -->
+    <div class="app-bar">
+      <div class="back-btn">←</div>
+      <div class="title">Crear evento</div>
+      <!-- No right action — publish button is at bottom -->
+    </div>
+
+    <!-- Screen content -->
+    <div class="screen-content">
+      <div class="scroll-area">
+
+        <!-- ── PORTADA SECTION ── -->
+        <div class="cover-section">
+          <span class="cover-section-title">Portada del evento</span>
+
+          <!-- Cover preview: idle / no image -->
+          <div class="cover-preview-container">
+            <div class="cover-preview-placeholder">
+              <span class="placeholder-icon">🖼</span>
+              <span class="placeholder-label">Sin portada seleccionada</span>
+            </div>
+            <!-- No overlay in idle state -->
+          </div>
+
+          <!-- Action buttons row -->
+          <button class="btn-ai" style="margin-top: 4px;">
+            <span>✨</span>
+            <span>Generar portada con IA</span>
+          </button>
+          <button class="btn-outline">
+            <span>📁</span>
+            <span>Subir imagen propia</span>
+          </button>
+        </div>
+
+        <div class="form-section-gap"></div>
+
+        <!-- ── BASIC INFO SECTION (abbreviated) ── -->
+        <div class="cover-section-title" style="margin-bottom: 12px;">Información básica</div>
+
+        <div class="form-field-stub">
+          <span class="field-icon">✏️</span>
+          <span>Nombre del evento</span>
+        </div>
+        <div style="height: 8px;"></div>
+        <div class="form-field-stub">
+          <span class="field-icon">📍</span>
+          <span>Ciudad</span>
+        </div>
+        <div style="height: 8px;"></div>
+        <div class="form-field-stub" style="height: 80px; align-items: flex-start; padding-top: 14px;">
+          <span class="field-icon">📝</span>
+          <span>Descripción del evento...</span>
+        </div>
+
+        <div class="form-section-gap"></div>
+
+        <!-- ── DATE / TIME (abbreviated) ── -->
+        <div class="cover-section-title" style="margin-bottom: 12px;">Fecha y hora</div>
+        <div class="form-field-stub">
+          <span class="field-icon">📅</span>
+          <span>Fecha de inicio</span>
+        </div>
+
+        <div class="form-section-gap"></div>
+        <div style="height: 48px;"></div><!-- spacer so content is not behind publish btn -->
+
+      </div><!-- /scroll-area -->
+
+      <!-- Publish button — sticky -->
+      <div class="publish-btn-container">
+        <button class="btn btn-primary" style="height: 52px; font-size: 16px;">Publicar evento</button>
+      </div>
+    </div><!-- /screen-content -->
+  </div><!-- /device -->
+
+  <!-- Annotations -->
+  <div style="margin-top: 24px; max-width: 375px; font-size: 12px; color: #999; line-height: 1.6;">
+    <strong style="color:#f98c1f;">Estado: IDLE</strong><br>
+    • "Generar portada con IA" → <code>EventFormCubit.generateCover()</code><br>
+    • "Subir imagen propia" → <code>FormImageCubit.pickImageFromGallery()</code><br>
+    • Preview container: 16:9 aspect ratio, placeholder visible<br>
+    • "Publicar evento" button ENABLED (no dependency on cover)<br>
+    • l10n keys: <code>event_coverGenerating</code>, <code>event_generateWithAI</code>, <code>event_uploadImage</code>
+  </div>
+</body>
+</html>

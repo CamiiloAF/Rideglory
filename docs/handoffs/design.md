@@ -1,214 +1,205 @@
-# Design Handoff — Iteration 2
+# Design handoff — Iteration 4
 
-**Agent:** design  
-**Iteration:** 2  
-**Status:** COMPLETE  
-**Generated:** 2026-05-12
-
----
-
-## Story Classification
-
-| Story | Title | Classification | Rationale |
-|-------|-------|---------------|-----------|
-| US-2-1 | Event list filters | EXTEND | Filter bottom sheet already exists (`EventFiltersBottomSheet`). Extend with: badge counter on filter button, "Limpiar filtros" conditional visibility, filtered empty state. |
-| US-2-2 | Clear filters | EXTEND | Sub-feature of filter bottom sheet. The "Limpiar filtros" button already exists in the sheet but needs conditional display + wiring. Badge disappear on clear. |
-| US-2-3 | Attendee profile navigation | NEW | `RiderProfilePage` does not exist. New screen with 4 ResultState branches. Attendee list row gains tap affordance (chevron hint). |
+**Date:** 2026-05-13
+**Status:** done
+**Iteration:** 4 — AI Event Cover Image Generation
 
 ---
 
-## Screen Inventory
+## Story classification
 
-### Screen 1: Events List — Filter button with badge (EXTEND)
-**Route:** existing (`/events`)  
-**Component:** `EventsDataView` → filter button area
+| Story | Classification | Rationale |
+|-------|---------------|-----------|
+| US-4-1 | EXTEND | EventFormPage already exists. Adding cover preview container, loading overlay, and AI button wiring. No new screen. |
+| US-4-2 | EXTEND | Adds "Regenerar" AppTextButton below preview and coexistence with custom image upload. |
+| US-4-3 | Backend only | No frontend UI — backend endpoint design only. |
+| US-4-4 | EXTEND | EventFormCubit state refactor. No new screen or route. No design deliverable; architecture only. |
 
-**States:**
-
-| State | Description | Mockup |
-|-------|-------------|--------|
-| No filters | Filter button: orange background, no badge | `events-list/events-list-no-filters.html` — frame 1 |
-| Active filters | Filter button: orange background + white badge with count (1–3) | `events-list/events-list-no-filters.html` — frame 2 |
-| Filtered empty | Full-screen empty state: icon + "No hay eventos con estos filtros" + "Limpiar filtros" outline button | `events-list/events-list-no-filters.html` — frame 3 |
-| All-events empty | Existing empty state: "No hay eventos próximos" (no change) | — |
-
-**Badge logic:**  
-- Count = number of non-null backend filters: `type`, `city`, `dateFrom`/`dateTo` (date range = 1)
-- Badge hidden when count = 0
-- Badge: 16×16px circle, white bg, primary-colored text, 9px bold, positioned top-right of filter icon
-
-**Active filter tag row (below search):**  
-- Optional pill row showing active filter values with ✕ tap to remove individual filter
-- Orange tinted pill: `rgba(249,140,31,0.15)` bg, primary border
+All UI changes are contained within the existing `EventFormPage` / `EventFormContent` widget tree. **No new routes or screens.** The `event_form_page.dart` route (`/crear-evento`) is extended, not replaced.
 
 ---
 
-### Screen 2: Event Filters Bottom Sheet (EXTEND)
-**Route:** Modal overlay on events list  
-**Component:** `EventFiltersBottomSheet`
+## Screen inventory — Iteration 4
 
-**States:**
+### Modified screen: Crear evento (`EventFormPage`)
+**Flutter file:** `lib/features/events/presentation/form/event_form_page.dart`
+**Route:** `/crear-evento` (existing go_router route)
+**New widget:** `lib/features/events/presentation/form/widgets/cover_preview_widget.dart`
 
-| State | Description | Mockup |
-|-------|-------------|--------|
-| Empty (no filters) | Sheet open, no values set. "Limpiar filtros" **hidden**. "Filtrar" button enabled. | `event-filters/event-filters-bottom-sheet.html` — frame 1 |
-| With selection | ≥1 filter active: "Limpiar filtros" (AppTextButton) **visible** in header right. | `event-filters/event-filters-bottom-sheet.html` — frame 2 |
-| All 3 backend filters | tipo + ciudad + fechas all set → badge on parent shows "3" | `event-filters/event-filters-bottom-sheet.html` — frame 3 |
-
-**Layout (top-to-bottom):**
-1. Drag handle (40×4px, `var(--border)` color, centered, 12px top margin)
-2. Header row: title "Filtros de eventos" (titleLarge bold) + `AppTextButton` "Limpiar filtros" (visible only when `activeFilter != null`)
-3. Divider
-4. Scrollable body:
-   - Section "Tipo de evento" → `FilterChip` wrap (Touring, Enduro, Rally, Track day, Adventure)
-   - Section "Ciudad" → `AppCityAutocomplete` field
-   - Section "Rango de fechas" → two `AppDatePicker` fields side-by-side (Desde / Hasta)
-   - Checkboxes: "Solo eventos gratuitos", "Solo multimarca" (local-only filters)
-5. Footer (not scrollable): `AppButton` "Filtrar" full-width
-
-**l10n keys used:**  
-`event_filterTitle`, `event_filterType`, `event_filterCity`, `event_filterDateRange`, `event_clearFilters`, `event_applyFilters`
+| State | Mockup file | `coverGenerationResult` value |
+|-------|------------|-------------------------------|
+| Idle (no image) | `iter-4/event-form-idle.html` | `initial()` |
+| Generating (loading overlay) | `iter-4/event-form-generating.html` | `loading()` |
+| Preview (image + Regenerar) | `iter-4/event-form-preview.html` | `data(imageUrl)` |
+| Error (snackbar + idle) | `iter-4/event-form-error.html` | `error(DomainException)` |
 
 ---
 
-### Screen 3: Attendee List — Tap affordance (EXTEND)
-**Route:** `/events/attendees` (existing)  
-**Component:** `AttendeeProcessedItem`
+## Component hierarchy — CoverPreviewWidget
 
-**Change:** Add trailing chevron `›` icon (`Icons.chevron_right_rounded`) in `onSurfaceVariant` color when `onTap` is provided. The row already has `InkWell` + `onTap` wired — visual hint only.
+```
+CoverPreviewWidget
+  └─ Column
+      ├─ Text "Portada del evento"     ← section-label style, uppercase, 11px
+      ├─ AspectRatio(16/9)
+      │   └─ Stack
+      │       ├─ [initial] Container (surface-dark bg)
+      │       │     └─ Column(icon🖼 + text "Sin portada seleccionada")
+      │       ├─ [data] CachedNetworkImage(imageUrl, BoxFit.cover)
+      │       └─ [loading] Container(rgba 0,0,0 0.55)     ← overlay
+      │             └─ Column
+      │                 ├─ CircularProgressIndicator(color: primary-orange)
+      │                 └─ Text(l10n.event_coverGeneratingOverlay)
+      ├─ [data only] Row(mainAxisAlignment: end)
+      │     └─ AppTextButton("Regenerar")   ← calls generateCover() again
+      ├─ [initial/data] AppButton(l10n.event_generateWithAI)   ← primary orange
+      └─ AppTextButton(l10n.event_uploadImage)   ← always visible
+```
 
-**Mockup:** `rider-profile/rider-profile-states.html` — frame 1 (attendee list with chevron)
-
----
-
-### Screen 4: Rider Profile Page (NEW)
-**Route:** `/events/attendees/rider-profile`  
-**Component:** `RiderProfilePage` (new)  
-**Widgets:** `RiderProfileContent` (data), `RiderProfileLoading` (shimmer)
-
-**States:**
-
-| State | Description | Mockup |
-|-------|-------------|--------|
-| Loading | Shimmer skeleton: circular avatar placeholder (72px) + 2 text lines + info rows + vehicle rows | `rider-profile/rider-profile-states.html` — frame 2 |
-| Data (with vehicles) | Avatar initials (large, 72px) + name + email + "Motos registradas" section + vehicle list items | `rider-profile/rider-profile-states.html` — frame 3 |
-| Data (no vehicles) | Same header + "Sin vehículos registrados" text under section title | `rider-profile/rider-profile-states.html` — frame 4 |
-| Error | Error banner (red tint, ⚠ icon, message + sub-message) + "Reintentar" outline button | `rider-profile/rider-profile-states.html` — frame 5 |
-| Empty | Not expected (every user has name + email). No design needed. |
-
-**AppBar:** Back button (`‹`) + title "Perfil del motorista"
-
-**Profile header (data state):**  
-- `CircleAvatar` 72px with initials (uses `Initials.buildFromFullName`)
-- Name: `textTheme.headlineSmall`, bold
-- Email: `textTheme.bodyMedium`, `onSurfaceVariant`
-
-**Info section:**  
-- City row: icon `📍` + label + value (if `residenceCity` non-null)
-- Section title "MOTOS REGISTRADAS" (uppercase, muted, small caps style)
-- `VehicleListItem`-style rows: moto icon + `displayName` + plate
-
-**Read-only guarantee:** No edit affordances, no "Set as main" button, no delete icon anywhere on this screen.
-
-**l10n keys used:**  
-`rider_profileTitle`, `rider_noVehicles`, `rider_errorRetry`
+**Key rules:**
+- "Generar portada con IA" button: visible when `initial()` or `error()`; hidden when `data()` (replaced by "Regenerar"); disabled when `loading()`.
+- "Regenerar": visible only when `data()`.
+- "Subir imagen propia": ALWAYS visible and enabled (never blocked by AI state).
+- Preview container maintains 16:9 `AspectRatio` in all states — no layout shift.
+- Loading overlay uses `Stack` + `Positioned.fill` — the existing image (or placeholder) stays visible below. Do NOT blank the preview during regeneration.
+- `CachedNetworkImage` with `BoxFit.cover` for the generated image URL.
 
 ---
 
-## Component Hierarchy
+## Shared widgets to reuse
 
-### Reused from `lib/shared/widgets/`
-| Component | Used in |
-|-----------|---------|
-| `AppButton` | Filter sheet "Filtrar" footer |
-| `AppTextButton` | "Limpiar filtros" in sheet header |
-| `EmptyStateWidget` | Filtered empty state on events list (extended with "Limpiar filtros" action) |
-| `NoSearchResultsEmptyWidget` | When local search returns 0 results (unchanged) |
+| Widget | Location | Usage in this iteration |
+|--------|----------|------------------------|
+| `AppButton` | `lib/shared/widgets/form/` | "Generar portada con IA" primary button |
+| `AppTextButton` | `lib/shared/widgets/form/` | "Regenerar" and "Subir imagen propia" |
+| `FormImageSection` | `lib/shared/widgets/form/form_image_section.dart` | Wraps the cover section; receives `onGenerateWithAITap` |
+| `AppImagePicker` | Design system | Extended with `onGenerateWithAITap` callback (already accepts it) |
 
-### Reused from `lib/features/events/`
-| Component | Used in |
-|-----------|---------|
-| `EventFiltersBottomSheet` | Extended: "Limpiar filtros" conditional + AppTextButton |
-| `AttendeeProcessedItem` | Extended: trailing chevron when `onTap` provided |
-| `InitialsAvatar` | Reused in `RiderProfileContent` |
-
-### New components (iter-2)
-| Component | File | Purpose |
-|-----------|------|---------|
-| `RiderProfilePage` | `lib/features/users/presentation/pages/rider_profile_page.dart` | New screen, provides cubit, 4-branch BlocBuilder |
-| `RiderProfileContent` | `lib/features/users/presentation/widgets/rider_profile_content.dart` | Data state widget (one-widget-per-file rule) |
-| `RiderProfileLoading` | `lib/features/users/presentation/widgets/rider_profile_loading.dart` | Shimmer skeleton (one-widget-per-file rule) |
+**New widget to create:**
+- `CoverPreviewWidget` — `lib/features/events/presentation/form/widgets/cover_preview_widget.dart`
+  - Accepts: `coverGenerationResult`, `imageUrl`, `onGenerateTap`, `onRegenerateTap`
+  - Stateless; driven by `EventFormState.coverGenerationResult`
 
 ---
 
-## UI Copy (Spanish, sentence case)
+## Color tokens used in iteration 4
 
-| Key | Value |
-|-----|-------|
-| `event_filterTitle` | Filtros de eventos |
-| `event_filterType` | Tipo de evento |
-| `event_filterDateRange` | Rango de fechas |
-| `event_filterCity` | Ciudad |
-| `event_clearFilters` | Limpiar filtros |
-| `event_noResultsFiltered` | No hay eventos con estos filtros |
-| `event_applyFilters` | Filtrar |
-| `rider_profileTitle` | Perfil del motorista |
-| `rider_noVehicles` | Sin vehículos registrados |
-| `rider_errorRetry` | Reintentar |
+All from existing `styles.css` / design system tokens — no new colors:
 
-Button labels: sentence case (`Filtrar`, `Limpiar filtros`, `Reintentar`) — no ALL CAPS.
-
----
-
-## Dark Theme Tokens Applied
-
-| Token | Value | Usage |
+| Usage | Token | Value |
 |-------|-------|-------|
-| `--bg` | `#111111` | Screen background |
-| `--surface` | `#1a1a1a` | Cards, bottom sheet, attendee items |
-| `--surface-high` | `#242424` | Form fields, vehicle icon bg |
-| `--border` | `#2a2a2a` | Dividers, card borders |
-| `--primary` | `#f98c1f` | Filter button bg, active chips, badge ring, active state borders |
-| `--on-surface-muted` | `#888888` | Subtitles, meta text, empty icons |
-| `--radius` | `8px` | Standard card/button radius |
-| `--radius-full` | `999px` | Chips, badges |
+| Preview container bg | `surface-dark` / `--color-surface` | `#1C1C1C` |
+| Loading overlay | black + 0.55 opacity | `rgba(0,0,0,0.55)` |
+| Spinner | `primary-orange` | `#f98c1f` |
+| Overlay text | white | `#FFFFFF` |
+| Error snackbar bg | `--color-error-bg` | `#2A1218` |
+| Error snackbar border | `--color-error` | `#CF6679` |
+| Section label | `--color-on-surface-variant` | `#9E9E9E` |
 
 ---
 
-## Mockup Files
+## UI copy (Spanish) — Iteration 4 ARB keys
 
+| l10n key | Spanish value | Screen / state |
+|----------|--------------|----------------|
+| `event_coverGenerating` | `"Generando portada..."` | Form subtitle / status |
+| `event_coverGenerated` | `"Portada generada"` | Accessibility label on success |
+| `event_coverGenerateError` | `"No pudimos generar la portada. Sube tu propia imagen."` | Error SnackBar text |
+| `event_coverRegenerate` | `"Regenerar"` | AppTextButton below preview |
+| `event_coverGeneratingOverlay` | `"Generando con IA..."` | Overlay text on loading spinner |
+
+---
+
+## Interaction flows
+
+### Flow A — AI generation (happy path)
 ```
-docs/design/html-mockups/iter-2/
-├── shared/
-│   └── styles.css                          ← Design token baseline (new for iter-2)
-├── events-list/
-│   └── events-list-no-filters.html         ← 3 states: no filters, active badge, filtered empty
-├── event-filters/
-│   └── event-filters-bottom-sheet.html     ← 3 states: empty, partial fill, all 3 backend filters
-└── rider-profile/
-    └── rider-profile-states.html           ← 5 frames: attendee list tap + 4 profile states
+[EventFormContent]
+  User fills: nombre, ciudad, tipo de evento
+  → Tap "Generar portada con IA"
+  → EventFormCubit.generateCover(title, eventType, city)
+  → coverGenerationResult = loading()
+     ↳ CoverPreviewWidget shows spinner overlay
+     ↳ "Generar portada con IA" button disabled
+     ↳ "Publicar evento" remains ENABLED
+  → POST /events/generate-cover (backend)
+  → success: coverGenerationResult = data(imageUrl)
+     ↳ CoverPreviewWidget shows image (CachedNetworkImage)
+     ↳ "Regenerar" button appears
+     ↳ BlocListener calls FormImageCubit.setRemoteImageUrl(imageUrl)
+```
+
+### Flow B — Regeneration
+```
+[CoverPreviewWidget in data() state]
+  → Tap "Regenerar"
+  → Same: EventFormCubit.generateCover(...)
+  → coverGenerationResult = loading()
+     ↳ Spinner overlay on top of EXISTING image (not blank)
+  → success/error as above
+```
+
+### Flow C — Custom image upload (overrides AI)
+```
+[Any state of coverGenerationResult]
+  → Tap "Subir imagen propia"
+  → FormImageCubit.pickImageFromGallery()
+  → Local image selected
+     ↳ FormImageCubit state = data(FormImageData(localPath))
+     ↳ coverGenerationResult in EventFormCubit remains unchanged
+     ↳ FormImageSection renders local image over the AI preview
+```
+
+### Flow D — Error
+```
+[loading() state]
+  → Backend returns 503
+  → coverGenerationResult = error(DomainException)
+     ↳ BlocListener shows SnackBar (Spanish error message)
+     ↳ coverGenerationResult resets to initial() after display
+     ↳ Form data preserved (freezed state separation)
 ```
 
 ---
 
-## ADR-3 Design Impact
+## HTML mockups
 
-Per ADR-3, `EventsCubit` keeps `Cubit<ResultState<List<EventModel>>>` — no `EventsState` freezed class. Design consequence: badge count derives from `cubit.filters.hasFilters` + individual null checks (type, city, dateRange), not from a `activeFilter` field. Frontend computes the integer count from the existing `EventFilters` plain class.
+| File | State | Notes |
+|------|-------|-------|
+| `docs/design/html-mockups/iter-4/event-form-idle.html` | initial() | No image, AI button + upload button |
+| `docs/design/html-mockups/iter-4/event-form-generating.html` | loading() | Spinner overlay; second variant shows regeneration |
+| `docs/design/html-mockups/iter-4/event-form-preview.html` | data(url) | Generated image, Regenerar button, state flow diagram |
+| `docs/design/html-mockups/iter-4/event-form-error.html` | error(e) | SnackBar, form reset to idle, data preserved |
+
+Shared base styles: `docs/design/html-mockups/iter-4/shared/styles.css` (copied from iter-1, extended with iter-4 cover preview classes)
 
 ---
 
-## Acceptance Criteria Cross-reference
+## Locked design decisions (Iteration 4)
 
-| AC | Covered in design |
-|----|-------------------|
-| US-2-1 #11 Active filter badge | Filter button + badge spec ✓ |
-| US-2-1 #12 "Limpiar filtros" conditional | Bottom sheet header, visible only when `hasFilters` ✓ |
-| US-2-1 #13 Filtered empty state | Frame 3 of events-list mockup ✓ |
-| US-2-1 #14 All-events empty state | Existing `EmptyStateWidget` unchanged ✓ |
-| US-2-2 #1 Single-tap clear | "Limpiar filtros" AppTextButton in sheet header ✓ |
-| US-2-2 #5 Badge disappears | Badge hidden when `!filters.hasFilters` ✓ |
-| US-2-3 #2 Route param | `context.pushNamed(AppRoutes.riderProfile, extra: userId)` noted ✓ |
-| US-2-3 #4 UI content | Name + email + vehicle list in data state ✓ |
-| US-2-3 #5 Read-only | No edit affordances in any state ✓ |
-| US-2-3 #6 ResultState branches | Loading shimmer, data, error, empty (not expected) ✓ |
-| US-2-3 #7 Navigation | Attendee list tap → `pushNamed` noted ✓ |
+- Cover preview: 16:9 `AspectRatio` widget — matches event list card ratio for visual consistency. No landscape/portrait toggle.
+- Loading overlay: `Stack` + semi-transparent black `Container` (0.55 opacity) + `CircularProgressIndicator` centered. Image never blanked.
+- "Regenerar": `AppTextButton` (text style, primary-orange), right-aligned below preview. Never replaces "Subir imagen propia".
+- "Generar portada con IA": `AppButton` (full-width primary orange). Hidden (not disabled) when `data()` — replaced by "Regenerar".
+- Error feedback: Flutter `SnackBar` (not inline error banner) — transient, non-blocking, Spanish message.
+- Form data independence: `coverGenerationResult` is a separate field in `@freezed EventFormState` — form field values are never cleared during generation.
+- `CachedNetworkImage`: used for Unsplash URLs. `BoxFit.cover` for the 16:9 container.
+
+---
+
+## Prior iteration inventory (unchanged)
+
+All screens from Iteration 3 remain valid and unmodified. The iteration 4 design touches only `EventFormPage`.
+
+See prior `design.md` for:
+- Flow 1–8 screen inventory (Pencil frames)
+- SOAT upload flow (6 screens, HTML mockups in `iter-3/`)
+- Design token table (Pencil variables)
+
+---
+
+## Change log
+
+- 2026-05-12: Iteration 1 design handoff — Profile page, 4 states, styles.css baseline.
+- 2026-05-12 (iter 3): Design System in Pencil — 8 flows documented, SOAT upload flow designed (6 screens + 6 HTML mockups), design tokens set as 9 Pencil variables. Hard gate for iter-3b cleared.
+- 2026-05-13 (iter 4): AI Event Cover Image Generation — CoverPreviewWidget designed (4 states: idle, loading, data/preview, error). 4 HTML mockups in `iter-4/`. styles.css extended with cover preview classes. No new screens or routes. All UI within EventFormPage.

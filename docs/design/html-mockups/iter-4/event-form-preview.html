@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear evento — Portada generada (preview)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    body { font-family: var(--font-family); }
+    h1 { font-size: 14px; color: #999; margin-bottom: 8px; font-weight: 500; }
+    .generated-image-mock {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1a2a3a 0%, #0d3b2a 40%, #1a3a1a 70%, #2a1a0d 100%);
+      display: flex;
+      align-items: flex-end;
+      padding: 12px;
+    }
+    .image-source-badge {
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 10px;
+      color: rgba(255,255,255,0.7);
+    }
+  </style>
+</head>
+<body>
+  <h1>US-4-2 — Portada generada: preview + botón Regenerar</h1>
+
+  <div class="device">
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons">
+        <span>●●●</span>
+        <span>WiFi</span>
+        <span>🔋</span>
+      </div>
+    </div>
+
+    <!-- App bar -->
+    <div class="app-bar">
+      <div class="back-btn">←</div>
+      <div class="title">Crear evento</div>
+    </div>
+
+    <!-- Screen content -->
+    <div class="screen-content">
+      <div class="scroll-area">
+
+        <!-- ── PORTADA SECTION ── -->
+        <div class="cover-section">
+          <span class="cover-section-title">Portada del evento</span>
+
+          <!-- Cover preview: image loaded via CachedNetworkImage -->
+          <div class="cover-preview-container">
+            <div class="generated-image-mock">
+              <span class="image-source-badge">Unsplash</span>
+            </div>
+            <!-- No overlay in data/success state -->
+          </div>
+
+          <!-- Regenerate button — visible only when coverGenerationResult == data() -->
+          <div class="cover-action-row">
+            <button class="btn-text-sm">↺ Regenerar</button>
+          </div>
+
+          <!-- "Subir imagen propia" always available (AC-4 of US-4-2) -->
+          <button class="btn-outline" style="margin-top: 2px;">
+            <span>📁</span>
+            <span>Subir imagen propia</span>
+          </button>
+
+          <!--
+            Note: "Generar portada con IA" button is hidden once a generated image exists.
+            User flow: idle → tap AI button → loading → preview (with Regenerar)
+                                                                ↘ tap "Subir imagen propia" anytime
+          -->
+        </div>
+
+        <div class="form-section-gap"></div>
+
+        <!-- ── BASIC INFO — filled ── -->
+        <div class="cover-section-title" style="margin-bottom: 12px;">Información básica</div>
+
+        <div class="form-field-stub form-field-filled">
+          <span class="field-icon">✏️</span>
+          <span>Rodada por el Eje Cafetero</span>
+        </div>
+        <div style="height: 8px;"></div>
+        <div class="form-field-stub form-field-filled">
+          <span class="field-icon">📍</span>
+          <span>Manizales</span>
+        </div>
+        <div style="height: 8px;"></div>
+        <div class="form-field-stub form-field-filled" style="height: 80px; align-items: flex-start; padding-top: 14px;">
+          <span class="field-icon">📝</span>
+          <span style="color: var(--color-on-surface);">Rodada de fin de semana por los municipios del Eje Cafetero...</span>
+        </div>
+
+        <div class="form-section-gap"></div>
+
+        <div class="cover-section-title" style="margin-bottom: 12px;">Fecha y hora</div>
+        <div class="form-field-stub form-field-filled">
+          <span class="field-icon">📅</span>
+          <span>18 may — 19 may 2026</span>
+        </div>
+
+        <div style="height: 64px;"></div>
+
+      </div><!-- /scroll-area -->
+
+      <!-- Publish button — enabled, user can submit with AI cover -->
+      <div class="publish-btn-container">
+        <button class="btn btn-primary" style="height: 52px; font-size: 16px;">Publicar evento</button>
+      </div>
+    </div><!-- /screen-content -->
+  </div><!-- /device -->
+
+  <!-- Annotations -->
+  <div style="margin-top: 24px; max-width: 375px; font-size: 12px; color: #999; line-height: 1.6;">
+    <strong style="color:#f98c1f;">Estado: DATA (coverGenerationResult = data(imageUrl))</strong><br>
+    • <code>CachedNetworkImage</code> renders the URL; <code>BoxFit.cover</code><br>
+    • "Regenerar" button (<code>AppTextButton</code>) visible below preview (AC-1 of US-4-2)<br>
+    • "Generar portada con IA" primary button hidden — replaced by "Regenerar" text button<br>
+    • "Subir imagen propia" remains available (AC-4 of US-4-2) — selecting own image replaces the generated URL in <code>EventFormState</code><br>
+    • Form can be submitted with: AI image ✓, custom image ✓, no image ✓ (cover is optional)<br>
+    • l10n key: <code>event_coverRegenerate</code> → "Regenerar"<br>
+    • l10n key: <code>event_coverGenerated</code> → "Portada generada"
+  </div>
+
+  <!-- State flow diagram -->
+  <div style="margin-top: 32px; max-width: 375px; font-family: monospace; font-size: 11px; color: #aaa; line-height: 2;">
+    <div style="color:#f98c1f; font-weight:bold; margin-bottom: 8px;">State flow (coverGenerationResult):</div>
+    initial()  →  [tap "Generar portada con IA"]<br>
+    loading()  →  overlay on preview, AI btn disabled<br>
+    data(url)  →  preview shows image, "Regenerar" visible<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→  [tap "Regenerar"] → loading() (overlay over image)<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→  [tap "Subir propia"] → FormImageCubit replaces URL<br>
+    error(e)   →  snackbar shown, back to initial()
+  </div>
+</body>
+</html>

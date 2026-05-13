@@ -1,0 +1,49 @@
+{
+  "iteration": 4,
+  "phase": "architect",
+  "status": "pass",
+  "updatedAt": "2026-05-13T02:30:00Z",
+  "summary": "Architecture defined for AI Event Cover Image Generation. Backend: new POST /events/generate-cover in api-gateway (ClaudeService + UnsplashService). Flutter: EventFormState @freezed refactor (ADR-7), new CoverGenerationDto/EventCoverService/EventCoverRepositoryImpl/GetGenerateCoverUseCase, CoverPreviewWidget, 5 ARB keys. ADR-8 keeps generateCover() in EventFormCubit. ADR-9 confirms no new Flutter packages needed.",
+  "metrics": {
+    "tokens": 18500,
+    "costUsd": 0.06
+  },
+  "artifacts": [
+    "docs/handoffs/architect.md",
+    "docs/handoffs/architect-for-backend.md",
+    "docs/handoffs/architect-for-frontend.md",
+    "docs/handoffs/architect-for-devops.md",
+    "docs/handoffs/architect-for-qa.md",
+    "docs/architecture/DIAGRAMS.md",
+    "workflow/state.json",
+    "docs/handoffs/contracts/iter-4/architect.json",
+    ".claude/skills/architect-skill.md"
+  ],
+  "qualityGates": [
+    {
+      "name": "required_artifacts_present",
+      "status": "pass",
+      "notes": "All 9 required artifacts written: architect.md, 4 slim handoffs, DIAGRAMS.md, state.json, contract JSON, architect-skill.md"
+    },
+    {
+      "name": "architecture_contracts_defined",
+      "status": "pass",
+      "notes": "Backend DTO shape defined (GenerateCoverDto request + CoverGenerationDto response). Flutter EventFormState freezed structure defined. Use case interface defined. Retrofit endpoint defined. Error mapping strategy defined. 5 l10n keys defined. UNSPLASH_ACCESS_KEY env var documented."
+    },
+    {
+      "name": "no_new_flutter_packages",
+      "status": "pass",
+      "notes": "ADR-9: CachedNetworkImage already in deps; no new pub.dev packages required for iter-4"
+    },
+    {
+      "name": "api_contract_complete",
+      "status": "pass",
+      "notes": "POST /events/generate-cover: request/response shapes, auth requirement, error codes (400/503), 15s timeout all specified"
+    },
+    {
+      "name": "layer_boundaries_respected",
+      "status": "pass",
+      "notes": "Domain: repository interface + use case (no Flutter imports). Data: DTO + Retrofit service + impl (no BuildContext). Presentation: cubit + widget only. Spanish error message hardcoded in repository impl (no BuildContext leak)."
+    }
+  ]
+}

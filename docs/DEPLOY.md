@@ -88,6 +88,7 @@ Create these in your GitHub repository settings (`Settings > Secrets and variabl
 | `FIREBASE_IOS_CLIENT_ID` | OAuth client ID (iOS) | String | `123456-def...mobile.googleusercontent.com` |
 | `FIREBASE_IOS_BUNDLE_ID` | iOS app bundle ID | String (reverse-domain format) | `com.example.rideglory` |
 | `LOCAL_API_BASE_URL` | Backend API URL override (optional) | Full URL with `/api` suffix | `http://api.example.com/api` |
+| `UNSPLASH_ACCESS_KEY` | Unsplash API access key for image generation (Iteration 4+) | String (API key) | (see https://unsplash.com/developers) |
 | `GOOGLE_SERVICES_JSON` | Firebase Android config (base64-encoded) | Base64 string | (see below) |
 | `GOOGLE_SERVICE_INFO_PLIST` | Firebase iOS config (base64-encoded) | Base64 string | (see below) |
 
