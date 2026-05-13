@@ -319,8 +319,8 @@
     },
     "devops": {
       "status": "idle",
-      "lastAction": "2026-05-12T16:45:00Z",
-      "focus": "iter-1 CI/CD pipeline complete — analyze-and-test gate + build-apk job"
+      "lastAction": "2026-05-13T23:59:00Z",
+      "focus": "iter-4 CI update complete — UNSPLASH_ACCESS_KEY secret injection; .env.example, docs/DEPLOY.md updated"
     }
   },
   "tasks": [
@@ -741,6 +741,14 @@
       "agent": "qa",
       "at": "2026-05-13T06:00:00Z",
       "detail": "All 8 acceptance criteria verified: TC-4-1 through TC-4-15. Backend 10/10 tests pass. Frontend unit 2/2 pass. Widget ACs 8/8 code-reviewed. Zero bugs filed. dart analyze 0 new errors; flutter test 7/7 pass. Iteration 4 gate CLEARED."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 4,
+      "phase": "devops",
+      "agent": "devops",
+      "at": "2026-05-13T23:59:00Z",
+      "detail": "CI pipeline updated for iter-4 AI cover generation feature. UNSPLASH_ACCESS_KEY secret added to .github/workflows/ci.yml (both analyze-and-test and build-apk jobs). docs/DEPLOY.md updated with secret documentation. .env.example updated with placeholder. Ready for PR and merge to main."
     }
   ]
 }

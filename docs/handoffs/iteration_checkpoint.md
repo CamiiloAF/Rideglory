@@ -2,7 +2,7 @@
 
 **Date:** 2026-05-13  
 **Iteration:** 4 — AI Event Cover Image Generation  
-**Status:** QA Phase Complete
+**Status:** DevOps Phase Complete
 
 ---
 
@@ -14,12 +14,13 @@
 4. ✅ **Backend** — POST /events/generate-cover implemented, 10/10 tests pass
 5. ✅ **Frontend** — EventFormCubit refactor, GetGenerateCoverUseCase, CoverPreviewWidget, 5 l10n keys, 0 new lint errors
 6. ✅ **QA** — Test catalog (15 cases), backend tests verified, frontend tests written, widget ACs verified via code review
+7. ✅ **DevOps** — CI pipeline updated with UNSPLASH_ACCESS_KEY secret injection; docs/DEPLOY.md and .env.example updated; contract written
 
 ---
 
 ## Next phase
 
-**DevOps** — Build APK, push branch to GitHub, open PR to main.
+**PR** — Push branch to GitHub, open PR to main for tech lead review.
 
 ---
 
