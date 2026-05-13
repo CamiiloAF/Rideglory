@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/domain/result_state.dart';
@@ -27,7 +28,6 @@ const _registrationFocusChainFields = <String>[
   RegistrationFormFields.medicalInsurance,
   RegistrationFormFields.emergencyContactName,
   RegistrationFormFields.emergencyContactPhone,
-  RegistrationFormFields.vehicleId,
 ];
 
 class RegistrationFormContent extends StatefulWidget {
@@ -44,27 +44,10 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
   late final FormFocusChain _focusChain = FormFocusChain(
     _registrationFocusChainFields,
   );
-
-  int _cityFieldGeneration = 0;
-
   @override
   void dispose() {
     _focusChain.dispose();
     super.dispose();
-  }
-
-  Future<void> _onClearForm() async {
-    await ConfirmationDialog.show(
-      context: context,
-      title: context.l10n.registration_clearFormConfirmTitle,
-      content: context.l10n.registration_clearFormConfirmBody,
-      confirmLabel: context.l10n.registration_clearForm,
-      confirmType: DialogActionType.danger,
-      onConfirm: () {
-        context.read<RegistrationFormCubit>().resetFormToEmpty();
-        setState(() => _cityFieldGeneration++);
-      },
-    );
   }
 
   Future<void> _openCreateVehicle(BuildContext context) async {
@@ -74,16 +57,23 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
     if (!context.mounted || savedVehicle == null) {
       return;
     }
-    context.read<RegistrationFormCubit>().formKey.currentState?.fields[RegistrationFormFields.vehicleId]?.didChange(savedVehicle.id);
-  }
-
-  void _submitRegistration() {
-    final selectedVehicleId = context
+    context
         .read<RegistrationFormCubit>()
         .formKey
         .currentState
         ?.fields[RegistrationFormFields.vehicleId]
-        ?.value as String?;
+        ?.didChange(savedVehicle.id);
+  }
+
+  void _submitRegistration() {
+    final selectedVehicleId =
+        context
+                .read<RegistrationFormCubit>()
+                .formKey
+                .currentState
+                ?.fields[RegistrationFormFields.vehicleId]
+                ?.value
+            as String?;
 
     final availableBrands = widget.event.allowedBrands
         .map((brand) => brand.trim())
@@ -92,7 +82,8 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
 
     if (selectedVehicleId != null && availableBrands.isNotEmpty) {
       VehicleModel? vehicle;
-      for (final currentVehicle in context.read<VehicleCubit>().availableVehicles) {
+      for (final currentVehicle
+          in context.read<VehicleCubit>().availableVehicles) {
         if (currentVehicle.id == selectedVehicleId) {
           vehicle = currentVehicle;
           break;
@@ -112,6 +103,7 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
             content: Text(
               '${context.l10n.registration_vehicleBrandNotAllowed}: ${availableBrands.join(', ')}',
             ),
+            duration: const Duration(seconds: 6),
           ),
         );
         return;
@@ -229,7 +221,6 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
               ),
               AppSpacing.gapMd,
               AppCityAutocomplete(
-                key: ValueKey<int>(_cityFieldGeneration),
                 name: RegistrationFormFields.residenceCity,
                 labelText: context.l10n.registration_residenceCity,
                 hintText: context.l10n.registration_residenceCityHint,
@@ -321,9 +312,6 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
                             ),
                           )
                           .toList(),
-                      onChanged: (_) => _focusChain.requestNextAfter(
-                        RegistrationFormFields.bloodType,
-                      ),
                     ),
                   ),
                 ],
@@ -444,26 +432,48 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
                 );
               }
 
-              return AppDropdown<String>(
+              return FormBuilderField<String>(
                 name: RegistrationFormFields.vehicleId,
-                labelText: context.l10n.registration_vehicleData,
-                hintText: context.l10n.registration_selectVehicleToPreload,
-                isRequired: true,
-                focusNode: _focusChain.nodeFor(RegistrationFormFields.vehicleId),
                 validator: FormBuilderValidators.required(
                   errorText: context.l10n.registration_vehicleBrandRequired,
                 ),
-                items: availableVehicles
-                    .map(
-                      (vehicle) => DropdownMenuItem<String>(
-                        value: vehicle.id,
-                        child: Text(
-                          '${vehicle.brand ?? ''} ${vehicle.model ?? ''} ${vehicle.licensePlate ?? ''}'
-                              .trim(),
+                builder: (field) {
+                  final selectedVehicle = availableVehicles
+                      .where((v) => v.id == field.value)
+                      .firstOrNull;
+                  final displayText = selectedVehicle != null
+                      ? '${selectedVehicle.brand ?? ''} ${selectedVehicle.model ?? ''} - ${selectedVehicle.licensePlate ?? ''}'
+                            .trim()
+                      : context.l10n.registration_selectVehicleToPreload;
+
+                  return GestureDetector(
+                    onTap: () async {
+                      final picked = await VehicleSelectionBottomSheet.show(
+                        context: context,
+                        vehicles: availableVehicles,
+                        selectedVehicleId: field.value,
+                      );
+                      if (picked != null) {
+                        field.didChange(picked.id);
+                      }
+                    },
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        labelText: context.l10n.registration_vehicleData,
+                        suffixIcon: const Icon(Icons.keyboard_arrow_down),
+                        errorText: field.errorText,
+                      ),
+                      child: Text(
+                        displayText,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: selectedVehicle != null
+                              ? context.colorScheme.onSurface
+                              : context.colorScheme.onSurfaceVariant,
                         ),
                       ),
-                    )
-                    .toList(),
+                    ),
+                  );
+                },
               );
             },
           ),
@@ -476,18 +486,10 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (!isEditing) ...[
-                  AppButton(
-                    label: context.l10n.registration_clearForm,
-                    onPressed: _onClearForm,
-                    style: AppButtonStyle.outlined,
-                    isFullWidth: true,
-                    icon: Icons.clear,
-                  ),
+                if (!cubit.isPreloadedFromProfile) ...[
+                  const SaveToProfileCheckbox(),
                   AppSpacing.gapMd,
                 ],
-                const SaveToProfileCheckbox(),
-                AppSpacing.gapMd,
                 AppButton(
                   label: isEditing
                       ? context.l10n.registration_updateRegistration

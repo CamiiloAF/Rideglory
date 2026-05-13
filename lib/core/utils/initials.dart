@@ -1,3 +1,16 @@
+/// Returns the first letter of the first and last word of [fullName], uppercase.
+/// Falls back to '?' when [fullName] is null or blank.
+String initialsFromName(String? fullName) {
+  if (fullName == null || fullName.trim().isEmpty) return '?';
+  final parts = fullName.trim().split(RegExp(r'\s+'));
+  if (parts.length == 1) {
+    return parts.first.isNotEmpty ? parts.first[0].toUpperCase() : '?';
+  }
+  final first = parts.first.isNotEmpty ? parts.first[0] : '';
+  final last = parts.last.isNotEmpty ? parts.last[0] : '';
+  return '$first$last'.toUpperCase();
+}
+
 abstract class Initials {
   static String buildInitials({
     required String firstName,

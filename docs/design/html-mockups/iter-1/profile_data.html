@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile — Data</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 20px 0 24px;
+    }
+    .profile-info { flex: 1; }
+    .profile-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #FFFFFF;
+      line-height: 1.2;
+    }
+    .profile-email {
+      font-size: 14px;
+      color: var(--color-on-surface-variant);
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="device">
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons">
+        <span>●●●</span>
+        <span>WiFi</span>
+        <span>🔋</span>
+      </div>
+    </div>
+
+    <!-- App bar -->
+    <div class="app-bar">
+      <span class="title">Mi perfil</span>
+    </div>
+
+    <!-- Screen content -->
+    <div class="screen-content">
+      <div class="scroll-area">
+
+        <!-- Profile header: avatar + name + email -->
+        <div class="profile-header">
+          <div class="avatar avatar-lg">CA</div>
+          <div class="profile-info">
+            <div class="profile-name">Carlos Agudelo</div>
+            <div class="profile-email">carlos.agudelo@gmail.com</div>
+          </div>
+        </div>
+
+        <div class="divider" style="margin-top:0;"></div>
+        <div class="spacer-md"></div>
+
+        <!-- Main vehicle section -->
+        <div class="section-label">Vehículo principal</div>
+        <div class="vehicle-chip">
+          <div>
+            <div class="chip-icon">🏍️</div>
+          </div>
+          <div>
+            <div class="chip-label">Vehículo principal</div>
+            <div class="chip-value">Honda CB500F — 2022</div>
+          </div>
+        </div>
+
+        <div class="spacer-xl"></div>
+
+        <!-- Actions section -->
+        <div class="section-label">Cuenta</div>
+        <div class="card" style="padding:0 16px;">
+          <div class="list-item">
+            <span class="item-icon">📋</span>
+            <div class="item-content">
+              <div class="item-title">Mis inscripciones</div>
+            </div>
+            <span class="item-chevron">›</span>
+          </div>
+          <div class="list-item" style="border-bottom:none;">
+            <span class="item-icon danger">🚪</span>
+            <div class="item-content">
+              <div class="item-title danger">Cerrar sesión</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom nav -->
+    <div class="bottom-nav">
+      <div class="nav-item">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Inicio</span>
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">📅</span>
+        <span class="nav-label">Eventos</span>
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">🏍️</span>
+        <span class="nav-label">Garaje</span>
+      </div>
+      <div class="nav-item active">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">Perfil</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- State label -->
+  <div style="margin-top:16px;font-family:'Space Grotesk',sans-serif;color:#9E9E9E;font-size:13px;text-align:center;">
+    Estado: <strong style="color:#f98c1f;">data</strong> — nombre, email, avatar de iniciales, vehículo principal
+  </div>
+</body>
+</html>

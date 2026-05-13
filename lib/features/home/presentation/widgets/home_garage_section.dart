@@ -35,17 +35,9 @@ class HomeGarageSection extends StatelessWidget {
                   fontWeight: FontWeight.w700,
                 ),
               ),
-              GestureDetector(
-                onTap: () => context.goNamed(AppRoutes.garage),
-                child: Text(
-                  'VER TODO',
-                  style: TextStyle(
-                    color: context.colorScheme.primary,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 1,
-                  ),
-                ),
+              AppTextButton(
+                label: context.l10n.vehicle_seeAll,
+                onPressed: () => context.go(AppRoutes.garage),
               ),
             ],
           ),

@@ -16,9 +16,8 @@ class VehicleMaintenancesCubit
     emit(const ResultState.loading());
     final result = await _getMaintenancesByVehicleIdUseCase.execute(vehicleId);
 
-    result.fold((error) => emit(ResultState.error(error: error)), (
-      page,
-    ) {
+    if (isClosed) return;
+    result.fold((error) => emit(ResultState.error(error: error)), (page) {
       final maintenances = [...page.items];
       maintenances.sort((a, b) => b.date.compareTo(a.date));
       if (maintenances.isEmpty) {

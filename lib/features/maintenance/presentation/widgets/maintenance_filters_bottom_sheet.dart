@@ -192,6 +192,10 @@ class _MaintenanceFiltersBottomSheetState
                   AppSpacing.gapSm,
                   Row(
                     children: [
+                      // OutlinedButton.icon used intentionally: AppButton
+                      // does not support icon+dynamic text label layout needed
+                      // for date-picker triggers. Refactor to shared widget in
+                      // a later iteration if the pattern recurs.
                       Expanded(
                         child: OutlinedButton.icon(
                           icon: Icon(
@@ -227,6 +231,7 @@ class _MaintenanceFiltersBottomSheetState
                         ),
                       ),
                       AppSpacing.hGapMd,
+                      // OutlinedButton.icon: same rationale as start-date picker above.
                       Expanded(
                         child: OutlinedButton.icon(
                           icon: Icon(

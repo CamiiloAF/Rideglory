@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile — Error</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    .error-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      gap: 24px;
+      text-align: center;
+    }
+    .error-icon-lg {
+      font-size: 48px;
+      opacity: 0.5;
+    }
+    .error-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-on-surface);
+    }
+    .error-subtitle {
+      font-size: 14px;
+      color: var(--color-on-surface-variant);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="device">
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons">
+        <span>●●●</span>
+        <span>WiFi</span>
+        <span>🔋</span>
+      </div>
+    </div>
+
+    <!-- App bar -->
+    <div class="app-bar">
+      <span class="title">Mi perfil</span>
+    </div>
+
+    <!-- Screen content -->
+    <div class="screen-content">
+
+      <!-- Error state: centered (no data to show below) -->
+      <div class="error-screen">
+        <!-- Error icon -->
+        <div class="error-icon-lg">⚠️</div>
+
+        <!-- Error message -->
+        <div>
+          <div class="error-title">No pudimos cargar tu perfil</div>
+          <div class="error-subtitle" style="margin-top:8px;">
+            Revisa tu conexión e intenta de nuevo.
+          </div>
+        </div>
+
+        <!-- Retry button (AppButton primary) -->
+        <button class="btn btn-primary" style="max-width:200px;">
+          Reintentar
+        </button>
+      </div>
+
+      <!-- Note: error banner alternative (used when profile has partial data) -->
+      <!--
+      If ProfileCubit.error fires AFTER a successful load (e.g. pull-to-refresh failure),
+      show the error-banner style below instead of replacing the full screen:
+
+      <div class="scroll-area">
+        <div class="error-banner" style="margin-bottom:16px;">
+          <span class="error-icon">⚠</span>
+          <div class="error-content">
+            <div class="error-message">No pudimos cargar tu perfil</div>
+            <button class="btn btn-text" style="height:32px;font-size:13px;justify-content:flex-start;padding:0;">
+              Reintentar
+            </button>
+          </div>
+        </div>
+        ... cached content below ...
+      </div>
+      -->
+
+    </div>
+
+    <!-- Bottom nav -->
+    <div class="bottom-nav">
+      <div class="nav-item">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Inicio</span>
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">📅</span>
+        <span class="nav-label">Eventos</span>
+      </div>
+      <div class="nav-item">
+        <span class="nav-icon">🏍️</span>
+        <span class="nav-label">Garaje</span>
+      </div>
+      <div class="nav-item active">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label">Perfil</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- State label -->
+  <div style="margin-top:16px;font-family:'Space Grotesk',sans-serif;color:#9E9E9E;font-size:13px;text-align:center;">
+    Estado: <strong style="color:#CF6679;">error</strong> — pantalla centrada + botón "Reintentar"
+  </div>
+</body>
+</html>
