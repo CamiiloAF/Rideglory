@@ -157,11 +157,8 @@ class AttendeesList extends StatelessWidget {
                 child: AttendeeProcessedItem(
                   registration: registration,
                   onTap: () => context.pushNamed(
-                    AppRoutes.registrationDetail,
-                    extra: RegistrationDetailExtra(
-                      registration: registration,
-                      eventOwnerId: event.ownerId,
-                    ),
+                    AppRoutes.riderProfile,
+                    extra: registration.userId,
                   ),
                   onOptionsPressed: () {},
                 ),

@@ -1,22 +1,22 @@
 {
-  "generatedAt": "2026-05-12T16:14:58Z",
+  "generatedAt": "2026-05-11T21:08:41Z",
   "currentIteration": 1,
   "phaseDurationMinutes": {
     "po_scope": {
-      "avgMinutes": 31.0,
-      "maxMinutes": 31.0,
+      "avgMinutes": 15.0,
+      "maxMinutes": 15.0,
       "samples": 1
     }
   },
   "retriesByRole": [],
   "failuresByRole": [],
   "tokenCost": {
-    "totalTokens": 55925,
-    "totalCostUsd": 0.04,
+    "totalTokens": 0,
+    "totalCostUsd": 0.0,
     "byPhase": {
       "po_scope": {
-        "tokens": 55925,
-        "costUsd": 0.04,
+        "tokens": 0,
+        "costUsd": 0.0,
         "samples": 1,
         "role": "po"
       }
@@ -26,11 +26,11 @@
         "iteration": 1,
         "status": "active",
         "phaseDurationsMinutes": {
-          "po_scope": 31.0
+          "po_scope": 15.0
         },
         "tokenCost": {
-          "tokens": 55925,
-          "costUsd": 0.04
+          "tokens": 0,
+          "costUsd": 0.0
         }
       },
       {
@@ -43,16 +43,7 @@
         }
       },
       {
-        "iteration": 31,
-        "status": "planned",
-        "phaseDurationsMinutes": {},
-        "tokenCost": {
-          "tokens": 0,
-          "costUsd": 0.0
-        }
-      },
-      {
-        "iteration": 32,
+        "iteration": 3,
         "status": "planned",
         "phaseDurationsMinutes": {},
         "tokenCost": {
@@ -62,51 +53,6 @@
       },
       {
         "iteration": 4,
-        "status": "planned",
-        "phaseDurationsMinutes": {},
-        "tokenCost": {
-          "tokens": 0,
-          "costUsd": 0.0
-        }
-      },
-      {
-        "iteration": 5,
-        "status": "planned",
-        "phaseDurationsMinutes": {},
-        "tokenCost": {
-          "tokens": 0,
-          "costUsd": 0.0
-        }
-      },
-      {
-        "iteration": 61,
-        "status": "planned",
-        "phaseDurationsMinutes": {},
-        "tokenCost": {
-          "tokens": 0,
-          "costUsd": 0.0
-        }
-      },
-      {
-        "iteration": 62,
-        "status": "planned",
-        "phaseDurationsMinutes": {},
-        "tokenCost": {
-          "tokens": 0,
-          "costUsd": 0.0
-        }
-      },
-      {
-        "iteration": 100,
-        "status": "planned",
-        "phaseDurationsMinutes": {},
-        "tokenCost": {
-          "tokens": 0,
-          "costUsd": 0.0
-        }
-      },
-      {
-        "iteration": 200,
         "status": "planned",
         "phaseDurationsMinutes": {},
         "tokenCost": {

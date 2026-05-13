@@ -4119,6 +4119,54 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'{level, select, 1{Fácil} 2{Moderado} 3{Intermedio} 4{Difícil} 5{Muy difícil} other{Intermedio}}'**
   String event_difficultyLevel(String level);
+
+  /// No description provided for @event_filterTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Filtros de eventos'**
+  String get event_filterTitle;
+
+  /// No description provided for @event_filterType.
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo de evento'**
+  String get event_filterType;
+
+  /// No description provided for @event_filterDateRange.
+  ///
+  /// In es, this message translates to:
+  /// **'Rango de fechas'**
+  String get event_filterDateRange;
+
+  /// No description provided for @event_filterCity.
+  ///
+  /// In es, this message translates to:
+  /// **'Ciudad'**
+  String get event_filterCity;
+
+  /// No description provided for @event_noResultsFiltered.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay eventos con estos filtros'**
+  String get event_noResultsFiltered;
+
+  /// No description provided for @rider_profileTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Perfil del motorista'**
+  String get rider_profileTitle;
+
+  /// No description provided for @rider_noVehicles.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin vehículos registrados'**
+  String get rider_noVehicles;
+
+  /// No description provided for @rider_errorRetry.
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get rider_errorRetry;
 }
 
 class _AppLocalizationsDelegate

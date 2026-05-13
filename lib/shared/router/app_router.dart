@@ -22,6 +22,7 @@ import 'package:rideglory/features/maintenance/domain/model/maintenance_model.da
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
 import '../../features/authentication/application/auth_cubit.dart';
+import '../../features/users/presentation/pages/rider_profile_page.dart';
 import '../../features/authentication/login/presentation/login_view.dart';
 import '../../features/authentication/signup/presentation/signup_view.dart';
 import '../../features/profile/presentation/profile_page.dart';
@@ -283,6 +284,14 @@ class AppRouter {
           final eventIdFromExtra = state.extra is String ? state.extra as String : null;
           final eventId = eventIdFromQuery ?? eventIdFromExtra ?? '';
           return EventDetailByIdPage(eventId: eventId);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.riderProfile,
+        name: AppRoutes.riderProfile,
+        builder: (context, state) {
+          final userId = state.extra as String;
+          return RiderProfilePage(userId: userId);
         },
       ),
     ],
