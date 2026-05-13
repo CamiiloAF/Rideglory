@@ -149,7 +149,7 @@ class ResultState<T> {
 - **LocationService**: GPS location updates via `geolocator`
 - **UserStorageService**: `SharedPreferences` wrapper for persistent local data
 - **ImageStorageService**: Firebase Storage for vehicle/user photos
-- **PlaceService**: Google Places autocomplete (Retrofit client)
+- **PlaceService**: Mapbox Geocoding API para búsqueda de lugares (Retrofit client)
 
 ### Dependency Injection (GetIt + Injectable)
 
@@ -190,7 +190,8 @@ class ResultState<T> {
 | `go_router` | Declarative routing and navigation |
 | `firebase_core`, `firebase_auth`, `cloud_firestore`, `firebase_storage`, `firebase_remote_config` | Firebase services |
 | `google_sign_in` | OAuth sign-in |
-| `google_maps_flutter`, `geocoding`, `geolocator` | Maps and location |
+| `mapbox_maps_flutter` | Mapas interactivos con estilos dark custom |
+| `geolocator` | GPS location updates |
 | `flutter_form_builder`, `form_builder_validators` | Form UI and validation |
 | `flutter_quill` | Rich text editor |
 | `web_socket_channel` | Real-time event tracking |
