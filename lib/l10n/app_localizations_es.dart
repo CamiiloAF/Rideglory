@@ -604,6 +604,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_generateWithAI => 'Generar';
 
   @override
+  String get event_coverGenerating => 'Generando portada...';
+
+  @override
+  String get event_coverGenerated => 'Portada generada';
+
+  @override
+  String get event_coverGenerateError =>
+      'No pudimos generar la portada. Sube tu propia imagen.';
+
+  @override
+  String get event_coverRegenerate => 'Regenerar';
+
+  @override
+  String get event_coverGeneratingOverlay => 'Generando con IA...';
+
+  @override
   String get event_photoPermissionDenied =>
       'Se necesita acceso a la galería para elegir la portada del evento.';
 

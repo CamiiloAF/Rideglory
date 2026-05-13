@@ -62,6 +62,10 @@ class FormImageCubit extends Cubit<ResultState<FormImageData>> {
     emit(ResultState.data(data: current.copyWith(localImagePath: null)));
   }
 
+  void setRemoteImageUrl(String url) {
+    emit(ResultState.data(data: FormImageData(remoteImageUrl: url)));
+  }
+
   String? get selectedLocalImagePath =>
       state.whenOrNull(data: (data) => data.localImagePath);
 

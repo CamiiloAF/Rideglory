@@ -304,8 +304,8 @@
     },
     "frontend": {
       "status": "idle",
-      "lastAction": "2026-05-12T05:00:00Z",
-      "focus": "iter-1 US-1-1 test infra + US-1-4 profile page \u2014 done"
+      "lastAction": "2026-05-13T05:30:00Z",
+      "focus": "iter-4 frontend complete \u2014 EventFormCubit @freezed refactor, GetGenerateCoverUseCase + EventCoverService + CoverGenerationDto + CoverPreviewWidget, 5 l10n keys, 0 errors"
     },
     "qa": {
       "status": "idle",
@@ -426,46 +426,46 @@
       "id": "T-4-3",
       "title": "Frontend: refactor EventFormCubit to @freezed EventFormState with coverGenerationResult field",
       "agent": "frontend",
-      "status": "backlog",
+      "status": "done",
       "iteration": 4,
       "story": "US-4-4",
-      "updatedAt": "2026-05-13T01:00:00Z"
+      "updatedAt": "2026-05-13T05:30:00Z"
     },
     {
       "id": "T-4-4",
       "title": "Frontend: implement GetGenerateCoverUseCase, EventCoverService, CoverGenerationDto",
       "agent": "frontend",
-      "status": "backlog",
+      "status": "done",
       "iteration": 4,
       "story": "US-4-4",
-      "updatedAt": "2026-05-13T01:00:00Z"
+      "updatedAt": "2026-05-13T05:30:00Z"
     },
     {
       "id": "T-4-5",
       "title": "Frontend: wire Generar portada con IA button to EventFormCubit.generateCover()",
       "agent": "frontend",
-      "status": "backlog",
+      "status": "done",
       "iteration": 4,
       "story": "US-4-1, US-4-2",
-      "updatedAt": "2026-05-13T01:00:00Z"
+      "updatedAt": "2026-05-13T05:30:00Z"
     },
     {
       "id": "T-4-6",
       "title": "Frontend: cover preview UI (16:9 aspect ratio, CachedNetworkImage, loading overlay)",
       "agent": "frontend",
-      "status": "backlog",
+      "status": "done",
       "iteration": 4,
       "story": "US-4-1",
-      "updatedAt": "2026-05-13T01:00:00Z"
+      "updatedAt": "2026-05-13T05:30:00Z"
     },
     {
       "id": "T-4-7",
       "title": "Frontend: add ARB keys for cover generation UI copy (event_* prefix)",
       "agent": "frontend",
-      "status": "backlog",
+      "status": "done",
       "iteration": 4,
       "story": "US-4-1, US-4-2",
-      "updatedAt": "2026-05-13T01:00:00Z"
+      "updatedAt": "2026-05-13T05:30:00Z"
     },
     {
       "id": "T-4-8",
@@ -725,6 +725,14 @@
       "agent": "backend",
       "at": "2026-05-13T04:30:00Z",
       "detail": "POST /events/generate-cover implemented — ClaudeService (Anthropic SDK) + UnsplashService (axios, 15 s timeout); GenerateCoverDto; EventsModule providers registered; .env.example updated; 10/10 unit tests pass; 0 lint errors — Next: frontend"
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 4,
+      "phase": "frontend",
+      "agent": "frontend",
+      "at": "2026-05-13T05:30:00Z",
+      "detail": "EventFormCubit @freezed refactor + GetGenerateCoverUseCase + EventCoverService + CoverGenerationDto + EventCoverRepositoryImpl + CoverPreviewWidget — AI cover generation end-to-end wired; 5 l10n keys; dart analyze 0 errors; flutter test 5/5 — Next: qa"
     }
   ]
 }

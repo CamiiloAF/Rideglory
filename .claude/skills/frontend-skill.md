@@ -117,6 +117,7 @@ Commands: `dart analyze`, `flutter test`, `dart run build_runner build --delete-
 
 - 2026-05-11 (iter 0): Skill stub created.
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
+- 2026-05-13 (iter 4): AI cover generation feature delivered. EventFormCubit refactored to @freezed EventFormState (saveResult + coverGenerationResult). GetGenerateCoverUseCase + EventCoverService (Retrofit POST /events/generate-cover) + CoverGenerationDto + EventCoverRepositoryImpl. CoverPreviewWidget (16:9, CachedNetworkImage, Stack overlay, Regenerar AppTextButton). EventFormContent AI button wired. EventFormView BlocConsumer bridges cover data → FormImageCubit.setRemoteImageUrl(). 5 l10n keys added. build_runner auto-generated all DI. dart analyze 0 errors. flutter test 5/5.
 
 ---
 
