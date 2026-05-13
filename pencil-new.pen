@@ -1,0 +1,2105 @@
+{
+  "version": "2.11",
+  "children": [
+    {
+      "type": "frame",
+      "id": "n57YvT",
+      "x": 0,
+      "y": 0,
+      "name": "01_splash",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "bsbYY",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/splash_screen_con_logo_oficial.png",
+            "mode": "fit"
+          }
+        },
+        {
+          "type": "frame",
+          "id": "R7lBSk",
+          "x": 0,
+          "y": 0,
+          "name": "status_bar",
+          "width": 390,
+          "height": 62,
+          "padding": [
+            0,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "TopRZ",
+              "fill": "#FFFFFF",
+              "content": "9:41",
+              "fontFamily": "SF Pro",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "BODLE",
+              "fill": "#FFFFFF",
+              "content": "●●●  ▮▮",
+              "fontFamily": "SF Pro",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "L12psu",
+      "x": 430,
+      "y": 0,
+      "name": "02_login",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "k7Xxfc",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/login_minimalista_rideglory.png",
+            "mode": "fit"
+          }
+        },
+        {
+          "type": "frame",
+          "id": "cyneI",
+          "x": 0,
+          "y": 0,
+          "name": "status_bar",
+          "width": 390,
+          "height": 62,
+          "padding": [
+            0,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "iXWda",
+              "fill": "#FFFFFF",
+              "content": "9:41",
+              "fontFamily": "SF Pro",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "nzfWw",
+              "fill": "#FFFFFF",
+              "content": "●●●  ▮▮",
+              "fontFamily": "SF Pro",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "y6upd8",
+      "x": 860,
+      "y": 0,
+      "name": "03_registro",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "mbgai",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/registro_v3.png",
+            "mode": "fit"
+          }
+        },
+        {
+          "type": "frame",
+          "id": "A7h1kZ",
+          "x": 0,
+          "y": 0,
+          "name": "status_bar",
+          "width": 390,
+          "height": 62,
+          "padding": [
+            0,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "qKEwc",
+              "fill": "#FFFFFF",
+              "content": "9:41",
+              "fontFamily": "SF Pro",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "Agddd",
+              "fill": "#FFFFFF",
+              "content": "●●●  ▮▮",
+              "fontFamily": "SF Pro",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "wjc0u",
+      "x": 1290,
+      "y": 0,
+      "name": "04_home_dashboard",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "vNqaC",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/dashboard_principal_nuevo_estilo.png",
+            "mode": "fit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "h7WOCx",
+      "x": 1720,
+      "y": 0,
+      "name": "05_eventos_lista",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "FK325",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/explorar_eventos_v3.png",
+            "mode": "fit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "W7uck",
+      "x": 0,
+      "y": 904,
+      "name": "06_eventos_filtros",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "m9zHDK",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/explorar_eventos_r_plica_fiel_v2.png",
+            "mode": "fit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "d8lUqM",
+      "x": 430,
+      "y": 904,
+      "name": "07_evento_detalle",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "PMXBb",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/detalle_de_evento_minimalista_1.png",
+            "mode": "fit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "VY37r",
+      "x": 860,
+      "y": 904,
+      "name": "08_crear_evento_form",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "fDGuF",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/nuevo_evento_formulario_final_con_ia.png",
+            "mode": "fit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Dqs8Y",
+      "x": 1290,
+      "y": 904,
+      "name": "09_mis_inscripciones",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "alTHH",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/mis_inscripciones_detallado_1.png",
+            "mode": "fit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "yZoXk",
+      "x": 1720,
+      "y": 904,
+      "name": "10_inscripcion_detalle",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "FG9fV",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/detalle_de_inscripci_n_moderno.png",
+            "mode": "fit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "aJHqN",
+      "x": 0,
+      "y": 1808,
+      "name": "11_gestionar_inscritos",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "z11MmY",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/gesti_n_de_inscritos_actualizada_1.png",
+            "mode": "fit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "u1yUDk",
+      "x": 430,
+      "y": 1808,
+      "name": "12_garaje_lista",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "FybI1",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/mis_veh_culos_1.png",
+            "mode": "fit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Iuk6m",
+      "x": 860,
+      "y": 1808,
+      "name": "13_vehiculo_detalle",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "YCbPZ",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/detalle_veh_culo_info_expandible_v1.png",
+            "mode": "fit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Z58sM",
+      "x": 1290,
+      "y": 1808,
+      "name": "14_vehiculo_form",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "kHzPB",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/nuevo_veh_culo_v3.png",
+            "mode": "fit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "yG8M9",
+      "x": 1720,
+      "y": 1808,
+      "name": "15_mantenimiento_lista",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "JImbM",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/historial_de_mantenimiento_listado_v1_1.png",
+            "mode": "fit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "A3P8f",
+      "x": 0,
+      "y": 2712,
+      "name": "16_mantenimiento_detalle",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "FdxyO",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/detalle_de_mantenimiento_1.png",
+            "mode": "fit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "dTzHM",
+      "x": 430,
+      "y": 2712,
+      "name": "17_mantenimiento_form",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "YtRYL",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/nuevo_mantenimiento_1.png",
+            "mode": "fit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "cMn7w",
+      "x": 860,
+      "y": 2712,
+      "name": "18_mi_perfil",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "gcEcg",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/perfil_con_editar_v3.png",
+            "mode": "fit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "pLLlh",
+      "x": 1290,
+      "y": 2712,
+      "name": "19_perfil_piloto",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "hFidy",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/perfil_de_piloto_1.png",
+            "mode": "fit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "x4sQHZ",
+      "x": 1720,
+      "y": 2712,
+      "name": "20_rastreo_mapa",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "D2YEw",
+          "x": 0,
+          "y": 0,
+          "name": "ref_image",
+          "width": 390,
+          "height": 844,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "/Users/cami/Developer/Personal/Rideglory/docs/design/stitch-references/rastreo_en_grupo_mapa_vivo.png",
+            "mode": "fit"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "X9DpQ",
+      "x": 0,
+      "y": 3616,
+      "name": "21_soat_vehiculo_badge",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "Jdq44",
+          "name": "status_bar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "MXB5b",
+              "fill": "#FFFFFF",
+              "content": "9:41",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "RLctz",
+              "fill": "#FFFFFF",
+              "content": "●●●  ▮▮",
+              "fontFamily": "Inter",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "GtODL",
+          "name": "wrapper",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            20,
+            24,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "aq7Z7",
+              "name": "header",
+              "width": "fill_container",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "jqtZ0",
+                  "width": 24,
+                  "height": 24,
+                  "iconFontName": "arrow-left",
+                  "iconFontFamily": "lucide",
+                  "fill": "#FFFFFF"
+                },
+                {
+                  "type": "text",
+                  "id": "pTnNg",
+                  "fill": "#FFFFFF",
+                  "content": "Mi Garaje",
+                  "fontFamily": "Inter",
+                  "fontSize": 20,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "F8rvtS",
+              "name": "vehicle_card",
+              "width": "fill_container",
+              "fill": "#111111",
+              "cornerRadius": 8,
+              "stroke": {
+                "thickness": 1,
+                "fill": "#ffffff1f"
+              },
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "sQVHn",
+                  "name": "row1",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "m0cYB",
+                      "width": 64,
+                      "height": 64,
+                      "fill": "#1a1a1a",
+                      "cornerRadius": 8
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Bfkth",
+                      "name": "col1",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "l5IE6v",
+                          "fill": "#FFFFFF",
+                          "content": "KTM 890 Adventure",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "sJIfH",
+                          "fill": "#ffffff99",
+                          "content": "12,450 km · ABC-123",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "shkSn",
+                  "name": "soat_badge_valid",
+                  "fill": "#0d2b1a",
+                  "cornerRadius": 36,
+                  "gap": 6,
+                  "padding": [
+                    6,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "dr6be",
+                      "width": 14,
+                      "height": 14,
+                      "iconFontName": "check_circle",
+                      "iconFontFamily": "Material Symbols Rounded",
+                      "fill": "#34c77b"
+                    },
+                    {
+                      "type": "text",
+                      "id": "igVbz",
+                      "fill": "#34c77b",
+                      "content": "SOAT vigente",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "hRA4W",
+                  "name": "btn21",
+                  "width": "fill_container",
+                  "height": 44,
+                  "fill": "#f98c1f",
+                  "cornerRadius": 8,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "irRVK",
+                      "fill": "#0D0D0D",
+                      "content": "Subir SOAT",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Q47PW",
+              "name": "vehicle_card_expiring",
+              "width": "fill_container",
+              "fill": "#111111",
+              "cornerRadius": 8,
+              "stroke": {
+                "thickness": 1,
+                "fill": "#ffffff1f"
+              },
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "LvwyU",
+                  "name": "row1b",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "rUkIq",
+                      "width": 64,
+                      "height": 64,
+                      "fill": "#1a1a1a",
+                      "cornerRadius": 8
+                    },
+                    {
+                      "type": "frame",
+                      "id": "O45zV",
+                      "name": "col1b",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "gmIaq",
+                          "fill": "#FFFFFF",
+                          "content": "Yamaha MT-07",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "KryFT",
+                          "fill": "#ffffff99",
+                          "content": "8,200 km · XYZ-456",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "hfPRb",
+                  "name": "badge21b",
+                  "fill": "#3d2a00",
+                  "cornerRadius": 36,
+                  "gap": 6,
+                  "padding": [
+                    6,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "X5Fx7r",
+                      "width": 14,
+                      "height": 14,
+                      "iconFontName": "warning",
+                      "iconFontFamily": "Material Symbols Rounded",
+                      "fill": "#f98c1f"
+                    },
+                    {
+                      "type": "text",
+                      "id": "cxcpa",
+                      "fill": "#f98c1f",
+                      "content": "Vence en 15 días",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "h5nyCU",
+              "name": "vehicle_card_expired",
+              "width": "fill_container",
+              "fill": "#111111",
+              "cornerRadius": 8,
+              "stroke": {
+                "thickness": 1,
+                "fill": "#ffffff1f"
+              },
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "yUJ7e",
+                  "name": "row1c",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "UtAZ8",
+                      "width": 64,
+                      "height": 64,
+                      "fill": "#1a1a1a",
+                      "cornerRadius": 8
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Ko4wl",
+                      "name": "col1c",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "kMXsJ",
+                          "fill": "#FFFFFF",
+                          "content": "Honda CB500X",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "z7Pxm",
+                          "fill": "#ffffff99",
+                          "content": "22,100 km · DEF-789",
+                          "fontFamily": "Inter",
+                          "fontSize": 13,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "zuRc6",
+                  "name": "badge21c",
+                  "fill": "#2d1219",
+                  "cornerRadius": 36,
+                  "gap": 6,
+                  "padding": [
+                    6,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "AL9F8",
+                      "width": 14,
+                      "height": 14,
+                      "iconFontName": "cancel",
+                      "iconFontFamily": "Material Symbols Rounded",
+                      "fill": "#CF6679"
+                    },
+                    {
+                      "type": "text",
+                      "id": "N1ewG",
+                      "fill": "#CF6679",
+                      "content": "SOAT vencido",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "CFHua",
+      "x": 430,
+      "y": 3616,
+      "name": "22_soat_upload_entry",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "wxZR3",
+          "name": "sb22",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "GGFDg",
+              "fill": "#FFFFFF",
+              "content": "9:41",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "xwT2Q",
+              "fill": "#FFFFFF",
+              "content": "●●●  ▮▮",
+              "fontFamily": "Inter",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "i5dDXQ",
+          "name": "wrap22",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            8,
+            20,
+            24,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "aurXb",
+              "name": "hdr22",
+              "width": "fill_container",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "QQ8ZZ",
+                  "width": 24,
+                  "height": 24,
+                  "iconFontName": "arrow-left",
+                  "iconFontFamily": "lucide",
+                  "fill": "#FFFFFF"
+                },
+                {
+                  "type": "text",
+                  "id": "I8vYrv",
+                  "fill": "#FFFFFF",
+                  "content": "Subir SOAT",
+                  "fontFamily": "Inter",
+                  "fontSize": 20,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "PC61Z",
+              "fill": "#ffffff99",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Sube tu SOAT en PDF o ingresa los datos manualmente.",
+              "fontFamily": "Inter",
+              "fontSize": 14,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "Ui0nx",
+              "name": "current_soat_card",
+              "width": "fill_container",
+              "fill": "#111111",
+              "cornerRadius": 8,
+              "stroke": {
+                "thickness": 1,
+                "fill": "#ffffff1f"
+              },
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 16,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "ulUeC",
+                  "fill": "#ffffff99",
+                  "content": "SOAT actual",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "yphOF",
+                  "fill": "#FFFFFF",
+                  "content": "Vence: 30 nov 2026",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "wY6eE",
+                  "fill": "#ffffff99",
+                  "content": "Póliza #POL-2025-9821 · Sura",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "jBLan",
+              "name": "dropzone",
+              "width": "fill_container",
+              "height": 200,
+              "fill": "#111111",
+              "cornerRadius": 8,
+              "stroke": {
+                "thickness": 2,
+                "fill": "#f98c1f"
+              },
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 24,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "T7HCG",
+                  "width": 48,
+                  "height": 48,
+                  "iconFontName": "upload_file",
+                  "iconFontFamily": "Material Symbols Rounded",
+                  "fill": "#f98c1f"
+                },
+                {
+                  "type": "text",
+                  "id": "Gl37w",
+                  "fill": "#FFFFFF",
+                  "content": "Seleccionar PDF",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "AdFyi",
+                  "fill": "#ffffff99",
+                  "content": "Toca para elegir un archivo (máx. 10 MB)",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ytxLY",
+              "name": "btn22",
+              "width": "fill_container",
+              "height": 44,
+              "cornerRadius": 8,
+              "stroke": {
+                "thickness": 1,
+                "fill": "#ffffff1f"
+              },
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "c0UAgI",
+                  "fill": "#FFFFFF",
+                  "content": "Ingresar manualmente",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "HLkUm",
+      "x": 860,
+      "y": 3616,
+      "name": "23_soat_upload_progress",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "k6SsW0",
+          "name": "sb23",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "mRu8R",
+              "fill": "#FFFFFF",
+              "content": "9:41",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "dOFHe",
+              "fill": "#FFFFFF",
+              "content": "●●●  ▮▮",
+              "fontFamily": "Inter",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "TuGAw",
+          "name": "wrap23",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            8,
+            20,
+            24,
+            20
+          ],
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "MofQi",
+              "name": "ring23",
+              "width": 120,
+              "height": 120,
+              "fill": "#111111",
+              "cornerRadius": 60,
+              "stroke": {
+                "thickness": 4,
+                "fill": "#f98c1f"
+              },
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "o5AiG",
+                  "width": 48,
+                  "height": 48,
+                  "iconFontName": "bolt",
+                  "iconFontFamily": "Material Symbols Rounded",
+                  "fill": "#f98c1f"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "V1QES",
+              "fill": "#FFFFFF",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Extrayendo información con IA…",
+              "textAlign": "center",
+              "fontFamily": "Inter",
+              "fontSize": 18,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "TJA89",
+              "fill": "#ffffff99",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Esto puede tomar unos segundos.",
+              "textAlign": "center",
+              "fontFamily": "Inter",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "ZyhEk",
+              "name": "bar23",
+              "width": 240,
+              "height": 6,
+              "fill": "#222",
+              "cornerRadius": 36,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "XrKNT",
+                  "width": 144,
+                  "height": 6,
+                  "fill": "#f98c1f",
+                  "cornerRadius": 36
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "c4Rvm",
+      "x": 1290,
+      "y": 3616,
+      "name": "24_soat_confirmacion",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "KNTMT",
+          "name": "sb24",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "sodax",
+              "fill": "#FFFFFF",
+              "content": "9:41",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "AoHag",
+              "fill": "#FFFFFF",
+              "content": "●●●  ▮▮",
+              "fontFamily": "Inter",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "UuMF3",
+          "name": "wrap24",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            20,
+            24,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "CyxT5",
+              "name": "hdr24",
+              "width": "fill_container",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "ljEqE",
+                  "width": 24,
+                  "height": 24,
+                  "iconFontName": "arrow-left",
+                  "iconFontFamily": "lucide",
+                  "fill": "#FFFFFF"
+                },
+                {
+                  "type": "text",
+                  "id": "nbPtu",
+                  "fill": "#FFFFFF",
+                  "content": "Confirmar datos del SOAT",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "rntHG",
+              "name": "notice24",
+              "width": "fill_container",
+              "fill": "#3d2a00",
+              "cornerRadius": 8,
+              "gap": 8,
+              "padding": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "JuZU5",
+                  "width": 18,
+                  "height": 18,
+                  "iconFontName": "bolt",
+                  "iconFontFamily": "Material Symbols Rounded",
+                  "fill": "#f98c1f"
+                },
+                {
+                  "type": "text",
+                  "id": "JXtxm",
+                  "fill": "#f98c1f",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Datos extraídos por IA. Verifica antes de guardar.",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "y3lGrw",
+              "name": "fld24a",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "wW8b6",
+                  "fill": "#f98c1f",
+                  "content": "Fecha de vencimiento",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "Xhp0z",
+                  "name": "in24a",
+                  "width": "fill_container",
+                  "height": 44,
+                  "fill": "#111111",
+                  "cornerRadius": 8,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#ffffff1f"
+                  },
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "qLksN",
+                      "fill": "#FFFFFF",
+                      "content": "30/11/2027",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "RUm6Y",
+              "name": "fld24b",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Wd8Vy",
+                  "fill": "#f98c1f",
+                  "content": "Número de póliza",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "J1Opv",
+                  "name": "in24b",
+                  "width": "fill_container",
+                  "height": 44,
+                  "fill": "#111111",
+                  "cornerRadius": 8,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#ffffff1f"
+                  },
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "rUA3d",
+                      "fill": "#FFFFFF",
+                      "content": "POL-2025-9821",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "tcygy",
+              "name": "fld24c",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Ainct",
+                  "fill": "#f98c1f",
+                  "content": "Aseguradora",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "MXhsQ",
+                  "name": "in24c",
+                  "width": "fill_container",
+                  "height": 44,
+                  "fill": "#111111",
+                  "cornerRadius": 8,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#ffffff1f"
+                  },
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "RvfGe",
+                      "fill": "#FFFFFF",
+                      "content": "Sura",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "NLb5g",
+              "name": "btn24",
+              "width": "fill_container",
+              "height": 48,
+              "fill": "#f98c1f",
+              "cornerRadius": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "uQMpE",
+                  "fill": "#0D0D0D",
+                  "content": "Confirmar datos",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "rCuxD",
+              "name": "btn24b",
+              "width": "fill_container",
+              "height": 44,
+              "cornerRadius": 8,
+              "stroke": {
+                "thickness": 1,
+                "fill": "#ffffff1f"
+              },
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "rENmY",
+                  "fill": "#FFFFFF",
+                  "content": "Ingresar manualmente",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Xx5Xf",
+      "x": 1720,
+      "y": 3616,
+      "name": "25_soat_manual_entry",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0D0D0D",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "Grtv3",
+          "name": "sb25",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            0,
+            24
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "X2sNm",
+              "fill": "#FFFFFF",
+              "content": "9:41",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "BvRhX",
+              "fill": "#FFFFFF",
+              "content": "●●●  ▮▮",
+              "fontFamily": "Inter",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "jdIdD",
+          "name": "wrap25",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            8,
+            20,
+            24,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "ZNb79",
+              "name": "hdr25",
+              "width": "fill_container",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "aFXhb",
+                  "width": 24,
+                  "height": 24,
+                  "iconFontName": "arrow-left",
+                  "iconFontFamily": "lucide",
+                  "fill": "#FFFFFF"
+                },
+                {
+                  "type": "text",
+                  "id": "evOF4",
+                  "fill": "#FFFFFF",
+                  "content": "Registrar SOAT",
+                  "fontFamily": "Inter",
+                  "fontSize": 20,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "eN0Kb",
+              "fill": "#ffffff99",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Ingresa los datos manualmente.",
+              "fontFamily": "Inter",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "FprGd",
+              "name": "fld25a",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "viWgV",
+                  "fill": "#f98c1f",
+                  "content": "Fecha de vencimiento",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "O8H6Nr",
+                  "name": "in25a",
+                  "width": "fill_container",
+                  "height": 44,
+                  "fill": "#111111",
+                  "cornerRadius": 8,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#ffffff1f"
+                  },
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "HCqMS",
+                      "fill": "#ffffff66",
+                      "content": "dd/mm/aaaa",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "JPdIJ",
+              "name": "fld25b",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "bn1Kv",
+                  "fill": "#f98c1f",
+                  "content": "Número de póliza",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "vd6iC",
+                  "name": "in25b",
+                  "width": "fill_container",
+                  "height": 44,
+                  "fill": "#111111",
+                  "cornerRadius": 8,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#ffffff1f"
+                  },
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "PX3gb",
+                      "fill": "#ffffff66",
+                      "content": "Ej. POL-2025-0001",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "njflQ",
+              "name": "fld25c",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 6,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Sm9bu",
+                  "fill": "#f98c1f",
+                  "content": "Aseguradora",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "qa0sv",
+                  "name": "in25c",
+                  "width": "fill_container",
+                  "height": 44,
+                  "fill": "#111111",
+                  "cornerRadius": 8,
+                  "stroke": {
+                    "thickness": 1,
+                    "fill": "#ffffff1f"
+                  },
+                  "padding": [
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "B4hpz",
+                      "fill": "#ffffff66",
+                      "content": "Selecciona…",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "rkzMS",
+              "name": "btn25",
+              "width": "fill_container",
+              "height": 48,
+              "fill": "#f98c1f",
+              "cornerRadius": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "vXdx0",
+                  "fill": "#0D0D0D",
+                  "content": "Guardar",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "700"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "background": {
+      "type": "color",
+      "value": "#0D0D0D"
+    },
+    "border": {
+      "type": "color",
+      "value": "#2E2E2E"
+    },
+    "error": {
+      "type": "color",
+      "value": "#CF6679"
+    },
+    "font-family": {
+      "type": "string",
+      "value": "Space Grotesk"
+    },
+    "primary": {
+      "type": "color",
+      "value": "#f98c1f"
+    },
+    "radius": {
+      "type": "number",
+      "value": 8
+    },
+    "radius-lg": {
+      "type": "number",
+      "value": 12
+    },
+    "surface": {
+      "type": "color",
+      "value": "#111111"
+    },
+    "surface-alt": {
+      "type": "color",
+      "value": "#1C1C1C"
+    },
+    "text-primary": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "text-secondary": {
+      "type": "color",
+      "value": "rgba(255,255,255,0.6)"
+    },
+    "touch-target": {
+      "type": "number",
+      "value": 44
+    },
+    "background-dark": {
+      "type": "color",
+      "value": "#0D0D0D"
+    },
+    "border-color": {
+      "type": "color",
+      "value": "rgba(255,255,255,0.12)"
+    },
+    "border-radius": {
+      "type": "number",
+      "value": 8
+    },
+    "error-color": {
+      "type": "color",
+      "value": "#CF6679"
+    },
+    "primary-orange": {
+      "type": "color",
+      "value": "#f98c1f"
+    },
+    "surface-dark": {
+      "type": "color",
+      "value": "#111111"
+    }
+  }
+}
