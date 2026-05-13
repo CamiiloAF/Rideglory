@@ -35,7 +35,7 @@ void main() {
               eventType: any(named: 'eventType'),
               city: any(named: 'city'),
             ),
-          ).thenAnswer((_) async => Right(imageUrl));
+          ).thenAnswer((_) async => const Right(imageUrl));
 
           // Act
           final result = await useCase(
@@ -45,7 +45,7 @@ void main() {
           );
 
           // Assert
-          expect(result, Right(imageUrl));
+          expect(result, const Right(imageUrl));
           verify(
             () => mockRepository.generateCover(
               title: title,
@@ -61,7 +61,7 @@ void main() {
         'TC-4-2: Error handling — emits Left(DomainException) when repository fails',
         () async {
           // Arrange
-          final exception = DomainException(
+          const exception = DomainException(
             message: 'No pudimos generar la portada. Sube tu propia imagen.',
           );
           when(
@@ -70,7 +70,7 @@ void main() {
               eventType: any(named: 'eventType'),
               city: any(named: 'city'),
             ),
-          ).thenAnswer((_) async => Left(exception));
+          ).thenAnswer((_) async => const Left(exception));
 
           // Act
           final result = await useCase(
@@ -80,7 +80,7 @@ void main() {
           );
 
           // Assert
-          expect(result, Left(exception));
+          expect(result, const Left(exception));
           verify(
             () => mockRepository.generateCover(
               title: title,
