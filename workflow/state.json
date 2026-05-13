@@ -299,8 +299,8 @@
     },
     "backend": {
       "status": "idle",
-      "lastAction": null,
-      "focus": null
+      "lastAction": "2026-05-13T04:30:00Z",
+      "focus": "iter-4 backend complete — POST /events/generate-cover: ClaudeService + UnsplashService; 10 unit tests pass"
     },
     "frontend": {
       "status": "idle",
@@ -408,19 +408,19 @@
       "id": "T-4-1",
       "title": "Backend: implement POST /events/generate-cover endpoint (Claude + Unsplash)",
       "agent": "backend",
-      "status": "backlog",
+      "status": "done",
       "iteration": 4,
       "story": "US-4-3",
-      "updatedAt": "2026-05-13T01:00:00Z"
+      "updatedAt": "2026-05-13T04:30:00Z"
     },
     {
       "id": "T-4-2",
       "title": "Backend: unit tests for cover endpoint (happy path + 3 error paths)",
-      "agent": "qa",
-      "status": "backlog",
+      "agent": "backend",
+      "status": "done",
       "iteration": 4,
       "story": "US-4-3",
-      "updatedAt": "2026-05-13T01:00:00Z"
+      "updatedAt": "2026-05-13T04:30:00Z"
     },
     {
       "id": "T-4-3",
@@ -717,6 +717,14 @@
       "agent": "design",
       "at": "2026-05-13T03:30:00Z",
       "detail": "CoverPreviewWidget 4-state UI designed; 4 HTML mockups + styles.css extended; design.md updated; contracts/iter-4/design.json written — Next: backend"
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 4,
+      "phase": "backend",
+      "agent": "backend",
+      "at": "2026-05-13T04:30:00Z",
+      "detail": "POST /events/generate-cover implemented — ClaudeService (Anthropic SDK) + UnsplashService (axios, 15 s timeout); GenerateCoverDto; EventsModule providers registered; .env.example updated; 10/10 unit tests pass; 0 lint errors — Next: frontend"
     }
   ]
 }
