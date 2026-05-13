@@ -101,6 +101,10 @@ Stitch references: `/Users/cami/Downloads/stitch_rideglory/` — copy to `docs/d
 | SOAT — AI confirmation | 3 | `docs/design/html-mockups/iter-3/soat-confirmation.html` | pre-filled editable fields |
 | SOAT — Manual entry | 3 | `docs/design/html-mockups/iter-3/soat-manual-entry.html` | empty form |
 | SOAT — Success | 3 | `docs/design/html-mockups/iter-3/soat-success.html` | summary card + valid badge |
+| EventForm — Cover idle | 4 | `docs/design/html-mockups/iter-4/event-form-idle.html` | placeholder, AI button, upload button |
+| EventForm — Cover generating | 4 | `docs/design/html-mockups/iter-4/event-form-generating.html` | spinner overlay on preview; regeneration variant |
+| EventForm — Cover preview | 4 | `docs/design/html-mockups/iter-4/event-form-preview.html` | CachedNetworkImage, Regenerar button, state flow |
+| EventForm — Cover error | 4 | `docs/design/html-mockups/iter-4/event-form-error.html` | SnackBar error, form back to idle, data preserved |
 
 ## Pencil document structure (iter-3)
 
@@ -167,6 +171,17 @@ Stitch references: `/Users/cami/Downloads/stitch_rideglory/` — copy to `docs/d
 - Profile: `perfil_de_piloto_*.png`, `perfil_con_editar_*.png`, `editar_perfil_*.png`
 - Tracking: `rastreo_en_grupo_*.png`, `telemetr_a_*.png`, `evento_en_curso_*.png`
 
+## Locked design decisions (iter-4)
+
+- Cover preview container: 16:9 `AspectRatio` in all states — no layout shift. Matches event list card ratio.
+- Loading overlay: `Stack` + `Positioned.fill` semi-transparent black container (0.55 opacity) + `CircularProgressIndicator` (primary orange) centered. The existing image (or placeholder) stays visible below — NEVER blank during regeneration.
+- "Regenerar": `AppTextButton` right-aligned below preview container. Visible only in `data()` state.
+- "Generar portada con IA": primary orange `AppButton`, full-width. Visible in `initial()` and `error()` states; hidden (not disabled) in `data()`.
+- "Subir imagen propia": always visible and enabled in all states. Never conditional.
+- Error feedback: Flutter `SnackBar` (transient, non-blocking). Not inline error banner.
+- Form fields never cleared during generation — `@freezed EventFormState` keeps `coverGenerationResult` independent of form field values.
+- `CachedNetworkImage` + `BoxFit.cover` for Unsplash image URLs.
+
 ## Gotchas and learnings
 
 - Profile page is a brownfield REWRITE (existing stub had raw ListTiles with no profile data). Mark future profile changes as UPDATE.
@@ -183,3 +198,4 @@ Stitch references: `/Users/cami/Downloads/stitch_rideglory/` — copy to `docs/d
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
 - 2026-05-12 (iter 1): Screen inventory added. Profile page designed (4 states). styles.css baseline established. Locked decisions documented.
 - 2026-05-12 (iter 3): Design System in Pencil — 8 flows documented, SOAT upload flow designed, design tokens set. 6 SOAT HTML mockups created. Hard gate for iter-3b cleared. Pencil variable table locked. Stitch reference groupings documented.
+- 2026-05-13 (iter 4): AI Event Cover Image Generation — CoverPreviewWidget designed (4 states: idle/initial, loading/generating, data/preview, error). 4 HTML mockups in docs/design/html-mockups/iter-4/. styles.css extended with cover-preview, spinner overlay, regenerate button, and snackbar classes. No new screens or routes. All changes within EventFormPage. 5 l10n keys documented. Locked decisions: 16:9 AspectRatio, overlay-not-blank pattern, Regenerar as AppTextButton, Subir propia always visible.

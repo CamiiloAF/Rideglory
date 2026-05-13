@@ -294,8 +294,8 @@
     },
     "design": {
       "status": "idle",
-      "lastAction": "2026-05-12T08:00:00Z",
-      "focus": "iter-3 Track P complete \u2014 8 flows in Pencil, design tokens set, SOAT upload flow designed (6 screens + 6 HTML mockups), iter-3b gate cleared"
+      "lastAction": "2026-05-13T03:30:00Z",
+      "focus": "iter-4 design complete \u2014 CoverPreviewWidget 4 states designed (idle, loading, preview, error); 4 HTML mockups in iter-4/; styles.css extended; design.md updated"
     },
     "backend": {
       "status": "idle",
@@ -701,6 +701,22 @@
       "agent": "architect",
       "at": "2026-05-13T02:30:30Z",
       "detail": "Architect phase complete — feature arch + API contracts defined for iter-4 AI cover generation"
+    },
+    {
+      "type": "design_iteration",
+      "iteration": 4,
+      "phase": "design",
+      "agent": "design",
+      "at": "2026-05-13T03:30:00Z",
+      "detail": "CoverPreviewWidget designed — 4 states (idle, loading, preview, error); 4 HTML mockups in iter-4/; styles.css extended with cover-preview classes; all US-4-1 and US-4-2 acceptance criteria covered in mockups; no new screens or routes"
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 4,
+      "phase": "design",
+      "agent": "design",
+      "at": "2026-05-13T03:30:00Z",
+      "detail": "CoverPreviewWidget 4-state UI designed; 4 HTML mockups + styles.css extended; design.md updated; contracts/iter-4/design.json written — Next: backend"
     }
   ]
 }

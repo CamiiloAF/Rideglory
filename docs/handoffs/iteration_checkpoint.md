@@ -12,7 +12,7 @@
 |-------|-------|--------|-----------|
 | po_scope | po | ✓ complete | 2026-05-13T01:15:30Z |
 | architect | architect | ✓ complete | 2026-05-13T02:30:30Z |
-| design | design | pending | — |
+| design | design | ✓ complete | 2026-05-13T03:30:00Z |
 | backend | backend | pending | — |
 | frontend | frontend | pending | — |
 | qa | qa | pending | — |
@@ -21,8 +21,8 @@
 | tech_lead | tech_lead | pending | — |
 | po_close | po | pending | — |
 
-**Last completed phase:** architect (architect)
-**Next phase:** design
+**Last completed phase:** design (design)
+**Next phase:** backend
 
 *Started: 2026-05-13T00:45:41Z*
 

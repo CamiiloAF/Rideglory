@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear evento — Error generando portada</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared/styles.css">
+  <style>
+    body { font-family: var(--font-family); }
+    h1 { font-size: 14px; color: #999; margin-bottom: 8px; font-weight: 500; }
+  </style>
+</head>
+<body>
+  <h1>US-4-1 AC-7 — Error generando portada (503 / red error)</h1>
+
+  <div class="device">
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons">
+        <span>●●●</span>
+        <span>WiFi</span>
+        <span>🔋</span>
+      </div>
+    </div>
+
+    <!-- App bar -->
+    <div class="app-bar">
+      <div class="back-btn">←</div>
+      <div class="title">Crear evento</div>
+    </div>
+
+    <!-- Screen content -->
+    <div class="screen-content" style="position: relative;">
+      <div class="scroll-area">
+
+        <!-- ── PORTADA SECTION ── -->
+        <div class="cover-section">
+          <span class="cover-section-title">Portada del evento</span>
+
+          <!--
+            After error: form returns to idle state.
+            Preview container shows placeholder again (coverGenerationResult = initial()).
+          -->
+          <div class="cover-preview-container">
+            <div class="cover-preview-placeholder">
+              <span class="placeholder-icon">🖼</span>
+              <span class="placeholder-label">Sin portada seleccionada</span>
+            </div>
+          </div>
+
+          <!-- Buttons back to normal (idle state) -->
+          <button class="btn-ai" style="margin-top: 4px;">
+            <span>✨</span>
+            <span>Generar portada con IA</span>
+          </button>
+          <button class="btn-outline">
+            <span>📁</span>
+            <span>Subir imagen propia</span>
+          </button>
+        </div>
+
+        <div class="form-section-gap"></div>
+
+        <!-- ── BASIC INFO — filled (data preserved!) ── -->
+        <div class="cover-section-title" style="margin-bottom: 12px;">Información básica</div>
+
+        <div class="form-field-stub form-field-filled">
+          <span class="field-icon">✏️</span>
+          <span>Rodada por el Eje Cafetero</span>
+        </div>
+        <div style="height: 8px;"></div>
+        <div class="form-field-stub form-field-filled">
+          <span class="field-icon">📍</span>
+          <span>Manizales</span>
+        </div>
+        <div style="height: 8px;"></div>
+        <div class="form-field-stub form-field-filled" style="height: 80px; align-items: flex-start; padding-top: 14px;">
+          <span class="field-icon">📝</span>
+          <span style="color: var(--color-on-surface);">Rodada de fin de semana por los municipios del Eje Cafetero...</span>
+        </div>
+
+        <div style="height: 100px;"></div>
+
+      </div><!-- /scroll-area -->
+
+      <!-- SnackBar — error toast (shown transiently; dismisses after 4s) -->
+      <div class="snackbar">
+        <span class="snackbar-icon">⚠</span>
+        <span>No pudimos generar la portada. Sube tu propia imagen.</span>
+      </div>
+
+      <!-- Publish button — still enabled -->
+      <div class="publish-btn-container">
+        <button class="btn btn-primary" style="height: 52px; font-size: 16px;">Publicar evento</button>
+      </div>
+    </div><!-- /screen-content -->
+  </div><!-- /device -->
+
+  <!-- Annotations -->
+  <div style="margin-top: 24px; max-width: 375px; font-size: 12px; color: #999; line-height: 1.6;">
+    <strong style="color:#CF6679;">Estado: ERROR (coverGenerationResult = error(DomainException))</strong><br>
+    • SnackBar shown with Spanish error text (AC-7 of US-4-1)<br>
+    • l10n key: <code>event_coverGenerateError</code> → "No pudimos generar la portada. Sube tu propia imagen."<br>
+    • After error: <code>coverGenerationResult</code> resets to <code>initial()</code> — form back to idle state<br>
+    • Form field values PRESERVED — <code>EventFormState</code> keeps form data separate from coverGenerationResult (AC-4 of US-4-4)<br>
+    • "Publicar evento" still enabled — user can publish without a cover (AC-6 of US-4-2)<br>
+    • SnackBar dismisses after ~4 seconds (standard Flutter ScaffoldMessenger behavior)<br>
+    • Error source: HTTP 503 from backend → <code>DomainException</code> → <code>error(e)</code>
+  </div>
+
+  <!-- Implementation note -->
+  <div style="margin-top: 24px; max-width: 375px; font-size: 12px; color: #888; line-height: 1.6; border-top: 1px solid #2e2e2e; padding-top: 16px;">
+    <strong style="color:#aaa;">Flutter implementation note:</strong><br>
+    Use <code>BlocListener&lt;EventFormCubit, EventFormState&gt;</code> in <code>EventFormContent</code>:<br>
+    <code style="color:#f98c1f; display:block; margin-top: 4px;">
+      state.coverGenerationResult.whenOrNull(<br>
+      &nbsp;&nbsp;error: (e) =&gt; ScaffoldMessenger.of(context)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;.showSnackBar(SnackBar(content: Text(context.l10n.event_coverGenerateError))),<br>
+      &nbsp;&nbsp;data: (url) =&gt; formImageCubit.setRemoteImageUrl(url),<br>
+      );
+    </code>
+  </div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+{
+  "iteration": 4,
+  "phase": "design",
+  "status": "pass",
+  "updatedAt": "2026-05-13T03:30:00Z",
+  "summary": "CoverPreviewWidget designed for all 4 ResultState branches (idle, loading/generating, data/preview, error). 4 HTML mockups created in docs/design/html-mockups/iter-4/. styles.css extended with cover-preview, spinner, overlay, and snackbar classes. No new screens or routes — all UI changes are within the existing EventFormPage/EventFormContent. design.md updated with component hierarchy, interaction flows, and locked decisions.",
+  "metrics": {
+    "tokens": 14200,
+    "costUsd": 0.04
+  },
+  "artifacts": [
+    "docs/handoffs/design.md",
+    "docs/design/html-mockups/iter-4/shared/styles.css",
+    "docs/design/html-mockups/iter-4/event-form-idle.html",
+    "docs/design/html-mockups/iter-4/event-form-generating.html",
+    "docs/design/html-mockups/iter-4/event-form-preview.html",
+    "docs/design/html-mockups/iter-4/event-form-error.html",
+    "workflow/state.json",
+    ".claude/skills/design-skill.md"
+  ],
+  "qualityGates": [
+    {
+      "name": "required_artifacts_present",
+      "status": "pass",
+      "notes": "All 4 HTML mockups present in iter-4/; styles.css present in iter-4/shared/; design.md updated; contract written"
+    },
+    {
+      "name": "design_coverage_complete",
+      "status": "pass",
+      "notes": "All 4 coverGenerationResult states covered: initial() → event-form-idle.html; loading() → event-form-generating.html (with regeneration variant); data(url) → event-form-preview.html; error(e) → event-form-error.html. All US-4-1 ACs (1-9) and US-4-2 ACs (1-7) addressed in mockups or annotations."
+    },
+    {
+      "name": "no_new_screens_or_routes",
+      "status": "pass",
+      "notes": "All 4 states are sub-states of the existing EventFormPage. CoverPreviewWidget is a new widget within the form, not a new page."
+    },
+    {
+      "name": "spanish_copy_complete",
+      "status": "pass",
+      "notes": "5 l10n keys defined: event_coverGenerating, event_coverGenerated, event_coverGenerateError, event_coverRegenerate, event_coverGeneratingOverlay — matches architect handoff ARB table exactly"
+    },
+    {
+      "name": "continuation_rule_followed",
+      "status": "pass",
+      "notes": "No redesign of existing screens. Iteration 3 design decisions preserved. styles.css copied forward from iter-1, extended with iter-4 classes only."
+    },
+    {
+      "name": "16_9_aspect_ratio_enforced",
+      "status": "pass",
+      "notes": "All mockups use 16:9 aspect-ratio cover container. Consistent with event list card ratio per US-4-1 AC-8."
+    },
+    {
+      "name": "publish_button_enabled_during_generation",
+      "status": "pass",
+      "notes": "event-form-generating.html explicitly shows 'Publicar evento' button enabled. Annotated as AC-4 of US-4-1."
+    },
+    {
+      "name": "overlay_not_blank_on_regeneration",
+      "status": "pass",
+      "notes": "event-form-generating.html includes second variant showing overlay over existing image (not blank). Annotated as AC-3 of US-4-2."
+    }
+  ]
+}
