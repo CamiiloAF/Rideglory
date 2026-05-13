@@ -1,66 +1,82 @@
-# Iteration checkpoint — Iteration 3 (Track P — Design System)
+# Iteration checkpoint — Iteration 4 (AI Event Cover Image Generation)
 
 **Purpose:** Human-readable resume trail. After each phase completes, update this file in the same session as `workflow/state.json` → `phase_complete`. Powers `/resume-iter`.
 
 ---
 
-## Status: active — Iteration 3 / Track P
+## Status: in-flight — Iteration 4
 
-**Goal:** Design System in Pencil — 8 flows documented, SOAT upload flow designed, hard gate for Iteration 3b cleared.
+**Goal:** Wire 'Generar portada con IA' button to backend endpoint using Claude Haiku + Unsplash API to generate relevant event cover images.
 
 | Phase | Agent | Status | Completed |
 |-------|-------|--------|-----------|
-| design | design | done | 2026-05-12T08:00Z |
-| qa | qa | done | 2026-05-12T12:00Z |
+| po_scope | po | ✓ complete | 2026-05-13T01:15:30Z |
+| architect | architect | pending | — |
+| design | design | pending | — |
+| backend | backend | pending | — |
+| frontend | frontend | pending | — |
+| qa | qa | pending | — |
+| devops | devops | pending | — |
+| pr | system | pending | — |
+| tech_lead | tech_lead | pending | — |
+| po_close | po | pending | — |
 
-**Last completed phase:** qa
-**Next phase:** devops
+**Last completed phase:** po_scope (po)
+**Next phase:** architect
 
-*Started: 2026-05-12T08:00:00Z*
+*Started: 2026-05-13T00:45:41Z*
 
 ---
 
-## Design Phase Summary (just completed)
+## PO Phase Summary (just completed)
+
+**Iteration:** 4 — AI Event Cover Image Generation
 
 **Deliverables:**
-- ✓ `pencil-new.pen` — 9 design token variables set; section `09 — SOAT Upload Flow` added with 6 new screens (frame `MOMzL`)
-- ✓ `docs/handoffs/design.md` — complete handoff: 8-flow screen inventory, SOAT component hierarchy, all UI copy, all l10n keys, Pencil frame IDs
-- ✓ `docs/design/html-mockups/iter-3/soat-vehicle-card.html` — vehicle card + all 3 SOAT badge variants
-- ✓ `docs/design/html-mockups/iter-3/soat-upload-entry.html` — file picker bottom sheet
-- ✓ `docs/design/html-mockups/iter-3/soat-upload-progress.html` — upload + AI extraction progress
-- ✓ `docs/design/html-mockups/iter-3/soat-confirmation.html` — AI-extracted fields confirmation form
-- ✓ `docs/design/html-mockups/iter-3/soat-manual-entry.html` — manual entry fallback
-- ✓ `docs/design/html-mockups/iter-3/soat-success.html` — success screen
-- ✓ `.claude/skills/design-skill.md` — screen inventory, Pencil variables, stitch groupings, locked decisions updated
+- ✓ `docs/handoffs/po.md` — Iteration 4 PO handoff document (iteration goal, 4 user stories, task breakdown, assumptions, scope decisions, dependencies)
+- ✓ `workflow/state.json` — 10 iteration 4 tasks (T-4-1 through T-4-10) added with pending status; po_plan + phase_complete events recorded
+- ✓ `docs/handoffs/contracts/iter-4/po_scope.json` — Phase contract (status: pass, 5 quality gates, metrics)
+- ✓ `.claude/skills/po-skill.md` — Updated changelog (2 lines appended)
 
-**Quality gates:**
-- ✓ Design tokens in Pencil: 9 variables set
-- ✓ SOAT flow complete: 6 screens × 2 formats (Pencil + HTML)
-- ✓ Hard gate for Iteration 3b: CLEARED
-- ✓ All UI copy in Spanish, sentence case
-- ✓ 8 flows inventoried and mapped to Flutter pages + stitch references
+**User Stories Defined (4 total):**
+1. US-4-1: AI cover generation with loading and preview
+2. US-4-2: Regenerate and custom image replacement
+3. US-4-3: Backend cover generation endpoint (Claude Haiku + Unsplash)
+4. US-4-4: EventFormCubit state refactor for cover generation
 
-**Stitch references read per flow:**
-- Auth: `login_screen_final.png`, `splash_screen_con_logo_oficial.png`, `registro_v1.png`
-- Home: `dashboard_principal_1.png`, `dashboard_principal_3.png`
-- Events: `explorar_eventos_v1.png`, `detalle_de_evento_minimalista_1.png`
-- Registration: `mis_inscripciones_detallado_1.png`, `gesti_n_de_inscritos_actualizada_1.png`
-- Vehicles: `mis_veh_culos_1.png`, `mi_garaje_y_mantenimiento_1.png`, `detalle_veh_culo_info_expandible_v1.png`
-- Maintenance: `historial_de_mantenimiento_listado_v1_1.png`
-- Profile: `perfil_de_piloto_1.png`
-- Tracking: `rastreo_en_grupo_mapa_vivo.png`
+**Tasks Created (10 total):**
+- Backend: T-4-1 (endpoint implementation), T-4-2 (unit tests)
+- Frontend: T-4-3 (cubit refactor), T-4-4 (use case + service + DTO), T-4-5 (button wiring), T-4-6 (preview UI), T-4-7 (ARB keys)
+- QA: T-4-8 (use case tests), T-4-9 (widget tests), T-4-10 (QA gate)
+
+**Quality Gates (all pass):**
+- ✓ required_artifacts_present: po.md, state.json, contract present and complete
+- ✓ scope_defined: 4 stories with acceptance criteria, in-scope/out-of-scope clearly delineated
+- ✓ user_stories_clear: All 4 stories written in mobile interaction language with testable criteria
+- ✓ task_breakdown_complete: 10 tasks created, all mapped to stories and agents
+- ✓ dependencies_documented: Depends on Iter-3a (ClaudeService); no design gate
 
 ---
 
 ## What Comes Next
 
-**Immediate:**
-- Iteration 3a backend: SOAT Prisma schema, REST endpoints, Claude Haiku extraction (backend agent)
-- Iteration 3b frontend: Flutter SOAT UI implementation using these mockups as spec (frontend agent)
-  - Use `docs/design/html-mockups/iter-3/` as visual spec
-  - Use `docs/handoffs/design.md` for component hierarchy, l10n keys, and color tokens
-  - Pencil frame IDs available for reference: `Na3V5` → `DMXj1` in section `MOMzL`
+**Immediate (Next Phase: architect):**
+- **Architect:** Review Iteration 4 PO handoff; confirm technical feasibility; produce architecture contracts (backend DTO shape, frontend `EventFormState` freezed class, service/use case interfaces); document ADRs
+- **Backend agent:** Implement `POST /events/generate-cover` endpoint (Claude Haiku query → Unsplash API → return imageUrl)
+- **Frontend agent:** Refactor `EventFormCubit` to `@freezed EventFormState`; implement use case + service + DTO; wire button and preview UI
+- **QA agent:** Write backend unit tests (happy path + error paths), frontend use case tests, widget tests for cover generation UI
 
-**Post-design tracks still open:**
-- Pencil frames for Mantenimiento (`GPsZu`), Rastreo (`AB3pd`), and Perfil (`XaOZT`) are empty — can be filled in parallel with later iterations
-- SOS overlay design (iter-6b) not yet started
+**Assumptions for Architect & Engineers:**
+- Iteration 3a (ClaudeService) is complete and working
+- EventFormCubit and EventFormPage pre-exist from earlier iterations
+- No Pencil design gate for Iteration 4 (unlike 3b)
+- Unsplash free API tier sufficient for pilot usage (50 req/hour)
+- 16:9 aspect ratio matches existing event list card ratio
+
+**Context for Backend Agent:**
+- Reuse existing `ClaudeService` (from Iter 3a) to generate Unsplash search query
+- Prompt: "Given this motorcycle event — title: {title}, type: {eventType}, city: {city} — generate a 3–5 word English phrase to search for a relevant background photo on Unsplash. Return only the phrase, nothing else."
+- Call Unsplash API: `GET /search/photos?query={query}&per_page=1&orientation=landscape`
+- Return: `{ imageUrl: string, source: "unsplash", query: string }`
+- Error handling: 503 on Claude fail, Unsplash fail, or timeout (15s limit)
+- Environment variable: `UNSPLASH_ACCESS_KEY` in `.env.example` and CI secrets

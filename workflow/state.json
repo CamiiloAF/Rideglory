@@ -2,7 +2,7 @@
   "project": "rideglory",
   "prdPath": "docs/PRD.md",
   "planStatus": "approved",
-  "currentIteration": 3,
+  "currentIteration": 4,
   "existingSystem": {
     "basePath": "/Users/cami/Developer/Personal/Rideglory",
     "flutter": "lib/",
@@ -172,7 +172,7 @@
       "id": 4,
       "title": "AI Event Cover Image Generation",
       "goal": "Wire the existing 'Generar portada con IA' button to a backend endpoint using Claude Haiku + Unsplash API to generate relevant event cover images.",
-      "status": "planned",
+      "status": "active",
       "stories": [
         "HU-AI-01a",
         "HU-AI-01b"
@@ -284,8 +284,8 @@
   "agents": {
     "po": {
       "status": "idle",
-      "lastAction": "2026-05-12T02:00:00Z",
-      "focus": "iter-1 scope and stories"
+      "lastAction": "2026-05-13T01:15:30Z",
+      "focus": "iter-4 scope and stories"
     },
     "architect": {
       "status": "idle",
@@ -403,6 +403,96 @@
       "iteration": 1,
       "story": "US-1-4",
       "updatedAt": "2026-05-12T05:00:00Z"
+    },
+    {
+      "id": "T-4-1",
+      "title": "Backend: implement POST /events/generate-cover endpoint (Claude + Unsplash)",
+      "agent": "backend",
+      "status": "pending",
+      "iteration": 4,
+      "story": "US-4-3",
+      "updatedAt": "2026-05-13T01:00:00Z"
+    },
+    {
+      "id": "T-4-2",
+      "title": "Backend: unit tests for cover endpoint (happy path + 3 error paths)",
+      "agent": "qa",
+      "status": "pending",
+      "iteration": 4,
+      "story": "US-4-3",
+      "updatedAt": "2026-05-13T01:00:00Z"
+    },
+    {
+      "id": "T-4-3",
+      "title": "Frontend: refactor EventFormCubit to @freezed EventFormState with coverGenerationResult field",
+      "agent": "frontend",
+      "status": "pending",
+      "iteration": 4,
+      "story": "US-4-4",
+      "updatedAt": "2026-05-13T01:00:00Z"
+    },
+    {
+      "id": "T-4-4",
+      "title": "Frontend: implement GetGenerateCoverUseCase, EventCoverService, CoverGenerationDto",
+      "agent": "frontend",
+      "status": "pending",
+      "iteration": 4,
+      "story": "US-4-4",
+      "updatedAt": "2026-05-13T01:00:00Z"
+    },
+    {
+      "id": "T-4-5",
+      "title": "Frontend: wire Generar portada con IA button to EventFormCubit.generateCover()",
+      "agent": "frontend",
+      "status": "pending",
+      "iteration": 4,
+      "story": "US-4-1, US-4-2",
+      "updatedAt": "2026-05-13T01:00:00Z"
+    },
+    {
+      "id": "T-4-6",
+      "title": "Frontend: cover preview UI (16:9 aspect ratio, CachedNetworkImage, loading overlay)",
+      "agent": "frontend",
+      "status": "pending",
+      "iteration": 4,
+      "story": "US-4-1",
+      "updatedAt": "2026-05-13T01:00:00Z"
+    },
+    {
+      "id": "T-4-7",
+      "title": "Frontend: add ARB keys for cover generation UI copy (event_* prefix)",
+      "agent": "frontend",
+      "status": "pending",
+      "iteration": 4,
+      "story": "US-4-1, US-4-2",
+      "updatedAt": "2026-05-13T01:00:00Z"
+    },
+    {
+      "id": "T-4-8",
+      "title": "Frontend: unit tests for GetGenerateCoverUseCase (happy path + error 503)",
+      "agent": "qa",
+      "status": "pending",
+      "iteration": 4,
+      "story": "US-4-4",
+      "updatedAt": "2026-05-13T01:00:00Z"
+    },
+    {
+      "id": "T-4-9",
+      "title": "Frontend: widget tests for EventFormPage cover generation (all states)",
+      "agent": "qa",
+      "status": "pending",
+      "iteration": 4,
+      "story": "US-4-1, US-4-2",
+      "updatedAt": "2026-05-13T01:00:00Z"
+    },
+    {
+      "id": "T-4-10",
+      "title": "QA gate: verify all acceptance criteria, dart analyze + flutter test pass",
+      "agent": "qa",
+      "status": "pending",
+      "iteration": 4,
+      "story": "QA gate — all US-4-* stories",
+      "updatedAt": "2026-05-13T01:00:00Z"
     }
   ],
   "events": [
@@ -572,6 +662,29 @@
       "agent": "qa",
       "at": "2026-05-12T12:00:00Z",
       "detail": "5 ACs pass (US-3-1 through US-3-5). All design artifacts verified: 8 flows in Pencil, 9 design tokens set, SOAT flow complete (6 screens + 4 badge variants), design.md handoff complete. Hard gate for Iteration 3b (Flutter SOAT UI) CLEARED. dart analyze and flutter test baseline green (no regression)."
+    },
+    {
+      "type": "iteration_started",
+      "iteration": 4,
+      "at": "2026-05-13T00:45:41Z",
+      "agent": "system",
+      "detail": "Full /iter 4 run starting. Goal: Wire Generar portada con IA button to backend endpoint using Claude Haiku + Unsplash API."
+    },
+    {
+      "type": "po_plan",
+      "iteration": 4,
+      "phase": "po_scope",
+      "agent": "po",
+      "at": "2026-05-13T01:15:00Z",
+      "detail": "Iter-4 scoped: AI Event Cover Image Generation. 4 user stories (US-4-1 AI generation + preview, US-4-2 regenerate + custom, US-4-3 backend endpoint, US-4-4 cubit refactor); 10 tasks created (4 backend, 6 frontend); full-stack feature. Depends on Iter-3a (ClaudeService pattern)."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 4,
+      "phase": "po_scope",
+      "agent": "po",
+      "at": "2026-05-13T01:15:30Z",
+      "detail": "Iter-4 scope defined: AI Event Cover Image Generation with Claude Haiku + Unsplash; 4 user stories, 10 tasks (T-4-1 through T-4-10); QA gate task included"
     }
   ]
 }
