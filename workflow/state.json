@@ -289,8 +289,8 @@
     },
     "architect": {
       "status": "idle",
-      "lastAction": "2026-05-12T03:00:00Z",
-      "focus": "iter-1 contracts + ADRs (no backend changes)"
+      "lastAction": "2026-05-13T02:30:00Z",
+      "focus": "iter-4 contracts — POST /events/generate-cover, EventFormState freezed refactor, CoverGenerationDto, ADR-7/8/9"
     },
     "design": {
       "status": "idle",
@@ -408,7 +408,7 @@
       "id": "T-4-1",
       "title": "Backend: implement POST /events/generate-cover endpoint (Claude + Unsplash)",
       "agent": "backend",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 4,
       "story": "US-4-3",
       "updatedAt": "2026-05-13T01:00:00Z"
@@ -417,7 +417,7 @@
       "id": "T-4-2",
       "title": "Backend: unit tests for cover endpoint (happy path + 3 error paths)",
       "agent": "qa",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 4,
       "story": "US-4-3",
       "updatedAt": "2026-05-13T01:00:00Z"
@@ -426,7 +426,7 @@
       "id": "T-4-3",
       "title": "Frontend: refactor EventFormCubit to @freezed EventFormState with coverGenerationResult field",
       "agent": "frontend",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 4,
       "story": "US-4-4",
       "updatedAt": "2026-05-13T01:00:00Z"
@@ -435,7 +435,7 @@
       "id": "T-4-4",
       "title": "Frontend: implement GetGenerateCoverUseCase, EventCoverService, CoverGenerationDto",
       "agent": "frontend",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 4,
       "story": "US-4-4",
       "updatedAt": "2026-05-13T01:00:00Z"
@@ -444,7 +444,7 @@
       "id": "T-4-5",
       "title": "Frontend: wire Generar portada con IA button to EventFormCubit.generateCover()",
       "agent": "frontend",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 4,
       "story": "US-4-1, US-4-2",
       "updatedAt": "2026-05-13T01:00:00Z"
@@ -453,7 +453,7 @@
       "id": "T-4-6",
       "title": "Frontend: cover preview UI (16:9 aspect ratio, CachedNetworkImage, loading overlay)",
       "agent": "frontend",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 4,
       "story": "US-4-1",
       "updatedAt": "2026-05-13T01:00:00Z"
@@ -462,7 +462,7 @@
       "id": "T-4-7",
       "title": "Frontend: add ARB keys for cover generation UI copy (event_* prefix)",
       "agent": "frontend",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 4,
       "story": "US-4-1, US-4-2",
       "updatedAt": "2026-05-13T01:00:00Z"
@@ -471,7 +471,7 @@
       "id": "T-4-8",
       "title": "Frontend: unit tests for GetGenerateCoverUseCase (happy path + error 503)",
       "agent": "qa",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 4,
       "story": "US-4-4",
       "updatedAt": "2026-05-13T01:00:00Z"
@@ -480,7 +480,7 @@
       "id": "T-4-9",
       "title": "Frontend: widget tests for EventFormPage cover generation (all states)",
       "agent": "qa",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 4,
       "story": "US-4-1, US-4-2",
       "updatedAt": "2026-05-13T01:00:00Z"
@@ -489,9 +489,9 @@
       "id": "T-4-10",
       "title": "QA gate: verify all acceptance criteria, dart analyze + flutter test pass",
       "agent": "qa",
-      "status": "pending",
+      "status": "backlog",
       "iteration": 4,
-      "story": "QA gate — all US-4-* stories",
+      "story": "QA gate \u2014 all US-4-* stories",
       "updatedAt": "2026-05-13T01:00:00Z"
     }
   ],
@@ -685,6 +685,22 @@
       "agent": "po",
       "at": "2026-05-13T01:15:30Z",
       "detail": "Iter-4 scope defined: AI Event Cover Image Generation with Claude Haiku + Unsplash; 4 user stories, 10 tasks (T-4-1 through T-4-10); QA gate task included"
+    },
+    {
+      "type": "architect_plan",
+      "iteration": 4,
+      "phase": "architect",
+      "agent": "architect",
+      "at": "2026-05-13T02:30:00Z",
+      "detail": "Iter-4 arch: POST /events/generate-cover (ClaudeService + UnsplashService), EventFormState @freezed refactor (ADR-7), GetGenerateCoverUseCase + EventCoverService + CoverGenerationDto (ADR-8), no new Flutter packages (ADR-9), UNSPLASH_ACCESS_KEY env var, 5 l10n keys. Slim handoffs written for backend/frontend/devops/qa. DIAGRAMS.md updated with AI cover sequence + EventFormState class diagram."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 4,
+      "phase": "architect",
+      "agent": "architect",
+      "at": "2026-05-13T02:30:30Z",
+      "detail": "Architect phase complete — feature arch + API contracts defined for iter-4 AI cover generation"
     }
   ]
 }
