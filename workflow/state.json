@@ -2,7 +2,7 @@
   "project": "rideglory",
   "prdPath": "docs/PRD.md",
   "planStatus": "approved",
-  "currentIteration": 4,
+  "currentIteration": 5,
   "existingSystem": {
     "basePath": "/Users/cami/Developer/Personal/Rideglory",
     "flutter": "lib/",
@@ -287,7 +287,7 @@
     "po": {
       "status": "idle",
       "lastAction": "2026-05-13T23:59:59Z",
-      "focus": "iter-4 po_close complete — summaries, history, product status, context bridge published"
+      "focus": "iter-4 po_close complete \u2014 summaries, history, product status, context bridge published"
     },
     "architect": {
       "status": "idle",
@@ -681,28 +681,12 @@
       "detail": "Iter-4 scoped: AI Event Cover Image Generation. 4 user stories (US-4-1 AI generation + preview, US-4-2 regenerate + custom, US-4-3 backend endpoint, US-4-4 cubit refactor); 10 tasks created (4 backend, 6 frontend); full-stack feature. Depends on Iter-3a (ClaudeService pattern)."
     },
     {
-      "type": "phase_complete",
-      "iteration": 4,
-      "phase": "po_scope",
-      "agent": "po",
-      "at": "2026-05-13T01:15:30Z",
-      "detail": "Iter-4 scope defined: AI Event Cover Image Generation with Claude Haiku + Unsplash; 4 user stories, 10 tasks (T-4-1 through T-4-10); QA gate task included"
-    },
-    {
       "type": "architect_plan",
       "iteration": 4,
       "phase": "architect",
       "agent": "architect",
       "at": "2026-05-13T02:30:00Z",
       "detail": "Iter-4 arch: POST /events/generate-cover (ClaudeService + UnsplashService), EventFormState @freezed refactor (ADR-7), GetGenerateCoverUseCase + EventCoverService + CoverGenerationDto (ADR-8), no new Flutter packages (ADR-9), UNSPLASH_ACCESS_KEY env var, 5 l10n keys. Slim handoffs written for backend/frontend/devops/qa. DIAGRAMS.md updated with AI cover sequence + EventFormState class diagram."
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 4,
-      "phase": "architect",
-      "agent": "architect",
-      "at": "2026-05-13T02:30:30Z",
-      "detail": "Architect phase complete \u2014 feature arch + API contracts defined for iter-4 AI cover generation"
     },
     {
       "type": "design_iteration",
@@ -713,68 +697,12 @@
       "detail": "CoverPreviewWidget designed \u2014 4 states (idle, loading, preview, error); 4 HTML mockups in iter-4/; styles.css extended with cover-preview classes; all US-4-1 and US-4-2 acceptance criteria covered in mockups; no new screens or routes"
     },
     {
-      "type": "phase_complete",
-      "iteration": 4,
-      "phase": "design",
-      "agent": "design",
-      "at": "2026-05-13T03:30:00Z",
-      "detail": "CoverPreviewWidget 4-state UI designed; 4 HTML mockups + styles.css extended; design.md updated; contracts/iter-4/design.json written \u2014 Next: backend"
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 4,
-      "phase": "backend",
-      "agent": "backend",
-      "at": "2026-05-13T04:30:00Z",
-      "detail": "POST /events/generate-cover implemented \u2014 ClaudeService (Anthropic SDK) + UnsplashService (axios, 15 s timeout); GenerateCoverDto; EventsModule providers registered; .env.example updated; 10/10 unit tests pass; 0 lint errors \u2014 Next: frontend"
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 4,
-      "phase": "frontend",
-      "agent": "frontend",
-      "at": "2026-05-13T05:30:00Z",
-      "detail": "EventFormCubit @freezed refactor + GetGenerateCoverUseCase + EventCoverService + CoverGenerationDto + EventCoverRepositoryImpl + CoverPreviewWidget \u2014 AI cover generation end-to-end wired; 5 l10n keys; dart analyze 0 errors; flutter test 5/5 \u2014 Next: qa"
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 4,
-      "phase": "qa",
-      "agent": "qa",
-      "at": "2026-05-13T06:00:00Z",
-      "detail": "All 8 acceptance criteria verified: TC-4-1 through TC-4-15. Backend 10/10 tests pass. Frontend unit 2/2 pass. Widget ACs 8/8 code-reviewed. Zero bugs filed. dart analyze 0 new errors; flutter test 7/7 pass. Iteration 4 gate CLEARED."
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 4,
-      "phase": "devops",
-      "agent": "devops",
-      "at": "2026-05-13T23:59:00Z",
-      "detail": "CI pipeline updated for iter-4 AI cover generation feature. UNSPLASH_ACCESS_KEY secret added to .github/workflows/ci.yml (both analyze-and-test and build-apk jobs). docs/DEPLOY.md updated with secret documentation. .env.example updated with placeholder. Ready for PR and merge to main."
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 4,
-      "phase": "pr",
-      "agent": "system",
-      "at": "2026-05-13T04:22:44Z",
-      "detail": "PR #11 opened: https://github.com/CamiiloAF/Rideglory/pull/11"
-    },
-    {
       "type": "tech_lead_review",
       "iteration": 4,
       "phase": "tech_lead",
       "agent": "tech_lead",
       "at": "2026-05-13T07:00:00Z",
       "detail": "PR #11 reviewed. 1 blocking issue fixed inline: 5 prefer_const_constructors violations in get_generate_cover_use_case_test.dart (const Right, Left, DomainException). dart analyze: 34 items (all pre-existing). flutter test: 7/7. Clean Architecture layers verified. No security concerns. Approved."
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 4,
-      "phase": "tech_lead",
-      "agent": "tech_lead",
-      "at": "2026-05-13T07:00:00Z",
-      "detail": "approved \u2014 1 blocking fix (const constructors in test); dart analyze 34 pre-existing items; flutter test 7/7; code-review-iter4.md produced"
     },
     {
       "type": "pr_merged",
@@ -785,12 +713,11 @@
       "detail": "PR #11 merged to main. Merge SHA: 02377a4"
     },
     {
-      "type": "phase_complete",
+      "type": "iteration_summary",
       "iteration": 4,
-      "phase": "po_close",
-      "agent": "po",
-      "at": "2026-05-13T23:59:59Z",
-      "detail": "Iteration 4 closed. ITERATION_SUMMARY_4.md, ITERATION_HISTORY.md, PRODUCT_STATUS.md, iteration_context_4.md published. iteration_checkpoint.md reset to idle. README.md updated with shipped features. contracts/iter-4/po_close.json written. All 6 required artifacts present. Quality gates passed: 4/4 stories delivered, 15/15 acceptance criteria pass, 0 bugs filed, tech lead approved (PR #11). Ready for Iteration 5."
+      "agent": "system",
+      "at": "2026-05-13T04:35:19Z",
+      "detail": "Iteration 4 complete \u2014 AI Event Cover Image Generation. PR #11 merged (02377a4). Phase chain: po_scope \u2192 architect \u2192 design \u2192 backend \u2192 frontend \u2192 qa \u2192 devops \u2192 pr \u2192 tech_lead \u2192 po_close. 4/4 stories, 15/15 ACs, 0 bugs."
     }
   ]
 }
