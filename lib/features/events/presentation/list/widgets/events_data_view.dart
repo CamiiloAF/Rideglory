@@ -72,19 +72,36 @@ class EventsDataView extends StatelessWidget {
                           color: context.colorScheme.onPrimary,
                           size: 24,
                         ),
-                        if (context.watch<EventsCubit>().filters.hasFilters)
-                          Positioned(
-                            right: 8,
-                            top: 8,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                color: context.colorScheme.onPrimary,
-                                shape: BoxShape.circle,
+                        Builder(
+                          builder: (context) {
+                            final activeFilters = context
+                                .watch<EventsCubit>()
+                                .filters;
+                            final count = _activeFilterCount(activeFilters);
+                            if (count == 0) return const SizedBox.shrink();
+                            return Positioned(
+                              right: 6,
+                              top: 6,
+                              child: Container(
+                                width: 16,
+                                height: 16,
+                                decoration: BoxDecoration(
+                                  color: context.colorScheme.onPrimary,
+                                  shape: BoxShape.circle,
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  '$count',
+                                  style: TextStyle(
+                                    color: context.colorScheme.primary,
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -141,6 +158,14 @@ class EventsDataView extends StatelessWidget {
               ),
       ],
     );
+  }
+
+  static int _activeFilterCount(EventFilters filters) {
+    var count = 0;
+    if (filters.types.isNotEmpty) count++;
+    if (filters.city != null && filters.city!.isNotEmpty) count++;
+    if (filters.startDate != null || filters.endDate != null) count++;
+    return count;
   }
 
   Future<void> _showFilters(BuildContext context) async {

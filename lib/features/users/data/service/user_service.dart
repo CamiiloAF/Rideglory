@@ -17,4 +17,7 @@ abstract class UserService {
 
   @GET(ApiRoutes.me)
   Future<UserDto> getCurrentUser();
+
+  @GET('/users/{id}')
+  Future<UserDto> getUserById(@Path('id') String id);
 }

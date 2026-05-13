@@ -86,18 +86,21 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    AppTextButton(
-                      label: context.l10n.event_clearFilters,
-                      onPressed: () {
-                        setState(() {
-                          _selectedTypes.clear();
-                          _selectedDifficulties.clear();
-                        });
-                        _formKey.currentState?.reset();
-                        cubit.clearFilters();
-                        Navigator.of(context).pop();
-                      },
-                    ),
+                    if (cubit.filters.hasFilters ||
+                        _selectedTypes.isNotEmpty ||
+                        _selectedDifficulties.isNotEmpty)
+                      AppTextButton(
+                        label: context.l10n.event_clearFilters,
+                        onPressed: () {
+                          setState(() {
+                            _selectedTypes.clear();
+                            _selectedDifficulties.clear();
+                          });
+                          _formKey.currentState?.reset();
+                          cubit.clearFilters();
+                          Navigator.of(context).pop();
+                        },
+                      ),
                   ],
                 ),
               ),

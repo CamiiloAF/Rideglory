@@ -108,6 +108,13 @@ dev_dependencies:
   mocktail: ^1.0.4
   bloc_test: ^10.0.0
 
+  # Testing
+  mocktail: ^1.0.4
+  bloc_test: ^10.0.0
+  network_image_mock: ^2.1.1
+  integration_test:
+    sdk: flutter
+
   # Code generation
   build_runner: ^2.10.4
   freezed: ^3.2.3

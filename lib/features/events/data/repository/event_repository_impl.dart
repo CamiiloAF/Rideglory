@@ -20,10 +20,20 @@ class EventRepositoryImpl implements EventRepository {
   final FirebaseStorage _storage;
 
   @override
-  Future<Either<DomainException, List<EventModel>>> getEvents() {
+  Future<Either<DomainException, List<EventModel>>> getEvents({
+    String? type,
+    String? dateFrom,
+    String? dateTo,
+    String? city,
+  }) {
     return executeService(
       function: () async {
-        return _eventService.getEvents();
+        return _eventService.getEvents(
+          type: type,
+          dateFrom: dateFrom,
+          dateTo: dateTo,
+          city: city,
+        );
       },
     );
   }

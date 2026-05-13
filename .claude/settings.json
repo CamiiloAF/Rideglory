@@ -2,12 +2,8 @@
   "enabledMcpjsonServers": ["stitch"],
   "permissions": {
     "allow": [
-      "Bash(*)",
-      "Edit(*)",
-      "Write(*)",
-      "Read(*)",
-      "mcp__pencil__*",
-      "mcp__ide__*"
+      "Write",
+      "Edit"
     ]
   }
 }

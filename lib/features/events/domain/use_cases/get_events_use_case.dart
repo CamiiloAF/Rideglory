@@ -10,6 +10,16 @@ class GetEventsUseCase {
 
   final EventRepository _eventRepository;
 
-  Future<Either<DomainException, List<EventModel>>> call() =>
-      _eventRepository.getEvents();
+  Future<Either<DomainException, List<EventModel>>> call({
+    String? type,
+    String? dateFrom,
+    String? dateTo,
+    String? city,
+  }) =>
+      _eventRepository.getEvents(
+        type: type,
+        dateFrom: dateFrom,
+        dateTo: dateTo,
+        city: city,
+      );
 }

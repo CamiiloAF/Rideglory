@@ -31,4 +31,11 @@ class UserRepositoryImpl implements UserRepository {
   Future<Either<DomainException, UserModel>> getCurrentUser() {
     return executeService(function: _userService.getCurrentUser);
   }
+
+  @override
+  Future<Either<DomainException, UserModel>> getUserById(String userId) {
+    return executeService(
+      function: () => _userService.getUserById(userId),
+    );
+  }
 }

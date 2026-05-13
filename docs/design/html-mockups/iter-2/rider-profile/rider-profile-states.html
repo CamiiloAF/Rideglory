@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rideglory — Perfil del motorista (todos los estados)</title>
+  <link rel="stylesheet" href="../shared/styles.css">
+</head>
+<body>
+
+<!-- ============================================================
+     SCREEN: Attendee List — with tappable rider rows
+     Story:  US-2-3
+     State:  Attendee list showing tap affordance → navigates to RiderProfilePage
+     ============================================================ -->
+<div class="page-group">
+  <div class="group-title">Lista de asistentes — con tap en motorista</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="back-button" style="font-size:20px; margin-right:8px;">‹</div>
+      <div class="app-bar-title">Asistentes</div>
+    </div>
+
+    <div class="screen-body">
+      <div class="scrollable">
+        <!-- Attendee items — each row is tappable -->
+        <div class="attendee-item" style="border: 1px solid var(--border);">
+          <div class="avatar">CM</div>
+          <div class="attendee-info">
+            <div class="attendee-name">Carlos Martínez</div>
+            <div class="attendee-vehicle">Honda CB500F 2022</div>
+          </div>
+          <div class="status-badge approved">Aprobado</div>
+          <div class="tap-hint">›</div>
+        </div>
+
+        <div class="attendee-item" style="border: 1px solid var(--border);">
+          <div class="avatar">LG</div>
+          <div class="attendee-info">
+            <div class="attendee-name">Laura Gómez</div>
+            <div class="attendee-vehicle">Yamaha MT-07 2023</div>
+          </div>
+          <div class="status-badge approved">Aprobado</div>
+          <div class="tap-hint">›</div>
+        </div>
+
+        <div class="attendee-item" style="border: 1px solid var(--border);">
+          <div class="avatar">JR</div>
+          <div class="attendee-info">
+            <div class="attendee-name">Juan Rodríguez</div>
+            <div class="attendee-vehicle">KTM Duke 390</div>
+          </div>
+          <div class="status-badge rejected">Rechazado</div>
+          <div class="tap-hint">›</div>
+        </div>
+
+        <div class="attendee-item" style="border: 1px solid var(--border);">
+          <div class="avatar">AP</div>
+          <div class="attendee-info">
+            <div class="attendee-name">Ana Pérez</div>
+            <div class="attendee-vehicle">N/A</div>
+          </div>
+          <div class="status-badge approved">Aprobado</div>
+          <div class="tap-hint">›</div>
+        </div>
+
+        <!-- Tap hint annotation -->
+        <div style="margin-top:16px; background:rgba(249,140,31,0.08); border:1px solid rgba(249,140,31,0.2); border-radius:8px; padding:10px 12px; font-size:11px; color:var(--on-surface-muted);">
+          👆 Tocar avatar o nombre llama <code style="color:var(--primary);">context.pushNamed(AppRoutes.riderProfile, extra: userId)</code>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="screen-label">Lista asistentes — flecha "›" indica tap → perfil</div>
+</div>
+
+<!-- ============================================================
+     SCREEN: Rider Profile — Loading state
+     Story:  US-2-3
+     State:  RiderProfileCubit = ResultState.loading()
+     Widget: RiderProfileLoadingWidget (shimmer skeleton)
+     ============================================================ -->
+<div class="page-group">
+  <div class="group-title">Perfil del motorista — Cargando</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="back-button" style="font-size:20px; margin-right:8px;">‹</div>
+      <div class="app-bar-title">Perfil del motorista</div>
+    </div>
+
+    <div class="screen-body">
+      <!-- Shimmer header -->
+      <div style="display:flex; flex-direction:column; align-items:center; padding: 24px 16px 20px; gap:12px;">
+        <div class="shimmer-block" style="width:72px; height:72px; border-radius:50%;"></div>
+        <div class="shimmer-block shimmer-line" style="width:160px; height:20px;"></div>
+        <div class="shimmer-block shimmer-line" style="width:120px; height:14px;"></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Shimmer info rows -->
+      <div style="padding: 8px 0;">
+        <div style="padding: 14px 16px; display:flex; gap:12px; align-items:center; border-bottom:1px solid var(--border);">
+          <div class="shimmer-block" style="width:24px; height:24px; border-radius:4px;"></div>
+          <div class="shimmer-block" style="width:140px; height:14px; border-radius:4px;"></div>
+        </div>
+        <div style="padding: 14px 16px; display:flex; gap:12px; align-items:center; border-bottom:1px solid var(--border);">
+          <div class="shimmer-block" style="width:24px; height:24px; border-radius:4px;"></div>
+          <div class="shimmer-block" style="width:180px; height:14px; border-radius:4px;"></div>
+        </div>
+      </div>
+
+      <!-- Section title shimmer -->
+      <div style="padding: 14px 16px 8px;">
+        <div class="shimmer-block" style="width:80px; height:11px; border-radius:4px;"></div>
+      </div>
+
+      <!-- Vehicle shimmer rows -->
+      <div style="padding: 12px 16px; display:flex; gap:12px; align-items:center; border-bottom:1px solid var(--border);">
+        <div class="shimmer-block" style="width:40px; height:40px; border-radius:8px;"></div>
+        <div style="flex:1;">
+          <div class="shimmer-block" style="width:140px; height:14px; border-radius:4px; margin-bottom:6px;"></div>
+          <div class="shimmer-block" style="width:80px; height:11px; border-radius:4px;"></div>
+        </div>
+      </div>
+      <div style="padding: 12px 16px; display:flex; gap:12px; align-items:center;">
+        <div class="shimmer-block" style="width:40px; height:40px; border-radius:8px;"></div>
+        <div style="flex:1;">
+          <div class="shimmer-block" style="width:110px; height:14px; border-radius:4px; margin-bottom:6px;"></div>
+          <div class="shimmer-block" style="width:70px; height:11px; border-radius:4px;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="screen-label">Estado: cargando — shimmer skeleton (RiderProfileLoading)</div>
+</div>
+
+<!-- ============================================================
+     SCREEN: Rider Profile — Data state (name + email + vehicles)
+     Story:  US-2-3
+     State:  RiderProfileCubit = ResultState.data(UserModel)
+     Widget: RiderProfileContent
+     ============================================================ -->
+<div class="page-group">
+  <div class="group-title">Perfil del motorista — Datos cargados</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="back-button" style="font-size:20px; margin-right:8px;">‹</div>
+      <div class="app-bar-title">Perfil del motorista</div>
+    </div>
+
+    <div class="screen-body">
+      <div class="scrollable" style="padding:0;">
+        <!-- Profile header -->
+        <div class="profile-header">
+          <div class="avatar large">CM</div>
+          <div class="profile-name">Carlos Martínez</div>
+          <div class="profile-email">carlos.martinez@email.com</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Info rows — read-only -->
+        <div class="info-row">
+          <div class="info-icon">📍</div>
+          <div style="flex:1;">
+            <div class="info-row-label">Ciudad de residencia</div>
+            <div class="info-row-value">Medellín</div>
+          </div>
+        </div>
+
+        <!-- Section: Motos -->
+        <div class="section-title">Motos registradas</div>
+
+        <div class="vehicle-item">
+          <div class="vehicle-icon">🏍️</div>
+          <div class="vehicle-info">
+            <div class="vehicle-name">Honda CB500F</div>
+            <div class="vehicle-plate">AXC-123 · 2022</div>
+          </div>
+        </div>
+        <div class="vehicle-item">
+          <div class="vehicle-icon">🏍️</div>
+          <div class="vehicle-info">
+            <div class="vehicle-name">Yamaha MT-03</div>
+            <div class="vehicle-plate">LQP-456 · 2020</div>
+          </div>
+        </div>
+
+        <!-- Read-only note -->
+        <div style="padding:12px 16px;">
+          <div style="font-size:11px; color:var(--on-surface-muted); font-style:italic;">
+            Solo lectura — sin opciones de edición
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="screen-label">Estado: datos — nombre, email, vehículos (RiderProfileContent)</div>
+</div>
+
+<!-- ============================================================
+     SCREEN: Rider Profile — Data state (NO vehicles)
+     Story:  US-2-3
+     State:  ResultState.data — user has no vehicles registered
+     ============================================================ -->
+<div class="page-group">
+  <div class="group-title">Perfil del motorista — Sin vehículos</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="back-button" style="font-size:20px; margin-right:8px;">‹</div>
+      <div class="app-bar-title">Perfil del motorista</div>
+    </div>
+
+    <div class="screen-body">
+      <div class="scrollable" style="padding:0;">
+        <div class="profile-header">
+          <div class="avatar large">AP</div>
+          <div class="profile-name">Ana Pérez</div>
+          <div class="profile-email">ana.perez@email.com</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="section-title">Motos registradas</div>
+
+        <!-- No vehicles state -->
+        <div style="display:flex; flex-direction:column; align-items:center; padding:24px 16px; gap:8px; text-align:center;">
+          <div style="font-size:36px; opacity:0.3;">🏍️</div>
+          <div style="font-size:14px; color:var(--on-surface-muted);">Sin vehículos registrados</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="screen-label">Estado: datos — sin vehículos ("Sin vehículos registrados")</div>
+</div>
+
+<!-- ============================================================
+     SCREEN: Rider Profile — Error state
+     Story:  US-2-3
+     State:  RiderProfileCubit = ResultState.error()
+     l10n:   rider_errorRetry = "Reintentar"
+     ============================================================ -->
+<div class="page-group">
+  <div class="group-title">Perfil del motorista — Error</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="back-button" style="font-size:20px; margin-right:8px;">‹</div>
+      <div class="app-bar-title">Perfil del motorista</div>
+    </div>
+
+    <div class="screen-body">
+      <div class="scrollable">
+        <!-- Error banner -->
+        <div class="error-banner">
+          <div class="error-icon">⚠</div>
+          <div class="error-text">
+            <p>No fue posible cargar el perfil</p>
+            <small>Verifica tu conexión e intenta de nuevo</small>
+          </div>
+        </div>
+
+        <!-- Retry button -->
+        <div class="btn-outline">Reintentar</div>
+      </div>
+    </div>
+  </div>
+  <div class="screen-label">Estado: error — banner + botón "Reintentar"</div>
+</div>
+
+</body>
+</html>

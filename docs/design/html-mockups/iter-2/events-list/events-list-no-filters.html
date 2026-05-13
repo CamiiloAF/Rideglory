@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rideglory — Lista de eventos (sin filtros)</title>
+  <link rel="stylesheet" href="../shared/styles.css">
+</head>
+<body>
+
+<!-- ============================================================
+     SCREEN: Events List — No active filters
+     Story:  US-2-1 / US-2-2
+     State:  Data — filter button shows no badge
+     ============================================================ -->
+<div class="page-group">
+  <div class="group-title">Lista de eventos — sin filtros activos</div>
+  <div class="phone">
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons">
+        <span>●●●</span>
+        <span>WiFi</span>
+        <span>🔋</span>
+      </div>
+    </div>
+
+    <!-- App bar -->
+    <div class="app-bar">
+      <div class="app-bar-title">Eventos</div>
+      <div class="app-bar-action" style="color: var(--primary)">＋</div>
+    </div>
+
+    <!-- Screen body -->
+    <div class="screen-body">
+
+      <!-- Search + filter row -->
+      <div class="search-row">
+        <div class="search-field">
+          <span style="color:var(--on-surface-muted)">🔍</span>
+          <span>Buscar eventos...</span>
+        </div>
+        <!-- Filter button — NO badge (no active filters) -->
+        <div class="filter-btn">
+          <span style="color:#fff; font-size:18px">⚙</span>
+          <!-- badge hidden: no active filters -->
+        </div>
+      </div>
+
+      <!-- Event type quick-filter chips -->
+      <div class="chip-row">
+        <div class="type-chip active">Todos</div>
+        <div class="type-chip">Touring</div>
+        <div class="type-chip">Enduro</div>
+        <div class="type-chip">Rally</div>
+        <div class="type-chip">Track day</div>
+      </div>
+
+      <!-- Event list -->
+      <div class="scrollable" style="padding: 0 16px 16px;">
+        <!-- Event card 1 -->
+        <div class="event-card">
+          <div class="event-card-image">
+            <div class="type-badge">Touring</div>
+            🏍️
+          </div>
+          <div class="event-card-body">
+            <div class="event-card-title">Ruta de la Montaña — Antioquia</div>
+            <div class="event-card-meta">
+              <span>📅 20 may 2026</span>
+              <span>📍 Medellín</span>
+              <span style="color:var(--primary)">Gratis</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event card 2 -->
+        <div class="event-card">
+          <div class="event-card-image">
+            <div class="type-badge">Enduro</div>
+            🏕️
+          </div>
+          <div class="event-card-body">
+            <div class="event-card-title">Enduro La Calera — Cundinamarca</div>
+            <div class="event-card-meta">
+              <span>📅 28 may 2026</span>
+              <span>📍 Bogotá</span>
+              <span>$80.000</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event card 3 -->
+        <div class="event-card">
+          <div class="event-card-image">
+            <div class="type-badge">Rally</div>
+            🌄
+          </div>
+          <div class="event-card-body">
+            <div class="event-card-title">Rally del Café — Eje Cafetero</div>
+            <div class="event-card-meta">
+              <span>📅 3 jun 2026</span>
+              <span>📍 Armenia</span>
+              <span>$120.000</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom nav -->
+    <div class="bottom-nav">
+      <div class="nav-item"><span>🏠</span>Inicio</div>
+      <div class="nav-item active"><span>🗓</span>Eventos</div>
+      <div class="nav-item"><span>🏍</span>Garaje</div>
+      <div class="nav-item"><span>👤</span>Perfil</div>
+    </div>
+  </div>
+  <div class="screen-label">Sin filtros — botón sin badge</div>
+</div>
+
+<!-- ============================================================
+     SCREEN: Events List — Active filters (badge shows count)
+     ============================================================ -->
+<div class="page-group">
+  <div class="group-title">Lista de eventos — filtros activos (badge "2")</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="app-bar-title">Eventos</div>
+      <div class="app-bar-action" style="color: var(--primary)">＋</div>
+    </div>
+
+    <div class="screen-body">
+      <div class="search-row">
+        <div class="search-field">
+          <span style="color:var(--on-surface-muted)">🔍</span>
+          <span>Buscar eventos...</span>
+        </div>
+        <!-- Filter button — badge "2" (type + city active) -->
+        <div class="filter-btn">
+          <span style="color:#fff; font-size:18px">⚙</span>
+          <div class="badge">2</div>
+        </div>
+      </div>
+
+      <!-- Active filter tag row (visual hint below search) -->
+      <div style="display:flex; gap:6px; padding: 0 16px 8px; flex-wrap:wrap;">
+        <div style="background:rgba(249,140,31,0.15); border:1px solid var(--primary); border-radius:999px; padding:3px 10px; font-size:11px; color:var(--primary); font-weight:600;">
+          Touring ✕
+        </div>
+        <div style="background:rgba(249,140,31,0.15); border:1px solid var(--primary); border-radius:999px; padding:3px 10px; font-size:11px; color:var(--primary); font-weight:600;">
+          Medellín ✕
+        </div>
+      </div>
+
+      <div class="chip-row">
+        <div class="type-chip active">Todos</div>
+        <div class="type-chip">Touring</div>
+        <div class="type-chip">Enduro</div>
+        <div class="type-chip">Rally</div>
+      </div>
+
+      <div class="scrollable" style="padding: 0 16px 16px;">
+        <div class="event-card">
+          <div class="event-card-image">
+            <div class="type-badge">Touring</div>
+            🏍️
+          </div>
+          <div class="event-card-body">
+            <div class="event-card-title">Ruta de la Montaña — Antioquia</div>
+            <div class="event-card-meta">
+              <span>📅 20 may 2026</span>
+              <span>📍 Medellín</span>
+              <span style="color:var(--primary)">Gratis</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item"><span>🏠</span>Inicio</div>
+      <div class="nav-item active"><span>🗓</span>Eventos</div>
+      <div class="nav-item"><span>🏍</span>Garaje</div>
+      <div class="nav-item"><span>👤</span>Perfil</div>
+    </div>
+  </div>
+  <div class="screen-label">Filtros activos — badge naranja con conteo</div>
+</div>
+
+<!-- ============================================================
+     SCREEN: Events List — Filtered empty state
+     ============================================================ -->
+<div class="page-group">
+  <div class="group-title">Lista de eventos — vacío con filtros activos</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="app-bar-title">Eventos</div>
+      <div class="app-bar-action" style="color: var(--primary)">＋</div>
+    </div>
+
+    <div class="screen-body">
+      <div class="search-row">
+        <div class="search-field">
+          <span style="color:var(--on-surface-muted)">🔍</span>
+          <span>Buscar eventos...</span>
+        </div>
+        <div class="filter-btn">
+          <span style="color:#fff; font-size:18px">⚙</span>
+          <div class="badge">3</div>
+        </div>
+      </div>
+
+      <div class="chip-row">
+        <div class="type-chip">Touring</div>
+        <div class="type-chip">Enduro</div>
+      </div>
+
+      <!-- Filtered empty state -->
+      <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <div class="empty-title">Sin resultados</div>
+        <div class="empty-desc">No hay eventos con estos filtros. Intenta cambiar los criterios.</div>
+        <div class="btn-outline" style="width: 220px; padding:10px; font-size:13px; margin-top:8px;">Limpiar filtros</div>
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item"><span>🏠</span>Inicio</div>
+      <div class="nav-item active"><span>🗓</span>Eventos</div>
+      <div class="nav-item"><span>🏍</span>Garaje</div>
+      <div class="nav-item"><span>👤</span>Perfil</div>
+    </div>
+  </div>
+  <div class="screen-label">Estado vacío — filtros activos ("No hay eventos con estos filtros")</div>
+</div>
+
+</body>
+</html>

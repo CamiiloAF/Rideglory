@@ -20,7 +20,7 @@
 
 | Iter | Title | Goal | Agents | Complexity | Depends On |
 |------|-------|------|--------|-----------|------------|
-| 1 | Test Infrastructure + Profile Feature + Code Review | Working test suite + complete profile page + codebase cleanup | frontend, qa, tech_lead | M | — |
+| 1 | Test Infrastructure + Profile Feature | Working test suite + complete profile page | frontend, qa | M | — |
 | 2 | Event Discovery Filters + Attendee Profile Links | Filter events by type/date/city; tap riders into profile | backend, frontend, qa | M | 1 |
 | **3** | **Design System in Pencil** | All screen flows in pencil-new.pen with design token variables; seeded from 320 Stitch references | design | M | — |
 | 4a | SOAT Backend + Domain/Data Infrastructure | Backend endpoints, Claude Haiku extraction, Flutter domain + data layers | backend, frontend, qa | L | 1 |
@@ -69,7 +69,6 @@ The codebase has a single empty test file. Without a test suite, every subsequen
 - **HU-TEST-01b** · Cubit unit tests · As the dev team, I want `blocTest` groups covering `VehicleCubit`, `EventsCubit`, `EventDetailCubit`, and `MaintenancesCubit` (initial → loading → data → empty → error) so regressions in state transitions are caught automatically.
 - **HU-TEST-01c** · Widget tests · As the dev team, I want widget tests for the vehicle garage page, event list page, and event detail page covering all `ResultState` UI branches (shimmer skeleton, data render, empty state, error banner) so design system components are verified under every condition.
 - **HU-PROFILE-01** · Profile page completion · As a rider, I tap my profile in the bottom navigation and see my name, email, initials avatar, and main vehicle so I feel recognized as a community member.
-- **HU-REFACTOR-01** · Code review and optimization · As the dev team, I want a systematic review of the existing codebase to identify and fix dead code, lint violations, architectural smells, and performance issues so the foundation is clean before new features are added.
 
 ### Acceptance Criteria
 
@@ -94,12 +93,6 @@ The codebase has a single empty test file. Without a test suite, every subsequen
 19. `dart run build_runner build --delete-conflicting-outputs` runs cleanly with zero new analysis warnings.
 20. `dart analyze` passes with zero violations.
 21. `flutter test` passes with 100% green tests.
-22. All `print()` calls replaced with proper logging or removed across `lib/`.
-23. All unused imports, variables, and dead code removed across `lib/`.
-24. No `BuildContext` usage in data layer files — any violations refactored to pass values at call site.
-25. No raw `Material` widgets where a shared design system equivalent exists (`ElevatedButton` → `AppButton`, `TextField` → `AppTextField`, etc.) — non-compliant call sites updated.
-26. All `// TODO` and `// FIXME` comments triaged: resolved inline or converted to GitHub issues; none left as stale comments in source.
-27. A brief `docs/architecture/code-review-iter1.md` summarizing findings, decisions made, and any items deliberately deferred with rationale.
 
 ### Technical Notes
 
@@ -110,11 +103,10 @@ The codebase has a single empty test file. Without a test suite, every subsequen
 - **Profile photo decision (ADR-2):** Phase 1 profile shows no photo upload affordance. `profilePhotoUrl` is not in the current Prisma `User` model. The profile page shows an initials avatar only. Photo upload is deferred.
 - **DI registration:** `ProfileCubit` must be `@injectable` (not `@singleton`) unless it is a global cubit. Given that profile data is user-specific, add it as a `@lazySingleton` to `injection.dart` and to the root `MultiBlocProvider` alongside `AuthCubit`.
 - **ARB keys to add:** `profile_title`, `profile_noVehicle`, `profile_errorRetry`, `profile_loadingError`, `profile_mainVehicle`.
-- **Code review scope (HU-REFACTOR-01):** Run `dart analyze --no-summary` and address every violation. Search for `print(` with grep across `lib/`. Use `dart fix --apply` for auto-fixable issues. Review each feature folder's data layer for `BuildContext` imports. The tech lead agent produces `docs/architecture/code-review-iter1.md` with a findings table (file, issue, resolution) before the frontend agent closes the iteration.
 
 ### Agents
 
-frontend, qa, tech_lead
+frontend, qa
 
 ### Estimated Complexity
 

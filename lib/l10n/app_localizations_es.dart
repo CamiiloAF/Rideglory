@@ -2137,4 +2137,28 @@ class AppLocalizationsEs extends AppLocalizations {
     });
     return '$_temp0';
   }
+
+  @override
+  String get event_filterTitle => 'Filtros de eventos';
+
+  @override
+  String get event_filterType => 'Tipo de evento';
+
+  @override
+  String get event_filterDateRange => 'Rango de fechas';
+
+  @override
+  String get event_filterCity => 'Ciudad';
+
+  @override
+  String get event_noResultsFiltered => 'No hay eventos con estos filtros';
+
+  @override
+  String get rider_profileTitle => 'Perfil del motorista';
+
+  @override
+  String get rider_noVehicles => 'Sin vehículos registrados';
+
+  @override
+  String get rider_errorRetry => 'Reintentar';
 }

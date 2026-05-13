@@ -741,5 +741,13 @@
     "placeholders": {
       "level": {}
     }
-  }
+  },
+  "event_filterTitle": "Filtros de eventos",
+  "event_filterType": "Tipo de evento",
+  "event_filterDateRange": "Rango de fechas",
+  "event_filterCity": "Ciudad",
+  "event_noResultsFiltered": "No hay eventos con estos filtros",
+  "rider_profileTitle": "Perfil del motorista",
+  "rider_noVehicles": "Sin vehículos registrados",
+  "rider_errorRetry": "Reintentar"
 }
