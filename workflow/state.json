@@ -29,11 +29,11 @@
         "permission_handler"
       ],
       "additions": [
-        "mocktail: ^1.0.4 (dev — Iteration 1)",
-        "bloc_test: ^10.0.0 (dev — Iteration 1)",
-        "network_image_mock: ^2.1.1 (dev — Iteration 1)",
-        "file_picker: ^8.0.0 (prod — Iteration 3a)",
-        "firebase_messaging: ^15.0.0 (prod — Iteration 6a)"
+        "mocktail: ^1.0.4 (dev \u2014 Iteration 1)",
+        "bloc_test: ^10.0.0 (dev \u2014 Iteration 1)",
+        "network_image_mock: ^2.1.1 (dev \u2014 Iteration 1)",
+        "file_picker: ^8.0.0 (prod \u2014 Iteration 3a)",
+        "firebase_messaging: ^15.0.0 (prod \u2014 Iteration 6a)"
       ]
     },
     "assumptions": [
@@ -56,15 +56,15 @@
       "Pencil single-machine dependency (Track P): Stitch reference images must be copied to docs/design/stitch-references/ before Track P."
     ],
     "deferred": [
-      "SOAT push reminders (30-day / 7-day) — requires FCM from Iteration 6a; scheduled post-6b.",
-      "Profile photo upload — profilePhotoUrl not in current Prisma schema; deferred post-6b.",
-      "Organizer SOS dismiss — only the SOS sender can cancel in v1; organizer dismiss deferred to v2.",
-      "AI event recommendations Claude narrative explanations (v2) — deterministic scoring sufficient for launch.",
-      "Authentication Clean Architecture refactor — auth works via AuthService; no user-visible value.",
-      "Mandatory documents beyond SOAT (tecno, other) — DTO and schema extensible but only SOAT in v1.",
-      "Web version, admin dashboard, payments, social feed — explicitly out of scope per PRD section 10.",
-      "Multi-language support (English) — ARB is Spanish-only.",
-      "CI/CD IPA build + App Store submission — APK build only in DevOps track; IPA deferred until distribution target confirmed."
+      "SOAT push reminders (30-day / 7-day) \u2014 requires FCM from Iteration 6a; scheduled post-6b.",
+      "Profile photo upload \u2014 profilePhotoUrl not in current Prisma schema; deferred post-6b.",
+      "Organizer SOS dismiss \u2014 only the SOS sender can cancel in v1; organizer dismiss deferred to v2.",
+      "AI event recommendations Claude narrative explanations (v2) \u2014 deterministic scoring sufficient for launch.",
+      "Authentication Clean Architecture refactor \u2014 auth works via AuthService; no user-visible value.",
+      "Mandatory documents beyond SOAT (tecno, other) \u2014 DTO and schema extensible but only SOAT in v1.",
+      "Web version, admin dashboard, payments, social feed \u2014 explicitly out of scope per PRD section 10.",
+      "Multi-language support (English) \u2014 ARB is Spanish-only.",
+      "CI/CD IPA build + App Store submission \u2014 APK build only in DevOps track; IPA deferred until distribution target confirmed."
     ]
   },
   "iterations": [
@@ -290,43 +290,43 @@
     "architect": {
       "status": "idle",
       "lastAction": "2026-05-13T02:30:00Z",
-      "focus": "iter-4 contracts — POST /events/generate-cover, EventFormState freezed refactor, CoverGenerationDto, ADR-7/8/9"
+      "focus": "iter-4 contracts \u2014 POST /events/generate-cover, EventFormState freezed refactor, CoverGenerationDto, ADR-7/8/9"
     },
     "design": {
       "status": "idle",
       "lastAction": "2026-05-13T03:30:00Z",
-      "focus": "iter-4 design complete — CoverPreviewWidget 4 states designed (idle, loading, preview, error); 4 HTML mockups in iter-4/; styles.css extended; design.md updated"
+      "focus": "iter-4 design complete \u2014 CoverPreviewWidget 4 states designed (idle, loading, preview, error); 4 HTML mockups in iter-4/; styles.css extended; design.md updated"
     },
     "backend": {
       "status": "idle",
       "lastAction": "2026-05-13T04:30:00Z",
-      "focus": "iter-4 backend complete — POST /events/generate-cover: ClaudeService + UnsplashService; 10 unit tests pass"
+      "focus": "iter-4 backend complete \u2014 POST /events/generate-cover: ClaudeService + UnsplashService; 10 unit tests pass"
     },
     "frontend": {
       "status": "idle",
       "lastAction": "2026-05-13T05:30:00Z",
-      "focus": "iter-4 frontend complete — EventFormCubit @freezed refactor, GetGenerateCoverUseCase + EventCoverService + CoverGenerationDto + CoverPreviewWidget, 5 l10n keys, 0 errors"
+      "focus": "iter-4 frontend complete \u2014 EventFormCubit @freezed refactor, GetGenerateCoverUseCase + EventCoverService + CoverGenerationDto + CoverPreviewWidget, 5 l10n keys, 0 errors"
     },
     "qa": {
       "status": "idle",
       "lastAction": "2026-05-13T06:00:00Z",
-      "focus": "iter-4 phase complete — test catalog + results, all ACs verified, zero bugs filed"
+      "focus": "iter-4 phase complete \u2014 test catalog + results, all ACs verified, zero bugs filed"
     },
     "tech_lead": {
       "status": "idle",
       "lastAction": "2026-05-12T18:00:00Z",
-      "focus": "iter-1 PR #8 reviewed and approved — 6 blocking issues fixed, code-review-iter1.md produced"
+      "focus": "iter-1 PR #8 reviewed and approved \u2014 6 blocking issues fixed, code-review-iter1.md produced"
     },
     "devops": {
       "status": "idle",
       "lastAction": "2026-05-13T23:59:00Z",
-      "focus": "iter-4 CI update complete — UNSPLASH_ACCESS_KEY secret injection; .env.example, docs/DEPLOY.md updated"
+      "focus": "iter-4 CI update complete \u2014 UNSPLASH_ACCESS_KEY secret injection; .env.example, docs/DEPLOY.md updated"
     }
   },
   "tasks": [
     {
       "id": "T-0-1",
-      "title": "Framework ready — run /solo-plan to plan iterations from the PRD",
+      "title": "Framework ready \u2014 run /solo-plan to plan iterations from the PRD",
       "agent": "po",
       "status": "done",
       "iteration": 0,
@@ -383,7 +383,7 @@
       "agent": "qa",
       "status": "done",
       "iteration": 1,
-      "story": "QA gate — all US-1-* stories",
+      "story": "QA gate \u2014 all US-1-* stories",
       "updatedAt": "2026-05-12T12:00:00Z"
     },
     {
@@ -491,7 +491,7 @@
       "agent": "qa",
       "status": "done",
       "iteration": 4,
-      "story": "QA gate — all US-4-* stories",
+      "story": "QA gate \u2014 all US-4-* stories",
       "updatedAt": "2026-05-13T01:00:00Z"
     }
   ],
@@ -557,7 +557,7 @@
       "phase": "architect",
       "agent": "architect",
       "at": "2026-05-12T03:00:30Z",
-      "detail": "Architect phase complete — feature arch (Profile cubit/use case) + no API contract changes confirmed for iter-1"
+      "detail": "Architect phase complete \u2014 feature arch (Profile cubit/use case) + no API contract changes confirmed for iter-1"
     },
     {
       "type": "design_iteration",
@@ -565,7 +565,7 @@
       "phase": "design",
       "agent": "design",
       "at": "2026-05-12T04:00:00Z",
-      "detail": "Profile page designed — 4 states (loading shimmer, data with vehicle, empty no vehicle, error + retry). styles.css baseline established."
+      "detail": "Profile page designed \u2014 4 states (loading shimmer, data with vehicle, empty no vehicle, error + retry). styles.css baseline established."
     },
     {
       "type": "phase_complete",
@@ -573,7 +573,7 @@
       "phase": "design",
       "agent": "design",
       "at": "2026-05-12T04:00:30Z",
-      "detail": "Profile page — 4 ResultState mockups (loading, data, empty, error); styles.css design baseline created"
+      "detail": "Profile page \u2014 4 ResultState mockups (loading, data, empty, error); styles.css design baseline created"
     },
     {
       "type": "phase_complete",
@@ -581,7 +581,7 @@
       "phase": "backend",
       "agent": "system",
       "at": "2026-05-12T04:05:00Z",
-      "detail": "Backend skipped — no rideglory-api changes required for iter-1. GET /users/me sufficient."
+      "detail": "Backend skipped \u2014 no rideglory-api changes required for iter-1. GET /users/me sufficient."
     },
     {
       "type": "frontend_complete",
@@ -597,7 +597,7 @@
       "phase": "frontend",
       "agent": "frontend",
       "at": "2026-05-12T05:00:30Z",
-      "detail": "Profile page complete (US-1-4) — ProfileCubit, GetMyProfileUseCase, 3 widgets, 4 ResultState branches, 5 l10n keys, initials helper; test infra dirs created (US-1-1); dart analyze zero new errors in new code"
+      "detail": "Profile page complete (US-1-4) \u2014 ProfileCubit, GetMyProfileUseCase, 3 widgets, 4 ResultState branches, 5 l10n keys, initials helper; test infra dirs created (US-1-1); dart analyze zero new errors in new code"
     },
     {
       "type": "phase_complete",
@@ -605,7 +605,7 @@
       "phase": "qa",
       "agent": "qa",
       "at": "2026-05-12T12:00:00Z",
-      "detail": "QA sign-off complete — all acceptance criteria verified. Test infrastructure (US-1-1): mocktail, bloc_test configured; test dirs created. ProfileCubit tests (US-1-4): 4 blocTests pass (initial, loading→data, loading→error, reset). All 5 flutter tests pass. dart analyze passes (zero new violations). Blockers fixed: onChanged parameter, network_image_mock conflict, build_runner. US-1-2 and US-1-3 deferred to Iter-2 per PO scope. US-1-5 pending tech_lead."
+      "detail": "QA sign-off complete \u2014 all acceptance criteria verified. Test infrastructure (US-1-1): mocktail, bloc_test configured; test dirs created. ProfileCubit tests (US-1-4): 4 blocTests pass (initial, loading\u2192data, loading\u2192error, reset). All 5 flutter tests pass. dart analyze passes (zero new violations). Blockers fixed: onChanged parameter, network_image_mock conflict, build_runner. US-1-2 and US-1-3 deferred to Iter-2 per PO scope. US-1-5 pending tech_lead."
     },
     {
       "type": "phase_complete",
@@ -629,7 +629,7 @@
       "phase": "tech_lead",
       "agent": "tech_lead",
       "at": "2026-05-12T18:00:00Z",
-      "detail": "PR #8 reviewed. 6 blocking issues fixed inline: _ProfileContent extracted to profile_content.dart (one-widget-per-file), print() → log() in rest_client_functions.dart, 2x TextButton → AppTextButton, unnecessary_non_null_assertion removed, unused_import removed. dart analyze: 0 warnings/errors. flutter test: 5/5. Approved."
+      "detail": "PR #8 reviewed. 6 blocking issues fixed inline: _ProfileContent extracted to profile_content.dart (one-widget-per-file), print() \u2192 log() in rest_client_functions.dart, 2x TextButton \u2192 AppTextButton, unnecessary_non_null_assertion removed, unused_import removed. dart analyze: 0 warnings/errors. flutter test: 5/5. Approved."
     },
     {
       "type": "phase_complete",
@@ -637,7 +637,7 @@
       "phase": "tech_lead",
       "agent": "tech_lead",
       "at": "2026-05-12T18:00:00Z",
-      "detail": "approved — 6 blocking issues fixed; dart analyze 0 warnings; flutter test 5/5; code-review-iter1.md produced"
+      "detail": "approved \u2014 6 blocking issues fixed; dart analyze 0 warnings; flutter test 5/5; code-review-iter1.md produced"
     },
     {
       "type": "design_iteration",
@@ -645,7 +645,7 @@
       "phase": "design",
       "agent": "design",
       "at": "2026-05-12T08:00:00Z",
-      "detail": "Track P design complete — 8 flows surveyed from stitch references and mapped to pencil-new.pen existing frames; 9 design tokens set as Pencil variables; SOAT upload flow designed: 6 screens in Pencil (section 09, frame MOMzL) + 6 HTML mockups in docs/design/html-mockups/iter-3/; all UI copy, l10n keys, and component hierarchies documented in design.md."
+      "detail": "Track P design complete \u2014 8 flows surveyed from stitch references and mapped to pencil-new.pen existing frames; 9 design tokens set as Pencil variables; SOAT upload flow designed: 6 screens in Pencil (section 09, frame MOMzL) + 6 HTML mockups in docs/design/html-mockups/iter-3/; all UI copy, l10n keys, and component hierarchies documented in design.md."
     },
     {
       "type": "phase_complete",
@@ -700,7 +700,7 @@
       "phase": "architect",
       "agent": "architect",
       "at": "2026-05-13T02:30:30Z",
-      "detail": "Architect phase complete — feature arch + API contracts defined for iter-4 AI cover generation"
+      "detail": "Architect phase complete \u2014 feature arch + API contracts defined for iter-4 AI cover generation"
     },
     {
       "type": "design_iteration",
@@ -708,7 +708,7 @@
       "phase": "design",
       "agent": "design",
       "at": "2026-05-13T03:30:00Z",
-      "detail": "CoverPreviewWidget designed — 4 states (idle, loading, preview, error); 4 HTML mockups in iter-4/; styles.css extended with cover-preview classes; all US-4-1 and US-4-2 acceptance criteria covered in mockups; no new screens or routes"
+      "detail": "CoverPreviewWidget designed \u2014 4 states (idle, loading, preview, error); 4 HTML mockups in iter-4/; styles.css extended with cover-preview classes; all US-4-1 and US-4-2 acceptance criteria covered in mockups; no new screens or routes"
     },
     {
       "type": "phase_complete",
@@ -716,7 +716,7 @@
       "phase": "design",
       "agent": "design",
       "at": "2026-05-13T03:30:00Z",
-      "detail": "CoverPreviewWidget 4-state UI designed; 4 HTML mockups + styles.css extended; design.md updated; contracts/iter-4/design.json written — Next: backend"
+      "detail": "CoverPreviewWidget 4-state UI designed; 4 HTML mockups + styles.css extended; design.md updated; contracts/iter-4/design.json written \u2014 Next: backend"
     },
     {
       "type": "phase_complete",
@@ -724,7 +724,7 @@
       "phase": "backend",
       "agent": "backend",
       "at": "2026-05-13T04:30:00Z",
-      "detail": "POST /events/generate-cover implemented — ClaudeService (Anthropic SDK) + UnsplashService (axios, 15 s timeout); GenerateCoverDto; EventsModule providers registered; .env.example updated; 10/10 unit tests pass; 0 lint errors — Next: frontend"
+      "detail": "POST /events/generate-cover implemented \u2014 ClaudeService (Anthropic SDK) + UnsplashService (axios, 15 s timeout); GenerateCoverDto; EventsModule providers registered; .env.example updated; 10/10 unit tests pass; 0 lint errors \u2014 Next: frontend"
     },
     {
       "type": "phase_complete",
@@ -732,7 +732,7 @@
       "phase": "frontend",
       "agent": "frontend",
       "at": "2026-05-13T05:30:00Z",
-      "detail": "EventFormCubit @freezed refactor + GetGenerateCoverUseCase + EventCoverService + CoverGenerationDto + EventCoverRepositoryImpl + CoverPreviewWidget — AI cover generation end-to-end wired; 5 l10n keys; dart analyze 0 errors; flutter test 5/5 — Next: qa"
+      "detail": "EventFormCubit @freezed refactor + GetGenerateCoverUseCase + EventCoverService + CoverGenerationDto + EventCoverRepositoryImpl + CoverPreviewWidget \u2014 AI cover generation end-to-end wired; 5 l10n keys; dart analyze 0 errors; flutter test 5/5 \u2014 Next: qa"
     },
     {
       "type": "phase_complete",
@@ -749,6 +749,14 @@
       "agent": "devops",
       "at": "2026-05-13T23:59:00Z",
       "detail": "CI pipeline updated for iter-4 AI cover generation feature. UNSPLASH_ACCESS_KEY secret added to .github/workflows/ci.yml (both analyze-and-test and build-apk jobs). docs/DEPLOY.md updated with secret documentation. .env.example updated with placeholder. Ready for PR and merge to main."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 4,
+      "phase": "pr",
+      "agent": "system",
+      "at": "2026-05-13T04:22:44Z",
+      "detail": "PR #11 opened: https://github.com/CamiiloAF/Rideglory/pull/11"
     }
   ]
 }
