@@ -1,39 +1,37 @@
-> Slim handoff — read this before docs/handoffs/architect.md
+# Architect → DevOps handoff — Iteration 4
 
-# Architect → DevOps — Iteration 1
+**Date:** 2026-05-13
+**Iteration:** 4 — AI Event Cover Image Generation
 
-**Status:** No CI/env changes required by Iteration 1 product scope.
+---
 
-## Env vars
-None added. `.env.example` unchanged.
+## CI/env changes required
 
-## CI changes
-Iteration 1 is a foundation iteration. The DevOps track (CI/CD pipeline with GitHub Actions) is a **parallel track** scheduled to run alongside Iteration 2 — not a blocker for Iteration 1.
+### New secret: `UNSPLASH_ACCESS_KEY`
 
-If the DevOps agent runs anyway during this iteration, deliver:
-- `.github/workflows/flutter-ci.yml` running on `push` to `iter-*` and `pull_request` to `main`.
-- Steps: `actions/checkout`, `subosito/flutter-action`, `flutter pub get`, `dart run build_runner build --delete-conflicting-outputs`, `dart analyze`, `flutter test`.
-- Secrets needed (placeholders only this iter): `FIREBASE_OPTIONS_DEV`, `GOOGLE_SERVICES_JSON`, `GOOGLE_SERVICE_INFO_PLIST`, `ENV_DEV`. Files written from secrets before the build step.
-- Cache Flutter SDK and pub cache.
+Add to GitHub Actions secrets (repository settings → Secrets and variables → Actions):
+- Secret name: `UNSPLASH_ACCESS_KEY`
+- Value: Unsplash API access key from https://unsplash.com/developers
 
-## Build steps the project already needs
-```bash
-cp .env.example .env             # then fill values
-dart run build_runner build --delete-conflicting-outputs
-flutter pub get
-dart analyze
-flutter test
+**Backend `.env.example` update** (done by backend agent — DevOps confirms it exists in the file before CI runs):
+```
+UNSPLASH_ACCESS_KEY=your_unsplash_access_key_here
 ```
 
-## Dev dependencies added this iteration (informational)
-- `mocktail: ^1.0.4`
-- `bloc_test: ^10.0.0`
-- `network_image_mock: ^2.1.1`
+### CI job update for backend (api-gateway)
 
-These are dev-only; CI must run `flutter pub get` after the pubspec change but no extra steps.
+If a backend CI job exists, inject `UNSPLASH_ACCESS_KEY` as an env var in the `api-gateway` test step:
+```yaml
+env:
+  UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+```
 
-## Coordination
-- Iteration 3a will add `file_picker` (prod) — IPA/APK size implications minor; no CI change required.
-- Iteration 6a adds `firebase_messaging` (prod) — APNs key + iOS push capability must be ready in CI secrets before that iteration.
+### Flutter CI — no changes
 
-> Full detail: docs/handoffs/architect.md
+No new Flutter packages require CI changes. `CachedNetworkImage` already in deps.
+
+---
+
+## Change log
+
+- 2026-05-13 (iter-4): Add UNSPLASH_ACCESS_KEY to CI secrets. No Flutter CI changes.

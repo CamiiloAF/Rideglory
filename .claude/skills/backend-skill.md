@@ -120,3 +120,4 @@ Repo: `/Users/cami/Developer/Personal/rideglory-api`
 
 - 2026-05-11 (iter 0): Skill stub created.
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
+- 2026-05-13 (iter-4): POST /events/generate-cover implemented. ClaudeService (Anthropic SDK, claude-haiku-4-5) + UnsplashService (axios, 15 s timeout, typed response interface) created in api-gateway/src/common/. GenerateCoverDto with class-validator. Both services registered in EventsModule. .env.example created with ANTHROPIC_API_KEY + UNSPLASH_ACCESS_KEY placeholders. 10 unit tests: all pass. 0 lint errors in new code. Pattern: services in common/, DTO in events/dto/, register in EventsModule providers array.

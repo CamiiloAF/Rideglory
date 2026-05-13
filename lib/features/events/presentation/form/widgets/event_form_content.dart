@@ -15,6 +15,7 @@ import 'package:rideglory/features/events/presentation/form/widgets/sections/eve
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_multi_brand_section.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/features/events/presentation/form/widgets/cover_preview_widget.dart';
 import 'package:rideglory/shared/cubits/form_image_cubit.dart';
 import 'package:rideglory/shared/widgets/form/form_image_section.dart';
 
@@ -76,26 +77,60 @@ class EventFormContent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BlocBuilder<FormImageCubit, ResultState<FormImageData>>(
-              builder: (context, state) {
-                final imageData = state.whenOrNull(data: (data) => data);
-                return FormImageSection(
-                  imageUrl: imageData?.hasLocalImage == true
-                      ? null
-                      : imageData?.displayImageUrl,
-                  localImagePath: imageData?.hasLocalImage == true
-                      ? imageData?.displayImageUrl
-                      : null,
-                  onPickImage: () =>
-                      context.read<FormImageCubit>().pickImageFromGallery(),
-                  onClearTap: imageData?.hasLocalImage == true
-                      ? context.read<FormImageCubit>().clearLocalImage
-                      : null,
-                  title: context.l10n.event_addEventCover,
-                  hint: context.l10n.event_addEventCoverHint,
-                  uploadButtonLabel: context.l10n.event_uploadImage,
-                  showGenerateWithAI: true,
-                  generateWithAILabel: context.l10n.event_generateWithAI,
+            BlocBuilder<EventFormCubit, EventFormState>(
+              buildWhen: (previous, current) =>
+                  previous.coverGenerationResult !=
+                  current.coverGenerationResult,
+              builder: (context, formState) {
+                return BlocBuilder<FormImageCubit, ResultState<FormImageData>>(
+                  builder: (context, imageState) {
+                    final imageData =
+                        imageState.whenOrNull(data: (data) => data);
+
+                    final hasLocalImage = imageData?.hasLocalImage == true;
+                    final coverResult = formState.coverGenerationResult;
+
+                    if (hasLocalImage || coverResult is Initial<String>) {
+                      return FormImageSection(
+                        imageUrl: hasLocalImage
+                            ? null
+                            : imageData?.displayImageUrl,
+                        localImagePath: hasLocalImage
+                            ? imageData?.displayImageUrl
+                            : null,
+                        onPickImage: () =>
+                            context
+                                .read<FormImageCubit>()
+                                .pickImageFromGallery(),
+                        onClearTap: hasLocalImage
+                            ? context.read<FormImageCubit>().clearLocalImage
+                            : null,
+                        title: context.l10n.event_addEventCover,
+                        hint: context.l10n.event_addEventCoverHint,
+                        uploadButtonLabel: context.l10n.event_uploadImage,
+                        showGenerateWithAI: true,
+                        generateWithAILabel: context.l10n.event_generateWithAI,
+                        onGenerateWithAITap: () => _triggerGenerate(context),
+                      );
+                    }
+
+                    final generatedImageUrl = coverResult.whenOrNull(
+                      data: (url) => url,
+                    );
+                    final isGenerating = coverResult is Loading<String>;
+
+                    return CoverPreviewWidget(
+                      coverGenerationResult: coverResult,
+                      imageUrl: generatedImageUrl,
+                      isGenerating: isGenerating,
+                      onGenerateTap: () => _triggerGenerate(context),
+                      onRegenerateTap: () => _triggerGenerate(context),
+                      onUploadTap: () =>
+                          context
+                              .read<FormImageCubit>()
+                              .pickImageFromGallery(),
+                    );
+                  },
                 );
               },
             ),
@@ -147,6 +182,17 @@ class EventFormContent extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _triggerGenerate(BuildContext context) {
+    final cubit = context.read<EventFormCubit>();
+    final formState = cubit.formKey.currentState?.value;
+    cubit.generateCover(
+      title: formState?[EventFormFields.name] as String? ?? '',
+      eventType:
+          (formState?[EventFormFields.eventType] as EventType?)?.name ?? '',
+      city: formState?[EventFormFields.city] as String? ?? '',
     );
   }
 }

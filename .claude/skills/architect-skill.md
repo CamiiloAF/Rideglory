@@ -90,6 +90,9 @@ Commands: `dart analyze`, `flutter test`, `dart run build_runner build --delete-
 - 2026-05-12 (iter-1): `UserModel` already exists with rich rider profile fields (eps, bloodType, emergency contacts). No need to add fields for the profile page — current model is over-specified, not under.
 - 2026-05-12 (iter-1): Stub `profile_page.dart` is a `StatelessWidget` with only `ListTile` actions; full rewrite needed for header + main vehicle + ResultState branches. Frontend should keep existing logout + my-registrations actions when rewriting.
 - 2026-05-12 (iter-1): Reusable initials helper belongs in `lib/core/utils/` not in the profile feature — Iteration 2 attendee list will reuse it.
+- 2026-05-13 (iter-4): ClaudeService (Anthropic SDK) does NOT exist in rideglory-api yet — iter-3a (SOAT backend) was planned but not executed before iter-4. Backend agent must create both ClaudeService and UnsplashService from scratch. Both live in `api-gateway/src/common/`.
+- 2026-05-13 (iter-4): EventFormCubit currently extends `Cubit<ResultState<EventModel>>`. The @freezed EventFormState refactor (ADR-7) WILL break all existing `BlocBuilder<EventFormCubit, ResultState<EventModel>>` usages. Frontend must update all consumers and QA must update all existing cubit tests.
+- 2026-05-13 (iter-4): FormImageCubit is a shared widget-level cubit (not DI singleton) — it's created per-page via `BlocProvider`. When EventFormCubit.generateCover() succeeds, use a BlocListener (not direct call) to invoke `FormImageCubit.setRemoteImageUrl()` so widget rebuilds correctly.
 
 ---
 
@@ -98,3 +101,4 @@ Commands: `dart analyze`, `flutter test`, `dart run build_runner build --delete-
 - 2026-05-11 (iter 0): Skill stub created.
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
 - 2026-05-12 (iter-1): Architect phase complete. Confirmed no backend changes. Defined ProfileCubit DI scope (ADR-1, lazySingleton in root MultiBlocProvider). Confirmed no photo upload v1 (ADR-2). New artifacts: GetMyProfileUseCase + ProfileCubit + initials helper. l10n keys with `profile_` prefix. DIAGRAMS.md initialized with profile fetch sequence.
+- 2026-05-13 (iter-4): Architect phase complete. Full-stack AI cover generation. Backend: POST /events/generate-cover in api-gateway (ClaudeService + UnsplashService). Flutter: EventFormState @freezed refactor (ADR-7), GetGenerateCoverUseCase + EventCoverService + CoverGenerationDto + EventCoverRepositoryImpl (ADR-8), no new packages (ADR-9). UNSPLASH_ACCESS_KEY env var. 5 l10n keys (event_ prefix). Cover generation sequence + EventFormState class diagram added to DIAGRAMS.md. Confirmed ClaudeService not yet in codebase — backend must implement from scratch for iter-4 (iter-3a was planned but not yet executed).

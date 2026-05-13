@@ -1,91 +1,180 @@
-> Slim handoff — read this before docs/handoffs/architect.md
+# Architect → Frontend handoff — Iteration 4
 
-# Architect → Frontend — Iteration 1
+**Date:** 2026-05-13
+**Iteration:** 4 — AI Event Cover Image Generation
 
-**Focus:** US-1-4 only (Profile page completion). All other US-1-* are QA or tech_lead owned.
+---
 
-## Feature path
-`lib/features/profile/`
+## Focus stories: US-4-1, US-4-2, US-4-4 (tasks T-4-3 through T-4-7)
+
+---
+
+## New files to create
 
 ```
-profile/
+lib/features/events/
   domain/
-    use_cases/get_my_profile_use_case.dart      ← NEW
+    repository/
+      event_cover_repository.dart          ← NEW (abstract interface)
+    use_cases/
+      get_generate_cover_use_case.dart     ← NEW
+  data/
+    dto/
+      cover_generation_dto.dart            ← NEW (+ .g.dart via build_runner)
+    service/
+      event_cover_service.dart             ← NEW (Retrofit, + .g.dart)
+    repository/
+      event_cover_repository_impl.dart     ← NEW
   presentation/
-    cubit/profile_cubit.dart                    ← NEW
-    profile_page.dart                           ← REWRITE (current is stub)
-    widgets/                                    ← NEW dir (one widget per file)
-      profile_header.dart                       ← name + email + initials avatar
-      profile_main_vehicle_card.dart            ← reads VehicleCubit
-      profile_actions_list.dart                 ← extracted from existing stub (registrations + logout)
+    form/
+      cubit/
+        event_form_cubit.dart              ← REFACTOR (add freezed EventFormState)
+      widgets/
+        cover_preview_widget.dart          ← NEW
 ```
 
-## Models / DTOs
-- **No new models.** Reuse `UserModel` from `lib/features/users/domain/model/user_model.dart`.
-- **No new DTOs.** `UserDto` + `UserService.getCurrentUser()` already wired.
-- **No Retrofit changes.**
+---
 
-## Cubit pattern
+## Domain layer
+
+**`EventCoverRepository`** (abstract):
 ```dart
-@lazySingleton
-class ProfileCubit extends Cubit<ResultState<UserModel>> {
-  ProfileCubit(this._getMyProfile) : super(const ResultState.initial());
-  final GetMyProfileUseCase _getMyProfile;
+abstract class EventCoverRepository {
+  Future<Either<DomainException, String>> generateCover({
+    required String title,
+    required String eventType,
+    required String city,
+  });
+}
+```
 
-  Future<void> fetchProfile() async {
-    emit(const ResultState.loading());
-    final result = await _getMyProfile();
+**`GetGenerateCoverUseCase`** (`@injectable`):
+- Single `call({required title, required eventType, required city})`
+- Delegates to `EventCoverRepository.generateCover(...)`
+
+---
+
+## Data layer
+
+**`CoverGenerationDto`** (`@JsonSerializable()`):
+```dart
+class CoverGenerationDto {
+  final String imageUrl;
+  final String source;
+  final String query;
+}
+```
+
+**`EventCoverService`** (Retrofit `@singleton`):
+```dart
+@POST('/events/generate-cover')
+Future<CoverGenerationDto> generateCover(@Body() Map<String, dynamic> body);
+```
+
+**`EventCoverRepositoryImpl`** (`@Injectable(as: EventCoverRepository)`):
+- Wraps `EventCoverService` with `executeService()`
+- Maps HTTP 503 to `DomainException(message: context.l10n.event_coverGenerateError)` — Note: error mapping happens in the repository using the pre-defined Spanish message string (no BuildContext here; hardcode the Spanish string directly matching the ARB value)
+- Returns `Right(dto.imageUrl)` on success
+
+**Add to `lib/core/http/api_routes.dart`**:
+```dart
+static const generateEventCover = '/events/generate-cover';
+```
+
+---
+
+## Presentation layer: EventFormState refactor (ADR-7)
+
+Replace `EventFormCubit extends Cubit<ResultState<EventModel>>` with:
+
+```dart
+@freezed
+class EventFormState with _$EventFormState {
+  const factory EventFormState({
+    @Default(ResultState<EventModel>.initial()) ResultState<EventModel> saveResult,
+    @Default(ResultState<String>.initial()) ResultState<String> coverGenerationResult,
+  }) = _EventFormState;
+}
+
+@injectable
+class EventFormCubit extends Cubit<EventFormState> {
+  EventFormCubit(...) : super(const EventFormState());
+
+  Future<void> generateCover({
+    required String title,
+    required String eventType,
+    required String city,
+  }) async {
+    emit(state.copyWith(coverGenerationResult: const ResultState.loading()));
+    final result = await _getGenerateCoverUseCase(title: title, eventType: eventType, city: city);
     result.fold(
-      (error) => emit(ResultState.error(error: error)),
-      (user) => emit(ResultState.data(data: user)),
+      (error) => emit(state.copyWith(coverGenerationResult: ResultState.error(error: error))),
+      (imageUrl) => emit(state.copyWith(coverGenerationResult: ResultState.data(data: imageUrl))),
     );
   }
-
-  void reset() => emit(const ResultState.initial());
+  // saveEvent() now emits state.copyWith(saveResult: ...)
 }
 ```
 
-- `GetMyProfileUseCase` returns `Future<Either<DomainException, UserModel>>` and delegates to `UserRepository.getCurrentUser()`.
-- Trigger `fetchProfile()` in `initState` of a `StatefulWidget` wrapping `ProfilePage`, or via `BlocProvider.value` + `.fetchProfile()` on first build.
+Update all `BlocBuilder<EventFormCubit, ResultState<EventModel>>` usages to use `state.saveResult`.
 
-## DI registration
-- Run `dart run build_runner build --delete-conflicting-outputs` after adding `@injectable` / `@lazySingleton` annotations.
-- Add `ProfileCubit` to the root `MultiBlocProvider` in `main.dart`, beside `AuthCubit` and `VehicleCubit`.
-- On logout (`_logout` in `profile_page.dart`), call `context.read<ProfileCubit>().reset()` before navigating away.
+---
 
-## UI requirements (acceptance criteria recap)
-- Initial state on entry: trigger `fetchProfile()` → shimmer skeleton while `loading`.
-- `data`: show `fullName`, `email`, initials avatar (two-letter `CircleAvatar` derived from `fullName`; fallback to `?` if null).
-- Main vehicle: read from existing `VehicleCubit`; if main vehicle present show name+model; if `empty` show `EmptyStateWidget` or inline `Sin vehículos`.
-- `error`: error banner + retry button calling `fetchProfile()`.
-- No raw `Material` widgets where a shared equivalent exists (`AppButton`, `AppTextField`, `AppAppBar`, `EmptyStateWidget`).
-
-## l10n keys to add to `lib/l10n/app_es.arb`
-| Key | Suggested Spanish |
-|-----|--------------------|
-| `profile_title` | "Mi perfil" |
-| `profile_mainVehicle` | "Vehículo principal" |
-| `profile_noVehicle` | "Sin vehículos" |
-| `profile_errorRetry` | "Reintentar" |
-| `profile_loadingError` | "No pudimos cargar tu perfil" |
-
-Run `flutter gen-l10n` after editing the ARB.
-
-## Initials helper
-Place at `lib/core/utils/initials.dart` (so it can be reused in Iteration 2 attendee list):
+## FormImageCubit: add one method
 
 ```dart
-String initialsFromName(String? fullName) {
-  if (fullName == null || fullName.trim().isEmpty) return '?';
-  final parts = fullName.trim().split(RegExp(r'\s+'));
-  if (parts.length == 1) return parts.first.characters.first.toUpperCase();
-  return (parts.first.characters.first + parts.last.characters.first).toUpperCase();
+void setRemoteImageUrl(String url) {
+  emit(ResultState.data(data: FormImageData(remoteImageUrl: url)));
 }
 ```
 
+In `EventFormContent`, add a `BlocListener<EventFormCubit, EventFormState>` that calls `formImageCubit.setRemoteImageUrl(imageUrl)` when `state.coverGenerationResult` transitions to `Data`.
+
+---
+
+## CoverPreviewWidget
+
+- `AspectRatio(aspectRatio: 16 / 9)`
+- Uses `CachedNetworkImage` when imageUrl available
+- Loading overlay: `Stack` with semi-transparent black `Container` + `CircularProgressIndicator` centered — shown when `coverGenerationResult` is `Loading`
+- Do NOT blank the preview during regeneration; overlay on top of existing image
+- Shows "Regenerar" `AppTextButton` below image when state is `Data`
+
+---
+
+## Wire the AI button
+
+In `EventFormContent`, pass `onGenerateWithAITap` to `FormImageSection`:
+```dart
+onGenerateWithAITap: () {
+  final formState = cubit.formKey.currentState?.value;
+  cubit.generateCover(
+    title: formState?[EventFormFields.name] as String? ?? '',
+    eventType: (formState?[EventFormFields.eventType] as EventType?)?.name ?? '',
+    city: formState?[EventFormFields.city] as String? ?? '',
+  );
+},
+```
+
+---
+
+## ARB keys to add
+
+| Key | Spanish value |
+|-----|---------------|
+| `event_coverGenerating` | `"Generando portada..."` |
+| `event_coverGenerated` | `"Portada generada"` |
+| `event_coverGenerateError` | `"No pudimos generar la portada. Sube tu propia imagen."` |
+| `event_coverRegenerate` | `"Regenerar"` |
+| `event_coverGeneratingOverlay` | `"Generando con IA..."` |
+
+---
+
 ## Gates before pushing
-- `dart analyze` zero violations.
-- `flutter test` green (QA writes the profile widget test post-frontend).
-- No hardcoded Spanish in any new widget.
+
+- `dart run build_runner build --delete-conflicting-outputs` succeeds
+- `dart analyze` zero violations
+- `flutter test` green
+- No `BuildContext` in data layer
 
 > Full detail: docs/handoffs/architect.md

@@ -1027,6 +1027,130 @@
         "docs/handoffs/iteration_checkpoint.md",
         "workflow/state.json"
       ]
+    },
+    {
+      "at": "2026-05-13T00:57:12Z",
+      "iteration": 4,
+      "phase": "po_scope",
+      "agent": "po",
+      "action": "update",
+      "paths": [
+        "claude/skills/po-skill.md",
+        "docs/handoffs/contracts/iter-4/po_scope.json",
+        "docs/handoffs/iteration_checkpoint.md",
+        "docs/handoffs/po.md",
+        "workflow/state.json"
+      ]
+    },
+    {
+      "at": "2026-05-13T01:09:55Z",
+      "iteration": 4,
+      "phase": "architect",
+      "agent": "architect",
+      "action": "update",
+      "paths": [
+        "claude/skills/architect-skill.md",
+        "docs/architecture/DIAGRAMS.md",
+        "docs/handoffs/architect-for-backend.md",
+        "docs/handoffs/architect-for-devops.md",
+        "docs/handoffs/architect-for-frontend.md",
+        "docs/handoffs/architect-for-qa.md",
+        "docs/handoffs/architect.md",
+        "docs/handoffs/contracts/iter-4/architect.json",
+        "docs/handoffs/iteration_checkpoint.md",
+        "workflow/state.json"
+      ]
+    },
+    {
+      "at": "2026-05-13T01:38:36Z",
+      "iteration": 4,
+      "phase": "design",
+      "agent": "design",
+      "action": "update",
+      "paths": [
+        "claude/skills/design-skill.md",
+        "docs/design",
+        "docs/handoffs/contracts/iter-4/design.json",
+        "docs/handoffs/design.md",
+        "docs/handoffs/iteration_checkpoint.md",
+        "workflow/state.json"
+      ]
+    },
+    {
+      "at": "2026-05-13T03:28:41Z",
+      "iteration": 4,
+      "phase": "backend",
+      "agent": "backend",
+      "action": "update",
+      "paths": [
+        "claude/skills/backend-skill.md",
+        "docs/handoffs/backend.md",
+        "docs/handoffs/contracts/iter-4/backend.json",
+        "docs/handoffs/iteration_checkpoint.md",
+        "workflow/state.json"
+      ]
+    },
+    {
+      "at": "2026-05-13T04:01:47Z",
+      "iteration": 4,
+      "phase": "frontend",
+      "agent": "frontend",
+      "action": "update",
+      "paths": [
+        "claude/skills/frontend-skill.md",
+        "docs/handoffs/contracts/iter-4/frontend.json",
+        "docs/handoffs/frontend.md",
+        "docs/handoffs/iteration_checkpoint.md",
+        "lib",
+        "workflow/state.json"
+      ]
+    },
+    {
+      "at": "2026-05-13T04:06:29Z",
+      "iteration": 4,
+      "phase": "qa",
+      "agent": "qa",
+      "action": "update",
+      "paths": [
+        "claude/skills/qa-skill.md",
+        "docs/handoffs/contracts/iter-4/qa.json",
+        "docs/handoffs/iteration_checkpoint.md",
+        "docs/handoffs/qa.md",
+        "test/features/events/domain/use_cases/get_generate_cover_use_case_test.dart",
+        "workflow/state.json"
+      ]
+    },
+    {
+      "at": "2026-05-13T04:08:34Z",
+      "iteration": 4,
+      "phase": "devops",
+      "agent": "devops",
+      "action": "update",
+      "paths": [
+        "claude/skills/devops-skill.md",
+        "docs/DEPLOY.md",
+        "docs/handoffs/contracts/iter-4/devops.json",
+        "docs/handoffs/devops.md",
+        "docs/handoffs/iteration_checkpoint.md",
+        "env.example",
+        "github/workflows/ci.yml",
+        "workflow/state.json"
+      ]
+    },
+    {
+      "at": "2026-05-13T04:29:37Z",
+      "iteration": 4,
+      "phase": "tech_lead",
+      "agent": "tech_lead",
+      "action": "update",
+      "paths": [
+        "claude/skills/tech_lead-skill.md",
+        "docs/architecture",
+        "docs/handoffs/contracts/iter-4/tech_lead.json",
+        "docs/handoffs/iteration_checkpoint.md",
+        "docs/handoffs/tech_lead.md",
+        "workflow/state.json"
+      ]
     }
   ]
 }

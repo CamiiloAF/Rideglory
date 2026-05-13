@@ -159,3 +159,4 @@ Commands: `dart analyze --no-summary`, `grep -rn "print(" lib/`, `dart fix --app
 - 2026-05-11 (iter 0): Skill stub created.
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
 - 2026-05-12 (iter 1): Gotchas and learnings appended after PR #8 review. 6 blocking issues fixed.
+- 2026-05-13 (iter 4): PR #11 reviewed and approved. 1 blocking fix: prefer_const_constructors in test file (const Right, Left, DomainException). dart analyze 34 pre-existing items only. flutter test 7/7. code-review-iter4.md produced.

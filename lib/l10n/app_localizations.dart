@@ -1240,6 +1240,36 @@ abstract class AppLocalizations {
   /// **'Generar'**
   String get event_generateWithAI;
 
+  /// No description provided for @event_coverGenerating.
+  ///
+  /// In es, this message translates to:
+  /// **'Generando portada...'**
+  String get event_coverGenerating;
+
+  /// No description provided for @event_coverGenerated.
+  ///
+  /// In es, this message translates to:
+  /// **'Portada generada'**
+  String get event_coverGenerated;
+
+  /// No description provided for @event_coverGenerateError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos generar la portada. Sube tu propia imagen.'**
+  String get event_coverGenerateError;
+
+  /// No description provided for @event_coverRegenerate.
+  ///
+  /// In es, this message translates to:
+  /// **'Regenerar'**
+  String get event_coverRegenerate;
+
+  /// No description provided for @event_coverGeneratingOverlay.
+  ///
+  /// In es, this message translates to:
+  /// **'Generando con IA...'**
+  String get event_coverGeneratingOverlay;
+
   /// No description provided for @event_photoPermissionDenied.
   ///
   /// In es, this message translates to:

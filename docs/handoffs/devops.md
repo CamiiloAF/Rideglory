@@ -1,7 +1,8 @@
-# DevOps Handoff — Iteration 1
+# DevOps Handoff — Iterations 1–4
 
-**Date:** 2026-05-12  
-**Status:** done
+**Last Updated:** 2026-05-13  
+**Iteration:** 4 — AI Event Cover Image Generation  
+**Status:** updated
 
 ---
 
@@ -233,10 +234,16 @@ flutter build apk --release
 
 ## Change Log
 
+### Iteration 1
 - **2026-05-12 (16:00 UTC):** DevOps phase started. Read architect, frontend, QA handoffs.
 - **2026-05-12 (16:15 UTC):** `.github/workflows/ci.yml` created with `analyze-and-test` and `build-apk` jobs. Secrets injection configured.
 - **2026-05-12 (16:30 UTC):** `docs/DEPLOY.md` written with full setup, secrets, and release process documentation.
 - **2026-05-12 (16:45 UTC):** Devops handoff finalized. All artifacts ready for phase contract and iteration checkpoint.
+
+### Iteration 4
+- **2026-05-13 (phase-7):** Updated `.github/workflows/ci.yml` to inject `UNSPLASH_ACCESS_KEY` secret for event cover image generation (backend integration).
+- **2026-05-13 (phase-7):** Updated `docs/DEPLOY.md` with new `UNSPLASH_ACCESS_KEY` secret in required secrets table.
+- **2026-05-13 (phase-7):** Updated `.env.example` with `UNSPLASH_ACCESS_KEY` placeholder.
 
 ---
 

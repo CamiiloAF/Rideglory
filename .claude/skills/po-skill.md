@@ -105,3 +105,4 @@ Commands: `dart analyze`, `flutter test`, `dart run build_runner build --delete-
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
 - 2026-05-12 (iter 1): Iteration 1 scoped — 5 user stories (test infra, cubit tests, widget tests, profile page, code review); 6 tasks added; QA gate task included; phase contract written.
 - 2026-05-12 (iter 3): Iteration 3 scoped — pure design iteration (Track P promoted); 5 user stories covering Pencil screen flows, design tokens, SOAT flow design, design.md handoff, QA gate; architect phase explicitly skipped; hard gate for iter-3b documented.
+- 2026-05-13 (iter 4): Iteration 4 scoped — AI Event Cover Image Generation; 4 user stories (US-4-1 through US-4-4); 10 tasks (T-4-1 through T-4-10) spanning backend endpoint, frontend cubit refactor, UI, and full test coverage; no Pencil design gate (unlike 3b); depends on Iter 3a ClaudeService pattern.

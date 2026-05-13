@@ -184,3 +184,12 @@ Mock library: `mocktail`. Cubit test library: `bloc_test`. Network image mock: `
   * Hard gate for Iteration 3b (Flutter SOAT UI) CLEARED.
   * Test catalog created in docs/handoffs/qa.md with 35 test cases across 5 US.
   * Phase contract written: docs/handoffs/contracts/iter-3/qa.json.
+- 2026-05-13 (iter 4): QA phase complete (full-stack AI cover generation).
+  * Backend tests: 10/10 pass (happy path + 4 error paths: Claude fails, Unsplash fails, timeout, malformed request).
+  * Frontend unit tests: 2/2 pass (GetGenerateCoverUseCase happy path + error 503).
+  * Widget ACs verified: 8/8 pass via code review (loading overlay, regenerate button, preview with 16:9 aspect, custom image always available, error handling, form state independence).
+  * Test results: dart analyze 0 new violations; flutter test 7/7 pass (4 profile + 2 cover + 1 placeholder); npm test 10/10 pass.
+  * Zero bugs filed. All ACs for US-4-1 and US-4-2 verified.
+  * Test catalog created in docs/handoffs/qa.md with 15 test cases (TC-4-1 through TC-4-15).
+  * Phase contract written: docs/handoffs/contracts/iter-4/qa.json.
+  * Iteration 4 gate CLEARED for DevOps phase.

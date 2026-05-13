@@ -1,9 +1,9 @@
-# Architect handoff — Iteration 1
+# Architect handoff — Iteration 4
 
-**Date:** 2026-05-12
+**Date:** 2026-05-13
 **Status:** done
 
-> Iteration 1 is a foundation iteration: test infrastructure + profile page completion + code cleanup. **No backend (rideglory-api) changes.** **No new endpoints, DTOs, or domain models.** Architecture work is constrained to: confirming the existing `GET /users/me` contract is sufficient for the profile page, defining the `ProfileCubit` DI scope (ADR-1), and confirming the no-photo-upload decision (ADR-2).
+AI Event Cover Image Generation: full-stack feature wiring the existing "Generar portada con IA" button to a new backend endpoint that uses the existing ClaudeService (iter-3a pattern) to generate an Unsplash search query, then fetches a cover image and returns the URL to Flutter.
 
 ---
 
@@ -11,11 +11,7 @@
 
 | Feature | Domain changes | Data changes | Presentation changes |
 |---------|----------------|--------------|----------------------|
-| profile | New: `GetMyProfileUseCase` in `lib/features/profile/domain/use_cases/get_my_profile_use_case.dart`. Reuses existing `UserRepository` (in `lib/features/users/domain/repository/`). No new repository, no new model — uses existing `UserModel`. | None. `UserService.getCurrentUser()` (Retrofit `GET /users/me`) and `UserRepositoryImpl` already exist and are reused as-is. | New: `ProfileCubit` extends `Cubit<ResultState<UserModel>>` in `lib/features/profile/presentation/cubit/profile_cubit.dart`. Replaces stub `profile_page.dart` with real UI (initials avatar, name, email, main vehicle, logout). Consumes existing `VehicleCubit` for main vehicle. |
-| vehicles | None | None | None — feature is read in widget tests only. |
-| events | None | None | None — feature is read in widget tests only. |
-| maintenance | None | None | None — feature is read in cubit tests only. |
-| test infrastructure (cross-cutting) | n/a | n/a | New `test/` tree mirroring `lib/features/` per US-1-1. `dev_dependencies` additions in `pubspec.yaml`. No `build_runner` impact. |
+| events / form | New: `GetGenerateCoverUseCase` in `domain/use_cases/`. New: `EventCoverRepository` interface in `domain/repository/`. | New: `CoverGenerationDto` + `EventCoverService` (Retrofit `POST /events/generate-cover`) + `EventCoverRepositoryImpl`. | Refactor: `EventFormCubit` → extends `Cubit<EventFormState>` (freezed). New field: `ResultState<String> coverGenerationResult`. New method: `generateCover({title, eventType, city})`. Update `EventFormContent` to wire the existing `onGenerateWithAITap` callback. New: `CoverPreviewWidget` for 16:9 overlay. |
 
 ---
 
@@ -23,9 +19,15 @@
 
 | Method | Path | Auth | Request body | Success | Errors |
 |--------|------|------|--------------|---------|--------|
-| — | — | — | — | — | — |
+| POST | `/events/generate-cover` | Firebase ID token (JWT bearer) | `{ title: string, eventType: string, city: string }` | 200 `{ imageUrl: string, source: "unsplash", query: string }` | 400 malformed body · 503 Claude or Unsplash failure |
 
-**No backend changes this iteration.** `GET /api/users/me` is pre-existing. Architect confirms the response shape matches the current `UserDto` (`id`, `fullName`, `email`, plus optional rider profile fields). No drift detected.
+**Implementation location:** `api-gateway/src/events/events.controller.ts` — add `@Post('generate-cover')` method. No microservice proxy needed; implement logic directly in `api-gateway` using `ClaudeService` (iter-3a pattern) and Axios/`axios` for Unsplash HTTP call.
+
+**Unsplash call:** `GET https://api.unsplash.com/search/photos?query={query}&per_page=1&orientation=landscape` with `Authorization: Client-ID ${UNSPLASH_ACCESS_KEY}`.
+
+**Claude prompt:** `"Generate a 3-5 word English search query for Unsplash to find a high-quality landscape photo for a motorcycle event. Event title: {title}. Event type: {eventType}. City: {city}. Return only the search query, nothing else."`
+
+**Timeout:** 15 s on Unsplash call (Promise.race). If exceeded, throw `ServiceUnavailableException`.
 
 ---
 
@@ -33,71 +35,86 @@
 
 | Name | Layer | File path | Notes |
 |------|-------|-----------|-------|
-| `GetMyProfileUseCase` | domain | `lib/features/profile/domain/use_cases/get_my_profile_use_case.dart` | `@injectable`. Single method `call()` returning `Future<Either<DomainException, UserModel>>`. Delegates to `UserRepository.getCurrentUser()`. |
-| `ProfileCubit` | presentation | `lib/features/profile/presentation/cubit/profile_cubit.dart` | `@lazySingleton`. Extends `Cubit<ResultState<UserModel>>`. Methods: `fetchProfile()`, `reset()`. Registered in root `MultiBlocProvider` in `main.dart` alongside `AuthCubit`, `VehicleCubit`, `MyRegistrationsCubit`. |
-
-No new freezed state class is required — single async result fits `ResultState<UserModel>` directly. The main-vehicle slot in the UI reads from the existing `VehicleCubit` (already global).
+| `CoverGenerationDto` | data | `lib/features/events/data/dto/cover_generation_dto.dart` | `@JsonSerializable()`. Fields: `imageUrl` (String), `source` (String), `query` (String). |
+| `EventCoverRepository` | domain | `lib/features/events/domain/repository/event_cover_repository.dart` | Abstract. Single method: `Future<Either<DomainException, String>> generateCover({required String title, required String eventType, required String city})`. Returns the `imageUrl` only (domain-clean). |
+| `GetGenerateCoverUseCase` | domain | `lib/features/events/domain/use_cases/get_generate_cover_use_case.dart` | `@injectable`. Delegates to `EventCoverRepository.generateCover()`. |
+| `EventCoverService` | data | `lib/features/events/data/service/event_cover_service.dart` | Retrofit. `@POST('/events/generate-cover')`. Returns `Future<CoverGenerationDto>`. |
+| `EventCoverRepositoryImpl` | data | `lib/features/events/data/repository/event_cover_repository_impl.dart` | `@Injectable(as: EventCoverRepository)`. Wraps `EventCoverService` with `executeService()`. Maps HTTP 503 to Spanish `DomainException`. Returns `Right(dto.imageUrl)`. |
+| `EventFormState` | presentation | `lib/features/events/presentation/form/cubit/event_form_cubit.dart` | `@freezed` class in same file as `EventFormCubit`. Fields: `ResultState<EventModel> saveResult`, `ResultState<String> coverGenerationResult`. |
 
 ---
 
 ## ADRs (architectural decisions)
 
-### ADR-1 — ProfileCubit DI scope: `@lazySingleton`
+### ADR-7 — EventFormCubit: split state into @freezed EventFormState
 **Status:** Accepted.
-**Context:** Profile data (`UserModel` from `/users/me`) is user-scoped and may be needed by future screens (settings, share-profile, organizer view of self).
-**Decision:** Register as `@lazySingleton` and add to root `MultiBlocProvider`. Reset state on logout via `AuthCubit` listener (same pattern as `VehicleCubit.clearVehicles()`).
-**Consequence:** Profile fetch happens once per session; downstream screens read without re-fetching. Memory cost is negligible (one `UserModel`).
+**Context:** `EventFormCubit` previously extended `Cubit<ResultState<EventModel>>`, making it impossible to track cover generation state independently without clobbering form save state.
+**Decision:** Introduce `@freezed EventFormState` with two `ResultState` fields (`saveResult`, `coverGenerationResult`). `EventFormCubit` now extends `Cubit<EventFormState>`.
+**Consequence:** All existing `BlocBuilder<EventFormCubit, ResultState<EventModel>>` usages in `event_form_view.dart` and `event_form_page.dart` must be updated to use `state.saveResult`. Widget tests must be updated accordingly. `buildEventToSave()` logic is unchanged.
 
-### ADR-2 — No profile photo upload in v1
-**Status:** Accepted (echoed from PO).
-**Context:** Prisma `User` model in rideglory-api does not include `profilePhotoUrl`. Adding it requires a backend migration not scoped to Iteration 1.
-**Decision:** Render an initials-based `CircleAvatar` (two-letter, derived from `fullName`). No upload affordance in profile UI. Revisit post-iteration 6b.
-**Consequence:** Profile UI is read-only for photo. Initials computation is a pure helper in presentation layer.
+### ADR-8 — Cover generation lives in EventFormCubit, not FormImageCubit
+**Status:** Accepted.
+**Context:** `FormImageCubit` is a shared cubit for generic image picking. Cover URL from AI is event-specific and needs access to form field values (title, eventType, city).
+**Decision:** `generateCover()` stays in `EventFormCubit`. On success, `EventFormCubit` updates `coverGenerationResult` to `data(imageUrl)`. The presentation layer then syncs this into `FormImageCubit` via `formImageCubit.setRemoteImageUrl(imageUrl)` — a new method to add to `FormImageCubit`.
+**Consequence:** `FormImageCubit` needs one new method: `void setRemoteImageUrl(String url)` — emits `data(FormImageData(remoteImageUrl: url))`. This keeps `FormImageCubit` generic while allowing the cover generation result to be reflected in the image preview.
+
+### ADR-9 — No new Flutter package additions for Iteration 4
+**Status:** Accepted.
+**Context:** `cached_network_image` is already a dependency (used in event list cards).
+**Decision:** Use existing `CachedNetworkImage` for the preview. No new pub.dev packages needed. Loading overlay uses a `Stack` with a semi-transparent `CircularProgressIndicator` over the existing preview.
+
+---
+
+## New API route constant (Flutter)
+
+Add to `lib/core/http/api_routes.dart`:
+```dart
+static const generateEventCover = '/events/generate-cover';
+```
 
 ---
 
 ## Environment variables
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| — | None added this iteration | — |
+| Variable | Repo | Description |
+|----------|------|-------------|
+| `UNSPLASH_ACCESS_KEY` | rideglory-api | Unsplash API access key. Add to `.env.example` and CI secrets. Never commit actual value. |
 
 ---
 
 ## Localization (l10n keys)
 
-All new strings live in `lib/l10n/app_es.arb` under the `profile_` prefix. Frontend agent must add at minimum:
+New keys in `lib/l10n/app_es.arb` (prefix `event_`):
 
-| Key | Spanish value (suggested) |
-|-----|---------------------------|
-| `profile_title` | "Mi perfil" |
-| `profile_mainVehicle` | "Vehículo principal" |
-| `profile_noVehicle` | "Sin vehículos" |
-| `profile_errorRetry` | "Reintentar" |
-| `profile_loadingError` | "No pudimos cargar tu perfil" |
+| Key | Spanish value |
+|-----|---------------|
+| `event_coverGenerating` | "Generando portada..." |
+| `event_coverGenerated` | "Portada generada" |
+| `event_coverGenerateError` | "No pudimos generar la portada. Sube tu propia imagen." |
+| `event_coverRegenerate` | "Regenerar" |
+| `event_coverGeneratingOverlay` | "Generando con IA..." |
 
-After editing ARB: `flutter gen-l10n` (or `dart run build_runner build --delete-conflicting-outputs`).
+Note: `event_generateWithAI` already exists (used in `EventFormContent`).
 
 ---
 
 ## Risks and open questions
 
-- **`UserDto` field drift:** If rideglory-api silently renames `fullName` → `name`, the profile page shows blank. Mitigation: `tech_lead` runs `dart analyze` and `qa` writes a repository test asserting DTO→model mapping (already required by US-1-2 indirectly via existing `UserRepository` coverage).
-- **Initials helper duplication:** Other features may need the same logic later (attendee list, organizer view). Frontend should place it under `lib/core/utils/initials.dart` to avoid duplication in Iteration 2.
-- **Logout state reset:** `ProfileCubit` must subscribe to `AuthCubit` sign-out events (or expose `reset()` called from `_logout`). Pattern already used by `VehicleCubit.clearVehicles()`.
+- **ClaudeService not implemented in iter-3a:** PO assumes ClaudeService exists from iter-3a. Backend verification shows no Claude/Anthropic files in `rideglory-api`. Backend agent must implement ClaudeService pattern (Anthropic Node.js SDK) as part of T-4-1 if it does not exist.
+- **EventFormState freezed refactor regression:** Existing `event_form_page.dart` and `event_form_view.dart` use `BlocBuilder<EventFormCubit, ResultState<EventModel>>` — all must be updated to `EventFormState` and use `state.saveResult`. Existing tests must be updated.
+- **FormImageCubit.setRemoteImageUrl coordination:** The presentation layer must call `formImageCubit.setRemoteImageUrl(imageUrl)` inside a `BlocListener` on `EventFormCubit` when `coverGenerationResult` transitions to `data(...)`.
 
 ---
 
 ## Next agent needs to know
 
-- **Backend (rideglory-api):** No changes. Skip phase or write a one-liner handoff.
-- **Frontend:** Implement `GetMyProfileUseCase` + `ProfileCubit` + redesigned `profile_page.dart` per `docs/handoffs/architect-for-frontend.md`. Add l10n keys. Register cubit in DI and root provider. Hook reset on logout.
-- **DevOps:** No CI/env changes required. Track DevOps (CI/CD pipeline) is parallel, not blocking.
-- **QA:** Test infrastructure tasks (US-1-1/2/3) gate the iteration. After frontend lands, write `ProfileCubit` blocTest group (5 states) and a `profile_page` widget test for all `ResultState` branches.
-- **Tech lead:** Runs code review (US-1-5) first per PO ordering. Architect will not re-review unless tech_lead surfaces an architectural concern.
+- **Backend:** Implement `POST /events/generate-cover` in `api-gateway/src/events/events.controller.ts`. Add `ClaudeService` (Anthropic SDK) + Unsplash HTTP call (axios). Add `UNSPLASH_ACCESS_KEY` to `.env.example`. See `docs/handoffs/architect-for-backend.md`.
+- **Frontend:** (1) Refactor `EventFormCubit` to `@freezed EventFormState`. (2) Add `GetGenerateCoverUseCase` + `EventCoverService` + `CoverGenerationDto` + `EventCoverRepositoryImpl`. (3) Add `setRemoteImageUrl()` to `FormImageCubit`. (4) Wire `onGenerateWithAITap` in `EventFormContent` to `EventFormCubit.generateCover()`. (5) Add `CoverPreviewWidget` with loading overlay. (6) Add 5 ARB keys. See `docs/handoffs/architect-for-frontend.md`.
+- **QA:** Backend unit tests (happy + 4 error paths) + Flutter unit tests for use case + widget tests for all cover generation states. See `docs/handoffs/architect-for-qa.md`.
+- **DevOps:** Add `UNSPLASH_ACCESS_KEY` to CI secrets. See `docs/handoffs/architect-for-devops.md`.
 
 ---
 
 ## Change log
 
-- 2026-05-12 (iter-1): Initial architect handoff. Confirmed no backend changes. Defined ProfileCubit scope (ADR-1) and no-photo-upload (ADR-2). No new DTOs / endpoints / env vars.
+- 2026-05-13 (iter-4): Full architect handoff. AI Event Cover Image Generation. Backend: new `POST /events/generate-cover` endpoint in api-gateway. Frontend: EventFormState freezed refactor + new use case/service/DTO + cover preview UI. ADR-7 (freezed state split), ADR-8 (generateCover in EventFormCubit), ADR-9 (no new packages). UNSPLASH_ACCESS_KEY env var. 5 l10n keys.

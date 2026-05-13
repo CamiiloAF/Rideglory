@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/shared/cubits/form_image_cubit.dart';
-import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/event_form_content.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -16,9 +15,12 @@ class EventFormView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<EventFormCubit, ResultState<EventModel>>(
+    return BlocConsumer<EventFormCubit, EventFormState>(
+      listenWhen: (previous, current) =>
+          previous.saveResult != current.saveResult ||
+          previous.coverGenerationResult != current.coverGenerationResult,
       listener: (context, state) {
-        state.whenOrNull(
+        state.saveResult.whenOrNull(
           data: (event) {
             final isEditing = context.read<EventFormCubit>().isEditing;
             ScaffoldMessenger.of(context).showSnackBar(
@@ -42,11 +44,26 @@ class EventFormView extends StatelessWidget {
             );
           },
         );
+
+        state.coverGenerationResult.whenOrNull(
+          data: (imageUrl) {
+            context.read<FormImageCubit>().setRemoteImageUrl(imageUrl);
+          },
+          error: (error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(context.l10n.event_coverGenerateError),
+                backgroundColor: Theme.of(context).colorScheme.errorContainer,
+              ),
+            );
+            context.read<EventFormCubit>().resetCoverGeneration();
+          },
+        );
       },
       builder: (context, state) {
         final cubit = context.read<EventFormCubit>();
         final isEditing = cubit.isEditing;
-        final isLoading = state is Loading;
+        final isSaving = state.saveResult is Loading;
 
         return Scaffold(
           backgroundColor: AppColors.darkBackground,
@@ -67,7 +84,7 @@ class EventFormView extends StatelessWidget {
           ),
           body: const EventFormContent(),
           bottomNavigationBar: _EventFormBottomBar(
-            isLoading: isLoading,
+            isLoading: isSaving,
             isEditing: isEditing,
           ),
         );
@@ -115,9 +132,16 @@ class _EventFormBottomBar extends StatelessWidget {
           final imageCubit = context.read<FormImageCubit>();
           final event = await cubit.buildEventToSave();
           if (event != null) {
+            final imageState = imageCubit.state;
+            final imageData = imageState.whenOrNull(data: (data) => data);
             await cubit.saveEvent(
               event,
-              localCoverImagePath: imageCubit.selectedLocalImagePath,
+              localCoverImagePath: imageData?.hasLocalImage == true
+                  ? imageData?.localImagePath
+                  : null,
+              remoteCoverImageUrl: imageData?.hasLocalImage != true
+                  ? imageData?.remoteImageUrl
+                  : null,
             );
           }
         },

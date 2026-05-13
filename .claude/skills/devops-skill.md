@@ -114,3 +114,4 @@ Commands: `flutter pub get`, `dart run build_runner build --delete-conflicting-o
 - 2026-05-11 (iter 0): Skill stub created.
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
 - 2026-05-12 (iter 1): DevOps phase complete. GitHub Actions CI/CD pipeline implemented (`.github/workflows/ci.yml`), deployment documentation written (`docs/DEPLOY.md`), phase contract and handoff finalized. Secrets configuration guide and Firebase config injection instructions included.
+- 2026-05-13 (iter 4): Updated CI workflow and deployment docs for UNSPLASH_ACCESS_KEY secret injection. No Flutter package changes required. Backend CI integration deferred to rideglory-api repo.
