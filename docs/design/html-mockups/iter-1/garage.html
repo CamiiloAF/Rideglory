@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rideglory · Garage — Iter-1 Mockups</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* main vehicle card (full-width) */
+    .vehicle-main-card {
+      margin: 8px 16px 12px;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(135deg, #2D1A0A, #1A0D05);
+      border: 1px solid var(--border);
+    }
+    .vehicle-main-img {
+      width: 100%;
+      height: 200px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 90px;
+    }
+    .vehicle-main-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(17,17,17,.97) 0%, rgba(17,17,17,.4) 60%, transparent 100%);
+    }
+    .vehicle-main-content {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 16px;
+    }
+    .plate-tag {
+      display: inline-block;
+      background: #FBBF24;
+      color: #1F2937;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+    .vehicle-main-name { font-size: 20px; font-weight: 700; color: white; }
+    .vehicle-main-sub { font-size: 13px; color: rgba(255,255,255,.65); margin-top: 2px; }
+
+    /* quick action buttons below main card */
+    .quick-actions-row {
+      display: flex;
+      gap: 8px;
+      padding: 0 16px;
+      margin-bottom: 16px;
+    }
+    .qaction {
+      flex: 1;
+      height: 44px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      font-size: 13px; font-weight: 500; color: var(--text-primary);
+      cursor: pointer;
+    }
+
+    /* other vehicles list */
+    .other-vehicle-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .other-vehicle-thumb {
+      width: 56px; height: 56px;
+      border-radius: var(--r-sm);
+      background: linear-gradient(135deg, #2D1A0A, #1A0D05);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+    .other-vehicle-info { flex: 1; min-width: 0; }
+    .other-vehicle-name { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+    .other-vehicle-plate {
+      display: inline-block;
+      background: #FBBF24;
+      color: #1F2937;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 3px;
+      letter-spacing: 1px;
+      margin-top: 3px;
+    }
+
+    /* spec row in detail */
+    .spec-row {
+      display: flex;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    .spec-label { font-size: 13px; color: var(--text-secondary); flex: 1; }
+    .spec-value { font-size: 14px; font-weight: 500; color: var(--text-primary); text-align: right; }
+
+    /* form image upload banner */
+    .img-upload-banner {
+      margin: 0 16px 16px;
+      height: 160px;
+      border-radius: var(--r-md);
+      background: var(--surface-high);
+      border: 1.5px dashed var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    /* document section */
+    .doc-section { padding: 0 16px 12px; }
+    .doc-section-title {
+      font-size: 14px; font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+    .doc-slots-col { display: flex; flex-direction: column; gap: 8px; }
+  </style>
+</head>
+<body>
+  <h1 style="color:#f1f5f9;font-size:20px;font-weight:700;margin-bottom:8px;padding:0 16px;">
+    Garage — Iter-1 Mockups
+  </h1>
+  <p style="color:#94a3b8;font-size:14px;margin-bottom:24px;padding:0 16px;">
+    Frames: KCf6W (lista) · P1GSzZ (detalle) · EqnMm (formulario) · aGqnv (document slot pill) · Módulo PR 4/5
+  </p>
+
+  <div class="screens-row">
+
+    <!-- ═══════════════════════════════════════════════════
+         1. GARAGE LIST — Loading (skeleton)
+    ════════════════════════════════════════════════════ -->
+    <div>
+      <div class="screens-group-label">Garaje — Cargando</div>
+      <div class="device">
+        <div class="status-bar"><span class="time">9:41</span><div class="icons">📶 📡 🔋</div></div>
+        <div class="app-bar">
+          <span class="title">Mi garaje</span>
+          <button class="action-btn">+</button>
+        </div>
+        <div class="scroll-area">
+          <!-- Main card skeleton -->
+          <div class="skeleton" style="margin:8px 16px 12px;height:200px;border-radius:var(--r-lg);"></div>
+          <div style="display:flex;gap:8px;padding:0 16px;margin-bottom:16px;">
+            <div class="skeleton" style="flex:1;height:44px;border-radius:var(--r-sm);"></div>
+            <div class="skeleton" style="flex:1;height:44px;border-radius:var(--r-sm);"></div>
+            <div class="skeleton" style="flex:1;height:44px;border-radius:var(--r-sm);"></div>
+          </div>
+          <!-- Other vehicles skeleton -->
+          <div style="padding:0 16px;margin-bottom:8px;" class="skeleton" style="width:100px;height:18px;"></div>
+          <div class="skeleton" style="margin:0 16px;height:18px;width:100px;margin-bottom:10px;"></div>
+          <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px;">
+            <div class="skeleton" style="width:56px;height:56px;border-radius:var(--r-sm);"></div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:6px;justify-content:center;">
+              <div class="skeleton" style="width:120px;height:15px;"></div>
+              <div class="skeleton" style="width:70px;height:12px;"></div>
+            </div>
+          </div>
+          <div style="padding:12px 16px;display:flex;gap:12px;">
+            <div class="skeleton" style="width:56px;height:56px;border-radius:var(--r-sm);"></div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:6px;justify-content:center;">
+              <div class="skeleton" style="width:110px;height:15px;"></div>
+              <div class="skeleton" style="width:60px;height:12px;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Inicio</span></div>
+          <div class="nav-item"><span class="nav-icon">📅</span><span class="nav-label">Eventos</span></div>
+          <div class="nav-add">+</div>
+          <div class="nav-item active"><span class="nav-icon">🏍</span><span class="nav-label">Garaje</span></div>
+          <div class="nav-item"><span class="nav-icon">🔧</span><span class="nav-label">Taller</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         2. GARAGE LIST — With data (frame KCf6W)
+    ════════════════════════════════════════════════════ -->
+    <div>
+      <div class="screens-group-label">Garaje — Con datos (KCf6W)</div>
+      <div class="device">
+        <div class="status-bar"><span class="time">9:41</span><div class="icons">📶 📡 🔋</div></div>
+        <div class="app-bar">
+          <span class="title">Mi garaje</span>
+          <button class="action-btn">+</button>
+        </div>
+        <div class="scroll-area">
+          <!-- Main vehicle hero card -->
+          <div class="vehicle-main-card">
+            <div class="vehicle-main-img">🏍</div>
+            <div class="vehicle-main-overlay"></div>
+            <div class="vehicle-main-content">
+              <div style="margin-bottom:4px;">
+                <span class="badge badge-primary" style="font-size:10px;">⭐ Principal</span>
+              </div>
+              <div class="plate-tag">ABC 123</div>
+              <div class="vehicle-main-name">Honda CB500F 2022</div>
+              <div class="vehicle-main-sub">48,200 km · Sin novedad</div>
+            </div>
+          </div>
+          <!-- Quick actions -->
+          <div class="quick-actions-row">
+            <div class="qaction">🔧 <span>Taller</span></div>
+            <div class="qaction">📋 <span>Detalle</span></div>
+            <div class="qaction">⚙ <span>Editar</span></div>
+          </div>
+          <!-- Other vehicles -->
+          <div class="section-header">
+            <span class="section-title">Otras motos</span>
+            <span class="section-action">+ Agregar</span>
+          </div>
+          <div class="other-vehicle-item">
+            <div class="other-vehicle-thumb">🏍</div>
+            <div class="other-vehicle-info">
+              <div class="other-vehicle-name">Yamaha MT-07 2020</div>
+              <div class="other-vehicle-plate">XYZ 456</div>
+            </div>
+            <div style="font-size:18px;color:var(--text-muted);">›</div>
+          </div>
+          <div class="other-vehicle-item">
+            <div class="other-vehicle-thumb">🏍</div>
+            <div class="other-vehicle-info">
+              <div class="other-vehicle-name">Kawasaki Ninja 400</div>
+              <div class="other-vehicle-plate">DEF 789</div>
+            </div>
+            <div style="font-size:18px;color:var(--text-muted);">›</div>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Inicio</span></div>
+          <div class="nav-item"><span class="nav-icon">📅</span><span class="nav-label">Eventos</span></div>
+          <div class="nav-add">+</div>
+          <div class="nav-item active"><span class="nav-icon">🏍</span><span class="nav-label">Garaje</span></div>
+          <div class="nav-item"><span class="nav-icon">🔧</span><span class="nav-label">Taller</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         3. GARAGE LIST — Empty state
+    ════════════════════════════════════════════════════ -->
+    <div>
+      <div class="screens-group-label">Garaje — Vacío</div>
+      <div class="device">
+        <div class="status-bar"><span class="time">9:41</span><div class="icons">📶 📡 🔋</div></div>
+        <div class="app-bar">
+          <span class="title">Mi garaje</span>
+        </div>
+        <div class="scroll-area">
+          <div class="empty-state">
+            <div class="empty-icon">🏍</div>
+            <div class="empty-title">Tu garaje está vacío</div>
+            <div class="empty-subtitle">Agrega tu primera moto para llevar el control de mantenimientos y documentos</div>
+            <button class="btn-primary btn-sm" style="width:auto;padding:0 28px;margin-top:16px;">Agregar moto</button>
+          </div>
+        </div>
+        <div class="bottom-nav">
+          <div class="nav-item"><span class="nav-icon">🏠</span><span class="nav-label">Inicio</span></div>
+          <div class="nav-item"><span class="nav-icon">📅</span><span class="nav-label">Eventos</span></div>
+          <div class="nav-add">+</div>
+          <div class="nav-item active"><span class="nav-icon">🏍</span><span class="nav-label">Garaje</span></div>
+          <div class="nav-item"><span class="nav-icon">🔧</span><span class="nav-label">Taller</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         4. VEHICLE DETAIL — frame P1GSzZ
+    ════════════════════════════════════════════════════ -->
+    <div>
+      <div class="screens-group-label">Detalle moto (P1GSzZ)</div>
+      <div class="device">
+        <div class="status-bar"><span class="time">9:41</span><div class="icons">📶 📡 🔋</div></div>
+        <div style="flex:1;overflow-y:auto;padding-bottom:40px;">
+          <!-- Hero -->
+          <div class="vehicle-main-card" style="margin:0;border-radius:0;border-left:none;border-right:none;border-top:none;">
+            <div class="vehicle-main-img" style="height:180px;">🏍</div>
+            <div class="vehicle-main-overlay"></div>
+            <!-- Back + menu -->
+            <div style="position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;">
+              <div style="width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;">←</div>
+              <div style="width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;">⋮</div>
+            </div>
+            <div class="vehicle-main-content">
+              <div class="plate-tag">ABC 123</div>
+              <div class="vehicle-main-name">Honda CB500F 2022</div>
+            </div>
+          </div>
+          <!-- Spec chips row -->
+          <div style="display:flex;gap:8px;padding:12px 16px;overflow-x:auto;">
+            <div class="chip sm active">48,200 km</div>
+            <div class="chip sm">2022</div>
+            <div class="chip sm">500cc</div>
+            <div class="chip sm">Naked</div>
+          </div>
+          <div class="divider"></div>
+          <!-- Specs table -->
+          <div class="spec-row"><span class="spec-label">Marca</span><span class="spec-value">Honda</span></div>
+          <div class="spec-row"><span class="spec-label">Modelo</span><span class="spec-value">CB500F</span></div>
+          <div class="spec-row"><span class="spec-label">Año</span><span class="spec-value">2022</span></div>
+          <div class="spec-row"><span class="spec-label">Cilindraje</span><span class="spec-value">500 cc</span></div>
+          <div class="spec-row"><span class="spec-label">Kilometraje</span><span class="spec-value">48,200 km</span></div>
+          <div class="spec-row"><span class="spec-label">Color</span><span class="spec-value">Rojo mate</span></div>
+          <div class="divider" style="margin-bottom:12px;"></div>
+          <!-- Document slots (molecule aGqnv) -->
+          <div class="doc-section">
+            <div class="doc-section-title">Documentos</div>
+            <div class="doc-slots-col">
+              <div class="doc-slot-pill valid">
+                <span class="pill-icon">📄</span>
+                <span class="pill-label">SOAT</span>
+                <span class="pill-status">Vigente</span>
+                <span style="color:var(--text-muted);font-size:16px;">›</span>
+              </div>
+              <div class="doc-slot-pill expiring">
+                <span class="pill-icon">🔧</span>
+                <span class="pill-label">Técnico-mecánica</span>
+                <span class="pill-status">Por vencer</span>
+                <span style="color:var(--text-muted);font-size:16px;">›</span>
+              </div>
+            </div>
+          </div>
+          <!-- Actions -->
+          <div style="padding:0 16px 16px;display:flex;flex-direction:column;gap:10px;">
+            <button class="btn-primary">🔧 Ver mantenimientos</button>
+            <button class="btn-secondary">✏ Editar moto</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         5. ADD/EDIT VEHICLE FORM — frame EqnMm
+    ════════════════════════════════════════════════════ -->
+    <div>
+      <div class="screens-group-label">Agregar / editar moto (EqnMm)</div>
+      <div class="device">
+        <div class="status-bar"><span class="time">9:41</span><div class="icons">📶 📡 🔋</div></div>
+        <div class="app-bar">
+          <button class="back-btn">←</button>
+          <span class="title">Agregar moto</span>
+        </div>
+        <div class="scroll-area" style="padding-bottom:40px;">
+          <!-- Image upload -->
+          <div class="img-upload-banner">
+            <span style="font-size:36px;">📸</span>
+            <span style="font-size:13px;color:var(--text-secondary);">Foto de la moto (opcional)</span>
+            <span style="font-size:12px;color:var(--primary);font-weight:500;">Toca para subir</span>
+          </div>
+          <!-- Basic info -->
+          <div class="page-section">
+            <div style="font-size:12px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Información del vehículo</div>
+            <div class="input-group">
+              <label class="input-label">Marca *</label>
+              <div class="input-field"><span class="placeholder">Selecciona la marca</span></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div class="input-group">
+                <label class="input-label">Modelo *</label>
+                <div class="input-field"><span class="placeholder">CB500F</span></div>
+              </div>
+              <div class="input-group">
+                <label class="input-label">Año *</label>
+                <div class="input-field"><span class="placeholder">2022</span></div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div class="input-group">
+                <label class="input-label">Cilindraje (cc)</label>
+                <div class="input-field"><span class="placeholder">500</span></div>
+              </div>
+              <div class="input-group">
+                <label class="input-label">Color</label>
+                <div class="input-field"><span class="placeholder">Rojo mate</span></div>
+              </div>
+            </div>
+            <div class="input-group">
+              <label class="input-label">Placa *</label>
+              <div class="input-field"><span class="placeholder">ABC 123</span></div>
+            </div>
+            <div class="input-group">
+              <label class="input-label">Kilometraje actual</label>
+              <div class="input-field"><span class="placeholder">48200</span></div>
+            </div>
+          </div>
+          <!-- Document slots (stub — iter-2 SOAT) -->
+          <div class="page-section">
+            <div style="font-size:12px;font-weight:600;color:var(--primary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">Documentos</div>
+            <div class="doc-slots-col">
+              <div class="doc-slot-pill empty">
+                <span class="pill-icon">📄</span>
+                <span class="pill-label">SOAT</span>
+                <span class="pill-status">Sin registrar</span>
+                <span style="color:var(--text-muted);font-size:16px;">+</span>
+              </div>
+              <div class="doc-slot-pill empty">
+                <span class="pill-icon">🔧</span>
+                <span class="pill-label">Técnico-mecánica</span>
+                <span class="pill-status">Sin registrar</span>
+                <span style="color:var(--text-muted);font-size:16px;">+</span>
+              </div>
+            </div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:8px;">Los documentos se configuran luego desde el detalle de la moto</div>
+          </div>
+          <!-- Save -->
+          <div class="page-section">
+            <button class="btn-primary">Guardar moto</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         6. DOCUMENT SLOT PILL — All states (molecule aGqnv)
+    ════════════════════════════════════════════════════ -->
+    <div>
+      <div class="screens-group-label">DocumentSlotPill — molecule aGqnv</div>
+      <div class="device">
+        <div class="status-bar"><span class="time">9:41</span><div class="icons">📶 📡 🔋</div></div>
+        <div class="app-bar">
+          <span class="title">DocumentSlotPill — 4 estados</span>
+        </div>
+        <div style="flex:1;padding:20px 16px;display:flex;flex-direction:column;gap:20px;">
+          <!-- Empty state -->
+          <div>
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Estado: empty</div>
+            <div class="doc-slot-pill empty">
+              <span class="pill-icon">📄</span>
+              <span class="pill-label">SOAT</span>
+              <span class="pill-status">Sin registrar</span>
+            </div>
+          </div>
+          <!-- Valid state -->
+          <div>
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Estado: valid</div>
+            <div class="doc-slot-pill valid">
+              <span class="pill-icon">📄</span>
+              <span class="pill-label">SOAT</span>
+              <span class="pill-status">✓ Vigente</span>
+            </div>
+          </div>
+          <!-- Expiring soon state -->
+          <div>
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Estado: expiringSoon</div>
+            <div class="doc-slot-pill expiring">
+              <span class="pill-icon">⚠</span>
+              <span class="pill-label">Técnico-mecánica</span>
+              <span class="pill-status">Por vencer</span>
+            </div>
+          </div>
+          <!-- Expired state -->
+          <div>
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Estado: expired</div>
+            <div class="doc-slot-pill expired">
+              <span class="pill-icon">❌</span>
+              <span class="pill-label">SOAT</span>
+              <span class="pill-status">Vencido</span>
+            </div>
+          </div>
+          <!-- API -->
+          <div style="background:#1a1a1a;border-radius:var(--r-sm);padding:12px;font-size:12px;color:#94a3b8;font-family:monospace;">
+            <div style="color:#f98c1f;margin-bottom:6px;">DocumentSlotPill API</div>
+            <div>label: String</div>
+            <div>state: DocumentSlotState</div>
+            <div>  .empty | .valid</div>
+            <div>  .expiringSoon | .expired</div>
+            <div>onTap: VoidCallback?</div>
+            <div>leading: IconData?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end screens-row -->
+
+  <!-- Gap analysis -->
+  <div style="max-width:960px;margin:32px 16px 0;padding:20px;background:#1a1a1a;border-radius:12px;border:1px solid #2d2d2d;">
+    <h2 style="color:#f98c1f;font-size:16px;font-weight:600;margin-bottom:12px;">Gap analysis — Garage (US-1-7, US-1-8) · Frames KCf6W, P1GSzZ, EqnMm, aGqnv</h2>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;color:#94a3b8;">
+      <thead><tr style="border-bottom:1px solid #2d2d2d;">
+        <th style="text-align:left;padding:6px 8px;color:#f1f5f9;">Archivo</th>
+        <th style="text-align:left;padding:6px 8px;color:#f1f5f9;">Mismatch detectado</th>
+        <th style="text-align:left;padding:6px 8px;color:#f1f5f9;">Corrección</th>
+      </tr></thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #1f1f1f;"><td style="padding:6px 8px;">vehicle_detail_view.dart:47</td><td style="padding:6px 8px;">Color(0xFF1C1C1E) hardcodeado</td><td style="padding:6px 8px;">AppColors.darkSurface</td></tr>
+        <tr style="border-bottom:1px solid #1f1f1f;"><td style="padding:6px 8px;">vehicle_spec_row.dart:24</td><td style="padding:6px 8px;">Color(0xFF2C241E)</td><td style="padding:6px 8px;">AppColors.darkSurfaceHighest</td></tr>
+        <tr style="border-bottom:1px solid #1f1f1f;"><td style="padding:6px 8px;">vehicle_garage_overview_item.dart:21,29</td><td style="padding:6px 8px;">Color(0xFF2C2C2E), Color(0xFF3A3A3C)</td><td style="padding:6px 8px;">AppColors.darkSurface / darkBorder</td></tr>
+        <tr style="border-bottom:1px solid #1f1f1f;"><td style="padding:6px 8px;">vehicle_quick_info_section.dart:23</td><td style="padding:6px 8px;">Colors.grey[500]</td><td style="padding:6px 8px;">AppColors.darkTextSecondary</td></tr>
+        <tr style="border-bottom:1px solid #1f1f1f;"><td style="padding:6px 8px;">vehicle_maintenance_history_section.dart (múltiples)</td><td style="padding:6px 8px;">Color(0xFF2C241E), Color(0xFF2C2C2E), Colors.grey[600/400]</td><td style="padding:6px 8px;">AppColors.darkSurface / darkSurfaceHighest / darkTextSecondary</td></tr>
+        <tr style="border-bottom:1px solid #1f1f1f;"><td style="padding:6px 8px;">garage_options_bottom_sheet.dart:97</td><td style="padding:6px 8px;">Colors.grey[700]</td><td style="padding:6px 8px;">AppColors.darkBorder</td></tr>
+        <tr style="border-bottom:1px solid #1f1f1f;"><td style="padding:6px 8px;">garage_page_view.dart:157</td><td style="padding:6px 8px;">backgroundColor: AppColors.darkSurface — revisar vs. frame</td><td style="padding:6px 8px;">colorScheme.surface si semántico</td></tr>
+        <tr><td style="padding:6px 8px;">DocumentSlotPill (NEW molecule)</td><td style="padding:6px 8px;">No existe lib/design_system/molecules/feedback/document_slot_pill.dart</td><td style="padding:6px 8px;color:#f59e0b;">Crear durante PR 4 — pre-condición US-1-7</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>

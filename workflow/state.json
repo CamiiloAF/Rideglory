@@ -520,8 +520,8 @@
     },
     "design": {
       "status": "idle",
-      "lastAction": null,
-      "focus": null
+      "lastAction": "2026-05-14T07:00:00Z",
+      "focus": "iter-1 design complete: gap analysis, 5 HTML mockup modules (15 screens), UI copy, component hierarchy, auth frames gate established"
     },
     "backend": {
       "status": "idle",
@@ -725,6 +725,22 @@
       "agent": "architect",
       "at": "2026-05-14T05:00:00Z",
       "detail": "Iter-1 is presentation-layer only — no backend/domain changes. Component extraction plan + color tokenization strategy defined."
+    },
+    {
+      "type": "design_iteration",
+      "iteration": 1,
+      "phase": "design",
+      "agent": "design",
+      "at": "2026-05-14T07:00:00Z",
+      "detail": "Design phase active: gap analysis performed, 5 HTML mockup modules produced, UI copy and component hierarchy documented."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 1,
+      "phase": "design",
+      "agent": "design",
+      "at": "2026-05-14T07:00:00Z",
+      "detail": "5 module mockups produced covering all 15 screens. Component hierarchy and copy documented. Auth frames gate established. Donut chart scoped to color-only. AppEventBadge and DocumentSlotPill primitives fully specified."
     }
   ]
 }

@@ -16,8 +16,8 @@
 |-------|-------|--------|
 | po_scope | PO | ✅ done |
 | architect | Architect | ✅ done |
-| design | Design | ⏳ pending |
-| backend | Backend | ⏳ pending |
+| design | Design | ✅ done |
+| backend | Backend | — (no backend work iter-1) |
 | frontend | Flutter Dev | ⏳ pending |
 | qa | QA | ⏳ pending |
 | devops | DevOps | ⏳ pending |
@@ -25,7 +25,17 @@
 | tech_lead | Tech Lead | ⏳ pending |
 | po_close | PO | ⏳ pending |
 
-**Last completed phase:** architect (2026-05-14)
-**Next phase:** design
+**Last completed phase:** design (2026-05-14)
+**Next phase:** frontend
+
+### Design phase summary
+- Gap analysis: 15 screens analyzed via codebase inspection
+- 5 HTML mockup modules produced (35+ screens/states total)
+- New primitives specified: `AppEventBadge` (atom, lib/design_system/atoms/badges/), `DocumentSlotPill` (molecule, lib/design_system/molecules/feedback/)
+- Auth frames gate: 8 frames must be created in rideglory.pen before US-1-3 (T-1-3)
+- Donut chart scope decision: color-only for iter-1, no geometry change
+- Full UI copy (ARB keys) for all 5 modules documented
+- Error messages mapped to API error codes
+- Pencil MCP unavailable during session — HTML mockups serve as design gate; frontend agent must open rideglory.pen and verify/create frames before PR 1
 
 *Last closed: —*

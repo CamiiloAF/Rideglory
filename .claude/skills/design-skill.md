@@ -177,3 +177,57 @@ Pantallas que pueden NO existir todavía en Pencil (crear si faltan):
 
 ## Change log
 - 2026-05-13 (plan v3 approval): Frame inventory, iter-1 gap analysis process, atom extraction pre-conditions, and per-iteration design scope documented.
+- 2026-05-14 (iter-1 design complete): Gap analysis complete. 5 HTML mockup modules produced. Auth frames gate: 8 frames to create in rideglory.pen (Auth — Splash/Login/Signup/PasswordRecovery). Donut chart: color-only scope for iter-1. See docs/handoffs/design.md for full details.
+
+---
+
+## Iter-1 design decisions (locked)
+
+### Auth frames gate
+8 frames missing from rideglory.pen inventory — must be created before T-1-3:
+- `Auth — Splash — Loading`
+- `Auth — Splash — Error`
+- `Auth — Login — Default`
+- `Auth — Login — Error`
+- `Auth — Signup — Default`
+- `Auth — Signup — Error`
+- `Auth — PasswordRecovery — Email`
+- `Auth — PasswordRecovery — Sent`
+
+### Donut chart (frame Ako7u) — iter-1 scope
+**Color-only** update. No geometry or animation changes in iter-1:
+- Urgent: `AppColors.error` (#EF4444)
+- Warning: `AppColors.warning` (#F59E0B)
+- OK: `AppColors.success` (#10B981)
+- Track: `AppColors.darkSurfaceHighest`
+
+### New design-system primitives
+
+**AppEventBadge** (atom — PR 3 pre-condition)
+- Path: `lib/design_system/atoms/badges/app_event_badge.dart`
+- Variants: `scheduled`, `inProgress`, `finished`, `cancelled`, `free`, `paid`
+- Size: 24px height, 6px border radius, 11px Space Grotesk 700
+
+**DocumentSlotPill** (molecule — PR 4 pre-condition)
+- Path: `lib/design_system/molecules/feedback/document_slot_pill.dart`
+- States: `empty`, `valid`, `expiringSoon`, `expired`
+- Min height 44px, 8px border radius, darkSurfaceHighest bg
+
+### Specific color violations identified in codebase
+| File | Violation | Fix |
+|------|-----------|-----|
+| home_event_default_background.dart:14 | Color(0xFF2D1A0A), Color(0xFF1A0D05) | AppColors.darkSurface / darkSurfaceHighest |
+| vehicle_detail_view.dart:47 | Color(0xFF1C1C1E) | AppColors.darkSurface |
+| vehicle_spec_row.dart:24 | Color(0xFF2C241E) | AppColors.darkSurfaceHighest |
+| vehicle_garage_overview_item.dart:21,29 | Color(0xFF2C2C2E), Color(0xFF3A3A3C) | AppColors.darkSurface / darkBorder |
+| vehicle_quick_info_section.dart:23 | Colors.grey[500] | AppColors.darkTextSecondary |
+| vehicle_maintenance_history_section.dart | Multiple grey + Color() refs | AppColors.darkSurface / darkSurfaceHighest |
+| garage_options_bottom_sheet.dart:97 | Colors.grey[700] | AppColors.darkBorder |
+| login_view.dart:38 | Colors.green (SnackBar) | AppColors.success |
+| maintenances_page.dart:178 | Colors.green / Colors.red (SnackBar) | AppColors.success / error |
+| event_form_multi_brand_section.dart:184 | TextFormField (wrong widget) | AppTextField |
+
+### Pencil MCP learnings
+- Pencil desktop app must be running before `open_document` works. If unavailable, HTML mockups serve as design gate but Pencil frames must still be verified/created before frontend starts.
+- Use `snapshot_layout` for structural checks, `get_screenshot` only for visual fidelity verification.
+- Auth frames do not exist in rideglory.pen — create with pattern `[Feature] — [Screen] — [State]`.
