@@ -775,7 +775,7 @@
       "iteration": 2,
       "description": "Tech Lead: review all iter-2 PRs for Clean Architecture compliance — layer violations, cursor pagination enforcement (no offset/limit), FCM background handler pattern (@pragma + DI re-init), DocumentSlotPill caller pattern (localized stateLabel), SOAT badge state boundary logic, app_es.arb completeness (soat_ and notification_ key prefixes).",
       "agent": "tech_lead",
-      "status": "blocked",
+      "status": "backlog",
       "storyRef": "US-2-1, US-2-7, US-2-8",
       "title": "Tech Lead: PR review — FCM pattern, cursor pagination, DocumentSlotPill contract",
       "updatedAt": "2026-05-15T00:30:00Z",
