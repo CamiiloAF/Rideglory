@@ -115,3 +115,36 @@ Commands: `flutter pub get`, `dart run build_runner build --delete-conflicting-o
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
 - 2026-05-12 (iter 1): DevOps phase complete. GitHub Actions CI/CD pipeline implemented (`.github/workflows/ci.yml`), deployment documentation written (`docs/DEPLOY.md`), phase contract and handoff finalized. Secrets configuration guide and Firebase config injection instructions included.
 - 2026-05-13 (iter 4): Updated CI workflow and deployment docs for UNSPLASH_ACCESS_KEY secret injection. No Flutter package changes required. Backend CI integration deferred to rideglory-api repo.
+
+---
+## Plan reapproval update — 2026-05-13 (plan v3, iters 1–5)
+
+### CI/CD considerations by iteration
+
+**Iter-1 (Redesign):**
+- No new env vars; no new CI steps
+- Verify flutter test passes on all 5–6 module PRs in CI before merge
+- dart analyze must be a blocking CI gate (currently must verify this)
+
+**Iter-2 (Notifications):**
+- GOOGLE_SERVICES_JSON and FIREBASE_OPTIONS secrets must be set in GitHub Actions before iter-2 CI can run firebase_messaging
+- No new backend env vars beyond DATABASE_URL for api-gateway (new Prisma)
+
+**Iter-3 (Mapbox):**
+- CRITICAL: After Story 3.0 merges, update Cocoapods cache key in GitHub Actions — Mapbox iOS binary (~200MB via SPM/Cocoapods) will bust existing cache
+- MAPBOX_ACCESS_TOKEN must be added to GitHub Actions secrets and injected into AndroidManifest and Info.plist during build (do not hardcode in source)
+- flutter build apk / flutter build ios must still pass after Mapbox migration
+
+**Iter-5 (Deep Links):**
+- Firebase Hosting or backend must serve /.well-known/assetlinks.json and /.well-known/apple-app-site-association
+- Redirect page for users without the app (store redirect): verify with curl in CI or deploy checklist
+- Apple Developer Portal + Firebase Console Apple provider: manual setup required before CI can test Apple Sign-In
+
+### General CI requirements (all iters)
+- Flutter stable channel, `subosito/flutter-action@v2`
+- flutter pub get → dart run build_runner build --delete-conflicting-outputs → dart analyze → flutter test → flutter build apk --release
+- Firebase config injection from GitHub Actions secrets (never commit google-services.json)
+- Branch protection: PR must be green on CI before merge
+
+## Change log
+- 2026-05-13 (plan v3 approval): CI considerations per iteration documented. Mapbox cache bust and Firebase secrets requirements noted.

@@ -133,3 +133,47 @@ Pantallas que pueden NO existir todavía en Pencil (crear si faltan):
 ## Change log
 
 - 2026-05-13: Skill reescrito desde cero. Reset completo de iteraciones anteriores. Fuente de verdad: REQUIREMENTS.md + rideglory.pen.
+
+---
+## Plan reapproval update — 2026-05-13 (plan v3, iters 1–5)
+
+### Design source of truth
+- `rideglory.pen` (Pencil MCP) is the ONLY design source. Never design from scratch.
+- Pencil MCP tools: get_editor_state, open_document, batch_get, get_screenshot, batch_design, export_nodes.
+
+### Iter-1 (Redesign) — design-heavy iteration
+- 15 screens to audit vs rideglory.pen. Produce gap analysis BEFORE any Flutter code.
+- Key frame IDs (REQUIREMENTS.md Appendix A): dyWWs (Home), Neipf (Events List), kAubW (Event Detail), zbCa0 (Create Event), KCf6W (Garage), P1GSzZ (Vehicle Detail), EqnMm (Add Vehicle), Ako7u (Maintenance Dashboard), SykjL (Maintenance History), J5h6P / eK2WW / ELB5u (Maintenance Form steps), oUv12 (Registration Detail), VMmN0 (Tab Bar), zKkmE (Event Badge).
+- Auth frames (Login/Signup/PasswordRecovery): NO frame IDs in Appendix A — create frames in rideglory.pen before Story 1.3 begins.
+- `app_event_badge.dart` atom: extract from frame zKkmE BEFORE Story 1.5.
+- Document slot pill (aGqnv): extract as molecule DURING Story 1.7.
+- Donut chart (Ako7u): confirm if colors-only or geometry change — if geometry, descope to colors-only for iter-1.
+
+### Iter-2 (SOAT + Notifications) — new screens
+- SOAT upload, SOAT manual form, SOAT 4-state badge (Sin SOAT / Vigente / Por vencer / Vencido), notification center.
+- Notification row: generic template with icon slot for 6 types.
+- ManageAttendeesPage (Story 2.9): confirm frame dUc9h scope (list + edit, or edit only).
+
+### Iter-3 (Tracking) — map-heavy screens
+- SOS button placement and confirmation dialog in frame qonbS.
+- Organizer control bar (conditionally visible — organizer only).
+- Red pulsing SOS marker animation spec.
+- Android foreground service notification text spec.
+- Empty state for "rider has no phone number" in SOS banner.
+
+### Iter-4 (Followers + Profile) — social screens
+- Frame A7qDd (Profile) MUST be updated to final design before iter-4 starts.
+- Follower/following list: quick-follow button must be visually distinct from profile-level follow button.
+- Optimistic update visual: follow button shows loading state during API call; reverts visually on failure.
+
+### Iter-5 (Deep Links) — minimal new UI
+- Share button in EventDetailPage confirmed in existing frame.
+- Apple Sign-In: black button, white Apple logo, "Continuar con Apple" text — HIG compliance mandatory.
+- Store redirect fallback page: show Rideglory logo + CTA (not a blank HTTP redirect).
+
+### Design system tokens (locked)
+- Background: #111111 | Primary orange: #f98c1f | Font: Space Grotesk | Border radius: 8px (cards: 12px, bottom sheets: 24px)
+- Dark theme only. All UI copy in Spanish (sentence case for buttons).
+
+## Change log
+- 2026-05-13 (plan v3 approval): Frame inventory, iter-1 gap analysis process, atom extraction pre-conditions, and per-iteration design scope documented.

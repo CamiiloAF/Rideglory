@@ -93,6 +93,7 @@ Commands: `dart analyze`, `flutter test`, `dart run build_runner build --delete-
 - 2026-05-13 (iter-4): ClaudeService (Anthropic SDK) does NOT exist in rideglory-api yet — iter-3a (SOAT backend) was planned but not executed before iter-4. Backend agent must create both ClaudeService and UnsplashService from scratch. Both live in `api-gateway/src/common/`.
 - 2026-05-13 (iter-4): EventFormCubit currently extends `Cubit<ResultState<EventModel>>`. The @freezed EventFormState refactor (ADR-7) WILL break all existing `BlocBuilder<EventFormCubit, ResultState<EventModel>>` usages. Frontend must update all consumers and QA must update all existing cubit tests.
 - 2026-05-13 (iter-4): FormImageCubit is a shared widget-level cubit (not DI singleton) — it's created per-page via `BlocProvider`. When EventFormCubit.generateCover() succeeds, use a BlocListener (not direct call) to invoke `FormImageCubit.setRemoteImageUrl()` so widget rebuilds correctly.
+- 2026-05-14 (iter-1, redesign): Iter-1 is **presentation-layer only** — zero backend, zero domain, zero data, zero DI, zero router edits. The architect's job collapses to (1) confirming the constraint, (2) extracting two design-system primitives (`AppEventBadge` atom from frame `zKkmE`, `DocumentSlotPill` molecule from frame `aGqnv`), (3) writing the color-tokenization policy (3-tier: `colorScheme` → `AppColors` → status palette), and (4) sequencing 5 module-scoped PRs. The `DocumentSlotPill` is built in iter-1 specifically for visual-only redesign but the molecule contract is designed for iter-2 SOAT reuse — pure presentation primitive, state enum-driven, no feature coupling. Existing component adoption is high: only ~3 files use raw `ElevatedButton`/`TextFormField`/`AlertDialog`; the heavy lift is ~99 files with `Colors.<named>` and ~20 files with `Color(0xFF…)` literals.
 
 ---
 
@@ -102,3 +103,40 @@ Commands: `dart analyze`, `flutter test`, `dart run build_runner build --delete-
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
 - 2026-05-12 (iter-1): Architect phase complete. Confirmed no backend changes. Defined ProfileCubit DI scope (ADR-1, lazySingleton in root MultiBlocProvider). Confirmed no photo upload v1 (ADR-2). New artifacts: GetMyProfileUseCase + ProfileCubit + initials helper. l10n keys with `profile_` prefix. DIAGRAMS.md initialized with profile fetch sequence.
 - 2026-05-13 (iter-4): Architect phase complete. Full-stack AI cover generation. Backend: POST /events/generate-cover in api-gateway (ClaudeService + UnsplashService). Flutter: EventFormState @freezed refactor (ADR-7), GetGenerateCoverUseCase + EventCoverService + CoverGenerationDto + EventCoverRepositoryImpl (ADR-8), no new packages (ADR-9). UNSPLASH_ACCESS_KEY env var. 5 l10n keys (event_ prefix). Cover generation sequence + EventFormState class diagram added to DIAGRAMS.md. Confirmed ClaudeService not yet in codebase — backend must implement from scratch for iter-4 (iter-3a was planned but not yet executed).
+
+---
+## Plan reapproval update — 2026-05-13 (plan v3, iters 1–5)
+
+### Architectural constraints and new patterns
+
+**Iter-1 (Redesign):** Presentation-layer only. ~95–135 files across 6 modules. No DTOs, no code gen, no DI. 5–6 module-scoped PRs (max 40 files each) required.
+
+**Iter-2 (SOAT + Notifications):**
+- New Flutter packages: `firebase_messaging ^15.x`, `flutter_local_notifications`
+- Background handler: top-level function with `@pragma('vm:entry-point')`; `configureDependencies()` called inside handler
+- api-gateway: `prisma init` + `prisma migrate dev` (FIRST-TIME — NOT reset)
+- 4 existing microservices: `prisma migrate reset` (after seed.ts created)
+- Notification pagination: cursor-based (`?cursor=<lastId>&limit=20`, `{ data, nextCursor }`)
+- notifications table in api-gateway (no new microservice)
+
+**Iter-3 (Tracking + Mapbox):**
+- `mapbox_maps_flutter ^2.6.x` replaces `google_maps_flutter` — Story 3.0 hard blocker
+- 4 Dart files to migrate; route via `GeoJsonSource + LineLayer` (not PolylineAnnotationManager)
+- Route stored as GeoJSON LineString (`routeGeoJson Json?`) in events-ms, not encoded polyline
+- Route adherence: Haversine client-side over GeoJSON coordinates (no external library)
+- `flutter_foreground_task` + `IsolateNameServer` for Android background GPS; `geolocator` with `AppleSettings` for iOS
+- Mapbox public token (`pk.*`) in AndroidManifest.xml and Info.plist (safe to commit)
+
+**Iter-4 (Followers):**
+- FollowCubit: `@freezed FollowState` (not ResultState<T>) — documented exception for optimistic update
+- FollowCubit DI: factory with userId param — documented exception to @injectable singleton
+- PublicVehicleDto: separate class from VehicleDto (not VehicleDto with null fields)
+
+**Iter-5 (Deep Links):**
+- `app_links ^6.x` — Firebase Dynamic Links is EOL Aug 2025, never use
+- `sign_in_with_apple ^6.x` — iOS only; manual Xcode entitlement required
+- GoRouter must be GetIt-registered for NotificationRouteHandler — assess in iter-4, plan as Story 5.0 if refactor needed
+
+## Change log
+- 2026-05-13 (plan v3 approval): New packages, patterns, and architectural exceptions documented for iters 1–5.
+- 2026-05-14 (iter 1): Architect phase complete. Presentation-layer-only constraint locked. Two design-system primitives specified (`AppEventBadge` atom, `DocumentSlotPill` molecule); 3-tier color tokenization policy defined; 5-PR module cadence validated; backend stand-down confirmed.

@@ -15,7 +15,7 @@
 | Phase | Agent | Status |
 |-------|-------|--------|
 | po_scope | PO | ✅ done |
-| architect | Architect | ⏳ pending |
+| architect | Architect | ✅ done |
 | design | Design | ⏳ pending |
 | backend | Backend | ⏳ pending |
 | frontend | Flutter Dev | ⏳ pending |
@@ -25,7 +25,7 @@
 | tech_lead | Tech Lead | ⏳ pending |
 | po_close | PO | ⏳ pending |
 
-**Last completed phase:** po_scope (2026-05-13)
-**Next phase:** architect
+**Last completed phase:** architect (2026-05-14)
+**Next phase:** design
 
 *Last closed: —*
