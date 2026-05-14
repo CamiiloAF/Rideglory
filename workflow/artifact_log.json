@@ -48,6 +48,37 @@
         "docs/handoffs/iteration_checkpoint.md",
         "workflow/state.json"
       ]
+    },
+    {
+      "at": "2026-05-14T05:19:50Z",
+      "iteration": 1,
+      "phase": "devops",
+      "agent": "devops",
+      "action": "update",
+      "paths": [
+        "claude/skills/devops-skill.md",
+        "docs/DEPLOY.md",
+        "docs/handoffs/contracts/iter-1/devops.json",
+        "docs/handoffs/devops.md",
+        "docs/handoffs/iteration_checkpoint.md",
+        "github/workflows/ci.yml",
+        "workflow/state.json"
+      ]
+    },
+    {
+      "at": "2026-05-14T05:32:35Z",
+      "iteration": 1,
+      "phase": "tech_lead",
+      "agent": "tech_lead",
+      "action": "update",
+      "paths": [
+        "claude/skills/tech_lead-skill.md",
+        "docs/architecture/code-review-iter1.md",
+        "docs/handoffs/contracts/iter-1/tech_lead.json",
+        "docs/handoffs/iteration_checkpoint.md",
+        "docs/handoffs/tech_lead.md",
+        "workflow/state.json"
+      ]
     }
   ]
 }

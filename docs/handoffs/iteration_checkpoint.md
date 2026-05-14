@@ -21,12 +21,12 @@
 | frontend | Flutter Dev | ✅ done |
 | qa | QA | ✅ done |
 | devops | DevOps | ✅ done |
-| pr | System | ⏳ pending |
-| tech_lead | Tech Lead | ⏳ pending |
+| pr | System | ✅ done |
+| tech_lead | Tech Lead | ✅ done |
 | po_close | PO | ⏳ pending |
 
-**Last completed phase:** devops (2026-05-14)
-**Next phase:** pr
+**Last completed phase:** tech_lead (2026-05-14)
+**Next phase:** po_close
 
 ### Design phase summary
 - Gap analysis: 15 screens analyzed via codebase inspection

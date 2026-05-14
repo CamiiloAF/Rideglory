@@ -152,6 +152,15 @@ Commands: `dart analyze --no-summary`, `grep -rn "print(" lib/`, `dart fix --app
 - **`flutter gen-l10n` can run standalone** even when `build_runner` is broken — ARB keys can be added and localization regenerated independently.
 - **Pre-existing `withOpacity` deprecations are info-level** and should be batched in a dedicated cleanup iteration, not fixed one by one during feature reviews (too much churn in shared widgets).
 
+### Iteration 1 (2026-05-14, redesign PR #13)
+
+- **`Colors.black87` is not in the allowed set.** The allowed Colors.* are only `Colors.transparent`, `Colors.black`, and `Colors.white`. `Colors.black87` replaced `Color(0xDD000000)` and `Color(0xE0000000)` in gradient overlays — tolerable but technically non-compliant. Correct form: `Colors.black.withValues(alpha: 0.87)`.
+- **Molecules without `BuildContext` must not have hardcoded string fallbacks.** `DocumentSlotPill` has Spanish fallback strings in its `effectiveStateLabel` default. Callers using this molecule must always pass the `stateLabel` parameter explicitly via `context.l10n.vehicle_doc_state_*`. Add a code comment to enforce this contract.
+- **Short local variable names are acceptable in design-system atoms when scope is narrow.** `final fg = _foregroundColor()` in `AppEventBadge.build()` is tolerable: type is `Color`, origin is a private method named clearly, usage is on the next line. Flag but do not block.
+- **Pre-existing violations (AlertDialog, TextFormField, showDialog, goNamed) should not be counted against the current PR** if those files are untouched. Confirm with `git diff main..iter-1 -- <file>` — empty diff = pre-existing, not the PR author's responsibility.
+- **`gh pr diff <n>` returns empty when the branch has no GitHub-format diff available locally.** Use `git diff main..<branch> -- 'lib/'` instead to get the actual code diff for review.
+- **Design-system primitives (atoms/molecules) may contain enums in the same file** — this is not a one-widget-per-file violation because enums are not widgets.
+
 ---
 
 ## Change log
@@ -160,6 +169,7 @@ Commands: `dart analyze --no-summary`, `grep -rn "print(" lib/`, `dart fix --app
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
 - 2026-05-12 (iter 1): Gotchas and learnings appended after PR #8 review. 6 blocking issues fixed.
 - 2026-05-13 (iter 4): PR #11 reviewed and approved. 1 blocking fix: prefer_const_constructors in test file (const Right, Left, DomainException). dart analyze 34 pre-existing items only. flutter test 7/7. code-review-iter4.md produced.
+- 2026-05-14 (iter 1): PR #13 reviewed and approved. 0 blocking issues. dart analyze 0 errors/0 warnings (33 pre-existing info items). flutter test 28 pass/4 pre-existing fail. 3 deferred non-blockers: Colors.black87 in gradient overlays, DocumentSlotPill hardcoded fallback strings, 4 pre-existing raw widget violations. code-review-iter1.md produced.
 
 ---
 ## Plan reapproval update — 2026-05-13 (plan v3, iters 1–5)
