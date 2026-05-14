@@ -113,3 +113,28 @@ However, 4 coding-standards violations are blocking: (1) raw `TextButton` in 2 A
 
 ## Change log
 - 2026-05-15: Initial review — PR #14 — BLOCKED (4 blocking coding-standards violations)
+
+## Re-review cycle
+
+**Date:** 2026-05-15
+**Verdict:** APPROVED
+
+### Violation checks
+
+| Blocking ID | Status | Evidence |
+|-------------|--------|---------|
+| BLOCKING-1: Raw TextButton | FIXED | notifications_view.dart uses `AppTextButton(label: context.l10n.notification_markAllRead, onPressed: ...)`. soat_status_page.dart now a thin page wrapper — AppTextButton is used in the extracted SoatStatusView widget. No raw TextButton remaining in either file. |
+| BLOCKING-2: One-widget-per-file | FIXED | 8 extracted soat widget files: `soat_data_view.dart`, `soat_detail_row.dart`, `soat_empty_state.dart`, `soat_manual_form_view.dart`, `soat_section_header.dart`, `soat_source_grid.dart`, `soat_source_option.dart`, `soat_status_view.dart`. 3 extracted notifications widget files: `notifications_data_view.dart`, `notifications_empty_state.dart`, `notifications_error_state.dart`. All 4 original page files now contain exactly one widget class each. |
+| BLOCKING-3: Hardcoded Semantics strings | FIXED | ARB keys added to `app_es.arb`: `notification_bell_unread_label` (with `{count}` placeholder), `notification_bell_label`, `notification_item_accessibility_label` (with `{title}`, `{time}` placeholders). `notification_bell_button.dart` uses `context.l10n.notification_bell_unread_label(unread)` / `context.l10n.notification_bell_label`. `notification_item.dart` uses `context.l10n.notification_item_accessibility_label(...)`. |
+| BLOCKING-4: MaterialPageRoute bypasses go_router | FIXED | `AppRoutes.soatUpload`, `AppRoutes.soatStatus`, `AppRoutes.soatManualForm` constants added to `app_routes.dart`. All 3 routes registered in `app_router.dart` via `GoRoute`. No `Navigator.push(MaterialPageRoute(...))` remaining in any soat file. |
+
+### Quality gates
+
+| Gate | Result |
+|------|--------|
+| dart analyze | PASS — No issues found! (0 errors, 0 warnings) |
+| flutter test | PASS — 64 pass / 1 pre-existing fail (TC-2-28 rider email, unchanged from iter-1) |
+
+### Decision
+
+**APPROVED** — All 4 blocking violations resolved. Architecture remains clean. PR #14 is ready to merge.

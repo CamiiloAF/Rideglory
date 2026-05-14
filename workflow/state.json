@@ -545,8 +545,8 @@
     },
     "tech_lead": {
       "status": "idle",
-      "lastAction": "2026-05-15T00:30:00Z",
-      "focus": "iter-2 PR #14 reviewed — BLOCKED. dart analyze PASS (0 issues). flutter test 64 pass/1 pre-existing fail. Architecture: clean (no layer violations, ResultState<T> correct, cursor pagination enforced, FCM @pragma correct). 4 blocking coding-standards violations: TextButton (2 instances), one-widget-per-file (4 files, 12 extra widgets), hardcoded Spanish strings in Semantics (3 instances), MaterialPageRoute bypasses go_router (2 instances). docs/handoffs/tech_lead.md updated."
+      "lastAction": "2026-05-15T01:00:00Z",
+      "focus": "iter-2 PR #14 re-reviewed — APPROVED. All 4 blocking violations resolved: AppTextButton used throughout, one widget per file enforced (11 new files extracted), Semantics labels use ARB keys via context.l10n, go_router named routes replace MaterialPageRoute. dart analyze: 0 issues. flutter test: 64 pass / 1 pre-existing fail. PR ready to merge."
     }
   },
   "tasks": [
@@ -1012,6 +1012,14 @@
       "agent": "tech_lead",
       "at": "2026-05-15T00:30:00Z",
       "detail": "blocked — 4 blocking rideglory-coding-standards violations in PR #14. Architecture clean. Fix required before merge."
+    },
+    {
+      "type": "tech_lead_review",
+      "iteration": 2,
+      "phase": "tech_lead",
+      "agent": "tech_lead",
+      "at": "2026-05-15T01:00:00Z",
+      "detail": "Re-review cycle: all 4 blocking violations resolved. BLOCKING-1: AppTextButton used in notifications_view.dart and soat_status_view.dart — no raw TextButton remaining. BLOCKING-2: 12 extra widget classes extracted to 11 separate files across soat/widgets/ (8 files) and notifications/widgets/ (3 files) — one widget per file throughout. BLOCKING-3: ARB keys notification_bell_unread_label, notification_bell_label, notification_item_accessibility_label added to app_es.arb; context.l10n used in Semantics labels — no hardcoded Spanish strings remaining. BLOCKING-4: AppRoutes.soatUpload/soatStatus/soatManualForm added to app_routes.dart; 3 GoRoute entries added to app_router.dart; no MaterialPageRoute remaining. dart analyze: 0 issues. flutter test: 64 pass / 1 pre-existing fail (unchanged). Decision: APPROVED."
     }
   ]
 }

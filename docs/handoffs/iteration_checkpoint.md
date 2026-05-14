@@ -23,7 +23,7 @@
 | qa | QA | ✅ done |
 | devops | DevOps | ✅ done |
 | pr | System | ✅ done |
-| tech_lead | Tech Lead | 🔴 blocked — 4 coding-standards violations in PR #14 |
+| tech_lead | Tech Lead | ✅ done — APPROVED (re-review cycle, all 4 violations fixed) |
 | po_close | PO | ⏳ pending |
 
 **Backend summary (2026-05-14):**
