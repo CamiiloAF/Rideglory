@@ -1,31 +1,61 @@
-# PO handoff — Iteration 1
+# PO Handoff — Iteration 2
 
-**Date:** 2026-05-13
+**Date:** 2026-05-14
 **Status:** in progress
 
 ---
 
 ## Iteration goal
 
-Bring 15 existing screens into full visual alignment with `rideglory.pen` — no new features, no backend changes — establishing a consistent design system baseline before new capabilities are layered on in iter-2.
+Allow riders to register and track their SOAT (mandatory insurance) per vehicle and receive push notifications for critical lifecycle events, while establishing the FCM infrastructure and persistent notification backend that iter-3, iter-4, and iter-5 depend on. Also completes ManageAttendeesPage redesign (Story 2.9) deferred from iter-1.
 
 ---
 
 ## Stories for this iteration
 
 | ID | Story | Acceptance criteria | Primary agent |
-|----|-------|---------------------|---------------|
-| US-1-1 | As a designer reviewing existing screens, I can identify all visual gaps between the current Flutter implementation and the `rideglory.pen` frames, documented in a gap analysis before any Flutter code is touched. | Gap analysis document lists every screen (all 15) with specific mismatches: component name, spacing value, color token, typography rule. Document reviewed and approved before any Flutter code changes begin. | design |
-| US-1-2 | As a rider opening the app, I see the splash screen with the correct logo, loading state indicator, and overall layout matching the `rideglory.pen` design. | Splash screen layout, logo sizing, background color, and loading indicator match the Pencil frame exactly. All loading states (loading, error, success) handled visually. No hardcoded `Color()` literals. | frontend |
-| US-1-3 | As a rider on the auth screens (login, signup, password recovery), the pages use `AppButton`, `AppTextField`, `AppPasswordTextField`, correct typography, and the exact color tokens from the design system. | No `ElevatedButton`, no `TextFormField` direct usage, no hardcoded color literals on any auth screen. `AppButton` used for all primary and secondary actions. Space Grotesk applied. Password recovery confirmation screen matches design. **Auth frames gate must be satisfied before this story begins.** | frontend |
-| US-1-4 | As a rider on the Home Dashboard, the layout matches the `rideglory.pen` frame `dyWWs` — including the greeting header, garage card (main vehicle + empty state), upcoming rides section (horizontal scroll + empty state), and bottom navigation pill bar (`VMmN0`). | Frame `dyWWs` matched: correct spacing, correct card border radius (12 px cards, 24 px bottom sheets), correct color tokens. Bottom nav pill bar matches frame `VMmN0`. SOAT badge placeholder **not included** (iter-2). No layout regressions vs. current behavior. | frontend |
-| US-1-5 | As a rider browsing Events, the events list page and event detail page match the `rideglory.pen` frames `Neipf` and `kAubW` — including event cards, badges (frame `zKkmE`), filter chips, the filter bottom sheet, and the CTA bar on event detail. **Pre-condition:** `lib/design_system/atoms/app_event_badge.dart` must be extracted/created from frame `zKkmE` before this story's implementation begins. | Event list: search bar, filter chips, event cards (image overlay, badge, organizer avatar, chips) match frame `Neipf`. Event detail: hero image, metric chips, map preview, allowed brands chips, CTA bar match frame `kAubW`. Filter bottom sheet layout correct. `app_event_badge.dart` used in all event card contexts. | frontend |
-| US-1-6 | As a rider creating an event, the Create/Edit Event form matches the `rideglory.pen` frame `zbCa0` — correct input fields, layout sections, difficulty selector, and button styles. | Form layout matches frame `zbCa0`. AI cover generation widget (iter-4 feature) is preserved and functional. Mapbox route preview widget unchanged. All inputs use `AppTextField`. `AppButton` used for primary actions. | frontend |
-| US-1-7 | As a rider viewing the Garage, the vehicle list page and vehicle detail page match `rideglory.pen` frames `KCf6W` and `P1GSzZ` — including the main vehicle card, "other vehicles" list, spec chips, and document slots. The document slot pill (`aGqnv`) is extracted as a design system molecule during this story for reuse in iter-2 SOAT badge. | Vehicle list matches frame `KCf6W`: main vehicle card with full-width image, stats chips, quick-access buttons; compact other-vehicles list. Vehicle detail matches frame `P1GSzZ`: specs, document badges, action buttons. All states (loading, empty, data, error) visually correct. | frontend |
-| US-1-8 | As a rider adding or editing a vehicle, the Add/Edit vehicle form matches `rideglory.pen` frame `EqnMm` — correct field layout, image upload UI, and step structure. | Form fields, image upload banner, and section layout match frame `EqnMm`. Document slot section (SOAT, tech review) UI is present but non-functional pending iter-2. `AppTextField` and `AppButton` used throughout. | frontend |
-| US-1-9 | As a rider viewing Maintenance, the dashboard, history list, and new maintenance forms match `rideglory.pen` frames `Ako7u` (dashboard), `SykjL` (history), `J5h6P` (step 1), `eK2WW` (step 2 — completed), and `ELB5u` (step 2 — scheduled). | All 5 maintenance frames matched. Dashboard: donut chart health indicator, urgency color coding (red/yellow/green) correct. History: year grouping, cost summary, chronological order. Filters bottom sheet (frame `v6RqaX`) layout correct. Step 1 grid 2×4 card layout correct. Step 2 tab (Completado / Programado) layout correct. | frontend |
-| US-1-10 | As a rider viewing their registrations, the My Registrations list and Registration Detail pages match `rideglory.pen` frames `oUv12` and the registration list layout. | Registration list and detail pages use design system components throughout; no hardcoded colors; empty and loading states correct. | frontend |
-| US-1-11 | As the dev team, we confirm zero visual regressions and zero `dart analyze` violations after the redesign — all existing tests pass and 5 manual smoke tests are green before final merge. | `dart analyze` passes with zero new violations. All 10 existing `flutter test` cases pass. 5 manual smoke tests green: (a) AI cover generation, (b) Event detail CTA state variants, (c) Maintenance donut chart rendering, (d) Home bottom nav pill bar, (e) Mapbox route preview in event form. All 3 events widget tests updated in the same PR that swaps their widgets. | qa |
+| --- | ----- | ------------------- | ------------- |
+| US-2-1 | As a rider, I can upload my SOAT document (photo or PDF from gallery/camera) for a vehicle in my garage and save the policy data (policy number, dates, insurer) in the backend. | Document is saved; vehicle badge changes to "Vigente" or "Por vencer" based on expiry date. All upload errors (network, file-too-large) shown as snackbars in Spanish. | frontend + backend |
+| US-2-2 | As a rider, I can manually enter my SOAT data (policy number, start date, expiry date, insurer) when I do not want to upload a document. | Expiry date is required and validated; on save, SOAT state badge reflects the correct validity logic (4 states). Empty or invalid dates show inline validation error. | frontend + backend |
+| US-2-3 | As a rider, I see a SOAT status badge (Sin SOAT / Vigente / Por vencer / Vencido) on my vehicle detail page and can tap the badge to navigate to the SOAT flow. | Four states calculated correctly based on expiry date vs. today (>30d → Vigente, ≤30d → Por vencer, past → Vencido, none → Sin SOAT). Badge is tappable and navigates to the correct flow. | frontend + backend |
+| US-2-4 | As a rider, I receive a push notification 30 days before, 7 days before, and on the day my SOAT expires, including the affected vehicle's name. | All three notifications arrive at the device on the correct dates and appear in the notification center. (Tap navigation → iter-5.) | backend |
+| US-2-5 | As an event organizer, I receive a push notification when a new rider registers for my event. | Notification appears in the notification center; unread badge on the bell icon increments. (Tap navigation → iter-5.) | backend + frontend |
+| US-2-6 | As a registered rider, I receive a push notification when my registration is approved or rejected. | Notification arrives within 30 seconds of the organizer's action; the "My Registrations" screen already reflects the updated status when opened. (Tap navigation → iter-5.) | backend + frontend |
+| US-2-7 | As a rider, I can open the notification center from the bell icon on Home and view all my notifications, distinguishing unread (orange dot) from read. Tapping a notification or using "Mark all as read" persists the state in the backend. | List loads from backend with cursor pagination (?cursor=<lastId>&limit=20, response { data, nextCursor }); marking read calls PATCH /api/notifications/:id/read; "Mark all" calls PATCH /api/notifications/read-all; bell badge reflects unread count from backend; empty state "Aún no tienes notificaciones" visible. | frontend + backend |
+| US-2-8 | As the dev team, the backend persists all notifications in a notifications table in api-gateway and exposes endpoints to list them, mark them as read, and register the FCM token. | GET /api/notifications?cursor=<lastId>&limit=20 returns { data: Notification[], nextCursor: string | null } for the authenticated user ordered by createdAt desc; PATCH /api/notifications/:id/read updates isRead=true; PATCH /api/notifications/read-all updates all unread for the user; POST /api/notifications/fcm-token receives { fcmToken: string } and updates fcmToken String? field on users-ms User model (called from AuthCubit post-login); all four endpoints require Bearer token with Firebase Auth guard; notifications table fields: id, userId, type, payload (JSON), isRead, createdAt. | backend |
+| US-2-9 | As an event organizer, the attendees management page (Pencil frame dUc9h) matches the rideglory.pen design — using design system components, correct color tokens, and consistent loading/empty states. | ManageAttendeesPage uses AppButton, AppDialog throughout; no hardcoded color literals; loading, empty, and error states visually correct per confirmed Pencil frame dUc9h. If frame covers list + edit, full layout is implemented; if edit-only, scope is limited to component-swap and color tokenization with no layout rework. | frontend |
+| US-2-10 | As the dev team, SOAT and notification features have full automated test coverage — unit tests for business logic, cubit tests for all state transitions, and widget tests for all new pages. | Unit: SOAT badge state logic (4 states, boundary dates); NotificationsCubit — initial load, cursor pagination, markRead, markAllRead (5 BLoC test cases minimum per cubit). Widget: SoatUploadPage, SoatManualFormPage, NotificationCenterPage — loading skeleton, data render, empty state, error banner per page. dart analyze passes with zero violations; flutter test passes with zero new failures. | qa |
+
+---
+
+## Assumptions and open questions
+
+- **Story 2.9 frame scope (assumption):** Frame dUc9h may cover list + edit view or edit-only. Design gate must confirm before implementation. If ambiguous, limit to component-swap and color tokenization without layout rework.
+- **FCM background isolate DI (confirmed):** The FCM background message handler runs in a separate Dart isolate. `configureDependencies()` must be re-called inside the handler. The top-level handler function requires `@pragma('vm:entry-point')`.
+- **Notification read state is backend-sourced (confirmed):** `SharedPreferences` may be used only as a local badge-count cache for optimization; the source of truth is the `notifications` table in api-gateway.
+- **Testing order (confirmed):** Story 2.8 (backend endpoints) must be complete before Story 2.7 (mark as read) can be fully implemented and tested. Order: 2.8 → 2.7 → 2.4/2.5/2.6.
+- **Cursor pagination throughout (confirmed):** All notification endpoints use cursor-based pagination (`?cursor=<lastId>&limit=20`). Offset/limit must NOT be used.
+- **api-gateway Prisma first-time setup (confirmed):** api-gateway has no existing `prisma/` directory. This is `prisma init` + schema creation + `prisma migrate dev` — NOT `prisma migrate reset`. A full pre-flight day is budgeted.
+- **DocumentSlotPill caller contract (from iter-1 tech_lead):** `DocumentSlotPill` has hardcoded Spanish fallback strings. Callers MUST pass a localized `stateLabel` via `context.l10n.<key>`. The SOAT implementation in iter-2 must follow this pattern explicitly.
+- **Pre-existing test failures (from iter-1 QA):** 4 test failures caused by stale `.g.dart` files (`user_service.g.dart` missing `getUserById`, `event_service.g.dart` signature mismatch). These will clear during iter-2 pre-flight when `build_runner` regenerates code for new SOAT/notification DTOs.
+- **Pre-existing non-blockers from tech_lead (deferred to iter-2):** `mileage_info_dialog.dart` uses raw `AlertDialog`; `event_form_multi_brand_section.dart` uses raw `TextFormField`; `info_chip_tooltip.dart` uses raw `showDialog()`; `home_view_all_events_button.dart` uses `context.goNamed()`. These are not assigned to dedicated iter-2 stories but the frontend agent should address them if files are touched.
+- **Home Dashboard SOAT badge NOT in iter-2:** SOAT badge on the Home Dashboard main vehicle card is deferred to iter-3 per PLAN.md.
+
+---
+
+## Out of scope (this iteration)
+
+- **Home Dashboard SOAT badge:** Deferred to iter-3. Vehicle detail SOAT badge IS in scope (US-2-3).
+- **Notification tap routing:** Stories 2.4/2.5/2.6/2.7 deliver notification display only. Tapping a notification navigates to the Home screen for now. Full routing (to specific screens) is iter-5 (Story 5.5).
+- **OCR auto-fill for SOAT:** Alta complejidad; entrada manual (US-2-2) is sufficient for MVP. Deferred post-iter-5.
+- **SOAT push reminders via FCM to the user's own device before Cron runs:** The cron scheduler sends push at 30d/7d/day-of. No on-save immediate reminder.
+- **Mandatory documents beyond SOAT:** Tech review (Revisión Técnico-Mecánica) is out of scope for iter-2. DTO is extensible but only SOAT in v1.
+- **Maintenance reminders:** Deferred to iter-3 (Story 3.6).
+- **Event 24h reminders:** Deferred to iter-3 (Story 3.7).
+- **Deep links, Apple Sign-In, notification routing to specific screens:** iter-5.
+- **Follow system, complete profiles:** iter-4.
+- **Mapbox migration:** Story 3.0 (iter-3).
+- **SOS alert feature:** iter-3.
 
 ---
 
@@ -33,80 +63,65 @@ Bring 15 existing screens into full visual alignment with `rideglory.pen` — no
 
 | Task ID | Description | Agent | Status |
 |---------|-------------|-------|--------|
-| T-1-1 | Inspect all relevant `rideglory.pen` frames via Pencil MCP; produce gap analysis document listing every screen (15 total) with specific mismatches (component, spacing, color, typography) | design | todo |
-| T-1-2 | Confirm or create Login / Signup / PasswordRecovery frames in `rideglory.pen` (auth frames gate for US-1-3) | design | todo |
-| T-1-3 | Implement US-1-2 (Splash screen) + US-1-3 (Auth screens) — module PR 1/5: `splash+auth` (≤ 40 files) | frontend | todo |
-| T-1-4 | Implement US-1-4 (Home Dashboard) — module PR 2/5: `home` (≤ 40 files) | frontend | todo |
-| T-1-5 | Extract `app_event_badge.dart` atom from frame `zKkmE`; implement US-1-5 (Events list + detail) + US-1-6 (Create/Edit Event form) — module PR 3/5: `events` (≤ 40 files) | frontend | todo |
-| T-1-6 | Extract document slot pill (`aGqnv`) as design system molecule; implement US-1-7 (Garage list + detail) + US-1-8 (Add/Edit vehicle form) — module PR 4/5: `garage` (≤ 40 files) | frontend | todo |
-| T-1-7 | Implement US-1-9 (Maintenance dashboard, history, forms) + US-1-10 (Registrations) — module PR 5/5: `maintenance+registration` (≤ 40 files) | frontend | todo |
-| T-1-8 | Run `dart analyze` baseline on `main` branch; document any pre-existing violations; verify violation count does not grow during iter-1 | qa | todo |
-| T-1-9 | Execute quality gate validation: `dart analyze` + `flutter test` green; widget tests updated; 5 manual smoke tests logged; no hardcoded color literals remain in `lib/features/` | qa | todo |
-| T-1-10 | Review all module PRs for Clean Architecture compliance: no layer violations, no hardcoded colors, correct widget usage (`AppButton`, `AppTextField`, `AppDialog`), updated `app_es.arb`, no test-rot merges | tech_lead | todo |
-
----
-
-## Assumptions and open questions
-
-- **No auth frames in rideglory.pen (assumption):** It is unknown whether Login, Signup, and PasswordRecovery screens have dedicated Pencil frames. The Design agent must verify this during pre-flight and create them if missing, before Story US-1-3 (Task T-1-2) begins. Stories US-1-2 and US-1-4 through US-1-10 may proceed in parallel with T-1-2.
-- **Donut chart scope (assumption):** The donut chart in frame `Ako7u` (Maintenance dashboard) may require either a color token swap only or a geometry/animation change. If geometry change is needed, it is descoped to color-only for iter-1. The Design agent must flag this during pre-flight (T-1-1) before US-1-9 begins.
-- **No backend changes (assumption):** Iter-1 is strictly presentation-layer. No new domain models, DTOs, services, use cases, or routes are introduced. The Architect confirmed only 3 imports of `core/data/` in `lib/features/*/presentation/`, all referencing `colombia_motos_brands_data.dart` (a static catalog).
-- **File blast radius confirmed:** Approximately 95–135 files will be touched. The heavy lift is color tokenization (~33 raw `Color(0x...)` literals + ~80 files with `Colors.<named>` references), not widget swapping (only ~3 files use `ElevatedButton`/`TextFormField` directly).
-- **AI cover generation (assumption):** The iter-4 AI cover generation widget in the event form must remain functional. It is treated as a blocking smoke test criterion, not advisory.
-- **ManageAttendeesPage deferred (confirmed):** Story 1.11 (ManageAttendeesPage) was explicitly deferred from iter-1 to iter-2 as Story 2.9 per the approved PLAN.md.
-
----
-
-## Out of scope (this iteration)
-
-- **SOAT badge on Home Dashboard / vehicle detail** — added in iter-3 per PLAN.md (not iter-2 either). Vehicle detail document slot pill is extracted as a molecule (US-1-7) but no SOAT logic is wired.
-- **ManageAttendeesPage redesign** — deferred to iter-2 as Story 2.9.
-- **New backend endpoints** — zero. No Prisma migrations, no new API routes.
-- **New domain models or use cases** — zero.
-- **New routes in go_router** — zero.
-- **New dev dependencies (mocktail, bloc_test)** — deferred; test infrastructure was planned for the prior plan's iter-1, now descoped for this redesign-first iter-1.
-- **Code generation** (`build_runner`) — not required since no domain/data changes are made.
-- **FCM, SOAT, tracking, followers, deep links, Apple Sign-In** — iter-2 through iter-5.
+| T-2-1 | Design gate: confirm/create Pencil frames for SOAT upload, SOAT manual form, SOAT status detail, notification center, vehicle detail with 4-state SOAT badge, generic notification row template. Confirm frame dUc9h scope for Story 2.9. | design | todo |
+| T-2-2 | Pre-flight backend: create seed.ts in vehicles-ms (2+ test vehicles) and events-ms (1 scheduled event + 1 registration); run prisma migrate reset on 4 existing services; prisma init + prisma migrate dev in api-gateway; verify GET /api/vehicles returns 200. | backend | todo |
+| T-2-3 | Backend: implement SOAT endpoints in vehicles-ms (POST /api/vehicles/:vehicleId/soat, GET /api/vehicles/:vehicleId/soat) with Soat Prisma model; add soatStatus computed logic. | backend | todo |
+| T-2-4 | Backend: add fcmToken String? to users-ms User model (Prisma migration); implement POST /api/notifications/fcm-token in api-gateway; add Firebase Auth guard. | backend | todo |
+| T-2-5 | Backend: create notifications table in api-gateway Prisma (id, userId, type, payload JSON, isRead, createdAt); implement GET /api/notifications (cursor), PATCH /:id/read, PATCH /read-all with Firebase Auth guard. | backend | todo |
+| T-2-6 | Backend: add FCM push trigger in events-ms registration approval/rejection flow; each push inserts a row in api-gateway notifications table. | backend | todo |
+| T-2-7 | Backend: install @nestjs/schedule; implement NotificationSchedulerService with @Cron for SOAT reminders (30d, 7d, day-of); America/Bogota timezone; each push inserts row in notifications table. | backend | todo |
+| T-2-8 | Flutter: implement lib/features/soat/ — domain (SoatModel, SoatRepository), data (SoatDto, SoatService Retrofit, SoatRepositoryImpl), presentation (SoatCubit, SoatUploadPage, SoatManualFormPage, SoatStatusPage). | frontend | todo |
+| T-2-9 | Flutter: implement lib/features/notifications/ — domain (NotificationModel, NotificationsRepository), data (NotificationsService with cursor pagination), presentation (NotificationsCubit, NotificationCenterPage); bell icon with unread badge on Home shell. | frontend | todo |
+| T-2-10 | Flutter: initialize FCM in AuthCubit post-login — permission request, token registration (POST /api/notifications/fcm-token); configure flutter_local_notifications for iOS foreground banners; Android notification channel; top-level background handler with @pragma('vm:entry-point') and DI re-init. | frontend | todo |
+| T-2-11 | Flutter: implement Story 2.9 — ManageAttendeesPage redesign per confirmed Pencil frame dUc9h (AppButton, AppDialog, no hardcoded colors, loading/empty/error states). | frontend | todo |
+| T-2-12 | QA: run dart analyze + flutter test; write unit tests (SoatCubit 4-state badge logic, NotificationsCubit — initial/pagination/markRead/markAllRead); write widget tests (SoatUploadPage, SoatManualFormPage, NotificationCenterPage); verify 6 notification types on device/emulator. | qa | todo |
+| T-2-13 | Tech Lead: review all PRs for Clean Architecture compliance — layer violations, cursor pagination enforcement, FCM background handler pattern, DocumentSlotPill caller pattern, SOAT badge state logic, app_es.arb completeness. | tech_lead | todo |
 
 ---
 
 ## Next agent needs to know
 
 ### architect
-- Iter-1 is **presentation-layer only**. No domain model, data layer, DI, or routing changes are permitted. Confirm this constraint and document it explicitly in your handoff so the frontend agent does not introduce any layer violations.
-- The `app_event_badge.dart` atom (from frame `zKkmE`) and the document slot pill molecule (from frame `aGqnv`) are new design system files — these live in `lib/design_system/atoms/` and `lib/design_system/molecules/` respectively. Confirm naming and file placement conventions.
-- Verify the 5–6 module-scoped PR strategy is compatible with the current feature branch setup. Document the feature branch name and merge order in your handoff.
-- No code generation files need regeneration (no `build_runner` run required).
+- **New features, full stack:** Iter-2 touches domain, data, presentation (Flutter), and backend (NestJS). All layers are in scope.
+- **FCM background isolate:** The background message handler must be a top-level Dart function annotated with `@pragma('vm:entry-point')`. `configureDependencies()` must be called inside the handler before any service is used. Document this pattern explicitly — it is the most critical correctness constraint in iter-2.
+- **api-gateway Prisma first-time setup:** No `prisma/` directory exists in api-gateway. Must run `npx prisma init`, create `schema.prisma` with Notification model, configure DATABASE_URL, run `npx prisma migrate dev --name init_notifications`. This is categorically different from the `prisma migrate reset` run on the 4 existing microservices.
+- **cursor pagination:** All notification list endpoints must use `?cursor=<lastId>&limit=20` pattern with `{ data, nextCursor }` response shape. Offset/limit is explicitly forbidden.
+- **DocumentSlotPill contract:** Callers must pass a localized `stateLabel` string — the molecule has no `BuildContext` and cannot self-localize. Enforce this in the architecture handoff to frontend.
+- **SOAT badge state logic (boundary rules):** >30 days remaining → Vigente, ≤30 days → Por vencer, past expiry → Vencido, no SOAT record → Sin SOAT.
+- **Story 2.9 constraint:** Pure presentation-layer change (same as iter-1 redesign stories). No domain/data changes. Scope depends on Pencil frame dUc9h confirmation.
+- **GoRouter DI assessment:** Document whether `app_router.dart` creates GoRouter as a top-level variable or via GetIt. This assessment is needed by iter-4. If the assessment is trivial to do now, note it.
 
-### design (frontend, UX)
-- **Pre-flight priority:** Gap analysis (T-1-1) is the highest-priority task. No Flutter code may begin until the gap analysis is complete and reviewed.
-- **Auth frames gate:** If Login / Signup / PasswordRecovery frames do not exist in `rideglory.pen`, create them before Task T-1-3 begins. This is a story-level blocker for US-1-3 only.
-- **Donut chart flag:** During pre-flight, determine whether the donut chart in `Ako7u` requires geometry/animation changes or is a color-only update. Flag explicitly.
-- **Frame ID reference:** All 15 screen Pencil frame IDs are documented in REQUIREMENTS.md Appendix A. Use these IDs in the gap analysis document.
+### design
+- **Design gate is a hard pre-condition:** No Flutter implementation may begin until all SOAT and notification Pencil frames are confirmed in `rideglory.pen`.
+- **Frame dUc9h scope clarification is critical:** If the frame covers list + edit, full layout is implemented. If edit-only, scope is limited. Resolve this ambiguity before Story 2.9 begins.
+- **Required frames:** SOAT upload page, SOAT manual form page, SOAT status/detail page, vehicle detail page with 4-state SOAT badge (Sin SOAT / Vigente / Por vencer / Vencido), notification center page, generic notification row template with icon slot per notification type (6 types), ManageAttendeesPage (confirm frame dUc9h).
+- **DocumentSlotPill integration:** The `DocumentSlotPill` molecule from iter-1 is the foundation for the SOAT badge in the vehicle detail. Design must show how the DocumentSlotPill's 4 states map to the SOAT badge states.
 
 ### frontend (flutter_dev)
-- Follow the 5–6 module-scoped PR strategy (tasks T-1-3 through T-1-7). Maximum 40 files per PR. Each PR requires `dart analyze` + `flutter test` green before merge into the feature branch.
-- Replace all `Color(0x...)` / `Colors.<named>` literals with `Theme.of(context).colorScheme.<property>` or `AppColors` constants.
-- Replace `ElevatedButton` → `AppButton`, raw `TextFormField` → `AppTextField`, raw `AlertDialog` → `AppDialog`.
-- All user-visible text changes must be reflected in `lib/l10n/app_es.arb`; run `flutter gen-l10n` after ARB changes.
-- The AI cover generation widget (iter-4) **must remain functional** — treat as a blocking smoke test.
-- The 3 events widget tests (`attendees_list_navigation_test.dart`, `event_filters_bottom_sheet_test.dart`, `events_page_view_test.dart`) must be updated in the same PR that swaps their widgets. No test-rot merges.
-
-### qa
-- Run `dart analyze` baseline on `main` before any code is merged (T-1-8). Document existing violations count — it must not grow.
-- After all module PRs are merged into the feature branch, execute the full quality gate (T-1-9): `dart analyze` + `flutter test` green + 5 manual smoke tests.
-- Smoke test checklist: (a) AI cover generation, (b) Event detail CTA state variants (registered / pending / closed / full), (c) Maintenance donut chart rendering, (d) Home bottom nav pill bar matches frame `VMmN0`, (e) Mapbox route preview in event form.
-- Update widget test finders whenever widget classes are renamed or replaced.
+- **Build runner required:** `dart run build_runner build --delete-conflicting-outputs` is mandatory in pre-flight. New DTOs for SOAT and notifications require code generation. The 4 pre-existing test failures should clear after this run.
+- **DocumentSlotPill caller contract:** When wiring up the SOAT badge in vehicle detail, always pass `stateLabel: context.l10n.vehicle_soat_<state>` — do not rely on the molecule's hardcoded fallback strings.
+- **FCM background isolate pattern:** Follow the `@pragma('vm:entry-point')` + `configureDependencies()` pattern exactly. This is a correctness constraint, not a style preference.
+- **New l10n keys needed:** All SOAT and notification UI copy must be added to `lib/l10n/app_es.arb` before any string is used in a widget. Key prefix: `soat_` and `notification_`.
+- **Scope of Story 2.9:** Wait for design gate confirmation on frame dUc9h scope before beginning ManageAttendeesPage changes. If frame is edit-only, do not add list layout.
+- **Feature structure:** `lib/features/soat/` (domain, data, presentation) and `lib/features/notifications/` (domain, data, presentation) — create both from scratch following existing features as reference.
 
 ### backend
-- **No backend work required for iter-1.** Backend agent is not active this iteration. Standby for iter-2 (SOAT + notification infrastructure).
+- **Pre-flight is the first task:** Complete seed.ts setup and prisma operations before writing any feature code. Verify `GET /api/vehicles` returns 200 and `GET /api/notifications` returns 200 empty list before proceeding.
+- **Notification table ownership:** The `notifications` table lives in api-gateway's Prisma schema. It is NOT in events-ms or users-ms. api-gateway proxies the FCM push and inserts the notification row after proxying.
+- **FCM dispatch:** firebase-admin is already installed in api-gateway. Use it for FCM multicast. No new package required.
+- **@nestjs/schedule:** `npm install @nestjs/schedule`. Add `ScheduleModule.forRoot()` to api-gateway AppModule. All cron expressions must use `America/Bogota` timezone.
+- **SOAT model in vehicles-ms:** Add `Soat` entity with fields: id, vehicleId, policyNumber, startDate, expiryDate, insurer, documentUrl (nullable), createdAt, updatedAt. One-to-one with Vehicle.
+- **Testing order:** Implement in order: T-2-4 (fcm-token endpoint) → T-2-5 (notifications table + endpoints) → T-2-3 (SOAT endpoints) → T-2-6 (FCM triggers) → T-2-7 (cron scheduler).
 
-### tech_lead
-- Code review focus: layer violations (no data/domain imports in presentation), color literal elimination, widget adoption (`AppButton`, `AppTextField`, `AppDialog`), `app_es.arb` completeness, widget test coverage (no test-rot).
-- Each module PR must be reviewed before the next begins. Provide explicit approve / request-changes per PR.
+### qa
+- **Build runner pre-flight:** Run `dart run build_runner build --delete-conflicting-outputs` first. Verify the 4 pre-existing test failures now pass (or confirm they clear with the new .g.dart files).
+- **Test targets:** Unit: SoatCubit (4-state boundary logic), NotificationsCubit (initial → loading → data → empty → error for each method). Widget: SoatUploadPage, SoatManualFormPage, NotificationCenterPage — 4 test cases each (loading, data, empty, error). dart analyze: must be 0 errors/warnings (no new violations).
+- **6 notification types to verify on device/emulator:** SOAT 30d, SOAT 7d, SOAT day-of, new registration (organizer), registration approved, registration rejected. Testing 2.4/2.5/2.6 requires a physical device or emulator with Firebase project configured.
+- **ManageAttendeesPage (Story 2.9):** No new cubit tests required (no new state management). Verify no hardcoded colors, correct design system component usage, loading/empty/error states.
+- **Scope reduction rule:** If Story 2.7 back-end read persistence is at risk near the end of the iteration, the unread badge may be reset locally (SharedPreferences) as a provisional measure. The backend endpoints (Story 2.8) must be complete regardless.
 
 ---
 
 ## Change log
 
-- 2026-05-13: Iteration 1 scoped from approved PLAN.md (redesign-first plan v3). 11 user stories defined (US-1-1 through US-1-11). 10 tasks defined (T-1-1 through T-1-10). QA gate task T-1-9 included. Scope decisions: ManageAttendeesPage deferred to iter-2, no backend work, no new domain models, 5–6 module-scoped PR strategy, auth frames gate per-story.
+- 2026-05-14: Iteration 2 scoped from PLAN.md (approved plan v3, iter-2 section). 10 user stories defined (US-2-1 through US-2-10). 13 tasks defined (T-2-1 through T-2-13). 1 QA task (T-2-12, agent: qa). Design gate is mandatory pre-condition. Pre-existing non-blockers from iter-1 tech_lead noted. Testing order documented (2.8 → 2.7 → 2.4/2.5/2.6). Home Dashboard SOAT badge confirmed out of scope.

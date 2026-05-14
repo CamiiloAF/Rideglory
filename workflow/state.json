@@ -510,8 +510,8 @@
   "agents": {
     "po": {
       "status": "idle",
-      "lastAction": "2026-05-14T17:00:00Z",
-      "focus": "iter-1 close-out complete; ready for iter-2 planning"
+      "lastAction": "2026-05-14T22:00:00Z",
+      "focus": "iter-2 scoped: SOAT + Notification Foundation + ManageAttendeesPage redesign; 10 stories, 13 tasks, 1 QA task"
     },
     "architect": {
       "status": "idle",
@@ -649,6 +649,136 @@
       "storyRef": "US-1-11",
       "title": "Review all 5 module PRs for Clean Architecture compliance: no layer violations,",
       "updatedAt": "2026-05-14T16:00:00Z"
+    },
+    {
+      "id": "T-2-1",
+      "iteration": 2,
+      "description": "Design gate: confirm/create Pencil frames for SOAT upload, SOAT manual form, SOAT status detail, notification center, vehicle detail with 4-state SOAT badge, generic notification row template (6 types). Confirm frame dUc9h scope for Story 2.9.",
+      "agent": "design",
+      "status": "todo",
+      "storyRef": "US-2-1, US-2-2, US-2-3, US-2-7, US-2-9",
+      "title": "Design gate: SOAT and notification Pencil frames; confirm frame dUc9h scope",
+      "updatedAt": "2026-05-14T22:00:00Z"
+    },
+    {
+      "id": "T-2-2",
+      "iteration": 2,
+      "description": "Pre-flight backend: create seed.ts in vehicles-ms (2+ test vehicles) and events-ms (1 scheduled event + 1 registration); run prisma migrate reset on 4 existing services; prisma init + prisma migrate dev in api-gateway; verify GET /api/vehicles returns 200 and GET /api/notifications returns 200.",
+      "agent": "backend",
+      "status": "todo",
+      "storyRef": "US-2-8",
+      "title": "Pre-flight: seeds, prisma reset (4 services), prisma init api-gateway",
+      "updatedAt": "2026-05-14T22:00:00Z"
+    },
+    {
+      "id": "T-2-3",
+      "iteration": 2,
+      "description": "Backend: implement SOAT endpoints in vehicles-ms (POST /api/vehicles/:vehicleId/soat, GET /api/vehicles/:vehicleId/soat) with Soat Prisma model (id, vehicleId, policyNumber, startDate, expiryDate, insurer, documentUrl, createdAt, updatedAt).",
+      "agent": "backend",
+      "status": "todo",
+      "storyRef": "US-2-1, US-2-2, US-2-3",
+      "title": "Backend: SOAT endpoints in vehicles-ms",
+      "updatedAt": "2026-05-14T22:00:00Z"
+    },
+    {
+      "id": "T-2-4",
+      "iteration": 2,
+      "description": "Backend: add fcmToken String? to users-ms User model (Prisma migration); implement POST /api/notifications/fcm-token in api-gateway with Firebase Auth guard.",
+      "agent": "backend",
+      "status": "todo",
+      "storyRef": "US-2-8",
+      "title": "Backend: fcmToken field in users-ms; POST /api/notifications/fcm-token endpoint",
+      "updatedAt": "2026-05-14T22:00:00Z"
+    },
+    {
+      "id": "T-2-5",
+      "iteration": 2,
+      "description": "Backend: create notifications table in api-gateway Prisma (id, userId, type, payload JSON, isRead, createdAt); implement GET /api/notifications (cursor pagination), PATCH /:id/read, PATCH /read-all with Firebase Auth guard.",
+      "agent": "backend",
+      "status": "todo",
+      "storyRef": "US-2-7, US-2-8",
+      "title": "Backend: notifications table + list/read endpoints in api-gateway",
+      "updatedAt": "2026-05-14T22:00:00Z"
+    },
+    {
+      "id": "T-2-6",
+      "iteration": 2,
+      "description": "Backend: add FCM push trigger in events-ms registration approval/rejection flow; each push inserts a row in api-gateway notifications table. Also add FCM push for new registration event to organizer.",
+      "agent": "backend",
+      "status": "todo",
+      "storyRef": "US-2-5, US-2-6",
+      "title": "Backend: FCM push triggers for registration events",
+      "updatedAt": "2026-05-14T22:00:00Z"
+    },
+    {
+      "id": "T-2-7",
+      "iteration": 2,
+      "description": "Backend: install @nestjs/schedule; implement NotificationSchedulerService with @Cron for SOAT reminders (30d, 7d, day-of expiry); America/Bogota timezone; each cron push inserts row in notifications table.",
+      "agent": "backend",
+      "status": "todo",
+      "storyRef": "US-2-4",
+      "title": "Backend: @nestjs/schedule SOAT cron reminders (30d, 7d, day-of)",
+      "updatedAt": "2026-05-14T22:00:00Z"
+    },
+    {
+      "id": "T-2-8",
+      "iteration": 2,
+      "description": "Flutter: implement lib/features/soat/ — domain (SoatModel, SoatRepository interface), data (SoatDto, SoatService Retrofit, SoatRepositoryImpl), presentation (SoatCubit, SoatUploadPage, SoatManualFormPage, SoatStatusPage). Wire DocumentSlotPill in vehicle detail with localized stateLabel. Run build_runner.",
+      "agent": "frontend",
+      "status": "todo",
+      "storyRef": "US-2-1, US-2-2, US-2-3",
+      "title": "Flutter: lib/features/soat/ — domain + data + presentation",
+      "updatedAt": "2026-05-14T22:00:00Z"
+    },
+    {
+      "id": "T-2-9",
+      "iteration": 2,
+      "description": "Flutter: implement lib/features/notifications/ — domain (NotificationModel, NotificationsRepository), data (NotificationsService cursor pagination), presentation (NotificationsCubit, NotificationCenterPage); bell icon with unread badge on Home shell.",
+      "agent": "frontend",
+      "status": "todo",
+      "storyRef": "US-2-7",
+      "title": "Flutter: lib/features/notifications/ — domain + data + presentation",
+      "updatedAt": "2026-05-14T22:00:00Z"
+    },
+    {
+      "id": "T-2-10",
+      "iteration": 2,
+      "description": "Flutter: initialize FCM in AuthCubit post-login — permission request, token registration (POST /api/notifications/fcm-token); configure flutter_local_notifications for iOS foreground banners; Android notification channel; top-level background handler with @pragma('vm:entry-point') and configureDependencies() re-init.",
+      "agent": "frontend",
+      "status": "todo",
+      "storyRef": "US-2-5, US-2-6",
+      "title": "Flutter: FCM initialization, background handler, flutter_local_notifications",
+      "updatedAt": "2026-05-14T22:00:00Z"
+    },
+    {
+      "id": "T-2-11",
+      "iteration": 2,
+      "description": "Flutter: implement Story 2.9 — ManageAttendeesPage redesign per confirmed Pencil frame dUc9h (AppButton, AppDialog throughout, no hardcoded colors, loading/empty/error states). Scope determined by design gate.",
+      "agent": "frontend",
+      "status": "todo",
+      "storyRef": "US-2-9",
+      "title": "Flutter: ManageAttendeesPage redesign (Story 2.9, frame dUc9h)",
+      "updatedAt": "2026-05-14T22:00:00Z"
+    },
+    {
+      "id": "T-2-12",
+      "iteration": 2,
+      "description": "QA: run build_runner pre-flight, verify 4 pre-existing test failures clear. Write unit tests (SoatCubit 4-state badge boundary logic; NotificationsCubit — initial/pagination/markRead/markAllRead, 5 BLoC test cases each). Write widget tests (SoatUploadPage, SoatManualFormPage, NotificationCenterPage — 4 cases each: loading, data, empty, error). Run dart analyze (zero violations) and flutter test (zero new failures). Verify 6 notification types on device/emulator.",
+      "agent": "qa",
+      "status": "todo",
+      "storyRef": "US-2-10",
+      "title": "QA: unit/widget tests for SOAT and notifications; dart analyze + flutter test gate",
+      "updatedAt": "2026-05-14T22:00:00Z"
+    },
+    {
+      "id": "T-2-13",
+      "iteration": 2,
+      "description": "Tech Lead: review all iter-2 PRs for Clean Architecture compliance — layer violations, cursor pagination enforcement (no offset/limit), FCM background handler pattern (@pragma + DI re-init), DocumentSlotPill caller pattern (localized stateLabel), SOAT badge state boundary logic, app_es.arb completeness (soat_ and notification_ key prefixes).",
+      "agent": "tech_lead",
+      "status": "todo",
+      "storyRef": "US-2-1, US-2-7, US-2-8",
+      "title": "Tech Lead: PR review — FCM pattern, cursor pagination, DocumentSlotPill contract",
+      "updatedAt": "2026-05-14T22:00:00Z"
     }
   ],
   "events": [
@@ -754,6 +884,21 @@
       "at": "2026-05-14T21:40:42Z",
       "agent": "system",
       "detail": "Full /iter 2 run starting."
+    },
+    {
+      "type": "po_plan",
+      "iteration": 2,
+      "at": "2026-05-14T22:00:00Z",
+      "agent": "po",
+      "detail": "Iteration 2 scoped: SOAT + Notification Foundation + ManageAttendeesPage redesign. 10 user stories (US-2-1 through US-2-10). 13 tasks (T-2-1 through T-2-13) including 1 QA task (T-2-12). Testing order: 2.8 -> 2.7 -> 2.4/2.5/2.6. Home Dashboard SOAT badge deferred to iter-3. Cursor pagination enforced throughout. Design gate mandatory pre-condition for all implementation."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 2,
+      "phase": "po_scope",
+      "agent": "po",
+      "at": "2026-05-14T22:00:00Z",
+      "detail": "Iter-2 po_scope done: SOAT registration, FCM notification foundation, ManageAttendeesPage redesign — 10 stories, 13 tasks, design gate + testing order documented."
     }
   ]
 }
