@@ -61,17 +61,17 @@ void main() {
     mockAuthCubit = MockAuthCubit();
     mockRegistrationsCubit = MockMyRegistrationsCubit();
     when(() => mockEventsCubit.filters).thenReturn(const EventFilters());
-    when(() => mockEventsCubit.stream).thenAnswer((_) => Stream.empty());
-    when(() => mockEventDeleteCubit.stream).thenAnswer((_) => Stream.empty());
+    when(() => mockEventsCubit.stream).thenAnswer((_) => const Stream.empty());
+    when(() => mockEventDeleteCubit.stream).thenAnswer((_) => const Stream.empty());
     when(() => mockEventDeleteCubit.state).thenReturn(
       const ResultState<String>.initial(),
     );
-    when(() => mockAuthCubit.stream).thenAnswer((_) => Stream.empty());
+    when(() => mockAuthCubit.stream).thenAnswer((_) => const Stream.empty());
     when(() => mockAuthCubit.state).thenReturn(
       const AuthState.unauthenticated(),
     );
     when(() => mockRegistrationsCubit.stream)
-        .thenAnswer((_) => Stream.empty());
+        .thenAnswer((_) => const Stream.empty());
     when(() => mockRegistrationsCubit.state).thenReturn(
       const ResultState.initial(),
     );

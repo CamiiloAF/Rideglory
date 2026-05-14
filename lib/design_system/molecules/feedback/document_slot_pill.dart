@@ -114,7 +114,7 @@ class DocumentSlotPill extends StatelessWidget {
           ),
           if (onTap != null) ...[
             const SizedBox(width: 4),
-            Icon(Icons.chevron_right_rounded,
+            const Icon(Icons.chevron_right_rounded,
                 size: 18, color: AppColors.darkTextSecondary),
           ],
         ],

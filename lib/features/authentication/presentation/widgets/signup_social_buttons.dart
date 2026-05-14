@@ -46,8 +46,8 @@ class SignupSocialButtons extends StatelessWidget {
             Row(
               children: [
                 Expanded(child: Container(height: 1, color: AppColors.darkBorder)),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
                     '¿Ya tienes cuenta?',
                     style: TextStyle(
@@ -67,7 +67,7 @@ class SignupSocialButtons extends StatelessWidget {
               child: RichText(
                 text: TextSpan(
                   text: '${context.l10n.auth_signIn} ',
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 15,
                     color: AppColors.darkTextSecondary,
                     fontWeight: FontWeight.w500,

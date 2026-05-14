@@ -39,7 +39,7 @@ class MaintenanceDatesSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(
+            const Icon(
               Icons.calendar_today_rounded,
               size: 16,
               color: AppColors.darkTextSecondary,

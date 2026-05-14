@@ -11,7 +11,7 @@ class MaintenanceCardActionsMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
-      icon: Icon(Icons.more_vert, color: AppColors.darkTextSecondary),
+      icon: const Icon(Icons.more_vert, color: AppColors.darkTextSecondary),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       itemBuilder: (context) => [
         if (onEdit != null)

@@ -40,7 +40,7 @@ void main() {
 
   setUp(() {
     mockRiderProfileCubit = MockRiderProfileCubit();
-    when(() => mockRiderProfileCubit.stream).thenAnswer((_) => Stream.empty());
+    when(() => mockRiderProfileCubit.stream).thenAnswer((_) => const Stream.empty());
     when(() => mockRiderProfileCubit.fetchRiderProfile(any()))
         .thenAnswer((_) async {});
     when(() => mockRiderProfileCubit.close()).thenAnswer((_) async {});

@@ -91,7 +91,7 @@ void main() {
       },
       build: () => eventsCubit,
       act: (cubit) {
-        final filters = EventFilters(types: {EventType.onRoad});
+        const filters = EventFilters(types: {EventType.onRoad});
         cubit.updateFilters(filters);
       },
       expect: () => [
@@ -226,8 +226,8 @@ void main() {
               dateFrom: null,
               dateTo: null,
               city: null,
-            )).thenAnswer((_) async => Left(
-              const DomainException(message: 'Network error'),
+            )).thenAnswer((_) async => const Left(
+              DomainException(message: 'Network error'),
             ));
       },
       build: () => eventsCubit,
@@ -250,7 +250,7 @@ void main() {
 
     // TC-2-9: EventFilters.hasFilters returns true when type filter is set
     test('TC-2-9: EventFilters.hasFilters is true with type filter', () {
-      final filters = EventFilters(types: {EventType.onRoad});
+      const filters = EventFilters(types: {EventType.onRoad});
       expect(filters.hasFilters, true);
     });
 

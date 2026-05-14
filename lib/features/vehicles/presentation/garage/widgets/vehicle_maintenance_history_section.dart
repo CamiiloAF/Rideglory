@@ -110,7 +110,7 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.history,
                             color: AppColors.darkTextSecondary,
                             size: 40,
@@ -229,7 +229,7 @@ class _MaintenanceRecordCard extends StatelessWidget {
                   ),
                 ),
                 AppSpacing.hGapMd,
-                Icon(Icons.chevron_right, color: AppColors.darkTextSecondary),
+                const Icon(Icons.chevron_right, color: AppColors.darkTextSecondary),
               ],
             ),
           ),

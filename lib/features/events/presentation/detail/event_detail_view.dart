@@ -237,7 +237,7 @@ class EventDetailViewState extends State<EventDetailView> {
                                   return const SizedBox.shrink();
                                 }
 
-                                return EventDetailStartedBanner(
+                                return const EventDetailStartedBanner(
                                   onFollowLive: null,
                                 );
                               },
