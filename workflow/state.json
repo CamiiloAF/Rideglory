@@ -1020,6 +1020,13 @@
       "agent": "tech_lead",
       "at": "2026-05-15T01:00:00Z",
       "detail": "Re-review cycle: all 4 blocking violations resolved. BLOCKING-1: AppTextButton used in notifications_view.dart and soat_status_view.dart — no raw TextButton remaining. BLOCKING-2: 12 extra widget classes extracted to 11 separate files across soat/widgets/ (8 files) and notifications/widgets/ (3 files) — one widget per file throughout. BLOCKING-3: ARB keys notification_bell_unread_label, notification_bell_label, notification_item_accessibility_label added to app_es.arb; context.l10n used in Semantics labels — no hardcoded Spanish strings remaining. BLOCKING-4: AppRoutes.soatUpload/soatStatus/soatManualForm added to app_routes.dart; 3 GoRoute entries added to app_router.dart; no MaterialPageRoute remaining. dart analyze: 0 issues. flutter test: 64 pass / 1 pre-existing fail (unchanged). Decision: APPROVED."
+    },
+    {
+      "type": "pr_merged",
+      "iteration": 2,
+      "at": "2026-05-15T00:45:00Z",
+      "agent": "system",
+      "detail": "PR #14 merged to main. Merge SHA: 847b12365de4851840efc35ecad086c317d5c7c4"
     }
   ]
 }
