@@ -38,19 +38,19 @@ class _SocialLoginButtonState extends State<SocialLoginButton> {
       case SocialLoginType.google:
         label = 'Continuar con Google';
         icon = Icons.login_rounded;
-        backgroundColor = const Color(0xFFFAFAFA);
-        textColor = const Color(0xFF1F2937);
+        backgroundColor = Colors.white;
+        textColor = Colors.black;
         break;
       case SocialLoginType.apple:
         label = 'Continuar con Apple';
         icon = Icons.apple;
-        backgroundColor = const Color(0xFF000000);
+        backgroundColor = Colors.black;
         textColor = Colors.white;
         break;
       case SocialLoginType.email:
         label = 'Continuar con Correo';
         icon = Icons.email_rounded;
-        backgroundColor = const Color(0xFF6366F1);
+        backgroundColor = AppColors.primary;
         textColor = Colors.white;
         break;
     }

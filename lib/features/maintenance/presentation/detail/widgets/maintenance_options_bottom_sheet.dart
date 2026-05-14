@@ -29,7 +29,7 @@ class MaintenanceOptionsBottomSheet extends StatelessWidget {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.grey[700],
+              color: AppColors.darkBorder,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -44,10 +44,10 @@ class MaintenanceOptionsBottomSheet extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.delete, color: Colors.red),
+            leading: const Icon(Icons.delete, color: AppColors.error),
             title: Text(
               context.l10n.maintenance_deleteMaintenance,
-              style: context.bodyLarge?.copyWith(color: Colors.red),
+              style: context.bodyLarge?.copyWith(color: AppColors.error),
             ),
             onTap: () {
               Navigator.pop(context, MaintenanceAction.delete);

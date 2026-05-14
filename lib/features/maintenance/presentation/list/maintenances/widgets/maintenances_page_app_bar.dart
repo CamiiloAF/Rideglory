@@ -37,7 +37,7 @@ class MaintenancesPageAppBar extends StatelessWidget
                 child: Container(
                   padding: const EdgeInsets.all(4),
                   decoration: const BoxDecoration(
-                    color: Color(0xFF6366F1),
+                    color: AppColors.primary,
                     shape: BoxShape.circle,
                   ),
                   constraints: const BoxConstraints(

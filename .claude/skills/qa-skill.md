@@ -193,3 +193,50 @@ Mock library: `mocktail`. Cubit test library: `bloc_test`. Network image mock: `
   * Test catalog created in docs/handoffs/qa.md with 15 test cases (TC-4-1 through TC-4-15).
   * Phase contract written: docs/handoffs/contracts/iter-4/qa.json.
   * Iteration 4 gate CLEARED for DevOps phase.
+
+---
+## Plan reapproval update — 2026-05-13 (plan v3, iters 1–5)
+
+### QA strategy by iteration
+
+**Iter-1 (Redesign):**
+- dart analyze baseline on main branch BEFORE any changes; document pre-existing violation count
+- All 10 existing flutter test cases must remain green after EACH module PR
+- 3 existing events widget tests must be updated in the SAME PR that swaps their widgets (no test-rot merges)
+- 5 manual smoke tests before final merge (see DoD)
+- No new unit tests needed (no new domain logic); update widget tests for changed widgets
+
+**Iter-2 (SOAT + Notifications):**
+- SOAT badge logic: 4 state unit tests (Sin SOAT, Vigente, Por vencer, Vencido) with edge cases (exact day, 1 day before, 7 days before, 30 days before)
+- NotificationsCubit: initial load, cursor pagination (nextCursor present/null), markRead, markAllRead — unit tests
+- Widget tests: SoatUploadPage, SoatManualFormPage, NotificationCenterPage (loading, data, empty, error)
+- FCM background handler: manual test plan on physical device required (emulator unreliable)
+- 6 notification types verified on real device or emulator
+
+**Iter-3 (Tracking + Mapbox):**
+- Story 3.0 gate: zero google_maps_flutter / geocoding imports in lib/ (grep in PR review)
+- route_map_preview.dart widget test required before Story 3.0 PR can merge
+- Background GPS: physical device test MANDATORY for both Android and iOS — logs attached to PR
+- Separate Android/iOS manual test plans for background GPS
+- SOS alert: end-to-end test on 2 physical devices (sender + receiver)
+
+**Iter-4 (Followers):**
+- FollowCubit: optimistic update + revert on error (unit); pagination (unit)
+- Widget tests: FollowersListPage, FollowingListPage (loading, data, empty, error)
+- Follow/unfollow symmetry verified (follow then unfollow restores counter)
+
+**Iter-5 (Deep Links):**
+- Universal Links: test cold-start on physical iOS device with RELEASE build (debug builds don't honor Associated Domains)
+- App Links: test cold-start on physical Android device
+- All 7 notification routing types verified end-to-end from cold start on physical device
+- Apple Sign-In: full auth flow on physical iPhone
+
+### Definition of done (all iters)
+- dart analyze: zero new violations
+- flutter test: 100% green, no regressions
+- All acceptance criteria from po.md explicitly verified
+- BUG tasks filed in workflow/state.json for any failing criteria
+
+## Change log
+- 2026-05-13 (plan v3 approval): QA strategy per iteration documented. Physical device requirements and smoke test lists established.
+- 2026-05-14 (iter-1, QA phase): Test catalog created (TC-1-1 through TC-1-21). Baseline verification: main branch 0 errors/0 warnings, 28 pass/4 fail. Iter-1 verification: 0 new violations, 28 pass/4 unchanged (stale .g.dart). Design system primitives confirmed (AppEventBadge atom + DocumentSlotPill molecule). Localization audit: ~140 new keys added (11KB → 46KB app_es.arb). Color tokenization: 0 hardcoded Color(0x...), 0 non-standard Colors.<> in lib/features/. Architecture constraints enforced (zero domain/data/DI/router changes). All 11 user stories acceptance criteria verified. Sign-off: GREEN ✅. No new test failures introduced; 0 blocking bugs filed.

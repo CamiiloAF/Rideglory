@@ -44,7 +44,7 @@ void main() {
     when(() => mockEventsCubit.state).thenReturn(
       const ResultState<List<EventModel>>.data(data: []),
     );
-    when(() => mockEventsCubit.stream).thenAnswer((_) => Stream.empty());
+    when(() => mockEventsCubit.stream).thenAnswer((_) => const Stream.empty());
   });
 
   group('EventFiltersBottomSheet — Filter Tests (US-2-1, US-2-2)', () {

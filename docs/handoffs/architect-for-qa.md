@@ -1,87 +1,79 @@
-# Architect → QA handoff — Iteration 4
+> Slim handoff — read this before docs/handoffs/architect.md
 
-**Date:** 2026-05-13
-**Iteration:** 4 — AI Event Cover Image Generation
+# Architect → QA — Iteration 1
 
----
+**Iter-1 = presentation-layer redesign across 15 screens. Quality gate is "no regression + no new lint violations + smoke tests green".**
 
 ## Test commands
 
 ```bash
-flutter pub get
-dart run build_runner build --delete-conflicting-outputs   # required after EventFormState freezed refactor
-dart analyze --no-summary                                   # must be zero violations
-flutter test                                                # must be 100% green
-flutter test test/features/events/                          # focused run
+# Static analysis (must be green per PR and on final feature branch)
+dart analyze
 
-# Backend tests (run from rideglory-api/api-gateway/)
-npm run test                                               # must pass
-npm run lint                                               # must pass
+# Unit + widget tests (must be green per PR and on final feature branch)
+flutter test
+
+# Single test (debugging)
+flutter test test/<path>_test.dart
+
+# Format check (advisory)
+dart format --output=none lib/
 ```
 
----
+No `dart run build_runner` invocation needed — no codegen source changes this iteration.
 
-## AC → test traceability
+## Baseline gate (T-1-8) — DO FIRST
 
-### US-4-3 (T-4-2) — Backend: `POST /events/generate-cover`
+Before any iter-1 PR merges:
 
-File: `api-gateway/test/events/generate-cover.spec.ts`
+```bash
+git checkout main
+flutter pub get
+dart analyze 2>&1 | tee /tmp/dart_analyze_main.txt
+flutter test 2>&1 | tee /tmp/flutter_test_main.txt
+git checkout iter-1
+```
 
-| AC | Test case | Expected |
-|----|-----------|----------|
-| AC-1 (happy path) | Claude returns query → Unsplash returns photo | HTTP 200 `{ imageUrl, source: 'unsplash', query }` |
-| AC-5a (Claude fails) | Mock ClaudeService to throw | HTTP 503 |
-| AC-5b (Unsplash fails) | Mock UnsplashService to throw | HTTP 503 |
-| AC-6 (timeout) | Mock Unsplash to delay 16 s | HTTP 503 |
-| AC-5c (malformed request) | Send body without `title` | HTTP 400 |
+Document the **count** of pre-existing `dart analyze` issues from `/tmp/dart_analyze_main.txt` in your QA handoff. Iter-1 acceptance: count must NOT grow on `iter-1` branch after final merge.
 
-### US-4-4 (T-4-8) — `GetGenerateCoverUseCase` unit test
+Also record the test count baseline (`flutter test --reporter expanded` shows totals). Final `iter-1` test count must be ≥ baseline (the 3 events widget tests are updated, not removed).
 
-File: `test/features/events/domain/get_generate_cover_use_case_test.dart`
+## Final gate (T-1-9) — Acceptance criteria traceability
 
-| AC | Test case | Expected |
-|----|-----------|----------|
-| AC-2 (happy path) | Mock `EventCoverRepository` returns `Right(imageUrl)` | Use case returns `Right('https://...')` |
-| AC-8 (503 error) | Mock repository returns `Left(DomainException)` | Use case returns `Left(DomainException)` |
+| AC | Criterion | Verification command/check |
+|----|-----------|---------------------------|
+| US-1-11 / DoD #1 | `dart analyze` zero new violations | `dart analyze` on `iter-1` HEAD; diff against baseline |
+| US-1-11 / DoD #2 | All 10 existing `flutter test` cases pass | `flutter test` on `iter-1` HEAD |
+| US-1-11 / DoD #3 | No hardcoded color literals in `lib/features/` | `grep -rE "Color\(0x" lib/features/` returns 0 lines; `grep -rE "Colors\.(?!transparent\b\|black\b\|white\b)" lib/features/` returns 0 lines |
+| US-1-11 / DoD #4 | All ARB updates committed | `git diff main..iter-1 -- lib/l10n/app_es.arb` non-empty; `lib/l10n/app_localizations*.dart` regenerated and committed |
+| US-1-11 / DoD #5 | All 3 events widget tests updated in same PR as widget swap | review PR 3 (events) for paired test+widget changes |
+| US-1-11 / DoD #6 | No new backend endpoints / domain models / routes / DI changes | `git diff main..iter-1 -- 'lib/**/domain/' 'lib/**/data/' 'lib/core/di/' 'lib/shared/router/'` returns empty |
 
-Mock: `class MockEventCoverRepository extends Mock implements EventCoverRepository`.
+## 5 Manual smoke tests (mandatory, log results)
 
-### US-4-1 + US-4-2 (T-4-9) — `EventFormPage` widget tests
+Run on physical device or emulator after PR 5 merges into `iter-1`. Capture screenshot + result for each.
 
-File: `test/features/events/presentation/form/event_form_page_test.dart`
+| # | Smoke | Pass criteria |
+|---|-------|---------------|
+| a | AI cover generation (event form) | Open Create Event → fill required fields → tap "Generar portada IA" → 2×2 grid renders → tap one image → save event → event created with selected cover URL |
+| b | Event detail CTA state variants | Verify CTA bar in 4 states: not registered (Inscribirse), pending approval (Pendiente), registered+approved (Inscrito + Cancelar), event closed/full (correct disabled copy) |
+| c | Maintenance donut chart rendering | Open Maintenance dashboard → donut chart renders with 3 urgency colors (red/yellow/green); no overflow exceptions in console |
+| d | Home bottom nav pill bar matches frame `VMmN0` | Visual verification: pill shape, active item indicator, icon + label sizing, safe-area padding |
+| e | Mapbox route preview in event form | Create Event → set start + end city → route preview renders polyline/line layer; no map crash, no missing-token error |
 
-| AC | Test case | Verify |
-|----|-----------|--------|
-| US-4-1 AC-3 | Emit `coverGenerationResult = Loading` | Loading overlay visible over preview area; spinner present |
-| US-4-1 AC-4 | Loading state | "Publicar" button remains enabled |
-| US-4-1 AC-6 | Emit `coverGenerationResult = Data(imageUrl)` | Preview image visible |
-| US-4-2 AC-1 | After `Data(imageUrl)` state | "Regenerar" button visible |
-| US-4-2 AC-3 | Tap "Regenerar" → emit Loading | Overlay renders over existing preview (not blank) |
-| US-4-2 AC-4 | Custom image selected | "Subir imagen propia" path available, no conflict |
-| US-4-1 AC-7 | Emit `coverGenerationResult = Error` | Spanish SnackBar visible; form returns to idle |
-| US-4-1 AC-8 | 16:9 container present | `AspectRatio(aspectRatio: 16/9)` found in widget tree |
+Stop the gate if any smoke test fails — open BUG task and route back to frontend.
 
-Use `mockNetworkImages()` from `network_image_mock` when testing preview with image URL.
+## Architectural quality gates QA must enforce in PR review checklist
 
-### Updated existing `EventFormCubit` tests (T-4-3)
+- No imports of `lib/features/<f>/data/` from any `lib/features/<f>/presentation/` file (except the existing 3 references to `colombia_motos_brands_data.dart` — frozen, do not grow).
+- No new file under `lib/features/*/data/` or `lib/features/*/domain/` introduced this iter.
+- No edits to `lib/core/di/injection.dart` other than (a) regenerated `injection.config.dart` (which should NOT regenerate this iter — flag if it appears in diff).
+- No edits to `lib/shared/router/app_router.dart`.
 
-After the `@freezed EventFormState` refactor:
-- Update all existing `blocTest<EventFormCubit, ResultState<EventModel>>` to `blocTest<EventFormCubit, EventFormState>`.
-- Assert on `state.saveResult` instead of top-level state.
-- Add new blocTest group for `generateCover`:
-  - `loading → data(imageUrl)` path
-  - `loading → error(DomainException)` path
-  - Form fields NOT cleared during cover generation (check that `saveResult` stays `initial` while `coverGenerationResult` is `loading`)
+## Tests NOT required this iteration
 
----
-
-## QA gate (T-4-10)
-
-1. `dart analyze --no-summary` → zero violations.
-2. `flutter test` → 100% green; no skipped tests.
-3. `npm run test` (api-gateway) → all 5 backend tests pass.
-4. All 8 widget test cases for `EventFormPage` cover generation pass.
-5. All `ResultState` cover generation branches (`initial`, `loading`, `data`, `error`) covered.
-6. No hardcoded Spanish strings in new Flutter code.
+- New widget tests for redesigned screens — DO NOT write them (PO scope explicitly defers test infrastructure expansion).
+- New BLoC tests — same reason.
+- E2E / integration tests — out of scope.
 
 > Full detail: docs/handoffs/architect.md

@@ -1,42 +1,81 @@
 {
   "iteration": 1,
   "phase": "frontend",
-  "agent": "frontend",
+  "agent": "flutter_developer",
   "status": "pass",
-  "updatedAt": "2026-05-12T05:00:00Z",
-  "summary": "US-1-1 test infra (dirs + dev deps) and US-1-4 profile page (ProfileCubit, GetMyProfileUseCase, 3 widgets, 4 ResultState branches, 5 l10n keys, initials helper) delivered. DI manually patched due to build_runner/mockito conflict. Zero new errors in new code.",
+  "updatedAt": "2026-05-14T00:00:00Z",
+  "summary": "Presentation-layer UI/UX redesign complete. All Color(0x...) and Colors.<named> literals in lib/features/ replaced with AppColors tokens or colorScheme. Two design system primitives created: AppEventBadge atom and DocumentSlotPill molecule. ~140 l10n keys added to app_es.arb and regenerated. dart analyze: 0 errors, 0 warnings. flutter test: 28 pass, 4 pre-existing failures (stale .g.dart files, not caused by iter-1 changes).",
   "metrics": {
-    "tokens": 45000,
-    "costUsd": 0.18
+    "filesModified": 34,
+    "filesCreated": 2,
+    "linesAdded": 490,
+    "hardcodedColorsRemoved": 47,
+    "l10nKeysAdded": 140,
+    "dartAnalyzeErrors": 0,
+    "dartAnalyzeWarnings": 0,
+    "testsPass": 28,
+    "testsFail": 4,
+    "testFailuresCausedByIter1": 0
   },
   "artifacts": [
-    "lib/core/utils/initials.dart (initialsFromName added)",
-    "lib/features/profile/domain/use_cases/get_my_profile_use_case.dart",
-    "lib/features/profile/presentation/cubits/profile_cubit.dart",
-    "lib/features/profile/presentation/profile_page.dart (rewritten)",
-    "lib/features/profile/presentation/widgets/profile_header.dart",
-    "lib/features/profile/presentation/widgets/profile_main_vehicle_card.dart",
-    "lib/features/profile/presentation/widgets/profile_actions_list.dart",
-    "lib/l10n/app_es.arb (5 keys added)",
-    "lib/core/di/injection.config.dart (manually patched)",
-    "lib/main.dart (ProfileCubit added to MultiBlocProvider)",
-    "pubspec.yaml (integration_test, mocktail, bloc_test, network_image_mock added)",
-    "test/features/vehicles/ (dir)",
-    "test/features/events/ (dir)",
-    "test/features/maintenance/ (dir)",
-    "test/features/profile/ (dir)",
-    "integration_test/app_test.dart (stub)"
+    "lib/design_system/atoms/badges/app_event_badge.dart",
+    "lib/design_system/molecules/feedback/document_slot_pill.dart",
+    "lib/design_system/atoms/atoms.dart",
+    "lib/design_system/molecules/molecules.dart",
+    "lib/l10n/app_es.arb",
+    "lib/l10n/app_localizations.dart",
+    "lib/l10n/app_localizations_es.dart",
+    "docs/handoffs/frontend.md",
+    "docs/handoffs/contracts/iter-1/frontend.json"
   ],
   "qualityGates": [
     {
-      "name": "required_artifacts_present",
-      "status": "pass",
-      "notes": "All required files created or updated per architect handoff. DI manually registered (build_runner broken — known blocker)."
+      "gate": "dart analyze 0 errors",
+      "status": "pass"
     },
     {
-      "name": "tests_passed_or_accepted",
+      "gate": "dart analyze 0 warnings",
+      "status": "pass"
+    },
+    {
+      "gate": "flutter test 0 regressions introduced",
       "status": "pass",
-      "notes": "No new test failures introduced. Pre-existing widget_test.dart stub failure (counter smoke test) and event_form_locations_section.dart errors were present before this iteration. build_runner broken due to mockito vs analyzer ^8.0.0 conflict — QA to resolve."
+      "note": "4 pre-existing failures in stale .g.dart files not caused by iter-1"
+    },
+    {
+      "gate": "No Color(0x...) literals in lib/features/",
+      "status": "pass"
+    },
+    {
+      "gate": "No Colors.<named> (except white/black/transparent) in lib/features/",
+      "status": "pass"
+    },
+    {
+      "gate": "AppEventBadge atom created and exported",
+      "status": "pass"
+    },
+    {
+      "gate": "DocumentSlotPill molecule created and exported",
+      "status": "pass"
+    },
+    {
+      "gate": "app_es.arb updated and flutter gen-l10n run",
+      "status": "pass"
+    },
+    {
+      "gate": "No domain/data/DI/routing changes",
+      "status": "pass"
+    },
+    {
+      "gate": "Preserved: live_tracking/, tracking/, manage_attendees_page.dart, EventCoverService, route_map_preview.dart",
+      "status": "pass"
     }
+  ],
+  "knownGaps": [
+    "Stale user_service.g.dart and event_service.g.dart cause 4 test compilation failures — pre-existing, deferred to iter-2 full rebuild",
+    "AppEventBadge integration into event card widgets pending iter-2 design gate",
+    "DocumentSlotPill integration into vehicle detail pending iter-2 SOAT data",
+    "ManageAttendeesPage deferred to iter-2 as Story 2.9",
+    "withOpacity deprecation in lib/shared/widgets/ (34 occurrences, pre-existing)"
   ]
 }

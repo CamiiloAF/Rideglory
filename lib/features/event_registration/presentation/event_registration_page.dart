@@ -62,7 +62,7 @@ class _RegistrationFormScaffold extends StatelessWidget {
                         ? context.l10n.registration_registrationUpdatedSuccess
                         : context.l10n.registration_registrationSentSuccess,
                   ),
-                  backgroundColor: Colors.green,
+                  backgroundColor: AppColors.success,
                 ),
               );
               context.pop(registration);
@@ -71,7 +71,7 @@ class _RegistrationFormScaffold extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(error.message),
-                  backgroundColor: Colors.red,
+                  backgroundColor: AppColors.error,
                 ),
               );
             },

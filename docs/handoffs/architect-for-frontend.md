@@ -1,180 +1,95 @@
-# Architect → Frontend handoff — Iteration 4
+> Slim handoff — read this before docs/handoffs/architect.md
 
-**Date:** 2026-05-13
-**Iteration:** 4 — AI Event Cover Image Generation
+# Architect → Frontend (Flutter) — Iteration 1
 
----
+**Iter-1 = presentation layer ONLY.** No domain/data/DI/router/build_runner work. If a story tempts you toward `lib/features/<feature>/{domain,data}/` or `lib/core/di/` — stop and re-read the story.
 
-## Focus stories: US-4-1, US-4-2, US-4-4 (tasks T-4-3 through T-4-7)
+## Branch & PR cadence
 
----
+- Work on branch `iter-1` (already checked out).
+- 5 module-scoped PRs (≤ 40 files each), merged in order: `splash+auth` → `home` → `events` → `garage` → `maintenance+registration`.
+- Each PR: `dart analyze` + `flutter test` green before merge.
 
-## New files to create
+## Feature → file scope per PR
 
-```
-lib/features/events/
-  domain/
-    repository/
-      event_cover_repository.dart          ← NEW (abstract interface)
-    use_cases/
-      get_generate_cover_use_case.dart     ← NEW
-  data/
-    dto/
-      cover_generation_dto.dart            ← NEW (+ .g.dart via build_runner)
-    service/
-      event_cover_service.dart             ← NEW (Retrofit, + .g.dart)
-    repository/
-      event_cover_repository_impl.dart     ← NEW
-  presentation/
-    form/
-      cubit/
-        event_form_cubit.dart              ← REFACTOR (add freezed EventFormState)
-      widgets/
-        cover_preview_widget.dart          ← NEW
-```
+| PR | Stories | Files in scope |
+|----|---------|----------------|
+| 1 splash+auth | US-1-2, US-1-3 | `lib/features/splash/presentation/**`, `lib/features/authentication/presentation/**` |
+| 2 home | US-1-4 | `lib/features/home/presentation/**`, `lib/shared/widgets/home_bottom_navigation_bar.dart`, `bottom_nav_*.dart`, `main_shell.dart` (only color tokens, no nav refactor) |
+| 3 events | US-1-5, US-1-6 | `lib/features/events/presentation/**` (excluding `live_tracking/`, `tracking/` — out of scope), `lib/design_system/atoms/badges/app_event_badge.dart` (NEW), barrel update, 3 widget tests |
+| 4 garage | US-1-7, US-1-8 | `lib/features/vehicles/presentation/**`, `lib/design_system/molecules/feedback/document_slot_pill.dart` (NEW), barrel update |
+| 5 maintenance+registration | US-1-9, US-1-10 | `lib/features/maintenance/presentation/**`, `lib/features/event_registration/presentation/**` (EXCLUDE `manage_*` — deferred to iter-2 Story 2.9) |
 
----
+## NEW design-system primitives (build BEFORE the consuming PR)
 
-## Domain layer
+### `AppEventBadge` — atom (PR 3 pre-condition)
+- Path: `lib/design_system/atoms/badges/app_event_badge.dart`
+- Source frame: `zKkmE`
+- API: `const AppEventBadge({required EventBadgeVariant variant, required String label})` — variant is an enum (e.g., `scheduled`, `inProgress`, `finished`, `cancelled`, `free`, `paid`); label comes from caller (`context.l10n.event_badge_<state>`).
+- Colors: `colorScheme.primary` for default; `AppColors.success/warning/error` for status; `AppColors.eventFree/eventPaid` for price variants.
+- Add export to `lib/design_system/atoms/atoms.dart`.
 
-**`EventCoverRepository`** (abstract):
-```dart
-abstract class EventCoverRepository {
-  Future<Either<DomainException, String>> generateCover({
-    required String title,
-    required String eventType,
-    required String city,
-  });
-}
-```
+### `DocumentSlotPill` — molecule (PR 4 pre-condition)
+- Path: `lib/design_system/molecules/feedback/document_slot_pill.dart`
+- Source frame: `aGqnv`
+- API: `const DocumentSlotPill({required String label, required DocumentSlotState state, VoidCallback? onTap, IconData? leading})` — state enum: `empty`, `valid`, `expiringSoon`, `expired` (state mapping is iter-2 SOAT concern; iter-1 ships the visual primitive only).
+- Colors: `AppColors.darkSurfaceHighest` background; `AppColors.success`, `warning`, `error` accents per state; `AppColors.darkBorder` divider.
+- Add export to `lib/design_system/molecules/molecules.dart`.
+- **Reuse contract**: iter-2 SOAT badge story (2.3) will consume this same molecule; do not couple it to vehicle-feature types.
 
-**`GetGenerateCoverUseCase`** (`@injectable`):
-- Single `call({required title, required eventType, required city})`
-- Delegates to `EventCoverRepository.generateCover(...)`
+## Color tokenization (mandatory across all 5 PRs)
 
----
+Replace, in priority order:
+1. **`Theme.of(context).colorScheme.<role>`** when the color has semantic role.
+2. **`AppColors.<constant>`** for dark surfaces/borders/text/status not in `colorScheme`.
+3. **Add to `AppColors`** (do not inline `Color(0xFF…)`) if no mapping exists. Append to architect handoff change log in same PR.
 
-## Data layer
+Forbidden in `lib/features/`: `Color(0xFF…)` literals; `Colors.<named>` except `Colors.transparent`, `Colors.black`, `Colors.white`.
 
-**`CoverGenerationDto`** (`@JsonSerializable()`):
-```dart
-class CoverGenerationDto {
-  final String imageUrl;
-  final String source;
-  final String query;
-}
-```
+Per-PR procedure: `grep -rE "Color\(0x|Colors\." <module-path>` → map → batch substitute → `dart analyze`.
 
-**`EventCoverService`** (Retrofit `@singleton`):
-```dart
-@POST('/events/generate-cover')
-Future<CoverGenerationDto> generateCover(@Body() Map<String, dynamic> body);
-```
+## Widget swap (only ~3 files affected)
 
-**`EventCoverRepositoryImpl`** (`@Injectable(as: EventCoverRepository)`):
-- Wraps `EventCoverService` with `executeService()`
-- Maps HTTP 503 to `DomainException(message: context.l10n.event_coverGenerateError)` — Note: error mapping happens in the repository using the pre-defined Spanish message string (no BuildContext here; hardcode the Spanish string directly matching the ARB value)
-- Returns `Right(dto.imageUrl)` on success
+Per existing-system scan: only `mileage_info_dialog.dart` and `event_form_multi_brand_section.dart` use raw widgets. Replace per US-1-3/1-6 acceptance:
+- `ElevatedButton` → `AppButton` (atoms)
+- `TextFormField` → `AppTextField` (atoms)
+- `TextField` for password → `AppPasswordTextField` (atoms)
+- `AlertDialog` → `AppDialog` (molecules)
 
-**Add to `lib/core/http/api_routes.dart`**:
-```dart
-static const generateEventCover = '/events/generate-cover';
-```
+## Localization (l10n)
 
----
+- File: `lib/l10n/app_es.arb`. Run `flutter gen-l10n` after edits and commit generated `lib/l10n/app_localizations*.dart`.
+- Key naming: feature prefix.
+  - **NEW** keys for `AppEventBadge` labels: `event_badge_scheduled`, `event_badge_inProgress`, `event_badge_finished`, `event_badge_cancelled`, `event_badge_free`, `event_badge_paid` (US-1-5).
+  - **NEW** keys for `DocumentSlotPill` labels (used in vehicle pages, not the molecule itself): `vehicle_doc_soat_label`, `vehicle_doc_techreview_label`, `vehicle_doc_state_empty`, `vehicle_doc_state_valid`, `vehicle_doc_state_expiringSoon`, `vehicle_doc_state_expired` (US-1-7, US-1-8). State labels are stubs in iter-1; iter-2 SOAT story will reuse them.
+  - Reuse existing keys whenever possible. Do not create duplicate keys.
 
-## Presentation layer: EventFormState refactor (ADR-7)
+## Cubit / state — read carefully
 
-Replace `EventFormCubit extends Cubit<ResultState<EventModel>>` with:
+You are **not** allowed to:
+- Create new cubits.
+- Add new states or methods to existing cubits.
+- Change the `Cubit<ResultState<T>>` signature of any cubit.
+- Inject new services into existing cubits.
 
-```dart
-@freezed
-class EventFormState with _$EventFormState {
-  const factory EventFormState({
-    @Default(ResultState<EventModel>.initial()) ResultState<EventModel> saveResult,
-    @Default(ResultState<String>.initial()) ResultState<String> coverGenerationResult,
-  }) = _EventFormState;
-}
+You **are** allowed to:
+- Restructure widget trees in `presentation/` to match Pencil frames.
+- Replace inline color/spacing literals with theme tokens.
+- Extract or rename private widgets within a feature for clarity (one widget per file).
+- Update `BlocBuilder<CubitX, ResultState<Y>>.builder` to render new visuals — without changing the cubit.
 
-@injectable
-class EventFormCubit extends Cubit<EventFormState> {
-  EventFormCubit(...) : super(const EventFormState());
+If you find yourself wanting to refactor a cubit signature, the story is mis-scoped. Stop and escalate.
 
-  Future<void> generateCover({
-    required String title,
-    required String eventType,
-    required String city,
-  }) async {
-    emit(state.copyWith(coverGenerationResult: const ResultState.loading()));
-    final result = await _getGenerateCoverUseCase(title: title, eventType: eventType, city: city);
-    result.fold(
-      (error) => emit(state.copyWith(coverGenerationResult: ResultState.error(error: error))),
-      (imageUrl) => emit(state.copyWith(coverGenerationResult: ResultState.data(data: imageUrl))),
-    );
-  }
-  // saveEvent() now emits state.copyWith(saveResult: ...)
-}
-```
+## Tests
 
-Update all `BlocBuilder<EventFormCubit, ResultState<EventModel>>` usages to use `state.saveResult`.
+- Update finders in 3 events widget tests (`attendees_list_navigation_test.dart`, `event_filters_bottom_sheet_test.dart`, `events_page_view_test.dart`) **in PR 3**, the same PR that swaps their target widgets. No test-rot merges.
+- Do not write new widget tests this iter (QA owns that).
 
----
+## Out of scope (do not touch)
 
-## FormImageCubit: add one method
-
-```dart
-void setRemoteImageUrl(String url) {
-  emit(ResultState.data(data: FormImageData(remoteImageUrl: url)));
-}
-```
-
-In `EventFormContent`, add a `BlocListener<EventFormCubit, EventFormState>` that calls `formImageCubit.setRemoteImageUrl(imageUrl)` when `state.coverGenerationResult` transitions to `Data`.
-
----
-
-## CoverPreviewWidget
-
-- `AspectRatio(aspectRatio: 16 / 9)`
-- Uses `CachedNetworkImage` when imageUrl available
-- Loading overlay: `Stack` with semi-transparent black `Container` + `CircularProgressIndicator` centered — shown when `coverGenerationResult` is `Loading`
-- Do NOT blank the preview during regeneration; overlay on top of existing image
-- Shows "Regenerar" `AppTextButton` below image when state is `Data`
-
----
-
-## Wire the AI button
-
-In `EventFormContent`, pass `onGenerateWithAITap` to `FormImageSection`:
-```dart
-onGenerateWithAITap: () {
-  final formState = cubit.formKey.currentState?.value;
-  cubit.generateCover(
-    title: formState?[EventFormFields.name] as String? ?? '',
-    eventType: (formState?[EventFormFields.eventType] as EventType?)?.name ?? '',
-    city: formState?[EventFormFields.city] as String? ?? '',
-  );
-},
-```
-
----
-
-## ARB keys to add
-
-| Key | Spanish value |
-|-----|---------------|
-| `event_coverGenerating` | `"Generando portada..."` |
-| `event_coverGenerated` | `"Portada generada"` |
-| `event_coverGenerateError` | `"No pudimos generar la portada. Sube tu propia imagen."` |
-| `event_coverRegenerate` | `"Regenerar"` |
-| `event_coverGeneratingOverlay` | `"Generando con IA..."` |
-
----
-
-## Gates before pushing
-
-- `dart run build_runner build --delete-conflicting-outputs` succeeds
-- `dart analyze` zero violations
-- `flutter test` green
-- No `BuildContext` in data layer
+- `live_tracking/`, `tracking/`, `users/` (rider profile), `profile/` features — no PO story.
+- `manage_attendees_page.dart` — deferred to iter-2.
+- `EventFormCubit`, `EventCoverService`, AI cover bottom sheet — preserve exact behavior; styling chrome around them is fine.
+- `route_map_preview.dart` — leave widget body untouched.
 
 > Full detail: docs/handoffs/architect.md

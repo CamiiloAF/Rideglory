@@ -20,4 +20,5 @@ export 'layout/app_card.dart';
 export 'layout/app_section_title.dart';
 export 'chips/app_filter_chip.dart';
 
+export 'badges/app_event_badge.dart';
 

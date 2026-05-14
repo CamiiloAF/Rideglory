@@ -89,6 +89,10 @@ Commands: `dart analyze`, `flutter test`, `dart run build_runner build --delete-
 
 ## Gotchas and learnings
 
+- **Redesign-first iteration scope:** When an iteration is pure presentation (no backend, no domain changes), state this as the first line of every section in the handoff. Every agent must be reminded that they must not introduce domain/data imports in presentation. The "no new X" constraints are as important as the stories themselves.
+- **Pre-condition gates vs. out-of-scope:** Distinguish between "this story is blocked until X is done" (a pre-condition gate, e.g., auth frames gate) and "this is out of scope" (a deferral). Pre-condition gates have a named task assigned to an agent; deferrals have a rationale and a candidate iteration.
+- **Module-scoped PR sizing:** For a redesign touching 95–135 files, split into 5–6 PRs of max 40 files each, organized by feature module. Each PR must have `dart analyze` + `flutter test` green before merging. Name PRs by module (splash+auth, home, events, garage, maintenance+registration) so tech_lead can track progress.
+- **Smoke test as acceptance criterion:** When a critical feature from a prior iteration (e.g., AI cover generation from iter-4) could be broken by a refactor iteration, encode it explicitly as a named smoke test item in both the story acceptance criteria and the QA task. "AI cover generation must remain functional" is ambiguous — "smoke test: generate cover → select image → save event → confirm functional" is testable.
 - **Iteration 1 scope split pattern:** Stories were split along agent lines (qa owns test infra + cubit + widget tests; frontend owns the profile page; tech_lead owns code review). This keeps agent context tight and avoids cross-agent merge conflicts.
 - **ProfileCubit DI scope decision:** When a cubit aggregates data from another cubit already in the root MultiBlocProvider (VehicleCubit), register the new cubit as @lazySingleton in the same root provider rather than @injectable at the page level. This prevents redundant fetches across screens.
 - **Test stub first, tests later:** For integration tests, creating stub files with empty group blocks in Iteration 1 satisfies the CI requirement while deferring actual E2E test logic to the iteration where the feature stabilizes. Document this pattern explicitly so qa agents in later iterations know where to fill in the bodies.
@@ -107,3 +111,28 @@ Commands: `dart analyze`, `flutter test`, `dart run build_runner build --delete-
 - 2026-05-12 (iter 3): Iteration 3 scoped — pure design iteration (Track P promoted); 5 user stories covering Pencil screen flows, design tokens, SOAT flow design, design.md handoff, QA gate; architect phase explicitly skipped; hard gate for iter-3b documented.
 - 2026-05-13 (iter 4): Iteration 4 scoped — AI Event Cover Image Generation; 4 user stories (US-4-1 through US-4-4); 10 tasks (T-4-1 through T-4-10) spanning backend endpoint, frontend cubit refactor, UI, and full test coverage; no Pencil design gate (unlike 3b); depends on Iter 3a ClaudeService pattern.
 - 2026-05-13 (iter 4 close): Iteration 4 delivered and merged (PR #11). All 4 stories shipped: AI cover button, regenerate/replace UI, backend endpoint (Claude + Unsplash), EventFormCubit @freezed refactor. 15/15 acceptance criteria pass. Backend 10/10 tests, frontend 7/7 tests, zero bugs. Tech lead approved (1 inline fix: const constructors in test). ITERATION_SUMMARY_4.md, ITERATION_HISTORY.md, PRODUCT_STATUS.md, iteration_context_4.md published. Next: Iteration 5 (AI recommendations).
+- 2026-05-13 (iter 1): Iteration 1 scoped as pure UI/UX Redesign — 11 user stories (US-1-1 through US-1-11), 10 tasks (T-1-1 through T-1-10, including 2 QA tasks). Presentation-layer only; no backend changes. 5-module PR strategy. Auth frames gate and donut chart scope delegated to design pre-flight. ManageAttendeesPage deferred to iter-2.
+
+---
+## Plan reapproval update — 2026-05-13 (plan v3, iters 1–5)
+
+### Updated scope (redesign-first)
+- **Iter-1:** UI/UX Redesign — 15 screens (splash, auth, home, events, garage, maintenance, registration), zero backend changes. Stories reference Pencil frame IDs. No feature stories.
+- **Iter-2:** SOAT + Notification Foundation + ManageAttendeesPage (Story 2.9). FCM infrastructure, cursor-paginated notification backend in api-gateway, 6 push types.
+- **Iter-3:** Tracking + SOS + Maintenance Reminders + Mapbox migration (Story 3.0 is hard blocker). Date-based reminders only. Home Dashboard SOAT badge.
+- **Iter-4:** Followers + complete profile. Deep link domain provisioned as action item during iter-4 (blocker for iter-5).
+- **Iter-5:** Deep Links (Android App Links + iOS Universal Links via app_links) + Apple Sign-In + NotificationRouteHandler (all 7 types).
+
+### Story conventions for redesign iterations
+- Stories: "As a rider, I see [screen] matching frame [ID] exactly."
+- Acceptance: references specific Pencil frame IDs from REQUIREMENTS.md Appendix A.
+- No backend stories in iter-1.
+
+### Recurring acceptance gates (all iters)
+- dart analyze: zero new violations
+- flutter test: 100% green
+- No hardcoded strings (app_es.arb) or color literals (colorScheme / AppColors)
+- No raw Material widgets where design system equivalent exists
+
+## Change log
+- 2026-05-13 (plan v3 approval): Redesign-first plan approved. 5 iters (1–5). Story conventions for visual iterations added. Scope updated.

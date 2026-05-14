@@ -32,7 +32,7 @@ class VehicleListItem extends StatelessWidget {
                       colors: context.appColors.primaryGradient,
                     )
                   : null,
-              color: isSelected ? null : AppColors.backgroundGray,
+              color: isSelected ? null : AppColors.darkSurface,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: isSelected ? Colors.transparent : context.colorScheme.outlineVariant,
@@ -47,7 +47,7 @@ class VehicleListItem extends StatelessWidget {
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? AppColors.overlayMedium
+                          ? Colors.white.withValues(alpha: 0.25)
                           : context.colorScheme.primary.withValues(alpha: .1),
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -70,7 +70,7 @@ class VehicleListItem extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             color: isSelected
                                 ? Colors.white
-                                : AppColors.textPrimary,
+                                : AppColors.darkTextPrimary,
                           ),
                         ),
                         if (vehicle.brand != null || vehicle.model != null) ...[
@@ -82,8 +82,8 @@ class VehicleListItem extends StatelessWidget {
                             ].where((e) => e != null).join(' '),
                             style: context.bodyMedium?.copyWith(
                               color: isSelected
-                                  ? AppColors.overlayStrong
-                                  : AppColors.textSecondary,
+                                  ? Colors.white.withValues(alpha: 0.9)
+                                  : AppColors.darkTextSecondary,
                             ),
                           ),
                         ],
@@ -96,7 +96,7 @@ class VehicleListItem extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: AppColors.overlayMedium,
+                        color: Colors.white.withValues(alpha: 0.25),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(

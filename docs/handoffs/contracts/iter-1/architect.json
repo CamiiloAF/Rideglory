@@ -1,13 +1,18 @@
 {
   "iteration": 1,
   "phase": "architect",
-  "agent": "architect",
   "status": "pass",
-  "updatedAt": "2026-05-12T03:00:00Z",
-  "summary": "Iteration 1 architect phase: confirmed no rideglory-api changes are required. Defined ProfileCubit DI scope (ADR-1: @lazySingleton in root MultiBlocProvider) and no profile photo upload v1 (ADR-2). Specified GetMyProfileUseCase + ProfileCubit + initials helper + 5 l10n keys with profile_ prefix. Wrote slim handoffs for backend (no-op), frontend (US-1-4 only), devops (no-op), and qa (full traceability for US-1-1 through US-1-4). Initialized docs/architecture/DIAGRAMS.md with profile fetch sequence diagram.",
+  "updatedAt": "2026-05-14T05:00:00Z",
+  "summary": "Iteration 1 architecture confirmed as presentation-layer only. Zero rideglory-api changes. Zero domain/data/DI/router changes. Two new design-system primitives defined: AppEventBadge atom (lib/design_system/atoms/badges/) from frame zKkmE, and DocumentSlotPill molecule (lib/design_system/molecules/feedback/) from frame aGqnv — the molecule is built once in iter-1 and reused for SOAT badge wiring in iter-2. Color tokenization strategy (3-tier: colorScheme → AppColors → status palette) defined and documented. Module PR cadence (5 PRs, ≤ 40 files each) validated against shared-file impact. Slim handoffs delivered to backend (stand-down), frontend, devops (no-op), and qa.",
   "metrics": {
-    "tokens": 42000,
-    "costUsd": 0.18
+    "newDomainModels": 0,
+    "newDtos": 0,
+    "newApiEndpoints": 0,
+    "newDesignSystemAtoms": 1,
+    "newDesignSystemMolecules": 1,
+    "newEnvVars": 0,
+    "modulePrCount": 5,
+    "filesEstimated": "95-135"
   },
   "artifacts": [
     "docs/handoffs/architect.md",
@@ -16,15 +21,30 @@
     "docs/handoffs/architect-for-devops.md",
     "docs/handoffs/architect-for-qa.md",
     "docs/architecture/DIAGRAMS.md",
-    "workflow/state.json",
     "docs/handoffs/iteration_checkpoint.md",
-    "docs/handoffs/contracts/iter-1/architect.json",
+    "workflow/state.json",
     ".claude/skills/architect-skill.md"
   ],
   "qualityGates": [
-    { "name": "required_artifacts_present", "status": "pass", "notes": "All 5 handoff docs + DIAGRAMS.md + contract + state.json + skill update written" },
-    { "name": "architecture_contracts_defined", "status": "pass", "notes": "No new API contracts needed; reused GET /users/me. Defined ProfileCubit + GetMyProfileUseCase + initials helper. l10n keys listed. ADR-1 and ADR-2 documented." },
-    { "name": "slim_handoffs_under_120_lines", "status": "pass", "notes": "All four architect-for-*.md files are under 120 lines." },
-    { "name": "no_backend_change_confirmed", "status": "pass", "notes": "GET /users/me pre-exists; UserDto fields satisfy UserModel; no rideglory-api work this iteration." }
+    {
+      "name": "required_artifacts_present",
+      "status": "pass",
+      "detail": "architect.md + 4 slim role handoffs + DIAGRAMS.md + iteration_checkpoint.md updated + skill updated"
+    },
+    {
+      "name": "architecture_contracts_defined",
+      "status": "pass",
+      "detail": "Iter-1 contract: zero new API endpoints, zero domain models, zero DTOs. Two design-system primitives specified with file paths, constructor signatures, color sources, and barrel-export instructions. Color tokenization 3-tier policy documented with grep procedure."
+    },
+    {
+      "name": "slim_handoffs_within_120_lines",
+      "status": "pass",
+      "detail": "architect-for-backend.md, architect-for-frontend.md, architect-for-devops.md, architect-for-qa.md each under 120 lines."
+    },
+    {
+      "name": "no_scope_drift",
+      "status": "pass",
+      "detail": "All decisions stay inside PO scope. No backend pre-implementation. No iter-2 SOAT logic. ManageAttendeesPage explicitly deferred. Tracking/Profile/Users features explicitly out of scope."
+    }
   ]
 }

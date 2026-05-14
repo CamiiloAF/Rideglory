@@ -39,10 +39,10 @@ class MaintenanceDatesSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(
+            const Icon(
               Icons.calendar_today_rounded,
               size: 16,
-              color: Colors.grey[600],
+              color: AppColors.darkTextSecondary,
             ),
             AppSpacing.hGapSm,
             Text(
@@ -59,15 +59,15 @@ class MaintenanceDatesSection extends StatelessWidget {
                 Icons.event_available_rounded,
                 size: 16,
                 color: daysUntilNext != null && daysUntilNext! <= 0
-                    ? const Color(0xFFEF4444)
-                    : Colors.grey[600],
+                    ? AppColors.error
+                    : AppColors.darkTextSecondary,
               ),
               AppSpacing.hGapSm,
               Text(
                 'Próximo: ${_formatDate(context, maintenance.nextMaintenanceDate!)}',
                 style: context.bodySmall?.copyWith(
                   color: daysUntilNext != null && daysUntilNext! <= 0
-                      ? const Color(0xFFEF4444)
+                      ? AppColors.error
                       : null,
                   fontWeight: FontWeight.w600,
                 ),

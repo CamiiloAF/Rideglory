@@ -14,13 +14,13 @@ class MaintenanceNotesSection extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.grey[100],
+          color: AppColors.darkSurface,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.notes_rounded, size: 16, color: Colors.grey[600]),
+            const Icon(Icons.notes_rounded, size: 16, color: AppColors.darkTextSecondary),
             AppSpacing.hGapSm,
             Expanded(
               child: Text(

@@ -15,7 +15,7 @@ class EventDetailHeaderOverlayGradient extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.transparent, Color(0xE0000000)],
+            colors: [Colors.transparent, Colors.black87],
           ),
         ),
       ),

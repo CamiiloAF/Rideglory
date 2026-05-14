@@ -160,3 +160,49 @@ Commands: `dart analyze --no-summary`, `grep -rn "print(" lib/`, `dart fix --app
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
 - 2026-05-12 (iter 1): Gotchas and learnings appended after PR #8 review. 6 blocking issues fixed.
 - 2026-05-13 (iter 4): PR #11 reviewed and approved. 1 blocking fix: prefer_const_constructors in test file (const Right, Left, DomainException). dart analyze 34 pre-existing items only. flutter test 7/7. code-review-iter4.md produced.
+
+---
+## Plan reapproval update — 2026-05-13 (plan v3, iters 1–5)
+
+### Review focus by iteration
+
+**Iter-1 (Redesign) — high volume, low logic risk:**
+- Verify no new ElevatedButton / TextFormField / AlertDialog introduced
+- Verify all Color(0x...) / Colors.<named> replaced with colorScheme or AppColors constants (scope: lib/features/ only)
+- Verify no domain or data layer changes (grep for new imports in domain/)
+- Verify 3 existing widget tests updated (not left broken)
+- Verify module-PR strategy followed (max 40 files per PR)
+- AI cover generation widget: mandatory smoke test result in PR description
+
+**Iter-2 (Notifications/SOAT):**
+- FCM background handler: @pragma('vm:entry-point') annotation present; configureDependencies() called inside handler
+- Cursor pagination: verify ?cursor= / nextCursor pattern (not offset/limit)
+- api-gateway Prisma: verify it's first-time init (not reset); seed.ts verified in 4 microservices before reset
+- Firebase Auth guard on ALL notification endpoints
+
+**Iter-3 (Mapbox migration):**
+- Zero google_maps_flutter / geocoding imports in lib/ after Story 3.0 (grep required)
+- route_map_preview.dart: sync → async with ResultState error handling (no missing error state)
+- GeoJsonSource + LineLayer used (not PolylineAnnotationManager)
+- FOREGROUND_SERVICE + FOREGROUND_SERVICE_LOCATION permissions reviewed against Play Store policy
+- IsolateNameServer bridge pattern verified in flutter_foreground_task handler
+
+**Iter-4 (Followers):**
+- FollowCubit exception documented in DI module comment
+- PublicVehicleDto is a separate class (not VehicleDto with null fields)
+- GoRouter DI assessment complete (documented in PR)
+
+**Iter-5 (Deep Links):**
+- assetlinks.json and apple-app-site-association verified reachable (curl result in PR)
+- Apple Sign-In button: HIG compliance (black button, white logo, correct text)
+- Universal Links tested with release build on physical iOS device (not debug)
+- NotificationRouteHandler: graceful error if target entity gone (no crash)
+
+### Security checklist (all iters)
+- No secrets in source code
+- Firebase Auth guard on every protected endpoint
+- No API keys in Flutter source
+- FCM tokens never logged or exposed to client
+
+## Change log
+- 2026-05-13 (plan v3 approval): Per-iteration review focus, security checklist, and architecture invariants documented.

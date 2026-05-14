@@ -14,14 +14,14 @@ class VehicleInfoChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: AppColors.darkSurface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[300]!, width: 1),
+        border: Border.all(color: AppColors.darkBorder, width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(_vehicleIcon, size: 16, color: Colors.grey[700]),
+          Icon(_vehicleIcon, size: 16, color: AppColors.darkTextSecondary),
           AppSpacing.hGapSm,
           Text(
             vehicle.name,

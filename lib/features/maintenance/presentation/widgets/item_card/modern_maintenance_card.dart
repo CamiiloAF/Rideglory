@@ -5,6 +5,7 @@ import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/item_card/maintenance_card_content.dart';
+import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
 
 class ModernMaintenanceCard extends StatelessWidget {
   final MaintenanceModel maintenance;
@@ -22,8 +23,8 @@ class ModernMaintenanceCard extends StatelessWidget {
 
   Color get _typeColor {
     return maintenance.type == MaintenanceType.oilChange
-        ? const Color(0xFF6366F1)
-        : const Color(0xFF8B5CF6);
+        ? AppColors.primary
+        : AppColors.primaryLight;
   }
 
   IconData get _typeIcon {

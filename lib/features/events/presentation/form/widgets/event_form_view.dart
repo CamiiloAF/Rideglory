@@ -30,7 +30,7 @@ class EventFormView extends StatelessWidget {
                       ? context.l10n.event_eventUpdatedSuccess
                       : context.l10n.event_eventCreatedSuccess,
                 ),
-                backgroundColor: Colors.green,
+                backgroundColor: AppColors.success,
               ),
             );
             context.pop(event);
@@ -39,7 +39,7 @@ class EventFormView extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(context.l10n.errorMessage(error.message)),
-                backgroundColor: Colors.red,
+                backgroundColor: AppColors.error,
               ),
             );
           },

@@ -11,7 +11,7 @@ class MaintenanceCardActionsMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
-      icon: Icon(Icons.more_vert, color: Colors.grey[600]),
+      icon: const Icon(Icons.more_vert, color: AppColors.darkTextSecondary),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       itemBuilder: (context) => [
         if (onEdit != null)
@@ -30,9 +30,9 @@ class MaintenanceCardActionsMenu extends StatelessWidget {
             value: 'delete',
             child: Row(
               children: [
-                const Icon(Icons.delete_outline, size: 20, color: Colors.red),
+                const Icon(Icons.delete_outline, size: 20, color: AppColors.error),
                 AppSpacing.hGapMd,
-                Text(context.l10n.delete, style: const TextStyle(color: Colors.red)),
+                Text(context.l10n.delete, style: const TextStyle(color: AppColors.error)),
               ],
             ),
           ),

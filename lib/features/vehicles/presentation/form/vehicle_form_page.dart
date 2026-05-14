@@ -126,14 +126,14 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
                   ? context.l10n.updatedSuccessfully
                   : context.l10n.savedSuccessfully,
             ),
-            backgroundColor: Colors.green,
+            backgroundColor: AppColors.success,
           ),
         );
         context.pop(savedVehicle);
       },
       error: (error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error.message), backgroundColor: Colors.red),
+          SnackBar(content: Text(error.message), backgroundColor: AppColors.error),
         );
       },
     );

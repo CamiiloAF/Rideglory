@@ -121,3 +121,45 @@ Repo: `/Users/cami/Developer/Personal/rideglory-api`
 - 2026-05-11 (iter 0): Skill stub created.
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
 - 2026-05-13 (iter-4): POST /events/generate-cover implemented. ClaudeService (Anthropic SDK, claude-haiku-4-5) + UnsplashService (axios, 15 s timeout, typed response interface) created in api-gateway/src/common/. GenerateCoverDto with class-validator. Both services registered in EventsModule. .env.example created with ANTHROPIC_API_KEY + UNSPLASH_ACCESS_KEY placeholders. 10 unit tests: all pass. 0 lint errors in new code. Pattern: services in common/, DTO in events/dto/, register in EventsModule providers array.
+
+---
+## Plan reapproval update — 2026-05-13 (plan v3, iters 1–5)
+
+### Backend scope by iteration
+
+**Iter-1 (Redesign):** Zero backend changes. Skip backend phase entirely.
+
+**Iter-2 (SOAT + Notifications):**
+- vehicles-ms: Soat entity (Prisma), POST/GET /api/vehicles/:vehicleId/soat
+- users-ms: fcmToken String? field on User, POST /api/notifications/fcm-token
+- api-gateway (FIRST-TIME Prisma): Notification entity (id, userId, type, payload JSON, isRead, createdAt), GET /api/notifications (cursor), PATCH /api/notifications/:id/read, PATCH /api/notifications/read-all
+- api-gateway: @nestjs/schedule + NotificationSchedulerService; SOAT cron (30d, 7d, day-of); America/Bogota timezone
+- events-ms: FCM push trigger on registration approval/rejection; push inserts row in notifications table
+
+**Iter-3 (Tracking):**
+- api-gateway/tracking: POST /api/events/:eventId/tracking/start, POST /api/events/:eventId/tracking/end (organizer-level — different from existing rider session join)
+- TrackingGateway: handle 'sos' WebSocket message → broadcast sos_alert + FCM multicast; deduplication via sosTriggeredAt
+- events-ms: GET /api/events/:eventId/route returning routeGeoJson (GeoJSON LineString, NOT encoded polyline); schedule 24h event reminder
+
+**Iter-4 (Followers):**
+- users-ms: Follow entity (followerId, followingId, createdAt, composite unique index); POST/DELETE /api/users/:userId/follow; GET /api/users/:userId/followers?page=&limit=; GET /api/users/:userId/following?page=&limit=
+- users-ms: _count.followers and _count.following in profile response; GET /api/vehicles?userId=:userId returning PublicVehicleDto (no licensePlate or insurance fields)
+- api-gateway: FCM push for nueva_suscripcion; row in notifications table
+
+**Iter-5 (Deep Links):**
+- events-ms: GET /api/events/:eventId/share-metadata with Cache-Control: public, max-age=3600
+- Firebase Hosting or api-gateway: /.well-known/assetlinks.json, /.well-known/apple-app-site-association, store redirect page
+
+### Security rules (all iters)
+- Every protected endpoint: Firebase ID token guard (FirebaseAuthGuard)
+- No API keys in source code
+- FCM tokens stored per-user, updated on each login
+
+### Pre-flight for iter-2 (critical order)
+1. Create seed.ts in vehicles-ms + events-ms
+2. prisma migrate reset in 4 existing services
+3. prisma init + prisma migrate dev in api-gateway (first-time)
+4. Verify GET /api/vehicles returns 200 empty
+
+## Change log
+- 2026-05-13 (plan v3 approval): Backend scope documented per iteration. Pre-flight order for iter-2 established.

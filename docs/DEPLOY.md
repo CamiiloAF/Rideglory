@@ -1,373 +1,347 @@
-# Deployment & CI/CD — Rideglory Flutter
+# Deployment Guide — Rideglory Flutter
 
-**Last Updated:** 2026-05-12  
-**Status:** Iteration 1 — CI pipeline foundation
-
----
+**Last updated:** 2026-05-14  
+**Iteration:** 1
 
 ## Overview
 
-Rideglory uses **GitHub Actions** to run automated CI/CD checks on every push and pull request. The pipeline ensures code quality through linting (`dart analyze`) and test coverage (`flutter test`) before merging.
-
-This document covers:
-1. Local development setup
-2. GitHub Actions secrets configuration
-3. CI/CD pipeline behavior
-4. Manual build and release steps
+Rideglory is built with Flutter (iOS and Android) and backed by a NestJS API (`rideglory-api` repository). This guide covers environment setup, CI/CD configuration, and release procedures.
 
 ---
 
-## Local Development Setup
+## Environment Variables
 
-### Prerequisites
+### `.env` file (local development and CI injection)
 
-- Flutter 3.8.1+ (or stable channel)
-- Dart 3.8.1+
-- Android SDK (API 21+) for APK builds
-- Xcode 15+ for iOS builds (future)
+Create a `.env` file in the project root with the following keys. All are required for the app to build and run.
 
-### Initial Setup
+| Variable | Purpose | Example | Required |
+|----------|---------|---------|----------|
+| `FIREBASE_ANDROID_API_KEY` | Firebase Android API key from google-services.json | `AIzaSy...` | Yes |
+| `FIREBASE_ANDROID_APP_ID` | Firebase Android app ID | `1:123456789:android:abcdef` | Yes |
+| `FIREBASE_IOS_API_KEY` | Firebase iOS API key | `AIzaSy...` | Yes |
+| `FIREBASE_IOS_APP_ID` | Firebase iOS app ID | `1:123456789:ios:abcdef` | Yes |
+| `FIREBASE_MESSAGING_SENDER_ID` | Firebase Cloud Messaging sender ID | `123456789` | Yes |
+| `FIREBASE_PROJECT_ID` | Firebase project ID | `rideglory-prod` | Yes |
+| `FIREBASE_STORAGE_BUCKET` | Firebase Cloud Storage bucket | `rideglory-prod.appspot.com` | Yes |
+| `FIREBASE_ANDROID_CLIENT_ID` | Google Sign-In client ID (Android) | `123456789-abcdef.apps.googleusercontent.com` | Yes |
+| `FIREBASE_IOS_CLIENT_ID` | Google Sign-In client ID (iOS) | `123456789-xyz.apps.googleusercontent.com` | Yes |
+| `FIREBASE_IOS_BUNDLE_ID` | iOS app bundle identifier | `com.rideglory.app` | Yes |
+| `LOCAL_API_BASE_URL` | Backend API base URL (dev/testing only) | `http://localhost:3000/api` | Yes |
+| `UNSPLASH_ACCESS_KEY` | Unsplash API key for placeholder images (iter-4+) | `Ym9nWV...` | Yes |
+
+### GitHub Actions Secrets
+
+Store all `.env` values in GitHub Actions secrets with **identical names** to the `.env` keys above. The CI workflow injects them at build time.
+
+Additionally, GitHub Actions requires:
+
+| Secret | Purpose | Format | Required |
+|--------|---------|--------|----------|
+| `GOOGLE_SERVICES_JSON` | Firebase Android config file (`google-services.json`) base64-encoded | base64(google-services.json) | Yes |
+| `GOOGLE_SERVICE_INFO_PLIST` | Firebase iOS config file (`GoogleService-Info.plist`) base64-encoded | base64(GoogleService-Info.plist) | Yes |
+
+**To encode config files for GitHub Actions:**
 
 ```bash
-# Clone the repository
-git clone <repo-url>
-cd Rideglory
+# Android
+cat android/app/google-services.json | base64 | pbcopy  # or xclip on Linux
 
-# Install dependencies
-flutter pub get
-
-# Copy and configure environment file
-cp .env.example .env
-# Edit .env with real Firebase credentials and API base URL
-
-# Generate code (freezed, retrofit, injectable, envied)
-dart run build_runner build --delete-conflicting-outputs
-
-# Run the app (dev)
-flutter run -d <device_id>
+# iOS
+cat ios/Runner/GoogleService-Info.plist | base64 | pbcopy
 ```
 
-### Code Quality Checks
-
-Run these locally before pushing:
-
-```bash
-# Analyze code for lint violations
-dart analyze
-
-# Run all tests
-flutter test
-
-# Format code (check only)
-dart format --output=none lib/
-
-# Format code (apply changes)
-dart format lib/
-```
+Then paste the encoded string into GitHub Actions as a secret.
 
 ---
 
-## GitHub Actions Secrets Configuration
+## Firebase Config Files (Local Development)
 
-All sensitive values (Firebase config, API keys) are stored as **GitHub Actions secrets** and injected at build time. **Never commit `.env` with real values or Firebase config files.**
+**Never commit Firebase config files.** They contain sensitive keys and are project-specific.
 
-### Required Secrets
+### Setup
 
-Create these in your GitHub repository settings (`Settings > Secrets and variables > Actions`):
+1. Obtain `google-services.json` and `GoogleService-Info.plist` from your Firebase Console.
+2. Place them in the repository:
+   - `android/app/google-services.json`
+   - `ios/Runner/GoogleService-Info.plist`
+3. These files are in `.gitignore` and will not be committed.
 
-| Secret Name | Purpose | Value Format | Example |
-|------------|---------|-------------|---------|
-| `FIREBASE_ANDROID_API_KEY` | Firebase Android authentication key | String | `AIz...` |
-| `FIREBASE_ANDROID_APP_ID` | Firebase Android app ID | String (app-id format) | `1:123456:android:abc...` |
-| `FIREBASE_IOS_API_KEY` | Firebase iOS authentication key | String | `AIz...` |
-| `FIREBASE_IOS_APP_ID` | Firebase iOS app ID | String (app-id format) | `1:123456:ios:def...` |
-| `FIREBASE_MESSAGING_SENDER_ID` | FCM sender ID (shared) | Numeric string | `123456789` |
-| `FIREBASE_PROJECT_ID` | Firebase project ID (shared) | String | `my-project` |
-| `FIREBASE_STORAGE_BUCKET` | Firebase Storage bucket (shared) | String | `my-project.appspot.com` |
-| `FIREBASE_ANDROID_CLIENT_ID` | OAuth client ID (Android) | String | `123456-abc...mobile.googleusercontent.com` |
-| `FIREBASE_IOS_CLIENT_ID` | OAuth client ID (iOS) | String | `123456-def...mobile.googleusercontent.com` |
-| `FIREBASE_IOS_BUNDLE_ID` | iOS app bundle ID | String (reverse-domain format) | `com.example.rideglory` |
-| `LOCAL_API_BASE_URL` | Backend API URL override (optional) | Full URL with `/api` suffix | `http://api.example.com/api` |
-| `UNSPLASH_ACCESS_KEY` | Unsplash API access key for image generation (Iteration 4+) | String (API key) | (see https://unsplash.com/developers) |
-| `GOOGLE_SERVICES_JSON` | Firebase Android config (base64-encoded) | Base64 string | (see below) |
-| `GOOGLE_SERVICE_INFO_PLIST` | Firebase iOS config (base64-encoded) | Base64 string | (see below) |
+### Example files
 
-### Firebase Config Files (Base64 Encoding)
+Placeholder/example files are committed to show the expected structure:
+- `android/app/google-services.json.example`
+- `ios/Runner/GoogleService-Info.plist.example`
 
-Firebase requires platform-specific config files that should **never be committed**. Instead, encode them as base64 and store in GitHub secrets:
-
-#### Android (`GOOGLE_SERVICES_JSON`)
-
-1. Obtain your `google-services.json` from Firebase Console
-2. Encode as base64:
-   ```bash
-   cat google-services.json | base64 -w 0 > google-services.json.b64
-   cat google-services.json.b64
-   ```
-3. Copy the output and paste into GitHub secret `GOOGLE_SERVICES_JSON`
-
-#### iOS (`GOOGLE_SERVICE_INFO_PLIST`)
-
-1. Obtain your `GoogleService-Info.plist` from Firebase Console
-2. Encode as base64:
-   ```bash
-   cat GoogleService-Info.plist | base64 -w 0 > GoogleService-Info.plist.b64
-   cat GoogleService-Info.plist.b64
-   ```
-3. Copy the output and paste into GitHub secret `GOOGLE_SERVICE_INFO_PLIST`
-
-### Local Test of Secret Injection
-
-To test that CI secrets are correctly injected, create a local `.env` file with real values:
+To set up locally, copy and edit:
 
 ```bash
-FIREBASE_ANDROID_API_KEY=AIz...
-FIREBASE_PROJECT_ID=my-project
-# ... other values
+cp android/app/google-services.json.example android/app/google-services.json
+cp ios/Runner/GoogleService-Info.plist.example ios/Runner/GoogleService-Info.plist
 ```
 
-Then run code generation:
-
-```bash
-dart run build_runner build --delete-conflicting-outputs
-```
-
-If successful, the `lib/core/config/app_env.dart` file will be generated with valid values.
+Then fill in real values from Firebase Console.
 
 ---
 
 ## CI/CD Pipeline
 
-### Workflow File
+### GitHub Actions Workflow
 
-**Location:** `.github/workflows/ci.yml`
+**File:** `.github/workflows/ci.yml`
 
-### Trigger Conditions
+#### Triggers
 
-| Event | Branch(es) | Action |
-|-------|-----------|--------|
-| `push` | `iter-*`, `main` | Run `analyze-and-test` job |
-| `pull_request` | To `main` | Run `analyze-and-test` job |
-| `push` tag | `v*` (e.g., `v1.0.0`) | Run `build-apk` job (in addition to `analyze-and-test`) |
+- **Push to `iter-*` branches** — runs full CI suite (`dart analyze` + `flutter test`)
+- **Push to `main` branch** — runs full CI suite
+- **Pull request to `main`** — runs full CI suite (required status check)
+- **Version tags** (`v*`) — triggers APK build job
 
-### Jobs
+#### Jobs
 
-#### 1. analyze-and-test (required gate)
+**1. `analyze-and-test` (required gate)**
 
-Runs on every push and PR. Must pass before merging to `main`.
+Runs on every push to `iter-*` or `main`, and every PR to `main`.
 
-**Steps:**
+Steps:
 1. Checkout code
-2. Setup Flutter (stable channel, with cache)
-3. Inject `.env` from secrets
-4. Inject Firebase config files from secrets
-5. `flutter pub get` — resolve dependencies
-6. `dart run build_runner build --delete-conflicting-outputs` — generate code
-7. `dart analyze` — lint code (fails on any violation)
-8. `flutter test` — run all unit/widget tests (fails on any failure)
+2. Setup Flutter (stable, cached)
+3. Inject `.env` from `ENV_FILE` (not used in iter-1, but ready for future)
+4. Inject `google-services.json` from `GOOGLE_SERVICES_JSON` secret (base64-decoded)
+5. Inject `GoogleService-Info.plist` from `GOOGLE_SERVICE_INFO_PLIST` secret (base64-decoded)
+6. `flutter pub get`
+7. `dart run build_runner build --delete-conflicting-outputs` (code generation)
+8. `dart analyze` — **fails if violations found**
+9. `flutter test` — **fails if tests fail**
 
-**Status:** Red X (failure) if any step fails.
+#### Exit codes
 
-#### 2. build-apk (optional, on version tags)
+- Exit 0: All checks pass. PR can merge.
+- Exit 1: `dart analyze` violation or `flutter test` failure. PR blocked.
 
-Runs when a tag matching `v*` is pushed (e.g., `v1.0.0`). Builds a release APK for internal testing.
+**2. `build-apk` (optional, version tags only)**
 
-**Steps:** Same as analyze-and-test, plus:
-- `flutter build apk --release` — build optimized APK
-- Upload artifact (retained 30 days)
+Triggers only on tags matching `v*` (e.g., `v1.0.0`).
 
-**Artifact:** `build/app/outputs/flutter-apk/app-release.apk`
-
-### Making CI Required
-
-To enforce that the CI pipeline passes before merging:
-
-1. Go to repository **Settings > Branches**
-2. Add a rule for `main`:
-   - Require status checks to pass before merging
-   - Require the `analyze-and-test` job to pass
-   - Optionally: require branches to be up to date before merging
+Steps: Same setup as above, then:
+- `flutter build apk --release` — builds optimized APK
+- Uploads artifact (retained for 30 days)
 
 ---
 
-## Release Process
+### Local Development CI Simulation
+
+Before pushing, run the same checks locally to avoid CI failures:
+
+```bash
+# Full CI simulation
+dart analyze && flutter test && flutter build apk --release
+
+# Or individual steps
+dart analyze              # Check for lint violations
+flutter test              # Run all unit/widget tests
+flutter build apk         # Build debug APK (faster for testing)
+```
+
+---
+
+## Release Workflow
 
 ### Creating a Release
 
-1. **Ensure all tests pass locally:**
-   ```bash
-   dart analyze && flutter test
-   ```
-
-2. **Update version in `pubspec.yaml`:**
+1. **Increment version** in `pubspec.yaml`:
    ```yaml
-   version: 1.0.0+2  # Increment build number; update version as needed
+   version: 1.0.0+1  # Major.Minor.Patch+Build
    ```
 
-3. **Commit and push:**
+2. **Tag the commit:**
    ```bash
-   git add pubspec.yaml
-   git commit -m "chore: bump version to 1.0.0"
-   git push origin iter-1  # or your iteration branch
-   ```
-
-4. **Create a GitHub release tag:**
-   ```bash
-   git tag -a v1.0.0 -m "Release v1.0.0 — Iteration 1 complete"
+   git tag v1.0.0
    git push origin v1.0.0
    ```
 
-5. **CI automatically builds APK:**
-   - The `build-apk` job triggers when the tag is pushed
-   - Monitor the Actions tab for build status
-   - Artifact available after job completes
+3. **CI automatically builds APK:**
+   - GitHub Actions `build-apk` job triggers
+   - Produces `app-release.apk`
+   - Artifact available in Actions tab for 30 days
 
-### Downloading APK Artifact
+4. **Manual distribution (future):**
+   - Download APK from Actions artifacts
+   - Upload to Google Play Console (internal testing / beta / production)
+   - Or distribute via TestFlight (iOS requires manual IPA build and provisioning)
 
-1. Go to repository **Actions** tab
-2. Find the run that built the release (matched the version tag)
-3. Click the run to view job details
-4. Download `rideglory-apk` artifact
-5. Extract and use `app-release.apk` for testing or distribution
+### Version naming convention
+
+- **Major:** Feature releases (e.g., `1.0.0` = first release, `2.0.0` = major redesign)
+- **Minor:** Features or significant updates (e.g., `1.1.0` = new event filters)
+- **Patch:** Bug fixes (e.g., `1.0.1` = UI fix)
+- **Build:** Internal build number (incremented for each test/internal release)
+
+Example: `1.2.3+42` = v1.2.3, build 42
+
+---
+
+## Dependencies & Code Generation
+
+### Build Runner
+
+`dart run build_runner build --delete-conflicting-outputs`
+
+Generates:
+- `*.g.dart` files from `json_serializable` (DTOs)
+- `*.freezed.dart` files from `freezed` (immutable models)
+- `*.config.dart` from `injectable` (DI registration)
+- `*.retrofit.dart` from `retrofit` (REST clients)
+
+**When to run:**
+- After adding/modifying `.env` keys (re-generates `AppEnv`)
+- After modifying Retrofit service interfaces
+- After modifying freezed models or serializable DTOs
+- After modifying DI configuration
+
+**Typically run by:**
+- Flutter developers during feature implementation
+- CI pipeline before `dart analyze`
+- DevOps in GitHub Actions (see `.github/workflows/ci.yml`)
+
+### Localization
+
+`flutter gen-l10n`
+
+Generates:
+- `lib/l10n/app_localizations.dart`
+- `lib/l10n/app_localizations_es.dart`
+
+**Source:** `lib/l10n/app_es.arb`
+
+Usually runs automatically with `flutter pub get`, but can be manually triggered.
+
+---
+
+## Secrets Configuration (GitHub Actions)
+
+### Setup Instructions
+
+1. Navigate to repository **Settings** → **Secrets and variables** → **Actions**
+
+2. Add repository secrets:
+
+   - `FIREBASE_ANDROID_API_KEY`
+   - `FIREBASE_ANDROID_APP_ID`
+   - `FIREBASE_IOS_API_KEY`
+   - `FIREBASE_IOS_APP_ID`
+   - `FIREBASE_MESSAGING_SENDER_ID`
+   - `FIREBASE_PROJECT_ID`
+   - `FIREBASE_STORAGE_BUCKET`
+   - `FIREBASE_ANDROID_CLIENT_ID`
+   - `FIREBASE_IOS_CLIENT_ID`
+   - `FIREBASE_IOS_BUNDLE_ID`
+   - `LOCAL_API_BASE_URL`
+   - `UNSPLASH_ACCESS_KEY`
+   - `GOOGLE_SERVICES_JSON` (base64-encoded)
+   - `GOOGLE_SERVICE_INFO_PLIST` (base64-encoded)
+
+3. CI workflow automatically injects them during build.
+
+### Verification
+
+To verify secrets are set correctly:
+
+1. Run a test build: `git push origin <branch>`
+2. Open Actions tab on GitHub
+3. Check for "missing secret" errors in logs
+4. If errors, update secrets and retry
 
 ---
 
 ## Troubleshooting
 
-### "Missing environment variable" error in CI
+### CI Build Fails with "Missing secret"
 
-**Cause:** A secret is not set in GitHub Actions settings.
+**Cause:** GitHub Actions secret not configured.  
+**Solution:** Add the secret to GitHub Actions settings (see Secrets Configuration above).
 
-**Fix:**
-1. Check `.env.example` for all required variables
-2. Verify each secret exists in GitHub: `Settings > Secrets and variables > Actions`
-3. Re-run the failed workflow from the Actions tab
+### `dart analyze` fails locally but passes in CI
 
-### "dart analyze" fails unexpectedly
-
-**Cause:** New lint violation introduced in code, or analyzer version mismatch.
-
-**Fix:**
-1. Run `dart analyze` locally to see the violations
-2. Fix violations or document deferral in the code (`// ignore: rule_name`)
-3. Push and re-run CI
-
-### "flutter test" fails
-
-**Cause:** A test assertion failed or a test file has a syntax error.
-
-**Fix:**
-1. Run `flutter test` locally to reproduce
-2. Debug and fix the test
-3. Push and re-run CI
-
-### Firebase config injection fails
-
-**Cause:** Secret is not base64-encoded correctly or is empty.
-
-**Fix:**
-1. Verify the secret is set in GitHub: `Settings > Secrets and variables > Actions`
-2. If empty, re-encode Firebase config file:
-   ```bash
-   cat google-services.json | base64 -w 0
-   ```
-3. Update the secret and re-run CI
-
-### APK artifact not uploaded
-
-**Cause:** The build failed before reaching the upload step.
-
-**Fix:**
-1. Check the `build-apk` job logs in Actions
-2. Look for error in `flutter build apk --release`
-3. Fix the error and re-tag (or push a new tag)
-
----
-
-## Code Generation & Build Commands
-
-### Local Development Flow
-
+**Cause:** Different Dart SDK versions or cached issues.  
+**Solution:** 
 ```bash
-# 1. Pull latest changes
-git pull origin iter-1
-
-# 2. Install/update dependencies
-flutter pub get
-
-# 3. Generate code (always after changing DTOs, cubits, or .env)
+dart run build_runner clean
 dart run build_runner build --delete-conflicting-outputs
-
-# If code generation fails:
-dart run build_runner clean  # Reset and retry
-dart run build_runner build --delete-conflicting-outputs
-
-# 4. Verify code quality
-dart analyze
-dart format lib/
-
-# 5. Run tests
-flutter test
-
-# 6. Run the app
-flutter run -d <device_id>
+dart analyze --no-summary
 ```
 
-### CI vs. Local
+### `flutter test` fails with stale `.g.dart`
 
-| Step | Local | CI |
-|------|-------|-----|
-| `flutter pub get` | Yes | Yes |
-| `dart run build_runner build` | Yes, if code changed | Always |
-| `dart analyze` | Optional (recommended) | **Required — gates merge** |
-| `flutter test` | Optional (recommended) | **Required — gates merge** |
-| Build APK | `flutter build apk --release` | Only on version tags |
+**Cause:** Code generation files out of sync.  
+**Solution:**
+```bash
+dart run build_runner rebuild --delete-conflicting-outputs
+flutter test
+```
 
----
+### Firebase config files missing
 
-## Next Steps
+**Cause:** `google-services.json` or `GoogleService-Info.plist` not copied locally.  
+**Solution:**
+```bash
+cp android/app/google-services.json.example android/app/google-services.json
+cp ios/Runner/GoogleService-Info.plist.example ios/Runner/GoogleService-Info.plist
+# Edit with real values from Firebase Console
+```
 
-### Before Iteration 2
+### APK build hangs or times out
 
-- [ ] All secrets configured in GitHub (`FIREBASE_*`, `GOOGLE_SERVICES_JSON`, `GOOGLE_SERVICE_INFO_PLIST`)
-- [ ] CI pipeline validates with a test push to `iter-1` branch
-- [ ] `dart analyze` and `flutter test` pass in CI
-- [ ] Main branch protection rule enforces `analyze-and-test` status check
-
-### Deferred to Later Iterations
-
-- **IPA build + App Store submission:** Requires code signing certificate and provisioning profile; deferred until distribution target confirmed (post-Iteration 2).
-- **TestFlight distribution:** Deferred; APK-only for Iteration 1.
-- **Firebase Remote Config integration:** Already used for base URL resolution; no CI changes needed.
+**Cause:** First build takes 3-5 minutes; CI timeout too short.  
+**Solution:** Check GitHub Actions job timeout (default 360 minutes for ubuntu-latest is sufficient).
 
 ---
 
-## Support & Maintenance
+## Platform-Specific Notes
 
-### Updating Flutter Version
+### Android
 
-1. Edit `subosito/flutter-action@v2` in `.github/workflows/ci.yml` (currently pinned to `stable`)
-2. Or manually pin a specific version in the workflow (e.g., `flutter-version: '3.13.0'`)
-3. Test locally with the same version before updating CI
+- **Min SDK:** API 21 (Android 5.0)
+- **Build tools version:** Configured in `android/app/build.gradle`
+- **Keystore:** Not configured in this guide (manual signing required for Play Store)
+- **Manifest:** Permissions in `android/app/src/main/AndroidManifest.xml`
 
-### Rotating Firebase Secrets
+### iOS
 
-1. Generate new Firebase config from Firebase Console
-2. Base64-encode and update the corresponding GitHub secret
-3. Next CI run will use the new config
-
-### Adding a New Secret
-
-1. Add the secret in GitHub: `Settings > Secrets and variables > Actions > New repository secret`
-2. Update `.env.example` with placeholder (if applicable)
-3. Add the secret to the `.env` file creation step in `.github/workflows/ci.yml`
-4. Document in the **Required Secrets** table in this file
+- **Min OS:** iOS 13
+- **Xcode:** Version 14+
+- **Provisioning profile:** Required for device testing and distribution (manual setup)
+- **Signing:** Handled by Xcode (Debug) or Apple Developer account (Release)
 
 ---
 
-## Questions?
+## Roadmap: Future Deployments
 
-Refer to:
-- [Flutter CLI reference](https://flutter.dev/docs/reference/flutter-cli)
-- [GitHub Actions documentation](https://docs.github.com/en/actions)
-- [Firebase setup guide](https://firebase.flutter.dev/)
+### Iter-2 (SOAT + Notifications)
+
+- New Firebase packages: `firebase_messaging`, `flutter_local_notifications`
+- iOS: APNs key setup in Apple Developer Portal
+- API-gateway Prisma initialization: new DATABASE_URL env var
+- CI: Cocoapods cache for iOS push notification binaries
+
+### Iter-3 (Mapbox Migration)
+
+- Mapbox token injection: `MAPBOX_ACCESS_TOKEN` secret
+- After Story 3.0 merge: Update Cocoapods cache key in CI (~200MB binary framework)
+- Native config: AndroidManifest.xml + Info.plist Mapbox meta-data
+
+### Iter-4/5 (Deep Links + Apple Sign-In)
+
+- Deep link domain: assetlinks.json + apple-app-site-association deployment
+- Apple Developer Portal: Apple Sign-In entitlement setup
+- Firebase Hosting or backend API: serve deep link fallback pages
+
+---
+
+## Support & Questions
+
+For issues related to:
+- **Build failures:** See [Troubleshooting](#troubleshooting) or check GitHub Actions logs
+- **Secrets configuration:** See [Secrets Configuration](#secrets-configuration-github-actions)
+- **Firebase setup:** Consult your Firebase Console project settings
+- **Platform-specific:** Refer to Flutter docs for [Android](https://flutter.dev/docs/deployment/android) and [iOS](https://flutter.dev/docs/deployment/ios)

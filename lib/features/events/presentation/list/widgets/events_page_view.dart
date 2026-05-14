@@ -28,7 +28,7 @@ class EventsPageView extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(context.l10n.event_eventDeletedSuccess),
-                        backgroundColor: Colors.green,
+                        backgroundColor: AppColors.success,
                       ),
                     );
                     context.read<EventsCubit>().removeEvent(eventId);
@@ -37,7 +37,7 @@ class EventsPageView extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(context.l10n.errorMessage(error.message)),
-                        backgroundColor: Colors.red,
+                        backgroundColor: AppColors.error,
                       ),
                     );
                   },

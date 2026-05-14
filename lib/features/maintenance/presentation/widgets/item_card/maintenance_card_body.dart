@@ -63,7 +63,7 @@ class MaintenanceCardBody extends StatelessWidget {
                     width: 56,
                     height: 56,
                     decoration: BoxDecoration(
-                      color: const Color(0xFF332A24), // Dark orange/brownish
+                      color: AppColors.darkSurfaceHighest,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(typeIcon, color: context.colorScheme.primary, size: 28),
@@ -102,7 +102,7 @@ class MaintenanceCardBody extends StatelessWidget {
                         Text(
                           maintenance.date.formattedDate,
                           style: context.bodyMedium?.copyWith(
-                            color: Colors.grey[500],
+                            color: AppColors.darkTextSecondary,
                           ),
                         ),
                         AppSpacing.gapMd,
@@ -117,7 +117,7 @@ class MaintenanceCardBody extends StatelessWidget {
                             Text(
                               '${numberFormat.format(maintenance.maintanceMileage)} km',
                               style: context.bodySmall?.copyWith(
-                                color: Colors.grey[400],
+                                color: AppColors.darkTextSecondary,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),

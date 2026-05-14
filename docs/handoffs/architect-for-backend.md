@@ -1,73 +1,40 @@
-# Architect → Backend handoff — Iteration 4
+> Slim handoff — read this before docs/handoffs/architect.md
 
-**Date:** 2026-05-13
-**Iteration:** 4 — AI Event Cover Image Generation
+# Architect → Backend (NestJS) — Iteration 1
 
----
+**Status: NO rideglory-api changes required this iteration.**
 
-## Your deliverable
+## Why
 
-Implement `POST /events/generate-cover` in `api-gateway/src/events/events.controller.ts`.
+Iteration 1 is a pure UI/UX redesign pass on 15 existing Flutter screens. Per PO scope and the existing-system scan:
 
----
+- No new endpoints requested by any of the 11 user stories (US-1-1 … US-1-11).
+- No DTO contract evolves — the redesign uses existing models as-is.
+- No Prisma schema changes, no migrations, no seed data updates.
+- No new env vars on the backend.
+- No new microservice; no api-gateway proxy edits.
 
-## Endpoint spec
+All API contracts already documented in `docs/handoffs/planning/00-existing-system-scan.md` §3 remain frozen for iter-1.
 
-| | |
-|--|--|
-| Method | POST |
-| Path | `/events/generate-cover` |
-| Auth | Firebase ID token (already enforced by `FirebaseAuthGuard`) |
-| Request body | `{ title: string, eventType: string, city: string }` |
-| Success | HTTP 200 `{ imageUrl: string, source: "unsplash", query: string }` |
-| Error — malformed | HTTP 400 (`BadRequestException`) |
-| Error — Claude/Unsplash fails | HTTP 503 (`ServiceUnavailableException`) |
-| Timeout | 15 s on Unsplash call |
+## What backend agent does this iteration
 
----
+**Nothing.** Stand down. Resume in iteration 2 (SOAT + Notifications):
+- New endpoints in vehicles-ms (`POST /api/vehicles/:vehicleId/soat`, `GET /api/vehicles/:vehicleId/soat`)
+- New endpoints in api-gateway (`POST /api/notifications/fcm-token`, `GET /api/notifications`, `PATCH /api/notifications/:id/read`, `PATCH /api/notifications/read-all`)
+- First-time Prisma setup in api-gateway (`prisma init` + `prisma migrate dev`, NOT reset)
+- `notifications` table in api-gateway
+- `fcmToken String?` field added to `User` in users-ms
+- `@nestjs/schedule` SOAT cron jobs (America/Bogota timezone)
+- Pre-flight: `seed.ts` in vehicles-ms and events-ms; `prisma migrate reset` on the 4 existing microservices
 
-## Implementation steps
+## What backend agent must NOT do this iteration
 
-1. **Create `ClaudeService`** in `api-gateway/src/common/claude.service.ts` (if not already from iter-3a):
-   - Inject Anthropic Node.js SDK (`@anthropic-ai/sdk`)
-   - Method `generateSearchQuery(title, eventType, city): Promise<string>`
-   - Prompt: `"Generate a 3-5 word English search query for Unsplash to find a high-quality landscape photo for a motorcycle event. Event title: {title}. Event type: {eventType}. City: {city}. Return only the search query, nothing else."`
-   - Model: `claude-haiku-4-5` (or latest Haiku alias)
-   - On Anthropic SDK error → throw `ServiceUnavailableException`
+- Pre-implement iter-2 SOAT endpoints "to get a head start" → would invalidate the iter-1 frozen-contract guarantee that the frontend redesign relies on.
+- Touch any DTO referenced by Flutter (`EventDto`, `VehicleDto`, `UserDto`, `RegistrationDto`, etc.) — even a non-functional rename breaks the frontend redesign PRs.
+- Run any `prisma migrate` command in any microservice (data state must not drift while frontend smoke tests run).
 
-2. **Create `UnsplashService`** in `api-gateway/src/common/unsplash.service.ts`:
-   - Use `axios` (already in node_modules) for `GET https://api.unsplash.com/search/photos?query={query}&per_page=1&orientation=landscape`
-   - Header: `Authorization: Client-ID ${process.env.UNSPLASH_ACCESS_KEY}`
-   - 15 s timeout via axios `timeout` option
-   - Return `results[0].urls.regular`
-   - If no results or axios error → throw `ServiceUnavailableException`
+## Coordination signal
 
-3. **Add `@Post('generate-cover')` to `EventsController`**:
-   - Validate body with class-validator DTO `GenerateCoverDto { title, eventType, city }` — all `@IsString() @IsNotEmpty()`
-   - Call `ClaudeService.generateSearchQuery()` → query
-   - Call `UnsplashService.searchPhoto(query)` → imageUrl
-   - Return `{ imageUrl, source: 'unsplash', query }`
+If frontend hits a redesign blocker that surfaces a missing field in an existing DTO (e.g., a card needs a value the API never returned), STOP and escalate to PO. The iter-1 plan explicitly states "no new domain models" — a workaround is not a pre-iter-2 ticket.
 
-4. **Add `UNSPLASH_ACCESS_KEY` to `.env.example`** (placeholder only — never commit real key)
-
-5. **Register both services in `EventsModule`**
-
----
-
-## Unit tests required (T-4-2)
-
-File: `api-gateway/test/events/generate-cover.spec.ts`
-
-| Test | Expected |
-|------|----------|
-| Happy path | HTTP 200 `{ imageUrl, source: 'unsplash', query }` |
-| Claude SDK throws | HTTP 503 |
-| Unsplash axios throws | HTTP 503 |
-| Unsplash 15 s timeout exceeded | HTTP 503 |
-| Missing `title` in body | HTTP 400 |
-
----
-
-## Change log
-
-- 2026-05-13 (iter-4): New backend handoff. POST /events/generate-cover endpoint: ClaudeService (query gen) + UnsplashService (photo fetch).
+> Full detail: docs/handoffs/architect.md

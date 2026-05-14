@@ -140,3 +140,75 @@ Run `flutter gen-l10n` as a standalone command (not via build_runner) to regener
 
 ### Initials helper
 `initialsFromName(String?)` is in `lib/core/utils/initials.dart`. The existing `Initials.buildFromFullName` static method also exists — prefer the top-level function for parity with the architect spec and future attendee list usage.
+
+---
+## Plan reapproval update — 2026-05-13 (plan v3, iters 1–5)
+
+### Flutter implementation scope by iteration
+
+**Iter-1 (Redesign) — presentation-layer only:**
+- Replace ElevatedButton → AppButton; TextFormField → AppTextField; AlertDialog → AppDialog
+- Replace Color(0x...) / Colors.<named> → colorScheme token or AppColors constant (scope: lib/features/ only)
+- Match each screen to its rideglory.pen frame exactly
+- Update all 3 existing widget tests in the same PR that swaps their widgets
+- 5 manual smoke tests before final merge: AI cover generation, CTA state variants, donut chart, bottom nav pill bar, Mapbox route preview
+- Module-scoped PRs: max 40 files each (splash+auth, home, events, garage, maintenance, registration)
+
+**Iter-2 (SOAT + Notifications):**
+- lib/features/soat/: domain (SoatModel), data (SoatDto, SoatService), presentation (SoatCubit, SoatUploadPage, SoatManualFormPage, SoatStatusPage)
+- lib/features/notifications/: domain (NotificationModel), data (NotificationsService cursor-paginated), presentation (NotificationsCubit, NotificationCenterPage)
+- FCM: initialized in AuthCubit post-login; flutter_local_notifications for iOS foreground; background handler as top-level function with @pragma('vm:entry-point') + configureDependencies()
+
+**Iter-3 (Tracking + Mapbox):**
+- Story 3.0 FIRST: remove google_maps_flutter, add mapbox_maps_flutter; rewrite 4 Dart files
+- route_map_preview.dart: sync geocoding call → debounced async Retrofit call (PlaceService) with ResultState error handling
+- GeoJsonSource + LineLayer for route rendering; Haversine client-side for adherence (200m)
+- flutter_foreground_task + IsolateNameServer bridge for Android; geolocator AppleSettings for iOS
+- VehicleModel: add soatStatus and soatExpiryDate fields; Home Dashboard SOAT badge
+
+**Iter-4 (Followers):**
+- FollowCubit: @freezed FollowState (isFollowing, followerCount, isLoading, error); optimistic update + revert on error
+- FollowCubit registered as factory with userId param in GetIt (documented exception)
+- FollowersListPage + FollowingListPage with offset/limit load-more pagination
+- Complete profile: bio, ciudad, real counters, PublicVehicleDto vehicles, organized events
+
+**Iter-5 (Deep Links):**
+- app_links: AppLinks().uriLinkStream in main.dart; AndroidManifest intent-filter; iOS Associated Domains
+- sign_in_with_apple: iOS only (defaultTargetPlatform == TargetPlatform.iOS guard)
+- NotificationRouteHandler: @singleton; handles onMessageOpenedApp + getInitialMessage; graceful error if entity gone
+- GoRouter must be GetIt-registered before NotificationRouteHandler can inject it
+
+### Architecture invariants (all iters)
+- Layer order: domain model → repository interface → DTO → Retrofit service → repository impl → use case → cubit → page → widgets
+- No DTO exposure to presentation layer; no HTTP calls in domain layer; no BuildContext in data layer
+- All states: initial, loading, data, empty, error — never skip any
+- dart run build_runner build --delete-conflicting-outputs after any new model/service
+- dart analyze + flutter test must pass before any PR
+
+## Change log
+- 2026-05-13 (plan v3 approval): Flutter implementation scope documented per iteration. Iter-1 redesign patterns and module-PR strategy documented.
+
+---
+
+## Iter-1 frontend learnings (2026-05-14)
+
+### Color tokenization at scale
+When tokenizing Color(0x...) literals, `replace_all` on grep results is effective but watch for subscript patterns: `Colors.grey[400]` → `AppColors.darkTextSecondary[400]` is invalid. Always use a targeted edit for `Colors.grey[N]` variants. The pattern is: `Colors.grey[400/500]` → `AppColors.darkTextSecondary`; `Colors.grey[700]` → `AppColors.darkBorder`; `Colors.grey[200]` → `AppColors.darkBorder`.
+
+### Redundant imports
+`AppColors` is exported from `design_system.dart` via the foundation barrel. Any file that already imports `design_system.dart` should NOT also import `app_colors.dart` directly — it triggers `unnecessary_import` info violations. After tokenization, run `dart analyze` to identify and strip these.
+
+### pubspec.yaml duplicate dev_dependencies
+`flutter gen-l10n` fails with a YAML parse error if `dev_dependencies` has duplicate keys. This happened because `mocktail`, `bloc_test`, and `integration_test` were each listed twice. Fix: edit pubspec.yaml manually to remove the duplicates, then run `flutter pub get`, then `flutter gen-l10n`.
+
+### flutter gen-l10n output
+When `l10n.yaml` is present, `flutter gen-l10n` ignores command-line arguments and uses the YAML config. Silent exit = success. The tool only exits with error if there are ARB parse errors (e.g., duplicate keys) or missing placeholders.
+
+### Stale .g.dart files do not block dart analyze
+`dart analyze` compiles from source interfaces and reports 0 errors even when `.g.dart` generated files are stale. However, `flutter test` compiles the test target which includes `.g.dart` files — stale generators cause compilation failures in widget tests. Resolution: `dart run build_runner build` in iter-2 when backend changes justify a full rebuild.
+
+### light-mode AppColors in dark context
+`AppColors.backgroundGray`, `AppColors.textPrimary`, `AppColors.textSecondary`, `AppColors.overlayStrong` are light-mode constants kept for compatibility. In dark-mode feature widgets, replace with: `AppColors.darkSurface` (backgroundGray), `AppColors.darkTextPrimary` (textPrimary), `AppColors.darkTextSecondary` (textSecondary), `Colors.white.withValues(alpha: N)` (overlayMedium/overlayStrong).
+
+### AppTextField requires form `name` field
+`AppTextField` wraps `FormBuilderTextField` which requires a `name` parameter (used as the FormBuilder field key). It cannot accept a raw `TextEditingController`. Custom autocomplete overlay implementations (e.g., `event_form_multi_brand_section.dart`) that use `TextFormField` with a controller should NOT be migrated — changing them would break the overlay logic.

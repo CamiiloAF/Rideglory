@@ -81,7 +81,7 @@ void main() {
     when(() => mockAttendeesCubit.state).thenReturn(
       ResultState<List<EventRegistrationModel>>.data(data: [_mockRegistration]),
     );
-    when(() => mockAttendeesCubit.stream).thenAnswer((_) => Stream.empty());
+    when(() => mockAttendeesCubit.stream).thenAnswer((_) => const Stream.empty());
   });
 
   group('AttendeesList — Navigation Tests (US-2-3)', () {

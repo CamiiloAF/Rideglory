@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
-const Color _mapPlaceholderBackground = Color(0xFF1F2B3B);
-
 class EventDetailMeetingPointSection extends StatelessWidget {
   const EventDetailMeetingPointSection({
     super.key,
@@ -42,7 +40,7 @@ class EventDetailMeetingPointSection extends StatelessWidget {
               Container(
                 height: 168,
                 width: double.infinity,
-                color: _mapPlaceholderBackground,
+                color: AppColors.darkSurfaceHighest,
                 child: Center(
                   child: Icon(
                     Icons.place,

@@ -1,9 +1,20 @@
-# Architect handoff — Iteration 4
+# Architect handoff — Iteration 1
 
-**Date:** 2026-05-13
+**Date:** 2026-05-14
 **Status:** done
+**Iteration goal:** UI/UX Redesign — bring 15 existing screens into alignment with `rideglory.pen`. Presentation layer only.
 
-AI Event Cover Image Generation: full-stack feature wiring the existing "Generar portada con IA" button to a new backend endpoint that uses the existing ClaudeService (iter-3a pattern) to generate an Unsplash search query, then fetches a cover image and returns the URL to Flutter.
+---
+
+## Iteration 1 architectural constraint (LOAD-BEARING)
+
+> **Iter-1 is presentation-layer ONLY.**
+> No `domain/` changes. No `data/` changes. No DTOs. No services. No use cases. No new routes. No DI changes (other than registering newly extracted design-system widgets, which are stateless — no DI). No code generation (`build_runner`) run required.
+> No `rideglory-api` changes — backend agent is **not active** this iteration.
+
+Rationale: per existing-system scan + PO scope, only 3 imports of `core/data/` exist in `lib/features/*/presentation/`, all referencing `colombia_motos_brands_data.dart` (a static catalog, not a service). Component adoption is mature (only 3 files use raw `ElevatedButton`/`TextFormField`/`AlertDialog`). The work is **color tokenization (~99 files reference `Colors.<named>`, ~20 files use `Color(0x…)` literals)** + **screen recomposition to match Pencil frames** + **two new design-system primitives**.
+
+If any agent in this iteration needs to add a new domain model, DTO, service, route, or backend endpoint to satisfy a story → STOP. Escalate to PO; the story is mis-scoped.
 
 ---
 
@@ -11,110 +22,86 @@ AI Event Cover Image Generation: full-stack feature wiring the existing "Generar
 
 | Feature | Domain changes | Data changes | Presentation changes |
 |---------|----------------|--------------|----------------------|
-| events / form | New: `GetGenerateCoverUseCase` in `domain/use_cases/`. New: `EventCoverRepository` interface in `domain/repository/`. | New: `CoverGenerationDto` + `EventCoverService` (Retrofit `POST /events/generate-cover`) + `EventCoverRepositoryImpl`. | Refactor: `EventFormCubit` → extends `Cubit<EventFormState>` (freezed). New field: `ResultState<String> coverGenerationResult`. New method: `generateCover({title, eventType, city})`. Update `EventFormContent` to wire the existing `onGenerateWithAITap` callback. New: `CoverPreviewWidget` for 16:9 overlay. |
+| splash | none | none | `splash_page.dart` recomposed to match Pencil; loading/error/success visual states use `AppLoadingIndicator` + design tokens (US-1-2) |
+| authentication | none | none | `login_page.dart`, `signup_page.dart`, `password_recovery_page.dart` swap raw widgets → `AppButton`/`AppTextField`/`AppPasswordTextField`; Space Grotesk applied via theme; no hardcoded colors (US-1-3) |
+| home | none | none | `home_page.dart` recomposed to match frame `dyWWs` (greeting header, garage card, upcoming rides horizontal scroll, bottom nav `VMmN0`); SOAT badge **not added** (iter-2/3) (US-1-4) |
+| events | none | none | `event_list_page.dart`, `event_detail_page.dart`, filter chips, filter bottom sheet, CTA bar match frames `Neipf`/`kAubW`; new atom `app_event_badge.dart` consumed in card contexts (US-1-5). `create_event_page.dart` matches frame `zbCa0` — AI cover widget + Mapbox route preview preserved untouched (US-1-6) |
+| vehicles | none | none | `vehicle_list_page.dart`, `vehicle_detail_page.dart` match frames `KCf6W`/`P1GSzZ`; new molecule `document_slot_pill.dart` extracted from `aGqnv` (US-1-7). `vehicle_form_page.dart` matches `EqnMm` — document slot section is **non-functional UI placeholder** for iter-2 (US-1-8) |
+| maintenance | none | none | dashboard, history, step1/step2 forms match frames `Ako7u`/`SykjL`/`J5h6P`/`eK2WW`/`ELB5u`; donut chart geometry **scope-flagged** by Design — color-only swap unless Design upgrades scope (US-1-9) |
+| event_registration | none | none | `my_registrations_page.dart`, `registration_detail_page.dart` adopt design-system components, no hardcoded colors, correct empty/loading states (US-1-10). `manage_attendees_page.dart` is **deferred to iter-2 Story 2.9** |
+| profile / users / tracking / live_tracking | none | none | **Out of scope** for iter-1 (no PO story targets these screens) |
 
 ---
 
 ## API contracts (rideglory-api changes)
 
-| Method | Path | Auth | Request body | Success | Errors |
-|--------|------|------|--------------|---------|--------|
-| POST | `/events/generate-cover` | Firebase ID token (JWT bearer) | `{ title: string, eventType: string, city: string }` | 200 `{ imageUrl: string, source: "unsplash", query: string }` | 400 malformed body · 503 Claude or Unsplash failure |
-
-**Implementation location:** `api-gateway/src/events/events.controller.ts` — add `@Post('generate-cover')` method. No microservice proxy needed; implement logic directly in `api-gateway` using `ClaudeService` (iter-3a pattern) and Axios/`axios` for Unsplash HTTP call.
-
-**Unsplash call:** `GET https://api.unsplash.com/search/photos?query={query}&per_page=1&orientation=landscape` with `Authorization: Client-ID ${UNSPLASH_ACCESS_KEY}`.
-
-**Claude prompt:** `"Generate a 3-5 word English search query for Unsplash to find a high-quality landscape photo for a motorcycle event. Event title: {title}. Event type: {eventType}. City: {city}. Return only the search query, nothing else."`
-
-**Timeout:** 15 s on Unsplash call (Promise.race). If exceeded, throw `ServiceUnavailableException`.
+**No changes.** Backend agent is idle this iteration. See `docs/handoffs/architect-for-backend.md`.
 
 ---
 
 ## New models and DTOs
 
-| Name | Layer | File path | Notes |
-|------|-------|-----------|-------|
-| `CoverGenerationDto` | data | `lib/features/events/data/dto/cover_generation_dto.dart` | `@JsonSerializable()`. Fields: `imageUrl` (String), `source` (String), `query` (String). |
-| `EventCoverRepository` | domain | `lib/features/events/domain/repository/event_cover_repository.dart` | Abstract. Single method: `Future<Either<DomainException, String>> generateCover({required String title, required String eventType, required String city})`. Returns the `imageUrl` only (domain-clean). |
-| `GetGenerateCoverUseCase` | domain | `lib/features/events/domain/use_cases/get_generate_cover_use_case.dart` | `@injectable`. Delegates to `EventCoverRepository.generateCover()`. |
-| `EventCoverService` | data | `lib/features/events/data/service/event_cover_service.dart` | Retrofit. `@POST('/events/generate-cover')`. Returns `Future<CoverGenerationDto>`. |
-| `EventCoverRepositoryImpl` | data | `lib/features/events/data/repository/event_cover_repository_impl.dart` | `@Injectable(as: EventCoverRepository)`. Wraps `EventCoverService` with `executeService()`. Maps HTTP 503 to Spanish `DomainException`. Returns `Right(dto.imageUrl)`. |
-| `EventFormState` | presentation | `lib/features/events/presentation/form/cubit/event_form_cubit.dart` | `@freezed` class in same file as `EventFormCubit`. Fields: `ResultState<EventModel> saveResult`, `ResultState<String> coverGenerationResult`. |
+**None.** No domain models, no DTOs added.
 
----
+## New design-system components (presentation only)
 
-## ADRs (architectural decisions)
+| Name | Layer | File path | Source frame | Used by |
+|------|-------|-----------|--------------|---------|
+| `AppEventBadge` | atom | `lib/design_system/atoms/badges/app_event_badge.dart` (new `badges/` subfolder) | `zKkmE` | Event card image overlay (list + detail), upcoming-rides carousel on Home |
+| `DocumentSlotPill` | molecule | `lib/design_system/molecules/feedback/document_slot_pill.dart` | `aGqnv` | Vehicle detail document section (US-1-7), vehicle form document slot section non-functional placeholder (US-1-8). **Reused in iter-2 for SOAT badge wiring.** |
 
-### ADR-7 — EventFormCubit: split state into @freezed EventFormState
-**Status:** Accepted.
-**Context:** `EventFormCubit` previously extended `Cubit<ResultState<EventModel>>`, making it impossible to track cover generation state independently without clobbering form save state.
-**Decision:** Introduce `@freezed EventFormState` with two `ResultState` fields (`saveResult`, `coverGenerationResult`). `EventFormCubit` now extends `Cubit<EventFormState>`.
-**Consequence:** All existing `BlocBuilder<EventFormCubit, ResultState<EventModel>>` usages in `event_form_view.dart` and `event_form_page.dart` must be updated to use `state.saveResult`. Widget tests must be updated accordingly. `buildEventToSave()` logic is unchanged.
+Both files MUST be added to the corresponding barrel exports:
+- `lib/design_system/atoms/atoms.dart` → add `export 'badges/app_event_badge.dart';`
+- `lib/design_system/molecules/molecules.dart` → add `export 'feedback/document_slot_pill.dart';`
 
-### ADR-8 — Cover generation lives in EventFormCubit, not FormImageCubit
-**Status:** Accepted.
-**Context:** `FormImageCubit` is a shared cubit for generic image picking. Cover URL from AI is event-specific and needs access to form field values (title, eventType, city).
-**Decision:** `generateCover()` stays in `EventFormCubit`. On success, `EventFormCubit` updates `coverGenerationResult` to `data(imageUrl)`. The presentation layer then syncs this into `FormImageCubit` via `formImageCubit.setRemoteImageUrl(imageUrl)` — a new method to add to `FormImageCubit`.
-**Consequence:** `FormImageCubit` needs one new method: `void setRemoteImageUrl(String url)` — emits `data(FormImageData(remoteImageUrl: url))`. This keeps `FormImageCubit` generic while allowing the cover generation result to be reflected in the image preview.
+Constructors: `const`, stateless, no `BuildContext` capture in fields. Colors come from `Theme.of(context).colorScheme` or `AppColors`. Strings come from caller (no `context.l10n` inside the widget) so they remain pure presentation primitives reusable across features.
 
-### ADR-9 — No new Flutter package additions for Iteration 4
-**Status:** Accepted.
-**Context:** `cached_network_image` is already a dependency (used in event list cards).
-**Decision:** Use existing `CachedNetworkImage` for the preview. No new pub.dev packages needed. Loading overlay uses a `Stack` with a semi-transparent `CircularProgressIndicator` over the existing preview.
+## Color tokenization strategy (replaces `Color(0x…)` and `Colors.<named>`)
 
----
+**Mapping policy (apply per file, in this priority order):**
+1. **Semantic theme tokens (preferred)** — `Theme.of(context).colorScheme.primary | onPrimary | surface | onSurface | surfaceContainerHighest | outline | error | onError`. Use when the color carries a semantic role.
+2. **`AppColors` palette constants** — for dark surfaces/borders/text not covered by `colorScheme`: `AppColors.darkBackground`, `AppColors.darkSurface`, `AppColors.darkSurfaceHighest`, `AppColors.darkBorder`, `AppColors.darkTextPrimary`, `AppColors.darkTextSecondary`, `AppColors.darkInputIcon`, `AppColors.primaryGradient`, `AppColors.maintenanceUrgent|Warning|Ok`, `AppColors.licensePlateTagBackground|Text`.
+3. **Status palette** — `AppColors.success|warning|error|info` (and `Light`/`Dark` variants) for non-themed status indicators (e.g., maintenance urgency dots, badge backgrounds).
 
-## New API route constant (Flutter)
+**Forbidden after iter-1:** `Color(0xFF…)` in `lib/features/`. `Colors.<named>` literals in `lib/features/` **except** `Colors.transparent` and `Colors.black`/`Colors.white` when overlaying images (which should still prefer `AppColors.overlay*` if available).
 
-Add to `lib/core/http/api_routes.dart`:
-```dart
-static const generateEventCover = '/events/generate-cover';
-```
+**Process per module PR:**
+1. Run `grep -rE "Color\(0x|Colors\.(?!transparent\b|black\b|white\b)" <module-path>` to enumerate occurrences.
+2. Map each to one of the three buckets above. If a color has no clear mapping, add it to `AppColors` as a domain-specific constant (do NOT inline `Color(0x…)`) and document it in the PR description.
+3. `dart analyze` after each substitution batch.
 
----
+If any new `AppColors` constant is added during the redesign, append a one-line entry to the architect handoff "Change log" section of *this* file in the same PR.
 
 ## Environment variables
 
-| Variable | Repo | Description |
-|----------|------|-------------|
-| `UNSPLASH_ACCESS_KEY` | rideglory-api | Unsplash API access key. Add to `.env.example` and CI secrets. Never commit actual value. |
+**None added.** No `.env` keys, no Firebase Remote Config keys.
 
----
+## Module PR strategy (compatibility check)
 
-## Localization (l10n keys)
+PO defined 5–6 module-scoped PRs (≤ 40 files each) targeting the `iter-1` feature branch. Architecturally compatible because:
+- Each module touches only files inside one `lib/features/<feature>/presentation/` subtree (+ shared design system in PRs 3 and 4 for the new atom/molecule).
+- No shared cross-feature dependency edits (no `injection.dart` re-wiring, no `app_router.dart` route additions, no shared `core/` mutations apart from the `AppColors` additions noted above).
+- Test impact is local: `attendees_list_navigation_test.dart`, `event_filters_bottom_sheet_test.dart`, `events_page_view_test.dart` updated in the same PR (PR 3) that swaps their target widgets. No cross-module test churn.
 
-New keys in `lib/l10n/app_es.arb` (prefix `event_`):
+**Merge order (recommended):** PR 1 (splash+auth) → PR 2 (home) → PR 3 (events) → PR 4 (garage) → PR 5 (maintenance+registration). PR 3 must be preceded by extraction of `AppEventBadge`; PR 4 must be preceded by extraction of `DocumentSlotPill`.
 
-| Key | Spanish value |
-|-----|---------------|
-| `event_coverGenerating` | "Generando portada..." |
-| `event_coverGenerated` | "Portada generada" |
-| `event_coverGenerateError` | "No pudimos generar la portada. Sube tu propia imagen." |
-| `event_coverRegenerate` | "Regenerar" |
-| `event_coverGeneratingOverlay` | "Generando con IA..." |
-
-Note: `event_generateWithAI` already exists (used in `EventFormContent`).
-
----
+**Branch:** `iter-1` (already exists, current branch).
 
 ## Risks and open questions
 
-- **ClaudeService not implemented in iter-3a:** PO assumes ClaudeService exists from iter-3a. Backend verification shows no Claude/Anthropic files in `rideglory-api`. Backend agent must implement ClaudeService pattern (Anthropic Node.js SDK) as part of T-4-1 if it does not exist.
-- **EventFormState freezed refactor regression:** Existing `event_form_page.dart` and `event_form_view.dart` use `BlocBuilder<EventFormCubit, ResultState<EventModel>>` — all must be updated to `EventFormState` and use `state.saveResult`. Existing tests must be updated.
-- **FormImageCubit.setRemoteImageUrl coordination:** The presentation layer must call `formImageCubit.setRemoteImageUrl(imageUrl)` inside a `BlocListener` on `EventFormCubit` when `coverGenerationResult` transitions to `data(...)`.
-
----
+- **Donut chart scope drift (US-1-9):** if Design flags geometry/animation change, descope to color-only per PO directive — no new package, no animation refactor in iter-1.
+- **AI cover widget regression risk (US-1-6):** EventForm refactor must NOT touch `EventFormCubit`, `EventCoverService`, or any iter-4 cubit/service. Only the page composition + section widget styling. QA smoke test (a) is the gate.
+- **Mapbox route preview (US-1-6):** `route_map_preview.dart` widget left untouched; only its surrounding page chrome restyled. Architect prohibition: do NOT swap to a different map widget in iter-1.
+- **`Colors.transparent`/`black`/`white` exemptions:** explicitly allowed for image overlays and dividers. QA gate `T-1-9` should grep for the broader pattern but exempt these three names.
 
 ## Next agent needs to know
 
-- **Backend:** Implement `POST /events/generate-cover` in `api-gateway/src/events/events.controller.ts`. Add `ClaudeService` (Anthropic SDK) + Unsplash HTTP call (axios). Add `UNSPLASH_ACCESS_KEY` to `.env.example`. See `docs/handoffs/architect-for-backend.md`.
-- **Frontend:** (1) Refactor `EventFormCubit` to `@freezed EventFormState`. (2) Add `GetGenerateCoverUseCase` + `EventCoverService` + `CoverGenerationDto` + `EventCoverRepositoryImpl`. (3) Add `setRemoteImageUrl()` to `FormImageCubit`. (4) Wire `onGenerateWithAITap` in `EventFormContent` to `EventFormCubit.generateCover()`. (5) Add `CoverPreviewWidget` with loading overlay. (6) Add 5 ARB keys. See `docs/handoffs/architect-for-frontend.md`.
-- **QA:** Backend unit tests (happy + 4 error paths) + Flutter unit tests for use case + widget tests for all cover generation states. See `docs/handoffs/architect-for-qa.md`.
-- **DevOps:** Add `UNSPLASH_ACCESS_KEY` to CI secrets. See `docs/handoffs/architect-for-devops.md`.
-
----
+- **Backend (rideglory-api):** stand down for iter-1. Resume in iter-2.
+- **Design:** read `docs/handoffs/architect-for-frontend.md` for the design-system primitive specs (`AppEventBadge`, `DocumentSlotPill`) so the gap analysis annotates frame mappings consistently.
+- **Frontend (Flutter dev):** read `docs/handoffs/architect-for-frontend.md` for full component extraction plan, color tokenization mapping, l10n key conventions, and the per-module file lists.
+- **DevOps:** read `docs/handoffs/architect-for-devops.md` — no CI changes, no new env vars, but the branch protection on `iter-1` needs to allow 5-PR merge cadence.
+- **QA:** read `docs/handoffs/architect-for-qa.md` for test commands, baseline + final gates, and the 5 smoke-test traceability matrix.
 
 ## Change log
 
-- 2026-05-13 (iter-4): Full architect handoff. AI Event Cover Image Generation. Backend: new `POST /events/generate-cover` endpoint in api-gateway. Frontend: EventFormState freezed refactor + new use case/service/DTO + cover preview UI. ADR-7 (freezed state split), ADR-8 (generateCover in EventFormCubit), ADR-9 (no new packages). UNSPLASH_ACCESS_KEY env var. 5 l10n keys.
+- 2026-05-14 (iter-1): Architect phase complete. Confirmed presentation-layer-only constraint. Defined two new design-system primitives (`AppEventBadge` atom, `DocumentSlotPill` molecule) with file paths and barrel-export instructions. Documented 3-tier color tokenization policy (colorScheme → AppColors → status palette). No backend changes. No domain/data/DI/router changes. Module PR strategy validated against shared-file impact (low). DIAGRAMS.md updated with design-system component hierarchy diagram (no data model diagrams required this iter).

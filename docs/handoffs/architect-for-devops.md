@@ -1,37 +1,42 @@
-# Architect → DevOps handoff — Iteration 4
+> Slim handoff — read this before docs/handoffs/architect.md
 
-**Date:** 2026-05-13
-**Iteration:** 4 — AI Event Cover Image Generation
+# Architect → DevOps — Iteration 1
 
----
+## TL;DR
 
-## CI/env changes required
+**No CI/CD changes. No new env vars. No build configuration changes. No native config changes (Android/iOS).**
 
-### New secret: `UNSPLASH_ACCESS_KEY`
+Iter-1 is presentation-layer-only across the Flutter app. Existing GitHub Actions pipeline (`dart analyze` + `flutter test` + APK/IPA build) is sufficient as-is.
 
-Add to GitHub Actions secrets (repository settings → Secrets and variables → Actions):
-- Secret name: `UNSPLASH_ACCESS_KEY`
-- Value: Unsplash API access key from https://unsplash.com/developers
+## What does NOT change
 
-**Backend `.env.example` update** (done by backend agent — DevOps confirms it exists in the file before CI runs):
-```
-UNSPLASH_ACCESS_KEY=your_unsplash_access_key_here
-```
+- `pubspec.yaml` / `pubspec.lock` — no new packages, no version bumps.
+- `.env` / `.env.example` — no new keys.
+- `android/app/build.gradle`, `android/app/src/main/AndroidManifest.xml` — untouched.
+- `ios/Runner/Info.plist`, `ios/Runner/Runner.entitlements` — untouched.
+- `firebase.json`, `google-services.json`, `GoogleService-Info.plist` — untouched.
+- Firebase Remote Config keys — no additions.
+- `build_runner` — not run this iteration (no codegen sources change).
+- GitHub Actions workflow YAMLs — untouched.
 
-### CI job update for backend (api-gateway)
+## What DOES change
 
-If a backend CI job exists, inject `UNSPLASH_ACCESS_KEY` as an env var in the `api-gateway` test step:
-```yaml
-env:
-  UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
-```
+- **Branch protection on `iter-1`:** allow 5 sequential PRs to merge into the `iter-1` feature branch. Reviewers: 1 approval + tech_lead sign-off per PR. `dart analyze` + `flutter test` must be green per PR (already enforced by existing CI).
+- **DEPLOY.md:** no edits required this iter — no infra additions.
 
-### Flutter CI — no changes
+## Pre-flight DevOps checklist (this iteration)
 
-No new Flutter packages require CI changes. `CachedNetworkImage` already in deps.
+- [ ] Confirm `iter-1` branch protection allows the 5-PR cadence.
+- [ ] Confirm CI runs on every PR into `iter-1` (not only into `main`).
+- [ ] No additional steps.
 
----
+## Looking ahead (iter-2)
 
-## Change log
+DevOps WILL be active in iter-2. Heads-up:
+- New Flutter packages: `firebase_messaging ^15.x`, `flutter_local_notifications`.
+- iOS: APNs key + Push Notifications capability in Xcode.
+- Android: notification channel config; FCM service.
+- api-gateway first-time Prisma setup → DATABASE_URL in api-gateway env, Docker Compose network coordination.
+- New backend env: none externally exposed yet (Firebase Admin already installed).
 
-- 2026-05-13 (iter-4): Add UNSPLASH_ACCESS_KEY to CI secrets. No Flutter CI changes.
+> Full detail: docs/handoffs/architect.md
