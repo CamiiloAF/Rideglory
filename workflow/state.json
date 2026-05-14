@@ -520,8 +520,8 @@
     },
     "design": {
       "status": "idle",
-      "lastAction": "2026-05-14T07:00:00Z",
-      "focus": "iter-1 design complete: gap analysis, 5 HTML mockup modules (15 screens), UI copy, component hierarchy, auth frames gate established"
+      "lastAction": "2026-05-14T23:30:00Z",
+      "focus": "iter-2 design complete: SOAT flow (upload+manual+status, 4-state badge), notification center (6 notification types, bell badge), ManageAttendeesPage UPDATE scope confirmed (list+edit, component-swap + state polish). 22 screens/states in 3 HTML mockups. Full UI copy (soat_, notification_ prefixes), component hierarchy, UX flow rules."
     },
     "backend": {
       "status": "idle",
@@ -915,6 +915,22 @@
       "agent": "architect",
       "at": "2026-05-14T23:00:00Z",
       "detail": "Iter-2 architect done: feature architecture (soat new, notifications rebuilt), 6 API contracts, api-gateway first-time Prisma + Soat/fcmToken models, FCM isolate pattern, GoRouter DI assessment, slim handoffs + DIAGRAMS ERD/sequences."
+    },
+    {
+      "type": "design_iteration",
+      "iteration": 2,
+      "phase": "design",
+      "agent": "design",
+      "at": "2026-05-14T23:30:00Z",
+      "detail": "Iter-2 design complete: SOAT flow (upload+manual+status 4-state badge), notification center (bell badge + 6 types), ManageAttendeesPage UPDATE. 22 screens in 3 HTML mockup files. Story 2.9 scope confirmed list+edit (component-swap + state polish only). Pencil MCP unavailable — HTML mockups serve as design gate."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 2,
+      "phase": "design",
+      "agent": "design",
+      "at": "2026-05-14T23:30:00Z",
+      "detail": "Iter-2 design done: 22 screens across soat.html, notifications.html, attendees.html; soat_ and notification_ l10n key inventory; DocumentSlotPill→SoatStatus 1:1 mapping; NotificationBellButton spec; Story 2.9 scope = UPDATE (list+edit confirmed)."
     }
   ]
 }

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rideglory – Notification Center — Iter-2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* Home AppBar with bell */
+  .home-app-bar {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border-subtle);
+    flex-shrink: 0;
+  }
+  .home-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    flex: 1;
+  }
+
+  /* Skeleton rows */
+  .skel-row {
+    display: flex;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .skel-circle { width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; }
+  .skel-lines { flex: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+  .skel-line-title { height: 14px; border-radius: 4px; width: 70%; }
+  .skel-line-sub   { height: 12px; border-radius: 4px; width: 50%; }
+  .skel-line-time  { height: 10px; border-radius: 4px; width: 30%; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     COLUMN 1: Home — Bell icon with unread badge
+     ============================================================ -->
+<div class="phone-group">
+  <div class="phone-label">Home — Campana con badge no leídas</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>100%</span></div>
+    </div>
+    <!-- Home AppBar with bell -->
+    <div class="home-app-bar">
+      <div class="home-title">Rideglory</div>
+      <!-- Bell button with badge -->
+      <div class="bell-btn">
+        <span class="bell-icon">🔔</span>
+        <div class="bell-badge">3</div>
+      </div>
+      <!-- Avatar -->
+      <div class="avatar" style="width:36px; height:36px; font-size:14px; margin-left:8px;">CA</div>
+    </div>
+    <div class="screen-body">
+      <!-- Dashboard content (simplified, context only) -->
+      <div style="margin-bottom:20px;">
+        <div style="font-size:14px; color:var(--text-2); margin-bottom:4px;">Buenos días,</div>
+        <div style="font-size:22px; font-weight:700; color:var(--text);">Camilo 👋</div>
+      </div>
+
+      <!-- Main vehicle card -->
+      <div class="card" style="margin-bottom:16px; height:160px; display:flex; align-items:flex-end; background:linear-gradient(135deg, #261A0E 0%, #1C1209 100%); position:relative;">
+        <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
+          <span style="font-size:64px; opacity:0.3;">🏍️</span>
+        </div>
+        <div style="padding:14px; position:relative; width:100%;">
+          <div style="font-size:16px; font-weight:700; color:var(--text);">Honda CB500F</div>
+          <div style="font-size:13px; color:var(--text-2);">ABC-123 · 15,420 km</div>
+        </div>
+      </div>
+
+      <!-- Upcoming rides -->
+      <div style="font-size:16px; font-weight:700; color:var(--text); margin-bottom:12px;">Próximas rodadas</div>
+      <div class="card" style="padding:16px; margin-bottom:10px;">
+        <div style="font-size:14px; font-weight:600; color:var(--text); margin-bottom:4px;">Páramo del Sumapaz 2025</div>
+        <div style="font-size:12px; color:var(--text-2);">Sáb 24 may · Bogotá → Sumapaz</div>
+      </div>
+      <div class="card" style="padding:16px; margin-bottom:10px;">
+        <div style="font-size:14px; font-weight:600; color:var(--text); margin-bottom:4px;">Ruta del Café</div>
+        <div style="font-size:12px; color:var(--text-2);">Dom 1 jun · Armenia → Montenegro</div>
+      </div>
+
+      <!-- Bell badge annotation -->
+      <div style="margin-top:24px; background:var(--primary-dim); border:1px solid var(--primary); border-radius:var(--r-sm); padding:12px 14px;">
+        <div style="font-size:12px; color:var(--primary); line-height:1.5; font-weight:600;">
+          📌 Campana (arriba derecha): badge rojo con conteo de no leídas (backend-sourced). Tap → NotificationCenterPage via context.pushNamed().
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     COLUMN 2: Notification Center — Loading (skeleton)
+     ============================================================ -->
+<div class="phone-group">
+  <div class="phone-label">Centro de notificaciones — Cargando</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>100%</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="back-btn">‹</div>
+      <div class="title">Notificaciones</div>
+      <div style="width:80px"></div>
+    </div>
+    <div class="screen-body">
+      <!-- Section label skeleton -->
+      <div class="list-section-label">
+        <div class="skeleton" style="width:80px; height:12px; border-radius:4px;"></div>
+        <div class="skeleton" style="width:24px; height:16px; border-radius:8px;"></div>
+      </div>
+
+      <!-- Skeleton rows -->
+      <div class="skel-row" style="padding:14px 0;">
+        <div class="skeleton skel-circle"></div>
+        <div class="skel-lines">
+          <div class="skeleton skel-line-title"></div>
+          <div class="skeleton skel-line-sub"></div>
+          <div class="skeleton skel-line-time"></div>
+        </div>
+      </div>
+      <div class="skel-row">
+        <div class="skeleton skel-circle"></div>
+        <div class="skel-lines">
+          <div class="skeleton skel-line-title" style="width:80%;"></div>
+          <div class="skeleton skel-line-sub" style="width:60%;"></div>
+          <div class="skeleton skel-line-time" style="width:25%;"></div>
+        </div>
+      </div>
+      <div class="skel-row">
+        <div class="skeleton skel-circle"></div>
+        <div class="skel-lines">
+          <div class="skeleton skel-line-title" style="width:65%;"></div>
+          <div class="skeleton skel-line-sub" style="width:45%;"></div>
+          <div class="skeleton skel-line-time" style="width:30%;"></div>
+        </div>
+      </div>
+
+      <!-- Section label skeleton (read section) -->
+      <div class="list-section-label" style="margin-top:24px;">
+        <div class="skeleton" style="width:60px; height:12px; border-radius:4px;"></div>
+      </div>
+      <div class="skel-row">
+        <div class="skeleton skel-circle"></div>
+        <div class="skel-lines">
+          <div class="skeleton skel-line-title" style="width:75%;"></div>
+          <div class="skeleton skel-line-sub" style="width:50%;"></div>
+          <div class="skeleton skel-line-time"></div>
+        </div>
+      </div>
+      <div class="skel-row">
+        <div class="skeleton skel-circle"></div>
+        <div class="skel-lines">
+          <div class="skeleton skel-line-title" style="width:55%;"></div>
+          <div class="skeleton skel-line-sub" style="width:40%;"></div>
+          <div class="skeleton skel-line-time" style="width:20%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     COLUMN 3: Notification Center — With data (mixed states)
+     ============================================================ -->
+<div class="phone-group">
+  <div class="phone-label">Centro de notificaciones — Con datos</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>100%</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="back-btn">‹</div>
+      <div class="title">Notificaciones</div>
+      <div class="action-btn">Marcar leídas</div>
+    </div>
+    <div class="screen-body">
+      <!-- UNREAD section -->
+      <div class="list-section-label">
+        No leídas
+        <div style="background:var(--primary); border-radius:20px; padding:0 8px; height:18px; display:flex; align-items:center; font-size:11px; font-weight:700; color:#fff;">3</div>
+      </div>
+
+      <!-- Notif 1: SOAT por vencer -->
+      <div class="notif-item unread" style="padding-left:6px;">
+        <div class="notif-icon-box soat">⚠️</div>
+        <div class="notif-body">
+          <div class="notif-title">Tu SOAT vence pronto</div>
+          <div class="notif-subtitle">Honda CB500F 2021 vence en 18 días. Renuévalo para evitar multas.</div>
+          <div class="notif-time">Hace 2 horas</div>
+        </div>
+        <div class="notif-dot"></div>
+      </div>
+
+      <!-- Notif 2: Inscripción aprobada -->
+      <div class="notif-item unread" style="padding-left:6px;">
+        <div class="notif-icon-box approved">✅</div>
+        <div class="notif-body">
+          <div class="notif-title">Inscripción aprobada</div>
+          <div class="notif-subtitle">Tu inscripción a "Páramo del Sumapaz 2025" fue aprobada. ¡Nos vemos en la rodada!</div>
+          <div class="notif-time">Hace 5 horas</div>
+        </div>
+        <div class="notif-dot"></div>
+      </div>
+
+      <!-- Notif 3: Nueva inscripción (organizer) -->
+      <div class="notif-item unread" style="padding-left:6px;">
+        <div class="notif-icon-box event">🏍️</div>
+        <div class="notif-body">
+          <div class="notif-title">Nueva inscripción</div>
+          <div class="notif-subtitle">Juan Rodríguez se inscribió a "Ruta del Café". Revisa su solicitud.</div>
+          <div class="notif-time">Hace 6 horas</div>
+        </div>
+        <div class="notif-dot"></div>
+      </div>
+
+      <!-- LEÍDAS section -->
+      <div class="list-section-label" style="margin-top:20px;">Anteriores</div>
+
+      <!-- Notif 4: SOAT día de (leída) -->
+      <div class="notif-item" style="opacity:0.7;">
+        <div class="notif-icon-box soat">🛡️</div>
+        <div class="notif-body">
+          <div class="notif-title">Tu SOAT venció hoy</div>
+          <div class="notif-subtitle">Honda CB500F 2021 · Renueva tu SOAT para seguir circulando.</div>
+          <div class="notif-time">Hace 3 días</div>
+        </div>
+      </div>
+
+      <!-- Notif 5: Inscripción rechazada (leída) -->
+      <div class="notif-item" style="opacity:0.7;">
+        <div class="notif-icon-box rejected">❌</div>
+        <div class="notif-body">
+          <div class="notif-title">Inscripción rechazada</div>
+          <div class="notif-subtitle">Tu solicitud para "Circuito Off-Road" fue rechazada. Revisa los requisitos.</div>
+          <div class="notif-time">Hace 5 días</div>
+        </div>
+      </div>
+
+      <!-- Notif 6: SOAT 30d (leída) -->
+      <div class="notif-item" style="opacity:0.7;">
+        <div class="notif-icon-box soat">⏰</div>
+        <div class="notif-body">
+          <div class="notif-title">SOAT vence en 30 días</div>
+          <div class="notif-subtitle">Kawasaki Ninja 400 · Empieza a gestionar la renovación.</div>
+          <div class="notif-time">Hace 1 semana</div>
+        </div>
+      </div>
+
+      <!-- Load more -->
+      <div style="padding:16px 0; text-align:center; font-size:14px; color:var(--primary); font-weight:600; cursor:pointer;">
+        Cargar más notificaciones
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     COLUMN 4: Notification Center — Empty state
+     ============================================================ -->
+<div class="phone-group">
+  <div class="phone-label">Centro de notificaciones — Vacío</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>100%</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="back-btn">‹</div>
+      <div class="title">Notificaciones</div>
+      <div style="width:80px"></div>
+    </div>
+    <div class="screen-body" style="display:flex; flex-direction:column;">
+      <div class="empty-state">
+        <div class="empty-icon-box">🔔</div>
+        <div class="empty-title">Aún no tienes notificaciones</div>
+        <div class="empty-subtitle">
+          Aquí aparecerán los avisos sobre tus SOAT, inscripciones y rodadas.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     COLUMN 5: Notification Center — Error state
+     ============================================================ -->
+<div class="phone-group">
+  <div class="phone-label">Centro de notificaciones — Error</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>100%</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="back-btn">‹</div>
+      <div class="title">Notificaciones</div>
+      <div style="width:80px"></div>
+    </div>
+    <div class="screen-body" style="display:flex; flex-direction:column;">
+      <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px; text-align:center;">
+        <div style="width:80px; height:80px; border-radius:24px; background:var(--error-dim); border:1px solid var(--error); display:flex; align-items:center; justify-content:center; font-size:36px; margin-bottom:24px;">⚠️</div>
+        <div style="font-size:18px; font-weight:700; color:var(--text); margin-bottom:8px;">No se pudieron cargar las notificaciones</div>
+        <div style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:24px;">Verifica tu conexión a internet e intenta de nuevo.</div>
+        <button class="btn btn-primary" style="width:auto; padding:0 32px;">Reintentar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     COLUMN 6: Generic Notification Row Templates (all 6 types)
+     ============================================================ -->
+<div class="phone-group">
+  <div class="phone-label">Plantilla genérica — 6 tipos de notificación</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>100%</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="back-btn">‹</div>
+      <div class="title">Plantillas</div>
+      <div style="width:40px"></div>
+    </div>
+    <div class="screen-body">
+      <div style="font-size:12px; color:var(--text-3); margin-bottom:12px; letter-spacing:0.5px;">Los 6 tipos — non-read state</div>
+
+      <!-- Type 1: SOAT_30D -->
+      <div style="font-size:11px; color:var(--text-3); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px;">SOAT_30D</div>
+      <div class="notif-item unread" style="padding-left:6px; margin-bottom:12px; border-bottom:none; background:var(--surface); border-radius:var(--r-sm); padding:12px; padding-left:12px;">
+        <div class="notif-icon-box soat" style="width:40px; height:40px; font-size:18px; border-radius:10px;">⏰</div>
+        <div class="notif-body">
+          <div class="notif-title">SOAT vence en 30 días</div>
+          <div class="notif-subtitle">Honda CB500F 2021</div>
+          <div class="notif-time">Hoy 8:00 a.m.</div>
+        </div>
+        <div class="notif-dot"></div>
+      </div>
+
+      <!-- Type 2: SOAT_7D -->
+      <div style="font-size:11px; color:var(--text-3); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px;">SOAT_7D</div>
+      <div class="notif-item unread" style="padding-left:6px; margin-bottom:12px; border-bottom:none; background:var(--surface); border-radius:var(--r-sm); padding:12px;">
+        <div class="notif-icon-box soat" style="width:40px; height:40px; font-size:18px; border-radius:10px; background:var(--warning-dim);">⚠️</div>
+        <div class="notif-body">
+          <div class="notif-title">Tu SOAT vence en 7 días</div>
+          <div class="notif-subtitle">Kawasaki Ninja 400 · Renueva ya</div>
+          <div class="notif-time">Hoy 8:00 a.m.</div>
+        </div>
+        <div class="notif-dot"></div>
+      </div>
+
+      <!-- Type 3: SOAT_DAY_OF -->
+      <div style="font-size:11px; color:var(--text-3); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px;">SOAT_DAY_OF</div>
+      <div class="notif-item unread" style="padding-left:6px; margin-bottom:12px; border-bottom:none; background:var(--surface); border-radius:var(--r-sm); padding:12px;">
+        <div class="notif-icon-box soat" style="width:40px; height:40px; font-size:18px; border-radius:10px; background:var(--error-dim);">🚫</div>
+        <div class="notif-body">
+          <div class="notif-title">Tu SOAT vence hoy</div>
+          <div class="notif-subtitle">Honda CB500F 2021 · Renueva antes de salir</div>
+          <div class="notif-time">Hoy 8:00 a.m.</div>
+        </div>
+        <div class="notif-dot"></div>
+      </div>
+
+      <!-- Type 4: NEW_REGISTRATION -->
+      <div style="font-size:11px; color:var(--text-3); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px;">NEW_REGISTRATION</div>
+      <div class="notif-item unread" style="padding-left:6px; margin-bottom:12px; border-bottom:none; background:var(--surface); border-radius:var(--r-sm); padding:12px;">
+        <div class="notif-icon-box event" style="width:40px; height:40px; font-size:18px; border-radius:10px;">🏍️</div>
+        <div class="notif-body">
+          <div class="notif-title">Nueva inscripción</div>
+          <div class="notif-subtitle">Juan R. quiere unirse a "Ruta del Café"</div>
+          <div class="notif-time">Hace 2 horas</div>
+        </div>
+        <div class="notif-dot"></div>
+      </div>
+
+      <!-- Type 5: REGISTRATION_APPROVED -->
+      <div style="font-size:11px; color:var(--text-3); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px;">REGISTRATION_APPROVED</div>
+      <div class="notif-item unread" style="padding-left:6px; margin-bottom:12px; border-bottom:none; background:var(--surface); border-radius:var(--r-sm); padding:12px;">
+        <div class="notif-icon-box approved" style="width:40px; height:40px; font-size:18px; border-radius:10px;">✅</div>
+        <div class="notif-body">
+          <div class="notif-title">Inscripción aprobada</div>
+          <div class="notif-subtitle">Estás inscrito a "Páramo del Sumapaz"</div>
+          <div class="notif-time">Hace 3 horas</div>
+        </div>
+        <div class="notif-dot"></div>
+      </div>
+
+      <!-- Type 6: REGISTRATION_REJECTED -->
+      <div style="font-size:11px; color:var(--text-3); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px;">REGISTRATION_REJECTED</div>
+      <div class="notif-item unread" style="padding-left:6px; border-bottom:none; background:var(--surface); border-radius:var(--r-sm); padding:12px;">
+        <div class="notif-icon-box rejected" style="width:40px; height:40px; font-size:18px; border-radius:10px;">❌</div>
+        <div class="notif-body">
+          <div class="notif-title">Inscripción rechazada</div>
+          <div class="notif-subtitle">Tu solicitud para "Off-Road Antioquia" no fue aprobada</div>
+          <div class="notif-time">Hace 1 día</div>
+        </div>
+        <div class="notif-dot"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
