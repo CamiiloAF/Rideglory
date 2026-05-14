@@ -5107,7 +5107,7 @@ abstract class AppLocalizations {
   /// No description provided for @event_filter_apply.
   ///
   /// In es, this message translates to:
-  /// **'Aplicar filtros'**
+  /// **'Aplicar'**
   String get event_filter_apply;
 
   /// No description provided for @event_cta_register.
@@ -6003,6 +6003,471 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Gestionar inscritos'**
   String get event_manageAttendeesTitle;
+
+  /// No description provided for @event_filter_pending.
+  ///
+  /// In es, this message translates to:
+  /// **'Pendientes'**
+  String get event_filter_pending;
+
+  /// No description provided for @event_filter_approved.
+  ///
+  /// In es, this message translates to:
+  /// **'Aprobados'**
+  String get event_filter_approved;
+
+  /// No description provided for @event_filter_rejected.
+  ///
+  /// In es, this message translates to:
+  /// **'Rechazados'**
+  String get event_filter_rejected;
+
+  /// No description provided for @event_reject_confirm_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Rechazar inscripción'**
+  String get event_reject_confirm_title;
+
+  /// No description provided for @event_reject_confirm_body.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Estás seguro de que quieres rechazar la inscripción de {name}? Esta acción no se puede deshacer.'**
+  String event_reject_confirm_body(String name);
+
+  /// No description provided for @event_reject_confirm_btn.
+  ///
+  /// In es, this message translates to:
+  /// **'Sí, rechazar'**
+  String get event_reject_confirm_btn;
+
+  /// No description provided for @event_approve_action.
+  ///
+  /// In es, this message translates to:
+  /// **'Aprobar'**
+  String get event_approve_action;
+
+  /// No description provided for @event_reject_action.
+  ///
+  /// In es, this message translates to:
+  /// **'Rechazar'**
+  String get event_reject_action;
+
+  /// No description provided for @event_edit_status.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar estado'**
+  String get event_edit_status;
+
+  /// No description provided for @event_filters_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Filtrar inscritos'**
+  String get event_filters_title;
+
+  /// No description provided for @event_filter_status_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Estado'**
+  String get event_filter_status_label;
+
+  /// No description provided for @soat_page_upload_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Subir SOAT'**
+  String get soat_page_upload_title;
+
+  /// No description provided for @soat_page_manual_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresar SOAT'**
+  String get soat_page_manual_title;
+
+  /// No description provided for @soat_page_status_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Mi SOAT'**
+  String get soat_page_status_title;
+
+  /// No description provided for @soat_upload_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona cómo quieres subir tu SOAT para {vehicleName}.'**
+  String soat_upload_subtitle(String vehicleName);
+
+  /// No description provided for @soat_manual_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa los datos del SOAT para {vehicleName}. Puedes subir el documento más adelante.'**
+  String soat_manual_subtitle(String vehicleName);
+
+  /// No description provided for @soat_source_camera.
+  ///
+  /// In es, this message translates to:
+  /// **'Cámara'**
+  String get soat_source_camera;
+
+  /// No description provided for @soat_source_gallery.
+  ///
+  /// In es, this message translates to:
+  /// **'Galería'**
+  String get soat_source_gallery;
+
+  /// No description provided for @soat_source_pdf.
+  ///
+  /// In es, this message translates to:
+  /// **'Archivo PDF'**
+  String get soat_source_pdf;
+
+  /// No description provided for @soat_source_manual.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresar manualmente'**
+  String get soat_source_manual;
+
+  /// No description provided for @soat_section_data.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos del SOAT'**
+  String get soat_section_data;
+
+  /// No description provided for @soat_field_policy_number.
+  ///
+  /// In es, this message translates to:
+  /// **'N.° de póliza'**
+  String get soat_field_policy_number;
+
+  /// No description provided for @soat_field_policy_placeholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej: SOAT-2024-123456'**
+  String get soat_field_policy_placeholder;
+
+  /// No description provided for @soat_field_insurer.
+  ///
+  /// In es, this message translates to:
+  /// **'Aseguradora'**
+  String get soat_field_insurer;
+
+  /// No description provided for @soat_field_insurer_placeholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej: Sura, Allianz, AXA Colpatria…'**
+  String get soat_field_insurer_placeholder;
+
+  /// No description provided for @soat_field_start_date.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha inicio'**
+  String get soat_field_start_date;
+
+  /// No description provided for @soat_field_expiry_date.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha vencimiento'**
+  String get soat_field_expiry_date;
+
+  /// No description provided for @soat_field_date_format.
+  ///
+  /// In es, this message translates to:
+  /// **'DD/MM/AAAA'**
+  String get soat_field_date_format;
+
+  /// No description provided for @soat_field_expiry_required.
+  ///
+  /// In es, this message translates to:
+  /// **'La fecha de vencimiento es obligatoria.'**
+  String get soat_field_expiry_required;
+
+  /// No description provided for @soat_field_date_invalid.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha inválida. Usa el formato DD/MM/AAAA.'**
+  String get soat_field_date_invalid;
+
+  /// No description provided for @soat_field_required.
+  ///
+  /// In es, this message translates to:
+  /// **'Este campo es obligatorio.'**
+  String get soat_field_required;
+
+  /// No description provided for @soat_save_btn.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar SOAT'**
+  String get soat_save_btn;
+
+  /// No description provided for @soat_save_data_btn.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar datos'**
+  String get soat_save_data_btn;
+
+  /// No description provided for @soat_update_btn.
+  ///
+  /// In es, this message translates to:
+  /// **'Actualizar SOAT'**
+  String get soat_update_btn;
+
+  /// No description provided for @soat_saving.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardando…'**
+  String get soat_saving;
+
+  /// No description provided for @soat_retry.
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get soat_retry;
+
+  /// No description provided for @soat_manual_note.
+  ///
+  /// In es, this message translates to:
+  /// **'Puedes subir el documento físico más adelante desde el detalle del vehículo.'**
+  String get soat_manual_note;
+
+  /// No description provided for @soat_switch_to_upload.
+  ///
+  /// In es, this message translates to:
+  /// **'Subir documento en cambio'**
+  String get soat_switch_to_upload;
+
+  /// No description provided for @soat_section_document.
+  ///
+  /// In es, this message translates to:
+  /// **'Documento'**
+  String get soat_section_document;
+
+  /// No description provided for @soat_document_attached.
+  ///
+  /// In es, this message translates to:
+  /// **'Adjunto'**
+  String get soat_document_attached;
+
+  /// No description provided for @soat_status_no_soat.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin registrar'**
+  String get soat_status_no_soat;
+
+  /// No description provided for @soat_status_valid.
+  ///
+  /// In es, this message translates to:
+  /// **'Vigente'**
+  String get soat_status_valid;
+
+  /// No description provided for @soat_status_expiring_soon.
+  ///
+  /// In es, this message translates to:
+  /// **'Por vencer'**
+  String get soat_status_expiring_soon;
+
+  /// No description provided for @soat_status_expired.
+  ///
+  /// In es, this message translates to:
+  /// **'Vencido'**
+  String get soat_status_expired;
+
+  /// No description provided for @soat_valid_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu SOAT está al día'**
+  String get soat_valid_title;
+
+  /// No description provided for @soat_expiring_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu SOAT vence pronto'**
+  String get soat_expiring_title;
+
+  /// No description provided for @soat_expired_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu SOAT está vencido'**
+  String get soat_expired_title;
+
+  /// No description provided for @soat_valid_days_remaining.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} días restantes'**
+  String soat_valid_days_remaining(int count);
+
+  /// No description provided for @soat_expiring_days_remaining.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} días restantes'**
+  String soat_expiring_days_remaining(int count);
+
+  /// No description provided for @soat_expired_days_ago.
+  ///
+  /// In es, this message translates to:
+  /// **'Venció hace {count} días'**
+  String soat_expired_days_ago(int count);
+
+  /// No description provided for @soat_expiring_warning.
+  ///
+  /// In es, this message translates to:
+  /// **'Te notificaremos 7 días antes del vencimiento. Renueva tu SOAT con anticipación para evitar multas.'**
+  String get soat_expiring_warning;
+
+  /// No description provided for @soat_expired_warning.
+  ///
+  /// In es, this message translates to:
+  /// **'Circular sin SOAT vigente es una infracción. Renueva tu seguro lo antes posible.'**
+  String get soat_expired_warning;
+
+  /// No description provided for @soat_renew_btn.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar nuevo SOAT'**
+  String get soat_renew_btn;
+
+  /// No description provided for @soat_view_document.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver documento'**
+  String get soat_view_document;
+
+  /// No description provided for @soat_edit_btn.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar'**
+  String get soat_edit_btn;
+
+  /// No description provided for @soat_uploading.
+  ///
+  /// In es, this message translates to:
+  /// **'Subiendo…'**
+  String get soat_uploading;
+
+  /// No description provided for @soat_upload_error.
+  ///
+  /// In es, this message translates to:
+  /// **'Error al subir. Archivo demasiado grande (máx. 10 MB).'**
+  String get soat_upload_error;
+
+  /// No description provided for @soat_save_error.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo guardar el SOAT. Verifica tu conexión e intenta de nuevo.'**
+  String get soat_save_error;
+
+  /// No description provided for @soat_upload_error_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Error al subir'**
+  String get soat_upload_error_label;
+
+  /// No description provided for @notification_loadMore.
+  ///
+  /// In es, this message translates to:
+  /// **'Cargar más notificaciones'**
+  String get notification_loadMore;
+
+  /// No description provided for @notification_loadError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudieron cargar las notificaciones'**
+  String get notification_loadError;
+
+  /// No description provided for @notification_loadErrorSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Verifica tu conexión a internet e intenta de nuevo.'**
+  String get notification_loadErrorSubtitle;
+
+  /// No description provided for @notification_retry.
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get notification_retry;
+
+  /// No description provided for @notification_soat30d_title.
+  ///
+  /// In es, this message translates to:
+  /// **'SOAT vence en 30 días'**
+  String get notification_soat30d_title;
+
+  /// No description provided for @notification_soat7d_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu SOAT vence en 7 días'**
+  String get notification_soat7d_title;
+
+  /// No description provided for @notification_soatDayOf_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu SOAT vence hoy'**
+  String get notification_soatDayOf_title;
+
+  /// No description provided for @notification_soat_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'{vehicleName} · Renuévalo para evitar multas'**
+  String notification_soat_subtitle(String vehicleName);
+
+  /// No description provided for @notification_soatDayOf_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'{vehicleName} · Renueva antes de salir'**
+  String notification_soatDayOf_subtitle(String vehicleName);
+
+  /// No description provided for @notification_newRegistration_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva inscripción'**
+  String get notification_newRegistration_title;
+
+  /// No description provided for @notification_newRegistration_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'{riderName} quiere unirse a \"{eventName}\"'**
+  String notification_newRegistration_subtitle(
+    String riderName,
+    String eventName,
+  );
+
+  /// No description provided for @notification_approved_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Inscripción aprobada'**
+  String get notification_approved_title;
+
+  /// No description provided for @notification_approved_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Estás inscrito a \"{eventName}\"'**
+  String notification_approved_subtitle(String eventName);
+
+  /// No description provided for @notification_rejected_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Inscripción rechazada'**
+  String get notification_rejected_title;
+
+  /// No description provided for @notification_rejected_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu solicitud para \"{eventName}\" no fue aprobada'**
+  String notification_rejected_subtitle(String eventName);
+
+  /// No description provided for @notification_bell_unread_label.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} notificaciones sin leer'**
+  String notification_bell_unread_label(int count);
+
+  /// No description provided for @notification_bell_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Notificaciones'**
+  String get notification_bell_label;
+
+  /// No description provided for @notification_item_accessibility_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Notificación: {title}, {time}'**
+  String notification_item_accessibility_label(String title, String time);
 }
 
 class _AppLocalizationsDelegate

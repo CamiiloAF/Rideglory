@@ -178,6 +178,7 @@ Pantallas que pueden NO existir todavía en Pencil (crear si faltan):
 ## Change log
 - 2026-05-13 (plan v3 approval): Frame inventory, iter-1 gap analysis process, atom extraction pre-conditions, and per-iteration design scope documented.
 - 2026-05-14 (iter-1 design complete): Gap analysis complete. 5 HTML mockup modules produced. Auth frames gate: 8 frames to create in rideglory.pen (Auth — Splash/Login/Signup/PasswordRecovery). Donut chart: color-only scope for iter-1. See docs/handoffs/design.md for full details.
+- 2026-05-14 (iter-2 design complete): SOAT flow (upload+manual+status), notification center, ManageAttendeesPage UPDATE. 22 screens in 3 HTML mockups. Story 2.9 scope confirmed.
 
 ---
 
@@ -231,3 +232,44 @@ Pantallas que pueden NO existir todavía en Pencil (crear si faltan):
 - Pencil desktop app must be running before `open_document` works. If unavailable, HTML mockups serve as design gate but Pencil frames must still be verified/created before frontend starts.
 - Use `snapshot_layout` for structural checks, `get_screenshot` only for visual fidelity verification.
 - Auth frames do not exist in rideglory.pen — create with pattern `[Feature] — [Screen] — [State]`.
+
+---
+
+## Iter-2 design decisions (locked)
+
+### Story 2.9 scope (ManageAttendeesPage)
+**UPDATE, not NEW.** List+edit layout already fully implemented in codebase. Scope = component-swap (AppButton, AppDialog) + no hardcoded colors + loading/empty/error state polish. No layout rework.
+Frame dUc9h covers list+edit confirmed.
+
+### DocumentSlotPill → SoatStatus mapping (1:1)
+| SOAT state | DocumentSlotState | Label key |
+|------------|-------------------|-----------|
+| `noSoat` | `empty` | `soat_status_no_soat` |
+| `valid` | `valid` | `soat_status_valid` |
+| `expiringSoon` | `expiringSoon` | `soat_status_expiring_soon` |
+| `expired` | `expired` | `soat_status_expired` |
+**Caller contract enforced:** always pass `stateLabel: context.l10n.soat_status_<state>`.
+
+### NotificationBellButton spec
+- 44×44px tap target in AppBar.actions[]
+- Badge: `AppColors.error`, `border: 2px solid AppColors.darkBackground`
+- Shows numeric count, truncates to `99+`
+- `unreadCount` from `NotificationsCubit.state.unreadCount` (backend-sourced)
+
+### SoatUploadPage source selector
+- 2×2 grid: Cámara / Galería / Archivo PDF / Ingresar manualmente
+- Source selection → upload zone changes context (camera preview vs file picker)
+- Manual entry = navigate to SoatManualFormPage
+
+### Notification row template
+- 6 types: SOAT_30D, SOAT_7D, SOAT_DAY_OF, NEW_REGISTRATION, REGISTRATION_APPROVED, REGISTRATION_REJECTED
+- Icon slot per type (⏰/⚠️/🚫/🏍️/✅/❌)
+- Unread: left orange accent bar (3px), `notif-dot` visible
+- Read: opacity 0.7, no accent bar, no dot
+- Tap → markRead(id) if unread, then navigate (iter-5 will add specific routing; iter-2 navigates to Home)
+
+### Iter-2 HTML mockups inventory
+- `docs/design/html-mockups/iter-2/styles.css` — tokens, shared components
+- `docs/design/html-mockups/iter-2/soat.html` — 9 screens (upload 3 + manual 2 + status 3 + vehicle-detail badge integration)
+- `docs/design/html-mockups/iter-2/notifications.html` — 6 screens (home bell + center 4 states + 6 type templates)
+- `docs/design/html-mockups/iter-2/attendees.html` — 7 screens (loading + pending + all + empty + error + dialog + bottom sheet)

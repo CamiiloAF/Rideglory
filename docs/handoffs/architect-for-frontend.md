@@ -1,95 +1,72 @@
 > Slim handoff — read this before docs/handoffs/architect.md
 
-# Architect → Frontend (Flutter) — Iteration 1
+# Architect → Frontend (Flutter) — Iteration 2
 
-**Iter-1 = presentation layer ONLY.** No domain/data/DI/router/build_runner work. If a story tempts you toward `lib/features/<feature>/{domain,data}/` or `lib/core/di/` — stop and re-read the story.
+**Iter-2 = full-stack.** Two new features in `lib/features/`, FCM init, vehicle-detail SOAT badge wiring, ManageAttendeesPage redesign. Template: copy the Clean Architecture layout of `lib/features/vehicles/`.
 
-## Branch & PR cadence
+## Pre-flight (mandatory before any code)
 
-- Work on branch `iter-1` (already checked out).
-- 5 module-scoped PRs (≤ 40 files each), merged in order: `splash+auth` → `home` → `events` → `garage` → `maintenance+registration`.
-- Each PR: `dart analyze` + `flutter test` green before merge.
+- `dart run build_runner clean` then `dart run build_runner build --delete-conflicting-outputs`. New SOAT + Notification DTOs/services need codegen. The 4 pre-existing test failures should clear.
+- `flutter pub get` after adding packages.
 
-## Feature → file scope per PR
+## New packages (pubspec.yaml)
 
-| PR | Stories | Files in scope |
-|----|---------|----------------|
-| 1 splash+auth | US-1-2, US-1-3 | `lib/features/splash/presentation/**`, `lib/features/authentication/presentation/**` |
-| 2 home | US-1-4 | `lib/features/home/presentation/**`, `lib/shared/widgets/home_bottom_navigation_bar.dart`, `bottom_nav_*.dart`, `main_shell.dart` (only color tokens, no nav refactor) |
-| 3 events | US-1-5, US-1-6 | `lib/features/events/presentation/**` (excluding `live_tracking/`, `tracking/` — out of scope), `lib/design_system/atoms/badges/app_event_badge.dart` (NEW), barrel update, 3 widget tests |
-| 4 garage | US-1-7, US-1-8 | `lib/features/vehicles/presentation/**`, `lib/design_system/molecules/feedback/document_slot_pill.dart` (NEW), barrel update |
-| 5 maintenance+registration | US-1-9, US-1-10 | `lib/features/maintenance/presentation/**`, `lib/features/event_registration/presentation/**` (EXCLUDE `manage_*` — deferred to iter-2 Story 2.9) |
+- `firebase_messaging: ^15.x`
+- `flutter_local_notifications: ^17.x`/`^18.x`
+- `file_picker: ^8.x` — only if SOAT PDF upload is in scope; `image_picker` (already present) handles camera/gallery photos. If PDF descoped to image-only, skip.
 
-## NEW design-system primitives (build BEFORE the consuming PR)
+## Feature 1 — `lib/features/soat/` (NEW, 3 layers)
 
-### `AppEventBadge` — atom (PR 3 pre-condition)
-- Path: `lib/design_system/atoms/badges/app_event_badge.dart`
-- Source frame: `zKkmE`
-- API: `const AppEventBadge({required EventBadgeVariant variant, required String label})` — variant is an enum (e.g., `scheduled`, `inProgress`, `finished`, `cancelled`, `free`, `paid`); label comes from caller (`context.l10n.event_badge_<state>`).
-- Colors: `colorScheme.primary` for default; `AppColors.success/warning/error` for status; `AppColors.eventFree/eventPaid` for price variants.
-- Add export to `lib/design_system/atoms/atoms.dart`.
+| Layer | Files |
+|-------|-------|
+| domain | `models/soat_model.dart` (+ `SoatStatus` enum + `SoatStatus get status` computed getter from `expiryDate` vs `now`, `int get daysUntilExpiry`); `repository/soat_repository.dart`; `usecases/get_soat_usecase.dart`, `usecases/save_soat_usecase.dart` (`@injectable`) |
+| data | `dto/soat_dto.dart` (`@JsonSerializable(converters: apiJsonDateTimeConverters)` extends `SoatModel`, `toModel()`, `toJson()` request extension — mirror `VehicleDto`); `service/soat_service.dart` (`@singleton @RestApi()`); `repository/soat_repository_impl.dart` (`@Injectable(as: SoatRepository)`, Firebase Storage path `soat/{vehicleId}/document.{ext}`, `executeService` wrap) |
+| presentation | `cubit/soat_cubit.dart` (`@injectable`, `Cubit<ResultState<SoatModel>>` — single result, NO freezed state class needed); `pages/soat_upload_page.dart`, `pages/soat_manual_form_page.dart`, `pages/soat_status_page.dart` |
 
-### `DocumentSlotPill` — molecule (PR 4 pre-condition)
-- Path: `lib/design_system/molecules/feedback/document_slot_pill.dart`
-- Source frame: `aGqnv`
-- API: `const DocumentSlotPill({required String label, required DocumentSlotState state, VoidCallback? onTap, IconData? leading})` — state enum: `empty`, `valid`, `expiringSoon`, `expired` (state mapping is iter-2 SOAT concern; iter-1 ships the visual primitive only).
-- Colors: `AppColors.darkSurfaceHighest` background; `AppColors.success`, `warning`, `error` accents per state; `AppColors.darkBorder` divider.
-- Add export to `lib/design_system/molecules/molecules.dart`.
-- **Reuse contract**: iter-2 SOAT badge story (2.3) will consume this same molecule; do not couple it to vehicle-feature types.
+`SoatService` endpoints: `@GET('${ApiRoutes.vehicles}/{vehicleId}/soat')`, `@POST('${ApiRoutes.vehicles}/{vehicleId}/soat')`. Add `ApiRoutes.vehicleSoat(vehicleId)` helper to `lib/core/http/api_routes.dart`.
 
-## Color tokenization (mandatory across all 5 PRs)
+**SoatStatus boundary rules** (client-side, `expiryDate` vs `DateTime.now()`): `> 30 days` → `valid` (Vigente); `<= 30 days && not past` → `expiringSoon` (Por vencer); `past` → `expired` (Vencido); no record → `noSoat` (Sin SOAT). `SoatStatus` maps 1:1 to `DocumentSlotState` from iter-1.
 
-Replace, in priority order:
-1. **`Theme.of(context).colorScheme.<role>`** when the color has semantic role.
-2. **`AppColors.<constant>`** for dark surfaces/borders/text/status not in `colorScheme`.
-3. **Add to `AppColors`** (do not inline `Color(0xFF…)`) if no mapping exists. Append to architect handoff change log in same PR.
+## Feature 2 — `lib/features/notifications/` (REBUILD existing stub)
 
-Forbidden in `lib/features/`: `Color(0xFF…)` literals; `Colors.<named>` except `Colors.transparent`, `Colors.black`, `Colors.white`.
+A stub already exists (`notification_model.dart`, `notifications_cubit.dart`, `notifications_view.dart`, `notification_item.dart`, `notifications_page.dart`). **Rewire, do not discard the UI shell.**
 
-Per-PR procedure: `grep -rE "Color\(0x|Colors\." <module-path>` → map → batch substitute → `dart analyze`.
+| Layer | Work |
+|-------|------|
+| domain | extend `NotificationModel` — add `Map<String,dynamic>? payload`; align enum values with backend `type` strings (`SOAT_30D`, `SOAT_7D`, `SOAT_DAY_OF`, `NEW_REGISTRATION`, `REGISTRATION_APPROVED`, `REGISTRATION_REJECTED`). NEW `repository/notifications_repository.dart`; usecases `get_notifications_usecase.dart`, `mark_notification_read_usecase.dart`, `mark_all_notifications_read_usecase.dart`, `register_fcm_token_usecase.dart` |
+| data (NEW) | `dto/notification_dto.dart`, `dto/notification_page_dto.dart` (`{ List<NotificationDto> data, String? nextCursor }`); `service/notifications_service.dart` (`@GET` with `@Query('cursor')` + `@Query('limit')`, two `@PATCH` for `:id/read` and `read-all`, `@POST` `/notifications/fcm-token`); `repository/notifications_repository_impl.dart` |
+| presentation | **rewrite** `NotificationsCubit` → `@injectable Cubit<NotificationsState>` where `NotificationsState` is `@freezed` (fields: `ResultState<List<NotificationModel>>` initial load, `String? nextCursor`, `int unreadCount`, `bool isLoadingMore`). Methods: `load()`, `loadMore()`, `markRead(id)`, `markAllRead()`. Update `notifications_view.dart` + `notification_item.dart` + `notifications_page.dart` to the new state type in the SAME PR (no test-rot). NEW `NotificationBellButton` widget with unread badge — replaces `HomeNotificationButton` in Home shell. |
 
-## Widget swap (only ~3 files affected)
+Cursor pagination only — `?cursor=<lastId>&limit=20`, response `{ data, nextCursor }`. Offset/limit forbidden.
 
-Per existing-system scan: only `mileage_info_dialog.dart` and `event_form_multi_brand_section.dart` use raw widgets. Replace per US-1-3/1-6 acceptance:
-- `ElevatedButton` → `AppButton` (atoms)
-- `TextFormField` → `AppTextField` (atoms)
-- `TextField` for password → `AppPasswordTextField` (atoms)
-- `AlertDialog` → `AppDialog` (molecules)
+## FCM init — `lib/core/services/fcm_service.dart` (NEW `@singleton`)
 
-## Localization (l10n)
+Wraps `firebase_messaging` + `flutter_local_notifications`. Called from `AuthCubit` after `AuthState.authenticated` (keep AuthCubit thin — inject `FcmService` or `RegisterFcmTokenUseCase`, request permission + register token via `POST /api/notifications/fcm-token`).
 
-- File: `lib/l10n/app_es.arb`. Run `flutter gen-l10n` after edits and commit generated `lib/l10n/app_localizations*.dart`.
-- Key naming: feature prefix.
-  - **NEW** keys for `AppEventBadge` labels: `event_badge_scheduled`, `event_badge_inProgress`, `event_badge_finished`, `event_badge_cancelled`, `event_badge_free`, `event_badge_paid` (US-1-5).
-  - **NEW** keys for `DocumentSlotPill` labels (used in vehicle pages, not the molecule itself): `vehicle_doc_soat_label`, `vehicle_doc_techreview_label`, `vehicle_doc_state_empty`, `vehicle_doc_state_valid`, `vehicle_doc_state_expiringSoon`, `vehicle_doc_state_expired` (US-1-7, US-1-8). State labels are stubs in iter-1; iter-2 SOAT story will reuse them.
-  - Reuse existing keys whenever possible. Do not create duplicate keys.
+**Background handler (LOAD-BEARING):** top-level function annotated `@pragma('vm:entry-point')`; inside it call `await Firebase.initializeApp()` then `await configureDependencies()` (DI is not initialized in the background isolate). Register via `FirebaseMessaging.onBackgroundMessage(...)` in `main()` before `runApp`.
 
-## Cubit / state — read carefully
+Configure: Android notification channel; iOS foreground banner presentation via `flutter_local_notifications`.
 
-You are **not** allowed to:
-- Create new cubits.
-- Add new states or methods to existing cubits.
-- Change the `Cubit<ResultState<T>>` signature of any cubit.
-- Inject new services into existing cubits.
+## Vehicle detail SOAT badge (US-2-3)
 
-You **are** allowed to:
-- Restructure widget trees in `presentation/` to match Pencil frames.
-- Replace inline color/spacing literals with theme tokens.
-- Extract or rename private widgets within a feature for clarity (one widget per file).
-- Update `BlocBuilder<CubitX, ResultState<Y>>.builder` to render new visuals — without changing the cubit.
+In `lib/features/vehicles/presentation/garage/widgets/vehicle_detail_*.dart`: render the iter-1 `DocumentSlotPill` molecule for the SOAT slot. **Pass localized `stateLabel: context.l10n.soat_status_<state>`** — the molecule has no `BuildContext`, never rely on its hardcoded fallback. `onTap` → `context.pushNamed` to SOAT flow.
 
-If you find yourself wanting to refactor a cubit signature, the story is mis-scoped. Stop and escalate.
+## DI & router
 
-## Tests
+- Register `SoatCubit`, `NotificationsCubit`, `FcmService`, repositories, services, use cases — all via `@injectable`/`@singleton` annotations; run `build_runner` to regenerate `injection.config.dart`.
+- Add SOAT pages + NotificationCenter route to `lib/shared/router/app_router.dart` + `app_routes.dart`. Use `context.pushNamed()` (back button enabled).
+- `NotificationsCubit` — add to root `MultiBlocProvider` in `main.dart` (bell badge is app-wide).
 
-- Update finders in 3 events widget tests (`attendees_list_navigation_test.dart`, `event_filters_bottom_sheet_test.dart`, `events_page_view_test.dart`) **in PR 3**, the same PR that swaps their target widgets. No test-rot merges.
-- Do not write new widget tests this iter (QA owns that).
+## Story 2.9 — ManageAttendeesPage (presentation-only)
 
-## Out of scope (do not touch)
+`lib/features/events/presentation/attendees/manage_attendees_page.dart` (or `attendees_management_page.dart`). Redesign per confirmed frame `dUc9h`: `AppButton`/`AppDialog`, no hardcoded colors, loading/empty/error states. Wait for design gate on frame scope (list+edit vs edit-only). No domain/data changes.
 
-- `live_tracking/`, `tracking/`, `users/` (rider profile), `profile/` features — no PO story.
-- `manage_attendees_page.dart` — deferred to iter-2.
-- `EventFormCubit`, `EventCoverService`, AI cover bottom sheet — preserve exact behavior; styling chrome around them is fine.
-- `route_map_preview.dart` — leave widget body untouched.
+## Localization
+
+`lib/l10n/app_es.arb` — add all SOAT (`soat_` prefix) and notification (`notification_` prefix) strings BEFORE use. Run `flutter gen-l10n`, commit generated files. Note: `notification_*` keys already partially exist from iter-1 stub — reuse, don't duplicate.
+
+## Pre-existing non-blockers (address if you touch the file)
+
+`mileage_info_dialog.dart` raw `AlertDialog`; `event_form_multi_brand_section.dart` raw `TextFormField`; `info_chip_tooltip.dart` raw `showDialog()`; `home_view_all_events_button.dart` uses `context.goNamed()`.
 
 > Full detail: docs/handoffs/architect.md

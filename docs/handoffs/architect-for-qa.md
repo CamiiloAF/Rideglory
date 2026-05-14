@@ -1,79 +1,82 @@
 > Slim handoff — read this before docs/handoffs/architect.md
 
-# Architect → QA — Iteration 1
+# Architect → QA — Iteration 2
 
-**Iter-1 = presentation-layer redesign across 15 screens. Quality gate is "no regression + no new lint violations + smoke tests green".**
+Iter-2 ships two new features (SOAT, notifications) full-stack. Quality gate = unit + cubit + widget coverage for new code, `dart analyze` zero violations, `flutter test` zero new failures, 6 notification types verified on device.
 
 ## Test commands
 
 ```bash
-# Static analysis (must be green per PR and on final feature branch)
+# Pre-flight — regenerate codegen FIRST (new SOAT + Notification DTOs/services)
+dart run build_runner clean
+dart run build_runner build --delete-conflicting-outputs
+
+# Static analysis — zero errors / zero warnings (no new violations)
 dart analyze
 
-# Unit + widget tests (must be green per PR and on final feature branch)
+# Unit + widget + cubit tests
 flutter test
 
-# Single test (debugging)
+# Single file (debugging)
 flutter test test/<path>_test.dart
-
-# Format check (advisory)
-dart format --output=none lib/
 ```
 
-No `dart run build_runner` invocation needed — no codegen source changes this iteration.
+After `build_runner` the 4 pre-existing failures (`user_service.g.dart` missing `getUserById`, `event_service.g.dart` signature mismatch) should clear. If they persist, flag — backend DTO drift.
 
-## Baseline gate (T-1-8) — DO FIRST
+## Test targets (T-2-12)
 
-Before any iter-1 PR merges:
+### Unit — `SoatModel.status` 4-state boundary logic
+| Case | Input | Expected |
+|------|-------|----------|
+| Vigente | `expiryDate` = now + 31d | `SoatStatus.valid` |
+| Boundary >30 | `expiryDate` = now + 30d | `SoatStatus.expiringSoon` (`<= 30` rule) |
+| Por vencer | `expiryDate` = now + 7d | `SoatStatus.expiringSoon` |
+| Boundary day-of | `expiryDate` = today | `SoatStatus.expiringSoon` (not past) |
+| Vencido | `expiryDate` = now - 1d | `SoatStatus.expired` |
+| Sin SOAT | no record / null model | `SoatStatus.noSoat` |
 
-```bash
-git checkout main
-flutter pub get
-dart analyze 2>&1 | tee /tmp/dart_analyze_main.txt
-flutter test 2>&1 | tee /tmp/flutter_test_main.txt
-git checkout iter-1
-```
+### Cubit (BLoC tests, mocktail) — min 5 cases each
+- `SoatCubit`: initial → loading → data; loading → empty (no SOAT, 204); loading → error; save success → data; save failure → error.
+- `NotificationsCubit`: initial load (loading → data); empty (loading → empty); error (loading → error); `loadMore()` appends page using `nextCursor`, `isLoadingMore` toggles; `markRead(id)` flips `isRead` + decrements `unreadCount`; `markAllRead()` zeroes `unreadCount`.
 
-Document the **count** of pre-existing `dart analyze` issues from `/tmp/dart_analyze_main.txt` in your QA handoff. Iter-1 acceptance: count must NOT grow on `iter-1` branch after final merge.
+### Widget — 4 cases each (loading skeleton, data render, empty, error banner)
+`SoatUploadPage`, `SoatManualFormPage`, `NotificationCenterPage`.
+- `SoatManualFormPage`: also assert expiry-date-required inline validation.
+- `NotificationCenterPage`: empty state shows "Aún no tienes notificaciones"; unread shows orange dot.
 
-Also record the test count baseline (`flutter test --reporter expanded` shows totals). Final `iter-1` test count must be ≥ baseline (the 3 events widget tests are updated, not removed).
+### Story 2.9 — ManageAttendeesPage
+No new cubit tests (no new state management). Verify: no hardcoded color literals, `AppButton`/`AppDialog` usage, loading/empty/error states correct per frame `dUc9h`.
 
-## Final gate (T-1-9) — Acceptance criteria traceability
+## Acceptance criteria traceability
 
-| AC | Criterion | Verification command/check |
-|----|-----------|---------------------------|
-| US-1-11 / DoD #1 | `dart analyze` zero new violations | `dart analyze` on `iter-1` HEAD; diff against baseline |
-| US-1-11 / DoD #2 | All 10 existing `flutter test` cases pass | `flutter test` on `iter-1` HEAD |
-| US-1-11 / DoD #3 | No hardcoded color literals in `lib/features/` | `grep -rE "Color\(0x" lib/features/` returns 0 lines; `grep -rE "Colors\.(?!transparent\b\|black\b\|white\b)" lib/features/` returns 0 lines |
-| US-1-11 / DoD #4 | All ARB updates committed | `git diff main..iter-1 -- lib/l10n/app_es.arb` non-empty; `lib/l10n/app_localizations*.dart` regenerated and committed |
-| US-1-11 / DoD #5 | All 3 events widget tests updated in same PR as widget swap | review PR 3 (events) for paired test+widget changes |
-| US-1-11 / DoD #6 | No new backend endpoints / domain models / routes / DI changes | `git diff main..iter-1 -- 'lib/**/domain/' 'lib/**/data/' 'lib/core/di/' 'lib/shared/router/'` returns empty |
+| Story | Criterion | Verification |
+|-------|-----------|--------------|
+| US-2-1 | document saved, badge → Vigente/Por vencer; upload errors as Spanish snackbars | widget test + manual upload |
+| US-2-2 | expiry required + validated; 4-state badge correct on save | unit (`SoatModel.status`) + widget validation test |
+| US-2-3 | 4 states from `expiryDate` vs today; badge tappable → SOAT flow | unit boundary table + widget tap test |
+| US-2-4 | SOAT push 30d/7d/day-of with vehicle name; appear in center | on-device cron verification |
+| US-2-5 | organizer push on new registration; bell badge increments | on-device + `NotificationsCubit` unreadCount test |
+| US-2-6 | push on approve/reject within 30s; "My Registrations" reflects status | on-device |
+| US-2-7 | cursor pagination `{ data, nextCursor }`; `PATCH /:id/read`, `/read-all`; bell badge from backend; empty state | `NotificationsCubit` tests + widget test |
+| US-2-8 | backend endpoints + `notifications` table + `fcmToken` | backend integration (curl GET/PATCH) |
+| US-2-9 | design system components, no hardcoded colors, states correct | PR review + widget render |
+| US-2-10 | full coverage; `dart analyze` 0; `flutter test` 0 new fails | this whole gate |
 
-## 5 Manual smoke tests (mandatory, log results)
+## 6 notification types on device/emulator (Firebase project required)
 
-Run on physical device or emulator after PR 5 merges into `iter-1`. Capture screenshot + result for each.
+SOAT 30d, SOAT 7d, SOAT day-of, new registration (organizer), registration approved, registration rejected. Requires physical device or emulator with FCM-configured Firebase project.
 
-| # | Smoke | Pass criteria |
-|---|-------|---------------|
-| a | AI cover generation (event form) | Open Create Event → fill required fields → tap "Generar portada IA" → 2×2 grid renders → tap one image → save event → event created with selected cover URL |
-| b | Event detail CTA state variants | Verify CTA bar in 4 states: not registered (Inscribirse), pending approval (Pendiente), registered+approved (Inscrito + Cancelar), event closed/full (correct disabled copy) |
-| c | Maintenance donut chart rendering | Open Maintenance dashboard → donut chart renders with 3 urgency colors (red/yellow/green); no overflow exceptions in console |
-| d | Home bottom nav pill bar matches frame `VMmN0` | Visual verification: pill shape, active item indicator, icon + label sizing, safe-area padding |
-| e | Mapbox route preview in event form | Create Event → set start + end city → route preview renders polyline/line layer; no map crash, no missing-token error |
+## Architecture quality gates QA enforces in PR review
 
-Stop the gate if any smoke test fails — open BUG task and route back to frontend.
+- No `BuildContext` in `lib/features/soat/data/` or `lib/features/notifications/data/`.
+- No offset/limit pagination anywhere — grep service files for `cursor` only.
+- FCM background handler is a top-level function with `@pragma('vm:entry-point')` and calls `configureDependencies()`.
+- `DocumentSlotPill` callers pass localized `stateLabel` (no reliance on molecule fallback strings).
+- No hardcoded `Color(0x...)` / non-exempt `Colors.<named>` in new feature files.
+- New cubits/services/repos registered via annotations; `injection.config.dart` regenerated and committed.
 
-## Architectural quality gates QA must enforce in PR review checklist
+## Scope reduction rule
 
-- No imports of `lib/features/<f>/data/` from any `lib/features/<f>/presentation/` file (except the existing 3 references to `colombia_motos_brands_data.dart` — frozen, do not grow).
-- No new file under `lib/features/*/data/` or `lib/features/*/domain/` introduced this iter.
-- No edits to `lib/core/di/injection.dart` other than (a) regenerated `injection.config.dart` (which should NOT regenerate this iter — flag if it appears in diff).
-- No edits to `lib/shared/router/app_router.dart`.
-
-## Tests NOT required this iteration
-
-- New widget tests for redesigned screens — DO NOT write them (PO scope explicitly defers test infrastructure expansion).
-- New BLoC tests — same reason.
-- E2E / integration tests — out of scope.
+If US-2-7 backend read-persistence is at risk near iteration end, the unread badge may fall back to a local `SharedPreferences` cache as a provisional measure — but the backend endpoints (US-2-8) must be complete regardless.
 
 > Full detail: docs/handoffs/architect.md

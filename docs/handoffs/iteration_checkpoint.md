@@ -8,67 +8,57 @@
 
 ---
 
-## Status: idle
+## Status: active — Iteration 2
 
-No active iteration checkpoint. Run **`/iter 2`** or **`/resume-iter`** to begin Iteration 2.
-
-**Last closed:** Iteration 1 closed 2026-05-14 with all 10 phases complete.
+**Last phase:** tech_lead
+**Next phase:** po_close
 
 | Phase | Agent | Status |
 |-------|-------|--------|
 | po_scope | PO | ✅ done |
 | architect | Architect | ✅ done |
 | design | Design | ✅ done |
-| backend | Backend | — (no backend work iter-1) |
+| backend | Backend | ✅ done |
 | frontend | Flutter Dev | ✅ done |
 | qa | QA | ✅ done |
 | devops | DevOps | ✅ done |
 | pr | System | ✅ done |
-| tech_lead | Tech Lead | ✅ done |
-| po_close | PO | ✅ done |
+| tech_lead | Tech Lead | ✅ done — APPROVED (re-review cycle, all 4 violations fixed) |
+| po_close | PO | ⏳ pending |
 
-**All phases completed:** 2026-05-14  
-**Iteration status:** DONE
+**Backend summary (2026-05-14):**
+- 6 endpoints: POST/GET /api/vehicles/:vehicleId/soat, POST /api/notifications/fcm-token, GET /api/notifications, PATCH /notifications/:id/read, PATCH /notifications/read-all
+- 3 FCM triggers: NEW_REGISTRATION (organizer), REGISTRATION_APPROVED/REJECTED (registrant)
+- SOAT cron: SOAT_30D/SOAT_7D/SOAT_DAY_OF (America/Bogota)
+- api-gateway first-time Prisma (port 5434, `gateway-db`)
+- 28 tests pass, 0 TS errors
 
-### Design phase summary
-- Gap analysis: 15 screens analyzed via codebase inspection
-- 5 HTML mockup modules produced (35+ screens/states total)
-- New primitives specified: `AppEventBadge` (atom, lib/design_system/atoms/badges/), `DocumentSlotPill` (molecule, lib/design_system/molecules/feedback/)
-- Auth frames gate: 8 frames must be created in rideglory.pen before US-1-3 (T-1-3)
-- Donut chart scope decision: color-only for iter-1, no geometry change
-- Full UI copy (ARB keys) for all 5 modules documented
-- Error messages mapped to API error codes
-- Pencil MCP unavailable during session — HTML mockups serve as design gate; frontend agent must open rideglory.pen and verify/create frames before PR 1
+**Frontend summary (2026-05-14):**
+- SOAT: domain (SoatModel, SoatRepository), data (SoatDto, SoatService), presentation (SoatCubit, 3 pages)
+- Notifications: domain (NotificationModel), data (NotificationsService cursor pagination), presentation (NotificationsCubit, NotificationCenterPage)
+- FCM init: background handler with @pragma + configureDependencies() re-init; flutter_local_notifications configured
+- VehicleSoatSection integration with DocumentSlotPill badge
+- NotificationBellButton with unread badge overlay
+- 16 new files, ~100+ new l10n keys (soat_, notification_ prefixes)
+- dart analyze: 0 issues; flutter test: 64 pass / 1 pre-existing fail (unchanged)
 
-### Frontend phase summary
-- 47 hardcoded Color(0x...) and Colors.\<named\> literals replaced with AppColors tokens across 34 files in lib/features/
-- Two design system primitives created: AppEventBadge atom (lib/design_system/atoms/badges/) and DocumentSlotPill molecule (lib/design_system/molecules/feedback/)
-- ~140 new l10n keys added to app_es.arb; flutter gen-l10n regenerated successfully
-- pubspec.yaml fixed: removed duplicate dev_dependencies entries
-- dart analyze: 0 errors, 0 warnings (52 info-level only, all pre-existing)
-- flutter test: 28 pass, 4 pre-existing failures (stale .g.dart files, not caused by iter-1)
-- Known gaps: AppEventBadge/DocumentSlotPill integration pending iter-2 data; ManageAttendeesPage deferred to iter-2; stale .g.dart deferred to iter-2 rebuild
+**QA summary (2026-05-14):**
+- Test catalog: 21 new test cases (TC-2-20 through TC-2-40)
+  - SOAT domain: 7 unit tests (4-state boundary logic)
+  - SOAT cubit: 5 BLoC tests (load, save success/error)
+  - Notifications cubit: 9 BLoC tests (load, pagination, markRead, markAllRead, error handling)
+- Architecture gates: 8/8 passed (no BuildContext in data, no hardcoded colors, cursor pagination, FCM pattern, DI, localization)
+- Test results: 64 pass, 1 pre-existing fail (TC-2-28 rider email — unchanged from iter-1)
+- Bugs filed: 0 blocking; US-2-4/2-5/2-6 device testing deferred (backend cron prerequisite)
+- Sign-off: GREEN — ready for tech lead review
 
-### QA phase summary
-- Baseline established: main branch dart analyze 0 errors/0 warnings (45 info-level), flutter test 28 pass/4 pre-existing fail
-- Iter-1 verification: 0 new violations, 28 pass, 4 failures unchanged (stale user_service.g.dart + event_service.g.dart)
-- Test catalog created: TC-1-1 through TC-1-21 (21 test cases covering all 11 user stories + DoD items)
-- Design system verification: AppEventBadge atom ✅, DocumentSlotPill molecule ✅ (both created, exported, ready for use)
-- Localization audit: app_es.arb +140 keys (11KB → 46KB), generated .dart files committed ✅
-- Color tokenization audit: 0 hardcoded Color(0x...), 0 non-standard Colors.<> in lib/features/ ✅
-- Architecture constraints: git diff main..iter-1 -- lib/*/domain/ lib/*/data/ lib/core/di/ lib/shared/router/ returns empty ✅
-- All 11 user stories (US-1-1 through US-1-11) acceptance criteria verified ✅
-- No blocking bugs filed; 0 new test failures; sign-off: GREEN ✅
+**DevOps summary (2026-05-14):**
+- CI validation: `.github/workflows/ci.yml` requires zero changes for iter-2
+- All 12 Firebase + .env secrets from iter-1 cover iter-2 completely
+- Flutter packages: `firebase_messaging` and `flutter_local_notifications` already in pubspec.yaml (no YAML edits)
+- Documentation: `docs/DEPLOY.md` updated with iter-2 pre-flight checklist, backend DATABASE_URL note, iOS APNs setup, Android notification channel requirements
+- Pre-flight gates: CI syntax valid, secrets audit complete, test flow verified
+- Phase contract: `docs/handoffs/contracts/iter-2/devops.json` generated with status=pass
+- Next: Tech Lead PR review and merge to main
 
-*Last closed: QA (2026-05-14T14:30:00Z)*
-
-### DevOps phase summary
-- CI pipeline verification: `.github/workflows/ci.yml` is syntactically valid and functionally ready (no changes required)
-- Validation: python3 yaml.safe_load() passed; all triggers (iter-*, main, PRs) configured; analyze-and-test + build-apk jobs operational
-- Pre-flight checklist: Flutter setup ✅, dart analyze gate ✅, flutter test gate ✅, code generation step ✅, Firebase config injection ✅, .env file injection ✅, APK build on tags ✅, branch protection compatible ✅
-- Deployment documentation: `docs/DEPLOY.md` created with 12 .env variables, GitHub Actions secrets reference, Firebase config handling, CI/CD details, local setup, release workflow, troubleshooting, and roadmap for iter-2+ (FCM, Mapbox, Apple Sign-In)
-- No changes required per architect-for-devops.md: presentation-layer redesign only, no new packages, no new env vars, no native config changes
-- Phase contract generated with 7 quality gates (all pass)
-- Sign-off: GREEN ✅ — Ready for PR phase
-
-*Last closed: DevOps (2026-05-14T15:00:00Z)*
+**Last closed:** Iteration 1 closed 2026-05-14 with all 10 phases complete.

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/notifications/domain/model/notification_model.dart';
 
@@ -13,59 +14,43 @@ class NotificationItem extends StatelessWidget {
   final VoidCallback onTap;
 
   Color _iconBgColor(NotificationType type) {
-    switch (type) {
-      case NotificationType.registrationApproved:
-        return AppColors.successSubtle;
-      case NotificationType.registrationRejected:
-        return AppColors.errorSubtle;
-      case NotificationType.registrationReadyForEdit:
-        return AppColors.infoSubtle;
-      case NotificationType.eventStarted:
-        return AppColors.primarySubtle;
-      case NotificationType.newRegistration:
-        return AppColors.primarySubtle;
-      case NotificationType.eventReminder:
-        return AppColors.warningSubtle;
-      case NotificationType.general:
-        return AppColors.darkTertiary;
-    }
+    return switch (type) {
+      NotificationType.registrationApproved => AppColors.successSubtle,
+      NotificationType.registrationRejected => AppColors.errorSubtle,
+      NotificationType.newRegistration => AppColors.primarySubtle,
+      NotificationType.soat30d ||
+      NotificationType.soat7d ||
+      NotificationType.soatDayOf =>
+        AppColors.warningSubtle,
+      NotificationType.general => AppColors.darkTertiary,
+    };
   }
 
   Color _iconColor(NotificationType type) {
-    switch (type) {
-      case NotificationType.registrationApproved:
-        return AppColors.success;
-      case NotificationType.registrationRejected:
-        return AppColors.error;
-      case NotificationType.registrationReadyForEdit:
-        return AppColors.info;
-      case NotificationType.eventStarted:
-      case NotificationType.newRegistration:
-        return AppColors.primary;
-      case NotificationType.eventReminder:
-        return AppColors.warning;
-      case NotificationType.general:
-        return AppColors.textOnDarkSecondary;
-    }
+    return switch (type) {
+      NotificationType.registrationApproved => AppColors.success,
+      NotificationType.registrationRejected => AppColors.error,
+      NotificationType.newRegistration => AppColors.primary,
+      NotificationType.soat30d ||
+      NotificationType.soat7d ||
+      NotificationType.soatDayOf =>
+        AppColors.warning,
+      NotificationType.general => AppColors.textOnDarkSecondary,
+    };
   }
 
   IconData _icon(NotificationType type) {
-    switch (type) {
-      case NotificationType.registrationApproved:
-        return Icons.check_circle_outline_rounded;
-      case NotificationType.registrationRejected:
-        return Icons.cancel_outlined;
-      case NotificationType.registrationReadyForEdit:
-        return Icons.edit_outlined;
-      case NotificationType.eventStarted:
-        return Icons.play_circle_outline_rounded;
-      case NotificationType.newRegistration:
-        return Icons.person_add_alt_1_outlined;
-      case NotificationType.eventReminder:
-        return Icons.alarm_outlined;
-      case NotificationType.general:
-        return Icons.notifications_outlined;
-    }
+    return switch (type) {
+      NotificationType.registrationApproved =>
+        Icons.check_circle_outline_rounded,
+      NotificationType.registrationRejected => Icons.cancel_outlined,
+      NotificationType.newRegistration => Icons.person_add_alt_1_outlined,
+      NotificationType.soat30d ||
+      NotificationType.soat7d ||
+      NotificationType.soatDayOf =>
+        Icons.description_outlined,
+      NotificationType.general => Icons.notifications_outlined,
+    };
   }
 
   String _timeAgo(DateTime dt) {
@@ -80,94 +65,104 @@ class NotificationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final isUnread = !notification.isRead;
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: isUnread ? AppColors.darkCard : AppColors.darkBgSecondary,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isUnread
-                ? AppColors.primary.withValues(alpha: 0.25)
-                : AppColors.darkBorderPrimary,
-          ),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: _iconBgColor(notification.type),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                _icon(notification.type),
-                color: _iconColor(notification.type),
-                size: 22,
+    return Semantics(
+      button: true,
+      label: context.l10n.notification_item_accessibility_label(
+        notification.title,
+        _timeAgo(notification.createdAt),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Opacity(
+          opacity: isUnread ? 1.0 : 0.7,
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: isUnread ? AppColors.darkCard : AppColors.darkBgSecondary,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isUnread
+                    ? AppColors.primary.withValues(alpha: 0.25)
+                    : AppColors.darkBorderPrimary,
               ),
             ),
-            AppSpacing.hGapMd,
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: _iconBgColor(notification.type),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    _icon(notification.type),
+                    color: _iconColor(notification.type),
+                    size: 22,
+                  ),
+                ),
+                AppSpacing.hGapMd,
+                Expanded(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Text(
-                          notification.title,
-                          style: TextStyle(
-                            color: AppColors.textOnDarkPrimary,
-                            fontSize: 14,
-                            fontWeight: isUnread
-                                ? FontWeight.w600
-                                : FontWeight.w500,
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              notification.title,
+                              style: TextStyle(
+                                color: AppColors.textOnDarkPrimary,
+                                fontSize: 14,
+                                fontWeight: isUnread
+                                    ? FontWeight.w600
+                                    : FontWeight.w500,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                          AppSpacing.hGapSm,
+                          if (isUnread)
+                            Container(
+                              width: 8,
+                              height: 8,
+                              margin: const EdgeInsets.only(top: 4),
+                              decoration: const BoxDecoration(
+                                color: AppColors.primary,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                        ],
+                      ),
+                      AppSpacing.gapXxs,
+                      Text(
+                        notification.body,
+                        style: const TextStyle(
+                          color: AppColors.textOnDarkSecondary,
+                          fontSize: 13,
+                          height: 1.4,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      AppSpacing.gapXxs,
+                      Text(
+                        _timeAgo(notification.createdAt),
+                        style: const TextStyle(
+                          color: AppColors.textOnDarkTertiary,
+                          fontSize: 12,
                         ),
                       ),
-                      AppSpacing.hGapSm,
-                      if (isUnread)
-                        Container(
-                          width: 8,
-                          height: 8,
-                          margin: const EdgeInsets.only(top: 4),
-                          decoration: const BoxDecoration(
-                            color: AppColors.primary,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
                     ],
                   ),
-                  AppSpacing.gapXxs,
-                  Text(
-                    notification.body,
-                    style: const TextStyle(
-                      color: AppColors.textOnDarkSecondary,
-                      fontSize: 13,
-                      height: 1.4,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  AppSpacing.gapXxs,
-                  Text(
-                    _timeAgo(notification.createdAt),
-                    style: const TextStyle(
-                      color: AppColors.textOnDarkTertiary,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

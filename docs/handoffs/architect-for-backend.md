@@ -1,40 +1,80 @@
 > Slim handoff — read this before docs/handoffs/architect.md
 
-# Architect → Backend (NestJS) — Iteration 1
+# Architect → Backend (NestJS) — Iteration 2
 
-**Status: NO rideglory-api changes required this iteration.**
+Backend at `/Users/cami/Developer/Personal/rideglory-api`. All endpoints require Firebase Auth Bearer token (existing guard). Error shape `{ message, statusCode, error }`.
 
-## Why
+## Pre-flight first (T-2-2 — blocks everything)
 
-Iteration 1 is a pure UI/UX redesign pass on 15 existing Flutter screens. Per PO scope and the existing-system scan:
+- `prisma migrate reset` on the 4 existing microservices: vehicles-ms, events-ms, users-ms, maintenances-ms.
+- `seed.ts` in vehicles-ms (2+ vehicles) and events-ms (1 scheduled event + 1 registration).
+- **api-gateway: FIRST-TIME Prisma.** No `prisma/` dir exists (confirmed). `npx prisma init`, configure `DATABASE_URL` in `.env` (match Docker Compose Postgres), write `schema.prisma` with the `Notification` model, then `npx prisma migrate dev --name init_notifications`. This is NOT `migrate reset`.
+- Verify `GET /api/vehicles` → 200 and `GET /api/notifications` → 200 empty `{ data: [], nextCursor: null }` before feature code.
 
-- No new endpoints requested by any of the 11 user stories (US-1-1 … US-1-11).
-- No DTO contract evolves — the redesign uses existing models as-is.
-- No Prisma schema changes, no migrations, no seed data updates.
-- No new env vars on the backend.
-- No new microservice; no api-gateway proxy edits.
+## Implementation order
 
-All API contracts already documented in `docs/handoffs/planning/00-existing-system-scan.md` §3 remain frozen for iter-1.
+T-2-4 (fcm-token) → T-2-5 (notifications table + endpoints) → T-2-3 (SOAT) → T-2-6 (FCM triggers) → T-2-7 (cron).
 
-## What backend agent does this iteration
+## Prisma models
 
-**Nothing.** Stand down. Resume in iteration 2 (SOAT + Notifications):
-- New endpoints in vehicles-ms (`POST /api/vehicles/:vehicleId/soat`, `GET /api/vehicles/:vehicleId/soat`)
-- New endpoints in api-gateway (`POST /api/notifications/fcm-token`, `GET /api/notifications`, `PATCH /api/notifications/:id/read`, `PATCH /api/notifications/read-all`)
-- First-time Prisma setup in api-gateway (`prisma init` + `prisma migrate dev`, NOT reset)
-- `notifications` table in api-gateway
-- `fcmToken String?` field added to `User` in users-ms
-- `@nestjs/schedule` SOAT cron jobs (America/Bogota timezone)
-- Pre-flight: `seed.ts` in vehicles-ms and events-ms; `prisma migrate reset` on the 4 existing microservices
+**users-ms `User`** — add `fcmToken String?`. Migration.
 
-## What backend agent must NOT do this iteration
+**vehicles-ms `Soat`** (new) — one-to-one with `Vehicle`:
+```
+model Soat {
+  id           String   @id @default(uuid())
+  vehicleId    String   @unique
+  policyNumber String
+  startDate    DateTime
+  expiryDate   DateTime
+  insurer      String
+  documentUrl  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+```
+Do NOT add a computed `status` — the 4-state badge is client-side.
 
-- Pre-implement iter-2 SOAT endpoints "to get a head start" → would invalidate the iter-1 frozen-contract guarantee that the frontend redesign relies on.
-- Touch any DTO referenced by Flutter (`EventDto`, `VehicleDto`, `UserDto`, `RegistrationDto`, etc.) — even a non-functional rename breaks the frontend redesign PRs.
-- Run any `prisma migrate` command in any microservice (data state must not drift while frontend smoke tests run).
+**api-gateway `Notification`** (new schema):
+```
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String
+  payload   Json
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  @@index([userId, createdAt])
+}
+```
 
-## Coordination signal
+## Endpoints
 
-If frontend hits a redesign blocker that surfaces a missing field in an existing DTO (e.g., a card needs a value the API never returned), STOP and escalate to PO. The iter-1 plan explicitly states "no new domain models" — a workaround is not a pre-iter-2 ticket.
+| Method | Path | Body | Success | Notes |
+|--------|------|------|---------|-------|
+| POST | `/api/vehicles/:vehicleId/soat` | `{ policyNumber, startDate, expiryDate, insurer, documentUrl? }` | `SoatResponse` 201 | 400 invalid dates, 403 not owner, 404 vehicle |
+| GET | `/api/vehicles/:vehicleId/soat` | — | `SoatResponse` or 204 | api-gateway proxies to vehicles-ms |
+| POST | `/api/notifications/fcm-token` | `{ fcmToken: string }` | 204 | updates `fcmToken` on users-ms `User`; called post-login |
+| GET | `/api/notifications?cursor=<lastId>&limit=20` | — | `{ data: Notification[], nextCursor: string\|null }` | ordered `createdAt desc`; **cursor pagination only — no offset/limit** |
+| PATCH | `/api/notifications/:id/read` | — | 204 | sets `isRead=true`; 403 if not owner |
+| PATCH | `/api/notifications/read-all` | — | 204 | all unread for the user |
+
+`SoatResponse`: `{ id, vehicleId, policyNumber, startDate, expiryDate, insurer, documentUrl?, createdAt, updatedAt }`.
+
+## New module: `api-gateway/src/notifications/`
+
+`NotificationsModule` (controller + service) — owns the `notifications` table, the 4 endpoints, FCM dispatch via `firebase-admin` (already installed, no new package). Register in `api-gateway/src/app.module.ts`. SOAT routes added to the existing `api-gateway/src/vehicles/` controller (proxy) + `vehicles-ms/src/vehicles/`.
+
+## FCM push triggers (T-2-6) — no new HTTP endpoint
+
+In the events-ms registration approve / reject / create flow, at the api-gateway proxy layer: after the action succeeds, (1) insert a `Notification` row, (2) send FCM multicast to the target user's `fcmToken`. Payload carries scalar IDs only: `{ eventId, registrationId }` — never nested objects (ADR-5). `type`: `NEW_REGISTRATION` (to organizer), `REGISTRATION_APPROVED`, `REGISTRATION_REJECTED`.
+
+## Cron scheduler (T-2-7)
+
+`npm install @nestjs/schedule`. Add `ScheduleModule.forRoot()` to api-gateway `AppModule`. `NotificationSchedulerService` with `@Cron` jobs for SOAT expiry at 30d / 7d / day-of. **All cron expressions use `America/Bogota` timezone.** Each fired reminder inserts a `Notification` row (`type`: `SOAT_30D` / `SOAT_7D` / `SOAT_DAY_OF`, payload `{ vehicleId, vehicleName }`) and sends FCM.
+
+## Env vars
+
+`DATABASE_URL` in api-gateway `.env` — must match Docker Compose Postgres.
 
 > Full detail: docs/handoffs/architect.md

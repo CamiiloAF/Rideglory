@@ -97,6 +97,82 @@
         "docs/handoffs/iteration_context.md",
         "workflow/state.json"
       ]
+    },
+    {
+      "at": "2026-05-14T21:53:19Z",
+      "iteration": 2,
+      "phase": "po_scope",
+      "agent": "po",
+      "action": "update",
+      "paths": [
+        "claude/skills/po-skill.md",
+        "docs/handoffs/contracts/iter-2/po_scope.json",
+        "docs/handoffs/iteration_checkpoint.md",
+        "docs/handoffs/po.md",
+        "workflow/state.json"
+      ]
+    },
+    {
+      "at": "2026-05-14T22:01:42Z",
+      "iteration": 2,
+      "phase": "architect",
+      "agent": "architect",
+      "action": "update",
+      "paths": [
+        "claude/skills/architect-skill.md",
+        "docs/architecture/DIAGRAMS.md",
+        "docs/handoffs/architect-for-backend.md",
+        "docs/handoffs/architect-for-devops.md",
+        "docs/handoffs/architect-for-frontend.md",
+        "docs/handoffs/architect-for-qa.md",
+        "docs/handoffs/architect.md",
+        "docs/handoffs/contracts/iter-2/architect.json",
+        "docs/handoffs/iteration_checkpoint.md",
+        "workflow/state.json"
+      ]
+    },
+    {
+      "at": "2026-05-14T22:10:56Z",
+      "iteration": 2,
+      "phase": "design",
+      "agent": "design",
+      "action": "update",
+      "paths": [
+        "claude/skills/design-skill.md",
+        "docs/design",
+        "docs/handoffs/contracts/iter-2/design.json",
+        "docs/handoffs/design.md",
+        "docs/handoffs/iteration_checkpoint.md",
+        "workflow/state.json"
+      ]
+    },
+    {
+      "at": "2026-05-14T22:31:21Z",
+      "iteration": 2,
+      "phase": "backend",
+      "agent": "backend",
+      "action": "update",
+      "paths": [
+        "claude/skills/backend-skill.md",
+        "docs/handoffs/backend.md",
+        "docs/handoffs/contracts/iter-2/backend.json",
+        "docs/handoffs/iteration_checkpoint.md",
+        "workflow/state.json"
+      ]
+    },
+    {
+      "at": "2026-05-14T23:20:29Z",
+      "iteration": 2,
+      "phase": "tech_lead",
+      "agent": "tech_lead",
+      "action": "update",
+      "paths": [
+        "claude/skills/tech_lead-skill.md",
+        "docs/handoffs/contracts/iter-2/tech_lead.json",
+        "docs/handoffs/iteration_checkpoint.md",
+        "docs/handoffs/tech_lead.md",
+        "workflow/state.json"
+      ]
     }
   ]
 }

@@ -1,0 +1,810 @@
+/* Rideglory Design System — Iter-2 Mockup Styles */
+/* Source of truth: design-skill.md + docs/handoffs/design.md */
+
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root {
+  /* Background */
+  --bg:          #111111;
+  --surface:     #1C1209;
+  --surface-2:   #261A0E;
+  --card:        #1A1208;
+
+  /* Border */
+  --border:      #3D2810;
+  --border-subtle: #2A1A08;
+
+  /* Primary */
+  --primary:     #f98c1f;
+  --primary-dim: rgba(249, 140, 31, 0.12);
+  --primary-dim2: rgba(249, 140, 31, 0.08);
+
+  /* Text */
+  --text:        #F1F5F9;
+  --text-2:      #94A3B8;
+  --text-3:      #64748B;
+  --text-muted:  #475569;
+
+  /* Status */
+  --success:     #10B981;
+  --success-dim: rgba(16, 185, 129, 0.12);
+  --warning:     #F59E0B;
+  --warning-dim: rgba(245, 158, 11, 0.12);
+  --error:       #EF4444;
+  --error-dim:   rgba(239, 68, 68, 0.12);
+
+  /* Typography */
+  --font: 'Space Grotesk', sans-serif;
+
+  /* Radius */
+  --r-sm:  8px;
+  --r-md:  12px;
+  --r-lg:  16px;
+  --r-xl:  24px;
+
+  /* Spacing */
+  --sp-xs: 4px;
+  --sp-sm: 8px;
+  --sp-md: 12px;
+  --sp-lg: 16px;
+  --sp-xl: 24px;
+  --sp-xxl: 32px;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0A0A0A;
+  font-family: var(--font);
+  color: var(--text);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 24px;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+/* ============================================================
+   PHONE FRAME
+   ============================================================ */
+.phone {
+  width: 375px;
+  height: 812px;
+  background: var(--bg);
+  border-radius: 44px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #2A2A2A;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.phone-label {
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748B;
+  text-align: center;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.phone-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Status bar */
+.status-bar {
+  height: 44px;
+  padding: 14px 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.status-bar .time {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.status-bar .icons {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.status-bar .icons span {
+  font-size: 12px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ============================================================
+   APP BAR
+   ============================================================ */
+.app-bar {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.app-bar .title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  flex: 1;
+  text-align: center;
+}
+
+.app-bar .back-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  font-size: 18px;
+}
+
+.app-bar .action-btn {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--primary);
+  padding: 8px 4px;
+  cursor: pointer;
+}
+
+/* ============================================================
+   SCROLLABLE CONTENT
+   ============================================================ */
+.screen-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px;
+  scrollbar-width: none;
+}
+
+.screen-body::-webkit-scrollbar { display: none; }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  height: 52px;
+  border-radius: var(--r-sm);
+  border: none;
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--primary);
+  border: 1.5px solid var(--primary);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-2);
+  border: 1.5px solid var(--border);
+}
+
+.btn-danger {
+  background: transparent;
+  color: var(--error);
+  border: 1.5px solid var(--error);
+}
+
+.btn-disabled {
+  background: var(--surface-2);
+  color: var(--text-3);
+  cursor: not-allowed;
+}
+
+.btn-sm {
+  height: 36px;
+  font-size: 13px;
+  border-radius: var(--r-sm);
+  width: auto;
+  padding: 0 16px;
+}
+
+/* ============================================================
+   TEXT FIELD
+   ============================================================ */
+.text-field {
+  margin-bottom: 16px;
+}
+
+.text-field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-2);
+  margin-bottom: 6px;
+  letter-spacing: 0.3px;
+}
+
+.text-field input,
+.text-field .input-box {
+  width: 100%;
+  height: 52px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 0 16px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 15px;
+  outline: none;
+  display: flex;
+  align-items: center;
+}
+
+.text-field input::placeholder {
+  color: var(--text-3);
+}
+
+.text-field input.error,
+.text-field .input-box.error {
+  border-color: var(--error);
+}
+
+.text-field .error-msg {
+  font-size: 12px;
+  color: var(--error);
+  margin-top: 4px;
+}
+
+.text-field .help-text {
+  font-size: 12px;
+  color: var(--text-3);
+  margin-top: 4px;
+}
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.card-body { padding: 16px; }
+
+/* ============================================================
+   SECTION HEADER
+   ============================================================ */
+.section-header {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  margin-top: 24px;
+}
+
+/* ============================================================
+   BADGES / CHIPS
+   ============================================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  gap: 4px;
+}
+
+.badge-success { background: var(--success-dim); color: var(--success); }
+.badge-warning { background: var(--warning-dim); color: var(--warning); }
+.badge-error   { background: var(--error-dim);   color: var(--error); }
+.badge-primary { background: var(--primary-dim); color: var(--primary); }
+.badge-neutral { background: rgba(148,163,184,.12); color: var(--text-2); }
+
+/* ============================================================
+   DOCUMENT SLOT PILL  (iter-1 molecule)
+   ============================================================ */
+.doc-slot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  background: var(--surface-2);
+  border-radius: var(--r-sm);
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  margin-bottom: 8px;
+}
+
+.doc-slot .doc-slot-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.doc-slot .doc-slot-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.doc-slot.empty    .doc-slot-icon { background: rgba(148,163,184,.1); }
+.doc-slot.valid    { border-color: var(--success); }
+.doc-slot.valid    .doc-slot-icon { background: var(--success-dim); }
+.doc-slot.expiring { border-color: var(--warning); }
+.doc-slot.expiring .doc-slot-icon { background: var(--warning-dim); }
+.doc-slot.expired  { border-color: var(--error); }
+.doc-slot.expired  .doc-slot-icon { background: var(--error-dim); }
+
+.doc-slot .doc-slot-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ============================================================
+   SKELETON / LOADING
+   ============================================================ */
+.skeleton {
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface-2) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  border-radius: var(--r-sm);
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ============================================================
+   ERROR BANNER
+   ============================================================ */
+.error-banner {
+  background: var(--error-dim);
+  border: 1px solid var(--error);
+  border-radius: var(--r-sm);
+  padding: 12px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.error-banner .icon { font-size: 18px; flex-shrink: 0; }
+.error-banner .msg  { font-size: 13px; color: var(--error); flex: 1; line-height: 1.5; }
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+}
+
+.empty-icon-box {
+  width: 80px;
+  height: 80px;
+  border-radius: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  margin-bottom: 24px;
+}
+
+.empty-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.empty-subtitle {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+/* ============================================================
+   SECTION LABEL (small uppercase label like in lists)
+   ============================================================ */
+.list-section-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-2);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin: 16px 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ============================================================
+   DIVIDER
+   ============================================================ */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 16px 0;
+}
+
+/* ============================================================
+   UPLOAD ZONE
+   ============================================================ */
+.upload-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--r-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 24px;
+  text-align: center;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.upload-zone .upload-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--primary-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.upload-zone .upload-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.upload-zone .upload-subtitle {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+.upload-zone .upload-link {
+  font-size: 13px;
+  color: var(--primary);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* ============================================================
+   NOTIFICATION ITEM
+   ============================================================ */
+.notif-item {
+  display: flex;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-subtle);
+  align-items: flex-start;
+  cursor: pointer;
+  position: relative;
+}
+
+.notif-item.unread::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+.notif-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.notif-icon-box.soat     { background: var(--warning-dim); }
+.notif-icon-box.event    { background: var(--primary-dim); }
+.notif-icon-box.approved { background: var(--success-dim); }
+.notif-icon-box.rejected { background: var(--error-dim); }
+.notif-icon-box.follower { background: rgba(139, 92, 246, 0.12); }
+
+.notif-body { flex: 1; }
+
+.notif-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+  margin-bottom: 2px;
+}
+
+.notif-subtitle {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.notif-time {
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.notif-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+/* ============================================================
+   ATTENDEE CARD  (ManageAttendeesPage)
+   ============================================================ */
+.attendee-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+
+.attendee-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 22px;
+  background: var(--surface-2);
+  border: 1.5px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.attendee-info { flex: 1; }
+.attendee-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+.attendee-meta {
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+.attendee-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   STEP INDICATOR
+   ============================================================ */
+.step-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px 0 8px;
+}
+
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--border);
+  transition: all 0.2s;
+}
+
+.step-dot.active {
+  width: 24px;
+  background: var(--primary);
+}
+
+/* ============================================================
+   PROGRESS BAR (file upload)
+   ============================================================ */
+.progress-track {
+  height: 4px;
+  background: var(--surface-2);
+  border-radius: 2px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 2px;
+}
+
+/* ============================================================
+   SOAT STATUS CARD  (vehicle detail wire-in)
+   ============================================================ */
+.soat-status-card {
+  background: var(--surface);
+  border-radius: var(--r-md);
+  border: 1.5px solid var(--border);
+  padding: 16px;
+  margin-bottom: 8px;
+}
+
+.soat-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.soat-status-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.soat-detail-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.soat-detail-chip {
+  flex: 1;
+  min-width: 0;
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.soat-detail-chip .chip-label {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-bottom: 2px;
+}
+
+.soat-detail-chip .chip-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================
+   BELL BADGE  (notification bell icon on home)
+   ============================================================ */
+.bell-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.bell-btn .bell-icon {
+  font-size: 22px;
+  color: var(--text);
+}
+
+.bell-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  background: var(--error);
+  border: 2px solid var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 3px;
+}
+
+/* ============================================================
+   TABS
+   ============================================================ */
+.tabs {
+  display: flex;
+  background: var(--surface);
+  border-radius: var(--r-sm);
+  padding: 4px;
+  gap: 4px;
+  margin-bottom: 20px;
+}
+
+.tab {
+  flex: 1;
+  height: 36px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-2);
+}
+
+.tab.active {
+  background: var(--primary);
+  color: #fff;
+}

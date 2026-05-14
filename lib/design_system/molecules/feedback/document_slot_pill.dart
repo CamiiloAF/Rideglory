@@ -21,6 +21,7 @@ class DocumentSlot {
   const DocumentSlot({
     required this.name,
     required this.state,
+    this.stateLabel,
     this.expiryLabel,
     this.onDelete,
     this.isInfoType = false,
@@ -28,6 +29,11 @@ class DocumentSlot {
 
   final String name;
   final DocumentSlotState state;
+
+  /// Localized label for the state badge. When provided, overrides the
+  /// default hardcoded Spanish fallback strings in [_DocumentSlotCard].
+  /// Callers MUST always pass this value; never rely on the hardcoded fallback.
+  final String? stateLabel;
   final String? expiryLabel;
   final VoidCallback? onDelete;
 
@@ -169,6 +175,7 @@ class _DocumentSlotCard extends StatelessWidget {
   }
 
   String _badgeLabel() {
+    if (slot.stateLabel != null) return slot.stateLabel!;
     return switch (slot.state) {
       DocumentSlotState.valid => 'Vigente',
       DocumentSlotState.expiringSoon => 'Por vencer',

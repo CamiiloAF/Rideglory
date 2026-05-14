@@ -1,42 +1,52 @@
 > Slim handoff — read this before docs/handoffs/architect.md
 
-# Architect → DevOps — Iteration 1
+# Architect → DevOps — Iteration 2
 
-## TL;DR
+DevOps is active this iteration. No GitHub Actions workflow YAML changes, but several config/native/env items need attention.
 
-**No CI/CD changes. No new env vars. No build configuration changes. No native config changes (Android/iOS).**
+## New env vars
 
-Iter-1 is presentation-layer-only across the Flutter app. Existing GitHub Actions pipeline (`dart analyze` + `flutter test` + APK/IPA build) is sufficient as-is.
+| Variable | Where | Notes |
+|----------|-------|-------|
+| `DATABASE_URL` | `rideglory-api/api-gateway/.env` (+ `.env.example`) | api-gateway gets Prisma for the first time. Must match the Docker Compose Postgres service. Add the new DB to Docker Compose if a separate database per service is the convention. |
 
-## What does NOT change
+No new Flutter `.env` keys — FCM uses existing `google-services.json` / `GoogleService-Info.plist`.
 
-- `pubspec.yaml` / `pubspec.lock` — no new packages, no version bumps.
-- `.env` / `.env.example` — no new keys.
-- `android/app/build.gradle`, `android/app/src/main/AndroidManifest.xml` — untouched.
-- `ios/Runner/Info.plist`, `ios/Runner/Runner.entitlements` — untouched.
-- `firebase.json`, `google-services.json`, `GoogleService-Info.plist` — untouched.
-- Firebase Remote Config keys — no additions.
-- `build_runner` — not run this iteration (no codegen sources change).
-- GitHub Actions workflow YAMLs — untouched.
+## New packages
 
-## What DOES change
+- Flutter (`pubspec.yaml`): `firebase_messaging ^15.x`, `flutter_local_notifications ^17.x/^18.x`, optional `file_picker ^8.x`. CI `flutter pub get` picks these up automatically — no workflow change.
+- Backend (`api-gateway/package.json`): `@nestjs/schedule`. `firebase-admin` already present.
 
-- **Branch protection on `iter-1`:** allow 5 sequential PRs to merge into the `iter-1` feature branch. Reviewers: 1 approval + tech_lead sign-off per PR. `dart analyze` + `flutter test` must be green per PR (already enforced by existing CI).
-- **DEPLOY.md:** no edits required this iter — no infra additions.
+## iOS native config (APNs — required for iOS push)
 
-## Pre-flight DevOps checklist (this iteration)
+- Upload an **APNs Authentication Key** (.p8) to Firebase Console → Project Settings → Cloud Messaging.
+- Xcode: enable **Push Notifications** capability + **Background Modes → Remote notifications** on the Runner target.
+- `ios/Runner/Info.plist`: `flutter_local_notifications` may need foreground presentation options — frontend handles in code, but verify build.
+- Without APNs setup iOS push fails silently. This is a pre-flight gate for stories 2.4/2.5/2.6.
 
-- [ ] Confirm `iter-1` branch protection allows the 5-PR cadence.
-- [ ] Confirm CI runs on every PR into `iter-1` (not only into `main`).
-- [ ] No additional steps.
+## Android native config
 
-## Looking ahead (iter-2)
+- `android/app/src/main/AndroidManifest.xml`: `flutter_local_notifications` requires a default notification channel + (Android 13+) the `POST_NOTIFICATIONS` runtime permission entry. Frontend wires the channel in Dart; confirm manifest entries build.
+- FCM background handler is pure Dart (`@pragma('vm:entry-point')`) — no native service class needed.
 
-DevOps WILL be active in iter-2. Heads-up:
-- New Flutter packages: `firebase_messaging ^15.x`, `flutter_local_notifications`.
-- iOS: APNs key + Push Notifications capability in Xcode.
-- Android: notification channel config; FCM service.
-- api-gateway first-time Prisma setup → DATABASE_URL in api-gateway env, Docker Compose network coordination.
-- New backend env: none externally exposed yet (Firebase Admin already installed).
+## api-gateway Prisma first-time setup (pre-flight, T-2-2)
+
+- This is `prisma init` + `prisma migrate dev`, NOT `migrate reset`.
+- Docker Compose: ensure the api-gateway can reach a Postgres instance; configure `DATABASE_URL` accordingly. Watch for port conflicts with the 4 existing per-service databases.
+- Document the exact `DATABASE_URL` and any Docker Compose change in the iter-2 pre-flight runbook / `DEPLOY.md`.
+
+## CI/CD
+
+- Existing pipeline (`dart analyze` + `flutter test` + APK/IPA build) stays. No workflow YAML edits.
+- `build_runner` runs locally (codegen output is committed); CI does not need a codegen step unless that is already the convention.
+- `DEPLOY.md`: add the api-gateway `DATABASE_URL` requirement and the APNs key setup step.
+
+## Pre-flight DevOps checklist
+
+- [ ] `DATABASE_URL` added to api-gateway `.env` + `.env.example`; Docker Compose DB reachable.
+- [ ] APNs .p8 key uploaded to Firebase Console; Xcode Push + Remote-notification capabilities enabled.
+- [ ] Android notification channel + `POST_NOTIFICATIONS` manifest entry verified after frontend wiring.
+- [ ] `@nestjs/schedule` installed in api-gateway.
+- [ ] `DEPLOY.md` updated.
 
 > Full detail: docs/handoffs/architect.md
