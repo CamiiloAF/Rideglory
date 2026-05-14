@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
 
 class BottomNavItem extends StatelessWidget {
   const BottomNavItem({
@@ -19,30 +19,39 @@ class BottomNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = context.colorScheme;
-    return InkWell(
-      onTap: onTap,
-      child: SizedBox(
-        width: 64,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              isActive ? activeIcon : icon,
-              color: isActive ? cs.primary : cs.onSurfaceVariant,
-              size: 24,
-            ),
-            AppSpacing.gapXxs,
-            Text(
-              label,
-              style: TextStyle(
-                color: isActive ? cs.primary : cs.onSurfaceVariant,
-                fontSize: 11,
-                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          decoration: BoxDecoration(
+            color: isActive ? AppColors.primary : Colors.transparent,
+            borderRadius: BorderRadius.circular(26),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                isActive ? activeIcon : icon,
+                color: isActive
+                    ? AppColors.darkBgPrimary
+                    : AppColors.tabInactive,
+                size: 18,
               ),
-            ),
-          ],
+              const SizedBox(height: 4),
+              Text(
+                label.toUpperCase(),
+                style: TextStyle(
+                  color: isActive
+                      ? AppColors.darkBgPrimary
+                      : AppColors.tabInactive,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -19,14 +19,14 @@ class RiderTelemetryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bg = context.colorScheme.surfaceContainerHighest;
-    final border = context.colorScheme.outlineVariant;
+    const bg = AppColors.riderCardBg;
+    const border = AppColors.darkBorderPrimary;
     final batteryPercent = rider.batteryPercent;
     final batteryColor = batteryPercent < 0
-        ? context.colorScheme.onSurfaceVariant
+        ? AppColors.tabInactive
         : batteryPercent >= 30
-        ? context.appColors.success
-        : context.appColors.warning;
+        ? AppColors.success
+        : AppColors.warning;
 
     final roleLabel = rider.role == RiderTrackingRole.lead
         ? context.l10n.map_riderLead
@@ -41,10 +41,10 @@ class RiderTelemetryCard extends StatelessWidget {
 
     return Container(
       width: MediaQuery.of(context).size.width * 0.85,
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: border),
       ),
       child: SingleChildScrollView(
@@ -58,22 +58,19 @@ class RiderTelemetryCard extends StatelessWidget {
                 Stack(
                   children: [
                     Container(
-                      width: 56,
-                      height: 56,
+                      width: 40,
+                      height: 40,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: context.colorScheme.primary.withValues(
-                          alpha: 0.20,
-                        ),
+                        color: AppColors.primary.withValues(alpha: 0.20),
                         border: Border.all(
-                          color: context.colorScheme.primary.withValues(
-                            alpha: 0.45,
-                          ),
+                          color: AppColors.primary.withValues(alpha: 0.45),
                         ),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.person,
-                        color: context.colorScheme.primary,
+                        color: AppColors.primary,
+                        size: 20,
                       ),
                     ),
                     Positioned(
@@ -84,9 +81,7 @@ class RiderTelemetryCard extends StatelessWidget {
                         height: 12,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: rider.isActive
-                              ? context.appColors.success
-                              : border,
+                          color: rider.isActive ? AppColors.success : border,
                           border: Border.all(color: bg, width: 2),
                         ),
                       ),
@@ -105,30 +100,30 @@ class RiderTelemetryCard extends StatelessWidget {
                               name.isEmpty ? context.l10n.map_riderRole : name,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: context.titleLarge?.copyWith(
-                                fontWeight: FontWeight.w900,
-                                color: context.colorScheme.onSurface,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
                               ),
                             ),
                           ),
                           AppSpacing.hGapSm,
                           Container(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
+                              horizontal: 8,
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: context.colorScheme.primary.withValues(
-                                alpha: 0.18,
-                              ),
-                              borderRadius: BorderRadius.circular(999),
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
                               roleLabel.toUpperCase(),
-                              style: context.labelSmall?.copyWith(
-                                color: context.colorScheme.primary,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: 0.6,
+                              style: const TextStyle(
+                                color: AppColors.darkBgPrimary,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.5,
                               ),
                             ),
                           ),
@@ -139,8 +134,10 @@ class RiderTelemetryCard extends StatelessWidget {
                         rider.deviceLabel,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: context.bodyMedium?.copyWith(
-                          color: context.colorScheme.onSurfaceVariant,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.textOnDarkSecondary,
                         ),
                       ),
                     ],

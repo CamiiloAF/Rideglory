@@ -1,0 +1,37 @@
+{
+  "slug": "pencil-screen-sync",
+  "sourcePrdPath": "improvements/pencil-screen-sync.md",
+  "project": "Rideglory",
+  "existingBase": "/Users/cami/Developer/Personal/Rideglory",
+  "startedAt": "2026-05-14T09:00:00Z",
+  "status": "in_progress",
+  "phaseLog": [
+    {
+      "phase": "po",
+      "agent": "po",
+      "at": "2026-05-14T10:30:00Z",
+      "summary": "PO scoped pencil-screen-sync: redesign type, high severity, 24 confirmed + 16 unidentified Pencil frames mapped to Flutter files, Design gate hard-blocking Frontend"
+    },
+    {
+      "phase": "architect",
+      "agent": "architect",
+      "at": "2026-05-14T12:00:00Z",
+      "summary": "Architect produced presentation-only change map (modules A-G + design system, ~150 touchable files). Resolved PO open questions: bottom-nav shell = main_shell.dart + home_bottom_navigation_bar.dart + bottom_nav_item/add_button; live_map_page.dart is UI-chrome-only, live_map_widget.dart off-limits; participants_placeholder_page.dart stays a placeholder. Found t7MYzR Forgot Password has no dedicated page (inline in login_view.dart). Defined hard Design gate, 8-step Frontend order, regression test surface (3 at-risk tests), protected file list. No domain/data/DI/router changes."
+    },
+    {
+      "phase": "design",
+      "agent": "design",
+      "at": "2026-05-14T15:00:00Z",
+      "summary": "40 frames screenshotted from rideglory.pen; all 16 unknown frames resolved; 6 out-of-scope, 10 in-scope; critical correction: ELB5u/eK2WW/heldR are Maintenance Form Step 2 (not registration); PMuA4 is a CTA reference sheet (not a screen); f0lXw is the actual registration detail; full design tokens extracted; per-screen specs written for all confirmed frames"
+    }
+  ],
+  "decisions": {
+    "uiChanges": true,
+    "backendChanges": false,
+    "frontendChanges": true,
+    "dbChanges": false,
+    "needsDesign": true
+  },
+  "preExistingDirtyTree": true,
+  "preExistingDirtyTreeNote": "6 deleted docs/design/html-mockups/iter-1/*.html (fake iter-1 mockups being removed). 2 untracked dirs: .claude/worktrees/, improvements/. None of these conflict with custom-iter output."
+}

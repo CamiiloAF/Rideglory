@@ -16,7 +16,7 @@ class ParticipantsPlaceholderPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.darkBgPrimary,
       appBar: AppBar(
         backgroundColor: context.colorScheme.surface,
         foregroundColor: context.colorScheme.onSurface,

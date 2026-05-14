@@ -40,7 +40,7 @@ class EventDetailMeetingPointSection extends StatelessWidget {
               Container(
                 height: 168,
                 width: double.infinity,
-                color: AppColors.darkSurfaceHighest,
+                color: AppColors.darkCard,
                 child: Center(
                   child: Icon(
                     Icons.place,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
 
 class SosButton extends StatelessWidget {
   const SosButton({
@@ -13,33 +13,36 @@ class SosButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onPressed,
-        borderRadius: BorderRadius.circular(28),
-        child: Ink(
-          width: 56,
-          height: 56,
-          decoration: BoxDecoration(
-            color: context.colorScheme.error,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.35),
-                blurRadius: 16,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: Center(
-            child: Text(
-              label,
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 0.6,
-                  ),
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: 48,
+        height: 48,
+        decoration: BoxDecoration(
+          color: AppColors.error,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.error.withValues(alpha: 0.5),
+              blurRadius: 16,
+              spreadRadius: 2,
+              offset: const Offset(0, 4),
+            ),
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w800,
+              fontSize: 11,
+              letterSpacing: 0.5,
             ),
           ),
         ),
@@ -47,4 +50,3 @@ class SosButton extends StatelessWidget {
     );
   }
 }
-

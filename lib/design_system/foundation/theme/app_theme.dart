@@ -268,14 +268,14 @@ class AppTheme {
       primary: AppColors.primary,
       secondary: AppColors.secondary,
       error: AppColors.error,
-      surface: AppColors.darkSurface,
+      surface: AppColors.darkCard,
     ).copyWith(
-      surface: AppColors.darkBackground,
+      surface: AppColors.darkBgPrimary,
       onSurface: AppColors.darkTextPrimary,
       onSurfaceVariant: AppColors.darkTextSecondary,
-      outline: AppColors.darkBorder,
-      outlineVariant: AppColors.darkBorder,
-      surfaceContainerHighest: AppColors.darkSurfaceHighest,
+      outline: AppColors.darkBorderPrimary,
+      outlineVariant: AppColors.darkBorderPrimary,
+      surfaceContainerHighest: AppColors.darkCard,
     );
 
     final textTheme = GoogleFonts.spaceGroteskTextTheme(

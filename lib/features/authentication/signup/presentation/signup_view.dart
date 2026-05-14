@@ -25,9 +25,9 @@ class _SignupViewState extends State<SignupView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.darkBgPrimary,
       appBar: AppBar(
-        backgroundColor: AppColors.darkBackground,
+        backgroundColor: AppColors.darkBgPrimary,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         leading: IconButton(

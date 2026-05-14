@@ -12,31 +12,31 @@ class HomeViewAllEventsButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       child: GestureDetector(
-        onTap: () => context.goNamed(AppRoutes.events),
+        onTap: () => context.go(AppRoutes.events),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 14),
+          height: 48,
           decoration: BoxDecoration(
-            color: context.colorScheme.surface,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: context.colorScheme.outlineVariant),
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.darkBorderLight),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                context.l10n.home_viewAllEvents,
-                style: TextStyle(
-                  color: context.colorScheme.onSurfaceVariant,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1,
+                context.l10n.home_viewCatalog.toUpperCase(),
+                style: const TextStyle(
+                  color: AppColors.textOnDarkSecondary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.3,
                 ),
               ),
-              AppSpacing.hGapXs,
-              Icon(
-                Icons.expand_more,
-                color: context.colorScheme.onSurfaceVariant,
+              const SizedBox(width: 8),
+              const Icon(
+                Icons.keyboard_arrow_down,
+                color: AppColors.textOnDarkSecondary,
                 size: 16,
               ),
             ],

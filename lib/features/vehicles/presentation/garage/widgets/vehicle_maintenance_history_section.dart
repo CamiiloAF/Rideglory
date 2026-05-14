@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:rideglory/core/di/injection.dart';
-import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
@@ -49,98 +48,18 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
             });
           }
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    context.l10n.vehicle_maintenanceHistory,
-                    style: context.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  AppTextButton(
-                    label: context.l10n.vehicle_seeAll,
-                    onPressed: () {
-                      context.pushNamed(
-                        AppRoutes.maintenances,
-                        extra: vehicle.id,
-                      );
-                    },
-                    visualDensity: VisualDensity.compact,
-                  ),
-                ],
-              ),
-              AppSpacing.gapLg,
-              BlocBuilder<
-                VehicleMaintenancesCubit,
-                ResultState<List<MaintenanceModel>>
-              >(
-                builder: (context, state) {
-                  return state.when(
-                    initial: () => const _LoadingState(),
-                    loading: () => const _LoadingState(),
-                    error: (error) => Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppColors.darkSurfaceHighest,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: AppColors.error.withValues(alpha: 0.3),
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          context.l10n.maintenance_errorLoadingRecords,
-                          style: context.bodyMedium?.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                    empty: () => Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(24),
-                      decoration: BoxDecoration(
-                        color: AppColors.darkSurfaceHighest,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
-                        children: [
-                          const Icon(
-                            Icons.history,
-                            color: AppColors.darkTextSecondary,
-                            size: 40,
-                          ),
-                          AppSpacing.gapMd,
-                          Text(
-                            context.l10n.maintenance_noRecordsYet,
-                            style: context.bodyMedium?.copyWith(
-                              color: AppColors.darkTextSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    data: (maintenances) {
-                      // Show max 3 records
-                      final items = maintenances.take(3).toList();
-
-                      return Column(
-                        children: items.map((maintenance) {
-                          return _MaintenanceRecordCard(
-                            maintenance: maintenance,
-                          );
-                        }).toList(),
-                      );
-                    },
-                  );
-                },
-              ),
-            ],
+          return BlocBuilder<VehicleMaintenancesCubit,
+              ResultState<List<MaintenanceModel>>>(
+            builder: (context, state) {
+              final latest = state.maybeWhen(
+                data: (list) => list.isNotEmpty ? list.first : null,
+                orElse: () => null,
+              );
+              return _MaintenanceCards(
+                latest: latest,
+                vehicleId: vehicle.id,
+              );
+            },
           );
         },
       ),
@@ -148,133 +67,162 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
   }
 }
 
-class _MaintenanceRecordCard extends StatelessWidget {
-  const _MaintenanceRecordCard({required this.maintenance});
+// ─── Two-card summary + CTA button ──────────────────────────────────────────
 
-  final MaintenanceModel maintenance;
+class _MaintenanceCards extends StatelessWidget {
+  const _MaintenanceCards({this.latest, this.vehicleId});
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: AppColors.darkSurface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: () async {
-            final result = await context.pushNamed<dynamic>(
-              AppRoutes.maintenanceDetail,
-              extra: maintenance,
-            );
-            if (context.mounted && result != null) {
-              if (result is MaintenanceModel) {
-                context
-                    .read<VehicleMaintenancesCubit>()
-                    .updateMaintenanceLocally(result);
-              } else if (result is Map && result['action'] == 'deleted') {
-                context
-                    .read<VehicleMaintenancesCubit>()
-                    .deleteMaintenanceLocally(result['deletedId'] as String);
-              }
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: AppColors.darkSurfaceHighest,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Center(
-                    child: Icon(
-                      _getMaintenanceIcon(maintenance.type),
-                      color: context.colorScheme.primary,
-                      size: 24,
-                    ),
-                  ),
-                ),
-                AppSpacing.hGapLg,
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        maintenance.name,
-                        style: context.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      AppSpacing.gapXxs,
-                      Text(
-                        '${maintenance.date.formattedDate} • ${NumberFormat('#,###').format(maintenance.maintanceMileage)} km',
-                        style: context.bodyMedium?.copyWith(
-                          color: AppColors.darkTextSecondary,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-                AppSpacing.hGapMd,
-                const Icon(Icons.chevron_right, color: AppColors.darkTextSecondary),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  IconData _getMaintenanceIcon(MaintenanceType type) {
-    switch (type.name.toLowerCase()) {
-      case 'oil':
-      case 'oilchange':
-        return Icons.oil_barrel_outlined;
-      case 'chain':
-        return Icons.link;
-      case 'brakes':
-        return Icons.sports_motorsports_outlined; // Placeholder flag/brakes
-      case 'tires':
-        return Icons.tire_repair_outlined;
-      default:
-        return Icons.build_outlined;
-    }
-  }
-}
-
-class _LoadingState extends StatelessWidget {
-  const _LoadingState();
+  final MaintenanceModel? latest;
+  final String? vehicleId;
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: List.generate(
-        3,
-        (index) => Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          height: 80,
-          decoration: BoxDecoration(
-            color: AppColors.darkSurface,
-            borderRadius: BorderRadius.circular(16),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(child: _ServiceCard.last(maintenance: latest)),
+            const SizedBox(width: 12),
+            Expanded(child: _ServiceCard.next(maintenance: latest)),
+          ],
+        ),
+        const SizedBox(height: 12),
+        _HistoryButton(vehicleId: vehicleId),
+      ],
+    );
+  }
+}
+
+// ─── Service summary card ────────────────────────────────────────────────────
+
+enum _CardType { last, next }
+
+class _ServiceCard extends StatelessWidget {
+  const _ServiceCard.last({this.maintenance}) : _type = _CardType.last;
+  const _ServiceCard.next({this.maintenance}) : _type = _CardType.next;
+
+  final MaintenanceModel? maintenance;
+  final _CardType _type;
+
+  bool get _isLast => _type == _CardType.last;
+
+  String _formatDate(DateTime? date) {
+    if (date == null) return '—';
+    return DateFormat('MMM yyyy', 'es').format(date);
+  }
+
+  String _formatKm(int? km) {
+    if (km == null) return '—';
+    return '${NumberFormat('#,###').format(km).replaceAll(',', '.')} km';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final date = _isLast ? maintenance?.date : maintenance?.nextMaintenanceDate;
+    final km = _isLast
+        ? maintenance?.maintanceMileage
+        : maintenance?.nextMaintenanceMileage;
+    final iconColor = _isLast ? AppColors.info : AppColors.primary;
+    final badgeText = _isLast
+        ? context.l10n.maintenance_done
+        : context.l10n.maintenance_legend_warning;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.darkCard,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.darkBorderPrimary),
+      ),
+      padding: const EdgeInsets.all(14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Icon(
+                _isLast ? Icons.calendar_today : Icons.calendar_month_outlined,
+                size: 16,
+                color: iconColor,
+              ),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: iconColor.withValues(alpha: 0.13),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  badgeText,
+                  style: TextStyle(
+                    color: iconColor,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
           ),
-          child: const Center(
-            child: AppLoadingIndicator(
-              variant: AppLoadingIndicatorVariant.inline,
+          const SizedBox(height: 6),
+          Text(
+            _formatDate(date),
+            style: const TextStyle(
+              color: AppColors.textOnDarkPrimary,
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
             ),
           ),
+          const SizedBox(height: 6),
+          Text(
+            _formatKm(km),
+            style: const TextStyle(
+              color: AppColors.textOnDarkSecondary,
+              fontSize: 11,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── History CTA button ──────────────────────────────────────────────────────
+
+class _HistoryButton extends StatelessWidget {
+  const _HistoryButton({this.vehicleId});
+
+  final String? vehicleId;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.pushNamed(AppRoutes.maintenances, extra: vehicleId),
+      child: Container(
+        height: 48,
+        decoration: BoxDecoration(
+          color: AppColors.primarySubtle,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.primary),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.assignment_outlined,
+              size: 18,
+              color: AppColors.primary,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              context.l10n.maintenance_viewHistory,
+              style: const TextStyle(
+                color: AppColors.primary,
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -16,118 +16,273 @@ enum DocumentSlotState {
   expired,
 }
 
-/// A pill-shaped row that shows a document slot label and its current state.
-///
-/// Design spec:
-/// - Minimum height 44 px (touch target).
-/// - Background: [AppColors.darkSurfaceHighest].
-/// - Border radius: 8 px.
-/// - State accent: success / warning / error per [state].
-/// - Reusable in iter-2 SOAT badge context; not coupled to vehicle types.
+/// Model for a single document slot.
+class DocumentSlot {
+  const DocumentSlot({
+    required this.name,
+    required this.state,
+    this.expiryLabel,
+    this.onDelete,
+    this.isInfoType = false,
+  });
+
+  final String name;
+  final DocumentSlotState state;
+  final String? expiryLabel;
+  final VoidCallback? onDelete;
+
+  /// Whether this slot uses the info/blue icon bg (e.g. SOAT).
+  final bool isInfoType;
+}
+
+/// Displays a document section with a header (title + count badge + "Opcional")
+/// and up to 3 document slot cards, matching the aGqnv Pencil spec.
 class DocumentSlotPill extends StatelessWidget {
   const DocumentSlotPill({
-    required this.label,
-    required this.state,
-    this.stateLabel,
-    this.onTap,
-    this.leading,
+    required this.slots,
+    this.totalSlots = 3,
+    this.isOptional = true,
     super.key,
   });
 
-  /// Document name, e.g. "SOAT" or "Técnico-mecánica".
-  final String label;
+  final List<DocumentSlot> slots;
+  final int totalSlots;
+  final bool isOptional;
 
-  /// Current validity state of the document.
-  final DocumentSlotState state;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _DocumentHeader(
+          count: slots.length,
+          total: totalSlots,
+          isOptional: isOptional,
+        ),
+        const SizedBox(height: 10),
+        ...slots.map((slot) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: _DocumentSlotCard(slot: slot),
+            )),
+        const SizedBox(height: 2),
+        const _DocumentInfoRow(),
+      ],
+    );
+  }
+}
 
-  /// Human-readable state label. If null, a default is shown per [state].
-  final String? stateLabel;
+class _DocumentHeader extends StatelessWidget {
+  const _DocumentHeader({
+    required this.count,
+    required this.total,
+    required this.isOptional,
+  });
 
-  /// Optional tap handler. Shows chevron when provided.
-  final VoidCallback? onTap;
+  final int count;
+  final int total;
+  final bool isOptional;
 
-  /// Optional leading icon.
-  final IconData? leading;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const Text(
+          'DOCUMENTOS',
+          style: TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w700,
+            color: AppColors.tabInactive,
+            letterSpacing: 1.5,
+          ),
+        ),
+        const SizedBox(width: 4),
+        if (isOptional)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.darkBorderLight),
+            ),
+            child: const Text(
+              'Opcional',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w400,
+                color: AppColors.tabInactive,
+              ),
+            ),
+          ),
+        const Spacer(),
+        Text(
+          '$count/$total',
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+            color: AppColors.primary,
+          ),
+        ),
+      ],
+    );
+  }
+}
 
-  Color _accentColor() {
-    return switch (state) {
-      DocumentSlotState.empty => AppColors.darkTextSecondary,
-      DocumentSlotState.valid => AppColors.success,
-      DocumentSlotState.expiringSoon => AppColors.warning,
-      DocumentSlotState.expired => AppColors.error,
+class _DocumentSlotCard extends StatelessWidget {
+  const _DocumentSlotCard({required this.slot});
+
+  final DocumentSlot slot;
+
+  Color _iconBg() {
+    return switch (slot.state) {
+      DocumentSlotState.valid => AppColors.successSubtle,
+      DocumentSlotState.expiringSoon ||
+      DocumentSlotState.expired ||
+      DocumentSlotState.empty =>
+        slot.isInfoType ? AppColors.infoSubtle : AppColors.darkTertiary,
     };
   }
 
-  IconData _stateIcon() {
-    return switch (state) {
-      DocumentSlotState.empty => Icons.add_circle_outline_rounded,
-      DocumentSlotState.valid => Icons.check_circle_rounded,
-      DocumentSlotState.expiringSoon => Icons.warning_amber_rounded,
-      DocumentSlotState.expired => Icons.cancel_rounded,
+  Color _iconColor() {
+    return switch (slot.state) {
+      DocumentSlotState.valid => AppColors.success,
+      DocumentSlotState.expiringSoon => AppColors.textOnDarkSecondary,
+      DocumentSlotState.expired => AppColors.error,
+      DocumentSlotState.empty => AppColors.textOnDarkSecondary,
+    };
+  }
+
+  Color _badgeBg() {
+    return switch (slot.state) {
+      DocumentSlotState.valid => AppColors.successSubtle,
+      DocumentSlotState.expiringSoon => AppColors.warningSubtle,
+      DocumentSlotState.expired => AppColors.errorSubtle,
+      DocumentSlotState.empty => AppColors.darkTertiary,
+    };
+  }
+
+  Color _badgeText() {
+    return switch (slot.state) {
+      DocumentSlotState.valid => AppColors.success,
+      DocumentSlotState.expiringSoon => AppColors.warning,
+      DocumentSlotState.expired => AppColors.error,
+      DocumentSlotState.empty => AppColors.textOnDarkSecondary,
+    };
+  }
+
+  String _badgeLabel() {
+    return switch (slot.state) {
+      DocumentSlotState.valid => 'Vigente',
+      DocumentSlotState.expiringSoon => 'Por vencer',
+      DocumentSlotState.expired => 'Vencido',
+      DocumentSlotState.empty => 'Sin registrar',
     };
   }
 
   @override
   Widget build(BuildContext context) {
-    final accent = _accentColor();
-    final effectiveLeading = leading ?? Icons.description_outlined;
-    final effectiveStateLabel = stateLabel ??
-        switch (state) {
-          DocumentSlotState.empty => 'Sin registrar',
-          DocumentSlotState.valid => 'Vigente',
-          DocumentSlotState.expiringSoon => 'Por vencer',
-          DocumentSlotState.expired => 'Vencido',
-        };
-
-    final content = Container(
-      constraints: const BoxConstraints(minHeight: 44),
+    return Container(
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.darkSurfaceHighest,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.darkBorder),
+        color: AppColors.darkCard,
+        borderRadius: BorderRadius.circular(12),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Row(
         children: [
-          Icon(effectiveLeading, size: 18, color: AppColors.darkTextSecondary),
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: _iconBg(),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(Icons.description_outlined, size: 20, color: _iconColor()),
+          ),
           const SizedBox(width: 10),
           Expanded(
-            child: Text(
-              label,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppColors.darkTextPrimary,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  slot.name,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+                if (slot.expiryLabel != null) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    slot.expiryLabel!,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.textOnDarkSecondary,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          const SizedBox(width: 6),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                decoration: BoxDecoration(
+                  color: _badgeBg(),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  _badgeLabel(),
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: _badgeText(),
+                  ),
+                ),
               ),
-            ),
+              if (slot.onDelete != null) ...[
+                const SizedBox(height: 6),
+                GestureDetector(
+                  onTap: slot.onDelete,
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: AppColors.darkTertiary,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Icon(Icons.close, size: 14, color: AppColors.textOnDarkSecondary),
+                  ),
+                ),
+              ],
+            ],
           ),
-          const SizedBox(width: 8),
-          Icon(_stateIcon(), size: 16, color: accent),
-          const SizedBox(width: 4),
-          Text(
-            effectiveStateLabel,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: accent,
-            ),
-          ),
-          if (onTap != null) ...[
-            const SizedBox(width: 4),
-            const Icon(Icons.chevron_right_rounded,
-                size: 18, color: AppColors.darkTextSecondary),
-          ],
         ],
       ),
     );
+  }
+}
 
-    if (onTap != null) {
-      return GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: content,
-      );
-    }
-    return content;
+class _DocumentInfoRow extends StatelessWidget {
+  const _DocumentInfoRow();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Row(
+      children: [
+        Icon(Icons.info_outline, size: 12, color: AppColors.tabInactive),
+        SizedBox(width: 5),
+        Text(
+          'Máximo 3 documentos',
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w400,
+            color: AppColors.tabInactive,
+          ),
+        ),
+      ],
+    );
   }
 }

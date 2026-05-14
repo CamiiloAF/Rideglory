@@ -14,9 +14,9 @@ class VehicleInfoChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: AppColors.darkCard,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.darkBorder, width: 1),
+        border: Border.all(color: AppColors.darkBorderPrimary, width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

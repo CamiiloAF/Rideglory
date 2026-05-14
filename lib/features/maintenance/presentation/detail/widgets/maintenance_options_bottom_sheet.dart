@@ -29,7 +29,7 @@ class MaintenanceOptionsBottomSheet extends StatelessWidget {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: AppColors.darkBorder,
+              color: AppColors.darkBorderPrimary,
               borderRadius: BorderRadius.circular(2),
             ),
           ),

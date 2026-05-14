@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/utils/initials.dart';
+import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
 
 class ProfileHeader extends StatelessWidget {
@@ -9,20 +10,42 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final initials = initialsFromName(user.fullName);
 
     return Column(
       children: [
-        CircleAvatar(
-          radius: 40,
-          backgroundColor: colorScheme.primary,
-          child: Text(
-            initials,
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: colorScheme.onPrimary,
+        // Avatar with gradient ring
+        Container(
+          width: 88,
+          height: 88,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                AppColors.primary,
+                Color(0x66F98C1F), // accent at 40%
+              ],
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(3),
+            child: Container(
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.darkCard,
+              ),
+              child: Center(
+                child: Text(
+                  initials,
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ),
           ),
         ),
@@ -30,18 +53,19 @@ class ProfileHeader extends StatelessWidget {
         if (user.fullName != null && user.fullName!.isNotEmpty)
           Text(
             user.fullName!,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: colorScheme.onSurface,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
             ),
           ),
+        const SizedBox(height: 4),
         if (user.email != null && user.email!.isNotEmpty)
           Text(
             user.email!,
-            style: TextStyle(
-              fontSize: 14,
-              color: colorScheme.onSurfaceVariant,
+            style: const TextStyle(
+              fontSize: 13,
+              color: AppColors.textOnDarkSecondary,
             ),
           ),
       ],

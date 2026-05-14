@@ -13,7 +13,7 @@ class EventDetailHeaderBackgroundImage extends StatelessWidget {
       return Image.network(
         event.imageUrl!,
         fit: BoxFit.cover,
-        errorBuilder: (_, __, ___) => const EventDetailHeaderPlaceholder(),
+        errorBuilder: (_, _, _) => const EventDetailHeaderPlaceholder(),
       );
     }
     return const EventDetailHeaderPlaceholder();

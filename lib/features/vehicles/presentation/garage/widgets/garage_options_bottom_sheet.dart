@@ -39,9 +39,9 @@ class GarageOptionsBottomSheet extends StatelessWidget {
     final deleteCubit = getIt<VehicleDeleteCubit>()..reset();
     showModalBottomSheet(
       context: parentContext,
-      backgroundColor: parentContext.colorScheme.surface,
+      backgroundColor: AppColors.darkCard,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (sheetContext) => BlocProvider<VehicleCubit>.value(
         value: vehicleCubit,
@@ -94,7 +94,7 @@ class GarageOptionsBottomSheet extends StatelessWidget {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: AppColors.darkBorder,
+              color: AppColors.darkBorderPrimary,
               borderRadius: BorderRadius.circular(2),
             ),
           ),

@@ -106,7 +106,7 @@ class _LiveMapPageState extends State<LiveMapPage> {
 
     if (eventId == null || eventId.isEmpty) {
       return Scaffold(
-        backgroundColor: AppColors.darkBackground,
+        backgroundColor: AppColors.darkBgPrimary,
         appBar: AppAppBar(title: event.name),
         body: Center(
           child: Padding(
@@ -125,7 +125,7 @@ class _LiveMapPageState extends State<LiveMapPage> {
 
     if (event.state != EventState.inProgress) {
       return Scaffold(
-        backgroundColor: AppColors.darkBackground,
+        backgroundColor: AppColors.darkBgPrimary,
         appBar: AppAppBar(title: event.name),
         body: Center(
           child: Padding(
@@ -148,7 +148,7 @@ class _LiveMapPageState extends State<LiveMapPage> {
     return BlocProvider.value(
       value: trackingCubit,
       child: Scaffold(
-        backgroundColor: AppColors.darkBackground,
+        backgroundColor: AppColors.darkBgPrimary,
         appBar: AppAppBar(
           title: event.name,
           actions: [

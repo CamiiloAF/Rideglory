@@ -1,0 +1,90 @@
+{
+  "slug": "pencil-screen-sync",
+  "phase": "design",
+  "status": "pass",
+  "updatedAt": "2026-05-14T15:00:00Z",
+  "summary": "40 frames screenshotted from rideglory.pen; all 16 unknown frames resolved (6 out-of-scope, 10 in-scope); critical corrections delivered: ELB5u/eK2WW/heldR are Maintenance Form Step 2 not registration; PMuA4 is a CTA reference sheet not a screen; f0lXw is the actual registration detail; full design token set extracted; per-screen specs written for all 34 confirmed/component frames",
+  "metrics": {
+    "tokens": 0,
+    "costUsd": 0.0
+  },
+  "artifacts": [
+    "docs/custom-iters/pencil-screen-sync/analysis/pencil-frame-map.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/dyWWs.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/Neipf.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/kAubW.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/PMuA4.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/zbCa0.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/KCf6W.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/P1GSzZ.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/EqnMm.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/aGqnv.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/VMmN0.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/zKkmE.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/v6RqaX.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/J5h6P.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/ELB5u_eK2WW_heldR.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/nxTub_AETwc_tt64n.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/o1A6t4.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/Gv2Rr.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/XJtvl.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/t7MYzR_UYeeY.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/A7qDd.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/uVOQl_MrYmb_VrqVl.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/DJOZ2.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/o7KqgL.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/VKLP4.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/pQCmS_f0lXw.md",
+    "docs/custom-iters/pencil-screen-sync/analysis/screens/YCuIq.md",
+    "docs/custom-iters/pencil-screen-sync/handoffs/design.md",
+    "docs/custom-iters/pencil-screen-sync/contracts/design.json"
+  ],
+  "qualityGates": [
+    {
+      "name": "required_artifacts_present",
+      "status": "pass",
+      "detail": "pencil-frame-map.md and design.md written; 27 per-screen spec files produced"
+    },
+    {
+      "name": "all_frames_screenshotted",
+      "status": "pass",
+      "detail": "40 of 40 frames screenshotted via mcp__pencil__get_screenshot. Note: Pencil MCP returns screenshots as inline AI-visible images, not saved PNG files — screenshots/ directory is empty by design. All visual content was analyzed and documented in per-screen spec files."
+    },
+    {
+      "name": "unknown_frames_resolved",
+      "status": "pass",
+      "detail": "16 of 16 unknown frames resolved: 10 in-scope (uVOQl=Login, MrYmb=Register, VrqVl=Splash, UYeeY=EmailSent, YCuIq=VehicleSheet, pQCmS=RegistrationForm, DJOZ2=RiderProfile, f0lXw=MyRegistration, o7KqgL=MaintenanceList, VKLP4=MaintenanceDetail); 6 out-of-scope (LDsMT, b5YFuy, IUxas, UqpLS, qs5o1, Q44tYx)"
+    },
+    {
+      "name": "architect_questions_answered",
+      "status": "pass",
+      "detail": "All 7 architect open questions answered in design.md: (1) 16 unknowns resolved; (2) PMuA4 is a reference sheet not a screen, zbCa0 is the only form; (3) t7MYzR is full-page screen not dialog — recommend inline state in login_view.dart; (4) XJtvl is my_registrations_page.dart; (5) CRITICAL: ELB5u/eK2WW/heldR are Maintenance Form Step 2 not registration_detail_page — architect change map was wrong; (6) Gv2Rr confirmed as rider_telemetry_panel.dart; (7) per-frame tokens documented in spec files"
+    },
+    {
+      "name": "no_protected_files_touched",
+      "status": "pass",
+      "detail": "No Flutter code written. No domain/, data/, DI, or protected files modified. Only analysis/ and handoffs/ artifacts written."
+    },
+    {
+      "name": "critical_corrections_documented",
+      "status": "pass",
+      "detail": "Two critical corrections from PRD/architect mapping documented and escalated: (A) ELB5u/eK2WW/heldR are maintenance not registration; (B) PMuA4 is a design reference sheet not an EventForm screen state"
+    }
+  ],
+  "escalations": [
+    {
+      "id": "E1",
+      "severity": "high",
+      "subject": "ELB5u/eK2WW/heldR frame mapping was wrong in PRD and architect handoff",
+      "detail": "The PRD and architect change map assigned these frames to registration_detail_page.dart. Screenshots prove they are Maintenance Form Step 2 variants. Frontend must implement them in maintenance_form_page.dart, NOT registration_detail_page.dart.",
+      "resolution": "Design corrects the mapping. Frontend must follow design.md, not PRD §4 or architect change map for these 3 frames."
+    },
+    {
+      "id": "E2",
+      "severity": "medium",
+      "subject": "t7MYzR Forgot Password requires human decision on routing",
+      "detail": "The frame is a full-page screen (390x844), not a dialog. Architect confirmed no dedicated page exists. Implementing as a separate route is out of scope; implementing as inline state in login_view.dart is safe but requires architectural confirmation.",
+      "resolution": "Human must approve: (a) create new forgot_password route (out of scope per PRD), or (b) implement as inline PageView/AnimatedSwitcher state within login_view.dart (recommended, no new route)."
+    }
+  ]
+}

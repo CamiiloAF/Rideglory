@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
-import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
 import 'package:rideglory/features/splash/presentation/cubit/splash_cubit.dart';
 import 'package:rideglory/features/splash/presentation/widgets/splash_brand_content.dart';
 import 'package:rideglory/features/splash/presentation/widgets/splash_footer.dart';
-import 'package:rideglory/features/splash/presentation/widgets/splash_glow_background.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -84,18 +83,15 @@ class _SplashContentState extends State<_SplashContent>
     return BlocListener<SplashCubit, SplashState>(
       listener: _handleNavigation,
       child: Scaffold(
-        backgroundColor: AppColors.darkBackground,
-        body: SafeArea(
-          child: Stack(
-            children: [
-              const SplashGlowBackground(),
-              const SplashBrandContent(),
-              SplashFooter(
-                progressAnimation: _progressAnimation,
-                onRetry: _onRetry,
-              ),
-            ],
-          ),
+        backgroundColor: AppColors.darkBgPrimary,
+        body: Stack(
+          children: [
+            const SplashBrandContent(),
+            SplashFooter(
+              progressAnimation: _progressAnimation,
+              onRetry: _onRetry,
+            ),
+          ],
         ),
       ),
     );

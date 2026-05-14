@@ -19,7 +19,7 @@ class MaintenanceProgressBar extends StatelessWidget {
         Container(
           height: 8,
           decoration: BoxDecoration(
-            color: AppColors.darkBorder,
+            color: AppColors.darkBorderPrimary,
             borderRadius: BorderRadius.circular(4),
           ),
         ),

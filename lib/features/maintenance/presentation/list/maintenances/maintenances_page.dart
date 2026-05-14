@@ -134,7 +134,7 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
         .activeFilterCount;
 
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.darkBgPrimary,
       appBar: AppAppBar(
         title: context.l10n.maintenance_maintenances,
         leading: IconButton(

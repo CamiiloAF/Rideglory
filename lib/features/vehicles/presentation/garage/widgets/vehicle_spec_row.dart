@@ -17,28 +17,44 @@ class VehicleSpecRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: isLast ? 0 : 12),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      decoration: BoxDecoration(
-        color: AppColors.darkSurfaceHighest,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: context.colorScheme.primary, size: 20),
-          AppSpacing.hGapLg,
-          Text(label, style: context.bodyMedium?.copyWith(color: Colors.white)),
-          const Spacer(),
-          Text(
-            value,
-            style: context.bodyMedium?.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          child: Row(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: AppColors.infoSubtle,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(icon, color: AppColors.primary, size: 16),
+              ),
+              AppSpacing.hGapMd,
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: AppColors.textOnDarkSecondary,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        if (!isLast)
+          const Divider(height: 1, thickness: 1, color: AppColors.darkBorderPrimary),
+      ],
     );
   }
 }

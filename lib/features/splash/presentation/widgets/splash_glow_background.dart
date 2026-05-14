@@ -20,7 +20,7 @@ class SplashGlowBackground extends StatelessWidget {
             gradient: RadialGradient(
               colors: [
                 context.colorScheme.primary.withValues(alpha: 0.22),
-                AppColors.darkBackground.withValues(alpha: 0.0),
+                AppColors.darkBgPrimary.withValues(alpha: 0.0),
               ],
             ),
           ),

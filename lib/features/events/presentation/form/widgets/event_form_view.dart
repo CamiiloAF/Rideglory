@@ -66,7 +66,7 @@ class EventFormView extends StatelessWidget {
         final isSaving = state.saveResult is Loading;
 
         return Scaffold(
-          backgroundColor: AppColors.darkBackground,
+          backgroundColor: AppColors.darkBgPrimary,
           appBar: AppBar(
             backgroundColor: context.colorScheme.surface,
             foregroundColor: context.colorScheme.onSurface,

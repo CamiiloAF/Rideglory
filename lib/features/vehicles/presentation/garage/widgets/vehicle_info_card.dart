@@ -18,8 +18,8 @@ class VehicleInfoCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.darkSurfaceHighest,
-        borderRadius: BorderRadius.circular(16),
+        color: AppColors.darkCard,
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

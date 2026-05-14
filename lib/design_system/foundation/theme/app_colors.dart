@@ -113,5 +113,43 @@ class AppColors {
   static const Color licensePlateTagBackground = Color(0xFFFBBF24);
   /// Dark text on license plate tag
   static const Color licensePlateTagText = Color(0xFF1F2937);
+
+  // ─── Pencil design system tokens ──────────────────────────────────────────
+  /// Pencil $bg-primary — page background
+  static const Color darkBgPrimary = Color(0xFF0D0D0F);
+  /// Pencil $bg-secondary — field / secondary surface
+  static const Color darkBgSecondary = Color(0xFF1A1A1F);
+  /// Pencil $bg-card — card surface
+  static const Color darkCard = Color(0xFF1E1E24);
+  /// Pencil $bg-tertiary
+  static const Color darkTertiary = Color(0xFF242429);
+  /// Pencil $border
+  static const Color darkBorderPrimary = Color(0xFF2A2A32);
+  /// Pencil $border-light
+  static const Color darkBorderLight = Color(0xFF3A3A44);
+  /// Pencil $text-primary (on dark)
+  static const Color textOnDarkPrimary = Color(0xFFFFFFFF);
+  /// Pencil $text-secondary
+  static const Color textOnDarkSecondary = Color(0xFF9CA3AF);
+  /// Pencil $text-tertiary
+  static const Color textOnDarkTertiary = Color(0xFF6B7280);
+  /// Pencil $accent-subtle
+  static const Color primarySubtle = Color(0xFF2D2117);
+  /// Pencil $tab-bar-bg
+  static const Color tabBarBackground = Color(0xFF15151A);
+  /// Pencil $tab-inactive
+  static const Color tabInactive = Color(0xFF6B7280);
+  /// Pencil success-subtle — Vigente badge bg, Realizado badge bg
+  static const Color successSubtle = Color(0xFF162A1F);
+  /// Pencil warning-subtle — Por vencer badge bg
+  static const Color warningSubtle = Color(0xFF2A2200);
+  /// Pencil error-subtle — Vencido badge bg
+  static const Color errorSubtle = Color(0xFF2D1010);
+  /// Pencil info-subtle — SOAT icon bg
+  static const Color infoSubtle = Color(0xFF1B2E4A);
+  /// Tracking rider card background
+  static const Color riderCardBg = Color(0xFF161616);
+  /// Tracking map dark background
+  static const Color trackingMapBg = Color(0xFF0C1018);
 }
 

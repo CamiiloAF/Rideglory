@@ -27,26 +27,29 @@ class HomeHeader extends StatelessWidget {
               children: [
                 Text(
                   context.l10n.home_greeting.toUpperCase(),
-                  style: TextStyle(
-                    color: context.colorScheme.primary,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
                     letterSpacing: 1.5,
                   ),
                 ),
-                AppSpacing.gapXxs,
+                const SizedBox(height: 3),
                 Text(
                   userName,
-                  style: TextStyle(
-                    color: context.colorScheme.onSurface,
-                    fontSize: 26,
-                    fontWeight: FontWeight.w800,
+                  style: const TextStyle(
+                    color: AppColors.textOnDarkPrimary,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
                   ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
           ),
-          const HomeNotificationButton(showBadge: true),
+          const SizedBox(width: 12),
+          const HomeNotificationButton(),
         ],
       ),
     );

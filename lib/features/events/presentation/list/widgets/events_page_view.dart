@@ -17,7 +17,7 @@ class EventsPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.darkBgPrimary,
       body: SafeArea(
         child: MultiBlocListener(
           listeners: [

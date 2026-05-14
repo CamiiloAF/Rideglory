@@ -25,7 +25,12 @@ class VehicleFullSpecsSection extends StatelessWidget {
         ),
         AppSpacing.gapLg,
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+          decoration: BoxDecoration(
+            color: AppColors.darkCard,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppColors.darkBorderPrimary),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: [
               VehicleSpecRow(
@@ -34,12 +39,12 @@ class VehicleFullSpecsSection extends StatelessWidget {
                 value: vehicle.year?.toString() ?? '-',
               ),
               VehicleSpecRow(
-                icon: Icons.verified_user_outlined, // VIN icon equivalent
+                icon: Icons.verified_user_outlined,
                 label: context.l10n.vehicle_vehicleVin,
                 value: vehicle.vin ?? '-',
               ),
               VehicleSpecRow(
-                icon: Icons.shopping_cart_outlined, // Cart icon equivalent
+                icon: Icons.shopping_cart_outlined,
                 label: context.l10n.vehicle_purchaseDate,
                 value: vehicle.purchaseDate != null
                     ? DateFormat.yMMMMd().format(vehicle.purchaseDate!)

@@ -14,7 +14,7 @@ class MaintenanceNotesSection extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppColors.darkSurface,
+          color: AppColors.darkCard,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(

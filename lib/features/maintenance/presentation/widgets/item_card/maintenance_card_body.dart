@@ -40,33 +40,42 @@ class MaintenanceCardBody extends StatelessWidget {
     final currencyFormat = NumberFormat.simpleCurrency(decimalDigits: 2);
     final numberFormat = NumberFormat('#,###');
 
+    // Determine urgency color for left border
+    final urgencyColor = isUrgent
+        ? AppColors.maintenanceUrgent
+        : (daysUntilNext != null && daysUntilNext! < 30
+            ? AppColors.maintenanceWarning
+            : AppColors.maintenanceOk);
+
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
-        color: context.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: context.colorScheme.outlineVariant, width: 1),
+        color: AppColors.darkCard,
+        borderRadius: BorderRadius.circular(12),
+        border: Border(
+          left: BorderSide(color: urgencyColor, width: 3),
+        ),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
             onTap: onTap,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(12),
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(14),
               child: Row(
                 children: [
                   // Icon Container
                   Container(
-                    width: 56,
-                    height: 56,
-                    decoration: BoxDecoration(
-                      color: AppColors.darkSurfaceHighest,
-                      borderRadius: BorderRadius.circular(12),
+                    width: 40,
+                    height: 40,
+                    decoration: const BoxDecoration(
+                      color: AppColors.darkTertiary,
+                      shape: BoxShape.circle,
                     ),
-                    child: Icon(typeIcon, color: context.colorScheme.primary, size: 28),
+                    child: Icon(typeIcon, color: context.colorScheme.primary, size: 20),
                   ),
                   AppSpacing.hGapLg,
 

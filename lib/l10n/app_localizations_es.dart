@@ -1269,7 +1269,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_addMaintenanceAction => 'Agregar mantenimiento';
 
   @override
-  String get maintenance_viewHistory => 'Ver historial';
+  String get maintenance_viewHistory => 'Ver historial de mantenimientos';
 
   @override
   String get maintenance_saveMaintenance => 'Guardar Registro';
@@ -1323,6 +1323,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get maintenance_next => 'Próximo';
+
+  @override
+  String get maintenance_done => 'Hecho';
 
   @override
   String get maintenance_calculateRemainingDistance =>
@@ -1380,6 +1383,61 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get maintenance_filter => 'Filtrar';
+
+  @override
+  String get vehicle_addShort => 'Agregar';
+
+  @override
+  String get vehicle_mainBadge => 'Moto principal';
+
+  @override
+  String get vehicle_viewDetail => 'Ver detalle';
+
+  @override
+  String get vehicle_otherVehicles => 'Otras motos';
+
+  @override
+  String get vehicle_plateSectionTitle => 'PLACA';
+
+  @override
+  String get vehicle_viewMaintenanceHistory =>
+      'Ver historial de mantenimientos';
+
+  @override
+  String get vehicle_specBrand => 'Marca';
+
+  @override
+  String get vehicle_specModel => 'Modelo';
+
+  @override
+  String get vehicle_specYear => 'Año';
+
+  @override
+  String get vehicle_specCc => 'Cilindraje';
+
+  @override
+  String get vehicle_specColor => 'Color';
+
+  @override
+  String get vehicle_specMileage => 'Kilometraje inicial';
+
+  @override
+  String get vehicle_specVin => 'VIN';
+
+  @override
+  String get vehicle_specPurchaseDate => 'Fecha de compra';
+
+  @override
+  String get vehicle_identification => 'Identificación del vehículo';
+
+  @override
+  String get vehicle_specs => 'Especificaciones';
+
+  @override
+  String get vehicle_plate => 'Placa';
+
+  @override
+  String get vehicle_vinLabel => 'VIN / No. de Serie';
 
   @override
   String get vehicle_vehicles => 'Vehículos';
@@ -2309,6 +2367,65 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se pudieron cargar tus datos. Verifica tu conexión e inténtalo de nuevo.';
 
   @override
+  String get home_helloAgain => 'Hola de nuevo';
+
+  @override
+  String get home_sectionGarage => 'Mi garaje';
+
+  @override
+  String get home_sectionEvents => 'Próximas rodadas';
+
+  @override
+  String get home_viewAllLink => 'Ver todas';
+
+  @override
+  String get home_statKmTotal => 'Kilómetros';
+
+  @override
+  String get home_statPromService => 'Próx. servicio';
+
+  @override
+  String get home_statLastService => 'Último servicio';
+
+  @override
+  String get home_vehicleViewDetail => 'Ver detalle';
+
+  @override
+  String get home_vehicleMaintenance => 'Mantenimiento';
+
+  @override
+  String get home_vehicleDocuments => 'Documentos';
+
+  @override
+  String get home_otherVehicles => 'Otras motos';
+
+  @override
+  String get home_eventViewDetails => 'Ver detalles';
+
+  @override
+  String get home_viewCatalog => 'Ver catálogo completo de eventos';
+
+  @override
+  String get home_emptyGarageTitle => 'Agrega tu primera moto';
+
+  @override
+  String get home_emptyGarageSubtitle =>
+      'Lleva el control de tu garaje y mantenimientos';
+
+  @override
+  String get home_emptyGarageCta => 'Agregar moto';
+
+  @override
+  String get home_emptyEventsTitle => 'Sin rodadas próximas';
+
+  @override
+  String get home_emptyEventsSubtitle =>
+      'Explora los eventos disponibles y únete a la comunidad';
+
+  @override
+  String get home_emptyEventsCta => 'Ver eventos';
+
+  @override
   String get event_badge_scheduled => 'Programado';
 
   @override
@@ -2748,4 +2865,48 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get registration_status_rejected => 'Rechazada';
+
+  @override
+  String get nav_inicio => 'Inicio';
+
+  @override
+  String get nav_garaje => 'Garaje';
+
+  @override
+  String get nav_eventos => 'Eventos';
+
+  @override
+  String get nav_perfil => 'Perfil';
+
+  @override
+  String get auth_forgotPasswordTitle => '¿Olvidaste tu contraseña?';
+
+  @override
+  String get auth_forgotPasswordBody =>
+      'Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.';
+
+  @override
+  String get auth_sendLink => 'Enviar enlace';
+
+  @override
+  String get auth_rememberPassword => '¿Ya la recordaste?';
+
+  @override
+  String get auth_signInLink2 => 'Inicia sesión';
+
+  @override
+  String get auth_emailSentTitle => '¡Revisa tu correo!';
+
+  @override
+  String get auth_emailSentBody =>
+      'Enviamos instrucciones para recuperar tu contraseña. Si no lo encuentras, revisa tu carpeta de spam.';
+
+  @override
+  String get auth_backToLogin => 'Volver al inicio de sesión';
+
+  @override
+  String get auth_resendEmail => '¿No recibiste el correo? Reenviar';
+
+  @override
+  String get nav_addEvent => 'Nueva Rodada';
 }

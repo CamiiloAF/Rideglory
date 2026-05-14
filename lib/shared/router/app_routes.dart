@@ -9,6 +9,7 @@ abstract class AppRoutes {
   // Authentication routes
   static const String login = '/login';
   static const String signup = '/signup';
+  static const String forgotPassword = '/forgot-password';
 
   // Vehicle routes
   static const String garage = '/garage';

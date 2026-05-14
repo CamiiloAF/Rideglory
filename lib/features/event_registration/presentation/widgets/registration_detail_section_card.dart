@@ -22,9 +22,9 @@ class RegistrationDetailSectionCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: context.colorScheme.surface,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: context.colorScheme.outlineVariant),
+        color: AppColors.darkCard,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.darkBorderPrimary),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),

@@ -16,42 +16,29 @@ class VehicleGarageOverviewItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
       decoration: BoxDecoration(
-        color: AppColors.darkSurfaceHighest,
-        borderRadius: BorderRadius.circular(16),
+        color: AppColors.darkCard,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.darkBorderPrimary),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: const BoxDecoration(
-              color: AppColors.darkBorder,
-              shape: BoxShape.circle,
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
             ),
-            child: Icon(icon, color: context.colorScheme.primary, size: 20),
           ),
-          AppSpacing.hGapMd,
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label.toUpperCase(),
-                  style: context.labelSmall?.copyWith(
-                    color: AppColors.darkTextSecondary,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                AppSpacing.gapXxs,
-                Text(
-                  value,
-                  style: context.bodyLarge?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 10,
+              color: AppColors.textOnDarkSecondary,
             ),
           ),
         ],

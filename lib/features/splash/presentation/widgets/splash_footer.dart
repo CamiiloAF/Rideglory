@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
 import 'package:rideglory/features/splash/presentation/cubit/splash_cubit.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
-import 'package:rideglory/design_system/design_system.dart';
 
 class SplashFooter extends StatelessWidget {
   final Animation<double> progressAnimation;
@@ -17,95 +17,59 @@ class SplashFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      left: 32,
-      right: 32,
-      bottom: 40,
+      left: 80,
+      right: 80,
+      bottom: 60,
       child: BlocBuilder<SplashCubit, SplashState>(
         builder: (context, state) {
           final isError = state is SplashError;
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (isError) ...[
+          if (isError) {
+            return Column(
+              children: [
                 Text(
                   '${context.l10n.splash_errorPrefix}${state.message}',
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: context.colorScheme.error,
+                  style: const TextStyle(
+                    color: AppColors.error,
+                    fontSize: 12,
                   ),
+                  textAlign: TextAlign.center,
                 ),
-                AppSpacing.gapSm,
+                const SizedBox(height: 8),
                 GestureDetector(
                   onTap: onRetry,
                   child: Text(
                     context.l10n.splash_retryLabel,
-                    style: context.textTheme.labelSmall?.copyWith(
-                      color: context.colorScheme.primary,
+                    style: const TextStyle(
+                      color: AppColors.primary,
+                      fontSize: 12,
                       letterSpacing: 1.2,
                     ),
                   ),
                 ),
-              ] else ...[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      context.l10n.splash_initializingLabel,
-                      style: context.textTheme.labelSmall?.copyWith(
-                        color: context.colorScheme.onSurfaceVariant,
-                        fontSize: 10,
-                        letterSpacing: 1.5,
-                      ),
-                    ),
-                    AnimatedBuilder(
-                      animation: progressAnimation,
-                      builder: (context, _) {
-                        return Text(
-                          '${(progressAnimation.value * 100).toInt()}%',
-                          style: context.textTheme.labelSmall?.copyWith(
-                            color: context.colorScheme.onSurfaceVariant,
-                            fontSize: 10,
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                AppSpacing.gapSm,
-                Container(
-                  height: 3,
-                  decoration: BoxDecoration(
-                    color: context.colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                  child: AnimatedBuilder(
-                    animation: progressAnimation,
-                    builder: (context, _) {
-                      return FractionallySizedBox(
-                        alignment: Alignment.centerLeft,
-                        widthFactor: progressAnimation.value,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: context.colorScheme.primary,
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
               ],
-              AppSpacing.gapXl,
-              Center(
-                child: Text(
-                  context.l10n.splash_versionLabel,
-                  style: context.textTheme.labelSmall?.copyWith(
-                    color: context.colorScheme.outlineVariant,
-                    fontSize: 10,
-                    letterSpacing: 2.0,
+            );
+          }
+          return AnimatedBuilder(
+            animation: progressAnimation,
+            builder: (context, _) {
+              return Container(
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.darkCard,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+                child: FractionallySizedBox(
+                  alignment: Alignment.centerLeft,
+                  widthFactor: progressAnimation.value,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              );
+            },
           );
         },
       ),

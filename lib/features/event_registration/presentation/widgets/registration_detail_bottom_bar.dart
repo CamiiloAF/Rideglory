@@ -20,18 +20,11 @@ class RegistrationDetailBottomBar extends StatelessWidget {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Container(
-      decoration: BoxDecoration(
-        color: context.colorScheme.surface,
+      decoration: const BoxDecoration(
+        color: AppColors.darkBgPrimary,
         border: Border(
-          top: BorderSide(color: context.colorScheme.outlineVariant),
+          top: BorderSide(color: AppColors.darkBorderPrimary),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
-            blurRadius: 12,
-            offset: const Offset(0, -2),
-          ),
-        ],
       ),
       padding: EdgeInsets.fromLTRB(16, 12, 16, math.max(16, bottomPadding)),
       child: SafeArea(

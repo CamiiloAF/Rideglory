@@ -20,7 +20,7 @@ class RiderProfilePage extends StatelessWidget {
     return BlocProvider(
       create: (_) => getIt<RiderProfileCubit>()..fetchRiderProfile(userId),
       child: Scaffold(
-        backgroundColor: AppColors.darkBackground,
+        backgroundColor: AppColors.darkBgPrimary,
         appBar: AppAppBar(title: context.l10n.rider_profileTitle),
         body: SafeArea(
           child: BlocBuilder<RiderProfileCubit, ResultState<UserModel>>(

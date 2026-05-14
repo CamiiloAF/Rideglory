@@ -45,7 +45,7 @@ class _HomeScaffold extends StatelessWidget {
         if (!didPop) _showExitConfirmation(context);
       },
       child: Scaffold(
-        backgroundColor: AppColors.darkBackground,
+        backgroundColor: AppColors.darkBgPrimary,
         body: SafeArea(
           bottom: false,
           child: BlocBuilder<HomeCubit, HomeState>(

@@ -15,7 +15,7 @@ class MyRegistrationsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.darkBgPrimary,
       appBar: AppAppBar(title: context.l10n.registration_myRegistrations),
       body: SafeArea(
         child:

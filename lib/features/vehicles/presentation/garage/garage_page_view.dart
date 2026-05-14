@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
-import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_vehicles_content.dart';
-import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_detail_view.dart';
 import 'package:rideglory/shared/widgets/states/page_error_state_widget.dart';
 import 'package:rideglory/shared/widgets/states/page_loading_state_widget.dart';
 
@@ -20,8 +18,6 @@ class GaragePageView extends StatefulWidget {
   });
 
   final Future<void> Function() loadVehicles;
-
-  /// When opening the garage from home (or deep link), scroll to this vehicle.
   final String? openWithVehicleId;
 
   @override
@@ -29,48 +25,20 @@ class GaragePageView extends StatefulWidget {
 }
 
 class _GaragePageViewState extends State<GaragePageView> {
-  int _currentIndex = 0;
-  late final PageController _pageController;
-  bool _appliedRouteVehicleFocus = false;
+  VehicleModel? _selectedVehicle;
   int _maintenanceRefreshTick = 0;
   final Map<String, MaintenanceModel> _pendingMaintenanceByVehicleId = {};
 
-  /// Keeps carousel index valid after local cubit updates (create/edit/delete).
-  /// [focusVehicle] aligns the PageView when we know which row changed (API returns it).
-  void _syncGaragePageIndex([VehicleModel? focusVehicle]) {
-    if (!mounted) return;
-    final vehicles = context
-        .read<VehicleCubit>()
-        .availableVehicles
-        .where((v) => !v.isArchived)
-        .toList();
-
-    int newIndex = _currentIndex;
-    if (vehicles.isEmpty) {
-      newIndex = 0;
-    } else {
-      if (newIndex >= vehicles.length) {
-        newIndex = vehicles.length - 1;
-      }
-      final focusId = focusVehicle?.id;
-      if (focusId != null) {
-        final i = vehicles.indexWhere((v) => v.id == focusId);
-        if (i >= 0) newIndex = i;
-      }
-    }
-
-    setState(() => _currentIndex = newIndex);
+  @override
+  void initState() {
+    super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || !_pageController.hasClients) return;
-      _pageController.jumpToPage(newIndex);
+      widget.loadVehicles();
     });
   }
 
-  Future<void> _pushCreateVehicleThenSync() async {
-    final result = await context.pushNamed(AppRoutes.createVehicle);
-    if (!mounted || result == null) return;
-    _syncGaragePageIndex(result is VehicleModel ? result : null);
-  }
+  void _selectVehicle(VehicleModel vehicle) => setState(() => _selectedVehicle = vehicle);
+  void _clearSelection() => setState(() => _selectedVehicle = null);
 
   void _onMaintenanceCreated(MaintenanceModel maintenance) {
     final vehicleId = maintenance.vehicleId;
@@ -83,9 +51,7 @@ class _GaragePageViewState extends State<GaragePageView> {
 
   void _onPendingMaintenanceConsumed(String vehicleId) {
     if (!_pendingMaintenanceByVehicleId.containsKey(vehicleId)) return;
-    setState(() {
-      _pendingMaintenanceByVehicleId.remove(vehicleId);
-    });
+    setState(() => _pendingMaintenanceByVehicleId.remove(vehicleId));
   }
 
   void _onMaintenanceRefreshRequested(String vehicleId) {
@@ -96,141 +62,45 @@ class _GaragePageViewState extends State<GaragePageView> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _pageController = PageController(initialPage: _currentIndex);
-    if (widget.openWithVehicleId == null) {
-      _appliedRouteVehicleFocus = true;
-    }
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      widget.loadVehicles();
-    });
-  }
-
-  @override
-  void didUpdateWidget(GaragePageView oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.openWithVehicleId != oldWidget.openWithVehicleId) {
-      _appliedRouteVehicleFocus =
-          widget.openWithVehicleId == null;
-    }
-  }
-
-  /// Aligns carousel + cubit selection when arriving with [GaragePageView.openWithVehicleId].
-  void _applyOpenWithVehicleIdIfNeeded() {
-    if (_appliedRouteVehicleFocus) return;
-    final id = widget.openWithVehicleId;
-    if (id == null) {
-      _appliedRouteVehicleFocus = true;
-      return;
-    }
-    if (!mounted) return;
-    final vehicles = context
-        .read<VehicleCubit>()
-        .availableVehicles
-        .where((vehicle) => !vehicle.isArchived)
-        .toList();
-    final index = vehicles.indexWhere((vehicle) => vehicle.id == id);
-    if (index < 0) {
-      _appliedRouteVehicleFocus = true;
-      return;
-    }
-    _appliedRouteVehicleFocus = true;
-    final vehicle = vehicles[index];
-    context.read<VehicleCubit>().selectVehicle(vehicle);
-    setState(() => _currentIndex = index);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || !_pageController.hasClients) return;
-      _pageController.jumpToPage(index);
-    });
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.darkSurface,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Icon(Icons.two_wheeler, color: context.colorScheme.primary),
-        ),
-        title: Text(
-          context.l10n.vehicle_myGarage,
-          style: context.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: context.colorScheme.onSurface,
-          ),
-        ),
-        centerTitle: false,
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 16),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.05),
-              shape: BoxShape.circle,
-            ),
-            child: IconButton(
-              icon: Icon(
-                Icons.notifications_none,
-                color: context.colorScheme.primary,
-              ),
-              onPressed: () {},
-            ),
-          ),
-        ],
-      ),
-      body: SafeArea(
-        bottom: false,
-        child: BlocBuilder<VehicleCubit, ResultState<List<VehicleModel>>>(
-          builder: (context, state) {
-            return state.maybeWhen(
-              loading: () =>
-                  PageLoadingStateWidget(onRefresh: widget.loadVehicles),
-              error: (error) => PageErrorStateWidget(
-                title: context.l10n.errorOccurred,
-                message: context.l10n.errorMessage(error.message),
-                onRetry: widget.loadVehicles,
-                onRefresh: widget.loadVehicles,
-              ),
-              empty: () => EmptyStateWidget(
-                icon: Icons.garage_outlined,
-                title: context.l10n.vehicle_noVehicles,
-                description: context.l10n.vehicle_noVehiclesDescription,
-                actionButtonText: context.l10n.vehicle_addVehicle,
-                onActionPressed: _pushCreateVehicleThenSync,
-              ),
-              data: (_) {
-                WidgetsBinding.instance
-                    .addPostFrameCallback((_) => _applyOpenWithVehicleIdIfNeeded());
-                return GarageVehiclesContent(
-                  pageController: _pageController,
-                  currentIndex: _currentIndex,
-                  maintenanceRefreshTick: _maintenanceRefreshTick,
-                  pendingMaintenanceByVehicleId: _pendingMaintenanceByVehicleId,
-                  onIndexChanged: (index) {
-                    setState(() {
-                      _currentIndex = index;
-                    });
-                  },
-                  onGarageListUpdatedLocally: _syncGaragePageIndex,
-                  onMaintenanceCreated: _onMaintenanceCreated,
-                  onMaintenanceRefreshRequested: _onMaintenanceRefreshRequested,
-                  onPendingMaintenanceConsumed: _onPendingMaintenanceConsumed,
-                );
-              },
-              orElse: () => const PageLoadingStateWidget(),
-            );
-          },
-        ),
-      ),
+    return BlocBuilder<VehicleCubit, ResultState<List<VehicleModel>>>(
+      builder: (context, state) {
+        if (state is Loading) return PageLoadingStateWidget(onRefresh: widget.loadVehicles);
+        if (state is Error<List<VehicleModel>>) {
+          return PageErrorStateWidget(
+            title: context.l10n.errorOccurred,
+            message: context.l10n.errorMessage(state.error.message),
+            onRetry: widget.loadVehicles,
+            onRefresh: widget.loadVehicles,
+          );
+        }
+
+        final selected = _selectedVehicle;
+        if (selected != null) {
+          // Sync in case the vehicle was edited/updated
+          final vehicles = context.read<VehicleCubit>().availableVehicles;
+          final updated = vehicles.where((v) => v.id == selected.id).firstOrNull ?? selected;
+
+          return VehicleDetailView(
+            vehicle: updated,
+            onBack: _clearSelection,
+            maintenanceRefreshTick: _maintenanceRefreshTick,
+            pendingCreatedMaintenance: _pendingMaintenanceByVehicleId[updated.id],
+            onPendingMaintenanceConsumed: _onPendingMaintenanceConsumed,
+            onMaintenanceCreated: _onMaintenanceCreated,
+            onMaintenanceRefreshRequested: _onMaintenanceRefreshRequested,
+            onVehicleUpdated: (v) => setState(() => _selectedVehicle = v),
+          );
+        }
+
+        return GarageVehiclesContent(
+          loadVehicles: widget.loadVehicles,
+          openWithVehicleId: widget.openWithVehicleId,
+          onSelectVehicle: _selectVehicle,
+          onMaintenanceCreated: _onMaintenanceCreated,
+          onMaintenanceRefreshRequested: _onMaintenanceRefreshRequested,
+        );
+      },
     );
   }
 }

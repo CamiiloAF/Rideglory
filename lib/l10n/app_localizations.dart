@@ -2521,7 +2521,7 @@ abstract class AppLocalizations {
   /// No description provided for @maintenance_viewHistory.
   ///
   /// In es, this message translates to:
-  /// **'Ver historial'**
+  /// **'Ver historial de mantenimientos'**
   String get maintenance_viewHistory;
 
   /// No description provided for @maintenance_saveMaintenance.
@@ -2625,6 +2625,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Próximo'**
   String get maintenance_next;
+
+  /// No description provided for @maintenance_done.
+  ///
+  /// In es, this message translates to:
+  /// **'Hecho'**
+  String get maintenance_done;
 
   /// No description provided for @maintenance_calculateRemainingDistance.
   ///
@@ -2733,6 +2739,114 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Filtrar'**
   String get maintenance_filter;
+
+  /// No description provided for @vehicle_addShort.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar'**
+  String get vehicle_addShort;
+
+  /// No description provided for @vehicle_mainBadge.
+  ///
+  /// In es, this message translates to:
+  /// **'Moto principal'**
+  String get vehicle_mainBadge;
+
+  /// No description provided for @vehicle_viewDetail.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver detalle'**
+  String get vehicle_viewDetail;
+
+  /// No description provided for @vehicle_otherVehicles.
+  ///
+  /// In es, this message translates to:
+  /// **'Otras motos'**
+  String get vehicle_otherVehicles;
+
+  /// No description provided for @vehicle_plateSectionTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'PLACA'**
+  String get vehicle_plateSectionTitle;
+
+  /// No description provided for @vehicle_viewMaintenanceHistory.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver historial de mantenimientos'**
+  String get vehicle_viewMaintenanceHistory;
+
+  /// No description provided for @vehicle_specBrand.
+  ///
+  /// In es, this message translates to:
+  /// **'Marca'**
+  String get vehicle_specBrand;
+
+  /// No description provided for @vehicle_specModel.
+  ///
+  /// In es, this message translates to:
+  /// **'Modelo'**
+  String get vehicle_specModel;
+
+  /// No description provided for @vehicle_specYear.
+  ///
+  /// In es, this message translates to:
+  /// **'Año'**
+  String get vehicle_specYear;
+
+  /// No description provided for @vehicle_specCc.
+  ///
+  /// In es, this message translates to:
+  /// **'Cilindraje'**
+  String get vehicle_specCc;
+
+  /// No description provided for @vehicle_specColor.
+  ///
+  /// In es, this message translates to:
+  /// **'Color'**
+  String get vehicle_specColor;
+
+  /// No description provided for @vehicle_specMileage.
+  ///
+  /// In es, this message translates to:
+  /// **'Kilometraje inicial'**
+  String get vehicle_specMileage;
+
+  /// No description provided for @vehicle_specVin.
+  ///
+  /// In es, this message translates to:
+  /// **'VIN'**
+  String get vehicle_specVin;
+
+  /// No description provided for @vehicle_specPurchaseDate.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha de compra'**
+  String get vehicle_specPurchaseDate;
+
+  /// No description provided for @vehicle_identification.
+  ///
+  /// In es, this message translates to:
+  /// **'Identificación del vehículo'**
+  String get vehicle_identification;
+
+  /// No description provided for @vehicle_specs.
+  ///
+  /// In es, this message translates to:
+  /// **'Especificaciones'**
+  String get vehicle_specs;
+
+  /// No description provided for @vehicle_plate.
+  ///
+  /// In es, this message translates to:
+  /// **'Placa'**
+  String get vehicle_plate;
+
+  /// No description provided for @vehicle_vinLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'VIN / No. de Serie'**
+  String get vehicle_vinLabel;
 
   /// No description provided for @vehicle_vehicles.
   ///
@@ -4444,6 +4558,120 @@ abstract class AppLocalizations {
   /// **'No se pudieron cargar tus datos. Verifica tu conexión e inténtalo de nuevo.'**
   String get home_error_message;
 
+  /// No description provided for @home_helloAgain.
+  ///
+  /// In es, this message translates to:
+  /// **'Hola de nuevo'**
+  String get home_helloAgain;
+
+  /// No description provided for @home_sectionGarage.
+  ///
+  /// In es, this message translates to:
+  /// **'Mi garaje'**
+  String get home_sectionGarage;
+
+  /// No description provided for @home_sectionEvents.
+  ///
+  /// In es, this message translates to:
+  /// **'Próximas rodadas'**
+  String get home_sectionEvents;
+
+  /// No description provided for @home_viewAllLink.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver todas'**
+  String get home_viewAllLink;
+
+  /// No description provided for @home_statKmTotal.
+  ///
+  /// In es, this message translates to:
+  /// **'Kilómetros'**
+  String get home_statKmTotal;
+
+  /// No description provided for @home_statPromService.
+  ///
+  /// In es, this message translates to:
+  /// **'Próx. servicio'**
+  String get home_statPromService;
+
+  /// No description provided for @home_statLastService.
+  ///
+  /// In es, this message translates to:
+  /// **'Último servicio'**
+  String get home_statLastService;
+
+  /// No description provided for @home_vehicleViewDetail.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver detalle'**
+  String get home_vehicleViewDetail;
+
+  /// No description provided for @home_vehicleMaintenance.
+  ///
+  /// In es, this message translates to:
+  /// **'Mantenimiento'**
+  String get home_vehicleMaintenance;
+
+  /// No description provided for @home_vehicleDocuments.
+  ///
+  /// In es, this message translates to:
+  /// **'Documentos'**
+  String get home_vehicleDocuments;
+
+  /// No description provided for @home_otherVehicles.
+  ///
+  /// In es, this message translates to:
+  /// **'Otras motos'**
+  String get home_otherVehicles;
+
+  /// No description provided for @home_eventViewDetails.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver detalles'**
+  String get home_eventViewDetails;
+
+  /// No description provided for @home_viewCatalog.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver catálogo completo de eventos'**
+  String get home_viewCatalog;
+
+  /// No description provided for @home_emptyGarageTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Agrega tu primera moto'**
+  String get home_emptyGarageTitle;
+
+  /// No description provided for @home_emptyGarageSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Lleva el control de tu garaje y mantenimientos'**
+  String get home_emptyGarageSubtitle;
+
+  /// No description provided for @home_emptyGarageCta.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar moto'**
+  String get home_emptyGarageCta;
+
+  /// No description provided for @home_emptyEventsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin rodadas próximas'**
+  String get home_emptyEventsTitle;
+
+  /// No description provided for @home_emptyEventsSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Explora los eventos disponibles y únete a la comunidad'**
+  String get home_emptyEventsSubtitle;
+
+  /// No description provided for @home_emptyEventsCta.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver eventos'**
+  String get home_emptyEventsCta;
+
   /// No description provided for @event_badge_scheduled.
   ///
   /// In es, this message translates to:
@@ -5307,6 +5535,90 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Rechazada'**
   String get registration_status_rejected;
+
+  /// No description provided for @nav_inicio.
+  ///
+  /// In es, this message translates to:
+  /// **'Inicio'**
+  String get nav_inicio;
+
+  /// No description provided for @nav_garaje.
+  ///
+  /// In es, this message translates to:
+  /// **'Garaje'**
+  String get nav_garaje;
+
+  /// No description provided for @nav_eventos.
+  ///
+  /// In es, this message translates to:
+  /// **'Eventos'**
+  String get nav_eventos;
+
+  /// No description provided for @nav_perfil.
+  ///
+  /// In es, this message translates to:
+  /// **'Perfil'**
+  String get nav_perfil;
+
+  /// No description provided for @auth_forgotPasswordTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Olvidaste tu contraseña?'**
+  String get auth_forgotPasswordTitle;
+
+  /// No description provided for @auth_forgotPasswordBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.'**
+  String get auth_forgotPasswordBody;
+
+  /// No description provided for @auth_sendLink.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar enlace'**
+  String get auth_sendLink;
+
+  /// No description provided for @auth_rememberPassword.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Ya la recordaste?'**
+  String get auth_rememberPassword;
+
+  /// No description provided for @auth_signInLink2.
+  ///
+  /// In es, this message translates to:
+  /// **'Inicia sesión'**
+  String get auth_signInLink2;
+
+  /// No description provided for @auth_emailSentTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¡Revisa tu correo!'**
+  String get auth_emailSentTitle;
+
+  /// No description provided for @auth_emailSentBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviamos instrucciones para recuperar tu contraseña. Si no lo encuentras, revisa tu carpeta de spam.'**
+  String get auth_emailSentBody;
+
+  /// No description provided for @auth_backToLogin.
+  ///
+  /// In es, this message translates to:
+  /// **'Volver al inicio de sesión'**
+  String get auth_backToLogin;
+
+  /// No description provided for @auth_resendEmail.
+  ///
+  /// In es, this message translates to:
+  /// **'¿No recibiste el correo? Reenviar'**
+  String get auth_resendEmail;
+
+  /// No description provided for @nav_addEvent.
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva Rodada'**
+  String get nav_addEvent;
 }
 
 class _AppLocalizationsDelegate

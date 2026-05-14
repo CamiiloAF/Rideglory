@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
 
 class MyLocationButton extends StatelessWidget {
   const MyLocationButton({
@@ -13,29 +13,31 @@ class MyLocationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
+    return Container(
+      width: 40,
+      height: 40,
       decoration: BoxDecoration(
-        color: context.colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: context.colorScheme.outlineVariant),
+        color: AppColors.darkCard,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isEnabled ? AppColors.primary : AppColors.darkBorderPrimary,
+          width: 2,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.25),
-            blurRadius: 12,
-            offset: const Offset(0, 8),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: InkWell(
         onTap: isEnabled ? onTap : null,
-        borderRadius: BorderRadius.circular(14),
-        child: SizedBox(
-          width: 48,
-          height: 48,
-          child: Icon(
-            Icons.my_location,
-            color: isEnabled ? context.colorScheme.primary : context.colorScheme.onSurfaceVariant,
-          ),
+        borderRadius: BorderRadius.circular(20),
+        child: Icon(
+          Icons.my_location,
+          size: 18,
+          color: isEnabled ? AppColors.primary : AppColors.tabInactive,
         ),
       ),
     );

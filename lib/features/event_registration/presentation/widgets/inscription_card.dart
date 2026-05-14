@@ -68,7 +68,7 @@ class InscriptionCard extends StatelessWidget {
                 width: 88,
                 height: 88,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Container(
+                errorBuilder: (_, _, _) => Container(
                   width: 88,
                   height: 88,
                   color: context.colorScheme.surfaceContainerHighest,

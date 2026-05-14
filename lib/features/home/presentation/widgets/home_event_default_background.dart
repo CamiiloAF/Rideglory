@@ -11,7 +11,7 @@ class HomeEventDefaultBackground extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppColors.darkSurface, AppColors.darkSurfaceHighest],
+          colors: [AppColors.darkCard, AppColors.darkCard],
         ),
       ),
       child: Center(

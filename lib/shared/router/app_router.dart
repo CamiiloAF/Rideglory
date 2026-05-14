@@ -24,6 +24,7 @@ import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import '../../features/authentication/application/auth_cubit.dart';
 import '../../features/users/presentation/pages/rider_profile_page.dart';
 import '../../features/authentication/login/presentation/login_view.dart';
+import '../../features/authentication/login/presentation/forgot_password_view.dart';
 import '../../features/authentication/signup/presentation/signup_view.dart';
 import '../../features/profile/presentation/profile_page.dart';
 import '../../features/maintenance/presentation/detail/maintenance_detail_page.dart';
@@ -47,7 +48,8 @@ class AppRouter {
       final isOnSplash = state.matchedLocation == AppRoutes.splash;
       final isOnAuthPage =
           state.matchedLocation == AppRoutes.login ||
-          state.matchedLocation == AppRoutes.signup;
+          state.matchedLocation == AppRoutes.signup ||
+          state.matchedLocation == AppRoutes.forgotPassword;
 
       // Allow access to splash and auth pages
       if (isOnSplash || isOnAuthPage) {
@@ -105,6 +107,13 @@ class AppRouter {
         name: AppRoutes.signup,
         builder: (context, state) {
           return const SignupView();
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.forgotPassword,
+        name: AppRoutes.forgotPassword,
+        builder: (context, state) {
+          return const ForgotPasswordView();
         },
       ),
 

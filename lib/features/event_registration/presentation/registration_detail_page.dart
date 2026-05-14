@@ -23,7 +23,7 @@ class RegistrationDetailPage extends StatelessWidget {
     final isRegistrantViewer = registration.userId == currentUserId;
 
     return Scaffold(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.darkBgPrimary,
       appBar: AppAppBar(title: context.l10n.registration_requestDetailsTitle),
       body: SingleChildScrollView(
         child: Column(

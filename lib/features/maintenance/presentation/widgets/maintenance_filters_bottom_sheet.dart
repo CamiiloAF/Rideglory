@@ -35,9 +35,14 @@ class _MaintenanceFiltersBottomSheetState
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: context.colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      decoration: const BoxDecoration(
+        color: AppColors.darkCard,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        border: Border(
+          top: BorderSide(color: AppColors.darkBorderPrimary),
+          left: BorderSide(color: AppColors.darkBorderPrimary),
+          right: BorderSide(color: AppColors.darkBorderPrimary),
+        ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

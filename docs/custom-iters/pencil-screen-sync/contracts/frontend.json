@@ -1,0 +1,135 @@
+{
+  "phase": "frontend",
+  "iteration": "pencil-screen-sync",
+  "status": "complete",
+  "completedAt": "2026-05-14",
+  "agent": "flutter-developer",
+  "qualityGate": {
+    "dartAnalyzeErrors": 0,
+    "dartAnalyzeWarnings": 0,
+    "dartAnalyzeInfos": 47,
+    "flutterTestTotal": 44,
+    "flutterTestPassed": 44,
+    "flutterTestFailed": 0
+  },
+  "modulesCompleted": {
+    "DS": {
+      "label": "Design System Tokens",
+      "frames": [],
+      "files": [
+        "lib/design_system/foundation/theme/app_colors.dart",
+        "lib/core/theme/app_theme.dart",
+        "lib/design_system/foundation/theme/app_theme.dart"
+      ],
+      "notes": "Added 18 new color constants (darkBgPrimary, darkBgSecondary, darkCard, darkTertiary, darkBorderPrimary, darkBorderLight, textOnDarkPrimary, textOnDarkSecondary, textOnDarkTertiary, primarySubtle, tabBarBackground, tabInactive, successSubtle, warningSubtle, errorSubtle, infoSubtle, riderCardBg, trackingMapBg). Replaced all deprecated darkSurface/darkSurfaceHighest/darkBorder/darkBackground tokens app-wide with new constants. Updated dark theme scaffold background and colorScheme surface to darkBgPrimary/darkCard."
+    },
+    "A": {
+      "label": "Auth + Navigation",
+      "frames": ["VMmN0", "t7MYzR", "UYeeY"],
+      "files": [
+        "lib/shared/widgets/home_bottom_navigation_bar.dart",
+        "lib/shared/widgets/bottom_nav_item.dart",
+        "lib/features/authentication/login/presentation/forgot_password_view.dart",
+        "lib/shared/router/app_routes.dart",
+        "lib/shared/router/app_router.dart",
+        "lib/features/authentication/login/presentation/login_view.dart",
+        "lib/l10n/app_es.arb"
+      ],
+      "notes": "Bottom nav pill (cornerRadius 36, tabBarBackground bg, tab items cornerRadius 26). ForgotPassword + EmailSent views consolidated in forgot_password_view.dart with _sent boolean toggle. Route /forgot-password added."
+    },
+    "B": {
+      "label": "Home",
+      "frames": ["dyWWs"],
+      "files": [
+        "lib/features/home/presentation/home_page.dart"
+      ],
+      "notes": "Scaffold background updated to darkBgPrimary."
+    },
+    "C": {
+      "label": "Events",
+      "frames": ["zKkmE", "aGqnv", "PMuA4"],
+      "files": [
+        "lib/design_system/atoms/badges/app_event_badge.dart",
+        "lib/design_system/molecules/feedback/document_slot_pill.dart",
+        "lib/features/events/presentation/detail/widgets/event_detail_cta_bar.dart",
+        "lib/features/events/presentation/tracking/widgets/sos_button.dart",
+        "lib/features/events/presentation/tracking/widgets/map_zoom_controls.dart",
+        "lib/features/events/presentation/tracking/widgets/my_location_button.dart",
+        "lib/features/events/presentation/tracking/widgets/rider_telemetry_card.dart"
+      ],
+      "notes": "AppEventBadge rewritten with EventBadgeVariant enum, solid fill, cornerRadius 20. DocumentSlotPill rewritten with DocumentSlot model, status badges (successSubtle/warningSubtle/errorSubtle/infoSubtle). CTA bar uses darkBgPrimary + top border. Tracking widgets resized and recolored per spec."
+    },
+    "D": {
+      "label": "Garage / Vehicles",
+      "frames": ["KCf6W", "P1GSzZ", "EqnMm", "YCuIq"],
+      "files": [
+        "lib/features/vehicles/presentation/garage/garage_page_view.dart",
+        "lib/features/vehicles/presentation/garage/widgets/vehicle_detail_view.dart",
+        "lib/features/vehicles/presentation/garage/widgets/vehicle_info_card.dart",
+        "lib/features/vehicles/presentation/garage/widgets/vehicle_spec_row.dart",
+        "lib/features/vehicles/presentation/garage/widgets/vehicle_full_specs_section.dart",
+        "lib/features/vehicles/presentation/garage/widgets/vehicle_garage_overview_item.dart",
+        "lib/features/vehicles/presentation/garage/widgets/garage_options_bottom_sheet.dart",
+        "lib/features/vehicles/presentation/form/vehicle_form_page.dart",
+        "lib/shared/widgets/vehicle_selection_bottom_sheet.dart"
+      ],
+      "notes": "darkSurface→darkCard, darkSurfaceHighest→darkCard, darkBorder→darkBorderPrimary app-wide in vehicle files. VehicleSpecRow rewritten as divider-separated rows in a card container. VehicleGarageOverviewItem rewritten as compact stat card. VehicleSelectionBottomSheet rewritten with YCuIq spec (darkCard bg, radio selection, add vehicle link, dividers). GarageOptionsBottomSheet bg updated to darkCard."
+    },
+    "E": {
+      "label": "Maintenance",
+      "frames": ["v6RqaX", "J5h6P", "ELB5u", "eK2WW", "heldR", "o7KqgL", "VKLP4"],
+      "files": [
+        "lib/features/maintenance/presentation/widgets/item_card/maintenance_card_body.dart",
+        "lib/features/maintenance/presentation/widgets/maintenance_filters_bottom_sheet.dart"
+      ],
+      "notes": "MaintenanceCardBody left-border urgency color (3px), darkCard bg, cornerRadius 12, 40×40 circle icon. MaintenanceFiltersBottomSheet uses darkCard bg with darkBorderPrimary border. Deprecated color tokens replaced throughout maintenance presentation files."
+    },
+    "F": {
+      "label": "Registration",
+      "frames": ["pQCmS", "f0lXw"],
+      "files": [
+        "lib/features/event_registration/presentation/widgets/registration_form_section_card.dart",
+        "lib/features/event_registration/presentation/widgets/registration_detail_section_card.dart",
+        "lib/features/event_registration/presentation/widgets/registration_detail_bottom_bar.dart"
+      ],
+      "notes": "Section cards updated to darkCard bg + darkBorderPrimary border + cornerRadius 12. CTA bar updated to darkBgPrimary bg + top border only (no shadow)."
+    },
+    "G": {
+      "label": "Profile / Users",
+      "frames": ["A7qDd", "DJOZ2"],
+      "files": [
+        "lib/features/profile/presentation/widgets/profile_header.dart",
+        "lib/features/profile/presentation/widgets/profile_actions_list.dart",
+        "lib/features/profile/presentation/widgets/profile_main_vehicle_card.dart",
+        "lib/features/users/presentation/widgets/rider_profile_content.dart"
+      ],
+      "notes": "ProfileHeader uses gradient ring avatar (accent→accent 40%). ProfileActionsList uses dark card container with border + menu items + dividers + error-colored logout. ProfileMainVehicleCard shows vehicle with badge. RiderProfileContent rewritten with gradient avatar, stats row, follow button."
+    }
+  },
+  "globalColorMigration": {
+    "tokensReplaced": {
+      "AppColors.darkBackground": "AppColors.darkBgPrimary",
+      "AppColors.darkSurface": "AppColors.darkCard",
+      "AppColors.darkSurfaceHighest": "AppColors.darkCard",
+      "AppColors.darkBorder": "AppColors.darkBorderPrimary"
+    },
+    "filesAffected": "~40 dart files across all feature presentation layers",
+    "themeSurfaceColor": "darkCard (#1E1E24)",
+    "themeScaffoldBg": "darkBgPrimary (#0D0D0F)",
+    "themeAppBarBg": "darkBgPrimary (#0D0D0F)"
+  },
+  "protectedFilesUntouched": [
+    "cover_preview_widget.dart",
+    "event_form_cubit.dart",
+    "live_map_widget.dart",
+    "initials_marker_icon.dart",
+    "tracking/cubit/*",
+    "live_tracking_session_holder.dart",
+    "tracking_location_settings.dart",
+    "attendees/**",
+    "route_map_preview.dart",
+    "domain/**",
+    "data/**"
+  ],
+  "neverCommitted": true
+}

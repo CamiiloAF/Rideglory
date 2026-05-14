@@ -21,53 +21,101 @@ class ProfileActionsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.darkCard,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.darkBorderPrimary),
+      ),
+      child: Column(
+        children: [
+          _ProfileMenuItem(
+            icon: Icons.event_note_outlined,
+            label: context.l10n.registration_myRegistrations,
+            iconColor: AppColors.textOnDarkSecondary,
+            onTap: () => context.pushNamed(AppRoutes.myRegistrations),
+            showChevron: true,
+          ),
+          const Divider(height: 1, thickness: 1, color: AppColors.darkBorderPrimary),
+          _ProfileMenuItem(
+            icon: Icons.build_outlined,
+            label: context.l10n.maintenance_maintenances,
+            iconColor: AppColors.textOnDarkSecondary,
+            onTap: () => context.pushNamed(AppRoutes.maintenances),
+            showChevron: true,
+          ),
+          const Divider(height: 1, thickness: 1, color: AppColors.darkBorderPrimary),
+          _ProfileMenuItem(
+            icon: Icons.logout_outlined,
+            label: context.l10n.auth_logout,
+            iconColor: AppColors.error,
+            labelColor: AppColors.error,
+            showChevron: false,
+            onTap: () {
+              ConfirmationDialog.show(
+                context: context,
+                title: context.l10n.auth_logoutConfirmTitle,
+                content: context.l10n.auth_logoutConfirmMessage,
+                cancelLabel: context.l10n.cancel,
+                confirmLabel: context.l10n.auth_logout,
+                confirmType: DialogActionType.danger,
+                dialogType: DialogType.warning,
+                onConfirm: () => _logout(context),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-    return Column(
-      children: [
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          leading: Icon(
-            Icons.event_note_outlined,
-            color: colorScheme.primary,
-          ),
-          title: Text(
-            context.l10n.registration_myRegistrations,
-            style: TextStyle(
-              color: colorScheme.onSurface,
-              fontWeight: FontWeight.w500,
+class _ProfileMenuItem extends StatelessWidget {
+  const _ProfileMenuItem({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.iconColor = AppColors.textOnDarkSecondary,
+    this.labelColor = Colors.white,
+    this.showChevron = true,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final Color iconColor;
+  final Color labelColor;
+  final bool showChevron;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        child: Row(
+          children: [
+            Icon(icon, color: iconColor, size: 20),
+            AppSpacing.hGapMd,
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: labelColor,
+                ),
+              ),
             ),
-          ),
-          trailing: Icon(
-            Icons.chevron_right_rounded,
-            color: colorScheme.onSurfaceVariant,
-          ),
-          onTap: () => context.pushNamed(AppRoutes.myRegistrations),
+            if (showChevron)
+              const Icon(
+                Icons.chevron_right,
+                color: AppColors.textOnDarkTertiary,
+                size: 20,
+              ),
+          ],
         ),
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          leading: Icon(Icons.logout_outlined, color: context.errorColor),
-          title: Text(
-            context.l10n.auth_logout,
-            style: TextStyle(
-              color: context.errorColor,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          onTap: () {
-            ConfirmationDialog.show(
-              context: context,
-              title: context.l10n.auth_logoutConfirmTitle,
-              content: context.l10n.auth_logoutConfirmMessage,
-              cancelLabel: context.l10n.cancel,
-              confirmLabel: context.l10n.auth_logout,
-              confirmType: DialogActionType.danger,
-              dialogType: DialogType.warning,
-              onConfirm: () => _logout(context),
-            );
-          },
-        ),
-      ],
+      ),
     );
   }
 }

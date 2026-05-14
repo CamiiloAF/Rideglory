@@ -142,7 +142,7 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.colorScheme.surface,
+      backgroundColor: AppColors.darkBgPrimary,
       appBar: AppAppBar(
         title: _isEditing
             ? context.l10n.vehicle_editVehicle

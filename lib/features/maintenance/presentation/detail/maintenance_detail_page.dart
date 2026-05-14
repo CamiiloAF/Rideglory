@@ -122,7 +122,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
           _popWithResult();
         },
         child: Scaffold(
-          backgroundColor: AppColors.darkBackground,
+          backgroundColor: AppColors.darkBgPrimary,
           appBar: AppAppBar(
             title: context.l10n.maintenance_maintenanceDetail,
             leading: BackButton(onPressed: _popWithResult),

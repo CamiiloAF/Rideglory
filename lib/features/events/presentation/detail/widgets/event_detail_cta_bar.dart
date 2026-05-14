@@ -35,20 +35,13 @@ class EventDetailCTABar extends StatelessWidget {
     final notRegistered = registration == null;
 
     return Container(
-      decoration: BoxDecoration(
-        color: context.colorScheme.surface,
+      decoration: const BoxDecoration(
+        color: AppColors.darkBgPrimary,
         border: Border(
-          top: BorderSide(color: context.colorScheme.outlineVariant),
+          top: BorderSide(color: AppColors.darkBorderPrimary),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
-            blurRadius: 12,
-            offset: const Offset(0, -2),
-          ),
-        ],
       ),
-      padding: EdgeInsets.fromLTRB(16, 12, 16, max(16.0, bottomPadding)),
+      padding: EdgeInsets.fromLTRB(20, 16, 20, max(16.0, bottomPadding)),
       child: notRegistered
           ? Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -70,10 +63,10 @@ class EventDetailCTABar extends StatelessWidget {
                         event.isFree
                             ? context.l10n.event_free
                             : '${(event.price ?? 0).toStringAsFixed(2)}€',
-                        style: TextStyle(
-                          color: context.colorScheme.onSurface,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ],
@@ -135,7 +128,7 @@ class _RegistrationStatusBadge extends StatelessWidget {
     RegistrationStatus.pending => AppColors.warning,
     RegistrationStatus.approved => AppColors.success,
     RegistrationStatus.rejected => AppColors.error,
-    RegistrationStatus.cancelled => AppColors.darkTextSecondary,
+    RegistrationStatus.cancelled => AppColors.tabInactive,
     RegistrationStatus.readyForEdit => AppColors.info,
   };
 

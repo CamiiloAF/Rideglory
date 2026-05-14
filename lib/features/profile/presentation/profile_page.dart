@@ -33,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
         if (!didPop) context.goNamed(AppRoutes.home);
       },
       child: Scaffold(
-        backgroundColor: AppColors.darkBackground,
+        backgroundColor: AppColors.darkBgPrimary,
         appBar: AppAppBar(title: context.l10n.profile_title),
         body: SafeArea(
           child: BlocBuilder<ProfileCubit, ResultState<UserModel>>(

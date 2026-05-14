@@ -61,7 +61,7 @@ class EventDetailViewState extends State<EventDetailView> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.darkBackground,
+        backgroundColor: AppColors.darkBgPrimary,
         body: MultiBlocListener(
           listeners: [
             BlocListener<EventDeleteCubit, ResultState<String>>(

@@ -21,13 +21,24 @@ class HomeEventsSection extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-          child: Text(
-            context.l10n.home_upcomingRides,
-            style: TextStyle(
-              color: context.colorScheme.onSurface,
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-            ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                context.l10n.home_sectionEvents.toUpperCase(),
+                style: const TextStyle(
+                  color: AppColors.textOnDarkSecondary,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.2,
+                ),
+              ),
+              const Icon(
+                Icons.tune,
+                color: AppColors.textOnDarkSecondary,
+                size: 20,
+              ),
+            ],
           ),
         ),
         events.isEmpty
@@ -36,12 +47,12 @@ class HomeEventsSection extends StatelessWidget {
                 child: HomeEmptyEventsCard(),
               )
             : SizedBox(
-                height: 260,
+                height: 340,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   itemCount: events.length,
-                  separatorBuilder: (_, _) => AppSpacing.hGapMd,
+                  separatorBuilder: (_, _) => const SizedBox(width: 16),
                   itemBuilder: (context, index) {
                     final event = events[index];
                     return HomeEventCard(

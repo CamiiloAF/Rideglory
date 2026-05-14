@@ -28,7 +28,7 @@ class MaintenanceMileageInfo extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.darkSurface,
+        color: AppColors.darkCard,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: typeColor.withValues(alpha: .1), width: 1),
       ),

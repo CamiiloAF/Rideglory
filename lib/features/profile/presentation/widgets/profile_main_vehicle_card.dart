@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 
 class ProfileMainVehicleCard extends StatelessWidget {
@@ -8,52 +9,110 @@ class ProfileMainVehicleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return BlocBuilder<VehicleCubit, dynamic>(
       builder: (context, state) {
         final vehicleCubit = context.read<VehicleCubit>();
         final mainVehicle = vehicleCubit.currentVehicle;
 
+        if (mainVehicle == null) return const SizedBox.shrink();
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              context.l10n.profile_mainVehicle,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 8),
-            if (mainVehicle != null)
-              Chip(
-                label: Text(
-                  mainVehicle.brand != null
-                      ? '${mainVehicle.brand} ${mainVehicle.name}'
-                      : mainVehicle.name,
-                  style: TextStyle(
-                    color: colorScheme.onSurface,
-                    fontWeight: FontWeight.w500,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  context.l10n.vehicle_myGarage.toUpperCase(),
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textOnDarkSecondary,
+                    letterSpacing: 1.5,
                   ),
                 ),
-                backgroundColor: colorScheme.surfaceContainerHighest,
-                side: BorderSide.none,
-                avatar: Icon(
-                  Icons.two_wheeler_rounded,
-                  color: colorScheme.primary,
-                  size: 18,
-                ),
-              )
-            else
-              Text(
-                context.l10n.profile_noVehicle,
-                style: TextStyle(
-                  color: colorScheme.onSurfaceVariant,
-                  fontSize: 14,
-                ),
+              ],
+            ),
+            AppSpacing.gapSm,
+            Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: AppColors.darkCard,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.darkBorderPrimary),
               ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: AppColors.darkBgSecondary,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.two_wheeler_rounded,
+                      color: AppColors.textOnDarkSecondary,
+                      size: 24,
+                    ),
+                  ),
+                  AppSpacing.hGapMd,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                mainVehicle.brand != null
+                                    ? '${mainVehicle.brand} ${mainVehicle.name}'
+                                    : mainVehicle.name,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if (mainVehicle.isMainVehicle)
+                              Container(
+                                margin: const EdgeInsets.only(left: 8),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppColors.primary,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: const Text(
+                                  'Principal',
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.darkBgPrimary,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                        if (mainVehicle.licensePlate != null)
+                          Text(
+                            mainVehicle.licensePlate!,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textOnDarkSecondary,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         );
       },

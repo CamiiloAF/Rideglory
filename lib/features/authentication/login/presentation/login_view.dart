@@ -58,24 +58,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void _handleForgotPassword(BuildContext context) {
-    final formState = _formKey.currentState;
-    if (formState == null) {
-      return;
-    }
-
-    formState.save();
-    final emailFieldState = formState.fields[AuthFormFields.email];
-    final isEmailValid = emailFieldState?.validate() ?? false;
-    if (!isEmailValid) {
-      return;
-    }
-
-    final email = (emailFieldState?.value as String?)?.trim();
-    if (email == null || email.isEmpty) {
-      return;
-    }
-
-    context.read<AuthCubit>().sendPasswordResetEmail(email);
+    context.pushNamed(AppRoutes.forgotPassword);
   }
 
   void _showExitDialog(BuildContext context) {
@@ -95,9 +78,9 @@ class _LoginViewState extends State<LoginView> {
         if (!didPop) _showExitDialog(context);
       },
       child: Scaffold(
-        backgroundColor: AppColors.darkBackground,
+        backgroundColor: AppColors.darkBgPrimary,
         appBar: AppBar(
-          backgroundColor: AppColors.darkBackground,
+          backgroundColor: AppColors.darkBgPrimary,
           elevation: 0,
           surfaceTintColor: Colors.transparent,
           title: Text(

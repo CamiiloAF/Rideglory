@@ -12,7 +12,7 @@ class DividerWithText extends StatelessWidget {
     return Row(
       children: [
         const Expanded(
-            child: Divider(height: 1, color: AppColors.darkBorder)),
+            child: Divider(height: 1, color: AppColors.darkBorderPrimary)),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text(
@@ -26,7 +26,7 @@ class DividerWithText extends StatelessWidget {
           ),
         ),
         const Expanded(
-            child: Divider(height: 1, color: AppColors.darkBorder)),
+            child: Divider(height: 1, color: AppColors.darkBorderPrimary)),
       ],
     );
   }

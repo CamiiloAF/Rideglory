@@ -27,9 +27,9 @@ class VehicleSelector extends StatelessWidget {
           margin: const EdgeInsets.all(16),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            color: AppColors.darkSurfaceHighest,
+            color: AppColors.darkCard,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.darkBorder),
+            border: Border.all(color: AppColors.darkBorderPrimary),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.05),
