@@ -225,7 +225,7 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
                           top: 8,
                           right: 8,
                           child: Material(
-                            color: colorScheme.surface.withOpacity(0),
+                            color: colorScheme.surface.withValues(alpha: 0),
                             child: InkWell(
                               onTap: widget.onAiSuggest,
                               borderRadius: BorderRadius.circular(4),

@@ -27,22 +27,22 @@ class DetailPill extends StatelessWidget {
     final isOverlay = variant == DetailPillVariant.overlay;
 
     final backgroundColor = isOverlay
-        ? cs.surface.withOpacity(0.4)
-        : cs.primary.withOpacity(0.25);
+        ? cs.surface.withValues(alpha: 0.4)
+        : cs.primary.withValues(alpha: 0.25);
 
     final border = isOverlay
         ? Border.all(
-            color: cs.onSurface.withOpacity(0.2),
+            color: cs.onSurface.withValues(alpha: 0.2),
             width: 1,
           )
         : null;
 
     final labelColor = isOverlay
-        ? cs.onSurface.withOpacity(0.95)
+        ? cs.onSurface.withValues(alpha: 0.95)
         : cs.primary;
 
     final subtitleColor = isOverlay
-        ? cs.onSurface.withOpacity(0.85)
+        ? cs.onSurface.withValues(alpha: 0.85)
         : cs.onSurfaceVariant;
 
     return Container(
@@ -75,7 +75,7 @@ class DetailPill extends StatelessWidget {
                       label,
                       style: TextStyle(
                         color: isOverlay
-                            ? cs.onSurface.withOpacity(0.98)
+                            ? cs.onSurface.withValues(alpha: 0.98)
                             : labelColor,
                         fontSize: 14,
                         fontWeight: FontWeight.w700,

@@ -91,7 +91,7 @@ class AppBottomSheet<T> extends StatelessWidget {
     return showModalBottomSheet<T>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: context.colorScheme.surface.withOpacity(0),
+      backgroundColor: context.colorScheme.surface.withValues(alpha: 0),
       isDismissible: isDismissible,
       enableDrag: enableDrag,
       builder: (context) => AppBottomSheet(

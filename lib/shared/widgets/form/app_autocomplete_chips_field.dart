@@ -80,7 +80,7 @@ class _AppAutocompleteChipsFieldState extends State<AppAutocompleteChipsField> {
           showWhenUnlinked: false,
           offset: const Offset(0, 56),
           child: Material(
-            color: cs.surface.withOpacity(0),
+            color: cs.surface.withValues(alpha: 0),
             child: Container(
               decoration: BoxDecoration(
                 color: cs.surface,
@@ -88,7 +88,7 @@ class _AppAutocompleteChipsFieldState extends State<AppAutocompleteChipsField> {
                 border: Border.all(color: cs.outlineVariant),
                 boxShadow: [
                   BoxShadow(
-                    color: cs.onSurface.withOpacity(0.3),
+                    color: cs.onSurface.withValues(alpha: 0.3),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),

@@ -21,7 +21,7 @@ class VehicleListItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Material(
-        color: cs.surface.withOpacity(0),
+        color: cs.surface.withValues(alpha: 0),
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(16),
@@ -38,20 +38,20 @@ class VehicleListItem extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color:
-                    isSelected ? cs.surface.withOpacity(0) : cs.outlineVariant,
+                    isSelected ? cs.surface.withValues(alpha: 0) : cs.outlineVariant,
                 width: 1.5,
               ),
               boxShadow: isSelected
                   ? [
                       BoxShadow(
-                        color: cs.primary.withOpacity(0.45),
+                        color: cs.primary.withValues(alpha: 0.45),
                         blurRadius: 18,
                         offset: const Offset(0, 6),
                       ),
                     ]
                   : [
                       BoxShadow(
-                        color: cs.surface.withOpacity(0.35),
+                        color: cs.surface.withValues(alpha: 0.35),
                         blurRadius: 14,
                         offset: const Offset(0, 4),
                       ),
@@ -65,8 +65,8 @@ class VehicleListItem extends StatelessWidget {
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? cs.surface.withOpacity(0.25)
-                          : cs.primary.withOpacity(0.08),
+                          ? cs.surface.withValues(alpha: 0.25)
+                          : cs.primary.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -98,7 +98,7 @@ class VehicleListItem extends StatelessWidget {
                             ].where((e) => e != null).join(' '),
                             style: context.bodySmall?.copyWith(
                               color: isSelected
-                                  ? cs.onPrimary.withOpacity(0.7)
+                                  ? cs.onPrimary.withValues(alpha: 0.7)
                                   : cs.onSurfaceVariant,
                             ),
                           ),
@@ -109,7 +109,7 @@ class VehicleListItem extends StatelessWidget {
                             vehicle.licensePlate!,
                             style: context.labelSmall?.copyWith(
                               color: isSelected
-                                  ? cs.onPrimary.withOpacity(0.6)
+                                  ? cs.onPrimary.withValues(alpha: 0.6)
                                   : cs.onSurfaceVariant,
                             ),
                           ),

@@ -229,7 +229,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                   bottom: 0,
                   child: Center(
                     child: Material(
-                      color: cs.surface.withOpacity(0),
+                      color: cs.surface.withValues(alpha: 0),
                       child: InkWell(
                         onTap: widget.onViewMapTap,
                         borderRadius: BorderRadius.circular(24),
@@ -243,7 +243,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                             borderRadius: BorderRadius.circular(24),
                             boxShadow: [
                               BoxShadow(
-                                color: cs.onSurface.withOpacity(0.3),
+                                color: cs.onSurface.withValues(alpha: 0.3),
                                 blurRadius: 8,
                                 offset: const Offset(0, 2),
                               ),
@@ -280,7 +280,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                   child: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: cs.surface.withOpacity(0.85),
+                      color: cs.surface.withValues(alpha: 0.85),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: const SizedBox(

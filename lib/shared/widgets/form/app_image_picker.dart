@@ -214,7 +214,7 @@ class AppImagePicker extends StatelessWidget {
                           top: 8,
                           right: 8,
                           child: Material(
-                            color: cs.onSurface.withOpacity(0.25),
+                            color: cs.onSurface.withValues(alpha: 0.25),
                             borderRadius: BorderRadius.circular(20),
                             child: InkWell(
                               onTap: onClearTap,
@@ -339,7 +339,7 @@ class _OutlinePrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: colorScheme.surface.withOpacity(0),
+      color: colorScheme.surface.withValues(alpha: 0),
       child: InkWell(
         onTap: onPressed,
         borderRadius: BorderRadius.circular(8),

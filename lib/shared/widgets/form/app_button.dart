@@ -45,7 +45,7 @@ class AppButton extends StatelessWidget {
 
     final backgroundColor = style == AppButtonStyle.filled
         ? variantColor
-        : cs.surface.withOpacity(0);
+        : cs.surface.withValues(alpha: 0);
 
     final foregroundColor = style == AppButtonStyle.filled
         ? cs.onPrimary
@@ -53,7 +53,7 @@ class AppButton extends StatelessWidget {
 
     final borderColor = style == AppButtonStyle.outlined
         ? variantColor
-        : cs.surface.withOpacity(0);
+        : cs.surface.withValues(alpha: 0);
 
     final hasBorder = style == AppButtonStyle.outlined;
 
@@ -66,7 +66,7 @@ class AppButton extends StatelessWidget {
         border: Border.all(color: borderColor, width: hasBorder ? 1.5 : 0),
       ),
       child: Material(
-        color: cs.surface.withOpacity(0),
+        color: cs.surface.withValues(alpha: 0),
         child: InkWell(
           onTap: onPressed == null || isLoading ? null : onPressed,
           borderRadius: BorderRadius.circular(8),
