@@ -2161,4 +2161,591 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get rider_errorRetry => 'Reintentar';
+
+  @override
+  String get app_tagline => 'Rodadas. Comunidad. Aventura.';
+
+  @override
+  String get splash_error_message =>
+      'No se pudo conectar. Verifica tu conexión a internet.';
+
+  @override
+  String get splash_retry => 'Reintentar';
+
+  @override
+  String get auth_welcome_title => 'Bienvenido';
+
+  @override
+  String get auth_welcome_subtitle => 'Inicia sesión para continuar';
+
+  @override
+  String get auth_email_label => 'Correo electrónico';
+
+  @override
+  String get auth_email_placeholder => 'tu@correo.com';
+
+  @override
+  String get auth_password_label => 'Contraseña';
+
+  @override
+  String get auth_password_placeholder => 'Mínimo 8 caracteres';
+
+  @override
+  String get auth_forgot_password => '¿Olvidaste tu contraseña?';
+
+  @override
+  String get auth_sign_in => 'Iniciar sesión';
+
+  @override
+  String get auth_continue_with_google => 'Continuar con Google';
+
+  @override
+  String get auth_no_account => '¿No tienes cuenta?';
+
+  @override
+  String get auth_register_link => 'Regístrate';
+
+  @override
+  String get auth_create_account_title => 'Crear cuenta';
+
+  @override
+  String get auth_join_community => 'Únete a la comunidad';
+
+  @override
+  String get auth_full_name_label => 'Nombre completo';
+
+  @override
+  String get auth_confirm_password_label => 'Confirmar contraseña';
+
+  @override
+  String get auth_terms_text =>
+      'Acepto los Términos de uso y la Política de privacidad de Rideglory';
+
+  @override
+  String get auth_create_account_btn => 'Crear cuenta';
+
+  @override
+  String get auth_already_have_account => '¿Ya tienes cuenta?';
+
+  @override
+  String get auth_sign_in_link => 'Inicia sesión';
+
+  @override
+  String get auth_recovery_title => 'Recuperar contraseña';
+
+  @override
+  String get auth_recovery_heading => '¿Olvidaste tu contraseña?';
+
+  @override
+  String get auth_recovery_subtitle =>
+      'Ingresa tu correo y te enviaremos un enlace para restablecerla.';
+
+  @override
+  String get auth_recovery_send => 'Enviar enlace';
+
+  @override
+  String get auth_recovery_back => '← Volver al inicio de sesión';
+
+  @override
+  String get auth_recovery_sent_title => 'Correo enviado';
+
+  @override
+  String auth_recovery_sent_body(String email) {
+    return 'Revisamos tu correo en $email. El enlace expira en 15 minutos.';
+  }
+
+  @override
+  String get auth_recovery_back_home => 'Volver al inicio';
+
+  @override
+  String get auth_recovery_resend => 'No recibí el correo — reenviar';
+
+  @override
+  String get home_greeting_morning => 'Buenos días,';
+
+  @override
+  String get home_greeting_afternoon => 'Buenas tardes,';
+
+  @override
+  String get home_greeting_evening => 'Buenas noches,';
+
+  @override
+  String get home_main_vehicle_badge => '⭐ Principal';
+
+  @override
+  String get home_no_vehicle_title => 'Agrega tu primera moto';
+
+  @override
+  String get home_no_vehicle_subtitle =>
+      'Lleva el control de tu garaje y mantenimientos';
+
+  @override
+  String get home_no_vehicle_cta => 'Agregar moto';
+
+  @override
+  String get home_upcoming_rides => 'Próximas rodadas';
+
+  @override
+  String get home_quick_access => 'Acceso rápido';
+
+  @override
+  String get home_my_registrations => 'Mis inscripciones';
+
+  @override
+  String get home_view_all_events => 'Ver todas';
+
+  @override
+  String get home_no_events_title => 'No tienes rodadas próximas';
+
+  @override
+  String get home_no_events_subtitle =>
+      'Explora los eventos disponibles y únete a la comunidad';
+
+  @override
+  String get home_explore_events => 'Ver eventos';
+
+  @override
+  String get home_error_message =>
+      'No se pudieron cargar tus datos. Verifica tu conexión e inténtalo de nuevo.';
+
+  @override
+  String get event_badge_scheduled => 'Programado';
+
+  @override
+  String get event_badge_inProgress => 'En curso';
+
+  @override
+  String get event_badge_finished => 'Finalizado';
+
+  @override
+  String get event_badge_cancelled => 'Cancelado';
+
+  @override
+  String get event_badge_free => 'Gratis';
+
+  @override
+  String get event_badge_paid => 'De pago';
+
+  @override
+  String get event_search_placeholder => 'Buscar eventos…';
+
+  @override
+  String get event_filter_all => 'Todos';
+
+  @override
+  String get event_filter_on_road => 'On road';
+
+  @override
+  String get event_filter_off_road => 'Off road';
+
+  @override
+  String get event_filter_exhibition => 'Exposición';
+
+  @override
+  String get event_filter_btn => 'Filtros';
+
+  @override
+  String get event_no_events_title => 'No hay eventos disponibles';
+
+  @override
+  String get event_no_events_subtitle =>
+      'Sé el primero en crear un evento para la comunidad';
+
+  @override
+  String get event_create_cta => 'Crear evento';
+
+  @override
+  String get event_filter_modal_title => 'Filtrar eventos';
+
+  @override
+  String get event_filter_type_label => 'Tipo';
+
+  @override
+  String get event_filter_type_all => 'Todos los tipos';
+
+  @override
+  String get event_filter_cost_label => 'Costo';
+
+  @override
+  String get event_filter_cost_all => 'Gratuitos y de pago';
+
+  @override
+  String get event_filter_cost_free => 'Solo gratuitos';
+
+  @override
+  String get event_filter_cost_paid => 'Solo de pago';
+
+  @override
+  String get event_filter_clear => 'Limpiar';
+
+  @override
+  String get event_filter_apply => 'Aplicar filtros';
+
+  @override
+  String get event_cta_register => 'Inscribirse';
+
+  @override
+  String get event_cta_view_registration => 'Ver inscripción';
+
+  @override
+  String get event_cta_cancel => 'Cancelar';
+
+  @override
+  String get event_cta_no_spots => 'Sin cupos disponibles';
+
+  @override
+  String get event_cta_closed => 'Cerrado';
+
+  @override
+  String get event_organizer_label => 'Organizador';
+
+  @override
+  String event_spots_remaining(Object count) {
+    return 'Quedan $count cupos';
+  }
+
+  @override
+  String get event_allowed_brands => 'Marcas permitidas';
+
+  @override
+  String get event_detail_description => 'Descripción';
+
+  @override
+  String get event_detail_route => 'Ruta';
+
+  @override
+  String get event_detail_share => 'Compartir';
+
+  @override
+  String get event_form_name_label => 'Nombre del evento';
+
+  @override
+  String get event_form_name_placeholder => 'Ej: Páramo del Sumapaz 2025';
+
+  @override
+  String get event_form_description_label => 'Descripción';
+
+  @override
+  String get event_form_description_placeholder =>
+      'Describe el recorrido, punto de encuentro, etc.';
+
+  @override
+  String get event_form_date_label => 'Fecha';
+
+  @override
+  String get event_form_time_label => 'Hora';
+
+  @override
+  String get event_form_city_label => 'Ciudad de inicio';
+
+  @override
+  String get event_form_max_participants_label => 'Máx. participantes';
+
+  @override
+  String get event_form_cost_label => 'Costo (COP)';
+
+  @override
+  String get event_form_cost_placeholder => '0 = gratis';
+
+  @override
+  String get event_form_difficulty_low => 'Baja';
+
+  @override
+  String get event_form_difficulty_medium => 'Media';
+
+  @override
+  String get event_form_difficulty_high => 'Alta';
+
+  @override
+  String get event_form_cover_upload_label =>
+      'Toca para subir imagen de portada';
+
+  @override
+  String get event_form_cover_ai_label => 'o generar con IA';
+
+  @override
+  String get event_form_publish => 'Publicar evento';
+
+  @override
+  String get event_form_save => 'Guardar';
+
+  @override
+  String get vehicle_garage_title => 'Mi garaje';
+
+  @override
+  String get vehicle_main_badge => '⭐ Principal';
+
+  @override
+  String get vehicle_empty_title => 'Tu garaje está vacío';
+
+  @override
+  String get vehicle_empty_subtitle =>
+      'Agrega tu primera moto para llevar el control de mantenimientos y documentos';
+
+  @override
+  String get vehicle_empty_cta => 'Agregar moto';
+
+  @override
+  String get vehicle_other_vehicles => 'Otras motos';
+
+  @override
+  String get vehicle_add_cta => '+ Agregar';
+
+  @override
+  String get vehicle_quick_taller => 'Taller';
+
+  @override
+  String get vehicle_quick_detail => 'Detalle';
+
+  @override
+  String get vehicle_quick_edit => 'Editar';
+
+  @override
+  String get vehicle_detail_specs_marca => 'Marca';
+
+  @override
+  String get vehicle_detail_specs_modelo => 'Modelo';
+
+  @override
+  String get vehicle_detail_specs_anio => 'Año';
+
+  @override
+  String get vehicle_detail_specs_cc => 'Cilindraje';
+
+  @override
+  String get vehicle_detail_specs_km => 'Kilometraje';
+
+  @override
+  String get vehicle_detail_specs_color => 'Color';
+
+  @override
+  String get vehicle_detail_documents => 'Documentos';
+
+  @override
+  String get vehicle_doc_soat_label => 'SOAT';
+
+  @override
+  String get vehicle_doc_techreview_label => 'Técnico-mecánica';
+
+  @override
+  String get vehicle_doc_state_empty => 'Sin registrar';
+
+  @override
+  String get vehicle_doc_state_valid => 'Vigente';
+
+  @override
+  String get vehicle_doc_state_expiringSoon => 'Por vencer';
+
+  @override
+  String get vehicle_doc_state_expired => 'Vencido';
+
+  @override
+  String get vehicle_view_maintenances => 'Ver mantenimientos';
+
+  @override
+  String get vehicle_edit => 'Editar moto';
+
+  @override
+  String get vehicle_form_title_add => 'Agregar moto';
+
+  @override
+  String get vehicle_form_title_edit => 'Editar moto';
+
+  @override
+  String get vehicle_form_brand_label => 'Marca';
+
+  @override
+  String get vehicle_form_model_label => 'Modelo';
+
+  @override
+  String get vehicle_form_year_label => 'Año';
+
+  @override
+  String get vehicle_form_cc_label => 'Cilindraje (cc)';
+
+  @override
+  String get vehicle_form_color_label => 'Color';
+
+  @override
+  String get vehicle_form_plate_label => 'Placa';
+
+  @override
+  String get vehicle_form_km_label => 'Kilometraje actual';
+
+  @override
+  String get vehicle_form_photo_label => 'Foto de la moto (opcional)';
+
+  @override
+  String get vehicle_form_photo_upload => 'Toca para subir';
+
+  @override
+  String get vehicle_form_docs_section => 'Documentos';
+
+  @override
+  String get vehicle_form_docs_note =>
+      'Los documentos se configuran luego desde el detalle de la moto';
+
+  @override
+  String get vehicle_form_save => 'Guardar moto';
+
+  @override
+  String get maintenance_dashboard_title => 'Mantenimientos';
+
+  @override
+  String get maintenance_history_title => 'Historial';
+
+  @override
+  String get maintenance_form_new_title => 'Nuevo mantenimiento';
+
+  @override
+  String get maintenance_form_step_select => 'Selecciona el tipo de servicio';
+
+  @override
+  String get maintenance_form_step_continue => 'Continuar →';
+
+  @override
+  String get maintenance_form_tab_done => 'Completado';
+
+  @override
+  String get maintenance_form_tab_scheduled => 'Programado';
+
+  @override
+  String get maintenance_form_date_done_label => 'Fecha de realización';
+
+  @override
+  String get maintenance_form_km_done_label => 'Kilometraje al realizar';
+
+  @override
+  String get maintenance_form_cost_label => 'Costo (COP)';
+
+  @override
+  String get maintenance_form_place_label => 'Lugar / taller';
+
+  @override
+  String get maintenance_form_notes_label => 'Notas (opcional)';
+
+  @override
+  String get maintenance_form_next_section => 'Próximo mantenimiento';
+
+  @override
+  String get maintenance_form_next_km_label => 'En km';
+
+  @override
+  String get maintenance_form_next_date_label => 'O en fecha';
+
+  @override
+  String get maintenance_form_save_done => 'Guardar mantenimiento';
+
+  @override
+  String get maintenance_form_date_scheduled_label => 'Fecha programada';
+
+  @override
+  String get maintenance_form_km_estimated_label => 'Kilometraje estimado';
+
+  @override
+  String get maintenance_form_reminder_note =>
+      '🔔 Recibirás un recordatorio 30 días antes de la fecha programada.';
+
+  @override
+  String get maintenance_form_save_scheduled => 'Guardar recordatorio';
+
+  @override
+  String get maintenance_history_search_placeholder => 'Buscar mantenimiento…';
+
+  @override
+  String get maintenance_filters_title => 'Filtrar mantenimientos';
+
+  @override
+  String get maintenance_filter_vehicle_label => 'Moto';
+
+  @override
+  String get maintenance_filter_status_label => 'Estado';
+
+  @override
+  String get maintenance_filter_status_all => 'Todos';
+
+  @override
+  String get maintenance_filter_status_done => 'Completados';
+
+  @override
+  String get maintenance_filter_status_scheduled => 'Programados';
+
+  @override
+  String get maintenance_filter_status_urgent => 'Urgentes';
+
+  @override
+  String get maintenance_filter_period_label => 'Período';
+
+  @override
+  String get maintenance_filter_from => 'Desde';
+
+  @override
+  String get maintenance_filter_to => 'Hasta';
+
+  @override
+  String get maintenance_filter_clear => 'Limpiar';
+
+  @override
+  String get maintenance_filter_apply => 'Aplicar';
+
+  @override
+  String get maintenance_legend_urgent => 'Urgente';
+
+  @override
+  String get maintenance_legend_warning => 'Próximo';
+
+  @override
+  String get maintenance_legend_ok => 'Al día';
+
+  @override
+  String get maintenance_status_overdue => 'atrasado';
+
+  @override
+  String get maintenance_km_remaining => 'faltan';
+
+  @override
+  String get registration_my_registrations_title => 'Mis inscripciones';
+
+  @override
+  String get registration_filter_all => 'Todas';
+
+  @override
+  String get registration_filter_pending => 'Pendientes';
+
+  @override
+  String get registration_filter_approved => 'Aprobadas';
+
+  @override
+  String get registration_filter_rejected => 'Rechazadas';
+
+  @override
+  String get registration_empty_title => 'No tienes inscripciones';
+
+  @override
+  String get registration_empty_subtitle =>
+      'Explora los eventos disponibles e inscríbete';
+
+  @override
+  String get registration_explore_events => 'Explorar eventos';
+
+  @override
+  String get registration_detail_rider_section => 'Datos del rider';
+
+  @override
+  String get registration_detail_vehicle_section => 'Vehículo';
+
+  @override
+  String get registration_detail_notes_section => 'Notas';
+
+  @override
+  String get registration_detail_cancel => 'Cancelar inscripción';
+
+  @override
+  String get registration_status_approved => 'Aprobada';
+
+  @override
+  String get registration_status_pending => 'Pendiente';
+
+  @override
+  String get registration_status_rejected => 'Rechazada';
 }

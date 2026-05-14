@@ -86,10 +86,10 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
                     error: (error) => Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF2C241E),
+                        color: AppColors.darkSurfaceHighest,
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: Colors.red.withValues(alpha: 0.3),
+                          color: AppColors.error.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Center(
@@ -105,21 +105,21 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF2C2C2E),
+                        color: AppColors.darkSurfaceHighest,
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Column(
                         children: [
                           Icon(
                             Icons.history,
-                            color: Colors.grey[600],
+                            color: AppColors.darkTextSecondary,
                             size: 40,
                           ),
                           AppSpacing.gapMd,
                           Text(
                             context.l10n.maintenance_noRecordsYet,
                             style: context.bodyMedium?.copyWith(
-                              color: Colors.grey[400],
+                              color: AppColors.darkTextSecondary,
                             ),
                           ),
                         ],
@@ -158,9 +158,7 @@ class _MaintenanceRecordCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: const Color(
-          0xFF262628,
-        ), // Matches dark surface in the design screenshot slightly
+        color: AppColors.darkSurface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
       ),
@@ -193,9 +191,7 @@ class _MaintenanceRecordCard extends StatelessWidget {
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: const Color(
-                      0xFF332A24,
-                    ), // Background for icon matching mockup
+                    color: AppColors.darkSurfaceHighest,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
@@ -224,7 +220,7 @@ class _MaintenanceRecordCard extends StatelessWidget {
                       Text(
                         '${maintenance.date.formattedDate} • ${NumberFormat('#,###').format(maintenance.maintanceMileage)} km',
                         style: context.bodyMedium?.copyWith(
-                          color: Colors.grey[400],
+                          color: AppColors.darkTextSecondary,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -233,7 +229,7 @@ class _MaintenanceRecordCard extends StatelessWidget {
                   ),
                 ),
                 AppSpacing.hGapMd,
-                Icon(Icons.chevron_right, color: Colors.grey[500]),
+                Icon(Icons.chevron_right, color: AppColors.darkTextSecondary),
               ],
             ),
           ),
@@ -271,7 +267,7 @@ class _LoadingState extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 12),
           height: 80,
           decoration: BoxDecoration(
-            color: const Color(0xFF262628),
+            color: AppColors.darkSurface,
             borderRadius: BorderRadius.circular(16),
           ),
           child: const Center(

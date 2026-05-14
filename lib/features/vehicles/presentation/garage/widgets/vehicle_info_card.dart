@@ -18,7 +18,7 @@ class VehicleInfoCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF2C241E), // Brownish dark similar to mockup
+        color: AppColors.darkSurfaceHighest,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(

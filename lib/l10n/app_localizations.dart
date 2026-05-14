@@ -4167,6 +4167,1146 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Reintentar'**
   String get rider_errorRetry;
+
+  /// No description provided for @app_tagline.
+  ///
+  /// In es, this message translates to:
+  /// **'Rodadas. Comunidad. Aventura.'**
+  String get app_tagline;
+
+  /// No description provided for @splash_error_message.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo conectar. Verifica tu conexión a internet.'**
+  String get splash_error_message;
+
+  /// No description provided for @splash_retry.
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get splash_retry;
+
+  /// No description provided for @auth_welcome_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Bienvenido'**
+  String get auth_welcome_title;
+
+  /// No description provided for @auth_welcome_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Inicia sesión para continuar'**
+  String get auth_welcome_subtitle;
+
+  /// No description provided for @auth_email_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Correo electrónico'**
+  String get auth_email_label;
+
+  /// No description provided for @auth_email_placeholder.
+  ///
+  /// In es, this message translates to:
+  /// **'tu@correo.com'**
+  String get auth_email_placeholder;
+
+  /// No description provided for @auth_password_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Contraseña'**
+  String get auth_password_label;
+
+  /// No description provided for @auth_password_placeholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Mínimo 8 caracteres'**
+  String get auth_password_placeholder;
+
+  /// No description provided for @auth_forgot_password.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Olvidaste tu contraseña?'**
+  String get auth_forgot_password;
+
+  /// No description provided for @auth_sign_in.
+  ///
+  /// In es, this message translates to:
+  /// **'Iniciar sesión'**
+  String get auth_sign_in;
+
+  /// No description provided for @auth_continue_with_google.
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar con Google'**
+  String get auth_continue_with_google;
+
+  /// No description provided for @auth_no_account.
+  ///
+  /// In es, this message translates to:
+  /// **'¿No tienes cuenta?'**
+  String get auth_no_account;
+
+  /// No description provided for @auth_register_link.
+  ///
+  /// In es, this message translates to:
+  /// **'Regístrate'**
+  String get auth_register_link;
+
+  /// No description provided for @auth_create_account_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear cuenta'**
+  String get auth_create_account_title;
+
+  /// No description provided for @auth_join_community.
+  ///
+  /// In es, this message translates to:
+  /// **'Únete a la comunidad'**
+  String get auth_join_community;
+
+  /// No description provided for @auth_full_name_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre completo'**
+  String get auth_full_name_label;
+
+  /// No description provided for @auth_confirm_password_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirmar contraseña'**
+  String get auth_confirm_password_label;
+
+  /// No description provided for @auth_terms_text.
+  ///
+  /// In es, this message translates to:
+  /// **'Acepto los Términos de uso y la Política de privacidad de Rideglory'**
+  String get auth_terms_text;
+
+  /// No description provided for @auth_create_account_btn.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear cuenta'**
+  String get auth_create_account_btn;
+
+  /// No description provided for @auth_already_have_account.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Ya tienes cuenta?'**
+  String get auth_already_have_account;
+
+  /// No description provided for @auth_sign_in_link.
+  ///
+  /// In es, this message translates to:
+  /// **'Inicia sesión'**
+  String get auth_sign_in_link;
+
+  /// No description provided for @auth_recovery_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Recuperar contraseña'**
+  String get auth_recovery_title;
+
+  /// No description provided for @auth_recovery_heading.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Olvidaste tu contraseña?'**
+  String get auth_recovery_heading;
+
+  /// No description provided for @auth_recovery_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa tu correo y te enviaremos un enlace para restablecerla.'**
+  String get auth_recovery_subtitle;
+
+  /// No description provided for @auth_recovery_send.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar enlace'**
+  String get auth_recovery_send;
+
+  /// No description provided for @auth_recovery_back.
+  ///
+  /// In es, this message translates to:
+  /// **'← Volver al inicio de sesión'**
+  String get auth_recovery_back;
+
+  /// No description provided for @auth_recovery_sent_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Correo enviado'**
+  String get auth_recovery_sent_title;
+
+  /// No description provided for @auth_recovery_sent_body.
+  ///
+  /// In es, this message translates to:
+  /// **'Revisamos tu correo en {email}. El enlace expira en 15 minutos.'**
+  String auth_recovery_sent_body(String email);
+
+  /// No description provided for @auth_recovery_back_home.
+  ///
+  /// In es, this message translates to:
+  /// **'Volver al inicio'**
+  String get auth_recovery_back_home;
+
+  /// No description provided for @auth_recovery_resend.
+  ///
+  /// In es, this message translates to:
+  /// **'No recibí el correo — reenviar'**
+  String get auth_recovery_resend;
+
+  /// No description provided for @home_greeting_morning.
+  ///
+  /// In es, this message translates to:
+  /// **'Buenos días,'**
+  String get home_greeting_morning;
+
+  /// No description provided for @home_greeting_afternoon.
+  ///
+  /// In es, this message translates to:
+  /// **'Buenas tardes,'**
+  String get home_greeting_afternoon;
+
+  /// No description provided for @home_greeting_evening.
+  ///
+  /// In es, this message translates to:
+  /// **'Buenas noches,'**
+  String get home_greeting_evening;
+
+  /// No description provided for @home_main_vehicle_badge.
+  ///
+  /// In es, this message translates to:
+  /// **'⭐ Principal'**
+  String get home_main_vehicle_badge;
+
+  /// No description provided for @home_no_vehicle_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Agrega tu primera moto'**
+  String get home_no_vehicle_title;
+
+  /// No description provided for @home_no_vehicle_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Lleva el control de tu garaje y mantenimientos'**
+  String get home_no_vehicle_subtitle;
+
+  /// No description provided for @home_no_vehicle_cta.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar moto'**
+  String get home_no_vehicle_cta;
+
+  /// No description provided for @home_upcoming_rides.
+  ///
+  /// In es, this message translates to:
+  /// **'Próximas rodadas'**
+  String get home_upcoming_rides;
+
+  /// No description provided for @home_quick_access.
+  ///
+  /// In es, this message translates to:
+  /// **'Acceso rápido'**
+  String get home_quick_access;
+
+  /// No description provided for @home_my_registrations.
+  ///
+  /// In es, this message translates to:
+  /// **'Mis inscripciones'**
+  String get home_my_registrations;
+
+  /// No description provided for @home_view_all_events.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver todas'**
+  String get home_view_all_events;
+
+  /// No description provided for @home_no_events_title.
+  ///
+  /// In es, this message translates to:
+  /// **'No tienes rodadas próximas'**
+  String get home_no_events_title;
+
+  /// No description provided for @home_no_events_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Explora los eventos disponibles y únete a la comunidad'**
+  String get home_no_events_subtitle;
+
+  /// No description provided for @home_explore_events.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver eventos'**
+  String get home_explore_events;
+
+  /// No description provided for @home_error_message.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudieron cargar tus datos. Verifica tu conexión e inténtalo de nuevo.'**
+  String get home_error_message;
+
+  /// No description provided for @event_badge_scheduled.
+  ///
+  /// In es, this message translates to:
+  /// **'Programado'**
+  String get event_badge_scheduled;
+
+  /// No description provided for @event_badge_inProgress.
+  ///
+  /// In es, this message translates to:
+  /// **'En curso'**
+  String get event_badge_inProgress;
+
+  /// No description provided for @event_badge_finished.
+  ///
+  /// In es, this message translates to:
+  /// **'Finalizado'**
+  String get event_badge_finished;
+
+  /// No description provided for @event_badge_cancelled.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelado'**
+  String get event_badge_cancelled;
+
+  /// No description provided for @event_badge_free.
+  ///
+  /// In es, this message translates to:
+  /// **'Gratis'**
+  String get event_badge_free;
+
+  /// No description provided for @event_badge_paid.
+  ///
+  /// In es, this message translates to:
+  /// **'De pago'**
+  String get event_badge_paid;
+
+  /// No description provided for @event_search_placeholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar eventos…'**
+  String get event_search_placeholder;
+
+  /// No description provided for @event_filter_all.
+  ///
+  /// In es, this message translates to:
+  /// **'Todos'**
+  String get event_filter_all;
+
+  /// No description provided for @event_filter_on_road.
+  ///
+  /// In es, this message translates to:
+  /// **'On road'**
+  String get event_filter_on_road;
+
+  /// No description provided for @event_filter_off_road.
+  ///
+  /// In es, this message translates to:
+  /// **'Off road'**
+  String get event_filter_off_road;
+
+  /// No description provided for @event_filter_exhibition.
+  ///
+  /// In es, this message translates to:
+  /// **'Exposición'**
+  String get event_filter_exhibition;
+
+  /// No description provided for @event_filter_btn.
+  ///
+  /// In es, this message translates to:
+  /// **'Filtros'**
+  String get event_filter_btn;
+
+  /// No description provided for @event_no_events_title.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay eventos disponibles'**
+  String get event_no_events_title;
+
+  /// No description provided for @event_no_events_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Sé el primero en crear un evento para la comunidad'**
+  String get event_no_events_subtitle;
+
+  /// No description provided for @event_create_cta.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear evento'**
+  String get event_create_cta;
+
+  /// No description provided for @event_filter_modal_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Filtrar eventos'**
+  String get event_filter_modal_title;
+
+  /// No description provided for @event_filter_type_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo'**
+  String get event_filter_type_label;
+
+  /// No description provided for @event_filter_type_all.
+  ///
+  /// In es, this message translates to:
+  /// **'Todos los tipos'**
+  String get event_filter_type_all;
+
+  /// No description provided for @event_filter_cost_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Costo'**
+  String get event_filter_cost_label;
+
+  /// No description provided for @event_filter_cost_all.
+  ///
+  /// In es, this message translates to:
+  /// **'Gratuitos y de pago'**
+  String get event_filter_cost_all;
+
+  /// No description provided for @event_filter_cost_free.
+  ///
+  /// In es, this message translates to:
+  /// **'Solo gratuitos'**
+  String get event_filter_cost_free;
+
+  /// No description provided for @event_filter_cost_paid.
+  ///
+  /// In es, this message translates to:
+  /// **'Solo de pago'**
+  String get event_filter_cost_paid;
+
+  /// No description provided for @event_filter_clear.
+  ///
+  /// In es, this message translates to:
+  /// **'Limpiar'**
+  String get event_filter_clear;
+
+  /// No description provided for @event_filter_apply.
+  ///
+  /// In es, this message translates to:
+  /// **'Aplicar filtros'**
+  String get event_filter_apply;
+
+  /// No description provided for @event_cta_register.
+  ///
+  /// In es, this message translates to:
+  /// **'Inscribirse'**
+  String get event_cta_register;
+
+  /// No description provided for @event_cta_view_registration.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver inscripción'**
+  String get event_cta_view_registration;
+
+  /// No description provided for @event_cta_cancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get event_cta_cancel;
+
+  /// No description provided for @event_cta_no_spots.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin cupos disponibles'**
+  String get event_cta_no_spots;
+
+  /// No description provided for @event_cta_closed.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrado'**
+  String get event_cta_closed;
+
+  /// No description provided for @event_organizer_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Organizador'**
+  String get event_organizer_label;
+
+  /// No description provided for @event_spots_remaining.
+  ///
+  /// In es, this message translates to:
+  /// **'Quedan {count} cupos'**
+  String event_spots_remaining(Object count);
+
+  /// No description provided for @event_allowed_brands.
+  ///
+  /// In es, this message translates to:
+  /// **'Marcas permitidas'**
+  String get event_allowed_brands;
+
+  /// No description provided for @event_detail_description.
+  ///
+  /// In es, this message translates to:
+  /// **'Descripción'**
+  String get event_detail_description;
+
+  /// No description provided for @event_detail_route.
+  ///
+  /// In es, this message translates to:
+  /// **'Ruta'**
+  String get event_detail_route;
+
+  /// No description provided for @event_detail_share.
+  ///
+  /// In es, this message translates to:
+  /// **'Compartir'**
+  String get event_detail_share;
+
+  /// No description provided for @event_form_name_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre del evento'**
+  String get event_form_name_label;
+
+  /// No description provided for @event_form_name_placeholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej: Páramo del Sumapaz 2025'**
+  String get event_form_name_placeholder;
+
+  /// No description provided for @event_form_description_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Descripción'**
+  String get event_form_description_label;
+
+  /// No description provided for @event_form_description_placeholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Describe el recorrido, punto de encuentro, etc.'**
+  String get event_form_description_placeholder;
+
+  /// No description provided for @event_form_date_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha'**
+  String get event_form_date_label;
+
+  /// No description provided for @event_form_time_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Hora'**
+  String get event_form_time_label;
+
+  /// No description provided for @event_form_city_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Ciudad de inicio'**
+  String get event_form_city_label;
+
+  /// No description provided for @event_form_max_participants_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Máx. participantes'**
+  String get event_form_max_participants_label;
+
+  /// No description provided for @event_form_cost_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Costo (COP)'**
+  String get event_form_cost_label;
+
+  /// No description provided for @event_form_cost_placeholder.
+  ///
+  /// In es, this message translates to:
+  /// **'0 = gratis'**
+  String get event_form_cost_placeholder;
+
+  /// No description provided for @event_form_difficulty_low.
+  ///
+  /// In es, this message translates to:
+  /// **'Baja'**
+  String get event_form_difficulty_low;
+
+  /// No description provided for @event_form_difficulty_medium.
+  ///
+  /// In es, this message translates to:
+  /// **'Media'**
+  String get event_form_difficulty_medium;
+
+  /// No description provided for @event_form_difficulty_high.
+  ///
+  /// In es, this message translates to:
+  /// **'Alta'**
+  String get event_form_difficulty_high;
+
+  /// No description provided for @event_form_cover_upload_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Toca para subir imagen de portada'**
+  String get event_form_cover_upload_label;
+
+  /// No description provided for @event_form_cover_ai_label.
+  ///
+  /// In es, this message translates to:
+  /// **'o generar con IA'**
+  String get event_form_cover_ai_label;
+
+  /// No description provided for @event_form_publish.
+  ///
+  /// In es, this message translates to:
+  /// **'Publicar evento'**
+  String get event_form_publish;
+
+  /// No description provided for @event_form_save.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar'**
+  String get event_form_save;
+
+  /// No description provided for @vehicle_garage_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Mi garaje'**
+  String get vehicle_garage_title;
+
+  /// No description provided for @vehicle_main_badge.
+  ///
+  /// In es, this message translates to:
+  /// **'⭐ Principal'**
+  String get vehicle_main_badge;
+
+  /// No description provided for @vehicle_empty_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu garaje está vacío'**
+  String get vehicle_empty_title;
+
+  /// No description provided for @vehicle_empty_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Agrega tu primera moto para llevar el control de mantenimientos y documentos'**
+  String get vehicle_empty_subtitle;
+
+  /// No description provided for @vehicle_empty_cta.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar moto'**
+  String get vehicle_empty_cta;
+
+  /// No description provided for @vehicle_other_vehicles.
+  ///
+  /// In es, this message translates to:
+  /// **'Otras motos'**
+  String get vehicle_other_vehicles;
+
+  /// No description provided for @vehicle_add_cta.
+  ///
+  /// In es, this message translates to:
+  /// **'+ Agregar'**
+  String get vehicle_add_cta;
+
+  /// No description provided for @vehicle_quick_taller.
+  ///
+  /// In es, this message translates to:
+  /// **'Taller'**
+  String get vehicle_quick_taller;
+
+  /// No description provided for @vehicle_quick_detail.
+  ///
+  /// In es, this message translates to:
+  /// **'Detalle'**
+  String get vehicle_quick_detail;
+
+  /// No description provided for @vehicle_quick_edit.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar'**
+  String get vehicle_quick_edit;
+
+  /// No description provided for @vehicle_detail_specs_marca.
+  ///
+  /// In es, this message translates to:
+  /// **'Marca'**
+  String get vehicle_detail_specs_marca;
+
+  /// No description provided for @vehicle_detail_specs_modelo.
+  ///
+  /// In es, this message translates to:
+  /// **'Modelo'**
+  String get vehicle_detail_specs_modelo;
+
+  /// No description provided for @vehicle_detail_specs_anio.
+  ///
+  /// In es, this message translates to:
+  /// **'Año'**
+  String get vehicle_detail_specs_anio;
+
+  /// No description provided for @vehicle_detail_specs_cc.
+  ///
+  /// In es, this message translates to:
+  /// **'Cilindraje'**
+  String get vehicle_detail_specs_cc;
+
+  /// No description provided for @vehicle_detail_specs_km.
+  ///
+  /// In es, this message translates to:
+  /// **'Kilometraje'**
+  String get vehicle_detail_specs_km;
+
+  /// No description provided for @vehicle_detail_specs_color.
+  ///
+  /// In es, this message translates to:
+  /// **'Color'**
+  String get vehicle_detail_specs_color;
+
+  /// No description provided for @vehicle_detail_documents.
+  ///
+  /// In es, this message translates to:
+  /// **'Documentos'**
+  String get vehicle_detail_documents;
+
+  /// No description provided for @vehicle_doc_soat_label.
+  ///
+  /// In es, this message translates to:
+  /// **'SOAT'**
+  String get vehicle_doc_soat_label;
+
+  /// No description provided for @vehicle_doc_techreview_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Técnico-mecánica'**
+  String get vehicle_doc_techreview_label;
+
+  /// No description provided for @vehicle_doc_state_empty.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin registrar'**
+  String get vehicle_doc_state_empty;
+
+  /// No description provided for @vehicle_doc_state_valid.
+  ///
+  /// In es, this message translates to:
+  /// **'Vigente'**
+  String get vehicle_doc_state_valid;
+
+  /// No description provided for @vehicle_doc_state_expiringSoon.
+  ///
+  /// In es, this message translates to:
+  /// **'Por vencer'**
+  String get vehicle_doc_state_expiringSoon;
+
+  /// No description provided for @vehicle_doc_state_expired.
+  ///
+  /// In es, this message translates to:
+  /// **'Vencido'**
+  String get vehicle_doc_state_expired;
+
+  /// No description provided for @vehicle_view_maintenances.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver mantenimientos'**
+  String get vehicle_view_maintenances;
+
+  /// No description provided for @vehicle_edit.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar moto'**
+  String get vehicle_edit;
+
+  /// No description provided for @vehicle_form_title_add.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar moto'**
+  String get vehicle_form_title_add;
+
+  /// No description provided for @vehicle_form_title_edit.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar moto'**
+  String get vehicle_form_title_edit;
+
+  /// No description provided for @vehicle_form_brand_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Marca'**
+  String get vehicle_form_brand_label;
+
+  /// No description provided for @vehicle_form_model_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Modelo'**
+  String get vehicle_form_model_label;
+
+  /// No description provided for @vehicle_form_year_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Año'**
+  String get vehicle_form_year_label;
+
+  /// No description provided for @vehicle_form_cc_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Cilindraje (cc)'**
+  String get vehicle_form_cc_label;
+
+  /// No description provided for @vehicle_form_color_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Color'**
+  String get vehicle_form_color_label;
+
+  /// No description provided for @vehicle_form_plate_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Placa'**
+  String get vehicle_form_plate_label;
+
+  /// No description provided for @vehicle_form_km_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Kilometraje actual'**
+  String get vehicle_form_km_label;
+
+  /// No description provided for @vehicle_form_photo_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Foto de la moto (opcional)'**
+  String get vehicle_form_photo_label;
+
+  /// No description provided for @vehicle_form_photo_upload.
+  ///
+  /// In es, this message translates to:
+  /// **'Toca para subir'**
+  String get vehicle_form_photo_upload;
+
+  /// No description provided for @vehicle_form_docs_section.
+  ///
+  /// In es, this message translates to:
+  /// **'Documentos'**
+  String get vehicle_form_docs_section;
+
+  /// No description provided for @vehicle_form_docs_note.
+  ///
+  /// In es, this message translates to:
+  /// **'Los documentos se configuran luego desde el detalle de la moto'**
+  String get vehicle_form_docs_note;
+
+  /// No description provided for @vehicle_form_save.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar moto'**
+  String get vehicle_form_save;
+
+  /// No description provided for @maintenance_dashboard_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Mantenimientos'**
+  String get maintenance_dashboard_title;
+
+  /// No description provided for @maintenance_history_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Historial'**
+  String get maintenance_history_title;
+
+  /// No description provided for @maintenance_form_new_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Nuevo mantenimiento'**
+  String get maintenance_form_new_title;
+
+  /// No description provided for @maintenance_form_step_select.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona el tipo de servicio'**
+  String get maintenance_form_step_select;
+
+  /// No description provided for @maintenance_form_step_continue.
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar →'**
+  String get maintenance_form_step_continue;
+
+  /// No description provided for @maintenance_form_tab_done.
+  ///
+  /// In es, this message translates to:
+  /// **'Completado'**
+  String get maintenance_form_tab_done;
+
+  /// No description provided for @maintenance_form_tab_scheduled.
+  ///
+  /// In es, this message translates to:
+  /// **'Programado'**
+  String get maintenance_form_tab_scheduled;
+
+  /// No description provided for @maintenance_form_date_done_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha de realización'**
+  String get maintenance_form_date_done_label;
+
+  /// No description provided for @maintenance_form_km_done_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Kilometraje al realizar'**
+  String get maintenance_form_km_done_label;
+
+  /// No description provided for @maintenance_form_cost_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Costo (COP)'**
+  String get maintenance_form_cost_label;
+
+  /// No description provided for @maintenance_form_place_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Lugar / taller'**
+  String get maintenance_form_place_label;
+
+  /// No description provided for @maintenance_form_notes_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Notas (opcional)'**
+  String get maintenance_form_notes_label;
+
+  /// No description provided for @maintenance_form_next_section.
+  ///
+  /// In es, this message translates to:
+  /// **'Próximo mantenimiento'**
+  String get maintenance_form_next_section;
+
+  /// No description provided for @maintenance_form_next_km_label.
+  ///
+  /// In es, this message translates to:
+  /// **'En km'**
+  String get maintenance_form_next_km_label;
+
+  /// No description provided for @maintenance_form_next_date_label.
+  ///
+  /// In es, this message translates to:
+  /// **'O en fecha'**
+  String get maintenance_form_next_date_label;
+
+  /// No description provided for @maintenance_form_save_done.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar mantenimiento'**
+  String get maintenance_form_save_done;
+
+  /// No description provided for @maintenance_form_date_scheduled_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha programada'**
+  String get maintenance_form_date_scheduled_label;
+
+  /// No description provided for @maintenance_form_km_estimated_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Kilometraje estimado'**
+  String get maintenance_form_km_estimated_label;
+
+  /// No description provided for @maintenance_form_reminder_note.
+  ///
+  /// In es, this message translates to:
+  /// **'🔔 Recibirás un recordatorio 30 días antes de la fecha programada.'**
+  String get maintenance_form_reminder_note;
+
+  /// No description provided for @maintenance_form_save_scheduled.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar recordatorio'**
+  String get maintenance_form_save_scheduled;
+
+  /// No description provided for @maintenance_history_search_placeholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar mantenimiento…'**
+  String get maintenance_history_search_placeholder;
+
+  /// No description provided for @maintenance_filters_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Filtrar mantenimientos'**
+  String get maintenance_filters_title;
+
+  /// No description provided for @maintenance_filter_vehicle_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Moto'**
+  String get maintenance_filter_vehicle_label;
+
+  /// No description provided for @maintenance_filter_status_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Estado'**
+  String get maintenance_filter_status_label;
+
+  /// No description provided for @maintenance_filter_status_all.
+  ///
+  /// In es, this message translates to:
+  /// **'Todos'**
+  String get maintenance_filter_status_all;
+
+  /// No description provided for @maintenance_filter_status_done.
+  ///
+  /// In es, this message translates to:
+  /// **'Completados'**
+  String get maintenance_filter_status_done;
+
+  /// No description provided for @maintenance_filter_status_scheduled.
+  ///
+  /// In es, this message translates to:
+  /// **'Programados'**
+  String get maintenance_filter_status_scheduled;
+
+  /// No description provided for @maintenance_filter_status_urgent.
+  ///
+  /// In es, this message translates to:
+  /// **'Urgentes'**
+  String get maintenance_filter_status_urgent;
+
+  /// No description provided for @maintenance_filter_period_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Período'**
+  String get maintenance_filter_period_label;
+
+  /// No description provided for @maintenance_filter_from.
+  ///
+  /// In es, this message translates to:
+  /// **'Desde'**
+  String get maintenance_filter_from;
+
+  /// No description provided for @maintenance_filter_to.
+  ///
+  /// In es, this message translates to:
+  /// **'Hasta'**
+  String get maintenance_filter_to;
+
+  /// No description provided for @maintenance_filter_clear.
+  ///
+  /// In es, this message translates to:
+  /// **'Limpiar'**
+  String get maintenance_filter_clear;
+
+  /// No description provided for @maintenance_filter_apply.
+  ///
+  /// In es, this message translates to:
+  /// **'Aplicar'**
+  String get maintenance_filter_apply;
+
+  /// No description provided for @maintenance_legend_urgent.
+  ///
+  /// In es, this message translates to:
+  /// **'Urgente'**
+  String get maintenance_legend_urgent;
+
+  /// No description provided for @maintenance_legend_warning.
+  ///
+  /// In es, this message translates to:
+  /// **'Próximo'**
+  String get maintenance_legend_warning;
+
+  /// No description provided for @maintenance_legend_ok.
+  ///
+  /// In es, this message translates to:
+  /// **'Al día'**
+  String get maintenance_legend_ok;
+
+  /// No description provided for @maintenance_status_overdue.
+  ///
+  /// In es, this message translates to:
+  /// **'atrasado'**
+  String get maintenance_status_overdue;
+
+  /// No description provided for @maintenance_km_remaining.
+  ///
+  /// In es, this message translates to:
+  /// **'faltan'**
+  String get maintenance_km_remaining;
+
+  /// No description provided for @registration_my_registrations_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Mis inscripciones'**
+  String get registration_my_registrations_title;
+
+  /// No description provided for @registration_filter_all.
+  ///
+  /// In es, this message translates to:
+  /// **'Todas'**
+  String get registration_filter_all;
+
+  /// No description provided for @registration_filter_pending.
+  ///
+  /// In es, this message translates to:
+  /// **'Pendientes'**
+  String get registration_filter_pending;
+
+  /// No description provided for @registration_filter_approved.
+  ///
+  /// In es, this message translates to:
+  /// **'Aprobadas'**
+  String get registration_filter_approved;
+
+  /// No description provided for @registration_filter_rejected.
+  ///
+  /// In es, this message translates to:
+  /// **'Rechazadas'**
+  String get registration_filter_rejected;
+
+  /// No description provided for @registration_empty_title.
+  ///
+  /// In es, this message translates to:
+  /// **'No tienes inscripciones'**
+  String get registration_empty_title;
+
+  /// No description provided for @registration_empty_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Explora los eventos disponibles e inscríbete'**
+  String get registration_empty_subtitle;
+
+  /// No description provided for @registration_explore_events.
+  ///
+  /// In es, this message translates to:
+  /// **'Explorar eventos'**
+  String get registration_explore_events;
+
+  /// No description provided for @registration_detail_rider_section.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos del rider'**
+  String get registration_detail_rider_section;
+
+  /// No description provided for @registration_detail_vehicle_section.
+  ///
+  /// In es, this message translates to:
+  /// **'Vehículo'**
+  String get registration_detail_vehicle_section;
+
+  /// No description provided for @registration_detail_notes_section.
+  ///
+  /// In es, this message translates to:
+  /// **'Notas'**
+  String get registration_detail_notes_section;
+
+  /// No description provided for @registration_detail_cancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar inscripción'**
+  String get registration_detail_cancel;
+
+  /// No description provided for @registration_status_approved.
+  ///
+  /// In es, this message translates to:
+  /// **'Aprobada'**
+  String get registration_status_approved;
+
+  /// No description provided for @registration_status_pending.
+  ///
+  /// In es, this message translates to:
+  /// **'Pendiente'**
+  String get registration_status_pending;
+
+  /// No description provided for @registration_status_rejected.
+  ///
+  /// In es, this message translates to:
+  /// **'Rechazada'**
+  String get registration_status_rejected;
 }
 
 class _AppLocalizationsDelegate

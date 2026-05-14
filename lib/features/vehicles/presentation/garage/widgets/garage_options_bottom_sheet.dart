@@ -54,7 +54,7 @@ class GarageOptionsBottomSheet extends StatelessWidget {
                   ScaffoldMessenger.of(parentContext).showSnackBar(
                     SnackBar(
                       content: Text(parentContext.l10n.vehicle_vehicleDeleted),
-                      backgroundColor: Colors.green,
+                      backgroundColor: AppColors.success,
                     ),
                   );
                   onGarageListUpdatedLocally?.call();
@@ -94,7 +94,7 @@ class GarageOptionsBottomSheet extends StatelessWidget {
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.grey[700],
+              color: AppColors.darkBorder,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -136,10 +136,10 @@ class GarageOptionsBottomSheet extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.delete, color: Colors.red),
+            leading: const Icon(Icons.delete, color: AppColors.error),
             title: Text(
               context.l10n.vehicle_deleteVehicle,
-              style: context.bodyLarge?.copyWith(color: Colors.red),
+              style: context.bodyLarge?.copyWith(color: AppColors.error),
             ),
             onTap: () async {
               Navigator.pop(context);

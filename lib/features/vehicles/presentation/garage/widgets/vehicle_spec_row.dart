@@ -21,7 +21,7 @@ class VehicleSpecRow extends StatelessWidget {
       margin: EdgeInsets.only(bottom: isLast ? 0 : 12),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
-        color: const Color(0xFF2C241E), // Dark brown matches mockup
+        color: AppColors.darkSurfaceHighest,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(

@@ -18,7 +18,7 @@ class VehicleGarageOverviewItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
-        color: const Color(0xFF2C2C2E), // Darker gray card
+        color: AppColors.darkSurfaceHighest,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -26,7 +26,7 @@ class VehicleGarageOverviewItem extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: const BoxDecoration(
-              color: Color(0xFF3A3A3C),
+              color: AppColors.darkBorder,
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: context.colorScheme.primary, size: 20),
@@ -39,7 +39,7 @@ class VehicleGarageOverviewItem extends StatelessWidget {
                 Text(
                   label.toUpperCase(),
                   style: context.labelSmall?.copyWith(
-                    color: Colors.grey[500],
+                    color: AppColors.darkTextSecondary,
                     letterSpacing: 0.5,
                   ),
                 ),

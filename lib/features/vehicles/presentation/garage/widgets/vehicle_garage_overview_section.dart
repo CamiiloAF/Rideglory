@@ -27,7 +27,7 @@ class VehicleGarageOverviewSection extends StatelessWidget {
               style: context.labelMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.5,
-                color: Colors.grey[500],
+                color: AppColors.darkTextSecondary,
               ),
             ),
             Container(

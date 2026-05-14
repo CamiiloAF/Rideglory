@@ -28,7 +28,7 @@ class MaintenanceMileageInfo extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: .7),
+        color: AppColors.darkSurface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: typeColor.withValues(alpha: .1), width: 1),
       ),
@@ -42,7 +42,7 @@ class MaintenanceMileageInfo extends StatelessWidget {
                 icon: Icons.build_rounded,
                 label: context.l10n.maintenance_maintenance,
                 value: maintenance.maintanceMileage.toStringAsFixed(0),
-                color: const Color(0xFF64748B),
+                color: AppColors.darkTextSecondary,
               ),
               if (maintenance.nextMaintenanceMileage != null)
                 Row(
@@ -82,7 +82,7 @@ class MaintenanceMileageInfo extends StatelessWidget {
                   : context.l10n.maintenance_calculateRemainingDistance,
               style: context.labelSmall?.copyWith(
                 color: remainingDistance != null && remainingDistance <= 0
-                    ? const Color(0xFFEF4444)
+                    ? AppColors.error
                     : null,
                 fontWeight: FontWeight.w500,
               ),

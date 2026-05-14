@@ -100,7 +100,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                 content: Text(
                   context.l10n.maintenance_maintenanceDeletedSuccessfully,
                 ),
-                backgroundColor: Colors.green,
+                backgroundColor: AppColors.success,
               ),
             );
             context.pop({'action': 'deleted', 'deletedId': deletedId});
@@ -109,7 +109,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(context.l10n.errorMessage(message)),
-                backgroundColor: Colors.red,
+                backgroundColor: AppColors.error,
               ),
             );
           },

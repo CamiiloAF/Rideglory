@@ -10,7 +10,7 @@ class HomeEventGradientOverlay extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Colors.transparent, Color(0xDD000000)],
+          colors: [Colors.transparent, Colors.black87],
           stops: [0.3, 1.0],
         ),
       ),

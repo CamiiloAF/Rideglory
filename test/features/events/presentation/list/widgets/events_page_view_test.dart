@@ -7,7 +7,6 @@ import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/design_system/foundation/theme/app_theme.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
-import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/delete/cubit/event_delete_cubit.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/events_page_view.dart';

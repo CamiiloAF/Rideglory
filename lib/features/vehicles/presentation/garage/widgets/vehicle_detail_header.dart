@@ -43,14 +43,14 @@ class VehicleDetailHeader extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.more_vert, color: Colors.grey),
+                    icon: const Icon(Icons.more_vert, color: AppColors.darkTextSecondary),
                     onPressed: onOptionsTap,
                   ),
                 ],
               ),
               Text(
                 _getBrandAndModel(),
-                style: context.bodyLarge?.copyWith(color: Colors.grey[400]),
+                style: context.bodyLarge?.copyWith(color: AppColors.darkTextSecondary),
               ),
 
               if (onMainVehicleChanged != null) ...[

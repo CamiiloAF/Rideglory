@@ -530,8 +530,8 @@
     },
     "frontend": {
       "status": "idle",
-      "lastAction": null,
-      "focus": null
+      "lastAction": "2026-05-14T12:00:00Z",
+      "focus": "iter-1 presentation-layer redesign complete: color tokenization (47 literals), AppEventBadge atom, DocumentSlotPill molecule, ~140 l10n keys, dart analyze 0 errors/warnings, 28 tests pass"
     },
     "qa": {
       "status": "idle",
@@ -741,6 +741,30 @@
       "agent": "design",
       "at": "2026-05-14T07:00:00Z",
       "detail": "5 module mockups produced covering all 15 screens. Component hierarchy and copy documented. Auth frames gate established. Donut chart scoped to color-only. AppEventBadge and DocumentSlotPill primitives fully specified."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 1,
+      "phase": "backend",
+      "agent": "system",
+      "at": "2026-05-14T06:00:00Z",
+      "detail": "No rideglory-api changes required — pass-through. Backend agent stood down."
+    },
+    {
+      "type": "frontend_done",
+      "iteration": 1,
+      "phase": "frontend",
+      "agent": "frontend",
+      "at": "2026-05-14T12:00:00Z",
+      "detail": "Presentation-layer redesign complete. 47 hardcoded Color literals replaced. AppEventBadge atom and DocumentSlotPill molecule created. ~140 l10n keys added. dart analyze: 0 errors, 0 warnings. flutter test: 28 pass, 4 pre-existing failures (stale .g.dart). No domain/data/DI changes."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 1,
+      "phase": "frontend",
+      "agent": "frontend",
+      "at": "2026-05-14T12:00:00Z",
+      "detail": "All color tokenization complete across 5 module PRs (auth, home, events, garage, maintenance+registration). Design system primitives created. l10n regenerated. Quality gates passed."
     }
   ]
 }

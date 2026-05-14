@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
 
 /// Widget para mostrar la barra de progreso del mantenimiento
 class MaintenanceProgressBar extends StatelessWidget {
@@ -18,7 +19,7 @@ class MaintenanceProgressBar extends StatelessWidget {
         Container(
           height: 8,
           decoration: BoxDecoration(
-            color: Colors.grey[200],
+            color: AppColors.darkBorder,
             borderRadius: BorderRadius.circular(4),
           ),
         ),

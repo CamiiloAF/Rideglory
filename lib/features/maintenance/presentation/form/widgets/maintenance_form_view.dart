@@ -35,7 +35,7 @@ class _MaintenanceFormViewState extends State<MaintenanceFormView> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(context.l10n.savedSuccessfully),
-                  backgroundColor: Colors.green,
+                  backgroundColor: AppColors.success,
                 ),
               );
               Navigator.of(context).pop(maintenance);
@@ -44,7 +44,7 @@ class _MaintenanceFormViewState extends State<MaintenanceFormView> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(context.l10n.errorMessage(error.message)),
-                  backgroundColor: Colors.red,
+                  backgroundColor: AppColors.error,
                 ),
               );
             },

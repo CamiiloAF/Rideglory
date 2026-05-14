@@ -71,7 +71,7 @@ class EventDetailViewState extends State<EventDetailView> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(context.l10n.event_eventDeletedSuccess),
-                        backgroundColor: Colors.green,
+                        backgroundColor: AppColors.success,
                       ),
                     );
                     context.pop(true);
@@ -179,12 +179,12 @@ class EventDetailViewState extends State<EventDetailView> {
                             children: [
                               const Icon(
                                 Icons.delete_outline,
-                                color: Colors.red,
+                                color: AppColors.error,
                               ),
                               AppSpacing.hGapMd,
                               Text(
                                 context.l10n.event_delete,
-                                style: const TextStyle(color: Colors.red),
+                                style: const TextStyle(color: AppColors.error),
                               ),
                             ],
                           ),
@@ -368,7 +368,7 @@ class EventDetailViewState extends State<EventDetailView> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(context.l10n.savedSuccessfully),
-        backgroundColor: Colors.green,
+        backgroundColor: AppColors.success,
       ),
     );
   }

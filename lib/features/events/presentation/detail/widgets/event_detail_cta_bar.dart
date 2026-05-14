@@ -132,11 +132,11 @@ class _RegistrationStatusBadge extends StatelessWidget {
   final EventRegistrationModel registration;
 
   Color get _color => switch (registration.status) {
-    RegistrationStatus.pending => Colors.orange,
-    RegistrationStatus.approved => Colors.green,
-    RegistrationStatus.rejected => Colors.red,
-    RegistrationStatus.cancelled => Colors.grey,
-    RegistrationStatus.readyForEdit => Colors.blue,
+    RegistrationStatus.pending => AppColors.warning,
+    RegistrationStatus.approved => AppColors.success,
+    RegistrationStatus.rejected => AppColors.error,
+    RegistrationStatus.cancelled => AppColors.darkTextSecondary,
+    RegistrationStatus.readyForEdit => AppColors.info,
   };
 
   String get _label => switch (registration.status) {

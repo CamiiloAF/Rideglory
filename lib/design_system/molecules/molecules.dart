@@ -20,4 +20,5 @@ export 'actions/contact_popup_menu_button.dart';
 export 'layout/form_section_header.dart';
 export 'layout/container_pull_to_refresh.dart';
 
+export 'feedback/document_slot_pill.dart';
 

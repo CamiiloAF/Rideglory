@@ -45,19 +45,19 @@ class SignupSocialButtons extends StatelessWidget {
             // Divider with "Already have account?" text
             Row(
               children: [
-                Expanded(child: Container(height: 1, color: Colors.grey[200])),
+                Expanded(child: Container(height: 1, color: AppColors.darkBorder)),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
                     '¿Ya tienes cuenta?',
                     style: TextStyle(
-                      color: Colors.grey[600],
+                      color: AppColors.darkTextSecondary,
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
-                Expanded(child: Container(height: 1, color: Colors.grey[200])),
+                Expanded(child: Container(height: 1, color: AppColors.darkBorder)),
               ],
             ),
             AppSpacing.gapXxl,
@@ -69,7 +69,7 @@ class SignupSocialButtons extends StatelessWidget {
                   text: '${context.l10n.auth_signIn} ',
                   style: TextStyle(
                     fontSize: 15,
-                    color: Colors.grey[700],
+                    color: AppColors.darkTextSecondary,
                     fontWeight: FontWeight.w500,
                   ),
                   children: [
@@ -80,7 +80,7 @@ class SignupSocialButtons extends StatelessWidget {
                           context.l10n.auth_signInLink,
                           style: const TextStyle(
                             fontSize: 15,
-                            color: Color(0xFF6366F1),
+                            color: AppColors.primary,
                             fontWeight: FontWeight.bold,
                             decoration: TextDecoration.underline,
                           ),

@@ -167,7 +167,7 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
                       content: Text(
                         context.l10n.maintenance_maintenanceDeletedSuccessfully,
                       ),
-                      backgroundColor: Colors.green,
+                      backgroundColor: AppColors.success,
                     ),
                   );
                   context.read<MaintenancesCubit>().deleteMaintenanceLocally(
@@ -178,7 +178,7 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(context.l10n.errorMessage(message)),
-                      backgroundColor: Colors.red,
+                      backgroundColor: AppColors.error,
                     ),
                   );
                 },

@@ -88,7 +88,7 @@ class MaintenanceDetailHeader extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1E3A5F).withValues(alpha: 0.8),
+                        color: AppColors.darkSurfaceHighest,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(

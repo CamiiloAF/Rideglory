@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
+import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
 
 class MaintenanceDetailRow extends StatelessWidget {
   const MaintenanceDetailRow({
@@ -18,7 +19,7 @@ class MaintenanceDetailRow extends StatelessWidget {
       children: [
         Text(
           label,
-          style: context.bodyMedium?.copyWith(color: Colors.grey[400]),
+          style: context.bodyMedium?.copyWith(color: AppColors.darkTextSecondary),
         ),
         Text(
           value,

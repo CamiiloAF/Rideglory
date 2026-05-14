@@ -15,7 +15,7 @@ class MaintenanceSectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, color: Colors.grey[400], size: 24),
+        Icon(icon, color: AppColors.darkTextSecondary, size: 24),
         AppSpacing.hGapSm,
         Text(
           title,

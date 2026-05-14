@@ -187,3 +187,28 @@ Run `flutter gen-l10n` as a standalone command (not via build_runner) to regener
 
 ## Change log
 - 2026-05-13 (plan v3 approval): Flutter implementation scope documented per iteration. Iter-1 redesign patterns and module-PR strategy documented.
+
+---
+
+## Iter-1 frontend learnings (2026-05-14)
+
+### Color tokenization at scale
+When tokenizing Color(0x...) literals, `replace_all` on grep results is effective but watch for subscript patterns: `Colors.grey[400]` → `AppColors.darkTextSecondary[400]` is invalid. Always use a targeted edit for `Colors.grey[N]` variants. The pattern is: `Colors.grey[400/500]` → `AppColors.darkTextSecondary`; `Colors.grey[700]` → `AppColors.darkBorder`; `Colors.grey[200]` → `AppColors.darkBorder`.
+
+### Redundant imports
+`AppColors` is exported from `design_system.dart` via the foundation barrel. Any file that already imports `design_system.dart` should NOT also import `app_colors.dart` directly — it triggers `unnecessary_import` info violations. After tokenization, run `dart analyze` to identify and strip these.
+
+### pubspec.yaml duplicate dev_dependencies
+`flutter gen-l10n` fails with a YAML parse error if `dev_dependencies` has duplicate keys. This happened because `mocktail`, `bloc_test`, and `integration_test` were each listed twice. Fix: edit pubspec.yaml manually to remove the duplicates, then run `flutter pub get`, then `flutter gen-l10n`.
+
+### flutter gen-l10n output
+When `l10n.yaml` is present, `flutter gen-l10n` ignores command-line arguments and uses the YAML config. Silent exit = success. The tool only exits with error if there are ARB parse errors (e.g., duplicate keys) or missing placeholders.
+
+### Stale .g.dart files do not block dart analyze
+`dart analyze` compiles from source interfaces and reports 0 errors even when `.g.dart` generated files are stale. However, `flutter test` compiles the test target which includes `.g.dart` files — stale generators cause compilation failures in widget tests. Resolution: `dart run build_runner build` in iter-2 when backend changes justify a full rebuild.
+
+### light-mode AppColors in dark context
+`AppColors.backgroundGray`, `AppColors.textPrimary`, `AppColors.textSecondary`, `AppColors.overlayStrong` are light-mode constants kept for compatibility. In dark-mode feature widgets, replace with: `AppColors.darkSurface` (backgroundGray), `AppColors.darkTextPrimary` (textPrimary), `AppColors.darkTextSecondary` (textSecondary), `Colors.white.withValues(alpha: N)` (overlayMedium/overlayStrong).
+
+### AppTextField requires form `name` field
+`AppTextField` wraps `FormBuilderTextField` which requires a `name` parameter (used as the FormBuilder field key). It cannot accept a raw `TextEditingController`. Custom autocomplete overlay implementations (e.g., `event_form_multi_brand_section.dart`) that use `TextFormField` with a controller should NOT be migrated — changing them would break the overlay logic.
