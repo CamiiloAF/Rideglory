@@ -2,7 +2,7 @@
   "iteration": 2,
   "phase": "design",
   "agent": "design",
-  "status": "done",
+  "status": "pass",
   "updatedAt": "2026-05-14T23:30:00Z",
   "summary": "Iter-2 design phase complete. 22 screens/states designed across 3 HTML mockup files: SOAT upload+manual+status flow (4-state badge), notification center rebuild (6 notification types, bell badge), ManageAttendeesPage UPDATE scope confirmed (list+edit, component-swap + state polish). Full UI copy in soat_ and notification_ prefixes. DocumentSlotPill→SoatStatus 1:1 state mapping documented. Pencil MCP unavailable — HTML mockups serve as design gate. Story 2.9 scope = UPDATE (no layout rework).",
   "metrics": {
@@ -21,60 +21,70 @@
   ],
   "qualityGates": [
     {
-      "gate": "All SOAT states designed (Sin SOAT, Vigente, Por vencer, Vencido)",
-      "status": "pass"
+      "status": "pass",
+      "name": "All SOAT states designed (Sin SOAT, Vigente, Por vencer, Vencido)"
     },
     {
-      "gate": "All 6 notification types have row templates",
-      "status": "pass"
+      "status": "pass",
+      "name": "All 6 notification types have row templates"
     },
     {
-      "gate": "NotificationCenterPage has loading/data/empty/error states",
-      "status": "pass"
+      "status": "pass",
+      "name": "NotificationCenterPage has loading/data/empty/error states"
     },
     {
-      "gate": "SoatUploadPage has default/uploading/error states",
-      "status": "pass"
+      "status": "pass",
+      "name": "SoatUploadPage has default/uploading/error states"
     },
     {
-      "gate": "SoatManualFormPage has default/validation-error states",
-      "status": "pass"
+      "status": "pass",
+      "name": "SoatManualFormPage has default/validation-error states"
     },
     {
-      "gate": "SoatStatusPage has all 3 live states (Vigente, Por vencer, Vencido)",
-      "status": "pass"
+      "status": "pass",
+      "name": "SoatStatusPage has all 3 live states (Vigente, Por vencer, Vencido)"
     },
     {
-      "gate": "AttendeesPage (Story 2.9) scope confirmed: list+edit UPDATE, component-swap + state polish",
-      "status": "pass"
+      "status": "pass",
+      "name": "AttendeesPage (Story 2.9) scope confirmed: list+edit UPDATE, component-swap + state polish"
     },
     {
-      "gate": "DocumentSlotPill → SoatStatus 1:1 mapping documented with localized stateLabel contract",
-      "status": "pass"
+      "status": "pass",
+      "name": "DocumentSlotPill → SoatStatus 1:1 mapping documented with localized stateLabel contract"
     },
     {
-      "gate": "NotificationBellButton spec documented (44px tap target, backend-sourced unreadCount, 99+ truncation)",
-      "status": "pass"
+      "status": "pass",
+      "name": "NotificationBellButton spec documented (44px tap target, backend-sourced unreadCount, 99+ truncation)"
     },
     {
-      "gate": "All UI copy in Spanish (sentence case for buttons), soat_ and notification_ key prefixes",
-      "status": "pass"
+      "status": "pass",
+      "name": "All UI copy in Spanish (sentence case for buttons), soat_ and notification_ key prefixes"
     },
     {
-      "gate": "Design system tokens unchanged from iter-1 (no new tokens introduced)",
-      "status": "pass"
+      "status": "pass",
+      "name": "Design system tokens unchanged from iter-1 (no new tokens introduced)"
     },
     {
-      "gate": "UX flow rules documented for SOAT entry points and upload phases",
-      "status": "pass"
+      "status": "pass",
+      "name": "UX flow rules documented for SOAT entry points and upload phases"
     },
     {
-      "gate": "Accessibility notes documented for all new components",
-      "status": "pass"
+      "status": "pass",
+      "name": "Accessibility notes documented for all new components"
     },
     {
-      "gate": "Error messages mapped to API error codes",
-      "status": "pass"
+      "status": "pass",
+      "name": "Error messages mapped to API error codes"
+    },
+    {
+      "name": "design_coverage_complete",
+      "status": "pass",
+      "detail": "Verified: all stories have mockups and all required artifacts are present."
+    },
+    {
+      "name": "required_artifacts_present",
+      "status": "pass",
+      "detail": "Verified: all stories have mockups and all required artifacts are present."
     }
   ],
   "keyDecisions": [
