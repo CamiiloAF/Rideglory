@@ -5,6 +5,8 @@
   "updatedAt": "2026-05-14T23:00:00Z",
   "summary": "Iteration 2 is full-stack: two new Flutter features and rideglory-api changes across vehicles-ms, users-ms, and api-gateway. lib/features/soat/ is built from scratch as a 3-layer Clean Architecture feature (SoatModel with client-side SoatStatus computed getter, SoatDto/SoatService Retrofit, SoatRepositoryImpl with Firebase Storage upload, SoatCubit as Cubit<ResultState<SoatModel>>, three pages). lib/features/notifications/ already exists as an iter-1 mock-only stub and is rebuilt: NotificationModel extended with payload, new domain/repository + data layer, NotificationsCubit rewritten to @injectable Cubit<@freezed NotificationsState> with cursor pagination. FcmService added to core/services with a @pragma('vm:entry-point') background isolate handler that re-calls configureDependencies(). 6 API contracts: POST/GET /api/vehicles/:vehicleId/soat (vehicles-ms), POST /api/notifications/fcm-token + GET /api/notifications (cursor) + PATCH /api/notifications/:id/read + PATCH /api/notifications/read-all (api-gateway). Backend: api-gateway gets its first-ever Prisma schema (Notification model), vehicles-ms gets a Soat model (one-to-one with Vehicle), users-ms User gets fcmToken String?. SoatStatus 4-state badge computed client-side from expiryDate vs now (<=30d boundary). GoRouter DI assessment: AppRouter.appRouter is a static top-level GoRouter, NOT GetIt-registered — refactor needed for iter-5 NotificationRouteHandler, deferred. 4 slim role handoffs delivered. DIAGRAMS.md updated with ERD and two sequence diagrams.",
   "metrics": {
+    "tokens": 150826,
+    "costUsd": 1.5,
     "newFlutterFeatures": 2,
     "newDomainModels": 2,
     "newDtos": 3,
