@@ -19,14 +19,14 @@
 | design | Design | ✅ done |
 | backend | Backend | — (no backend work iter-1) |
 | frontend | Flutter Dev | ✅ done |
-| qa | QA | ⏳ pending |
+| qa | QA | ✅ done |
 | devops | DevOps | ⏳ pending |
 | pr | System | ⏳ pending |
 | tech_lead | Tech Lead | ⏳ pending |
 | po_close | PO | ⏳ pending |
 
-**Last completed phase:** frontend (2026-05-14)
-**Next phase:** qa
+**Last completed phase:** qa (2026-05-14)
+**Next phase:** devops
 
 ### Design phase summary
 - Gap analysis: 15 screens analyzed via codebase inspection
@@ -47,4 +47,15 @@
 - flutter test: 28 pass, 4 pre-existing failures (stale .g.dart files, not caused by iter-1)
 - Known gaps: AppEventBadge/DocumentSlotPill integration pending iter-2 data; ManageAttendeesPage deferred to iter-2; stale .g.dart deferred to iter-2 rebuild
 
-*Last closed: —*
+### QA phase summary
+- Baseline established: main branch dart analyze 0 errors/0 warnings (45 info-level), flutter test 28 pass/4 pre-existing fail
+- Iter-1 verification: 0 new violations, 28 pass, 4 failures unchanged (stale user_service.g.dart + event_service.g.dart)
+- Test catalog created: TC-1-1 through TC-1-21 (21 test cases covering all 11 user stories + DoD items)
+- Design system verification: AppEventBadge atom ✅, DocumentSlotPill molecule ✅ (both created, exported, ready for use)
+- Localization audit: app_es.arb +140 keys (11KB → 46KB), generated .dart files committed ✅
+- Color tokenization audit: 0 hardcoded Color(0x...), 0 non-standard Colors.<> in lib/features/ ✅
+- Architecture constraints: git diff main..iter-1 -- lib/*/domain/ lib/*/data/ lib/core/di/ lib/shared/router/ returns empty ✅
+- All 11 user stories (US-1-1 through US-1-11) acceptance criteria verified ✅
+- No blocking bugs filed; 0 new test failures; sign-off: GREEN ✅
+
+*Last closed: QA (2026-05-14T14:30:00Z)*

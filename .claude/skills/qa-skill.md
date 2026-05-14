@@ -239,3 +239,4 @@ Mock library: `mocktail`. Cubit test library: `bloc_test`. Network image mock: `
 
 ## Change log
 - 2026-05-13 (plan v3 approval): QA strategy per iteration documented. Physical device requirements and smoke test lists established.
+- 2026-05-14 (iter-1, QA phase): Test catalog created (TC-1-1 through TC-1-21). Baseline verification: main branch 0 errors/0 warnings, 28 pass/4 fail. Iter-1 verification: 0 new violations, 28 pass/4 unchanged (stale .g.dart). Design system primitives confirmed (AppEventBadge atom + DocumentSlotPill molecule). Localization audit: ~140 new keys added (11KB → 46KB app_es.arb). Color tokenization: 0 hardcoded Color(0x...), 0 non-standard Colors.<> in lib/features/. Architecture constraints enforced (zero domain/data/DI/router changes). All 11 user stories acceptance criteria verified. Sign-off: GREEN ✅. No new test failures introduced; 0 blocking bugs filed.
