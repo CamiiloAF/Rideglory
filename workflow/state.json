@@ -703,28 +703,12 @@
       "detail": "Iteration 1 scoped: UI/UX Redesign — 11 user stories (US-1-1 through US-1-11), 10 tasks (T-1-1 through T-1-10), 2 QA tasks (T-1-8, T-1-9). No backend changes. 5-module PR strategy. Auth frames gate and donut chart scope to be confirmed by design in pre-flight."
     },
     {
-      "type": "phase_complete",
-      "iteration": 1,
-      "phase": "po_scope",
-      "agent": "po",
-      "at": "2026-05-13T10:00:00Z",
-      "detail": "PO scope complete: 11 user stories, 10 tasks (2 QA + 2 design + 5 frontend + 1 tech_lead), presentation-layer redesign only, ManageAttendeesPage deferred to iter-2"
-    },
-    {
       "type": "architect_plan",
       "iteration": 1,
       "phase": "architect",
       "agent": "architect",
       "at": "2026-05-14T05:00:00Z",
       "detail": "Iter-1 architecture confirmed presentation-layer only. Zero rideglory-api / domain / data / DI / router changes. Two design-system primitives specified: AppEventBadge atom (lib/design_system/atoms/badges/, frame zKkmE) and DocumentSlotPill molecule (lib/design_system/molecules/feedback/, frame aGqnv — reusable for iter-2 SOAT). 3-tier color tokenization policy defined (colorScheme → AppColors → status palette). Module PR cadence (5 PRs ≤ 40 files) validated. Slim handoffs delivered to backend (stand-down), frontend, devops (no-op), qa. DIAGRAMS.md initialized."
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 1,
-      "phase": "architect",
-      "agent": "architect",
-      "at": "2026-05-14T05:00:00Z",
-      "detail": "Iter-1 is presentation-layer only — no backend/domain changes. Component extraction plan + color tokenization strategy defined."
     },
     {
       "type": "design_iteration",
@@ -735,60 +719,12 @@
       "detail": "Design phase active: gap analysis performed, 5 HTML mockup modules produced, UI copy and component hierarchy documented."
     },
     {
-      "type": "phase_complete",
-      "iteration": 1,
-      "phase": "design",
-      "agent": "design",
-      "at": "2026-05-14T07:00:00Z",
-      "detail": "5 module mockups produced covering all 15 screens. Component hierarchy and copy documented. Auth frames gate established. Donut chart scoped to color-only. AppEventBadge and DocumentSlotPill primitives fully specified."
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 1,
-      "phase": "backend",
-      "agent": "system",
-      "at": "2026-05-14T06:00:00Z",
-      "detail": "No rideglory-api changes required — pass-through. Backend agent stood down."
-    },
-    {
       "type": "frontend_done",
       "iteration": 1,
       "phase": "frontend",
       "agent": "frontend",
       "at": "2026-05-14T12:00:00Z",
       "detail": "Presentation-layer redesign complete. 47 hardcoded Color literals replaced. AppEventBadge atom and DocumentSlotPill molecule created. ~140 l10n keys added. dart analyze: 0 errors, 0 warnings. flutter test: 28 pass, 4 pre-existing failures (stale .g.dart). No domain/data/DI changes."
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 1,
-      "phase": "frontend",
-      "agent": "frontend",
-      "at": "2026-05-14T12:00:00Z",
-      "detail": "All color tokenization complete across 5 module PRs (auth, home, events, garage, maintenance+registration). Design system primitives created. l10n regenerated. Quality gates passed."
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 1,
-      "phase": "qa",
-      "agent": "qa",
-      "at": "2026-05-14T14:30:00Z",
-      "detail": "28 tests pass, 0 new bugs filed. dart analyze 0 errors/0 warnings (no new violations). All 11 user stories acceptance criteria verified. Design system primitives confirmed (AppEventBadge atom + DocumentSlotPill molecule). Color tokenization 100% complete. Architecture constraints enforced. Sign-off: GREEN ✅"
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 1,
-      "phase": "devops",
-      "agent": "devops",
-      "at": "2026-05-14T15:00:00Z",
-      "detail": "CI pipeline validated (.github/workflows/ci.yml syntactically correct). docs/DEPLOY.md created with env var reference, secrets setup, troubleshooting, roadmap. Pre-flight checklist: Flutter setup ✅, dart analyze gate ✅, flutter test gate ✅, code generation ✅, Firebase config injection ✅, .env injection ✅, APK build ✅. No CI changes required per architect-for-devops.md. Phase contract and handoff complete. Ready for PR phase."
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 1,
-      "phase": "pr",
-      "agent": "system",
-      "at": "2026-05-14T07:00:00Z",
-      "detail": "PR #13 opened: https://github.com/CamiiloAF/Rideglory/pull/13"
     },
     {
       "type": "tech_lead_review",
@@ -799,14 +735,6 @@
       "detail": "PR #13 reviewed. dart analyze: 0 errors/0 warnings. flutter test: 28 pass/4 pre-existing fail (unchanged). Clean Architecture: 0 layer violations. Color tokenization: 0 hardcoded Color(0x...) in lib/features/. No new ElevatedButton/TextFormField/AlertDialog. Deferred non-blockers: Colors.black87 in 2 gradient overlays, DocumentSlotPill fallback strings, 4 pre-existing widget violations. Security: PASS. Decision: APPROVED."
     },
     {
-      "type": "phase_complete",
-      "iteration": 1,
-      "phase": "tech_lead",
-      "agent": "tech_lead",
-      "at": "2026-05-14T16:00:00Z",
-      "detail": "approved — dart analyze 0 errors/0 warnings, flutter test 28/28 passing, no layer violations, color tokenization complete, 3 deferred non-blockers"
-    },
-    {
       "type": "pr_merged",
       "iteration": 1,
       "at": "2026-05-14T07:30:00Z",
@@ -814,12 +742,11 @@
       "detail": "PR #13 merged to main. Merge SHA: ed3eb0cf1de1dcaa53244ff04d683408a98237c8"
     },
     {
-      "type": "phase_complete",
+      "type": "iteration_summary",
       "iteration": 1,
-      "phase": "po_close",
-      "agent": "po",
-      "at": "2026-05-14T17:00:00Z",
-      "detail": "Iteration 1 closed. Summary at docs/ITERATION_SUMMARY_1.md. All artifacts written: ITERATION_SUMMARY_1.md, ITERATION_HISTORY.md, PRODUCT_STATUS.md, iteration_context.md, README.md updated, iteration_checkpoint.md reset. Ready for iter-2."
+      "at": "2026-05-14T08:00:00Z",
+      "agent": "system",
+      "detail": "Iteration 1 DONE. Phases: po_scope → architect → design → backend → frontend → qa → devops → pr → tech_lead → po_close. PR #13: https://github.com/CamiiloAF/Rideglory/pull/13 (merged SHA ed3eb0cf)."
     }
   ]
 }
