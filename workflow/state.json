@@ -525,8 +525,8 @@
     },
     "backend": {
       "status": "idle",
-      "lastAction": null,
-      "focus": null
+      "lastAction": "2026-05-14T22:30:00Z",
+      "focus": "iter-2 backend complete: SOAT (vehicles-ms POST/GET /api/vehicles/:vehicleId/soat), fcmToken (users-ms migration), notifications table (api-gateway first-time Prisma), 4 notification endpoints, FCM triggers on registration create/approve/reject, SOAT cron scheduler (30d/7d/day-of America/Bogota). 28 tests pass, 0 TS errors."
     },
     "frontend": {
       "status": "idle",
@@ -665,60 +665,60 @@
       "iteration": 2,
       "description": "Pre-flight backend: create seed.ts in vehicles-ms (2+ test vehicles) and events-ms (1 scheduled event + 1 registration); run prisma migrate reset on 4 existing services; prisma init + prisma migrate dev in api-gateway; verify GET /api/vehicles returns 200 and GET /api/notifications returns 200.",
       "agent": "backend",
-      "status": "backlog",
+      "status": "done",
       "storyRef": "US-2-8",
       "title": "Pre-flight: seeds, prisma reset (4 services), prisma init api-gateway",
-      "updatedAt": "2026-05-14T22:00:00Z"
+      "updatedAt": "2026-05-14T22:30:00Z"
     },
     {
       "id": "T-2-3",
       "iteration": 2,
       "description": "Backend: implement SOAT endpoints in vehicles-ms (POST /api/vehicles/:vehicleId/soat, GET /api/vehicles/:vehicleId/soat) with Soat Prisma model (id, vehicleId, policyNumber, startDate, expiryDate, insurer, documentUrl, createdAt, updatedAt).",
       "agent": "backend",
-      "status": "backlog",
+      "status": "done",
       "storyRef": "US-2-1, US-2-2, US-2-3",
       "title": "Backend: SOAT endpoints in vehicles-ms",
-      "updatedAt": "2026-05-14T22:00:00Z"
+      "updatedAt": "2026-05-14T22:30:00Z"
     },
     {
       "id": "T-2-4",
       "iteration": 2,
       "description": "Backend: add fcmToken String? to users-ms User model (Prisma migration); implement POST /api/notifications/fcm-token in api-gateway with Firebase Auth guard.",
       "agent": "backend",
-      "status": "backlog",
+      "status": "done",
       "storyRef": "US-2-8",
       "title": "Backend: fcmToken field in users-ms; POST /api/notifications/fcm-token endpoint",
-      "updatedAt": "2026-05-14T22:00:00Z"
+      "updatedAt": "2026-05-14T22:30:00Z"
     },
     {
       "id": "T-2-5",
       "iteration": 2,
       "description": "Backend: create notifications table in api-gateway Prisma (id, userId, type, payload JSON, isRead, createdAt); implement GET /api/notifications (cursor pagination), PATCH /:id/read, PATCH /read-all with Firebase Auth guard.",
       "agent": "backend",
-      "status": "backlog",
+      "status": "done",
       "storyRef": "US-2-7, US-2-8",
       "title": "Backend: notifications table + list/read endpoints in api-gateway",
-      "updatedAt": "2026-05-14T22:00:00Z"
+      "updatedAt": "2026-05-14T22:30:00Z"
     },
     {
       "id": "T-2-6",
       "iteration": 2,
       "description": "Backend: add FCM push trigger in events-ms registration approval/rejection flow; each push inserts a row in api-gateway notifications table. Also add FCM push for new registration event to organizer.",
       "agent": "backend",
-      "status": "backlog",
+      "status": "done",
       "storyRef": "US-2-5, US-2-6",
       "title": "Backend: FCM push triggers for registration events",
-      "updatedAt": "2026-05-14T22:00:00Z"
+      "updatedAt": "2026-05-14T22:30:00Z"
     },
     {
       "id": "T-2-7",
       "iteration": 2,
       "description": "Backend: install @nestjs/schedule; implement NotificationSchedulerService with @Cron for SOAT reminders (30d, 7d, day-of expiry); America/Bogota timezone; each cron push inserts row in notifications table.",
       "agent": "backend",
-      "status": "backlog",
+      "status": "done",
       "storyRef": "US-2-4",
       "title": "Backend: @nestjs/schedule SOAT cron reminders (30d, 7d, day-of)",
-      "updatedAt": "2026-05-14T22:00:00Z"
+      "updatedAt": "2026-05-14T22:30:00Z"
     },
     {
       "id": "T-2-8",
@@ -931,6 +931,22 @@
       "agent": "design",
       "at": "2026-05-14T23:30:00Z",
       "detail": "Iter-2 design done: 22 screens across soat.html, notifications.html, attendees.html; soat_ and notification_ l10n key inventory; DocumentSlotPill→SoatStatus 1:1 mapping; NotificationBellButton spec; Story 2.9 scope = UPDATE (list+edit confirmed)."
+    },
+    {
+      "type": "backend_done",
+      "iteration": 2,
+      "phase": "backend",
+      "agent": "backend",
+      "at": "2026-05-14T22:30:00Z",
+      "detail": "T-2-2 through T-2-7 done: Soat model + upsert/get endpoints (vehicles-ms); fcmToken migration (users-ms); Notification model + 4 notification endpoints + cron scheduler (api-gateway first-time Prisma); FCM triggers on create/approve/reject registration. 28 tests pass, 0 TS errors."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 2,
+      "phase": "backend",
+      "agent": "backend",
+      "at": "2026-05-14T22:30:00Z",
+      "detail": "6 endpoints + FCM triggers + SOAT cron scheduler implemented across 3 microservices. 28 tests passing. Next = frontend."
     }
   ]
 }

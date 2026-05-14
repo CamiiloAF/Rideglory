@@ -10,20 +10,27 @@
 
 ## Status: active — Iteration 2
 
-**Last phase:** design
-**Next phase:** backend
+**Last phase:** backend
+**Next phase:** frontend
 
 | Phase | Agent | Status |
 |-------|-------|--------|
 | po_scope | PO | ✅ done |
 | architect | Architect | ✅ done |
 | design | Design | ✅ done |
-| backend | Backend | ⏳ pending |
+| backend | Backend | ✅ done |
 | frontend | Flutter Dev | ⏳ pending |
 | qa | QA | ⏳ pending |
 | devops | DevOps | ⏳ pending |
 | pr | System | ⏳ pending |
 | tech_lead | Tech Lead | ⏳ pending |
 | po_close | PO | ⏳ pending |
+
+**Backend summary (2026-05-14):**
+- 6 endpoints: POST/GET /api/vehicles/:vehicleId/soat, POST /api/notifications/fcm-token, GET /api/notifications, PATCH /notifications/:id/read, PATCH /notifications/read-all
+- 3 FCM triggers: NEW_REGISTRATION (organizer), REGISTRATION_APPROVED/REJECTED (registrant)
+- SOAT cron: SOAT_30D/SOAT_7D/SOAT_DAY_OF (America/Bogota)
+- api-gateway first-time Prisma (port 5434, `gateway-db`)
+- 28 tests pass, 0 TS errors
 
 **Last closed:** Iteration 1 closed 2026-05-14 with all 10 phases complete.

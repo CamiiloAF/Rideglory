@@ -145,6 +145,20 @@
         "docs/handoffs/iteration_checkpoint.md",
         "workflow/state.json"
       ]
+    },
+    {
+      "at": "2026-05-14T22:31:21Z",
+      "iteration": 2,
+      "phase": "backend",
+      "agent": "backend",
+      "action": "update",
+      "paths": [
+        "claude/skills/backend-skill.md",
+        "docs/handoffs/backend.md",
+        "docs/handoffs/contracts/iter-2/backend.json",
+        "docs/handoffs/iteration_checkpoint.md",
+        "workflow/state.json"
+      ]
     }
   ]
 }
