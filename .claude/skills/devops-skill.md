@@ -115,6 +115,7 @@ Commands: `flutter pub get`, `dart run build_runner build --delete-conflicting-o
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
 - 2026-05-12 (iter 1): DevOps phase complete. GitHub Actions CI/CD pipeline implemented (`.github/workflows/ci.yml`), deployment documentation written (`docs/DEPLOY.md`), phase contract and handoff finalized. Secrets configuration guide and Firebase config injection instructions included.
 - 2026-05-13 (iter 4): Updated CI workflow and deployment docs for UNSPLASH_ACCESS_KEY secret injection. No Flutter package changes required. Backend CI integration deferred to rideglory-api repo.
+- 2026-05-14 (iter 1): DevOps phase — presentation-layer redesign (no CI changes). Verified `.github/workflows/ci.yml` is syntactically valid and functionally ready. docs/DEPLOY.md created with comprehensive env var reference, secrets setup, troubleshooting, and future iteration roadmap. Pre-flight checklist completed: Flutter setup confirmed, dart analyze gate operational, flutter test gate operational, code generation included, Firebase config injection verified, APK build configured. No new packages or env vars required per architect-for-devops.md. docs/handoffs/devops.md and phase contract generated. Skill update appended.
 
 ---
 ## Plan reapproval update — 2026-05-13 (plan v3, iters 1–5)

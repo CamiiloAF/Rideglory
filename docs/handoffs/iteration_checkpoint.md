@@ -20,13 +20,13 @@
 | backend | Backend | — (no backend work iter-1) |
 | frontend | Flutter Dev | ✅ done |
 | qa | QA | ✅ done |
-| devops | DevOps | ⏳ pending |
+| devops | DevOps | ✅ done |
 | pr | System | ⏳ pending |
 | tech_lead | Tech Lead | ⏳ pending |
 | po_close | PO | ⏳ pending |
 
-**Last completed phase:** qa (2026-05-14)
-**Next phase:** devops
+**Last completed phase:** devops (2026-05-14)
+**Next phase:** pr
 
 ### Design phase summary
 - Gap analysis: 15 screens analyzed via codebase inspection
@@ -59,3 +59,14 @@
 - No blocking bugs filed; 0 new test failures; sign-off: GREEN ✅
 
 *Last closed: QA (2026-05-14T14:30:00Z)*
+
+### DevOps phase summary
+- CI pipeline verification: `.github/workflows/ci.yml` is syntactically valid and functionally ready (no changes required)
+- Validation: python3 yaml.safe_load() passed; all triggers (iter-*, main, PRs) configured; analyze-and-test + build-apk jobs operational
+- Pre-flight checklist: Flutter setup ✅, dart analyze gate ✅, flutter test gate ✅, code generation step ✅, Firebase config injection ✅, .env file injection ✅, APK build on tags ✅, branch protection compatible ✅
+- Deployment documentation: `docs/DEPLOY.md` created with 12 .env variables, GitHub Actions secrets reference, Firebase config handling, CI/CD details, local setup, release workflow, troubleshooting, and roadmap for iter-2+ (FCM, Mapbox, Apple Sign-In)
+- No changes required per architect-for-devops.md: presentation-layer redesign only, no new packages, no new env vars, no native config changes
+- Phase contract generated with 7 quality gates (all pass)
+- Sign-off: GREEN ✅ — Ready for PR phase
+
+*Last closed: DevOps (2026-05-14T15:00:00Z)*
