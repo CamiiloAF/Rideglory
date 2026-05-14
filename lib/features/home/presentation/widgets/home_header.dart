@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
-import 'package:rideglory/features/home/presentation/widgets/home_notification_button.dart';
+import 'package:rideglory/features/notifications/presentation/widgets/notification_bell_button.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
@@ -49,7 +49,7 @@ class HomeHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          const HomeNotificationButton(),
+          const NotificationBellButton(),
         ],
       ),
     );

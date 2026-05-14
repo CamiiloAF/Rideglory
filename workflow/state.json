@@ -530,8 +530,8 @@
     },
     "frontend": {
       "status": "idle",
-      "lastAction": "2026-05-14T12:00:00Z",
-      "focus": "iter-1 presentation-layer redesign complete: color tokenization (47 literals), AppEventBadge atom, DocumentSlotPill molecule, ~140 l10n keys, dart analyze 0 errors/warnings, 28 tests pass"
+      "lastAction": "2026-05-14T23:59:00Z",
+      "focus": "iter-2 frontend complete: SOAT 3-layer feature (upload/manual/status pages, 4-state badge), notifications rebuild (real backend, cursor pagination, markRead/markAllRead optimistic updates), FCM init (firebase_messaging + flutter_local_notifications), NotificationBellButton with unread badge, VehicleSoatSection in vehicle detail. 16 new files. dart analyze 0 issues. 64 tests pass / 1 pre-existing fail (TC-2-28 rider email, unchanged)."
     },
     "qa": {
       "status": "idle",
@@ -947,6 +947,14 @@
       "agent": "backend",
       "at": "2026-05-14T22:30:00Z",
       "detail": "6 endpoints + FCM triggers + SOAT cron scheduler implemented across 3 microservices. 28 tests passing. Next = frontend."
+    },
+    {
+      "type": "frontend_done",
+      "iteration": 2,
+      "phase": "frontend",
+      "agent": "frontend",
+      "at": "2026-05-14T23:59:00Z",
+      "detail": "T-2-8 through T-2-11 done: SOAT (domain+data+presentation), notifications rebuild, FCM init, VehicleSoatSection badge, NotificationBellButton. 16 new files. Unit tests: soat_model_test (7 cases), soat_cubit_test (5 cases), notifications_cubit_test (9 cases). dart analyze 0 issues. Next = qa."
     }
   ]
 }

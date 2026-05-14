@@ -212,3 +212,53 @@ When `l10n.yaml` is present, `flutter gen-l10n` ignores command-line arguments a
 
 ### AppTextField requires form `name` field
 `AppTextField` wraps `FormBuilderTextField` which requires a `name` parameter (used as the FormBuilder field key). It cannot accept a raw `TextEditingController`. Custom autocomplete overlay implementations (e.g., `event_form_multi_brand_section.dart`) that use `TextFormField` with a controller should NOT be migrated — changing them would break the overlay logic.
+
+---
+
+## Iter-2 frontend learnings (2026-05-14)
+
+### AppTextField parameter names
+`AppTextField` uses `labelText:` and `hintText:` (not `label:` or `hint:`). The validator is a single function: `validator: (value) { ... return null; }` — NOT `validators: [FormBuilderValidators.required()]`. Always read the widget signature before using it.
+
+### @freezed abstract class for multi-field state
+When the cubit state has multiple fields (e.g., `NotificationsState` with `listResult`, `nextCursor`, `unreadCount`, `isLoadingMore`), use:
+```dart
+@freezed
+abstract class MyState with _$MyState {
+  const factory MyState({ ... }) = _MyState;
+}
+```
+The `abstract` keyword is required — omitting it causes "Missing concrete implementations" compile errors. The generated `_$MyState` mixin provides the concrete implementation.
+
+### Non-exhaustive switch on ResultState<T>
+`switch` expressions over `ResultState<T>` cause "Non-exhaustive switch" errors because the Dart analyzer sees 5 possible subtypes (initial/loading/data/empty/error) and requires all to be covered. Pattern: use `if (state is Loading) { ... } else if (state is Data<T>) { ... }` etc. instead of switch expressions. This avoids the exhaustiveness requirement.
+
+### BuildContext async gap fix
+When calling `Navigator.pop()` or any context method after an `await`, store the navigator reference BEFORE the await:
+```dart
+final navigator = Navigator.of(context);
+final success = await cubit.save(...);
+if (!mounted) return;
+navigator.pop(true);
+```
+Never use `context` directly after an `await` — triggers `use_build_context_synchronously` lint violation.
+
+### SoatRepository: 404 is not an error
+When a vehicle has no SOAT, the backend returns 404. The repository must catch `DioException` with `statusCode == 404` and return `const Right(null)` — not an error. This maps to `ResultState.empty()` in the cubit. All other errors return `Left(DomainException(...))`.
+
+### firebase_messaging version compatibility
+`firebase_messaging: ^15.2.5` conflicts with `firebase_remote_config: ^6.4.0` (common Firebase BOM constraint). Use `^16.2.0` which is compatible. Always run `flutter pub get` and check for dependency conflicts before picking a version.
+
+### @lazySingleton for global cubits
+Cubits accessed from multiple pages (e.g., `NotificationsCubit` for the bell badge) should be `@lazySingleton` so they persist across page transitions. Add them to root `MultiBlocProvider` in `main.dart`. Use `BlocProvider.value(value: getIt<TheCubit>())` in pages that need the singleton (not `BlocProvider(create: ...)` which would create a new instance).
+
+### mocktail registerFallbackValue for custom types
+When using `any(named: 'paramName')` in mock setups where the parameter type is a custom domain model (e.g., `SoatModel`), mocktail requires pre-registration of a fallback value. Add to `setUpAll`:
+```dart
+class FakeSoatModel extends Fake implements SoatModel {}
+setUpAll(() { registerFallbackValue(FakeSoatModel()); });
+```
+Without this, `any()` throws `Bad state: A test tried to use any or captureAny on a parameter of type SoatModel`.
+
+### Cursor pagination in NotificationsCubit
+`loadMore()` must guard against double-calls: check `state.isLoadingMore || state.nextCursor == null` at the top. The `nextCursor` from each page response becomes the `cursor` query param for the next call. When `nextCursor` is null, there are no more pages.

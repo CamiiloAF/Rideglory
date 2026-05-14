@@ -39,4 +39,8 @@ abstract class AppRoutes {
 
   // Notifications
   static const String notifications = '/notifications';
+
+  // SOAT routes
+  static const String soatUpload = '/soat/upload';
+  static const String soatStatus = '/soat/status';
 }

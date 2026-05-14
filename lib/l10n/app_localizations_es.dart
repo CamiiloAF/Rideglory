@@ -2650,7 +2650,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_filter_clear => 'Limpiar';
 
   @override
-  String get event_filter_apply => 'Aplicar filtros';
+  String get event_filter_apply => 'Aplicar';
 
   @override
   String get event_cta_register => 'Inscribirse';
@@ -3109,4 +3109,261 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_manageAttendeesTitle => 'Gestionar inscritos';
+
+  @override
+  String get event_filter_pending => 'Pendientes';
+
+  @override
+  String get event_filter_approved => 'Aprobados';
+
+  @override
+  String get event_filter_rejected => 'Rechazados';
+
+  @override
+  String get event_reject_confirm_title => 'Rechazar inscripción';
+
+  @override
+  String event_reject_confirm_body(String name) {
+    return '¿Estás seguro de que quieres rechazar la inscripción de $name? Esta acción no se puede deshacer.';
+  }
+
+  @override
+  String get event_reject_confirm_btn => 'Sí, rechazar';
+
+  @override
+  String get event_approve_action => 'Aprobar';
+
+  @override
+  String get event_reject_action => 'Rechazar';
+
+  @override
+  String get event_edit_status => 'Editar estado';
+
+  @override
+  String get event_filters_title => 'Filtrar inscritos';
+
+  @override
+  String get event_filter_status_label => 'Estado';
+
+  @override
+  String get soat_page_upload_title => 'Subir SOAT';
+
+  @override
+  String get soat_page_manual_title => 'Ingresar SOAT';
+
+  @override
+  String get soat_page_status_title => 'Mi SOAT';
+
+  @override
+  String soat_upload_subtitle(String vehicleName) {
+    return 'Selecciona cómo quieres subir tu SOAT para $vehicleName.';
+  }
+
+  @override
+  String soat_manual_subtitle(String vehicleName) {
+    return 'Ingresa los datos del SOAT para $vehicleName. Puedes subir el documento más adelante.';
+  }
+
+  @override
+  String get soat_source_camera => 'Cámara';
+
+  @override
+  String get soat_source_gallery => 'Galería';
+
+  @override
+  String get soat_source_pdf => 'Archivo PDF';
+
+  @override
+  String get soat_source_manual => 'Ingresar manualmente';
+
+  @override
+  String get soat_section_data => 'Datos del SOAT';
+
+  @override
+  String get soat_field_policy_number => 'N.° de póliza';
+
+  @override
+  String get soat_field_policy_placeholder => 'Ej: SOAT-2024-123456';
+
+  @override
+  String get soat_field_insurer => 'Aseguradora';
+
+  @override
+  String get soat_field_insurer_placeholder =>
+      'Ej: Sura, Allianz, AXA Colpatria…';
+
+  @override
+  String get soat_field_start_date => 'Fecha inicio';
+
+  @override
+  String get soat_field_expiry_date => 'Fecha vencimiento';
+
+  @override
+  String get soat_field_date_format => 'DD/MM/AAAA';
+
+  @override
+  String get soat_field_expiry_required =>
+      'La fecha de vencimiento es obligatoria.';
+
+  @override
+  String get soat_field_date_invalid =>
+      'Fecha inválida. Usa el formato DD/MM/AAAA.';
+
+  @override
+  String get soat_field_required => 'Este campo es obligatorio.';
+
+  @override
+  String get soat_save_btn => 'Guardar SOAT';
+
+  @override
+  String get soat_save_data_btn => 'Guardar datos';
+
+  @override
+  String get soat_update_btn => 'Actualizar SOAT';
+
+  @override
+  String get soat_saving => 'Guardando…';
+
+  @override
+  String get soat_retry => 'Reintentar';
+
+  @override
+  String get soat_manual_note =>
+      'Puedes subir el documento físico más adelante desde el detalle del vehículo.';
+
+  @override
+  String get soat_switch_to_upload => 'Subir documento en cambio';
+
+  @override
+  String get soat_section_document => 'Documento';
+
+  @override
+  String get soat_document_attached => 'Adjunto';
+
+  @override
+  String get soat_status_no_soat => 'Sin registrar';
+
+  @override
+  String get soat_status_valid => 'Vigente';
+
+  @override
+  String get soat_status_expiring_soon => 'Por vencer';
+
+  @override
+  String get soat_status_expired => 'Vencido';
+
+  @override
+  String get soat_valid_title => 'Tu SOAT está al día';
+
+  @override
+  String get soat_expiring_title => 'Tu SOAT vence pronto';
+
+  @override
+  String get soat_expired_title => 'Tu SOAT está vencido';
+
+  @override
+  String soat_valid_days_remaining(int count) {
+    return '$count días restantes';
+  }
+
+  @override
+  String soat_expiring_days_remaining(int count) {
+    return '$count días restantes';
+  }
+
+  @override
+  String soat_expired_days_ago(int count) {
+    return 'Venció hace $count días';
+  }
+
+  @override
+  String get soat_expiring_warning =>
+      'Te notificaremos 7 días antes del vencimiento. Renueva tu SOAT con anticipación para evitar multas.';
+
+  @override
+  String get soat_expired_warning =>
+      'Circular sin SOAT vigente es una infracción. Renueva tu seguro lo antes posible.';
+
+  @override
+  String get soat_renew_btn => 'Registrar nuevo SOAT';
+
+  @override
+  String get soat_view_document => 'Ver documento';
+
+  @override
+  String get soat_edit_btn => 'Editar';
+
+  @override
+  String get soat_uploading => 'Subiendo…';
+
+  @override
+  String get soat_upload_error =>
+      'Error al subir. Archivo demasiado grande (máx. 10 MB).';
+
+  @override
+  String get soat_save_error =>
+      'No se pudo guardar el SOAT. Verifica tu conexión e intenta de nuevo.';
+
+  @override
+  String get soat_upload_error_label => 'Error al subir';
+
+  @override
+  String get notification_loadMore => 'Cargar más notificaciones';
+
+  @override
+  String get notification_loadError =>
+      'No se pudieron cargar las notificaciones';
+
+  @override
+  String get notification_loadErrorSubtitle =>
+      'Verifica tu conexión a internet e intenta de nuevo.';
+
+  @override
+  String get notification_retry => 'Reintentar';
+
+  @override
+  String get notification_soat30d_title => 'SOAT vence en 30 días';
+
+  @override
+  String get notification_soat7d_title => 'Tu SOAT vence en 7 días';
+
+  @override
+  String get notification_soatDayOf_title => 'Tu SOAT vence hoy';
+
+  @override
+  String notification_soat_subtitle(String vehicleName) {
+    return '$vehicleName · Renuévalo para evitar multas';
+  }
+
+  @override
+  String notification_soatDayOf_subtitle(String vehicleName) {
+    return '$vehicleName · Renueva antes de salir';
+  }
+
+  @override
+  String get notification_newRegistration_title => 'Nueva inscripción';
+
+  @override
+  String notification_newRegistration_subtitle(
+    String riderName,
+    String eventName,
+  ) {
+    return '$riderName quiere unirse a \"$eventName\"';
+  }
+
+  @override
+  String get notification_approved_title => 'Inscripción aprobada';
+
+  @override
+  String notification_approved_subtitle(String eventName) {
+    return 'Estás inscrito a \"$eventName\"';
+  }
+
+  @override
+  String get notification_rejected_title => 'Inscripción rechazada';
+
+  @override
+  String notification_rejected_subtitle(String eventName) {
+    return 'Tu solicitud para \"$eventName\" no fue aprobada';
+  }
 }

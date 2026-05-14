@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/exceptions/auth_exception.dart';
 import 'package:rideglory/core/services/auth_service.dart';
+import 'package:rideglory/core/services/fcm_service.dart';
 import 'package:rideglory/core/l10n/rideglory_l10n.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
 
@@ -14,13 +15,16 @@ part 'auth_state.dart';
 @singleton
 class AuthCubit extends Cubit<AuthState> {
   final AuthService _authService;
+  final FcmService _fcmService;
 
-  AuthCubit(this._authService) : super(const AuthState.initial());
+  AuthCubit(this._authService, this._fcmService)
+      : super(const AuthState.initial());
 
   void checkAuthState() {
     final user = _authService.currentUser;
     if (user != null) {
       emit(AuthState.authenticated(user));
+      _fcmService.initialize().ignore();
     } else {
       emit(const AuthState.unauthenticated());
     }
@@ -45,6 +49,7 @@ class AuthCubit extends Cubit<AuthState> {
         if (authUser.firebaseUser.uid.isNotEmpty) {
           await _printFirebaseToken(authUser.firebaseUser);
           emit(AuthState.authenticated(authUser.user));
+          _fcmService.initialize().ignore();
         } else {
           emit(
             const AuthState.error(
@@ -73,6 +78,7 @@ class AuthCubit extends Cubit<AuthState> {
         if (firebaseUser != null) {
           await _printFirebaseToken(firebaseUser);
           emit(AuthState.authenticated(_authService.currentUser));
+          _fcmService.initialize().ignore();
         } else {
           emit(
             const AuthState.error(
@@ -94,6 +100,7 @@ class AuthCubit extends Cubit<AuthState> {
         if (authUser.firebaseUser.uid.isNotEmpty) {
           await _printFirebaseToken(authUser.firebaseUser);
           emit(AuthState.authenticated(authUser.user));
+          _fcmService.initialize().ignore();
         } else {
           emit(const AuthState.error('Google sign-in failed'));
         }

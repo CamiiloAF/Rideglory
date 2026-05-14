@@ -1,113 +1,120 @@
-# Frontend Handoff — Iter-1: UI/UX Redesign
+# Frontend Handoff — Iter-2: SOAT + Notifications + FCM
 
 **Agent:** Flutter Developer
-**Iteration:** 1
+**Iteration:** 2
 **Phase:** frontend
 **Status:** pass
 **Completed at:** 2026-05-14
 
 ---
 
-## Screens Delivered
+## Scope
 
-### PR 1 — Splash + Auth
-- Splash screen: no hardcoded color literals; AppColors tokens throughout
-- Auth: `login_view.dart`, `divider_with_text.dart`, `social_login_button.dart`, `signup_social_buttons.dart` — all `Colors.green`/`Colors.grey`/`Color(0x...)` literals replaced with `AppColors.success`, `AppColors.darkTextSecondary`, `AppColors.darkBorder`, `AppColors.primary`
-
-### PR 2 — Home
-- `home_event_default_background.dart`: `Color(0xFF2D1A0A)` → `AppColors.darkSurface`, `Color(0xFF1A0D05)` → `AppColors.darkSurfaceHighest`
-- `home_event_gradient_overlay.dart`: `Color(0xDD000000)` → `Colors.black87`
-
-### PR 3 — Events
-- `event_detail_header_overlay_gradient.dart`: `Color(0xE0000000)` → `Colors.black87`
-- `event_detail_meeting_point_section.dart`: removed top-level `_mapPlaceholderBackground` constant; uses `AppColors.darkSurfaceHighest`
-- `event_registration_page.dart`: `Colors.green`/`Colors.red` → `AppColors.success`/`AppColors.error`
-
-### PR 4 — Garage / Vehicles
-- 12 vehicle presentation files tokenized: `vehicle_spec_row.dart`, `vehicle_detail_view.dart`, `vehicle_info_card.dart`, `vehicle_garage_overview_item.dart`, `vehicle_garage_overview_section.dart`, `vehicle_maintenance_history_section.dart`, `vehicle_detail_header.dart`, `garage_options_bottom_sheet.dart`, `vehicle_full_specs_section.dart`, `vehicle_quick_info_section.dart`, `vehicle_selector.dart`, `vehicle_form_page.dart`
-
-### PR 5 — Maintenance + Registration
-- `maintenance_form_view.dart`, `maintenance_mileage_info.dart`, `maintenance_card_header.dart`, `maintenance_card_body.dart`, `modern_maintenance_card.dart`, `maintenance_dates_section.dart`, `maintenances_page_app_bar.dart`: all `Color(0x...)` and `Colors.<named>` replaced with AppColors tokens
-- `maintenance_detail_page.dart`: `Colors.green`/`Colors.red` → `AppColors.success`/`AppColors.error`
-- `maintenance_detail_header.dart`: `Color(0xFF1E3A5F).withValues(alpha: 0.8)` → `AppColors.darkSurfaceHighest`
-- `maintenance_options_bottom_sheet.dart`: `Colors.grey[700]`/`Colors.red` → `AppColors.darkBorder`/`AppColors.error`
-- `maintenance_section_header.dart`: `Colors.grey[400]` → `AppColors.darkTextSecondary`
-- `maintenance/form/widgets/vehicle_list_item.dart`: `AppColors.backgroundGray`/`overlayMedium`/`overlayStrong`/`textPrimary`/`textSecondary` → dark-mode equivalents
+Story 2.6 (SOAT Registration), Story 2.11 (Notification Center + FCM), Story 2.9 (ManageAttendeesPage — confirmed already implemented; no scope change needed).
 
 ---
 
-## Design System Primitives Created
+## Features Delivered
 
-### `AppEventBadge` (atom)
-- Path: `lib/design_system/atoms/badges/app_event_badge.dart`
-- Enum: `EventBadgeVariant { scheduled, inProgress, finished, cancelled, free, paid }`
-- 24px height, 6px border radius, 11sp/700 font
-- Exported via `lib/design_system/atoms/atoms.dart`
+### SOAT Feature (`lib/features/soat/`)
 
-### `DocumentSlotPill` (molecule)
-- Path: `lib/design_system/molecules/feedback/document_slot_pill.dart`
-- Enum: `DocumentSlotState { empty, valid, expiringSoon, expired }`
-- 44px min height, 8px border radius, AppColors.darkSurfaceHighest background
-- Exported via `lib/design_system/molecules/molecules.dart`
+Full Clean Architecture implementation across 3 layers:
+
+**Domain**
+- `soat_model.dart` — `SoatModel` with computed `status` (4-state: `noSoat`, `valid`, `expiringSoon`, `expired`) and `daysUntilExpiry` (day-aligned, no time component leakage)
+- `soat_repository.dart` — abstract `SoatRepository` interface
+- `get_soat_usecase.dart`, `save_soat_usecase.dart` — `@injectable` use cases
+
+**Data**
+- `soat_dto.dart` — `@JsonSerializable(converters: apiJsonDateTimeConverters)` DTO; `toModel()` + `toRequestJson()` extension
+- `soat_service.dart` — `@singleton @RestApi()` Retrofit client for `GET/POST /api/vehicles/:vehicleId/soat`
+- `soat_repository_impl.dart` — `@Injectable(as: SoatRepository)`; 404 mapped to `Right(null)` (no SOAT = empty, not error)
+
+**Presentation**
+- `SoatCubit` — `@injectable Cubit<ResultState<SoatModel>>` with `load()` and `save()` methods
+- `SoatUploadPage` — 2×2 grid source picker (camera/gallery/pdf/manual); non-manual options defer to manual
+- `SoatManualFormPage` — `FormBuilder` with policy number, insurer, start date, expiry date; date validated via `DateFormat('dd/MM/yyyy').parseStrict()`; navigator stored before async gap to fix `use_build_context_synchronously`
+- `SoatStatusPage` — hero status card with 4-state display; warning callout for expiringSoon/expired; details card; edit button navigates to manual form
+
+**Vehicle Integration**
+- `VehicleSoatSection` — `StatefulWidget` using `FutureBuilder` + `GetSoatUseCase` directly; maps `SoatStatus` to `DocumentSlotPill` `DocumentSlotState`; tap routes to soatUpload (null) or soatStatus (existing)
+- Added to `VehicleDetailView` between `_SpecsCard` and `VehicleMaintenanceHistorySection`
+
+### Notifications Rebuild (`lib/features/notifications/`)
+
+**Domain**
+- `NotificationModel` — new `NotificationType` enum: `soat30d`, `soat7d`, `soatDayOf`, `newRegistration`, `registrationApproved`, `registrationRejected`, `general`; added `payload?: Map<String, dynamic>?`
+- `NotificationsRepository` — new abstract with `getNotifications({cursor, limit})`, `markRead()`, `markAllRead()`, `registerFcmToken()`; `NotificationsPage` value class
+- 4 `@injectable` use cases: `GetNotificationsUseCase`, `MarkNotificationReadUseCase`, `MarkAllNotificationsReadUseCase`, `RegisterFcmTokenUseCase`
+
+**Data**
+- `NotificationDto` — maps backend type strings (`SOAT_30D`, `NEW_REGISTRATION`, etc.) to enum
+- `NotificationsService` — `@singleton @RestApi()` Retrofit client; cursor-based pagination via `?cursor=&limit=`; `markRead` uses `@PATCH('{notificationId}/read')`
+- `NotificationsRepositoryImpl` — `@Injectable(as: NotificationsRepository)`
+
+**Presentation**
+- `NotificationsState` — `@freezed abstract class` with `listResult`, `nextCursor`, `unreadCount`, `isLoadingMore`
+- `NotificationsCubit` — `@lazySingleton`; `load()` (full reload), `loadMore()` (cursor append), `markRead()` (optimistic), `markAllRead()` (optimistic)
+- `NotificationsPage` / `NotificationsView` — rewritten with real state; uses if/else `is` type checks (non-exhaustive switch avoided)
+- `NotificationBellButton` — `BlocBuilder<NotificationsCubit, NotificationsState>` badge overlay; 16×16 circle; "99+" overflow; navigates to notifications on tap
+
+### FCM Initialization (`lib/core/services/fcm_service.dart`)
+
+- `@singleton FcmService` — requests permission, sets up `flutter_local_notifications` Android channel, foreground handler, token registration via `RegisterFcmTokenUseCase`
+- `firebaseMessagingBackgroundHandler` — `@pragma('vm:entry-point')` top-level function registered in `main.dart`
+- `AuthCubit` — wired `FcmService.initialize()` after every successful auth state emission
+
+### Routing
+
+New routes in `app_routes.dart` + `app_router.dart`:
+- `AppRoutes.soatUpload` — extra: `VehicleModel`
+- `AppRoutes.soatStatus` — extra: `VehicleModel`
+
+### Dependencies Added (`pubspec.yaml`)
+
+- `firebase_messaging: ^16.2.0`
+- `flutter_local_notifications: ^18.0.1`
+
+### L10n Keys Added (`lib/l10n/app_es.arb`)
+
+~100+ new keys with prefixes: `soat_*`, `notification_*`, `event_filter_*`.
 
 ---
 
-## Localization (l10n)
+## Tests
 
-- Added ~140 new ARB keys to `lib/l10n/app_es.arb` covering: splash, auth, home, event badges, event search/filter/detail/form, vehicle, maintenance, and registration modules
-- `flutter gen-l10n` run successfully; `app_localizations.dart` and `app_localizations_es.dart` regenerated
-- `pubspec.yaml` fixed: removed duplicate `dev_dependencies` entries for `mocktail`, `bloc_test`, `integration_test` that caused gen-l10n failure
+| File | Cases | Result |
+|------|-------|--------|
+| `test/features/soat/domain/models/soat_model_test.dart` | 7 (TC-2-20 – TC-2-26) | PASS |
+| `test/features/soat/presentation/cubit/soat_cubit_test.dart` | 5 (TC-2-27 – TC-2-31) | PASS |
+| `test/features/notifications/presentation/cubit/notifications_cubit_test.dart` | 9 (TC-2-32 – TC-2-40) | PASS |
 
----
-
-## API Integration
-
-No API changes. Iteration 1 is presentation-layer only. No new endpoints, no domain model changes, no DI changes.
-
----
-
-## Validation and State Handling
-
-No state or validation logic changed. All cubit, use case, repository, and service files are untouched. Only `lib/features/*/presentation/` files modified (plus design system atoms/molecules and l10n).
-
----
-
-## Test Results
+Full suite: 64 pass / 1 pre-existing fail (TC-2-28 rider email display — unchanged from before iter-2).
 
 ```
-dart analyze: 0 errors, 0 warnings (52 info-level only — prefer_const_constructors, deprecated withOpacity in shared/ widgets pre-existing)
-flutter test: 28 passed, 4 failed
+dart analyze → No issues found!
+flutter test  → 64 pass / 1 pre-existing fail
 ```
 
-The 4 failures are pre-existing compilation errors caused by stale generated code (`user_service.g.dart` missing `getUserById`, `event_service.g.dart` `getEvents` signature mismatch). These `.g.dart` files are NOT modified by iter-1 — they were out of sync before this iteration started. Regenerating them requires `dart run build_runner build` which is out of scope for a presentation-layer-only iteration.
+---
+
+## Architecture Notes
+
+- Domain layer has zero Flutter/HTTP imports (verified by `dart analyze`)
+- Data layer has zero `BuildContext` usage
+- Presentation never calls Retrofit directly; routes through use cases
+- `SoatRepositoryImpl.getSoat()` handles 404 as `Right(null)` — not an error — matching backend contract
+- `NotificationsCubit` uses `@lazySingleton` so bell badge stays live across page transitions
+- BuildContext async gap fixed with `navigator = Navigator.of(context)` before `await` + `if (!mounted) return` pattern
 
 ---
 
-## Known Gaps
+## Handoff to QA
 
-1. **Stale .g.dart files** (`user_service.g.dart`, `event_service.g.dart`): 4 widget tests fail due to generated code out of sync with service interfaces. Requires `dart run build_runner build` — deferred to iter-2 where backend changes will trigger a full rebuild anyway.
-2. **ManageAttendeesPage** (`manage_attendees_page.dart`): explicitly deferred to iter-2 as Story 2.9 per scope agreement.
-3. **AppEventBadge integration in event cards**: primitive created and exported; integration into `event_card_price_badge.dart` and `event_card_my_event_badge.dart` pending widget-level wiring (scaffolded, ready for iter-2 design gate).
-4. **DocumentSlotPill integration in vehicle detail**: primitive created and exported; vehicle detail integration pending iter-2 SOAT data availability.
-5. **withOpacity deprecation warnings** in `lib/shared/widgets/` (pre-existing, 34 occurrences): out of scope for iter-1 presentation-only pass.
-
----
-
-## Change Log
-
-| File | Change |
-|------|--------|
-| `lib/design_system/atoms/badges/app_event_badge.dart` | NEW — AppEventBadge atom |
-| `lib/design_system/molecules/feedback/document_slot_pill.dart` | NEW — DocumentSlotPill molecule |
-| `lib/design_system/atoms/atoms.dart` | Added AppEventBadge export |
-| `lib/design_system/molecules/molecules.dart` | Added DocumentSlotPill export |
-| `lib/l10n/app_es.arb` | Added ~140 new l10n keys |
-| `lib/l10n/app_localizations.dart` | Regenerated |
-| `lib/l10n/app_localizations_es.dart` | Regenerated |
-| `pubspec.yaml` | Removed duplicate dev_dependencies |
-| 3 auth files | Color tokenization |
-| 2 home files | Color tokenization |
-| 3 events files | Color tokenization |
-| 12 vehicle files | Color tokenization |
-| 9 maintenance files | Color tokenization |
-| `test/features/events/presentation/list/widgets/events_page_view_test.dart` | Removed unused import (warning fix) |
+QA should verify:
+- SOAT badge displays correct status in vehicle detail for all 4 states
+- Manual SOAT form validates expiry date correctly (required + format dd/MM/yyyy)
+- Notification bell badge increments/decrements correctly with real backend data
+- markAllRead sets badge to 0
+- FCM token registers on login (check backend logs)
+- Cursor pagination loads more notifications on scroll

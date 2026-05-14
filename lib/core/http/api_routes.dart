@@ -35,4 +35,12 @@ abstract final class ApiRoutes {
       '$registrations/$registrationId/reject';
   static String setRegistrationReadyForEdit(String registrationId) =>
       '$registrations/$registrationId/ready-for-edit';
+
+  static const notifications = '/notifications';
+  static const notificationsFcmToken = '/notifications/fcm-token';
+  static const notificationsReadAll = '/notifications/read-all';
+
+  static String vehicleSoat(String vehicleId) => '$vehicles/$vehicleId/soat';
+  static String notificationRead(String notificationId) =>
+      '$notifications/$notificationId/read';
 }
