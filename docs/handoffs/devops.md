@@ -1,20 +1,21 @@
-# DevOps Handoff — Iteration 1: UI/UX Redesign
+# DevOps Handoff — Iteration 2: SOAT + Notification Foundation
 
 **Date:** 2026-05-14  
-**Status:** done  
-**Iteration:** 1  
+**Status:** complete  
+**Iteration:** 2  
 **Agent:** DevOps
 
 ---
 
 ## Summary
 
-**Iter-1 is presentation-layer only.** No CI/CD changes, no new env vars, no new packages, no native config changes. The existing GitHub Actions pipeline (`.github/workflows/ci.yml`) is sufficient as-is and requires no modifications.
+**Iter-2: SOAT + Notification Foundation.** No GitHub Actions workflow changes required. CI pipeline remains fully operational with no YAML modifications. Flutter dependencies (`firebase_messaging`, `flutter_local_notifications`) already declared in `pubspec.yaml` — picked up automatically by `flutter pub get`. Backend `DATABASE_URL` requirement is api-gateway responsibility (rideglory-api repo), not Flutter CI.
 
 **Deliverables:**
-- ✅ `docs/DEPLOY.md` — comprehensive deployment guide (new)
-- ✅ `.github/workflows/ci.yml` — **no changes** (existing pipeline remains valid)
-- ✅ Pre-flight checklist completed (branch protection, CI triggers verified)
+- ✅ `docs/DEPLOY.md` — updated with iter-2 pre-flight checklist and backend notes
+- ✅ `.github/workflows/ci.yml` — **no changes** (existing pipeline fully sufficient)
+- ✅ Pre-flight validation completed (CI syntax valid, secrets audit passed, test flow verified)
+- ✅ This handoff document updated
 
 ---
 
@@ -22,9 +23,9 @@
 
 **Location:** `.github/workflows/ci.yml`
 
-### Status
+### Status (Iter-2)
 
-✅ **Syntactically valid and functional.** No edits required for iter-1.
+✅ **Syntactically valid and fully operational.** No edits required for iter-2. All secrets and environment variables from iter-1 cover iter-2 completely.
 
 ### Pipeline details
 
@@ -55,13 +56,17 @@
    - `flutter build apk --release`
    - Upload APK artifact (retained 30 days)
 
-### Test baseline (iter-1)
+### Test baseline (Iter-2)
 
 Per QA handoff:
-- `dart analyze`: 0 errors, 0 warnings (45 info-level pre-existing)
-- `flutter test`: 28 pass, 4 pre-existing failures (stale `.g.dart` files, not from iter-1)
+- `dart analyze`: 0 errors, 0 warnings (21 new test cases, 0 new violations)
+- `flutter test`: 64 pass, 1 pre-existing failure (TC-2-28 rider email from iter-1, unchanged)
 
-**CI gate result:** ✅ **PASS** — No new violations or test failures introduced.
+**Iter-2 additions:**
+- `firebase_messaging ^15.x` — FCM token registration + background message handling
+- `flutter_local_notifications ^17.x/^18.x` — iOS foreground banners, Android notification channels
+
+**CI gate result:** ✅ **PASS** — No new violations or test failures introduced. All 21 new test cases passing.
 
 ---
 
@@ -130,26 +135,32 @@ All commands must exit with code 0 before pushing.
 
 GitHub Actions injects environment variables from secrets at build time. All are required for CI to pass:
 
-| Secret | Purpose | Value |
-|--------|---------|-------|
-| `FIREBASE_ANDROID_API_KEY` | Firebase Android key | From google-services.json |
-| `FIREBASE_ANDROID_APP_ID` | Firebase Android app ID | `1:xxxxxxx:android:xxxxx` |
-| `FIREBASE_IOS_API_KEY` | Firebase iOS key | From GoogleService-Info.plist |
-| `FIREBASE_IOS_APP_ID` | Firebase iOS app ID | `1:xxxxxxx:ios:xxxxx` |
-| `FIREBASE_MESSAGING_SENDER_ID` | FCM sender ID | Numeric ID |
-| `FIREBASE_PROJECT_ID` | Firebase project | Project slug |
-| `FIREBASE_STORAGE_BUCKET` | Cloud Storage bucket | `project.appspot.com` |
-| `FIREBASE_ANDROID_CLIENT_ID` | Google Sign-In (Android) | OAuth client ID |
-| `FIREBASE_IOS_CLIENT_ID` | Google Sign-In (iOS) | OAuth client ID |
-| `FIREBASE_IOS_BUNDLE_ID` | iOS bundle ID | `com.rideglory.app` |
-| `LOCAL_API_BASE_URL` | Backend API base URL | `http://localhost:3000/api` (dev) or prod URL |
-| `UNSPLASH_ACCESS_KEY` | Unsplash API (iter-4+) | Access token |
-| `GOOGLE_SERVICES_JSON` | Firebase Android config (base64) | `base64(google-services.json)` |
-| `GOOGLE_SERVICE_INFO_PLIST` | Firebase iOS config (base64) | `base64(GoogleService-Info.plist)` |
+| Secret | Purpose | Iter-2 Change |
+|--------|---------|---------------|
+| `FIREBASE_ANDROID_API_KEY` | Firebase Android key | No change |
+| `FIREBASE_ANDROID_APP_ID` | Firebase Android app ID | No change |
+| `FIREBASE_IOS_API_KEY` | Firebase iOS key | No change |
+| `FIREBASE_IOS_APP_ID` | Firebase iOS app ID | No change |
+| `FIREBASE_MESSAGING_SENDER_ID` | FCM sender ID | No change |
+| `FIREBASE_PROJECT_ID` | Firebase project | No change |
+| `FIREBASE_STORAGE_BUCKET` | Cloud Storage bucket | No change |
+| `FIREBASE_ANDROID_CLIENT_ID` | Google Sign-In (Android) | No change |
+| `FIREBASE_IOS_CLIENT_ID` | Google Sign-In (iOS) | No change |
+| `FIREBASE_IOS_BUNDLE_ID` | iOS bundle ID | No change |
+| `LOCAL_API_BASE_URL` | Backend API base URL | No change |
+| `UNSPLASH_ACCESS_KEY` | Unsplash API (iter-4+) | No change |
+| `GOOGLE_SERVICES_JSON` | Firebase Android config (base64) | No change |
+| `GOOGLE_SERVICE_INFO_PLIST` | Firebase iOS config (base64) | No change |
 
-**Setup:** GitHub repo → Settings → Secrets and variables → Actions → Add secrets (one per row).
+**Backend env vars (rideglory-api, not Flutter CI):**
 
-**Verification:** Run a test push to `iter-1` branch and check Actions tab for "missing secret" errors.
+| Variable | Purpose | Scope |
+|----------|---------|-------|
+| `DATABASE_URL` | api-gateway Prisma connection | Backend only (not in Flutter CI) |
+
+**Setup:** GitHub repo → Settings → Secrets and variables → Actions → Add secrets (one per row). No new secrets required for iter-2 Flutter CI.
+
+**Verification:** Run a test push to `iter-2` branch and check Actions tab for "missing secret" errors (expected: none).
 
 ---
 
@@ -189,9 +200,9 @@ Files are available only during the workflow run and discarded afterward (not pe
 
 ## Known Gaps
 
-**None.** Iter-1 is presentation-only. All CI infrastructure is ready.
+**None.** Iter-2 Flutter CI requires no changes. All infrastructure remains ready.
 
-### Pre-flight checklist (completed)
+### Pre-flight checklist (Iter-2, completed)
 
 - [x] CI workflow (`.github/workflows/ci.yml`) syntactically valid ✅
 - [x] Flutter setup with `subosito/flutter-action@v2` confirmed ✅
@@ -201,7 +212,10 @@ Files are available only during the workflow run and discarded afterward (not pe
 - [x] Firebase config injection (base64-decoded from secrets) implemented ✅
 - [x] `.env` file injection from secrets working ✅
 - [x] APK build job (version tags) configured ✅
-- [x] Branch protection allows `iter-1` workflow ✅
+- [x] Branch protection allows `iter-2` workflow ✅
+- [x] `firebase_messaging` and `flutter_local_notifications` in pubspec.yaml (no CI edits) ✅
+- [x] 21 new test cases verified passing ✅
+- [x] `dart analyze` shows 0 new violations ✅
 
 ---
 
@@ -250,3 +264,5 @@ DevOps will be active:
 ## Change Log
 
 - 2026-05-14 (iter-1, devops phase): Pre-flight completed. `.github/workflows/ci.yml` validation passed (syntactically correct, functionally ready). `docs/DEPLOY.md` created with comprehensive deployment guide, env var reference, secrets setup instructions, troubleshooting, and roadmap for future iterations. No CI edits required per architect-for-devops.md (presentation-layer-only iter). Phase contract generated. Skill updated. Branch pushed to `iter-1`.
+
+- 2026-05-14 (iter-2, devops phase): CI workflow validation complete — no changes required. All 12 Firebase + .env secrets from iter-1 cover iter-2 completely. `firebase_messaging` and `flutter_local_notifications` packages already declared in pubspec.yaml (no YAML edits). `docs/DEPLOY.md` updated with iter-2 pre-flight checklist, backend DATABASE_URL note, and iOS/Android notification config requirements. Pre-flight gates all passed: syntax valid, secrets audit complete, test flow verified. QA confirms 21 new tests passing, 0 new violations. Backend DATABASE_URL is rideglory-api scope (not Flutter CI). Phase contract and handoff finalized. Ready for tech lead PR review.
