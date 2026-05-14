@@ -955,6 +955,14 @@
       "agent": "frontend",
       "at": "2026-05-14T23:59:00Z",
       "detail": "T-2-8 through T-2-11 done: SOAT (domain+data+presentation), notifications rebuild, FCM init, VehicleSoatSection badge, NotificationBellButton. 16 new files. Unit tests: soat_model_test (7 cases), soat_cubit_test (5 cases), notifications_cubit_test (9 cases). dart analyze 0 issues. Next = qa."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 2,
+      "phase": "frontend",
+      "agent": "frontend",
+      "at": "2026-05-14T22:58:43Z",
+      "detail": "SOAT flow + notifications rebuild + FCM init. dart analyze 0 issues, flutter test 64 pass / 1 pre-existing fail."
     }
   ]
 }
