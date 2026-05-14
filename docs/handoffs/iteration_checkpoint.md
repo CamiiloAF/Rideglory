@@ -8,67 +8,24 @@
 
 ---
 
-## Status: idle
+## Status: active — Iteration 3
 
-No active iteration checkpoint. Run **`/iter 2`** or **`/resume-iter`** to begin Iteration 2.
+**Last phase:** (none — just started)
+**Next phase:** po_scope
 
-**Last closed:** Iteration 1 closed 2026-05-14 with all 10 phases complete.
+**Note:** PR will NOT be merged at end of Tech Lead phase (sin mezclar PR instruction).
 
 | Phase | Agent | Status |
 |-------|-------|--------|
-| po_scope | PO | ✅ done |
-| architect | Architect | ✅ done |
-| design | Design | ✅ done |
-| backend | Backend | — (no backend work iter-1) |
-| frontend | Flutter Dev | ✅ done |
-| qa | QA | ✅ done |
-| devops | DevOps | ✅ done |
-| pr | System | ✅ done |
-| tech_lead | Tech Lead | ✅ done |
-| po_close | PO | ✅ done |
+| po_scope | PO | 🔄 in progress |
+| architect | Architect | ⏳ pending |
+| design | Design | ⏳ pending |
+| backend | Backend | ⏳ pending |
+| frontend | Flutter Dev | ⏳ pending |
+| qa | QA | ⏳ pending |
+| devops | DevOps | ⏳ pending |
+| pr | System | ⏳ pending |
+| tech_lead | Tech Lead | ⏳ pending |
+| po_close | PO | ⏳ pending |
 
-**All phases completed:** 2026-05-14  
-**Iteration status:** DONE
-
-### Design phase summary
-- Gap analysis: 15 screens analyzed via codebase inspection
-- 5 HTML mockup modules produced (35+ screens/states total)
-- New primitives specified: `AppEventBadge` (atom, lib/design_system/atoms/badges/), `DocumentSlotPill` (molecule, lib/design_system/molecules/feedback/)
-- Auth frames gate: 8 frames must be created in rideglory.pen before US-1-3 (T-1-3)
-- Donut chart scope decision: color-only for iter-1, no geometry change
-- Full UI copy (ARB keys) for all 5 modules documented
-- Error messages mapped to API error codes
-- Pencil MCP unavailable during session — HTML mockups serve as design gate; frontend agent must open rideglory.pen and verify/create frames before PR 1
-
-### Frontend phase summary
-- 47 hardcoded Color(0x...) and Colors.\<named\> literals replaced with AppColors tokens across 34 files in lib/features/
-- Two design system primitives created: AppEventBadge atom (lib/design_system/atoms/badges/) and DocumentSlotPill molecule (lib/design_system/molecules/feedback/)
-- ~140 new l10n keys added to app_es.arb; flutter gen-l10n regenerated successfully
-- pubspec.yaml fixed: removed duplicate dev_dependencies entries
-- dart analyze: 0 errors, 0 warnings (52 info-level only, all pre-existing)
-- flutter test: 28 pass, 4 pre-existing failures (stale .g.dart files, not caused by iter-1)
-- Known gaps: AppEventBadge/DocumentSlotPill integration pending iter-2 data; ManageAttendeesPage deferred to iter-2; stale .g.dart deferred to iter-2 rebuild
-
-### QA phase summary
-- Baseline established: main branch dart analyze 0 errors/0 warnings (45 info-level), flutter test 28 pass/4 pre-existing fail
-- Iter-1 verification: 0 new violations, 28 pass, 4 failures unchanged (stale user_service.g.dart + event_service.g.dart)
-- Test catalog created: TC-1-1 through TC-1-21 (21 test cases covering all 11 user stories + DoD items)
-- Design system verification: AppEventBadge atom ✅, DocumentSlotPill molecule ✅ (both created, exported, ready for use)
-- Localization audit: app_es.arb +140 keys (11KB → 46KB), generated .dart files committed ✅
-- Color tokenization audit: 0 hardcoded Color(0x...), 0 non-standard Colors.<> in lib/features/ ✅
-- Architecture constraints: git diff main..iter-1 -- lib/*/domain/ lib/*/data/ lib/core/di/ lib/shared/router/ returns empty ✅
-- All 11 user stories (US-1-1 through US-1-11) acceptance criteria verified ✅
-- No blocking bugs filed; 0 new test failures; sign-off: GREEN ✅
-
-*Last closed: QA (2026-05-14T14:30:00Z)*
-
-### DevOps phase summary
-- CI pipeline verification: `.github/workflows/ci.yml` is syntactically valid and functionally ready (no changes required)
-- Validation: python3 yaml.safe_load() passed; all triggers (iter-*, main, PRs) configured; analyze-and-test + build-apk jobs operational
-- Pre-flight checklist: Flutter setup ✅, dart analyze gate ✅, flutter test gate ✅, code generation step ✅, Firebase config injection ✅, .env file injection ✅, APK build on tags ✅, branch protection compatible ✅
-- Deployment documentation: `docs/DEPLOY.md` created with 12 .env variables, GitHub Actions secrets reference, Firebase config handling, CI/CD details, local setup, release workflow, troubleshooting, and roadmap for iter-2+ (FCM, Mapbox, Apple Sign-In)
-- No changes required per architect-for-devops.md: presentation-layer redesign only, no new packages, no new env vars, no native config changes
-- Phase contract generated with 7 quality gates (all pass)
-- Sign-off: GREEN ✅ — Ready for PR phase
-
-*Last closed: DevOps (2026-05-14T15:00:00Z)*
+**Last closed:** Iteration 2 closed 2026-05-15 with all 10 phases complete.
