@@ -8,10 +8,11 @@
 
 ---
 
-## Status: active — Iteration 2
+## Status: idle — Iteration 2 closed
 
-**Last phase:** tech_lead
-**Next phase:** po_close
+**Iteration:** 2  
+**Closed:** 2026-05-15 (po_close phase complete)  
+**Next iteration:** Iter-3 (Tracking + SOS + Maintenance Reminders + Mapbox Migration)
 
 | Phase | Agent | Status |
 |-------|-------|--------|
@@ -24,7 +25,7 @@
 | devops | DevOps | ✅ done |
 | pr | System | ✅ done |
 | tech_lead | Tech Lead | ✅ done — APPROVED (re-review cycle, all 4 violations fixed) |
-| po_close | PO | ⏳ pending |
+| po_close | PO | ✅ done — Summary, history, product status, context bridge, PR, state updated |
 
 **Backend summary (2026-05-14):**
 - 6 endpoints: POST/GET /api/vehicles/:vehicleId/soat, POST /api/notifications/fcm-token, GET /api/notifications, PATCH /notifications/:id/read, PATCH /notifications/read-all
@@ -61,4 +62,4 @@
 - Phase contract: `docs/handoffs/contracts/iter-2/devops.json` generated with status=pass
 - Next: Tech Lead PR review and merge to main
 
-**Last closed:** Iteration 1 closed 2026-05-14 with all 10 phases complete.
+**Last closed:** Iteration 2 closed 2026-05-15 with all 10 phases complete. PR #14 merged to main (SHA 847b12365de4851840efc35ecad086c317d5c7c4).

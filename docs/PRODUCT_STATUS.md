@@ -1,6 +1,6 @@
 # Product Status — Rideglory MVP
 
-**Last Updated:** 2026-05-14 (Iteration 1 closed)
+**Last Updated:** 2026-05-15 (Iteration 2 closed)
 
 ---
 
@@ -41,13 +41,23 @@
 - **Follower/following lists** — See who follows you and who you follow (iter-4 feature)
 - **Status:** Live (follow system iter-4 feature)
 
-### Notifications
-- **Notification center** — View all push notifications with read/unread state
-- **SOAT alerts** — 30 days before, 7 days before, day-of expiry (iter-2 feature)
-- **Registration updates** — Push when registration approved/rejected (iter-2 feature)
+### SOAT Insurance Registration (Iter-2)
+- **SOAT document upload** — Upload photo or PDF of insurance document
+- **SOAT manual entry** — Manually enter policy number, insurer, dates
+- **SOAT status badge** — 4-state indicator (Sin SOAT / Vigente / Por vencer / Vencido) on vehicle detail
+- **SOAT expiry tracking** — Backend persistence with date validation
+- **Status:** Live
+
+### Notifications (Iter-2 Infrastructure)
+- **Notification center** — View all push notifications with read/unread state (cursor pagination)
+- **Bell icon with badge** — Unread notification count indicator on Home
+- **Mark read/unread** — Persistent read state via backend
+- **SOAT alerts** — 30 days before, 7 days before, day-of expiry (backend scheduler configured)
+- **Registration updates** — Push when registration approved/rejected (backend triggers configured)
 - **New follower alerts** — Push when someone follows you (iter-4 feature)
 - **Maintenance reminders** — Push for scheduled maintenance (iter-3 feature)
-- **Status:** Pending iter-2 implementation
+- **FCM infrastructure** — Background handler, token registration, 6 notification types
+- **Status:** Live (push delivery device testing pending backend merge)
 
 ### Design System
 - **Color tokens** — Dark theme with orange primary (#f98c1f), comprehensive palette
@@ -60,17 +70,9 @@
 
 ## What's NOT Yet Shipped (Planned)
 
-### SOAT Registration & Tracking (Iter-2)
-- Upload/manually enter SOAT insurance documents
-- SOAT badge on vehicle detail (4 states: none, valid, expiring, expired)
-- Push notifications for SOAT expiry
-- Status: Planned for iter-2
-
-### Enhanced Notifications (Iter-2)
-- Full notification routing (tap to navigate to relevant screen)
-- FCM push infrastructure setup
-- Notification read/unread persistence
-- Status: Planned for iter-2
+### SOAT Home Dashboard Badge (Iter-3)
+- SOAT status badge on main vehicle card in Home dashboard
+- Status: Planned for iter-3
 
 ### Full Tracking Experience (Iter-3)
 - Background GPS location updates (Android foreground service, iOS background location)
@@ -85,10 +87,13 @@
 - New follower notifications
 - Status: Planned for iter-4
 
+### Notification Tap Routing (Iter-1)
+- Notification tap navigation to relevant screen (event detail, registration status, profile, maintenance, etc.)
+- Status: Planned for iter-1
+
 ### Deep Links & Apple Sign-In (Iter-1)
 - Android App Links + iOS Universal Links for event sharing
 - Apple Sign-In authentication (iOS only)
-- Notification tap routing to correct screen
 - Status: Planned for iter-1
 
 ---
@@ -120,7 +125,7 @@
 
 ## Deployment & Operations
 
-- **Build Status:** ✅ Passing (iter-1 PR #13 merged)
+- **Build Status:** ✅ Passing (iter-2 PR #14 merged)
 - **CI/CD:** GitHub Actions validates `dart analyze` and `flutter test` on every PR
 - **Release Checklist:** See [DEPLOY.md](./DEPLOY.md)
 - **Env Variables:** Configure `.env` per [CLAUDE.md](../CLAUDE.md) env setup section
@@ -143,6 +148,6 @@
 - **Product Requirements:** [REQUIREMENTS.md (PRD)](./REQUIREMENTS.md)
 - **Iteration Plan:** [PLAN.md](./PLAN.md)
 - **Architecture Guide:** [CLAUDE.md](../CLAUDE.md)
-- **Latest Iteration Summary:** [ITERATION_SUMMARY_1.md](./ITERATION_SUMMARY_1.md)
+- **Latest Iteration Summary:** [ITERATION_SUMMARY_2.md](./ITERATION_SUMMARY_2.md)
 - **GitHub Repository:** [CamiiloAF/Rideglory](https://github.com/CamiiloAF/Rideglory)
 - **Backend API:** [CamiiloAF/rideglory-api](https://github.com/CamiiloAF/rideglory-api)
