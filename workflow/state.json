@@ -805,6 +805,13 @@
       "agent": "tech_lead",
       "at": "2026-05-14T16:00:00Z",
       "detail": "approved — dart analyze 0 errors/0 warnings, flutter test 28/28 passing, no layer violations, color tokenization complete, 3 deferred non-blockers"
+    },
+    {
+      "type": "pr_merged",
+      "iteration": 1,
+      "at": "2026-05-14T07:30:00Z",
+      "agent": "system",
+      "detail": "PR #13 merged to main. Merge SHA: ed3eb0cf1de1dcaa53244ff04d683408a98237c8"
     }
   ]
 }
