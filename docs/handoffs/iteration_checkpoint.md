@@ -10,13 +10,13 @@
 
 ## Status: active — Iteration 2
 
-**Last phase:** po_scope
-**Next phase:** architect
+**Last phase:** architect
+**Next phase:** design
 
 | Phase | Agent | Status |
 |-------|-------|--------|
 | po_scope | PO | ✅ done |
-| architect | Architect | ⏳ pending |
+| architect | Architect | ✅ done |
 | design | Design | ⏳ pending |
 | backend | Backend | ⏳ pending |
 | frontend | Flutter Dev | ⏳ pending |

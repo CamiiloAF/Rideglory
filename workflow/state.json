@@ -515,8 +515,8 @@
     },
     "architect": {
       "status": "idle",
-      "lastAction": "2026-05-14T05:00:00Z",
-      "focus": "iter-1 presentation-layer constraint locked; AppEventBadge + DocumentSlotPill primitives specified; color tokenization policy defined; backend stand-down confirmed"
+      "lastAction": "2026-05-14T23:00:00Z",
+      "focus": "iter-2 architecture: SOAT (lib/features/soat/ new) + notifications (rebuild stub) full-stack; 6 API contracts; api-gateway first-time Prisma; FCM background isolate pattern; GoRouter DI assessed (static top-level, refactor deferred)"
     },
     "design": {
       "status": "idle",
@@ -899,6 +899,22 @@
       "agent": "po",
       "at": "2026-05-14T22:00:00Z",
       "detail": "Iter-2 po_scope done: SOAT registration, FCM notification foundation, ManageAttendeesPage redesign — 10 stories, 13 tasks, design gate + testing order documented."
+    },
+    {
+      "type": "architect_plan",
+      "iteration": 2,
+      "phase": "architect",
+      "agent": "architect",
+      "at": "2026-05-14T23:00:00Z",
+      "detail": "Iter-2 full-stack architecture defined. Two Flutter features: lib/features/soat/ (new 3-layer) and lib/features/notifications/ (rebuilt from iter-1 mock stub). 6 API contracts: 2 SOAT (vehicles-ms POST/GET /api/vehicles/:vehicleId/soat) + 4 notifications (api-gateway fcm-token, list cursor-paginated, :id/read, read-all). Backend: api-gateway first-time Prisma (Notification model), vehicles-ms Soat model, users-ms fcmToken field. New packages: firebase_messaging, flutter_local_notifications, optional file_picker, backend @nestjs/schedule. New env var DATABASE_URL (api-gateway). SoatStatus computed client-side (4 states, <=30d boundary). FCM background isolate @pragma('vm:entry-point') + configureDependencies() documented as load-bearing. GoRouter DI assessment: static top-level, NOT GetIt-registered — refactor deferred to iter-4/5. 4 slim handoffs delivered (backend, frontend, devops, qa). DIAGRAMS.md updated with ERD + SOAT-save + FCM-lifecycle sequence diagrams."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 2,
+      "phase": "architect",
+      "agent": "architect",
+      "at": "2026-05-14T23:00:00Z",
+      "detail": "Iter-2 architect done: feature architecture (soat new, notifications rebuilt), 6 API contracts, api-gateway first-time Prisma + Soat/fcmToken models, FCM isolate pattern, GoRouter DI assessment, slim handoffs + DIAGRAMS ERD/sequences."
     }
   ]
 }

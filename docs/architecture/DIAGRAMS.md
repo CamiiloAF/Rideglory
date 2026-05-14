@@ -135,6 +135,108 @@ flowchart TD
 
 ---
 
+## Iteration 2 — SOAT + Notification Foundation
+
+Iter-2 introduces new persisted entities and async flows. ERD covers the new backend tables; sequence diagrams cover the SOAT save flow and the FCM notification lifecycle (foreground + background isolate).
+
+### ERD — new entities
+
+```mermaid
+erDiagram
+  Vehicle ||--o| Soat : "has one (vehicles-ms)"
+  User ||--o{ Notification : "receives (api-gateway)"
+  User {
+    string id PK
+    string fcmToken "NEW iter-2 · nullable · users-ms"
+  }
+  Vehicle {
+    string id PK
+    string ownerId
+  }
+  Soat {
+    string id PK
+    string vehicleId FK "unique"
+    string policyNumber
+    datetime startDate
+    datetime expiryDate
+    string insurer
+    string documentUrl "nullable"
+    datetime createdAt
+    datetime updatedAt
+  }
+  Notification {
+    string id PK
+    string userId
+    string type "SOAT_30D|SOAT_7D|SOAT_DAY_OF|NEW_REGISTRATION|REGISTRATION_APPROVED|REGISTRATION_REJECTED"
+    json payload "scalar IDs only"
+    boolean isRead "default false"
+    datetime createdAt
+  }
+```
+
+`Soat` lives in vehicles-ms. `Notification` lives in api-gateway's first-ever Prisma schema. `fcmToken` is added to `User` in users-ms.
+
+### Sequence — SOAT save + client-side status
+
+```mermaid
+sequenceDiagram
+  participant UI as SoatUploadPage / SoatManualFormPage
+  participant Cubit as SoatCubit
+  participant Repo as SoatRepositoryImpl
+  participant FS as Firebase Storage
+  participant API as rideglory-api (vehicles-ms)
+
+  UI->>Cubit: save(soat, localDocumentPath?)
+  Cubit->>Cubit: emit Loading
+  opt document attached
+    Repo->>FS: putFile(soat/{vehicleId}/document.ext)
+    FS-->>Repo: documentUrl
+  end
+  Cubit->>Repo: saveSoat(SoatModel)
+  Repo->>API: POST /api/vehicles/:vehicleId/soat
+  API-->>Repo: SoatResponse (no status field)
+  Repo-->>Cubit: Either<DomainException, SoatModel>
+  Cubit->>Cubit: emit Data(soat)
+  Note over UI: SoatModel.status computed client-side<br/>(expiryDate vs now) → DocumentSlotPill state
+```
+
+### Sequence — FCM notification lifecycle
+
+```mermaid
+sequenceDiagram
+  participant App as Flutter App
+  participant Auth as AuthCubit
+  participant FCM as FcmService
+  participant GW as api-gateway
+  participant FB as Firebase Cloud Messaging
+  participant BG as Background Isolate
+
+  Note over Auth: post-login
+  Auth->>FCM: initialize() + requestPermission()
+  FCM->>GW: POST /api/notifications/fcm-token { fcmToken }
+  GW-->>FCM: 204
+
+  Note over GW: trigger (registration approved / SOAT cron @America/Bogota)
+  GW->>GW: INSERT Notification row
+  GW->>FB: send multicast (payload: scalar IDs)
+  alt app foreground
+    FB-->>FCM: onMessage
+    FCM->>FCM: flutter_local_notifications banner
+  else app background / terminated
+    FB-->>BG: onBackgroundMessage (@pragma vm:entry-point)
+    BG->>BG: Firebase.initializeApp() + configureDependencies()
+    BG->>BG: show local notification
+  end
+
+  Note over App: user opens Notification Center
+  App->>GW: GET /api/notifications?cursor=&limit=20
+  GW-->>App: { data, nextCursor }
+  App->>GW: PATCH /api/notifications/:id/read | /read-all
+```
+
+---
+
 ## Change log
 
 - 2026-05-14 (iter-1): Initial diagrams document created. Captures design-system layering, new iter-1 primitives (`AppEventBadge`, `DocumentSlotPill`) and their consumers, module PR sequence, and color tokenization decision flow. No ERD or sequence diagrams — iter-1 introduces no new data models or async flows.
+- 2026-05-14 (iter-2): Added ERD for new entities (`Soat` in vehicles-ms, `Notification` in api-gateway, `fcmToken` on `User` in users-ms). Added sequence diagrams: SOAT save flow (with client-side status computation) and FCM notification lifecycle (token registration, trigger+insert+multicast, foreground vs background-isolate handling, cursor-paginated read).

@@ -1,20 +1,20 @@
-# Architect handoff — Iteration 1
+# Architect handoff — Iteration 2
 
 **Date:** 2026-05-14
 **Status:** done
-**Iteration goal:** UI/UX Redesign — bring 15 existing screens into alignment with `rideglory.pen`. Presentation layer only.
+**Iteration goal:** SOAT registration per vehicle + FCM push notification foundation + notifications backend (api-gateway first-time Prisma) + ManageAttendeesPage redesign (Story 2.9).
 
 ---
 
-## Iteration 1 architectural constraint (LOAD-BEARING)
+## Iteration 2 architectural scope (LOAD-BEARING)
 
-> **Iter-1 is presentation-layer ONLY.**
-> No `domain/` changes. No `data/` changes. No DTOs. No services. No use cases. No new routes. No DI changes (other than registering newly extracted design-system widgets, which are stateless — no DI). No code generation (`build_runner`) run required.
-> No `rideglory-api` changes — backend agent is **not active** this iteration.
+> **Iter-2 is full-stack.** Touches Flutter `domain/data/presentation` (two NEW features) and `rideglory-api` (vehicles-ms, users-ms, api-gateway). This is the inverse of iter-1.
 
-Rationale: per existing-system scan + PO scope, only 3 imports of `core/data/` exist in `lib/features/*/presentation/`, all referencing `colombia_motos_brands_data.dart` (a static catalog, not a service). Component adoption is mature (only 3 files use raw `ElevatedButton`/`TextFormField`/`AlertDialog`). The work is **color tokenization (~99 files reference `Colors.<named>`, ~20 files use `Color(0x…)` literals)** + **screen recomposition to match Pencil frames** + **two new design-system primitives**.
+Two new Flutter features created from scratch following the Clean Architecture template of `lib/features/vehicles/`:
+- `lib/features/soat/` — full 3-layer feature.
+- `lib/features/notifications/` — **stub already exists** (model, cubit, page, view, item widget) but is mock-only. It must be **rebuilt** into a real 3-layer feature with backend wiring. Do not delete the existing UI shell (`notifications_view.dart`, `notification_item.dart`) — rewire it.
 
-If any agent in this iteration needs to add a new domain model, DTO, service, route, or backend endpoint to satisfy a story → STOP. Escalate to PO; the story is mis-scoped.
+Backend: api-gateway gets its **first-ever Prisma schema** (`prisma init` + `migrate dev`, NOT reset). vehicles-ms gets a `Soat` model. users-ms `User` gets `fcmToken String?`.
 
 ---
 
@@ -22,86 +22,134 @@ If any agent in this iteration needs to add a new domain model, DTO, service, ro
 
 | Feature | Domain changes | Data changes | Presentation changes |
 |---------|----------------|--------------|----------------------|
-| splash | none | none | `splash_page.dart` recomposed to match Pencil; loading/error/success visual states use `AppLoadingIndicator` + design tokens (US-1-2) |
-| authentication | none | none | `login_page.dart`, `signup_page.dart`, `password_recovery_page.dart` swap raw widgets → `AppButton`/`AppTextField`/`AppPasswordTextField`; Space Grotesk applied via theme; no hardcoded colors (US-1-3) |
-| home | none | none | `home_page.dart` recomposed to match frame `dyWWs` (greeting header, garage card, upcoming rides horizontal scroll, bottom nav `VMmN0`); SOAT badge **not added** (iter-2/3) (US-1-4) |
-| events | none | none | `event_list_page.dart`, `event_detail_page.dart`, filter chips, filter bottom sheet, CTA bar match frames `Neipf`/`kAubW`; new atom `app_event_badge.dart` consumed in card contexts (US-1-5). `create_event_page.dart` matches frame `zbCa0` — AI cover widget + Mapbox route preview preserved untouched (US-1-6) |
-| vehicles | none | none | `vehicle_list_page.dart`, `vehicle_detail_page.dart` match frames `KCf6W`/`P1GSzZ`; new molecule `document_slot_pill.dart` extracted from `aGqnv` (US-1-7). `vehicle_form_page.dart` matches `EqnMm` — document slot section is **non-functional UI placeholder** for iter-2 (US-1-8) |
-| maintenance | none | none | dashboard, history, step1/step2 forms match frames `Ako7u`/`SykjL`/`J5h6P`/`eK2WW`/`ELB5u`; donut chart geometry **scope-flagged** by Design — color-only swap unless Design upgrades scope (US-1-9) |
-| event_registration | none | none | `my_registrations_page.dart`, `registration_detail_page.dart` adopt design-system components, no hardcoded colors, correct empty/loading states (US-1-10). `manage_attendees_page.dart` is **deferred to iter-2 Story 2.9** |
-| profile / users / tracking / live_tracking | none | none | **Out of scope** for iter-1 (no PO story targets these screens) |
+| **soat** (NEW) | `SoatModel` (pure Dart, with `SoatStatus` enum + `status` computed getter), `SoatRepository` interface, use cases `GetSoatUseCase` / `SaveSoatUseCase` | `SoatDto` (json_serializable, `toModel()`), `SoatService` (Retrofit, `@GET`/`@POST` on `/vehicles/{vehicleId}/soat`), `SoatRepositoryImpl` (`@Injectable(as: SoatRepository)`, Firebase Storage upload for document, `executeService` wrap) | `SoatCubit` (`Cubit<ResultState<SoatModel>>` — single result), `SoatUploadPage`, `SoatManualFormPage`, `SoatStatusPage` |
+| **notifications** (REBUILD stub) | `NotificationModel` (keep enum, **add** `payload Map<String,dynamic>?`), `NotificationsRepository` interface, use cases `GetNotificationsUseCase` / `MarkNotificationReadUseCase` / `MarkAllNotificationsReadUseCase` / `RegisterFcmTokenUseCase` | `NotificationDto`, `NotificationPageDto` (`{ data, nextCursor }`), `NotificationsService` (Retrofit cursor pagination), `NotificationsRepositoryImpl` | `NotificationsCubit` → rewrite to `Cubit<NotificationsState>` (`@freezed` — needs list + nextCursor + unreadCount + pagination-loading flag, so a freezed state class, NOT bare `ResultState<T>`). `NotificationCenterPage` rewires existing `NotificationsView`. New `NotificationBellButton` (replaces `HomeNotificationButton`) with unread badge. |
+| **vehicles** | none | none | `vehicle_detail_view.dart` / `vehicle_detail_header.dart`: wire `DocumentSlotPill` (iter-1 molecule) for SOAT slot — tappable → `context.pushNamed(soat...)`. Pass localized `stateLabel`. |
+| **authentication** | none | none | `AuthCubit`: after `authenticated`, call `RegisterFcmTokenUseCase` (request permission + register token). FCM init is a `core/services/` concern invoked from AuthCubit — keep AuthCubit thin. |
+| **events / event_registration** | none | none | `manage_attendees_page.dart` (Story 2.9) — presentation-only redesign per frame `dUc9h`: `AppButton`/`AppDialog`, no hardcoded colors, loading/empty/error states. Scope confirmed by design gate. |
+| **core** | new `core/services/fcm_service.dart` (`@singleton`), top-level background handler in `lib/main.dart` or `core/services/fcm_background_handler.dart` | — | — |
 
 ---
 
 ## API contracts (rideglory-api changes)
 
-**No changes.** Backend agent is idle this iteration. See `docs/handoffs/architect-for-backend.md`.
+All endpoints require Firebase Auth ID token (`Authorization: Bearer <token>`) via existing guard. Error shape: `{ message, statusCode, error }`.
+
+| Method | Path | Auth | Request body | Success (200/201) | Errors |
+|--------|------|------|--------------|-------------------|--------|
+| POST | `/api/vehicles/:vehicleId/soat` | Bearer | `{ policyNumber: string, startDate: ISO8601, expiryDate: ISO8601, insurer: string, documentUrl?: string }` | `SoatResponse` (see below) | 400 invalid dates / 404 vehicle not found / 403 not owner |
+| GET | `/api/vehicles/:vehicleId/soat` | Bearer | — | `SoatResponse` or `204 No Content` if none | 404 vehicle not found / 403 not owner |
+| POST | `/api/notifications/fcm-token` | Bearer | `{ fcmToken: string }` | `204 No Content` | 400 missing token / 401 |
+| GET | `/api/notifications?cursor=<lastId>&limit=20` | Bearer | — | `{ data: Notification[], nextCursor: string \| null }` ordered `createdAt desc` | 401 |
+| PATCH | `/api/notifications/:id/read` | Bearer | — | `204 No Content` | 404 / 403 not owner |
+| PATCH | `/api/notifications/read-all` | Bearer | — | `204 No Content` | 401 |
+
+**`SoatResponse`:** `{ id, vehicleId, policyNumber, startDate, expiryDate, insurer, documentUrl?, createdAt, updatedAt }`. Backend does NOT return `status` — the 4-state badge is computed **client-side** in `SoatModel.status` from `expiryDate` vs. `DateTime.now()`. Boundary rules: `> 30 days` → Vigente, `<= 30 days && not past` → Por vencer, `past expiry` → Vencido, `no record` → Sin SOAT.
+
+**`Notification`:** `{ id, userId, type: string, payload: object, isRead: boolean, createdAt: ISO8601 }`. `type` is one of: `SOAT_30D`, `SOAT_7D`, `SOAT_DAY_OF`, `NEW_REGISTRATION`, `REGISTRATION_APPROVED`, `REGISTRATION_REJECTED`. `payload` carries scalar IDs only (`vehicleId`, `eventId`, `registrationId`, `vehicleName`) — never nested objects (FCM/deep-link convention, ADR-5).
+
+**FCM push triggers (no new HTTP endpoint — internal):** events-ms registration approve/reject/create flow → api-gateway proxies → api-gateway sends FCM multicast via `firebase-admin` + inserts a row in `notifications` table. Cron (`@nestjs/schedule`, `America/Bogota`) for SOAT 30d/7d/day-of → same insert+push path.
 
 ---
 
 ## New models and DTOs
 
-**None.** No domain models, no DTOs added.
+| Name | Layer | File path | Notes |
+|------|-------|-----------|-------|
+| `SoatModel` | domain | `lib/features/soat/domain/models/soat_model.dart` | Pure Dart, `copyWith`, `==`/`hashCode`. Has `SoatStatus get status` computed getter + `int get daysUntilExpiry`. |
+| `SoatStatus` | domain (enum) | same file | `noSoat`, `valid`, `expiringSoon`, `expired`. Maps 1:1 to `DocumentSlotState` from iter-1 molecule. |
+| `SoatRepository` | domain | `lib/features/soat/domain/repository/soat_repository.dart` | `getSoat(vehicleId)`, `saveSoat(SoatModel, {localDocumentPath})`, `uploadSoatDocument(...)`. |
+| `GetSoatUseCase`, `SaveSoatUseCase` | domain | `lib/features/soat/domain/usecases/` | One file each, `@injectable`. |
+| `SoatDto` | data | `lib/features/soat/data/dto/soat_dto.dart` | `@JsonSerializable(converters: apiJsonDateTimeConverters)`, extends `SoatModel`, `toModel()` + `toJson()` request extension (mirror `VehicleDto` pattern). |
+| `SoatService` | data | `lib/features/soat/data/service/soat_service.dart` | `@singleton @RestApi()`, Retrofit. |
+| `SoatRepositoryImpl` | data | `lib/features/soat/data/repository/soat_repository_impl.dart` | `@Injectable(as: SoatRepository)`, Firebase Storage path `soat/{vehicleId}/document.{ext}`. |
+| `SoatCubit` | presentation | `lib/features/soat/presentation/cubit/soat_cubit.dart` | `@injectable`, `Cubit<ResultState<SoatModel>>`. |
+| `NotificationModel` (extend) | domain | `lib/features/notifications/domain/model/notification_model.dart` | Keep existing enum + fields; **add** `Map<String,dynamic>? payload`. Add missing enum values to align with backend `type` strings. |
+| `NotificationsRepository` | domain | `lib/features/notifications/domain/repository/notifications_repository.dart` | NEW. |
+| `NotificationDto`, `NotificationPageDto` | data | `lib/features/notifications/data/dto/` | NEW. `NotificationPageDto` = `{ List<NotificationDto> data, String? nextCursor }`. |
+| `NotificationsService` | data | `lib/features/notifications/data/service/notifications_service.dart` | NEW. `@GET` with `@Query('cursor')`/`@Query('limit')`, `@PATCH`. |
+| `NotificationsRepositoryImpl` | data | `lib/features/notifications/data/repository/notifications_repository_impl.dart` | NEW. |
+| `NotificationsCubit` (rewrite) | presentation | existing path | `@freezed NotificationsState` (list + `nextCursor` + `unreadCount` + `isLoadingMore` + `ResultState` for initial load). |
+| `FcmService` | core | `lib/core/services/fcm_service.dart` | `@singleton`. Wraps `firebase_messaging` + `flutter_local_notifications`. |
 
-## New design-system components (presentation only)
+### Backend (rideglory-api)
 
-| Name | Layer | File path | Source frame | Used by |
-|------|-------|-----------|--------------|---------|
-| `AppEventBadge` | atom | `lib/design_system/atoms/badges/app_event_badge.dart` (new `badges/` subfolder) | `zKkmE` | Event card image overlay (list + detail), upcoming-rides carousel on Home |
-| `DocumentSlotPill` | molecule | `lib/design_system/molecules/feedback/document_slot_pill.dart` | `aGqnv` | Vehicle detail document section (US-1-7), vehicle form document slot section non-functional placeholder (US-1-8). **Reused in iter-2 for SOAT badge wiring.** |
+| Name | Service | File | Notes |
+|------|---------|------|-------|
+| `Soat` Prisma model | vehicles-ms | `vehicles-ms/prisma/schema.prisma` | `id, vehicleId @unique, policyNumber, startDate, expiryDate, insurer, documentUrl?, createdAt, updatedAt`. One-to-one with `Vehicle`. |
+| `Notification` Prisma model | api-gateway (NEW schema) | `api-gateway/prisma/schema.prisma` | `id, userId, type, payload Json, isRead @default(false), createdAt @default(now())`. Index on `(userId, createdAt)`. |
+| `fcmToken` field | users-ms | `users-ms/prisma/schema.prisma` | `fcmToken String?` on `User`. |
+| `NotificationsModule` + controller + service | api-gateway | `api-gateway/src/notifications/` | NEW module. Owns `notifications` table, FCM dispatch (`firebase-admin`), cursor pagination. |
+| `NotificationSchedulerService` | api-gateway | `api-gateway/src/notifications/` | `@nestjs/schedule` `@Cron`, `America/Bogota`. |
+| `SoatModule` additions | vehicles-ms + api-gateway | `vehicles-ms/src/vehicles/`, `api-gateway/src/vehicles/` | Soat controller routes added to existing vehicles module on both sides. |
 
-Both files MUST be added to the corresponding barrel exports:
-- `lib/design_system/atoms/atoms.dart` → add `export 'badges/app_event_badge.dart';`
-- `lib/design_system/molecules/molecules.dart` → add `export 'feedback/document_slot_pill.dart';`
-
-Constructors: `const`, stateless, no `BuildContext` capture in fields. Colors come from `Theme.of(context).colorScheme` or `AppColors`. Strings come from caller (no `context.l10n` inside the widget) so they remain pure presentation primitives reusable across features.
-
-## Color tokenization strategy (replaces `Color(0x…)` and `Colors.<named>`)
-
-**Mapping policy (apply per file, in this priority order):**
-1. **Semantic theme tokens (preferred)** — `Theme.of(context).colorScheme.primary | onPrimary | surface | onSurface | surfaceContainerHighest | outline | error | onError`. Use when the color carries a semantic role.
-2. **`AppColors` palette constants** — for dark surfaces/borders/text not covered by `colorScheme`: `AppColors.darkBackground`, `AppColors.darkSurface`, `AppColors.darkSurfaceHighest`, `AppColors.darkBorder`, `AppColors.darkTextPrimary`, `AppColors.darkTextSecondary`, `AppColors.darkInputIcon`, `AppColors.primaryGradient`, `AppColors.maintenanceUrgent|Warning|Ok`, `AppColors.licensePlateTagBackground|Text`.
-3. **Status palette** — `AppColors.success|warning|error|info` (and `Light`/`Dark` variants) for non-themed status indicators (e.g., maintenance urgency dots, badge backgrounds).
-
-**Forbidden after iter-1:** `Color(0xFF…)` in `lib/features/`. `Colors.<named>` literals in `lib/features/` **except** `Colors.transparent` and `Colors.black`/`Colors.white` when overlaying images (which should still prefer `AppColors.overlay*` if available).
-
-**Process per module PR:**
-1. Run `grep -rE "Color\(0x|Colors\.(?!transparent\b|black\b|white\b)" <module-path>` to enumerate occurrences.
-2. Map each to one of the three buckets above. If a color has no clear mapping, add it to `AppColors` as a domain-specific constant (do NOT inline `Color(0x…)`) and document it in the PR description.
-3. `dart analyze` after each substitution batch.
-
-If any new `AppColors` constant is added during the redesign, append a one-line entry to the architect handoff "Change log" section of *this* file in the same PR.
+---
 
 ## Environment variables
 
-**None added.** No `.env` keys, no Firebase Remote Config keys.
+| Variable | Where | Description | Example |
+|----------|-------|-------------|---------|
+| `DATABASE_URL` | api-gateway `.env` | First-time Prisma DB connection for api-gateway. Must match Docker Compose Postgres. | `postgresql://user:pass@localhost:5432/rideglory_gateway` |
 
-## Module PR strategy (compatibility check)
+No new Flutter `.env` keys. FCM uses existing `google-services.json` / `GoogleService-Info.plist`. `firebase-admin` already installed in api-gateway (no new backend package except `@nestjs/schedule`).
 
-PO defined 5–6 module-scoped PRs (≤ 40 files each) targeting the `iter-1` feature branch. Architecturally compatible because:
-- Each module touches only files inside one `lib/features/<feature>/presentation/` subtree (+ shared design system in PRs 3 and 4 for the new atom/molecule).
-- No shared cross-feature dependency edits (no `injection.dart` re-wiring, no `app_router.dart` route additions, no shared `core/` mutations apart from the `AppColors` additions noted above).
-- Test impact is local: `attendees_list_navigation_test.dart`, `event_filters_bottom_sheet_test.dart`, `events_page_view_test.dart` updated in the same PR (PR 3) that swaps their target widgets. No cross-module test churn.
+---
 
-**Merge order (recommended):** PR 1 (splash+auth) → PR 2 (home) → PR 3 (events) → PR 4 (garage) → PR 5 (maintenance+registration). PR 3 must be preceded by extraction of `AppEventBadge`; PR 4 must be preceded by extraction of `DocumentSlotPill`.
+## New Flutter packages (pubspec.yaml)
 
-**Branch:** `iter-1` (already exists, current branch).
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `firebase_messaging` | `^15.x` | FCM token + foreground/background messages |
+| `flutter_local_notifications` | `^17.x`/`^18.x` | iOS foreground banners + Android notification channel |
+| `file_picker` *(optional)* | `^8.x` | PDF picking for SOAT upload (camera/gallery via existing `image_picker`; PDF needs `file_picker`). Frontend confirms during impl; if PDF deferred to image-only, skip. |
+
+`firebase_messaging` requires the Android background handler entry-point and iOS APNs. APNs key + Xcode push capability is a DevOps/pre-flight item (see architect-for-devops.md).
+
+---
+
+## FCM background isolate pattern (most critical correctness constraint)
+
+The background message handler runs in a **separate Dart isolate** — GetIt is not initialized there.
+
+```dart
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  await configureDependencies(); // MUST re-init DI in the isolate
+  // ... handle message (e.g. show local notification)
+}
+```
+
+Registered in `main()` via `FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler)` **before** `runApp`. Failure to re-init DI causes silent missed notifications on some devices. Tech Lead must verify `@pragma('vm:entry-point')` + `configureDependencies()` in review.
+
+---
+
+## GoRouter DI assessment (requested by PO for iter-4)
+
+`lib/shared/router/app_router.dart` declares `AppRouter.appRouter` as a **static top-level `GoRouter` instance** — it is **NOT registered in GetIt**. Confirmed by reading the file head.
+
+**Implication for iter-4/iter-5:** `NotificationRouteHandler` (iter-5) needs an injectable `GoRouter`. A refactor is required — register `GoRouter` in a DI module and inject it. This is **not in iter-2 scope**; documented here so iter-4 can plan it as Story 4.0 / iter-5 Story 5.0. No action this iteration.
+
+---
 
 ## Risks and open questions
 
-- **Donut chart scope drift (US-1-9):** if Design flags geometry/animation change, descope to color-only per PO directive — no new package, no animation refactor in iter-1.
-- **AI cover widget regression risk (US-1-6):** EventForm refactor must NOT touch `EventFormCubit`, `EventCoverService`, or any iter-4 cubit/service. Only the page composition + section widget styling. QA smoke test (a) is the gate.
-- **Mapbox route preview (US-1-6):** `route_map_preview.dart` widget left untouched; only its surrounding page chrome restyled. Architect prohibition: do NOT swap to a different map widget in iter-1.
-- **`Colors.transparent`/`black`/`white` exemptions:** explicitly allowed for image overlays and dividers. QA gate `T-1-9` should grep for the broader pattern but exempt these three names.
+- **api-gateway first-time Prisma setup:** Docker Compose DB networking + `DATABASE_URL` + potential port conflict. Mitigation: full pre-flight day (T-2-2); verify `GET /api/notifications` returns 200 empty before feature code.
+- **FCM background isolate DI:** silent missed notifications if `configureDependencies()` omitted. Mitigation: documented pattern above; tech_lead checklist item.
+- **APNs not configured:** iOS push will silently fail. Mitigation: DevOps pre-flight — APNs auth key uploaded to Firebase Console + Push Notifications capability in Xcode.
+- **`NotificationsCubit` rewrite breaks existing stub:** existing `NotificationsCubit` is `Cubit<NotificationsState>` with sealed-class states and is created inline in `NotificationsPage`. Rewriting to `@freezed` + DI singleton breaks `notifications_view.dart` `BlocBuilder` type refs. Mitigation: frontend updates view + page + item in the same PR; no test-rot.
+- **Cursor pagination drift:** offset/limit is forbidden. Backend response MUST be `{ data, nextCursor }`. DTO field names must match exactly.
+- **Story 2.9 scope ambiguity (frame dUc9h):** resolved by design gate. If edit-only, limit to component-swap + color tokenization.
+- **SOAT document type:** PDF picking needs `file_picker` (image_picker is image-only). Frontend confirms; if scope-reduced to image-only, drop the package.
 
 ## Next agent needs to know
 
-- **Backend (rideglory-api):** stand down for iter-1. Resume in iter-2.
-- **Design:** read `docs/handoffs/architect-for-frontend.md` for the design-system primitive specs (`AppEventBadge`, `DocumentSlotPill`) so the gap analysis annotates frame mappings consistently.
-- **Frontend (Flutter dev):** read `docs/handoffs/architect-for-frontend.md` for full component extraction plan, color tokenization mapping, l10n key conventions, and the per-module file lists.
-- **DevOps:** read `docs/handoffs/architect-for-devops.md` — no CI changes, no new env vars, but the branch protection on `iter-1` needs to allow 5-PR merge cadence.
-- **QA:** read `docs/handoffs/architect-for-qa.md` for test commands, baseline + final gates, and the 5 smoke-test traceability matrix.
+- **Backend (rideglory-api):** read `docs/handoffs/architect-for-backend.md`. Testing order T-2-4 (fcm-token) → T-2-5 (notifications table+endpoints) → T-2-3 (SOAT) → T-2-6 (FCM triggers) → T-2-7 (cron). api-gateway Prisma is `init` + `migrate dev`, NOT reset.
+- **Design:** read `docs/handoffs/architect-for-frontend.md` §SOAT model so frame annotations map `SoatStatus` ↔ `DocumentSlotState`. Confirm frame `dUc9h` scope.
+- **Frontend (Flutter dev):** read `docs/handoffs/architect-for-frontend.md` — full feature structure, DTO/Retrofit/cubit patterns, FCM isolate pattern, l10n keys, `DocumentSlotPill` caller contract.
+- **DevOps:** read `docs/handoffs/architect-for-devops.md` — `DATABASE_URL` env var, APNs setup, `@nestjs/schedule` install, no CI pipeline change needed.
+- **QA:** read `docs/handoffs/architect-for-qa.md` — test commands + acceptance traceability for SOAT 4-state logic and `NotificationsCubit` pagination.
 
 ## Change log
 
-- 2026-05-14 (iter-1): Architect phase complete. Confirmed presentation-layer-only constraint. Defined two new design-system primitives (`AppEventBadge` atom, `DocumentSlotPill` molecule) with file paths and barrel-export instructions. Documented 3-tier color tokenization policy (colorScheme → AppColors → status palette). No backend changes. No domain/data/DI/router changes. Module PR strategy validated against shared-file impact (low). DIAGRAMS.md updated with design-system component hierarchy diagram (no data model diagrams required this iter).
+- 2026-05-14 (iter-2): Architect phase complete. Full-stack SOAT + FCM notification foundation. Two Flutter features (`soat/` new, `notifications/` rebuilt from stub). 6 new API contracts (2 SOAT, 4 notifications). Backend: api-gateway first-time Prisma (`Notification` model), vehicles-ms `Soat` model, users-ms `fcmToken`. 2-3 new Flutter packages (`firebase_messaging`, `flutter_local_notifications`, optional `file_picker`). FCM background isolate `@pragma('vm:entry-point')` + `configureDependencies()` pattern documented as load-bearing. GoRouter DI assessment: top-level static, NOT in GetIt — refactor needed for iter-5, planned not done. SOAT status computed client-side (4 states). Cursor pagination enforced. DIAGRAMS.md updated with ERD + FCM/SOAT sequence diagrams.
