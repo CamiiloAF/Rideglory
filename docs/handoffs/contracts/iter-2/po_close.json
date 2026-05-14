@@ -27,6 +27,11 @@
       "name": "iteration_closed",
       "status": "pass",
       "detail": "Iteration 2 marked as 'done' in state.json. agents.po.status = 'idle'. currentIteration = 2. po_close event appended to events log."
+    },
+    {
+      "name": "iteration_docs_published",
+      "status": "pass",
+      "detail": "ITERATION_SUMMARY_2.md, ITERATION_HISTORY.md, PRODUCT_STATUS.md, iteration_context.md, README.md all written and committed."
     }
   ]
 }
