@@ -987,6 +987,14 @@
       "agent": "devops",
       "at": "2026-05-14T23:50:00Z",
       "detail": "CI validation complete — no GitHub Actions YAML changes required. All 12 Firebase + .env secrets from iter-1 cover iter-2. firebase_messaging and flutter_local_notifications already in pubspec.yaml. docs/DEPLOY.md updated with iter-2 pre-flight checklist. docs/handoffs/devops.md updated. Phase contract generated. QA confirms 21 new tests passing, 0 violations. Ready for tech lead PR review."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 2,
+      "phase": "pr",
+      "agent": "system",
+      "at": "2026-05-14T23:55:00Z",
+      "detail": "PR #14 opened: https://github.com/CamiiloAF/Rideglory/pull/14"
     }
   ]
 }
