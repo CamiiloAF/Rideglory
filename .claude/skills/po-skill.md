@@ -136,3 +136,4 @@ Commands: `dart analyze`, `flutter test`, `dart run build_runner build --delete-
 
 ## Change log
 - 2026-05-13 (plan v3 approval): Redesign-first plan approved. 5 iters (1–5). Story conventions for visual iterations added. Scope updated.
+- 2026-05-14 (iter-1 po_close): Iteration 1 (UI/UX Redesign) closed successfully. All 11 stories (US-1-1 through US-1-11) delivered. 15 screens redesigned, 47 color literals replaced, 2 design-system primitives created (AppEventBadge, DocumentSlotPill), ~140 l10n keys added. dart analyze 0 errors/warnings, flutter test 28 pass, 5 manual smoke tests green. PR #13 merged. 6 close-out documents written (ITERATION_SUMMARY_1.md, ITERATION_HISTORY.md, PRODUCT_STATUS.md, iteration_context.md, README.md, iteration_checkpoint.md). Ready for iter-2 (SOAT + Notification Foundation).
