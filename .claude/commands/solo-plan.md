@@ -167,7 +167,7 @@ Spawn with same structure as the reference framework (Claude-cami/solo-plan.md A
 
 ---
 
-## Agent 2 — Architect: stack proposal + technical review | model: sonnet
+## Agent 2 — Architect: stack proposal + technical review | model: opus
 
 Spawn with same structure as reference, but:
 - Stack is NOT chosen from scratch — it's the existing Flutter + Firebase + rideglory-api stack

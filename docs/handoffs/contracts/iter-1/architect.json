@@ -5,6 +5,8 @@
   "updatedAt": "2026-05-14T05:00:00Z",
   "summary": "Iteration 1 architecture confirmed as presentation-layer only. Zero rideglory-api changes. Zero domain/data/DI/router changes. Two new design-system primitives defined: AppEventBadge atom (lib/design_system/atoms/badges/) from frame zKkmE, and DocumentSlotPill molecule (lib/design_system/molecules/feedback/) from frame aGqnv — the molecule is built once in iter-1 and reused for SOAT badge wiring in iter-2. Color tokenization strategy (3-tier: colorScheme → AppColors → status palette) defined and documented. Module PR cadence (5 PRs, ≤ 40 files each) validated against shared-file impact. Slim handoffs delivered to backend (stand-down), frontend, devops (no-op), and qa.",
   "metrics": {
+    "tokens": 101635,
+    "costUsd": 0.35,
     "newDomainModels": 0,
     "newDtos": 0,
     "newApiEndpoints": 0,

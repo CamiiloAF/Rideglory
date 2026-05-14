@@ -18,7 +18,8 @@ A Flutter mobile application for motorcycle riding events and community coordina
 - **GitHub:** [Rideglory repository](https://github.com/CamiiloAF/Rideglory)
 - **Backend API:** [rideglory-api repository](https://github.com/CamiiloAF/rideglory-api) (NestJS microservices)
 - **Product Documentation:** `/docs/` (PRD, architecture, iteration history)
-- **Latest Iteration:** [Iteration 4 Summary](/docs/ITERATION_SUMMARY_4.md) (AI Event Cover Generation)
+- **Latest Iteration:** [Iteration 1 Summary](/docs/ITERATION_SUMMARY_1.md) (UI/UX Redesign — Design System Baseline)
+- **Previous Iterations:** [Iteration History](/docs/ITERATION_HISTORY.md)
 
 ## Getting Started
 
