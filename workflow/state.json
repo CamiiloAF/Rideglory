@@ -535,8 +535,8 @@
     },
     "qa": {
       "status": "idle",
-      "lastAction": "2026-05-14T14:30:00Z",
-      "focus": "iter-1 QA complete: test catalog (TC-1-1 through TC-1-21), dart analyze 0 errors/0 warnings (no regressions), flutter test 28 pass/4 pre-existing fail (no new failures), design system primitives verified, color tokenization 100%, architecture constraints enforced"
+      "lastAction": "2026-05-14T23:30:00Z",
+      "focus": "iter-2 QA complete: test catalog (TC-2-20 through TC-2-40), dart analyze 0 violations (no regressions), flutter test 64 pass/1 pre-existing fail (no new failures), architecture 8/8 gates passed, sign-off GREEN"
     },
     "devops": {
       "status": "idle",
@@ -963,6 +963,22 @@
       "agent": "frontend",
       "at": "2026-05-14T22:58:43Z",
       "detail": "SOAT flow + notifications rebuild + FCM init. dart analyze 0 issues, flutter test 64 pass / 1 pre-existing fail."
+    },
+    {
+      "type": "qa_run",
+      "iteration": 2,
+      "phase": "qa",
+      "agent": "qa",
+      "at": "2026-05-14T23:30:00Z",
+      "detail": "Test catalog: 21 new test cases (TC-2-20 through TC-2-40). dart analyze: 0 violations. flutter test: 64 pass / 1 pre-existing fail (TC-2-28 rider email unchanged). Architecture: 8/8 quality gates passed. Bugs filed: 0 blocking. US-2-4/2-5/2-6 deferred to device testing. Sign-off: GREEN."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 2,
+      "phase": "qa",
+      "agent": "qa",
+      "at": "2026-05-14T23:30:00Z",
+      "detail": "Test catalog (TC-2-20 through TC-2-40, 21 cases) created. All acceptance criteria verified or deferred with clear rationale. Zero blocking bugs. Ready for tech lead review."
     }
   ]
 }
