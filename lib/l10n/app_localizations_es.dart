@@ -3366,4 +3366,17 @@ class AppLocalizationsEs extends AppLocalizations {
   String notification_rejected_subtitle(String eventName) {
     return 'Tu solicitud para \"$eventName\" no fue aprobada';
   }
+
+  @override
+  String notification_bell_unread_label(int count) {
+    return '$count notificaciones sin leer';
+  }
+
+  @override
+  String get notification_bell_label => 'Notificaciones';
+
+  @override
+  String notification_item_accessibility_label(String title, String time) {
+    return 'Notificación: $title, $time';
+  }
 }

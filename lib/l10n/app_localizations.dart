@@ -6450,6 +6450,24 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Tu solicitud para \"{eventName}\" no fue aprobada'**
   String notification_rejected_subtitle(String eventName);
+
+  /// No description provided for @notification_bell_unread_label.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} notificaciones sin leer'**
+  String notification_bell_unread_label(int count);
+
+  /// No description provided for @notification_bell_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Notificaciones'**
+  String get notification_bell_label;
+
+  /// No description provided for @notification_item_accessibility_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Notificación: {title}, {time}'**
+  String notification_item_accessibility_label(String title, String time);
 }
 
 class _AppLocalizationsDelegate

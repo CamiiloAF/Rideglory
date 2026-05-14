@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/notifications/presentation/cubit/notifications_cubit.dart';
 import 'package:rideglory/features/notifications/presentation/cubit/notifications_state.dart';
@@ -18,8 +19,8 @@ class NotificationBellButton extends StatelessWidget {
 
         return Semantics(
           label: unread > 0
-              ? '$unread notificaciones sin leer'
-              : 'Notificaciones',
+              ? context.l10n.notification_bell_unread_label(unread)
+              : context.l10n.notification_bell_label,
           button: true,
           child: GestureDetector(
             onTap: () => context.pushNamed(AppRoutes.notifications),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/notifications/domain/model/notification_model.dart';
 
@@ -66,7 +67,10 @@ class NotificationItem extends StatelessWidget {
 
     return Semantics(
       button: true,
-      label: 'Notificación: ${notification.title}, ${_timeAgo(notification.createdAt)}',
+      label: context.l10n.notification_item_accessibility_label(
+        notification.title,
+        _timeAgo(notification.createdAt),
+      ),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),

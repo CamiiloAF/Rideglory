@@ -1212,5 +1212,19 @@
     "placeholders": {
       "eventName": { "type": "String" }
     }
+  },
+  "notification_bell_unread_label": "{count} notificaciones sin leer",
+  "@notification_bell_unread_label": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "notification_bell_label": "Notificaciones",
+  "notification_item_accessibility_label": "Notificación: {title}, {time}",
+  "@notification_item_accessibility_label": {
+    "placeholders": {
+      "title": { "type": "String" },
+      "time": { "type": "String" }
+    }
   }
 }

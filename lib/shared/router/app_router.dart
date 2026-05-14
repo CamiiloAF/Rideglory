@@ -19,8 +19,10 @@ import 'package:rideglory/features/events/presentation/tracking/live_map_page.da
 import 'package:rideglory/features/events/presentation/tracking/participants/participants_placeholder_page.dart';
 import 'package:rideglory/features/home/presentation/home_page.dart';
 import 'package:rideglory/features/notifications/presentation/notifications_page.dart';
+import 'package:rideglory/features/soat/presentation/pages/soat_manual_form_page.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_upload_page.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_status_page.dart';
+import 'package:rideglory/features/soat/domain/models/soat_model.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
@@ -337,6 +339,16 @@ class AppRouter {
         builder: (context, state) {
           final vehicle = state.extra as VehicleModel;
           return SoatStatusPage(vehicle: vehicle);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.soatManualForm,
+        name: AppRoutes.soatManualForm,
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>;
+          final vehicle = extra['vehicle'] as VehicleModel;
+          final existingSoat = extra['existingSoat'] as SoatModel?;
+          return SoatManualFormPage(vehicle: vehicle, existingSoat: existingSoat);
         },
       ),
     ],
