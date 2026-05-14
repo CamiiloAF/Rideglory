@@ -19,127 +19,211 @@ class InscriptionCard extends StatelessWidget {
   final VoidCallback? onSecondaryAction;
   final VoidCallback onTap;
 
-  Color _statusBackgroundColor(
-    BuildContext context,
-    RegistrationStatus status,
-  ) {
+  Color _statusBgColor(RegistrationStatus status) {
     switch (status) {
       case RegistrationStatus.approved:
-        return context.appColors.success;
+        return AppColors.successSubtle;
       case RegistrationStatus.pending:
       case RegistrationStatus.readyForEdit:
-        return context.appColors.warning;
+        return AppColors.warningSubtle;
       case RegistrationStatus.rejected:
-        return context.colorScheme.error;
+        return AppColors.errorSubtle;
       case RegistrationStatus.cancelled:
-        return context.colorScheme.onSurfaceVariant;
+        return AppColors.darkTertiary;
+    }
+  }
+
+  Color _statusFgColor(RegistrationStatus status) {
+    switch (status) {
+      case RegistrationStatus.approved:
+        return AppColors.success;
+      case RegistrationStatus.pending:
+      case RegistrationStatus.readyForEdit:
+        return AppColors.warning;
+      case RegistrationStatus.rejected:
+        return AppColors.error;
+      case RegistrationStatus.cancelled:
+        return AppColors.textOnDarkTertiary;
+    }
+  }
+
+  String _statusLabel(BuildContext context, RegistrationStatus status) {
+    switch (status) {
+      case RegistrationStatus.approved:
+        return context.l10n.registration_statusBadgeApproved;
+      case RegistrationStatus.pending:
+        return context.l10n.registration_statusBadgePending;
+      case RegistrationStatus.readyForEdit:
+        return context.l10n.registration_statusBadgeReadyForEdit;
+      case RegistrationStatus.rejected:
+        return context.l10n.registration_statusBadgeRejected;
+      case RegistrationStatus.cancelled:
+        return context.l10n.registration_statusBadgeCancelled;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
     final registration = item.registration;
     final event = item.event;
     final status = registration.status;
 
-    final dateTime = event != null
+    final dateLabel = event != null
         ? '${event.startDate.formattedDate} • ${event.meetingTime.formattedTime}'
         : registration.createdAt?.formattedDate ?? '';
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: context.colorScheme.surface,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: context.colorScheme.outlineVariant),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                event?.imageUrl ?? '',
-                width: 88,
-                height: 88,
-                fit: BoxFit.cover,
-                errorBuilder: (_, _, _) => Container(
-                  width: 88,
-                  height: 88,
-                  color: context.colorScheme.surfaceContainerHighest,
-                  child: Icon(
-                    Icons.event_outlined,
-                    color: colorScheme.onSurfaceVariant,
-                    size: 32,
-                  ),
-                ),
-              ),
+    final fgColor = _statusFgColor(status);
+    final bgColor = _statusBgColor(status);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.darkCard,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.darkBorderPrimary),
             ),
-            AppSpacing.hGapMd,
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Header row: image + info + status badge
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Text(
-                          registration.eventName,
-                          style: context.titleSmall?.copyWith(
-                            color: colorScheme.onSurface,
-                            fontWeight: FontWeight.w600,
+                      // Event image
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          event?.imageUrl ?? '',
+                          width: 72,
+                          height: 72,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => Container(
+                            width: 72,
+                            height: 72,
+                            color: AppColors.darkTertiary,
+                            child: const Icon(
+                              Icons.event_outlined,
+                              color: AppColors.textOnDarkTertiary,
+                              size: 28,
+                            ),
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      AppSpacing.hGapSm,
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _statusBackgroundColor(context, status),
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Text(
-                          status.label.toUpperCase(),
-                          style: context.labelSmall?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                          ),
+                      AppSpacing.hGapMd,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    registration.eventName,
+                                    style: const TextStyle(
+                                      color: AppColors.textOnDarkPrimary,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      height: 1.3,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                AppSpacing.hGapSm,
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: bgColor,
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: fgColor.withValues(alpha: 0.4),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    _statusLabel(context, status),
+                                    style: TextStyle(
+                                      color: fgColor,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 0.3,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            if (dateLabel.isNotEmpty) ...[
+                              AppSpacing.gapXxs,
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.calendar_today_outlined,
+                                    size: 12,
+                                    color: AppColors.textOnDarkSecondary,
+                                  ),
+                                  AppSpacing.hGapXxs,
+                                  Expanded(
+                                    child: Text(
+                                      dateLabel,
+                                      style: const TextStyle(
+                                        color: AppColors.textOnDarkSecondary,
+                                        fontSize: 12,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                            if (event?.city != null) ...[
+                              AppSpacing.gapXxs,
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.location_on_outlined,
+                                    size: 12,
+                                    color: AppColors.textOnDarkSecondary,
+                                  ),
+                                  AppSpacing.hGapXxs,
+                                  Expanded(
+                                    child: Text(
+                                      event!.city,
+                                      style: const TextStyle(
+                                        color: AppColors.textOnDarkSecondary,
+                                        fontSize: 12,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ],
                         ),
                       ),
                     ],
                   ),
-                  if (dateTime.isNotEmpty) ...[
-                    AppSpacing.gapXxs,
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_today_outlined,
-                          size: 14,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                        AppSpacing.hGapXxs,
-                        Text(
-                          dateTime,
-                          style: context.bodySmall?.copyWith(
-                            color: colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                  AppSpacing.gapSm,
-                  Row(
+                ),
+                // Divider
+                const Divider(
+                  height: 1,
+                  color: AppColors.darkBorderPrimary,
+                ),
+                // Action buttons row
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+                  child: Row(
                     children: [
                       Expanded(
                         child: AppButton(
@@ -149,27 +233,28 @@ class InscriptionCard extends StatelessWidget {
                           style: AppButtonStyle.outlined,
                           onPressed: onDetails,
                           isFullWidth: true,
-                          height: 36,
+                          height: 38,
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
+                            horizontal: 12,
                             vertical: 8,
                           ),
                         ),
                       ),
-                      AppSpacing.hGapSm,
-                      if (onSecondaryAction != null)
+                      if (onSecondaryAction != null) ...[
+                        AppSpacing.hGapSm,
                         Expanded(
                           child: _SecondaryActionButton(
                             status: status,
                             onPressed: onSecondaryAction!,
                           ),
                         ),
+                      ],
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -188,6 +273,7 @@ class _SecondaryActionButton extends StatelessWidget {
     IconData icon;
     AppButtonVariant variant;
     AppButtonStyle style = AppButtonStyle.filled;
+
     switch (status) {
       case RegistrationStatus.approved:
         label = context.l10n.registration_myRegistration;
@@ -227,8 +313,8 @@ class _SecondaryActionButton extends StatelessWidget {
       style: style,
       onPressed: onPressed,
       isFullWidth: true,
-      height: 36,
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      height: 38,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     );
   }
 }

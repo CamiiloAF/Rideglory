@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/core/utils/initials.dart';
 import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
+import 'package:rideglory/shared/router/app_routes.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({super.key, required this.user});
@@ -14,50 +17,17 @@ class ProfileHeader extends StatelessWidget {
 
     return Column(
       children: [
-        // Avatar with gradient ring
-        Container(
-          width: 88,
-          height: 88,
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                AppColors.primary,
-                Color(0x66F98C1F), // accent at 40%
-              ],
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(3),
-            child: Container(
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.darkCard,
-              ),
-              child: Center(
-                child: Text(
-                  initials,
-                  style: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+        _ProfileAvatar(initials: initials),
         const SizedBox(height: 12),
         if (user.fullName != null && user.fullName!.isNotEmpty)
           Text(
             user.fullName!,
             style: const TextStyle(
-              fontSize: 20,
+              fontSize: 22,
               fontWeight: FontWeight.w700,
-              color: Colors.white,
+              color: AppColors.textOnDarkPrimary,
             ),
+            textAlign: TextAlign.center,
           ),
         const SizedBox(height: 4),
         if (user.email != null && user.email!.isNotEmpty)
@@ -68,7 +38,96 @@ class ProfileHeader extends StatelessWidget {
               color: AppColors.textOnDarkSecondary,
             ),
           ),
+        if (user.residenceCity != null &&
+            user.residenceCity!.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.location_on_outlined,
+                size: 14,
+                color: AppColors.textOnDarkSecondary,
+              ),
+              const SizedBox(width: 4),
+              Text(
+                user.residenceCity!,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: AppColors.textOnDarkSecondary,
+                ),
+              ),
+            ],
+          ),
+        ],
+        const SizedBox(height: 16),
+        GestureDetector(
+          onTap: () => context.pushNamed(
+            AppRoutes.editProfile,
+            extra: user,
+          ),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            decoration: BoxDecoration(
+              color: AppColors.darkCard,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: AppColors.darkBorderPrimary),
+            ),
+            child: Text(
+              context.l10n.profile_editInfo,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: AppColors.textOnDarkPrimary,
+              ),
+            ),
+          ),
+        ),
       ],
+    );
+  }
+}
+
+class _ProfileAvatar extends StatelessWidget {
+  const _ProfileAvatar({required this.initials});
+
+  final String initials;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 88,
+      height: 88,
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppColors.primary,
+            Color(0x66F98C1F),
+          ],
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(3),
+        child: Container(
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppColors.darkCard,
+          ),
+          child: Center(
+            child: Text(
+              initials,
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textOnDarkPrimary,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -17,120 +17,128 @@ class AttendeePendingRequestCard extends StatelessWidget {
     this.onTap,
   });
 
+  String _timeAgo(BuildContext context, DateTime? createdAt) {
+    if (createdAt == null) return '';
+    final now = DateTime.now();
+    final diff = now.difference(createdAt);
+    if (diff.inDays > 0) return context.l10n.event_timeAgoDays(diff.inDays);
+    if (diff.inHours > 0) return context.l10n.event_timeAgoHours(diff.inHours);
+    return context.l10n.event_timeAgoMinutes(diff.inMinutes.clamp(0, 59));
+  }
+
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-    final textTheme = context.textTheme;
     final vehicleText =
         registration.vehicleSummary?.displayName.isNotEmpty == true
-        ? registration.vehicleSummary!.displayName
-        : context.l10n.notAvailable;
+            ? registration.vehicleSummary!.displayName
+            : context.l10n.notAvailable;
+    final timeAgo = _timeAgo(context, registration.createdAt);
 
     return Container(
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: context.colorScheme.surface,
-        borderRadius: BorderRadius.circular(8),
+        color: AppColors.darkCard,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.darkBorderPrimary),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Material(
-            color: Colors.transparent,
-            child: InkWell(
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
               onTap: onTap,
-              borderRadius: BorderRadius.circular(8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  InitialsAvatar(
-                    fullName: registration.fullName,
-                    radius: 24,
-                    backgroundColor: colorScheme.primary,
-                    textStyle: textTheme.titleSmall?.copyWith(
-                      color: colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InitialsAvatar(
+                      fullName: registration.fullName,
+                      radius: 22,
+                      backgroundColor: AppColors.primarySubtle,
+                      textStyle: const TextStyle(
+                        color: AppColors.primary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                  AppSpacing.hGapMd,
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          registration.fullName,
-                          style: textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: colorScheme.onSurface,
+                    AppSpacing.hGapMd,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            registration.fullName,
+                            style: const TextStyle(
+                              color: AppColors.textOnDarkPrimary,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                        AppSpacing.gapXxs,
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.two_wheeler_rounded,
-                              size: 14,
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                            AppSpacing.hGapXxs,
-                            Expanded(
-                              child: Text(
-                                vehicleText,
-                                style: textTheme.bodySmall?.copyWith(
-                                  color: colorScheme.onSurfaceVariant,
-                                ),
-                                overflow: TextOverflow.ellipsis,
+                          AppSpacing.gapXxs,
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.two_wheeler_rounded,
+                                size: 13,
+                                color: AppColors.textOnDarkSecondary,
                               ),
-                            ),
-                          ],
+                              AppSpacing.hGapXxs,
+                              Expanded(
+                                child: Text(
+                                  vehicleText,
+                                  style: const TextStyle(
+                                    color: AppColors.textOnDarkSecondary,
+                                    fontSize: 13,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (timeAgo.isNotEmpty)
+                      Text(
+                        timeAgo,
+                        style: const TextStyle(
+                          color: AppColors.textOnDarkTertiary,
+                          fontSize: 12,
                         ),
-                      ],
-                    ),
-                  ),
-                  Text(
-                    (() {
-                      final createdAt = registration.createdAt;
-                      if (createdAt == null) return '';
-                      final now = DateTime.now();
-                      final diff = now.difference(createdAt);
-                      if (diff.inDays > 0) {
-                        return context.l10n.event_timeAgoDays(diff.inDays);
-                      }
-                      if (diff.inHours > 0) {
-                        return context.l10n.event_timeAgoHours(diff.inHours);
-                      }
-                      return context.l10n.event_timeAgoMinutes(
-                        diff.inMinutes.clamp(0, 59),
-                      );
-                    })(),
-                    style: textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
+                      ),
+                  ],
+                ),
               ),
             ),
-          ),
-          AppSpacing.gapMd,
-          ApproveRejectBar(
-            rejectLabel: context.l10n.event_rejectRegistration,
-            approveLabel: context.l10n.event_approveRegistration,
-            onReject: () => AttendeeActionConfirmation.showReject(
-              context,
-              participantName: registration.fullName,
-              onConfirm: () => context
-                  .read<AttendeesCubit>()
-                  .rejectRegistration(registration.id!),
+            const Divider(height: 1, color: AppColors.darkBorderPrimary),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: ApproveRejectBar(
+                rejectLabel: context.l10n.event_rejectRegistration,
+                approveLabel: context.l10n.event_approveRegistration,
+                onReject: () => AttendeeActionConfirmation.showReject(
+                  context,
+                  participantName: registration.fullName,
+                  onConfirm: () => context
+                      .read<AttendeesCubit>()
+                      .rejectRegistration(registration.id!),
+                ),
+                onApprove: () => AttendeeActionConfirmation.showApprove(
+                  context,
+                  participantName: registration.fullName,
+                  onConfirm: () => context
+                      .read<AttendeesCubit>()
+                      .approveRegistration(registration.id!),
+                ),
+              ),
             ),
-            onApprove: () => AttendeeActionConfirmation.showApprove(
-              context,
-              participantName: registration.fullName,
-              onConfirm: () => context
-                  .read<AttendeesCubit>()
-                  .approveRegistration(registration.id!),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

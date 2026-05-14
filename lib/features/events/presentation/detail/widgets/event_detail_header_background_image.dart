@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
-import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_header_placeholder.dart';
 
+/// Full-bleed hero image for the Event Detail screen.
+/// Matches Pencil page 5: h=219 image with no gradient overlay.
+/// Falls back to a dark placeholder with a moto icon.
 class EventDetailHeaderBackgroundImage extends StatelessWidget {
   const EventDetailHeaderBackgroundImage({super.key, required this.event});
 
@@ -9,13 +12,36 @@ class EventDetailHeaderBackgroundImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (event.imageUrl != null && event.imageUrl!.isNotEmpty) {
+    final imageUrl = event.imageUrl?.trim();
+    final hasImage = imageUrl != null && imageUrl.isNotEmpty;
+
+    if (hasImage) {
       return Image.network(
-        event.imageUrl!,
+        imageUrl,
         fit: BoxFit.cover,
-        errorBuilder: (_, _, _) => const EventDetailHeaderPlaceholder(),
+        width: double.infinity,
+        height: double.infinity,
+        errorBuilder: (_, _, _) => const _Placeholder(),
       );
     }
-    return const EventDetailHeaderPlaceholder();
+    return const _Placeholder();
+  }
+}
+
+class _Placeholder extends StatelessWidget {
+  const _Placeholder();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: AppColors.darkCard,
+      child: const Center(
+        child: Icon(
+          Icons.two_wheeler_rounded,
+          color: AppColors.primary,
+          size: 64,
+        ),
+      ),
+    );
   }
 }

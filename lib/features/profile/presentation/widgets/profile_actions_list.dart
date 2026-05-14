@@ -31,20 +31,16 @@ class ProfileActionsList extends StatelessWidget {
         children: [
           _ProfileMenuItem(
             icon: Icons.event_note_outlined,
-            label: context.l10n.registration_myRegistrations,
-            iconColor: AppColors.textOnDarkSecondary,
+            label: context.l10n.profile_registrations,
             onTap: () => context.pushNamed(AppRoutes.myRegistrations),
-            showChevron: true,
           ),
-          const Divider(height: 1, thickness: 1, color: AppColors.darkBorderPrimary),
+          const _MenuDivider(),
           _ProfileMenuItem(
             icon: Icons.build_outlined,
-            label: context.l10n.maintenance_maintenances,
-            iconColor: AppColors.textOnDarkSecondary,
+            label: context.l10n.profile_maintenances,
             onTap: () => context.pushNamed(AppRoutes.maintenances),
-            showChevron: true,
           ),
-          const Divider(height: 1, thickness: 1, color: AppColors.darkBorderPrimary),
+          const _MenuDivider(),
           _ProfileMenuItem(
             icon: Icons.logout_outlined,
             label: context.l10n.auth_logout,
@@ -70,13 +66,26 @@ class ProfileActionsList extends StatelessWidget {
   }
 }
 
+class _MenuDivider extends StatelessWidget {
+  const _MenuDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Divider(
+      height: 1,
+      thickness: 1,
+      color: AppColors.darkBorderPrimary,
+    );
+  }
+}
+
 class _ProfileMenuItem extends StatelessWidget {
   const _ProfileMenuItem({
     required this.icon,
     required this.label,
     required this.onTap,
     this.iconColor = AppColors.textOnDarkSecondary,
-    this.labelColor = Colors.white,
+    this.labelColor = AppColors.textOnDarkPrimary,
     this.showChevron = true,
   });
 

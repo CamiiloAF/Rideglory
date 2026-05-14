@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
 
+/// Floating SOS button shown on the live map.
+/// Tapping opens the SOS confirmation sheet.
 class SosButton extends StatelessWidget {
   const SosButton({
     super.key,
@@ -16,21 +18,21 @@ class SosButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        width: 48,
-        height: 48,
+        width: 56,
+        height: 56,
         decoration: BoxDecoration(
           color: AppColors.error,
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: AppColors.error.withValues(alpha: 0.5),
-              blurRadius: 16,
+              color: AppColors.error.withValues(alpha: 0.55),
+              blurRadius: 20,
               spreadRadius: 2,
               offset: const Offset(0, 4),
             ),
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
-              blurRadius: 8,
+              color: Colors.black.withValues(alpha: 0.35),
+              blurRadius: 10,
               offset: const Offset(0, 4),
             ),
           ],
@@ -40,8 +42,8 @@ class SosButton extends StatelessWidget {
             label,
             style: const TextStyle(
               color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 11,
+              fontWeight: FontWeight.w900,
+              fontSize: 12,
               letterSpacing: 0.5,
             ),
           ),

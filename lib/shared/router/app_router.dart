@@ -18,6 +18,7 @@ import 'package:rideglory/features/events/presentation/detail/event_detail_by_id
 import 'package:rideglory/features/events/presentation/tracking/live_map_page.dart';
 import 'package:rideglory/features/events/presentation/tracking/participants/participants_placeholder_page.dart';
 import 'package:rideglory/features/home/presentation/home_page.dart';
+import 'package:rideglory/features/notifications/presentation/notifications_page.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
@@ -27,6 +28,8 @@ import '../../features/authentication/login/presentation/login_view.dart';
 import '../../features/authentication/login/presentation/forgot_password_view.dart';
 import '../../features/authentication/signup/presentation/signup_view.dart';
 import '../../features/profile/presentation/profile_page.dart';
+import '../../features/profile/presentation/edit_profile_page.dart';
+import '../../features/users/domain/model/user_model.dart';
 import '../../features/maintenance/presentation/detail/maintenance_detail_page.dart';
 import '../../features/maintenance/presentation/form/maintenance_form_page.dart';
 import '../../features/maintenance/presentation/list/maintenances/maintenances_page.dart';
@@ -164,6 +167,16 @@ class AppRouter {
                 path: AppRoutes.profile,
                 name: AppRoutes.profile,
                 builder: (context, state) => const ProfilePage(),
+                routes: [
+                  GoRoute(
+                    path: 'edit',
+                    name: AppRoutes.editProfile,
+                    builder: (context, state) {
+                      final user = state.extra as UserModel;
+                      return EditProfilePage(user: user);
+                    },
+                  ),
+                ],
               ),
             ],
           ),
@@ -302,6 +315,11 @@ class AppRouter {
           final userId = state.extra as String;
           return RiderProfilePage(userId: userId);
         },
+      ),
+      GoRoute(
+        path: AppRoutes.notifications,
+        name: AppRoutes.notifications,
+        builder: (context, state) => const NotificationsPage(),
       ),
     ],
   );

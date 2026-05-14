@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
+/// Meeting-point card matching Pencil page 5 "Meeting Point Section":
+/// - Section title 16/700 white
+/// - Map Card: radius 12, bg #1E1E24
+///   - Map placeholder area h=130
+///   - Address row: address text (13/normal secondary) + orange "Ver mapa" pill
 class EventDetailMeetingPointSection extends StatelessWidget {
   const EventDetailMeetingPointSection({
     super.key,
@@ -19,96 +24,82 @@ class EventDetailMeetingPointSection extends StatelessWidget {
       children: [
         Text(
           context.l10n.event_meetingPointLabel,
-          style: TextStyle(
-            color: context.colorScheme.onSurface,
-            fontSize: 19,
-            fontWeight: FontWeight.w800,
-            letterSpacing: -0.2,
+          style: const TextStyle(
+            color: AppColors.textOnDarkPrimary,
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
           ),
         ),
-        AppSpacing.gapMd,
+        const SizedBox(height: 10),
         Container(
           decoration: BoxDecoration(
-            color: context.colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: context.colorScheme.outlineVariant),
+            color: AppColors.darkCard,
+            borderRadius: BorderRadius.circular(12),
           ),
           clipBehavior: Clip.antiAlias,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // ── Map placeholder ──────────────────────────────────────
               Container(
-                height: 168,
+                height: 130,
                 width: double.infinity,
-                color: AppColors.darkCard,
-                child: Center(
+                color: AppColors.darkTertiary,
+                child: const Center(
                   child: Icon(
-                    Icons.place,
-                    color: context.colorScheme.primary,
-                    size: 56,
+                    Icons.location_on_outlined,
+                    color: AppColors.primary,
+                    size: 40,
                   ),
                 ),
               ),
+
+              // ── Address row ─────────────────────────────────────────
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            context.l10n.event_meetingPointLabel,
-                            style: TextStyle(
-                              color: context.colorScheme.onSurface,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          AppSpacing.gapXxs,
-                          Text(
-                            location,
-                            style: TextStyle(
-                              color: context.colorScheme.onSurfaceVariant,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ],
+                      child: Text(
+                        location,
+                        style: const TextStyle(
+                          color: AppColors.textOnDarkSecondary,
+                          fontSize: 13,
+                        ),
                       ),
                     ),
                     if (onViewMap != null) ...[
-                      AppSpacing.hGapMd,
-                      Material(
-                        color: context.colorScheme.primary,
-                        borderRadius: BorderRadius.circular(10),
-                        child: InkWell(
-                          onTap: onViewMap,
-                          borderRadius: BorderRadius.circular(10),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(
-                                  Icons.send,
-                                  color: Colors.white,
-                                  size: 18,
+                      const SizedBox(width: 12),
+                      GestureDetector(
+                        onTap: onViewMap,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.location_on_outlined,
+                                color: AppColors.darkBgPrimary,
+                                size: 12,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                context.l10n.event_viewMap,
+                                style: const TextStyle(
+                                  color: AppColors.darkBgPrimary,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
                                 ),
-                                AppSpacing.hGapSm,
-                                Text(
-                                  context.l10n.event_viewMap,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                       ),

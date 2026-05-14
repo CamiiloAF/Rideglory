@@ -32,16 +32,18 @@ class RegistrationDetailBottomBar extends StatelessWidget {
         child: Row(
           children: [
             if (showCancel)
-              AppButton(
-                label: context.l10n.registration_cancelRegistration,
-                variant: AppButtonVariant.danger,
-                onPressed: () async {
-                  final ok = await params.onCancelRegistration!();
-                  if (ok && context.mounted) {
-                    Navigator.of(context).pop();
-                  }
-                },
-                isFullWidth: false,
+              Expanded(
+                child: AppButton(
+                  label: context.l10n.registration_cancelRegistration,
+                  variant: AppButtonVariant.danger,
+                  onPressed: () async {
+                    final ok = await params.onCancelRegistration!();
+                    if (ok && context.mounted) {
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  isFullWidth: true,
+                ),
               )
             else if (params.onReject != null && params.onApprove != null)
               Expanded(
@@ -54,20 +56,26 @@ class RegistrationDetailBottomBar extends StatelessWidget {
               )
             else ...[
               if (params.onReject != null)
-                AppButton(
-                  label: context.l10n.registration_reject,
-                  variant: AppButtonVariant.danger,
-                  icon: Icons.close_rounded,
-                  onPressed: () => params.onReject!(context),
-                  isFullWidth: false,
+                Expanded(
+                  child: AppButton(
+                    label: context.l10n.registration_reject,
+                    variant: AppButtonVariant.danger,
+                    icon: Icons.close_rounded,
+                    onPressed: () => params.onReject!(context),
+                    isFullWidth: true,
+                  ),
                 ),
+              if (params.onReject != null && params.onApprove != null)
+                AppSpacing.hGapSm,
               if (params.onApprove != null)
-                AppButton(
-                  label: context.l10n.registration_approve,
-                  variant: AppButtonVariant.primary,
-                  icon: Icons.check_rounded,
-                  onPressed: () => params.onApprove!(context),
-                  isFullWidth: false,
+                Expanded(
+                  child: AppButton(
+                    label: context.l10n.registration_approve,
+                    variant: AppButtonVariant.primary,
+                    icon: Icons.check_rounded,
+                    onPressed: () => params.onApprove!(context),
+                    isFullWidth: true,
+                  ),
                 ),
             ],
           ],

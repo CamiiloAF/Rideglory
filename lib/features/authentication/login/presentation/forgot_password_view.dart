@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
-import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
+import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/authentication/constants/auth_form_fields.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
@@ -42,20 +42,30 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
 
   void _handleSend(BuildContext context) {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
-      final email = (_formKey.currentState!.value[AuthFormFields.email] as String).trim();
+      final email =
+          (_formKey.currentState!.value[AuthFormFields.email] as String).trim();
       context.read<AuthCubit>().sendPasswordResetEmail(email);
+    }
+  }
+
+  void _handleResend(BuildContext context) {
+    if (_sentEmail.isNotEmpty) {
+      context.read<AuthCubit>().sendPasswordResetEmail(_sentEmail);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthCubit, AuthState>(
-      listener: _onAuthStateChanged,
-      child: Scaffold(
-        backgroundColor: AppColors.darkBgPrimary,
-        body: SafeArea(
+    return Scaffold(
+      backgroundColor: AppColors.darkBgPrimary,
+      body: BlocListener<AuthCubit, AuthState>(
+        listener: _onAuthStateChanged,
+        child: SafeArea(
           child: _sent
-              ? _EmailSentContent(email: _sentEmail)
+              ? _EmailSentContent(
+                  email: _sentEmail,
+                  onResend: () => _handleResend(context),
+                )
               : _ForgotPasswordForm(
                   formKey: _formKey,
                   onSend: () => _handleSend(context),
@@ -65,6 +75,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
     );
   }
 }
+
+// ─── Forgot Password Form ───────────────────────────────────────────────────
 
 class _ForgotPasswordForm extends StatelessWidget {
   const _ForgotPasswordForm({
@@ -78,146 +90,155 @@ class _ForgotPasswordForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(height: 48),
-            const _BrandHeader(),
-            const SizedBox(height: 32),
-            GestureDetector(
-              onTap: () => context.pop(),
-              child: const Icon(
-                Icons.arrow_back,
-                color: AppColors.textOnDarkSecondary,
-                size: 24,
-              ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              context.l10n.auth_forgotPasswordTitle,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              context.l10n.auth_forgotPasswordBody,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: AppColors.textOnDarkSecondary,
-                height: 1.5,
-              ),
-            ),
-            const SizedBox(height: 24),
-            FormBuilder(
-              key: formKey,
-              child: Column(
-                children: [
-                  FormBuilderTextField(
-                    name: AuthFormFields.email,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      hintText: context.l10n.auth_emailHint,
-                      prefixIcon: const Icon(
-                        Icons.mail_outline,
-                        color: AppColors.textOnDarkSecondary,
-                        size: 20,
-                      ),
-                      filled: true,
-                      fillColor: AppColors.darkBgSecondary,
-                      hintStyle: const TextStyle(
-                        color: AppColors.tabInactive,
-                        fontSize: 14,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.darkBorderPrimary),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.darkBorderPrimary),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.primary),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 16,
-                      ),
-                    ),
-                    style: const TextStyle(color: Colors.white, fontSize: 14),
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(
-                          errorText: 'El correo es requerido'),
-                      FormBuilderValidators.email(
-                          errorText: 'Correo inválido'),
-                    ]),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              height: 52,
-              child: ElevatedButton(
-                onPressed: onSend,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: AppColors.darkBgPrimary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  textStyle: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                child: Text(context.l10n.auth_sendLink),
-              ),
-            ),
-            const SizedBox(height: 24),
-            Center(
-              child: GestureDetector(
-                onTap: () => context.goNamed(AppRoutes.login),
-                child: RichText(
-                  text: TextSpan(
-                    style: const TextStyle(fontSize: 14),
-                    children: [
-                      TextSpan(
-                        text: '${context.l10n.auth_rememberPassword} ',
-                        style: const TextStyle(
-                            color: AppColors.textOnDarkSecondary),
-                      ),
-                      TextSpan(
-                        text: context.l10n.auth_signInLink2,
-                        style: const TextStyle(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 40),
-          ],
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SizedBox(height: 24),
+          _BackButton(),
+          const SizedBox(height: 32),
+          const _ForgotPasswordHeading(),
+          const SizedBox(height: 32),
+          _ForgotPasswordEmailField(formKey: formKey),
+          const SizedBox(height: 24),
+          _SendLinkButton(onSend: onSend),
+          const SizedBox(height: 24),
+          _BackToLoginLink(),
+          const SizedBox(height: 40),
+        ],
+      ),
+    );
+  }
+}
+
+class _BackButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        if (context.canPop()) context.pop();
+      },
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: AppColors.darkCard,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.darkBorderPrimary),
+        ),
+        child: const Icon(
+          Icons.arrow_back,
+          color: AppColors.textOnDarkPrimary,
+          size: 20,
         ),
       ),
     );
   }
 }
 
+class _ForgotPasswordHeading extends StatelessWidget {
+  const _ForgotPasswordHeading();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          context.l10n.auth_recovery_heading,
+          style: context.textTheme.displaySmall?.copyWith(
+            color: AppColors.textOnDarkPrimary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          context.l10n.auth_recovery_subtitle,
+          style: context.textTheme.bodyMedium?.copyWith(
+            color: AppColors.textOnDarkSecondary,
+            height: 1.5,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ForgotPasswordEmailField extends StatelessWidget {
+  const _ForgotPasswordEmailField({required this.formKey});
+
+  final GlobalKey<FormBuilderState> formKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return FormBuilder(
+      key: formKey,
+      child: AppTextField(
+        name: AuthFormFields.email,
+        labelText: context.l10n.auth_email_label,
+        hintText: context.l10n.auth_email_placeholder,
+        keyboardType: TextInputType.emailAddress,
+        textCapitalization: TextCapitalization.none,
+        textInputAction: TextInputAction.done,
+        validator: FormBuilderValidators.compose([
+          FormBuilderValidators.required(
+            errorText: context.l10n.auth_emailRequired,
+          ),
+          FormBuilderValidators.email(
+            errorText: context.l10n.auth_invalidEmail,
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
+class _SendLinkButton extends StatelessWidget {
+  const _SendLinkButton({required this.onSend});
+
+  final VoidCallback onSend;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AuthCubit, AuthState>(
+      builder: (context, state) {
+        return AppButton(
+          label: context.l10n.auth_recovery_send,
+          onPressed: onSend,
+          isLoading: state.isLoading,
+        );
+      },
+    );
+  }
+}
+
+class _BackToLoginLink extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: GestureDetector(
+        onTap: () => context.goNamed(AppRoutes.login),
+        child: Text(
+          context.l10n.auth_recovery_back,
+          style: context.textTheme.bodySmall?.copyWith(
+            color: AppColors.primary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Email Sent Content ─────────────────────────────────────────────────────
+
 class _EmailSentContent extends StatelessWidget {
-  const _EmailSentContent({required this.email});
+  const _EmailSentContent({
+    required this.email,
+    required this.onResend,
+  });
 
   final String email;
+  final VoidCallback onResend;
 
   @override
   Widget build(BuildContext context) {
@@ -226,39 +247,20 @@ class _EmailSentContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 48),
-          const _BrandHeader(),
           const Spacer(),
-          Center(
-            child: Container(
-              width: 80,
-              height: 80,
-              decoration: const BoxDecoration(
-                color: AppColors.primarySubtle,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.mail_outline,
-                color: AppColors.primary,
-                size: 40,
-              ),
-            ),
-          ),
+          _EmailSentIcon(),
           const SizedBox(height: 24),
           Text(
-            context.l10n.auth_emailSentTitle,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
+            context.l10n.auth_recovery_sent_title,
+            style: context.textTheme.displaySmall?.copyWith(
+              color: AppColors.textOnDarkPrimary,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 12),
           Text(
-            context.l10n.auth_emailSentBody,
-            style: const TextStyle(
-              fontSize: 14,
+            context.l10n.auth_recovery_sent_body(email),
+            style: context.textTheme.bodyMedium?.copyWith(
               color: AppColors.textOnDarkSecondary,
               height: 1.5,
             ),
@@ -269,47 +271,34 @@ class _EmailSentContent extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               decoration: BoxDecoration(
-                color: AppColors.darkBgSecondary,
+                color: AppColors.darkCard,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: AppColors.darkBorderPrimary),
               ),
               child: Text(
                 email,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: AppColors.textOnDarkPrimary,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
           ],
           const Spacer(),
-          SizedBox(
-            height: 52,
-            child: ElevatedButton(
-              onPressed: () => context.goNamed(AppRoutes.login),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.darkBgPrimary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                textStyle: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              child: Text(context.l10n.auth_backToLogin),
-            ),
+          AppButton(
+            label: context.l10n.auth_recovery_back_home,
+            onPressed: () => context.goNamed(AppRoutes.login),
           ),
           const SizedBox(height: 16),
           Center(
-            child: Text(
-              context.l10n.auth_resendEmail,
-              style: const TextStyle(
-                color: AppColors.primary,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
+            child: GestureDetector(
+              onTap: onResend,
+              child: Text(
+                context.l10n.auth_recovery_resend,
+                style: context.textTheme.bodySmall?.copyWith(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -320,32 +309,23 @@ class _EmailSentContent extends StatelessWidget {
   }
 }
 
-class _BrandHeader extends StatelessWidget {
-  const _BrandHeader();
-
+class _EmailSentIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        Text(
-          'RIDEGLORY',
-          style: TextStyle(
-            fontSize: 28,
-            fontWeight: FontWeight.w800,
-            color: AppColors.primary,
-            letterSpacing: 1.0,
-          ),
+    return Center(
+      child: Container(
+        width: 80,
+        height: 80,
+        decoration: const BoxDecoration(
+          color: AppColors.primarySubtle,
+          shape: BoxShape.circle,
         ),
-        SizedBox(height: 4),
-        Text(
-          'Connect. Ride. Explore.',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            color: AppColors.textOnDarkSecondary,
-          ),
+        child: const Icon(
+          Icons.mail_outline_rounded,
+          color: AppColors.primary,
+          size: 40,
         ),
-      ],
+      ),
     );
   }
 }

@@ -17,26 +17,30 @@ class TelemetryMetric extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final resolvedValueColor =
+        valueColor ?? AppColors.textOnDarkPrimary;
+
     return Expanded(
       child: Container(
-        height: 66,
+        height: 64,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
-          color: context.colorScheme.surface,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: context.colorScheme.outlineVariant),
+          color: AppColors.darkCard,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.darkBorderPrimary),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               label.toUpperCase(),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: context.labelSmall?.copyWith(
-                color: context.colorScheme.onSurfaceVariant,
+              style: const TextStyle(
+                color: AppColors.textOnDarkTertiary,
+                fontSize: 9,
+                fontWeight: FontWeight.w700,
                 letterSpacing: 0.8,
-                fontWeight: FontWeight.w900,
               ),
             ),
             const Spacer(),
@@ -44,18 +48,19 @@ class TelemetryMetric extends StatelessWidget {
               children: [
                 Icon(
                   icon,
-                  size: 16,
-                  color: valueColor ?? context.colorScheme.onSurface,
+                  size: 14,
+                  color: resolvedValueColor,
                 ),
-                AppSpacing.hGapSm,
+                AppSpacing.hGapXxs,
                 Expanded(
                   child: Text(
                     value,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: context.titleMedium?.copyWith(
-                      color: valueColor ?? context.colorScheme.onSurface,
-                      fontWeight: FontWeight.w900,
+                    style: TextStyle(
+                      color: resolvedValueColor,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
                 ),

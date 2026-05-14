@@ -9,6 +9,7 @@ import 'package:rideglory/features/users/presentation/cubit/rider_profile_cubit.
 import 'package:rideglory/features/users/presentation/widgets/rider_profile_content.dart';
 import 'package:rideglory/features/users/presentation/widgets/rider_profile_error.dart';
 import 'package:rideglory/features/users/presentation/widgets/rider_profile_loading.dart';
+import 'package:rideglory/shared/widgets/states/page_loading_state_widget.dart';
 
 class RiderProfilePage extends StatelessWidget {
   const RiderProfilePage({super.key, required this.userId});
@@ -26,14 +27,15 @@ class RiderProfilePage extends StatelessWidget {
           child: BlocBuilder<RiderProfileCubit, ResultState<UserModel>>(
             builder: (context, state) {
               return state.when(
-                initial: () => const RiderProfileLoading(),
+                initial: () => const PageLoadingStateWidget(),
                 loading: () => const RiderProfileLoading(),
                 data: (user) => RiderProfileContent(user: user),
                 empty: () => const RiderProfileLoading(),
                 error: (error) => RiderProfileError(
                   message: error.message,
-                  onRetry: () =>
-                      context.read<RiderProfileCubit>().fetchRiderProfile(userId),
+                  onRetry: () => context
+                      .read<RiderProfileCubit>()
+                      .fetchRiderProfile(userId),
                 ),
               );
             },

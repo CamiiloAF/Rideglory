@@ -24,27 +24,42 @@ class RegistrationDetailPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppColors.darkBgPrimary,
-      appBar: AppAppBar(title: context.l10n.registration_requestDetailsTitle),
+      appBar: AppBar(
+        title: Text(
+          context.l10n.registration_requestDetailsTitle,
+          style: const TextStyle(
+            color: AppColors.textOnDarkPrimary,
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        backgroundColor: AppColors.darkBgPrimary,
+        surfaceTintColor: Colors.transparent,
+        centerTitle: true,
+        elevation: 0,
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             RegistrationDetailHeader(registration: registration),
             if (!isRegistrantViewer)
-              ContactPopupMenuButton(
-                phone: registration.phone,
-                contactLabel: context.l10n.registration_contactLabel,
-                callLabel: context.l10n.registration_callLabel,
-                whatsappLabel: context.l10n.registration_whatsappLabel,
-                alignment: Alignment.center,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: ContactPopupMenuButton(
+                  phone: registration.phone,
+                  contactLabel: context.l10n.registration_contactLabel,
+                  callLabel: context.l10n.registration_callLabel,
+                  whatsappLabel: context.l10n.registration_whatsappLabel,
+                  alignment: Alignment.center,
+                ),
               ),
-            AppSpacing.gapSm,
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
                   RegistrationDetailSectionCard(
-                    icon: Icons.person_outline,
+                    icon: Icons.person_outline_rounded,
                     title: context.l10n.registration_sectionPersonalInfo,
                     initiallyExpanded: true,
                     child: Column(
@@ -56,8 +71,7 @@ class RegistrationDetailPage extends StatelessWidget {
                           showDivider: false,
                         ),
                         RegistrationDetailInfoRow(
-                          label:
-                              context.l10n.registration_identificationIdLabel,
+                          label: context.l10n.registration_identificationIdLabel,
                           value: registration.identificationNumber,
                         ),
                         RegistrationDetailInfoRow(
@@ -81,8 +95,7 @@ class RegistrationDetailPage extends StatelessWidget {
                       children: [
                         RegistrationDetailInfoRow(
                           label: context.l10n.registration_epsOrInsuranceLabel,
-                          value:
-                              registration.medicalInsurance != null &&
+                          value: registration.medicalInsurance != null &&
                                   registration.medicalInsurance!.isNotEmpty
                               ? '${registration.eps} / ${registration.medicalInsurance}'
                               : registration.eps,
@@ -91,16 +104,19 @@ class RegistrationDetailPage extends StatelessWidget {
                         RegistrationDetailInfoRow(
                           label: context.l10n.registration_bloodTypeLabel,
                           value: registration.bloodType.label,
-                          valueColor: context.colorScheme.error,
+                          valueColor: AppColors.error,
                         ),
                         AppSpacing.gapSm,
                         Text(
                           context.l10n.registration_emergencyContact,
-                          style: context.textTheme.titleSmall?.copyWith(
-                            color: context.colorScheme.onSurfaceVariant,
+                          style: const TextStyle(
+                            color: AppColors.textOnDarkSecondary,
+                            fontSize: 12,
                             fontWeight: FontWeight.w600,
+                            letterSpacing: 0.3,
                           ),
                         ),
+                        AppSpacing.gapXxs,
                         RegistrationDetailEmergencyCard(
                           contactName: registration.emergencyContactName,
                           contactPhone: registration.emergencyContactPhone,
@@ -135,45 +151,46 @@ class _VehicleDetailContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-    final textTheme = context.textTheme;
     final vehicleModel =
         registration.vehicleSummary?.displayName.isNotEmpty == true
-        ? registration.vehicleSummary!.displayName
-        : context.l10n.notAvailable;
+            ? registration.vehicleSummary!.displayName
+            : context.l10n.notAvailable;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: 64,
-          height: 64,
+          width: 60,
+          height: 60,
           decoration: BoxDecoration(
-            color: context.colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(8),
+            color: AppColors.darkTertiary,
+            borderRadius: BorderRadius.circular(10),
           ),
-          child: Icon(
+          child: const Icon(
             Icons.two_wheeler_outlined,
-            size: 32,
-            color: colorScheme.onSurfaceVariant,
+            size: 28,
+            color: AppColors.textOnDarkSecondary,
           ),
         ),
-        AppSpacing.hGapLg,
+        AppSpacing.hGapMd,
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 context.l10n.registration_motorcycleLabel.toUpperCase(),
-                style: textTheme.labelSmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
+                style: const TextStyle(
+                  color: AppColors.textOnDarkTertiary,
+                  fontSize: 11,
+                  letterSpacing: 0.5,
                 ),
               ),
               AppSpacing.gapXxs,
               Text(
                 vehicleModel,
-                style: textTheme.titleSmall?.copyWith(
-                  color: colorScheme.onSurface,
+                style: const TextStyle(
+                  color: AppColors.textOnDarkPrimary,
+                  fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -182,25 +199,27 @@ class _VehicleDetailContent extends StatelessWidget {
                 children: [
                   Text(
                     '${context.l10n.registration_plateLabel}: ',
-                    style: textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
+                    style: const TextStyle(
+                      color: AppColors.textOnDarkSecondary,
+                      fontSize: 13,
                     ),
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
+                      horizontal: 8,
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: context.appColors.licensePlateTagBackground,
+                      color: AppColors.licensePlateTagBackground,
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
                       registration.vehicleSummary?.licensePlate ??
                           context.l10n.notAvailable,
-                      style: textTheme.labelMedium?.copyWith(
-                        color: context.appColors.licensePlateTagText,
-                        fontWeight: FontWeight.w600,
+                      style: const TextStyle(
+                        color: AppColors.licensePlateTagText,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),

@@ -432,6 +432,33 @@ class AppLocalizationsEs extends AppLocalizations {
       'Se cerrará el seguimiento en vivo para todos los participantes.';
 
   @override
+  String get event_requestUnderReview =>
+      'Tu solicitud está siendo revisada por el organizador.';
+
+  @override
+  String get event_registrationRejected => 'Inscripción rechazada';
+
+  @override
+  String get event_rejectedMessage =>
+      'El organizador no aprobó tu solicitud para este evento.';
+
+  @override
+  String get event_eventCancelled => 'Evento cancelado';
+
+  @override
+  String get event_cancelledMessage =>
+      'Este evento fue cancelado por el organizador.';
+
+  @override
+  String get event_participantsReady => 'Participantes listos para iniciar';
+
+  @override
+  String get event_rideInProgress => 'Rodada en progreso';
+
+  @override
+  String get event_saveDraft => 'Guardar borrador';
+
+  @override
   String get event_meetingTimePrefix => 'Encuentro: ';
 
   @override
@@ -1051,6 +1078,55 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get map_mockDeviceWahooElemnt => 'Wahoo ELEMNT';
+
+  @override
+  String get map_endRide => 'Finalizar rodada';
+
+  @override
+  String get map_endRideConfirmTitle => '¿Finalizar rodada?';
+
+  @override
+  String get map_endRideConfirmMessage =>
+      'Se cerrará el seguimiento en vivo para todos los participantes. Esta acción no se puede deshacer.';
+
+  @override
+  String get map_endRideConfirmButton => 'Sí, finalizar';
+
+  @override
+  String get map_sosAlertTitle => 'Alerta SOS activa';
+
+  @override
+  String get map_sosAlertMessage =>
+      'Has enviado una alerta de emergencia. Los demás participantes verán tu ubicación y sabrán que necesitas ayuda.';
+
+  @override
+  String get map_sosDismiss => 'Cancelar alerta';
+
+  @override
+  String get map_sosConfirmTitle => '¿Enviar SOS?';
+
+  @override
+  String get map_sosConfirmMessage =>
+      'Esto notificará a todos los participantes de la rodada sobre tu emergencia y compartirá tu ubicación en tiempo real.';
+
+  @override
+  String get map_sosSend => 'Enviar SOS';
+
+  @override
+  String get map_mySpeed => 'MI VEL';
+
+  @override
+  String get map_myDistance => 'MI DIST';
+
+  @override
+  String get map_participantsTitle => 'Participantes';
+
+  @override
+  String get map_activeRiders => 'en rodada';
+
+  @override
+  String get map_noActiveRidersMessage =>
+      'No hay riders activos en este momento';
 
   @override
   String get maintenance_maintenance => 'Mantenimiento';
@@ -1719,6 +1795,69 @@ class AppLocalizationsEs extends AppLocalizations {
   String get profile_loadingError => 'No pudimos cargar tu perfil';
 
   @override
+  String get profile_editTitle => 'Editar perfil';
+
+  @override
+  String get profile_editSave => 'Guardar cambios';
+
+  @override
+  String get profile_editCancel => 'Cancelar';
+
+  @override
+  String get profile_editSuccess => 'Perfil actualizado correctamente';
+
+  @override
+  String get profile_fieldFullName => 'Nombre completo';
+
+  @override
+  String get profile_fieldPhone => 'Teléfono';
+
+  @override
+  String get profile_fieldCity => 'Ciudad de residencia';
+
+  @override
+  String get profile_fieldBloodType => 'Tipo de sangre';
+
+  @override
+  String get profile_fieldEmergencyContact => 'Contacto de emergencia';
+
+  @override
+  String get profile_fieldEmergencyPhone => 'Teléfono de emergencia';
+
+  @override
+  String get profile_sectionPersonal => 'Información personal';
+
+  @override
+  String get profile_sectionEmergency => 'Contacto de emergencia';
+
+  @override
+  String get profile_editInfo => 'Editar perfil';
+
+  @override
+  String get profile_statsEvents => 'Rodadas';
+
+  @override
+  String get profile_statsKm => 'Km';
+
+  @override
+  String get profile_statsFollowers => 'Seguidores';
+
+  @override
+  String get profile_garage => 'Garaje';
+
+  @override
+  String get profile_viewAll => 'Ver todo';
+
+  @override
+  String get profile_settings => 'Configuración';
+
+  @override
+  String get profile_registrations => 'Mis inscripciones';
+
+  @override
+  String get profile_maintenances => 'Mantenimientos';
+
+  @override
   String get registration_registrationPageTitle => 'Inscripción al Evento';
 
   @override
@@ -2219,6 +2358,21 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get rider_errorRetry => 'Reintentar';
+
+  @override
+  String get rider_follow => 'Seguir';
+
+  @override
+  String get rider_statsEvents => 'Rodadas';
+
+  @override
+  String get rider_statsFollowers => 'Seguidores';
+
+  @override
+  String get rider_statsFollowing => 'Siguiendo';
+
+  @override
+  String get rider_location => 'Ubicación';
 
   @override
   String get app_tagline => 'Rodadas. Comunidad. Aventura.';
@@ -2909,4 +3063,50 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get nav_addEvent => 'Nueva Rodada';
+
+  @override
+  String get notification_centerTitle => 'Notificaciones';
+
+  @override
+  String get notification_markAllRead => 'Marcar todo como leído';
+
+  @override
+  String get notification_emptyTitle => 'Sin notificaciones';
+
+  @override
+  String get notification_emptySubtitle =>
+      'Aquí aparecerán tus inscripciones aprobadas, recordatorios de eventos y más.';
+
+  @override
+  String get notification_sectionUnread => 'NO LEÍDAS';
+
+  @override
+  String get notification_sectionRead => 'ANTERIORES';
+
+  @override
+  String get registration_statusBadgeApproved => 'Aprobada';
+
+  @override
+  String get registration_statusBadgePending => 'Pendiente';
+
+  @override
+  String get registration_statusBadgeRejected => 'Rechazada';
+
+  @override
+  String get registration_statusBadgeCancelled => 'Cancelada';
+
+  @override
+  String get registration_statusBadgeReadyForEdit => 'Para editar';
+
+  @override
+  String get event_myEventsTab => 'Mis eventos';
+
+  @override
+  String get event_registrationsTab => 'Inscritos';
+
+  @override
+  String get event_eventRegistrationsTitle => 'Inscripciones del Evento';
+
+  @override
+  String get event_manageAttendeesTitle => 'Gestionar inscritos';
 }

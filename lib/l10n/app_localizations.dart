@@ -904,6 +904,54 @@ abstract class AppLocalizations {
   /// **'Se cerrará el seguimiento en vivo para todos los participantes.'**
   String get event_stopEventConfirmMessage;
 
+  /// No description provided for @event_requestUnderReview.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu solicitud está siendo revisada por el organizador.'**
+  String get event_requestUnderReview;
+
+  /// No description provided for @event_registrationRejected.
+  ///
+  /// In es, this message translates to:
+  /// **'Inscripción rechazada'**
+  String get event_registrationRejected;
+
+  /// No description provided for @event_rejectedMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'El organizador no aprobó tu solicitud para este evento.'**
+  String get event_rejectedMessage;
+
+  /// No description provided for @event_eventCancelled.
+  ///
+  /// In es, this message translates to:
+  /// **'Evento cancelado'**
+  String get event_eventCancelled;
+
+  /// No description provided for @event_cancelledMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Este evento fue cancelado por el organizador.'**
+  String get event_cancelledMessage;
+
+  /// No description provided for @event_participantsReady.
+  ///
+  /// In es, this message translates to:
+  /// **'Participantes listos para iniciar'**
+  String get event_participantsReady;
+
+  /// No description provided for @event_rideInProgress.
+  ///
+  /// In es, this message translates to:
+  /// **'Rodada en progreso'**
+  String get event_rideInProgress;
+
+  /// No description provided for @event_saveDraft.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar borrador'**
+  String get event_saveDraft;
+
   /// No description provided for @event_meetingTimePrefix.
   ///
   /// In es, this message translates to:
@@ -2103,6 +2151,96 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Wahoo ELEMNT'**
   String get map_mockDeviceWahooElemnt;
+
+  /// No description provided for @map_endRide.
+  ///
+  /// In es, this message translates to:
+  /// **'Finalizar rodada'**
+  String get map_endRide;
+
+  /// No description provided for @map_endRideConfirmTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Finalizar rodada?'**
+  String get map_endRideConfirmTitle;
+
+  /// No description provided for @map_endRideConfirmMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Se cerrará el seguimiento en vivo para todos los participantes. Esta acción no se puede deshacer.'**
+  String get map_endRideConfirmMessage;
+
+  /// No description provided for @map_endRideConfirmButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Sí, finalizar'**
+  String get map_endRideConfirmButton;
+
+  /// No description provided for @map_sosAlertTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Alerta SOS activa'**
+  String get map_sosAlertTitle;
+
+  /// No description provided for @map_sosAlertMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Has enviado una alerta de emergencia. Los demás participantes verán tu ubicación y sabrán que necesitas ayuda.'**
+  String get map_sosAlertMessage;
+
+  /// No description provided for @map_sosDismiss.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar alerta'**
+  String get map_sosDismiss;
+
+  /// No description provided for @map_sosConfirmTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Enviar SOS?'**
+  String get map_sosConfirmTitle;
+
+  /// No description provided for @map_sosConfirmMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Esto notificará a todos los participantes de la rodada sobre tu emergencia y compartirá tu ubicación en tiempo real.'**
+  String get map_sosConfirmMessage;
+
+  /// No description provided for @map_sosSend.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar SOS'**
+  String get map_sosSend;
+
+  /// No description provided for @map_mySpeed.
+  ///
+  /// In es, this message translates to:
+  /// **'MI VEL'**
+  String get map_mySpeed;
+
+  /// No description provided for @map_myDistance.
+  ///
+  /// In es, this message translates to:
+  /// **'MI DIST'**
+  String get map_myDistance;
+
+  /// No description provided for @map_participantsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Participantes'**
+  String get map_participantsTitle;
+
+  /// No description provided for @map_activeRiders.
+  ///
+  /// In es, this message translates to:
+  /// **'en rodada'**
+  String get map_activeRiders;
+
+  /// No description provided for @map_noActiveRidersMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay riders activos en este momento'**
+  String get map_noActiveRidersMessage;
 
   /// No description provided for @maintenance_maintenance.
   ///
@@ -3382,6 +3520,132 @@ abstract class AppLocalizations {
   /// **'No pudimos cargar tu perfil'**
   String get profile_loadingError;
 
+  /// No description provided for @profile_editTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar perfil'**
+  String get profile_editTitle;
+
+  /// No description provided for @profile_editSave.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar cambios'**
+  String get profile_editSave;
+
+  /// No description provided for @profile_editCancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get profile_editCancel;
+
+  /// No description provided for @profile_editSuccess.
+  ///
+  /// In es, this message translates to:
+  /// **'Perfil actualizado correctamente'**
+  String get profile_editSuccess;
+
+  /// No description provided for @profile_fieldFullName.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre completo'**
+  String get profile_fieldFullName;
+
+  /// No description provided for @profile_fieldPhone.
+  ///
+  /// In es, this message translates to:
+  /// **'Teléfono'**
+  String get profile_fieldPhone;
+
+  /// No description provided for @profile_fieldCity.
+  ///
+  /// In es, this message translates to:
+  /// **'Ciudad de residencia'**
+  String get profile_fieldCity;
+
+  /// No description provided for @profile_fieldBloodType.
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo de sangre'**
+  String get profile_fieldBloodType;
+
+  /// No description provided for @profile_fieldEmergencyContact.
+  ///
+  /// In es, this message translates to:
+  /// **'Contacto de emergencia'**
+  String get profile_fieldEmergencyContact;
+
+  /// No description provided for @profile_fieldEmergencyPhone.
+  ///
+  /// In es, this message translates to:
+  /// **'Teléfono de emergencia'**
+  String get profile_fieldEmergencyPhone;
+
+  /// No description provided for @profile_sectionPersonal.
+  ///
+  /// In es, this message translates to:
+  /// **'Información personal'**
+  String get profile_sectionPersonal;
+
+  /// No description provided for @profile_sectionEmergency.
+  ///
+  /// In es, this message translates to:
+  /// **'Contacto de emergencia'**
+  String get profile_sectionEmergency;
+
+  /// No description provided for @profile_editInfo.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar perfil'**
+  String get profile_editInfo;
+
+  /// No description provided for @profile_statsEvents.
+  ///
+  /// In es, this message translates to:
+  /// **'Rodadas'**
+  String get profile_statsEvents;
+
+  /// No description provided for @profile_statsKm.
+  ///
+  /// In es, this message translates to:
+  /// **'Km'**
+  String get profile_statsKm;
+
+  /// No description provided for @profile_statsFollowers.
+  ///
+  /// In es, this message translates to:
+  /// **'Seguidores'**
+  String get profile_statsFollowers;
+
+  /// No description provided for @profile_garage.
+  ///
+  /// In es, this message translates to:
+  /// **'Garaje'**
+  String get profile_garage;
+
+  /// No description provided for @profile_viewAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver todo'**
+  String get profile_viewAll;
+
+  /// No description provided for @profile_settings.
+  ///
+  /// In es, this message translates to:
+  /// **'Configuración'**
+  String get profile_settings;
+
+  /// No description provided for @profile_registrations.
+  ///
+  /// In es, this message translates to:
+  /// **'Mis inscripciones'**
+  String get profile_registrations;
+
+  /// No description provided for @profile_maintenances.
+  ///
+  /// In es, this message translates to:
+  /// **'Mantenimientos'**
+  String get profile_maintenances;
+
   /// No description provided for @registration_registrationPageTitle.
   ///
   /// In es, this message translates to:
@@ -4281,6 +4545,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Reintentar'**
   String get rider_errorRetry;
+
+  /// No description provided for @rider_follow.
+  ///
+  /// In es, this message translates to:
+  /// **'Seguir'**
+  String get rider_follow;
+
+  /// No description provided for @rider_statsEvents.
+  ///
+  /// In es, this message translates to:
+  /// **'Rodadas'**
+  String get rider_statsEvents;
+
+  /// No description provided for @rider_statsFollowers.
+  ///
+  /// In es, this message translates to:
+  /// **'Seguidores'**
+  String get rider_statsFollowers;
+
+  /// No description provided for @rider_statsFollowing.
+  ///
+  /// In es, this message translates to:
+  /// **'Siguiendo'**
+  String get rider_statsFollowing;
+
+  /// No description provided for @rider_location.
+  ///
+  /// In es, this message translates to:
+  /// **'Ubicación'**
+  String get rider_location;
 
   /// No description provided for @app_tagline.
   ///
@@ -5619,6 +5913,96 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Nueva Rodada'**
   String get nav_addEvent;
+
+  /// No description provided for @notification_centerTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Notificaciones'**
+  String get notification_centerTitle;
+
+  /// No description provided for @notification_markAllRead.
+  ///
+  /// In es, this message translates to:
+  /// **'Marcar todo como leído'**
+  String get notification_markAllRead;
+
+  /// No description provided for @notification_emptyTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin notificaciones'**
+  String get notification_emptyTitle;
+
+  /// No description provided for @notification_emptySubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Aquí aparecerán tus inscripciones aprobadas, recordatorios de eventos y más.'**
+  String get notification_emptySubtitle;
+
+  /// No description provided for @notification_sectionUnread.
+  ///
+  /// In es, this message translates to:
+  /// **'NO LEÍDAS'**
+  String get notification_sectionUnread;
+
+  /// No description provided for @notification_sectionRead.
+  ///
+  /// In es, this message translates to:
+  /// **'ANTERIORES'**
+  String get notification_sectionRead;
+
+  /// No description provided for @registration_statusBadgeApproved.
+  ///
+  /// In es, this message translates to:
+  /// **'Aprobada'**
+  String get registration_statusBadgeApproved;
+
+  /// No description provided for @registration_statusBadgePending.
+  ///
+  /// In es, this message translates to:
+  /// **'Pendiente'**
+  String get registration_statusBadgePending;
+
+  /// No description provided for @registration_statusBadgeRejected.
+  ///
+  /// In es, this message translates to:
+  /// **'Rechazada'**
+  String get registration_statusBadgeRejected;
+
+  /// No description provided for @registration_statusBadgeCancelled.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelada'**
+  String get registration_statusBadgeCancelled;
+
+  /// No description provided for @registration_statusBadgeReadyForEdit.
+  ///
+  /// In es, this message translates to:
+  /// **'Para editar'**
+  String get registration_statusBadgeReadyForEdit;
+
+  /// No description provided for @event_myEventsTab.
+  ///
+  /// In es, this message translates to:
+  /// **'Mis eventos'**
+  String get event_myEventsTab;
+
+  /// No description provided for @event_registrationsTab.
+  ///
+  /// In es, this message translates to:
+  /// **'Inscritos'**
+  String get event_registrationsTab;
+
+  /// No description provided for @event_eventRegistrationsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Inscripciones del Evento'**
+  String get event_eventRegistrationsTitle;
+
+  /// No description provided for @event_manageAttendeesTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Gestionar inscritos'**
+  String get event_manageAttendeesTitle;
 }
 
 class _AppLocalizationsDelegate

@@ -18,8 +18,6 @@ class RegistrationDetailSectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final primary = context.colorScheme.primary;
-
     return Container(
       decoration: BoxDecoration(
         color: AppColors.darkCard,
@@ -27,17 +25,26 @@ class RegistrationDetailSectionCard extends StatelessWidget {
         border: Border.all(color: AppColors.darkBorderPrimary),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: ExpandableContainer(
           initiallyExpanded: initiallyExpanded,
-          trailingColor: primary,
-          leading: Icon(icon, color: primary, size: 22),
+          trailingColor: AppColors.primary,
+          leading: Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: AppColors.primarySubtle,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: AppColors.primary, size: 20),
+          ),
           title: Text(
             title.toUpperCase(),
-            style: TextStyle(
-              color: primary,
-              fontSize: 16,
+            style: const TextStyle(
+              color: AppColors.textOnDarkPrimary,
+              fontSize: 13,
               fontWeight: FontWeight.w700,
+              letterSpacing: 0.5,
             ),
           ),
           child: child,

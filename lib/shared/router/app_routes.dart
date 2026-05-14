@@ -5,6 +5,7 @@ abstract class AppRoutes {
   // Home route
   static const String home = '/home';
   static const String profile = '/profile';
+  static const String editProfile = '/profile/edit';
 
   // Authentication routes
   static const String login = '/login';
@@ -35,4 +36,7 @@ abstract class AppRoutes {
   static const String registrationDetail = '/events/registration-detail';
   static const String eventDetailById = '/events/detail-by-id';
   static const String riderProfile = '/events/attendees/rider-profile';
+
+  // Notifications
+  static const String notifications = '/notifications';
 }

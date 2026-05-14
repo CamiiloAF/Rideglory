@@ -2,125 +2,67 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
-import 'package:rideglory/features/event_registration/domain/model/registration_with_event.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/event_registration/domain/model/registration_with_event.dart';
 import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/event_card.dart';
+import 'package:rideglory/features/events/presentation/list/widgets/event_filter_chip.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/event_filters_bottom_sheet.dart';
-import 'package:rideglory/features/events/presentation/list/widgets/event_type_filter_chips.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/design_system/design_system.dart';
-import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
+/// Main content view for the events list screen.
+/// Matches Pencil page 0: search bar + filter btn, filter chips row, event cards.
 class EventsDataView extends StatelessWidget {
-  final List<EventModel> events;
-
   const EventsDataView({super.key, required this.events});
+
+  final List<EventModel> events;
 
   @override
   Widget build(BuildContext context) {
     final currentUserId = context.watch<AuthCubit>().state.currentUser?.id;
     final myRegistrationsState = context.watch<MyRegistrationsCubit>().state;
-    final registeredEventIds = <String>{};
-    if (myRegistrationsState is Data<List<RegistrationWithEvent>>) {
-      final items = myRegistrationsState.data;
-      for (final item in items) {
-        final status = item.registration.status;
-        final isActive =
-            status == RegistrationStatus.pending ||
-            status == RegistrationStatus.approved ||
-            status == RegistrationStatus.readyForEdit;
-        if (isActive) {
-          registeredEventIds.add(item.registration.eventId);
-        }
-      }
-    }
+    final registeredEventIds = _buildRegisteredIds(myRegistrationsState);
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // ── Search + Filter btn ─────────────────────────────────────────
         Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
           child: Row(
             children: [
               Expanded(
-                child: AppSearchBar(
-                  hintText: context.l10n.event_searchEvents,
-                  onSearchChanged: (query) =>
+                child: _SearchBar(
+                  onChanged: (query) =>
                       context.read<EventsCubit>().updateSearchQuery(query),
-                  padding: EdgeInsets.zero,
-                  darkMode: true,
                 ),
               ),
-              AppSpacing.hGapMd,
-              SizedBox(
-                width: 48,
-                height: 48,
-                child: Material(
-                  color: context.colorScheme.primary,
-                  borderRadius: BorderRadius.circular(14),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(14),
-                    onTap: () => _showFilters(context),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Icon(
-                          Icons.tune_rounded,
-                          color: context.colorScheme.onPrimary,
-                          size: 24,
-                        ),
-                        Builder(
-                          builder: (context) {
-                            final activeFilters = context
-                                .watch<EventsCubit>()
-                                .filters;
-                            final count = _activeFilterCount(activeFilters);
-                            if (count == 0) return const SizedBox.shrink();
-                            return Positioned(
-                              right: 6,
-                              top: 6,
-                              child: Container(
-                                width: 16,
-                                height: 16,
-                                decoration: BoxDecoration(
-                                  color: context.colorScheme.onPrimary,
-                                  shape: BoxShape.circle,
-                                ),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  '$count',
-                                  style: TextStyle(
-                                    color: context.colorScheme.primary,
-                                    fontSize: 9,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+              const SizedBox(width: 10),
+              _FilterButton(onTap: () => _showFilters(context)),
             ],
           ),
         ),
-        AppSpacing.gapSm,
-        const EventTypeFilterChips(),
-        AppSpacing.gapSm,
-        events.isEmpty
-            ? const NoSearchResultsEmptyWidget()
-            : Expanded(
-                child: RefreshIndicator(
+        const SizedBox(height: 12),
+
+        // ── Filter chips ────────────────────────────────────────────────
+        const _EventTypeFilterChips(),
+        const SizedBox(height: 16),
+
+        // ── Event list ──────────────────────────────────────────────────
+        Expanded(
+          child: events.isEmpty
+              ? const NoSearchResultsEmptyWidget()
+              : RefreshIndicator(
                   onRefresh: () => context.read<EventsCubit>().fetchEvents(),
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(16),
+                  child: ListView.separated(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
                     itemCount: events.length,
+                    separatorBuilder: (_, _) => const SizedBox(height: 16),
                     itemBuilder: (_, i) {
                       final event = events[i];
                       final isOwner = event.ownerId == currentUserId;
@@ -134,41 +76,168 @@ class EventsDataView extends StatelessWidget {
                         isOwner: isOwner,
                         isRegistered: isRegistered,
                         onStartEvent: isOwner
-                            ? () => context.read<EventsCubit>().startEvent(event)
+                            ? () =>
+                                context.read<EventsCubit>().startEvent(event)
                             : null,
-                        onTap: () async {
-                          final result = await context.pushNamed<dynamic>(
-                            AppRoutes.eventDetail,
-                            extra: event,
-                          );
-                          if (context.mounted) {
-                            if (result is EventModel) {
-                              context.read<EventsCubit>().updateEvent(result);
-                            } else if (result == true && event.id != null) {
-                              context.read<EventsCubit>().removeEvent(
-                                event.id!,
-                              );
-                            }
-                          }
-                        },
+                        onTap: () => _navigateToDetail(context, event),
                       );
                     },
                   ),
                 ),
-              ),
+        ),
       ],
     );
   }
 
-  static int _activeFilterCount(EventFilters filters) {
-    var count = 0;
-    if (filters.types.isNotEmpty) count++;
-    if (filters.city != null && filters.city!.isNotEmpty) count++;
-    if (filters.startDate != null || filters.endDate != null) count++;
-    return count;
+  Set<String> _buildRegisteredIds(ResultState<List<RegistrationWithEvent>> state) {
+    final ids = <String>{};
+    if (state is Data<List<RegistrationWithEvent>>) {
+      for (final item in state.data) {
+        final status = item.registration.status;
+        final isActive =
+            status == RegistrationStatus.pending ||
+            status == RegistrationStatus.approved ||
+            status == RegistrationStatus.readyForEdit;
+        if (isActive && item.registration.eventId.isNotEmpty) {
+          ids.add(item.registration.eventId);
+        }
+      }
+    }
+    return ids;
+  }
+
+  Future<void> _navigateToDetail(BuildContext context, EventModel event) async {
+    final result = await context.pushNamed<dynamic>(
+      AppRoutes.eventDetail,
+      extra: event,
+    );
+    if (context.mounted) {
+      if (result is EventModel) {
+        context.read<EventsCubit>().updateEvent(result);
+      } else if (result == true && event.id != null) {
+        context.read<EventsCubit>().removeEvent(event.id!);
+      }
+    }
   }
 
   Future<void> _showFilters(BuildContext context) async {
     await EventFiltersBottomSheet.show(context: context);
+  }
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Private widgets
+// ──────────────────────────────────────────────────────────────────────────────
+
+class _SearchBar extends StatelessWidget {
+  const _SearchBar({required this.onChanged});
+
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 44,
+      decoration: BoxDecoration(
+        color: AppColors.darkBgSecondary,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppColors.darkBorderPrimary),
+      ),
+      child: TextField(
+        onChanged: onChanged,
+        style: const TextStyle(
+          color: AppColors.textOnDarkPrimary,
+          fontSize: 14,
+        ),
+        decoration: InputDecoration(
+          hintText: context.l10n.event_searchEvents,
+          hintStyle: const TextStyle(
+            color: AppColors.textOnDarkTertiary,
+            fontSize: 14,
+          ),
+          prefixIcon: const Icon(
+            Icons.search,
+            color: AppColors.textOnDarkTertiary,
+            size: 18,
+          ),
+          border: InputBorder.none,
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+          isDense: true,
+        ),
+      ),
+    );
+  }
+}
+
+class _FilterButton extends StatelessWidget {
+  const _FilterButton({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          color: AppColors.primary,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Icon(
+          Icons.tune_rounded,
+          color: AppColors.darkBgPrimary,
+          size: 18,
+        ),
+      ),
+    );
+  }
+}
+
+class _EventTypeFilterChips extends StatelessWidget {
+  const _EventTypeFilterChips();
+
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.watch<EventsCubit>();
+    final selectedTypes = cubit.filters.types;
+
+    return SizedBox(
+      height: 34,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        children: [
+          EventFilterChip(
+            label: context.l10n.event_filterAll,
+            isSelected: selectedTypes.isEmpty,
+            onTap: () =>
+                cubit.updateFilters(cubit.filters.copyWith(types: {})),
+          ),
+          const SizedBox(width: 8),
+          ...EventType.values.map((type) {
+            final isSelected = selectedTypes.contains(type);
+            return Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: EventFilterChip(
+                label: type.label,
+                isSelected: isSelected,
+                onTap: () {
+                  final newTypes = Set<EventType>.from(selectedTypes);
+                  if (isSelected) {
+                    newTypes.remove(type);
+                  } else {
+                    newTypes.add(type);
+                  }
+                  cubit.updateFilters(cubit.filters.copyWith(types: newTypes));
+                },
+              ),
+            );
+          }),
+        ],
+      ),
+    );
   }
 }

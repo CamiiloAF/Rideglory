@@ -14,29 +14,29 @@ class MyLocationButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 40,
-      height: 40,
+      width: 44,
+      height: 44,
       decoration: BoxDecoration(
-        color: AppColors.darkCard,
-        borderRadius: BorderRadius.circular(20),
+        color: AppColors.darkCard.withValues(alpha: 0.92),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isEnabled ? AppColors.primary : AppColors.darkBorderPrimary,
-          width: 2,
+          color: isEnabled ? AppColors.primary.withValues(alpha: 0.6) : AppColors.darkBorderPrimary,
+          width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.25),
-            blurRadius: 8,
+            color: Colors.black.withValues(alpha: 0.28),
+            blurRadius: 12,
             offset: const Offset(0, 4),
           ),
         ],
       ),
       child: InkWell(
         onTap: isEnabled ? onTap : null,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(12),
         child: Icon(
-          Icons.my_location,
-          size: 18,
+          Icons.my_location_rounded,
+          size: 20,
           color: isEnabled ? AppColors.primary : AppColors.tabInactive,
         ),
       ),
