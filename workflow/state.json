@@ -545,8 +545,8 @@
     },
     "tech_lead": {
       "status": "idle",
-      "lastAction": "2026-05-14T16:00:00Z",
-      "focus": "iter-1 PR #13 reviewed and approved. dart analyze 0 errors/0 warnings. flutter test 28 pass/4 pre-existing fail. No layer violations, no hardcoded colors, no new raw Material widgets. 3 deferred non-blockers (Colors.black87 in gradients, DocumentSlotPill fallback strings, pre-existing widget violations). code-review-iter1.md produced."
+      "lastAction": "2026-05-15T00:30:00Z",
+      "focus": "iter-2 PR #14 reviewed — BLOCKED. dart analyze PASS (0 issues). flutter test 64 pass/1 pre-existing fail. Architecture: clean (no layer violations, ResultState<T> correct, cursor pagination enforced, FCM @pragma correct). 4 blocking coding-standards violations: TextButton (2 instances), one-widget-per-file (4 files, 12 extra widgets), hardcoded Spanish strings in Semantics (3 instances), MaterialPageRoute bypasses go_router (2 instances). docs/handoffs/tech_lead.md updated."
     }
   },
   "tasks": [
@@ -775,10 +775,11 @@
       "iteration": 2,
       "description": "Tech Lead: review all iter-2 PRs for Clean Architecture compliance — layer violations, cursor pagination enforcement (no offset/limit), FCM background handler pattern (@pragma + DI re-init), DocumentSlotPill caller pattern (localized stateLabel), SOAT badge state boundary logic, app_es.arb completeness (soat_ and notification_ key prefixes).",
       "agent": "tech_lead",
-      "status": "backlog",
+      "status": "blocked",
       "storyRef": "US-2-1, US-2-7, US-2-8",
       "title": "Tech Lead: PR review — FCM pattern, cursor pagination, DocumentSlotPill contract",
-      "updatedAt": "2026-05-14T22:00:00Z"
+      "updatedAt": "2026-05-15T00:30:00Z",
+      "notes": "BLOCKED: 4 coding-standards violations in PR #14. Required fixes: (1) Replace TextButton with AppTextButton in notifications_view.dart:34 and soat_status_page.dart:64; (2) Extract private widgets to separate files (12 extra widget classes in 4 files); (3) Move 3 hardcoded Spanish Semantics strings to app_es.arb + context.l10n; (4) Add AppRoutes.soatManualForm named route and replace MaterialPageRoute navigation."
     }
   ],
   "events": [
@@ -995,6 +996,22 @@
       "agent": "system",
       "at": "2026-05-14T23:55:00Z",
       "detail": "PR #14 opened: https://github.com/CamiiloAF/Rideglory/pull/14"
+    },
+    {
+      "type": "tech_lead_review",
+      "iteration": 2,
+      "phase": "tech_lead",
+      "agent": "tech_lead",
+      "at": "2026-05-15T00:30:00Z",
+      "detail": "PR #14 reviewed — BLOCKED. dart analyze PASS (0 issues). flutter test 64 pass/1 pre-existing fail. Architecture: clean (no layer violations, ResultState<T> correct, cursor pagination enforced, FCM @pragma correct, DI correct). 4 blocking coding-standards violations: (1) TextButton in 2 AppBar actions — replace with AppTextButton; (2) one-widget-per-file violated in 4 files (12 extra widget classes total); (3) 3 hardcoded Spanish strings in Semantics labels — move to app_es.arb; (4) MaterialPageRoute bypasses go_router in 2 places — add AppRoutes.soatManualForm named route. Review comment posted on PR #14."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 2,
+      "phase": "tech_lead",
+      "agent": "tech_lead",
+      "at": "2026-05-15T00:30:00Z",
+      "detail": "blocked — 4 blocking rideglory-coding-standards violations in PR #14. Architecture clean. Fix required before merge."
     }
   ]
 }

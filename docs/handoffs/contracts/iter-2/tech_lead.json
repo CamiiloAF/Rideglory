@@ -1,0 +1,85 @@
+{
+  "iteration": 2,
+  "phase": "tech_lead",
+  "status": "blocked",
+  "updatedAt": "2026-05-15T00:30:00Z",
+  "summary": "PR #14 reviewed. Architecture is clean (no layer violations, ResultState<T> correct, cursor pagination enforced, FCM @pragma handler correct, NotificationsCubit @lazySingleton in root MultiBlocProvider correct). 4 blocking rideglory-coding-standards violations identified: (1) raw TextButton in 2 AppBar actions where AppTextButton is required; (2) multiple widget classes per file in 4 new files (12 extra widget classes); (3) 3 hardcoded Spanish strings in Semantics labels that must go through app_es.arb + context.l10n; (4) MaterialPageRoute used for SoatManualFormPage navigation instead of a named go_router route. dart analyze PASS (0 issues). flutter test 64 pass / 1 pre-existing fail (unchanged from iter-1). Decision: BLOCKED — fix 4 violations and re-push.",
+  "metrics": {
+    "tokens": 0,
+    "costUsd": 0.0
+  },
+  "artifacts": [
+    "docs/handoffs/tech_lead.md",
+    "workflow/state.json",
+    "docs/handoffs/iteration_checkpoint.md",
+    "docs/handoffs/contracts/iter-2/tech_lead.json",
+    ".claude/skills/tech_lead-skill.md"
+  ],
+  "qualityGates": [
+    {
+      "name": "required_artifacts_present",
+      "status": "pass",
+      "detail": "tech_lead.md, state.json, iteration_checkpoint.md, tech_lead.json, tech_lead-skill.md all written"
+    },
+    {
+      "name": "architecture_clean",
+      "status": "pass",
+      "detail": "Domain layer: zero Flutter imports. Data layer: zero BuildContext. Presentation: no direct HTTP calls, no DTO exposure. Dependencies flow correctly. ResultState<T> pattern used throughout. FCM @pragma('vm:entry-point') present. Cursor pagination enforced."
+    },
+    {
+      "name": "lint_passes",
+      "status": "pass",
+      "detail": "dart analyze: No issues found! (0 errors, 0 warnings). Exit code 0."
+    },
+    {
+      "name": "tests_pass",
+      "status": "pass",
+      "detail": "flutter test: 64 pass / 1 pre-existing fail (TC-2-28 rider email — unchanged from iter-1). 21 new test cases added (TC-2-20 through TC-2-40). 0 new failures."
+    },
+    {
+      "name": "security_checks",
+      "status": "pass",
+      "detail": "No secrets in source. Firebase ID token auth via interceptor on all API calls. FCM token only partially logged (first 10 chars) in kDebugMode using dart:developer log. google-services.json not tracked. No print() calls in lib/."
+    }
+  ],
+  "blockingIssues": [
+    {
+      "id": "BLOCKING-1",
+      "description": "Raw TextButton in feature code",
+      "files": [
+        "lib/features/notifications/presentation/notifications_view.dart:34",
+        "lib/features/soat/presentation/pages/soat_status_page.dart:64"
+      ],
+      "fix": "Replace with AppTextButton(label: context.l10n.<key>, onPressed: ...)"
+    },
+    {
+      "id": "BLOCKING-2",
+      "description": "One-widget-per-file violation — multiple widget classes in same file",
+      "files": [
+        "lib/features/soat/presentation/pages/soat_manual_form_page.dart (3 classes)",
+        "lib/features/soat/presentation/pages/soat_status_page.dart (5 classes)",
+        "lib/features/soat/presentation/pages/soat_upload_page.dart (3 classes)",
+        "lib/features/notifications/presentation/notifications_view.dart (4 classes)"
+      ],
+      "fix": "Extract each widget class to its own file"
+    },
+    {
+      "id": "BLOCKING-3",
+      "description": "Hardcoded Spanish strings in Semantics labels",
+      "files": [
+        "lib/features/notifications/presentation/widgets/notification_bell_button.dart:21-22",
+        "lib/features/notifications/presentation/widgets/notification_item.dart:69"
+      ],
+      "fix": "Add ARB keys for accessibility labels and use context.l10n.<key>"
+    },
+    {
+      "id": "BLOCKING-4",
+      "description": "MaterialPageRoute bypasses go_router navigation standards",
+      "files": [
+        "lib/features/soat/presentation/pages/soat_status_page.dart:131",
+        "lib/features/soat/presentation/pages/soat_upload_page.dart:108"
+      ],
+      "fix": "Add AppRoutes.soatManualForm named route and navigate via context.pushNamed()"
+    }
+  ]
+}

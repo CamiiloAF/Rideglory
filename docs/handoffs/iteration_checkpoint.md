@@ -10,8 +10,8 @@
 
 ## Status: active — Iteration 2
 
-**Last phase:** devops
-**Next phase:** pr
+**Last phase:** tech_lead
+**Next phase:** po_close
 
 | Phase | Agent | Status |
 |-------|-------|--------|
@@ -22,8 +22,8 @@
 | frontend | Flutter Dev | ✅ done |
 | qa | QA | ✅ done |
 | devops | DevOps | ✅ done |
-| pr | System | ⏳ pending |
-| tech_lead | Tech Lead | ⏳ pending |
+| pr | System | ✅ done |
+| tech_lead | Tech Lead | 🔴 blocked — 4 coding-standards violations in PR #14 |
 | po_close | PO | ⏳ pending |
 
 **Backend summary (2026-05-14):**

@@ -1,129 +1,115 @@
-# Tech Lead Handoff — Iteration 1: UI/UX Redesign
+# Tech lead review — Iteration 2
 
-**Reviewer:** tech_lead
-**Iteration:** 1
-**Phase:** tech_lead
-**Date:** 2026-05-14
-**Decision:** **APPROVED**
-
----
+**Date:** 2026-05-15
+**Status:** blocked
 
 ## Pull request
+| Field     | Value                                               |
+| --------- | --------------------------------------------------- |
+| URL       | https://github.com/CamiiloAF/Rideglory/pull/14     |
+| Branch    | iter-2 → main                                       |
+| PR number | #14                                                 |
 
-**PR #13** — feat(iter-1): UI/UX Redesign — design system baseline (15 screens)
-**URL:** https://github.com/CamiiloAF/Rideglory/pull/13
-**Branch:** `iter-1` → `main`
-**Files changed:** 100 (majority docs/design assets; Flutter lib/ changes reviewed below)
+## Inline review comments
+| File / location | Severity | Summary |
+| --------------- | -------- | ------- |
+| `lib/features/notifications/presentation/notifications_view.dart:34` | blocking | Raw `TextButton` in feature code — replace with `AppTextButton` |
+| `lib/features/soat/presentation/pages/soat_status_page.dart:64` | blocking | Raw `TextButton` in feature code — replace with `AppTextButton` |
+| `lib/features/soat/presentation/pages/soat_manual_form_page.dart` | blocking | 3 widget classes in one file (`SoatManualFormPage`, `_SoatManualFormView`, `_SectionHeader`) — extract to separate files |
+| `lib/features/soat/presentation/pages/soat_status_page.dart` | blocking | 5 widget classes in one file — extract `_SoatStatusView`, `_SoatEmptyState`, `_SoatDataView`, `_DetailRow` |
+| `lib/features/soat/presentation/pages/soat_upload_page.dart` | blocking | 3 widget classes in one file — extract `_SoatSourceGrid`, `_SourceOption` |
+| `lib/features/notifications/presentation/notifications_view.dart` | blocking | 4 widget classes in one file — extract `_ErrorState`, `_EmptyState`, `_DataView` |
+| `lib/features/notifications/presentation/widgets/notification_bell_button.dart:21-22` | blocking | Hardcoded Spanish strings in Semantics labels (`'$unread notificaciones sin leer'`, `'Notificaciones'`) — must go through `app_es.arb` + `context.l10n` |
+| `lib/features/notifications/presentation/widgets/notification_item.dart:69` | blocking | Hardcoded Spanish string `'Notificación: ...'` in Semantics label — must go through `app_es.arb` + `context.l10n` |
+| `lib/features/soat/presentation/pages/soat_status_page.dart:131` | blocking | `Navigator.push(MaterialPageRoute(...))` bypasses go_router — add `AppRoutes.soatManualForm` named route and use `context.pushNamed()` |
+| `lib/features/soat/presentation/pages/soat_upload_page.dart:108` | blocking | `Navigator.push(MaterialPageRoute(...))` bypasses go_router — same fix as above |
+| `lib/core/services/fcm_service.dart:81` | info | FCM token first 10 chars logged in kDebugMode — acceptable in debug; add inline comment documenting the rationale |
+| `lib/features/soat/data/dto/soat_dto.dart` | info | `SoatModelToRequest` extension on domain model lives in data layer DTO file — minor concern about layer dependency direction; tolerable but worth noting |
 
-### Scope summary
+## Stories reviewed
+| Story ID | Outcome | Notes |
+| -------- | ------- | ----- |
+| US-2-1 | needs-fixes | SOAT upload implemented. 4 blocking violations in soat_upload_page.dart |
+| US-2-2 | needs-fixes | SOAT manual form implemented. 4 blocking violations in soat_manual_form_page.dart |
+| US-2-3 | pass | SoatModel 4-state logic correct; VehicleSoatSection uses localized stateLabel via context.l10n.soat_status_* — iter-1 deferred item resolved |
+| US-2-4 | deferred | Backend cron prerequisite (T-2-7); manual device testing pending |
+| US-2-5 | deferred | Backend FCM trigger prerequisite; manual device testing pending |
+| US-2-6 | deferred | Backend notification delivery; manual device testing pending |
+| US-2-7 | needs-fixes | NotificationsCubit correct; violations in notifications_view.dart (multiple widgets, TextButton) |
+| US-2-8 | pass (backend) | Backend agent responsibility — not in Flutter PR scope |
+| US-2-9 | pass | ManageAttendeesPage scope confirmed (component-swap); not touched in this PR (pre-existing) |
+| US-2-10 | needs-fixes | dart analyze PASS; flutter test PASS; 4 coding-standards violations remain |
 
-Presentation-layer redesign across 5 modules (splash+auth, home, events, garage, maintenance+registration). No domain, data, DI, or router changes. Two new design-system primitives created (AppEventBadge atom, DocumentSlotPill molecule). ~140 new ARB l10n keys.
+## Flutter Clean Architecture adherence
+| Layer | Compliant | Violations |
+| ----- | --------- | ---------- |
+| domain | yes | None — zero Flutter imports, zero HTTP calls in soat/domain/ and notifications/domain/ |
+| data | yes | None — zero BuildContext in soat/data/ and notifications/data/; DTOs not exposed to presentation |
+| presentation | yes (architecture) | No direct HTTP calls; no DTO types exposed publicly; dependencies flow correctly |
 
----
+Note: Architecture is clean. All 4 blocking issues are coding-standards violations, not architecture violations.
 
-## Blocking issues
-
-**None.** All items below are observations or deferred non-blockers.
-
-### Minor findings (non-blocking)
-
-| # | File | Finding | Severity | Disposition |
-|---|------|---------|----------|-------------|
-| 1 | `lib/design_system/atoms/badges/app_event_badge.dart:65` | `final fg = _foregroundColor()` — `fg` is a single-letter-like abbreviation. Standards prefer domain names. Acceptable in this context (local color alias, type and purpose obvious). | info | Deferred — acceptable in design primitive context |
-| 2 | `lib/features/home/presentation/widgets/home_event_gradient_overlay.dart:13` | `Colors.black87` introduced where `Color(0xDD000000)` was removed. Strictly, only `Colors.black` is allowed. Same for `event_detail_header_overlay_gradient.dart`. | warning | Deferred — visually correct, semantically close. Fix in next maintenance pass. |
-| 3 | `lib/design_system/molecules/feedback/document_slot_pill.dart:76-79` | Hardcoded Spanish strings (`'Sin registrar'`, `'Vigente'`, `'Por vencer'`, `'Vencido'`) in the fallback default for `effectiveStateLabel`. Molecule has no `BuildContext` → cannot call `context.l10n`. Calling code should always pass `stateLabel` explicitly. | warning | Deferred — callers must pass localized `stateLabel`. Document in code comment. Molecule-level default is tolerable for iter-1. |
-| 4 | `lib/features/maintenance/presentation/widgets/item_card/mileage_info_dialog.dart` | `AlertDialog` (raw) still in use. Pre-existing — not introduced by iter-1; file not touched in this PR. | info | Pre-existing; track in iter-2 cleanup |
-| 5 | `lib/features/events/presentation/form/widgets/sections/event_form_multi_brand_section.dart` | `TextFormField` still in use. Pre-existing — not introduced by iter-1; file not touched in this PR. | info | Pre-existing; track in iter-2 cleanup |
-| 6 | `lib/features/maintenance/presentation/widgets/item_card/info_chip_tooltip.dart` | `showDialog()` direct call still in use. Pre-existing — not introduced by iter-1. | info | Pre-existing; track in iter-2 cleanup |
-| 7 | `lib/features/home/presentation/widgets/home_view_all_events_button.dart` | `context.goNamed()` used instead of `context.pushNamed()`. Pre-existing — not introduced by iter-1. | info | Pre-existing; track in iter-2 cleanup |
-| 8 | `lib/l10n/app_es.arb:926` | `"maintenance_form_reminder_note"` contains a `🔔` emoji. Acceptable in ARB strings only. | info | Acceptable — in ARB, not hardcoded in Dart |
-
----
+## rideglory-coding-standards adherence
+| Rule | Compliant | Violations |
+|------|-----------|------------|
+| One widget per file | no | soat_manual_form_page.dart (3), soat_status_page.dart (5), soat_upload_page.dart (3), notifications_view.dart (4) — 12 extra widget classes across 4 files |
+| No `Widget _buildXxx()` helpers | yes | None found |
+| ARB strings only | no | 3 hardcoded Spanish strings in Semantics labels in notification_bell_button.dart:21-22 and notification_item.dart:69 |
+| No ElevatedButton/OutlinedButton/TextButton directly | no | TextButton used in notifications_view.dart:34 and soat_status_page.dart:64 (AppBar actions) |
+| No showDialog() directly | yes | None — AppButton/AppDialog used throughout |
+| ResultState<T> for async | yes | SoatCubit: Cubit<ResultState<SoatModel>> correct; NotificationsCubit: @freezed NotificationsState with ResultState<List<NotificationModel>> correct |
+| pushNamed navigation | no | MaterialPageRoute used in soat_status_page.dart:131 and soat_upload_page.dart:108 for SoatManualFormPage navigation (no named route) |
+| Colors via colorScheme or AppColors | yes | All colors use AppColors constants; Colors.white used only for text-on-dark-badge (allowed set) |
+| Button text sentence case | yes | All button labels checked — sentence case throughout |
 
 ## Security findings
-
-- No secrets, API keys, or credentials found in Dart source.
-- Firebase config (`firebase_options.dart`) uses `AppEnv` (envied) — all values come from `.env` at build time. No plain-text tokens.
-- `google-services.json` and `GoogleService-Info.plist` are not tracked (confirmed via .gitignore and absence from diff).
-- No `print()` calls found in `lib/`.
-- No `BuildContext` usage in domain or data layers.
-- **Result: PASS — no security issues.**
-
----
+| Finding | Severity | Status |
+| ------- | -------- | ------ |
+| FCM token partial logging (first 10 chars) | info | Wrapped in `kDebugMode`, uses `dart:developer log` (not `print`) — acceptable |
+| No secrets in source | pass | No API keys, credentials, or tokens hardcoded |
+| Firebase ID token auth | pass | All API calls go through `FirebaseAuthInterceptor` in `AppDio` |
+| FCM background handler @pragma | pass | `@pragma('vm:entry-point')` present on `firebaseMessagingBackgroundHandler` |
+| google-services.json not tracked | pass | Confirmed absent from diff |
+| No print() statements | pass | Uses `dart:developer log` with `kDebugMode` guard only |
 
 ## Test coverage assessment
+- dart analyze: **PASS — No issues found!** (0 errors, 0 warnings)
+- flutter test: **64 pass / 1 pre-existing fail** (TC-2-28 rider email display — unchanged from iter-1)
+- 21 new test cases (TC-2-20 through TC-2-40): 7 SOAT domain boundary tests, 5 SoatCubit state machine tests, 9 NotificationsCubit tests (load, pagination, markRead, markAllRead, error rollback)
+- Coverage is adequate for domain + cubit layers; widget tests for SOAT pages and NotificationsView deferred per QA rationale
 
-### dart analyze
+## Blocking issues (must fix before merge)
 
-```
-0 errors, 0 warnings
-33 info-level (pre-existing withOpacity deprecations in lib/shared/widgets/ only)
-Exit code: 0 (or equivalent — no fatal warnings)
-```
+1. **[BLOCKING-1] Raw TextButton in feature code**
+   - `lib/features/notifications/presentation/notifications_view.dart:34` — replace `TextButton(...)` with `AppTextButton(label: context.l10n.notification_markAllRead, onPressed: ...)`
+   - `lib/features/soat/presentation/pages/soat_status_page.dart:64` — replace `TextButton(...)` with `AppTextButton(label: context.l10n.soat_edit_btn, onPressed: ...)`
 
-No new violations introduced by iter-1. Gate: **PASS**
+2. **[BLOCKING-2] One-widget-per-file violation**
+   - `soat_manual_form_page.dart`: extract `_SoatManualFormView` → `_soat_manual_form_view.dart` and `_SectionHeader` → `_soat_section_header.dart`
+   - `soat_status_page.dart`: extract `_SoatStatusView`, `_SoatEmptyState`, `_SoatDataView`, `_DetailRow` to separate files
+   - `soat_upload_page.dart`: extract `_SoatSourceGrid` → `_soat_source_grid.dart` and `_SourceOption` → `_soat_source_option.dart`
+   - `notifications_view.dart`: extract `_ErrorState`, `_EmptyState`, `_DataView` to separate files
 
-### flutter test
+3. **[BLOCKING-3] Hardcoded Spanish strings in Semantics labels**
+   - `notification_bell_button.dart:21-22`: add ARB keys `notification_bell_unread_label` (with `{count}` placeholder) and `notification_bell_label`; use `context.l10n.notification_bell_unread_label(unread)` and `context.l10n.notification_bell_label`
+   - `notification_item.dart:69`: add ARB key `notification_item_accessibility_label` (with `{title}` and `{time}` placeholders); use via `context.l10n.notification_item_accessibility_label(notification.title, _timeAgo(notification.createdAt))`
 
-```
-28 pass, 4 fail
-4 failures are pre-existing (user_service.g.dart missing getUserById, event_service.g.dart signature mismatch)
-No new test failures introduced by iter-1 presentation changes
-```
+4. **[BLOCKING-4] Raw Navigator.push(MaterialPageRoute(...)) bypasses go_router**
+   - Add `static const String soatManualForm = '/soat/manual-form'` to `lib/shared/router/app_routes.dart`
+   - Add route in `lib/shared/router/app_router.dart` that accepts `VehicleModel` (vehicle) and `SoatModel?` (existingSoat) as `extra`
+   - Replace `Navigator.of(context).push(MaterialPageRoute(...))` with `context.pushNamed(AppRoutes.soatManualForm, extra: {'vehicle': vehicle, 'existingSoat': soat})`
 
-Gate: **PASS** (4 pre-existing failures acknowledged; deferred to iter-2 build_runner run)
+## Non-blocking notes (fix in next iteration)
 
-### Architecture constraints
-
-- `git diff main..iter-1 -- lib/**/domain/ lib/**/data/ lib/core/di/ lib/shared/router/` → **empty diff** — confirmed zero domain/data/DI/router changes.
-- Color tokenization: `grep -rE "Color\(0x" lib/features/` → **0 matches**
-- Non-standard Colors: `grep -rE "Colors\." lib/features/ | grep -v "transparent|black|white"` → **0 new matches in features** (2 `Colors.black87` introduced but in gradient overlays, borderline acceptable)
-- ElevatedButton / TextFormField / AlertDialog: pre-existing violations only; none introduced by iter-1.
-
-### Design system primitives
-
-- `AppEventBadge` atom: 1 widget per file ✅, correct enum variants ✅, AppColors used ✅, exported via atoms.dart ✅
-- `DocumentSlotPill` molecule: 1 widget per file ✅, 4 state variants ✅, AppColors used ✅, exported via molecules.dart ✅
-
----
+- `lib/core/services/fcm_service.dart:81` — FCM token first 10 chars logged in kDebugMode via `dart:developer log`. Functionally acceptable; add a comment explaining why partial logging is sufficient for debugging without exposing full token.
+- `lib/features/soat/data/dto/soat_dto.dart` — `SoatModelToRequest` extension adds `toRequestJson()` to the domain model from a data-layer file. This creates a subtle data→domain dependency. Consider moving to `SoatModel` directly or a separate `soat_model_extensions.dart` in domain. Not an architecture violation per se (extension is additive), but worth cleaning up.
+- `lib/core/services/fcm_service.dart` — `configureDependencies()` is commented as a future requirement in the background handler. Per architect spec, this must be called when DI-registered services are used in the background. Add a `// TODO(iter-3): call configureDependencies() if background processing beyond logging is needed` so it is not forgotten.
 
 ## Overall signal
 
-**APPROVED — clean presentation-layer redesign.**
+PR #14 delivers a solid SOAT + FCM notification foundation: Clean Architecture is correctly layered (domain/data/presentation separation verified), ResultState<T> pattern used throughout, cursor pagination enforced, FCM @pragma handler correct, NotificationsCubit correctly marked @lazySingleton in root MultiBlocProvider, 140+ ARB keys localized, and the iter-1 DocumentSlotPill deferred item (localized stateLabel) is now resolved. The code is architecturally sound.
 
-Iter-1 successfully delivers the design system baseline for all 15 screens:
-- 47 hardcoded color literals eliminated from `lib/features/` across 5 modules
-- 2 reusable design-system primitives created (AppEventBadge + DocumentSlotPill) per architect spec
-- ~140 new ARB l10n keys, generated files committed
-- Clean architecture preserved: zero domain/data/DI/router changes
-- `dart analyze` 0 errors/0 warnings; `flutter test` 28/28 passing (4 pre-existing .g.dart failures unchanged)
-- No security issues
-
-Non-blocking deferred items (3): `Colors.black87` gradient usage, `DocumentSlotPill` default hardcoded strings, `fg` variable name in AppEventBadge. All acceptable at iter-1 risk level.
-
----
+However, 4 coding-standards violations are blocking: (1) raw `TextButton` in 2 AppBar actions where `AppTextButton` is required; (2) multiple widget classes per file across 4 new files (12 extra classes total); (3) 3 hardcoded Spanish strings in Semantics labels that must go through app_es.arb; (4) `MaterialPageRoute` used for SoatManualFormPage navigation instead of a named go_router route. All 4 are mechanical fixes with no architectural impact. Fix and re-push; the PR is otherwise ready to merge.
 
 ## Change log
-
-| File | Change |
-|------|--------|
-| `lib/design_system/atoms/badges/app_event_badge.dart` | NEW — AppEventBadge atom (6 variants, 24px, 6px radius) |
-| `lib/design_system/molecules/feedback/document_slot_pill.dart` | NEW — DocumentSlotPill molecule (4 states, 44px min-height) |
-| `lib/design_system/atoms/atoms.dart` | Added AppEventBadge export |
-| `lib/design_system/molecules/molecules.dart` | Added DocumentSlotPill export |
-| `lib/l10n/app_es.arb` | +~140 l10n keys (splash, auth, home, events, vehicles, maintenance, registration) |
-| `lib/l10n/app_localizations.dart` | Regenerated (158KB) |
-| `lib/l10n/app_localizations_es.dart` | Regenerated (67KB) |
-| 3 auth files | Color tokenization (`Colors.green/grey` → `AppColors.success/darkTextSecondary`) |
-| 2 home files | Color tokenization (`Color(0xFF2D1A0A/1A0D05)` → `AppColors.darkSurface/darkSurfaceHighest`) |
-| 3 events files | Color tokenization + `AppColors.info` for readyForEdit status |
-| 12 vehicle files | Color tokenization (complete suite) |
-| 9 maintenance files | Color tokenization (complete suite) |
-| 1 registration file | Color tokenization (`Colors.green/red` → `AppColors.success/error`) |
-| `pubspec.yaml` | Removed duplicate dev_dependencies entries |
-
----
-
-## Code review document
-
-See `docs/architecture/code-review-iter1.md` for the formal code review table per HU-REFACTOR-01.
+- 2026-05-15: Initial review — PR #14 — BLOCKED (4 blocking coding-standards violations)

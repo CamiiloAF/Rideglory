@@ -170,6 +170,7 @@ Commands: `dart analyze --no-summary`, `grep -rn "print(" lib/`, `dart fix --app
 - 2026-05-12 (iter 1): Gotchas and learnings appended after PR #8 review. 6 blocking issues fixed.
 - 2026-05-13 (iter 4): PR #11 reviewed and approved. 1 blocking fix: prefer_const_constructors in test file (const Right, Left, DomainException). dart analyze 34 pre-existing items only. flutter test 7/7. code-review-iter4.md produced.
 - 2026-05-14 (iter 1): PR #13 reviewed and approved. 0 blocking issues. dart analyze 0 errors/0 warnings (33 pre-existing info items). flutter test 28 pass/4 pre-existing fail. 3 deferred non-blockers: Colors.black87 in gradient overlays, DocumentSlotPill hardcoded fallback strings, 4 pre-existing raw widget violations. code-review-iter1.md produced.
+- 2026-05-15 (iter 2): PR #14 reviewed — BLOCKED. dart analyze 0 issues. flutter test 64 pass/1 pre-existing fail. Architecture clean. 4 blocking coding-standards violations found.
 
 ---
 ## Plan reapproval update — 2026-05-13 (plan v3, iters 1–5)
@@ -216,3 +217,12 @@ Commands: `dart analyze --no-summary`, `grep -rn "print(" lib/`, `dart fix --app
 
 ## Change log
 - 2026-05-13 (plan v3 approval): Per-iteration review focus, security checklist, and architecture invariants documented.
+
+### Iteration 2 (2026-05-15) — PR #14
+
+- **`AppTextButton` must be used even in AppBar actions.** Two instances of `TextButton` found in AppBar `actions` arrays (notifications_view.dart, soat_status_page.dart). `AppTextButton` works in any context since it wraps `TextButton` internally; `AppTextButton(label: ..., onPressed: ...)` is a drop-in replacement. Do not use `TextButton` directly even when the AppBar context feels like a special case.
+- **One-widget-per-file is strictly enforced for all private widget classes in page files.** Page files that compose complex layouts commonly end up with multiple private widget classes (e.g. `_ErrorState`, `_EmptyState`, `_DataView`, `_SectionHeader`, `_DetailRow`). Each of these must be in its own file, even if they are tiny and only used internally. The standard has no "size" exception.
+- **Semantics labels are user-visible strings.** `Semantics(label: ...)` strings are read by screen readers and count as user-visible text. All `label:` values with Spanish words must go through `app_es.arb` + `context.l10n.<key>`. This also applies to `Semantics` labels that are computed (e.g., `'$count notificaciones sin leer'` → add an ARB key with a `{count}` placeholder).
+- **`MaterialPageRoute` is forbidden for feature navigation.** Even when a sub-screen has no currently named go_router route, the fix is to add the named route (not to use `MaterialPageRoute`). The pattern `Navigator.of(context).push(MaterialPageRoute(builder: (_) => SomePage(...)))` is always blocked. Add an `AppRoutes.xxx` constant, register the route in `app_router.dart`, and navigate via `context.pushNamed(AppRoutes.xxx, extra: ...)`. Also eliminates the `.then((result) {...})` pattern — use `await context.pushNamed(...)` return value instead.
+- **Architecture was fully clean in iter-2.** Domain: zero Flutter imports. Data: zero BuildContext, DTOs not exposed. Presentation: no HTTP calls, no DTO types in public interface. ResultState<T> used correctly. FCM @pragma handler correct. Cursor pagination enforced. No `bool isLoading` flags. This is a model implementation of Clean Architecture for Rideglory.
+- **`gh pr review <n> --request-changes` fails on own PRs** (GitHub does not allow self-review with changes request). Use `gh pr review <n> --comment` to post the review summary as a top-level comment. The inline comments (`--comment --body "FILE path:LINE — ..."`) still work regardless.
