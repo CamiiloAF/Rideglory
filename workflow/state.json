@@ -353,8 +353,8 @@
     {
       "id": 3,
       "goal": "Tracking Completo + SOS + Maintenance Reminders: completar la experiencia de rastreo con botón SOS, controles del organizador, GPS en background, recordatorios de mantenimiento basados en fecha, y migración completa a mapbox_maps_flutter como único SDK de mapas (Story 3.0).",
-      "status": "planned",
-      "notes": "Story 3.0 (Mapbox migration) is the first story and a hard blocker for all other stories — no pre-flight checklist for Maps SDK. Date-based maintenance reminders only (no km). Home Dashboard SOAT badge added in this iteration. Route stored as GeoJSON LineString (routeGeoJson Json?) in events-ms — not encoded polyline.",
+      "status": "done",
+      "notes": "Story 3.0 (Mapbox migration) completed as hard blocker. Date-based maintenance reminders implemented (30d before scheduled date, 24h before event). Home Dashboard SOAT badge (4-state display) added. Route stored as GeoJSON LineString (routeGeoJson Json?) in events-ms. PR #15 approved by tech lead 2026-05-15T07:00:00Z, pending human merge.",
       "primaryAgents": [
         "po",
         "architect",
@@ -510,8 +510,8 @@
   "agents": {
     "po": {
       "status": "idle",
-      "lastAction": "2026-05-15T01:30:00Z",
-      "focus": "iter-3 scoped: Tracking Completo + SOS + Maintenance Reminders. 8 user stories (US-3-0 through US-3-8), 12 tasks (T-3-1 through T-3-12). Story 3.0 (Mapbox migration) is absolute blocker. Date-only maintenance reminders. Home Dashboard SOAT badge included."
+      "lastAction": "2026-05-15T07:30:00Z",
+      "focus": "iter-3 closed: Tracking Completo + SOS + Maintenance Reminders. 7 stories delivered (US-3-0 through US-3-10, excluding T-3-9 route rendering deferred to backlog). Story 3.0 (Mapbox migration) completed as hard blocker. PR #15 approved, pending human merge. Next: iter-4 (social follow system)."
     },
     "architect": {
       "status": "idle",
@@ -1003,6 +1003,14 @@
       "agent": "tech_lead",
       "at": "2026-05-15T07:00:00Z",
       "detail": "Re-review cycle 2. PR #15. Decision: APPROVED. All 6 blocking violations resolved: BLOCK-1 LiveTrackingCubit depends only on TrackingRepository domain interface; BLOCK-2 live_map_page.dart helpers extracted to live_map_app_bar.dart and live_map_body.dart; BLOCK-3 sos_banner.dart 3 SnackBar strings use context.l10n; BLOCK-4 sos_button.dart Semantics label uses context.l10n.tracking_sosSemanticsLabel; BLOCK-5 route_map_preview.dart error uses context.l10n.map_geocodeError; BLOCK-6 sos_banner_action.dart extracted, home_garage_card.dart uses sibling files. dart analyze: 0 errors/0 warnings. flutter test: 47 pass/1 pre-existing fail (TC-2-28). PR #15 approved. Next phase: po_close."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 3,
+      "phase": "po_close",
+      "agent": "po",
+      "at": "2026-05-15T07:30:00Z",
+      "detail": "Iteration 3 closed. PR #15 approved, pending human merge. Summary at docs/ITERATION_SUMMARY_3.md. Next: iter-4 (social follow system)"
     }
   ]
 }

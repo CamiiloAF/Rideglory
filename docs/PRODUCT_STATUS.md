@@ -1,6 +1,6 @@
 # Product Status — Rideglory MVP
 
-**Last Updated:** 2026-05-14 (Iteration 1 closed)
+**Last Updated:** 2026-05-15 (Iteration 3 closed — PR #15 approved, pending human merge)
 
 ---
 
@@ -18,22 +18,27 @@
 - **Event filters** — By type, city, date range (bottom sheet UI)
 - **Event creation form** — Organizers can create events with route, description, difficulty
 - **AI event covers** — Auto-generate cover images via Claude Haiku + Unsplash integration
-- **Real-time tracking** — Live rider location updates on Mapbox map during active rides
-- **Status:** Live (tracking iter-4 feature)
+- **Real-time tracking** — Live rider location updates on Mapbox map during active rides; Mapbox SDK unified
+- **SOS emergency button** — Red button on tracking map; confirmation dialog; broadcasts to all riders with push
+- **SOS banner** — Tap rider in crisis for Llamar (native dialer) or Localizar (Maps navigation)
+- **Organizer ride controls** — Start / end rides; auto-closes tracking for all riders on finish
+- **Background GPS** — Android foreground service (non-dismissible notification), iOS system location indicator
+- **Status:** In review (PR #15 approved, pending human merge)
 
 ### Vehicle Garage
 - **Vehicle list page** — View all registered vehicles, select main vehicle
-- **Vehicle detail page** — Full specs, insurance docs, maintenance history, actions
+- **Vehicle detail page** — Full specs, insurance docs, maintenance history, actions, SOAT badge
 - **Add/edit vehicle form** — Register motorcycles with make, model, year, VIN, document uploads
 - **Vehicle selection** — Quick switch between vehicles in UI
-- **Status:** Live
+- **SOAT badge on Home Dashboard** — 4-state display (Sin SOAT, Vigente, Por vencer, Vencido) on main vehicle card (iter-3 feature, in review)
+- **Status:** Live (SOAT dashboard badge in review, PR #15)
 
 ### Maintenance Logging
 - **Maintenance dashboard** — Health indicator (donut chart), upcoming work alerts
 - **Maintenance history** — Chronological list of completed maintenance, costs tracked
 - **Maintenance forms** — Record new maintenance tasks (oil change, tire replacement, etc.)
-- **Maintenance reminders** — Push notifications 30 days before scheduled tasks
-- **Status:** Live
+- **Maintenance reminders** — Push notifications 30 days before scheduled tasks (iter-3 feature, in review)
+- **Status:** Live (maintenance reminder feature in review, PR #15)
 
 ### User Profiles
 - **Rider profile page** — Public profile with bio, location, follower/following counts
@@ -46,8 +51,10 @@
 - **SOAT alerts** — 30 days before, 7 days before, day-of expiry (iter-2 feature)
 - **Registration updates** — Push when registration approved/rejected (iter-2 feature)
 - **New follower alerts** — Push when someone follows you (iter-4 feature)
-- **Maintenance reminders** — Push for scheduled maintenance (iter-3 feature)
-- **Status:** Pending iter-2 implementation
+- **Maintenance reminders** — Push 30 days before scheduled maintenance (iter-3 feature, in review)
+- **Event reminders** — Push 24 hours before event start (iter-3 feature, in review)
+- **SOS emergency alerts** — Push to all event riders when SOS button triggered (iter-3 feature, in review)
+- **Status:** Partial live (iter-2 SOAT/registration), iter-3 maintenance/event/SOS in review (PR #15)
 
 ### Design System
 - **Color tokens** — Dark theme with orange primary (#f98c1f), comprehensive palette
@@ -58,26 +65,19 @@
 
 ---
 
-## What's NOT Yet Shipped (Planned)
+## What's NOT Yet Shipped (Planned or In Review)
 
-### SOAT Registration & Tracking (Iter-2)
-- Upload/manually enter SOAT insurance documents
-- SOAT badge on vehicle detail (4 states: none, valid, expiring, expired)
-- Push notifications for SOAT expiry
-- Status: Planned for iter-2
+### Iter-3 Tracking Features (IN REVIEW — PR #15 approved, pending merge)
+- Background GPS location updates (Android foreground service, iOS background location) ✅ Implemented
+- SOS emergency button with broadcast ✅ Implemented
+- Organizer controls (start/end rides) ✅ Implemented
+- Route adherence indicator (deferred to iter-4)
+- Maintenance 30d + Event 24h reminders ✅ Implemented
+- Status: In review (PR #15 approved, pending human merge)
 
-### Enhanced Notifications (Iter-2)
-- Full notification routing (tap to navigate to relevant screen)
-- FCM push infrastructure setup
-- Notification read/unread persistence
-- Status: Planned for iter-2
-
-### Full Tracking Experience (Iter-3)
-- Background GPS location updates (Android foreground service, iOS background location)
-- SOS emergency button with broadcast
-- Organizer controls (start/end rides)
-- Route adherence indicator
-- Status: Planned for iter-3
+### Iter-4 Features (Planned)
+- Route GeoJSON rendering on tracking map (deferred from iter-3)
+- Route adherence chip (En ruta / Fuera de ruta) (deferred from iter-3)
 
 ### Social Follow System (Iter-4)
 - Follow/unfollow riders with optimistic updates
@@ -130,11 +130,10 @@
 
 ## Next Steps
 
-1. **Iter-2 pre-flight:** Verify seed.ts files, reset Prisma databases, initialize api-gateway Prisma
-2. **Iter-2 scope:** SOAT upload form, FCM notification infrastructure, ManageAttendeesPage redesign
-3. **Iter-3 scope:** Full tracking with SOS, organizer controls, background GPS
-4. **Iter-4 scope:** Social follow system, deep link domain provisioning
-5. **Iter-1 (final phase):** Apple Sign-In, App Links/Universal Links, notification routing
+1. **Human merge of PR #15:** Approve and merge to main (tech lead review approved 2026-05-15T07:00:00Z)
+2. **Post-merge actions:** Update CocoaPods CI cache (Mapbox 200MB binary framework), run physical device background GPS tests
+3. **Iter-4 scope:** Social follow system (Follow/unfollow), deep link domain provisioning
+4. **Iter-1 (final phase):** Apple Sign-In, App Links/Universal Links, notification routing, route adherence (iter-3 backlog)
 
 ---
 

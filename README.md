@@ -6,20 +6,23 @@ A Flutter mobile application for motorcycle riding events and community coordina
 
 | Feature | Status | Iteration | Details |
 |---------|--------|-----------|---------|
-| **Authentication** | Live | Framework | Email, Google, Apple sign-in via Firebase |
+| **Authentication** | Live | Framework | Email, Google sign-in via Firebase |
 | **Event Discovery** | Live | 1–2 | Browse events, filter by type/city/date, real-time tracking |
-| **Vehicle Garage** | Live | Framework | Add/manage/delete motorcycles, maintenance logging |
+| **Real-Time Tracking** | In Review | 3 | Live Mapbox map, SOS emergency system, organizer controls, background GPS |
+| **Vehicle Garage** | Live | Framework | Add/manage/delete motorcycles, maintenance logging, SOAT insurance tracking |
 | **User Profiles** | Live | 1 | Public rider profiles, attendee list navigation |
 | **AI Event Covers** | Live | 4 | Auto-generate event cover images via Claude Haiku + Unsplash |
-| **Design System** | Complete | 3 | Pencil UI toolkit with tokens, components, all screen flows |
+| **Notifications** | In Review | 3 | Push reminders (SOAT, maintenance, events, SOS alerts) |
+| **Design System** | Complete | 1 | Pencil UI toolkit with tokens, components, all screen flows |
 
 ## Deployed Links
 
 - **GitHub:** [Rideglory repository](https://github.com/CamiiloAF/Rideglory)
 - **Backend API:** [rideglory-api repository](https://github.com/CamiiloAF/rideglory-api) (NestJS microservices)
 - **Product Documentation:** `/docs/` (PRD, architecture, iteration history)
-- **Latest Iteration:** [Iteration 1 Summary](/docs/ITERATION_SUMMARY_1.md) (UI/UX Redesign — Design System Baseline)
+- **Latest Iteration:** [Iteration 3 Summary](/docs/ITERATION_SUMMARY_3.md) (Tracking + SOS + Mapbox Migration)
 - **Previous Iterations:** [Iteration History](/docs/ITERATION_HISTORY.md)
+- **PR Status:** [PR #15](https://github.com/CamiiloAF/Rideglory/pull/15) (Iteration 3 — approved, pending human merge)
 
 ## Getting Started
 

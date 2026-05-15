@@ -1,178 +1,191 @@
-# Iteration Context — Bridging Iter-1 to Iter-2
+# Iteration Context — Bridging Iter-3 to Iter-4
 
 **Prepared by:** PO (po_close phase)  
-**Date:** 2026-05-14  
-**For:** Iteration 2 (SOAT + Notification Foundation)
+**Date:** 2026-05-15T07:30:00Z  
+**For:** Iteration 4 (Social follow system + profile completion + deep link domain provisioning)
 
 ---
 
-## What Iter-1 Left You
+## What Iter-3 Left You
 
-### ✅ Design System Complete
-- All 15 screens now use consistent color tokens, typography, and spacing
-- Two new design-system primitives created:
-  - `AppEventBadge` atom (6 variants: scheduled, inProgress, finished, cancelled, free, paid)
-  - `DocumentSlotPill` molecule (4 states: empty, valid, expiringSoon, expired) — **ready for SOAT integration**
-- ~140 new L10n keys added to `app_es.arb`; generated `.dart` files committed
-- **All 5 modules refactored:** splash+auth, home, events, garage, maintenance+registration
+### ✅ Complete Real-Time Tracking & Emergency System
+- **Mapbox SDK migration** (Story 3.0): google_maps_flutter + geocoding fully removed; mapbox_maps_flutter ^2.2.0 deployed
+- **SOS emergency system** (Stories 3.1–3.2): Red button → confirmation → broadcast to all riders + FCM push; Llamar/Localizar actions with phone check
+- **Organizer ride controls** (Stories 3.3–3.4): Start/end ride buttons; auto-close tracking for all riders on finish
+- **Background GPS** (Story 3.5): Android foreground service (non-dismissible notification) + iOS system location indicator
+- **Maintenance & event reminders** (Stories 3.6–3.7): 30d maintenance + 24h event cron jobs (America/Bogota timezone)
+- **SOAT badge** (Story 3.10): 4-state display on Home Dashboard (Sin SOAT, Vigente, Por vencer, Vencido)
 
-### ✅ No Regressions
-- `dart analyze` → 0 errors, 0 warnings (no new violations)
-- `flutter test` → 28 pass, 4 pre-existing failures (unchanged)
-- **AI cover generation (iter-4) remains functional** — verified via smoke test
-- Mapbox route preview working as before
-- All existing features intact
+### ✅ Code Quality & Architecture
+- `dart analyze` → 0 errors, 0 warnings (3 Mapbox SDK info hints acceptable)
+- `flutter test` → 47 pass, 1 pre-existing failure (unrelated to iter-3)
+- **Clean Architecture enforced:** LiveTrackingCubit depends on domain TrackingRepository only; no EventService/Dio/WsClient imports in presentation
+- **One widget per file enforced:** sos_banner_action.dart extracted; home_garage_card.dart uses sibling files
+- **Localization complete:** ~30 new l10n keys in app_es.arb; no hardcoded Spanish strings in new code
 
-### ⚠️ Stale Code Generation
-Four test files fail due to pre-existing generated code out of sync:
-- `user_service.g.dart` missing `getUserById` endpoint
-- `event_service.g.dart` signature mismatch on `getEvents`
+### ✅ Backend Ready for Social Features
+- All tracking endpoints deployed: POST start/end, GET route (GeoJSON), GET geocode
+- Event participant lookup patterns proven (for SOS multicast broadcast)
+- Notification table mature: ready to add FOLLOW type
+- WS infrastructure stable: patterns for sosAlerts + eventEnded can be reused for follow observability
 
-**Not blocking.** Caused by backend changes in iter-2 or iter-4; will be regenerated during iter-2 pre-flight when `build_runner` is run for SOAT/notification schema changes.
-
----
-
-## What Iter-1 Did NOT Change
-
-### Backend (Intentionally)
-- Zero new endpoints
-- Zero schema migrations
-- Zero service changes
-- **Next backend work:** Iter-2 (SOAT endpoints, notifications table, FCM)
-
-### Domain & Data Layers
-- Zero domain models added/changed
-- Zero DTOs added/changed
-- Zero use cases added/changed
-- Zero DI changes
-- Zero router changes
-- **Constraint enforced:** Pure presentation-layer redesign only
-
-### Test Infrastructure
-- No new test dependencies (mocktail, bloc_test) added
-- 10 existing tests continue to pass
-- New unit/widget tests deferred to iter-2+
+### ⚠️ PR #15 Status
+- **Tech lead review:** APPROVED (2026-05-15T07:00:00Z)
+- **Merge status:** Pending human action (not yet merged to main)
+- **Critical:** Must merge before /iter 4 begins to avoid merge conflicts with follow system
 
 ---
 
-## Iter-2 Pre-Flight Checklist
+## What Iter-3 Deferred (Ready for Iter-4)
+
+### T-3-9 (Backlog) — Route Adherence Features
+- **Route GeoJSON rendering:** GeoJsonSource + LineLayer on tracking map (not yet implemented)
+- **Route adherence chip:** "En ruta ✓" / "Fuera de ruta ⚠" with 200m Haversine check (depends on T-3-9)
+- **Candidate for iter-4 if time permits** after follow system; otherwise iter-4+ slot
+
+### Post-MVP Deferred Items
+- SOS sender cancel / dismiss (organizer dismiss only, post-MVP)
+- Km-based maintenance reminders (requires odometer tracking, not defined in PRD)
+- Notification tap routing (scheduled for iter-1, deep links phase)
+
+---
+
+## Iter-4 Pre-Flight Checklist
 
 **Before any code is written, complete these tasks:**
 
-### 1. Backend Setup
-- [ ] Verify `rideglory-api` git status and checkout main
-- [ ] Run `prisma migrate reset` on all 4 existing microservices (vehicles-ms, events-ms, users-ms, maintenances-ms)
-- [ ] Verify seed.ts exists in vehicles-ms and events-ms; run fresh seed if needed
-- [ ] **NEW:** Prisma init on api-gateway (first-time setup):
-  - [ ] `prisma init` (creates `prisma/schema.prisma`)
-  - [ ] Configure DATABASE_URL in `.env` (must match Docker Compose PostgreSQL)
-  - [ ] Create notifications table schema (id, userId, type, payload, isRead, createdAt)
-  - [ ] Run `prisma migrate dev --name init` to initialize and test database connectivity
-  - [ ] Verify `GET /api/notifications` endpoint returns 200 with empty array
+### 1. Verify PR #15 Merge
+- [ ] Check GitHub: is PR #15 merged to main?
+- [ ] If NOT merged: flag to orchestrator; do not start iter-4 code until merged (avoid conflicts with follow system)
+- [ ] If merged: pull main and verify Mapbox integration is stable
 
-### 2. Code Generation (Flutter)
-- [ ] Run `dart run build_runner clean`
-- [ ] Run `dart run build_runner build --delete-conflicting-outputs`
-- [ ] Verify all 4 failing tests now pass (or show only pre-existing failures)
-- [ ] Run `flutter test` and confirm 28+ tests pass
+### 2. DevOps Post-Merge Actions
+- [ ] Update CocoaPods cache key in GitHub Actions (Mapbox binary framework ~200MB) — must be done immediately after merge
 
-### 3. Design Gate (SOAT + Notifications)
-- [ ] Confirm SOAT status badge frames in `rideglory.pen` (vehicle detail page)
-- [ ] Confirm SOAT upload form frame in `rideglory.pen`
-- [ ] Confirm SOAT manual entry form frame in `rideglory.pen`
-- [ ] Confirm notification center / generic notification row template in `rideglory.pen`
-- [ ] Confirm ManageAttendeesPage frame (Story 2.9) in `rideglory.pen` — list + edit or edit-only?
+### 3. Design Gate (Profile + Follow System)
+- [ ] Confirm FollowersListPage frame in `rideglory.pen` (with quick-follow button, loading state, empty state)
+- [ ] Confirm FollowingListPage frame in `rideglory.pen` (same states)
+- [ ] Confirm profile frame (A7qDd) final design in `rideglory.pen` (bio, city, follower counts, public vehicles, organized events)
+- [ ] Confirm follow button states in frame (default, in-flight, following)
 
-### 4. Architecture Assessment (GoRouter DI)
+### 4. Backend Setup (Follow System)
+- [ ] Verify `rideglory-api` checkout main (post-iter-3 merge)
+- [ ] Follow entity schema ready: followerId, followingId, createdAt, composite unique index (users-ms Prisma)
+- [ ] Verify endpoints ready: POST /users/:userId/follow, DELETE /users/:userId/follow, GET /users/:userId/followers, GET /users/:userId/following
+- [ ] Verify _count.followers and _count.following available in user profile response
+
+### 5. GoRouter DI Assessment (Blocker for Iter-1)
 - [ ] Check if `app_router.dart` creates GoRouter as top-level variable or via DI
-- [ ] If top-level: plan refactoring (scope as Story 1.0 if blocking NotificationRouteHandler)
-- [ ] Document decision in architect handoff
+- [ ] **If top-level:** Create refactoring task (Story 1.0 pre-flight for iter-1); document in architect handoff
+- [ ] **If already in GetIt:** Document confirmation in architect handoff (no iter-1 blocker)
+
+### 6. Deep Link Domain Provisioning (Hard Blocker for Iter-1)
+- [ ] Provision custom domain with valid TLS certificate
+- [ ] Create `.well-known/assetlinks.json` for Android App Links (exact format: SHA256 cert fingerprint + package name)
+- [ ] Create `.well-known/apple-app-site-association` for iOS Universal Links (team ID + bundle ID)
+- [ ] Deploy both files to custom domain; verify with curl that both return 200
+- [ ] Test on real device: Universal Link cold-start (iOS) and App Link cold-start (Android)
+- [ ] **Critical:** This must be done before iter-1 closes (deep links phase cannot start without verified domain)
 
 ---
 
-## High-Risk Items for Iter-2
+## High-Risk Items for Iter-4
 
-### api-gateway Prisma First-Time Setup
-**Risk:** PostgreSQL connectivity, DATABASE_URL configuration, Docker Compose networking  
-**Mitigation:** Allot full pre-flight day. Test `prisma migrate dev` and verify `GET /api/notifications` returns 200 before moving to implementation.
+### Follow State Optimistic Update (Exception to ResultState<T>)
+**Risk:** FollowCubit uses @freezed FollowState { isFollowing, followerCount, isLoading, error } instead of ResultState<T>  
+**Mitigation:** Document as intentional architecture exception. Code review must verify: (1) optimistic update reverts visually on error, (2) follower count matches backend after fetch, (3) no race conditions on fast double-tap.
 
-### Story 2.9 Scope (ManageAttendeesPage)
-**Risk:** Frame dUc9h may be unclear (list + edit, or edit-only)  
-**Mitigation:** Design gate must confirm scope. If ambiguous, limit to component-swap and color tokenization (no layout rework).
+### FollowCubit Factory DI Pattern
+**Risk:** FollowCubit is registered as factory (not @singleton) — one instance per userId; unusual pattern  
+**Mitigation:** Document in DI module with comment explaining why (per-user state isolation). Code review must verify factory is registered correctly and not cached globally.
 
-### FCM Token Registration Dependency Chain
-**Risk:** Stories 2.4/2.5/2.6 (push notifications) depend on Story 2.8 (POST /api/notifications/fcm-token) being complete  
-**Mitigation:** Implement 2.8 first. Backend DI re-initialization inside FCM background handler must be documented and reviewed carefully.
+### GoRouter DI Refactoring (Potential Blocker for Iter-1)
+**Risk:** If app_router.dart creates GoRouter as top-level variable, NotificationRouteHandler (iter-1) cannot inject it  
+**Mitigation:** Assess in iter-4 pre-flight. If refactoring needed, scope as Story 1.0 pre-flight (do not defer to iter-1 implementation phase).
 
-### Notification Read Persistence Timing
-**Risk:** Story 2.7 (mark as read) depends on backend endpoints (Story 2.8) being functional  
-**Mitigation:** Testing order: 2.8 → 2.7 → 2.4/2.5/2.6. No concurrent implementation.
+### Deep Link Domain TLS + HTTPS
+**Risk:** assetlinks.json or apple-app-site-association unreachable, invalid TLS, or incorrect format  
+**Mitigation:** Curl both endpoints before iter-4 closes. Test cold-start on physical device (release build, not debug). App Store / Play Store review will reject if links don't work.
 
 ---
 
 ## Key Assumptions & Gotchas
 
-### Build Runner Regeneration Needed
-The 4 failing test files will regenerate correctly during iter-2 pre-flight because:
-1. New SOAT and notification DTOs added to domain
-2. New Retrofit endpoints in services (SoatService, NotificationsService)
-3. `build_runner build` will regenerate all `.g.dart` files
-4. Tests will pass once service interface signatures match again
+### Follow Button Loading State Visuals
+The follow button must show loading state during the API call and revert visually on failure. Spec in design frame.
 
-**Action:** Don't worry about these 4 failures in iter-1. They'll clear in iter-2 pre-flight.
-
-### DocumentSlotPill Localization Gotcha
-The `DocumentSlotPill` molecule has hardcoded Spanish fallback strings (`'Sin registrar'`, `'Vigente'`, `'Por vencer'`, `'Vencido'`) because it cannot access `context.l10n` without `BuildContext`.
-
-**How to use in iter-2:**
+**Pattern:**
 ```dart
-DocumentSlotPill(
-  state: DocumentSlotState.empty,
-  stateLabel: context.l10n.vehicle_document_slot_empty, // Callers must pass localized string
-)
+// Optimistic: isFollowing = true immediately
+// During request: isLoading = true (show spinner)
+// On success: update followerCount from backend
+// On failure: isFollowing reverts, show snackbar error
 ```
 
-If this pattern is too verbose, reconsider moving localization into the molecule (requires accepting a Localizations delegate). Document in code comments.
+### PublicVehicleDto vs. VehicleDto
+Must be a separate class, NOT VehicleDto with null fields. Clean Architecture principle: domain model must not carry null fields representing hidden data.
 
-### AI Cover Generation Still Works
-The `AIEventCoverWidget` in event form was a smoke test blocker. It works because:
-- Iter-1 did not touch its implementation or imports
-- It still calls the backend endpoint (no backend changes)
-- Treat as a "canary" feature — if anything breaks in form implementation, this fails first
+```dart
+// ❌ WRONG
+class PublicVehicleDto extends VehicleDto { }
+
+// ✅ CORRECT
+class PublicVehicleDto {
+  final String id;
+  final String make;
+  final String model;
+  // No licensePlate, no insurance fields
+}
+```
+
+### Follower Notification Type
+Must be distinct from other notification types. Add `FOLLOWER_NOTIFICATION` or `NEW_FOLLOWER` to NotificationType enum; dispatch from api-gateway post-follow; mark reminderSentAt once sent.
+
+### Pagination Offset vs. Cursor
+Use offset/limit for followers/following lists (simpler than cursor pagination). Example: `GET /api/users/:userId/followers?page=1&limit=20`.
 
 ---
 
-## Documents to Update Post-Iter-2
+## Documents to Update Post-Iter-4
 
-When iter-2 closes, the PO will update:
-- `docs/ITERATION_SUMMARY_2.md` (stories delivered, scope changes, metrics)
-- `docs/ITERATION_HISTORY.md` (append row for iter-2)
-- `docs/PRODUCT_STATUS.md` (add SOAT and notification features to "shipped" section)
-- `docs/handoffs/iteration_context.md` (bridge for iter-3)
+When iter-4 closes, the PO will update:
+- `docs/ITERATION_SUMMARY_4.md` (stories delivered, follow system metrics)
+- `docs/ITERATION_HISTORY.md` (append row for iter-4)
+- `docs/PRODUCT_STATUS.md` (add follow system and complete profiles to "shipped")
+- `docs/handoffs/iteration_context.md` (bridge for iter-1 — note deep link domain is live)
 - `README.md` (update latest iteration link)
-- `docs/handoffs/iteration_checkpoint.md` (reset to idle, set "Last closed: Iteration 2")
+- `docs/handoffs/iteration_checkpoint.md` (reset to idle, set "Last closed: Iteration 4")
 
 ---
 
-## Quick Reference: File Locations
+## Quick Reference: Key Files (Updated for Iter-3 Context)
 
 | File | Purpose |
 |------|---------|
 | `docs/REQUIREMENTS.md` | Product spec (all features, user flows) |
-| `docs/PLAN.md` | Full 5-iteration roadmap with stories, assumptions, risks |
-| `docs/ITERATION_SUMMARY_1.md` | Details on what iter-1 delivered |
-| `docs/handoffs/po.md` | Iter-1 PO handoff (stories, scope, assumptions) |
-| `docs/handoffs/architect.md` | Iter-1 architecture decisions (design-system spec, no backend) |
-| `docs/handoffs/frontend.md` | Iter-1 implementation summary (color tokenization, primitives) |
-| `docs/handoffs/qa.md` | Iter-1 QA results (test catalog, smoke tests) |
-| `docs/handoffs/tech_lead.md` | Iter-1 code review (PR #13 verdict, non-blockers) |
-| `docs/PRODUCT_STATUS.md` | Current shipped capabilities |
-| `workflow/state.json` | Machine-readable phase/task state (read by `/resume-iter`) |
+| `docs/PLAN.md` | Full 5-iteration roadmap (iter-3 now confirmed complete) |
+| `docs/ITERATION_SUMMARY_1.md` | Details on iter-1 (UI/UX redesign) |
+| `docs/ITERATION_SUMMARY_3.md` | Details on iter-3 (tracking + SOS + Mapbox migration) |
+| `docs/handoffs/po.md` | Iter-3 PO handoff (final version) |
+| `docs/handoffs/architect.md` | Iter-3 architecture decisions (Mapbox, tracking SOS, WS patterns) |
+| `docs/handoffs/frontend.md` | Iter-3 implementation summary (SOS, organizer controls, background GPS) |
+| `docs/handoffs/backend.md` | Iter-3 backend (tracking endpoints, cron jobs, SOS handler) |
+| `docs/handoffs/qa.md` | Iter-3 QA results (test catalog, hard gates, BUG-3-1 resolved) |
+| `docs/handoffs/tech_lead.md` | Iter-3 code review (PR #15 approved after 2 cycles) |
+| `docs/PRODUCT_STATUS.md` | Current shipped capabilities (iter-3 tracking in review) |
+| `workflow/state.json` | Machine-readable phase/task state (iteration 3 done) |
 
 ---
 
 ## Summary
 
-Iter-1 left you with a **visually cohesive codebase** and **zero technical debt** from the redesign. The next 4 iterations (2, 3, 4, 5) can be implemented with confidence that the UI foundation is solid.
+Iter-3 left you with a **production-ready real-time tracking system** and **complete emergency infrastructure**. The Mapbox migration eliminates vendor lock-in; the SOS system is ready for field testing; background GPS is implementable on both platforms.
 
-**Next iteration is ready to start.** Run `/iter 2` or `/solo-plan` to begin Iteration 2 planning.
+**Critical path forward:**
+1. **Human merge of PR #15** (tech lead approved)
+2. **CocoaPods cache update** in CI/CD (DevOps post-merge)
+3. **Iter-4 pre-flight** confirms follow system design, GoRouter DI, deep link domain
+4. **Iter-4 implementation** adds social layer and deep link infrastructure (blocker for iter-1)
+5. **Iter-1 final phase** completes Apple Sign-In, App Links, notification routing
+
+**Next iteration is ready to plan.** Run `/iter 4` or `/solo-plan` to begin Iteration 4 planning once PR #15 is merged.
