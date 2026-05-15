@@ -1,129 +1,123 @@
-# Tech Lead Handoff — Iteration 1: UI/UX Redesign
+# Tech Lead Review — iter-3 (PR #15)
 
-**Reviewer:** tech_lead
-**Iteration:** 1
-**Phase:** tech_lead
-**Date:** 2026-05-14
-**Decision:** **APPROVED**
-
----
-
-## Pull request
-
-**PR #13** — feat(iter-1): UI/UX Redesign — design system baseline (15 screens)
-**URL:** https://github.com/CamiiloAF/Rideglory/pull/13
-**Branch:** `iter-1` → `main`
-**Files changed:** 100 (majority docs/design assets; Flutter lib/ changes reviewed below)
-
-### Scope summary
-
-Presentation-layer redesign across 5 modules (splash+auth, home, events, garage, maintenance+registration). No domain, data, DI, or router changes. Two new design-system primitives created (AppEventBadge atom, DocumentSlotPill molecule). ~140 new ARB l10n keys.
+**Decision: BLOCKED**
+**Reviewed at:** 2026-05-15T06:00:00Z
+**PR:** https://github.com/CamiiloAF/Rideglory/pull/15
+**Iteration:** 3 — Tracking Completo + SOS + Organizer Controls + Mapbox Migration
 
 ---
 
-## Blocking issues
+## Summary
 
-**None.** All items below are observations or deferred non-blockers.
+PR #15 delivers 7 stories (3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.10) including the full Mapbox migration, SOS flow, organizer ride controls, background GPS, and SOAT vehicle badge. The Story 3.0 hard gate (zero `google_maps_flutter` / `geocoding` imports) is satisfied. BUG-3-1 (widget test for `route_map_preview.dart`) is resolved — the test file is present and 4/4 pass.
 
-### Minor findings (non-blocking)
-
-| # | File | Finding | Severity | Disposition |
-|---|------|---------|----------|-------------|
-| 1 | `lib/design_system/atoms/badges/app_event_badge.dart:65` | `final fg = _foregroundColor()` — `fg` is a single-letter-like abbreviation. Standards prefer domain names. Acceptable in this context (local color alias, type and purpose obvious). | info | Deferred — acceptable in design primitive context |
-| 2 | `lib/features/home/presentation/widgets/home_event_gradient_overlay.dart:13` | `Colors.black87` introduced where `Color(0xDD000000)` was removed. Strictly, only `Colors.black` is allowed. Same for `event_detail_header_overlay_gradient.dart`. | warning | Deferred — visually correct, semantically close. Fix in next maintenance pass. |
-| 3 | `lib/design_system/molecules/feedback/document_slot_pill.dart:76-79` | Hardcoded Spanish strings (`'Sin registrar'`, `'Vigente'`, `'Por vencer'`, `'Vencido'`) in the fallback default for `effectiveStateLabel`. Molecule has no `BuildContext` → cannot call `context.l10n`. Calling code should always pass `stateLabel` explicitly. | warning | Deferred — callers must pass localized `stateLabel`. Document in code comment. Molecule-level default is tolerable for iter-1. |
-| 4 | `lib/features/maintenance/presentation/widgets/item_card/mileage_info_dialog.dart` | `AlertDialog` (raw) still in use. Pre-existing — not introduced by iter-1; file not touched in this PR. | info | Pre-existing; track in iter-2 cleanup |
-| 5 | `lib/features/events/presentation/form/widgets/sections/event_form_multi_brand_section.dart` | `TextFormField` still in use. Pre-existing — not introduced by iter-1; file not touched in this PR. | info | Pre-existing; track in iter-2 cleanup |
-| 6 | `lib/features/maintenance/presentation/widgets/item_card/info_chip_tooltip.dart` | `showDialog()` direct call still in use. Pre-existing — not introduced by iter-1. | info | Pre-existing; track in iter-2 cleanup |
-| 7 | `lib/features/home/presentation/widgets/home_view_all_events_button.dart` | `context.goNamed()` used instead of `context.pushNamed()`. Pre-existing — not introduced by iter-1. | info | Pre-existing; track in iter-2 cleanup |
-| 8 | `lib/l10n/app_es.arb:926` | `"maintenance_form_reminder_note"` contains a `🔔` emoji. Acceptable in ARB strings only. | info | Acceptable — in ARB, not hardcoded in Dart |
+However, **6 blocking violations** prevent merge: a Clean Architecture layer breach and 5 coding-standards violations. All are correctable in a single fix cycle.
 
 ---
 
-## Security findings
+## Hard Gates
 
-- No secrets, API keys, or credentials found in Dart source.
-- Firebase config (`firebase_options.dart`) uses `AppEnv` (envied) — all values come from `.env` at build time. No plain-text tokens.
-- `google-services.json` and `GoogleService-Info.plist` are not tracked (confirmed via .gitignore and absence from diff).
-- No `print()` calls found in `lib/`.
-- No `BuildContext` usage in domain or data layers.
-- **Result: PASS — no security issues.**
-
----
-
-## Test coverage assessment
-
-### dart analyze
-
-```
-0 errors, 0 warnings
-33 info-level (pre-existing withOpacity deprecations in lib/shared/widgets/ only)
-Exit code: 0 (or equivalent — no fatal warnings)
-```
-
-No new violations introduced by iter-1. Gate: **PASS**
-
-### flutter test
-
-```
-28 pass, 4 fail
-4 failures are pre-existing (user_service.g.dart missing getUserById, event_service.g.dart signature mismatch)
-No new test failures introduced by iter-1 presentation changes
-```
-
-Gate: **PASS** (4 pre-existing failures acknowledged; deferred to iter-2 build_runner run)
-
-### Architecture constraints
-
-- `git diff main..iter-1 -- lib/**/domain/ lib/**/data/ lib/core/di/ lib/shared/router/` → **empty diff** — confirmed zero domain/data/DI/router changes.
-- Color tokenization: `grep -rE "Color\(0x" lib/features/` → **0 matches**
-- Non-standard Colors: `grep -rE "Colors\." lib/features/ | grep -v "transparent|black|white"` → **0 new matches in features** (2 `Colors.black87` introduced but in gradient overlays, borderline acceptable)
-- ElevatedButton / TextFormField / AlertDialog: pre-existing violations only; none introduced by iter-1.
-
-### Design system primitives
-
-- `AppEventBadge` atom: 1 widget per file ✅, correct enum variants ✅, AppColors used ✅, exported via atoms.dart ✅
-- `DocumentSlotPill` molecule: 1 widget per file ✅, 4 state variants ✅, AppColors used ✅, exported via molecules.dart ✅
+| Gate | Status |
+|---|---|
+| Zero `google_maps_flutter` imports in `lib/` | PASS |
+| Zero `geocoding` imports in `lib/` | PASS |
+| `dart analyze` 0 errors/0 warnings | PASS (per frontend handoff) |
+| `flutter test` — target stories pass | PASS (43 pass / 1 pre-existing fail TC-2-28) |
+| BUG-3-1 widget test for `route_map_preview.dart` | PASS (4/4 cases present) |
 
 ---
 
-## Overall signal
+## Blocking Violations
 
-**APPROVED — clean presentation-layer redesign.**
+### BLOCK-1 — Clean Architecture: Data layer imported in cubit
 
-Iter-1 successfully delivers the design system baseline for all 15 screens:
-- 47 hardcoded color literals eliminated from `lib/features/` across 5 modules
-- 2 reusable design-system primitives created (AppEventBadge + DocumentSlotPill) per architect spec
-- ~140 new ARB l10n keys, generated files committed
-- Clean architecture preserved: zero domain/data/DI/router changes
-- `dart analyze` 0 errors/0 warnings; `flutter test` 28/28 passing (4 pre-existing .g.dart failures unchanged)
-- No security issues
+**File:** `lib/features/events/presentation/tracking/cubit/live_tracking_cubit.dart` L15–17
 
-Non-blocking deferred items (3): `Colors.black87` gradient usage, `DocumentSlotPill` default hardcoded strings, `fg` variable name in AppEventBadge. All acceptable at iter-1 risk level.
+The cubit imports `package:dio/dio.dart`, `event_service.dart`, and `tracking_ws_client.dart` — all data-layer concerns. The cubit also catches `DioException` directly (~L400), a data-layer exception type leaking into presentation.
+
+**Required fix:** Extract a `TrackingRepository` interface (domain) with `endRide(String eventId)` and `publishSos(SosAlertModel)` methods. The data-layer `TrackingRepositoryImpl` wraps `EventService` and `TrackingWsClient` and converts `DioException` to `DomainException`. Cubit receives `TrackingRepository` via injection.
 
 ---
 
-## Change log
+### BLOCK-2 — Coding Standards: `_buildXxx` helper methods
 
-| File | Change |
-|------|--------|
-| `lib/design_system/atoms/badges/app_event_badge.dart` | NEW — AppEventBadge atom (6 variants, 24px, 6px radius) |
-| `lib/design_system/molecules/feedback/document_slot_pill.dart` | NEW — DocumentSlotPill molecule (4 states, 44px min-height) |
-| `lib/design_system/atoms/atoms.dart` | Added AppEventBadge export |
-| `lib/design_system/molecules/molecules.dart` | Added DocumentSlotPill export |
-| `lib/l10n/app_es.arb` | +~140 l10n keys (splash, auth, home, events, vehicles, maintenance, registration) |
-| `lib/l10n/app_localizations.dart` | Regenerated (158KB) |
-| `lib/l10n/app_localizations_es.dart` | Regenerated (67KB) |
-| 3 auth files | Color tokenization (`Colors.green/grey` → `AppColors.success/darkTextSecondary`) |
-| 2 home files | Color tokenization (`Color(0xFF2D1A0A/1A0D05)` → `AppColors.darkSurface/darkSurfaceHighest`) |
-| 3 events files | Color tokenization + `AppColors.info` for readyForEdit status |
-| 12 vehicle files | Color tokenization (complete suite) |
-| 9 maintenance files | Color tokenization (complete suite) |
-| 1 registration file | Color tokenization (`Colors.green/red` → `AppColors.success/error`) |
-| `pubspec.yaml` | Removed duplicate dev_dependencies entries |
+**File:** `lib/features/events/presentation/tracking/live_map_page.dart` L203, L224, L256
+
+`_buildAppBar()`, `_buildLiveMapAppBar()`, `_buildBody()` are Widget-returning private methods violating the "no `_buildXxx` helpers" rule.
+
+**Required fix:** Extract to separate widget files, e.g. `live_map_app_bar.dart` and `live_map_body.dart`.
 
 ---
 
-## Code review document
+### BLOCK-3 — Coding Standards: Hardcoded Spanish strings in `sos_banner.dart`
 
-See `docs/architecture/code-review-iter1.md` for the formal code review table per HU-REFACTOR-01.
+**File:** `lib/features/events/presentation/tracking/widgets/sos_banner.dart` L22, L34, L51
+
+Three SnackBar messages not in `app_es.arb`:
+- `'No se pudo iniciar la llamada.'`
+- `'No se pudo obtener la ubicación del rider.'`
+- `'No se pudo abrir el mapa.'`
+
+**Required fix:** Add l10n keys (e.g., `tracking_sosCallError`, `tracking_sosLocationError`, `tracking_sosMapError`) and use `context.l10n.<key>`.
+
+---
+
+### BLOCK-4 — Coding Standards: Hardcoded Spanish string in `sos_button.dart`
+
+**File:** `lib/features/events/presentation/tracking/widgets/sos_button.dart` L21
+
+Semantics label `'Enviar alerta de emergencia'` is a raw literal.
+
+**Required fix:** Add l10n key `tracking_sosSemanticsLabel` and use `context.l10n.tracking_sosSemanticsLabel`.
+
+---
+
+### BLOCK-5 — Coding Standards: Hardcoded Spanish string in `route_map_preview.dart`
+
+**File:** `lib/shared/widgets/map/route_map_preview.dart` L288
+
+Error text `'No se pudo obtener las coordenadas.'` is hardcoded in `build()`.
+
+**Required fix:** Add l10n key `map_geocodeError` and use `context.l10n.map_geocodeError`.
+
+---
+
+### BLOCK-6 — Coding Standards: Multiple widget classes per file
+
+**Files:**
+- `lib/features/events/presentation/tracking/widgets/sos_banner.dart`: `SosBannerWidget` (L9) + `_SosBannerAction` (L131)
+- `lib/features/home/presentation/widgets/home_garage_card.dart`: `HomeGarageCard` + `_HeroImage` + `_PlaceholderImage` + `_VehicleInfo` + `_SoatBadge`
+
+**Required fix:** One widget class per file. Extract private widgets to sibling files in the same directory.
+
+---
+
+## Non-Blocking / Deferred
+
+1. `home_garage_card.dart` — `_SoatBadge._statusLabel()` may return the same l10n key for all three `SoatStatus` values (valid/expiringSoon/expired). Verify three distinct keys are used. Fix before iter-4 if confirmed as logic bug.
+
+2. `DioException` catch in cubit `endRide()` (~L400) will be automatically resolved when BLOCK-1 is addressed.
+
+---
+
+## What Passed
+
+- Mapbox migration correct: `Position(longitude, latitude)` lng-first order respected throughout
+- `mapbox_maps_flutter hide Error` import alias used where `ResultState<T>` is also used
+- `geolocator as geo` alias used where Mapbox and geolocator Position types conflict
+- `SosAlertModel` in domain layer — clean, no Flutter imports
+- `GeocodeResultDto` in `lib/core/services/dto/` — correct placement
+- `AddressLocation` in `lib/shared/models/` — clean domain model
+- `OrganizerControlBar`, `RideFinishedOverlay` — one widget per file, AppButton used, l10n used
+- `live_tracking_state.dart` — freezed state with `sosAlertResult: ResultState<SosAlertModel?>` — correct pattern
+- `app_es.arb` — ~30 new keys with proper placeholder documentation
+- `main.dart` — `MapboxOptions.setAccessToken(AppEnv.mapboxPublicToken)` before `runApp()`
+- CI: `MAPBOX_DOWNLOADS_TOKEN` and `MAPBOX_ACCESS_TOKEN` secrets wired in `ci.yml`
+- `AndroidManifest.xml` — Google Maps key removed, foreground service declared with `foregroundServiceType="location"`
+- `route_map_preview_test.dart` — 4 test cases (loading/error/data/empty) using mocktail — BUG-3-1 resolved
+
+---
+
+## Decision
+
+**BLOCKED.** Fix the 6 blocking violations and re-request review. No other phase may proceed until these are resolved and this review is updated to APPROVED.

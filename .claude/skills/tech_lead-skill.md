@@ -216,3 +216,22 @@ Commands: `dart analyze --no-summary`, `grep -rn "print(" lib/`, `dart fix --app
 
 ## Change log
 - 2026-05-13 (plan v3 approval): Per-iteration review focus, security checklist, and architecture invariants documented.
+
+---
+
+### Iteration 3 (2026-05-15, PR #15 review — BLOCKED)
+
+- **`gh pr review --request-changes` fails on own PRs.** GitHub GraphQL error: "Review Can not request changes on your own pull request." Post the full review decision as a `--comment` instead. This satisfies the "inline comments + decision" requirement from the playbook.
+- **Mapbox `hide Error` import alias is REQUIRED** in files that import both `mapbox_maps_flutter` and use `ResultState<T>`. The Mapbox SDK exports a type named `Error` that shadows the Dart builtin. Correct: `import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide Error;`
+- **`geolocator as geo` alias is REQUIRED** in files that also import `mapbox_maps_flutter`. Both packages export `Position` and `LocationSettings` types. Confirm alias is present in every file using both.
+- **`DioException` in a cubit is always a BLOCKING violation** — it's a data-layer exception type. The repository/use case must catch it and convert to `DomainException` before the cubit sees it. No exceptions.
+- **Multiple private widget classes in one file is BLOCKING** even when they are all private (`_`-prefixed). The one-widget-per-file rule applies to `_Widget` classes too. Each must be extracted to its own file.
+- **`_buildXxx()` helpers in a StatelessWidget/StatefulWidget are BLOCKING.** This pattern is extremely common in Flutter tutorials but is explicitly banned in rideglory-coding-standards. Extract to sibling widget files.
+- **Hardcoded Spanish strings in Semantics labels are BLOCKING.** `Semantics(label: 'Enviar alerta de emergencia')` is just as non-compliant as a visible text widget with a hardcoded string.
+- **SnackBar strings require l10n even when triggered from non-build context.** SnackBar content must use `context.l10n.<key>` — the BuildContext is available at the call site (action handler), so there is no exemption.
+- **Story 3.0 hard gate verification must be documented explicitly in the review.** Run `grep -r 'google_maps_flutter' lib/` and `grep -r 'geocoding' lib/` and record the zero-result outcome. Do not rely on frontend handoff claims alone.
+- **Pre-existing violations that are NOT in the diff are NOT blocking.** Verify with `git diff main..<branch> -- <file>`. If the file was untouched, those violations are pre-existing and belong in "deferred" section, not in "blocking."
+- **home_garage_card.dart is a known pre-existing multi-widget file.** `_HeroImage` and `_PlaceholderImage` were pre-existing. Only `_SoatBadge` (added in this PR) is attributable to this PR author, but since the file already had multiple widgets, calling out the full set is correct policy — the fix cycle should address all of them.
+
+### Change log entry
+- 2026-05-15 (iter-3 review): PR #15 reviewed. Decision: BLOCKED. 6 blocking violations. Story 3.0 hard gate PASS. BUG-3-1 resolved. Skill updated with iter-3 learnings.

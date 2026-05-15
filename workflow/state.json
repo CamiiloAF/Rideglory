@@ -545,8 +545,8 @@
     },
     "tech_lead": {
       "status": "idle",
-      "lastAction": "2026-05-14T16:00:00Z",
-      "focus": "iter-1 PR #13 reviewed and approved. dart analyze 0 errors/0 warnings. flutter test 28 pass/4 pre-existing fail. No layer violations, no hardcoded colors, no new raw Material widgets. 3 deferred non-blockers (Colors.black87 in gradients, DocumentSlotPill fallback strings, pre-existing widget violations). code-review-iter1.md produced."
+      "lastAction": "2026-05-15T06:00:00Z",
+      "focus": "iter-3 PR #15 reviewed. Decision: BLOCKED. 6 blocking violations: (1) data layer imports in live_tracking_cubit.dart (EventService, TrackingWsClient, DioException); (2) _buildXxx helpers in live_map_page.dart; (3) hardcoded Spanish strings in sos_banner.dart (3 SnackBars); (4) hardcoded Semantics label in sos_button.dart; (5) hardcoded error string in route_map_preview.dart; (6) multiple widget classes in sos_banner.dart and home_garage_card.dart. Hard gates PASS: zero google_maps_flutter/geocoding imports, BUG-3-1 resolved (widget test 4/4 pass). Next: frontend fix cycle, then re-review."
     }
   },
   "tasks": [
@@ -979,6 +979,22 @@
       "agent": "system",
       "at": "2026-05-15T05:45:00Z",
       "detail": "PR #15 opened: https://github.com/CamiiloAF/Rideglory/pull/15"
+    },
+    {
+      "type": "tech_lead_review",
+      "iteration": 3,
+      "phase": "tech_lead",
+      "agent": "tech_lead",
+      "at": "2026-05-15T06:00:00Z",
+      "detail": "PR #15 reviewed. Decision: BLOCKED. Hard gates PASS: zero google_maps_flutter/geocoding imports in lib/, BUG-3-1 widget test (4/4 pass), dart analyze 0 errors/0 warnings (per frontend handoff), flutter test 43 pass/1 pre-existing fail. 6 blocking violations: BLOCK-1 data layer (EventService+TrackingWsClient+DioException) imported in live_tracking_cubit.dart presentation layer; BLOCK-2 _buildXxx helper methods in live_map_page.dart; BLOCK-3 3 hardcoded Spanish SnackBar strings in sos_banner.dart; BLOCK-4 hardcoded Semantics label in sos_button.dart; BLOCK-5 hardcoded error string in route_map_preview.dart; BLOCK-6 multiple widget classes in sos_banner.dart and home_garage_card.dart. 2 deferred non-blockers. Inline PR comments posted. Cannot proceed to po_close until all 6 blocks resolved and re-reviewed."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 3,
+      "phase": "tech_lead",
+      "agent": "tech_lead",
+      "at": "2026-05-15T06:00:00Z",
+      "detail": "Decision: BLOCKED. 6 blocking violations posted as inline PR comments. Frontend fix cycle required before re-review. Checkpoint: Last=tech_lead, Next=po_close (after re-review approval)."
     }
   ]
 }
