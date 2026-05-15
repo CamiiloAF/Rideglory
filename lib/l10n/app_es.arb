@@ -1077,5 +1077,99 @@
   "event_myEventsTab": "Mis eventos",
   "event_registrationsTab": "Inscritos",
   "event_eventRegistrationsTitle": "Inscripciones del Evento",
-  "event_manageAttendeesTitle": "Gestionar inscritos"
+  "event_manageAttendeesTitle": "Gestionar inscritos",
+  "sos_button_label": "SOS",
+  "sos_confirm_title": "¿Enviar alerta SOS?",
+  "sos_confirm_body": "Todos los participantes serán notificados de tu emergencia. Esta acción no se puede deshacer.",
+  "sos_confirm_action": "Enviar SOS",
+  "sos_sent_confirmation": "SOS enviado — los riders han sido notificados",
+  "sos_banner_subtitle_with_phone": "Toca para ver acciones",
+  "sos_banner_subtitle_no_phone": "Sin teléfono registrado",
+  "sos_call_action": "Llamar",
+  "sos_locate_action": "Localizar",
+  "sos_banner_title": "{riderName} necesita ayuda",
+  "@sos_banner_title": {
+    "placeholders": {
+      "riderName": {
+        "type": "String"
+      }
+    }
+  },
+  "tracking_start_ride": "Iniciar rodada",
+  "tracking_start_ride_confirm_title": "¿Iniciar rodada?",
+  "tracking_start_ride_confirm_body": "Los riders aprobados recibirán acceso al mapa de rastreo en tiempo real.",
+  "tracking_end_ride": "Terminar rodada",
+  "tracking_end_ride_confirm_title": "¿Terminar rodada?",
+  "tracking_end_ride_confirm_body": "La pantalla de rastreo se cerrará para todos los riders conectados. Esta acción no se puede deshacer.",
+  "tracking_route_on_route": "En ruta ✓",
+  "tracking_route_off_route": "Fuera de ruta ⚠",
+  "tracking_ride_finished": "¡La rodada ha terminado!",
+  "tracking_ride_finished_body": "{eventName} ha finalizado exitosamente.",
+  "@tracking_ride_finished_body": {
+    "placeholders": {
+      "eventName": {
+        "type": "String"
+      }
+    }
+  },
+  "tracking_back_to_home": "Volver al inicio",
+  "tracking_organizer_badge": "Organizador",
+  "tracking_organizer_label": "Control de rodada",
+  "tracking_riders_count": "Riders en la rodada · {count}",
+  "@tracking_riders_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tracking_rider_status_on_route": "En ruta",
+  "tracking_rider_status_sos": "🚨 SOS activo",
+  "tracking_fg_service_title": "Rideglory — Rodada activa",
+  "tracking_fg_service_body": "Tu ubicación se está compartiendo con los riders de la rodada.",
+  "sos_push_title": "¡Alerta de emergencia!",
+  "sos_push_body": "{riderName} ha activado el SOS en {eventName}.",
+  "@sos_push_body": {
+    "placeholders": {
+      "riderName": {
+        "type": "String"
+      },
+      "eventName": {
+        "type": "String"
+      }
+    }
+  },
+  "maintenance_push_title": "Mantenimiento próximo",
+  "maintenance_push_body": "El {serviceType} de tu {vehicleName} está programado en 30 días.",
+  "@maintenance_push_body": {
+    "placeholders": {
+      "serviceType": {
+        "type": "String"
+      },
+      "vehicleName": {
+        "type": "String"
+      }
+    }
+  },
+  "event_reminder_push_title": "¡Tu rodada es mañana!",
+  "event_reminder_push_body": "{eventName} comienza mañana. ¡Prepara tu moto!",
+  "@event_reminder_push_body": {
+    "placeholders": {
+      "eventName": {
+        "type": "String"
+      }
+    }
+  },
+  "tracking_ride_ended_push_title": "La rodada ha terminado",
+  "tracking_ride_ended_push_body": "{eventName} ha finalizado. ¡Hasta la próxima!",
+  "@tracking_ride_ended_push_body": {
+    "placeholders": {
+      "eventName": {
+        "type": "String"
+      }
+    }
+  },
+  "vehicle_soat_badge_label": "SOAT",
+  "vehicle_soat_tap_to_add": "Sin registrar · Agregar →",
+  "vehicle_soat_update": "Actualizar →"
 }

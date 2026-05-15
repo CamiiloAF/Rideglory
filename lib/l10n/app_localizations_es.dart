@@ -3109,4 +3109,140 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_manageAttendeesTitle => 'Gestionar inscritos';
+
+  @override
+  String get sos_button_label => 'SOS';
+
+  @override
+  String get sos_confirm_title => '¿Enviar alerta SOS?';
+
+  @override
+  String get sos_confirm_body =>
+      'Todos los participantes serán notificados de tu emergencia. Esta acción no se puede deshacer.';
+
+  @override
+  String get sos_confirm_action => 'Enviar SOS';
+
+  @override
+  String get sos_sent_confirmation =>
+      'SOS enviado — los riders han sido notificados';
+
+  @override
+  String get sos_banner_subtitle_with_phone => 'Toca para ver acciones';
+
+  @override
+  String get sos_banner_subtitle_no_phone => 'Sin teléfono registrado';
+
+  @override
+  String get sos_call_action => 'Llamar';
+
+  @override
+  String get sos_locate_action => 'Localizar';
+
+  @override
+  String sos_banner_title(String riderName) {
+    return '$riderName necesita ayuda';
+  }
+
+  @override
+  String get tracking_start_ride => 'Iniciar rodada';
+
+  @override
+  String get tracking_start_ride_confirm_title => '¿Iniciar rodada?';
+
+  @override
+  String get tracking_start_ride_confirm_body =>
+      'Los riders aprobados recibirán acceso al mapa de rastreo en tiempo real.';
+
+  @override
+  String get tracking_end_ride => 'Terminar rodada';
+
+  @override
+  String get tracking_end_ride_confirm_title => '¿Terminar rodada?';
+
+  @override
+  String get tracking_end_ride_confirm_body =>
+      'La pantalla de rastreo se cerrará para todos los riders conectados. Esta acción no se puede deshacer.';
+
+  @override
+  String get tracking_route_on_route => 'En ruta ✓';
+
+  @override
+  String get tracking_route_off_route => 'Fuera de ruta ⚠';
+
+  @override
+  String get tracking_ride_finished => '¡La rodada ha terminado!';
+
+  @override
+  String tracking_ride_finished_body(String eventName) {
+    return '$eventName ha finalizado exitosamente.';
+  }
+
+  @override
+  String get tracking_back_to_home => 'Volver al inicio';
+
+  @override
+  String get tracking_organizer_badge => 'Organizador';
+
+  @override
+  String get tracking_organizer_label => 'Control de rodada';
+
+  @override
+  String tracking_riders_count(int count) {
+    return 'Riders en la rodada · $count';
+  }
+
+  @override
+  String get tracking_rider_status_on_route => 'En ruta';
+
+  @override
+  String get tracking_rider_status_sos => '🚨 SOS activo';
+
+  @override
+  String get tracking_fg_service_title => 'Rideglory — Rodada activa';
+
+  @override
+  String get tracking_fg_service_body =>
+      'Tu ubicación se está compartiendo con los riders de la rodada.';
+
+  @override
+  String get sos_push_title => '¡Alerta de emergencia!';
+
+  @override
+  String sos_push_body(String riderName, String eventName) {
+    return '$riderName ha activado el SOS en $eventName.';
+  }
+
+  @override
+  String get maintenance_push_title => 'Mantenimiento próximo';
+
+  @override
+  String maintenance_push_body(String serviceType, String vehicleName) {
+    return 'El $serviceType de tu $vehicleName está programado en 30 días.';
+  }
+
+  @override
+  String get event_reminder_push_title => '¡Tu rodada es mañana!';
+
+  @override
+  String event_reminder_push_body(String eventName) {
+    return '$eventName comienza mañana. ¡Prepara tu moto!';
+  }
+
+  @override
+  String get tracking_ride_ended_push_title => 'La rodada ha terminado';
+
+  @override
+  String tracking_ride_ended_push_body(String eventName) {
+    return '$eventName ha finalizado. ¡Hasta la próxima!';
+  }
+
+  @override
+  String get vehicle_soat_badge_label => 'SOAT';
+
+  @override
+  String get vehicle_soat_tap_to_add => 'Sin registrar · Agregar →';
+
+  @override
+  String get vehicle_soat_update => 'Actualizar →';
 }

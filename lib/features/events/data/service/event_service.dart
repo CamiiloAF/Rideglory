@@ -37,4 +37,10 @@ abstract class EventService {
 
   @DELETE('${ApiRoutes.events}/{id}')
   Future<void> deleteEvent(@Path('id') String id);
+
+  @POST('${ApiRoutes.events}/{id}/tracking/start')
+  Future<EventDto> startRide(@Path('id') String eventId);
+
+  @POST('${ApiRoutes.events}/{id}/tracking/end')
+  Future<EventDto> endRide(@Path('id') String eventId);
 }

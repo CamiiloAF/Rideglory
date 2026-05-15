@@ -1,3 +1,9 @@
+enum SoatStatus {
+  valid,
+  expiringSoon,
+  expired,
+}
+
 class VehicleModel {
   final String? id;
   final String name;
@@ -13,6 +19,8 @@ class VehicleModel {
   final DateTime? updatedAt;
   final bool isArchived;
   final bool isMainVehicle;
+  final SoatStatus? soatStatus;
+  final DateTime? soatExpiryDate;
 
   const VehicleModel({
     this.id,
@@ -29,6 +37,8 @@ class VehicleModel {
     this.updatedAt,
     this.isArchived = false,
     this.isMainVehicle = false,
+    this.soatStatus,
+    this.soatExpiryDate,
   });
 
   VehicleModel copyWith({
@@ -46,6 +56,8 @@ class VehicleModel {
     DateTime? updatedDate,
     bool? isArchived,
     bool? isMainVehicle,
+    SoatStatus? soatStatus,
+    DateTime? soatExpiryDate,
   }) {
     return VehicleModel(
       id: id ?? this.id,
@@ -62,6 +74,8 @@ class VehicleModel {
       updatedAt: updatedDate ?? updatedAt,
       isArchived: isArchived ?? this.isArchived,
       isMainVehicle: isMainVehicle ?? this.isMainVehicle,
+      soatStatus: soatStatus ?? this.soatStatus,
+      soatExpiryDate: soatExpiryDate ?? this.soatExpiryDate,
     );
   }
 
@@ -82,7 +96,9 @@ class VehicleModel {
             createdAt == other.createdAt &&
             updatedAt == other.updatedAt &&
             isArchived == other.isArchived &&
-            isMainVehicle == other.isMainVehicle;
+            isMainVehicle == other.isMainVehicle &&
+            soatStatus == other.soatStatus &&
+            soatExpiryDate == other.soatExpiryDate;
   }
 
   @override
@@ -101,5 +117,7 @@ class VehicleModel {
     updatedAt,
     isArchived,
     isMainVehicle,
+    soatStatus,
+    soatExpiryDate,
   );
 }

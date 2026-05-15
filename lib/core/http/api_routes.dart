@@ -13,6 +13,13 @@ abstract final class ApiRoutes {
   static const registrations = '/registrations';
   static const myRegistrations = '$registrations/me';
   static const placesAutocomplete = '/places/autocomplete';
+  static const placesGeocode = '/places/geocode';
+
+  static String eventTrackingStart(String eventId) =>
+      '$events/$eventId/tracking/start';
+  static String eventTrackingEnd(String eventId) =>
+      '$events/$eventId/tracking/end';
+  static String eventRoute(String eventId) => '$events/$eventId/route';
 
   static String eventTrackingStartSession(String eventId) =>
       '$events/$eventId/tracking/session/start';

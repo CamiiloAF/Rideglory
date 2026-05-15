@@ -73,8 +73,10 @@ dependencies:
   url_launcher: ^6.3.1
 
   # Maps
-  google_maps_flutter: ^2.10.0
-  geocoding: ^3.0.0
+  mapbox_maps_flutter: ^2.2.0
+
+  # Background GPS (Android foreground service)
+  flutter_foreground_task: ^8.14.0
 
   # Rich text editor
   flutter_quill: ^11.0.0

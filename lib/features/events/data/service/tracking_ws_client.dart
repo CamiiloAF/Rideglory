@@ -7,6 +7,7 @@ import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/http/api_routes.dart';
 import 'package:rideglory/features/events/data/dto/rider_tracking_dto.dart';
 import 'package:rideglory/features/events/domain/model/rider_tracking_model.dart';
+import 'package:rideglory/features/events/domain/model/sos_alert_model.dart';
 import 'package:rideglory/features/events/domain/model/update_location_request.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -20,12 +21,22 @@ class TrackingWsClient {
   StreamSubscription<dynamic>? _subscription;
   final StreamController<List<RiderTrackingModel>> _ridersController =
       StreamController<List<RiderTrackingModel>>.broadcast();
+  final StreamController<SosAlertModel> _sosController =
+      StreamController<SosAlertModel>.broadcast();
+  final StreamController<void> _eventEndedController =
+      StreamController<void>.broadcast();
   final Map<String, RiderTrackingModel> _ridersByUserId = {};
 
   Timer? _reconnectTimer;
   String? _activeEventId;
   String? _baseUrl;
   bool _manualDisconnect = false;
+
+  /// Stream of SOS alerts broadcast by other riders.
+  Stream<SosAlertModel> get sosAlerts => _sosController.stream;
+
+  /// Stream that emits once when the organizer ends the ride.
+  Stream<void> get eventEnded => _eventEndedController.stream;
 
   Stream<List<RiderTrackingModel>> watchRiders({
     required String eventId,
@@ -36,6 +47,26 @@ class TrackingWsClient {
     _manualDisconnect = false;
     unawaited(_connect(eventId: eventId, baseUrl: baseUrl));
     return _ridersController.stream;
+  }
+
+  /// Publishes a SOS alert to the tracking gateway.
+  void publishSos({
+    required String eventId,
+    required String userId,
+    double? latitude,
+    double? longitude,
+  }) {
+    _channel?.sink.add(
+      jsonEncode({
+        'type': 'tracking.sos',
+        'data': {
+          'eventId': eventId,
+          'userId': userId,
+          if (latitude != null) 'latitude': latitude,
+          if (longitude != null) 'longitude': longitude,
+        },
+      }),
+    );
   }
 
   Future<void> publishLocation(UpdateLocationRequest request) async {
@@ -163,6 +194,17 @@ class TrackingWsClient {
     }
     if (type == 'tracking.rider.left') {
       _handleRiderLeft(data);
+      return;
+    }
+    if (type == 'tracking.sos.alert') {
+      _handleSosAlert(data);
+      return;
+    }
+    if (type == 'tracking.event.ended') {
+      developer.log('Tracking WS received event.ended.');
+      if (!_eventEndedController.isClosed) {
+        _eventEndedController.add(null);
+      }
     }
   }
 
@@ -203,6 +245,24 @@ class TrackingWsClient {
     }
     _ridersByUserId.remove(userId);
     _emitRiders();
+  }
+
+  void _handleSosAlert(Object? payload) {
+    if (payload is! Map<String, dynamic>) return;
+    final userId = payload['userId'] as String?;
+    final fullName = payload['fullName'] as String?;
+    if (userId == null || fullName == null) return;
+
+    final alert = SosAlertModel(
+      userId: userId,
+      riderName: fullName,
+      latitude: (payload['latitude'] as num?)?.toDouble(),
+      longitude: (payload['longitude'] as num?)?.toDouble(),
+      phone: payload['phone'] as String?,
+    );
+    if (!_sosController.isClosed) {
+      _sosController.add(alert);
+    }
   }
 
   void _emitRiders() {

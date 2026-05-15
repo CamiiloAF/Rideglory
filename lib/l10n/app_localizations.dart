@@ -6003,6 +6003,240 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Gestionar inscritos'**
   String get event_manageAttendeesTitle;
+
+  /// No description provided for @sos_button_label.
+  ///
+  /// In es, this message translates to:
+  /// **'SOS'**
+  String get sos_button_label;
+
+  /// No description provided for @sos_confirm_title.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Enviar alerta SOS?'**
+  String get sos_confirm_title;
+
+  /// No description provided for @sos_confirm_body.
+  ///
+  /// In es, this message translates to:
+  /// **'Todos los participantes serán notificados de tu emergencia. Esta acción no se puede deshacer.'**
+  String get sos_confirm_body;
+
+  /// No description provided for @sos_confirm_action.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar SOS'**
+  String get sos_confirm_action;
+
+  /// No description provided for @sos_sent_confirmation.
+  ///
+  /// In es, this message translates to:
+  /// **'SOS enviado — los riders han sido notificados'**
+  String get sos_sent_confirmation;
+
+  /// No description provided for @sos_banner_subtitle_with_phone.
+  ///
+  /// In es, this message translates to:
+  /// **'Toca para ver acciones'**
+  String get sos_banner_subtitle_with_phone;
+
+  /// No description provided for @sos_banner_subtitle_no_phone.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin teléfono registrado'**
+  String get sos_banner_subtitle_no_phone;
+
+  /// No description provided for @sos_call_action.
+  ///
+  /// In es, this message translates to:
+  /// **'Llamar'**
+  String get sos_call_action;
+
+  /// No description provided for @sos_locate_action.
+  ///
+  /// In es, this message translates to:
+  /// **'Localizar'**
+  String get sos_locate_action;
+
+  /// No description provided for @sos_banner_title.
+  ///
+  /// In es, this message translates to:
+  /// **'{riderName} necesita ayuda'**
+  String sos_banner_title(String riderName);
+
+  /// No description provided for @tracking_start_ride.
+  ///
+  /// In es, this message translates to:
+  /// **'Iniciar rodada'**
+  String get tracking_start_ride;
+
+  /// No description provided for @tracking_start_ride_confirm_title.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Iniciar rodada?'**
+  String get tracking_start_ride_confirm_title;
+
+  /// No description provided for @tracking_start_ride_confirm_body.
+  ///
+  /// In es, this message translates to:
+  /// **'Los riders aprobados recibirán acceso al mapa de rastreo en tiempo real.'**
+  String get tracking_start_ride_confirm_body;
+
+  /// No description provided for @tracking_end_ride.
+  ///
+  /// In es, this message translates to:
+  /// **'Terminar rodada'**
+  String get tracking_end_ride;
+
+  /// No description provided for @tracking_end_ride_confirm_title.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Terminar rodada?'**
+  String get tracking_end_ride_confirm_title;
+
+  /// No description provided for @tracking_end_ride_confirm_body.
+  ///
+  /// In es, this message translates to:
+  /// **'La pantalla de rastreo se cerrará para todos los riders conectados. Esta acción no se puede deshacer.'**
+  String get tracking_end_ride_confirm_body;
+
+  /// No description provided for @tracking_route_on_route.
+  ///
+  /// In es, this message translates to:
+  /// **'En ruta ✓'**
+  String get tracking_route_on_route;
+
+  /// No description provided for @tracking_route_off_route.
+  ///
+  /// In es, this message translates to:
+  /// **'Fuera de ruta ⚠'**
+  String get tracking_route_off_route;
+
+  /// No description provided for @tracking_ride_finished.
+  ///
+  /// In es, this message translates to:
+  /// **'¡La rodada ha terminado!'**
+  String get tracking_ride_finished;
+
+  /// No description provided for @tracking_ride_finished_body.
+  ///
+  /// In es, this message translates to:
+  /// **'{eventName} ha finalizado exitosamente.'**
+  String tracking_ride_finished_body(String eventName);
+
+  /// No description provided for @tracking_back_to_home.
+  ///
+  /// In es, this message translates to:
+  /// **'Volver al inicio'**
+  String get tracking_back_to_home;
+
+  /// No description provided for @tracking_organizer_badge.
+  ///
+  /// In es, this message translates to:
+  /// **'Organizador'**
+  String get tracking_organizer_badge;
+
+  /// No description provided for @tracking_organizer_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Control de rodada'**
+  String get tracking_organizer_label;
+
+  /// No description provided for @tracking_riders_count.
+  ///
+  /// In es, this message translates to:
+  /// **'Riders en la rodada · {count}'**
+  String tracking_riders_count(int count);
+
+  /// No description provided for @tracking_rider_status_on_route.
+  ///
+  /// In es, this message translates to:
+  /// **'En ruta'**
+  String get tracking_rider_status_on_route;
+
+  /// No description provided for @tracking_rider_status_sos.
+  ///
+  /// In es, this message translates to:
+  /// **'🚨 SOS activo'**
+  String get tracking_rider_status_sos;
+
+  /// No description provided for @tracking_fg_service_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Rideglory — Rodada activa'**
+  String get tracking_fg_service_title;
+
+  /// No description provided for @tracking_fg_service_body.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu ubicación se está compartiendo con los riders de la rodada.'**
+  String get tracking_fg_service_body;
+
+  /// No description provided for @sos_push_title.
+  ///
+  /// In es, this message translates to:
+  /// **'¡Alerta de emergencia!'**
+  String get sos_push_title;
+
+  /// No description provided for @sos_push_body.
+  ///
+  /// In es, this message translates to:
+  /// **'{riderName} ha activado el SOS en {eventName}.'**
+  String sos_push_body(String riderName, String eventName);
+
+  /// No description provided for @maintenance_push_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Mantenimiento próximo'**
+  String get maintenance_push_title;
+
+  /// No description provided for @maintenance_push_body.
+  ///
+  /// In es, this message translates to:
+  /// **'El {serviceType} de tu {vehicleName} está programado en 30 días.'**
+  String maintenance_push_body(String serviceType, String vehicleName);
+
+  /// No description provided for @event_reminder_push_title.
+  ///
+  /// In es, this message translates to:
+  /// **'¡Tu rodada es mañana!'**
+  String get event_reminder_push_title;
+
+  /// No description provided for @event_reminder_push_body.
+  ///
+  /// In es, this message translates to:
+  /// **'{eventName} comienza mañana. ¡Prepara tu moto!'**
+  String event_reminder_push_body(String eventName);
+
+  /// No description provided for @tracking_ride_ended_push_title.
+  ///
+  /// In es, this message translates to:
+  /// **'La rodada ha terminado'**
+  String get tracking_ride_ended_push_title;
+
+  /// No description provided for @tracking_ride_ended_push_body.
+  ///
+  /// In es, this message translates to:
+  /// **'{eventName} ha finalizado. ¡Hasta la próxima!'**
+  String tracking_ride_ended_push_body(String eventName);
+
+  /// No description provided for @vehicle_soat_badge_label.
+  ///
+  /// In es, this message translates to:
+  /// **'SOAT'**
+  String get vehicle_soat_badge_label;
+
+  /// No description provided for @vehicle_soat_tap_to_add.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin registrar · Agregar →'**
+  String get vehicle_soat_tap_to_add;
+
+  /// No description provided for @vehicle_soat_update.
+  ///
+  /// In es, this message translates to:
+  /// **'Actualizar →'**
+  String get vehicle_soat_update;
 }
 
 class _AppLocalizationsDelegate

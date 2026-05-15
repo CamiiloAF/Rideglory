@@ -1,5 +1,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/services/auth_service.dart';
+import 'package:rideglory/features/events/data/service/event_service.dart';
+import 'package:rideglory/features/events/data/service/tracking_ws_client.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_rider_profile_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/start_tracking_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/stop_tracking_use_case.dart';
@@ -16,6 +18,8 @@ class LiveTrackingCubitFactory {
     this._stopTrackingUseCase,
     this._getRiderProfileUseCase,
     this._authService,
+    this._trackingWsClient,
+    this._eventService,
   );
 
   final WatchActiveRidersUseCase _watchActiveRidersUseCase;
@@ -24,6 +28,8 @@ class LiveTrackingCubitFactory {
   final StopTrackingUseCase _stopTrackingUseCase;
   final GetRiderProfileUseCase _getRiderProfileUseCase;
   final AuthService _authService;
+  final TrackingWsClient _trackingWsClient;
+  final EventService _eventService;
 
   LiveTrackingCubit create({
     required String eventId,
@@ -38,6 +44,8 @@ class LiveTrackingCubitFactory {
       stopTrackingUseCase: _stopTrackingUseCase,
       getRiderProfileUseCase: _getRiderProfileUseCase,
       authService: _authService,
+      trackingWsClient: _trackingWsClient,
+      eventService: _eventService,
     );
   }
 }

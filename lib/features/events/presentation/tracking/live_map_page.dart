@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart' as geo;
 import 'package:go_router/go_router.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/permissions/location_permission_handler.dart';
@@ -13,17 +13,19 @@ import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/model/rider_tracking_model.dart';
 import 'package:rideglory/features/events/presentation/tracking/cubit/live_tracking_cubit.dart';
 import 'package:rideglory/features/events/presentation/tracking/live_tracking_session_holder.dart';
-import 'package:rideglory/features/events/presentation/tracking/widgets/end_ride_confirm_dialog.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/live_map_widget.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/map_zoom_controls.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/my_location_button.dart';
+import 'package:rideglory/features/events/presentation/tracking/widgets/organizer_control_bar.dart';
+import 'package:rideglory/features/events/presentation/tracking/widgets/ride_finished_overlay.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/rider_telemetry_panel.dart';
-import 'package:rideglory/features/events/presentation/tracking/widgets/sos_active_overlay.dart';
+import 'package:rideglory/features/events/presentation/tracking/widgets/sos_banner.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/sos_button.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/sos_confirm_dialog.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 
 class LiveMapPage extends StatefulWidget {
   const LiveMapPage({super.key, required this.event});
@@ -36,10 +38,7 @@ class LiveMapPage extends StatefulWidget {
 
 class _LiveMapPageState extends State<LiveMapPage> {
   final ValueNotifier<LiveMapController?> _mapController = ValueNotifier(null);
-  CameraPosition? _initialCameraPosition;
-
-  /// Whether an SOS alert has been broadcast by this user.
-  bool _sosActive = false;
+  CameraOptions? _initialCameraOptions;
 
   @override
   void initState() {
@@ -73,20 +72,22 @@ class _LiveMapPageState extends State<LiveMapPage> {
 
   Future<void> _loadInitialCamera() async {
     final permission = await LocationPermissionHandler.status();
-    final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    final serviceEnabled = await geo.Geolocator.isLocationServiceEnabled();
 
     if (permission == LocationPermissionResult.granted && serviceEnabled) {
       try {
-        final position = await Geolocator.getCurrentPosition(
-          locationSettings: const LocationSettings(
-            accuracy: LocationAccuracy.high,
+        final position = await geo.Geolocator.getCurrentPosition(
+          locationSettings: const geo.LocationSettings(
+            accuracy: geo.LocationAccuracy.high,
           ),
         );
         if (!mounted) return;
         setState(() {
-          _initialCameraPosition = CameraPosition(
-            target: LatLng(position.latitude, position.longitude),
-            zoom: 15,
+          _initialCameraOptions = CameraOptions(
+            center: Point(
+              coordinates: Position(position.longitude, position.latitude),
+            ),
+            zoom: 15.0,
           );
         });
         return;
@@ -97,29 +98,39 @@ class _LiveMapPageState extends State<LiveMapPage> {
 
     if (!mounted) return;
     setState(() {
-      _initialCameraPosition = const CameraPosition(
-        target: LatLng(4.8133, -75.6961),
-        zoom: 12,
+      // Default: Armenia, Colombia (lng, lat — Mapbox lng-first)
+      _initialCameraOptions = CameraOptions(
+        center: Point(
+          coordinates: Position(-75.6961, 4.8133),
+        ),
+        zoom: 12.0,
       );
     });
   }
 
-  Future<void> _onSosPressed() async {
-    if (_sosActive) {
-      // Dismiss active SOS
-      setState(() => _sosActive = false);
-      return;
-    }
+  Future<void> _onSosPressed(LiveTrackingCubit cubit) async {
+    final hasSentSos = cubit.state.hasSentSos;
+    if (hasSentSos) return;
+
     final confirmed = await SosConfirmDialog.show(context: context);
     if (confirmed == true && mounted) {
-      setState(() => _sosActive = true);
+      cubit.triggerSos();
     }
   }
 
-  Future<void> _onEndRidePressed() async {
-    final confirmed = await EndRideConfirmDialog.show(context: context);
+  Future<void> _onEndRidePressed(
+    BuildContext ctx,
+    LiveTrackingCubit cubit,
+  ) async {
+    final confirmed = await ConfirmationDialog.show(
+      context: ctx,
+      title: ctx.l10n.tracking_end_ride_confirm_title,
+      content: ctx.l10n.tracking_end_ride_confirm_body,
+      confirmLabel: ctx.l10n.tracking_end_ride,
+      confirmType: DialogActionType.danger,
+    );
     if (confirmed == true && mounted) {
-      context.pop();
+      await cubit.endRide(widget.event.id ?? '');
     }
   }
 
@@ -167,13 +178,24 @@ class _LiveMapPageState extends State<LiveMapPage> {
       eventOwnerId: event.ownerId,
     );
 
+    final currentUser = context.read<AuthCubit>().state.currentUser;
+    final isOrganizer = currentUser?.id == event.ownerId;
+
     return BlocProvider.value(
       value: trackingCubit,
       child: Scaffold(
         backgroundColor: AppColors.darkBgPrimary,
         extendBodyBehindAppBar: true,
         appBar: _buildLiveMapAppBar(context, event),
-        body: _buildBody(context),
+        body: BlocListener<LiveTrackingCubit, LiveTrackingState>(
+          listenWhen: (prev, next) => prev.isFinished != next.isFinished,
+          listener: (ctx, state) {
+            if (state.isFinished) {
+              // Overlay handles navigation via its own button.
+            }
+          },
+          child: _buildBody(context, trackingCubit, isOrganizer, event),
+        ),
       ),
     );
   }
@@ -227,37 +249,17 @@ class _LiveMapPageState extends State<LiveMapPage> {
           ),
         ),
         const SizedBox(width: 8),
-        // End ride button
-        Padding(
-          padding: const EdgeInsets.only(right: 12),
-          child: GestureDetector(
-            onTap: _onEndRidePressed,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-              decoration: BoxDecoration(
-                color: AppColors.primarySubtle,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: AppColors.primary.withValues(alpha: 0.5),
-                ),
-              ),
-              child: Text(
-                context.l10n.map_endRide,
-                style: const TextStyle(
-                  color: AppColors.primary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ),
-        ),
       ],
     );
   }
 
-  Widget _buildBody(BuildContext context) {
-    final initialCamera = _initialCameraPosition;
+  Widget _buildBody(
+    BuildContext context,
+    LiveTrackingCubit trackingCubit,
+    bool isOrganizer,
+    EventModel event,
+  ) {
+    final initialCamera = _initialCameraOptions;
 
     return Stack(
       children: [
@@ -276,7 +278,7 @@ class _LiveMapPageState extends State<LiveMapPage> {
                       error: (_) => <RiderTrackingModel>[],
                     );
                     return LiveMapWidget(
-                      initialCameraPosition: initialCamera,
+                      initialCameraOptions: initialCamera,
                       riders: riders,
                       onMapReady: (controller) =>
                           _mapController.value = controller,
@@ -291,6 +293,44 @@ class _LiveMapPageState extends State<LiveMapPage> {
                     ),
                   ),
                 ),
+        ),
+
+        // Organizer control bar (top, only when organizer)
+        if (isOrganizer)
+          Positioned(
+            top: kToolbarHeight + MediaQuery.of(context).padding.top + 4,
+            left: 0,
+            right: 0,
+            child: BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
+              buildWhen: (prev, next) =>
+                  prev.isFinished != next.isFinished,
+              builder: (context, state) {
+                return OrganizerControlBar(
+                  onEndRide: () =>
+                      _onEndRidePressed(context, trackingCubit),
+                );
+              },
+            ),
+          ),
+
+        // SOS banner (below organizer bar)
+        Positioned(
+          top: kToolbarHeight +
+              MediaQuery.of(context).padding.top +
+              (isOrganizer ? 60 : 4),
+          left: 0,
+          right: 0,
+          child: BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
+            buildWhen: (prev, next) =>
+                prev.sosAlertResult != next.sosAlertResult,
+            builder: (context, state) {
+              final sosAlert = state.sosAlertResult.whenOrNull(
+                data: (alert) => alert,
+              );
+              if (sosAlert == null) return const SizedBox.shrink();
+              return SosBannerWidget(sosAlert: sosAlert);
+            },
+          ),
         ),
 
         // Map controls (top-right)
@@ -318,13 +358,19 @@ class _LiveMapPageState extends State<LiveMapPage> {
         ),
 
         // SOS button (bottom-right, above telemetry panel)
-        Positioned(
-          right: 16,
-          bottom: MediaQuery.of(context).size.height * 0.32,
-          child: SosButton(
-            label: context.l10n.map_sos,
-            onPressed: _onSosPressed,
-          ),
+        BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
+          buildWhen: (prev, next) => prev.hasSentSos != next.hasSentSos,
+          builder: (context, state) {
+            return Positioned(
+              right: 16,
+              bottom: MediaQuery.of(context).size.height * 0.32,
+              child: SosButton(
+                label: context.l10n.map_sos,
+                isActive: state.hasSentSos,
+                onPressed: () => _onSosPressed(trackingCubit),
+              ),
+            );
+          },
         ),
 
         // Telemetry panel (bottom)
@@ -335,13 +381,16 @@ class _LiveMapPageState extends State<LiveMapPage> {
           child: RiderTelemetryPanel(),
         ),
 
-        // SOS active overlay
-        if (_sosActive)
-          Positioned.fill(
-            child: SosActiveOverlay(
-              onDismiss: () => setState(() => _sosActive = false),
-            ),
-          ),
+        // Ride finished overlay
+        BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
+          buildWhen: (prev, next) => prev.isFinished != next.isFinished,
+          builder: (context, state) {
+            if (!state.isFinished) return const SizedBox.shrink();
+            return Positioned.fill(
+              child: RideFinishedOverlay(eventName: event.name),
+            );
+          },
+        ),
       ],
     );
   }
@@ -349,7 +398,6 @@ class _LiveMapPageState extends State<LiveMapPage> {
 
 // ── Private helper widgets ───────────────────────────────────────────────────
 
-/// Frosted-glass-style pill overlay button used in the transparent app bar.
 class _MapOverlayButton extends StatelessWidget {
   const _MapOverlayButton({required this.onTap, required this.child});
 
@@ -375,7 +423,6 @@ class _MapOverlayButton extends StatelessWidget {
   }
 }
 
-/// Compact event-name + LIVE badge shown in the transparent app bar title.
 class _LiveBadgeTitle extends StatelessWidget {
   const _LiveBadgeTitle({required this.eventName});
 

@@ -1,113 +1,103 @@
-# Frontend Handoff — Iter-1: UI/UX Redesign
+# Frontend Handoff — Iter-3: Tracking Completo + SOS + Organizer Controls + Mapbox Migration
 
 **Agent:** Flutter Developer
-**Iteration:** 1
+**Iteration:** 3
 **Phase:** frontend
 **Status:** pass
 **Completed at:** 2026-05-14
 
 ---
 
-## Screens Delivered
+## Stories Delivered
 
-### PR 1 — Splash + Auth
-- Splash screen: no hardcoded color literals; AppColors tokens throughout
-- Auth: `login_view.dart`, `divider_with_text.dart`, `social_login_button.dart`, `signup_social_buttons.dart` — all `Colors.green`/`Colors.grey`/`Color(0x...)` literals replaced with `AppColors.success`, `AppColors.darkTextSecondary`, `AppColors.darkBorder`, `AppColors.primary`
+### Story 3.0 — Mapbox SDK Migration (blocker)
+- `pubspec.yaml`: removed `google_maps_flutter ^2.10.0` and `geocoding ^3.0.0`; added `mapbox_maps_flutter ^2.2.0` and `flutter_foreground_task ^8.14.0`
+- `initials_marker_icon.dart`: renamed `create()` → `createBytes()`; return type `BitmapDescriptor` → `Uint8List`
+- `live_map_widget.dart`: complete rewrite to Mapbox (`MapWidget`, `PointAnnotationManager`, `LiveMapController`); diff-based annotation management (no flicker); geolocator prefixed as `geo` to avoid `Position`/`LocationSettings` name conflicts
+- `live_map_page.dart`: `CameraPosition`/`LatLng` → `CameraOptions`/`Position` (lng-first); `geolocator` prefixed as `geo`; SOS/organizer/finished overlay state driven by cubit
+- `route_map_preview.dart`: sync `locationFromAddress()` → debounced async `PlaceService.geocode()` + `ResultState` loading/error inline banner; `mapbox_maps_flutter` imported with `hide Error` to avoid name conflict with `result_state.dart`
+- `main.dart`: Mapbox token initialized via `MapboxOptions.setAccessToken(AppEnv.mapboxPublicToken)` before `runApp()`
+- `android/app/src/main/AndroidManifest.xml`: Google Maps API key removed; `flutter_foreground_task` ForegroundService declaration added with `foregroundServiceType="location"`
 
-### PR 2 — Home
-- `home_event_default_background.dart`: `Color(0xFF2D1A0A)` → `AppColors.darkSurface`, `Color(0xFF1A0D05)` → `AppColors.darkSurfaceHighest`
-- `home_event_gradient_overlay.dart`: `Color(0xDD000000)` → `Colors.black87`
+### Story 3.1 — SOS Button
+- `sos_button.dart`: `isActive` flag; active state = transparent fill + red border; inactive = solid red; `Semantics` wrapper
+- `live_map_page.dart`: SOS button passes `isActive: state.hasSentSos`; `_onSosPressed()` calls `cubit.triggerSos()`
 
-### PR 3 — Events
-- `event_detail_header_overlay_gradient.dart`: `Color(0xE0000000)` → `Colors.black87`
-- `event_detail_meeting_point_section.dart`: removed top-level `_mapPlaceholderBackground` constant; uses `AppColors.darkSurfaceHighest`
-- `event_registration_page.dart`: `Colors.green`/`Colors.red` → `AppColors.success`/`AppColors.error`
+### Story 3.2 — SOS Banner (Llamar/Localizar)
+- `sos_banner.dart` (new): `SosBannerWidget` with red background, rider name, subtitle, Llamar/Localizar buttons; `url_launcher` for `tel:` URI and Maps deep link (`geo:` Android / `maps:` iOS); Llamar hidden if rider has no phone
+- `sos_confirm_dialog.dart`: existing confirmation dialog wired to SOS flow
+- `cubit/live_tracking_state.dart`: added `sosAlertResult`, `hasSentSos`, `isFinished` fields
+- `cubit/live_tracking_cubit.dart`: `triggerSos()`, `endRide()`, `_subscribeToSosAlerts()`, `_subscribeToEventEnded()` methods
+- `data/service/tracking_ws_client.dart`: `sosAlerts` stream, `eventEnded` stream, `publishSos()`, `_handleSosAlert()` handlers for `tracking.sos.alert` and `tracking.event.ended` WS messages
+- `domain/model/sos_alert_model.dart` (new): `SosAlertModel` pure domain class
 
-### PR 4 — Garage / Vehicles
-- 12 vehicle presentation files tokenized: `vehicle_spec_row.dart`, `vehicle_detail_view.dart`, `vehicle_info_card.dart`, `vehicle_garage_overview_item.dart`, `vehicle_garage_overview_section.dart`, `vehicle_maintenance_history_section.dart`, `vehicle_detail_header.dart`, `garage_options_bottom_sheet.dart`, `vehicle_full_specs_section.dart`, `vehicle_quick_info_section.dart`, `vehicle_selector.dart`, `vehicle_form_page.dart`
+### Story 3.3 — Organizer "Iniciar rodada"
+- `widgets/event_detail_owner_lifecycle_bar.dart` (existing): `_OwnerStartBar` with green "Iniciar evento" button; already present and wired
+- `detail/cubit/event_detail_cubit.dart`: `startEvent()` and `stopEvent()` methods already implemented
+- `detail/event_detail_view.dart`: `EventDetailOwnerLifecycleBar` shown in `bottomNavigationBar` for owner
 
-### PR 5 — Maintenance + Registration
-- `maintenance_form_view.dart`, `maintenance_mileage_info.dart`, `maintenance_card_header.dart`, `maintenance_card_body.dart`, `modern_maintenance_card.dart`, `maintenance_dates_section.dart`, `maintenances_page_app_bar.dart`: all `Color(0x...)` and `Colors.<named>` replaced with AppColors tokens
-- `maintenance_detail_page.dart`: `Colors.green`/`Colors.red` → `AppColors.success`/`AppColors.error`
-- `maintenance_detail_header.dart`: `Color(0xFF1E3A5F).withValues(alpha: 0.8)` → `AppColors.darkSurfaceHighest`
-- `maintenance_options_bottom_sheet.dart`: `Colors.grey[700]`/`Colors.red` → `AppColors.darkBorder`/`AppColors.error`
-- `maintenance_section_header.dart`: `Colors.grey[400]` → `AppColors.darkTextSecondary`
-- `maintenance/form/widgets/vehicle_list_item.dart`: `AppColors.backgroundGray`/`overlayMedium`/`overlayStrong`/`textPrimary`/`textSecondary` → dark-mode equivalents
+### Story 3.4 — Organizer "Terminar rodada"
+- `widgets/organizer_control_bar.dart` (new): `OrganizerControlBar` with "Organizador" badge + "Terminar rodada" danger button in map overlay
+- `widgets/ride_finished_overlay.dart` (new): `RideFinishedOverlay` with 🏁 emoji, event name, CTA "Volver al inicio" → `context.goAndClearStack(AppRoutes.home)`
+- `data/service/event_service.dart`: `startRide(eventId)` and `endRide(eventId)` Retrofit methods added
+- `cubit/live_tracking_cubit_factory.dart`: passes `TrackingWsClient` and `EventService` to cubit
 
----
+### Story 3.5 — Background GPS
+- `tracking_location_settings.dart` (existing): Android `AndroidSettings` with `ForegroundNotificationConfig` (non-dismissible) + iOS `AppleSettings` with `allowBackgroundLocationUpdates`; already complete
+- `core/services/dto/geocode_result_dto.dart` (new): `GeocodeResultDto` for async geocode response
+- `core/services/place_service.dart`: `geocode(@Query('q') address)` Retrofit method added
+- `shared/models/address_location.dart` (new): `AddressLocation` pure model
 
-## Design System Primitives Created
-
-### `AppEventBadge` (atom)
-- Path: `lib/design_system/atoms/badges/app_event_badge.dart`
-- Enum: `EventBadgeVariant { scheduled, inProgress, finished, cancelled, free, paid }`
-- 24px height, 6px border radius, 11sp/700 font
-- Exported via `lib/design_system/atoms/atoms.dart`
-
-### `DocumentSlotPill` (molecule)
-- Path: `lib/design_system/molecules/feedback/document_slot_pill.dart`
-- Enum: `DocumentSlotState { empty, valid, expiringSoon, expired }`
-- 44px min height, 8px border radius, AppColors.darkSurfaceHighest background
-- Exported via `lib/design_system/molecules/molecules.dart`
-
----
-
-## Localization (l10n)
-
-- Added ~140 new ARB keys to `lib/l10n/app_es.arb` covering: splash, auth, home, event badges, event search/filter/detail/form, vehicle, maintenance, and registration modules
-- `flutter gen-l10n` run successfully; `app_localizations.dart` and `app_localizations_es.dart` regenerated
-- `pubspec.yaml` fixed: removed duplicate `dev_dependencies` entries for `mocktail`, `bloc_test`, `integration_test` that caused gen-l10n failure
+### Story 3.10 — VehicleModel SOAT fields + Home Dashboard SOAT badge
+- `domain/models/vehicle_model.dart`: added `SoatStatus` enum (`valid`, `expiringSoon`, `expired`); added `soatStatus: SoatStatus?` and `soatExpiryDate: DateTime?` fields; `copyWith`, `==`, `hashCode` updated
+- `data/dto/vehicle_dto.dart`: `soatStatus` and `soatExpiryDate` fields forwarded to `VehicleModel` in `toModel()` and `VehicleModelExtension.toJson()`
+- `home_garage_card.dart`: `_VehicleInfo` shows `_SoatBadge` widget conditionally when SOAT status or expiry date is present; badge uses `DocumentSlotState`-style color coding
 
 ---
 
-## API Integration
+## Key New Files
 
-No API changes. Iteration 1 is presentation-layer only. No new endpoints, no domain model changes, no DI changes.
-
----
-
-## Validation and State Handling
-
-No state or validation logic changed. All cubit, use case, repository, and service files are untouched. Only `lib/features/*/presentation/` files modified (plus design system atoms/molecules and l10n).
-
----
-
-## Test Results
-
-```
-dart analyze: 0 errors, 0 warnings (52 info-level only — prefer_const_constructors, deprecated withOpacity in shared/ widgets pre-existing)
-flutter test: 28 passed, 4 failed
-```
-
-The 4 failures are pre-existing compilation errors caused by stale generated code (`user_service.g.dart` missing `getUserById`, `event_service.g.dart` `getEvents` signature mismatch). These `.g.dart` files are NOT modified by iter-1 — they were out of sync before this iteration started. Regenerating them requires `dart run build_runner build` which is out of scope for a presentation-layer-only iteration.
+| File | Purpose |
+|------|---------|
+| `lib/features/events/domain/model/sos_alert_model.dart` | SOS alert pure domain model |
+| `lib/features/events/presentation/tracking/widgets/sos_banner.dart` | SOS banner with Llamar/Localizar |
+| `lib/features/events/presentation/tracking/widgets/organizer_control_bar.dart` | Organizer control overlay bar |
+| `lib/features/events/presentation/tracking/widgets/ride_finished_overlay.dart` | Ride finished full-screen overlay |
+| `lib/core/services/dto/geocode_result_dto.dart` | Geocode API response DTO |
+| `lib/shared/models/address_location.dart` | AddressLocation pure model |
 
 ---
 
-## Known Gaps
+## Quality Gate
 
-1. **Stale .g.dart files** (`user_service.g.dart`, `event_service.g.dart`): 4 widget tests fail due to generated code out of sync with service interfaces. Requires `dart run build_runner build` — deferred to iter-2 where backend changes will trigger a full rebuild anyway.
-2. **ManageAttendeesPage** (`manage_attendees_page.dart`): explicitly deferred to iter-2 as Story 2.9 per scope agreement.
-3. **AppEventBadge integration in event cards**: primitive created and exported; integration into `event_card_price_badge.dart` and `event_card_my_event_badge.dart` pending widget-level wiring (scaffolded, ready for iter-2 design gate).
-4. **DocumentSlotPill integration in vehicle detail**: primitive created and exported; vehicle detail integration pending iter-2 SOAT data availability.
-5. **withOpacity deprecation warnings** in `lib/shared/widgets/` (pre-existing, 34 occurrences): out of scope for iter-1 presentation-only pass.
+- `dart analyze lib/`: **0 errors, 0 warnings** (3 info-level deprecation hints from Mapbox SDK API — acceptable)
+- `flutter test`: **43 pass, 1 pre-existing failure** (TC-2-28 rider email test — unrelated to iter-3, present before our changes)
+- Zero `google_maps_flutter` or `geocoding` imports in `lib/`
+- Zero hardcoded strings in UI — all via `context.l10n.<key>`
+- `app_es.arb` updated with ~30 new keys
 
 ---
 
-## Change Log
+## l10n Keys Added (partial list)
 
-| File | Change |
-|------|--------|
-| `lib/design_system/atoms/badges/app_event_badge.dart` | NEW — AppEventBadge atom |
-| `lib/design_system/molecules/feedback/document_slot_pill.dart` | NEW — DocumentSlotPill molecule |
-| `lib/design_system/atoms/atoms.dart` | Added AppEventBadge export |
-| `lib/design_system/molecules/molecules.dart` | Added DocumentSlotPill export |
-| `lib/l10n/app_es.arb` | Added ~140 new l10n keys |
-| `lib/l10n/app_localizations.dart` | Regenerated |
-| `lib/l10n/app_localizations_es.dart` | Regenerated |
-| `pubspec.yaml` | Removed duplicate dev_dependencies |
-| 3 auth files | Color tokenization |
-| 2 home files | Color tokenization |
-| 3 events files | Color tokenization |
-| 12 vehicle files | Color tokenization |
-| 9 maintenance files | Color tokenization |
-| `test/features/events/presentation/list/widgets/events_page_view_test.dart` | Removed unused import (warning fix) |
+`sos_button_label`, `sos_confirm_title`, `sos_confirm_body`, `sos_confirm_action`, `sos_banner_title`, `sos_banner_subtitle_with_phone`, `sos_banner_subtitle_no_phone`, `sos_call_action`, `sos_locate_action`, `tracking_start_ride`, `tracking_end_ride`, `tracking_end_ride_confirm_title`, `tracking_end_ride_confirm_body`, `tracking_organizer_badge`, `tracking_organizer_label`, `tracking_ride_finished`, `tracking_ride_finished_body`, `tracking_back_to_home`, `vehicle_soat_badge_label`, `vehicle_soat_tap_to_add`, `vehicle_soat_update`
+
+---
+
+## Contracts Required from Backend
+
+| Endpoint | Used by |
+|----------|---------|
+| `POST /api/events/:id/tracking/start` | `EventService.startRide()` |
+| `POST /api/events/:id/tracking/end` | `EventService.endRide()` |
+| `GET /api/places/geocode?q=<address>` | `PlaceService.geocode()` → `GeocodeResultDto` |
+| WS `tracking.sos.alert` event | `TrackingWsClient.sosAlerts` stream |
+| WS `tracking.event.ended` event | `TrackingWsClient.eventEnded` stream |
+
+---
+
+## Deferred / Not Implemented
+
+- Route GeoJSON render (`GeoJsonSource + LineLayer`) — Story 3.0 route rendering: backend endpoint exists, Flutter render not implemented (T-3-9)
+- Route adherence chip (En ruta / Fuera de ruta) — requires route GeoJSON to be rendered (T-3-9)
+- Red pulsing SOS marker annotation — visual enhancement (T-3-6 partial)

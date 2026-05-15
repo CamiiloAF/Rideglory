@@ -8,43 +8,52 @@ class SosButton extends StatelessWidget {
     super.key,
     required this.label,
     required this.onPressed,
+    this.isActive = false,
   });
 
   final String label;
   final VoidCallback onPressed;
+  final bool isActive;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        width: 56,
-        height: 56,
-        decoration: BoxDecoration(
-          color: AppColors.error,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.error.withValues(alpha: 0.55),
-              blurRadius: 20,
-              spreadRadius: 2,
-              offset: const Offset(0, 4),
-            ),
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.35),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w900,
-              fontSize: 12,
-              letterSpacing: 0.5,
+    return Semantics(
+      label: 'Enviar alerta de emergencia',
+      button: true,
+      child: GestureDetector(
+        onTap: isActive ? null : onPressed,
+        child: Container(
+          width: 56,
+          height: 56,
+          decoration: BoxDecoration(
+            color: isActive ? Colors.transparent : AppColors.error,
+            shape: BoxShape.circle,
+            border: isActive
+                ? Border.all(color: AppColors.error, width: 3)
+                : null,
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.error.withValues(alpha: 0.55),
+                blurRadius: 20,
+                spreadRadius: 2,
+                offset: const Offset(0, 4),
+              ),
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.35),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: isActive ? AppColors.error : Colors.white,
+                fontWeight: FontWeight.w900,
+                fontSize: 12,
+                letterSpacing: 0.5,
+              ),
             ),
           ),
         ),
