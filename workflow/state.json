@@ -525,8 +525,8 @@
     },
     "backend": {
       "status": "idle",
-      "lastAction": null,
-      "focus": null
+      "lastAction": "2026-05-15T03:00:00Z",
+      "focus": "iter-3 backend complete: tracking start/end organizer endpoints, SOS WS handler with FCM multicast + dedup, GET /events/:id/route GeoJSON, GET /places/geocode Mapbox proxy, maintenance 30d cron + event 24h cron. 44 unit tests pass. events-ms + maintenances-ms Prisma migrations created."
     },
     "frontend": {
       "status": "idle",
@@ -665,40 +665,40 @@
       "iteration": 3,
       "description": "Backend: implement POST /api/events/:eventId/tracking/start and POST /api/events/:eventId/tracking/end in api-gateway/src/tracking/. Guard: organizer only.",
       "agent": "backend",
-      "status": "backlog",
+      "status": "done",
       "storyRef": "US-3-3, US-3-4",
       "title": "Backend tracking start/end endpoints",
-      "updatedAt": "2026-05-15T01:30:00Z"
+      "updatedAt": "2026-05-15T03:00:00Z"
     },
     {
       "id": "T-3-3",
       "iteration": 3,
       "description": "Backend: implement SOS handler in TrackingGateway — receive WS sos message, broadcast sos_alert to all event participants via WebSocket, dispatch FCM multicast push to all approved registrants; deduplication guard with sosTriggeredAt on events-ms Event model.",
       "agent": "backend",
-      "status": "backlog",
+      "status": "done",
       "storyRef": "US-3-1, US-3-2",
       "title": "Backend SOS handler — WebSocket broadcast + FCM multicast",
-      "updatedAt": "2026-05-15T01:30:00Z"
+      "updatedAt": "2026-05-15T03:00:00Z"
     },
     {
       "id": "T-3-4",
       "iteration": 3,
       "description": "Backend: implement GET /api/events/:eventId/route in events-ms returning routeGeoJson (GeoJSON LineString, stored as routeGeoJson Json? on Event model).",
       "agent": "backend",
-      "status": "backlog",
+      "status": "done",
       "storyRef": "US-3-0, US-3-9",
       "title": "Backend route GeoJSON endpoint",
-      "updatedAt": "2026-05-15T01:30:00Z"
+      "updatedAt": "2026-05-15T03:00:00Z"
     },
     {
       "id": "T-3-5",
       "iteration": 3,
       "description": "Backend: add NotificationSchedulerService cron entries in api-gateway for maintenance date-based reminder (30d, America/Bogota timezone) and 24h event reminder. Uses @nestjs/schedule (already installed from iter-2).",
       "agent": "backend",
-      "status": "backlog",
+      "status": "done",
       "storyRef": "US-3-6, US-3-7",
       "title": "Backend cron scheduler — maintenance + event reminders",
-      "updatedAt": "2026-05-15T01:30:00Z"
+      "updatedAt": "2026-05-15T03:00:00Z"
     },
     {
       "id": "T-3-6",
@@ -921,6 +921,14 @@
       "agent": "design",
       "at": "2026-05-15T02:30:00Z",
       "detail": "SOS screens, organizer controls, background GPS notification copy, Home SOAT badge (4 states) designed"
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 3,
+      "phase": "backend",
+      "agent": "backend",
+      "at": "2026-05-15T03:00:00Z",
+      "detail": "tracking start/end organizer endpoints + SOS WS handler + GET /events/:id/route GeoJSON + GET /places/geocode Mapbox proxy + maintenance 30d cron + event 24h cron; 44 unit tests pass"
     }
   ]
 }
