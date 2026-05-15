@@ -4,11 +4,11 @@
   "status": "pass",
   "agent": "tech_lead",
   "executedAt": "2026-05-15T06:00:00Z",
-  "updatedAt": "2026-05-15T06:00:00Z",
+  "updatedAt": "2026-05-15T07:00:00Z",
   "prUrl": "https://github.com/CamiiloAF/Rideglory/pull/15",
   "prNumber": 15,
-  "decision": "blocked",
-  "summary": "PR #15 iter-3 reviewed. Story 3.0 hard gate satisfied (zero google_maps_flutter/geocoding imports in lib/). BUG-3-1 resolved (route_map_preview_test.dart 4/4 pass). 6 blocking violations found: (1) data layer imports in presentation/cubit (live_tracking_cubit.dart imports EventService + TrackingWsClient + DioException), (2) _buildXxx helpers in live_map_page.dart, (3) 3 hardcoded Spanish strings in sos_banner.dart, (4) hardcoded Semantics label in sos_button.dart, (5) hardcoded error string in route_map_preview.dart, (6) multiple widget classes in sos_banner.dart and home_garage_card.dart. PR cannot merge until all 6 are fixed and re-reviewed.",
+  "decision": "approved",
+  "summary": "PR #15 iter-3 reviewed in 2 cycles. Cycle 1 (2026-05-15T06:00:00Z): BLOCKED — 6 violations found. Cycle 2 (2026-05-15T07:00:00Z): APPROVED — all 6 violations resolved. Story 3.0 hard gate satisfied (zero google_maps_flutter/geocoding imports). BUG-3-1 resolved (widget test 4/4 pass). dart analyze: 0 errors/0 warnings. flutter test: 47 pass / 1 pre-existing fail (TC-2-28). All 6 blocks fixed: (1) LiveTrackingCubit now uses TrackingRepository domain interface only; (2) live_map_page.dart helpers extracted to live_map_app_bar.dart and live_map_body.dart; (3) sos_banner.dart 3 SnackBar strings use context.l10n; (4) sos_button.dart Semantics label uses context.l10n.tracking_sosSemanticsLabel; (5) route_map_preview.dart error uses context.l10n.map_geocodeError; (6) sos_banner_action.dart extracted from sos_banner.dart; home_garage_card.dart delegates to sibling files. PR ready to merge.",
   "metrics": {
     "tokens": 55000,
     "costUsd": 0.82,
@@ -41,23 +41,23 @@
     },
     {
       "name": "clean_architecture",
-      "status": "fail",
-      "detail": "BLOCK-1: live_tracking_cubit.dart imports EventService, TrackingWsClient (data layer) and DioException. Presentation must only depend on domain abstractions."
+      "status": "pass",
+      "detail": "BLOCK-1 RESOLVED: live_tracking_cubit.dart imports only tracking_repository.dart (domain interface). No EventService, TrackingWsClient, or DioException."
     },
     {
       "name": "no_build_helpers",
-      "status": "fail",
-      "detail": "BLOCK-2: live_map_page.dart has _buildAppBar(), _buildLiveMapAppBar(), _buildBody() helper methods."
+      "status": "pass",
+      "detail": "BLOCK-2 RESOLVED: live_map_page.dart has zero Widget-returning private methods. live_map_app_bar.dart and live_map_body.dart extracted as separate widget files."
     },
     {
       "name": "no_hardcoded_strings",
-      "status": "fail",
-      "detail": "BLOCK-3/4/5: Hardcoded Spanish strings in sos_banner.dart (3 SnackBar messages), sos_button.dart (Semantics label), route_map_preview.dart (error text). None present in app_es.arb."
+      "status": "pass",
+      "detail": "BLOCK-3/4/5 RESOLVED: sos_banner.dart uses context.l10n.tracking_sosCallError/sosLocationError/sosMapError. sos_button.dart uses context.l10n.tracking_sosSemanticsLabel. route_map_preview.dart uses context.l10n.map_geocodeError."
     },
     {
       "name": "one_widget_per_file",
-      "status": "fail",
-      "detail": "BLOCK-6: sos_banner.dart has SosBannerWidget + _SosBannerAction. home_garage_card.dart has 5 widget classes."
+      "status": "pass",
+      "detail": "BLOCK-6 RESOLVED: sos_banner.dart has only SosBannerWidget (1 class). _SosBannerAction extracted to sos_banner_action.dart. home_garage_card.dart delegates to sibling widget files."
     },
     {
       "name": "required_artifacts_present",

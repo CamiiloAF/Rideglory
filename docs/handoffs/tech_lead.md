@@ -121,3 +121,35 @@ Error text `'No se pudo obtener las coordenadas.'` is hardcoded in `build()`.
 ## Decision
 
 **BLOCKED.** Fix the 6 blocking violations and re-request review. No other phase may proceed until these are resolved and this review is updated to APPROVED.
+
+---
+
+# Tech Lead Re-Review — iter-3 (PR #15) — Cycle 2
+
+**Decision: APPROVED**
+**Re-reviewed at:** 2026-05-15T07:00:00Z
+
+## Re-Review: All 6 Blocking Violations Resolved
+
+| # | Violation | Status |
+|---|-----------|--------|
+| BLOCK-1 | `LiveTrackingCubit` — no data layer imports | RESOLVED — imports only `tracking_repository.dart` (domain interface); no EventService, TrackingWsClient, or DioException |
+| BLOCK-2 | `live_map_page.dart` — no `_buildXxx` helpers | RESOLVED — `live_map_app_bar.dart` and `live_map_body.dart` extracted as separate widget files; zero Widget-returning private methods remain |
+| BLOCK-3 | `sos_banner.dart` SnackBar strings use `context.l10n` | RESOLVED — all 3 use `context.l10n.tracking_sosCallError`, `tracking_sosLocationError`, `tracking_sosMapError` |
+| BLOCK-4 | `sos_button.dart` Semantics label uses `context.l10n.tracking_sosSemanticsLabel` | RESOLVED — `context.l10n.tracking_sosSemanticsLabel` at L22 |
+| BLOCK-5 | `route_map_preview.dart` error text uses `context.l10n.map_geocodeError` | RESOLVED — `context.l10n.map_geocodeError` at L289 |
+| BLOCK-6 | One widget class per file (`sos_banner.dart` + `home_garage_card.dart`) | RESOLVED — `_SosBannerAction` extracted to `sos_banner_action.dart`; `home_garage_card.dart` delegates to extracted sibling files |
+
+## Quality Gates (Re-Verified)
+
+| Gate | Status |
+|------|--------|
+| `dart analyze` — 0 errors, 0 warnings | PASS (3 info-level Mapbox SDK deprecations — acceptable) |
+| `flutter test` — 47 pass / 1 pre-existing fail (TC-2-28) | PASS |
+| Zero `google_maps_flutter` imports in `lib/` | PASS (unchanged) |
+| Zero `geocoding` imports in `lib/` | PASS (unchanged) |
+| BUG-3-1 widget test (4/4 pass) | PASS (unchanged) |
+
+## Re-Review Decision
+
+**APPROVED.** All 6 blocking violations are resolved. PR #15 is ready to merge. Next phase: po_close.

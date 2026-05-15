@@ -545,8 +545,8 @@
     },
     "tech_lead": {
       "status": "idle",
-      "lastAction": "2026-05-15T06:00:00Z",
-      "focus": "iter-3 PR #15 reviewed. Decision: BLOCKED. 6 blocking violations: (1) data layer imports in live_tracking_cubit.dart (EventService, TrackingWsClient, DioException); (2) _buildXxx helpers in live_map_page.dart; (3) hardcoded Spanish strings in sos_banner.dart (3 SnackBars); (4) hardcoded Semantics label in sos_button.dart; (5) hardcoded error string in route_map_preview.dart; (6) multiple widget classes in sos_banner.dart and home_garage_card.dart. Hard gates PASS: zero google_maps_flutter/geocoding imports, BUG-3-1 resolved (widget test 4/4 pass). Next: frontend fix cycle, then re-review."
+      "lastAction": "2026-05-15T07:00:00Z",
+      "focus": "iter-3 PR #15 re-reviewed (cycle 2). Decision: APPROVED. All 6 blocking violations resolved: (1) LiveTrackingCubit uses TrackingRepository domain interface only; (2) live_map_page.dart helpers extracted to separate widget files; (3) sos_banner.dart SnackBar strings use context.l10n; (4) sos_button.dart Semantics label uses context.l10n.tracking_sosSemanticsLabel; (5) route_map_preview.dart error uses context.l10n.map_geocodeError; (6) one widget class per file enforced. dart analyze: 0 errors/0 warnings. flutter test: 47 pass/1 pre-existing fail. PR #15 approved. Next phase: po_close."
     }
   },
   "tasks": [
@@ -995,6 +995,14 @@
       "agent": "tech_lead",
       "at": "2026-05-15T06:00:00Z",
       "detail": "Decision: BLOCKED. 6 blocking violations posted as inline PR comments. Frontend fix cycle required before re-review. Checkpoint: Last=tech_lead, Next=po_close (after re-review approval)."
+    },
+    {
+      "type": "tech_lead_review",
+      "iteration": 3,
+      "phase": "tech_lead",
+      "agent": "tech_lead",
+      "at": "2026-05-15T07:00:00Z",
+      "detail": "Re-review cycle 2. PR #15. Decision: APPROVED. All 6 blocking violations resolved: BLOCK-1 LiveTrackingCubit depends only on TrackingRepository domain interface; BLOCK-2 live_map_page.dart helpers extracted to live_map_app_bar.dart and live_map_body.dart; BLOCK-3 sos_banner.dart 3 SnackBar strings use context.l10n; BLOCK-4 sos_button.dart Semantics label uses context.l10n.tracking_sosSemanticsLabel; BLOCK-5 route_map_preview.dart error uses context.l10n.map_geocodeError; BLOCK-6 sos_banner_action.dart extracted, home_garage_card.dart uses sibling files. dart analyze: 0 errors/0 warnings. flutter test: 47 pass/1 pre-existing fail (TC-2-28). PR #15 approved. Next phase: po_close."
     }
   ]
 }

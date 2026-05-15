@@ -8,14 +8,12 @@
 
 ---
 
-## Status: blocked — Iteration 3
+## Status: in-progress — Iteration 3
 
-**Last phase:** tech_lead
-**Next phase:** po_close (after frontend fix cycle + tech_lead re-review approval)
+**Last phase:** tech_lead (re-review — APPROVED)
+**Next phase:** po_close
 
-**Blocker:** 6 Clean Architecture / coding standards violations in PR #15. Frontend must fix all 6 before tech_lead re-reviews. Only after APPROVED decision may po_close run.
-
-**Decision:** BLOCKED — PR #15 cannot merge.
+**Decision:** APPROVED — PR #15 ready to merge.
 
 | Phase | Agent | Status |
 |-------|-------|--------|
@@ -23,24 +21,16 @@
 | architect | Architect | ✅ done |
 | design | Design | ✅ done |
 | backend | Backend | ✅ done |
-| frontend | Flutter Dev | ✅ done (fix cycle required) |
+| frontend | Flutter Dev | ✅ done (fix cycle complete) |
 | qa | QA | ✅ done (BUG-3-1 resolved by frontend) |
 | devops | DevOps | ✅ done |
 | pr | System | ✅ done (PR #15 open) |
-| tech_lead | Tech Lead | 🔴 blocked (6 violations, frontend fix cycle needed) |
-| po_close | PO | ⏳ pending (after tech_lead approval) |
+| tech_lead | Tech Lead | ✅ approved (re-review cycle 2, all 6 violations resolved) |
+| po_close | PO | ⏳ pending |
 
-**Blocking violations (6):**
-1. BLOCK-1: `live_tracking_cubit.dart` imports data layer (EventService, TrackingWsClient, DioException)
-2. BLOCK-2: `live_map_page.dart` has `_buildAppBar()`, `_buildLiveMapAppBar()`, `_buildBody()` helpers
-3. BLOCK-3: `sos_banner.dart` has 3 hardcoded Spanish SnackBar strings (L22, L34, L51)
-4. BLOCK-4: `sos_button.dart` has hardcoded Semantics label (L21)
-5. BLOCK-5: `route_map_preview.dart` has hardcoded error string (L288)
-6. BLOCK-6: `sos_banner.dart` + `home_garage_card.dart` have multiple widget classes per file
-
-**Hard gates that PASS:**
+**Quality Gates (re-verified):**
+- dart analyze: 0 errors, 0 warnings (3 info-level Mapbox SDK deprecations — acceptable)
+- flutter test: 47 pass / 1 pre-existing fail (TC-2-28)
 - Zero google_maps_flutter imports in lib/
 - Zero geocoding imports in lib/
 - BUG-3-1 resolved (route_map_preview_test.dart 4/4 pass)
-- dart analyze 0 errors/0 warnings (per frontend handoff)
-- flutter test 43 pass / 1 pre-existing fail
