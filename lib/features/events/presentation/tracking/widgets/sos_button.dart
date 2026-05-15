@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
 
 /// Floating SOS button shown on the live map.
@@ -18,7 +19,7 @@ class SosButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: 'Enviar alerta de emergencia',
+      label: context.l10n.tracking_sosSemanticsLabel,
       button: true,
       child: GestureDetector(
         onTap: isActive ? null : onPressed,

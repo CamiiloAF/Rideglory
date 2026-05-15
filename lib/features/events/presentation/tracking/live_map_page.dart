@@ -5,25 +5,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:go_router/go_router.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
-import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/permissions/location_permission_handler.dart';
+import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
-import 'package:rideglory/features/events/domain/model/rider_tracking_model.dart';
 import 'package:rideglory/features/events/presentation/tracking/cubit/live_tracking_cubit.dart';
 import 'package:rideglory/features/events/presentation/tracking/live_tracking_session_holder.dart';
+import 'package:rideglory/features/events/presentation/tracking/widgets/live_map_app_bar.dart';
+import 'package:rideglory/features/events/presentation/tracking/widgets/live_map_body.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/live_map_widget.dart';
-import 'package:rideglory/features/events/presentation/tracking/widgets/map_zoom_controls.dart';
-import 'package:rideglory/features/events/presentation/tracking/widgets/my_location_button.dart';
-import 'package:rideglory/features/events/presentation/tracking/widgets/organizer_control_bar.dart';
-import 'package:rideglory/features/events/presentation/tracking/widgets/ride_finished_overlay.dart';
-import 'package:rideglory/features/events/presentation/tracking/widgets/rider_telemetry_panel.dart';
-import 'package:rideglory/features/events/presentation/tracking/widgets/sos_banner.dart';
-import 'package:rideglory/features/events/presentation/tracking/widgets/sos_button.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/sos_confirm_dialog.dart';
-import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 
@@ -142,7 +134,7 @@ class _LiveMapPageState extends State<LiveMapPage> {
     if (eventId == null || eventId.isEmpty) {
       return Scaffold(
         backgroundColor: AppColors.darkBgPrimary,
-        appBar: _buildAppBar(context, event.name),
+        appBar: LiveMapSimpleAppBar(title: event.name),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -159,7 +151,7 @@ class _LiveMapPageState extends State<LiveMapPage> {
     if (event.state != EventState.inProgress) {
       return Scaffold(
         backgroundColor: AppColors.darkBgPrimary,
-        appBar: _buildAppBar(context, event.name),
+        appBar: LiveMapSimpleAppBar(title: event.name),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -186,7 +178,7 @@ class _LiveMapPageState extends State<LiveMapPage> {
       child: Scaffold(
         backgroundColor: AppColors.darkBgPrimary,
         extendBodyBehindAppBar: true,
-        appBar: _buildLiveMapAppBar(context, event),
+        appBar: LiveMapOverlayAppBar(event: event),
         body: BlocListener<LiveTrackingCubit, LiveTrackingState>(
           listenWhen: (prev, next) => prev.isFinished != next.isFinished,
           listener: (ctx, state) {
@@ -194,275 +186,16 @@ class _LiveMapPageState extends State<LiveMapPage> {
               // Overlay handles navigation via its own button.
             }
           },
-          child: _buildBody(context, trackingCubit, isOrganizer, event),
-        ),
-      ),
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar(BuildContext context, String title) {
-    return AppBar(
-      backgroundColor: AppColors.darkCard,
-      foregroundColor: AppColors.textOnDarkPrimary,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
-        onPressed: () => context.pop(),
-      ),
-      centerTitle: true,
-      title: Text(
-        title,
-        style: const TextStyle(
-          color: AppColors.textOnDarkPrimary,
-          fontSize: 16,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      elevation: 0,
-    );
-  }
-
-  PreferredSizeWidget _buildLiveMapAppBar(
-    BuildContext context,
-    EventModel event,
-  ) {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      leading: _MapOverlayButton(
-        onTap: () => context.pop(),
-        child: const Icon(
-          Icons.arrow_back_ios_new_rounded,
-          color: AppColors.textOnDarkPrimary,
-          size: 18,
-        ),
-      ),
-      centerTitle: true,
-      title: _LiveBadgeTitle(eventName: event.name),
-      actions: [
-        // Participants button
-        _MapOverlayButton(
-          onTap: () => context.pushNamed(AppRoutes.participants, extra: event),
-          child: const Icon(
-            Icons.group_rounded,
-            color: AppColors.textOnDarkPrimary,
-            size: 22,
+          child: LiveMapBody(
+            trackingCubit: trackingCubit,
+            isOrganizer: isOrganizer,
+            event: event,
+            mapController: _mapController,
+            initialCameraOptions: _initialCameraOptions,
+            onSosPressed: () => _onSosPressed(trackingCubit),
+            onEndRidePressed: () => _onEndRidePressed(context, trackingCubit),
           ),
         ),
-        const SizedBox(width: 8),
-      ],
-    );
-  }
-
-  Widget _buildBody(
-    BuildContext context,
-    LiveTrackingCubit trackingCubit,
-    bool isOrganizer,
-    EventModel event,
-  ) {
-    final initialCamera = _initialCameraOptions;
-
-    return Stack(
-      children: [
-        // Map layer
-        Positioned.fill(
-          child: initialCamera != null
-              ? BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
-                  buildWhen: (prev, next) =>
-                      prev.ridersResult != next.ridersResult,
-                  builder: (context, state) {
-                    final riders = state.ridersResult.when(
-                      initial: () => <RiderTrackingModel>[],
-                      loading: () => <RiderTrackingModel>[],
-                      data: (data) => data,
-                      empty: () => <RiderTrackingModel>[],
-                      error: (_) => <RiderTrackingModel>[],
-                    );
-                    return LiveMapWidget(
-                      initialCameraOptions: initialCamera,
-                      riders: riders,
-                      onMapReady: (controller) =>
-                          _mapController.value = controller,
-                    );
-                  },
-                )
-              : const ColoredBox(
-                  color: AppColors.trackingMapBg,
-                  child: Center(
-                    child: AppLoadingIndicator(
-                      variant: AppLoadingIndicatorVariant.inline,
-                    ),
-                  ),
-                ),
-        ),
-
-        // Organizer control bar (top, only when organizer)
-        if (isOrganizer)
-          Positioned(
-            top: kToolbarHeight + MediaQuery.of(context).padding.top + 4,
-            left: 0,
-            right: 0,
-            child: BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
-              buildWhen: (prev, next) =>
-                  prev.isFinished != next.isFinished,
-              builder: (context, state) {
-                return OrganizerControlBar(
-                  onEndRide: () =>
-                      _onEndRidePressed(context, trackingCubit),
-                );
-              },
-            ),
-          ),
-
-        // SOS banner (below organizer bar)
-        Positioned(
-          top: kToolbarHeight +
-              MediaQuery.of(context).padding.top +
-              (isOrganizer ? 60 : 4),
-          left: 0,
-          right: 0,
-          child: BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
-            buildWhen: (prev, next) =>
-                prev.sosAlertResult != next.sosAlertResult,
-            builder: (context, state) {
-              final sosAlert = state.sosAlertResult.whenOrNull(
-                data: (alert) => alert,
-              );
-              if (sosAlert == null) return const SizedBox.shrink();
-              return SosBannerWidget(sosAlert: sosAlert);
-            },
-          ),
-        ),
-
-        // Map controls (top-right)
-        Positioned(
-          right: 12,
-          top: kToolbarHeight + MediaQuery.of(context).padding.top + 12,
-          child: ValueListenableBuilder<LiveMapController?>(
-            valueListenable: _mapController,
-            builder: (context, controller, _) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  MapZoomControls(controller: controller),
-                  AppSpacing.gapMd,
-                  MyLocationButton(
-                    isEnabled: controller != null,
-                    onTap: controller == null
-                        ? null
-                        : () => controller.centerOnMyLocation(),
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
-
-        // SOS button (bottom-right, above telemetry panel)
-        BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
-          buildWhen: (prev, next) => prev.hasSentSos != next.hasSentSos,
-          builder: (context, state) {
-            return Positioned(
-              right: 16,
-              bottom: MediaQuery.of(context).size.height * 0.32,
-              child: SosButton(
-                label: context.l10n.map_sos,
-                isActive: state.hasSentSos,
-                onPressed: () => _onSosPressed(trackingCubit),
-              ),
-            );
-          },
-        ),
-
-        // Telemetry panel (bottom)
-        const Positioned(
-          left: 0,
-          right: 0,
-          bottom: 0,
-          child: RiderTelemetryPanel(),
-        ),
-
-        // Ride finished overlay
-        BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
-          buildWhen: (prev, next) => prev.isFinished != next.isFinished,
-          builder: (context, state) {
-            if (!state.isFinished) return const SizedBox.shrink();
-            return Positioned.fill(
-              child: RideFinishedOverlay(eventName: event.name),
-            );
-          },
-        ),
-      ],
-    );
-  }
-}
-
-// ── Private helper widgets ───────────────────────────────────────────────────
-
-class _MapOverlayButton extends StatelessWidget {
-  const _MapOverlayButton({required this.onTap, required this.child});
-
-  final VoidCallback onTap;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 40,
-        height: 40,
-        margin: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: AppColors.darkCard.withValues(alpha: 0.85),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.darkBorderPrimary),
-        ),
-        child: Center(child: child),
-      ),
-    );
-  }
-}
-
-class _LiveBadgeTitle extends StatelessWidget {
-  const _LiveBadgeTitle({required this.eventName});
-
-  final String eventName;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-      decoration: BoxDecoration(
-        color: AppColors.darkCard.withValues(alpha: 0.85),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.darkBorderPrimary),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 7,
-            height: 7,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.error,
-            ),
-          ),
-          AppSpacing.hGapXxs,
-          const SizedBox(width: 3),
-          Flexible(
-            child: Text(
-              eventName,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                color: AppColors.textOnDarkPrimary,
-                fontSize: 13,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

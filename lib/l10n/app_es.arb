@@ -1171,5 +1171,10 @@
   },
   "vehicle_soat_badge_label": "SOAT",
   "vehicle_soat_tap_to_add": "Sin registrar · Agregar →",
-  "vehicle_soat_update": "Actualizar →"
+  "vehicle_soat_update": "Actualizar →",
+  "tracking_sosCallError": "No se pudo iniciar la llamada.",
+  "tracking_sosLocationError": "No se pudo obtener la ubicación del rider.",
+  "tracking_sosMapError": "No se pudo abrir el mapa.",
+  "tracking_sosSemanticsLabel": "Enviar alerta de emergencia",
+  "map_geocodeError": "No se pudo obtener las coordenadas."
 }

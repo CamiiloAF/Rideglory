@@ -12,12 +12,10 @@ import 'package:rideglory/core/permissions/location_permission_handler.dart';
 import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/rider_profile_model.dart';
-import 'package:dio/dio.dart';
-import 'package:rideglory/features/events/data/service/event_service.dart';
-import 'package:rideglory/features/events/data/service/tracking_ws_client.dart';
 import 'package:rideglory/features/events/domain/model/rider_tracking_model.dart';
 import 'package:rideglory/features/events/domain/model/sos_alert_model.dart';
 import 'package:rideglory/features/events/domain/model/update_location_request.dart';
+import 'package:rideglory/features/events/domain/repository/tracking_repository.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_rider_profile_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/start_tracking_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/stop_tracking_use_case.dart';
@@ -39,8 +37,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     required StopTrackingUseCase stopTrackingUseCase,
     required GetRiderProfileUseCase getRiderProfileUseCase,
     required AuthService authService,
-    required TrackingWsClient trackingWsClient,
-    required EventService eventService,
+    required TrackingRepository trackingRepository,
   }) : _eventId = eventId,
        _eventOwnerId = eventOwnerId,
        _watchActiveRidersUseCase = watchActiveRidersUseCase,
@@ -49,8 +46,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
        _stopTrackingUseCase = stopTrackingUseCase,
        _getRiderProfileUseCase = getRiderProfileUseCase,
        _authService = authService,
-       _trackingWsClient = trackingWsClient,
-       _eventService = eventService,
+       _trackingRepository = trackingRepository,
        super(
          const LiveTrackingState(
            ridersResult: ResultState.initial(),
@@ -69,8 +65,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
   final StopTrackingUseCase _stopTrackingUseCase;
   final GetRiderProfileUseCase _getRiderProfileUseCase;
   final AuthService _authService;
-  final TrackingWsClient _trackingWsClient;
-  final EventService _eventService;
+  final TrackingRepository _trackingRepository;
 
   StreamSubscription<List<RiderTrackingModel>>? _ridersSubscription;
   StreamSubscription<Position>? _positionSubscription;
@@ -379,12 +374,12 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     return super.close();
   }
 
-  /// Publishes an SOS alert via WebSocket. Sets [hasSentSos] to true.
+  /// Publishes an SOS alert via the tracking repository. Sets [hasSentSos] to true.
   void triggerSos() {
     final userId = _userId;
     if (userId == null) return;
 
-    _trackingWsClient.publishSos(
+    _trackingRepository.publishSos(
       eventId: _eventId,
       userId: userId,
       latitude: state.currentUserLatitude,
@@ -393,18 +388,18 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     emit(state.copyWith(hasSentSos: true));
   }
 
-  /// Called by the organizer to end the ride via HTTP.
+  /// Called by the organizer to end the ride via the tracking repository.
   Future<void> endRide(String eventId) async {
-    try {
-      await _eventService.endRide(eventId);
-    } on DioException catch (error) {
-      developer.log('End ride failed: $error');
-    }
+    final result = await _trackingRepository.endRide(eventId);
+    result.fold(
+      (error) => developer.log('End ride failed: $error'),
+      (_) {},
+    );
   }
 
   void _subscribeToSosAlerts() {
     _sosSubscription?.cancel();
-    _sosSubscription = _trackingWsClient.sosAlerts.listen((alert) {
+    _sosSubscription = _trackingRepository.sosAlerts.listen((alert) {
       if (isClosed) return;
       emit(
         state.copyWith(
@@ -416,7 +411,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
 
   void _subscribeToEventEnded() {
     _eventEndedSubscription?.cancel();
-    _eventEndedSubscription = _trackingWsClient.eventEnded.listen((_) {
+    _eventEndedSubscription = _trackingRepository.eventEnded.listen((_) {
       if (isClosed) return;
       emit(state.copyWith(isFinished: true));
     });

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/domain/model/sos_alert_model.dart';
+import 'package:rideglory/features/events/presentation/tracking/widgets/sos_banner_action.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Full-width SOS banner shown at the top of the map overlay stack.
@@ -19,7 +20,7 @@ class SosBannerWidget extends StatelessWidget {
     if (!await launchUrl(uri)) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No se pudo iniciar la llamada.')),
+        SnackBar(content: Text(context.l10n.tracking_sosCallError)),
       );
     }
   }
@@ -30,9 +31,7 @@ class SosBannerWidget extends StatelessWidget {
     if (lat == null || lng == null) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('No se pudo obtener la ubicación del rider.'),
-        ),
+        SnackBar(content: Text(context.l10n.tracking_sosLocationError)),
       );
       return;
     }
@@ -48,7 +47,7 @@ class SosBannerWidget extends StatelessWidget {
     if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No se pudo abrir el mapa.')),
+        SnackBar(content: Text(context.l10n.tracking_sosMapError)),
       );
     }
   }
@@ -108,14 +107,14 @@ class SosBannerWidget extends StatelessWidget {
           Row(
             children: [
               if (hasPhone) ...[
-                _SosBannerAction(
+                SosBannerAction(
                   icon: Icons.phone_rounded,
                   label: context.l10n.sos_call_action,
                   onTap: () => _callRider(context),
                 ),
                 const SizedBox(width: 8),
               ],
-              _SosBannerAction(
+              SosBannerAction(
                 icon: Icons.location_on_rounded,
                 label: context.l10n.sos_locate_action,
                 onTap: () => _locateRider(context),
@@ -128,44 +127,3 @@ class SosBannerWidget extends StatelessWidget {
   }
 }
 
-class _SosBannerAction extends StatelessWidget {
-  const _SosBannerAction({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        constraints: const BoxConstraints(minHeight: 44),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.2),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: Colors.white, size: 16),
-            const SizedBox(width: 6),
-            Text(
-              label,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

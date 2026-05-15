@@ -5,6 +5,7 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide Error;
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/core/services/place_service.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/shared/models/address_location.dart';
@@ -284,9 +285,9 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                       color: AppColors.errorSubtle,
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: const Text(
-                      'No se pudo obtener las coordenadas.',
-                      style: TextStyle(
+                    child: Text(
+                      context.l10n.map_geocodeError,
+                      style: const TextStyle(
                         color: AppColors.error,
                         fontSize: 11,
                         fontWeight: FontWeight.w500,

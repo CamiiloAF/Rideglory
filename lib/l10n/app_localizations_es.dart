@@ -3245,4 +3245,20 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get vehicle_soat_update => 'Actualizar →';
+
+  @override
+  String get tracking_sosCallError => 'No se pudo iniciar la llamada.';
+
+  @override
+  String get tracking_sosLocationError =>
+      'No se pudo obtener la ubicación del rider.';
+
+  @override
+  String get tracking_sosMapError => 'No se pudo abrir el mapa.';
+
+  @override
+  String get tracking_sosSemanticsLabel => 'Enviar alerta de emergencia';
+
+  @override
+  String get map_geocodeError => 'No se pudo obtener las coordenadas.';
 }

@@ -6237,6 +6237,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Actualizar →'**
   String get vehicle_soat_update;
+
+  /// No description provided for @tracking_sosCallError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo iniciar la llamada.'**
+  String get tracking_sosCallError;
+
+  /// No description provided for @tracking_sosLocationError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo obtener la ubicación del rider.'**
+  String get tracking_sosLocationError;
+
+  /// No description provided for @tracking_sosMapError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo abrir el mapa.'**
+  String get tracking_sosMapError;
+
+  /// No description provided for @tracking_sosSemanticsLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar alerta de emergencia'**
+  String get tracking_sosSemanticsLabel;
+
+  /// No description provided for @map_geocodeError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo obtener las coordenadas.'**
+  String get map_geocodeError;
 }
 
 class _AppLocalizationsDelegate
