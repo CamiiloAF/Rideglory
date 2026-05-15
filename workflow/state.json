@@ -520,8 +520,8 @@
     },
     "design": {
       "status": "idle",
-      "lastAction": "2026-05-14T07:00:00Z",
-      "focus": "iter-1 design complete: gap analysis, 5 HTML mockup modules (15 screens), UI copy, component hierarchy, auth frames gate established"
+      "lastAction": "2026-05-15T02:30:00Z",
+      "focus": "iter-3 design complete: 20 screen states designed (tracking map, SOS flow, organizer controls, background GPS notifications, Home SOAT badge 4 states); 5 HTML mockup files; full UI copy (30+ l10n keys); new widget list (SosBannerWidget, OrganizerControlBar, RouteAdherenceChip, RideFinishedOverlay); Pencil frame update list for qonbS and kAubW"
     },
     "backend": {
       "status": "idle",
@@ -905,6 +905,22 @@
       "agent": "architect",
       "at": "2026-05-15T02:00:00Z",
       "detail": "Story 3.0 Mapbox migration + tracking SOS + maintenance/event schedulers fully spec'd"
+    },
+    {
+      "type": "design_iteration",
+      "iteration": 3,
+      "phase": "design",
+      "agent": "design",
+      "at": "2026-05-15T02:30:00Z",
+      "detail": "20 screen states designed across 5 HTML mockups: tracking map (normal/off-route/organizer), SOS flow (dialog/sent/banner/no-phone), organizer controls (iniciar/terminar rodada dialogs, ride finished overlay), Android foreground service + iOS Info.plist notification strings, push copy reference card, Home SOAT badge (4 states). 30+ l10n keys specified. 4 new widgets defined. Pencil frame update list for qonbS and kAubW."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 3,
+      "phase": "design",
+      "agent": "design",
+      "at": "2026-05-15T02:30:00Z",
+      "detail": "SOS screens, organizer controls, background GPS notification copy, Home SOAT badge (4 states) designed"
     }
   ]
 }

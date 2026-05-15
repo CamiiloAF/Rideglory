@@ -10,8 +10,8 @@
 
 ## Status: active — Iteration 3
 
-**Last phase:** architect
-**Next phase:** design
+**Last phase:** design
+**Next phase:** backend
 
 **Note:** PR will NOT be merged at end of Tech Lead phase (sin mezclar PR instruction).
 
@@ -19,8 +19,7 @@
 |-------|-------|--------|
 | po_scope | PO | ✅ done |
 | architect | Architect | ✅ done |
-| design | Design | ⏳ pending |
-| design | Design | ⏳ pending |
+| design | Design | ✅ done |
 | backend | Backend | ⏳ pending |
 | frontend | Flutter Dev | ⏳ pending |
 | qa | QA | ⏳ pending |

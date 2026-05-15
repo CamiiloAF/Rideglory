@@ -133,6 +133,7 @@ Pantallas que pueden NO existir todavía en Pencil (crear si faltan):
 ## Change log
 
 - 2026-05-13: Skill reescrito desde cero. Reset completo de iteraciones anteriores. Fuente de verdad: REQUIREMENTS.md + rideglory.pen.
+- 2026-05-15 (iter-3 design complete): SOS flow, organizer controls, background GPS notifications, Home SOAT badge designed. Frame `qonbS` and `kAubW` require Pencil update before T-3-6/T-3-7.
 
 ---
 ## Plan reapproval update — 2026-05-13 (plan v3, iters 1–5)
@@ -231,3 +232,45 @@ Pantallas que pueden NO existir todavía en Pencil (crear si faltan):
 - Pencil desktop app must be running before `open_document` works. If unavailable, HTML mockups serve as design gate but Pencil frames must still be verified/created before frontend starts.
 - Use `snapshot_layout` for structural checks, `get_screenshot` only for visual fidelity verification.
 - Auth frames do not exist in rideglory.pen — create with pattern `[Feature] — [Screen] — [State]`.
+
+---
+
+## Iter-3 design decisions (locked)
+
+### SOS marker animation
+- `AnimationController` overlay widget above Mapbox canvas. Scale 0.8→1.8, opacity 0.8→0, 1.5s, `Curves.easeOut`, repeat.
+- If `MediaQuery.disableAnimations` is true: show static red marker, no animation.
+- Widget: `SosMarkerPulse` wrapping `PointAnnotation` position.
+
+### SOS Banner — visibility rules
+- Shown when `sosAlertResult` is `Data(SosAlert)` (received from WS `tracking.sos.alert`)
+- Anchored TOP of map overlay stack, above route adherence chip
+- "Llamar" button: only shown if `sosAlert.riderPhone != null`
+- "Localizar" button: always shown; deep-links to Google Maps (Android) or Apple Maps (iOS)
+- Non-blocking: map stays interactive below banner
+
+### Organizer Control Bar — visibility rules
+- Shown when `currentUser.id == event.ownerId AND event.state == 'in_progress'`
+- Never visible to regular riders
+- Topmost item in map overlay stack
+
+### SOS Banner touch target fix (accessibility)
+- Banner action buttons in HTML mockup use 32px height. Flutter implementation MUST use min 44px height.
+- Solution: `SizedBox(height: 44)` wrapper or `padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10)`
+
+### Home SOAT badge
+- Uses existing `DocumentSlotPill` molecule (iter-1, no new widget needed)
+- Rendered below main vehicle hero card in `home_garage_card.dart`
+- 4 states: `none → empty`, `valid → valid`, `expiringSoon → expiringSoon`, `expired → expired`
+- Tappable → navigates to SOAT detail flow
+
+### Pencil frames to update/create (iter-3 gate)
+Before T-3-6: Update frame `qonbS` (SOS FAB, SOS banner, organizer bar, adherence chip positions)
+Before T-3-7: Update frame `kAubW` (add "Iniciar rodada" organizer CTA variant)
+New frames to create (pattern: `[Feature] — [Screen] — [State]`):
+- `Tracking — SOS — Confirmation Dialog`
+- `Tracking — SOS — Banner (Llamar + Localizar)`
+- `Tracking — SOS — Banner (Localizar only)`
+- `Tracking — Organizer — Control Bar`
+- `Tracking — Ride Finished Overlay`
+- `Event Detail — Iniciar Rodada Dialog`

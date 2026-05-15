@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rideglory — Tracking Map (iter-3)</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap">
+</head>
+<body>
+<div class="frame-wrap">
+
+  <!-- =====================================================
+       State 1: Tracking Map — Normal (rider view)
+       Frame qonbS — Event Tracking Map
+       ===================================================== -->
+  <div>
+    <p class="phone-label">Tracking Map — Estado normal (rider)</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons">
+          <span>●●●</span>
+          <span>WiFi</span>
+          <span>🔋</span>
+        </div>
+      </div>
+
+      <!-- App Bar -->
+      <div class="app-bar">
+        <div class="icon-btn">←</div>
+        <div>
+          <div class="app-bar-title">Páramo del Sumapaz</div>
+          <div class="app-bar-subtitle">En curso · 5 riders</div>
+        </div>
+        <!-- Organizer badge hidden for regular rider -->
+      </div>
+
+      <!-- Map Canvas (mapbox_maps_flutter MapWidget) -->
+      <div class="map-canvas">
+        <div class="map-grid"></div>
+        <!-- Roads -->
+        <div class="map-road h" style="top: 50%"></div>
+        <div class="map-road v" style="left: 30%"></div>
+        <div class="map-road h" style="top: 28%"></div>
+
+        <!-- Route line (GeoJsonSource + LineLayer) -->
+        <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 375 420">
+          <polyline points="40,370 80,320 130,250 190,200 250,160 310,100 350,60"
+            stroke="#f98c1f" stroke-width="4" fill="none" stroke-dasharray="none" opacity="0.8"/>
+        </svg>
+
+        <!-- Rider markers -->
+        <div class="rider-marker" style="top:180px;left:160px">
+          <div class="rider-avatar">CM</div>
+          <div class="rider-dot"></div>
+        </div>
+        <div class="rider-marker" style="top:140px;left:220px">
+          <div class="rider-avatar">JR</div>
+          <div class="rider-dot"></div>
+        </div>
+        <div class="rider-marker" style="top:240px;left:100px">
+          <div class="rider-avatar">AP</div>
+          <div class="rider-dot"></div>
+        </div>
+
+        <!-- Top overlays -->
+        <div class="map-overlay-top">
+          <!-- Route adherence chip -->
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="adherence-chip adherence-on">✓ En ruta</div>
+            <div class="chip chip-surface" style="backdrop-filter:blur(12px)">
+              🕐 1h 24min restantes
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom overlays — SOS button + zoom controls -->
+        <div class="map-overlay-bottom">
+          <!-- Zoom controls -->
+          <div class="zoom-controls" style="margin-bottom:8px">
+            <div class="zoom-btn">+</div>
+            <div class="zoom-btn">−</div>
+          </div>
+          <div style="flex:1"></div>
+          <!-- Center on me button -->
+          <div class="icon-btn" style="width:44px;height:44px;background:var(--surface);backdrop-filter:blur(12px);margin-bottom:8px">⊙</div>
+          <!-- SOS Button -->
+          <div class="sos-fab">SOS</div>
+        </div>
+      </div>
+
+      <!-- Riders Panel (collapsed handle) -->
+      <div class="riders-panel">
+        <div class="panel-handle"></div>
+        <div class="panel-title">Riders en la rodada · 5</div>
+        <div class="rider-row">
+          <div class="rider-row-avatar">CM</div>
+          <div class="rider-row-name">Carlos M. (Yo)</div>
+          <span class="chip chip-success" style="font-size:10px">En ruta</span>
+        </div>
+        <div class="rider-row">
+          <div class="rider-row-avatar">JR</div>
+          <div class="rider-row-name">Juan Rodríguez</div>
+          <span class="rider-row-status">En ruta</span>
+        </div>
+        <div class="rider-row">
+          <div class="rider-row-avatar">AP</div>
+          <div class="rider-row-name">Ana Pérez</div>
+          <span class="rider-row-status">En ruta</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       State 2: Tracking Map — Off Route State
+       ===================================================== -->
+  <div>
+    <p class="phone-label">Tracking Map — Fuera de ruta</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="app-bar">
+        <div class="icon-btn">←</div>
+        <div>
+          <div class="app-bar-title">Páramo del Sumapaz</div>
+          <div class="app-bar-subtitle">En curso · 5 riders</div>
+        </div>
+      </div>
+      <div class="map-canvas">
+        <div class="map-grid"></div>
+        <div class="map-road h" style="top: 50%"></div>
+        <div class="map-road v" style="left: 30%"></div>
+        <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 375 420">
+          <polyline points="40,370 80,320 130,250 190,200 250,160 310,100 350,60"
+            stroke="#f98c1f" stroke-width="4" fill="none" opacity="0.8"/>
+        </svg>
+        <!-- Rider off-route -->
+        <div class="rider-marker" style="top:300px;left:260px">
+          <div class="rider-avatar">CM</div>
+          <div class="rider-dot"></div>
+        </div>
+        <div class="map-overlay-top">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="adherence-chip adherence-off">⚠ Fuera de ruta</div>
+          </div>
+        </div>
+        <div class="map-overlay-bottom">
+          <div class="zoom-controls" style="margin-bottom:8px">
+            <div class="zoom-btn">+</div>
+            <div class="zoom-btn">−</div>
+          </div>
+          <div style="flex:1"></div>
+          <div class="icon-btn" style="width:44px;height:44px;backdrop-filter:blur(12px);margin-bottom:8px">⊙</div>
+          <div class="sos-fab">SOS</div>
+        </div>
+      </div>
+      <div class="riders-panel">
+        <div class="panel-handle"></div>
+        <div class="panel-title">Riders en la rodada · 5</div>
+        <div class="rider-row">
+          <div class="rider-row-avatar">CM</div>
+          <div class="rider-row-name">Carlos M. (Yo)</div>
+          <span class="chip chip-warning" style="font-size:10px">Fuera de ruta</span>
+        </div>
+        <div class="rider-row">
+          <div class="rider-row-avatar">JR</div>
+          <div class="rider-row-name">Juan Rodríguez</div>
+          <span class="rider-row-status">En ruta</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       State 3: Tracking Map — Organizer View
+       Organizer control bar visible; "Terminar rodada" button
+       ===================================================== -->
+  <div>
+    <p class="phone-label">Tracking Map — Vista organizador</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="app-bar">
+        <div class="icon-btn">←</div>
+        <div>
+          <div class="app-bar-title">Páramo del Sumapaz</div>
+          <div class="app-bar-subtitle">En curso · 5 riders</div>
+        </div>
+        <div class="organizer-badge">Org.</div>
+      </div>
+      <div class="map-canvas">
+        <div class="map-grid"></div>
+        <div class="map-road h" style="top: 50%"></div>
+        <div class="map-road v" style="left: 30%"></div>
+        <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 375 420">
+          <polyline points="40,370 80,320 130,250 190,200 250,160 310,100 350,60"
+            stroke="#f98c1f" stroke-width="4" fill="none" opacity="0.8"/>
+        </svg>
+        <div class="rider-marker" style="top:180px;left:160px">
+          <div class="rider-avatar">CM</div>
+          <div class="rider-dot"></div>
+        </div>
+        <div class="rider-marker" style="top:140px;left:220px">
+          <div class="rider-avatar">JR</div>
+          <div class="rider-dot"></div>
+        </div>
+        <!-- Top overlay -->
+        <div class="map-overlay-top">
+          <!-- Organizer control bar -->
+          <div class="organizer-bar">
+            <div class="organizer-badge">Organizador</div>
+            <div class="organizer-bar-label">Control de rodada</div>
+            <button class="btn btn-outline-danger" style="padding:8px 14px;font-size:13px;min-height:36px">
+              Terminar rodada
+            </button>
+          </div>
+          <div style="display:flex;gap:8px">
+            <div class="adherence-chip adherence-on">✓ En ruta</div>
+          </div>
+        </div>
+        <div class="map-overlay-bottom">
+          <div class="zoom-controls" style="margin-bottom:8px">
+            <div class="zoom-btn">+</div>
+            <div class="zoom-btn">−</div>
+          </div>
+          <div style="flex:1"></div>
+          <div class="icon-btn" style="width:44px;height:44px;backdrop-filter:blur(12px);margin-bottom:8px">⊙</div>
+          <div class="sos-fab">SOS</div>
+        </div>
+      </div>
+      <!-- Riders panel with all riders -->
+      <div class="riders-panel">
+        <div class="panel-handle"></div>
+        <div class="panel-title">Riders en la rodada · 5</div>
+        <div class="rider-row">
+          <div class="rider-row-avatar">CM</div>
+          <div class="rider-row-name">Carlos M.</div>
+          <span class="rider-row-status">En ruta</span>
+        </div>
+        <div class="rider-row">
+          <div class="rider-row-avatar">JR</div>
+          <div class="rider-row-name">Juan Rodríguez</div>
+          <span class="rider-row-status">En ruta</span>
+        </div>
+        <div class="rider-row">
+          <div class="rider-row-avatar">AP</div>
+          <div class="rider-row-name">Ana Pérez</div>
+          <span class="rider-row-status">En ruta</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
