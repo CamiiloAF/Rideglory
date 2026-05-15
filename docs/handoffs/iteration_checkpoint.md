@@ -10,14 +10,14 @@
 
 ## Status: active — Iteration 3
 
-**Last phase:** (none — just started)
-**Next phase:** po_scope
+**Last phase:** po_scope
+**Next phase:** architect
 
 **Note:** PR will NOT be merged at end of Tech Lead phase (sin mezclar PR instruction).
 
 | Phase | Agent | Status |
 |-------|-------|--------|
-| po_scope | PO | 🔄 in progress |
+| po_scope | PO | ✅ done |
 | architect | Architect | ⏳ pending |
 | design | Design | ⏳ pending |
 | backend | Backend | ⏳ pending |

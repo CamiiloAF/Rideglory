@@ -1,13 +1,13 @@
-# PO handoff — Iteration 1
+# PO Handoff — Iteration 3
 
-**Date:** 2026-05-13
+**Date:** 2026-05-15
 **Status:** in progress
 
 ---
 
 ## Iteration goal
 
-Bring 15 existing screens into full visual alignment with `rideglory.pen` — no new features, no backend changes — establishing a consistent design system baseline before new capabilities are layered on in iter-2.
+Complete the real-time tracking experience with SOS alert, organizer ride controls, background GPS, date-based maintenance reminders, and migrate the maps SDK from `google_maps_flutter` to `mapbox_maps_flutter` as a single unified SDK — leaving riders fully connected during active events.
 
 ---
 
@@ -15,17 +15,15 @@ Bring 15 existing screens into full visual alignment with `rideglory.pen` — no
 
 | ID | Story | Acceptance criteria | Primary agent |
 |----|-------|---------------------|---------------|
-| US-1-1 | As a designer reviewing existing screens, I can identify all visual gaps between the current Flutter implementation and the `rideglory.pen` frames, documented in a gap analysis before any Flutter code is touched. | Gap analysis document lists every screen (all 15) with specific mismatches: component name, spacing value, color token, typography rule. Document reviewed and approved before any Flutter code changes begin. | design |
-| US-1-2 | As a rider opening the app, I see the splash screen with the correct logo, loading state indicator, and overall layout matching the `rideglory.pen` design. | Splash screen layout, logo sizing, background color, and loading indicator match the Pencil frame exactly. All loading states (loading, error, success) handled visually. No hardcoded `Color()` literals. | frontend |
-| US-1-3 | As a rider on the auth screens (login, signup, password recovery), the pages use `AppButton`, `AppTextField`, `AppPasswordTextField`, correct typography, and the exact color tokens from the design system. | No `ElevatedButton`, no `TextFormField` direct usage, no hardcoded color literals on any auth screen. `AppButton` used for all primary and secondary actions. Space Grotesk applied. Password recovery confirmation screen matches design. **Auth frames gate must be satisfied before this story begins.** | frontend |
-| US-1-4 | As a rider on the Home Dashboard, the layout matches the `rideglory.pen` frame `dyWWs` — including the greeting header, garage card (main vehicle + empty state), upcoming rides section (horizontal scroll + empty state), and bottom navigation pill bar (`VMmN0`). | Frame `dyWWs` matched: correct spacing, correct card border radius (12 px cards, 24 px bottom sheets), correct color tokens. Bottom nav pill bar matches frame `VMmN0`. SOAT badge placeholder **not included** (iter-2). No layout regressions vs. current behavior. | frontend |
-| US-1-5 | As a rider browsing Events, the events list page and event detail page match the `rideglory.pen` frames `Neipf` and `kAubW` — including event cards, badges (frame `zKkmE`), filter chips, the filter bottom sheet, and the CTA bar on event detail. **Pre-condition:** `lib/design_system/atoms/app_event_badge.dart` must be extracted/created from frame `zKkmE` before this story's implementation begins. | Event list: search bar, filter chips, event cards (image overlay, badge, organizer avatar, chips) match frame `Neipf`. Event detail: hero image, metric chips, map preview, allowed brands chips, CTA bar match frame `kAubW`. Filter bottom sheet layout correct. `app_event_badge.dart` used in all event card contexts. | frontend |
-| US-1-6 | As a rider creating an event, the Create/Edit Event form matches the `rideglory.pen` frame `zbCa0` — correct input fields, layout sections, difficulty selector, and button styles. | Form layout matches frame `zbCa0`. AI cover generation widget (iter-4 feature) is preserved and functional. Mapbox route preview widget unchanged. All inputs use `AppTextField`. `AppButton` used for primary actions. | frontend |
-| US-1-7 | As a rider viewing the Garage, the vehicle list page and vehicle detail page match `rideglory.pen` frames `KCf6W` and `P1GSzZ` — including the main vehicle card, "other vehicles" list, spec chips, and document slots. The document slot pill (`aGqnv`) is extracted as a design system molecule during this story for reuse in iter-2 SOAT badge. | Vehicle list matches frame `KCf6W`: main vehicle card with full-width image, stats chips, quick-access buttons; compact other-vehicles list. Vehicle detail matches frame `P1GSzZ`: specs, document badges, action buttons. All states (loading, empty, data, error) visually correct. | frontend |
-| US-1-8 | As a rider adding or editing a vehicle, the Add/Edit vehicle form matches `rideglory.pen` frame `EqnMm` — correct field layout, image upload UI, and step structure. | Form fields, image upload banner, and section layout match frame `EqnMm`. Document slot section (SOAT, tech review) UI is present but non-functional pending iter-2. `AppTextField` and `AppButton` used throughout. | frontend |
-| US-1-9 | As a rider viewing Maintenance, the dashboard, history list, and new maintenance forms match `rideglory.pen` frames `Ako7u` (dashboard), `SykjL` (history), `J5h6P` (step 1), `eK2WW` (step 2 — completed), and `ELB5u` (step 2 — scheduled). | All 5 maintenance frames matched. Dashboard: donut chart health indicator, urgency color coding (red/yellow/green) correct. History: year grouping, cost summary, chronological order. Filters bottom sheet (frame `v6RqaX`) layout correct. Step 1 grid 2×4 card layout correct. Step 2 tab (Completado / Programado) layout correct. | frontend |
-| US-1-10 | As a rider viewing their registrations, the My Registrations list and Registration Detail pages match `rideglory.pen` frames `oUv12` and the registration list layout. | Registration list and detail pages use design system components throughout; no hardcoded colors; empty and loading states correct. | frontend |
-| US-1-11 | As the dev team, we confirm zero visual regressions and zero `dart analyze` violations after the redesign — all existing tests pass and 5 manual smoke tests are green before final merge. | `dart analyze` passes with zero new violations. All 10 existing `flutter test` cases pass. 5 manual smoke tests green: (a) AI cover generation, (b) Event detail CTA state variants, (c) Maintenance donut chart rendering, (d) Home bottom nav pill bar, (e) Mapbox route preview in event form. All 3 events widget tests updated in the same PR that swaps their widgets. | qa |
+| US-3-0 | As the dev team, the project uses `mapbox_maps_flutter` as the sole maps SDK; `google_maps_flutter` and `geocoding` have been eliminated completely. | `pubspec.yaml` declares `mapbox_maps_flutter ^2.2.0`; `google_maps_flutter` and `geocoding` are absent from `pubspec.yaml` and `pubspec.lock`. `dart analyze` passes with zero errors or warnings in `lib/`. Zero `google_maps_flutter` or `geocoding` imports remain in `lib/`. `live_map_widget.dart`, `live_map_page.dart`, `initials_marker_icon.dart`, and `route_map_preview.dart` compile and render correctly on a physical device. `route_map_preview.dart` uses `PlaceService` (Retrofit async) for address lookup; loading and error states handled with `ResultState`. `AndroidManifest.xml` contains Mapbox token meta-data; `Info.plist` contains `MBXAccessToken`; no Google Maps API key remains in native config. iOS CocoaPods install completed; app builds in simulator. This story must be merged and `dart analyze` must be clean **before any other iter-3 story begins**. | frontend |
+| US-3-1 | As a rider in an active event, I can press the red SOS button visible on the tracking map, confirm the alert in a dialog, and all other riders in the event receive an emergency push notification with my name and location. | SOS alert processed in under 5 seconds from confirmation tap. The rider's map marker changes to a red pulsing indicator on all other participants' maps. A red banner with the rider's name appears on all other participants' screens. The confirming rider sees a "SOS enviado" confirmation. If the rider's phone number is not registered, only the "Localizar" action appears (not "Llamar"). | frontend, backend |
+| US-3-2 | As a rider seeing an SOS alert on the tracking map, I can tap the SOS banner for the rider in crisis and access two actions: Call (native dialer) and Locate (Google Maps / Apple Maps with navigation). | Both actions are functional on iOS and Android. "Llamar" is only shown if the rider has a registered phone number. "Localizar" deep-links to Google Maps (Android) or Apple Maps (iOS) with navigation to the rider's last known coordinates. Actions visible to any participant, not just the organizer. | frontend |
+| US-3-3 | As the organizer of a scheduled event, I can start the ride from the event detail screen, transitioning the event to `in_progress` state and enabling live tracking for all approved registrants. | "Iniciar rodada" button is only visible to the event organizer on the event detail page. Tapping it shows a confirmation dialog. On confirmation, the backend transitions the event to `in_progress`; all approved riders immediately see the CTA on the event detail change to "Ver rastreo". | frontend, backend |
+| US-3-4 | As the organizer of an active event, I can end the ride from the tracking screen, transitioning the event to `finished` and closing the tracking screen for all connected riders. | "Terminar rodada" button visible only to the organizer on the tracking screen. On confirmation, event transitions to `finished` in the backend; all connected WebSocket clients receive a termination signal and the tracking screen closes for all participants; a push notification "La rodada ha terminado" arrives in under 10 seconds. | frontend, backend |
+| US-3-5 | As a rider in an active event with the app in the background, the app continues sending my location to the WebSocket every 5 seconds. On Android, a non-dismissable persistent notification "Rideglory — Rodada activa" is displayed. On iOS, the system location indicator is visible. | Android: location updates continue with app in background; foreground service notification is visible and non-dismissable (verified on physical device). iOS: location updates continue; system blue location indicator is visible (native behavior, verified on physical device). Logs from both platforms attached to the PR. | frontend |
+| US-3-6 | As a rider with a scheduled maintenance record (date-based), I receive a push notification 30 days before the scheduled date. | Push is scheduled when the maintenance record is saved with a future date. Notification text includes the service type and motorcycle name in Spanish. Push arrives within a 5-minute window of the scheduled time. Notification appears in the notification center. | backend, frontend |
+| US-3-7 | As an approved registrant of a future event, I receive a push reminder notification 24 hours before the event start time. | Push arrives between 23h 55min and 24h 5min before the event's scheduled start time. Notification text includes the event name. Notification appears in the notification center. | backend |
+| US-3-8 | As the dev team, `dart analyze` passes with zero violations, all existing tests remain green, and Story 3.0's Mapbox migration passes a widget test before merging. | `dart analyze`: 0 errors, 0 warnings on the final feature branch. `flutter test`: all pre-existing passing tests continue to pass (no new failures). Widget test for `route_map_preview.dart` passes before Story 3.0 PR merges. No hardcoded Spanish strings — all new user-visible text in `app_es.arb`. No `google_maps_flutter` or `geocoding` imports in `lib/`. Location usage descriptions in `Info.plist` written in clear Spanish. Physical device logs for background GPS (Android + iOS) attached to PR. | qa |
 
 ---
 
@@ -33,80 +31,83 @@ Bring 15 existing screens into full visual alignment with `rideglory.pen` — no
 
 | Task ID | Description | Agent | Status |
 |---------|-------------|-------|--------|
-| T-1-1 | Inspect all relevant `rideglory.pen` frames via Pencil MCP; produce gap analysis document listing every screen (15 total) with specific mismatches (component, spacing, color, typography) | design | todo |
-| T-1-2 | Confirm or create Login / Signup / PasswordRecovery frames in `rideglory.pen` (auth frames gate for US-1-3) | design | todo |
-| T-1-3 | Implement US-1-2 (Splash screen) + US-1-3 (Auth screens) — module PR 1/5: `splash+auth` (≤ 40 files) | frontend | todo |
-| T-1-4 | Implement US-1-4 (Home Dashboard) — module PR 2/5: `home` (≤ 40 files) | frontend | todo |
-| T-1-5 | Extract `app_event_badge.dart` atom from frame `zKkmE`; implement US-1-5 (Events list + detail) + US-1-6 (Create/Edit Event form) — module PR 3/5: `events` (≤ 40 files) | frontend | todo |
-| T-1-6 | Extract document slot pill (`aGqnv`) as design system molecule; implement US-1-7 (Garage list + detail) + US-1-8 (Add/Edit vehicle form) — module PR 4/5: `garage` (≤ 40 files) | frontend | todo |
-| T-1-7 | Implement US-1-9 (Maintenance dashboard, history, forms) + US-1-10 (Registrations) — module PR 5/5: `maintenance+registration` (≤ 40 files) | frontend | todo |
-| T-1-8 | Run `dart analyze` baseline on `main` branch; document any pre-existing violations; verify violation count does not grow during iter-1 | qa | todo |
-| T-1-9 | Execute quality gate validation: `dart analyze` + `flutter test` green; widget tests updated; 5 manual smoke tests logged; no hardcoded color literals remain in `lib/features/` | qa | todo |
-| T-1-10 | Review all module PRs for Clean Architecture compliance: no layer violations, no hardcoded colors, correct widget usage (`AppButton`, `AppTextField`, `AppDialog`), updated `app_es.arb`, no test-rot merges | tech_lead | todo |
+| T-3-1 | Migrate `google_maps_flutter` → `mapbox_maps_flutter`: update `pubspec.yaml`, native configs (AndroidManifest.xml, Info.plist), refactor `live_map_widget.dart`, `live_map_page.dart`, `initials_marker_icon.dart`, `route_map_preview.dart`. Add widget test for `route_map_preview.dart`. Must be merged before T-3-2 begins. | frontend | backlog |
+| T-3-2 | Backend: implement `POST /api/events/:eventId/tracking/start` and `POST /api/events/:eventId/tracking/end` in `api-gateway/src/tracking/`. Guard: organizer only. | backend | backlog |
+| T-3-3 | Backend: implement SOS handler in `TrackingGateway` — receive `{ type: "sos" }` WS message, broadcast `sos_alert` to all event participants via WebSocket, dispatch FCM multicast push to all approved registrants; deduplicate with `sosTriggeredAt` on events-ms. | backend | backlog |
+| T-3-4 | Backend: implement `GET /api/events/:eventId/route` in events-ms returning `routeGeoJson` (GeoJSON LineString, stored as `routeGeoJson Json?` on Event model). | backend | backlog |
+| T-3-5 | Backend: add `NotificationSchedulerService` cron entries in api-gateway for maintenance date-based reminder (30d, America/Bogota timezone) and 24h event reminder. Uses `@nestjs/schedule`. | backend | backlog |
+| T-3-6 | Flutter: implement SOS button + confirmation dialog on tracking map; SOS banner with Llamar/Localizar actions; red pulsing marker for rider in SOS state using `mapbox_maps_flutter` annotations API. | frontend | backlog |
+| T-3-7 | Flutter: implement organizer "Iniciar rodada" / "Terminar rodada" controls in `EventDetailPage` and `EventTrackingPage`; `LiveTrackingCubit` emits `TrackingFinished` on `tracking.event.ended` WebSocket event; tracking screen auto-closes for all riders. | frontend | backlog |
+| T-3-8 | Flutter: implement background GPS — `flutter_foreground_task` on Android (foreground service isolate + `IsolateNameServer`; `configureDependencies()` called in `onStart()`); `geolocator` with `AppleSettings(activityType: ActivityType.automotiveNavigation)` on iOS. | frontend | backlog |
+| T-3-9 | Flutter: render event route as GeoJSON LineString on tracking map using `GeoJsonSource + LineLayer`; implement route adherence chip ("En ruta ✓" / "Fuera de ruta ⚠") with 200m Haversine check client-side. | frontend | backlog |
+| T-3-10 | Flutter: add `soatStatus` and `soatExpiryDate` to `VehicleModel`; display Home Dashboard SOAT badge on main vehicle card (deferred from iter-2). | frontend | backlog |
+| T-3-11 | QA: widget test for `route_map_preview.dart` (pre-condition for T-3-1 merge); `dart analyze` + `flutter test` gate; physical device background GPS logs; verify zero `google_maps_flutter`/`geocoding` imports; verify `app_es.arb` updated for all new strings. | qa | backlog |
+| T-3-12 | DevOps: update CocoaPods cache key in GitHub Actions CI immediately after Story 3.0 (T-3-1) merges (~200MB Mapbox binary framework). Update `DEPLOY.md` with background GPS device test requirements. | devops | backlog |
 
 ---
 
 ## Assumptions and open questions
 
-- **No auth frames in rideglory.pen (assumption):** It is unknown whether Login, Signup, and PasswordRecovery screens have dedicated Pencil frames. The Design agent must verify this during pre-flight and create them if missing, before Story US-1-3 (Task T-1-2) begins. Stories US-1-2 and US-1-4 through US-1-10 may proceed in parallel with T-1-2.
-- **Donut chart scope (assumption):** The donut chart in frame `Ako7u` (Maintenance dashboard) may require either a color token swap only or a geometry/animation change. If geometry change is needed, it is descoped to color-only for iter-1. The Design agent must flag this during pre-flight (T-1-1) before US-1-9 begins.
-- **No backend changes (assumption):** Iter-1 is strictly presentation-layer. No new domain models, DTOs, services, use cases, or routes are introduced. The Architect confirmed only 3 imports of `core/data/` in `lib/features/*/presentation/`, all referencing `colombia_motos_brands_data.dart` (a static catalog).
-- **File blast radius confirmed:** Approximately 95–135 files will be touched. The heavy lift is color tokenization (~33 raw `Color(0x...)` literals + ~80 files with `Colors.<named>` references), not widget swapping (only ~3 files use `ElevatedButton`/`TextFormField` directly).
-- **AI cover generation (assumption):** The iter-4 AI cover generation widget in the event form must remain functional. It is treated as a blocking smoke test criterion, not advisory.
-- **ManageAttendeesPage deferred (confirmed):** Story 1.11 (ManageAttendeesPage) was explicitly deferred from iter-1 to iter-2 as Story 2.9 per the approved PLAN.md.
+- **Story 3.0 is an absolute blocker (confirmed):** No iter-3 story other than 3.0 may be implemented until the Mapbox migration is merged and `dart analyze` is clean. This is documented in the PLAN.md definition of done and enforced by the iteration checkpoint.
+- **GeoJSON LineString format (confirmed by architect):** Route polyline is stored as `routeGeoJson Json?` on the Event model in events-ms, not as a Google-encoded polyline string per PRD §17.2. Prisma migrate reset discards existing event data so no legacy migration is needed. Flutter renders with `GeoJsonSource + LineLayer` — not `PolylineAnnotationManager`.
+- **Date-based maintenance reminders only (confirmed):** Story 3.6 covers only date-based reminders (30 days before scheduled date). Km-based reminders (requiring odometer tracking) are deferred post-MVP per PLAN.md deferred items.
+- **Android foreground service untestable in emulator (known risk):** Physical device testing is mandatory for US-3-5 on both Android and iOS. CI pipeline cannot substitute for device verification. Logs must be attached to the PR.
+- **SOS is send-only in v1 (confirmed):** The SOS sender cannot cancel their own SOS alert in the MVP. Only the WebSocket reconnection or event end will clear SOS state. This is documented as a scope decision.
+- **FCM for SOS (confirmed by PLAN.md):** SOS alerts are sent via both WebSocket (in-app, real-time) and FCM push (for riders with app in background). The iter-2 FCM infrastructure is already deployed and can be reused.
+- **Home Dashboard SOAT badge (moved from iter-2):** The PLAN.md and iter-2 DoD both explicitly defer the Home Dashboard SOAT badge to iter-3. `VehicleModel.soatStatus` and `VehicleModel.soatExpiryDate` are added in this iteration.
+- **iter-2 infrastructure available:** This iteration depends on the FCM infrastructure (iter-2): push dispatch from api-gateway, `notifications` table, `NotificationSchedulerService` skeleton. These are assumed complete per iter-2's definition of done.
 
 ---
 
 ## Out of scope (this iteration)
 
-- **SOAT badge on Home Dashboard / vehicle detail** — added in iter-3 per PLAN.md (not iter-2 either). Vehicle detail document slot pill is extracted as a molecule (US-1-7) but no SOAT logic is wired.
-- **ManageAttendeesPage redesign** — deferred to iter-2 as Story 2.9.
-- **New backend endpoints** — zero. No Prisma migrations, no new API routes.
-- **New domain models or use cases** — zero.
-- **New routes in go_router** — zero.
-- **New dev dependencies (mocktail, bloc_test)** — deferred; test infrastructure was planned for the prior plan's iter-1, now descoped for this redesign-first iter-1.
-- **Code generation** (`build_runner`) — not required since no domain/data changes are made.
-- **FCM, SOAT, tracking, followers, deep links, Apple Sign-In** — iter-2 through iter-5.
+- **Km-based maintenance reminders:** Requires automatic odometer tracking system not defined in the PRD. Deferred post-MVP.
+- **SOS sender cancel / dismiss:** Organizer SOS dismiss deferred to post-MVP per skill scope boundaries.
+- **Followers and social layer:** Iter-4.
+- **Deep links (event sharing):** Iter-5.
+- **Apple Sign-In:** Iter-5.
+- **Notification tap routing (deep navigation from push):** Iter-5 (NotificationRouteHandler).
+- **SOAT OCR auto-fill:** Deferred post-MVP per PLAN.md.
+- **New vehicle management screens** beyond SOAT badge update: no form changes.
 
 ---
 
 ## Next agent needs to know
 
 ### architect
-- Iter-1 is **presentation-layer only**. No domain model, data layer, DI, or routing changes are permitted. Confirm this constraint and document it explicitly in your handoff so the frontend agent does not introduce any layer violations.
-- The `app_event_badge.dart` atom (from frame `zKkmE`) and the document slot pill molecule (from frame `aGqnv`) are new design system files — these live in `lib/design_system/atoms/` and `lib/design_system/molecules/` respectively. Confirm naming and file placement conventions.
-- Verify the 5–6 module-scoped PR strategy is compatible with the current feature branch setup. Document the feature branch name and merge order in your handoff.
-- No code generation files need regeneration (no `build_runner` run required).
-
-### design (frontend, UX)
-- **Pre-flight priority:** Gap analysis (T-1-1) is the highest-priority task. No Flutter code may begin until the gap analysis is complete and reviewed.
-- **Auth frames gate:** If Login / Signup / PasswordRecovery frames do not exist in `rideglory.pen`, create them before Task T-1-3 begins. This is a story-level blocker for US-1-3 only.
-- **Donut chart flag:** During pre-flight, determine whether the donut chart in `Ako7u` requires geometry/animation changes or is a color-only update. Flag explicitly.
-- **Frame ID reference:** All 15 screen Pencil frame IDs are documented in REQUIREMENTS.md Appendix A. Use these IDs in the gap analysis document.
-
-### frontend (flutter_dev)
-- Follow the 5–6 module-scoped PR strategy (tasks T-1-3 through T-1-7). Maximum 40 files per PR. Each PR requires `dart analyze` + `flutter test` green before merge into the feature branch.
-- Replace all `Color(0x...)` / `Colors.<named>` literals with `Theme.of(context).colorScheme.<property>` or `AppColors` constants.
-- Replace `ElevatedButton` → `AppButton`, raw `TextFormField` → `AppTextField`, raw `AlertDialog` → `AppDialog`.
-- All user-visible text changes must be reflected in `lib/l10n/app_es.arb`; run `flutter gen-l10n` after ARB changes.
-- The AI cover generation widget (iter-4) **must remain functional** — treat as a blocking smoke test.
-- The 3 events widget tests (`attendees_list_navigation_test.dart`, `event_filters_bottom_sheet_test.dart`, `events_page_view_test.dart`) must be updated in the same PR that swaps their widgets. No test-rot merges.
-
-### qa
-- Run `dart analyze` baseline on `main` before any code is merged (T-1-8). Document existing violations count — it must not grow.
-- After all module PRs are merged into the feature branch, execute the full quality gate (T-1-9): `dart analyze` + `flutter test` green + 5 manual smoke tests.
-- Smoke test checklist: (a) AI cover generation, (b) Event detail CTA state variants (registered / pending / closed / full), (c) Maintenance donut chart rendering, (d) Home bottom nav pill bar matches frame `VMmN0`, (e) Mapbox route preview in event form.
-- Update widget test finders whenever widget classes are renamed or replaced.
+- Story 3.0 (Mapbox migration) is the highest-risk task. Review the 4 Dart files (`live_map_widget.dart`, `live_map_page.dart`, `initials_marker_icon.dart`, `route_map_preview.dart`) and 4 native/config files. Confirm `PlaceService` (Retrofit async) replaces the synchronous `geocoding` call in `route_map_preview.dart` with proper `ResultState` handling.
+- Confirm `GeoJsonSource + LineLayer` API usage pattern for the route polyline (NOT `PolylineAnnotationManager`).
+- Confirm `flutter_foreground_task` + `IsolateNameServer` bridge pattern for Android background GPS; `configureDependencies()` must be called in `onStart()`.
+- Confirm `VehicleModel` extension: `soatStatus` and `soatExpiryDate` fields added cleanly; `VehicleDto` updates accordingly.
+- Document whether `TrackingGateway` SOS handler should sit in api-gateway (WebSocket gateway) or events-ms (where `sosTriggeredAt` deduplication lives). Clear the boundary.
 
 ### backend
-- **No backend work required for iter-1.** Backend agent is not active this iteration. Standby for iter-2 (SOAT + notification infrastructure).
+- **Start with T-3-2** (tracking start/end endpoints) and T-3-4 (route GeoJSON endpoint) before T-3-3 (SOS handler). The SOS handler depends on being able to look up event participants.
+- SOS deduplication guard: add `sosTriggeredAt DateTime?` to the Event model in events-ms; SOS WS handler checks if `sosTriggeredAt` is already set — if so, do not re-broadcast or re-send FCM.
+- Cron expressions for T-3-5 must use `America/Bogota` timezone. Use `@nestjs/schedule`'s `ScheduleModule` (already configured in api-gateway from iter-2).
+- FCM multicast for SOS must target all approved registrant tokens for the event. Reuse the token lookup pattern from iter-2.
+- `GET /api/events/:eventId/route` must return GeoJSON LineString (`routeGeoJson` field from events-ms Event model).
 
-### tech_lead
-- Code review focus: layer violations (no data/domain imports in presentation), color literal elimination, widget adoption (`AppButton`, `AppTextField`, `AppDialog`), `app_es.arb` completeness, widget test coverage (no test-rot).
-- Each module PR must be reviewed before the next begins. Provide explicit approve / request-changes per PR.
+### frontend (Flutter Dev)
+- **Do not start any story other than 3.0 until T-3-1 is merged and `dart analyze` is clean.**
+- For Story 3.0: the sync `geocoding` lookup in `route_map_preview.dart` must become a debounced async `PlaceService` Retrofit call with `ResultState<AddressModel>` state (loading skeleton, error banner, data render).
+- For the SOS marker: use `mapbox_maps_flutter` annotations API to add a custom annotation for the rider in SOS state. If pulsing animation is not natively available, use a `AnimationController` with an overlay widget as fallback — document the approach in the PR.
+- Background GPS: `FOREGROUND_SERVICE` and `FOREGROUND_SERVICE_LOCATION` permissions must be declared in `AndroidManifest.xml`. Include Play Store policy note in PR description.
+- Route adherence Haversine check is client-side over GeoJSON coordinate array. No Mapbox decoder library needed.
+- `VehicleModel.soatStatus` must use the existing `SoatStatus` enum or equivalent domain value from iter-2. Coordinate with architect.
+
+### qa
+- **Widget test for `route_map_preview.dart` is a hard gate for T-3-1 merge.** Write the test before the frontend opens the PR.
+- `dart analyze` must pass with zero violations after T-3-1 merges (especially no lingering `google_maps_flutter` imports).
+- Background GPS physical device test is mandatory: two platforms, separate test plans (Android foreground service + iOS background location). Logs must be attached to PR as evidence.
+- Verify `Info.plist` location usage descriptions are in clear Spanish (required for App Store review).
+
+### devops
+- Update CocoaPods cache key in GitHub Actions **immediately after T-3-1 merges**. The Mapbox binary framework is ~200MB and will break CI if the cache key is stale.
+- Document background GPS physical device test steps in `DEPLOY.md`.
 
 ---
 
 ## Change log
 
-- 2026-05-13: Iteration 1 scoped from approved PLAN.md (redesign-first plan v3). 11 user stories defined (US-1-1 through US-1-11). 10 tasks defined (T-1-1 through T-1-10). QA gate task T-1-9 included. Scope decisions: ManageAttendeesPage deferred to iter-2, no backend work, no new domain models, 5–6 module-scoped PR strategy, auth frames gate per-story.
+- 2026-05-15: Iteration 3 scoped from approved PLAN.md. 8 user stories (US-3-0 through US-3-8). 12 tasks (T-3-1 through T-3-12). Scope decisions: Story 3.0 absolute blocker; GeoJSON LineString format confirmed; date-only maintenance reminders; km reminders deferred; Home Dashboard SOAT badge moved from iter-2; SOS sender-cancel deferred post-MVP; CocoaPods cache update added as devops task.

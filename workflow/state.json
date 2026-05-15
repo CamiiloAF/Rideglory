@@ -2,7 +2,7 @@
   "project": "Rideglory",
   "prdPath": "REQUIREMENTS.md",
   "planStatus": "approved",
-  "currentIteration": 2,
+  "currentIteration": 3,
   "existingSystem": {
     "basePath": "/Users/cami/Developer/Personal/Rideglory",
     "backendPath": "/Users/cami/Developer/Personal/rideglory-api",
@@ -510,8 +510,8 @@
   "agents": {
     "po": {
       "status": "idle",
-      "lastAction": "2026-05-14T17:00:00Z",
-      "focus": "iter-1 close-out complete; ready for iter-2 planning"
+      "lastAction": "2026-05-15T01:30:00Z",
+      "focus": "iter-3 scoped: Tracking Completo + SOS + Maintenance Reminders. 8 user stories (US-3-0 through US-3-8), 12 tasks (T-3-1 through T-3-12). Story 3.0 (Mapbox migration) is absolute blocker. Date-only maintenance reminders. Home Dashboard SOAT badge included."
     },
     "architect": {
       "status": "idle",
@@ -649,6 +649,126 @@
       "storyRef": "US-1-11",
       "title": "Review all 5 module PRs for Clean Architecture compliance: no layer violations,",
       "updatedAt": "2026-05-14T16:00:00Z"
+    },
+    {
+      "id": "T-3-1",
+      "iteration": 3,
+      "description": "Migrate google_maps_flutter → mapbox_maps_flutter: update pubspec.yaml, native configs (AndroidManifest.xml, Info.plist), refactor live_map_widget.dart, live_map_page.dart, initials_marker_icon.dart, route_map_preview.dart. Add widget test for route_map_preview.dart. Must be merged and dart analyze clean before any other iter-3 story begins.",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-3-0",
+      "title": "Mapbox SDK migration — Story 3.0 blocker",
+      "updatedAt": "2026-05-15T01:30:00Z"
+    },
+    {
+      "id": "T-3-2",
+      "iteration": 3,
+      "description": "Backend: implement POST /api/events/:eventId/tracking/start and POST /api/events/:eventId/tracking/end in api-gateway/src/tracking/. Guard: organizer only.",
+      "agent": "backend",
+      "status": "backlog",
+      "storyRef": "US-3-3, US-3-4",
+      "title": "Backend tracking start/end endpoints",
+      "updatedAt": "2026-05-15T01:30:00Z"
+    },
+    {
+      "id": "T-3-3",
+      "iteration": 3,
+      "description": "Backend: implement SOS handler in TrackingGateway — receive WS sos message, broadcast sos_alert to all event participants via WebSocket, dispatch FCM multicast push to all approved registrants; deduplication guard with sosTriggeredAt on events-ms Event model.",
+      "agent": "backend",
+      "status": "backlog",
+      "storyRef": "US-3-1, US-3-2",
+      "title": "Backend SOS handler — WebSocket broadcast + FCM multicast",
+      "updatedAt": "2026-05-15T01:30:00Z"
+    },
+    {
+      "id": "T-3-4",
+      "iteration": 3,
+      "description": "Backend: implement GET /api/events/:eventId/route in events-ms returning routeGeoJson (GeoJSON LineString, stored as routeGeoJson Json? on Event model).",
+      "agent": "backend",
+      "status": "backlog",
+      "storyRef": "US-3-0, US-3-9",
+      "title": "Backend route GeoJSON endpoint",
+      "updatedAt": "2026-05-15T01:30:00Z"
+    },
+    {
+      "id": "T-3-5",
+      "iteration": 3,
+      "description": "Backend: add NotificationSchedulerService cron entries in api-gateway for maintenance date-based reminder (30d, America/Bogota timezone) and 24h event reminder. Uses @nestjs/schedule (already installed from iter-2).",
+      "agent": "backend",
+      "status": "backlog",
+      "storyRef": "US-3-6, US-3-7",
+      "title": "Backend cron scheduler — maintenance + event reminders",
+      "updatedAt": "2026-05-15T01:30:00Z"
+    },
+    {
+      "id": "T-3-6",
+      "iteration": 3,
+      "description": "Flutter: implement SOS button + confirmation dialog on tracking map; SOS banner with Llamar/Localizar actions; red pulsing marker for rider in SOS state using mapbox_maps_flutter annotations API.",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-3-1, US-3-2",
+      "title": "Flutter SOS button, banner, pulsing marker",
+      "updatedAt": "2026-05-15T01:30:00Z"
+    },
+    {
+      "id": "T-3-7",
+      "iteration": 3,
+      "description": "Flutter: implement organizer Iniciar/Terminar rodada controls in EventDetailPage and EventTrackingPage; LiveTrackingCubit emits TrackingFinished on tracking.event.ended WebSocket event; tracking screen auto-closes for all riders on finish.",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-3-3, US-3-4",
+      "title": "Flutter organizer ride start/end controls",
+      "updatedAt": "2026-05-15T01:30:00Z"
+    },
+    {
+      "id": "T-3-8",
+      "iteration": 3,
+      "description": "Flutter: background GPS — flutter_foreground_task on Android (foreground service isolate + IsolateNameServer; configureDependencies() in onStart()); geolocator with AppleSettings(activityType: ActivityType.automotiveNavigation) on iOS. FOREGROUND_SERVICE + FOREGROUND_SERVICE_LOCATION in AndroidManifest.xml.",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-3-5",
+      "title": "Flutter background GPS — Android foreground service + iOS",
+      "updatedAt": "2026-05-15T01:30:00Z"
+    },
+    {
+      "id": "T-3-9",
+      "iteration": 3,
+      "description": "Flutter: render event route as GeoJSON LineString on tracking map using GeoJsonSource + LineLayer (NOT PolylineAnnotationManager); implement route adherence chip (En ruta / Fuera de ruta) with 200m Haversine check client-side over GeoJSON coordinate array.",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-3-0, US-3-5",
+      "title": "Flutter GeoJSON route render + Haversine adherence chip",
+      "updatedAt": "2026-05-15T01:30:00Z"
+    },
+    {
+      "id": "T-3-10",
+      "iteration": 3,
+      "description": "Flutter: add soatStatus and soatExpiryDate to VehicleModel and VehicleDto; display Home Dashboard SOAT badge on main vehicle card (deferred from iter-2 per PLAN.md).",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-3-0",
+      "title": "Flutter VehicleModel SOAT fields + Home Dashboard SOAT badge",
+      "updatedAt": "2026-05-15T01:30:00Z"
+    },
+    {
+      "id": "T-3-11",
+      "iteration": 3,
+      "description": "QA: widget test for route_map_preview.dart (hard gate for T-3-1 merge); dart analyze + flutter test pass gate; physical device background GPS verification logs (Android + iOS); verify zero google_maps_flutter/geocoding imports; verify app_es.arb updated for all new strings; verify Info.plist location descriptions in Spanish.",
+      "agent": "qa",
+      "status": "backlog",
+      "storyRef": "US-3-8",
+      "title": "QA quality gate — Mapbox widget test + background GPS device logs",
+      "updatedAt": "2026-05-15T01:30:00Z"
+    },
+    {
+      "id": "T-3-12",
+      "iteration": 3,
+      "description": "DevOps: update CocoaPods cache key in GitHub Actions CI immediately after Story 3.0 (T-3-1) merges (~200MB Mapbox binary framework). Update DEPLOY.md with background GPS device test requirements for Android and iOS.",
+      "agent": "devops",
+      "status": "backlog",
+      "storyRef": "US-3-0",
+      "title": "DevOps CocoaPods cache update + DEPLOY.md background GPS",
+      "updatedAt": "2026-05-15T01:30:00Z"
     }
   ],
   "events": [
@@ -754,6 +874,21 @@
       "at": "2026-05-14T21:40:42Z",
       "agent": "system",
       "detail": "Full /iter 2 run starting."
+    },
+    {
+      "type": "po_plan",
+      "iteration": 3,
+      "at": "2026-05-15T01:30:00Z",
+      "agent": "po",
+      "detail": "Iteration 3 scoped: Tracking Completo + SOS + Maintenance Reminders. 8 user stories (US-3-0 through US-3-8), 12 tasks (T-3-1 through T-3-12, including 1 QA task T-3-11 and 1 DevOps task T-3-12). Story 3.0 (Mapbox migration) is hard blocker for all other stories. Date-based maintenance reminders only. Home Dashboard SOAT badge added. FCM infrastructure from iter-2 reused for SOS and reminder pushes."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 3,
+      "phase": "po_scope",
+      "agent": "po",
+      "at": "2026-05-15T01:30:00Z",
+      "detail": "8 user stories, 12 tasks, Story 3.0 Mapbox migration as absolute blocker; SOS, organizer controls, background GPS, date reminders, SOAT badge scoped."
     }
   ]
 }
