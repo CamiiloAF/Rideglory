@@ -86,6 +86,13 @@ Commands: `dart analyze`, `flutter test`, `dart run build_runner build --delete-
 ## Gotchas and learnings
 
 <!-- Append during iterations -->
+- 2026-05-15 (iter-3): **Mapbox Position is lng-first** — `Position(longitude, latitude)` in mapbox_maps_flutter. Opposite of Google `LatLng(lat, lng)`. This is the most common migration bug. Flag explicitly in every code review that touches coordinates.
+- 2026-05-15 (iter-3): **MAPBOX_DOWNLOADS_TOKEN is a CI blocker** — if the secret is missing from GitHub Actions before Story 3.0 CI runs, Android and iOS builds fail with opaque 401 errors on the SDK download. DevOps must inject it before the first CI run. Architect must call this out in the devops handoff.
+- 2026-05-15 (iter-3): **SOS handler placement decision** — SOS WebSocket handler lives in `api-gateway/src/tracking/tracking.gateway.ts` (transport boundary). Dedup field `sosTriggeredAt` lives in events-ms `Event` model (state ownership). The gateway RPCs to events-ms to set the field atomically before broadcasting. This split keeps transport and state in their natural homes.
+- 2026-05-15 (iter-3): **`geocoding` package is sync** — `locationFromAddress()` blocks the Dart isolate. The migration to `PlaceService.geocode` (Retrofit async) with `ResultState` handling is not just an API swap; it introduces a proper loading/error UX that was previously silently swallowed by a bare `catch`.
+- 2026-05-15 (iter-3): **`flutter_foreground_task` isolate + DI** — same pattern as FCM background handler (iter-2): `configureDependencies()` must be called inside `onStart()` because the isolate has a fresh Dart VM with no GetIt registrations. `IsolateNameServer` is the only safe channel to bridge data back to the main isolate.
+- 2026-05-15 (iter-3): **`routeGeoJson Json?` is stored in events-ms** but rendered in the Flutter tracking screen. Backend stores GeoJSON as a raw JSON column (Prisma `Json?`). Flutter deserializes the `coordinates` array directly — no Mapbox polyline decode library needed.
+- 2026-05-15 (iter-3): **Story 3.0 has two distinct `route_map_preview.dart` files** — one in `lib/design_system/organisms/map/` (barrel re-export) and the implementation in `lib/shared/widgets/map/`. Only the implementation file changes; the barrel is untouched.
 - 2026-05-12 (iter-1): Iteration 1 is intentionally backend-free. Architect handoff is light — main work is confirming `GET /users/me` shape and writing the `ProfileCubit` DI ADR. Always check `lib/features/<feature>/` for existing service/repository before declaring a new endpoint.
 - 2026-05-12 (iter-1): `UserModel` already exists with rich rider profile fields (eps, bloodType, emergency contacts). No need to add fields for the profile page — current model is over-specified, not under.
 - 2026-05-12 (iter-1): Stub `profile_page.dart` is a `StatelessWidget` with only `ListTile` actions; full rewrite needed for header + main vehicle + ResultState branches. Frontend should keep existing logout + my-registrations actions when rewriting.
@@ -99,6 +106,7 @@ Commands: `dart analyze`, `flutter test`, `dart run build_runner build --delete-
 
 ## Change log
 
+- 2026-05-15 (iter-3): Architect phase complete. Story 3.0 Mapbox migration fully specced (4 Dart + 4 native files; PlaceService.geocode; GeoJsonSource+LineLayer route). Tracking SOS/organizer controls/background GPS/route adherence/SOAT badge mapped to layers. API contracts: tracking/start+end, GET /events/:id/route, GET /places/geocode, WS sos/sos.alert/event.ended, 2 cron entries. SOS boundary: gateway transport + events-ms dedup. ERD + SOS sequence diagram + Mapbox migration flowchart in DIAGRAMS.md. 4 slim role handoffs written.
 - 2026-05-11 (iter 0): Skill stub created.
 - 2026-05-12 (iter 0): Domain content populated from approved PRD + PLAN.md via /solo-approve.
 - 2026-05-12 (iter-1): Architect phase complete. Confirmed no backend changes. Defined ProfileCubit DI scope (ADR-1, lazySingleton in root MultiBlocProvider). Confirmed no photo upload v1 (ADR-2). New artifacts: GetMyProfileUseCase + ProfileCubit + initials helper. l10n keys with `profile_` prefix. DIAGRAMS.md initialized with profile fetch sequence.

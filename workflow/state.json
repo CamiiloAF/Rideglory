@@ -515,8 +515,8 @@
     },
     "architect": {
       "status": "idle",
-      "lastAction": "2026-05-14T05:00:00Z",
-      "focus": "iter-1 presentation-layer constraint locked; AppEventBadge + DocumentSlotPill primitives specified; color tokenization policy defined; backend stand-down confirmed"
+      "lastAction": "2026-05-15T02:00:00Z",
+      "focus": "iter-3 architecture complete: Story 3.0 Mapbox migration specced (4 Dart + 4 native files); tracking SOS/organizer/background GPS mapped; API contracts defined (tracking/start+end, GET /events/:id/route, GET /places/geocode, WS sos/sos.alert/event.ended, 2 cron entries); VehicleModel SOAT fields + Home badge; ERD + SOS sequence diagram + Mapbox flowchart in DIAGRAMS.md; 4 slim handoffs written"
     },
     "design": {
       "status": "idle",
@@ -889,6 +889,22 @@
       "agent": "po",
       "at": "2026-05-15T01:30:00Z",
       "detail": "8 user stories, 12 tasks, Story 3.0 Mapbox migration as absolute blocker; SOS, organizer controls, background GPS, date reminders, SOAT badge scoped."
+    },
+    {
+      "type": "architect_plan",
+      "iteration": 3,
+      "phase": "architect",
+      "agent": "architect",
+      "at": "2026-05-15T02:00:00Z",
+      "detail": "Story 3.0 Mapbox migration fully specced: 4 Dart files (live_map_widget, live_map_page, initials_marker_icon, route_map_preview) + 4 native/config files migrated; PlaceService.geocode replaces geocoding; GeoJsonSource+LineLayer route render. Tracking SOS/organizer controls/background GPS/route adherence/SOAT badge mapped to Flutter layers. API contracts: POST tracking/start+end (organizer-only), GET /events/:id/route (GeoJSON LineString), GET /places/geocode, WS tracking.sos + tracking.sos.alert + tracking.event.ended, cron maintenance-30d + event-24h (America/Bogota). SOS boundary: gateway transport + events-ms sosTriggeredAt dedup. VehicleModel SOAT fields + DocumentSlotPill on Home card. 4 slim handoffs written."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 3,
+      "phase": "architect",
+      "agent": "architect",
+      "at": "2026-05-15T02:00:00Z",
+      "detail": "Story 3.0 Mapbox migration + tracking SOS + maintenance/event schedulers fully spec'd"
     }
   ]
 }

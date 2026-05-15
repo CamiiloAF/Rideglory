@@ -1,95 +1,210 @@
 > Slim handoff — read this before docs/handoffs/architect.md
 
-# Architect → Frontend (Flutter) — Iteration 1
+# Architect → Frontend (Flutter) — Iteration 3
 
-**Iter-1 = presentation layer ONLY.** No domain/data/DI/router/build_runner work. If a story tempts you toward `lib/features/<feature>/{domain,data}/` or `lib/core/di/` — stop and re-read the story.
+**Story 3.0 is the absolute blocker. Do NOT start any other story until 3.0 is merged and `dart analyze` passes with zero errors/warnings in `lib/`.**
 
-## Branch & PR cadence
+---
 
-- Work on branch `iter-1` (already checked out).
-- 5 module-scoped PRs (≤ 40 files each), merged in order: `splash+auth` → `home` → `events` → `garage` → `maintenance+registration`.
-- Each PR: `dart analyze` + `flutter test` green before merge.
+## Story 3.0 — Mapbox SDK migration (start here)
 
-## Feature → file scope per PR
+### pubspec.yaml changes
 
-| PR | Stories | Files in scope |
-|----|---------|----------------|
-| 1 splash+auth | US-1-2, US-1-3 | `lib/features/splash/presentation/**`, `lib/features/authentication/presentation/**` |
-| 2 home | US-1-4 | `lib/features/home/presentation/**`, `lib/shared/widgets/home_bottom_navigation_bar.dart`, `bottom_nav_*.dart`, `main_shell.dart` (only color tokens, no nav refactor) |
-| 3 events | US-1-5, US-1-6 | `lib/features/events/presentation/**` (excluding `live_tracking/`, `tracking/` — out of scope), `lib/design_system/atoms/badges/app_event_badge.dart` (NEW), barrel update, 3 widget tests |
-| 4 garage | US-1-7, US-1-8 | `lib/features/vehicles/presentation/**`, `lib/design_system/molecules/feedback/document_slot_pill.dart` (NEW), barrel update |
-| 5 maintenance+registration | US-1-9, US-1-10 | `lib/features/maintenance/presentation/**`, `lib/features/event_registration/presentation/**` (EXCLUDE `manage_*` — deferred to iter-2 Story 2.9) |
+Remove: `google_maps_flutter: ^2.10.0`, `geocoding: ^3.0.0`
+Add: `mapbox_maps_flutter: ^2.2.0`, `flutter_foreground_task: ^8.x` (for Story 3.5)
 
-## NEW design-system primitives (build BEFORE the consuming PR)
+Run `dart run build_runner build --delete-conflicting-outputs` after pub get.
 
-### `AppEventBadge` — atom (PR 3 pre-condition)
-- Path: `lib/design_system/atoms/badges/app_event_badge.dart`
-- Source frame: `zKkmE`
-- API: `const AppEventBadge({required EventBadgeVariant variant, required String label})` — variant is an enum (e.g., `scheduled`, `inProgress`, `finished`, `cancelled`, `free`, `paid`); label comes from caller (`context.l10n.event_badge_<state>`).
-- Colors: `colorScheme.primary` for default; `AppColors.success/warning/error` for status; `AppColors.eventFree/eventPaid` for price variants.
-- Add export to `lib/design_system/atoms/atoms.dart`.
+### 4 Dart files to migrate
 
-### `DocumentSlotPill` — molecule (PR 4 pre-condition)
-- Path: `lib/design_system/molecules/feedback/document_slot_pill.dart`
-- Source frame: `aGqnv`
-- API: `const DocumentSlotPill({required String label, required DocumentSlotState state, VoidCallback? onTap, IconData? leading})` — state enum: `empty`, `valid`, `expiringSoon`, `expired` (state mapping is iter-2 SOAT concern; iter-1 ships the visual primitive only).
-- Colors: `AppColors.darkSurfaceHighest` background; `AppColors.success`, `warning`, `error` accents per state; `AppColors.darkBorder` divider.
-- Add export to `lib/design_system/molecules/molecules.dart`.
-- **Reuse contract**: iter-2 SOAT badge story (2.3) will consume this same molecule; do not couple it to vehicle-feature types.
+**1. `lib/features/events/presentation/tracking/widgets/live_map_widget.dart`**
+- `GoogleMap` → `MapWidget`; `GoogleMapController` → `MapboxMap`
+- Markers: `PointAnnotationManager.create(PointAnnotationOptions(geometry: Point(...), image: bytes))`
+- `LiveMapController.zoomIn/Out` → `mapboxMap.flyTo(CameraOptions(zoom: currentZoom ± 1))`
+- `LiveMapController.centerOnMyLocation` → `geolocator` position + `mapboxMap.flyTo`
+- `InitialsMarkerIcon.create()` now returns `Uint8List` — pass directly as `image:`
 
-## Color tokenization (mandatory across all 5 PRs)
+**2. `lib/features/events/presentation/tracking/live_map_page.dart`**
+- `CameraPosition` → `CameraOptions`
+- `LatLng(lat, lng)` → `Point(coordinates: Position(lng, lat))` — **Mapbox is lng-first**
+- Default fallback `LatLng(4.8133, -75.6961)` → `Position(-75.6961, 4.8133)` (lng, lat)
+- Remove `google_maps_flutter` import. Keep all overlay/SOS/control widget code unchanged.
 
-Replace, in priority order:
-1. **`Theme.of(context).colorScheme.<role>`** when the color has semantic role.
-2. **`AppColors.<constant>`** for dark surfaces/borders/text/status not in `colorScheme`.
-3. **Add to `AppColors`** (do not inline `Color(0xFF…)`) if no mapping exists. Append to architect handoff change log in same PR.
+**3. `lib/features/events/presentation/tracking/widgets/initials_marker_icon.dart`**
+- Rename `create()` → `createBytes()`; return type `Uint8List` (not `BitmapDescriptor`)
+- Last 3 lines: remove `BitmapDescriptor.bytes(...)` → return raw `Uint8List.view(bytes!.buffer)`
 
-Forbidden in `lib/features/`: `Color(0xFF…)` literals; `Colors.<named>` except `Colors.transparent`, `Colors.black`, `Colors.white`.
+**4. `lib/shared/widgets/map/route_map_preview.dart`**
+- Remove `geocoding` import; remove `locationFromAddress()` usage
+- New state: `ResultState<AddressLocation> _originResult`, `ResultState<AddressLocation> _destResult`
+- Each debounced lookup: `getIt<PlaceService>().geocode(address)` → map `GeocodeResultDto` → `AddressLocation`
+- Loading state: spinner overlay (existing pattern from the widget)
+- Error state: inline red banner (replace silent `catch`)
+- Map: `MapWidget` with two `PointAnnotationManager` annotations; fit bounds via `MapboxMap.cameraForCoordinates`
 
-Per-PR procedure: `grep -rE "Color\(0x|Colors\." <module-path>` → map → batch substitute → `dart analyze`.
+### New PlaceService geocode method
 
-## Widget swap (only ~3 files affected)
+Add to `lib/core/services/place_service.dart`:
+```dart
+@GET(ApiRoutes.placesGeocode)
+Future<GeocodeResultDto> geocode(@Query('q') String address);
+```
 
-Per existing-system scan: only `mileage_info_dialog.dart` and `event_form_multi_brand_section.dart` use raw widgets. Replace per US-1-3/1-6 acceptance:
-- `ElevatedButton` → `AppButton` (atoms)
-- `TextFormField` → `AppTextField` (atoms)
-- `TextField` for password → `AppPasswordTextField` (atoms)
-- `AlertDialog` → `AppDialog` (molecules)
+Add `static const placesGeocode = '/places/geocode';` to `ApiRoutes`.
 
-## Localization (l10n)
+New DTO: `lib/core/services/dto/geocode_result_dto.dart`
+```dart
+@JsonSerializable()
+class GeocodeResultDto {
+  final double latitude;
+  final double longitude;
+  final String? formattedAddress;
+  // ...standard json_serializable boilerplate
+}
+```
 
-- File: `lib/l10n/app_es.arb`. Run `flutter gen-l10n` after edits and commit generated `lib/l10n/app_localizations*.dart`.
-- Key naming: feature prefix.
-  - **NEW** keys for `AppEventBadge` labels: `event_badge_scheduled`, `event_badge_inProgress`, `event_badge_finished`, `event_badge_cancelled`, `event_badge_free`, `event_badge_paid` (US-1-5).
-  - **NEW** keys for `DocumentSlotPill` labels (used in vehicle pages, not the molecule itself): `vehicle_doc_soat_label`, `vehicle_doc_techreview_label`, `vehicle_doc_state_empty`, `vehicle_doc_state_valid`, `vehicle_doc_state_expiringSoon`, `vehicle_doc_state_expired` (US-1-7, US-1-8). State labels are stubs in iter-1; iter-2 SOAT story will reuse them.
-  - Reuse existing keys whenever possible. Do not create duplicate keys.
+New domain model: `lib/shared/models/address_location.dart`
+```dart
+class AddressLocation {
+  final double latitude;
+  final double longitude;
+  final String? label;
+}
+```
 
-## Cubit / state — read carefully
+### Native config files (4)
 
-You are **not** allowed to:
-- Create new cubits.
-- Add new states or methods to existing cubits.
-- Change the `Cubit<ResultState<T>>` signature of any cubit.
-- Inject new services into existing cubits.
+| File | Action |
+|------|--------|
+| `android/app/src/main/AndroidManifest.xml` | Remove Google Maps API key meta-data. Add `FOREGROUND_SERVICE` + `FOREGROUND_SERVICE_LOCATION` permissions. Add `flutter_foreground_task` service declaration. Set Mapbox token at runtime via `MapboxOptions.setAccessToken(AppEnv.mapboxPublicToken)` in `main.dart` |
+| `android/gradle.properties` | Add `MAPBOX_DOWNLOADS_TOKEN=sk.*` (from CI secret — do NOT hardcode) |
+| `ios/Runner/Info.plist` | Remove Google Maps key. Add `MBXAccessToken = pk.*` (from AppEnv). Add/verify `NSLocationWhenInUseUsageDescription` + `NSLocationAlwaysAndWhenInUseUsageDescription` in clear Spanish. Add `location` to `UIBackgroundModes` |
+| `ios/Podfile` | Confirm `platform :ios, '13.0'`. Run `pod install` |
 
-You **are** allowed to:
-- Restructure widget trees in `presentation/` to match Pencil frames.
-- Replace inline color/spacing literals with theme tokens.
-- Extract or rename private widgets within a feature for clarity (one widget per file).
-- Update `BlocBuilder<CubitX, ResultState<Y>>.builder` to render new visuals — without changing the cubit.
+Add `MAPBOX_PUBLIC_TOKEN` to `.env` and `AppEnv` (envied). Call `MapboxOptions.setAccessToken(AppEnv.mapboxPublicToken)` before `runApp()`.
 
-If you find yourself wanting to refactor a cubit signature, the story is mis-scoped. Stop and escalate.
+**QA writes the `route_map_preview.dart` widget test BEFORE the 3.0 PR opens.**
 
-## Tests
+---
 
-- Update finders in 3 events widget tests (`attendees_list_navigation_test.dart`, `event_filters_bottom_sheet_test.dart`, `events_page_view_test.dart`) **in PR 3**, the same PR that swaps their target widgets. No test-rot merges.
-- Do not write new widget tests this iter (QA owns that).
+## Stories 3.1–3.2 — SOS (gated on 3.0)
 
-## Out of scope (do not touch)
+**`LiveTrackingState`** — add fields:
+```dart
+ResultState<SosAlert?> sosAlertResult,  // incoming SOS from others
+@Default(false) bool hasSentSos,        // this user sent SOS
+```
 
-- `live_tracking/`, `tracking/`, `users/` (rider profile), `profile/` features — no PO story.
-- `manage_attendees_page.dart` — deferred to iter-2.
-- `EventFormCubit`, `EventCoverService`, AI cover bottom sheet — preserve exact behavior; styling chrome around them is fine.
-- `route_map_preview.dart` — leave widget body untouched.
+**`LiveTrackingCubit`** — add:
+- `triggerSos()`: publishes `tracking.sos` WS message; sets `hasSentSos = true`
+- Listen to `TrackingWsClient.sosAlerts` stream; emit new `sosAlertResult`
+
+**`TrackingWsClient`** — add:
+- `publishSos({required String eventId, required String userId})`
+- `Stream<SosAlert> get sosAlerts` (parse `tracking.sos.alert` inbound messages)
+
+**`RiderTrackingModel`** — add `bool isSos = false`; `RiderTrackingDto` gains `isSos`.
+
+**New widgets:**
+- `lib/features/events/presentation/tracking/widgets/sos_banner.dart` — red banner with rider name, "Llamar" (`url_launcher` tel: scheme, shown only if `phone != null`), "Localizar" (deep-link to Google Maps / Apple Maps). Wire to `LiveMapPage`.
+- SOS marker: in `live_map_widget.dart`, riders with `isSos == true` get a separate red `PointAnnotation` on top; use `AnimationController` overlay widget for pulsing if Mapbox annotation animation is unavailable.
+
+Remove local `_sosActive` bool from `LiveMapPage`; replace with cubit state.
+
+---
+
+## Stories 3.3–3.4 — Organizer ride controls (gated on 3.0)
+
+**New use cases:** `lib/features/events/domain/use_cases/start_ride_use_case.dart`, `end_ride_use_case.dart`
+
+**`TrackingService`** (Retrofit client) — add:
+```dart
+@POST('/api/events/{eventId}/tracking/start')
+Future<EventDto> startRide(@Path() String eventId);
+
+@POST('/api/events/{eventId}/tracking/end')
+Future<EventDto> endRide(@Path() String eventId);
+```
+
+**`EventDetailCubit`** — add `startRide(String eventId)` → emits `ResultState` update on success.
+
+**`EventDetailPage`** — show "Iniciar rodada" button only when `currentUser.id == event.ownerId && event.state == scheduled`.
+
+**`LiveTrackingState`** — add `@Default(false) bool isFinished`.
+
+**`LiveTrackingCubit`** — listen to `TrackingWsClient.eventEnded` stream; emit `isFinished = true`.
+
+**`TrackingWsClient`** — add `Stream<void> get eventEnded` (parse `tracking.event.ended`).
+
+**`LiveMapPage`** — `BlocListener` on `isFinished`: auto-pop when `true`. Organizer "Terminar rodada" button wired to `EndRideUseCase`.
+
+---
+
+## Story 3.5 — Background GPS
+
+**Android:** `flutter_foreground_task` (already added in pubspec during 3.0).
+- Create `lib/core/services/background_tracking_service.dart`.
+- `@pragma('vm:entry-point')` on top-level `void startCallback()` function.
+- Call `configureDependencies()` inside `onStart()`.
+- Use `IsolateNameServer` to bridge location updates from isolate → main for WS publish.
+- Permissions in `AndroidManifest.xml`: `FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_LOCATION`.
+
+**iOS:** `geolocator` with:
+```dart
+AppleSettings(
+  activityType: ActivityType.automotiveNavigation,
+  allowBackgroundLocationUpdates: true,
+  showBackgroundLocationIndicator: true,
+)
+```
+
+Physical device test logs (Android + iOS) are mandatory for PR merge.
+
+---
+
+## Story 3.9 — Route render + adherence chip
+
+**New use case + data:** `GetEventRouteUseCase` → `EventService.getRoute(eventId)` (`GET /api/events/:eventId/route`) → `RouteGeoJsonDto` → `EventRoute` domain model.
+
+**`LiveMapPage`** on load: fetch route; render via `GeoJsonSource` + `LineLayer` on Mapbox style.
+
+**New `RouteAdherenceChip` widget:** Haversine 200m check — `lib/core/utils/geo_distance.dart`:
+```dart
+double haversineMeters(double lat1, double lng1, double lat2, double lng2)
+```
+Check current user position against each GeoJSON coordinate; show "En ruta ✓" or "Fuera de ruta ⚠" chip.
+
+---
+
+## Story 3.10 — VehicleModel SOAT fields + Home badge
+
+**`VehicleModel`** — add:
+```dart
+final SoatStatus? soatStatus;   // enum: none, valid, expiringSoon, expired
+final DateTime? soatExpiryDate;
+```
+Update `copyWith`, `==`, `hashCode`.
+
+**`VehicleDto`** — add `soatStatus` (JSON string → enum mapping) + `soatExpiryDate` (ISO string).
+
+**`home_garage_card.dart`** — render `DocumentSlotPill` molecule for main vehicle's SOAT state.
+
+---
+
+## l10n keys (new, `map_`/`sos_`/`tracking_`/`vehicle_` prefix)
+
+| Key | Spanish value |
+|-----|--------------|
+| `sos_button_label` | `SOS` |
+| `sos_confirm_title` | `¿Enviar alerta SOS?` |
+| `sos_confirm_body` | `Todos los participantes serán notificados de tu emergencia.` |
+| `sos_sent_confirmation` | `SOS enviado` |
+| `sos_call_action` | `Llamar` |
+| `sos_locate_action` | `Localizar` |
+| `tracking_start_ride` | `Iniciar rodada` |
+| `tracking_end_ride` | `Terminar rodada` |
+| `tracking_route_on_route` | `En ruta ✓` |
+| `tracking_route_off_route` | `Fuera de ruta ⚠` |
+| `tracking_ride_finished` | `La rodada ha terminado` |
 
 > Full detail: docs/handoffs/architect.md

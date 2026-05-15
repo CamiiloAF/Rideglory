@@ -1,79 +1,126 @@
 > Slim handoff — read this before docs/handoffs/architect.md
 
-# Architect → QA — Iteration 1
+# Architect → QA — Iteration 3
 
-**Iter-1 = presentation-layer redesign across 15 screens. Quality gate is "no regression + no new lint violations + smoke tests green".**
+**Hard gate:** widget test for `route_map_preview.dart` must be written and passing BEFORE Story 3.0 PR opens. No exceptions.
+
+---
 
 ## Test commands
 
 ```bash
-# Static analysis (must be green per PR and on final feature branch)
+# Static analysis (must be zero errors/warnings after every PR)
 dart analyze
 
-# Unit + widget tests (must be green per PR and on final feature branch)
+# All tests
 flutter test
 
-# Single test (debugging)
+# Single file
 flutter test test/<path>_test.dart
 
-# Format check (advisory)
-dart format --output=none lib/
+# Code generation (run before tests if DTOs or services changed)
+dart run build_runner build --delete-conflicting-outputs
 ```
 
-No `dart run build_runner` invocation needed — no codegen source changes this iteration.
+---
 
-## Baseline gate (T-1-8) — DO FIRST
+## T-3-11 (QA task): hard gate for Story 3.0 merge
 
-Before any iter-1 PR merges:
+### 1. Widget test — `route_map_preview.dart` (WRITE BEFORE 3.0 PR)
+
+File: `test/shared/widgets/map/route_map_preview_test.dart`
+
+Minimum test cases:
+- **Loading state:** supply a non-empty `meetingPoint`; stub `PlaceService.geocode` to hang → expect spinner overlay visible.
+- **Error state:** stub `PlaceService.geocode` to throw `DioException`; expect error banner rendered, no crash.
+- **Data state:** stub `PlaceService.geocode` to return `GeocodeResultDto(latitude, longitude, formattedAddress)` for origin only; expect `MapWidget` rendered.
+- **Empty state:** both `meetingPoint` and `destination` null → expect "Vista previa del mapa" placeholder text.
+
+Use `mocktail` for `PlaceService` stub (already in dev dependencies per ADR-1).
+
+### 2. Zero `google_maps_flutter` / `geocoding` imports
 
 ```bash
-git checkout main
-flutter pub get
-dart analyze 2>&1 | tee /tmp/dart_analyze_main.txt
-flutter test 2>&1 | tee /tmp/flutter_test_main.txt
-git checkout iter-1
+grep -r "google_maps_flutter\|package:geocoding" lib/
+# Must return zero lines
 ```
 
-Document the **count** of pre-existing `dart analyze` issues from `/tmp/dart_analyze_main.txt` in your QA handoff. Iter-1 acceptance: count must NOT grow on `iter-1` branch after final merge.
+Run this in the PR review checklist before approving 3.0.
 
-Also record the test count baseline (`flutter test --reporter expanded` shows totals). Final `iter-1` test count must be ≥ baseline (the 3 events widget tests are updated, not removed).
+### 3. `dart analyze` — zero after 3.0 merge
 
-## Final gate (T-1-9) — Acceptance criteria traceability
+```bash
+dart analyze
+# Expected: No issues found!
+```
 
-| AC | Criterion | Verification command/check |
-|----|-----------|---------------------------|
-| US-1-11 / DoD #1 | `dart analyze` zero new violations | `dart analyze` on `iter-1` HEAD; diff against baseline |
-| US-1-11 / DoD #2 | All 10 existing `flutter test` cases pass | `flutter test` on `iter-1` HEAD |
-| US-1-11 / DoD #3 | No hardcoded color literals in `lib/features/` | `grep -rE "Color\(0x" lib/features/` returns 0 lines; `grep -rE "Colors\.(?!transparent\b\|black\b\|white\b)" lib/features/` returns 0 lines |
-| US-1-11 / DoD #4 | All ARB updates committed | `git diff main..iter-1 -- lib/l10n/app_es.arb` non-empty; `lib/l10n/app_localizations*.dart` regenerated and committed |
-| US-1-11 / DoD #5 | All 3 events widget tests updated in same PR as widget swap | review PR 3 (events) for paired test+widget changes |
-| US-1-11 / DoD #6 | No new backend endpoints / domain models / routes / DI changes | `git diff main..iter-1 -- 'lib/**/domain/' 'lib/**/data/' 'lib/core/di/' 'lib/shared/router/'` returns empty |
+### 4. `flutter test` — no new failures
 
-## 5 Manual smoke tests (mandatory, log results)
+Baseline from pre-3.0: 28 passing, 4 pre-existing failures (stale `.g.dart`). After 3.0 merge: 29+ passing (new `route_map_preview_test.dart`), 4 pre-existing failures maximum.
 
-Run on physical device or emulator after PR 5 merges into `iter-1`. Capture screenshot + result for each.
+---
 
-| # | Smoke | Pass criteria |
-|---|-------|---------------|
-| a | AI cover generation (event form) | Open Create Event → fill required fields → tap "Generar portada IA" → 2×2 grid renders → tap one image → save event → event created with selected cover URL |
-| b | Event detail CTA state variants | Verify CTA bar in 4 states: not registered (Inscribirse), pending approval (Pendiente), registered+approved (Inscrito + Cancelar), event closed/full (correct disabled copy) |
-| c | Maintenance donut chart rendering | Open Maintenance dashboard → donut chart renders with 3 urgency colors (red/yellow/green); no overflow exceptions in console |
-| d | Home bottom nav pill bar matches frame `VMmN0` | Visual verification: pill shape, active item indicator, icon + label sizing, safe-area padding |
-| e | Mapbox route preview in event form | Create Event → set start + end city → route preview renders polyline/line layer; no map crash, no missing-token error |
+## Physical device tests (mandatory for Story 3.5 merge)
 
-Stop the gate if any smoke test fails — open BUG task and route back to frontend.
+### Android background GPS
 
-## Architectural quality gates QA must enforce in PR review checklist
+Device: physical Android (Samsung or Xiaomi preferred — aggressive battery optimization).
 
-- No imports of `lib/features/<f>/data/` from any `lib/features/<f>/presentation/` file (except the existing 3 references to `colombia_motos_brands_data.dart` — frozen, do not grow).
-- No new file under `lib/features/*/data/` or `lib/features/*/domain/` introduced this iter.
-- No edits to `lib/core/di/injection.dart` other than (a) regenerated `injection.config.dart` (which should NOT regenerate this iter — flag if it appears in diff).
-- No edits to `lib/shared/router/app_router.dart`.
+Test plan:
+1. Build and install debug APK.
+2. Grant "Allow all the time" location permission.
+3. Open a test event in `IN_PROGRESS` state; enter tracking.
+4. Press home button (app backgrounded).
+5. Verify "Rideglory — Rodada activa" persistent notification visible in notification shade (not dismissable).
+6. Wait 60 seconds. Check WS server logs for continued location updates every ~5s.
+7. Attach `adb logcat -s BackgroundTrackingService` output as PR artifact.
 
-## Tests NOT required this iteration
+### iOS background location
 
-- New widget tests for redesigned screens — DO NOT write them (PO scope explicitly defers test infrastructure expansion).
-- New BLoC tests — same reason.
-- E2E / integration tests — out of scope.
+Device: physical iPhone.
+
+Test plan:
+1. Build and install via Xcode (release-profile scheme).
+2. Grant "Always" location permission.
+3. Open tracking screen; background the app.
+4. Verify blue location indicator in system status bar.
+5. Wait 60 seconds. Check WS server logs for continued updates.
+6. Attach Xcode console log as PR artifact.
+
+**Both logs must be attached as PR artifacts before Story 3.5 merges.**
+
+---
+
+## Acceptance criteria traceability
+
+| AC | Story | Verification |
+|----|-------|--------------|
+| Mapbox only, Google removed | US-3-0 | `grep -r google_maps_flutter\|geocoding lib/` → 0 lines |
+| `dart analyze` zero | US-3-8 | `dart analyze` → `No issues found!` |
+| No new test failures | US-3-8 | `flutter test` count ≥ baseline |
+| Widget test passes before 3.0 PR | US-3-8 | `flutter test test/shared/widgets/map/route_map_preview_test.dart` passes |
+| Info.plist location strings in Spanish | US-3-0 | Open `ios/Runner/Info.plist`; verify `NSLocationWhenInUseUsageDescription` and `NSLocationAlwaysAndWhenInUseUsageDescription` are written in Spanish |
+| No hardcoded strings in new widgets | US-3-8 | `git diff --name-only HEAD~1 HEAD | xargs grep -l '"[A-ZÁÉÍÓÚa-záéíóú]' --include="*.dart"` → new widget files show zero hardcoded Spanish string literals; all in `app_es.arb` |
+| Android foreground service log | US-3-5 | Device log attached to PR |
+| iOS background location log | US-3-5 | Xcode log attached to PR |
+| SOS processed < 5s | US-3-1 | Manual test: measure time from SOS confirm tap to other rider's banner appearing |
+| Event end push < 10s | US-3-4 | Manual test: measure time from "Terminar rodada" confirm to FCM push receipt |
+
+---
+
+## `app_es.arb` verification
+
+```bash
+git diff main..iter-3 -- lib/l10n/app_es.arb
+# Must be non-empty (new keys added for SOS, tracking, route adherence strings)
+```
+
+All new l10n keys should use prefixes: `sos_`, `tracking_`, `map_`, `vehicle_`.
+
+---
+
+## Pre-existing failures (do not regress)
+
+4 tests fail on `main` due to stale `.g.dart` files (`user_service.g.dart`, `event_service.g.dart`). After `build_runner build` in iter-3 pre-flight, these should regenerate and clear. If they do not, document and treat as blocking.
 
 > Full detail: docs/handoffs/architect.md

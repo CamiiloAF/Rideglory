@@ -135,6 +135,127 @@ flowchart TD
 
 ---
 
+## Iteration 3 — Tracking + SOS + Mapbox Migration
+
+### ERD — Event model with iter-3 additions
+
+```mermaid
+erDiagram
+    Event {
+        string id PK
+        string ownerId FK
+        string name
+        string state "SCHEDULED | IN_PROGRESS | FINISHED | CANCELLED"
+        Json routeGeoJson "nullable — GeoJSON LineString"
+        DateTime sosTriggeredAt "nullable — dedup guard"
+        DateTime reminderSentAt "nullable — 24h push dedup"
+        DateTime startDate
+    }
+    Registration {
+        string id PK
+        string eventId FK
+        string userId FK
+        string status "PENDING | APPROVED | REJECTED"
+    }
+    MaintenanceRecord {
+        string id PK
+        string vehicleId FK
+        string serviceType
+        DateTime nextMaintenanceDate "nullable"
+        boolean receiveDateAlert
+        DateTime reminderSentAt "nullable — 30d push dedup"
+    }
+    Vehicle {
+        string id PK
+        string userId FK
+        string name
+        SoatStatus soatStatus "NONE | VALID | EXPIRING_SOON | EXPIRED"
+        DateTime soatExpiryDate "nullable"
+    }
+    Notification {
+        string id PK
+        string userId FK
+        string type "SOS_ALERT | EVENT_REMINDER | MAINTENANCE_REMINDER | ..."
+        Json payload
+        boolean isRead
+        DateTime createdAt
+    }
+
+    Event ||--o{ Registration : "has"
+    Vehicle ||--o{ MaintenanceRecord : "has"
+```
+
+### SOS alert sequence diagram
+
+```mermaid
+sequenceDiagram
+    participant R as Rider (Flutter)
+    participant GW as TrackingGateway (api-gateway)
+    participant EMS as events-ms
+    participant NS as NotificationService
+    participant FCM as Firebase FCM
+    participant Others as Other riders (Flutter)
+
+    R->>R: Tap SOS button
+    R->>R: SosConfirmDialog shown
+    R->>R: Confirm → LiveTrackingCubit.triggerSos()
+    R->>GW: WS message { type: "tracking.sos", data: { eventId, userId } }
+    GW->>EMS: RPC markSosTriggered(eventId)
+    alt sosTriggeredAt already set
+        EMS-->>GW: { triggered: false }
+        GW->>R: (no-op — silent deduplicate)
+    else first SOS
+        EMS->>EMS: SET sosTriggeredAt = now()
+        EMS-->>GW: { triggered: true, fullName, phone?, latitude, longitude }
+        GW->>GW: broadcast to WS room
+        GW-->>Others: { type: "tracking.sos.alert", data: { userId, fullName, latitude, longitude, phone? } }
+        GW->>NS: dispatch FCM multicast (approved registrant tokens)
+        NS->>FCM: sendMulticast(tokens, payload)
+        FCM-->>Others: Push notification "¡Alerta SOS! {fullName}"
+        GW->>NS: insert notifications row (type: SOS_ALERT)
+    end
+    R-->>R: "SOS enviado" confirmation shown
+    Others->>Others: SosBanner rendered; red pulsing marker on map
+```
+
+### Mapbox migration — SDK swap (Story 3.0)
+
+```mermaid
+flowchart TD
+    subgraph Before["Before (google_maps_flutter + geocoding)"]
+        GM[GoogleMap widget]
+        GMC[GoogleMapController]
+        BD[BitmapDescriptor]
+        GEO[geocoding.locationFromAddress]
+    end
+    subgraph After["After (mapbox_maps_flutter)"]
+        MW[MapWidget]
+        MBM[MapboxMap]
+        PAM[PointAnnotationManager]
+        PS[PlaceService.geocode → Retrofit]
+    end
+    subgraph Files["4 Dart files migrated"]
+        LMW[live_map_widget.dart]
+        LMP[live_map_page.dart]
+        IMI[initials_marker_icon.dart]
+        RMP[route_map_preview.dart]
+    end
+    GM --> MW
+    GMC --> MBM
+    BD --> PAM
+    GEO --> PS
+    MW --> LMW
+    MW --> LMP
+    MW --> RMP
+    PAM --> LMW
+    PAM --> RMP
+    PS --> RMP
+    MBM --> LMP
+```
+
+---
+
 ## Change log
 
 - 2026-05-14 (iter-1): Initial diagrams document created. Captures design-system layering, new iter-1 primitives (`AppEventBadge`, `DocumentSlotPill`) and their consumers, module PR sequence, and color tokenization decision flow. No ERD or sequence diagrams — iter-1 introduces no new data models or async flows.
+- 2026-05-15 (iter-3): Added ERD (Event + Registration + MaintenanceRecord + Vehicle + Notification with iter-3 fields: `routeGeoJson`, `sosTriggeredAt`, `reminderSentAt`, `soatStatus`, `soatExpiryDate`). Added SOS alert sequence diagram (WS → gateway → events-ms dedup → broadcast + FCM). Added Mapbox migration SDK-swap flowchart (4 Dart files, 4 type replacements).
