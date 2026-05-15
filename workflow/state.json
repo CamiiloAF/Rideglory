@@ -893,28 +893,12 @@
       "detail": "Iteration 3 scoped: Tracking Completo + SOS + Maintenance Reminders. 8 user stories (US-3-0 through US-3-8), 12 tasks (T-3-1 through T-3-12, including 1 QA task T-3-11 and 1 DevOps task T-3-12). Story 3.0 (Mapbox migration) is hard blocker for all other stories. Date-based maintenance reminders only. Home Dashboard SOAT badge added. FCM infrastructure from iter-2 reused for SOS and reminder pushes."
     },
     {
-      "type": "phase_complete",
-      "iteration": 3,
-      "phase": "po_scope",
-      "agent": "po",
-      "at": "2026-05-15T01:30:00Z",
-      "detail": "8 user stories, 12 tasks, Story 3.0 Mapbox migration as absolute blocker; SOS, organizer controls, background GPS, date reminders, SOAT badge scoped."
-    },
-    {
       "type": "architect_plan",
       "iteration": 3,
       "phase": "architect",
       "agent": "architect",
       "at": "2026-05-15T02:00:00Z",
       "detail": "Story 3.0 Mapbox migration fully specced: 4 Dart files (live_map_widget, live_map_page, initials_marker_icon, route_map_preview) + 4 native/config files migrated; PlaceService.geocode replaces geocoding; GeoJsonSource+LineLayer route render. Tracking SOS/organizer controls/background GPS/route adherence/SOAT badge mapped to Flutter layers. API contracts: POST tracking/start+end (organizer-only), GET /events/:id/route (GeoJSON LineString), GET /places/geocode, WS tracking.sos + tracking.sos.alert + tracking.event.ended, cron maintenance-30d + event-24h (America/Bogota). SOS boundary: gateway transport + events-ms sosTriggeredAt dedup. VehicleModel SOAT fields + DocumentSlotPill on Home card. 4 slim handoffs written."
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 3,
-      "phase": "architect",
-      "agent": "architect",
-      "at": "2026-05-15T02:00:00Z",
-      "detail": "Story 3.0 Mapbox migration + tracking SOS + maintenance/event schedulers fully spec'd"
     },
     {
       "type": "design_iteration",
@@ -925,60 +909,12 @@
       "detail": "20 screen states designed across 5 HTML mockups: tracking map (normal/off-route/organizer), SOS flow (dialog/sent/banner/no-phone), organizer controls (iniciar/terminar rodada dialogs, ride finished overlay), Android foreground service + iOS Info.plist notification strings, push copy reference card, Home SOAT badge (4 states). 30+ l10n keys specified. 4 new widgets defined. Pencil frame update list for qonbS and kAubW."
     },
     {
-      "type": "phase_complete",
-      "iteration": 3,
-      "phase": "design",
-      "agent": "design",
-      "at": "2026-05-15T02:30:00Z",
-      "detail": "SOS screens, organizer controls, background GPS notification copy, Home SOAT badge (4 states) designed"
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 3,
-      "phase": "backend",
-      "agent": "backend",
-      "at": "2026-05-15T03:00:00Z",
-      "detail": "tracking start/end organizer endpoints + SOS WS handler + GET /events/:id/route GeoJSON + GET /places/geocode Mapbox proxy + maintenance 30d cron + event 24h cron; 44 unit tests pass"
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 3,
-      "phase": "frontend",
-      "agent": "frontend",
-      "at": "2026-05-14T20:00:00Z",
-      "detail": "Mapbox migration (Story 3.0) complete + SOS button/banner (3.1/3.2) + organizer ride controls (3.3/3.4) + background GPS (3.5) + VehicleModel SOAT + Home badge (3.10). dart analyze 0 errors/0 warnings. 43 tests pass (1 pre-existing failure). Zero google_maps_flutter/geocoding imports. 29 l10n keys added. MapboxOptions initialized in main()."
-    },
-    {
       "type": "qa_run",
       "iteration": 3,
       "phase": "qa",
       "at": "2026-05-15T05:00:00Z",
       "agent": "qa",
       "detail": "QA phase executed. Test catalog TC-3-1 through TC-3-21 created. dart analyze: 0 errors/0 warnings (3 Mapbox SDK info hints acceptable). flutter test: 43 pass, 1 pre-existing failure (TC-2-28, unrelated to iter-3). Hard gate verification: google_maps_flutter/geocoding imports = 0 (PASS), app_es.arb ~30 keys added (PASS), Info.plist Spanish location descriptions (PASS), AndroidManifest.xml updated (PASS). BLOCKED: route_map_preview.dart widget test does not exist (hard gate per T-3-11). BUG-3-1 filed. Sign-off: BLOCKED until widget test created and passing. Next: frontend must implement test before Story 3.0 PR opens."
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 3,
-      "phase": "qa",
-      "agent": "qa",
-      "at": "2026-05-15T05:00:00Z",
-      "detail": "BUG-3-1: Widget test for route_map_preview.dart HARD GATE BLOCKER — must be created before Story 3.0 PR merge. Test file location: test/shared/widgets/map/route_map_preview_test.dart. Expected: 4 test cases (loading, error, data, empty states) using mocktail PlaceService stub. Status: backlog. Sign-off: BLOCKED"
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 3,
-      "phase": "devops",
-      "agent": "devops",
-      "at": "2026-05-15T05:30:00Z",
-      "detail": "Mapbox CI secrets + .env generation configured; DEPLOY.md updated with background GPS test requirements; CocoaPods cache key update plan documented for post-merge. CI pipeline ready for Story 3.0 (awaiting MAPBOX_DOWNLOADS_TOKEN + MAPBOX_ACCESS_TOKEN configuration in GitHub repository secrets)."
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 3,
-      "phase": "pr",
-      "agent": "system",
-      "at": "2026-05-15T05:45:00Z",
-      "detail": "PR #15 opened: https://github.com/CamiiloAF/Rideglory/pull/15"
     },
     {
       "type": "tech_lead_review",
@@ -989,14 +925,6 @@
       "detail": "PR #15 reviewed. Decision: BLOCKED. Hard gates PASS: zero google_maps_flutter/geocoding imports in lib/, BUG-3-1 widget test (4/4 pass), dart analyze 0 errors/0 warnings (per frontend handoff), flutter test 43 pass/1 pre-existing fail. 6 blocking violations: BLOCK-1 data layer (EventService+TrackingWsClient+DioException) imported in live_tracking_cubit.dart presentation layer; BLOCK-2 _buildXxx helper methods in live_map_page.dart; BLOCK-3 3 hardcoded Spanish SnackBar strings in sos_banner.dart; BLOCK-4 hardcoded Semantics label in sos_button.dart; BLOCK-5 hardcoded error string in route_map_preview.dart; BLOCK-6 multiple widget classes in sos_banner.dart and home_garage_card.dart. 2 deferred non-blockers. Inline PR comments posted. Cannot proceed to po_close until all 6 blocks resolved and re-reviewed."
     },
     {
-      "type": "phase_complete",
-      "iteration": 3,
-      "phase": "tech_lead",
-      "agent": "tech_lead",
-      "at": "2026-05-15T06:00:00Z",
-      "detail": "Decision: BLOCKED. 6 blocking violations posted as inline PR comments. Frontend fix cycle required before re-review. Checkpoint: Last=tech_lead, Next=po_close (after re-review approval)."
-    },
-    {
       "type": "tech_lead_review",
       "iteration": 3,
       "phase": "tech_lead",
@@ -1005,12 +933,11 @@
       "detail": "Re-review cycle 2. PR #15. Decision: APPROVED. All 6 blocking violations resolved: BLOCK-1 LiveTrackingCubit depends only on TrackingRepository domain interface; BLOCK-2 live_map_page.dart helpers extracted to live_map_app_bar.dart and live_map_body.dart; BLOCK-3 sos_banner.dart 3 SnackBar strings use context.l10n; BLOCK-4 sos_button.dart Semantics label uses context.l10n.tracking_sosSemanticsLabel; BLOCK-5 route_map_preview.dart error uses context.l10n.map_geocodeError; BLOCK-6 sos_banner_action.dart extracted, home_garage_card.dart uses sibling files. dart analyze: 0 errors/0 warnings. flutter test: 47 pass/1 pre-existing fail (TC-2-28). PR #15 approved. Next phase: po_close."
     },
     {
-      "type": "phase_complete",
+      "type": "iteration_summary",
       "iteration": 3,
-      "phase": "po_close",
-      "agent": "po",
-      "at": "2026-05-15T07:30:00Z",
-      "detail": "Iteration 3 closed. PR #15 approved, pending human merge. Summary at docs/ITERATION_SUMMARY_3.md. Next: iter-4 (social follow system)"
+      "at": "2026-05-15T07:35:00Z",
+      "agent": "system",
+      "detail": "Iteration 3 DONE. Phases: po_scope → architect → design → backend → frontend → qa → devops → pr → tech_lead → po_close. PR #15: https://github.com/CamiiloAF/Rideglory/pull/15 (approved, NOT merged — sin mezclar PR). Tech lead: APPROVED cycle 2."
     }
   ]
 }

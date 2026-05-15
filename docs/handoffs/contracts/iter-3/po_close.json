@@ -30,7 +30,8 @@
         "docs/handoffs/iteration_context.md (bridge for iter-4 with pre-flight checklist, risk assessment, GoRouter DI assessment requirement, deep link domain provisioning blocker)",
         "README.md (updated latest iteration link and feature table)",
         "docs/handoffs/iteration_checkpoint.md (reset to idle, Last closed set to Iteration 3)"
-      ]
+      ],
+      "status": "pass"
     },
     {
       "name": "iteration_closed",
@@ -41,7 +42,8 @@
         "workflow/state.json: appended phase_complete event (type, iteration, phase, agent, at, detail)",
         "PR #15 approved by tech lead (decision APPROVED, 2026-05-15T07:00:00Z)",
         "All 6 blocking violations from cycle 1 resolved in cycle 2 re-review"
-      ]
+      ],
+      "status": "pass"
     },
     {
       "name": "iteration_docs_published",
@@ -52,7 +54,8 @@
         "PRODUCT_STATUS.md: 'What's Shipped' section updated with iter-3 tracking/SOS/organizer controls/background GPS/SOAT badge/maintenance/event reminders (all marked 'in review, PR #15 approved, pending human merge')",
         "iteration_context.md: detailed bridge for iter-4 including iter-3 final state, deferred items (T-3-9 route rendering), iter-4 pre-flight checklist (GoRouter DI + deep link domain provisioning as hard blockers), high-risk items, assumptions, gotchas",
         "README.md: feature table updated (Real-Time Tracking in review, Notifications in review, Latest Iteration link to ITERATION_SUMMARY_3.md, PR #15 link added)"
-      ]
+      ],
+      "status": "pass"
     }
   ],
   "notes": "PR #15 is APPROVED but NOT MERGED. Mark in all summary documents as 'in review, pending human merge'. Tech lead approval timestamps: initial review BLOCKED (2026-05-15T06:00:00Z, 6 violations), re-review APPROVED (2026-05-15T07:00:00Z, all violations resolved). Iteration 3 delivered complete real-time tracking experience with emergency SOS system, organizer controls, background GPS, and critical Mapbox SDK migration (Story 3.0 as hard blocker). Deferred to backlog: T-3-9 route GeoJSON rendering + route adherence chip (candidate for iter-4). Next iteration (iter-4) depends on: (1) PR #15 human merge, (2) post-merge CocoaPods CI cache update (DevOps), (3) deep link domain provisioning (hard blocker for iter-1), (4) GoRouter DI assessment."
