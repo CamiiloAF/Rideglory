@@ -18,36 +18,46 @@
   ],
   "qualityGates": [
     {
-      "gate": "All 8 user stories have testable acceptance criteria",
-      "status": "pass"
+      "status": "pass",
+      "name": "All 8 user stories have testable acceptance criteria"
     },
     {
-      "gate": "At least one QA task (agent: qa) included — T-3-11",
-      "status": "pass"
+      "status": "pass",
+      "name": "At least one QA task (agent: qa) included — T-3-11"
     },
     {
-      "gate": "All new task statuses are valid (backlog/in_progress/done/cancelled)",
-      "status": "pass"
+      "status": "pass",
+      "name": "All new task statuses are valid (backlog/in_progress/done/cancelled)"
     },
     {
-      "gate": "Story 3.0 blocker explicitly documented with enforcement in all agent sections",
-      "status": "pass"
+      "status": "pass",
+      "name": "Story 3.0 blocker explicitly documented with enforcement in all agent sections"
     },
     {
-      "gate": "Scope decisions and assumptions documented",
-      "status": "pass"
+      "status": "pass",
+      "name": "Scope decisions and assumptions documented"
     },
     {
-      "gate": "Out-of-scope items enumerated with rationale",
-      "status": "pass"
+      "status": "pass",
+      "name": "Out-of-scope items enumerated with rationale"
     },
     {
-      "gate": "workflow/state.json currentIteration updated to 3",
-      "status": "pass"
+      "status": "pass",
+      "name": "workflow/state.json currentIteration updated to 3"
     },
     {
-      "gate": "po_plan and phase_complete events appended to workflow/state.json",
-      "status": "pass"
+      "status": "pass",
+      "name": "po_plan and phase_complete events appended to workflow/state.json"
+    },
+    {
+      "name": "required_artifacts_present",
+      "status": "pass",
+      "detail": "All required handoff artifacts written and iteration 3 scope fully defined."
+    },
+    {
+      "name": "scope_defined",
+      "status": "pass",
+      "detail": "All required handoff artifacts written and iteration 3 scope fully defined."
     }
   ]
 }
