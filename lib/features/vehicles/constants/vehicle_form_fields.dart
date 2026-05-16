@@ -18,4 +18,12 @@ abstract class VehicleFormFields {
   static const String color = 'color';
 
   static const String setAsCurrent = 'setAsCurrent';
+
+  static const String engine = 'engine';
+
+  static const String horsepower = 'horsepower';
+
+  static const String torque = 'torque';
+
+  static const String weight = 'weight';
 }

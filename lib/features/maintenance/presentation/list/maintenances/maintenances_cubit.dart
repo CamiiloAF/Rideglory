@@ -15,8 +15,17 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
   MaintenanceFilters _filters = const MaintenanceFilters();
   String _searchQuery = '';
 
+  /// Current vehicle mileage for status calculation.
+  /// Set by the page when it has vehicle context.
+  int _currentVehicleMileage = 0;
+
   MaintenanceFilters get filters => _filters;
   String get searchQuery => _searchQuery;
+
+  void setCurrentVehicleMileage(int mileage) {
+    _currentVehicleMileage = mileage;
+    _applyClientFiltersAndEmit();
+  }
 
   void setInitialVehicleFilter(String vehicleId) {
     _filters = MaintenanceFilters(vehicleIds: [vehicleId]);
@@ -73,8 +82,18 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
 
   void addMaintenanceLocally(MaintenanceModel maintenance) {
     _allMaintenances = [..._allMaintenances, maintenance];
-    final vid = maintenance.vehicleId;
-    if (vid != null) _summariesByVehicleId.remove(vid);
+    final vehicleId = maintenance.vehicleId;
+    if (vehicleId != null) _summariesByVehicleId.remove(vehicleId);
+    _applyClientFiltersAndEmit();
+  }
+
+  /// Inserts multiple records locally (e.g. completed + auto-created scheduled).
+  void addMaintenancesLocally(List<MaintenanceModel> maintenances) {
+    _allMaintenances = [..._allMaintenances, ...maintenances];
+    for (final maintenance in maintenances) {
+      final vehicleId = maintenance.vehicleId;
+      if (vehicleId != null) _summariesByVehicleId.remove(vehicleId);
+    }
     _applyClientFiltersAndEmit();
   }
 
@@ -88,8 +107,8 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
         updatedMaintenance,
         ..._allMaintenances.sublist(index + 1),
       ];
-      final vid = updatedMaintenance.vehicleId;
-      if (vid != null) _summariesByVehicleId.remove(vid);
+      final vehicleId = updatedMaintenance.vehicleId;
+      if (vehicleId != null) _summariesByVehicleId.remove(vehicleId);
       _applyClientFiltersAndEmit();
     }
   }
@@ -130,49 +149,77 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
           .toList();
     }
 
+    if (_filters.types.isNotEmpty) {
+      filtered = filtered.where((m) => _filters.types.contains(m.type)).toList();
+    }
+
+    // Status filter: applies ONLY to scheduled records.
+    // Completed records are only shown when filter is 'all' or 'upToDate'.
     if (_filters.statusFilter != MaintenanceStatusFilter.all) {
-      final now = DateTime.now();
       filtered = filtered.where((maintenance) {
-        final next = maintenance.nextMaintenanceDate;
+        if (maintenance.mode == MaintenanceMode.completed) {
+          // Completed records only visible on 'all' (already handled above) or upToDate
+          return _filters.statusFilter == MaintenanceStatusFilter.upToDate;
+        }
+        final status = MaintenanceModel.calculateStatus(
+          maintenance,
+          _currentVehicleMileage,
+        );
         switch (_filters.statusFilter) {
           case MaintenanceStatusFilter.overdue:
-            return next != null && next.isBefore(now);
-          case MaintenanceStatusFilter.upcoming:
-            if (next == null) return false;
-            final daysUntil = next.difference(now).inDays;
-            return daysUntil >= 0 && daysUntil <= 30;
-          case MaintenanceStatusFilter.onTrack:
-            return next == null || next.difference(now).inDays > 30;
+            return status == MaintenanceStatus.overdue;
+          case MaintenanceStatusFilter.next:
+            return status == MaintenanceStatus.next;
+          case MaintenanceStatusFilter.upToDate:
+            return status == MaintenanceStatus.upToDate;
           case MaintenanceStatusFilter.all:
             return true;
         }
       }).toList();
     }
 
-    switch (_filters.sortBy) {
-      case MaintenanceSortOption.nextMaintenance:
-        filtered.sort((a, b) {
-          if (a.nextMaintenanceDate != null && b.nextMaintenanceDate == null) {
-            return -1;
-          }
-          if (a.nextMaintenanceDate == null && b.nextMaintenanceDate != null) {
-            return 1;
-          }
-          if (a.nextMaintenanceDate != null && b.nextMaintenanceDate != null) {
-            return a.nextMaintenanceDate!.compareTo(b.nextMaintenanceDate!);
-          }
-          return b.date.compareTo(a.date);
-        });
-      case MaintenanceSortOption.date:
-        filtered.sort((a, b) => b.date.compareTo(a.date));
-      case MaintenanceSortOption.name:
-        filtered.sort((a, b) => a.name.compareTo(b.name));
-    }
+    // Sort by urgency: overdue → next → upToDate → completed (by serviceDate desc)
+    filtered.sort(_compareByUrgency);
 
     if (_allMaintenances.isEmpty) {
       emit(const ResultState.empty());
     } else {
       emit(ResultState.data(data: filtered));
     }
+  }
+
+  int _compareByUrgency(MaintenanceModel a, MaintenanceModel b) {
+    final statusA = a.mode == MaintenanceMode.completed
+        ? null
+        : MaintenanceModel.calculateStatus(a, _currentVehicleMileage);
+    final statusB = b.mode == MaintenanceMode.completed
+        ? null
+        : MaintenanceModel.calculateStatus(b, _currentVehicleMileage);
+
+    final rankA = _statusRank(a.mode, statusA);
+    final rankB = _statusRank(b.mode, statusB);
+
+    if (rankA != rankB) return rankA.compareTo(rankB);
+
+    // Within same rank, sort by date
+    final dateA = a.nextDate ?? a.serviceDate ?? a.createdDate ?? DateTime(0);
+    final dateB = b.nextDate ?? b.serviceDate ?? b.createdDate ?? DateTime(0);
+    return dateA.compareTo(dateB);
+  }
+
+  static int _statusRank(MaintenanceMode mode, MaintenanceStatus? status) {
+    if (mode == MaintenanceMode.scheduled) {
+      switch (status) {
+        case MaintenanceStatus.overdue:
+          return 0;
+        case MaintenanceStatus.next:
+          return 1;
+        case MaintenanceStatus.upToDate:
+        case null:
+          return 2;
+      }
+    }
+    // completed always last
+    return 3;
   }
 }

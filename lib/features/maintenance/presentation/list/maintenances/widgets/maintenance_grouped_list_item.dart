@@ -10,18 +10,30 @@ import 'package:rideglory/features/maintenance/presentation/maintenance_type_sty
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 
-enum MaintenanceItemStatus { overdue, upcoming, current }
+enum MaintenanceItemStatus { overdue, upcoming, current, completed }
 
-MaintenanceItemStatus maintenanceStatusOf(MaintenanceModel m) {
-  final now = DateTime.now();
-  if (m.nextMaintenanceDate != null && m.nextMaintenanceDate!.isBefore(now)) {
-    return MaintenanceItemStatus.overdue;
+/// Derives a [MaintenanceItemStatus] from the new [MaintenanceModel] fields
+/// and the vehicle's current mileage for display purposes in the list widget.
+MaintenanceItemStatus maintenanceStatusOf(
+  MaintenanceModel maintenance,
+  int currentVehicleMileage,
+) {
+  if (maintenance.mode == MaintenanceMode.completed) {
+    return MaintenanceItemStatus.completed;
   }
-  if (m.nextMaintenanceDate != null &&
-      m.nextMaintenanceDate!.difference(now).inDays <= 30) {
-    return MaintenanceItemStatus.upcoming;
+  final status = MaintenanceModel.calculateStatus(
+    maintenance,
+    currentVehicleMileage,
+  );
+  switch (status) {
+    case MaintenanceStatus.overdue:
+      return MaintenanceItemStatus.overdue;
+    case MaintenanceStatus.next:
+      return MaintenanceItemStatus.upcoming;
+    case MaintenanceStatus.upToDate:
+    case null:
+      return MaintenanceItemStatus.current;
   }
-  return MaintenanceItemStatus.current;
 }
 
 class MaintenanceGroupedListItem extends StatelessWidget {
@@ -38,29 +50,36 @@ class MaintenanceGroupedListItem extends StatelessWidget {
 
   static const _successColor = Color(0xFF22C55E);
   static const _warningColor = Color(0xFFEAB308);
+  static const _completedColor = Color(0xFF6B7280);
 
   Color get _statusColor => switch (status) {
     MaintenanceItemStatus.overdue => AppColors.error,
     MaintenanceItemStatus.upcoming => _warningColor,
     MaintenanceItemStatus.current => _successColor,
+    MaintenanceItemStatus.completed => _completedColor,
   };
 
   Color get _cardBackground => switch (status) {
     MaintenanceItemStatus.overdue => const Color(0xFF1A0A0A),
     MaintenanceItemStatus.upcoming => const Color(0xFF1A1600),
     MaintenanceItemStatus.current => AppColors.darkCard,
+    MaintenanceItemStatus.completed => AppColors.darkCard,
   };
 
   Color get _cardBorder => switch (status) {
     MaintenanceItemStatus.overdue => const Color(0x30EF4444),
     MaintenanceItemStatus.upcoming => const Color(0x30EAB308),
     MaintenanceItemStatus.current => AppColors.darkBorderPrimary,
+    MaintenanceItemStatus.completed => AppColors.darkBorderPrimary,
   };
 
   Color get _iconBackground => switch (status) {
     MaintenanceItemStatus.overdue => const Color(0x20EF4444),
     MaintenanceItemStatus.upcoming => const Color(0x20EAB308),
     MaintenanceItemStatus.current => MaintenanceTypeStyle.color(
+      maintenance.type,
+    ).withValues(alpha: 0.12),
+    MaintenanceItemStatus.completed => MaintenanceTypeStyle.color(
       maintenance.type,
     ).withValues(alpha: 0.12),
   };
@@ -71,41 +90,52 @@ class MaintenanceGroupedListItem extends StatelessWidget {
     MaintenanceItemStatus.current => MaintenanceTypeStyle.color(
       maintenance.type,
     ),
+    MaintenanceItemStatus.completed => MaintenanceTypeStyle.color(
+      maintenance.type,
+    ),
   };
 
-  int? _remainingKm(int? currentMileage) {
-    final next = maintenance.nextMaintenanceMileage;
-    if (next == null || currentMileage == null) return null;
-    final remaining = next - currentMileage;
-    return remaining > 0 ? remaining : 0;
+  int? _kmDelta(int currentMileage) {
+    final next = maintenance.nextOdometer;
+    if (next == null) return null;
+    return (next - currentMileage).abs();
   }
 
-  String _subtitle(BuildContext context, int? currentMileage) {
+  String _subtitle(BuildContext context, int currentMileage) {
     final numberFormat = NumberFormat('#,###');
-    if (maintenance.nextMaintenanceMileage != null) {
-      final remaining = _remainingKm(currentMileage);
-      final km = numberFormat.format(
-        remaining ?? maintenance.nextMaintenanceMileage,
-      );
-      if (status == MaintenanceItemStatus.overdue) return 'Venció en $km km';
+    if (maintenance.mode == MaintenanceMode.completed) {
+      final date = maintenance.serviceDate;
+      final km = maintenance.odometerAtService;
+      if (date != null && km != null) {
+        return 'Realizado el ${date.formattedDate} · ${numberFormat.format(km)} km';
+      }
+      if (date != null) return 'Realizado el ${date.formattedDate}';
+      return maintenance.type.label;
+    }
+
+    if (maintenance.nextOdometer != null) {
+      final delta = _kmDelta(currentMileage);
+      final km = numberFormat.format(delta ?? maintenance.nextOdometer);
+      if (status == MaintenanceItemStatus.overdue) return 'Atrasado por $km km';
       return 'Próximo en $km km';
     }
-    if (maintenance.nextMaintenanceDate != null) {
+    if (maintenance.nextDate != null) {
       if (status == MaintenanceItemStatus.overdue) {
-        return 'Venció el ${maintenance.nextMaintenanceDate!.formattedDate}';
+        return 'Venció el ${maintenance.nextDate!.formattedDate}';
       }
-      return 'Próximo el ${maintenance.nextMaintenanceDate!.formattedDate}';
+      return 'Próximo el ${maintenance.nextDate!.formattedDate}';
     }
     return maintenance.type.label;
   }
 
-  Widget _kmBadge(BuildContext context, int? currentMileage) {
+  Widget _rightBadge(BuildContext context, int currentMileage) {
     final numberFormat = NumberFormat('#,###');
-    if (maintenance.nextMaintenanceMileage != null) {
-      final remaining = _remainingKm(currentMileage);
-      final km = numberFormat.format(
-        remaining ?? maintenance.nextMaintenanceMileage,
-      );
+    if (maintenance.mode == MaintenanceMode.completed) {
+      return const SizedBox.shrink();
+    }
+    if (maintenance.nextOdometer != null) {
+      final delta = _kmDelta(currentMileage);
+      final km = numberFormat.format(delta ?? maintenance.nextOdometer);
       final label = status == MaintenanceItemStatus.overdue
           ? context.l10n.maintenance_expired_label
           : context.l10n.maintenance_km_remaining;
@@ -135,15 +165,15 @@ class MaintenanceGroupedListItem extends StatelessWidget {
     return const SizedBox.shrink();
   }
 
-  int? _currentMileageFor(VehicleCubit cubit) {
+  int _currentMileageFor(VehicleCubit cubit) {
     final vehicleId = maintenance.vehicleId;
-    if (vehicleId == null) return cubit.currentMileage;
+    if (vehicleId == null) return cubit.currentMileage ?? 0;
     try {
       return cubit.availableVehicles
-          .firstWhere((v) => v.id == vehicleId)
+          .firstWhere((vehicle) => vehicle.id == vehicleId)
           .currentMileage;
     } catch (_) {
-      return cubit.currentMileage;
+      return cubit.currentMileage ?? 0;
     }
   }
 
@@ -202,7 +232,7 @@ class MaintenanceGroupedListItem extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                _kmBadge(context, currentMileage),
+                _rightBadge(context, currentMileage),
               ],
             ),
           ),

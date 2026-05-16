@@ -165,6 +165,19 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
         color: (formData[VehicleFormFields.color] as String?)?.isEmpty ?? true
             ? null
             : formData[VehicleFormFields.color] as String?,
+        engine: (formData[VehicleFormFields.engine] as String?)?.isEmpty ?? true
+            ? null
+            : formData[VehicleFormFields.engine] as String?,
+        horsepower:
+            (formData[VehicleFormFields.horsepower] as String?)?.isEmpty ?? true
+            ? null
+            : formData[VehicleFormFields.horsepower] as String?,
+        torque: (formData[VehicleFormFields.torque] as String?)?.isEmpty ?? true
+            ? null
+            : formData[VehicleFormFields.torque] as String?,
+        weight: (formData[VehicleFormFields.weight] as String?)?.isEmpty ?? true
+            ? null
+            : formData[VehicleFormFields.weight] as String?,
       );
       return vehicleToSave;
     } else {

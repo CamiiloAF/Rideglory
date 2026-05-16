@@ -41,16 +41,16 @@ class MaintenanceMileageInfo extends StatelessWidget {
               InfoChip(
                 icon: Icons.build_rounded,
                 label: context.l10n.maintenance_maintenance,
-                value: maintenance.maintanceMileage.toStringAsFixed(0),
+                value: '${maintenance.odometerAtService ?? 0}',
                 color: AppColors.darkTextSecondary,
               ),
-              if (maintenance.nextMaintenanceMileage != null)
+              if (maintenance.nextOdometer != null)
                 InfoChip(
                   icon: Icons.flag_rounded,
                   label: context.l10n.maintenance_next,
                   value: remainingDistance != null
                       ? '${remainingDistance.toStringAsFixed(0)} km'
-                      : maintenance.nextMaintenanceMileage!.toStringAsFixed(0),
+                      : '${maintenance.nextOdometer!}',
                   color: typeColor,
                   tooltip: InfoChipTooltip(
                     typeColor: typeColor,

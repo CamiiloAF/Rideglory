@@ -196,10 +196,16 @@ class EventFormCubit extends Cubit<EventFormState> {
         : (formData[EventFormFields.allowedBrands] as List<String>? ??
               <String>[]);
 
+    final isFreeEvent = formData[EventFormFields.isFreeEvent] as bool? ?? false;
     final priceStr = formData[EventFormFields.price] as String?;
-    final price = priceStr != null && priceStr.isNotEmpty
-        ? int.tryParse(priceStr)
-        : null;
+    final price = isFreeEvent
+        ? null
+        : (priceStr != null && priceStr.isNotEmpty
+            ? int.tryParse(priceStr)
+            : null);
+
+    final maxParticipants =
+        formData[EventFormFields.maxParticipants] as int?;
 
     return EventModel(
       id: _editingEvent?.id,
@@ -216,6 +222,7 @@ class EventFormCubit extends Cubit<EventFormState> {
       eventType: formData[EventFormFields.eventType] as EventType,
       allowedBrands: allowedBrands,
       price: price,
+      maxParticipants: maxParticipants,
       imageUrl: _editingEvent?.imageUrl,
       state: _editingEvent?.state ?? EventState.scheduled,
     );

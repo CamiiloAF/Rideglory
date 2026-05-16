@@ -5251,7 +5251,7 @@ abstract class AppLocalizations {
   /// No description provided for @event_form_max_participants_label.
   ///
   /// In es, this message translates to:
-  /// **'Máx. participantes'**
+  /// **'Cupos disponibles'**
   String get event_form_max_participants_label;
 
   /// No description provided for @event_form_cost_label.
@@ -5307,6 +5307,60 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Guardar'**
   String get event_form_save;
+
+  /// No description provided for @event_form_cancel_action.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get event_form_cancel_action;
+
+  /// No description provided for @event_form_publish_action.
+  ///
+  /// In es, this message translates to:
+  /// **'Publicar'**
+  String get event_form_publish_action;
+
+  /// No description provided for @event_form_optional_badge.
+  ///
+  /// In es, this message translates to:
+  /// **'Opcional'**
+  String get event_form_optional_badge;
+
+  /// No description provided for @event_form_max_participants_section_title.
+  ///
+  /// In es, this message translates to:
+  /// **'MÁXIMO DE PARTICIPANTES'**
+  String get event_form_max_participants_section_title;
+
+  /// No description provided for @event_form_max_participants_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Deja vacío para no limitar inscritos'**
+  String get event_form_max_participants_subtitle;
+
+  /// No description provided for @event_form_max_participants_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Una vez lleno el cupo, el evento aparece como \'Completo\' automáticamente.'**
+  String get event_form_max_participants_hint;
+
+  /// No description provided for @event_form_price_section_title.
+  ///
+  /// In es, this message translates to:
+  /// **'PRECIO DE INSCRIPCIÓN'**
+  String get event_form_price_section_title;
+
+  /// No description provided for @event_form_price_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Precio de inscripción (COP)'**
+  String get event_form_price_subtitle;
+
+  /// No description provided for @event_form_free_event_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Evento gratuito'**
+  String get event_form_free_event_label;
 
   /// No description provided for @vehicle_garage_title.
   ///
@@ -5626,6 +5680,90 @@ abstract class AppLocalizations {
   /// **'Guardar moto'**
   String get vehicle_form_save;
 
+  /// No description provided for @vehicle_form_nav_cancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get vehicle_form_nav_cancel;
+
+  /// No description provided for @vehicle_form_nav_save.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar'**
+  String get vehicle_form_nav_save;
+
+  /// No description provided for @vehicle_form_delete_vehicle.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar vehículo'**
+  String get vehicle_form_delete_vehicle;
+
+  /// No description provided for @vehicle_form_placa_required_badge.
+  ///
+  /// In es, this message translates to:
+  /// **'Obligatorio'**
+  String get vehicle_form_placa_required_badge;
+
+  /// No description provided for @vehicle_form_vin_optional_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Opcional'**
+  String get vehicle_form_vin_optional_label;
+
+  /// No description provided for @vehicle_form_specs_section.
+  ///
+  /// In es, this message translates to:
+  /// **'ESPECIFICACIONES'**
+  String get vehicle_form_specs_section;
+
+  /// No description provided for @vehicle_form_specs_engine_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Motor'**
+  String get vehicle_form_specs_engine_label;
+
+  /// No description provided for @vehicle_form_specs_horsepower_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Potencia'**
+  String get vehicle_form_specs_horsepower_label;
+
+  /// No description provided for @vehicle_form_specs_torque_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Torque'**
+  String get vehicle_form_specs_torque_label;
+
+  /// No description provided for @vehicle_form_specs_weight_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Peso'**
+  String get vehicle_form_specs_weight_label;
+
+  /// No description provided for @vehicle_form_specs_engine_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej. 689cc · Paralelo 2 cil.'**
+  String get vehicle_form_specs_engine_hint;
+
+  /// No description provided for @vehicle_form_specs_horsepower_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej. 73 hp'**
+  String get vehicle_form_specs_horsepower_hint;
+
+  /// No description provided for @vehicle_form_specs_torque_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej. 68 Nm'**
+  String get vehicle_form_specs_torque_hint;
+
+  /// No description provided for @vehicle_form_specs_weight_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej. 179 kg'**
+  String get vehicle_form_specs_weight_hint;
+
   /// No description provided for @maintenance_dashboard_title.
   ///
   /// In es, this message translates to:
@@ -5799,6 +5937,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Guardar recordatorio'**
   String get maintenance_form_save_scheduled;
+
+  /// No description provided for @maintenance_scheduled_requires_date_or_km.
+  ///
+  /// In es, this message translates to:
+  /// **'Debes ingresar al menos la fecha o los km del próximo mantenimiento'**
+  String get maintenance_scheduled_requires_date_or_km;
 
   /// No description provided for @maintenance_prox_service_in.
   ///
@@ -6663,6 +6807,72 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'vencido'**
   String get maintenance_expired_label;
+
+  /// No description provided for @maintenance_modeCompleted.
+  ///
+  /// In es, this message translates to:
+  /// **'Realizado'**
+  String get maintenance_modeCompleted;
+
+  /// No description provided for @maintenance_modeScheduled.
+  ///
+  /// In es, this message translates to:
+  /// **'Programado'**
+  String get maintenance_modeScheduled;
+
+  /// No description provided for @maintenance_statusOverdue.
+  ///
+  /// In es, this message translates to:
+  /// **'Vencido'**
+  String get maintenance_statusOverdue;
+
+  /// No description provided for @maintenance_statusNext.
+  ///
+  /// In es, this message translates to:
+  /// **'Próximo'**
+  String get maintenance_statusNext;
+
+  /// No description provided for @maintenance_statusUpToDate.
+  ///
+  /// In es, this message translates to:
+  /// **'Al día'**
+  String get maintenance_statusUpToDate;
+
+  /// No description provided for @maintenance_noNextService.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin próximo servicio'**
+  String get maintenance_noNextService;
+
+  /// No description provided for @maintenance_noServicesRegistered.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin servicios registrados'**
+  String get maintenance_noServicesRegistered;
+
+  /// No description provided for @maintenance_validationNextFieldRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Agrega al menos un criterio para el próximo servicio (km o fecha).'**
+  String get maintenance_validationNextFieldRequired;
+
+  /// No description provided for @maintenance_validationNextDateMustBeFuture.
+  ///
+  /// In es, this message translates to:
+  /// **'La fecha del próximo servicio debe ser futura'**
+  String get maintenance_validationNextDateMustBeFuture;
+
+  /// No description provided for @maintenance_validationServiceDateRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'La fecha del servicio es requerida'**
+  String get maintenance_validationServiceDateRequired;
+
+  /// No description provided for @maintenance_validationOdometerRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'El odómetro es requerido'**
+  String get maintenance_validationOdometerRequired;
 }
 
 class _AppLocalizationsDelegate

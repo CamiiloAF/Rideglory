@@ -13,8 +13,8 @@ class MaintenanceNextServiceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final numberFormat = NumberFormat('#,###');
-    final hasDate = maintenance.nextMaintenanceDate != null;
-    final hasMileage = maintenance.nextMaintenanceMileage != null;
+    final hasDate = maintenance.nextDate != null;
+    final hasMileage = maintenance.nextOdometer != null;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -46,14 +46,14 @@ class MaintenanceNextServiceCard extends StatelessWidget {
               if (hasDate)
                 _NextRow(
                   label: context.l10n.maintenance_next_date_label,
-                  value: maintenance.nextMaintenanceDate!.formattedDate,
+                  value: maintenance.nextDate!.formattedDate,
                 ),
               if (hasDate && hasMileage) const SizedBox(height: 8),
               if (hasMileage)
                 _NextRow(
                   label: context.l10n.maintenance_next_odometer_label,
                   value:
-                      '${numberFormat.format(maintenance.nextMaintenanceMileage)} km',
+                      '${numberFormat.format(maintenance.nextOdometer)} km',
                 ),
             ],
           ),

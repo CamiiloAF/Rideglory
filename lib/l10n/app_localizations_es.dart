@@ -2725,7 +2725,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_form_city_label => 'Ciudad de inicio';
 
   @override
-  String get event_form_max_participants_label => 'Máx. participantes';
+  String get event_form_max_participants_label => 'Cupos disponibles';
 
   @override
   String get event_form_cost_label => 'Costo (COP)';
@@ -2754,6 +2754,36 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_form_save => 'Guardar';
+
+  @override
+  String get event_form_cancel_action => 'Cancelar';
+
+  @override
+  String get event_form_publish_action => 'Publicar';
+
+  @override
+  String get event_form_optional_badge => 'Opcional';
+
+  @override
+  String get event_form_max_participants_section_title =>
+      'MÁXIMO DE PARTICIPANTES';
+
+  @override
+  String get event_form_max_participants_subtitle =>
+      'Deja vacío para no limitar inscritos';
+
+  @override
+  String get event_form_max_participants_hint =>
+      'Una vez lleno el cupo, el evento aparece como \'Completo\' automáticamente.';
+
+  @override
+  String get event_form_price_section_title => 'PRECIO DE INSCRIPCIÓN';
+
+  @override
+  String get event_form_price_subtitle => 'Precio de inscripción (COP)';
+
+  @override
+  String get event_form_free_event_label => 'Evento gratuito';
 
   @override
   String get vehicle_garage_title => 'Mi garaje';
@@ -2917,6 +2947,48 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_form_save => 'Guardar moto';
 
   @override
+  String get vehicle_form_nav_cancel => 'Cancelar';
+
+  @override
+  String get vehicle_form_nav_save => 'Guardar';
+
+  @override
+  String get vehicle_form_delete_vehicle => 'Eliminar vehículo';
+
+  @override
+  String get vehicle_form_placa_required_badge => 'Obligatorio';
+
+  @override
+  String get vehicle_form_vin_optional_label => 'Opcional';
+
+  @override
+  String get vehicle_form_specs_section => 'ESPECIFICACIONES';
+
+  @override
+  String get vehicle_form_specs_engine_label => 'Motor';
+
+  @override
+  String get vehicle_form_specs_horsepower_label => 'Potencia';
+
+  @override
+  String get vehicle_form_specs_torque_label => 'Torque';
+
+  @override
+  String get vehicle_form_specs_weight_label => 'Peso';
+
+  @override
+  String get vehicle_form_specs_engine_hint => 'Ej. 689cc · Paralelo 2 cil.';
+
+  @override
+  String get vehicle_form_specs_horsepower_hint => 'Ej. 73 hp';
+
+  @override
+  String get vehicle_form_specs_torque_hint => 'Ej. 68 Nm';
+
+  @override
+  String get vehicle_form_specs_weight_hint => 'Ej. 179 kg';
+
+  @override
   String get maintenance_dashboard_title => 'Mantenimientos';
 
   @override
@@ -3005,6 +3077,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get maintenance_form_save_scheduled => 'Guardar recordatorio';
+
+  @override
+  String get maintenance_scheduled_requires_date_or_km =>
+      'Debes ingresar al menos la fecha o los km del próximo mantenimiento';
 
   @override
   String get maintenance_prox_service_in => 'Próximo servicio en';
@@ -3461,4 +3537,41 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get maintenance_expired_label => 'vencido';
+
+  @override
+  String get maintenance_modeCompleted => 'Realizado';
+
+  @override
+  String get maintenance_modeScheduled => 'Programado';
+
+  @override
+  String get maintenance_statusOverdue => 'Vencido';
+
+  @override
+  String get maintenance_statusNext => 'Próximo';
+
+  @override
+  String get maintenance_statusUpToDate => 'Al día';
+
+  @override
+  String get maintenance_noNextService => 'Sin próximo servicio';
+
+  @override
+  String get maintenance_noServicesRegistered => 'Sin servicios registrados';
+
+  @override
+  String get maintenance_validationNextFieldRequired =>
+      'Agrega al menos un criterio para el próximo servicio (km o fecha).';
+
+  @override
+  String get maintenance_validationNextDateMustBeFuture =>
+      'La fecha del próximo servicio debe ser futura';
+
+  @override
+  String get maintenance_validationServiceDateRequired =>
+      'La fecha del servicio es requerida';
+
+  @override
+  String get maintenance_validationOdometerRequired =>
+      'El odómetro es requerido';
 }

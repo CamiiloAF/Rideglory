@@ -44,16 +44,17 @@ class ModernMaintenanceCard extends StatelessWidget {
       };
 
   double? _getProgressPercent(int? currentMileage) {
-    final nextMileage = maintenance.nextMaintenanceMileage;
-    if (nextMileage == null || currentMileage == null) return null;
-    final range = nextMileage - maintenance.maintanceMileage;
+    final nextMileage = maintenance.nextOdometer;
+    final atService = maintenance.odometerAtService;
+    if (nextMileage == null || currentMileage == null || atService == null) return null;
+    final range = nextMileage - atService;
     if (range <= 0) return 1.0;
-    final traveled = currentMileage - maintenance.maintanceMileage;
+    final traveled = currentMileage - atService;
     return (traveled / range).clamp(0.0, 1.0);
   }
 
   int? _getRemainingDistance(int? currentMileage) {
-    final nextMileage = maintenance.nextMaintenanceMileage;
+    final nextMileage = maintenance.nextOdometer;
     if (currentMileage == null || nextMileage == null) return null;
     final remaining = nextMileage - currentMileage;
     return remaining > 0 ? remaining : 0;
@@ -80,7 +81,7 @@ class ModernMaintenanceCard extends StatelessWidget {
           }
         }
 
-        final daysUntilNext = maintenance.nextMaintenanceDate
+        final daysUntilNext = maintenance.nextDate
             ?.difference(DateTime.now())
             .inDays;
 

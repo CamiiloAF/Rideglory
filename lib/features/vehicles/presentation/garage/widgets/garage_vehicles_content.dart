@@ -2,10 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
+import 'package:rideglory/features/maintenance/domain/use_cases/get_maintenances_by_vehicle_id_use_case.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_empty_state.dart';
@@ -393,6 +396,8 @@ class _VehiclePlaceholder extends StatelessWidget {
 
 // ─── Stats Cards ─────────────────────────────────────────────────────────────
 
+typedef _MaintenanceSummary = ({MaintenanceModel? last, MaintenanceModel? next});
+
 class _StatsCards extends StatelessWidget {
   const _StatsCards({required this.vehicle});
 
@@ -405,37 +410,111 @@ class _StatsCards extends StatelessWidget {
     );
   }
 
+  Future<_MaintenanceSummary> _loadSummary() async {
+    final vehicleId = vehicle.id;
+    if (vehicleId == null) return (last: null, next: null);
+
+    final useCase = getIt<GetMaintenancesByVehicleIdUseCase>();
+    final result = await useCase.execute(vehicleId);
+
+    return result.fold(
+      (_) => (last: null, next: null),
+      (page) {
+        final completed = page.items
+            .where((m) => m.mode == MaintenanceMode.completed)
+            .toList()
+          ..sort((a, b) {
+            final dateA = a.serviceDate ?? a.createdDate ?? DateTime(0);
+            final dateB = b.serviceDate ?? b.createdDate ?? DateTime(0);
+            return dateB.compareTo(dateA);
+          });
+
+        final scheduled = page.items
+            .where((m) => m.mode == MaintenanceMode.scheduled)
+            .toList()
+          ..sort((a, b) {
+            if (a.nextDate != null && b.nextDate != null) {
+              return a.nextDate!.compareTo(b.nextDate!);
+            }
+            if (a.nextDate != null) return -1;
+            if (b.nextDate != null) return 1;
+            final aKm = a.nextOdometer ?? 0;
+            final bKm = b.nextOdometer ?? 0;
+            return aKm.compareTo(bKm);
+          });
+
+        return (last: completed.firstOrNull, next: scheduled.firstOrNull);
+      },
+    );
+  }
+
+  String _lastServiceValue(MaintenanceModel? m) {
+    if (m == null) return '—';
+    final date = m.serviceDate;
+    if (date != null) return DateFormat('d MMM. yyyy', 'es').format(date);
+    final km = m.odometerAtService;
+    if (km != null) return '${_formatKm(km)} km';
+    return '—';
+  }
+
+  String _nextServiceValue(MaintenanceModel? m) {
+    if (m == null) return '—';
+    final km = m.nextOdometer;
+    if (km != null) return '${_formatKm(km)} km';
+    final date = m.nextDate;
+    if (date != null) return DateFormat('d MMM. yyyy', 'es').format(date);
+    return '—';
+  }
+
+  bool _isNextOverdue(MaintenanceModel? m) {
+    if (m == null) return false;
+    return MaintenanceModel.calculateStatus(m, vehicle.currentMileage) ==
+        MaintenanceStatus.overdue;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _StatCard(
-            icon: Icons.speed,
-            iconColor: AppColors.primary,
-            value: _formatKm(vehicle.currentMileage),
-            label: context.l10n.home_statKmTotal,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: _StatCard(
-            icon: Icons.build,
-            iconColor: const Color(0xFFEAB308),
-            value: '—',
-            label: context.l10n.home_statPromService,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: _StatCard(
-            icon: Icons.calendar_today,
-            iconColor: AppColors.info,
-            value: '—',
-            label: context.l10n.home_statLastService,
-          ),
-        ),
-      ],
+    return FutureBuilder<_MaintenanceSummary>(
+      future: _loadSummary(),
+      builder: (context, snapshot) {
+        final last = snapshot.data?.last;
+        final next = snapshot.data?.next;
+        final nextOverdue = _isNextOverdue(next);
+
+        return Row(
+          children: [
+            Expanded(
+              child: _StatCard(
+                icon: Icons.speed,
+                iconColor: AppColors.primary,
+                value: _formatKm(vehicle.currentMileage),
+                label: context.l10n.home_statKmTotal,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _StatCard(
+                icon: Icons.build,
+                iconColor: nextOverdue ? AppColors.error : const Color(0xFFEAB308),
+                value: _nextServiceValue(next),
+                label: context.l10n.home_statPromService,
+                backgroundColor: nextOverdue ? const Color(0x1AEF4444) : null,
+                borderColor: nextOverdue ? const Color(0x40EF4444) : null,
+                valueColor: nextOverdue ? AppColors.error : null,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _StatCard(
+                icon: Icons.calendar_today,
+                iconColor: AppColors.info,
+                value: _lastServiceValue(last),
+                label: context.l10n.home_statLastService,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -446,19 +525,26 @@ class _StatCard extends StatelessWidget {
     required this.iconColor,
     required this.value,
     required this.label,
+    this.backgroundColor,
+    this.borderColor,
+    this.valueColor,
   });
 
   final IconData icon;
   final Color iconColor;
   final String value;
   final String label;
+  final Color? backgroundColor;
+  final Color? borderColor;
+  final Color? valueColor;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.darkCard,
+        color: backgroundColor ?? AppColors.darkCard,
         borderRadius: BorderRadius.circular(12),
+        border: borderColor != null ? Border.all(color: borderColor!) : null,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
       child: Column(
@@ -468,8 +554,8 @@ class _StatCard extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             value,
-            style: const TextStyle(
-              color: AppColors.textOnDarkPrimary,
+            style: TextStyle(
+              color: valueColor ?? AppColors.textOnDarkPrimary,
               fontSize: 16,
               fontWeight: FontWeight.w700,
             ),

@@ -72,7 +72,7 @@ class MaintenanceCardHeader extends StatelessWidget {
           ),
         ),
         AppSpacing.hGapMd,
-        if (maintenance.isScheduled)
+        if (maintenance.mode == MaintenanceMode.scheduled)
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(

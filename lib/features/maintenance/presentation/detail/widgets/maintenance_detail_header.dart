@@ -65,9 +65,11 @@ class MaintenanceDetailHeader extends StatelessWidget {
               ),
               AppSpacing.gapXxs,
               Text(
-                context.l10n.maintenance_performedOn(
-                  maintenance.date.formattedDate,
-                ),
+                maintenance.mode == MaintenanceMode.completed
+                    ? context.l10n.maintenance_performedOn(
+                        (maintenance.serviceDate ?? maintenance.createdDate ?? DateTime.now()).formattedDate,
+                      )
+                    : context.l10n.maintenance_modeScheduled,
                 style: theme.textTheme.bodyLarge?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),

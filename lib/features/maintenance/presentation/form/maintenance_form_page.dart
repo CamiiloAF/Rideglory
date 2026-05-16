@@ -61,7 +61,9 @@ class _MaintenanceFormPageState extends State<MaintenanceFormPage> {
                   backgroundColor: AppColors.success,
                 ),
               );
-              Navigator.of(context).pop(maintenance);
+              // Pop with the full list of saved records (1 or 2 for auto-created scheduled)
+              final saved = _cubit.lastSavedRecords ?? [maintenance];
+              Navigator.of(context).pop(saved);
             },
             error: (error) {
               ScaffoldMessenger.of(context).showSnackBar(

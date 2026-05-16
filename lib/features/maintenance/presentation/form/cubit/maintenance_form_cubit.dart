@@ -10,6 +10,9 @@ import 'package:rideglory/features/maintenance/constants/maintenance_form_fields
 
 import '../../../domain/use_cases/update_maintenance_use_case.dart';
 
+/// Result state holds the primary saved MaintenanceModel.
+/// When auto-creation of a scheduled record occurs, the cubit exposes it
+/// via [createdScheduledRecord] for the caller to insert locally.
 @injectable
 class MaintenanceFormCubit extends Cubit<ResultState<MaintenanceModel>> {
   MaintenanceFormCubit(
@@ -28,10 +31,16 @@ class MaintenanceFormCubit extends Cubit<ResultState<MaintenanceModel>> {
   String? _resolvedVehicleId;
   int? _currentVehicleMileage;
   MaintenanceType? _selectedType;
+  MaintenanceMode _mode = MaintenanceMode.completed;
+
+  /// When a completed maintenance auto-creates a scheduled record,
+  /// this holds the second record for local insertion by the caller.
+  List<MaintenanceModel>? lastSavedRecords;
 
   bool get isEditing => _editingMaintenance != null;
   MaintenanceModel? get editingMaintenance => _editingMaintenance;
   int? get currentVehicleMileage => _currentVehicleMileage;
+  MaintenanceMode get selectedMode => _mode;
 
   void initialize({
     MaintenanceModel? maintenance,
@@ -40,8 +49,10 @@ class MaintenanceFormCubit extends Cubit<ResultState<MaintenanceModel>> {
     this.preselectedVehicle = preselectedVehicle;
     _editingMaintenance = maintenance;
     _selectedType = maintenance?.type;
+    _mode = maintenance?.mode ?? MaintenanceMode.completed;
     userId = maintenance?.userId;
     _resolvedVehicleId = preselectedVehicle?.id ?? maintenance?.vehicleId;
+    lastSavedRecords = null;
     emit(const ResultState.initial());
   }
 
@@ -57,70 +68,93 @@ class MaintenanceFormCubit extends Cubit<ResultState<MaintenanceModel>> {
     _selectedType = type;
   }
 
-  Future<void> createFollowUpScheduled(MaintenanceModel followUp) async {
-    await _addMaintenanceUseCase(followUp);
+  void updateMode(MaintenanceMode mode) {
+    _mode = mode;
+    emit(const ResultState.initial());
   }
 
-  Future<void> saveMaintenance(MaintenanceModel maintenanceToSave) async {
+  Future<void> saveMaintenance({int? nextKmInterval}) async {
+    final maintenance = buildMaintenanceToSave();
+    if (maintenance == null) return;
+
     emit(const ResultState.loading());
 
-    final result = maintenanceToSave.id != null
-        ? await _updateMaintenanceUseCase(maintenanceToSave)
-        : await _addMaintenanceUseCase(maintenanceToSave);
-
-    result.fold(
-      (error) => emit(ResultState.error(error: error)),
-      (maintenance) => emit(ResultState.data(data: maintenance)),
-    );
+    if (maintenance.id != null) {
+      final result = await _updateMaintenanceUseCase(maintenance);
+      result.fold(
+        (error) => emit(ResultState.error(error: error)),
+        (saved) {
+          lastSavedRecords = [saved];
+          emit(ResultState.data(data: saved));
+        },
+      );
+    } else {
+      final result = await _addMaintenanceUseCase(
+        maintenance,
+        nextKmInterval: nextKmInterval,
+      );
+      result.fold(
+        (error) => emit(ResultState.error(error: error)),
+        (savedList) {
+          lastSavedRecords = savedList;
+          emit(ResultState.data(data: savedList.first));
+        },
+      );
+    }
   }
 
-  MaintenanceModel? buildMaintenanceToSave({bool isScheduled = false}) {
+  MaintenanceModel? buildMaintenanceToSave() {
     if (formKey.currentState?.saveAndValidate() ?? false) {
       final formData = formKey.currentState!.value;
 
       final type =
           (_selectedType ??
           formData[MaintenanceFormFields.type] as MaintenanceType?)!;
-      final maintenanceToSave = MaintenanceModel(
+
+      final odometerAtService =
+          formData[MaintenanceFormFields.currentMileage] != null &&
+              (formData[MaintenanceFormFields.currentMileage] as String).isNotEmpty
+          ? int.tryParse(formData[MaintenanceFormFields.currentMileage] as String)
+          : _currentVehicleMileage;
+
+      final relativeNextKm = buildNextKmInterval();
+      final baseKm = _mode == MaintenanceMode.completed
+          ? (odometerAtService ?? _currentVehicleMileage ?? 0)
+          : (_currentVehicleMileage ?? 0);
+      final nextOdometer = relativeNextKm != null ? baseKm + relativeNextKm : null;
+
+      return MaintenanceModel(
         id: _editingMaintenance?.id,
         vehicleId: _resolvedVehicleId,
         userId: userId,
         type: type,
-        notes: formData[MaintenanceFormFields.notes] as String?,
-        date:
-            (formData[MaintenanceFormFields.date] as DateTime?) ??
-            DateTime.now(),
-        nextMaintenanceDate:
-            formData[MaintenanceFormFields.nextMaintenanceDate] as DateTime?,
-        maintanceMileage:
-            formData[MaintenanceFormFields.currentMileage] != null &&
-                (formData[MaintenanceFormFields.currentMileage] as String)
-                    .isNotEmpty
-            ? int.parse(
-                formData[MaintenanceFormFields.currentMileage] as String,
-              )
-            : (_currentVehicleMileage ?? 0),
-        isScheduled: isScheduled,
-        nextMaintenanceMileage:
-            formData[MaintenanceFormFields.nextMaintenanceMileage] != null &&
-                (formData[MaintenanceFormFields.nextMaintenanceMileage]
-                        as String)
-                    .isNotEmpty
-            ? int.parse(
-                formData[MaintenanceFormFields.nextMaintenanceMileage]
-                    as String,
-              )
+        mode: _mode,
+        serviceDate: _mode == MaintenanceMode.completed
+            ? formData[MaintenanceFormFields.date] as DateTime? ?? DateTime.now()
             : null,
-        cost:
-            formData[MaintenanceFormFields.cost] != null &&
+        odometerAtService: _mode == MaintenanceMode.completed ? odometerAtService : null,
+        workshop: formData[MaintenanceFormFields.workshop] as String?,
+        notes: formData[MaintenanceFormFields.notes] as String?,
+        nextDate: formData[MaintenanceFormFields.nextMaintenanceDate] as DateTime?,
+        nextOdometer: nextOdometer,
+        cost: formData[MaintenanceFormFields.cost] != null &&
                 (formData[MaintenanceFormFields.cost] as String).isNotEmpty
-            ? double.parse(formData[MaintenanceFormFields.cost] as String)
+            ? double.tryParse(formData[MaintenanceFormFields.cost] as String)
             : null,
       );
-      return maintenanceToSave;
-    } else {
-      return null;
     }
+    return null;
+  }
+
+  /// Extracts the relative km interval from the form for the API.
+  int? buildNextKmInterval() {
+    if (formKey.currentState == null) return null;
+    final formData = formKey.currentState!.value;
+    final raw = formData[MaintenanceFormFields.nextMaintenanceMileage];
+    if (raw == null) return null;
+    final str = raw as String;
+    if (str.isEmpty) return null;
+    return int.tryParse(str);
   }
 
   bool shouldChangeVehicleMileage(int currentMileage, int newMileage) =>

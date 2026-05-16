@@ -1,8 +1,10 @@
 enum EventType {
-  offRoad('Off-Road'),
-  onRoad('On-Road'),
-  exhibition('Exhibición'),
-  charitable('Benéfico');
+  tourism('Turismo'),
+  urban('Urbana'),
+  offRoad('Off-road'),
+  competition('Competición'),
+  solidarity('Solidaria'),
+  shortDistance('Corta distancia');
 
   final String label;
   const EventType(this.label);
@@ -49,6 +51,7 @@ class EventModel {
   final EventType eventType;
   final List<String> allowedBrands;
   final int? price;
+  final int? maxParticipants;
   final String? imageUrl;
   final DateTime? createdDate;
   final DateTime? updatedDate;
@@ -69,6 +72,7 @@ class EventModel {
     required this.eventType,
     this.allowedBrands = const [],
     this.price,
+    this.maxParticipants,
     this.imageUrl,
     this.createdDate,
     this.updatedDate,
@@ -96,6 +100,7 @@ class EventModel {
     EventType? eventType,
     List<String>? allowedBrands,
     int? price,
+    int? maxParticipants,
     String? imageUrl,
     DateTime? createdDate,
     DateTime? updatedDate,
@@ -116,6 +121,7 @@ class EventModel {
       eventType: eventType ?? this.eventType,
       allowedBrands: allowedBrands ?? this.allowedBrands,
       price: price ?? this.price,
+      maxParticipants: maxParticipants ?? this.maxParticipants,
       imageUrl: imageUrl ?? this.imageUrl,
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,

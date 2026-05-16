@@ -11,12 +11,13 @@ class MaintenanceDto {
     this.userId,
     this.vehicleId,
     required this.type,
+    required this.mode,
+    this.serviceDate,
+    this.odometerAtService,
+    this.workshop,
     this.notes,
-    required this.date,
-    this.nextMaintenanceDate,
-    required this.maintanceMileage,
-    this.isScheduled = false,
-    this.nextMaintenanceMileage,
+    this.nextDate,
+    this.nextOdometer,
     this.cost,
     this.createdAt,
     this.updatedAt,
@@ -30,31 +31,31 @@ class MaintenanceDto {
     userId: m.userId,
     vehicleId: m.vehicleId,
     type: m.type,
+    mode: m.mode,
+    serviceDate: m.serviceDate,
+    odometerAtService: m.odometerAtService,
+    workshop: m.workshop,
     notes: m.notes,
-    date: m.date,
-    nextMaintenanceDate: m.nextMaintenanceDate,
-    maintanceMileage: m.maintanceMileage,
-    isScheduled: m.isScheduled,
-    nextMaintenanceMileage: m.nextMaintenanceMileage,
+    nextDate: m.nextDate,
+    nextOdometer: m.nextOdometer,
     cost: m.cost,
   );
 
-  Map<String, dynamic> toJson() {
-    final json = _$MaintenanceDtoToJson(this);
-    json['date'] = apiEncodeRequiredDateTime(date);
-    return json;
-  }
+  Map<String, dynamic> toJson() => _$MaintenanceDtoToJson(this);
 
   final String? id;
   final String? userId;
   final String? vehicleId;
   final MaintenanceType type;
+  final MaintenanceMode mode;
+  final DateTime? serviceDate;
+  final int? odometerAtService;
+  final String? workshop;
   final String? notes;
-  final DateTime date;
-  final DateTime? nextMaintenanceDate;
-  final int maintanceMileage;
-  final bool isScheduled;
-  final int? nextMaintenanceMileage;
+  @JsonKey(name: 'nextDate')
+  final DateTime? nextDate;
+  @JsonKey(name: 'nextOdometer')
+  final int? nextOdometer;
   final double? cost;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -64,12 +65,13 @@ class MaintenanceDto {
     userId: userId,
     vehicleId: vehicleId,
     type: type,
+    mode: mode,
+    serviceDate: serviceDate,
+    odometerAtService: odometerAtService,
+    workshop: workshop,
     notes: notes,
-    date: date,
-    nextMaintenanceDate: nextMaintenanceDate,
-    maintanceMileage: maintanceMileage,
-    isScheduled: isScheduled,
-    nextMaintenanceMileage: nextMaintenanceMileage,
+    nextDate: nextDate,
+    nextOdometer: nextOdometer,
     cost: cost,
     createdDate: createdAt,
     updatedDate: updatedAt,

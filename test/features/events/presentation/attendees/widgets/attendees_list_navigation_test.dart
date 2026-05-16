@@ -24,7 +24,7 @@ final _mockEvent = EventModel(
   meetingPoint: 'Parque',
   destination: 'Guatapé',
   meetingTime: DateTime(2026, 5, 20, 8),
-  eventType: EventType.onRoad,
+  eventType: EventType.tourism,
   difficulty: EventDifficulty.two,
 );
 

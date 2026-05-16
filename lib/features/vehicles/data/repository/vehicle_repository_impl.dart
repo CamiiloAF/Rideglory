@@ -137,6 +137,10 @@ class VehicleRepositoryImpl implements VehicleRepository {
       'purchaseDate': vehicle.purchaseDate?.toApiIso8601String(),
       'imageUrl': vehicle.imageUrl,
       'isArchived': vehicle.isArchived,
+      'engine': vehicle.engine,
+      'horsepower': vehicle.horsepower,
+      'torque': vehicle.torque,
+      'weight': vehicle.weight,
     }..removeWhere((_, value) => value == null);
   }
 }

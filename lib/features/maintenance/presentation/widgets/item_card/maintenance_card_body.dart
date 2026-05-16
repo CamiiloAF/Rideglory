@@ -109,29 +109,31 @@ class MaintenanceCardBody extends StatelessWidget {
                         ),
                         AppSpacing.gapXxs,
                         Text(
-                          maintenance.date.formattedDate,
+                          (maintenance.serviceDate ?? maintenance.createdDate ?? DateTime.now()).formattedDate,
                           style: context.bodyMedium?.copyWith(
                             color: AppColors.darkTextSecondary,
                           ),
                         ),
-                        AppSpacing.gapMd,
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.speed_outlined,
-                              size: 16,
-                              color: context.colorScheme.primary,
-                            ),
-                            AppSpacing.hGapXxs,
-                            Text(
-                              '${numberFormat.format(maintenance.maintanceMileage)} km',
-                              style: context.bodySmall?.copyWith(
-                                color: AppColors.darkTextSecondary,
-                                fontWeight: FontWeight.w500,
+                        if (maintenance.odometerAtService != null) ...[
+                          AppSpacing.gapMd,
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.speed_outlined,
+                                size: 16,
+                                color: context.colorScheme.primary,
                               ),
-                            ),
-                          ],
-                        ),
+                              AppSpacing.hGapXxs,
+                              Text(
+                                '${numberFormat.format(maintenance.odometerAtService)} km',
+                                style: context.bodySmall?.copyWith(
+                                  color: AppColors.darkTextSecondary,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ],
                     ),
                   ),

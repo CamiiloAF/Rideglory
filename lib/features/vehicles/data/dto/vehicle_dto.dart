@@ -24,6 +24,10 @@ class VehicleDto extends VehicleModel {
     super.soatStatus,
     super.soatExpiryDate,
     super.color,
+    super.engine,
+    super.horsepower,
+    super.torque,
+    super.weight,
   });
 
   factory VehicleDto.fromJson(Map<String, dynamic> json) =>
@@ -50,6 +54,10 @@ class VehicleDto extends VehicleModel {
       soatStatus: soatStatus,
       soatExpiryDate: soatExpiryDate,
       color: color,
+      engine: engine,
+      horsepower: horsepower,
+      torque: torque,
+      weight: weight,
     );
   }
 }
@@ -73,5 +81,9 @@ extension VehicleModelExtension on VehicleModel {
     soatStatus: soatStatus,
     soatExpiryDate: soatExpiryDate,
     color: color,
+    engine: engine,
+    horsepower: horsepower,
+    torque: torque,
+    weight: weight,
   ).toJson();
 }

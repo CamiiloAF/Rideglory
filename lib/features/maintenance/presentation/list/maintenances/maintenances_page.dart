@@ -91,10 +91,14 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
   }
 
   Future<void> _onAddMaintenance() async {
-    final result = await context.pushNamed<MaintenanceModel?>(
+    // Form pops with List<MaintenanceModel> (1 or 2 records if auto-created scheduled)
+    final result = await context.pushNamed<dynamic>(
       AppRoutes.createMaintenance,
     );
-    if (result != null && mounted) {
+    if (!mounted) return;
+    if (result is List<MaintenanceModel>) {
+      context.read<MaintenancesCubit>().addMaintenancesLocally(result);
+    } else if (result is MaintenanceModel) {
       context.read<MaintenancesCubit>().addMaintenanceLocally(result);
     }
   }

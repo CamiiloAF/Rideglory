@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
-enum MaintenanceStatusFilter { all, overdue, upcoming, onTrack }
+enum MaintenanceStatusFilter { all, overdue, next, upToDate }
 
 enum MaintenanceDateRange { thisMonth, last3Months, lastYear, custom }
 

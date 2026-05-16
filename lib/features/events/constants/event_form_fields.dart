@@ -12,4 +12,6 @@ abstract class EventFormFields {
   static const String isMultiBrand = 'isMultiBrand';
   static const String allowedBrands = 'allowedBrands';
   static const String price = 'price';
+  static const String maxParticipants = 'maxParticipants';
+  static const String isFreeEvent = 'isFreeEvent';
 }

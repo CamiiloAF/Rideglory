@@ -37,8 +37,8 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
     final cubit = context.read<MaintenanceFormCubit>();
     final editing = cubit.editingMaintenance;
     if (editing != null) {
-      _isCompleted = !editing.isScheduled;
-      _maintenanceOdometer = editing.maintanceMileage;
+      _isCompleted = editing.mode == MaintenanceMode.completed;
+      _maintenanceOdometer = editing.odometerAtService;
     }
     final vehicleCubit = context.read<VehicleCubit>();
     cubit.setVehicleId(vehicleCubit.currentVehicle?.id);
@@ -56,25 +56,25 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
           ?? cubit.currentVehicleMileage
           ?? cubit.preselectedVehicle?.currentMileage
           ?? 0;
-      // Scheduled: base is current vehicle km (how far until due)
-      // Completed: base is the maintenance odometer (how far until next)
-      final base = maintenance.isScheduled ? vehicleKm : maintenance.maintanceMileage;
-      final relativeNextKm = maintenance.nextMaintenanceMileage != null
-          ? (maintenance.nextMaintenanceMileage! - base).clamp(0, double.maxFinite.toInt())
+      // For display, compute relative km interval from absolute nextOdometer
+      final base = maintenance.mode == MaintenanceMode.scheduled
+          ? vehicleKm
+          : (maintenance.odometerAtService ?? vehicleKm);
+      final relativeNextKm = maintenance.nextOdometer != null
+          ? (maintenance.nextOdometer! - base).clamp(0, double.maxFinite.toInt())
           : null;
       return {
         MaintenanceFormFields.type: maintenance.type,
         MaintenanceFormFields.notes: maintenance.notes,
-        MaintenanceFormFields.date: maintenance.date,
-        MaintenanceFormFields.nextMaintenanceDate:
-            maintenance.nextMaintenanceDate,
+        MaintenanceFormFields.date: maintenance.serviceDate,
+        MaintenanceFormFields.nextMaintenanceDate: maintenance.nextDate,
         MaintenanceFormFields.currentMileage:
-            maintenance.maintanceMileage.toString(),
-        MaintenanceFormFields.nextMaintenanceMileage:
-            relativeNextKm?.toString(),
+            (maintenance.odometerAtService ?? vehicleKm).toString(),
+        MaintenanceFormFields.nextMaintenanceMileage: relativeNextKm?.toString(),
         MaintenanceFormFields.vehicleId:
             maintenance.vehicleId ?? currentVehicleId,
         MaintenanceFormFields.cost: maintenance.cost?.toString(),
+        MaintenanceFormFields.workshop: maintenance.workshop,
       };
     }
 
@@ -87,56 +87,34 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
 
   void _saveMaintenance() {
     final cubit = context.read<MaintenanceFormCubit>();
-    var maintenanceToSave = cubit.buildMaintenanceToSave(isScheduled: !_isCompleted);
-    if (maintenanceToSave == null) return;
-
     final vehicleCubit = context.read<VehicleCubit>();
     final vehicleKm = vehicleCubit.currentMileage ?? cubit.currentVehicleMileage ?? 0;
 
-    if (!_isCompleted) {
-      // Scheduled: next fields belong to this record; compute absolute km from current vehicle km.
-      final base = vehicleKm;
-      final absoluteNextKm = maintenanceToSave.nextMaintenanceMileage != null
-          ? base + maintenanceToSave.nextMaintenanceMileage!
-          : null;
-      maintenanceToSave = maintenanceToSave.copyWith(
-        maintanceMileage: vehicleKm,
-        nextMaintenanceMileage: absoluteNextKm,
+    cubit.updateMode(
+      _isCompleted ? MaintenanceMode.completed : MaintenanceMode.scheduled,
+    );
+
+    final nextKmInterval = cubit.buildNextKmInterval();
+    final maintenanceToSave = cubit.buildMaintenanceToSave();
+    if (maintenanceToSave == null) return;
+
+    if (!_isCompleted && maintenanceToSave.nextDate == null && maintenanceToSave.nextOdometer == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(context.l10n.maintenance_scheduled_requires_date_or_km),
+          backgroundColor: AppColors.error,
+        ),
       );
-    } else {
-      // Completed: next fields must NOT be stored on the record.
-      // If filled → create a follow-up scheduled maintenance instead.
-      final base = _maintenanceOdometer ?? vehicleKm;
-      final relativeNextKm = maintenanceToSave.nextMaintenanceMileage;
-      final absoluteNextKm = relativeNextKm != null ? base + relativeNextKm : null;
-      final nextDate = maintenanceToSave.nextMaintenanceDate;
-
-      maintenanceToSave = maintenanceToSave.copyWith(
-        nextMaintenanceMileage: null,
-        nextMaintenanceDate: null,
-      );
-
-      if (maintenanceToSave.maintanceMileage > vehicleKm) {
-        vehicleCubit.updateMileage(maintenanceToSave.maintanceMileage);
-      }
-
-      if (absoluteNextKm != null || nextDate != null) {
-        cubit.createFollowUpScheduled(
-          MaintenanceModel(
-            vehicleId: maintenanceToSave.vehicleId,
-            userId: maintenanceToSave.userId,
-            type: maintenanceToSave.type,
-            date: nextDate ?? DateTime.now(),
-            maintanceMileage: vehicleKm,
-            isScheduled: true,
-            nextMaintenanceMileage: absoluteNextKm,
-            nextMaintenanceDate: nextDate,
-          ),
-        );
-      }
+      return;
     }
 
-    cubit.saveMaintenance(maintenanceToSave);
+    if (_isCompleted &&
+        maintenanceToSave.odometerAtService != null &&
+        maintenanceToSave.odometerAtService! > vehicleKm) {
+      vehicleCubit.updateMileage(maintenanceToSave.odometerAtService!);
+    }
+
+    cubit.saveMaintenance(nextKmInterval: nextKmInterval);
   }
 
   @override
@@ -289,12 +267,13 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                     baseKm: _maintenanceOdometer ?? vehicleCurrentMileage,
                     initialNextMileage: () {
                       final editing = cubit.editingMaintenance;
-                      if (editing?.nextMaintenanceMileage == null) return null;
-                      final base = editing!.maintanceMileage;
-                      return (editing.nextMaintenanceMileage! - base).clamp(0, double.maxFinite.toInt());
+                      if (editing?.nextOdometer == null) return null;
+                      final base = editing!.odometerAtService
+                          ?? vehicleCurrentMileage
+                          ?? 0;
+                      return (editing.nextOdometer! - base).clamp(0, double.maxFinite.toInt());
                     }(),
-                    initialNextDate:
-                        cubit.editingMaintenance?.nextMaintenanceDate,
+                    initialNextDate: cubit.editingMaintenance?.nextDate,
                   ),
                 ],
               ),

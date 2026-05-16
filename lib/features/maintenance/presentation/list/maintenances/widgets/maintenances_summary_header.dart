@@ -18,19 +18,26 @@ class MaintenancesSummaryHeader extends StatelessWidget {
 
   MaintenanceModel? _lastFromList() {
     if (maintenances.isEmpty) return null;
-    final sorted = [...maintenances]..sort((a, b) => b.date.compareTo(a.date));
-    return sorted.first;
+    final completed = maintenances
+        .where((m) => m.mode == MaintenanceMode.completed)
+        .toList();
+    if (completed.isEmpty) return null;
+    completed.sort((a, b) {
+      final dateA = a.serviceDate ?? a.createdDate ?? DateTime(0);
+      final dateB = b.serviceDate ?? b.createdDate ?? DateTime(0);
+      return dateB.compareTo(dateA);
+    });
+    return completed.first;
   }
 
   DateTime? _nextFromList() {
     final now = DateTime.now();
-    final candidates =
-        maintenances
-            .map((m) => m.nextMaintenanceDate)
-            .whereType<DateTime>()
-            .where((d) => d.isAfter(now))
-            .toList()
-          ..sort();
+    final candidates = maintenances
+        .map((m) => m.nextDate)
+        .whereType<DateTime>()
+        .where((d) => d.isAfter(now))
+        .toList()
+      ..sort();
     return candidates.isEmpty ? null : candidates.first;
   }
 
@@ -40,7 +47,7 @@ class MaintenancesSummaryHeader extends StatelessWidget {
 
     final lastFromList = _lastFromList();
     final lastService =
-        maintenanceSummary?.lastServiceDate ?? lastFromList?.date;
+        maintenanceSummary?.lastServiceDate ?? lastFromList?.serviceDate;
     final nextDate = maintenanceSummary?.nextServiceDate ?? _nextFromList();
 
     return Padding(

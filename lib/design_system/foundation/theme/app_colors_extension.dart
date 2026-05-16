@@ -16,11 +16,13 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color error;
   final Color errorLight;
 
-  // Domain / event
+  // Domain / event — one per EventType value
+  final Color eventTourism;
+  final Color eventUrban;
   final Color eventOffRoad;
-  final Color eventOnRoad;
-  final Color eventExhibition;
-  final Color eventCharitable;
+  final Color eventCompetition;
+  final Color eventSolidarity;
+  final Color eventShortDistance;
   final Color eventFree;
   final Color eventPaid;
   final Color motorcycle;
@@ -53,10 +55,12 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.infoLight,
     required this.error,
     required this.errorLight,
+    required this.eventTourism,
+    required this.eventUrban,
     required this.eventOffRoad,
-    required this.eventOnRoad,
-    required this.eventExhibition,
-    required this.eventCharitable,
+    required this.eventCompetition,
+    required this.eventSolidarity,
+    required this.eventShortDistance,
     required this.eventFree,
     required this.eventPaid,
     required this.motorcycle,
@@ -86,10 +90,12 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       infoLight: AppColors.infoLight,
       error: AppColors.error,
       errorLight: AppColors.errorLight,
+      eventTourism: AppColors.eventTourism,
+      eventUrban: AppColors.eventUrban,
       eventOffRoad: AppColors.eventOffRoad,
-      eventOnRoad: AppColors.eventOnRoad,
-      eventExhibition: AppColors.eventExhibition,
-      eventCharitable: AppColors.eventCharitable,
+      eventCompetition: AppColors.eventCompetition,
+      eventSolidarity: AppColors.eventSolidarity,
+      eventShortDistance: AppColors.eventShortDistance,
       eventFree: AppColors.eventFree,
       eventPaid: AppColors.eventPaid,
       motorcycle: AppColors.motorcycle,
@@ -119,10 +125,12 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? infoLight,
     Color? error,
     Color? errorLight,
+    Color? eventTourism,
+    Color? eventUrban,
     Color? eventOffRoad,
-    Color? eventOnRoad,
-    Color? eventExhibition,
-    Color? eventCharitable,
+    Color? eventCompetition,
+    Color? eventSolidarity,
+    Color? eventShortDistance,
     Color? eventFree,
     Color? eventPaid,
     Color? motorcycle,
@@ -149,10 +157,12 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       infoLight: infoLight ?? this.infoLight,
       error: error ?? this.error,
       errorLight: errorLight ?? this.errorLight,
+      eventTourism: eventTourism ?? this.eventTourism,
+      eventUrban: eventUrban ?? this.eventUrban,
       eventOffRoad: eventOffRoad ?? this.eventOffRoad,
-      eventOnRoad: eventOnRoad ?? this.eventOnRoad,
-      eventExhibition: eventExhibition ?? this.eventExhibition,
-      eventCharitable: eventCharitable ?? this.eventCharitable,
+      eventCompetition: eventCompetition ?? this.eventCompetition,
+      eventSolidarity: eventSolidarity ?? this.eventSolidarity,
+      eventShortDistance: eventShortDistance ?? this.eventShortDistance,
       eventFree: eventFree ?? this.eventFree,
       eventPaid: eventPaid ?? this.eventPaid,
       motorcycle: motorcycle ?? this.motorcycle,
@@ -191,10 +201,12 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       infoLight: lerpColor(infoLight, other.infoLight),
       error: lerpColor(error, other.error),
       errorLight: lerpColor(errorLight, other.errorLight),
+      eventTourism: lerpColor(eventTourism, other.eventTourism),
+      eventUrban: lerpColor(eventUrban, other.eventUrban),
       eventOffRoad: lerpColor(eventOffRoad, other.eventOffRoad),
-      eventOnRoad: lerpColor(eventOnRoad, other.eventOnRoad),
-      eventExhibition: lerpColor(eventExhibition, other.eventExhibition),
-      eventCharitable: lerpColor(eventCharitable, other.eventCharitable),
+      eventCompetition: lerpColor(eventCompetition, other.eventCompetition),
+      eventSolidarity: lerpColor(eventSolidarity, other.eventSolidarity),
+      eventShortDistance: lerpColor(eventShortDistance, other.eventShortDistance),
       eventFree: lerpColor(eventFree, other.eventFree),
       eventPaid: lerpColor(eventPaid, other.eventPaid),
       motorcycle: lerpColor(motorcycle, other.motorcycle),
@@ -223,4 +235,3 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     );
   }
 }
-

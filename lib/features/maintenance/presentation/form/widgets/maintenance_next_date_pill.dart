@@ -33,6 +33,12 @@ class _MaintenanceNextDatePillState extends State<MaintenanceNextDatePill> {
     }
   }
 
+  void _clearDate(FormFieldState<DateTime> field) {
+    setState(() => _selectedDate = null);
+    field.didChange(null);
+    widget.onChanged?.call(null);
+  }
+
   @override
   Widget build(BuildContext context) {
     return FormBuilderField<DateTime>(
@@ -44,44 +50,54 @@ class _MaintenanceNextDatePillState extends State<MaintenanceNextDatePill> {
             ? DateFormat('dd MMM yyyy', 'es').format(displayDate)
             : '—';
 
-        return GestureDetector(
-          onTap: () => _pickDate(field),
-          child: Container(
-            height: 32,
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1A1A1F),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: hasDate
-                    ? AppColors.primary
-                    : AppColors.darkBorderPrimary,
-              ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.calendar_today_outlined,
-                  size: 12,
-                  color: hasDate
-                      ? AppColors.primary
-                      : AppColors.darkTextSecondary,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: hasDate
-                        ? AppColors.darkTextPrimary
-                        : AppColors.darkTextSecondary,
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            GestureDetector(
+              onTap: () => _pickDate(field),
+              child: Container(
+                height: 32,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1A1A1F),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: hasDate ? AppColors.primary : AppColors.darkBorderPrimary,
                   ),
                 ),
-              ],
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.calendar_today_outlined,
+                      size: 12,
+                      color: hasDate ? AppColors.primary : AppColors.darkTextSecondary,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: hasDate ? AppColors.darkTextPrimary : AppColors.darkTextSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
+            if (hasDate) ...[
+              const SizedBox(width: 4),
+              GestureDetector(
+                onTap: () => _clearDate(field),
+                child: const Icon(
+                  Icons.close,
+                  size: 14,
+                  color: AppColors.textOnDarkTertiary,
+                ),
+              ),
+            ],
+          ],
         );
       },
     );

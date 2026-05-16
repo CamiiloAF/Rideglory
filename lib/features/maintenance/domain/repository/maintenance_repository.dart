@@ -22,8 +22,12 @@ abstract class MaintenanceRepository {
     DateTime? endDate,
   });
 
-  Future<Either<DomainException, MaintenanceModel>> addMaintenance(
+  /// Returns a list of 1 or 2 models:
+  /// - 1 model when mode == scheduled or no next fields provided
+  /// - 2 models when mode == completed AND next fields provided (auto-created scheduled record)
+  Future<Either<DomainException, List<MaintenanceModel>>> addMaintenance(
     MaintenanceModel maintenance,
+    int? nextKmInterval,
   );
 
   Future<Either<DomainException, MaintenanceModel>> updateMaintenance(

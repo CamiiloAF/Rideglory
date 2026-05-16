@@ -16,16 +16,24 @@ class MaintenanceInfoCard extends StatelessWidget {
     final currencyFormat = NumberFormat.currency(symbol: '\$', decimalDigits: 0);
 
     final rows = <_InfoRow>[
-      _InfoRow(
-        label: context.l10n.maintenance_service_date,
-        value: maintenance.date.formattedDate,
-        isAccent: false,
-      ),
-      _InfoRow(
-        label: context.l10n.maintenance_odometer_km,
-        value: '${numberFormat.format(maintenance.maintanceMileage)} km',
-        isAccent: false,
-      ),
+      if (maintenance.serviceDate != null)
+        _InfoRow(
+          label: context.l10n.maintenance_service_date,
+          value: maintenance.serviceDate!.formattedDate,
+          isAccent: false,
+        ),
+      if (maintenance.odometerAtService != null)
+        _InfoRow(
+          label: context.l10n.maintenance_odometer_km,
+          value: '${numberFormat.format(maintenance.odometerAtService)} km',
+          isAccent: false,
+        ),
+      if (maintenance.workshop != null && maintenance.workshop!.isNotEmpty)
+        _InfoRow(
+          label: context.l10n.maintenance_form_taller_label,
+          value: maintenance.workshop!,
+          isAccent: false,
+        ),
       if (maintenance.cost != null)
         _InfoRow(
           label: context.l10n.maintenance_totalCost,

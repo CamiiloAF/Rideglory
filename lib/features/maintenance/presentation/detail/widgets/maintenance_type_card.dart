@@ -5,6 +5,17 @@ import 'package:rideglory/features/maintenance/domain/model/maintenance_model.da
 import 'package:rideglory/features/maintenance/presentation/maintenance_type_style.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
+class _BadgeStyle {
+  const _BadgeStyle({
+    required this.color,
+    required this.background,
+    required this.label,
+  });
+  final Color color;
+  final Color background;
+  final String label;
+}
+
 class MaintenanceTypeCard extends StatelessWidget {
   final MaintenanceModel maintenance;
   final VehicleModel? vehicle;
@@ -17,8 +28,41 @@ class MaintenanceTypeCard extends StatelessWidget {
 
   static const _successColor = Color(0xFF22C55E);
   static const _successSubtle = Color(0x1A22C55E);
+  static const _warningColor = Color(0xFFEAB308);
+  static const _warningSubtle = Color(0x1AEAB308);
 
-  bool get _isDone => !maintenance.isScheduled;
+  bool get _isDone => maintenance.mode == MaintenanceMode.completed;
+
+  _BadgeStyle _badgeStyle(BuildContext context) {
+    if (_isDone) {
+      return _BadgeStyle(
+        color: _successColor,
+        background: _successSubtle,
+        label: context.l10n.maintenance_status_done_badge,
+      );
+    }
+    final status = MaintenanceModel.calculateStatus(
+      maintenance,
+      vehicle?.currentMileage ?? 0,
+    );
+    return switch (status) {
+      MaintenanceStatus.overdue => _BadgeStyle(
+        color: AppColors.error,
+        background: const Color(0x1AEF4444),
+        label: context.l10n.maintenance_status_overdue,
+      ),
+      MaintenanceStatus.next => _BadgeStyle(
+        color: _warningColor,
+        background: _warningSubtle,
+        label: context.l10n.maintenance_status_scheduled_badge,
+      ),
+      _ => _BadgeStyle(
+        color: AppColors.primary,
+        background: AppColors.primarySubtle,
+        label: context.l10n.maintenance_status_scheduled_badge,
+      ),
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +70,7 @@ class MaintenanceTypeCard extends StatelessWidget {
     final vehicleLabel = vehicle != null
         ? '${vehicle!.brand} ${vehicle!.model} · ${vehicle!.year}'
         : null;
+    final badge = _badgeStyle(context);
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -79,15 +124,13 @@ class MaintenanceTypeCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: _isDone ? _successSubtle : AppColors.primarySubtle,
+              color: badge.background,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Text(
-              _isDone
-                  ? context.l10n.maintenance_status_done_badge
-                  : context.l10n.maintenance_status_scheduled_badge,
+              badge.label,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: _isDone ? _successColor : AppColors.primary,
+                color: badge.color,
                 fontWeight: FontWeight.w600,
                 fontSize: 11,
               ),

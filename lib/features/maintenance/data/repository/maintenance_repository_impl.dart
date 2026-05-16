@@ -30,11 +30,11 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
     return await vehiclesResult.fold((error) async => Left(error), (
       vehicles,
     ) async {
-      final ids = vehicles.map((v) => v.id).whereType<String>().toList();
+      final ids = vehicles.map((vehicle) => vehicle.id).whereType<String>().toList();
       final batches = await Future.wait(
         ids.map(
-          (id) => getMaintenancesByVehicleId(
-            id,
+          (vehicleId) => getMaintenancesByVehicleId(
+            vehicleId,
             types: types,
             startDate: startDate,
             endDate: endDate,
@@ -51,7 +51,11 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
         aggregated.addAll(page.items);
         summariesByVehicleId[ids[i]] = page.summary;
       }
-      aggregated.sort((a, b) => b.date.compareTo(a.date));
+      aggregated.sort((a, b) {
+        final dateA = a.serviceDate ?? a.createdDate ?? DateTime(0);
+        final dateB = b.serviceDate ?? b.createdDate ?? DateTime(0);
+        return dateB.compareTo(dateA);
+      });
       return Right(
         MaintenanceUserListAggregate(
           items: aggregated,
@@ -113,8 +117,9 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
   };
 
   @override
-  Future<Either<DomainException, MaintenanceModel>> addMaintenance(
+  Future<Either<DomainException, List<MaintenanceModel>>> addMaintenance(
     MaintenanceModel maintenance,
+    int? nextKmInterval,
   ) async {
     final vehicleId = maintenance.vehicleId;
     if (vehicleId == null) {
@@ -127,13 +132,32 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
 
     return executeService(
       function: () async {
-        final dto = await _maintenanceService.create(
-          vehicleId,
-          MaintenanceDto.fromModel(maintenance).toJson(),
-        );
-        return dto.toModel();
+        final body = _buildCreateBody(maintenance, nextKmInterval);
+        final response = await _maintenanceService.create(vehicleId, body);
+        return response.toModels();
       },
     );
+  }
+
+  static Map<String, dynamic> _buildCreateBody(
+    MaintenanceModel maintenance,
+    int? nextKmInterval,
+  ) {
+    return {
+      'type': _typeToApi(maintenance.type),
+      'mode': maintenance.mode == MaintenanceMode.completed ? 'COMPLETED' : 'SCHEDULED',
+      if (maintenance.serviceDate != null)
+        'serviceDate': maintenance.serviceDate!.toUtc().toIso8601String(),
+      if (maintenance.odometerAtService != null)
+        'odometerAtService': maintenance.odometerAtService,
+      if (maintenance.workshop != null) 'workshop': maintenance.workshop,
+      if (maintenance.notes != null) 'notes': maintenance.notes,
+      if (nextKmInterval != null) 'nextKmInterval': nextKmInterval,
+      if (maintenance.nextOdometer != null) 'nextOdometer': maintenance.nextOdometer,
+      if (maintenance.nextDate != null)
+        'nextDate': maintenance.nextDate!.toUtc().toIso8601String(),
+      if (maintenance.cost != null) 'cost': maintenance.cost,
+    };
   }
 
   @override

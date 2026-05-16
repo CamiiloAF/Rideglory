@@ -58,10 +58,11 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
     final action = await MaintenanceOptionsBottomSheet.show(context);
 
     if (action == MaintenanceAction.edit && mounted) {
-      final result = await context.pushNamed<MaintenanceModel?>(
+      final raw = await context.pushNamed<dynamic>(
         AppRoutes.editMaintenance,
         extra: _maintenance,
       );
+      final result = raw is List<MaintenanceModel> ? raw.first : raw as MaintenanceModel?;
       if (result != null && mounted) {
         setState(() {
           _maintenance = result;
@@ -74,10 +75,11 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
   }
 
   Future<void> _onEdit() async {
-    final result = await context.pushNamed<MaintenanceModel?>(
+    final raw = await context.pushNamed<dynamic>(
       AppRoutes.editMaintenance,
       extra: _maintenance,
     );
+    final result = raw is List<MaintenanceModel> ? raw.first : raw as MaintenanceModel?;
     if (result != null && mounted) {
       setState(() {
         _maintenance = result;
@@ -179,8 +181,8 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
 
               final hasNotes =
                   _maintenance.notes != null && _maintenance.notes!.isNotEmpty;
-              final hasNextService = _maintenance.nextMaintenanceDate != null ||
-                  _maintenance.nextMaintenanceMileage != null;
+              final hasNextService = _maintenance.nextDate != null ||
+                  _maintenance.nextOdometer != null;
 
               return Column(
                 children: [
@@ -194,7 +196,7 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
                             maintenance: _maintenance,
                             vehicle: vehicle,
                           ),
-                          if (!_maintenance.isScheduled) ...[
+                          if (_maintenance.mode == MaintenanceMode.completed) ...[
                             const SizedBox(height: 16),
                             MaintenanceInfoCard(maintenance: _maintenance),
                           ],

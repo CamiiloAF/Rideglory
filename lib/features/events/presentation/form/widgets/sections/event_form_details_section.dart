@@ -19,7 +19,7 @@ class EventFormDetailsSection extends StatefulWidget {
 
 class _EventFormDetailsSectionState extends State<EventFormDetailsSection> {
   EventDifficulty _selectedDifficulty = EventDifficulty.one;
-  EventType _selectedEventType = EventType.onRoad;
+  EventType _selectedEventType = EventType.urban;
 
   static const _difficultyLabels = {
     EventDifficulty.one: 'Fácil',

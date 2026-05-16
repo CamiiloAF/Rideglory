@@ -22,6 +22,10 @@ class VehicleModel {
   final SoatStatus? soatStatus;
   final DateTime? soatExpiryDate;
   final String? color;
+  final String? engine;
+  final String? horsepower;
+  final String? torque;
+  final String? weight;
 
   const VehicleModel({
     this.id,
@@ -41,6 +45,10 @@ class VehicleModel {
     this.soatStatus,
     this.soatExpiryDate,
     this.color,
+    this.engine,
+    this.horsepower,
+    this.torque,
+    this.weight,
   });
 
   VehicleModel copyWith({
@@ -61,6 +69,10 @@ class VehicleModel {
     SoatStatus? soatStatus,
     DateTime? soatExpiryDate,
     Object? color = _unset,
+    Object? engine = _unset,
+    Object? horsepower = _unset,
+    Object? torque = _unset,
+    Object? weight = _unset,
   }) {
     return VehicleModel(
       id: id ?? this.id,
@@ -80,6 +92,10 @@ class VehicleModel {
       soatStatus: soatStatus ?? this.soatStatus,
       soatExpiryDate: soatExpiryDate ?? this.soatExpiryDate,
       color: color == _unset ? this.color : color as String?,
+      engine: engine == _unset ? this.engine : engine as String?,
+      horsepower: horsepower == _unset ? this.horsepower : horsepower as String?,
+      torque: torque == _unset ? this.torque : torque as String?,
+      weight: weight == _unset ? this.weight : weight as String?,
     );
   }
 
@@ -103,11 +119,15 @@ class VehicleModel {
             isMainVehicle == other.isMainVehicle &&
             soatStatus == other.soatStatus &&
             soatExpiryDate == other.soatExpiryDate &&
-            color == other.color;
+            color == other.color &&
+            engine == other.engine &&
+            horsepower == other.horsepower &&
+            torque == other.torque &&
+            weight == other.weight;
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     name,
     brand,
@@ -125,7 +145,11 @@ class VehicleModel {
     soatStatus,
     soatExpiryDate,
     color,
-  );
+    engine,
+    horsepower,
+    torque,
+    weight,
+  ]);
 }
 
 const _unset = Object();
