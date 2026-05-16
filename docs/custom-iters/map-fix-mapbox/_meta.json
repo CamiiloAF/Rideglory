@@ -1,0 +1,17 @@
+{
+  "slug": "map-fix-mapbox",
+  "sourcePrdPath": "docs/custom-iters/map-fix-mapbox/PRD.md",
+  "project": "Rideglory",
+  "existingBase": "/Users/cami/Developer/Personal/Rideglory",
+  "startedAt": "2026-05-16T00:00:00Z",
+  "status": "awaiting_custom_iter",
+  "phaseLog": [],
+  "decisions": {
+    "uiChanges": true,
+    "backendChanges": false,
+    "frontendChanges": true,
+    "dbChanges": false,
+    "needsDesign": false
+  },
+  "preExistingDirtyTree": true
+}

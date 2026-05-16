@@ -1247,6 +1247,25 @@
   "vehicle_soat_save_button": "Guardar SOAT",
   "vehicle_soat_saved_successfully": "SOAT registrado exitosamente",
   "vehicle_soat_section_title": "Documentos",
+  "vehicle_soat_upload_question": "¿Cómo deseas registrar tu SOAT?",
+  "vehicle_soat_upload_subtitle": "Selecciona una opción para actualizar el SOAT de tu vehículo",
+  "vehicle_soat_option_upload_title": "Subir documento",
+  "vehicle_soat_option_upload_desc": "Toma una foto o selecciona desde tu galería el documento del SOAT vigente",
+  "vehicle_soat_camera_button": "Cámara",
+  "vehicle_soat_gallery_button": "Galería",
+  "vehicle_soat_option_manual_title": "Ingresar manualmente",
+  "vehicle_soat_option_manual_desc": "Completa los datos del SOAT de forma manual sin necesidad de subir un documento",
+  "vehicle_soat_option_manual_cta": "Completar formulario",
+  "vehicle_soat_confirm_title": "Confirmar SOAT",
+  "vehicle_soat_confirm_button": "Confirmar SOAT",
+  "vehicle_soat_confirm_verify": "Verifica los datos del SOAT",
+  "vehicle_soat_confirm_verify_sub": "Revisa y corrige la información antes de confirmar",
+  "vehicle_soat_manual_section_title": "Ingresa los datos del SOAT",
+  "vehicle_soat_manual_section_sub": "Completa la información de tu seguro",
+  "vehicle_soat_doc_uploaded": "Documento subido exitosamente",
+  "vehicle_soat_status_valid": "SOAT vigente",
+  "vehicle_soat_status_valid_desc": "Tu SOAT estará vigente por 365 días más",
+  "vehicle_soat_upload_failed": "No se pudo seleccionar el documento",
   "tracking_sosCallError": "No se pudo iniciar la llamada.",
   "tracking_sosLocationError": "No se pudo obtener la ubicación del rider.",
   "tracking_sosMapError": "No se pudo abrir el mapa.",
@@ -1277,5 +1296,34 @@
   "maintenance_validationNextFieldRequired": "Agrega al menos un criterio para el próximo servicio (km o fecha).",
   "maintenance_validationNextDateMustBeFuture": "La fecha del próximo servicio debe ser futura",
   "maintenance_validationServiceDateRequired": "La fecha del servicio es requerida",
-  "maintenance_validationOdometerRequired": "El odómetro es requerido"
+  "maintenance_validationOdometerRequired": "El odómetro es requerido",
+
+  "garage_viewMaintenanceHistory": "Ver historial de mantenimientos",
+  "garage_lastService": "Último servicio",
+  "garage_nextService": "Próximo servicio",
+  "garage_otherVehiclesSection": "OTROS VEHÍCULOS",
+  "garage_upToDate": "Al día",
+  "garage_upcomingCount": "{count} próximo",
+  "@garage_upcomingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "garage_mainVehicleBadge": "Moto principal",
+  "garage_odometerLabel": "odómetro",
+  "garage_healthHeader": "Estado de mantenimientos",
+  "garage_healthServicesCount": "{count} servicios",
+  "@garage_healthServicesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "garage_healthOverdue": "Atrasado",
+  "garage_healthUpcoming": "Próximo",
+  "garage_tapForDetail": "Toca para ver detalle del vehículo",
+  "garage_seeDetail": "Ver detalle"
 }

@@ -86,23 +86,26 @@ class _MaintenanceCards extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: _ServiceCard.last(
-                maintenance: lastCompleted,
-                maintenanceId: lastCompleted?.id,
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: _ServiceCard.last(
+                  maintenance: lastCompleted,
+                  maintenanceId: lastCompleted?.id,
+                ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _ServiceCard.next(
-                maintenance: nextScheduled,
-                maintenanceId: nextScheduled?.id,
-                currentMileage: currentMileage,
+              const SizedBox(width: 12),
+              Expanded(
+                child: _ServiceCard.next(
+                  maintenance: nextScheduled,
+                  maintenanceId: nextScheduled?.id,
+                  currentMileage: currentMileage,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         const SizedBox(height: 12),
         _HistoryButton(vehicleId: vehicleId),

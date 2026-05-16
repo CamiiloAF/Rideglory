@@ -3478,6 +3478,70 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_soat_section_title => 'Documentos';
 
   @override
+  String get vehicle_soat_upload_question => '¿Cómo deseas registrar tu SOAT?';
+
+  @override
+  String get vehicle_soat_upload_subtitle =>
+      'Selecciona una opción para actualizar el SOAT de tu vehículo';
+
+  @override
+  String get vehicle_soat_option_upload_title => 'Subir documento';
+
+  @override
+  String get vehicle_soat_option_upload_desc =>
+      'Toma una foto o selecciona desde tu galería el documento del SOAT vigente';
+
+  @override
+  String get vehicle_soat_camera_button => 'Cámara';
+
+  @override
+  String get vehicle_soat_gallery_button => 'Galería';
+
+  @override
+  String get vehicle_soat_option_manual_title => 'Ingresar manualmente';
+
+  @override
+  String get vehicle_soat_option_manual_desc =>
+      'Completa los datos del SOAT de forma manual sin necesidad de subir un documento';
+
+  @override
+  String get vehicle_soat_option_manual_cta => 'Completar formulario';
+
+  @override
+  String get vehicle_soat_confirm_title => 'Confirmar SOAT';
+
+  @override
+  String get vehicle_soat_confirm_button => 'Confirmar SOAT';
+
+  @override
+  String get vehicle_soat_confirm_verify => 'Verifica los datos del SOAT';
+
+  @override
+  String get vehicle_soat_confirm_verify_sub =>
+      'Revisa y corrige la información antes de confirmar';
+
+  @override
+  String get vehicle_soat_manual_section_title => 'Ingresa los datos del SOAT';
+
+  @override
+  String get vehicle_soat_manual_section_sub =>
+      'Completa la información de tu seguro';
+
+  @override
+  String get vehicle_soat_doc_uploaded => 'Documento subido exitosamente';
+
+  @override
+  String get vehicle_soat_status_valid => 'SOAT vigente';
+
+  @override
+  String get vehicle_soat_status_valid_desc =>
+      'Tu SOAT estará vigente por 365 días más';
+
+  @override
+  String get vehicle_soat_upload_failed =>
+      'No se pudo seleccionar el documento';
+
+  @override
   String get tracking_sosCallError => 'No se pudo iniciar la llamada.';
 
   @override
@@ -3574,4 +3638,50 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get maintenance_validationOdometerRequired =>
       'El odómetro es requerido';
+
+  @override
+  String get garage_viewMaintenanceHistory => 'Ver historial de mantenimientos';
+
+  @override
+  String get garage_lastService => 'Último servicio';
+
+  @override
+  String get garage_nextService => 'Próximo servicio';
+
+  @override
+  String get garage_otherVehiclesSection => 'OTROS VEHÍCULOS';
+
+  @override
+  String get garage_upToDate => 'Al día';
+
+  @override
+  String garage_upcomingCount(int count) {
+    return '$count próximo';
+  }
+
+  @override
+  String get garage_mainVehicleBadge => 'Moto principal';
+
+  @override
+  String get garage_odometerLabel => 'odómetro';
+
+  @override
+  String get garage_healthHeader => 'Estado de mantenimientos';
+
+  @override
+  String garage_healthServicesCount(int count) {
+    return '$count servicios';
+  }
+
+  @override
+  String get garage_healthOverdue => 'Atrasado';
+
+  @override
+  String get garage_healthUpcoming => 'Próximo';
+
+  @override
+  String get garage_tapForDetail => 'Toca para ver detalle del vehículo';
+
+  @override
+  String get garage_seeDetail => 'Ver detalle';
 }

@@ -1,0 +1,38 @@
+{
+  "slug": "vehicle-form-specs",
+  "phase": "frontend",
+  "status": "pass",
+  "updatedAt": "2026-05-16T00:04:00Z",
+  "summary": "Vehicle form redesigned to Pencil frame EqnMm; 4 spec fields added end-to-end; 18 tests pass; 6 pre-existing compilation failures unchanged",
+  "metrics": { "tokens": 0, "costUsd": 0.0 },
+  "artifacts": [
+    "lib/features/vehicles/domain/models/vehicle_model.dart",
+    "lib/features/vehicles/data/dto/vehicle_dto.dart",
+    "lib/features/vehicles/data/dto/vehicle_dto.g.dart",
+    "lib/features/vehicles/constants/vehicle_form_fields.dart",
+    "lib/features/vehicles/data/repository/vehicle_repository_impl.dart",
+    "lib/features/vehicles/presentation/cubit/vehicle_form_cubit.dart",
+    "lib/l10n/app_es.arb",
+    "lib/features/vehicles/presentation/form/vehicle_form_page.dart",
+    "lib/features/vehicles/presentation/form/vehicle_form_body.dart",
+    "lib/features/vehicles/presentation/form/widgets/vehicle_form_nav_header.dart",
+    "lib/features/vehicles/presentation/form/widgets/vehicle_form_cover_section.dart",
+    "lib/features/vehicles/presentation/form/widgets/vehicle_scan_banner.dart",
+    "lib/features/vehicles/presentation/form/widgets/vehicle_form_basic_section.dart",
+    "lib/features/vehicles/presentation/form/widgets/vehicle_form_section_header.dart",
+    "lib/features/vehicles/presentation/form/widgets/vehicle_form_id_section.dart",
+    "lib/features/vehicles/presentation/form/widgets/vehicle_form_specs_section.dart",
+    "lib/features/vehicles/presentation/form/widgets/vehicle_specs_row.dart",
+    "lib/features/vehicles/presentation/form/widgets/vehicle_form_docs_section.dart",
+    "lib/features/vehicles/presentation/form/widgets/vehicle_form_cta.dart",
+    "docs/custom-iters/vehicle-form-specs/handoffs/frontend.md"
+  ],
+  "qualityGates": [
+    { "name": "build_runner_clean", "status": "pass", "detail": "dart run build_runner build --delete-conflicting-outputs — 30 outputs written, no errors" },
+    { "name": "dart_analyze_vehicles", "status": "pass", "detail": "0 errors in vehicles feature files" },
+    { "name": "tests_pass", "status": "pass", "detail": "18/18 non-broken tests pass; 6 pre-existing compilation failures unchanged" },
+    { "name": "1_widget_per_file", "status": "pass", "detail": "All new widgets are in separate files; only State class co-located with StatefulWidget" },
+    { "name": "l10n_strings", "status": "pass", "detail": "All new UI strings in app_es.arb; no hardcoded strings in widget files" },
+    { "name": "no_commits", "status": "pass", "detail": "No git commits made" }
+  ]
+}

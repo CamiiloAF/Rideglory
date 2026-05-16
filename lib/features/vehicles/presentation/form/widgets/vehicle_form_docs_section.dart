@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_section_header.dart';
+import 'package:rideglory/features/vehicles/presentation/soat/soat_confirmation_page.dart';
+import 'package:rideglory/features/vehicles/presentation/soat/widgets/vehicle_soat_options_sheet.dart';
 import 'package:rideglory/features/vehicles/presentation/widgets/vehicle_document_upload_slot.dart';
 
 class VehicleFormDocsSection extends StatelessWidget {
@@ -51,8 +54,7 @@ class VehicleFormDocsSection extends StatelessWidget {
               title: context.l10n.vehicle_doc_soat_label,
               subtitle: context.l10n.vehicle_form_soat_subtitle,
               localPath: state.soatLocalPath,
-              onUploadTap: () =>
-                  context.read<VehicleFormCubit>().pickSoatDocument(),
+              onUploadTap: () => _onSoatTap(context, state.vehicle),
               onClear: state.soatLocalPath != null
                   ? () =>
                       context.read<VehicleFormCubit>().clearSoatDocument()
@@ -95,6 +97,46 @@ class VehicleFormDocsSection extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+}
+
+Future<void> _onSoatTap(BuildContext context, VehicleModel? vehicle) async {
+  final vehicleId = vehicle?.id;
+  if (vehicleId == null) {
+    context.read<VehicleFormCubit>().pickSoatDocument();
+    return;
+  }
+
+  final result = await showModalBottomSheet<SoatOptionsResult>(
+    context: context,
+    backgroundColor: AppColors.darkBgPrimary,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+    ),
+    builder: (_) => const VehicleSoatOptionsSheet(),
+  );
+
+  if (result == null || !context.mounted) return;
+
+  if (result is SoatOptionsUpload) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => SoatConfirmationPage(
+          vehicle: vehicle!,
+          documentImage: result.image,
+          onSuccess: () => Navigator.of(context).pop(),
+        ),
+      ),
+    );
+  } else if (result is SoatOptionsManual) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => SoatConfirmationPage(
+          vehicle: vehicle!,
+          onSuccess: () => Navigator.of(context).pop(),
+        ),
+      ),
     );
   }
 }

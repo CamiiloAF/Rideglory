@@ -1,0 +1,66 @@
+{
+  "slug": "prd-maintenance",
+  "sourcePrdPath": "docs/custom-iters/maintenances-logic/PRD_maintenance.md",
+  "project": "Rideglory",
+  "existingBase": "/Users/cami/Developer/Personal/Rideglory",
+  "startedAt": "2026-05-16T00:00:00Z",
+  "status": "ready_for_human_review",
+  "phaseLog": [
+    {
+      "phase": "po",
+      "agent": "po",
+      "at": "2026-05-16T00:05:00Z",
+      "summary": "Normalized PRD: maintenance module refactor/feature, high severity — model, status calc, auto-creation, garage widget, API contracts all need updates"
+    },
+    {
+      "phase": "architect",
+      "agent": "architect",
+      "at": "2026-05-16T00:10:00Z",
+      "summary": "Change map: 30+ files, DB migration plan, API contract updated (POST returns {created:[]}), status calc logic specified"
+    },
+    {
+      "phase": "design",
+      "agent": "orchestrator",
+      "at": "2026-05-16T00:11:00Z",
+      "summary": "SKIPPED — needsDesign: false; PRD is the full spec; Pencil designs exist"
+    },
+    {
+      "phase": "backend",
+      "agent": "backend",
+      "at": "2026-05-16T00:20:00Z",
+      "summary": "Contracts updated, Prisma schema + migration written, service create() returns {created:[]}, builds pass"
+    },
+    {
+      "phase": "frontend",
+      "agent": "frontend",
+      "at": "2026-05-16T01:00:00Z",
+      "summary": "All Flutter files updated: MaintenanceModel refactored, DTO with legacy fallback, 14 new l10n keys, VehicleMaintenancesCubit lastCompleted/nextScheduled getters, dart analyze clean (0 errors)"
+    },
+    {
+      "phase": "qa",
+      "agent": "qa",
+      "at": "2026-05-16T01:15:00Z",
+      "summary": "dart analyze: 0 errors; flutter test: 34 pass, 3 pre-existing failures; 11/11 ACs verified by code review"
+    },
+    {
+      "phase": "tech_lead",
+      "agent": "tech_lead",
+      "at": "2026-05-16T01:30:00Z",
+      "summary": "APPROVED — architecture compliant, 3 minor non-blocking findings"
+    },
+    {
+      "phase": "po_close",
+      "agent": "po",
+      "at": "2026-05-16T01:35:00Z",
+      "summary": "REVIEW_CHECKLIST.md written; status set to ready_for_human_review"
+    }
+  ],
+  "decisions": {
+    "uiChanges": true,
+    "backendChanges": true,
+    "frontendChanges": true,
+    "dbChanges": true,
+    "needsDesign": false
+  },
+  "preExistingDirtyTree": false
+}

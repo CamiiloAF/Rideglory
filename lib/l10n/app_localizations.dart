@@ -6688,6 +6688,120 @@ abstract class AppLocalizations {
   /// **'Documentos'**
   String get vehicle_soat_section_title;
 
+  /// No description provided for @vehicle_soat_upload_question.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cómo deseas registrar tu SOAT?'**
+  String get vehicle_soat_upload_question;
+
+  /// No description provided for @vehicle_soat_upload_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona una opción para actualizar el SOAT de tu vehículo'**
+  String get vehicle_soat_upload_subtitle;
+
+  /// No description provided for @vehicle_soat_option_upload_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Subir documento'**
+  String get vehicle_soat_option_upload_title;
+
+  /// No description provided for @vehicle_soat_option_upload_desc.
+  ///
+  /// In es, this message translates to:
+  /// **'Toma una foto o selecciona desde tu galería el documento del SOAT vigente'**
+  String get vehicle_soat_option_upload_desc;
+
+  /// No description provided for @vehicle_soat_camera_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Cámara'**
+  String get vehicle_soat_camera_button;
+
+  /// No description provided for @vehicle_soat_gallery_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Galería'**
+  String get vehicle_soat_gallery_button;
+
+  /// No description provided for @vehicle_soat_option_manual_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresar manualmente'**
+  String get vehicle_soat_option_manual_title;
+
+  /// No description provided for @vehicle_soat_option_manual_desc.
+  ///
+  /// In es, this message translates to:
+  /// **'Completa los datos del SOAT de forma manual sin necesidad de subir un documento'**
+  String get vehicle_soat_option_manual_desc;
+
+  /// No description provided for @vehicle_soat_option_manual_cta.
+  ///
+  /// In es, this message translates to:
+  /// **'Completar formulario'**
+  String get vehicle_soat_option_manual_cta;
+
+  /// No description provided for @vehicle_soat_confirm_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirmar SOAT'**
+  String get vehicle_soat_confirm_title;
+
+  /// No description provided for @vehicle_soat_confirm_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirmar SOAT'**
+  String get vehicle_soat_confirm_button;
+
+  /// No description provided for @vehicle_soat_confirm_verify.
+  ///
+  /// In es, this message translates to:
+  /// **'Verifica los datos del SOAT'**
+  String get vehicle_soat_confirm_verify;
+
+  /// No description provided for @vehicle_soat_confirm_verify_sub.
+  ///
+  /// In es, this message translates to:
+  /// **'Revisa y corrige la información antes de confirmar'**
+  String get vehicle_soat_confirm_verify_sub;
+
+  /// No description provided for @vehicle_soat_manual_section_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa los datos del SOAT'**
+  String get vehicle_soat_manual_section_title;
+
+  /// No description provided for @vehicle_soat_manual_section_sub.
+  ///
+  /// In es, this message translates to:
+  /// **'Completa la información de tu seguro'**
+  String get vehicle_soat_manual_section_sub;
+
+  /// No description provided for @vehicle_soat_doc_uploaded.
+  ///
+  /// In es, this message translates to:
+  /// **'Documento subido exitosamente'**
+  String get vehicle_soat_doc_uploaded;
+
+  /// No description provided for @vehicle_soat_status_valid.
+  ///
+  /// In es, this message translates to:
+  /// **'SOAT vigente'**
+  String get vehicle_soat_status_valid;
+
+  /// No description provided for @vehicle_soat_status_valid_desc.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu SOAT estará vigente por 365 días más'**
+  String get vehicle_soat_status_valid_desc;
+
+  /// No description provided for @vehicle_soat_upload_failed.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo seleccionar el documento'**
+  String get vehicle_soat_upload_failed;
+
   /// No description provided for @tracking_sosCallError.
   ///
   /// In es, this message translates to:
@@ -6873,6 +6987,90 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'El odómetro es requerido'**
   String get maintenance_validationOdometerRequired;
+
+  /// No description provided for @garage_viewMaintenanceHistory.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver historial de mantenimientos'**
+  String get garage_viewMaintenanceHistory;
+
+  /// No description provided for @garage_lastService.
+  ///
+  /// In es, this message translates to:
+  /// **'Último servicio'**
+  String get garage_lastService;
+
+  /// No description provided for @garage_nextService.
+  ///
+  /// In es, this message translates to:
+  /// **'Próximo servicio'**
+  String get garage_nextService;
+
+  /// No description provided for @garage_otherVehiclesSection.
+  ///
+  /// In es, this message translates to:
+  /// **'OTROS VEHÍCULOS'**
+  String get garage_otherVehiclesSection;
+
+  /// No description provided for @garage_upToDate.
+  ///
+  /// In es, this message translates to:
+  /// **'Al día'**
+  String get garage_upToDate;
+
+  /// No description provided for @garage_upcomingCount.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} próximo'**
+  String garage_upcomingCount(int count);
+
+  /// No description provided for @garage_mainVehicleBadge.
+  ///
+  /// In es, this message translates to:
+  /// **'Moto principal'**
+  String get garage_mainVehicleBadge;
+
+  /// No description provided for @garage_odometerLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'odómetro'**
+  String get garage_odometerLabel;
+
+  /// No description provided for @garage_healthHeader.
+  ///
+  /// In es, this message translates to:
+  /// **'Estado de mantenimientos'**
+  String get garage_healthHeader;
+
+  /// No description provided for @garage_healthServicesCount.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} servicios'**
+  String garage_healthServicesCount(int count);
+
+  /// No description provided for @garage_healthOverdue.
+  ///
+  /// In es, this message translates to:
+  /// **'Atrasado'**
+  String get garage_healthOverdue;
+
+  /// No description provided for @garage_healthUpcoming.
+  ///
+  /// In es, this message translates to:
+  /// **'Próximo'**
+  String get garage_healthUpcoming;
+
+  /// No description provided for @garage_tapForDetail.
+  ///
+  /// In es, this message translates to:
+  /// **'Toca para ver detalle del vehículo'**
+  String get garage_tapForDetail;
+
+  /// No description provided for @garage_seeDetail.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver detalle'**
+  String get garage_seeDetail;
 }
 
 class _AppLocalizationsDelegate
