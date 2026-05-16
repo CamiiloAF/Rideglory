@@ -170,7 +170,7 @@ class EventFormContent extends StatelessWidget {
               name: EventFormFields.price,
               labelText: context.l10n.event_price,
               hintText: context.l10n.event_priceHint,
-              prefixIcon: Icons.attach_money,
+              prefixText: '\$',
               keyboardType: TextInputType.number,
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.numeric(

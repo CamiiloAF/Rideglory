@@ -17,12 +17,14 @@ class EventDetailOwnerLifecycleBar extends StatelessWidget {
     required this.isLoading,
     required this.onStart,
     required this.onStop,
+    required this.onOpenMap,
   });
 
   final EventModel event;
   final bool isLoading;
   final VoidCallback onStart;
   final VoidCallback onStop;
+  final VoidCallback onOpenMap;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,7 @@ class EventDetailOwnerLifecycleBar extends StatelessWidget {
         EventState.inProgress => _OwnerLiveBar(
             isLoading: isLoading,
             onStop: onStop,
+            onOpenMap: onOpenMap,
           ),
         EventState.finished => const SizedBox.shrink(),
         EventState.cancelled => const SizedBox.shrink(),
@@ -130,12 +133,17 @@ class _OwnerStartBar extends StatelessWidget {
   }
 }
 
-/// OWNER — EVENT LIVE state: live badge + "Rodada en curso" + full-width end button.
+/// OWNER — EVENT LIVE state: live badge + "Rodada en curso" + map button + end button.
 class _OwnerLiveBar extends StatelessWidget {
-  const _OwnerLiveBar({required this.isLoading, required this.onStop});
+  const _OwnerLiveBar({
+    required this.isLoading,
+    required this.onStop,
+    required this.onOpenMap,
+  });
 
   final bool isLoading;
   final VoidCallback onStop;
+  final VoidCallback onOpenMap;
 
   @override
   Widget build(BuildContext context) {
@@ -186,6 +194,36 @@ class _OwnerLiveBar extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
+
+        // Map button
+        GestureDetector(
+          onTap: onOpenMap,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 22),
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(25),
+              border: Border.all(color: AppColors.primary, width: 1.5),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.map_outlined, color: AppColors.primary, size: 16),
+                const SizedBox(width: 8),
+                Text(
+                  context.l10n.event_viewMap,
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
 
         // End button
         GestureDetector(

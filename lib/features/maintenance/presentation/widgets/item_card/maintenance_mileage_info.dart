@@ -45,24 +45,18 @@ class MaintenanceMileageInfo extends StatelessWidget {
                 color: AppColors.darkTextSecondary,
               ),
               if (maintenance.nextMaintenanceMileage != null)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    InfoChip(
-                      icon: Icons.flag_rounded,
-                      label: context.l10n.maintenance_next,
-                      value:
-                          maintenance.nextMaintenanceMileage!.toStringAsFixed(0),
-                      color: typeColor,
-                      tooltip: InfoChipTooltip(
-                        typeColor: typeColor,
-                        currentMileage: currentMileage,
-                        maintenance: maintenance,
-                      ),
-                    ),
-                  ],
+                InfoChip(
+                  icon: Icons.flag_rounded,
+                  label: context.l10n.maintenance_next,
+                  value: remainingDistance != null
+                      ? '${remainingDistance.toStringAsFixed(0)} km'
+                      : maintenance.nextMaintenanceMileage!.toStringAsFixed(0),
+                  color: typeColor,
+                  tooltip: InfoChipTooltip(
+                    typeColor: typeColor,
+                    currentMileage: currentMileage,
+                    maintenance: maintenance,
+                  ),
                 ),
             ],
           ),

@@ -18,7 +18,10 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
   MaintenanceFilters get filters => _filters;
   String get searchQuery => _searchQuery;
 
-  /// Backend-computed summary when exactly one vehicle is selected in filters.
+  void setInitialVehicleFilter(String vehicleId) {
+    _filters = MaintenanceFilters(vehicleIds: [vehicleId]);
+  }
+
   MaintenanceListSummary? summaryForHeader() {
     if (_filters.vehicleIds.length != 1) return null;
     return _summariesByVehicleId[_filters.vehicleIds.first];
@@ -26,36 +29,55 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
 
   Future<void> fetchMaintenances() async {
     emit(const ResultState.loading());
-    final result = await _getMaintenancesUseCase.execute();
+    final (startDate, endDate) = _filters.dateWindow;
+    final result = await _getMaintenancesUseCase.execute(
+      types: _filters.types.isEmpty ? null : _filters.types,
+      startDate: startDate,
+      endDate: endDate,
+    );
 
     result.fold((error) => emit(ResultState.error(error: error)), (aggregate) {
       _allMaintenances = aggregate.items;
       _summariesByVehicleId = Map<String, MaintenanceListSummary>.from(
         aggregate.summariesByVehicleId,
       );
-      _applyFiltersAndEmit();
+      _applyClientFiltersAndEmit();
     });
   }
 
   void updateSearchQuery(String query) {
     _searchQuery = query.toLowerCase();
-    _applyFiltersAndEmit();
+    _applyClientFiltersAndEmit();
   }
 
-  void updateFilters(MaintenanceFilters filters) {
+  Future<void> updateFilters(MaintenanceFilters filters) async {
+    final previousTypes = _filters.types;
+    final previousDateRange = _filters.dateRange;
+    final previousCustomStart = _filters.customStartDate;
+    final previousCustomEnd = _filters.customEndDate;
+
     _filters = filters;
-    _applyFiltersAndEmit();
+
+    final serverFiltersChanged =
+        previousTypes != filters.types ||
+        previousDateRange != filters.dateRange ||
+        previousCustomStart != filters.customStartDate ||
+        previousCustomEnd != filters.customEndDate;
+
+    if (serverFiltersChanged) {
+      await fetchMaintenances();
+    } else {
+      _applyClientFiltersAndEmit();
+    }
   }
 
-  /// Add a new maintenance to the local list without refetching from Firebase
   void addMaintenanceLocally(MaintenanceModel maintenance) {
     _allMaintenances = [..._allMaintenances, maintenance];
     final vid = maintenance.vehicleId;
     if (vid != null) _summariesByVehicleId.remove(vid);
-    _applyFiltersAndEmit();
+    _applyClientFiltersAndEmit();
   }
 
-  /// Update an existing maintenance in the local list without refetching from Firebase
   void updateMaintenanceLocally(MaintenanceModel updatedMaintenance) {
     final index = _allMaintenances.indexWhere(
       (m) => m.id == updatedMaintenance.id,
@@ -68,16 +90,15 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
       ];
       final vid = updatedMaintenance.vehicleId;
       if (vid != null) _summariesByVehicleId.remove(vid);
-      _applyFiltersAndEmit();
+      _applyClientFiltersAndEmit();
     }
   }
 
-  /// Remove a maintenance from the local list without refetching from Firebase
   void deleteMaintenanceLocally(String maintenanceId) {
     String? affectedVehicleId;
-    for (final m in _allMaintenances) {
-      if (m.id == maintenanceId) {
-        affectedVehicleId = m.vehicleId;
+    for (final maintenance in _allMaintenances) {
+      if (maintenance.id == maintenanceId) {
+        affectedVehicleId = maintenance.vehicleId;
         break;
       }
     }
@@ -87,27 +108,18 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
     if (affectedVehicleId != null) {
       _summariesByVehicleId.remove(affectedVehicleId);
     }
-    _applyFiltersAndEmit();
+    _applyClientFiltersAndEmit();
   }
 
-  void _applyFiltersAndEmit() {
+  void _applyClientFiltersAndEmit() {
     var filtered = List<MaintenanceModel>.from(_allMaintenances);
 
-    // Filter by search query
     if (_searchQuery.isNotEmpty) {
-      filtered = filtered.where((m) {
-        return m.name.toLowerCase().contains(_searchQuery);
-      }).toList();
-    }
-
-    // Filter by types
-    if (_filters.types.isNotEmpty) {
       filtered = filtered
-          .where((m) => _filters.types.contains(m.type))
+          .where((m) => m.name.toLowerCase().contains(_searchQuery))
           .toList();
     }
 
-    // Filter by vehicles
     if (_filters.vehicleIds.isNotEmpty) {
       filtered = filtered
           .where(
@@ -118,46 +130,28 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
           .toList();
     }
 
-    // Filter by date range
-    if (_filters.startDate != null) {
-      filtered = filtered
-          .where(
-            (m) =>
-                m.date.isAfter(_filters.startDate!) ||
-                m.date.isAtSameMomentAs(_filters.startDate!),
-          )
-          .toList();
-    }
-    if (_filters.endDate != null) {
-      filtered = filtered
-          .where(
-            (m) =>
-                m.date.isBefore(_filters.endDate!.add(const Duration(days: 1))),
-          )
-          .toList();
-    }
-
-    // Filter urgent only
-    if (_filters.showUrgentOnly == true) {
+    if (_filters.statusFilter != MaintenanceStatusFilter.all) {
       final now = DateTime.now();
-      filtered = filtered.where((m) {
-        // Must have alerts enabled
-        if (!m.receiveAlert) return false;
-
-        if (m.nextMaintenanceDate != null) {
-          final daysUntil = m.nextMaintenanceDate!.difference(now).inDays;
-          // Urgent if overdue (negative) or within 7 days (0-6 days)
-          return daysUntil <= 7;
+      filtered = filtered.where((maintenance) {
+        final next = maintenance.nextMaintenanceDate;
+        switch (_filters.statusFilter) {
+          case MaintenanceStatusFilter.overdue:
+            return next != null && next.isBefore(now);
+          case MaintenanceStatusFilter.upcoming:
+            if (next == null) return false;
+            final daysUntil = next.difference(now).inDays;
+            return daysUntil >= 0 && daysUntil <= 30;
+          case MaintenanceStatusFilter.onTrack:
+            return next == null || next.difference(now).inDays > 30;
+          case MaintenanceStatusFilter.all:
+            return true;
         }
-        return false;
       }).toList();
     }
 
-    // Sort
     switch (_filters.sortBy) {
       case MaintenanceSortOption.nextMaintenance:
         filtered.sort((a, b) {
-          // Items with next maintenance date come first
           if (a.nextMaintenanceDate != null && b.nextMaintenanceDate == null) {
             return -1;
           }
@@ -167,20 +161,14 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
           if (a.nextMaintenanceDate != null && b.nextMaintenanceDate != null) {
             return a.nextMaintenanceDate!.compareTo(b.nextMaintenanceDate!);
           }
-          // If both null, sort by date
           return b.date.compareTo(a.date);
         });
-        break;
       case MaintenanceSortOption.date:
         filtered.sort((a, b) => b.date.compareTo(a.date));
-        break;
       case MaintenanceSortOption.name:
         filtered.sort((a, b) => a.name.compareTo(b.name));
-        break;
     }
 
-    // Only emit empty if there are no maintenances at all
-    // If there are maintenances but filters return empty, emit data with empty list
     if (_allMaintenances.isEmpty) {
       emit(const ResultState.empty());
     } else {

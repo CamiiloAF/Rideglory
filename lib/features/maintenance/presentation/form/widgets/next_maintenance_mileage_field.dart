@@ -28,7 +28,6 @@ class _NextMaintenanceMileageFieldState
       name: 'nextMaintenanceMileage',
       labelText: context.l10n.maintenance_nextMaintenanceMileage,
       keyboardType: TextInputType.number,
-      prefixIcon: Icons.speed,
       suffixText: 'km',
       textInputAction: TextInputAction.done,
       onChanged: (value) {

@@ -25,9 +25,13 @@ class MaintenanceFormCubit extends Cubit<ResultState<MaintenanceModel>> {
   MaintenanceModel? _editingMaintenance;
   VehicleModel? preselectedVehicle;
   String? userId;
+  String? _resolvedVehicleId;
+  int? _currentVehicleMileage;
+  MaintenanceType? _selectedType;
 
   bool get isEditing => _editingMaintenance != null;
   MaintenanceModel? get editingMaintenance => _editingMaintenance;
+  int? get currentVehicleMileage => _currentVehicleMileage;
 
   void initialize({
     MaintenanceModel? maintenance,
@@ -35,8 +39,26 @@ class MaintenanceFormCubit extends Cubit<ResultState<MaintenanceModel>> {
   }) {
     this.preselectedVehicle = preselectedVehicle;
     _editingMaintenance = maintenance;
+    _selectedType = maintenance?.type;
     userId = maintenance?.userId;
+    _resolvedVehicleId = preselectedVehicle?.id ?? maintenance?.vehicleId;
     emit(const ResultState.initial());
+  }
+
+  void setVehicleId(String? vehicleId) {
+    _resolvedVehicleId ??= vehicleId;
+  }
+
+  void setCurrentVehicleMileage(int? mileage) {
+    _currentVehicleMileage = mileage;
+  }
+
+  void updateSelectedType(MaintenanceType type) {
+    _selectedType = type;
+  }
+
+  Future<void> createFollowUpScheduled(MaintenanceModel followUp) async {
+    await _addMaintenanceUseCase(followUp);
   }
 
   Future<void> saveMaintenance(MaintenanceModel maintenanceToSave) async {
@@ -52,30 +74,33 @@ class MaintenanceFormCubit extends Cubit<ResultState<MaintenanceModel>> {
     );
   }
 
-  MaintenanceModel? buildMaintenanceToSave() {
+  MaintenanceModel? buildMaintenanceToSave({bool isScheduled = false}) {
     if (formKey.currentState?.saveAndValidate() ?? false) {
       final formData = formKey.currentState!.value;
 
+      final type =
+          (_selectedType ??
+          formData[MaintenanceFormFields.type] as MaintenanceType?)!;
       final maintenanceToSave = MaintenanceModel(
         id: _editingMaintenance?.id,
-        vehicleId: formData[MaintenanceFormFields.vehicleId] as String?,
-        name: formData[MaintenanceFormFields.name] as String,
+        vehicleId: _resolvedVehicleId,
         userId: userId,
-        type: formData[MaintenanceFormFields.type] as MaintenanceType,
+        type: type,
         notes: formData[MaintenanceFormFields.notes] as String?,
-        date: formData[MaintenanceFormFields.date] as DateTime,
+        date:
+            (formData[MaintenanceFormFields.date] as DateTime?) ??
+            DateTime.now(),
         nextMaintenanceDate:
             formData[MaintenanceFormFields.nextMaintenanceDate] as DateTime?,
-        maintanceMileage: int.parse(
-          formData[MaintenanceFormFields.currentMileage] as String,
-        ),
-        receiveAlert:
-            formData[MaintenanceFormFields.receiveAlert] as bool? ?? false,
-        receiveMileageAlert:
-            formData[MaintenanceFormFields.receiveMileageAlert] as bool? ??
-            false,
-        receiveDateAlert:
-            formData[MaintenanceFormFields.receiveDateAlert] as bool? ?? false,
+        maintanceMileage:
+            formData[MaintenanceFormFields.currentMileage] != null &&
+                (formData[MaintenanceFormFields.currentMileage] as String)
+                    .isNotEmpty
+            ? int.parse(
+                formData[MaintenanceFormFields.currentMileage] as String,
+              )
+            : (_currentVehicleMileage ?? 0),
+        isScheduled: isScheduled,
         nextMaintenanceMileage:
             formData[MaintenanceFormFields.nextMaintenanceMileage] != null &&
                 (formData[MaintenanceFormFields.nextMaintenanceMileage]

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
 import 'package:rideglory/shared/widgets/form/text_field_label.dart';
 
-class AppTextField extends StatelessWidget {
+class AppTextField extends StatefulWidget {
   final String name;
   final String? labelText;
   final IconData? prefixIcon;
+  final String? prefixText;
   final Widget? suffixIcon;
   final String? suffixText;
   final TextStyle? suffixStyle;
@@ -34,6 +36,7 @@ class AppTextField extends StatelessWidget {
     required this.name,
     this.labelText,
     this.prefixIcon,
+    this.prefixText,
     this.suffixIcon,
     this.suffixText,
     this.suffixStyle,
@@ -58,44 +61,78 @@ class AppTextField extends StatelessWidget {
   });
 
   @override
+  State<AppTextField> createState() => _AppTextFieldState();
+}
+
+class _AppTextFieldState extends State<AppTextField> {
+  late final FocusNode _focusNode;
+  bool _isFocused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = widget.focusNode ?? FocusNode();
+    _focusNode.addListener(_onFocusChange);
+  }
+
+  void _onFocusChange() {
+    setState(() => _isFocused = _focusNode.hasFocus);
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onFocusChange);
+    if (widget.focusNode == null) _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final iconColor = _isFocused ? AppColors.darkInputIcon : null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (labelText != null)
-          TextFieldLabel(labelText: labelText!, isRequired: isRequired),
-        FormBuilderTextField(
-          name: name,
-          decoration: InputDecoration(
-            prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
-            suffixIcon: suffixIcon,
-            suffixText: suffixText,
-            suffixStyle: suffixStyle,
-            hintText: hintText,
-            helperText: helperText,
-            helperMaxLines: 3,
-            counterText: maxLength != null
-                ? ''
-                : null, // Hide counter when maxLength is set
+        if (widget.labelText != null)
+          TextFieldLabel(
+            labelText: widget.labelText!,
+            isRequired: widget.isRequired,
           ),
-          initialValue: initialValue,
-          maxLines: maxLines,
-          minLines: minLines,
-          maxLength: maxLength,
-          keyboardType: keyboardType,
-          enabled: enabled,
-          readOnly: readonly,
-          onChanged: onChanged,
-          validator: validator != null
-              ? FormBuilderValidators.compose([validator!])
+        FormBuilderTextField(
+          name: widget.name,
+          decoration: InputDecoration(
+            prefixIcon: widget.prefixIcon != null
+                ? Icon(widget.prefixIcon, color: iconColor)
+                : null,
+            prefixText: widget.prefixText,
+            suffixIcon: widget.suffixIcon,
+            suffixIconColor: iconColor,
+            prefixIconColor: iconColor,
+            suffixText: widget.suffixText,
+            suffixStyle: widget.suffixStyle,
+            hintText: widget.hintText,
+            helperText: widget.helperText,
+            helperMaxLines: 3,
+            counterText: widget.maxLength != null ? '' : null,
+          ),
+          initialValue: widget.initialValue,
+          maxLines: widget.maxLines,
+          minLines: widget.minLines,
+          maxLength: widget.maxLength,
+          keyboardType: widget.keyboardType,
+          enabled: widget.enabled,
+          readOnly: widget.readonly,
+          onChanged: widget.onChanged,
+          validator: widget.validator != null
+              ? FormBuilderValidators.compose([widget.validator!])
               : null,
-          autovalidateMode: autovalidateMode,
-          obscureText: obscureText,
-          textInputAction: textInputAction,
-          onSubmitted: onFieldSubmitted,
-          focusNode: focusNode,
+          autovalidateMode: widget.autovalidateMode,
+          obscureText: widget.obscureText,
+          textInputAction: widget.textInputAction,
+          onSubmitted: widget.onFieldSubmitted,
+          focusNode: _focusNode,
           textCapitalization:
-              textCapitalization ?? TextCapitalization.sentences,
+              widget.textCapitalization ?? TextCapitalization.sentences,
         ),
       ],
     );

@@ -21,6 +21,7 @@ class VehicleModel {
   final bool isMainVehicle;
   final SoatStatus? soatStatus;
   final DateTime? soatExpiryDate;
+  final String? color;
 
   const VehicleModel({
     this.id,
@@ -39,6 +40,7 @@ class VehicleModel {
     this.isMainVehicle = false,
     this.soatStatus,
     this.soatExpiryDate,
+    this.color,
   });
 
   VehicleModel copyWith({
@@ -58,6 +60,7 @@ class VehicleModel {
     bool? isMainVehicle,
     SoatStatus? soatStatus,
     DateTime? soatExpiryDate,
+    Object? color = _unset,
   }) {
     return VehicleModel(
       id: id ?? this.id,
@@ -76,6 +79,7 @@ class VehicleModel {
       isMainVehicle: isMainVehicle ?? this.isMainVehicle,
       soatStatus: soatStatus ?? this.soatStatus,
       soatExpiryDate: soatExpiryDate ?? this.soatExpiryDate,
+      color: color == _unset ? this.color : color as String?,
     );
   }
 
@@ -98,7 +102,8 @@ class VehicleModel {
             isArchived == other.isArchived &&
             isMainVehicle == other.isMainVehicle &&
             soatStatus == other.soatStatus &&
-            soatExpiryDate == other.soatExpiryDate;
+            soatExpiryDate == other.soatExpiryDate &&
+            color == other.color;
   }
 
   @override
@@ -119,5 +124,8 @@ class VehicleModel {
     isMainVehicle,
     soatStatus,
     soatExpiryDate,
+    color,
   );
 }
+
+const _unset = Object();

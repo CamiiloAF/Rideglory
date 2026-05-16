@@ -92,10 +92,22 @@ class GarageVehiclesContent extends StatelessWidget {
                     const SizedBox(height: 16),
                     _QuickActions(
                       vehicle: mainVehicle,
-                      onMaintenanceTap: () => context.pushNamed(
-                        AppRoutes.createMaintenance,
-                        extra: mainVehicle,
+                      onViewMaintenancesTap: () => context.pushNamed(
+                        AppRoutes.maintenances,
+                        extra: mainVehicle.id,
                       ),
+                      onCreateMaintenanceTap: () async {
+                        final result = await context.pushNamed<dynamic>(
+                          AppRoutes.createMaintenance,
+                          extra: mainVehicle,
+                        );
+                        if (!context.mounted || result == null) return;
+                        if (result is MaintenanceModel) {
+                          onMaintenanceCreated(result);
+                        } else if (mainVehicle.id != null) {
+                          onMaintenanceRefreshRequested(mainVehicle.id!);
+                        }
+                      },
                     ),
                     if (otherVehicles.isNotEmpty) ...[
                       const SizedBox(height: 16),
@@ -483,11 +495,13 @@ class _StatCard extends StatelessWidget {
 class _QuickActions extends StatelessWidget {
   const _QuickActions({
     required this.vehicle,
-    required this.onMaintenanceTap,
+    required this.onViewMaintenancesTap,
+    required this.onCreateMaintenanceTap,
   });
 
   final VehicleModel vehicle;
-  final VoidCallback onMaintenanceTap;
+  final VoidCallback onViewMaintenancesTap;
+  final VoidCallback onCreateMaintenanceTap;
 
   @override
   Widget build(BuildContext context) {
@@ -497,15 +511,15 @@ class _QuickActions extends StatelessWidget {
           child: _ActionBtn(
             icon: Icons.build_outlined,
             label: context.l10n.home_vehicleMaintenance,
-            onTap: onMaintenanceTap,
+            onTap: onViewMaintenancesTap,
           ),
         ),
         const SizedBox(width: 10),
         Expanded(
           child: _ActionBtn(
-            icon: Icons.description_outlined,
-            label: context.l10n.home_vehicleDocuments,
-            onTap: () {},
+            icon: Icons.add_circle_outline,
+            label: context.l10n.vehicle_addMaintenance,
+            onTap: onCreateMaintenanceTap,
           ),
         ),
       ],

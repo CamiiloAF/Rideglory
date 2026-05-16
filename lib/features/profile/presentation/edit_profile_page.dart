@@ -41,7 +41,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
               AppTextField(
                 name: 'fullName',
                 labelText: context.l10n.profile_fieldFullName,
-                prefixIcon: Icons.person_outline,
                 initialValue: widget.user.fullName,
                 isRequired: true,
                 textInputAction: TextInputAction.next,
@@ -50,7 +49,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
               AppTextField(
                 name: 'phone',
                 labelText: context.l10n.profile_fieldPhone,
-                prefixIcon: Icons.phone_outlined,
                 initialValue: widget.user.phone,
                 keyboardType: TextInputType.phone,
                 textInputAction: TextInputAction.next,
@@ -59,7 +57,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
               AppTextField(
                 name: 'residenceCity',
                 labelText: context.l10n.profile_fieldCity,
-                prefixIcon: Icons.location_city_outlined,
                 initialValue: widget.user.residenceCity,
                 textInputAction: TextInputAction.next,
               ),
@@ -67,7 +64,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
               AppTextField(
                 name: 'bloodType',
                 labelText: context.l10n.profile_fieldBloodType,
-                prefixIcon: Icons.water_drop_outlined,
                 initialValue: widget.user.bloodType?.name,
                 textInputAction: TextInputAction.next,
               ),
@@ -77,7 +73,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
               AppTextField(
                 name: 'emergencyContactName',
                 labelText: context.l10n.profile_fieldEmergencyContact,
-                prefixIcon: Icons.contact_phone_outlined,
                 initialValue: widget.user.emergencyContactName,
                 textInputAction: TextInputAction.next,
               ),
@@ -85,7 +80,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
               AppTextField(
                 name: 'emergencyContactPhone',
                 labelText: context.l10n.profile_fieldEmergencyPhone,
-                prefixIcon: Icons.phone_in_talk_outlined,
                 initialValue: widget.user.emergencyContactPhone,
                 keyboardType: TextInputType.phone,
                 textInputAction: TextInputAction.done,

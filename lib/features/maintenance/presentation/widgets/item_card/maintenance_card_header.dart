@@ -72,8 +72,24 @@ class MaintenanceCardHeader extends StatelessWidget {
           ),
         ),
         AppSpacing.hGapMd,
-        // Badge de alerta
-        if (maintenance.receiveAlert && isUrgent)
+        if (maintenance.isScheduled)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Text(
+              'PROGRAMADO',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                color: AppColors.primary,
+                letterSpacing: 0.5,
+              ),
+            ),
+          )
+        else if (isUrgent)
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(

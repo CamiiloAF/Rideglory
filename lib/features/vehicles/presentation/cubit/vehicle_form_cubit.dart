@@ -36,6 +36,28 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
     }
   }
 
+  Future<void> pickSoatDocument() async {
+    final file = await _imageStorageService.pickImageFromGallery();
+    if (file != null) {
+      emit(state.copyWith(soatLocalPath: file.path));
+    }
+  }
+
+  void clearSoatDocument() {
+    emit(state.copyWith(soatLocalPath: null));
+  }
+
+  Future<void> pickTechReviewDocument() async {
+    final file = await _imageStorageService.pickImageFromGallery();
+    if (file != null) {
+      emit(state.copyWith(techReviewLocalPath: file.path));
+    }
+  }
+
+  void clearTechReviewDocument() {
+    emit(state.copyWith(techReviewLocalPath: null));
+  }
+
   Future<void> saveVehicle(
     VehicleModel vehicle, {
     String? localImagePath,
@@ -140,6 +162,9 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
         purchaseDate: formData[VehicleFormFields.purchaseDate] as DateTime?,
         isArchived: wasArchived ? false : (state.vehicle?.isArchived ?? false),
         isMainVehicle: state.vehicle?.isMainVehicle ?? false,
+        color: (formData[VehicleFormFields.color] as String?)?.isEmpty ?? true
+            ? null
+            : formData[VehicleFormFields.color] as String?,
       );
       return vehicleToSave;
     } else {

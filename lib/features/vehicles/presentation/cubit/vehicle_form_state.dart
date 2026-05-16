@@ -8,6 +8,8 @@ abstract class VehicleFormState with _$VehicleFormState {
     @Default(ResultState.initial()) ResultState<VehicleModel> vehicleResult,
     @Default(null) VehicleModel? vehicle,
     @Default(null) String? localImagePath,
+    @Default(null) String? soatLocalPath,
+    @Default(null) String? techReviewLocalPath,
   }) = _VehicleFormState;
 
   bool get isLoading => vehicleResult is Loading;

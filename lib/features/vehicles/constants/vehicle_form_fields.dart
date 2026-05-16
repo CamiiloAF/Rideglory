@@ -15,5 +15,7 @@ abstract class VehicleFormFields {
 
   static const String purchaseDate = 'purchaseDate';
 
+  static const String color = 'color';
+
   static const String setAsCurrent = 'setAsCurrent';
 }

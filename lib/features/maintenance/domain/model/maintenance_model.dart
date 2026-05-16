@@ -3,8 +3,20 @@ import 'package:json_annotation/json_annotation.dart';
 enum MaintenanceType {
   @JsonValue('OIL_CHANGE')
   oilChange('Cambio de aceite'),
+  @JsonValue('BRAKE_CHECK')
+  brakeCheck('Revisión de frenos'),
+  @JsonValue('TIRE_CHANGE')
+  tireChange('Cambio de llantas'),
   @JsonValue('PREVENTIVE')
-  preventive('Mantenimiento preventivo');
+  preventive('Revisión general'),
+  @JsonValue('AIR_FILTER')
+  airFilter('Filtro de aire'),
+  @JsonValue('CHAIN_SPROCKET')
+  chainSprocket('Cadena y piñones'),
+  @JsonValue('ELECTRICAL')
+  electrical('Electricidad'),
+  @JsonValue('OTHER')
+  other('Otro');
 
   final String label;
   const MaintenanceType(this.label);
@@ -24,33 +36,29 @@ class MaintenanceModel {
   final String? id;
   final String? userId;
   final String? vehicleId;
-  final String name;
   final MaintenanceType type;
   final String? notes;
   final DateTime date;
   final DateTime? nextMaintenanceDate;
   final int maintanceMileage;
-  final bool receiveAlert;
-  final bool receiveMileageAlert;
-  final bool receiveDateAlert;
+  final bool isScheduled;
   final int? nextMaintenanceMileage;
   final DateTime? createdDate;
   final DateTime? updatedDate;
   final double? cost;
 
+  String get name => type.label;
+
   MaintenanceModel({
     this.id,
     this.userId,
     this.vehicleId,
-    required this.name,
     required this.type,
     this.notes,
     required this.date,
     this.nextMaintenanceDate,
     required this.maintanceMileage,
-    required this.receiveAlert,
-    this.receiveMileageAlert = false,
-    this.receiveDateAlert = false,
+    this.isScheduled = false,
     this.nextMaintenanceMileage,
     this.createdDate,
     this.updatedDate,
@@ -59,16 +67,13 @@ class MaintenanceModel {
 
   MaintenanceModel copyWith({
     String? id,
-    String? name,
     MaintenanceType? type,
     String? notes,
     DateTime? date,
     DateTime? nextMaintenanceDate,
     int? maintanceMileage,
     DistanceUnit? distanceUnit,
-    bool? receiveAlert,
-    bool? receiveMileageAlert,
-    bool? receiveDateAlert,
+    bool? isScheduled,
     int? nextMaintenanceMileage,
     String? userId,
     String? vehicleId,
@@ -80,15 +85,12 @@ class MaintenanceModel {
       id: id ?? this.id,
       userId: userId ?? this.userId,
       vehicleId: vehicleId ?? this.vehicleId,
-      name: name ?? this.name,
       type: type ?? this.type,
       notes: notes ?? this.notes,
       date: date ?? this.date,
       nextMaintenanceDate: nextMaintenanceDate ?? this.nextMaintenanceDate,
       maintanceMileage: maintanceMileage ?? this.maintanceMileage,
-      receiveAlert: receiveAlert ?? this.receiveAlert,
-      receiveMileageAlert: receiveMileageAlert ?? this.receiveMileageAlert,
-      receiveDateAlert: receiveDateAlert ?? this.receiveDateAlert,
+      isScheduled: isScheduled ?? this.isScheduled,
       nextMaintenanceMileage:
           nextMaintenanceMileage ?? this.nextMaintenanceMileage,
       createdDate: createdDate ?? this.createdDate,

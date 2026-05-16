@@ -4,21 +4,18 @@ import 'package:rideglory/features/maintenance/domain/model/maintenance_model.da
 
 part 'maintenance_dto.g.dart';
 
-@JsonSerializable(converters: apiJsonDateTimeConverters)
+@JsonSerializable(converters: apiJsonDateTimeConverters, includeIfNull: false)
 class MaintenanceDto {
   const MaintenanceDto({
-    required this.id,
-    required this.userId,
-    required this.vehicleId,
-    required this.name,
+    this.id,
+    this.userId,
+    this.vehicleId,
     required this.type,
     this.notes,
     required this.date,
     this.nextMaintenanceDate,
     required this.maintanceMileage,
-    required this.receiveAlert,
-    required this.receiveMileageAlert,
-    required this.receiveDateAlert,
+    this.isScheduled = false,
     this.nextMaintenanceMileage,
     this.cost,
     this.createdAt,
@@ -28,41 +25,53 @@ class MaintenanceDto {
   factory MaintenanceDto.fromJson(Map<String, dynamic> json) =>
       _$MaintenanceDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$MaintenanceDtoToJson(this);
+  factory MaintenanceDto.fromModel(MaintenanceModel m) => MaintenanceDto(
+    id: m.id,
+    userId: m.userId,
+    vehicleId: m.vehicleId,
+    type: m.type,
+    notes: m.notes,
+    date: m.date,
+    nextMaintenanceDate: m.nextMaintenanceDate,
+    maintanceMileage: m.maintanceMileage,
+    isScheduled: m.isScheduled,
+    nextMaintenanceMileage: m.nextMaintenanceMileage,
+    cost: m.cost,
+  );
 
-  final String id;
-  final String userId;
-  final String vehicleId;
-  final String name;
+  Map<String, dynamic> toJson() {
+    final json = _$MaintenanceDtoToJson(this);
+    json['date'] = apiEncodeRequiredDateTime(date);
+    return json;
+  }
+
+  final String? id;
+  final String? userId;
+  final String? vehicleId;
   final MaintenanceType type;
   final String? notes;
   final DateTime date;
   final DateTime? nextMaintenanceDate;
   final int maintanceMileage;
-  final bool receiveAlert;
-  final bool receiveMileageAlert;
-  final bool receiveDateAlert;
+  final bool isScheduled;
   final int? nextMaintenanceMileage;
   final double? cost;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
   MaintenanceModel toModel() => MaintenanceModel(
-        id: id,
-        userId: userId,
-        vehicleId: vehicleId,
-        name: name,
-        type: type,
-        notes: notes,
-        date: date,
-        nextMaintenanceDate: nextMaintenanceDate,
-        maintanceMileage: maintanceMileage,
-        receiveAlert: receiveAlert,
-        receiveMileageAlert: receiveMileageAlert,
-        receiveDateAlert: receiveDateAlert,
-        nextMaintenanceMileage: nextMaintenanceMileage,
-        cost: cost,
-        createdDate: createdAt,
-        updatedDate: updatedAt,
-      );
+    id: id,
+    userId: userId,
+    vehicleId: vehicleId,
+    type: type,
+    notes: notes,
+    date: date,
+    nextMaintenanceDate: nextMaintenanceDate,
+    maintanceMileage: maintanceMileage,
+    isScheduled: isScheduled,
+    nextMaintenanceMileage: nextMaintenanceMileage,
+    cost: cost,
+    createdDate: createdAt,
+    updatedDate: updatedAt,
+  );
 }

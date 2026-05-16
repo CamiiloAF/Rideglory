@@ -7,6 +7,7 @@ import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/core/http/rest_client_functions.dart';
 import 'package:rideglory/features/vehicles/data/service/vehicle_service.dart';
+import 'package:rideglory/features/vehicles/domain/models/soat_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/domain/repository/vehicle_repository.dart';
 
@@ -91,6 +92,35 @@ class VehicleRepositoryImpl implements VehicleRepository {
         final ref = _storage.ref().child('vehicles/$vehicleId/cover.jpg');
         final uploadTask = await ref.putFile(file);
         return uploadTask.ref.getDownloadURL();
+      },
+    );
+  }
+
+  @override
+  Future<Either<DomainException, SoatModel>> upsertSoat({
+    required String vehicleId,
+    required SoatModel soat,
+  }) {
+    return executeService(
+      function: () async {
+        final dto = await _vehicleService.upsertSoat(vehicleId, {
+          'policyNumber': soat.policyNumber,
+          'startDate': soat.startDate.toIso8601String(),
+          'expiryDate': soat.expiryDate.toIso8601String(),
+          'insurer': soat.insurer,
+          if (soat.documentUrl != null) 'documentUrl': soat.documentUrl,
+        });
+        return dto.toModel();
+      },
+    );
+  }
+
+  @override
+  Future<Either<DomainException, SoatModel>> getSoat(String vehicleId) {
+    return executeService(
+      function: () async {
+        final dto = await _vehicleService.getSoat(vehicleId);
+        return dto.toModel();
       },
     );
   }

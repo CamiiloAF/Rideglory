@@ -91,6 +91,7 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
             VehicleFormFields.licensePlate: state.vehicle!.licensePlate,
             VehicleFormFields.vin: state.vehicle!.vin,
             VehicleFormFields.purchaseDate: state.vehicle!.purchaseDate,
+            VehicleFormFields.color: state.vehicle!.color,
           }
         : <String, dynamic>{};
   }

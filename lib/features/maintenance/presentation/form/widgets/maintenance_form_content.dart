@@ -1,45 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_form_fields.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/form/cubit/maintenance_form_cubit.dart';
-import 'package:rideglory/features/maintenance/presentation/form/widgets/change_vehicle_mileage_bottom_sheet.dart';
-import 'package:rideglory/features/maintenance/presentation/form/widgets/save_maintenance_button.dart';
-import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/features/maintenance/presentation/form/widgets/maintenance_context_card.dart';
+import 'package:rideglory/features/maintenance/presentation/form/widgets/maintenance_form_cta_bar.dart';
+import 'package:rideglory/features/maintenance/presentation/form/widgets/maintenance_mileage_update_banner.dart';
+import 'package:rideglory/features/maintenance/presentation/form/widgets/maintenance_next_service_card.dart';
+import 'package:rideglory/features/maintenance/presentation/form/widgets/maintenance_status_toggle.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
-import 'package:rideglory/design_system/design_system.dart';
-import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MaintenanceFormContent extends StatefulWidget {
-  const MaintenanceFormContent({super.key});
+  final MaintenanceType selectedType;
+  final VoidCallback onChangeType;
+
+  const MaintenanceFormContent({
+    super.key,
+    required this.selectedType,
+    required this.onChangeType,
+  });
 
   @override
   State<MaintenanceFormContent> createState() => _MaintenanceFormContentState();
 }
 
 class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
-  VehicleModel? _selectedVehicle;
+  bool _isCompleted = true;
+  int? _maintenanceOdometer;
 
   @override
   void initState() {
     super.initState();
     final cubit = context.read<MaintenanceFormCubit>();
-    final vehicleCubit = context.read<VehicleCubit>();
-
-    // Determine initial vehicle
-    _selectedVehicle = cubit.preselectedVehicle ?? vehicleCubit.currentVehicle;
-
-    final editingMaintenance = cubit.editingMaintenance;
-    if (editingMaintenance != null && editingMaintenance.vehicleId != null) {
-      final availableVehicles = vehicleCubit.availableVehicles;
-      final vehicle = availableVehicles.firstWhere(
-        (v) => v.id == editingMaintenance.vehicleId,
-        orElse: () => _selectedVehicle!,
-      );
-      _selectedVehicle = vehicle;
+    final editing = cubit.editingMaintenance;
+    if (editing != null) {
+      _isCompleted = !editing.isScheduled;
+      _maintenanceOdometer = editing.maintanceMileage;
     }
+    final vehicleCubit = context.read<VehicleCubit>();
+    cubit.setVehicleId(vehicleCubit.currentVehicle?.id);
+    cubit.setCurrentVehicleMileage(vehicleCubit.currentMileage);
   }
 
   Map<String, dynamic> _getInitialValues() {
@@ -49,22 +52,26 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
     final maintenance = cubit.editingMaintenance;
 
     if (maintenance != null) {
+      final vehicleKm = context.read<VehicleCubit>().currentMileage
+          ?? cubit.currentVehicleMileage
+          ?? cubit.preselectedVehicle?.currentMileage
+          ?? 0;
+      // Scheduled: base is current vehicle km (how far until due)
+      // Completed: base is the maintenance odometer (how far until next)
+      final base = maintenance.isScheduled ? vehicleKm : maintenance.maintanceMileage;
+      final relativeNextKm = maintenance.nextMaintenanceMileage != null
+          ? (maintenance.nextMaintenanceMileage! - base).clamp(0, double.maxFinite.toInt())
+          : null;
       return {
-        MaintenanceFormFields.name: maintenance.name,
         MaintenanceFormFields.type: maintenance.type,
         MaintenanceFormFields.notes: maintenance.notes,
         MaintenanceFormFields.date: maintenance.date,
         MaintenanceFormFields.nextMaintenanceDate:
             maintenance.nextMaintenanceDate,
-        MaintenanceFormFields.currentMileage: maintenance.maintanceMileage
-            .toString(),
-        MaintenanceFormFields.receiveAlert: maintenance.receiveAlert,
-        MaintenanceFormFields.receiveMileageAlert:
-            maintenance.receiveMileageAlert,
-        MaintenanceFormFields.receiveDateAlert: maintenance.receiveDateAlert,
-        MaintenanceFormFields.nextMaintenanceMileage: maintenance
-            .nextMaintenanceMileage
-            ?.toString(),
+        MaintenanceFormFields.currentMileage:
+            maintenance.maintanceMileage.toString(),
+        MaintenanceFormFields.nextMaintenanceMileage:
+            relativeNextKm?.toString(),
         MaintenanceFormFields.vehicleId:
             maintenance.vehicleId ?? currentVehicleId,
         MaintenanceFormFields.cost: maintenance.cost?.toString(),
@@ -72,300 +79,238 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
     }
 
     return {
+      MaintenanceFormFields.type: widget.selectedType,
       MaintenanceFormFields.date: DateTime.now(),
-      MaintenanceFormFields.type: MaintenanceType.oilChange,
-      MaintenanceFormFields.receiveAlert: false,
-      MaintenanceFormFields.receiveMileageAlert: false,
-      MaintenanceFormFields.receiveDateAlert: false,
       MaintenanceFormFields.vehicleId: preselectedVehicleId ?? currentVehicleId,
     };
   }
 
   void _saveMaintenance() {
     final cubit = context.read<MaintenanceFormCubit>();
-    final maintenanceToSave = cubit.buildMaintenanceToSave();
+    var maintenanceToSave = cubit.buildMaintenanceToSave(isScheduled: !_isCompleted);
+    if (maintenanceToSave == null) return;
 
-    if (maintenanceToSave == null) {
-      return;
-    }
+    final vehicleCubit = context.read<VehicleCubit>();
+    final vehicleKm = vehicleCubit.currentMileage ?? cubit.currentVehicleMileage ?? 0;
 
-    final currentMileage = context.read<VehicleCubit>().currentMileage;
-
-    final shouldSyncMileage = cubit.shouldChangeVehicleMileage(
-      currentMileage ?? 0,
-      maintenanceToSave.maintanceMileage.toInt(),
-    );
-
-    if (shouldSyncMileage) {
-      return _showChangeVehicleMileageDialog(
-        maintenanceToSave,
-        currentMileage,
-        cubit,
+    if (!_isCompleted) {
+      // Scheduled: next fields belong to this record; compute absolute km from current vehicle km.
+      final base = vehicleKm;
+      final absoluteNextKm = maintenanceToSave.nextMaintenanceMileage != null
+          ? base + maintenanceToSave.nextMaintenanceMileage!
+          : null;
+      maintenanceToSave = maintenanceToSave.copyWith(
+        maintanceMileage: vehicleKm,
+        nextMaintenanceMileage: absoluteNextKm,
       );
+    } else {
+      // Completed: next fields must NOT be stored on the record.
+      // If filled → create a follow-up scheduled maintenance instead.
+      final base = _maintenanceOdometer ?? vehicleKm;
+      final relativeNextKm = maintenanceToSave.nextMaintenanceMileage;
+      final absoluteNextKm = relativeNextKm != null ? base + relativeNextKm : null;
+      final nextDate = maintenanceToSave.nextMaintenanceDate;
+
+      maintenanceToSave = maintenanceToSave.copyWith(
+        nextMaintenanceMileage: null,
+        nextMaintenanceDate: null,
+      );
+
+      if (maintenanceToSave.maintanceMileage > vehicleKm) {
+        vehicleCubit.updateMileage(maintenanceToSave.maintanceMileage);
+      }
+
+      if (absoluteNextKm != null || nextDate != null) {
+        cubit.createFollowUpScheduled(
+          MaintenanceModel(
+            vehicleId: maintenanceToSave.vehicleId,
+            userId: maintenanceToSave.userId,
+            type: maintenanceToSave.type,
+            date: nextDate ?? DateTime.now(),
+            maintanceMileage: vehicleKm,
+            isScheduled: true,
+            nextMaintenanceMileage: absoluteNextKm,
+            nextMaintenanceDate: nextDate,
+          ),
+        );
+      }
     }
 
     cubit.saveMaintenance(maintenanceToSave);
   }
 
-  void _showChangeVehicleMileageDialog(
-    MaintenanceModel maintenanceToSave,
-    int? currentMileage,
-    MaintenanceFormCubit cubit,
-  ) {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (dialogContext) => ChangeVehicleMileageBottomSheet(
-        maintenanceToSave: maintenanceToSave,
-        currentMileage: currentMileage,
-        saveMaintenance: (maintenance) {
-          cubit.saveMaintenance(maintenance);
-        },
-      ),
-    );
-  }
-
-  void validateAndSyncMileageIfNeeded() {}
-
   @override
   Widget build(BuildContext context) {
     final cubit = context.read<MaintenanceFormCubit>();
+    final now = DateTime.now();
+    final vehicleCurrentMileage = context.read<VehicleCubit>().currentMileage
+        ?? cubit.currentVehicleMileage
+        ?? cubit.preselectedVehicle?.currentMileage;
+    final showMileageBanner =
+        _isCompleted &&
+        _maintenanceOdometer != null &&
+        vehicleCurrentMileage != null &&
+        _maintenanceOdometer! > vehicleCurrentMileage;
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(24),
-      child: FormBuilder(
-        key: cubit.formKey,
-        initialValue: _getInitialValues(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // 1. Nombre del Mantenimiento
-            AppTextField(
-              name: MaintenanceFormFields.name,
-              labelText: context.l10n.maintenance_maintenanceName,
-              isRequired: true,
-              hintText: 'Ej: Cambio de aceite sintético',
-              textInputAction: TextInputAction.next,
-              validator: FormBuilderValidators.compose([
-                FormBuilderValidators.required(
-                  errorText: context.l10n.maintenance_nameRequired,
-                ),
-                FormBuilderValidators.minLength(
-                  3,
-                  errorText: context.l10n.maintenance_minCharacters,
-                ),
-              ]),
-            ),
-            AppSpacing.gapXl,
-
-            // 2. Tipo de Mantenimiento
-            AppDropdown<MaintenanceType>(
-              name: MaintenanceFormFields.type,
-              labelText: context.l10n.maintenance_maintenanceType,
-              isRequired: true,
-              validator: FormBuilderValidators.required(
-                errorText: context.l10n.maintenance_typeRequired,
-              ),
-              items: MaintenanceType.values
-                  .map(
-                    (type) =>
-                        DropdownMenuItem(value: type, child: Text(type.label)),
-                  )
-                  .toList(),
-            ),
-            AppSpacing.gapXl,
-
-            // 3. Vehículo
-            AppDropdown<String>(
-              name: MaintenanceFormFields.vehicleId,
-              labelText: context.l10n.maintenance_vehicle,
-              isRequired: true,
-              validator: FormBuilderValidators.required(
-                errorText: context.l10n.maintenance_selectVehicle,
-              ),
-              items: context
-                  .read<VehicleCubit>()
-                  .availableVehicles
-                  .where((v) => !v.isArchived)
-                  .map(
-                    (v) => DropdownMenuItem(
-                      value: v.id,
-                      child: Text('${v.brand} ${v.model}'),
-                    ),
-                  )
-                  .toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  final vehicle = context
-                      .read<VehicleCubit>()
-                      .availableVehicles
-                      .firstWhere((v) => v.id == value);
-                  setState(() {
-                    _selectedVehicle = vehicle;
-                  });
-                }
-              },
-            ),
-            AppSpacing.gapXl,
-
-            // 4. Fecha de Servicio
-            AppDatePicker(
-              fieldName: MaintenanceFormFields.date,
-              lastDate: DateTime.now(),
-              labelText: context.l10n.maintenance_maintenanceDateLabel,
-              isRequired: true,
-              hintText: 'mm/dd/yyyy',
-            ),
-            AppSpacing.gapXl,
-
-            // 5. Kilometraje Actual
-            AppMileageField(
-              name: MaintenanceFormFields.currentMileage,
-              labelText: context.l10n.maintenance_maintenanceMileage,
-              textInputAction: TextInputAction.next,
-            ),
-            AppSpacing.gapXl,
-
-            // 6. Costo del Mantenimiento
-            AppTextField(
-              name: MaintenanceFormFields.cost,
-              labelText: context.l10n.maintenance_maintenanceCost,
-              prefixIcon: Icons.attach_money,
-              hintText: '0.00',
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              textInputAction: TextInputAction.next,
-            ),
-            AppSpacing.gapXl,
-
-            // 7. Notas / Observaciones
-            AppTextField(
-              name: MaintenanceFormFields.notes,
-              labelText: context.l10n.maintenance_maintenanceNotes,
-              hintText: 'Detalles adicionales sobre el trabajo realizado...',
-              maxLines: 4,
-              minLines: 3,
-              textInputAction: TextInputAction.done,
-            ),
-            AppSpacing.gapXxxl,
-
-            // 8. Alertas de próximo servicio
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: context.colorScheme.surfaceContainerHighest.withValues(
-                  alpha: 0.3,
-                ),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: context.colorScheme.outline.withValues(alpha: 0.2),
-                ),
-              ),
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 32),
+            child: FormBuilder(
+              key: cubit.formKey,
+              initialValue: _getInitialValues(),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  MaintenanceContextCard(
+                    selectedType: widget.selectedType,
+                    onChangeType: widget.onChangeType,
+                  ),
+                  const SizedBox(height: 20),
                   Text(
-                    context.l10n.maintenance_alertsConfiguration,
-                    style: context.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
+                    context.l10n.maintenance_form_estado_section,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textOnDarkTertiary,
+                      letterSpacing: 1.0,
                     ),
                   ),
-                  AppSpacing.gapXl,
-
-                  // Alerta por Fecha
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.calendar_month_outlined,
-                        color: context.colorScheme.primary,
-                        size: 20,
+                  const SizedBox(height: 12),
+                  MaintenanceStatusToggle(
+                    isCompleted: _isCompleted,
+                    onToggle: (value) => setState(() {
+                      _isCompleted = value;
+                      if (!value) _maintenanceOdometer = null;
+                    }),
+                  ),
+                  if (_isCompleted) ...[
+                    const SizedBox(height: 20),
+                    Text(
+                      context.l10n.maintenance_sectionDetails,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textOnDarkTertiary,
+                        letterSpacing: 1.0,
                       ),
-                      AppSpacing.hGapMd,
-                      Expanded(
-                        child: Text(
-                          context.l10n.maintenance_dateAlert,
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
+                    ),
+                    const SizedBox(height: 12),
+                    AppDatePicker(
+                      fieldName: MaintenanceFormFields.date,
+                      labelText: context.l10n.maintenance_maintenanceDateLabel,
+                      isRequired: true,
+                      firstDate: DateTime(2000),
+                      lastDate: now,
+                    ),
+                    const SizedBox(height: 12),
+                    AppMileageField(
+                      name: MaintenanceFormFields.currentMileage,
+                      labelText: context.l10n.maintenance_form_km_label,
+                      isRequired: true,
+                      validators:
+                          AppMileageField.defaultCurrentMileageValidators(
+                            context,
                           ),
-                        ),
+                      onChanged: (value) => setState(
+                        () => _maintenanceOdometer = int.tryParse(value ?? ''),
                       ),
-                      FormBuilderField<bool>(
-                        name: MaintenanceFormFields.receiveDateAlert,
-                        builder: (field) {
-                          return Switch(
-                            value: field.value ?? false,
-                            onChanged: (val) => field.didChange(val),
-                            activeThumbColor: context.colorScheme.primary,
-                          );
-                        },
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      context.l10n.maintenance_form_cost_taller_section,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.textOnDarkTertiary,
+                        letterSpacing: 1.0,
                       ),
-                    ],
+                    ),
+                    const SizedBox(height: 12),
+                    AppTextField(
+                      name: MaintenanceFormFields.cost,
+                      labelText: context.l10n.maintenance_totalCost,
+                      prefixText: '\$',
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      hintText: '0.00',
+                      textInputAction: TextInputAction.next,
+                    ),
+                    const SizedBox(height: 12),
+                    AppTextField(
+                      name: MaintenanceFormFields.workshop,
+                      labelText: context.l10n.maintenance_form_taller_label,
+                      suffixIcon: const Icon(
+                        Icons.location_on_outlined,
+                        size: 16,
+                      ),
+                      hintText: 'Ej: Taller Moto Service',
+                      textInputAction: TextInputAction.next,
+                    ),
+                  ],
+                  const SizedBox(height: 20),
+                  Text(
+                    context.l10n.maintenance_form_notes_section,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textOnDarkTertiary,
+                      letterSpacing: 1.0,
+                    ),
                   ),
-                  AppSpacing.gapLg,
-                  AppDatePicker(
-                    fieldName: MaintenanceFormFields.nextMaintenanceDate,
-                    labelText: context.l10n.maintenance_nextMaintenanceDate,
-                    firstDate: DateTime.now(),
-                    hintText: 'mm/dd/yyyy',
+                  const SizedBox(height: 12),
+                  AppTextField(
+                    name: MaintenanceFormFields.notes,
+                    labelText: context.l10n.maintenance_maintenanceNotes,
+                    maxLines: null,
+                    minLines: 4,
+                    hintText:
+                        'Detalles adicionales sobre el trabajo realizado...',
+                    textInputAction: TextInputAction.done,
                   ),
-                  AppSpacing.gapSm,
-
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    child: Divider(height: 1),
+                  const SizedBox(height: 20),
+                  Text(
+                    _isCompleted
+                        ? 'CREAR PRÓXIMO MANTENIMIENTO'
+                        : 'PROGRAMADO PARA',
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textOnDarkTertiary,
+                      letterSpacing: 1.0,
+                    ),
                   ),
-
-                  // Alerta por Kilometraje
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.speed_outlined,
-                        color: context.colorScheme.primary,
-                        size: 20,
-                      ),
-                      AppSpacing.hGapMd,
-                      Expanded(
-                        child: Text(
-                          context.l10n.maintenance_mileageAlert,
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      FormBuilderField<bool>(
-                        name: MaintenanceFormFields.receiveMileageAlert,
-                        builder: (field) {
-                          return Switch(
-                            value: field.value ?? false,
-                            onChanged: (val) => field.didChange(val),
-                            activeThumbColor: context.colorScheme.primary,
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  AppSpacing.gapLg,
-                  AppMileageField(
-                    name: MaintenanceFormFields.nextMaintenanceMileage,
-                    labelText: context.l10n.maintenance_nextMaintenanceMileageLabel,
-                    isRequired: false,
-                    hintText: 'Ej: 15000',
+                  const SizedBox(height: 12),
+                  MaintenanceNextServiceCard(
+                    isCompleted: _isCompleted,
+                    currentMileage: vehicleCurrentMileage,
+                    baseKm: _maintenanceOdometer ?? vehicleCurrentMileage,
+                    initialNextMileage: () {
+                      final editing = cubit.editingMaintenance;
+                      if (editing?.nextMaintenanceMileage == null) return null;
+                      final base = editing!.maintanceMileage;
+                      return (editing.nextMaintenanceMileage! - base).clamp(0, double.maxFinite.toInt());
+                    }(),
+                    initialNextDate:
+                        cubit.editingMaintenance?.nextMaintenanceDate,
                   ),
                 ],
               ),
             ),
-            AppSpacing.gap40,
-
-            // Botón de guardado
-            SaveMaintenanceButton(onSave: _saveMaintenance),
-            AppSpacing.gapXxl,
-          ],
+          ),
         ),
-      ),
+        if (showMileageBanner)
+          MaintenanceMileageUpdateBanner(
+            currentMileage: vehicleCurrentMileage,
+            newMileage: _maintenanceOdometer!,
+          ),
+        MaintenanceFormCtaBar(
+          onSave: _saveMaintenance,
+          onDiscard: () => Navigator.of(context).pop(),
+        ),
+      ],
     );
   }
 }

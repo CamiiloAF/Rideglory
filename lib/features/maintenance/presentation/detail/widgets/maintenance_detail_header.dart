@@ -15,14 +15,16 @@ class MaintenanceDetailHeader extends StatelessWidget {
   final MaintenanceModel maintenance;
   final VehicleModel? vehicle;
 
-  static IconData _iconForType(MaintenanceType type) {
-    switch (type) {
-      case MaintenanceType.oilChange:
-        return Icons.oil_barrel_outlined;
-      case MaintenanceType.preventive:
-        return Icons.handyman_outlined;
-    }
-  }
+  static IconData _iconForType(MaintenanceType type) => switch (type) {
+        MaintenanceType.oilChange => Icons.opacity,
+        MaintenanceType.brakeCheck => Icons.album_outlined,
+        MaintenanceType.tireChange => Icons.radio_button_unchecked,
+        MaintenanceType.preventive => Icons.assignment_turned_in_outlined,
+        MaintenanceType.airFilter => Icons.air,
+        MaintenanceType.chainSprocket => Icons.link,
+        MaintenanceType.electrical => Icons.bolt,
+        MaintenanceType.other => Icons.more_horiz,
+      };
 
   String _vehicleDisplayName() {
     if (vehicle == null) return '';

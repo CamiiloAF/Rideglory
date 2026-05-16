@@ -37,6 +37,25 @@ class FormImageCubit extends Cubit<ResultState<FormImageData>> {
     emit(ResultState.data(data: FormImageData(remoteImageUrl: remoteImageUrl)));
   }
 
+  Future<void> pickImageFromCamera() async {
+    if (_isPickingImage) return;
+    _isPickingImage = true;
+    final current = _currentImageData();
+    if (current == null) {
+      _isPickingImage = false;
+      return;
+    }
+
+    try {
+      final file = await _imageStorageService.pickImageFromCamera();
+      if (file == null) return;
+
+      emit(ResultState.data(data: current.copyWith(localImagePath: file.path)));
+    } finally {
+      _isPickingImage = false;
+    }
+  }
+
   Future<void> pickImageFromGallery() async {
     if (_isPickingImage) return;
     _isPickingImage = true;

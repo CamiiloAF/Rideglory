@@ -2818,6 +2818,36 @@ abstract class AppLocalizations {
   /// **'El tipo es requerido'**
   String get maintenance_typeRequired;
 
+  /// No description provided for @maintenance_sectionBasicInfo.
+  ///
+  /// In es, this message translates to:
+  /// **'INFORMACIÓN BÁSICA'**
+  String get maintenance_sectionBasicInfo;
+
+  /// No description provided for @maintenance_sectionDetails.
+  ///
+  /// In es, this message translates to:
+  /// **'DETALLES DEL SERVICIO'**
+  String get maintenance_sectionDetails;
+
+  /// No description provided for @maintenance_sectionAlerts.
+  ///
+  /// In es, this message translates to:
+  /// **'ALERTAS DE PRÓXIMO SERVICIO'**
+  String get maintenance_sectionAlerts;
+
+  /// No description provided for @maintenance_nextDateLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Próxima fecha de servicio'**
+  String get maintenance_nextDateLabel;
+
+  /// No description provided for @maintenance_nextMileageLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Próximo kilometraje'**
+  String get maintenance_nextMileageLabel;
+
   /// No description provided for @maintenance_remindersLabel.
   ///
   /// In es, this message translates to:
@@ -5494,17 +5524,101 @@ abstract class AppLocalizations {
   /// **'Toca para subir'**
   String get vehicle_form_photo_upload;
 
+  /// No description provided for @vehicle_form_cover_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar foto de portada'**
+  String get vehicle_form_cover_title;
+
+  /// No description provided for @vehicle_form_cover_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'JPG, PNG · Máx. 10MB'**
+  String get vehicle_form_cover_subtitle;
+
+  /// No description provided for @vehicle_form_upload_btn.
+  ///
+  /// In es, this message translates to:
+  /// **'Subir'**
+  String get vehicle_form_upload_btn;
+
+  /// No description provided for @vehicle_form_take_photo_btn.
+  ///
+  /// In es, this message translates to:
+  /// **'Tomar foto'**
+  String get vehicle_form_take_photo_btn;
+
+  /// No description provided for @vehicle_form_scan_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Escanear tarjeta de propiedad'**
+  String get vehicle_form_scan_title;
+
+  /// No description provided for @vehicle_form_scan_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Autocompleta marca, modelo, año, placa y VIN automáticamente'**
+  String get vehicle_form_scan_subtitle;
+
+  /// No description provided for @vehicle_form_info_section.
+  ///
+  /// In es, this message translates to:
+  /// **'INFORMACIÓN BÁSICA'**
+  String get vehicle_form_info_section;
+
+  /// No description provided for @vehicle_form_id_section.
+  ///
+  /// In es, this message translates to:
+  /// **'IDENTIFICACIÓN'**
+  String get vehicle_form_id_section;
+
+  /// No description provided for @vehicle_form_color_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej. Azul, Negro mate'**
+  String get vehicle_form_color_hint;
+
   /// No description provided for @vehicle_form_docs_section.
   ///
   /// In es, this message translates to:
-  /// **'Documentos'**
+  /// **'DOCUMENTOS'**
   String get vehicle_form_docs_section;
 
-  /// No description provided for @vehicle_form_docs_note.
+  /// No description provided for @vehicle_form_soat_subtitle.
   ///
   /// In es, this message translates to:
-  /// **'Los documentos se configuran luego desde el detalle de la moto'**
-  String get vehicle_form_docs_note;
+  /// **'Seguro obligatorio de accidentes'**
+  String get vehicle_form_soat_subtitle;
+
+  /// No description provided for @vehicle_form_techreview_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Rev. técnica del vehículo'**
+  String get vehicle_form_techreview_subtitle;
+
+  /// No description provided for @vehicle_form_docs_upload.
+  ///
+  /// In es, this message translates to:
+  /// **'Subir'**
+  String get vehicle_form_docs_upload;
+
+  /// No description provided for @vehicle_form_add_doc_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar otro documento'**
+  String get vehicle_form_add_doc_title;
+
+  /// No description provided for @vehicle_form_add_doc_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'PDF, JPG, PNG · Máx. 5 MB'**
+  String get vehicle_form_add_doc_subtitle;
+
+  /// No description provided for @vehicle_form_docs_max_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Máximo 3 documentos por vehículo'**
+  String get vehicle_form_docs_max_hint;
 
   /// No description provided for @vehicle_form_save.
   ///
@@ -5527,19 +5641,25 @@ abstract class AppLocalizations {
   /// No description provided for @maintenance_form_new_title.
   ///
   /// In es, this message translates to:
-  /// **'Nuevo mantenimiento'**
+  /// **'Nuevo Mantenimiento'**
   String get maintenance_form_new_title;
+
+  /// No description provided for @maintenance_form_step_select_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Paso 1 de 2'**
+  String get maintenance_form_step_select_label;
 
   /// No description provided for @maintenance_form_step_select.
   ///
   /// In es, this message translates to:
-  /// **'Selecciona el tipo de servicio'**
+  /// **'Selecciona el tipo de mantenimiento'**
   String get maintenance_form_step_select;
 
   /// No description provided for @maintenance_form_step_continue.
   ///
   /// In es, this message translates to:
-  /// **'Continuar →'**
+  /// **'Continuar'**
   String get maintenance_form_step_continue;
 
   /// No description provided for @maintenance_form_tab_done.
@@ -5608,6 +5728,54 @@ abstract class AppLocalizations {
   /// **'Guardar mantenimiento'**
   String get maintenance_form_save_done;
 
+  /// No description provided for @maintenance_form_discard.
+  ///
+  /// In es, this message translates to:
+  /// **'Descartar'**
+  String get maintenance_form_discard;
+
+  /// No description provided for @maintenance_form_estado_section.
+  ///
+  /// In es, this message translates to:
+  /// **'ESTADO'**
+  String get maintenance_form_estado_section;
+
+  /// No description provided for @maintenance_form_context_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo de mantenimiento seleccionado'**
+  String get maintenance_form_context_subtitle;
+
+  /// No description provided for @maintenance_form_km_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Kilometraje al momento del servicio'**
+  String get maintenance_form_km_label;
+
+  /// No description provided for @maintenance_form_cost_taller_section.
+  ///
+  /// In es, this message translates to:
+  /// **'COSTO Y TALLER'**
+  String get maintenance_form_cost_taller_section;
+
+  /// No description provided for @maintenance_form_taller_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Taller / Mecánico'**
+  String get maintenance_form_taller_label;
+
+  /// No description provided for @maintenance_form_notes_section.
+  ///
+  /// In es, this message translates to:
+  /// **'NOTAS'**
+  String get maintenance_form_notes_section;
+
+  /// No description provided for @maintenance_form_next_section_header.
+  ///
+  /// In es, this message translates to:
+  /// **'PRÓXIMO MANTENIMIENTO'**
+  String get maintenance_form_next_section_header;
+
   /// No description provided for @maintenance_form_date_scheduled_label.
   ///
   /// In es, this message translates to:
@@ -5632,6 +5800,18 @@ abstract class AppLocalizations {
   /// **'Guardar recordatorio'**
   String get maintenance_form_save_scheduled;
 
+  /// No description provided for @maintenance_prox_service_in.
+  ///
+  /// In es, this message translates to:
+  /// **'Próximo servicio en'**
+  String get maintenance_prox_service_in;
+
+  /// No description provided for @maintenance_prox_days_left.
+  ///
+  /// In es, this message translates to:
+  /// **'Faltan para el servicio'**
+  String get maintenance_prox_days_left;
+
   /// No description provided for @maintenance_history_search_placeholder.
   ///
   /// In es, this message translates to:
@@ -5650,6 +5830,12 @@ abstract class AppLocalizations {
   /// **'Moto'**
   String get maintenance_filter_vehicle_label;
 
+  /// No description provided for @maintenance_filter_type_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo de mantenimiento'**
+  String get maintenance_filter_type_label;
+
   /// No description provided for @maintenance_filter_status_label.
   ///
   /// In es, this message translates to:
@@ -5661,6 +5847,24 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Todos'**
   String get maintenance_filter_status_all;
+
+  /// No description provided for @maintenance_filter_status_overdue.
+  ///
+  /// In es, this message translates to:
+  /// **'Atrasado'**
+  String get maintenance_filter_status_overdue;
+
+  /// No description provided for @maintenance_filter_status_upcoming.
+  ///
+  /// In es, this message translates to:
+  /// **'Próximo'**
+  String get maintenance_filter_status_upcoming;
+
+  /// No description provided for @maintenance_filter_status_on_track.
+  ///
+  /// In es, this message translates to:
+  /// **'Al día'**
+  String get maintenance_filter_status_on_track;
 
   /// No description provided for @maintenance_filter_status_done.
   ///
@@ -5679,6 +5883,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Urgentes'**
   String get maintenance_filter_status_urgent;
+
+  /// No description provided for @maintenance_filter_date_range_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Rango de fecha'**
+  String get maintenance_filter_date_range_label;
+
+  /// No description provided for @maintenance_filter_date_this_month.
+  ///
+  /// In es, this message translates to:
+  /// **'Este mes'**
+  String get maintenance_filter_date_this_month;
+
+  /// No description provided for @maintenance_filter_date_last_3_months.
+  ///
+  /// In es, this message translates to:
+  /// **'Últimos 3 meses'**
+  String get maintenance_filter_date_last_3_months;
+
+  /// No description provided for @maintenance_filter_date_last_year.
+  ///
+  /// In es, this message translates to:
+  /// **'Último año'**
+  String get maintenance_filter_date_last_year;
+
+  /// No description provided for @maintenance_filter_date_custom.
+  ///
+  /// In es, this message translates to:
+  /// **'Personalizado'**
+  String get maintenance_filter_date_custom;
 
   /// No description provided for @maintenance_filter_period_label.
   ///
@@ -5703,6 +5937,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Limpiar'**
   String get maintenance_filter_clear;
+
+  /// No description provided for @maintenance_filter_clear_all.
+  ///
+  /// In es, this message translates to:
+  /// **'Limpiar todo'**
+  String get maintenance_filter_clear_all;
 
   /// No description provided for @maintenance_filter_apply.
   ///
@@ -6238,6 +6478,72 @@ abstract class AppLocalizations {
   /// **'Actualizar →'**
   String get vehicle_soat_update;
 
+  /// No description provided for @vehicle_soat_form_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar SOAT'**
+  String get vehicle_soat_form_title;
+
+  /// No description provided for @vehicle_soat_form_edit_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Actualizar SOAT'**
+  String get vehicle_soat_form_edit_title;
+
+  /// No description provided for @vehicle_soat_policy_number_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Número de póliza'**
+  String get vehicle_soat_policy_number_label;
+
+  /// No description provided for @vehicle_soat_policy_number_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej: SOA-123456'**
+  String get vehicle_soat_policy_number_hint;
+
+  /// No description provided for @vehicle_soat_insurer_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Aseguradora'**
+  String get vehicle_soat_insurer_label;
+
+  /// No description provided for @vehicle_soat_insurer_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej: Sura, Colseguros...'**
+  String get vehicle_soat_insurer_hint;
+
+  /// No description provided for @vehicle_soat_start_date_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha de inicio'**
+  String get vehicle_soat_start_date_label;
+
+  /// No description provided for @vehicle_soat_expiry_date_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha de vencimiento'**
+  String get vehicle_soat_expiry_date_label;
+
+  /// No description provided for @vehicle_soat_save_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar SOAT'**
+  String get vehicle_soat_save_button;
+
+  /// No description provided for @vehicle_soat_saved_successfully.
+  ///
+  /// In es, this message translates to:
+  /// **'SOAT registrado exitosamente'**
+  String get vehicle_soat_saved_successfully;
+
+  /// No description provided for @vehicle_soat_section_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Documentos'**
+  String get vehicle_soat_section_title;
+
   /// No description provided for @tracking_sosCallError.
   ///
   /// In es, this message translates to:
@@ -6267,6 +6573,96 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No se pudo obtener las coordenadas.'**
   String get map_geocodeError;
+
+  /// No description provided for @maintenance_summary_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Resumen de Mantenimientos'**
+  String get maintenance_summary_title;
+
+  /// No description provided for @maintenance_services_count.
+  ///
+  /// In es, this message translates to:
+  /// **'Servicios'**
+  String get maintenance_services_count;
+
+  /// No description provided for @maintenance_total_spent.
+  ///
+  /// In es, this message translates to:
+  /// **'Total gastado'**
+  String get maintenance_total_spent;
+
+  /// No description provided for @maintenance_overdue_section.
+  ///
+  /// In es, this message translates to:
+  /// **'ATRASADO'**
+  String get maintenance_overdue_section;
+
+  /// No description provided for @maintenance_upcoming_section.
+  ///
+  /// In es, this message translates to:
+  /// **'PRÓXIMAMENTE'**
+  String get maintenance_upcoming_section;
+
+  /// No description provided for @maintenance_on_track_section.
+  ///
+  /// In es, this message translates to:
+  /// **'AL DÍA'**
+  String get maintenance_on_track_section;
+
+  /// No description provided for @maintenance_status_done_badge.
+  ///
+  /// In es, this message translates to:
+  /// **'Realizado'**
+  String get maintenance_status_done_badge;
+
+  /// No description provided for @maintenance_status_scheduled_badge.
+  ///
+  /// In es, this message translates to:
+  /// **'Programado'**
+  String get maintenance_status_scheduled_badge;
+
+  /// No description provided for @maintenance_service_info.
+  ///
+  /// In es, this message translates to:
+  /// **'Información del servicio'**
+  String get maintenance_service_info;
+
+  /// No description provided for @maintenance_service_date.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha del servicio'**
+  String get maintenance_service_date;
+
+  /// No description provided for @maintenance_odometer_km.
+  ///
+  /// In es, this message translates to:
+  /// **'Odómetro'**
+  String get maintenance_odometer_km;
+
+  /// No description provided for @maintenance_next_review.
+  ///
+  /// In es, this message translates to:
+  /// **'Próxima revisión'**
+  String get maintenance_next_review;
+
+  /// No description provided for @maintenance_next_date_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Próxima fecha'**
+  String get maintenance_next_date_label;
+
+  /// No description provided for @maintenance_next_odometer_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Próximo odómetro'**
+  String get maintenance_next_odometer_label;
+
+  /// No description provided for @maintenance_expired_label.
+  ///
+  /// In es, this message translates to:
+  /// **'vencido'**
+  String get maintenance_expired_label;
 }
 
 class _AppLocalizationsDelegate

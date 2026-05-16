@@ -36,6 +36,7 @@ import '../../features/maintenance/presentation/list/maintenances/maintenances_p
 import '../../features/splash/presentation/splash_screen.dart';
 import '../../features/vehicles/presentation/form/vehicle_form_page.dart';
 import '../../features/vehicles/presentation/garage/garage_page.dart';
+import '../../features/vehicles/presentation/soat/soat_form_page.dart';
 import '../widgets/main_shell.dart';
 import 'app_routes.dart';
 
@@ -195,6 +196,14 @@ class AppRouter {
         builder: (context, state) {
           final vehicle = state.extra as VehicleModel?;
           return VehicleFormPage(vehicle: vehicle);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.vehicleSoat,
+        name: AppRoutes.vehicleSoat,
+        builder: (context, state) {
+          final vehicle = state.extra as VehicleModel;
+          return SoatFormPage(vehicle: vehicle);
         },
       ),
 

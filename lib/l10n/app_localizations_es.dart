@@ -1429,6 +1429,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_typeRequired => 'El tipo es requerido';
 
   @override
+  String get maintenance_sectionBasicInfo => 'INFORMACIÓN BÁSICA';
+
+  @override
+  String get maintenance_sectionDetails => 'DETALLES DEL SERVICIO';
+
+  @override
+  String get maintenance_sectionAlerts => 'ALERTAS DE PRÓXIMO SERVICIO';
+
+  @override
+  String get maintenance_nextDateLabel => 'Próxima fecha de servicio';
+
+  @override
+  String get maintenance_nextMileageLabel => 'Próximo kilometraje';
+
+  @override
   String get maintenance_remindersLabel => 'Recibe recordatorios automáticos';
 
   @override
@@ -2850,11 +2865,53 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_form_photo_upload => 'Toca para subir';
 
   @override
-  String get vehicle_form_docs_section => 'Documentos';
+  String get vehicle_form_cover_title => 'Agregar foto de portada';
 
   @override
-  String get vehicle_form_docs_note =>
-      'Los documentos se configuran luego desde el detalle de la moto';
+  String get vehicle_form_cover_subtitle => 'JPG, PNG · Máx. 10MB';
+
+  @override
+  String get vehicle_form_upload_btn => 'Subir';
+
+  @override
+  String get vehicle_form_take_photo_btn => 'Tomar foto';
+
+  @override
+  String get vehicle_form_scan_title => 'Escanear tarjeta de propiedad';
+
+  @override
+  String get vehicle_form_scan_subtitle =>
+      'Autocompleta marca, modelo, año, placa y VIN automáticamente';
+
+  @override
+  String get vehicle_form_info_section => 'INFORMACIÓN BÁSICA';
+
+  @override
+  String get vehicle_form_id_section => 'IDENTIFICACIÓN';
+
+  @override
+  String get vehicle_form_color_hint => 'Ej. Azul, Negro mate';
+
+  @override
+  String get vehicle_form_docs_section => 'DOCUMENTOS';
+
+  @override
+  String get vehicle_form_soat_subtitle => 'Seguro obligatorio de accidentes';
+
+  @override
+  String get vehicle_form_techreview_subtitle => 'Rev. técnica del vehículo';
+
+  @override
+  String get vehicle_form_docs_upload => 'Subir';
+
+  @override
+  String get vehicle_form_add_doc_title => 'Agregar otro documento';
+
+  @override
+  String get vehicle_form_add_doc_subtitle => 'PDF, JPG, PNG · Máx. 5 MB';
+
+  @override
+  String get vehicle_form_docs_max_hint => 'Máximo 3 documentos por vehículo';
 
   @override
   String get vehicle_form_save => 'Guardar moto';
@@ -2866,13 +2923,17 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_history_title => 'Historial';
 
   @override
-  String get maintenance_form_new_title => 'Nuevo mantenimiento';
+  String get maintenance_form_new_title => 'Nuevo Mantenimiento';
 
   @override
-  String get maintenance_form_step_select => 'Selecciona el tipo de servicio';
+  String get maintenance_form_step_select_label => 'Paso 1 de 2';
 
   @override
-  String get maintenance_form_step_continue => 'Continuar →';
+  String get maintenance_form_step_select =>
+      'Selecciona el tipo de mantenimiento';
+
+  @override
+  String get maintenance_form_step_continue => 'Continuar';
 
   @override
   String get maintenance_form_tab_done => 'Completado';
@@ -2908,6 +2969,31 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_form_save_done => 'Guardar mantenimiento';
 
   @override
+  String get maintenance_form_discard => 'Descartar';
+
+  @override
+  String get maintenance_form_estado_section => 'ESTADO';
+
+  @override
+  String get maintenance_form_context_subtitle =>
+      'Tipo de mantenimiento seleccionado';
+
+  @override
+  String get maintenance_form_km_label => 'Kilometraje al momento del servicio';
+
+  @override
+  String get maintenance_form_cost_taller_section => 'COSTO Y TALLER';
+
+  @override
+  String get maintenance_form_taller_label => 'Taller / Mecánico';
+
+  @override
+  String get maintenance_form_notes_section => 'NOTAS';
+
+  @override
+  String get maintenance_form_next_section_header => 'PRÓXIMO MANTENIMIENTO';
+
+  @override
   String get maintenance_form_date_scheduled_label => 'Fecha programada';
 
   @override
@@ -2921,6 +3007,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_form_save_scheduled => 'Guardar recordatorio';
 
   @override
+  String get maintenance_prox_service_in => 'Próximo servicio en';
+
+  @override
+  String get maintenance_prox_days_left => 'Faltan para el servicio';
+
+  @override
   String get maintenance_history_search_placeholder => 'Buscar mantenimiento…';
 
   @override
@@ -2930,10 +3022,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_filter_vehicle_label => 'Moto';
 
   @override
+  String get maintenance_filter_type_label => 'Tipo de mantenimiento';
+
+  @override
   String get maintenance_filter_status_label => 'Estado';
 
   @override
   String get maintenance_filter_status_all => 'Todos';
+
+  @override
+  String get maintenance_filter_status_overdue => 'Atrasado';
+
+  @override
+  String get maintenance_filter_status_upcoming => 'Próximo';
+
+  @override
+  String get maintenance_filter_status_on_track => 'Al día';
 
   @override
   String get maintenance_filter_status_done => 'Completados';
@@ -2943,6 +3047,21 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get maintenance_filter_status_urgent => 'Urgentes';
+
+  @override
+  String get maintenance_filter_date_range_label => 'Rango de fecha';
+
+  @override
+  String get maintenance_filter_date_this_month => 'Este mes';
+
+  @override
+  String get maintenance_filter_date_last_3_months => 'Últimos 3 meses';
+
+  @override
+  String get maintenance_filter_date_last_year => 'Último año';
+
+  @override
+  String get maintenance_filter_date_custom => 'Personalizado';
 
   @override
   String get maintenance_filter_period_label => 'Período';
@@ -2955,6 +3074,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get maintenance_filter_clear => 'Limpiar';
+
+  @override
+  String get maintenance_filter_clear_all => 'Limpiar todo';
 
   @override
   String get maintenance_filter_apply => 'Aplicar';
@@ -3247,6 +3369,39 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_soat_update => 'Actualizar →';
 
   @override
+  String get vehicle_soat_form_title => 'Registrar SOAT';
+
+  @override
+  String get vehicle_soat_form_edit_title => 'Actualizar SOAT';
+
+  @override
+  String get vehicle_soat_policy_number_label => 'Número de póliza';
+
+  @override
+  String get vehicle_soat_policy_number_hint => 'Ej: SOA-123456';
+
+  @override
+  String get vehicle_soat_insurer_label => 'Aseguradora';
+
+  @override
+  String get vehicle_soat_insurer_hint => 'Ej: Sura, Colseguros...';
+
+  @override
+  String get vehicle_soat_start_date_label => 'Fecha de inicio';
+
+  @override
+  String get vehicle_soat_expiry_date_label => 'Fecha de vencimiento';
+
+  @override
+  String get vehicle_soat_save_button => 'Guardar SOAT';
+
+  @override
+  String get vehicle_soat_saved_successfully => 'SOAT registrado exitosamente';
+
+  @override
+  String get vehicle_soat_section_title => 'Documentos';
+
+  @override
   String get tracking_sosCallError => 'No se pudo iniciar la llamada.';
 
   @override
@@ -3261,4 +3416,49 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get map_geocodeError => 'No se pudo obtener las coordenadas.';
+
+  @override
+  String get maintenance_summary_title => 'Resumen de Mantenimientos';
+
+  @override
+  String get maintenance_services_count => 'Servicios';
+
+  @override
+  String get maintenance_total_spent => 'Total gastado';
+
+  @override
+  String get maintenance_overdue_section => 'ATRASADO';
+
+  @override
+  String get maintenance_upcoming_section => 'PRÓXIMAMENTE';
+
+  @override
+  String get maintenance_on_track_section => 'AL DÍA';
+
+  @override
+  String get maintenance_status_done_badge => 'Realizado';
+
+  @override
+  String get maintenance_status_scheduled_badge => 'Programado';
+
+  @override
+  String get maintenance_service_info => 'Información del servicio';
+
+  @override
+  String get maintenance_service_date => 'Fecha del servicio';
+
+  @override
+  String get maintenance_odometer_km => 'Odómetro';
+
+  @override
+  String get maintenance_next_review => 'Próxima revisión';
+
+  @override
+  String get maintenance_next_date_label => 'Próxima fecha';
+
+  @override
+  String get maintenance_next_odometer_label => 'Próximo odómetro';
+
+  @override
+  String get maintenance_expired_label => 'vencido';
 }

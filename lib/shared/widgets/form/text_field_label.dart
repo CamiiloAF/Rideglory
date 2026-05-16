@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
 
 class TextFieldLabel extends StatelessWidget {
   final String labelText;
@@ -13,12 +14,21 @@ class TextFieldLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final labelColor =
+        isDark ? AppColors.textOnDarkSecondary : AppColors.textSecondary;
+    final labelStyle = TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w600,
+      color: labelColor,
+    );
 
     final child = !isRequired
-        ? Text(labelText)
+        ? Text(labelText, style: labelStyle)
         : Text.rich(
             TextSpan(
               text: labelText,
+              style: labelStyle,
               children: [
                 TextSpan(
                   text: ' *',

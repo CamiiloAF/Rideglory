@@ -1,4 +1,4 @@
-import 'dart:async';
+  import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,41 +63,39 @@ class _LiveMapPageState extends State<LiveMapPage> {
   }
 
   Future<void> _loadInitialCamera() async {
-    final permission = await LocationPermissionHandler.status();
-    final serviceEnabled = await geo.Geolocator.isLocationServiceEnabled();
-
-    if (permission == LocationPermissionResult.granted && serviceEnabled) {
-      try {
-        final position = await geo.Geolocator.getCurrentPosition(
-          locationSettings: const geo.LocationSettings(
-            accuracy: geo.LocationAccuracy.high,
-          ),
-        );
-        if (!mounted) return;
-        setState(() {
-          _initialCameraOptions = CameraOptions(
-            center: Point(
-              coordinates: Position(position.longitude, position.latitude),
-            ),
-            zoom: 15.0,
-          );
-        });
-        return;
-      } catch (_) {
-        // Fall through to default.
-      }
-    }
-
-    if (!mounted) return;
+    // Show the map immediately with the fallback so it never blocks on GPS.
+    // Armenia, Colombia (lng-first for Mapbox).
     setState(() {
-      // Default: Armenia, Colombia (lng, lat — Mapbox lng-first)
       _initialCameraOptions = CameraOptions(
-        center: Point(
-          coordinates: Position(-75.6961, 4.8133),
-        ),
+        center: Point(coordinates: Position(-75.6961, 4.8133)),
         zoom: 12.0,
       );
     });
+
+    // Refine with actual GPS position in the background.
+    try {
+      final permission = await LocationPermissionHandler.status();
+      final serviceEnabled = await geo.Geolocator.isLocationServiceEnabled();
+      if (permission != LocationPermissionResult.granted || !serviceEnabled) {
+        return;
+      }
+      final position = await geo.Geolocator.getCurrentPosition(
+        locationSettings: const geo.LocationSettings(
+          accuracy: geo.LocationAccuracy.high,
+        ),
+      ).timeout(const Duration(seconds: 5));
+      if (!mounted) return;
+      setState(() {
+        _initialCameraOptions = CameraOptions(
+          center: Point(
+            coordinates: Position(position.longitude, position.latitude),
+          ),
+          zoom: 15.0,
+        );
+      });
+    } catch (_) {
+      // GPS failed — fallback already shown.
+    }
   }
 
   Future<void> _onSosPressed(LiveTrackingCubit cubit) async {

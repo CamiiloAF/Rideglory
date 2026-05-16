@@ -8,6 +8,7 @@ import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_maintenance_history_section.dart';
+import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_soat_card.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
 class VehicleDetailView extends StatelessWidget {
@@ -55,6 +56,8 @@ class VehicleDetailView extends StatelessWidget {
                   const SizedBox(height: 16),
                 ],
                 _SpecsCard(vehicle: vehicle),
+                const SizedBox(height: 16),
+                VehicleSoatCard(vehicle: vehicle),
                 const SizedBox(height: 16),
                 VehicleMaintenanceHistorySection(
                   vehicle: vehicle,

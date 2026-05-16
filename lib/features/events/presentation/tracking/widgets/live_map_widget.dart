@@ -126,10 +126,7 @@ class _LiveMapWidgetState extends State<LiveMapWidget> {
         _annotationsById[rider.userId] = updated;
       } else {
         final created = await manager.create(
-          PointAnnotationOptions(
-            geometry: point,
-            image: bytes,
-          ),
+          PointAnnotationOptions(geometry: point, image: bytes),
         );
         _annotationsById[rider.userId] = created;
       }
@@ -139,11 +136,14 @@ class _LiveMapWidgetState extends State<LiveMapWidget> {
   @override
   Widget build(BuildContext context) {
     return MapWidget(
-      cameraOptions: widget.initialCameraOptions,
-      styleUri: MapboxStyles.DARK,
+      viewport: CameraViewportState(
+        center: widget.initialCameraOptions.center,
+        zoom: widget.initialCameraOptions.zoom,
+      ),
+      styleUri: MapboxStyles.STANDARD,
       onMapCreated: (mapboxMap) async {
-        _annotationManager =
-            await mapboxMap.annotations.createPointAnnotationManager();
+        _annotationManager = await mapboxMap.annotations
+            .createPointAnnotationManager();
         widget.onMapReady(LiveMapController(mapboxMap));
         await _updateAnnotations();
       },

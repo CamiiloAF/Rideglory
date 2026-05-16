@@ -23,6 +23,7 @@ class VehicleDto extends VehicleModel {
     super.isMainVehicle = false,
     super.soatStatus,
     super.soatExpiryDate,
+    super.color,
   });
 
   factory VehicleDto.fromJson(Map<String, dynamic> json) =>
@@ -48,6 +49,7 @@ class VehicleDto extends VehicleModel {
       isMainVehicle: isMainVehicle,
       soatStatus: soatStatus,
       soatExpiryDate: soatExpiryDate,
+      color: color,
     );
   }
 }
@@ -70,5 +72,6 @@ extension VehicleModelExtension on VehicleModel {
     isMainVehicle: isMainVehicle,
     soatStatus: soatStatus,
     soatExpiryDate: soatExpiryDate,
+    color: color,
   ).toJson();
 }

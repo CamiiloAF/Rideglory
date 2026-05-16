@@ -15,8 +15,9 @@ abstract class MaintenanceService {
 
   @GET('${ApiRoutes.maintenances}/vehicle/{vehicleId}')
   Future<VehicleMaintenancesListResponseDto> getByVehicleId(
-    @Path('vehicleId') String vehicleId,
-  );
+    @Path('vehicleId') String vehicleId, {
+    @Queries() Map<String, dynamic>? filter,
+  });
 
   @POST('${ApiRoutes.maintenances}/vehicle/{vehicleId}')
   Future<MaintenanceDto> create(

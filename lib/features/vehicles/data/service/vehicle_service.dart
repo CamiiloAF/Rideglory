@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:rideglory/core/http/api_routes.dart';
+import 'package:rideglory/features/vehicles/data/dto/soat_dto.dart';
 import 'package:rideglory/features/vehicles/data/dto/vehicle_dto.dart';
 
 part 'vehicle_service.g.dart';
@@ -29,4 +30,13 @@ abstract class VehicleService {
 
   @DELETE('${ApiRoutes.vehicles}/hard-delete/{id}')
   Future<void> deleteVehicle(@Path('id') String id);
+
+  @POST('${ApiRoutes.vehicles}/{vehicleId}/soat')
+  Future<SoatDto> upsertSoat(
+    @Path('vehicleId') String vehicleId,
+    @Body() Map<String, dynamic> body,
+  );
+
+  @GET('${ApiRoutes.vehicles}/{vehicleId}/soat')
+  Future<SoatDto> getSoat(@Path('vehicleId') String vehicleId);
 }

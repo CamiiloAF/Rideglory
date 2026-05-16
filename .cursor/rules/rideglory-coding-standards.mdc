@@ -44,8 +44,64 @@ La app usa **gen-l10n** de Flutter con **`intl`**. La plantilla está en **`lib/
 
 ## 🏗️ Estructura general
 
-- No está permitido crear métodos que retornen un widget ejemplo `Widget _buildHeader()`
-- Cada Widget debe vivir en un archivo y cada archivo solo tendrá máximo 1 widget no importa si es público o privado
+### ⛔ REGLAS CRÍTICAS DE WIDGETS — VIOLACIÓN CERO TOLERANCIA
+
+**1. Prohibido: métodos que retornen widgets**
+
+```dart
+// ❌ NUNCA hacer esto
+Widget _buildHeader() { ... }
+Widget _contextCard(BuildContext context) { ... }
+Widget _stepDot({required bool active}) { ... }
+
+// ✅ Correcto: cada lógica de UI va en su propia clase widget
+class MaintenanceContextCard extends StatelessWidget { ... } // en su propio archivo
+```
+
+**2. Máximo 1 clase widget por archivo — sin excepciones**
+
+```dart
+// ❌ NUNCA dos clases widget en un mismo archivo
+class MyPage extends StatelessWidget { ... }
+class _MyPrivateHelper extends StatelessWidget { ... }  // ← VIOLACIÓN
+
+// ✅ Correcto: archivo separado para cada widget
+// my_page.dart → class MyPage
+// my_page_header.dart → class _MyPageHeader (o public)
+```
+
+La regla aplica a `StatelessWidget`, `StatefulWidget`, y `PreferredSizeWidget`. Una clase `State<T>` sí puede coexistir con su `StatefulWidget` en el mismo archivo.
+
+### 📦 Uso obligatorio de widgets compartidos — revisar ANTES de implementar
+
+Antes de escribir cualquier widget de input o botón, **verificar en `lib/shared/widgets/form/`**:
+
+| Lo que necesitas | Widget a usar | Ruta |
+|---|---|---|
+| Campo de texto | `AppTextField` | `shared/widgets/form/app_text_field.dart` |
+| Campo de contraseña | `AppPasswordTextField` | `shared/widgets/form/app_password_text_field.dart` |
+| Campo de kilometraje | `AppMileageField` | `shared/widgets/form/app_mileage_field.dart` |
+| Selector de fecha | `AppDatePicker` | `shared/widgets/form/app_date_picker.dart` |
+| Botón principal | `AppButton` | `shared/widgets/form/app_button.dart` |
+| Botón de texto / link | `AppTextButton` | `shared/widgets/form/app_text_button.dart` |
+| Header de sección en formulario | `FormSectionHeader` | `shared/widgets/form/form_section_header.dart` |
+
+```dart
+// ❌ PROHIBIDO — usar primitivos de Flutter cuando existe equivalente shared
+FormBuilderTextField(name: 'field', ...)
+ElevatedButton(...)
+TextButton(...)
+
+// ✅ CORRECTO — usar siempre el wrapper de shared/
+AppTextField(name: 'field', ...)
+AppButton(label: '...', ...)
+AppTextButton(label: '...', ...)
+```
+
+**Excepción documentada**: Si el shared widget no cubre el caso de uso específico del diseño, se puede usar el primitivo pero con un comentario `// Custom: <razón>` junto al widget.
+
+---
+
 - Debe seguir una arquitectura limpia separada por capas: presentation, data, domain
 - Constantes de campos de formulario → `lib/features/<feature>/constants/<feature>_form_fields.dart`
 - Evita agregar comentarios muy obvios (p. ej. no documentar que `LoginSocialButton` es el botón social si el nombre de la clase ya lo indica).
@@ -54,7 +110,7 @@ La app usa **gen-l10n** de Flutter con **`intl`**. La plantilla está en **`lib/
   - ✅ `'Iniciar sesión'` `'Crear cuenta'` `'Regístrate gratis'`
   - ❌ `'INICIAR SESIÓN'` `'Crear Cuenta'` `'REGÍSTRATE GRATIS'`
 
-## 📦 Componentes compartidos
+## 📦 Componentes compartidos (detalle)
 
 - **Siempre** usar los componentes de `lib/shared/widgets/` en lugar de construir widgets primitivos
   propios cuando existe un equivalente:
