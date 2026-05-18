@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rideglory – Manage Attendees (Story 2.9) — Iter-2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .filter-chip {
+    display: inline-flex;
+    align-items: center;
+    height: 32px;
+    padding: 0 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--text-2);
+    gap: 4px;
+  }
+  .filter-chip.active {
+    border-color: var(--primary);
+    background: var(--primary-dim);
+    color: var(--primary);
+  }
+  .filter-chips-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  /* Vehicle info pill inside attendee card */
+  .vehicle-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface-2);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 12px;
+    color: var(--text-2);
+    font-weight: 500;
+  }
+
+  /* Filter bottom sheet */
+  .bottom-sheet {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--surface);
+    border-radius: 24px 24px 0 0;
+    border-top: 1px solid var(--border);
+    padding: 0 16px 24px;
+  }
+  .bottom-sheet-handle {
+    width: 40px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 12px auto 20px;
+  }
+  .bs-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+  .bs-section-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-2);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .bs-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  .bs-chip {
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+  .bs-chip.active {
+    border-color: var(--primary);
+    background: var(--primary-dim);
+    color: var(--primary);
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     COLUMN 1: Manage Attendees — Loading
+     ============================================================ -->
+<div class="phone-group">
+  <div class="phone-label">Gestionar inscritos — Cargando</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>100%</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="back-btn">‹</div>
+      <div class="title">Inscritos</div>
+      <div style="width:40px"></div>
+    </div>
+    <div class="screen-body">
+      <!-- Search + filter skeleton -->
+      <div style="display:flex; gap:10px; margin-bottom:16px;">
+        <div class="skeleton" style="flex:1; height:48px; border-radius:var(--r-sm);"></div>
+        <div class="skeleton" style="width:48px; height:48px; border-radius:14px;"></div>
+      </div>
+      <!-- Chip row skeleton -->
+      <div style="display:flex; gap:8px; margin-bottom:16px;">
+        <div class="skeleton" style="width:60px; height:32px; border-radius:20px;"></div>
+        <div class="skeleton" style="width:90px; height:32px; border-radius:20px;"></div>
+        <div class="skeleton" style="width:80px; height:32px; border-radius:20px;"></div>
+        <div class="skeleton" style="width:90px; height:32px; border-radius:20px;"></div>
+      </div>
+      <!-- Card skeletons -->
+      <div class="card" style="padding:14px; margin-bottom:10px;">
+        <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+          <div class="skeleton" style="width:44px; height:44px; border-radius:22px;"></div>
+          <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+            <div class="skeleton" style="width:60%; height:14px; border-radius:4px;"></div>
+            <div class="skeleton" style="width:40%; height:12px; border-radius:4px;"></div>
+          </div>
+          <div class="skeleton" style="width:70px; height:24px; border-radius:6px;"></div>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <div class="skeleton" style="flex:1; height:36px; border-radius:var(--r-sm);"></div>
+          <div class="skeleton" style="flex:1; height:36px; border-radius:var(--r-sm);"></div>
+        </div>
+      </div>
+      <div class="card" style="padding:14px; margin-bottom:10px;">
+        <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+          <div class="skeleton" style="width:44px; height:44px; border-radius:22px;"></div>
+          <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+            <div class="skeleton" style="width:55%; height:14px; border-radius:4px;"></div>
+            <div class="skeleton" style="width:35%; height:12px; border-radius:4px;"></div>
+          </div>
+          <div class="skeleton" style="width:70px; height:24px; border-radius:6px;"></div>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <div class="skeleton" style="flex:1; height:36px; border-radius:var(--r-sm);"></div>
+          <div class="skeleton" style="flex:1; height:36px; border-radius:var(--r-sm);"></div>
+        </div>
+      </div>
+      <div class="card" style="padding:14px;">
+        <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+          <div class="skeleton" style="width:44px; height:44px; border-radius:22px;"></div>
+          <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+            <div class="skeleton" style="width:70%; height:14px; border-radius:4px;"></div>
+            <div class="skeleton" style="width:45%; height:12px; border-radius:4px;"></div>
+          </div>
+          <div class="skeleton" style="width:70px; height:24px; border-radius:6px;"></div>
+        </div>
+        <div class="skeleton" style="width:90px; height:36px; border-radius:var(--r-sm);"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     COLUMN 2: Manage Attendees — With data, pending tab active
+     ============================================================ -->
+<div class="phone-group">
+  <div class="phone-label">Gestionar inscritos — Con datos (pendientes)</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>100%</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="back-btn">‹</div>
+      <div class="title">Inscritos</div>
+      <div style="width:40px"></div>
+    </div>
+    <div class="screen-body">
+      <!-- Search bar + filter button -->
+      <div style="display:flex; gap:10px; margin-bottom:12px;">
+        <div style="flex:1; height:48px; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-sm); display:flex; align-items:center; padding:0 14px; gap:8px;">
+          <span style="color:var(--text-3); font-size:17px;">🔍</span>
+          <span style="font-size:14px; color:var(--text-3);">Buscar inscrito…</span>
+        </div>
+        <div style="width:48px; height:48px; background:var(--primary); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; cursor:pointer; position:relative;">
+          ⚙️
+          <!-- active dot -->
+          <div style="position:absolute; top:8px; right:8px; width:8px; height:8px; border-radius:50%; background:#fff;"></div>
+        </div>
+      </div>
+
+      <!-- Status filter chips -->
+      <div class="filter-chips-row">
+        <div class="filter-chip">Todos <span style="background:var(--surface-2); border-radius:10px; padding:0 5px; font-size:11px; margin-left:2px;">8</span></div>
+        <div class="filter-chip active">Pendientes <span style="background:var(--primary-dim); border-radius:10px; padding:0 5px; font-size:11px; margin-left:2px; color:var(--primary);">3</span></div>
+        <div class="filter-chip">Aprobados</div>
+        <div class="filter-chip">Rechazados</div>
+      </div>
+
+      <!-- Section label -->
+      <div class="list-section-label">Pendientes de revisión</div>
+
+      <!-- Attendee card 1 — Pending -->
+      <div class="attendee-card">
+        <div class="attendee-row">
+          <div class="avatar">JR</div>
+          <div class="attendee-info">
+            <div class="attendee-name">Juan Rodríguez</div>
+            <div class="attendee-meta">
+              <span class="vehicle-pill">🏍️ Honda CB500F · ABC-123</span>
+            </div>
+          </div>
+          <span class="badge badge-warning">Pendiente</span>
+        </div>
+        <div class="attendee-actions">
+          <button class="btn btn-primary btn-sm">Aprobar</button>
+          <button class="btn btn-danger btn-sm">Rechazar</button>
+        </div>
+      </div>
+
+      <!-- Attendee card 2 — Pending -->
+      <div class="attendee-card">
+        <div class="attendee-row">
+          <div class="avatar" style="background:var(--surface-2); color:#8B5CF6;">MP</div>
+          <div class="attendee-info">
+            <div class="attendee-name">María Pérez</div>
+            <div class="attendee-meta">
+              <span class="vehicle-pill">🏍️ Kawasaki Z400 · XYZ-789</span>
+            </div>
+          </div>
+          <span class="badge badge-warning">Pendiente</span>
+        </div>
+        <div class="attendee-actions">
+          <button class="btn btn-primary btn-sm">Aprobar</button>
+          <button class="btn btn-danger btn-sm">Rechazar</button>
+        </div>
+      </div>
+
+      <!-- Attendee card 3 — Pending -->
+      <div class="attendee-card">
+        <div class="attendee-row">
+          <div class="avatar" style="color:#10B981;">CA</div>
+          <div class="attendee-info">
+            <div class="attendee-name">Carlos Agudelo</div>
+            <div class="attendee-meta">
+              <span class="vehicle-pill">🏍️ Yamaha MT-07 · DEF-456</span>
+            </div>
+          </div>
+          <span class="badge badge-warning">Pendiente</span>
+        </div>
+        <div class="attendee-actions">
+          <button class="btn btn-primary btn-sm">Aprobar</button>
+          <button class="btn btn-danger btn-sm">Rechazar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     COLUMN 3: Manage Attendees — All tab (mixed states)
+     ============================================================ -->
+<div class="phone-group">
+  <div class="phone-label">Gestionar inscritos — Todos (mezcla de estados)</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>100%</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="back-btn">‹</div>
+      <div class="title">Inscritos</div>
+      <div style="width:40px"></div>
+    </div>
+    <div class="screen-body">
+      <div style="display:flex; gap:10px; margin-bottom:12px;">
+        <div style="flex:1; height:48px; background:var(--surface); border:1.5px solid var(--border); border-radius:var(--r-sm); display:flex; align-items:center; padding:0 14px; gap:8px;">
+          <span style="color:var(--text-3); font-size:17px;">🔍</span>
+          <span style="font-size:14px; color:var(--text-3);">Buscar inscrito…</span>
+        </div>
+        <div style="width:48px; height:48px; background:var(--primary); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; cursor:pointer;">⚙️</div>
+      </div>
+
+      <div class="filter-chips-row">
+        <div class="filter-chip active">Todos <span style="background:var(--primary-dim); border-radius:10px; padding:0 5px; font-size:11px; margin-left:2px; color:var(--primary);">8</span></div>
+        <div class="filter-chip">Pendientes <span style="background:var(--surface-2); border-radius:10px; padding:0 5px; font-size:11px; margin-left:2px;">3</span></div>
+        <div class="filter-chip">Aprobados</div>
+        <div class="filter-chip">Rechazados</div>
+      </div>
+
+      <!-- Pending card -->
+      <div class="attendee-card">
+        <div class="attendee-row">
+          <div class="avatar">JR</div>
+          <div class="attendee-info">
+            <div class="attendee-name">Juan Rodríguez</div>
+            <div class="attendee-meta"><span class="vehicle-pill">🏍️ Honda CB500F</span></div>
+          </div>
+          <span class="badge badge-warning">Pendiente</span>
+        </div>
+        <div class="attendee-actions">
+          <button class="btn btn-primary btn-sm">Aprobar</button>
+          <button class="btn btn-danger btn-sm">Rechazar</button>
+        </div>
+      </div>
+
+      <!-- Approved card -->
+      <div class="attendee-card">
+        <div class="attendee-row">
+          <div class="avatar" style="color:#10B981;">MP</div>
+          <div class="attendee-info">
+            <div class="attendee-name">María Pérez</div>
+            <div class="attendee-meta"><span class="vehicle-pill">🏍️ Kawasaki Z400</span></div>
+          </div>
+          <span class="badge badge-success">Aprobado</span>
+        </div>
+        <div class="attendee-actions">
+          <button class="btn btn-ghost btn-sm">Editar estado</button>
+        </div>
+      </div>
+
+      <!-- Rejected card -->
+      <div class="attendee-card">
+        <div class="attendee-row">
+          <div class="avatar" style="color:var(--text-3);">SR</div>
+          <div class="attendee-info">
+            <div class="attendee-name">Santiago Ríos</div>
+            <div class="attendee-meta"><span class="vehicle-pill">🏍️ Yamaha MT-03</span></div>
+          </div>
+          <span class="badge badge-error">Rechazado</span>
+        </div>
+        <div class="attendee-actions">
+          <button class="btn btn-ghost btn-sm">Aprobar</button>
+        </div>
+      </div>
+
+      <!-- Approved card 2 -->
+      <div class="attendee-card">
+        <div class="attendee-row">
+          <div class="avatar" style="color:#F59E0B;">CA</div>
+          <div class="attendee-info">
+            <div class="attendee-name">Carlos Agudelo</div>
+            <div class="attendee-meta"><span class="vehicle-pill">🏍️ Yamaha MT-07</span></div>
+          </div>
+          <span class="badge badge-success">Aprobado</span>
+        </div>
+        <div class="attendee-actions">
+          <button class="btn btn-ghost btn-sm">Editar estado</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     COLUMN 4: Manage Attendees — Empty (no registrations)
+     ============================================================ -->
+<div class="phone-group">
+  <div class="phone-label">Gestionar inscritos — Vacío</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>100%</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="back-btn">‹</div>
+      <div class="title">Inscritos</div>
+      <div style="width:40px"></div>
+    </div>
+    <div class="screen-body" style="display:flex; flex-direction:column;">
+      <div class="empty-state">
+        <div class="empty-icon-box">👥</div>
+        <div class="empty-title">Sin inscritos aún</div>
+        <div class="empty-subtitle">Cuando los riders se inscriban a tu evento, los verás aquí para revisar y aprobar sus solicitudes.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     COLUMN 5: Manage Attendees — Error
+     ============================================================ -->
+<div class="phone-group">
+  <div class="phone-label">Gestionar inscritos — Error</div>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>100%</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="back-btn">‹</div>
+      <div class="title">Inscritos</div>
+      <div style="width:40px"></div>
+    </div>
+    <div class="screen-body" style="display:flex; flex-direction:column;">
+      <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px; text-align:center;">
+        <div style="width:72px; height:72px; border-radius:20px; background:var(--error-dim); border:1px solid var(--error); display:flex; align-items:center; justify-content:center; font-size:32px; margin-bottom:24px;">⚠️</div>
+        <div style="font-size:18px; font-weight:700; color:var(--text); margin-bottom:8px;">No se pudo cargar la lista</div>
+        <div style="font-size:14px; color:var(--text-2); line-height:1.6; margin-bottom:24px;">Verifica tu conexión e intenta de nuevo.</div>
+        <button class="btn btn-primary" style="width:auto; padding:0 32px;">Reintentar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     COLUMN 6: Manage Attendees — Confirmation dialog
+     (AppDialog — reject confirmation)
+     ============================================================ -->
+<div class="phone-group">
+  <div class="phone-label">Gestionar inscritos — Confirmar rechazo (AppDialog)</div>
+  <div class="phone" style="position:relative;">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>100%</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="back-btn">‹</div>
+      <div class="title">Inscritos</div>
+      <div style="width:40px"></div>
+    </div>
+    <div class="screen-body" style="filter:blur(2px); pointer-events:none; opacity:0.5;">
+      <div class="attendee-card">
+        <div class="attendee-row">
+          <div class="avatar">JR</div>
+          <div class="attendee-info">
+            <div class="attendee-name">Juan Rodríguez</div>
+            <div class="attendee-meta"><span class="vehicle-pill">🏍️ Honda CB500F</span></div>
+          </div>
+          <span class="badge badge-warning">Pendiente</span>
+        </div>
+        <div class="attendee-actions">
+          <button class="btn btn-primary btn-sm">Aprobar</button>
+          <button class="btn btn-danger btn-sm">Rechazar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- AppDialog overlay -->
+    <div style="position:absolute; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; padding:24px;">
+      <div style="background:var(--surface); border-radius:var(--r-lg); padding:24px; width:100%; border:1px solid var(--border);">
+        <div style="font-size:18px; font-weight:700; color:var(--text); margin-bottom:8px; text-align:center;">Rechazar inscripción</div>
+        <div style="font-size:14px; color:var(--text-2); line-height:1.6; text-align:center; margin-bottom:24px;">
+          ¿Estás seguro de que quieres rechazar la inscripción de
+          <strong style="color:var(--text);">Juan Rodríguez</strong>?
+          Esta acción no se puede deshacer.
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <button class="btn btn-danger">Sí, rechazar</button>
+          <button class="btn btn-ghost">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     COLUMN 7: Filter Bottom Sheet
+     ============================================================ -->
+<div class="phone-group">
+  <div class="phone-label">Gestionar inscritos — Filtros (bottom sheet)</div>
+  <div class="phone" style="position:relative;">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <div class="icons"><span>●●●</span><span>WiFi</span><span>100%</span></div>
+    </div>
+    <div class="app-bar">
+      <div class="back-btn">‹</div>
+      <div class="title">Inscritos</div>
+      <div style="width:40px"></div>
+    </div>
+    <!-- Blurred background -->
+    <div class="screen-body" style="filter:blur(1px); opacity:0.4; pointer-events:none;">
+      <div class="attendee-card" style="margin-bottom:10px; height:80px;"></div>
+      <div class="attendee-card" style="margin-bottom:10px; height:80px;"></div>
+    </div>
+
+    <!-- Bottom sheet -->
+    <div class="bottom-sheet">
+      <div class="bottom-sheet-handle"></div>
+      <div class="bs-title">Filtrar inscritos</div>
+
+      <div class="bs-section-label">Estado</div>
+      <div class="bs-chips">
+        <div class="bs-chip active">Todos</div>
+        <div class="bs-chip">Pendientes</div>
+        <div class="bs-chip">Aprobados</div>
+        <div class="bs-chip">Rechazados</div>
+      </div>
+
+      <div style="display:flex; gap:10px; margin-top:8px;">
+        <button class="btn btn-ghost" style="flex:1;">Limpiar</button>
+        <button class="btn btn-primary" style="flex:1;">Aplicar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

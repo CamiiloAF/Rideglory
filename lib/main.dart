@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -8,7 +9,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:rideglory/core/config/api_remote_config.dart';
 import 'package:rideglory/core/config/app_env.dart';
+import 'package:rideglory/core/services/fcm_service.dart';
 import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
+import 'package:rideglory/features/notifications/presentation/cubit/notifications_cubit.dart';
 import 'package:rideglory/features/profile/presentation/cubits/profile_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/core/di/injection.dart';
@@ -34,6 +37,7 @@ Future<void> main() async {
   }
 
   await Firebase.initializeApp(options: firebaseOptions);
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   await ApiRemoteConfig.initialize(FirebaseRemoteConfig.instance);
   await initializeDateFormatting();
 
@@ -65,6 +69,7 @@ class MyApp extends StatelessWidget {
               getIt.get<MyRegistrationsCubit>()..fetchMyRegistrations(),
         ),
         BlocProvider(create: (context) => getIt.get<ProfileCubit>()),
+        BlocProvider(create: (context) => getIt.get<NotificationsCubit>()),
       ],
       child: MaterialApp.router(
         routerConfig: AppRouter.appRouter,

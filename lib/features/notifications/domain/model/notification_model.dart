@@ -1,10 +1,10 @@
 enum NotificationType {
+  soat30d,
+  soat7d,
+  soatDayOf,
+  newRegistration,
   registrationApproved,
   registrationRejected,
-  registrationReadyForEdit,
-  eventStarted,
-  newRegistration,
-  eventReminder,
   general,
 }
 
@@ -16,8 +16,7 @@ class NotificationModel {
     required this.body,
     required this.createdAt,
     this.isRead = false,
-    this.eventId,
-    this.registrationId,
+    this.payload,
   });
 
   final String id;
@@ -26,19 +25,21 @@ class NotificationModel {
   final String body;
   final DateTime createdAt;
   final bool isRead;
-  final String? eventId;
-  final String? registrationId;
+  final Map<String, dynamic>? payload;
 
-  NotificationModel copyWith({bool? isRead}) {
+  NotificationModel copyWith({
+    bool? isRead,
+    String? title,
+    String? body,
+  }) {
     return NotificationModel(
       id: id,
       type: type,
-      title: title,
-      body: body,
+      title: title ?? this.title,
+      body: body ?? this.body,
       createdAt: createdAt,
       isRead: isRead ?? this.isRead,
-      eventId: eventId,
-      registrationId: registrationId,
+      payload: payload,
     );
   }
 }

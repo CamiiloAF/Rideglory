@@ -350,12 +350,35 @@ Physical device required. Simulator does not honor background location permissio
 
 ## Roadmap: Future Deployments
 
-### Iter-2 (SOAT + Notifications)
+### Iter-2 (SOAT + Notifications) — ACTIVE
 
-- New Firebase packages: `firebase_messaging`, `flutter_local_notifications`
-- iOS: APNs key setup in Apple Developer Portal
-- API-gateway Prisma initialization: new DATABASE_URL env var
-- CI: Cocoapods cache for iOS push notification binaries
+**Status:** CI pipeline confirmed operational. No GitHub Actions workflow changes required. Flutter dependencies (`firebase_messaging`, `flutter_local_notifications`) already declared in pubspec.yaml.
+
+**Backend setup (rideglory-api):**
+- New env var: `DATABASE_URL` in `api-gateway/.env` (Prisma connection string, format: `postgresql://user:password@host:port/database`)
+- Docker Compose: Verify Postgres service is reachable from api-gateway container; use Docker Compose DB as target or external RDS instance
+- `prisma init` + `prisma migrate dev` executed in api-gateway (first-time Prisma setup, distinct from `prisma migrate reset` on 4 existing services)
+- Firebase Admin SDK: Already installed; no additional packages needed
+
+**Pre-flight checklist (backend agent):**
+- [ ] Docker Compose Postgres service running or external DB configured
+- [ ] `DATABASE_URL` set in `api-gateway/.env` and `.env.example`
+- [ ] `prisma init` + `prisma migrate dev` completed in api-gateway
+- [ ] GET /api/notifications returns 200 (empty list)
+
+**iOS APNs setup (frontend agent pre-flight):**
+- Upload APNs Authentication Key (.p8) to Firebase Console → Project Settings → Cloud Messaging
+- Xcode: enable Push Notifications capability + Background Modes → Remote notifications on Runner target
+- `ios/Runner/Info.plist`: `flutter_local_notifications` foreground options configured (handled in code)
+
+**Android native config (frontend agent pre-flight):**
+- `android/app/src/main/AndroidManifest.xml`: default notification channel + `POST_NOTIFICATIONS` runtime permission (Android 13+)
+- Verified during build; no CI changes required
+
+**CI notes:**
+- No new GitHub Actions secrets needed (Firebase config sufficient)
+- `flutter pub get` picks up `firebase_messaging` and `flutter_local_notifications` automatically
+- Cocoapods cache not yet busted (iOS notification binaries < 100MB, minimal impact)
 
 ### Iter-3 (Mapbox Migration + Tracking)
 

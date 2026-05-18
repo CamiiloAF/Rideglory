@@ -1346,5 +1346,154 @@
   "garage_healthOverdue": "Atrasado",
   "garage_healthUpcoming": "Próximo",
   "garage_tapForDetail": "Toca para ver detalle del vehículo",
-  "garage_seeDetail": "Ver detalle"
+  "garage_seeDetail": "Ver detalle",
+
+  "event_filter_pending": "Pendientes",
+  "event_filter_approved": "Aprobados",
+  "event_filter_rejected": "Rechazados",
+  "event_reject_confirm_title": "Rechazar inscripción",
+  "event_reject_confirm_body": "¿Estás seguro de que quieres rechazar la inscripción de {name}? Esta acción no se puede deshacer.",
+  "@event_reject_confirm_body": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "event_reject_confirm_btn": "Sí, rechazar",
+  "event_approve_action": "Aprobar",
+  "event_reject_action": "Rechazar",
+  "event_edit_status": "Editar estado",
+  "event_filters_title": "Filtrar inscritos",
+  "event_filter_status_label": "Estado",
+  "event_filter_clear": "Limpiar",
+  "event_filter_apply": "Aplicar",
+
+  "notification_loadMore": "Cargar más notificaciones",
+  "notification_loadError": "No se pudieron cargar las notificaciones",
+  "notification_loadErrorSubtitle": "Verifica tu conexión a internet e intenta de nuevo.",
+  "notification_retry": "Reintentar",
+  "notification_soat30d_title": "SOAT vence en 30 días",
+  "notification_soat7d_title": "Tu SOAT vence en 7 días",
+  "notification_soatDayOf_title": "Tu SOAT vence hoy",
+  "notification_soat_subtitle": "{vehicleName} · Renuévalo para evitar multas",
+  "@notification_soat_subtitle": {
+    "placeholders": {
+      "vehicleName": { "type": "String" }
+    }
+  },
+  "notification_soatDayOf_subtitle": "{vehicleName} · Renueva antes de salir",
+  "@notification_soatDayOf_subtitle": {
+    "placeholders": {
+      "vehicleName": { "type": "String" }
+    }
+  },
+  "notification_newRegistration_title": "Nueva inscripción",
+  "notification_newRegistration_subtitle": "{riderName} quiere unirse a \"{eventName}\"",
+  "@notification_newRegistration_subtitle": {
+    "placeholders": {
+      "riderName": { "type": "String" },
+      "eventName": { "type": "String" }
+    }
+  },
+  "notification_approved_title": "Inscripción aprobada",
+  "notification_approved_subtitle": "Estás inscrito a \"{eventName}\"",
+  "@notification_approved_subtitle": {
+    "placeholders": {
+      "eventName": { "type": "String" }
+    }
+  },
+  "notification_rejected_title": "Inscripción rechazada",
+  "notification_rejected_subtitle": "Tu solicitud para \"{eventName}\" no fue aprobada",
+  "@notification_rejected_subtitle": {
+    "placeholders": {
+      "eventName": { "type": "String" }
+    }
+  },
+  "notification_bell_unread_label": "{count} notificaciones sin leer",
+  "@notification_bell_unread_label": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "notification_bell_label": "Notificaciones",
+  "notification_item_accessibility_label": "Notificación: {title}, {time}",
+  "@notification_item_accessibility_label": {
+    "placeholders": {
+      "title": { "type": "String" },
+      "time": { "type": "String" }
+    }
+  },
+
+  "soat_page_upload_title": "Subir SOAT",
+  "soat_page_manual_title": "Ingresar SOAT",
+  "soat_page_status_title": "Mi SOAT",
+  "soat_upload_subtitle": "Selecciona cómo quieres subir tu SOAT para {vehicleName}.",
+  "@soat_upload_subtitle": {
+    "placeholders": {
+      "vehicleName": { "type": "String" }
+    }
+  },
+  "soat_manual_subtitle": "Ingresa los datos del SOAT para {vehicleName}. Puedes subir el documento más adelante.",
+  "@soat_manual_subtitle": {
+    "placeholders": {
+      "vehicleName": { "type": "String" }
+    }
+  },
+  "soat_source_camera": "Cámara",
+  "soat_source_gallery": "Galería",
+  "soat_source_pdf": "Archivo PDF",
+  "soat_source_manual": "Ingresar manualmente",
+  "soat_section_data": "Datos del SOAT",
+  "soat_field_policy_number": "N.° de póliza",
+  "soat_field_policy_placeholder": "Ej: SOAT-2024-123456",
+  "soat_field_insurer": "Aseguradora",
+  "soat_field_insurer_placeholder": "Ej: Sura, Allianz, AXA Colpatria…",
+  "soat_field_start_date": "Fecha inicio",
+  "soat_field_expiry_date": "Fecha vencimiento",
+  "soat_field_date_format": "DD/MM/AAAA",
+  "soat_field_expiry_required": "La fecha de vencimiento es obligatoria.",
+  "soat_field_date_invalid": "Fecha inválida. Usa el formato DD/MM/AAAA.",
+  "soat_field_required": "Este campo es obligatorio.",
+  "soat_save_btn": "Guardar SOAT",
+  "soat_save_data_btn": "Guardar datos",
+  "soat_update_btn": "Actualizar SOAT",
+  "soat_saving": "Guardando…",
+  "soat_retry": "Reintentar",
+  "soat_manual_note": "Puedes subir el documento físico más adelante desde el detalle del vehículo.",
+  "soat_switch_to_upload": "Subir documento en cambio",
+  "soat_section_document": "Documento",
+  "soat_document_attached": "Adjunto",
+  "soat_status_no_soat": "Sin registrar",
+  "soat_status_valid": "Vigente",
+  "soat_status_expiring_soon": "Por vencer",
+  "soat_status_expired": "Vencido",
+  "soat_valid_title": "Tu SOAT está al día",
+  "soat_expiring_title": "Tu SOAT vence pronto",
+  "soat_expired_title": "Tu SOAT está vencido",
+  "soat_valid_days_remaining": "{count} días restantes",
+  "@soat_valid_days_remaining": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "soat_expiring_days_remaining": "{count} días restantes",
+  "@soat_expiring_days_remaining": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "soat_expired_days_ago": "Venció hace {count} días",
+  "@soat_expired_days_ago": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "soat_expiring_warning": "Te notificaremos 7 días antes del vencimiento. Renueva tu SOAT con anticipación para evitar multas.",
+  "soat_expired_warning": "Circular sin SOAT vigente es una infracción. Renueva tu seguro lo antes posible.",
+  "soat_renew_btn": "Registrar nuevo SOAT",
+  "soat_view_document": "Ver documento",
+  "soat_edit_btn": "Editar",
+  "soat_uploading": "Subiendo…",
+  "soat_upload_error": "Error al subir. Archivo demasiado grande (máx. 10 MB).",
+  "soat_save_error": "No se pudo guardar el SOAT. Verifica tu conexión e intenta de nuevo.",
+  "soat_upload_error_label": "Error al subir"
 }
