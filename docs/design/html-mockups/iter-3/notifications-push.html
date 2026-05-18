@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rideglory — Push Notifications + Background GPS (iter-3)</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap">
+</head>
+<body>
+<div class="frame-wrap">
+
+  <!-- =====================================================
+       Android Foreground Service Notification
+       Story 3.5 — Background GPS
+       Non-dismissable persistent notification
+       ===================================================== -->
+  <div>
+    <p class="phone-label">Android — Notificación foreground service (GPS activo)</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+
+      <!-- Android notification shade mockup -->
+      <div style="background:#111;padding:8px">
+        <div style="font-size:11px;color:#666;padding:4px 8px;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.06em;font-weight:600">
+          Notificaciones
+        </div>
+
+        <!-- Foreground service notification — non-dismissable -->
+        <div class="android-notif">
+          <div class="notif-app-icon">R</div>
+          <div class="notif-body">
+            <div class="notif-app-name">RIDEGLORY · Ahora</div>
+            <div class="notif-title">Rideglory — Rodada activa</div>
+            <div class="notif-text">Tu ubicación se está compartiendo con los riders de la rodada.</div>
+          </div>
+          <div class="notif-time" style="align-self:center">●</div>
+        </div>
+
+        <!-- Note: non-dismissable indicator -->
+        <div style="
+          font-size:11px;
+          color:#555;
+          padding:6px 14px;
+          text-align:center;
+          font-style:italic;
+        ">
+          No se puede descartar · Servicio en primer plano activo
+        </div>
+      </div>
+
+      <!-- App locked screen context -->
+      <div style="
+        flex:1;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        flex-direction:column;
+        gap:12px;
+        padding:24px;
+        background:var(--bg);
+        min-height:420px;
+      ">
+        <div style="font-size:48px">🏍️</div>
+        <div style="font-size:16px;font-weight:700;color:var(--text-primary)">App en background</div>
+        <div style="font-size:13px;color:var(--text-secondary);text-align:center;line-height:1.5">
+          El GPS sigue activo. Tu ubicación se envía cada 5 segundos al WebSocket de la rodada.
+        </div>
+
+        <!-- Status indicators -->
+        <div class="card" style="width:100%">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--success);flex-shrink:0"></div>
+            <div style="font-size:13px;color:var(--text-primary)">GPS activo · Actualización cada 5s</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--primary);flex-shrink:0"></div>
+            <div style="font-size:13px;color:var(--text-primary)">WebSocket conectado</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:8px;height:8px;border-radius:50%;background:var(--success);flex-shrink:0"></div>
+            <div style="font-size:13px;color:var(--text-primary)">Foreground service corriendo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       iOS Background Location Indicator
+       Story 3.5 — iOS system blue indicator in status bar
+       ===================================================== -->
+  <div>
+    <p class="phone-label">iOS — Indicador de ubicación del sistema (background)</p>
+    <div class="phone">
+      <!-- iOS-style status bar with blue location indicator -->
+      <div class="status-bar" style="background:#0A84FF;border-radius:40px 40px 0 0;padding:14px 24px 8px">
+        <span class="time" style="color:#fff">9:41</span>
+        <div style="font-size:11px;color:#fff;font-weight:600;text-align:center;flex:1">
+          Rideglory está usando tu ubicación
+        </div>
+        <div class="status-icons" style="color:#fff">
+          <span>🔋</span>
+        </div>
+      </div>
+
+      <!-- App content behind -->
+      <div style="padding:20px;flex:1;min-height:640px;background:var(--bg)">
+        <div style="
+          background:rgba(10,132,255,0.08);
+          border:1px solid rgba(10,132,255,0.25);
+          border-radius:var(--r-md);
+          padding:12px 14px;
+          margin-bottom:16px;
+          display:flex;
+          align-items:center;
+          gap:10px;
+        ">
+          <span style="font-size:18px">📍</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:#60A5FA">Ubicación activa en background</div>
+            <div style="font-size:11px;color:var(--text-secondary);margin-top:2px">
+              iOS muestra el indicador azul en la barra de estado
+            </div>
+          </div>
+        </div>
+
+        <div style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:16px">
+          En iOS, la ubicación en background se gestiona con <code style="color:var(--primary);font-family:monospace">geolocator</code> y <code style="color:var(--primary);font-family:monospace">AppleSettings(activityType: ActivityType.automotiveNavigation, allowBackgroundLocationUpdates: true)</code>.
+        </div>
+
+        <!-- Info.plist NSLocation descriptions -->
+        <div class="card">
+          <div class="section-header">Textos Info.plist (español)</div>
+          <div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px">
+            Aparecen en el diálogo de permisos del sistema iOS
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:var(--surface-2);border-radius:var(--r-sm);padding:10px;border:1px solid var(--border)">
+              <div style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:3px">NSLocationWhenInUseUsageDescription</div>
+              <div style="font-size:13px;color:var(--text-primary)">
+                "Rideglory usa tu ubicación para compartirla con los riders de la rodada en tiempo real."
+              </div>
+            </div>
+            <div style="background:var(--surface-2);border-radius:var(--r-sm);padding:10px;border:1px solid var(--border)">
+              <div style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:3px">NSLocationAlwaysAndWhenInUseUsageDescription</div>
+              <div style="font-size:13px;color:var(--text-primary)">
+                "Rideglory usa tu ubicación en segundo plano para continuar compartiendo tu posición durante la rodada cuando la app no está en primer plano."
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       Push Notification — SOS Alert (FCM)
+       Received by other riders when SOS is triggered
+       ===================================================== -->
+  <div>
+    <p class="phone-label">Push — Alerta SOS (FCM, recibida por riders)</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+
+      <!-- Lock screen style notifications -->
+      <div style="background:linear-gradient(180deg,#1a1a2e 0%,#16213e 100%);min-height:680px;padding:0">
+
+        <!-- Time on lock screen -->
+        <div style="text-align:center;padding:60px 24px 24px">
+          <div style="font-size:64px;font-weight:200;color:#fff;letter-spacing:-2px">9:41</div>
+          <div style="font-size:16px;color:rgba(255,255,255,0.6)">Miércoles, 20 de junio</div>
+        </div>
+
+        <!-- SOS FCM push notification -->
+        <div class="push-preview" style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3)">
+          <div class="push-icon" style="background:var(--sos-red)">🚨</div>
+          <div class="push-content">
+            <div class="push-header">
+              <span class="push-app" style="color:rgba(255,255,255,0.6)">RIDEGLORY</span>
+              <span class="push-time" style="color:rgba(255,255,255,0.4)">ahora</span>
+            </div>
+            <div class="push-title" style="color:#fff">¡Alerta de emergencia!</div>
+            <div class="push-body" style="color:rgba(255,255,255,0.7)">
+              Carlos M. ha activado el SOS en Páramo del Sumapaz. Lat: 4.813, Lng: -75.696
+            </div>
+          </div>
+        </div>
+
+        <!-- Regular maintenance push notification (for comparison) -->
+        <div class="push-preview">
+          <div class="push-icon" style="background:#F59E0B">🔧</div>
+          <div class="push-content">
+            <div class="push-header">
+              <span class="push-app">RIDEGLORY</span>
+              <span class="push-time">hace 2h</span>
+            </div>
+            <div class="push-title">Mantenimiento próximo</div>
+            <div class="push-body">
+              El cambio de aceite de tu Honda CB500F está programado en 30 días.
+            </div>
+          </div>
+        </div>
+
+        <!-- Event reminder push notification -->
+        <div class="push-preview">
+          <div class="push-icon" style="background:var(--primary)">🏍️</div>
+          <div class="push-content">
+            <div class="push-header">
+              <span class="push-app">RIDEGLORY</span>
+              <span class="push-time">hace 23h</span>
+            </div>
+            <div class="push-title">¡Tu rodada es mañana!</div>
+            <div class="push-body">
+              Páramo del Sumapaz 2026 comienza mañana a las 6:00 AM. ¡Prepara tu moto!
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       Push Notification Copy Reference Card
+       All notification texts for app_es.arb and FCM payload
+       ===================================================== -->
+  <div>
+    <p class="phone-label">Referencia: textos de todas las notificaciones push (iter-3)</p>
+    <div class="phone" style="min-height:auto;border-radius:var(--r-lg)">
+      <div style="padding:20px">
+        <div style="font-size:16px;font-weight:800;color:var(--text-primary);margin-bottom:16px">
+          Copy de notificaciones (app_es.arb)
+        </div>
+
+        <!-- SOS Push -->
+        <div class="card" style="margin-bottom:10px">
+          <div class="section-header">SOS Alert (US-3-1)</div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:12px">
+            <div><span style="color:var(--text-muted)">Título:</span> <span style="color:var(--text-primary)">¡Alerta de emergencia!</span></div>
+            <div><span style="color:var(--text-muted)">Cuerpo:</span> <span style="color:var(--text-primary)">{riderName} ha activado el SOS en {eventName}.</span></div>
+            <div><span style="color:var(--text-muted)">key (título):</span> <code style="color:var(--primary)">sos_push_title</code></div>
+            <div><span style="color:var(--text-muted)">key (cuerpo):</span> <code style="color:var(--primary)">sos_push_body</code></div>
+          </div>
+        </div>
+
+        <!-- Maintenance reminder -->
+        <div class="card" style="margin-bottom:10px">
+          <div class="section-header">Mantenimiento próximo (US-3-6)</div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:12px">
+            <div><span style="color:var(--text-muted)">Título:</span> <span style="color:var(--text-primary)">Mantenimiento próximo</span></div>
+            <div><span style="color:var(--text-muted)">Cuerpo:</span> <span style="color:var(--text-primary)">El {serviceType} de tu {vehicleName} está programado en 30 días.</span></div>
+            <div><span style="color:var(--text-muted)">key (título):</span> <code style="color:var(--primary)">maintenance_push_title</code></div>
+            <div><span style="color:var(--text-muted)">key (cuerpo):</span> <code style="color:var(--primary)">maintenance_push_body</code></div>
+          </div>
+        </div>
+
+        <!-- Event reminder -->
+        <div class="card" style="margin-bottom:10px">
+          <div class="section-header">Recordatorio de evento (US-3-7)</div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:12px">
+            <div><span style="color:var(--text-muted)">Título:</span> <span style="color:var(--text-primary)">¡Tu rodada es mañana!</span></div>
+            <div><span style="color:var(--text-muted)">Cuerpo:</span> <span style="color:var(--text-primary)">{eventName} comienza mañana a las {startTime}. ¡Prepara tu moto!</span></div>
+            <div><span style="color:var(--text-muted)">key (título):</span> <code style="color:var(--primary)">event_reminder_push_title</code></div>
+            <div><span style="color:var(--text-muted)">key (cuerpo):</span> <code style="color:var(--primary)">event_reminder_push_body</code></div>
+          </div>
+        </div>
+
+        <!-- Ride ended -->
+        <div class="card" style="margin-bottom:10px">
+          <div class="section-header">Rodada terminada (US-3-4)</div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:12px">
+            <div><span style="color:var(--text-muted)">Título:</span> <span style="color:var(--text-primary)">La rodada ha terminado</span></div>
+            <div><span style="color:var(--text-muted)">Cuerpo:</span> <span style="color:var(--text-primary)">{eventName} ha finalizado. ¡Hasta la próxima!</span></div>
+            <div><span style="color:var(--text-muted)">key (título):</span> <code style="color:var(--primary)">tracking_ride_ended_push_title</code></div>
+            <div><span style="color:var(--text-muted)">key (cuerpo):</span> <code style="color:var(--primary)">tracking_ride_ended_push_body</code></div>
+          </div>
+        </div>
+
+        <!-- Android foreground service -->
+        <div class="card">
+          <div class="section-header">Android Foreground Service (US-3-5)</div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:12px">
+            <div><span style="color:var(--text-muted)">Título:</span> <span style="color:var(--text-primary)">Rideglory — Rodada activa</span></div>
+            <div><span style="color:var(--text-muted)">Cuerpo:</span> <span style="color:var(--text-primary)">Tu ubicación se está compartiendo con los riders de la rodada.</span></div>
+            <div><span style="color:var(--text-muted)">key (título):</span> <code style="color:var(--primary)">tracking_fg_service_title</code></div>
+            <div><span style="color:var(--text-muted)">key (cuerpo):</span> <code style="color:var(--primary)">tracking_fg_service_body</code></div>
+            <div style="margin-top:4px;padding:6px 8px;background:var(--primary-dim);border-radius:var(--r-sm)">
+              <span style="color:var(--primary)">⚠ No descartable (FOREGROUND_SERVICE_LOCATION)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

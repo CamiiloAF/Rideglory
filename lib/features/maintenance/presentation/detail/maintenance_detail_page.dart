@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:rideglory/core/di/injection.dart';
-import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/delete/cubit/maintenance_delete_cubit.dart';
+import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_cta_bar.dart';
+import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_info_card.dart';
+import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_next_service_card.dart';
+import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_notes_card.dart';
 import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_options_bottom_sheet.dart';
-import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_info_tile.dart';
-import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_section_header.dart';
-import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_alert_card.dart';
-import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_detail_header.dart';
+import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_type_card.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
-import 'package:rideglory/design_system/design_system.dart';
-import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/shared/router/app_routes.dart';
 
 class MaintenanceDetailPage extends StatelessWidget {
   const MaintenanceDetailPage({super.key, required this.maintenance});
@@ -59,10 +58,11 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
     final action = await MaintenanceOptionsBottomSheet.show(context);
 
     if (action == MaintenanceAction.edit && mounted) {
-      final result = await context.pushNamed<MaintenanceModel?>(
+      final raw = await context.pushNamed<dynamic>(
         AppRoutes.editMaintenance,
         extra: _maintenance,
       );
+      final result = raw is List<MaintenanceModel> ? raw.first : raw as MaintenanceModel?;
       if (result != null && mounted) {
         setState(() {
           _maintenance = result;
@@ -70,27 +70,41 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
         });
       }
     } else if (action == MaintenanceAction.delete && mounted) {
-      final confirm = await ConfirmationDialog.show(
-        context: context,
-        title: context.l10n.maintenance_deleteMaintenance,
-        content: context.l10n.maintenance_deleteMaintenanceMessage,
-        confirmLabel: context.l10n.delete,
-        confirmType: DialogActionType.danger,
-      );
-      if (confirm == true && mounted) {
-        context.read<MaintenanceDeleteCubit>().deleteMaintenance(_maintenance);
-      }
+      _confirmDelete();
+    }
+  }
+
+  Future<void> _onEdit() async {
+    final raw = await context.pushNamed<dynamic>(
+      AppRoutes.editMaintenance,
+      extra: _maintenance,
+    );
+    final result = raw is List<MaintenanceModel> ? raw.first : raw as MaintenanceModel?;
+    if (result != null && mounted) {
+      setState(() {
+        _maintenance = result;
+        _wasUpdated = true;
+      });
+    }
+  }
+
+  void _onDelete() => _confirmDelete();
+
+  Future<void> _confirmDelete() async {
+    final confirm = await ConfirmationDialog.show(
+      context: context,
+      title: context.l10n.maintenance_deleteMaintenance,
+      content: context.l10n.maintenance_deleteMaintenanceMessage,
+      confirmLabel: context.l10n.delete,
+      confirmType: DialogActionType.danger,
+    );
+    if (confirm == true && mounted) {
+      context.read<MaintenanceDeleteCubit>().deleteMaintenance(_maintenance);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final currencyFormat = NumberFormat.currency(
-      symbol: '\$',
-      decimalDigits: 2,
-    );
-    final numberFormat = NumberFormat('#,###');
-
     return BlocListener<MaintenanceDeleteCubit, MaintenanceDeleteState>(
       listener: (context, state) {
         state.whenOrNull(
@@ -123,272 +137,112 @@ class _MaintenanceDetailViewState extends State<_MaintenanceDetailView> {
         },
         child: Scaffold(
           backgroundColor: AppColors.darkBgPrimary,
-          appBar: AppAppBar(
-            title: context.l10n.maintenance_maintenanceDetail,
-            leading: BackButton(onPressed: _popWithResult),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.share_outlined),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.more_vert),
-                onPressed: _showOptions,
-              ),
-            ],
-          ),
-          body: SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: BlocBuilder<VehicleCubit, ResultState<List<VehicleModel>>>(
-              builder: (context, vehicleState) {
-                VehicleModel? vehicle;
-                if (_maintenance.vehicleId != null) {
-                  try {
-                    vehicle = context.read<VehicleCubit>().availableVehicles
-                        .firstWhere(
-                          (v) => v.id == _maintenance.vehicleId,
-                        );
-                  } catch (_) {}
-                }
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    MaintenanceDetailHeader(
-                      maintenance: _maintenance,
-                      vehicle: vehicle,
-                    ),
-                AppSpacing.gapXxl,
-                Row(
-                  children: [
-                    Expanded(
-                      child: MaintenanceInfoTile(
-                        label: context.l10n.maintenance_mileage,
-                        value:
-                            '${numberFormat.format(_maintenance.maintanceMileage)} km',
-                        icon: Icons.speed,
-                      ),
-                    ),
-                    AppSpacing.hGapLg,
-                    Expanded(
-                      child: MaintenanceInfoTile(
-                        label: context.l10n.maintenance_totalCost,
-                        value: _maintenance.cost != null
-                            ? currencyFormat.format(_maintenance.cost)
-                            : context.l10n.notAvailable,
-                        icon: Icons.attach_money,
-                      ),
-                    ),
-                  ],
-                ),
-                AppSpacing.gapXxl,
-                if (_maintenance.notes != null &&
-                    _maintenance.notes!.isNotEmpty) ...[
-                  MaintenanceSectionHeader(
-                    title: context.l10n.maintenance_serviceNotes,
-                    icon: Icons.description_outlined,
+          appBar: AppBar(
+            backgroundColor: AppColors.darkBgPrimary,
+            elevation: 0,
+            automaticallyImplyLeading: false,
+            titleSpacing: 0,
+            title: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  _DetailIconButton(
+                    icon: Icons.arrow_back,
+                    onTap: _popWithResult,
                   ),
-                  AppSpacing.gapMd,
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: context.colorScheme.surface,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: context.colorScheme.outlineVariant),
-                    ),
+                  const SizedBox(width: 8),
+                  Expanded(
                     child: Text(
-                      _maintenance.notes!,
-                      style: context.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        height: 1.5,
+                      context.l10n.maintenance_maintenanceDetail,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: AppColors.textOnDarkPrimary,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 17,
                       ),
                     ),
                   ),
-                  AppSpacing.gapXxl,
+                  _DetailIconButton(
+                    icon: Icons.more_vert,
+                    onTap: _showOptions,
+                  ),
                 ],
-                if (_maintenance.nextMaintenanceDate != null ||
-                    _maintenance.nextMaintenanceMileage != null) ...[
-                  Row(
-                    children: [
-                      MaintenanceSectionHeader(
-                        title: context.l10n.maintenance_nextMaintenance,
-                        icon: Icons.event_repeat_outlined,
-                      ),
-                      AppSpacing.hGapSm,
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .colorScheme.primary
-                              .withValues(alpha: 0.25),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          context.l10n.maintenance_suggested.toUpperCase(),
-                          style: context.labelSmall?.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  AppSpacing.gapMd,
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: context.colorScheme.surface,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: context.colorScheme.outlineVariant),
-                    ),
-                    child: Row(
-                      children: [
-                        if (_maintenance.nextMaintenanceDate != null)
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  context.l10n.maintenance_estimatedDate.toUpperCase(),
-                                  style: context.bodySmall?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme.onSurfaceVariant,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 0.8,
-                                  ),
-                                ),
-                                AppSpacing.gapSm,
-                                Text(
-                                  _maintenance.nextMaintenanceDate!
-                                      .formattedDate,
-                                  style: context.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context)
-                                        .colorScheme.onSurface,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        if (_maintenance.nextMaintenanceDate != null &&
-                            _maintenance.nextMaintenanceMileage != null)
-                          Container(
-                            width: 1,
-                            height: 48,
-                            color: context.colorScheme.outlineVariant,
-                          ),
-                        if (_maintenance.nextMaintenanceMileage != null)
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  context.l10n.maintenance_mileage.toUpperCase(),
-                                  style: context.bodySmall?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme.onSurfaceVariant,
-                                    fontWeight: FontWeight.w600,
-                                    letterSpacing: 0.8,
-                                  ),
-                                ),
-                                AppSpacing.gapSm,
-                                Text(
-                                  '${numberFormat.format(_maintenance.nextMaintenanceMileage)} km',
-                                  style: context.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context)
-                                        .colorScheme.onSurface,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  AppSpacing.gapXxl,
-                ],
-                if (_maintenance.receiveAlert) ...[
-                  MaintenanceSectionHeader(
-                    title: context.l10n.maintenance_alertsConfiguration,
-                    icon: Icons.notifications_active_outlined,
-                  ),
-                  AppSpacing.gapMd,
-                  if (!_maintenance.receiveMileageAlert &&
-                      !_maintenance.receiveDateAlert)
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: context.colorScheme.surface,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: context.colorScheme.outlineVariant),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.notifications_active,
-                            color: Theme.of(context).colorScheme.primary,
-                            size: 24,
-                          ),
-                          AppSpacing.hGapLg,
-                          Expanded(
-                            child: Text(
-                              context.l10n.maintenance_alertsActivatedDesc,
-                              style: context.bodyMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  else
-                    Row(
-                      children: [
-                        if (_maintenance.receiveMileageAlert ||
-                            _maintenance.nextMaintenanceMileage != null)
-                          Expanded(
-                            child: MaintenanceAlertCard(
-                              icon: Icons.speed,
-                              label: context.l10n.maintenance_alertByMileage.toUpperCase(),
-                              value: _maintenance.nextMaintenanceMileage != null
-                                  ? '${numberFormat.format(_maintenance.nextMaintenanceMileage)} km'
-                                  : '-',
-                              subtitle: context.l10n.maintenance_mileageAlertBefore,
-                              isOn: _maintenance.receiveMileageAlert,
-                            ),
-                          ),
-                        if (_maintenance.receiveMileageAlert &&
-                            _maintenance.receiveDateAlert)
-                          AppSpacing.hGapMd,
-                        if (_maintenance.receiveDateAlert ||
-                            _maintenance.nextMaintenanceDate != null)
-                          Expanded(
-                            child: MaintenanceAlertCard(
-                              icon: Icons.calendar_month_outlined,
-                              label: context.l10n.maintenance_alertByDate.toUpperCase(),
-                              value:
-                                  _maintenance.nextMaintenanceDate?.formattedDate ??
-                                  '-',
-                              subtitle: context.l10n.maintenance_dateAlertBefore,
-                              isOn: _maintenance.receiveDateAlert,
-                            ),
-                          ),
-                      ],
-                    ),
-                ],
-              ],
-            );
-              },
+              ),
             ),
           ),
+          body: BlocBuilder<VehicleCubit, ResultState<List<VehicleModel>>>(
+            builder: (context, vehicleState) {
+              VehicleModel? vehicle;
+              if (_maintenance.vehicleId != null) {
+                try {
+                  vehicle = context.read<VehicleCubit>().availableVehicles
+                      .firstWhere((v) => v.id == _maintenance.vehicleId);
+                } catch (_) {}
+              }
+
+              final hasNotes =
+                  _maintenance.notes != null && _maintenance.notes!.isNotEmpty;
+              final hasNextService = _maintenance.nextDate != null ||
+                  _maintenance.nextOdometer != null;
+
+              return Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          MaintenanceTypeCard(
+                            maintenance: _maintenance,
+                            vehicle: vehicle,
+                          ),
+                          if (_maintenance.mode == MaintenanceMode.completed) ...[
+                            const SizedBox(height: 16),
+                            MaintenanceInfoCard(maintenance: _maintenance),
+                          ],
+                          if (hasNotes) ...[
+                            const SizedBox(height: 16),
+                            MaintenanceNotesCard(notes: _maintenance.notes!),
+                          ],
+                          if (hasNextService) ...[
+                            const SizedBox(height: 16),
+                            MaintenanceNextServiceCard(
+                              maintenance: _maintenance,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                  MaintenanceCtaBar(onEdit: _onEdit, onDelete: _onDelete),
+                ],
+              );
+            },
+          ),
         ),
+      ),
+    );
+  }
+}
+
+class _DetailIconButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _DetailIconButton({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          color: AppColors.darkTertiary,
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Icon(icon, color: AppColors.textOnDarkPrimary, size: 18),
       ),
     );
   }

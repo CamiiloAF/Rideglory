@@ -246,10 +246,14 @@ App-wide reusable components:
 - Complex state: `@freezed` state class with multiple `ResultState<T>` fields, part of cubit file
 - No boolean flags for loading/error (use `ResultState`)
 
+### Widgets — Reglas críticas (violación cero tolerancia)
+- **Un widget por archivo**: cada `.dart` tiene máximo 1 clase que extiende `StatelessWidget`/`StatefulWidget`/`PreferredSizeWidget`. La clase `State<T>` sí puede coexistir con su `StatefulWidget`.
+- **Prohibidos los métodos que retornan widgets**: `Widget _buildHeader()`, `Widget _ctaBar(context)`, etc. → cada pieza de UI es su propia clase widget en su propio archivo.
+- **Siempre verificar `lib/shared/widgets/form/` antes de implementar**: `AppTextField`, `AppMileageField`, `AppDatePicker`, `AppButton`, `AppTextButton`, `FormSectionHeader`, etc. Nunca usar `FormBuilderTextField`, `ElevatedButton` o `TextButton` directamente si existe un equivalente shared.
+
 ### Naming & Style
 - Variables: avoid single-letter generics (`v`, `e`); prefer domain names (`vehicle`, `event`, `error`)
 - Button text: sentence case (`'Iniciar sesión'`, not `'INICIAR SESIÓN'`)
-- One widget per file (private or public)
 - No obvious comments (class/method names should be self-explanatory)
 
 ### Linting

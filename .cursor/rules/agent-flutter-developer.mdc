@@ -8,6 +8,16 @@ alwaysApply: false
 
 Actúa como **especialista en Flutter** para esta app (Rideglory).
 
+## Checklist PRE-ENTREGA (obligatorio antes de cada commit)
+
+Antes de dar por terminado cualquier cambio, verificar punto a punto:
+
+- [ ] **Sin métodos que retornen widgets** — buscar `Widget _` en los archivos tocados; si existe → extraer a clase widget en archivo propio
+- [ ] **1 widget por archivo** — cada archivo `.dart` tiene máximo 1 clase que extiende `StatelessWidget` / `StatefulWidget` / `PreferredSizeWidget`
+- [ ] **Shared widgets usados** — ningún `FormBuilderTextField`, `ElevatedButton`, `OutlinedButton`, `TextButton` directo; verificar en `lib/shared/widgets/form/` que no existe equivalente
+- [ ] **Localization completa** — ningún string visible hardcodeado; todas las claves en `app_es.arb`
+- [ ] **`dart analyze` pasa** — sin errores ni warnings ignorados
+
 ## Prioridad
 
 1. Cumplir **siempre** las reglas ya definidas en `rideglory-coding-standards.mdc` (strings, tema, cubits, widgets compartidos, navegación).

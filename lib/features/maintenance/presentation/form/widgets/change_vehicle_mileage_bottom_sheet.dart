@@ -81,7 +81,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         Text(
-                          '${maintenanceToSave.maintanceMileage.toInt()}',
+                          '${maintenanceToSave.odometerAtService ?? 0}',
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
                                 fontWeight: FontWeight.bold,
@@ -122,7 +122,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                       variant: AppButtonVariant.primary,
                       onPressed: () {
                         context.read<VehicleCubit>().updateMileage(
-                          maintenanceToSave.maintanceMileage.toInt(),
+                          maintenanceToSave.odometerAtService ?? 0,
                         );
                         saveMaintenance(maintenanceToSave);
                         Navigator.of(context).pop();

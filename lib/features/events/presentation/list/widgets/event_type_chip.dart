@@ -8,16 +8,14 @@ class EventTypeChip extends StatelessWidget {
   const EventTypeChip({super.key, required this.eventType});
 
   Color _getColor(BuildContext context) {
-    switch (eventType) {
-      case EventType.offRoad:
-        return context.appColors.eventOffRoad;
-      case EventType.onRoad:
-        return context.appColors.eventOnRoad;
-      case EventType.exhibition:
-        return context.appColors.eventExhibition;
-      case EventType.charitable:
-        return context.appColors.eventCharitable;
-    }
+    return switch (eventType) {
+      EventType.tourism => context.appColors.eventTourism,
+      EventType.urban => context.appColors.eventUrban,
+      EventType.offRoad => context.appColors.eventOffRoad,
+      EventType.competition => context.appColors.eventCompetition,
+      EventType.solidarity => context.appColors.eventSolidarity,
+      EventType.shortDistance => context.appColors.eventShortDistance,
+    };
   }
 
   @override

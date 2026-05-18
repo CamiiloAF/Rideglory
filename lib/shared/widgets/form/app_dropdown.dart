@@ -40,7 +40,6 @@ class AppDropdown<T> extends StatelessWidget {
           name: name,
           focusNode: focusNode,
           decoration: InputDecoration(
-            border: const OutlineInputBorder(),
             hintText: hintText,
             prefixIcon: prefixIcon,
           ),

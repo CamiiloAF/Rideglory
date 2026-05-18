@@ -13,7 +13,9 @@ import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/features/events/constants/event_strings.dart';
 import 'package:rideglory/features/events/domain/model/rider_profile_model.dart';
 import 'package:rideglory/features/events/domain/model/rider_tracking_model.dart';
+import 'package:rideglory/features/events/domain/model/sos_alert_model.dart';
 import 'package:rideglory/features/events/domain/model/update_location_request.dart';
+import 'package:rideglory/features/events/domain/repository/tracking_repository.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_rider_profile_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/start_tracking_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/stop_tracking_use_case.dart';
@@ -35,6 +37,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     required StopTrackingUseCase stopTrackingUseCase,
     required GetRiderProfileUseCase getRiderProfileUseCase,
     required AuthService authService,
+    required TrackingRepository trackingRepository,
   }) : _eventId = eventId,
        _eventOwnerId = eventOwnerId,
        _watchActiveRidersUseCase = watchActiveRidersUseCase,
@@ -43,6 +46,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
        _stopTrackingUseCase = stopTrackingUseCase,
        _getRiderProfileUseCase = getRiderProfileUseCase,
        _authService = authService,
+       _trackingRepository = trackingRepository,
        super(
          const LiveTrackingState(
            ridersResult: ResultState.initial(),
@@ -61,10 +65,13 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
   final StopTrackingUseCase _stopTrackingUseCase;
   final GetRiderProfileUseCase _getRiderProfileUseCase;
   final AuthService _authService;
+  final TrackingRepository _trackingRepository;
 
   StreamSubscription<List<RiderTrackingModel>>? _ridersSubscription;
   StreamSubscription<Position>? _positionSubscription;
   StreamSubscription<User?>? _authSubscription;
+  StreamSubscription<SosAlertModel>? _sosSubscription;
+  StreamSubscription<void>? _eventEndedSubscription;
   final Battery _battery = Battery();
   Timer? _ridersReconnectTimer;
 
@@ -96,6 +103,8 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     });
 
     _subscribeToRiders();
+    _subscribeToSosAlerts();
+    _subscribeToEventEnded();
 
     await _startSharingMyLocation();
   }
@@ -320,6 +329,10 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     _positionSubscription = null;
     await _ridersSubscription?.cancel();
     _ridersSubscription = null;
+    await _sosSubscription?.cancel();
+    _sosSubscription = null;
+    await _eventEndedSubscription?.cancel();
+    _eventEndedSubscription = null;
     _ridersReconnectTimer?.cancel();
 
     final uid = _userId;
@@ -340,6 +353,8 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
         ridersResult: const ResultState.empty(),
         currentUserLatitude: null,
         currentUserLongitude: null,
+        hasSentSos: false,
+        sosAlertResult: const ResultState.initial(),
       ),
     );
   }
@@ -350,11 +365,56 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     await _authSubscription?.cancel();
     await _ridersSubscription?.cancel();
     await _positionSubscription?.cancel();
+    await _sosSubscription?.cancel();
+    await _eventEndedSubscription?.cancel();
     final uid = _userId;
     if (uid != null && state.isTracking) {
       await _stopTrackingUseCase(eventId: _eventId, userId: uid);
     }
     return super.close();
+  }
+
+  /// Publishes an SOS alert via the tracking repository. Sets [hasSentSos] to true.
+  void triggerSos() {
+    final userId = _userId;
+    if (userId == null) return;
+
+    _trackingRepository.publishSos(
+      eventId: _eventId,
+      userId: userId,
+      latitude: state.currentUserLatitude,
+      longitude: state.currentUserLongitude,
+    );
+    emit(state.copyWith(hasSentSos: true));
+  }
+
+  /// Called by the organizer to end the ride via the tracking repository.
+  Future<void> endRide(String eventId) async {
+    final result = await _trackingRepository.endRide(eventId);
+    result.fold(
+      (error) => developer.log('End ride failed: $error'),
+      (_) {},
+    );
+  }
+
+  void _subscribeToSosAlerts() {
+    _sosSubscription?.cancel();
+    _sosSubscription = _trackingRepository.sosAlerts.listen((alert) {
+      if (isClosed) return;
+      emit(
+        state.copyWith(
+          sosAlertResult: ResultState.data(data: alert),
+        ),
+      );
+    });
+  }
+
+  void _subscribeToEventEnded() {
+    _eventEndedSubscription?.cancel();
+    _eventEndedSubscription = _trackingRepository.eventEnded.listen((_) {
+      if (isClosed) return;
+      emit(state.copyWith(isFinished: true));
+    });
   }
 
   void _scheduleRidersResubscribe() {

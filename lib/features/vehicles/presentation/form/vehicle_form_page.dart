@@ -3,21 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/core/services/image_storage_service.dart';
-import 'package:rideglory/shared/cubits/form_image_cubit.dart';
+import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_form_fields.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
-
-import '../widgets/vehicle_form.dart';
-import 'package:rideglory/design_system/design_system.dart';
-import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_delete_cubit.dart';
+import 'package:rideglory/features/vehicles/presentation/form/vehicle_form_body.dart';
+import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_nav_header.dart';
+import 'package:rideglory/shared/cubits/form_image_cubit.dart';
 
 class VehicleFormPage extends StatelessWidget {
-  final VehicleModel? vehicle;
-
   const VehicleFormPage({super.key, this.vehicle});
+
+  final VehicleModel? vehicle;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +32,9 @@ class VehicleFormPage extends StatelessWidget {
         BlocProvider(
           create: (context) =>
               getIt.get<VehicleFormCubit>()..initialize(vehicle: vehicle),
+        ),
+        BlocProvider(
+          create: (context) => getIt<VehicleDeleteCubit>()..reset(),
         ),
       ],
       child: const _VehicleFormView(),
@@ -86,11 +90,16 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
             VehicleFormFields.brand: state.vehicle!.brand,
             VehicleFormFields.model: state.vehicle!.model,
             VehicleFormFields.year: state.vehicle!.year?.toString(),
-            VehicleFormFields.currentMileage: state.vehicle!.currentMileage
-                .toString(),
+            VehicleFormFields.currentMileage:
+                state.vehicle!.currentMileage.toString(),
             VehicleFormFields.licensePlate: state.vehicle!.licensePlate,
             VehicleFormFields.vin: state.vehicle!.vin,
             VehicleFormFields.purchaseDate: state.vehicle!.purchaseDate,
+            VehicleFormFields.color: state.vehicle!.color,
+            VehicleFormFields.engine: state.vehicle!.engine,
+            VehicleFormFields.horsepower: state.vehicle!.horsepower,
+            VehicleFormFields.torque: state.vehicle!.torque,
+            VehicleFormFields.weight: state.vehicle!.weight,
           }
         : <String, dynamic>{};
   }
@@ -100,9 +109,7 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
     final imageCubit = context.read<FormImageCubit>();
     final vehicleToSave = cubit.buildVehicleToSave();
 
-    if (vehicleToSave == null) {
-      return;
-    }
+    if (vehicleToSave == null) return;
 
     cubit.saveVehicle(
       vehicleToSave,
@@ -110,7 +117,31 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
     );
   }
 
-  void _listener(BuildContext context, VehicleFormState state) {
+  Future<void> _confirmDelete() async {
+    final state = context.read<VehicleFormCubit>().state;
+    if (state.vehicle?.id == null) return;
+
+    await ConfirmationDialog.show(
+      context: context,
+      title: context.l10n.vehicle_deleteVehicle,
+      content: context.l10n.vehicle_deleteVehicleConfirmContent(
+        state.vehicle!.name,
+      ),
+      cancelLabel: context.l10n.cancel,
+      confirmLabel: context.l10n.delete,
+      confirmType: DialogActionType.danger,
+      dialogType: DialogType.confirmation,
+      onConfirm: () {
+        final vehicles = context.read<VehicleCubit>().availableVehicles;
+        context.read<VehicleDeleteCubit>().deleteVehicle(
+          state.vehicle!.id!,
+          availableVehicles: vehicles,
+        );
+      },
+    );
+  }
+
+  void _formListener(BuildContext context, VehicleFormState state) {
     state.vehicleResult.whenOrNull(
       data: (savedVehicle) {
         if (state.isEditing) {
@@ -133,7 +164,42 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
       },
       error: (error) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error.message), backgroundColor: AppColors.error),
+          SnackBar(
+            content: Text(error.message),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      },
+    );
+  }
+
+  void _deleteListener(BuildContext context, VehicleDeleteState state) {
+    state.when(
+      initial: () {},
+      loading: () {},
+      success: (_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(context.l10n.deletedSuccessfully),
+            backgroundColor: AppColors.success,
+          ),
+        );
+        context.pop();
+      },
+      error: (message) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      },
+      errorLastVehicle: (message) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+            backgroundColor: AppColors.error,
+          ),
         );
       },
     );
@@ -141,25 +207,34 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.darkBgPrimary,
-      appBar: AppAppBar(
-        title: _isEditing
-            ? context.l10n.vehicle_editVehicle
-            : context.l10n.vehicle_addVehicle,
-      ),
-      body: BlocListener<VehicleFormCubit, VehicleFormState>(
-        listener: _listener,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: VehicleForm(
-            formKey: context.read<VehicleFormCubit>().formKey,
-            initialValue: _initialValues,
+    return BlocBuilder<VehicleFormCubit, VehicleFormState>(
+      builder: (context, formState) {
+        return Scaffold(
+          backgroundColor: AppColors.darkBgPrimary,
+          appBar: VehicleFormNavHeader(
             isEditing: _isEditing,
+            isLoading: formState.isLoading,
+            onCancel: () => context.pop(),
             onSave: _saveVehicle,
           ),
-        ),
-      ),
+          body: MultiBlocListener(
+            listeners: [
+              BlocListener<VehicleFormCubit, VehicleFormState>(
+                listener: _formListener,
+              ),
+              BlocListener<VehicleDeleteCubit, VehicleDeleteState>(
+                listener: _deleteListener,
+              ),
+            ],
+            child: VehicleFormBody(
+              formKey: context.read<VehicleFormCubit>().formKey,
+              initialValue: _initialValues,
+              onSave: _saveVehicle,
+              onDelete: _confirmDelete,
+            ),
+          ),
+        );
+      },
     );
   }
 }

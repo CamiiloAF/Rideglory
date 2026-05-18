@@ -1,0 +1,54 @@
+{
+  "slug": "map-fix-mapbox",
+  "sourcePrdPath": "docs/custom-iters/map-fix-mapbox/PRD.md",
+  "project": "Rideglory",
+  "existingBase": "/Users/cami/Developer/Personal/Rideglory",
+  "startedAt": "2026-05-16T12:00:00Z",
+  "status": "ready_for_human_review",
+  "phaseLog": [
+    {
+      "phase": "po",
+      "agent": "po",
+      "at": "2026-05-16T12:05:00Z",
+      "summary": "PO phase complete. Bug classified as type=bug_fix severity=high. Four affected files confirmed by reading source: Info.plist missing MBXAccessToken, main.dart conditional token set, RouteMapPreview no onMapLoadError handler, LiveMapWidget no onMapLoadError handler. mapbox_maps_flutter 2.23.1 confirmed in pubspec.lock. PRD_NORMALIZED.md and po.md written. No design, backend, or DB changes needed."
+    },
+    {
+      "phase": "architect",
+      "agent": "architect",
+      "at": "2026-05-16T12:25:00Z",
+      "summary": "Architect phase complete. 5-file change map locked (main.dart, Info.plist, route_map_preview.dart, live_map_widget.dart, live_map_body.dart; optional app_es.arb). Verified Mapbox 2.23.1 API: parameter is onMapLoadErrorListener (with Listener suffix); typedef OnMapLoadErrorListener takes MapLoadingErrorEventData. Decision flip from PRD: use literal pk token in Info.plist instead of $(MAPBOX_PUBLIC_TOKEN) — confirmed via grep that no xcconfig defines that build variable. Three handoffs written (architect.md, architect-for-frontend.md, architect-for-qa.md)."
+    },
+    {
+      "phase": "frontend",
+      "agent": "frontend",
+      "at": "2026-05-16T13:00:00Z",
+      "summary": "Frontend phase complete. 6 source files modified + 2 generated. MBXAccessToken added to Info.plist (literal pk token), fail-fast assert in main.dart, onMapLoadErrorListener wired in RouteMapPreview (shows placeholder) and LiveMapWidget (calls onMapError callback), onMapError wired in LiveMapBody (shows SnackBar), map_loadError key added to app_es.arb and regenerated. dart analyze: 0 errors, 2 pre-existing info-level deprecation warnings."
+    },
+    {
+      "phase": "qa",
+      "agent": "qa",
+      "at": "2026-05-16T22:46:37Z",
+      "summary": "QA PASS — 0 analyze errors, flutter test baseline held (only TC-2-28 pre-existing), no android/domain/data/cubit files changed; 2 dart format fixes applied (whitespace only); all 8 files verified by code review."
+    },
+    {
+      "phase": "tech_lead",
+      "agent": "tech_lead",
+      "at": "2026-05-16T23:10:00Z",
+      "summary": "APPROVED — all 5 source changes correct, no architecture violations, no security issues; 6 non-blocking follow-ups filed."
+    },
+    {
+      "phase": "po_close",
+      "agent": "po",
+      "at": "2026-05-16T22:53:25Z",
+      "summary": "Close-out complete. REVIEW_CHECKLIST.md and SUMMARY.md written. Status set to ready_for_human_review."
+    }
+  ],
+  "decisions": {
+    "uiChanges": true,
+    "backendChanges": false,
+    "frontendChanges": true,
+    "dbChanges": false,
+    "needsDesign": false
+  },
+  "preExistingDirtyTree": false
+}

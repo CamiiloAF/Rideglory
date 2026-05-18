@@ -16,6 +16,7 @@ abstract class AppRoutes {
   static const String garage = '/garage';
   static const String createVehicle = '/vehicles/create';
   static const String editVehicle = '/vehicles/edit';
+  static const String vehicleSoat = '/vehicles/soat';
 
   static const String maintenances = '/maintenances';
   static const String createMaintenance = '/maintenances/create';

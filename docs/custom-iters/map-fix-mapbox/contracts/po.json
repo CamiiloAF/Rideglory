@@ -1,0 +1,38 @@
+{
+  "slug": "map-fix-mapbox",
+  "phase": "po",
+  "status": "pass",
+  "updatedAt": "2026-05-16T12:05:00Z",
+  "summary": "Bug classified as type=bug_fix severity=high. Four affected files confirmed by reading source code: ios/Runner/Info.plist missing MBXAccessToken key (iOS native SDK initializes before Dart), lib/main.dart conditional token set (silently no-ops on misconfiguration), lib/shared/widgets/map/route_map_preview.dart no onMapLoadError handler on MapWidget, lib/features/events/presentation/tracking/widgets/live_map_widget.dart no onMapLoadError handler. mapbox_maps_flutter 2.23.1 confirmed in pubspec.lock. No design, backend, or DB changes needed. PRD_NORMALIZED.md and po.md written with 8 numbered acceptance criteria and regression guardrail table.",
+  "artifacts": [
+    "docs/custom-iters/map-fix-mapbox/PRD_NORMALIZED.md",
+    "docs/custom-iters/map-fix-mapbox/handoffs/po.md"
+  ],
+  "qualityGates": [
+    {
+      "name": "required_artifacts_present",
+      "status": "pass",
+      "detail": "PRD_NORMALIZED.md and handoffs/po.md written with all required sections"
+    },
+    {
+      "name": "source_files_verified",
+      "status": "pass",
+      "detail": "All four affected files read and confirmed: Info.plist missing MBXAccessToken, main.dart conditional guard on lines 40-43, RouteMapPreview MapWidget no error handler, LiveMapWidget MapWidget no error handler"
+    },
+    {
+      "name": "sdk_version_confirmed",
+      "status": "pass",
+      "detail": "mapbox_maps_flutter 2.23.1 confirmed in pubspec.lock (sha256: c2043d610ae976831b958f9ca22627a729f22598f5b339e3c94eb8d883f918ce)"
+    },
+    {
+      "name": "no_protected_files_touched",
+      "status": "pass",
+      "detail": "Only workspace files under docs/custom-iters/map-fix-mapbox/ modified; no files in docs/PRD.md, docs/PLAN.md, workflow/, or .claude/skills/ touched"
+    },
+    {
+      "name": "acceptance_criteria_testable",
+      "status": "pass",
+      "detail": "8 numbered acceptance criteria written; each is independently verifiable (4 platform smoke tests, 1 error-state test, 1 code-review gate, 1 dart analyze gate, 1 launch gate)"
+    }
+  ]
+}

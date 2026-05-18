@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
-import 'package:rideglory/shared/widgets/bottom_nav_add_button.dart';
 import 'package:rideglory/shared/widgets/bottom_nav_item.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
@@ -52,7 +51,6 @@ class HomeBottomNavigationBar extends StatelessWidget {
               isActive: currentIndex == 1,
               onTap: () => onTap(1),
             ),
-            BottomNavAddButton(onTap: onAddTap),
             BottomNavItem(
               icon: Icons.calendar_today_outlined,
               activeIcon: Icons.calendar_today,

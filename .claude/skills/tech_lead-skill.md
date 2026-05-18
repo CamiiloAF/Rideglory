@@ -170,7 +170,6 @@ Commands: `dart analyze --no-summary`, `grep -rn "print(" lib/`, `dart fix --app
 - 2026-05-12 (iter 1): Gotchas and learnings appended after PR #8 review. 6 blocking issues fixed.
 - 2026-05-13 (iter 4): PR #11 reviewed and approved. 1 blocking fix: prefer_const_constructors in test file (const Right, Left, DomainException). dart analyze 34 pre-existing items only. flutter test 7/7. code-review-iter4.md produced.
 - 2026-05-14 (iter 1): PR #13 reviewed and approved. 0 blocking issues. dart analyze 0 errors/0 warnings (33 pre-existing info items). flutter test 28 pass/4 pre-existing fail. 3 deferred non-blockers: Colors.black87 in gradient overlays, DocumentSlotPill hardcoded fallback strings, 4 pre-existing raw widget violations. code-review-iter1.md produced.
-- 2026-05-15 (iter 2): PR #14 reviewed — BLOCKED. dart analyze 0 issues. flutter test 64 pass/1 pre-existing fail. Architecture clean. 4 blocking coding-standards violations found.
 
 ---
 ## Plan reapproval update — 2026-05-13 (plan v3, iters 1–5)
@@ -218,11 +217,21 @@ Commands: `dart analyze --no-summary`, `grep -rn "print(" lib/`, `dart fix --app
 ## Change log
 - 2026-05-13 (plan v3 approval): Per-iteration review focus, security checklist, and architecture invariants documented.
 
-### Iteration 2 (2026-05-15) — PR #14
+---
 
-- **`AppTextButton` must be used even in AppBar actions.** Two instances of `TextButton` found in AppBar `actions` arrays (notifications_view.dart, soat_status_page.dart). `AppTextButton` works in any context since it wraps `TextButton` internally; `AppTextButton(label: ..., onPressed: ...)` is a drop-in replacement. Do not use `TextButton` directly even when the AppBar context feels like a special case.
-- **One-widget-per-file is strictly enforced for all private widget classes in page files.** Page files that compose complex layouts commonly end up with multiple private widget classes (e.g. `_ErrorState`, `_EmptyState`, `_DataView`, `_SectionHeader`, `_DetailRow`). Each of these must be in its own file, even if they are tiny and only used internally. The standard has no "size" exception.
-- **Semantics labels are user-visible strings.** `Semantics(label: ...)` strings are read by screen readers and count as user-visible text. All `label:` values with Spanish words must go through `app_es.arb` + `context.l10n.<key>`. This also applies to `Semantics` labels that are computed (e.g., `'$count notificaciones sin leer'` → add an ARB key with a `{count}` placeholder).
-- **`MaterialPageRoute` is forbidden for feature navigation.** Even when a sub-screen has no currently named go_router route, the fix is to add the named route (not to use `MaterialPageRoute`). The pattern `Navigator.of(context).push(MaterialPageRoute(builder: (_) => SomePage(...)))` is always blocked. Add an `AppRoutes.xxx` constant, register the route in `app_router.dart`, and navigate via `context.pushNamed(AppRoutes.xxx, extra: ...)`. Also eliminates the `.then((result) {...})` pattern — use `await context.pushNamed(...)` return value instead.
-- **Architecture was fully clean in iter-2.** Domain: zero Flutter imports. Data: zero BuildContext, DTOs not exposed. Presentation: no HTTP calls, no DTO types in public interface. ResultState<T> used correctly. FCM @pragma handler correct. Cursor pagination enforced. No `bool isLoading` flags. This is a model implementation of Clean Architecture for Rideglory.
-- **`gh pr review <n> --request-changes` fails on own PRs** (GitHub does not allow self-review with changes request). Use `gh pr review <n> --comment` to post the review summary as a top-level comment. The inline comments (`--comment --body "FILE path:LINE — ..."`) still work regardless.
+### Iteration 3 (2026-05-15, PR #15 review — BLOCKED)
+
+- **`gh pr review --request-changes` fails on own PRs.** GitHub GraphQL error: "Review Can not request changes on your own pull request." Post the full review decision as a `--comment` instead. This satisfies the "inline comments + decision" requirement from the playbook.
+- **Mapbox `hide Error` import alias is REQUIRED** in files that import both `mapbox_maps_flutter` and use `ResultState<T>`. The Mapbox SDK exports a type named `Error` that shadows the Dart builtin. Correct: `import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide Error;`
+- **`geolocator as geo` alias is REQUIRED** in files that also import `mapbox_maps_flutter`. Both packages export `Position` and `LocationSettings` types. Confirm alias is present in every file using both.
+- **`DioException` in a cubit is always a BLOCKING violation** — it's a data-layer exception type. The repository/use case must catch it and convert to `DomainException` before the cubit sees it. No exceptions.
+- **Multiple private widget classes in one file is BLOCKING** even when they are all private (`_`-prefixed). The one-widget-per-file rule applies to `_Widget` classes too. Each must be extracted to its own file.
+- **`_buildXxx()` helpers in a StatelessWidget/StatefulWidget are BLOCKING.** This pattern is extremely common in Flutter tutorials but is explicitly banned in rideglory-coding-standards. Extract to sibling widget files.
+- **Hardcoded Spanish strings in Semantics labels are BLOCKING.** `Semantics(label: 'Enviar alerta de emergencia')` is just as non-compliant as a visible text widget with a hardcoded string.
+- **SnackBar strings require l10n even when triggered from non-build context.** SnackBar content must use `context.l10n.<key>` — the BuildContext is available at the call site (action handler), so there is no exemption.
+- **Story 3.0 hard gate verification must be documented explicitly in the review.** Run `grep -r 'google_maps_flutter' lib/` and `grep -r 'geocoding' lib/` and record the zero-result outcome. Do not rely on frontend handoff claims alone.
+- **Pre-existing violations that are NOT in the diff are NOT blocking.** Verify with `git diff main..<branch> -- <file>`. If the file was untouched, those violations are pre-existing and belong in "deferred" section, not in "blocking."
+- **home_garage_card.dart is a known pre-existing multi-widget file.** `_HeroImage` and `_PlaceholderImage` were pre-existing. Only `_SoatBadge` (added in this PR) is attributable to this PR author, but since the file already had multiple widgets, calling out the full set is correct policy — the fix cycle should address all of them.
+
+### Change log entry
+- 2026-05-15 (iter-3 review): PR #15 reviewed. Decision: BLOCKED. 6 blocking violations. Story 3.0 hard gate PASS. BUG-3-1 resolved. Skill updated with iter-3 learnings.

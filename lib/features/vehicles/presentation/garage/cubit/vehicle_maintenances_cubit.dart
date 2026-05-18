@@ -12,6 +12,42 @@ class VehicleMaintenancesCubit
 
   final GetMaintenancesByVehicleIdUseCase _getMaintenancesByVehicleIdUseCase;
 
+  /// The most recent completed maintenance record for the vehicle.
+  MaintenanceModel? get lastCompleted => state.whenOrNull(
+    data: (list) {
+      final completed = list
+          .where((m) => m.mode == MaintenanceMode.completed)
+          .toList();
+      if (completed.isEmpty) return null;
+      completed.sort((a, b) {
+        final dateA = a.serviceDate ?? a.createdDate ?? DateTime(0);
+        final dateB = b.serviceDate ?? b.createdDate ?? DateTime(0);
+        return dateB.compareTo(dateA);
+      });
+      return completed.first;
+    },
+  );
+
+  /// The most urgent scheduled maintenance record for the vehicle.
+  MaintenanceModel? get nextScheduled => state.whenOrNull(
+    data: (list) {
+      final scheduled = list
+          .where((m) => m.mode == MaintenanceMode.scheduled)
+          .toList();
+      if (scheduled.isEmpty) return null;
+      // Sort by urgency: earliest nextDate or smallest nextOdometer
+      scheduled.sort((a, b) {
+        if (a.nextDate != null && b.nextDate != null) {
+          return a.nextDate!.compareTo(b.nextDate!);
+        }
+        if (a.nextDate != null) return -1;
+        if (b.nextDate != null) return 1;
+        return 0;
+      });
+      return scheduled.first;
+    },
+  );
+
   Future<void> fetchMaintenances(String vehicleId) async {
     emit(const ResultState.loading());
     final result = await _getMaintenancesByVehicleIdUseCase.execute(vehicleId);
@@ -19,7 +55,11 @@ class VehicleMaintenancesCubit
     if (isClosed) return;
     result.fold((error) => emit(ResultState.error(error: error)), (page) {
       final maintenances = [...page.items];
-      maintenances.sort((a, b) => b.date.compareTo(a.date));
+      maintenances.sort((a, b) {
+        final dateA = a.serviceDate ?? a.createdDate ?? DateTime(0);
+        final dateB = b.serviceDate ?? b.createdDate ?? DateTime(0);
+        return dateB.compareTo(dateA);
+      });
       if (maintenances.isEmpty) {
         emit(const ResultState.empty());
       } else {
@@ -46,7 +86,11 @@ class VehicleMaintenancesCubit
           return;
         }
         final updatedList = [...maintenances, maintenance]
-          ..sort((a, b) => b.date.compareTo(a.date));
+          ..sort((a, b) {
+            final dateA = a.serviceDate ?? a.createdDate ?? DateTime(0);
+            final dateB = b.serviceDate ?? b.createdDate ?? DateTime(0);
+            return dateB.compareTo(dateA);
+          });
         emit(ResultState.data(data: updatedList));
       },
     );
@@ -60,7 +104,11 @@ class VehicleMaintenancesCubit
             .toList();
 
         // Re-sort just in case date changed
-        updatedList.sort((a, b) => b.date.compareTo(a.date));
+        updatedList.sort((a, b) {
+          final dateA = a.serviceDate ?? a.createdDate ?? DateTime(0);
+          final dateB = b.serviceDate ?? b.createdDate ?? DateTime(0);
+          return dateB.compareTo(dateA);
+        });
 
         emit(ResultState.data(data: updatedList));
       },

@@ -1429,6 +1429,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_typeRequired => 'El tipo es requerido';
 
   @override
+  String get maintenance_sectionBasicInfo => 'INFORMACIÓN BÁSICA';
+
+  @override
+  String get maintenance_sectionDetails => 'DETALLES DEL SERVICIO';
+
+  @override
+  String get maintenance_sectionAlerts => 'ALERTAS DE PRÓXIMO SERVICIO';
+
+  @override
+  String get maintenance_nextDateLabel => 'Próxima fecha de servicio';
+
+  @override
+  String get maintenance_nextMileageLabel => 'Próximo kilometraje';
+
+  @override
   String get maintenance_remindersLabel => 'Recibe recordatorios automáticos';
 
   @override
@@ -2710,7 +2725,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_form_city_label => 'Ciudad de inicio';
 
   @override
-  String get event_form_max_participants_label => 'Máx. participantes';
+  String get event_form_max_participants_label => 'Cupos disponibles';
 
   @override
   String get event_form_cost_label => 'Costo (COP)';
@@ -2739,6 +2754,36 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_form_save => 'Guardar';
+
+  @override
+  String get event_form_cancel_action => 'Cancelar';
+
+  @override
+  String get event_form_publish_action => 'Publicar';
+
+  @override
+  String get event_form_optional_badge => 'Opcional';
+
+  @override
+  String get event_form_max_participants_section_title =>
+      'MÁXIMO DE PARTICIPANTES';
+
+  @override
+  String get event_form_max_participants_subtitle =>
+      'Deja vacío para no limitar inscritos';
+
+  @override
+  String get event_form_max_participants_hint =>
+      'Una vez lleno el cupo, el evento aparece como \'Completo\' automáticamente.';
+
+  @override
+  String get event_form_price_section_title => 'PRECIO DE INSCRIPCIÓN';
+
+  @override
+  String get event_form_price_subtitle => 'Precio de inscripción (COP)';
+
+  @override
+  String get event_form_free_event_label => 'Evento gratuito';
 
   @override
   String get vehicle_garage_title => 'Mi garaje';
@@ -2850,14 +2895,98 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_form_photo_upload => 'Toca para subir';
 
   @override
-  String get vehicle_form_docs_section => 'Documentos';
+  String get vehicle_form_cover_title => 'Agregar foto de portada';
 
   @override
-  String get vehicle_form_docs_note =>
-      'Los documentos se configuran luego desde el detalle de la moto';
+  String get vehicle_form_cover_subtitle => 'JPG, PNG · Máx. 10MB';
+
+  @override
+  String get vehicle_form_upload_btn => 'Subir';
+
+  @override
+  String get vehicle_form_take_photo_btn => 'Tomar foto';
+
+  @override
+  String get vehicle_form_scan_title => 'Escanear tarjeta de propiedad';
+
+  @override
+  String get vehicle_form_scan_subtitle =>
+      'Autocompleta marca, modelo, año, placa y VIN automáticamente';
+
+  @override
+  String get vehicle_form_info_section => 'INFORMACIÓN BÁSICA';
+
+  @override
+  String get vehicle_form_id_section => 'IDENTIFICACIÓN';
+
+  @override
+  String get vehicle_form_color_hint => 'Ej. Azul, Negro mate';
+
+  @override
+  String get vehicle_form_docs_section => 'DOCUMENTOS';
+
+  @override
+  String get vehicle_form_soat_subtitle => 'Seguro obligatorio de accidentes';
+
+  @override
+  String get vehicle_form_techreview_subtitle => 'Rev. técnica del vehículo';
+
+  @override
+  String get vehicle_form_docs_upload => 'Subir';
+
+  @override
+  String get vehicle_form_add_doc_title => 'Agregar otro documento';
+
+  @override
+  String get vehicle_form_add_doc_subtitle => 'PDF, JPG, PNG · Máx. 5 MB';
+
+  @override
+  String get vehicle_form_docs_max_hint => 'Máximo 3 documentos por vehículo';
 
   @override
   String get vehicle_form_save => 'Guardar moto';
+
+  @override
+  String get vehicle_form_nav_cancel => 'Cancelar';
+
+  @override
+  String get vehicle_form_nav_save => 'Guardar';
+
+  @override
+  String get vehicle_form_delete_vehicle => 'Eliminar vehículo';
+
+  @override
+  String get vehicle_form_placa_required_badge => 'Obligatorio';
+
+  @override
+  String get vehicle_form_vin_optional_label => 'Opcional';
+
+  @override
+  String get vehicle_form_specs_section => 'ESPECIFICACIONES';
+
+  @override
+  String get vehicle_form_specs_engine_label => 'Motor';
+
+  @override
+  String get vehicle_form_specs_horsepower_label => 'Potencia';
+
+  @override
+  String get vehicle_form_specs_torque_label => 'Torque';
+
+  @override
+  String get vehicle_form_specs_weight_label => 'Peso';
+
+  @override
+  String get vehicle_form_specs_engine_hint => 'Ej. 689cc · Paralelo 2 cil.';
+
+  @override
+  String get vehicle_form_specs_horsepower_hint => 'Ej. 73 hp';
+
+  @override
+  String get vehicle_form_specs_torque_hint => 'Ej. 68 Nm';
+
+  @override
+  String get vehicle_form_specs_weight_hint => 'Ej. 179 kg';
 
   @override
   String get maintenance_dashboard_title => 'Mantenimientos';
@@ -2866,13 +2995,17 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_history_title => 'Historial';
 
   @override
-  String get maintenance_form_new_title => 'Nuevo mantenimiento';
+  String get maintenance_form_new_title => 'Nuevo Mantenimiento';
 
   @override
-  String get maintenance_form_step_select => 'Selecciona el tipo de servicio';
+  String get maintenance_form_step_select_label => 'Paso 1 de 2';
 
   @override
-  String get maintenance_form_step_continue => 'Continuar →';
+  String get maintenance_form_step_select =>
+      'Selecciona el tipo de mantenimiento';
+
+  @override
+  String get maintenance_form_step_continue => 'Continuar';
 
   @override
   String get maintenance_form_tab_done => 'Completado';
@@ -2908,6 +3041,31 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_form_save_done => 'Guardar mantenimiento';
 
   @override
+  String get maintenance_form_discard => 'Descartar';
+
+  @override
+  String get maintenance_form_estado_section => 'ESTADO';
+
+  @override
+  String get maintenance_form_context_subtitle =>
+      'Tipo de mantenimiento seleccionado';
+
+  @override
+  String get maintenance_form_km_label => 'Kilometraje al momento del servicio';
+
+  @override
+  String get maintenance_form_cost_taller_section => 'COSTO Y TALLER';
+
+  @override
+  String get maintenance_form_taller_label => 'Taller / Mecánico';
+
+  @override
+  String get maintenance_form_notes_section => 'NOTAS';
+
+  @override
+  String get maintenance_form_next_section_header => 'PRÓXIMO MANTENIMIENTO';
+
+  @override
   String get maintenance_form_date_scheduled_label => 'Fecha programada';
 
   @override
@@ -2921,6 +3079,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_form_save_scheduled => 'Guardar recordatorio';
 
   @override
+  String get maintenance_scheduled_requires_date_or_km =>
+      'Debes ingresar al menos la fecha o los km del próximo mantenimiento';
+
+  @override
+  String get maintenance_prox_service_in => 'Próximo servicio en';
+
+  @override
+  String get maintenance_prox_days_left => 'Faltan para el servicio';
+
+  @override
   String get maintenance_history_search_placeholder => 'Buscar mantenimiento…';
 
   @override
@@ -2930,10 +3098,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_filter_vehicle_label => 'Moto';
 
   @override
+  String get maintenance_filter_type_label => 'Tipo de mantenimiento';
+
+  @override
   String get maintenance_filter_status_label => 'Estado';
 
   @override
   String get maintenance_filter_status_all => 'Todos';
+
+  @override
+  String get maintenance_filter_status_overdue => 'Atrasado';
+
+  @override
+  String get maintenance_filter_status_upcoming => 'Próximo';
+
+  @override
+  String get maintenance_filter_status_on_track => 'Al día';
 
   @override
   String get maintenance_filter_status_done => 'Completados';
@@ -2943,6 +3123,21 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get maintenance_filter_status_urgent => 'Urgentes';
+
+  @override
+  String get maintenance_filter_date_range_label => 'Rango de fecha';
+
+  @override
+  String get maintenance_filter_date_this_month => 'Este mes';
+
+  @override
+  String get maintenance_filter_date_last_3_months => 'Últimos 3 meses';
+
+  @override
+  String get maintenance_filter_date_last_year => 'Último año';
+
+  @override
+  String get maintenance_filter_date_custom => 'Personalizado';
 
   @override
   String get maintenance_filter_period_label => 'Período';
@@ -2955,6 +3150,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get maintenance_filter_clear => 'Limpiar';
+
+  @override
+  String get maintenance_filter_clear_all => 'Limpiar todo';
 
   @override
   String get maintenance_filter_apply => 'Aplicar';
@@ -3111,6 +3309,411 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_manageAttendeesTitle => 'Gestionar inscritos';
 
   @override
+  String get sos_button_label => 'SOS';
+
+  @override
+  String get sos_confirm_title => '¿Enviar alerta SOS?';
+
+  @override
+  String get sos_confirm_body =>
+      'Todos los participantes serán notificados de tu emergencia. Esta acción no se puede deshacer.';
+
+  @override
+  String get sos_confirm_action => 'Enviar SOS';
+
+  @override
+  String get sos_sent_confirmation =>
+      'SOS enviado — los riders han sido notificados';
+
+  @override
+  String get sos_banner_subtitle_with_phone => 'Toca para ver acciones';
+
+  @override
+  String get sos_banner_subtitle_no_phone => 'Sin teléfono registrado';
+
+  @override
+  String get sos_call_action => 'Llamar';
+
+  @override
+  String get sos_locate_action => 'Localizar';
+
+  @override
+  String sos_banner_title(String riderName) {
+    return '$riderName necesita ayuda';
+  }
+
+  @override
+  String get tracking_start_ride => 'Iniciar rodada';
+
+  @override
+  String get tracking_start_ride_confirm_title => '¿Iniciar rodada?';
+
+  @override
+  String get tracking_start_ride_confirm_body =>
+      'Los riders aprobados recibirán acceso al mapa de rastreo en tiempo real.';
+
+  @override
+  String get tracking_end_ride => 'Terminar rodada';
+
+  @override
+  String get tracking_end_ride_confirm_title => '¿Terminar rodada?';
+
+  @override
+  String get tracking_end_ride_confirm_body =>
+      'La pantalla de rastreo se cerrará para todos los riders conectados. Esta acción no se puede deshacer.';
+
+  @override
+  String get tracking_route_on_route => 'En ruta ✓';
+
+  @override
+  String get tracking_route_off_route => 'Fuera de ruta ⚠';
+
+  @override
+  String get tracking_ride_finished => '¡La rodada ha terminado!';
+
+  @override
+  String tracking_ride_finished_body(String eventName) {
+    return '$eventName ha finalizado exitosamente.';
+  }
+
+  @override
+  String get tracking_back_to_home => 'Volver al inicio';
+
+  @override
+  String get tracking_organizer_badge => 'Organizador';
+
+  @override
+  String get tracking_organizer_label => 'Control de rodada';
+
+  @override
+  String tracking_riders_count(int count) {
+    return 'Riders en la rodada · $count';
+  }
+
+  @override
+  String get tracking_rider_status_on_route => 'En ruta';
+
+  @override
+  String get tracking_rider_status_sos => '🚨 SOS activo';
+
+  @override
+  String get tracking_fg_service_title => 'Rideglory — Rodada activa';
+
+  @override
+  String get tracking_fg_service_body =>
+      'Tu ubicación se está compartiendo con los riders de la rodada.';
+
+  @override
+  String get sos_push_title => '¡Alerta de emergencia!';
+
+  @override
+  String sos_push_body(String riderName, String eventName) {
+    return '$riderName ha activado el SOS en $eventName.';
+  }
+
+  @override
+  String get maintenance_push_title => 'Mantenimiento próximo';
+
+  @override
+  String maintenance_push_body(String serviceType, String vehicleName) {
+    return 'El $serviceType de tu $vehicleName está programado en 30 días.';
+  }
+
+  @override
+  String get event_reminder_push_title => '¡Tu rodada es mañana!';
+
+  @override
+  String event_reminder_push_body(String eventName) {
+    return '$eventName comienza mañana. ¡Prepara tu moto!';
+  }
+
+  @override
+  String get tracking_ride_ended_push_title => 'La rodada ha terminado';
+
+  @override
+  String tracking_ride_ended_push_body(String eventName) {
+    return '$eventName ha finalizado. ¡Hasta la próxima!';
+  }
+
+  @override
+  String get vehicle_soat_badge_label => 'SOAT';
+
+  @override
+  String get vehicle_soat_tap_to_add => 'Sin registrar · Agregar →';
+
+  @override
+  String get vehicle_soat_update => 'Actualizar →';
+
+  @override
+  String get vehicle_soat_form_title => 'Registrar SOAT';
+
+  @override
+  String get vehicle_soat_form_edit_title => 'Actualizar SOAT';
+
+  @override
+  String get vehicle_soat_policy_number_label => 'Número de póliza';
+
+  @override
+  String get vehicle_soat_policy_number_hint => 'Ej: SOA-123456';
+
+  @override
+  String get vehicle_soat_insurer_label => 'Aseguradora';
+
+  @override
+  String get vehicle_soat_insurer_hint => 'Ej: Sura, Colseguros...';
+
+  @override
+  String get vehicle_soat_start_date_label => 'Fecha de inicio';
+
+  @override
+  String get vehicle_soat_expiry_date_label => 'Fecha de vencimiento';
+
+  @override
+  String get vehicle_soat_save_button => 'Guardar SOAT';
+
+  @override
+  String get vehicle_soat_saved_successfully => 'SOAT registrado exitosamente';
+
+  @override
+  String get vehicle_soat_section_title => 'Documentos';
+
+  @override
+  String get vehicle_soat_upload_question => '¿Cómo deseas registrar tu SOAT?';
+
+  @override
+  String get vehicle_soat_upload_subtitle =>
+      'Selecciona una opción para actualizar el SOAT de tu vehículo';
+
+  @override
+  String get vehicle_soat_option_upload_title => 'Subir documento';
+
+  @override
+  String get vehicle_soat_option_upload_desc =>
+      'Toma una foto o selecciona desde tu galería el documento del SOAT vigente';
+
+  @override
+  String get vehicle_soat_camera_button => 'Cámara';
+
+  @override
+  String get vehicle_soat_gallery_button => 'Galería';
+
+  @override
+  String get vehicle_soat_option_manual_title => 'Ingresar manualmente';
+
+  @override
+  String get vehicle_soat_option_manual_desc =>
+      'Completa los datos del SOAT de forma manual sin necesidad de subir un documento';
+
+  @override
+  String get vehicle_soat_option_manual_cta => 'Completar formulario';
+
+  @override
+  String get vehicle_soat_confirm_title => 'Confirmar SOAT';
+
+  @override
+  String get vehicle_soat_confirm_button => 'Confirmar SOAT';
+
+  @override
+  String get vehicle_soat_confirm_verify => 'Verifica los datos del SOAT';
+
+  @override
+  String get vehicle_soat_confirm_verify_sub =>
+      'Revisa y corrige la información antes de confirmar';
+
+  @override
+  String get vehicle_soat_manual_section_title => 'Ingresa los datos del SOAT';
+
+  @override
+  String get vehicle_soat_manual_section_sub =>
+      'Completa la información de tu seguro';
+
+  @override
+  String get vehicle_soat_doc_uploaded => 'Documento subido exitosamente';
+
+  @override
+  String get vehicle_soat_status_valid => 'SOAT vigente';
+
+  @override
+  String vehicle_soat_status_valid_desc(int days) {
+    return 'Tu SOAT estará vigente por $days días más';
+  }
+
+  @override
+  String get vehicle_soat_status_expires_today => 'Vence hoy';
+
+  @override
+  String get vehicle_soat_status_expired_title => 'SOAT vencido';
+
+  @override
+  String vehicle_soat_status_expired_desc(int days) {
+    return 'Venció hace $days días';
+  }
+
+  @override
+  String get vehicle_soat_status_invalid_dates_title => 'Fechas inválidas';
+
+  @override
+  String get vehicle_soat_status_invalid_dates_desc =>
+      'La fecha de inicio debe ser anterior al vencimiento';
+
+  @override
+  String get vehicle_soat_status_pending => 'Estado del SOAT';
+
+  @override
+  String get vehicle_soat_upload_failed =>
+      'No se pudo seleccionar el documento';
+
+  @override
+  String get tracking_sosCallError => 'No se pudo iniciar la llamada.';
+
+  @override
+  String get tracking_sosLocationError =>
+      'No se pudo obtener la ubicación del rider.';
+
+  @override
+  String get tracking_sosMapError => 'No se pudo abrir el mapa.';
+
+  @override
+  String get tracking_sosSemanticsLabel => 'Enviar alerta de emergencia';
+
+  @override
+  String get map_geocodeError => 'No se pudo obtener las coordenadas.';
+
+  @override
+  String get map_loadError => 'No se pudo cargar el mapa.';
+
+  @override
+  String get maintenance_summary_title => 'Resumen de Mantenimientos';
+
+  @override
+  String get maintenance_services_count => 'Servicios';
+
+  @override
+  String get maintenance_total_spent => 'Total gastado';
+
+  @override
+  String get maintenance_overdue_section => 'ATRASADO';
+
+  @override
+  String get maintenance_upcoming_section => 'PRÓXIMAMENTE';
+
+  @override
+  String get maintenance_on_track_section => 'AL DÍA';
+
+  @override
+  String get maintenance_status_done_badge => 'Realizado';
+
+  @override
+  String get maintenance_status_scheduled_badge => 'Programado';
+
+  @override
+  String get maintenance_service_info => 'Información del servicio';
+
+  @override
+  String get maintenance_service_date => 'Fecha del servicio';
+
+  @override
+  String get maintenance_odometer_km => 'Odómetro';
+
+  @override
+  String get maintenance_next_review => 'Próxima revisión';
+
+  @override
+  String get maintenance_next_date_label => 'Próxima fecha';
+
+  @override
+  String get maintenance_next_odometer_label => 'Próximo odómetro';
+
+  @override
+  String get maintenance_expired_label => 'vencido';
+
+  @override
+  String get maintenance_modeCompleted => 'Realizado';
+
+  @override
+  String get maintenance_modeScheduled => 'Programado';
+
+  @override
+  String get maintenance_statusOverdue => 'Vencido';
+
+  @override
+  String get maintenance_statusNext => 'Próximo';
+
+  @override
+  String get maintenance_statusUpToDate => 'Al día';
+
+  @override
+  String get maintenance_noNextService => 'Sin próximo servicio';
+
+  @override
+  String get maintenance_noServicesRegistered => 'Sin servicios registrados';
+
+  @override
+  String get maintenance_validationNextFieldRequired =>
+      'Agrega al menos un criterio para el próximo servicio (km o fecha).';
+
+  @override
+  String get maintenance_validationNextDateMustBeFuture =>
+      'La fecha del próximo servicio debe ser futura';
+
+  @override
+  String get maintenance_validationServiceDateRequired =>
+      'La fecha del servicio es requerida';
+
+  @override
+  String get maintenance_validationOdometerRequired =>
+      'El odómetro es requerido';
+
+  @override
+  String get garage_viewMaintenanceHistory => 'Ver historial de mantenimientos';
+
+  @override
+  String get garage_lastService => 'Último servicio';
+
+  @override
+  String get garage_nextService => 'Próximo servicio';
+
+  @override
+  String get garage_completedServiceBadge => 'HECHO';
+
+  @override
+  String get garage_otherVehiclesSection => 'OTROS VEHÍCULOS';
+
+  @override
+  String get garage_upToDate => 'Al día';
+
+  @override
+  String garage_upcomingCount(int count) {
+    return '$count próximo';
+  }
+
+  @override
+  String get garage_mainVehicleBadge => 'Principal';
+
+  @override
+  String get garage_odometerLabel => 'odómetro';
+
+  @override
+  String get garage_healthHeader => 'Estado de mantenimientos';
+
+  @override
+  String garage_healthServicesCount(int count) {
+    return '$count servicios';
+  }
+
+  @override
+  String get garage_healthOverdue => 'Atrasado';
+
+  @override
+  String get garage_healthUpcoming => 'Próximo';
+
+  @override
+  String get garage_tapForDetail => 'Toca para ver detalle del vehículo';
+
+  @override
+  String get garage_seeDetail => 'Ver detalle';
+
+  @override
   String get event_filter_pending => 'Pendientes';
 
   @override
@@ -3144,6 +3747,79 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_filter_status_label => 'Estado';
+
+  @override
+  String get notification_loadMore => 'Cargar más notificaciones';
+
+  @override
+  String get notification_loadError =>
+      'No se pudieron cargar las notificaciones';
+
+  @override
+  String get notification_loadErrorSubtitle =>
+      'Verifica tu conexión a internet e intenta de nuevo.';
+
+  @override
+  String get notification_retry => 'Reintentar';
+
+  @override
+  String get notification_soat30d_title => 'SOAT vence en 30 días';
+
+  @override
+  String get notification_soat7d_title => 'Tu SOAT vence en 7 días';
+
+  @override
+  String get notification_soatDayOf_title => 'Tu SOAT vence hoy';
+
+  @override
+  String notification_soat_subtitle(String vehicleName) {
+    return '$vehicleName · Renuévalo para evitar multas';
+  }
+
+  @override
+  String notification_soatDayOf_subtitle(String vehicleName) {
+    return '$vehicleName · Renueva antes de salir';
+  }
+
+  @override
+  String get notification_newRegistration_title => 'Nueva inscripción';
+
+  @override
+  String notification_newRegistration_subtitle(
+    String riderName,
+    String eventName,
+  ) {
+    return '$riderName quiere unirse a \"$eventName\"';
+  }
+
+  @override
+  String get notification_approved_title => 'Inscripción aprobada';
+
+  @override
+  String notification_approved_subtitle(String eventName) {
+    return 'Estás inscrito a \"$eventName\"';
+  }
+
+  @override
+  String get notification_rejected_title => 'Inscripción rechazada';
+
+  @override
+  String notification_rejected_subtitle(String eventName) {
+    return 'Tu solicitud para \"$eventName\" no fue aprobada';
+  }
+
+  @override
+  String notification_bell_unread_label(int count) {
+    return '$count notificaciones sin leer';
+  }
+
+  @override
+  String get notification_bell_label => 'Notificaciones';
+
+  @override
+  String notification_item_accessibility_label(String title, String time) {
+    return 'Notificación: $title, $time';
+  }
 
   @override
   String get soat_page_upload_title => 'Subir SOAT';
@@ -3306,77 +3982,4 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get soat_upload_error_label => 'Error al subir';
-
-  @override
-  String get notification_loadMore => 'Cargar más notificaciones';
-
-  @override
-  String get notification_loadError =>
-      'No se pudieron cargar las notificaciones';
-
-  @override
-  String get notification_loadErrorSubtitle =>
-      'Verifica tu conexión a internet e intenta de nuevo.';
-
-  @override
-  String get notification_retry => 'Reintentar';
-
-  @override
-  String get notification_soat30d_title => 'SOAT vence en 30 días';
-
-  @override
-  String get notification_soat7d_title => 'Tu SOAT vence en 7 días';
-
-  @override
-  String get notification_soatDayOf_title => 'Tu SOAT vence hoy';
-
-  @override
-  String notification_soat_subtitle(String vehicleName) {
-    return '$vehicleName · Renuévalo para evitar multas';
-  }
-
-  @override
-  String notification_soatDayOf_subtitle(String vehicleName) {
-    return '$vehicleName · Renueva antes de salir';
-  }
-
-  @override
-  String get notification_newRegistration_title => 'Nueva inscripción';
-
-  @override
-  String notification_newRegistration_subtitle(
-    String riderName,
-    String eventName,
-  ) {
-    return '$riderName quiere unirse a \"$eventName\"';
-  }
-
-  @override
-  String get notification_approved_title => 'Inscripción aprobada';
-
-  @override
-  String notification_approved_subtitle(String eventName) {
-    return 'Estás inscrito a \"$eventName\"';
-  }
-
-  @override
-  String get notification_rejected_title => 'Inscripción rechazada';
-
-  @override
-  String notification_rejected_subtitle(String eventName) {
-    return 'Tu solicitud para \"$eventName\" no fue aprobada';
-  }
-
-  @override
-  String notification_bell_unread_label(int count) {
-    return '$count notificaciones sin leer';
-  }
-
-  @override
-  String get notification_bell_label => 'Notificaciones';
-
-  @override
-  String notification_item_accessibility_label(String title, String time) {
-    return 'Notificación: $title, $time';
-  }
 }

@@ -46,12 +46,12 @@ class MaintenanceDatesSection extends StatelessWidget {
             ),
             AppSpacing.hGapSm,
             Text(
-              'Realizado: ${_formatDate(context, maintenance.date)}',
+              'Realizado: ${_formatDate(context, maintenance.serviceDate ?? maintenance.createdDate ?? DateTime.now())}',
               style: context.bodySmall?.copyWith(fontWeight: FontWeight.w500),
             ),
           ],
         ),
-        if (maintenance.nextMaintenanceDate != null) ...[
+        if (maintenance.nextDate != null) ...[
           AppSpacing.gapSm,
           Row(
             children: [
@@ -64,7 +64,7 @@ class MaintenanceDatesSection extends StatelessWidget {
               ),
               AppSpacing.hGapSm,
               Text(
-                'Próximo: ${_formatDate(context, maintenance.nextMaintenanceDate!)}',
+                'Próximo: ${_formatDate(context, maintenance.nextDate!)}',
                 style: context.bodySmall?.copyWith(
                   color: daysUntilNext != null && daysUntilNext! <= 0
                       ? AppColors.error

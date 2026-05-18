@@ -50,14 +50,13 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
 
           return BlocBuilder<VehicleMaintenancesCubit,
               ResultState<List<MaintenanceModel>>>(
-            builder: (context, state) {
-              final latest = state.maybeWhen(
-                data: (list) => list.isNotEmpty ? list.first : null,
-                orElse: () => null,
-              );
+            builder: (context, _) {
+              final cubit = context.read<VehicleMaintenancesCubit>();
               return _MaintenanceCards(
-                latest: latest,
+                lastCompleted: cubit.lastCompleted,
+                nextScheduled: cubit.nextScheduled,
                 vehicleId: vehicle.id,
+                currentMileage: vehicle.currentMileage,
               );
             },
           );
@@ -70,22 +69,43 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
 // ─── Two-card summary + CTA button ──────────────────────────────────────────
 
 class _MaintenanceCards extends StatelessWidget {
-  const _MaintenanceCards({this.latest, this.vehicleId});
+  const _MaintenanceCards({
+    this.lastCompleted,
+    this.nextScheduled,
+    this.vehicleId,
+    required this.currentMileage,
+  });
 
-  final MaintenanceModel? latest;
+  final MaintenanceModel? lastCompleted;
+  final MaintenanceModel? nextScheduled;
   final String? vehicleId;
+  final int currentMileage;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Expanded(child: _ServiceCard.last(maintenance: latest)),
-            const SizedBox(width: 12),
-            Expanded(child: _ServiceCard.next(maintenance: latest)),
-          ],
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: _ServiceCard.last(
+                  maintenance: lastCompleted,
+                  maintenanceId: lastCompleted?.id,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _ServiceCard.next(
+                  maintenance: nextScheduled,
+                  maintenanceId: nextScheduled?.id,
+                  currentMileage: currentMileage,
+                ),
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: 12),
         _HistoryButton(vehicleId: vehicleId),
@@ -99,17 +119,32 @@ class _MaintenanceCards extends StatelessWidget {
 enum _CardType { last, next }
 
 class _ServiceCard extends StatelessWidget {
-  const _ServiceCard.last({this.maintenance}) : _type = _CardType.last;
-  const _ServiceCard.next({this.maintenance}) : _type = _CardType.next;
+  const _ServiceCard.last({this.maintenance, this.maintenanceId})
+    : _type = _CardType.last,
+      _currentMileage = 0;
+  const _ServiceCard.next({
+    this.maintenance,
+    this.maintenanceId,
+    required int currentMileage,
+  }) : _type = _CardType.next,
+       _currentMileage = currentMileage;
 
   final MaintenanceModel? maintenance;
+  final String? maintenanceId;
   final _CardType _type;
+  final int _currentMileage;
 
   bool get _isLast => _type == _CardType.last;
 
+  bool get _isOverdue {
+    if (_isLast || maintenance == null) return false;
+    return MaintenanceModel.calculateStatus(maintenance!, _currentMileage) ==
+        MaintenanceStatus.overdue;
+  }
+
   String _formatDate(DateTime? date) {
     if (date == null) return '—';
-    return DateFormat('MMM yyyy', 'es').format(date);
+    return DateFormat('d MMM. yyyy', 'es').format(date);
   }
 
   String _formatKm(int? km) {
@@ -117,22 +152,60 @@ class _ServiceCard extends StatelessWidget {
     return '${NumberFormat('#,###').format(km).replaceAll(',', '.')} km';
   }
 
+  String _primaryValue() {
+    if (_isLast) {
+      final date = maintenance?.serviceDate;
+      final km = maintenance?.odometerAtService;
+      if (date != null) return _formatDate(date);
+      if (km != null) return _formatKm(km);
+      return '—';
+    } else {
+      final km = maintenance?.nextOdometer;
+      final date = maintenance?.nextDate;
+      if (km != null) return _formatKm(km);
+      if (date != null) return _formatDate(date);
+      return '—';
+    }
+  }
+
+  String? _secondaryValue() {
+    if (_isLast) {
+      final date = maintenance?.serviceDate;
+      final km = maintenance?.odometerAtService;
+      if (date != null && km != null) return _formatKm(km);
+      return null;
+    } else {
+      final km = maintenance?.nextOdometer;
+      final date = maintenance?.nextDate;
+      if (km != null && date != null) return _formatDate(date);
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final date = _isLast ? maintenance?.date : maintenance?.nextMaintenanceDate;
-    final km = _isLast
-        ? maintenance?.maintanceMileage
-        : maintenance?.nextMaintenanceMileage;
-    final iconColor = _isLast ? AppColors.info : AppColors.primary;
+    final overdue = _isOverdue;
+    final iconColor = _isLast
+        ? AppColors.info
+        : overdue
+            ? AppColors.error
+            : AppColors.primary;
     final badgeText = _isLast
         ? context.l10n.maintenance_done
-        : context.l10n.maintenance_legend_warning;
+        : overdue
+            ? context.l10n.maintenance_statusOverdue
+            : context.l10n.maintenance_legend_warning;
+    final bgColor = overdue ? const Color(0x1AEF4444) : AppColors.darkCard;
+    final borderColor =
+        overdue ? const Color(0x40EF4444) : AppColors.darkBorderPrimary;
+    final primary = _primaryValue();
+    final secondary = _secondaryValue();
 
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.darkCard,
+        color: bgColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.darkBorderPrimary),
+        border: Border.all(color: borderColor),
       ),
       padding: const EdgeInsets.all(14),
       child: Column(
@@ -166,21 +239,27 @@ class _ServiceCard extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            _formatDate(date),
-            style: const TextStyle(
-              color: AppColors.textOnDarkPrimary,
+            primary,
+            style: TextStyle(
+              color: overdue
+                  ? AppColors.error
+                  : AppColors.textOnDarkPrimary,
               fontSize: 15,
               fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(height: 6),
-          Text(
-            _formatKm(km),
-            style: const TextStyle(
-              color: AppColors.textOnDarkSecondary,
-              fontSize: 11,
+          if (secondary != null) ...[
+            const SizedBox(height: 4),
+            Text(
+              secondary,
+              style: TextStyle(
+                color: overdue
+                    ? AppColors.error.withValues(alpha: 0.7)
+                    : AppColors.textOnDarkSecondary,
+                fontSize: 11,
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );

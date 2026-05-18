@@ -29,6 +29,7 @@ Create a `.env` file in the project root with the following keys. All are requir
 | `FIREBASE_IOS_BUNDLE_ID` | iOS app bundle identifier | `com.rideglory.app` | Yes |
 | `LOCAL_API_BASE_URL` | Backend API base URL (dev/testing only) | `http://localhost:3000/api` | Yes |
 | `UNSPLASH_ACCESS_KEY` | Unsplash API key for placeholder images (iter-4+) | `Ym9nWV...` | Yes |
+| `MAPBOX_PUBLIC_TOKEN` | Mapbox public access token (pk.*) for Mapbox Maps runtime | `pk.eyJ1...` | Yes (iter-3+) |
 
 ### GitHub Actions Secrets
 
@@ -40,6 +41,8 @@ Additionally, GitHub Actions requires:
 |--------|---------|--------|----------|
 | `GOOGLE_SERVICES_JSON` | Firebase Android config file (`google-services.json`) base64-encoded | base64(google-services.json) | Yes |
 | `GOOGLE_SERVICE_INFO_PLIST` | Firebase iOS config file (`GoogleService-Info.plist`) base64-encoded | base64(GoogleService-Info.plist) | Yes |
+| `MAPBOX_DOWNLOADS_TOKEN` | Mapbox SDK download token (sk.*) for Gradle Maven repo and CocoaPods. **Critical for iOS/Android builds.** | `sk.eyJ1...` | Yes (iter-3+) |
+| `MAPBOX_ACCESS_TOKEN` | Mapbox public access token (pk.*) for runtime map access. Same as `MAPBOX_PUBLIC_TOKEN` in `.env`. | `pk.eyJ1...` | Yes (iter-3+) |
 
 **To encode config files for GitHub Actions:**
 
@@ -240,6 +243,8 @@ Usually runs automatically with `flutter pub get`, but can be manually triggered
    - `UNSPLASH_ACCESS_KEY`
    - `GOOGLE_SERVICES_JSON` (base64-encoded)
    - `GOOGLE_SERVICE_INFO_PLIST` (base64-encoded)
+   - `MAPBOX_DOWNLOADS_TOKEN` (Mapbox SDK download token, starts with `sk.*`)
+   - `MAPBOX_ACCESS_TOKEN` (Mapbox public token, starts with `pk.*`)
 
 3. CI workflow automatically injects them during build.
 
@@ -315,6 +320,34 @@ cp ios/Runner/GoogleService-Info.plist.example ios/Runner/GoogleService-Info.pli
 
 ---
 
+## Background GPS — Physical Device Test Requirements (Iter-3)
+
+Real-time event tracking with background GPS requires physical device testing. Emulators do not correctly support foreground services (Android) or background location (iOS).
+
+### Android
+
+Physical device required. Test on Samsung or Xiaomi devices (known aggressive battery restrictions).
+
+**Steps:**
+1. Start a mock event tracking session (event detail → "Iniciar rodada")
+2. Send app to background (home button or swipe up)
+3. Verify persistent non-dismissable notification "Rideglory — Rodada activa" appears in notification shade
+4. Wait 30 seconds; verify location updates continue appearing in WebSocket server logs
+5. Attach device log (`adb logcat -s BackgroundTrackingService`) as PR artifact
+
+### iOS
+
+Physical device required. Simulator does not honor background location permissions.
+
+**Steps:**
+1. Start a mock event tracking session
+2. Send app to background
+3. Verify blue location indicator appears in system status bar
+4. Wait 30 seconds; verify location updates continue in WebSocket server logs
+5. Attach Xcode console log as PR artifact
+
+---
+
 ## Roadmap: Future Deployments
 
 ### Iter-2 (SOAT + Notifications) — ACTIVE
@@ -347,11 +380,13 @@ cp ios/Runner/GoogleService-Info.plist.example ios/Runner/GoogleService-Info.pli
 - `flutter pub get` picks up `firebase_messaging` and `flutter_local_notifications` automatically
 - Cocoapods cache not yet busted (iOS notification binaries < 100MB, minimal impact)
 
-### Iter-3 (Mapbox Migration)
+### Iter-3 (Mapbox Migration + Tracking)
 
-- Mapbox token injection: `MAPBOX_ACCESS_TOKEN` secret
-- After Story 3.0 merge: Update Cocoapods cache key in CI (~200MB binary framework)
-- Native config: AndroidManifest.xml + Info.plist Mapbox meta-data
+- Mapbox secrets: `MAPBOX_DOWNLOADS_TOKEN` (Gradle + CocoaPods) + `MAPBOX_ACCESS_TOKEN` (runtime access)
+- After Story 3.0 merge: Update Cocoapods cache key in CI (Mapbox binary framework ~200MB adds 5-10 min per run without cache)
+- Native config: AndroidManifest.xml + Info.plist Mapbox meta-data with token
+- CocoaPods cache: key updated to include `mapbox_maps_flutter` version fingerprint (e.g., `ios-pods-mapbox-v2.2.0-<hash>`)
+- Background GPS: physical device test logs for Android (foreground service) and iOS (blue location indicator) attached to PR
 
 ### Iter-4/5 (Deep Links + Apple Sign-In)
 

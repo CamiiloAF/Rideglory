@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart' as geo;
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:rideglory/features/events/domain/model/rider_tracking_model.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/initials_marker_icon.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -13,21 +14,24 @@ class LiveMapWidget extends StatefulWidget {
   const LiveMapWidget({
     super.key,
     required this.onMapReady,
-    required this.initialCameraPosition,
+    required this.initialCameraOptions,
     required this.riders,
+    this.onMapError,
   });
 
   final LiveMapReadyCallback onMapReady;
-  final CameraPosition initialCameraPosition;
+  final CameraOptions initialCameraOptions;
   final List<RiderTrackingModel> riders;
+  final ValueChanged<String>? onMapError;
 
   @override
   State<LiveMapWidget> createState() => _LiveMapWidgetState();
 }
 
 class _LiveMapWidgetState extends State<LiveMapWidget> {
-  final Completer<GoogleMapController> _controller = Completer();
-  final Map<String, BitmapDescriptor> _iconsById = {};
+  PointAnnotationManager? _annotationManager;
+  final Map<String, PointAnnotation> _annotationsById = {};
+  final Map<String, Uint8List> _iconBytesById = {};
   bool _iconsLoaded = false;
 
   @override
@@ -45,7 +49,7 @@ class _LiveMapWidgetState extends State<LiveMapWidget> {
     if (_riderSignature(oldWidget.riders) != _riderSignature(widget.riders)) {
       setState(() {
         _iconsLoaded = false;
-        _iconsById.clear();
+        _iconBytesById.clear();
       });
       unawaited(_loadMarkerIcons());
     }
@@ -53,107 +57,144 @@ class _LiveMapWidgetState extends State<LiveMapWidget> {
 
   String _riderSignature(List<RiderTrackingModel> riders) {
     return riders
-        .map((r) => '${r.userId}:${r.fullName}:${r.role.name}')
+        .map((rider) => '${rider.userId}:${rider.fullName}:${rider.role.name}')
         .join('|');
   }
 
   Future<void> _loadMarkerIcons() async {
     if (widget.riders.isEmpty) {
       if (!mounted) return;
-      setState(() {
-        _iconsLoaded = true;
-      });
+      setState(() => _iconsLoaded = true);
       return;
     }
 
     final futures = widget.riders.map((rider) async {
       final isLead = rider.role == RiderTrackingRole.lead;
-      final icon = await InitialsMarkerIcon.create(
+      final bytes = await InitialsMarkerIcon.createBytes(
         fullName: rider.fullName,
         colorScheme: context.colorScheme,
-        size: isLead ? 60 : 56,
+        size: isLead ? 80 : 75,
         backgroundColor: context.colorScheme.primary,
         borderColor: context.colorScheme.primary,
         highlight: isLead,
       );
-      return MapEntry(rider.userId, icon);
+      return MapEntry(rider.userId, bytes);
     });
 
     final entries = await Future.wait(futures);
     if (!mounted) return;
     setState(() {
-      for (final e in entries) {
-        _iconsById[e.key] = e.value;
+      for (final entry in entries) {
+        _iconBytesById[entry.key] = entry.value;
       }
       _iconsLoaded = true;
     });
+    await _updateAnnotations();
+  }
+
+  Future<void> _updateAnnotations() async {
+    final manager = _annotationManager;
+    if (manager == null || !_iconsLoaded) return;
+
+    // Remove annotations for riders no longer present.
+    final currentIds = widget.riders.map((rider) => rider.userId).toSet();
+    final toRemove = _annotationsById.keys
+        .where((id) => !currentIds.contains(id))
+        .toList();
+    for (final id in toRemove) {
+      final annotation = _annotationsById.remove(id);
+      if (annotation != null) {
+        await manager.delete(annotation);
+      }
+    }
+
+    // Add or update annotations for current riders.
+    for (final rider in widget.riders) {
+      final bytes = _iconBytesById[rider.userId];
+      if (bytes == null) continue;
+
+      final point = Point(
+        coordinates: Position(rider.longitude, rider.latitude),
+      );
+
+      final existing = _annotationsById[rider.userId];
+      if (existing != null) {
+        final updated = PointAnnotation(
+          id: existing.id,
+          geometry: point,
+          image: bytes,
+        );
+        await manager.update(updated);
+        _annotationsById[rider.userId] = updated;
+      } else {
+        final created = await manager.create(
+          PointAnnotationOptions(geometry: point, image: bytes),
+        );
+        _annotationsById[rider.userId] = created;
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final markers = _iconsLoaded ? _buildRiderMarkers() : const <Marker>{};
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(0),
-      child: GoogleMap(
-        initialCameraPosition: widget.initialCameraPosition,
-        myLocationEnabled: true,
-        myLocationButtonEnabled: false,
-        compassEnabled: true,
-        zoomControlsEnabled: false,
-        onMapCreated: (controller) {
-          if (!_controller.isCompleted) {
-            _controller.complete(controller);
-            widget.onMapReady(LiveMapController(controller));
-          }
-        },
-        markers: markers,
+    return MapWidget(
+      viewport: CameraViewportState(
+        center: widget.initialCameraOptions.center,
+        zoom: widget.initialCameraOptions.zoom,
       ),
+      styleUri: MapboxStyles.DARK,
+      onMapCreated: (mapboxMap) async {
+        await mapboxMap.scaleBar.updateSettings(
+          ScaleBarSettings(enabled: false),
+        );
+        _annotationManager = await mapboxMap.annotations
+            .createPointAnnotationManager();
+        widget.onMapReady(LiveMapController(mapboxMap));
+        await _updateAnnotations();
+      },
+      onMapLoadErrorListener: (MapLoadingErrorEventData data) {
+        widget.onMapError?.call(data.message);
+      },
     );
-  }
-
-  Set<Marker> _buildRiderMarkers() {
-    return widget.riders.map((rider) {
-      final position = LatLng(rider.latitude, rider.longitude);
-      final icon = _iconsById[rider.userId];
-
-      return Marker(
-        markerId: MarkerId(rider.userId),
-        position: position,
-        infoWindow: InfoWindow(title: rider.fullName.trim()),
-        icon: icon ?? BitmapDescriptor.defaultMarker,
-      );
-    }).toSet();
   }
 }
 
 class LiveMapController {
-  LiveMapController(this._controller);
+  LiveMapController(this._mapboxMap);
 
-  final GoogleMapController _controller;
+  final MapboxMap _mapboxMap;
+  double _currentZoom = 15.0;
 
   Future<void> zoomIn() async {
-    final zoom = await _controller.getZoomLevel();
-    await _controller.animateCamera(CameraUpdate.zoomTo(zoom + 1));
+    _currentZoom += 1;
+    await _mapboxMap.flyTo(
+      CameraOptions(zoom: _currentZoom),
+      MapAnimationOptions(duration: 300),
+    );
   }
 
   Future<void> zoomOut() async {
-    final zoom = await _controller.getZoomLevel();
-    await _controller.animateCamera(CameraUpdate.zoomTo(zoom - 1));
+    _currentZoom -= 1;
+    await _mapboxMap.flyTo(
+      CameraOptions(zoom: _currentZoom),
+      MapAnimationOptions(duration: 300),
+    );
   }
 
   Future<void> centerOnMyLocation() async {
-    final position = await Geolocator.getCurrentPosition(
-      locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
-    );
-    final zoom = await _controller.getZoomLevel();
-    await _controller.animateCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: LatLng(position.latitude, position.longitude),
-          zoom: zoom < 15 ? 15 : zoom,
-        ),
+    final position = await geo.Geolocator.getCurrentPosition(
+      locationSettings: const geo.LocationSettings(
+        accuracy: geo.LocationAccuracy.high,
       ),
+    );
+    await _mapboxMap.flyTo(
+      CameraOptions(
+        center: Point(
+          coordinates: Position(position.longitude, position.latitude),
+        ),
+        zoom: _currentZoom < 15 ? 15 : _currentZoom,
+      ),
+      MapAnimationOptions(duration: 500),
     );
   }
 }

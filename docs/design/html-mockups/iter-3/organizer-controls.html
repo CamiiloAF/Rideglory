@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rideglory — Organizer Controls (iter-3)</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap">
+</head>
+<body>
+<div class="frame-wrap">
+
+  <!-- =====================================================
+       State 1: Event Detail — Organizer View (scheduled)
+       "Iniciar rodada" button visible only to organizer
+       when event.state == scheduled && currentUser == organizer
+       ===================================================== -->
+  <div>
+    <p class="phone-label">Detalle de evento — Iniciar rodada (solo organizador)</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+
+      <!-- Hero image area -->
+      <div style="width:100%;height:200px;background:linear-gradient(180deg,#1a0d05 0%,#0A0A0A 100%);position:relative;overflow:hidden">
+        <div style="position:absolute;inset:0;background:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22375%22 height=%22200%22><rect fill=%22%23151515%22 width=%22375%22 height=%22200%22/><text x=%22187%22 y=%22110%22 fill=%22%233D3D3D%22 text-anchor=%22middle%22 font-size=%2240%22>🏍️</text></svg>');background-size:cover"></div>
+        <!-- Back button overlay -->
+        <div style="position:absolute;top:16px;left:16px">
+          <div class="icon-btn">←</div>
+        </div>
+        <!-- Event state badge -->
+        <div style="position:absolute;bottom:12px;left:12px;display:flex;gap:6px">
+          <div class="chip chip-warning">Programado</div>
+          <div class="chip chip-surface">Gratis</div>
+        </div>
+        <!-- Organizer badge -->
+        <div style="position:absolute;top:16px;right:16px">
+          <div class="organizer-badge" style="padding:4px 10px;font-size:11px">Eres el organizador</div>
+        </div>
+      </div>
+
+      <!-- Content scrollable -->
+      <div style="padding:16px;overflow-y:auto;max-height:460px">
+        <div style="font-size:20px;font-weight:800;color:var(--text-primary);margin-bottom:6px">
+          Páramo del Sumapaz 2026
+        </div>
+        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">
+          📅 Sáb 20 jun · 6:00 AM · Bogotá, Colombia
+        </div>
+
+        <!-- Metrics row -->
+        <div style="display:flex;gap:8px;margin-bottom:16px">
+          <div class="chip chip-surface">👥 18/25 cupos</div>
+          <div class="chip chip-surface">📍 120 km</div>
+          <div class="chip chip-surface">⚡ Media</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Attendee count for organizer -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin:12px 0">
+          <div style="font-size:14px;font-weight:600;color:var(--text-primary)">Inscritos aprobados</div>
+          <div style="font-size:14px;font-weight:700;color:var(--primary)">18 riders</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Organizer control: Iniciar rodada -->
+        <div style="margin-top:16px">
+          <div class="section-header">Control del organizador</div>
+          <div class="card" style="margin-bottom:12px">
+            <div style="font-size:13px;color:var(--text-secondary);margin-bottom:10px;line-height:1.4">
+              Al iniciar la rodada, todos los riders aprobados podrán acceder al rastreo en tiempo real.
+            </div>
+            <button class="btn btn-primary btn-full">
+              🏁 Iniciar rodada
+            </button>
+          </div>
+        </div>
+
+        <!-- Regular CTA (what non-organizers see — greyed out for reference) -->
+        <div style="opacity:0.3;pointer-events:none">
+          <div class="card" style="display:flex;align-items:center;gap:10px">
+            <div style="font-size:12px;color:var(--text-secondary)">
+              Riders ven: "Quedan 7 cupos" + botón "Inscribirse"
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       State 2: "Iniciar rodada" Confirmation Dialog
+       ===================================================== -->
+  <div>
+    <p class="phone-label">Iniciar rodada — Diálogo de confirmación</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+
+      <!-- Blurred background preview -->
+      <div style="padding:20px;filter:blur(1px);opacity:0.4;flex:1">
+        <div style="font-size:20px;font-weight:800;color:var(--text-primary);margin-bottom:8px">
+          Páramo del Sumapaz 2026
+        </div>
+        <div style="font-size:13px;color:var(--text-secondary)">📅 Sáb 20 jun · 6:00 AM</div>
+        <div style="margin-top:20px;height:60px;background:var(--surface);border-radius:var(--r-md);border:1px solid var(--border)"></div>
+      </div>
+
+      <!-- Dialog overlay -->
+      <div class="dialog-overlay" style="position:absolute;top:0;left:0;right:0;bottom:0">
+        <div class="dialog">
+          <div class="dialog-icon" style="background:var(--primary-dim);border-color:var(--primary);font-size:24px">🏁</div>
+          <div class="dialog-title">¿Iniciar rodada?</div>
+          <div class="dialog-body">
+            Los 18 riders aprobados recibirán acceso al mapa de rastreo en tiempo real.
+          </div>
+          <div class="dialog-actions">
+            <button class="btn btn-primary btn-full">
+              🏁 Iniciar rodada
+            </button>
+            <button class="btn btn-secondary btn-full">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       State 3: Event Detail — Rider sees "Ver rastreo"
+       After organizer starts the ride, event.state == in_progress
+       Regular rider CTA changes to "Ver rastreo"
+       ===================================================== -->
+  <div>
+    <p class="phone-label">Detalle de evento — En curso (rider ve "Ver rastreo")</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div style="width:100%;height:200px;background:linear-gradient(180deg,#1a0d05 0%,#0A0A0A 100%);position:relative">
+        <div style="position:absolute;inset:0;background:#151515;display:flex;align-items:center;justify-content:center;font-size:40px">🏍️</div>
+        <div style="position:absolute;top:16px;left:16px">
+          <div class="icon-btn">←</div>
+        </div>
+        <div style="position:absolute;bottom:12px;left:12px;display:flex;gap:6px">
+          <div class="chip chip-primary">En curso</div>
+          <div class="chip chip-surface">Gratis</div>
+        </div>
+      </div>
+      <div style="padding:16px;overflow-y:auto;max-height:460px">
+        <div style="font-size:20px;font-weight:800;color:var(--text-primary);margin-bottom:6px">
+          Páramo del Sumapaz 2026
+        </div>
+        <div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">
+          📅 Sáb 20 jun · 6:00 AM · Bogotá, Colombia
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:16px">
+          <div class="chip chip-surface">👥 18 riders</div>
+          <div class="chip chip-surface">📍 120 km</div>
+        </div>
+        <div class="divider"></div>
+        <!-- CTA bar for approved rider when event is in_progress -->
+        <div style="
+          position:sticky;bottom:0;
+          background:var(--bg);
+          padding:16px 0 8px;
+          margin-top:16px;
+          display:flex;
+          align-items:center;
+          gap:12px;
+          border-top:1px solid var(--border);
+        ">
+          <div>
+            <div class="chip chip-primary" style="font-size:11px">● En curso</div>
+          </div>
+          <button class="btn btn-primary" style="flex:1">
+            📍 Ver rastreo
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       State 4: Terminar rodada — Confirmation Dialog
+       Shown on tracking screen when organizer taps "Terminar rodada"
+       ===================================================== -->
+  <div>
+    <p class="phone-label">Terminar rodada — Diálogo (organizador en tracking)</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="app-bar">
+        <div class="icon-btn">←</div>
+        <div>
+          <div class="app-bar-title">Páramo del Sumapaz</div>
+          <div class="app-bar-subtitle">En curso · 18 riders</div>
+        </div>
+        <div class="organizer-badge">Org.</div>
+      </div>
+
+      <!-- Map blurred -->
+      <div class="map-canvas" style="filter:blur(1px);opacity:0.45">
+        <div class="map-grid"></div>
+        <div class="rider-marker" style="top:180px;left:160px">
+          <div class="rider-avatar">CM</div>
+          <div class="rider-dot"></div>
+        </div>
+      </div>
+
+      <!-- Dialog -->
+      <div class="dialog-overlay" style="position:absolute;top:0;left:0;right:0;bottom:0">
+        <div class="dialog">
+          <div class="dialog-icon" style="background:var(--error-dim);border-color:rgba(239,68,68,0.4)">🏁</div>
+          <div class="dialog-title">¿Terminar rodada?</div>
+          <div class="dialog-body">
+            La pantalla de rastreo se cerrará para todos los riders conectados. Esta acción no se puede deshacer.
+          </div>
+          <div class="dialog-actions">
+            <button class="btn btn-danger btn-full">
+              Terminar rodada
+            </button>
+            <button class="btn btn-secondary btn-full">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       State 5: Ride Finished — Auto-close screen for all riders
+       Snackbar/overlay that appears briefly before auto-pop
+       ===================================================== -->
+  <div>
+    <p class="phone-label">Rodada terminada — Pantalla se cierra (todos los riders)</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="app-bar">
+        <div class="icon-btn">←</div>
+        <div>
+          <div class="app-bar-title">Páramo del Sumapaz</div>
+          <div class="app-bar-subtitle">Finalizado</div>
+        </div>
+      </div>
+
+      <!-- Map faded -->
+      <div class="map-canvas" style="opacity:0.3">
+        <div class="map-grid"></div>
+        <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 375 420">
+          <polyline points="40,370 80,320 130,250 190,200 250,160 310,100 350,60"
+            stroke="#f98c1f" stroke-width="3" fill="none" opacity="0.6"/>
+        </svg>
+      </div>
+
+      <!-- Full-overlay finish state -->
+      <div style="
+        position:absolute;top:56px;left:0;right:0;bottom:0;
+        background:rgba(10,10,10,0.88);
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        gap:16px;
+        padding:32px;
+        backdrop-filter:blur(8px);
+      ">
+        <div style="font-size:56px">🏁</div>
+        <div style="font-size:20px;font-weight:800;color:var(--text-primary);text-align:center">
+          ¡La rodada ha terminado!
+        </div>
+        <div style="font-size:14px;color:var(--text-secondary);text-align:center;line-height:1.5">
+          Páramo del Sumapaz 2026 ha finalizado exitosamente.
+        </div>
+        <!-- Stats summary -->
+        <div style="display:flex;gap:16px;margin-top:8px">
+          <div style="text-align:center">
+            <div style="font-size:22px;font-weight:800;color:var(--primary)">120 km</div>
+            <div style="font-size:11px;color:var(--text-secondary)">Recorrido</div>
+          </div>
+          <div style="width:1px;background:var(--border)"></div>
+          <div style="text-align:center">
+            <div style="font-size:22px;font-weight:800;color:var(--primary)">3h 40min</div>
+            <div style="font-size:11px;color:var(--text-secondary)">Duración</div>
+          </div>
+          <div style="width:1px;background:var(--border)"></div>
+          <div style="text-align:center">
+            <div style="font-size:22px;font-weight:800;color:var(--primary)">18</div>
+            <div style="font-size:11px;color:var(--text-secondary)">Riders</div>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="width:100%;margin-top:8px">
+          Volver al inicio
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

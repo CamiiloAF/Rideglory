@@ -6,7 +6,9 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:rideglory/core/config/api_remote_config.dart';
+import 'package:rideglory/core/config/app_env.dart';
 import 'package:rideglory/core/services/fcm_service.dart';
 import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
 import 'package:rideglory/features/notifications/presentation/cubit/notifications_cubit.dart';
@@ -38,6 +40,13 @@ Future<void> main() async {
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   await ApiRemoteConfig.initialize(FirebaseRemoteConfig.instance);
   await initializeDateFormatting();
+
+  const mapboxToken = AppEnv.mapboxAccessToken;
+  assert(
+    mapboxToken != null && mapboxToken.isNotEmpty,
+    'MAPBOX_ACCESS_TOKEN must be set in .env',
+  );
+  MapboxOptions.setAccessToken(mapboxToken!);
 
   configureDependencies();
 

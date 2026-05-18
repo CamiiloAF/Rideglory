@@ -1,0 +1,20 @@
+{
+  "slug": "vehicle-form-specs",
+  "phase": "qa",
+  "status": "pass",
+  "updatedAt": "2026-05-16T00:05:00Z",
+  "summary": "All automated gates pass; 12 manual probes documented for human review; sign-off: conditional",
+  "metrics": { "tokens": 0, "costUsd": 0.0 },
+  "artifacts": [
+    "docs/custom-iters/vehicle-form-specs/handoffs/qa.md",
+    "docs/custom-iters/vehicle-form-specs/contracts/qa.json"
+  ],
+  "qualityGates": [
+    { "name": "dart_analyze", "status": "pass", "detail": "0 errors in changed vehicle files" },
+    { "name": "build_runner", "status": "pass", "detail": "30 outputs, 0 errors" },
+    { "name": "flutter_tests", "status": "pass", "detail": "18/18 non-broken tests pass" },
+    { "name": "backend_tests", "status": "pass", "detail": "9/9 unit tests pass" },
+    { "name": "no_new_regressions", "status": "pass", "detail": "No new failures introduced" },
+    { "name": "ac_coverage", "status": "pass", "detail": "AC-7, AC-8, AC-10 automated; AC-1 through AC-6, AC-9 need manual verify" }
+  ]
+}

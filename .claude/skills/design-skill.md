@@ -133,6 +133,7 @@ Pantallas que pueden NO existir todavía en Pencil (crear si faltan):
 ## Change log
 
 - 2026-05-13: Skill reescrito desde cero. Reset completo de iteraciones anteriores. Fuente de verdad: REQUIREMENTS.md + rideglory.pen.
+- 2026-05-15 (iter-3 design complete): SOS flow, organizer controls, background GPS notifications, Home SOAT badge designed. Frame `qonbS` and `kAubW` require Pencil update before T-3-6/T-3-7.
 
 ---
 ## Plan reapproval update — 2026-05-13 (plan v3, iters 1–5)
@@ -178,7 +179,6 @@ Pantallas que pueden NO existir todavía en Pencil (crear si faltan):
 ## Change log
 - 2026-05-13 (plan v3 approval): Frame inventory, iter-1 gap analysis process, atom extraction pre-conditions, and per-iteration design scope documented.
 - 2026-05-14 (iter-1 design complete): Gap analysis complete. 5 HTML mockup modules produced. Auth frames gate: 8 frames to create in rideglory.pen (Auth — Splash/Login/Signup/PasswordRecovery). Donut chart: color-only scope for iter-1. See docs/handoffs/design.md for full details.
-- 2026-05-14 (iter-2 design complete): SOAT flow (upload+manual+status), notification center, ManageAttendeesPage UPDATE. 22 screens in 3 HTML mockups. Story 2.9 scope confirmed.
 
 ---
 
@@ -235,41 +235,42 @@ Pantallas que pueden NO existir todavía en Pencil (crear si faltan):
 
 ---
 
-## Iter-2 design decisions (locked)
+## Iter-3 design decisions (locked)
 
-### Story 2.9 scope (ManageAttendeesPage)
-**UPDATE, not NEW.** List+edit layout already fully implemented in codebase. Scope = component-swap (AppButton, AppDialog) + no hardcoded colors + loading/empty/error state polish. No layout rework.
-Frame dUc9h covers list+edit confirmed.
+### SOS marker animation
+- `AnimationController` overlay widget above Mapbox canvas. Scale 0.8→1.8, opacity 0.8→0, 1.5s, `Curves.easeOut`, repeat.
+- If `MediaQuery.disableAnimations` is true: show static red marker, no animation.
+- Widget: `SosMarkerPulse` wrapping `PointAnnotation` position.
 
-### DocumentSlotPill → SoatStatus mapping (1:1)
-| SOAT state | DocumentSlotState | Label key |
-|------------|-------------------|-----------|
-| `noSoat` | `empty` | `soat_status_no_soat` |
-| `valid` | `valid` | `soat_status_valid` |
-| `expiringSoon` | `expiringSoon` | `soat_status_expiring_soon` |
-| `expired` | `expired` | `soat_status_expired` |
-**Caller contract enforced:** always pass `stateLabel: context.l10n.soat_status_<state>`.
+### SOS Banner — visibility rules
+- Shown when `sosAlertResult` is `Data(SosAlert)` (received from WS `tracking.sos.alert`)
+- Anchored TOP of map overlay stack, above route adherence chip
+- "Llamar" button: only shown if `sosAlert.riderPhone != null`
+- "Localizar" button: always shown; deep-links to Google Maps (Android) or Apple Maps (iOS)
+- Non-blocking: map stays interactive below banner
 
-### NotificationBellButton spec
-- 44×44px tap target in AppBar.actions[]
-- Badge: `AppColors.error`, `border: 2px solid AppColors.darkBackground`
-- Shows numeric count, truncates to `99+`
-- `unreadCount` from `NotificationsCubit.state.unreadCount` (backend-sourced)
+### Organizer Control Bar — visibility rules
+- Shown when `currentUser.id == event.ownerId AND event.state == 'in_progress'`
+- Never visible to regular riders
+- Topmost item in map overlay stack
 
-### SoatUploadPage source selector
-- 2×2 grid: Cámara / Galería / Archivo PDF / Ingresar manualmente
-- Source selection → upload zone changes context (camera preview vs file picker)
-- Manual entry = navigate to SoatManualFormPage
+### SOS Banner touch target fix (accessibility)
+- Banner action buttons in HTML mockup use 32px height. Flutter implementation MUST use min 44px height.
+- Solution: `SizedBox(height: 44)` wrapper or `padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10)`
 
-### Notification row template
-- 6 types: SOAT_30D, SOAT_7D, SOAT_DAY_OF, NEW_REGISTRATION, REGISTRATION_APPROVED, REGISTRATION_REJECTED
-- Icon slot per type (⏰/⚠️/🚫/🏍️/✅/❌)
-- Unread: left orange accent bar (3px), `notif-dot` visible
-- Read: opacity 0.7, no accent bar, no dot
-- Tap → markRead(id) if unread, then navigate (iter-5 will add specific routing; iter-2 navigates to Home)
+### Home SOAT badge
+- Uses existing `DocumentSlotPill` molecule (iter-1, no new widget needed)
+- Rendered below main vehicle hero card in `home_garage_card.dart`
+- 4 states: `none → empty`, `valid → valid`, `expiringSoon → expiringSoon`, `expired → expired`
+- Tappable → navigates to SOAT detail flow
 
-### Iter-2 HTML mockups inventory
-- `docs/design/html-mockups/iter-2/styles.css` — tokens, shared components
-- `docs/design/html-mockups/iter-2/soat.html` — 9 screens (upload 3 + manual 2 + status 3 + vehicle-detail badge integration)
-- `docs/design/html-mockups/iter-2/notifications.html` — 6 screens (home bell + center 4 states + 6 type templates)
-- `docs/design/html-mockups/iter-2/attendees.html` — 7 screens (loading + pending + all + empty + error + dialog + bottom sheet)
+### Pencil frames to update/create (iter-3 gate)
+Before T-3-6: Update frame `qonbS` (SOS FAB, SOS banner, organizer bar, adherence chip positions)
+Before T-3-7: Update frame `kAubW` (add "Iniciar rodada" organizer CTA variant)
+New frames to create (pattern: `[Feature] — [Screen] — [State]`):
+- `Tracking — SOS — Confirmation Dialog`
+- `Tracking — SOS — Banner (Llamar + Localizar)`
+- `Tracking — SOS — Banner (Localizar only)`
+- `Tracking — Organizer — Control Bar`
+- `Tracking — Ride Finished Overlay`
+- `Event Detail — Iniciar Rodada Dialog`

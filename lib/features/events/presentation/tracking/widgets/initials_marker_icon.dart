@@ -2,11 +2,10 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rideglory/core/utils/initials.dart';
 
 abstract class InitialsMarkerIcon {
-  static Future<BitmapDescriptor> create({
+  static Future<Uint8List> createBytes({
     required String fullName,
     required ColorScheme colorScheme,
     double size = 96,
@@ -24,7 +23,9 @@ abstract class InitialsMarkerIcon {
       ..color = resolvedBorder.withValues(alpha: 0.30)
       ..maskFilter = const ui.MaskFilter.blur(ui.BlurStyle.normal, 10);
     final borderPaint = Paint()
-      ..color = highlight ? resolvedBorder : resolvedBorder.withValues(alpha: 0.45)
+      ..color = highlight
+          ? resolvedBorder
+          : resolvedBorder.withValues(alpha: 0.45)
       ..style = PaintingStyle.stroke
       ..strokeWidth = size * (highlight ? 0.085 : 0.06);
 
@@ -62,6 +63,6 @@ abstract class InitialsMarkerIcon {
     final picture = recorder.endRecording();
     final image = await picture.toImage(size.toInt(), size.toInt());
     final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
-    return BitmapDescriptor.bytes(Uint8List.view(bytes!.buffer));
+    return Uint8List.view(bytes!.buffer);
   }
 }

@@ -312,6 +312,8 @@ class EventDetailViewState extends State<EventDetailView> {
                               .read<EventDetailCubit>()
                               .startEvent(currentEvent),
                           onStop: () => _confirmStopEvent(context),
+                          onOpenMap: () =>
+                              unawaited(_onFollowLivePressed()),
                         );
                       },
                     )

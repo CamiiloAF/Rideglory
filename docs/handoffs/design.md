@@ -1,28 +1,28 @@
-# Design handoff — Iteration 2
+# Design Handoff — Iteration 3
 
-**Date:** 2026-05-14
+**Date:** 2026-05-15
 **Agent:** design
 **Status:** done
-**Iteration goal:** SOAT registration flow (upload + manual + 4-state badge), notification center rebuild, ManageAttendeesPage refinement (Story 2.9). Design gate for all iter-2 frontend work.
+**Iteration goal:** Tracking Completo + SOS + Maintenance Reminders — complete the real-time tracking UX with SOS, organizer controls, background GPS notification copy, and Home SOAT badge.
 
 ---
 
 ## Design system baseline
 
-All tokens locked from iter-1. No new tokens introduced this iteration.
+All tokens from iter-1 remain locked. No new tokens introduced except SOS-specific additions (documented below).
 
 | Token | Value | Flutter mapping |
 |-------|-------|----------------|
-| Background | `#111111` | `AppColors.darkBackground` |
-| Surface 1 | `#1C1209` | `AppColors.darkSurface` |
-| Surface 2 | `#261A0E` | `AppColors.darkSurfaceHighest` |
-| Border | `#3D2810` | `AppColors.darkBorder` |
+| Background | `#0A0A0A` | `AppColors.darkBackground` |
+| Surface 1 | `#161616` | `AppColors.darkSurface` |
+| Surface 2 | `#1F1F1F` | `AppColors.darkSurfaceHighest` |
+| Border | `#2D2D2D` | `AppColors.darkBorder` |
 | Primary orange | `#f98c1f` | `colorScheme.primary` |
-| Primary dim | `rgba(249,140,31,.12)` | `AppColors.primary.withValues(alpha:.12)` |
-| Text primary | `#F1F5F9` | `colorScheme.onSurface` |
-| Text secondary | `#94A3B8` | `AppColors.darkTextSecondary` |
-| Success | `#10B981` | `AppColors.success` |
-| Error | `#EF4444` | `AppColors.error` |
+| Primary dim | `rgba(249,140,31,0.12)` | `colorScheme.primary.withValues(alpha: 0.12)` |
+| Text primary | `#F4F4F5` | `colorScheme.onSurface` |
+| Text secondary | `#71717A` | `AppColors.darkTextSecondary` |
+| Success | `#22C55E` | `AppColors.success` |
+| Error / SOS red | `#EF4444` | `AppColors.error` |
 | Warning | `#F59E0B` | `AppColors.warning` |
 | Font | Space Grotesk | `AppTextStyles` (auto via theme) |
 | Border radius — inputs/buttons | 8px | `AppRadius.sm` |
@@ -30,7 +30,29 @@ All tokens locked from iter-1. No new tokens introduced this iteration.
 | Border radius — large cards | 16px | `AppRadius.lg` |
 | Border radius — bottom sheets | 24px | `AppRadius.xl` |
 
-**Changed this iteration:** none — tokens locked from iter-1.
+**New iter-3 design additions (not new tokens — new usage patterns):**
+- `SOS FAB` — 56×56px, `AppColors.error` fill, 3px white border (0.25 alpha), `box-shadow: 0 4px 20px rgba(239,68,68,0.5)`
+- `SOS Rider Marker` — `AnimationController` pulsing ring using `AppColors.error`; ring animates from 0.8→1.8 scale, 0→0 opacity, 1.5s
+- `SOS Banner` — full-width `AppColors.error` bg container, anchor at top of map overlay stack (non-blocking to map interaction)
+- `Organizer Control Bar` — `AppColors.darkSurface` with 96% opacity + `backdropFilter blur(12px)`, anchored top of map
+
+---
+
+## Story classification
+
+| Story | Title | UI type | Screens affected |
+|-------|-------|---------|-----------------|
+| US-3-0 | Mapbox SDK migration | UPDATE | `live_map_widget`, `live_map_page`, `route_map_preview` — invisible to user if done right |
+| US-3-1 | SOS button + alert | EXTEND | Tracking map — new SOS FAB, confirmation dialog, SOS sent state |
+| US-3-2 | SOS banner actions | EXTEND | Tracking map — SOS banner with Llamar/Localizar, SOS rider marker |
+| US-3-3 | Iniciar rodada | EXTEND | Event detail page — "Iniciar rodada" button (organizer-only) + confirmation dialog |
+| US-3-4 | Terminar rodada | EXTEND | Tracking map — organizer control bar with "Terminar rodada" + confirmation dialog + finish overlay |
+| US-3-5 | Background GPS | NEW (system) | Android foreground service notification text; iOS Info.plist strings (no app UI) |
+| US-3-6 | Maintenance reminder push | NEW (system) | Push notification copy only (no new screen) |
+| US-3-7 | Event reminder push | NEW (system) | Push notification copy only (no new screen) |
+| US-3-10* | VehicleModel SOAT + Home badge | EXTEND | Home dashboard — SOAT badge on main vehicle card (4 states) |
+
+*Note: Story 3.10 from task list (T-3-10) is numbered as US-3-10 in architect handoff scope.
 
 ---
 
@@ -38,292 +60,306 @@ All tokens locked from iter-1. No new tokens introduced this iteration.
 
 | Screen name | Story | Type | Mockup file | Status |
 |-------------|-------|------|-------------|--------|
-| SoatUploadPage — default | US-2-1 | NEW | `soat.html` | done |
-| SoatUploadPage — file uploading | US-2-1 | NEW | `soat.html` | done |
-| SoatUploadPage — upload error | US-2-1 | NEW | `soat.html` | done |
-| SoatManualFormPage — default | US-2-2 | NEW | `soat.html` | done |
-| SoatManualFormPage — validation errors | US-2-2 | NEW | `soat.html` | done |
-| SoatStatusPage — Vigente | US-2-3 | NEW | `soat.html` | done |
-| SoatStatusPage — Por vencer | US-2-3 | NEW | `soat.html` | done |
-| SoatStatusPage — Vencido | US-2-3 | NEW | `soat.html` | done |
-| Vehicle Detail — 4-state SOAT badge integration | US-2-3 | EXTEND | `soat.html` | done |
-| Home — Bell icon with unread badge | US-2-7 | EXTEND | `notifications.html` | done |
-| NotificationCenterPage — Loading (skeleton) | US-2-7 | EXTEND | `notifications.html` | done |
-| NotificationCenterPage — With data | US-2-7 | EXTEND | `notifications.html` | done |
-| NotificationCenterPage — Empty state | US-2-7 | EXTEND | `notifications.html` | done |
-| NotificationCenterPage — Error state | US-2-7 | EXTEND | `notifications.html` | done |
-| Notification row templates (6 types) | US-2-5/2-6 | NEW | `notifications.html` | done |
-| AttendeesPage — Loading | US-2-9 | UPDATE | `attendees.html` | done |
-| AttendeesPage — Pending filter | US-2-9 | UPDATE | `attendees.html` | done |
-| AttendeesPage — All tab (mixed) | US-2-9 | UPDATE | `attendees.html` | done |
-| AttendeesPage — Empty | US-2-9 | UPDATE | `attendees.html` | done |
-| AttendeesPage — Error | US-2-9 | UPDATE | `attendees.html` | done |
-| AttendeesPage — Confirm dialog | US-2-9 | UPDATE | `attendees.html` | done |
-| AttendeesPage — Filter bottom sheet | US-2-9 | UPDATE | `attendees.html` | done |
-
-### Story 2.9 scope decision (frame dUc9h)
-
-**Verdict: list + edit is already implemented.** Inspecting `attendees_page.dart`, `attendees_view.dart`, `attendees_data_view.dart`, `attendees_list.dart` confirms the page already has:
-- Search bar
-- Status filter chips
-- List of attendee cards with approve/reject actions
-- Filter bottom sheet
-
-**Story 2.9 scope = UPDATE (component-swap + color tokenization + state polish)**. The full list+edit layout is already present. Design work is:
-1. Verify all action buttons use `AppButton` (not ElevatedButton)
-2. Verify all dialogs use `AppDialog` / `ConfirmationDialog`
-3. Verify loading, empty, and error states match iter-1 standards
-4. Ensure no hardcoded `Color(0x...)` literals
-
-No layout rework required.
+| Tracking Map — Normal (rider) | 3.0, 3.1, 3.2 | EXTEND | `tracking-map.html` | done |
+| Tracking Map — Off Route | 3.9 | EXTEND | `tracking-map.html` | done |
+| Tracking Map — Organizer View | 3.3, 3.4 | EXTEND | `tracking-map.html` | done |
+| SOS Confirmation Dialog | 3.1 | EXTEND | `sos-flow.html` | done |
+| SOS Sent — Sender confirmation | 3.1 | EXTEND | `sos-flow.html` | done |
+| SOS Banner — Received by riders | 3.2 | EXTEND | `sos-flow.html` | done |
+| SOS Banner — No phone number | 3.2 | EXTEND | `sos-flow.html` | done |
+| Event Detail — Organizer (scheduled) | 3.3 | EXTEND | `organizer-controls.html` | done |
+| Iniciar Rodada — Confirmation Dialog | 3.3 | EXTEND | `organizer-controls.html` | done |
+| Event Detail — Rider (in_progress) | 3.3 | EXTEND | `organizer-controls.html` | done |
+| Terminar Rodada — Confirmation Dialog | 3.4 | EXTEND | `organizer-controls.html` | done |
+| Ride Finished Overlay | 3.4 | EXTEND | `organizer-controls.html` | done |
+| Android Foreground Service Notification | 3.5 | NEW (system) | `notifications-push.html` | done |
+| iOS Background Location Info.plist strings | 3.5 | NEW (system) | `notifications-push.html` | done |
+| SOS FCM Push (lock screen) | 3.1 | NEW (system) | `notifications-push.html` | done |
+| Push Copy Reference Card | 3.5, 3.6, 3.7 | NEW (doc) | `notifications-push.html` | done |
+| Home Dashboard — SOAT vigente | 3.10 | EXTEND | `home-soat-badge.html` | done |
+| Home Dashboard — SOAT por vencer | 3.10 | EXTEND | `home-soat-badge.html` | done |
+| Home Dashboard — SOAT vencido | 3.10 | EXTEND | `home-soat-badge.html` | done |
+| Home Dashboard — SOAT sin registrar | 3.10 | EXTEND | `home-soat-badge.html` | done |
 
 ---
 
 ## Component hierarchy
 
-| Screen | Components used | New components needed |
-|--------|-----------------|-----------------------|
-| SoatUploadPage | `AppButton`, `AppTextField`, `AppAppBar` | `SoatSourceSelector` widget (2×2 grid, local to feature) |
-| SoatManualFormPage | `AppButton`, `AppTextField`, `AppAppBar`, `FormSectionHeader` | none |
-| SoatStatusPage | `AppButton`, `AppCard`, `DocumentSlotPill`, `AppAppBar` | none |
-| Vehicle Detail (SOAT badge) | `DocumentSlotPill` (iter-1 molecule) | none |
-| NotificationCenterPage | `AppButton`, `AppAppBar`, `NotificationItem` widget | `NotificationBellButton` (replaces HomeNotificationButton) |
-| AttendeesPage | `AppButton`, `AppDialog`/`ConfirmationDialog`, `AppSearchBar`, `AppFilterChip`, `AppAppBar`, `AppBottomSheet` | none |
+| Screen | Components reused | New components needed |
+|--------|-------------------|-----------------------|
+| Tracking Map | `MapWidget` (Mapbox), `AppAppBar`, existing overlay stack | `SosBannerWidget`, `OrganizerControlBar`, `RouteAdherenceChip`, `SosMarkerAnnotation` (overlay wrapper) |
+| SOS Confirmation Dialog | `AppDialog` / `ConfirmationDialog` | No new dialog widget — use `ConfirmationDialog` with red primary action |
+| SOS Banner | — | `SosBannerWidget` — new widget in `lib/features/events/presentation/tracking/widgets/sos_banner.dart` |
+| Organizer Control Bar | — | `OrganizerControlBar` — new widget in `lib/features/events/presentation/tracking/widgets/organizer_control_bar.dart` |
+| Event Detail — Iniciar rodada | `AppButton`, `ConfirmationDialog`, existing detail page | Conditionally rendered `AppButton` in `EventDetailPage` CTA bar |
+| Ride Finished Overlay | `AppButton` | `RideFinishedOverlay` — overlay widget in `LiveMapPage` |
+| Route Adherence Chip | — | `RouteAdherenceChip` — in `lib/features/events/presentation/tracking/widgets/route_adherence_chip.dart` |
+| Home SOAT badge | `DocumentSlotPill` (iter-1 molecule) | No new widget — reuse `DocumentSlotPill` in main vehicle card |
+| Push notifications | — | System-level only (FCM payload + flutter_local_notifications config) |
 
-### DocumentSlotPill → SoatStatus mapping (1:1)
+**Key reuse decisions:**
+- SOS dialog reuses `ConfirmationDialog` — pass `isDestructive: true` to make primary button red
+- `DocumentSlotPill` (created in iter-1) is reused directly for Home SOAT badge — no new widget needed
+- `AppButton` for "Iniciar rodada" / "Terminar rodada" — rendered conditionally based on `currentUser.id == event.ownerId`
+- Rider marker with SOS state is an overlay `AnimationController` widget wrapping the existing `PointAnnotation` — no new base widget, just a conditional wrapper
 
-| SOAT state | DocumentSlotState | Badge label | Border color |
-|------------|-------------------|-------------|--------------|
-| `noSoat` | `empty` | `soat_status_no_soat` | `AppColors.darkBorder` |
-| `valid` (>30d) | `valid` | `soat_status_valid` | `AppColors.success` |
-| `expiringSoon` (≤30d) | `expiringSoon` | `soat_status_expiring_soon` | `AppColors.warning` |
-| `expired` (past) | `expired` | `soat_status_expired` | `AppColors.error` |
+---
 
-The `DocumentSlotPill` molecule from iter-1 maps directly to SOAT badge states.
-**Caller contract:** always pass `stateLabel: context.l10n.soat_status_<state>` — never rely on hardcoded fallback strings.
+## UX flow specs
 
-### NotificationBellButton spec
+### SOS Button flow (US-3-1)
+1. Rider sees SOS FAB (56×56 red circle) anchored bottom-right of map, above zoom controls
+2. Tap → `ConfirmationDialog` appears (overlay, map visible blurred behind)
+   - Icon: 🚨 red dim background
+   - Title: "¿Enviar alerta SOS?"
+   - Body: "Todos los participantes serán notificados de tu emergencia. Esta acción no se puede deshacer."
+   - Primary: "🚨 Enviar SOS" (red/danger button)
+   - Secondary: "Cancelar" (surface button)
+3. On confirm → `LiveTrackingCubit.triggerSos()` → WS publish → `hasSentSos = true`
+4. Sender sees: green success snackbar "SOS enviado — los riders han sido notificados" + SOS FAB border turns red (transparent fill, red border pulsing)
+5. Sender's entry in riders panel shows "SOS activo" chip (error style)
 
-- Position: `AppBar.actions[]` on `HomeShell` (top right)
-- Size: 44×44px tap target
-- Icon: `Icons.notifications_outlined` (inactive) / `Icons.notifications` (active — has unread)
-- Badge: circular red badge `AppColors.error`, `border: 2px solid AppColors.darkBackground` (avoids overlap bleed), 16×16px, shows count up to 99+
-- `unreadCount` sourced from `NotificationsCubit.state.unreadCount`
+### SOS Banner flow (US-3-2, received by others)
+1. `LiveTrackingCubit` receives `sos_alert` WS event → `sosAlertResult = Data(sosAlert)`
+2. `SosBannerWidget` renders at **top of map overlay stack**, above route adherence chip
+3. Banner: red background, 🚨 icon, rider name, subtitle "Toca para ver acciones"
+4. Actions row:
+   - "📞 Llamar" → `url_launcher` `tel:+57XXXXXXXX` — **only if `sosAlert.riderPhone != null`**
+   - "📍 Localizar" → `url_launcher` Google Maps (Android) / Apple Maps (iOS) deep link with rider's last coords
+5. Rider's `PointAnnotation` on map gains red pulsing `AnimationController` overlay
+6. Riders panel shows "🚨 SOS activo" badge on that rider's row
+
+### "Sin teléfono" empty state (US-3-2)
+- If `sosAlert.riderPhone == null`: **only "📍 Localizar" button visible** in banner
+- No error message — just the single action button
+- Banner subtitle changes to "Sin teléfono registrado"
+
+### Iniciar Rodada flow (US-3-3)
+1. `EventDetailPage` CTA bar: conditionally shows "🏁 Iniciar rodada" button when `currentUser.id == event.ownerId && event.state == 'scheduled'`
+2. Tap → `ConfirmationDialog`:
+   - Icon: 🏁 orange dim background
+   - Title: "¿Iniciar rodada?"
+   - Body: "Los {count} riders aprobados recibirán acceso al mapa de rastreo en tiempo real."
+   - Primary: "🏁 Iniciar rodada" (primary/orange button)
+   - Secondary: "Cancelar"
+3. On confirm → `EventDetailCubit.startRide()` → backend transitions event to `in_progress`
+4. All riders: event state refreshes; CTA bar changes to "📍 Ver rastreo" button
+
+### Terminar Rodada flow (US-3-4)
+1. Organizer's tracking screen shows `OrganizerControlBar` at top (persistent, above map, blur bg)
+   - Badge "Organizador", label "Control de rodada", "Terminar rodada" button (outline-danger)
+2. Tap → `ConfirmationDialog`:
+   - Icon: 🏁 red dim background
+   - Title: "¿Terminar rodada?"
+   - Body: "La pantalla de rastreo se cerrará para todos los riders conectados."
+   - Primary: "Terminar rodada" (red/danger)
+   - Secondary: "Cancelar"
+3. On confirm → `EndRideUseCase` → backend event transitions to `finished`
+4. All riders: WS `tracking.event.ended` received → `LiveTrackingCubit` emits `isFinished = true` → `LiveMapPage` shows `RideFinishedOverlay` then auto-pops
+
+### Ride Finished Overlay (US-3-4)
+- Semi-opaque dark overlay (blur) over map with:
+  - 🏁 large emoji
+  - "¡La rodada ha terminado!" title
+  - Event name + completion message
+  - Stats row: km, duración, riders
+  - "Volver al inicio" primary button → `context.goAndClearStack(RoutePaths.home)`
+
+---
+
+## Component hierarchy — new widgets
+
+```
+lib/features/events/presentation/tracking/widgets/
+  sos_banner.dart                ← NEW — SosBannerWidget
+  organizer_control_bar.dart     ← NEW — OrganizerControlBar
+  route_adherence_chip.dart      ← NEW — RouteAdherenceChip
+  ride_finished_overlay.dart     ← NEW — RideFinishedOverlay (inline in LiveMapPage or separate)
+```
 
 ---
 
 ## UI copy (Spanish)
 
-### SOAT (`soat_` prefix)
+All new keys go in `lib/l10n/app_es.arb` with prefix matching feature.
 
-| Key | Text | Context |
-|-----|------|---------|
-| `soat_page_upload_title` | Subir SOAT | AppBar title |
-| `soat_page_manual_title` | Ingresar SOAT | AppBar title — manual form |
-| `soat_page_status_title` | Mi SOAT | AppBar title — status page |
-| `soat_upload_subtitle` | Selecciona cómo quieres subir tu SOAT para {vehicleName}. | Page subtitle |
-| `soat_manual_subtitle` | Ingresa los datos del SOAT para {vehicleName}. Puedes subir el documento más adelante. | Page subtitle |
-| `soat_source_camera` | Cámara | Source option label |
-| `soat_source_gallery` | Galería | Source option label |
-| `soat_source_pdf` | Archivo PDF | Source option label |
-| `soat_source_manual` | Ingresar manualmente | Source option label |
-| `soat_upload_zone_title` | Toca para tomar foto | Upload drop zone title |
-| `soat_upload_zone_subtitle` | o arrastra la imagen aquí | Upload drop zone subtitle |
-| `soat_upload_zone_link` | Seleccionar archivo | Upload drop zone link |
-| `soat_section_data` | Datos del SOAT | Form section header |
-| `soat_field_policy_number` | N.° de póliza | Field label |
-| `soat_field_policy_placeholder` | Ej: SOAT-2024-123456 | Placeholder |
-| `soat_field_insurer` | Aseguradora | Field label |
-| `soat_field_insurer_placeholder` | Ej: Sura, Allianz, AXA Colpatria… | Placeholder |
-| `soat_field_start_date` | Fecha inicio | Field label |
-| `soat_field_expiry_date` | Fecha vencimiento | Field label |
-| `soat_field_date_format` | DD/MM/AAAA | Date placeholder |
-| `soat_field_expiry_required` | La fecha de vencimiento es obligatoria. | Validation error |
-| `soat_field_date_invalid` | Fecha inválida. Usa el formato DD/MM/AAAA. | Validation error |
-| `soat_field_required` | Este campo es obligatorio. | Generic required error |
-| `soat_save_btn` | Guardar SOAT | Primary button |
-| `soat_save_data_btn` | Guardar datos | Manual form primary button |
-| `soat_update_btn` | Actualizar SOAT | Update action button |
-| `soat_saving` | Guardando… | Disabled button state |
-| `soat_retry` | Reintentar | Retry button |
-| `soat_manual_note` | Puedes subir el documento físico más adelante desde el detalle del vehículo. | Info note |
-| `soat_switch_to_upload` | Subir documento en cambio | Link below manual form save button |
-| `soat_section_document` | Documento | Section header on status page |
-| `soat_document_attached` | Adjunto | Badge on document slot |
-| `soat_status_no_soat` | Sin registrar | DocumentSlotPill label — noSoat |
-| `soat_status_valid` | Vigente | DocumentSlotPill label — valid |
-| `soat_status_expiring_soon` | Por vencer | DocumentSlotPill label — expiringSoon |
-| `soat_status_expired` | Vencido | DocumentSlotPill label — expired |
-| `soat_valid_title` | Tu SOAT está al día | Status page hero title |
-| `soat_expiring_title` | Tu SOAT vence pronto | Status page hero title |
-| `soat_expired_title` | Tu SOAT está vencido | Status page hero title |
-| `soat_valid_days_remaining` | {count} días restantes | Days chip |
-| `soat_expiring_days_remaining` | {count} días restantes | Days chip (warning color) |
-| `soat_expired_days_ago` | Venció hace {count} días | Days chip (error color) |
-| `soat_expiring_warning` | Te notificaremos 7 días antes del vencimiento. Renueva tu SOAT con anticipación para evitar multas. | Warning callout |
-| `soat_expired_warning` | Circular sin SOAT vigente es una infracción. Renueva tu seguro lo antes posible. | Error callout |
-| `soat_renew_btn` | Registrar nuevo SOAT | CTA on expired status page |
-| `soat_view_document` | Ver documento | Secondary action |
-| `soat_edit_btn` | Editar | AppBar action on status page |
-| `soat_uploading` | Subiendo… | File upload progress label |
-| `soat_upload_error` | Error al subir. Archivo demasiado grande (máx. 10 MB). | Snackbar: file too large |
-| `soat_save_error` | No se pudo guardar el SOAT. Verifica tu conexión e intenta de nuevo. | Error banner |
-| `soat_upload_error_label` | Error al subir | File status label (error state) |
+| l10n key | Spanish text | Context |
+|----------|-------------|---------|
+| `sos_button_label` | `SOS` | SOS FAB label |
+| `sos_confirm_title` | `¿Enviar alerta SOS?` | Confirmation dialog title |
+| `sos_confirm_body` | `Todos los participantes serán notificados de tu emergencia. Esta acción no se puede deshacer.` | Confirmation dialog body |
+| `sos_confirm_action` | `Enviar SOS` | Primary dialog button |
+| `sos_sent_confirmation` | `SOS enviado — los riders han sido notificados` | Snackbar on sender |
+| `sos_banner_subtitle_with_phone` | `Toca para ver acciones` | SOS banner subtitle |
+| `sos_banner_subtitle_no_phone` | `Sin teléfono registrado` | SOS banner — no phone |
+| `sos_call_action` | `Llamar` | Banner action button |
+| `sos_locate_action` | `Localizar` | Banner action button |
+| `sos_banner_title` | `{riderName} necesita ayuda` | SOS banner title (parameterized) |
+| `tracking_start_ride` | `Iniciar rodada` | Event detail CTA button |
+| `tracking_start_ride_confirm_title` | `¿Iniciar rodada?` | Confirmation dialog title |
+| `tracking_start_ride_confirm_body` | `Los {count} riders aprobados recibirán acceso al mapa de rastreo en tiempo real.` | Dialog body |
+| `tracking_end_ride` | `Terminar rodada` | Organizer control bar button |
+| `tracking_end_ride_confirm_title` | `¿Terminar rodada?` | Confirmation dialog title |
+| `tracking_end_ride_confirm_body` | `La pantalla de rastreo se cerrará para todos los riders conectados. Esta acción no se puede deshacer.` | Dialog body |
+| `tracking_route_on_route` | `En ruta ✓` | Route adherence chip — on route |
+| `tracking_route_off_route` | `Fuera de ruta ⚠` | Route adherence chip — off route |
+| `tracking_ride_finished` | `¡La rodada ha terminado!` | Finished overlay title |
+| `tracking_ride_finished_body` | `{eventName} ha finalizado exitosamente.` | Finished overlay body |
+| `tracking_back_to_home` | `Volver al inicio` | Finished overlay CTA |
+| `tracking_organizer_badge` | `Organizador` | Organizer control bar badge |
+| `tracking_organizer_label` | `Control de rodada` | Organizer control bar label |
+| `tracking_riders_count` | `Riders en la rodada · {count}` | Riders panel title |
+| `tracking_rider_status_on_route` | `En ruta` | Rider row status |
+| `tracking_rider_status_sos` | `🚨 SOS activo` | Rider row status — SOS |
+| `tracking_fg_service_title` | `Rideglory — Rodada activa` | Android foreground service notif title |
+| `tracking_fg_service_body` | `Tu ubicación se está compartiendo con los riders de la rodada.` | Android foreground service notif body |
+| `sos_push_title` | `¡Alerta de emergencia!` | FCM push title |
+| `sos_push_body` | `{riderName} ha activado el SOS en {eventName}.` | FCM push body |
+| `maintenance_push_title` | `Mantenimiento próximo` | FCM push title |
+| `maintenance_push_body` | `El {serviceType} de tu {vehicleName} está programado en 30 días.` | FCM push body |
+| `event_reminder_push_title` | `¡Tu rodada es mañana!` | FCM push title |
+| `event_reminder_push_body` | `{eventName} comienza mañana a las {startTime}. ¡Prepara tu moto!` | FCM push body |
+| `tracking_ride_ended_push_title` | `La rodada ha terminado` | FCM push title |
+| `tracking_ride_ended_push_body` | `{eventName} ha finalizado. ¡Hasta la próxima!` | FCM push body |
+| `vehicle_soat_badge_label` | `SOAT` | Home SOAT badge label |
+| `vehicle_soat_tap_to_add` | `Sin registrar · Agregar →` | SOAT empty state on home card |
+| `vehicle_soat_update` | `Actualizar →` | SOAT expired CTA on home card |
 
-### Notifications (`notification_` prefix — extending iter-1 stub)
-
-| Key | Text | Context |
-|-----|------|---------|
-| `notification_centerTitle` | Notificaciones | AppBar title (already exists in stub) |
-| `notification_markAllRead` | Marcar leídas | AppBar action (already exists) |
-| `notification_emptyTitle` | Aún no tienes notificaciones | Empty state title (already exists) |
-| `notification_emptySubtitle` | Aquí aparecerán los avisos sobre tus SOAT, inscripciones y rodadas. | Empty state subtitle |
-| `notification_sectionUnread` | No leídas | Section label (already exists) |
-| `notification_sectionRead` | Anteriores | Section label (already exists) |
-| `notification_loadMore` | Cargar más notificaciones | Pagination link |
-| `notification_loadError` | No se pudieron cargar las notificaciones | Error title |
-| `notification_loadErrorSubtitle` | Verifica tu conexión a internet e intenta de nuevo. | Error subtitle |
-| `notification_retry` | Reintentar | Error retry button |
-| `notification_soat30d_title` | SOAT vence en 30 días | SOAT_30D notification title |
-| `notification_soat7d_title` | Tu SOAT vence en 7 días | SOAT_7D notification title |
-| `notification_soatDayOf_title` | Tu SOAT vence hoy | SOAT_DAY_OF notification title |
-| `notification_soat_subtitle` | {vehicleName} · Renuévalo para evitar multas | SOAT notification subtitle |
-| `notification_soatDayOf_subtitle` | {vehicleName} · Renueva antes de salir | SOAT day-of subtitle |
-| `notification_newRegistration_title` | Nueva inscripción | NEW_REGISTRATION notification title |
-| `notification_newRegistration_subtitle` | {riderName} quiere unirse a "{eventName}" | Subtitle |
-| `notification_approved_title` | Inscripción aprobada | REGISTRATION_APPROVED title |
-| `notification_approved_subtitle` | Estás inscrito a "{eventName}" | Subtitle |
-| `notification_rejected_title` | Inscripción rechazada | REGISTRATION_REJECTED title |
-| `notification_rejected_subtitle` | Tu solicitud para "{eventName}" no fue aprobada | Subtitle |
-| `notification_timeAgo_hours` | Hace {count} hora{s} | Relative time |
-| `notification_timeAgo_days` | Hace {count} día{s} | Relative time |
-| `notification_timeAgo_weeks` | Hace {count} semana{s} | Relative time |
-| `notification_today` | Hoy {time} | Same-day timestamp |
-
-### ManageAttendeesPage (extending iter-1 existing l10n keys)
-
-All existing `event_` keys are already present. New keys:
-
-| Key | Text | Context |
-|-----|------|---------|
-| `event_filter_pending` | Pendientes | Status filter chip |
-| `event_filter_approved` | Aprobados | Status filter chip |
-| `event_filter_rejected` | Rechazados | Status filter chip |
-| `event_reject_confirm_title` | Rechazar inscripción | AppDialog title |
-| `event_reject_confirm_body` | ¿Estás seguro de que quieres rechazar la inscripción de {name}? Esta acción no se puede deshacer. | AppDialog body |
-| `event_reject_confirm_btn` | Sí, rechazar | Confirm button |
-| `event_approve_action` | Aprobar | Attendee action button |
-| `event_reject_action` | Rechazar | Attendee action button |
-| `event_edit_status` | Editar estado | Attendee action for already-processed |
-| `event_filters_title` | Filtrar inscritos | Bottom sheet title |
-| `event_filter_status_label` | Estado | Bottom sheet section label |
-| `event_filter_clear` | Limpiar | Bottom sheet clear button |
-| `event_filter_apply` | Aplicar | Bottom sheet apply button |
+**Info.plist location usage descriptions (iOS — written in English keys but Spanish values):**
+- `NSLocationWhenInUseUsageDescription`: "Rideglory usa tu ubicación para compartirla con los riders de la rodada en tiempo real."
+- `NSLocationAlwaysAndWhenInUseUsageDescription`: "Rideglory usa tu ubicación en segundo plano para continuar compartiendo tu posición durante la rodada cuando la app no está en primer plano."
 
 ---
 
-## Error messages (must match API error codes)
+## Error messages
 
-| Error code / situation | User-facing message (ES) | Screen |
-|------------------------|--------------------------|--------|
-| Network timeout / no connection | No se pudo guardar el SOAT. Verifica tu conexión e intenta de nuevo. | SoatUploadPage / SoatManualFormPage |
-| File too large (>10 MB) | Error al subir. Archivo demasiado grande (máx. 10 MB). | SoatUploadPage snackbar |
-| `DioException` 404 (vehicle soat) | No se encontró el SOAT para este vehículo. | SoatStatusPage |
-| `DioException` 500 | Ocurrió un error en el servidor. Intenta más tarde. | Any SOAT screen |
-| SOAT expiry date missing | La fecha de vencimiento es obligatoria. | SoatManualFormPage inline |
-| SOAT expiry date format invalid | Fecha inválida. Usa el formato DD/MM/AAAA. | SoatManualFormPage inline |
-| Notifications load error | No se pudieron cargar las notificaciones | NotificationCenterPage error state |
-| Attendees load error | No se pudo cargar la lista | AttendeesPage error state |
-| Generic fallback | Ocurrió un error inesperado. Intenta de nuevo. | All screens |
+| Error situation | User-facing message (ES) | Screen |
+|-----------------|--------------------------|--------|
+| SOS WS publish fails | `No se pudo enviar el SOS. Verifica tu conexión.` | Snackbar on tracking map |
+| Start ride fails (network) | `No se pudo iniciar la rodada. Inténtalo de nuevo.` | Snackbar on event detail |
+| End ride fails (network) | `No se pudo terminar la rodada. Inténtalo de nuevo.` | Snackbar on tracking map |
+| Locate action — no coords | `No se pudo obtener la ubicación del rider.` | Snackbar on tracking map |
+| Route GeoJSON load fails | `No se pudo cargar la ruta. Continuando sin ruta.` | Non-blocking banner on map |
+| Background GPS permission denied | `Para continuar la rodada, activa el permiso de ubicación en Configuración.` | Dialog before tracking starts |
 
 ---
 
-## UX flow rules
+## SOS marker animation spec (Flutter)
 
-### SOAT flow entry points
-1. Vehicle Detail → tap DocumentSlotPill (SOAT row) → `context.pushNamed('soat-status')` if SOAT exists, or `context.pushNamed('soat-upload')` if `noSoat`
-2. SoatStatusPage `Actualizar SOAT` button → `context.pushNamed('soat-upload')`
-3. SoatUploadPage source option `Ingresar manualmente` → `context.pushNamed('soat-manual')`
-4. SoatManualFormPage `Subir documento en cambio` link → pop back to SoatUploadPage
+The SOS marker uses a Mapbox `PointAnnotation` for positioning. The pulsing ring effect is achieved via an `AnimationController` positioned as a Flutter overlay widget above the map:
 
-### SOAT upload phases (visual)
-1. **Selección** — 2×2 source grid + upload zone + data form
-2. **Progreso** — file card with progress bar, save button disabled (`Guardando…`)
-3. **Procesando** — same UI, server processing
-4. **Confirmación** — pop back to Vehicle Detail with success snackbar; DocumentSlotPill badge updates
-
-### Notification read flow
-- Tap unread notification item → calls `markRead(id)` → dot disappears, item opacity drops to 0.7
-- `Marcar leídas` → calls `markAllRead()` → AppBar action disappears, unread section empties
-- Bell badge updates from `NotificationsCubit.state.unreadCount`
-- Load-more: tap `Cargar más notificaciones` → calls `loadMore()` → appends to list
-- Pull-to-refresh: calls `load()` → full reload
-
-### Notification bell badge
-- Visible only when `unreadCount > 0`
-- Shows numeric count; truncates to `99+` if over 99
-- Updates on: app foreground, notification mark-read, notification center open
-
-### SOAT Status logic (client-side)
 ```
-if noSoat:       → "Sin registrar" (neutral badge)
-if daysUntilExpiry > 30:   → "Vigente"    (green)
-if daysUntilExpiry <= 30 && daysUntilExpiry >= 0: → "Por vencer" (yellow)
-if daysUntilExpiry < 0:    → "Vencido"    (red)
+SosMarkerPulse:
+  outer ring: 56×56 transparent circle, border 2px error
+  animation: scale 0.8→1.8, opacity 0.8→0, duration 1.5s, curve Curves.easeOut, repeat
+  inner dot: 36×36 rider avatar circle, filled error red
+  rider initials: white 13px font-weight 700
 ```
+
+If `mapbox_maps_flutter` annotation animation is not available natively, use an `AnimatedBuilder` widget positioned over the map canvas.
+
+---
+
+## Organizer Control Bar — visibility rules
+
+```
+OrganizerControlBar shows when:
+  currentUser.id == event.ownerId
+  AND event.state == 'in_progress'
+
+OrganizerControlBar hides when:
+  currentUser is not the organizer (all riders)
+  OR event.state != 'in_progress'
+```
+
+Always rendered as the topmost item in the map overlay stack, below the status bar, above route adherence chip and SOS banner.
+
+---
+
+## SOS Banner — layering order (top to bottom in overlay stack)
+
+```
+1. OrganizerControlBar  (organizer only, state == in_progress)
+2. SosBannerWidget      (all participants, when sosAlertResult is Data)
+3. RouteAdherenceChip   (all participants, always visible when in_progress)
+4. [map canvas]
+5. MapWidget (Mapbox)
+```
+
+All overlays anchor to `Stack` in `LiveMapPage`. Map remains interactive below all overlays.
+
+---
+
+## Home Dashboard SOAT badge — implementation note
+
+The SOAT badge on the main vehicle card uses the existing `DocumentSlotPill` molecule (created in iter-1):
+
+```dart
+DocumentSlotPill(
+  state: vehicle.soatStatus.toDocumentSlotState(), // extension on SoatStatus
+  stateLabel: context.l10n.vehicle_soat_state_label, // per state
+  onTap: () => context.pushNamed(RoutePaths.soatDetail, params: {...}),
+)
+```
+
+Rendered below the main vehicle hero card in `home_garage_card.dart`. 4 states map to `DocumentSlotState`: `none → empty`, `valid → valid`, `expiringSoon → expiringSoon`, `expired → expired`.
 
 ---
 
 ## Accessibility notes
 
-1. All interactive elements ≥ 44×44px (tap targets).
-2. SOAT source options: 2×2 grid with 48px min height per cell — pass `Semantics(button:true, label: ...)` on each.
-3. Error states: red border + inline error text (not just border change).
-4. Progress bar: include `Semantics(label: 'Subiendo, ${percent}%', value: '${percent}')`.
-5. Notification items: `Semantics(button: true, label: 'Notificación: ${title}, ${time}')`.
-6. Bell badge: `Semantics(label: '${count} notificaciones sin leer')`.
-7. Attendee action buttons: `Semantics(label: 'Aprobar inscripción de ${name}')` and `Semantics(label: 'Rechazar inscripción de ${name}')`.
-8. All empty states: icons are decorative (`excludeFromSemantics: true`), title/subtitle are read.
+1. SOS FAB: minimum 56×56px (exceeds 44px minimum). Semantics label: "Enviar alerta de emergencia".
+2. SOS Banner: all action buttons 32px height (below 44px minimum) — **add `SizedBox(height: 44)` wrapper or increase padding to meet 44px minimum touch target**.
+3. SOS dialog primary button: full-width, 48px height. Meets contrast ratio (white on #EF4444 = 4.6:1, AA pass).
+4. Organizer control bar "Terminar rodada": minimum 44px touch target — use `minHeight: 44` on `OutlinedButton`.
+5. Route adherence chip: non-interactive (display only). No touch target required.
+6. SOAT badge row: full-row tappable, 44px min height.
+7. SOS pulsing animation: add `MediaQuery.disableAnimations` check — if animations disabled (accessibility), show static red marker without pulse.
+
+---
+
+## Pencil (rideglory.pen) — frame update list
+
+Pencil MCP was not available during this session. The following frames must be verified/updated before frontend implementation:
+
+**Frame `qonbS` — Event Tracking Map (MUST update before T-3-6):**
+- Add SOS FAB position spec (bottom-right, above zoom controls)
+- Add SOS banner position (top of overlay stack, below app bar)
+- Add organizer control bar position (top, conditional)
+- Add red pulsing SOS marker variant for rider in SOS state
+- Add route adherence chip position (top left, below organizer bar)
+- Confirm riders panel handle + scroll behavior
+
+**Frame `kAubW` — Event Detail (MUST update before T-3-7):**
+- Add "Iniciar rodada" button to CTA bar (organizer-only variant)
+- Confirm "Ver rastreo" CTA variant for `in_progress` state
+
+**New frames to CREATE:**
+- `Tracking — SOS — Confirmation Dialog`
+- `Tracking — SOS — Banner (with Llamar + Localizar)`
+- `Tracking — SOS — Banner (Localizar only, no phone)`
+- `Tracking — Organizer — Control Bar`
+- `Tracking — Ride Finished Overlay`
+- `Event Detail — Iniciar Rodada Dialog`
 
 ---
 
 ## Design tool artifacts
 
-### Pencil (rideglory.pen)
-Pencil MCP not available during this session (desktop app not running). HTML mockups serve as the design gate. Frames to create in rideglory.pen before frontend implementation:
-
-**Frames to CREATE (iter-2 gate):**
-- `SOAT — Upload — Default` (frame pattern: `[Feature] — [Screen] — [State]`)
-- `SOAT — Upload — Uploading`
-- `SOAT — Upload — Error`
-- `SOAT — Manual Form — Default`
-- `SOAT — Manual Form — Errors`
-- `SOAT — Status — Vigente`
-- `SOAT — Status — Por vencer`
-- `SOAT — Status — Vencido`
-- `Vehicle Detail — SOAT Badge — 4 states` (update to frame `P1GSzZ` section)
-- `Notifications — Center — Loading`
-- `Notifications — Center — Data`
-- `Notifications — Center — Empty`
-- `Notifications — Notification Row — 6 types`
-- `Home — Bell Badge` (update to frame `dyWWs` header)
-
-**Frame dUc9h (ManageAttendeesPage):**
-- Scope confirmed as **list + edit** (full layout already in codebase)
-- UPDATE scope: verify component usage (AppButton, AppDialog), state polish (loading skeleton, empty EmptyStateWidget, error banner + retry)
-
 ### HTML mockups
-Location: `docs/design/html-mockups/iter-2/`
+Location: `docs/design/html-mockups/iter-3/`
 
 | File | Screens covered |
 |------|----------------|
-| `styles.css` | Shared design tokens — extends iter-1 tokens, adds SOAT/notification-specific components |
-| `soat.html` | SoatUploadPage (3 states) · SoatManualFormPage (2 states) · SoatStatusPage (3 states: Vigente, Por vencer, Vencido) · Vehicle Detail SOAT badge (4 states) |
-| `notifications.html` | Home bell badge · NotificationCenterPage (loading, data, empty, error) · 6 notification row templates |
-| `attendees.html` | AttendeesPage (loading, pending filter, all tab, empty, error, confirm dialog, filter bottom sheet) |
+| `styles.css` | Shared design tokens + SOS-specific additions |
+| `tracking-map.html` | Tracking map (normal, off-route, organizer view) |
+| `sos-flow.html` | SOS dialog, SOS sent state, SOS banner (with/without phone) |
+| `organizer-controls.html` | Iniciar rodada (event detail), confirmation dialogs, ride finished overlay |
+| `notifications-push.html` | Android foreground service notif, iOS background indicator + Info.plist strings, push copy reference |
+| `home-soat-badge.html` | Home SOAT badge — all 4 states (vigente, por vencer, vencido, sin registrar) |
 
 ---
 
 ## Change log
 
-- 2026-05-14: Iter-2 design phase complete. Pencil MCP unavailable — HTML mockups serve as gate. Story 2.9 scope confirmed as list+edit UPDATE (no layout rework, component-swap + state polish). 4 new HTML mockup files (styles.css, soat.html, notifications.html, attendees.html). 22 screens/states designed across 3 new HTML files. Full UI copy, component hierarchy, error messages, UX flow rules, and accessibility notes documented.
+- 2026-05-15: Iter-3 design phase complete. 20 screen states designed across 5 HTML mockups. SOS flow, organizer controls, background GPS notification copy, push notification copy, and Home SOAT badge (4 states) all specified. Story classification completed. New widget list defined. Component hierarchy documented. All UI copy in Spanish captured with l10n keys. Pencil frame update list specified.

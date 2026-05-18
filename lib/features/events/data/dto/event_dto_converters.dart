@@ -38,21 +38,25 @@ class EventTypeConverter extends JsonConverter<EventType, String> {
   @override
   EventType fromJson(String json) {
     return switch (json) {
-      'OFF_ROAD' || 'offRoad' => EventType.offRoad,
-      'ON_ROAD' || 'onRoad' => EventType.onRoad,
-      'EXHIBITION' || 'exhibition' => EventType.exhibition,
-      'CHARITABLE' || 'charitable' => EventType.charitable,
-      _ => EventType.onRoad,
+      'TOURISM' => EventType.tourism,
+      'URBAN' => EventType.urban,
+      'OFF_ROAD' => EventType.offRoad,
+      'COMPETITION' => EventType.competition,
+      'SOLIDARITY' => EventType.solidarity,
+      'SHORT_DISTANCE' => EventType.shortDistance,
+      _ => EventType.tourism,
     };
   }
 
   @override
   String toJson(EventType object) {
     return switch (object) {
+      EventType.tourism => 'TOURISM',
+      EventType.urban => 'URBAN',
       EventType.offRoad => 'OFF_ROAD',
-      EventType.onRoad => 'ON_ROAD',
-      EventType.exhibition => 'EXHIBITION',
-      EventType.charitable => 'CHARITABLE',
+      EventType.competition => 'COMPETITION',
+      EventType.solidarity => 'SOLIDARITY',
+      EventType.shortDistance => 'SHORT_DISTANCE',
     };
   }
 }

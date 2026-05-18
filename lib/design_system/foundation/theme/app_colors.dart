@@ -95,10 +95,12 @@ class AppColors {
   static const Color motorcycle = primary;
   static const Color car = Color(0xFF3B82F6);
 
+  static const Color eventTourism = Color(0xFF9333EA);
+  static const Color eventUrban = primary;
   static const Color eventOffRoad = Color(0xFF8B4513);
-  static const Color eventOnRoad = primary;
-  static const Color eventExhibition = Color(0xFF9333EA);
-  static const Color eventCharitable = Color(0xFF14B8A6);
+  static const Color eventCompetition = Color(0xFFEF4444);
+  static const Color eventSolidarity = Color(0xFF14B8A6);
+  static const Color eventShortDistance = Color(0xFF8B5CF6);
 
   static const Color difficultyChip = Color(0xFFEF4444);
 

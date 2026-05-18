@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/go_router.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/domain/use_cases/get_maintenance_list_use_case.dart';
 import 'package:rideglory/features/maintenance/presentation/delete/cubit/maintenance_delete_cubit.dart';
@@ -12,13 +14,10 @@ import 'package:rideglory/features/maintenance/presentation/list/maintenances/wi
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_empty_widget.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_error_widget.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_loading_widget.dart';
-import 'package:rideglory/features/maintenance/presentation/widgets/expandable_fab.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters_bottom_sheet.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/design_system/design_system.dart';
-import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class MaintenancesPage extends StatelessWidget {
   final String? initialVehicleId;
@@ -33,9 +32,7 @@ class MaintenancesPage extends StatelessWidget {
           create: (context) {
             final cubit = MaintenancesCubit(getIt<GetMaintenanceListUseCase>());
             if (initialVehicleId != null) {
-              cubit.updateFilters(
-                MaintenanceFilters(vehicleIds: [initialVehicleId!]),
-              );
+              cubit.setInitialVehicleFilter(initialVehicleId!);
             }
             cubit.fetchMaintenances();
             return cubit;
@@ -56,8 +53,6 @@ class _MaintenancesPageView extends StatefulWidget {
 }
 
 class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
-  bool _showExpandedFab = false;
-
   Future<void> _showFiltersBottomSheet() async {
     final cubit = context.read<MaintenancesCubit>();
     final vehicleCubit = context.read<VehicleCubit>();
@@ -69,56 +64,41 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
       builder: (context) => MaintenanceFiltersBottomSheet(
         initialFilters: cubit.filters,
         availableVehicles: vehicleCubit.availableVehicles
-            .where((v) => !v.isArchived)
+            .where((vehicle) => !vehicle.isArchived)
             .toList(),
       ),
     );
 
     if (result != null && mounted) {
-      cubit.updateFilters(result);
+      await cubit.updateFilters(result);
     }
   }
 
   Future<void> _onTap(MaintenanceModel maintenance) async {
-    if (maintenance.id != null) {
-      final result = await context.pushNamed<dynamic>(
-        AppRoutes.maintenanceDetail,
-        extra: maintenance,
+    if (maintenance.id == null) return;
+    final result = await context.pushNamed<dynamic>(
+      AppRoutes.maintenanceDetail,
+      extra: maintenance,
+    );
+    if (!mounted || result == null) return;
+    if (result is MaintenanceModel) {
+      context.read<MaintenancesCubit>().updateMaintenanceLocally(result);
+    } else if (result is Map && result['action'] == 'deleted') {
+      context.read<MaintenancesCubit>().deleteMaintenanceLocally(
+        result['deletedId'] as String,
       );
-      if (mounted && result != null) {
-        if (result is MaintenanceModel) {
-          context.read<MaintenancesCubit>().updateMaintenanceLocally(result);
-        } else if (result is Map && result['action'] == 'deleted') {
-          context.read<MaintenancesCubit>().deleteMaintenanceLocally(
-            result['deletedId'] as String,
-          );
-        }
-      }
     }
-  }
-
-  Future<void> _onEdit(MaintenanceModel maintenance) async {
-    if (maintenance.id != null) {
-      final result = await context.pushNamed<MaintenanceModel?>(
-        AppRoutes.editMaintenance,
-        extra: maintenance,
-      );
-      if (result != null && mounted) {
-        context.read<MaintenancesCubit>().updateMaintenanceLocally(result);
-      }
-    }
-  }
-
-  void _onDelete(MaintenanceModel maintenance) {
-    context.read<MaintenanceDeleteCubit>().deleteMaintenance(maintenance);
   }
 
   Future<void> _onAddMaintenance() async {
-    final result = await context.pushNamed<MaintenanceModel?>(
+    // Form pops with List<MaintenanceModel> (1 or 2 records if auto-created scheduled)
+    final result = await context.pushNamed<dynamic>(
       AppRoutes.createMaintenance,
     );
-
-    if (result != null && mounted) {
+    if (!mounted) return;
+    if (result is List<MaintenanceModel>) {
+      context.read<MaintenancesCubit>().addMaintenancesLocally(result);
+    } else if (result is MaintenanceModel) {
       context.read<MaintenancesCubit>().addMaintenanceLocally(result);
     }
   }
@@ -128,36 +108,61 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
 
   @override
   Widget build(BuildContext context) {
-    final activeFilterCount = context
-        .watch<MaintenancesCubit>()
-        .filters
-        .activeFilterCount;
-
     return Scaffold(
       backgroundColor: AppColors.darkBgPrimary,
-      appBar: AppAppBar(
-        title: context.l10n.maintenance_maintenances,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            if (context.canPop()) {
-              context.pop();
-              return;
-            }
-            context.goAndClearStack(AppRoutes.home);
-          },
+      appBar: AppBar(
+        backgroundColor: AppColors.darkBgPrimary,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        titleSpacing: 0,
+        title: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            children: [
+              _AppBarIconButton(
+                icon: Icons.arrow_back,
+                hasBorder: true,
+                onTap: () {
+                  if (context.canPop()) {
+                    context.pop();
+                    return;
+                  }
+                  context.goAndClearStack(AppRoutes.home);
+                },
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  context.l10n.maintenance_maintenances,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: AppColors.textOnDarkPrimary,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  _AppBarIconButton(
+                    icon: Icons.tune,
+                    hasBorder: true,
+                    onTap: _showFiltersBottomSheet,
+                  ),
+                  const SizedBox(width: 8),
+                  _AppBarIconButton(
+                    icon: Icons.add,
+                    hasBorder: false,
+                    isAccent: true,
+                    onTap: _onAddMaintenance,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
-      floatingActionButton: _showExpandedFab ? const ExpandableFab() : null,
       body: MultiBlocListener(
         listeners: [
-          BlocListener<MaintenancesCubit, ResultState<List<MaintenanceModel>>>(
-            listener: (context, state) {
-              setState(() {
-                _showExpandedFab = state is! Empty;
-              });
-            },
-          ),
           BlocListener<MaintenanceDeleteCubit, MaintenanceDeleteState>(
             listener: (context, state) {
               state.whenOrNull(
@@ -186,35 +191,64 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
             },
           ),
         ],
-        child:
-            BlocBuilder<MaintenancesCubit, ResultState<List<MaintenanceModel>>>(
-              builder: (context, state) => state.maybeWhen(
-                loading: () => MaintenancesLoadingWidget(onRefresh: _onRefresh),
-                error: (error) => MaintenancesErrorWidget(
-                  error: error.message,
-                  onRefresh: _onRefresh,
-                ),
-                empty: () => MaintenancesEmptyWidget(
-                  onRefresh: _onRefresh,
-                  onActionPressed: _onAddMaintenance,
-                ),
-                data: (maintenances) => MaintenancesDataWidget(
-                  maintenances: maintenances,
-                  maintenanceSummary:
-                      context.read<MaintenancesCubit>().summaryForHeader(),
-                  onRefresh: _onRefresh,
-                  onSearchChanged: (value) {
-                    context.read<MaintenancesCubit>().updateSearchQuery(value);
-                  },
-                  onTap: _onTap,
-                  onEdit: _onEdit,
-                  onDelete: _onDelete,
-                  onFilterPressed: _showFiltersBottomSheet,
-                  activeFilterCount: activeFilterCount,
-                ),
-                orElse: () => MaintenancesLoadingWidget(onRefresh: _onRefresh),
-              ),
+        child: BlocBuilder<MaintenancesCubit, ResultState<List<MaintenanceModel>>>(
+          builder: (context, state) => state.maybeWhen(
+            loading: () => MaintenancesLoadingWidget(onRefresh: _onRefresh),
+            error: (error) => MaintenancesErrorWidget(
+              error: error.message,
+              onRefresh: _onRefresh,
             ),
+            empty: () => MaintenancesEmptyWidget(
+              onRefresh: _onRefresh,
+              onActionPressed: _onAddMaintenance,
+            ),
+            data: (maintenances) => MaintenancesDataWidget(
+              maintenances: maintenances,
+              onRefresh: _onRefresh,
+              onTap: _onTap,
+              onFilterPressed: _showFiltersBottomSheet,
+              onAddPressed: _onAddMaintenance,
+            ),
+            orElse: () => MaintenancesLoadingWidget(onRefresh: _onRefresh),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AppBarIconButton extends StatelessWidget {
+  final IconData icon;
+  final bool hasBorder;
+  final bool isAccent;
+  final VoidCallback onTap;
+
+  const _AppBarIconButton({
+    required this.icon,
+    required this.hasBorder,
+    this.isAccent = false,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          color: isAccent ? AppColors.primary : AppColors.darkCard,
+          borderRadius: BorderRadius.circular(18),
+          border: hasBorder
+              ? Border.all(color: AppColors.darkBorderPrimary)
+              : null,
+        ),
+        child: Icon(
+          icon,
+          color: AppColors.textOnDarkPrimary,
+          size: 16,
+        ),
       ),
     );
   }

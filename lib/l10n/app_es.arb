@@ -459,6 +459,11 @@
   "maintenance_nameRequired": "El nombre es requerido",
   "maintenance_minCharacters": "Mínimo 3 caracteres",
   "maintenance_typeRequired": "El tipo es requerido",
+  "maintenance_sectionBasicInfo": "INFORMACIÓN BÁSICA",
+  "maintenance_sectionDetails": "DETALLES DEL SERVICIO",
+  "maintenance_sectionAlerts": "ALERTAS DE PRÓXIMO SERVICIO",
+  "maintenance_nextDateLabel": "Próxima fecha de servicio",
+  "maintenance_nextMileageLabel": "Próximo kilometraje",
   "maintenance_remindersLabel": "Recibe recordatorios automáticos",
   "maintenance_nextServiceAlerts": "Alertas de próximo servicio",
   "maintenance_alertsConfiguration": "Configuración de alertas",
@@ -941,7 +946,7 @@
   "event_form_date_label": "Fecha",
   "event_form_time_label": "Hora",
   "event_form_city_label": "Ciudad de inicio",
-  "event_form_max_participants_label": "Máx. participantes",
+  "event_form_max_participants_label": "Cupos disponibles",
   "event_form_cost_label": "Costo (COP)",
   "event_form_cost_placeholder": "0 = gratis",
   "event_form_difficulty_low": "Baja",
@@ -951,6 +956,15 @@
   "event_form_cover_ai_label": "o generar con IA",
   "event_form_publish": "Publicar evento",
   "event_form_save": "Guardar",
+  "event_form_cancel_action": "Cancelar",
+  "event_form_publish_action": "Publicar",
+  "event_form_optional_badge": "Opcional",
+  "event_form_max_participants_section_title": "MÁXIMO DE PARTICIPANTES",
+  "event_form_max_participants_subtitle": "Deja vacío para no limitar inscritos",
+  "event_form_max_participants_hint": "Una vez lleno el cupo, el evento aparece como 'Completo' automáticamente.",
+  "event_form_price_section_title": "PRECIO DE INSCRIPCIÓN",
+  "event_form_price_subtitle": "Precio de inscripción (COP)",
+  "event_form_free_event_label": "Evento gratuito",
 
   "vehicle_garage_title": "Mi garaje",
   "vehicle_main_badge": "⭐ Principal",
@@ -988,15 +1002,44 @@
   "vehicle_form_km_label": "Kilometraje actual",
   "vehicle_form_photo_label": "Foto de la moto (opcional)",
   "vehicle_form_photo_upload": "Toca para subir",
-  "vehicle_form_docs_section": "Documentos",
-  "vehicle_form_docs_note": "Los documentos se configuran luego desde el detalle de la moto",
+  "vehicle_form_cover_title": "Agregar foto de portada",
+  "vehicle_form_cover_subtitle": "JPG, PNG · Máx. 10MB",
+  "vehicle_form_upload_btn": "Subir",
+  "vehicle_form_take_photo_btn": "Tomar foto",
+  "vehicle_form_scan_title": "Escanear tarjeta de propiedad",
+  "vehicle_form_scan_subtitle": "Autocompleta marca, modelo, año, placa y VIN automáticamente",
+  "vehicle_form_info_section": "INFORMACIÓN BÁSICA",
+  "vehicle_form_id_section": "IDENTIFICACIÓN",
+  "vehicle_form_color_hint": "Ej. Azul, Negro mate",
+  "vehicle_form_docs_section": "DOCUMENTOS",
+  "vehicle_form_soat_subtitle": "Seguro obligatorio de accidentes",
+  "vehicle_form_techreview_subtitle": "Rev. técnica del vehículo",
+  "vehicle_form_docs_upload": "Subir",
+  "vehicle_form_add_doc_title": "Agregar otro documento",
+  "vehicle_form_add_doc_subtitle": "PDF, JPG, PNG · Máx. 5 MB",
+  "vehicle_form_docs_max_hint": "Máximo 3 documentos por vehículo",
   "vehicle_form_save": "Guardar moto",
+  "vehicle_form_nav_cancel": "Cancelar",
+  "vehicle_form_nav_save": "Guardar",
+  "vehicle_form_delete_vehicle": "Eliminar vehículo",
+  "vehicle_form_placa_required_badge": "Obligatorio",
+  "vehicle_form_vin_optional_label": "Opcional",
+  "vehicle_form_specs_section": "ESPECIFICACIONES",
+  "vehicle_form_specs_engine_label": "Motor",
+  "vehicle_form_specs_horsepower_label": "Potencia",
+  "vehicle_form_specs_torque_label": "Torque",
+  "vehicle_form_specs_weight_label": "Peso",
+  "vehicle_form_specs_engine_hint": "Ej. 689cc · Paralelo 2 cil.",
+  "vehicle_form_specs_horsepower_hint": "Ej. 73 hp",
+  "vehicle_form_specs_torque_hint": "Ej. 68 Nm",
+  "vehicle_form_specs_weight_hint": "Ej. 179 kg",
 
   "maintenance_dashboard_title": "Mantenimientos",
   "maintenance_history_title": "Historial",
-  "maintenance_form_new_title": "Nuevo mantenimiento",
-  "maintenance_form_step_select": "Selecciona el tipo de servicio",
-  "maintenance_form_step_continue": "Continuar →",
+  "maintenance_form_new_title": "Nuevo Mantenimiento",
+  "maintenance_form_step_select_label": "Paso 1 de 2",
+  "maintenance_form_step_select": "Selecciona el tipo de mantenimiento",
+  "maintenance_form_step_continue": "Continuar",
   "maintenance_form_tab_done": "Completado",
   "maintenance_form_tab_scheduled": "Programado",
   "maintenance_form_date_done_label": "Fecha de realización",
@@ -1008,22 +1051,43 @@
   "maintenance_form_next_km_label": "En km",
   "maintenance_form_next_date_label": "O en fecha",
   "maintenance_form_save_done": "Guardar mantenimiento",
+  "maintenance_form_discard": "Descartar",
+  "maintenance_form_estado_section": "ESTADO",
+  "maintenance_form_context_subtitle": "Tipo de mantenimiento seleccionado",
+  "maintenance_form_km_label": "Kilometraje al momento del servicio",
+  "maintenance_form_cost_taller_section": "COSTO Y TALLER",
+  "maintenance_form_taller_label": "Taller / Mecánico",
+  "maintenance_form_notes_section": "NOTAS",
+  "maintenance_form_next_section_header": "PRÓXIMO MANTENIMIENTO",
   "maintenance_form_date_scheduled_label": "Fecha programada",
   "maintenance_form_km_estimated_label": "Kilometraje estimado",
   "maintenance_form_reminder_note": "🔔 Recibirás un recordatorio 30 días antes de la fecha programada.",
   "maintenance_form_save_scheduled": "Guardar recordatorio",
+  "maintenance_scheduled_requires_date_or_km": "Debes ingresar al menos la fecha o los km del próximo mantenimiento",
+  "maintenance_prox_service_in": "Próximo servicio en",
+  "maintenance_prox_days_left": "Faltan para el servicio",
   "maintenance_history_search_placeholder": "Buscar mantenimiento…",
   "maintenance_filters_title": "Filtrar mantenimientos",
   "maintenance_filter_vehicle_label": "Moto",
+  "maintenance_filter_type_label": "Tipo de mantenimiento",
   "maintenance_filter_status_label": "Estado",
   "maintenance_filter_status_all": "Todos",
+  "maintenance_filter_status_overdue": "Atrasado",
+  "maintenance_filter_status_upcoming": "Próximo",
+  "maintenance_filter_status_on_track": "Al día",
   "maintenance_filter_status_done": "Completados",
   "maintenance_filter_status_scheduled": "Programados",
   "maintenance_filter_status_urgent": "Urgentes",
+  "maintenance_filter_date_range_label": "Rango de fecha",
+  "maintenance_filter_date_this_month": "Este mes",
+  "maintenance_filter_date_last_3_months": "Últimos 3 meses",
+  "maintenance_filter_date_last_year": "Último año",
+  "maintenance_filter_date_custom": "Personalizado",
   "maintenance_filter_period_label": "Período",
   "maintenance_filter_from": "Desde",
   "maintenance_filter_to": "Hasta",
   "maintenance_filter_clear": "Limpiar",
+  "maintenance_filter_clear_all": "Limpiar todo",
   "maintenance_filter_apply": "Aplicar",
   "maintenance_legend_urgent": "Urgente",
   "maintenance_legend_warning": "Próximo",
@@ -1078,6 +1142,211 @@
   "event_registrationsTab": "Inscritos",
   "event_eventRegistrationsTitle": "Inscripciones del Evento",
   "event_manageAttendeesTitle": "Gestionar inscritos",
+  "sos_button_label": "SOS",
+  "sos_confirm_title": "¿Enviar alerta SOS?",
+  "sos_confirm_body": "Todos los participantes serán notificados de tu emergencia. Esta acción no se puede deshacer.",
+  "sos_confirm_action": "Enviar SOS",
+  "sos_sent_confirmation": "SOS enviado — los riders han sido notificados",
+  "sos_banner_subtitle_with_phone": "Toca para ver acciones",
+  "sos_banner_subtitle_no_phone": "Sin teléfono registrado",
+  "sos_call_action": "Llamar",
+  "sos_locate_action": "Localizar",
+  "sos_banner_title": "{riderName} necesita ayuda",
+  "@sos_banner_title": {
+    "placeholders": {
+      "riderName": {
+        "type": "String"
+      }
+    }
+  },
+  "tracking_start_ride": "Iniciar rodada",
+  "tracking_start_ride_confirm_title": "¿Iniciar rodada?",
+  "tracking_start_ride_confirm_body": "Los riders aprobados recibirán acceso al mapa de rastreo en tiempo real.",
+  "tracking_end_ride": "Terminar rodada",
+  "tracking_end_ride_confirm_title": "¿Terminar rodada?",
+  "tracking_end_ride_confirm_body": "La pantalla de rastreo se cerrará para todos los riders conectados. Esta acción no se puede deshacer.",
+  "tracking_route_on_route": "En ruta ✓",
+  "tracking_route_off_route": "Fuera de ruta ⚠",
+  "tracking_ride_finished": "¡La rodada ha terminado!",
+  "tracking_ride_finished_body": "{eventName} ha finalizado exitosamente.",
+  "@tracking_ride_finished_body": {
+    "placeholders": {
+      "eventName": {
+        "type": "String"
+      }
+    }
+  },
+  "tracking_back_to_home": "Volver al inicio",
+  "tracking_organizer_badge": "Organizador",
+  "tracking_organizer_label": "Control de rodada",
+  "tracking_riders_count": "Riders en la rodada · {count}",
+  "@tracking_riders_count": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tracking_rider_status_on_route": "En ruta",
+  "tracking_rider_status_sos": "🚨 SOS activo",
+  "tracking_fg_service_title": "Rideglory — Rodada activa",
+  "tracking_fg_service_body": "Tu ubicación se está compartiendo con los riders de la rodada.",
+  "sos_push_title": "¡Alerta de emergencia!",
+  "sos_push_body": "{riderName} ha activado el SOS en {eventName}.",
+  "@sos_push_body": {
+    "placeholders": {
+      "riderName": {
+        "type": "String"
+      },
+      "eventName": {
+        "type": "String"
+      }
+    }
+  },
+  "maintenance_push_title": "Mantenimiento próximo",
+  "maintenance_push_body": "El {serviceType} de tu {vehicleName} está programado en 30 días.",
+  "@maintenance_push_body": {
+    "placeholders": {
+      "serviceType": {
+        "type": "String"
+      },
+      "vehicleName": {
+        "type": "String"
+      }
+    }
+  },
+  "event_reminder_push_title": "¡Tu rodada es mañana!",
+  "event_reminder_push_body": "{eventName} comienza mañana. ¡Prepara tu moto!",
+  "@event_reminder_push_body": {
+    "placeholders": {
+      "eventName": {
+        "type": "String"
+      }
+    }
+  },
+  "tracking_ride_ended_push_title": "La rodada ha terminado",
+  "tracking_ride_ended_push_body": "{eventName} ha finalizado. ¡Hasta la próxima!",
+  "@tracking_ride_ended_push_body": {
+    "placeholders": {
+      "eventName": {
+        "type": "String"
+      }
+    }
+  },
+  "vehicle_soat_badge_label": "SOAT",
+  "vehicle_soat_tap_to_add": "Sin registrar · Agregar →",
+  "vehicle_soat_update": "Actualizar →",
+  "vehicle_soat_form_title": "Registrar SOAT",
+  "vehicle_soat_form_edit_title": "Actualizar SOAT",
+  "vehicle_soat_policy_number_label": "Número de póliza",
+  "vehicle_soat_policy_number_hint": "Ej: SOA-123456",
+  "vehicle_soat_insurer_label": "Aseguradora",
+  "vehicle_soat_insurer_hint": "Ej: Sura, Colseguros...",
+  "vehicle_soat_start_date_label": "Fecha de inicio",
+  "vehicle_soat_expiry_date_label": "Fecha de vencimiento",
+  "vehicle_soat_save_button": "Guardar SOAT",
+  "vehicle_soat_saved_successfully": "SOAT registrado exitosamente",
+  "vehicle_soat_section_title": "Documentos",
+  "vehicle_soat_upload_question": "¿Cómo deseas registrar tu SOAT?",
+  "vehicle_soat_upload_subtitle": "Selecciona una opción para actualizar el SOAT de tu vehículo",
+  "vehicle_soat_option_upload_title": "Subir documento",
+  "vehicle_soat_option_upload_desc": "Toma una foto o selecciona desde tu galería el documento del SOAT vigente",
+  "vehicle_soat_camera_button": "Cámara",
+  "vehicle_soat_gallery_button": "Galería",
+  "vehicle_soat_option_manual_title": "Ingresar manualmente",
+  "vehicle_soat_option_manual_desc": "Completa los datos del SOAT de forma manual sin necesidad de subir un documento",
+  "vehicle_soat_option_manual_cta": "Completar formulario",
+  "vehicle_soat_confirm_title": "Confirmar SOAT",
+  "vehicle_soat_confirm_button": "Confirmar SOAT",
+  "vehicle_soat_confirm_verify": "Verifica los datos del SOAT",
+  "vehicle_soat_confirm_verify_sub": "Revisa y corrige la información antes de confirmar",
+  "vehicle_soat_manual_section_title": "Ingresa los datos del SOAT",
+  "vehicle_soat_manual_section_sub": "Completa la información de tu seguro",
+  "vehicle_soat_doc_uploaded": "Documento subido exitosamente",
+  "vehicle_soat_status_valid": "SOAT vigente",
+  "vehicle_soat_status_valid_desc": "Tu SOAT estará vigente por {days} días más",
+  "@vehicle_soat_status_valid_desc": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "vehicle_soat_status_expires_today": "Vence hoy",
+  "vehicle_soat_status_expired_title": "SOAT vencido",
+  "vehicle_soat_status_expired_desc": "Venció hace {days} días",
+  "@vehicle_soat_status_expired_desc": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "vehicle_soat_status_invalid_dates_title": "Fechas inválidas",
+  "vehicle_soat_status_invalid_dates_desc": "La fecha de inicio debe ser anterior al vencimiento",
+  "vehicle_soat_status_pending": "Estado del SOAT",
+  "vehicle_soat_upload_failed": "No se pudo seleccionar el documento",
+  "tracking_sosCallError": "No se pudo iniciar la llamada.",
+  "tracking_sosLocationError": "No se pudo obtener la ubicación del rider.",
+  "tracking_sosMapError": "No se pudo abrir el mapa.",
+  "tracking_sosSemanticsLabel": "Enviar alerta de emergencia",
+  "map_geocodeError": "No se pudo obtener las coordenadas.",
+  "map_loadError": "No se pudo cargar el mapa.",
+  "@map_loadError": {
+    "description": "Shown as a SnackBar when the Mapbox map fails to load tiles or style during a live ride."
+  },
+  "maintenance_summary_title": "Resumen de Mantenimientos",
+  "maintenance_services_count": "Servicios",
+  "maintenance_total_spent": "Total gastado",
+  "maintenance_overdue_section": "ATRASADO",
+  "maintenance_upcoming_section": "PRÓXIMAMENTE",
+  "maintenance_on_track_section": "AL DÍA",
+  "maintenance_status_done_badge": "Realizado",
+  "maintenance_status_scheduled_badge": "Programado",
+  "maintenance_service_info": "Información del servicio",
+  "maintenance_service_date": "Fecha del servicio",
+  "maintenance_odometer_km": "Odómetro",
+  "maintenance_next_review": "Próxima revisión",
+  "maintenance_next_date_label": "Próxima fecha",
+  "maintenance_next_odometer_label": "Próximo odómetro",
+  "maintenance_expired_label": "vencido",
+  "maintenance_modeCompleted": "Realizado",
+  "maintenance_modeScheduled": "Programado",
+  "maintenance_statusOverdue": "Vencido",
+  "maintenance_statusNext": "Próximo",
+  "maintenance_statusUpToDate": "Al día",
+  "maintenance_noNextService": "Sin próximo servicio",
+  "maintenance_noServicesRegistered": "Sin servicios registrados",
+  "maintenance_validationNextFieldRequired": "Agrega al menos un criterio para el próximo servicio (km o fecha).",
+  "maintenance_validationNextDateMustBeFuture": "La fecha del próximo servicio debe ser futura",
+  "maintenance_validationServiceDateRequired": "La fecha del servicio es requerida",
+  "maintenance_validationOdometerRequired": "El odómetro es requerido",
+
+  "garage_viewMaintenanceHistory": "Ver historial de mantenimientos",
+  "garage_lastService": "Último servicio",
+  "garage_nextService": "Próximo servicio",
+  "garage_completedServiceBadge": "HECHO",
+  "garage_otherVehiclesSection": "OTROS VEHÍCULOS",
+  "garage_upToDate": "Al día",
+  "garage_upcomingCount": "{count} próximo",
+  "@garage_upcomingCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "garage_mainVehicleBadge": "Principal",
+  "garage_odometerLabel": "odómetro",
+  "garage_healthHeader": "Estado de mantenimientos",
+  "garage_healthServicesCount": "{count} servicios",
+  "@garage_healthServicesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "garage_healthOverdue": "Atrasado",
+  "garage_healthUpcoming": "Próximo",
+  "garage_tapForDetail": "Toca para ver detalle del vehículo",
+  "garage_seeDetail": "Ver detalle",
 
   "event_filter_pending": "Pendientes",
   "event_filter_approved": "Aprobados",
@@ -1097,6 +1366,62 @@
   "event_filter_status_label": "Estado",
   "event_filter_clear": "Limpiar",
   "event_filter_apply": "Aplicar",
+
+  "notification_loadMore": "Cargar más notificaciones",
+  "notification_loadError": "No se pudieron cargar las notificaciones",
+  "notification_loadErrorSubtitle": "Verifica tu conexión a internet e intenta de nuevo.",
+  "notification_retry": "Reintentar",
+  "notification_soat30d_title": "SOAT vence en 30 días",
+  "notification_soat7d_title": "Tu SOAT vence en 7 días",
+  "notification_soatDayOf_title": "Tu SOAT vence hoy",
+  "notification_soat_subtitle": "{vehicleName} · Renuévalo para evitar multas",
+  "@notification_soat_subtitle": {
+    "placeholders": {
+      "vehicleName": { "type": "String" }
+    }
+  },
+  "notification_soatDayOf_subtitle": "{vehicleName} · Renueva antes de salir",
+  "@notification_soatDayOf_subtitle": {
+    "placeholders": {
+      "vehicleName": { "type": "String" }
+    }
+  },
+  "notification_newRegistration_title": "Nueva inscripción",
+  "notification_newRegistration_subtitle": "{riderName} quiere unirse a \"{eventName}\"",
+  "@notification_newRegistration_subtitle": {
+    "placeholders": {
+      "riderName": { "type": "String" },
+      "eventName": { "type": "String" }
+    }
+  },
+  "notification_approved_title": "Inscripción aprobada",
+  "notification_approved_subtitle": "Estás inscrito a \"{eventName}\"",
+  "@notification_approved_subtitle": {
+    "placeholders": {
+      "eventName": { "type": "String" }
+    }
+  },
+  "notification_rejected_title": "Inscripción rechazada",
+  "notification_rejected_subtitle": "Tu solicitud para \"{eventName}\" no fue aprobada",
+  "@notification_rejected_subtitle": {
+    "placeholders": {
+      "eventName": { "type": "String" }
+    }
+  },
+  "notification_bell_unread_label": "{count} notificaciones sin leer",
+  "@notification_bell_unread_label": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "notification_bell_label": "Notificaciones",
+  "notification_item_accessibility_label": "Notificación: {title}, {time}",
+  "@notification_item_accessibility_label": {
+    "placeholders": {
+      "title": { "type": "String" },
+      "time": { "type": "String" }
+    }
+  },
 
   "soat_page_upload_title": "Subir SOAT",
   "soat_page_manual_title": "Ingresar SOAT",
@@ -1170,61 +1495,5 @@
   "soat_uploading": "Subiendo…",
   "soat_upload_error": "Error al subir. Archivo demasiado grande (máx. 10 MB).",
   "soat_save_error": "No se pudo guardar el SOAT. Verifica tu conexión e intenta de nuevo.",
-  "soat_upload_error_label": "Error al subir",
-
-  "notification_loadMore": "Cargar más notificaciones",
-  "notification_loadError": "No se pudieron cargar las notificaciones",
-  "notification_loadErrorSubtitle": "Verifica tu conexión a internet e intenta de nuevo.",
-  "notification_retry": "Reintentar",
-  "notification_soat30d_title": "SOAT vence en 30 días",
-  "notification_soat7d_title": "Tu SOAT vence en 7 días",
-  "notification_soatDayOf_title": "Tu SOAT vence hoy",
-  "notification_soat_subtitle": "{vehicleName} · Renuévalo para evitar multas",
-  "@notification_soat_subtitle": {
-    "placeholders": {
-      "vehicleName": { "type": "String" }
-    }
-  },
-  "notification_soatDayOf_subtitle": "{vehicleName} · Renueva antes de salir",
-  "@notification_soatDayOf_subtitle": {
-    "placeholders": {
-      "vehicleName": { "type": "String" }
-    }
-  },
-  "notification_newRegistration_title": "Nueva inscripción",
-  "notification_newRegistration_subtitle": "{riderName} quiere unirse a \"{eventName}\"",
-  "@notification_newRegistration_subtitle": {
-    "placeholders": {
-      "riderName": { "type": "String" },
-      "eventName": { "type": "String" }
-    }
-  },
-  "notification_approved_title": "Inscripción aprobada",
-  "notification_approved_subtitle": "Estás inscrito a \"{eventName}\"",
-  "@notification_approved_subtitle": {
-    "placeholders": {
-      "eventName": { "type": "String" }
-    }
-  },
-  "notification_rejected_title": "Inscripción rechazada",
-  "notification_rejected_subtitle": "Tu solicitud para \"{eventName}\" no fue aprobada",
-  "@notification_rejected_subtitle": {
-    "placeholders": {
-      "eventName": { "type": "String" }
-    }
-  },
-  "notification_bell_unread_label": "{count} notificaciones sin leer",
-  "@notification_bell_unread_label": {
-    "placeholders": {
-      "count": { "type": "int" }
-    }
-  },
-  "notification_bell_label": "Notificaciones",
-  "notification_item_accessibility_label": "Notificación: {title}, {time}",
-  "@notification_item_accessibility_label": {
-    "placeholders": {
-      "title": { "type": "String" },
-      "time": { "type": "String" }
-    }
-  }
+  "soat_upload_error_label": "Error al subir"
 }

@@ -19,7 +19,7 @@ class EventFormDetailsSection extends StatefulWidget {
 
 class _EventFormDetailsSectionState extends State<EventFormDetailsSection> {
   EventDifficulty _selectedDifficulty = EventDifficulty.one;
-  EventType _selectedEventType = EventType.onRoad;
+  EventType _selectedEventType = EventType.urban;
 
   static const _difficultyLabels = {
     EventDifficulty.one: 'Fácil',
@@ -60,7 +60,6 @@ class _EventFormDetailsSectionState extends State<EventFormDetailsSection> {
           labelText: context.l10n.event_allowedBrands,
           hintText: context.l10n.event_allowedBrandsHint,
           helperText: context.l10n.event_allowedBrandsHelper,
-          prefixIcon: Icons.shield_outlined,
           suggestions: ColombiaMotosBrandsData.search,
           initialValue:
               context.read<EventFormCubit>().editingEvent?.allowedBrands ?? [],
@@ -69,7 +68,7 @@ class _EventFormDetailsSectionState extends State<EventFormDetailsSection> {
         AppTextField(
           name: EventFormFields.price,
           labelText: context.l10n.event_price,
-          prefixIcon: Icons.attach_money,
+          prefixText: '\$',
           keyboardType: TextInputType.number,
           validator: FormBuilderValidators.compose([
             FormBuilderValidators.numeric(

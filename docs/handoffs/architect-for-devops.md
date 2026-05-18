@@ -1,52 +1,99 @@
 > Slim handoff — read this before docs/handoffs/architect.md
 
-# Architect → DevOps — Iteration 2
+# Architect → DevOps — Iteration 3
 
-DevOps is active this iteration. No GitHub Actions workflow YAML changes, but several config/native/env items need attention.
+**Two action windows:** (1) before Story 3.0 CI can run; (2) immediately after Story 3.0 merges.
 
-## New env vars
+---
 
-| Variable | Where | Notes |
-|----------|-------|-------|
-| `DATABASE_URL` | `rideglory-api/api-gateway/.env` (+ `.env.example`) | api-gateway gets Prisma for the first time. Must match the Docker Compose Postgres service. Add the new DB to Docker Compose if a separate database per service is the convention. |
+## Before Story 3.0 CI runs — inject secret
 
-No new Flutter `.env` keys — FCM uses existing `google-services.json` / `GoogleService-Info.plist`.
+### `MAPBOX_DOWNLOADS_TOKEN` CI secret (CRITICAL)
 
-## New packages
+Mapbox requires a secret SDK download token (`sk.*`) to fetch the Mapbox binary framework on Android (Gradle) and iOS (CocoaPods). Without it, Android builds fail with a 401 on the Mapbox Maven repo and iOS builds fail silently during `pod install`.
 
-- Flutter (`pubspec.yaml`): `firebase_messaging ^15.x`, `flutter_local_notifications ^17.x/^18.x`, optional `file_picker ^8.x`. CI `flutter pub get` picks these up automatically — no workflow change.
-- Backend (`api-gateway/package.json`): `@nestjs/schedule`. `firebase-admin` already present.
+**Action:** Add `MAPBOX_DOWNLOADS_TOKEN` as a GitHub Actions repository secret before any CI run that includes the Mapbox package.
 
-## iOS native config (APNs — required for iOS push)
+In GitHub Actions workflow YAML, expose it to the build steps:
+```yaml
+env:
+  MAPBOX_DOWNLOADS_TOKEN: ${{ secrets.MAPBOX_DOWNLOADS_TOKEN }}
+```
 
-- Upload an **APNs Authentication Key** (.p8) to Firebase Console → Project Settings → Cloud Messaging.
-- Xcode: enable **Push Notifications** capability + **Background Modes → Remote notifications** on the Runner target.
-- `ios/Runner/Info.plist`: `flutter_local_notifications` may need foreground presentation options — frontend handles in code, but verify build.
-- Without APNs setup iOS push fails silently. This is a pre-flight gate for stories 2.4/2.5/2.6.
+For Android Gradle, it is also needed in `~/.gradle/gradle.properties` on the CI runner:
+```
+MAPBOX_DOWNLOADS_TOKEN=sk.eyJ1...
+```
 
-## Android native config
+For iOS, `pod install` reads it from the environment. Confirm the `Podfile` references it via `ENV['MAPBOX_DOWNLOADS_TOKEN']` or the standard Mapbox Podfile snippet.
 
-- `android/app/src/main/AndroidManifest.xml`: `flutter_local_notifications` requires a default notification channel + (Android 13+) the `POST_NOTIFICATIONS` runtime permission entry. Frontend wires the channel in Dart; confirm manifest entries build.
-- FCM background handler is pure Dart (`@pragma('vm:entry-point')`) — no native service class needed.
+---
 
-## api-gateway Prisma first-time setup (pre-flight, T-2-2)
+## Immediately after Story 3.0 merges — update CocoaPods cache key
 
-- This is `prisma init` + `prisma migrate dev`, NOT `migrate reset`.
-- Docker Compose: ensure the api-gateway can reach a Postgres instance; configure `DATABASE_URL` accordingly. Watch for port conflicts with the 4 existing per-service databases.
-- Document the exact `DATABASE_URL` and any Docker Compose change in the iter-2 pre-flight runbook / `DEPLOY.md`.
+The Mapbox binary framework is ~200MB. The current CocoaPods cache key in CI covers the old `google_maps_flutter` pods. After 3.0 merges, the cache key is stale and CI will re-download 200MB on every run until the key is updated.
 
-## CI/CD
+**Action:** Update the `cache-name` / `key` value in the CocoaPods cache step of the GitHub Actions iOS workflow. Base the key on `ios/Podfile.lock` hash:
 
-- Existing pipeline (`dart analyze` + `flutter test` + APK/IPA build) stays. No workflow YAML edits.
-- `build_runner` runs locally (codegen output is committed); CI does not need a codegen step unless that is already the convention.
-- `DEPLOY.md`: add the api-gateway `DATABASE_URL` requirement and the APNs key setup step.
+```yaml
+- uses: actions/cache@v4
+  with:
+    path: ios/Pods
+    key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
+    restore-keys: |
+      ${{ runner.os }}-pods-
+```
 
-## Pre-flight DevOps checklist
+If the workflow already uses `hashFiles('ios/Podfile.lock')`, the cache will auto-bust on the first run after `pod install` regenerates `Podfile.lock`. Verify by checking the CI log for a cache miss then a successful re-prime.
 
-- [ ] `DATABASE_URL` added to api-gateway `.env` + `.env.example`; Docker Compose DB reachable.
-- [ ] APNs .p8 key uploaded to Firebase Console; Xcode Push + Remote-notification capabilities enabled.
-- [ ] Android notification channel + `POST_NOTIFICATIONS` manifest entry verified after frontend wiring.
-- [ ] `@nestjs/schedule` installed in api-gateway.
-- [ ] `DEPLOY.md` updated.
+---
+
+## New environment variables
+
+| Variable | Scope | Description | Secret? |
+|----------|-------|-------------|---------|
+| `MAPBOX_DOWNLOADS_TOKEN` | CI only | SDK binary download token. Never in `.env`. | Yes — GitHub Actions secret |
+| `MAPBOX_PUBLIC_TOKEN` | Flutter `.env` + `AppEnv` | Runtime access token (`pk.*`). Set via `MapboxOptions.setAccessToken()`. | No (public-scoped) — add to `.env.example` |
+
+The rideglory-api already has `MAPBOX_ACCESS_TOKEN` for `places/autocomplete`. Verify it covers the new `/places/geocode` endpoint (same token, same scope — no new backend secret needed).
+
+---
+
+## DEPLOY.md updates
+
+Add a new section **"Background GPS — Physical Device Test Requirements"**:
+
+```markdown
+## Background GPS — Physical Device Test Requirements (Iter-3)
+
+### Android
+- Physical device required (emulator does not support foreground service GPS correctly)
+- Device under test: Samsung or Xiaomi (known aggressive battery restrictions)
+- Steps:
+  1. Start a mock event tracking session
+  2. Send app to background (home button)
+  3. Verify persistent non-dismissable notification "Rideglory — Rodada activa" in notification shade
+  4. Wait 30 seconds; verify location updates continue appearing in WS server logs
+  5. Attach device log (`adb logcat -s BackgroundTrackingService`) as PR artifact
+
+### iOS
+- Physical device required (simulator does not honor background location)
+- Steps:
+  1. Start a mock event tracking session
+  2. Send app to background
+  3. Verify blue location indicator in system status bar
+  4. Wait 30 seconds; verify location updates continue in WS server logs
+  5. Attach Xcode console log as PR artifact
+```
+
+---
+
+## Checklist
+
+- [ ] `MAPBOX_DOWNLOADS_TOKEN` added to GitHub Actions repository secrets before Story 3.0 CI run
+- [ ] CocoaPods cache key updated immediately after Story 3.0 merges (verify Podfile.lock hash-based key)
+- [ ] `MAPBOX_PUBLIC_TOKEN` added to `.env.example` with placeholder value
+- [ ] `DEPLOY.md` updated with background GPS physical device test steps
+- [ ] Confirm `dart analyze` + `flutter test` CI steps are unchanged (no new test commands needed)
 
 > Full detail: docs/handoffs/architect.md

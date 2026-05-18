@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
+import 'package:rideglory/features/vehicles/domain/models/soat_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
 abstract class VehicleRepository {
@@ -21,4 +22,11 @@ abstract class VehicleRepository {
     required String vehicleId,
     required String localImagePath,
   });
+
+  Future<Either<DomainException, SoatModel>> upsertSoat({
+    required String vehicleId,
+    required SoatModel soat,
+  });
+
+  Future<Either<DomainException, SoatModel>> getSoat(String vehicleId);
 }

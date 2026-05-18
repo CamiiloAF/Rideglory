@@ -4,6 +4,7 @@ import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/get_vehicles_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/set_main_vehicle_usecase.dart';
+import 'package:rideglory/features/vehicles/domain/usecases/update_vehicle_usecase.dart';
 
 /// User vehicles plus UI selection (garage, dropdowns, home). When [state] is
 /// [Data], `data` is always the full list; [currentVehicle] is the focused row
@@ -13,15 +14,18 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
   VehicleCubit(
     this._getMyVehiclesUseCase,
     this._setMainVehicleUseCase,
+    this._updateVehicleUseCase,
   ) : super(const ResultState.initial());
 
   final GetMyVehiclesUseCase _getMyVehiclesUseCase;
   final SetMainVehicleUseCase _setMainVehicleUseCase;
+  final UpdateVehicleUseCase _updateVehicleUseCase;
 
   List<VehicleModel> _vehicles = [];
   String? _selectedVehicleId;
 
-  List<VehicleModel> get availableVehicles => List<VehicleModel>.unmodifiable(_vehicles);
+  List<VehicleModel> get availableVehicles =>
+      List<VehicleModel>.unmodifiable(_vehicles);
 
   VehicleModel? get currentVehicle {
     if (_vehicles.isEmpty) return null;
@@ -39,14 +43,11 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
   Future<void> fetchMyVehicles() async {
     emit(const ResultState.loading());
     final result = await _getMyVehiclesUseCase();
-    result.fold(
-      (error) => emit(ResultState.error(error: error)),
-      (vehicles) {
-        _vehicles = List<VehicleModel>.from(vehicles);
-        _selectedVehicleId = _selectionIdDefault(_vehicles);
-        _emitLoadedOrEmpty();
-      },
-    );
+    result.fold((error) => emit(ResultState.error(error: error)), (vehicles) {
+      _vehicles = List<VehicleModel>.from(vehicles);
+      _selectedVehicleId = _selectionIdDefault(_vehicles);
+      _emitLoadedOrEmpty();
+    });
   }
 
   void selectVehicle(VehicleModel vehicle) {
@@ -56,13 +57,13 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
     _emitLoadedOrEmpty();
   }
 
-  void updateMileage(int newMileage) {
-    final id = currentVehicle?.id;
-    if (id == null) return;
-    _vehicles = _vehicles
-        .map((v) => v.id == id ? v.copyWith(currentMileage: newMileage) : v)
-        .toList();
+  Future<void> updateMileage(int newMileage) async {
+    final vehicle = currentVehicle;
+    if (vehicle == null) return;
+    final updated = vehicle.copyWith(currentMileage: newMileage);
+    _vehicles = _vehicles.map((v) => v.id == vehicle.id ? updated : v).toList();
     _emitLoadedOrEmpty();
+    await _updateVehicleUseCase(updated);
   }
 
   void applySavedVehicleEdit(VehicleModel updated) {
@@ -89,6 +90,24 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
       _selectedVehicleId = vehicle.id;
     }
     _emitLoadedOrEmpty();
+  }
+
+  void updateSoatLocally(String vehicleId, {required DateTime expiryDate}) {
+    _vehicles = _vehicles.map((v) {
+      if (v.id != vehicleId) return v;
+      return v.copyWith(
+        soatStatus: _soatStatusFrom(expiryDate),
+        soatExpiryDate: expiryDate,
+      );
+    }).toList();
+    _emitLoadedOrEmpty();
+  }
+
+  SoatStatus _soatStatusFrom(DateTime expiryDate) {
+    final daysRemaining = expiryDate.difference(DateTime.now()).inDays;
+    if (daysRemaining < 0) return SoatStatus.expired;
+    if (daysRemaining <= 30) return SoatStatus.expiringSoon;
+    return SoatStatus.valid;
   }
 
   void deleteVehicleLocally(String vehicleId) {

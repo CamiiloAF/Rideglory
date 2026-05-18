@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rideglory — SOS Flow (iter-3)</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap">
+</head>
+<body>
+<div class="frame-wrap">
+
+  <!-- =====================================================
+       State 1: SOS Confirmation Dialog
+       Triggered when rider taps the SOS FAB
+       Overlays the tracking map — map still visible behind
+       ===================================================== -->
+  <div>
+    <p class="phone-label">SOS — Diálogo de confirmación</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="app-bar">
+        <div class="icon-btn">←</div>
+        <div>
+          <div class="app-bar-title">Páramo del Sumapaz</div>
+          <div class="app-bar-subtitle">En curso · 5 riders</div>
+        </div>
+      </div>
+
+      <!-- Map (blurred behind dialog) -->
+      <div class="map-canvas" style="filter:blur(1px);opacity:0.5">
+        <div class="map-grid"></div>
+        <div class="map-road h" style="top:50%"></div>
+        <div class="map-road v" style="left:30%"></div>
+        <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 375 420">
+          <polyline points="40,370 80,320 130,250 190,200 250,160 310,100 350,60"
+            stroke="#f98c1f" stroke-width="4" fill="none" opacity="0.8"/>
+        </svg>
+        <div class="rider-marker" style="top:180px;left:160px">
+          <div class="rider-avatar">CM</div>
+          <div class="rider-dot"></div>
+        </div>
+      </div>
+
+      <!-- Dialog overlay -->
+      <div class="dialog-overlay" style="position:absolute;top:0;left:0;right:0;bottom:0">
+        <div class="dialog">
+          <div class="dialog-icon">🚨</div>
+          <div class="dialog-title">¿Enviar alerta SOS?</div>
+          <div class="dialog-body">
+            Todos los participantes serán notificados de tu emergencia.
+            Esta acción no se puede deshacer.
+          </div>
+          <div class="dialog-actions">
+            <button class="btn btn-danger btn-full">
+              🚨 Enviar SOS
+            </button>
+            <button class="btn btn-secondary btn-full">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       State 2: SOS Sent — Sender Confirmation
+       Rider sees "SOS enviado" state — map, no dialog
+       ===================================================== -->
+  <div>
+    <p class="phone-label">SOS — Enviado (confirmación al emisor)</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="app-bar">
+        <div class="icon-btn">←</div>
+        <div>
+          <div class="app-bar-title">Páramo del Sumapaz</div>
+          <div class="app-bar-subtitle">En curso · 5 riders</div>
+        </div>
+      </div>
+      <div class="map-canvas">
+        <div class="map-grid"></div>
+        <div class="map-road h" style="top:50%"></div>
+        <div class="map-road v" style="left:30%"></div>
+        <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 375 420">
+          <polyline points="40,370 80,320 130,250 190,200 250,160 310,100 350,60"
+            stroke="#f98c1f" stroke-width="4" fill="none" opacity="0.8"/>
+        </svg>
+        <!-- Sender's own marker (normal — sender sees their own position) -->
+        <div class="rider-marker" style="top:180px;left:160px">
+          <div class="rider-avatar">CM</div>
+          <div class="rider-dot"></div>
+        </div>
+        <!-- Confirmation toast / snackbar at top -->
+        <div class="map-overlay-top">
+          <div style="
+            background:#22C55E;
+            border-radius:var(--r-sm);
+            padding:10px 14px;
+            display:flex;
+            align-items:center;
+            gap:8px;
+            color:#fff;
+            font-size:13px;
+            font-weight:700;
+            backdrop-filter:blur(12px);
+          ">
+            <span>✓</span>
+            SOS enviado — los riders han sido notificados
+          </div>
+        </div>
+        <!-- SOS FAB now shows active state (pulsing border) -->
+        <div class="map-overlay-bottom">
+          <div style="flex:1"></div>
+          <div class="sos-fab" style="
+            background:transparent;
+            border:3px solid var(--sos-red);
+            color:var(--sos-red);
+            animation:sos-pulse 1.2s ease-in-out infinite;
+          ">SOS</div>
+        </div>
+      </div>
+      <div class="riders-panel">
+        <div class="panel-handle"></div>
+        <div class="panel-title">Riders en la rodada · 5</div>
+        <div class="rider-row">
+          <div class="rider-row-avatar">CM</div>
+          <div class="rider-row-name">Carlos M. (Yo)</div>
+          <span class="chip chip-error" style="font-size:10px">SOS activo</span>
+        </div>
+        <div class="rider-row">
+          <div class="rider-row-avatar">JR</div>
+          <div class="rider-row-name">Juan Rodríguez</div>
+          <span class="rider-row-status">En ruta</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       State 3: SOS Banner — Received by other riders
+       Red banner anchored at top of map canvas (non-blocking)
+       Rider marker turns red + pulsing on map
+       ===================================================== -->
+  <div>
+    <p class="phone-label">SOS — Banner recibido (otros riders)</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="app-bar">
+        <div class="icon-btn">←</div>
+        <div>
+          <div class="app-bar-title">Páramo del Sumapaz</div>
+          <div class="app-bar-subtitle">En curso · 5 riders</div>
+        </div>
+      </div>
+      <div class="map-canvas">
+        <div class="map-grid"></div>
+        <div class="map-road h" style="top:50%"></div>
+        <div class="map-road v" style="left:30%"></div>
+        <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" viewBox="0 0 375 420">
+          <polyline points="40,370 80,320 130,250 190,200 250,160 310,100 350,60"
+            stroke="#f98c1f" stroke-width="4" fill="none" opacity="0.8"/>
+        </svg>
+
+        <!-- Normal rider -->
+        <div class="rider-marker" style="top:200px;left:200px">
+          <div class="rider-avatar">JR</div>
+          <div class="rider-dot"></div>
+        </div>
+
+        <!-- SOS rider — red pulsing marker -->
+        <div class="rider-marker" style="top:280px;left:130px;z-index:20">
+          <div style="position:relative">
+            <div class="sos-ring"></div>
+            <div class="rider-avatar sos">CM</div>
+          </div>
+          <div class="rider-dot sos"></div>
+        </div>
+
+        <!-- SOS Banner — anchored top of map, non-blocking -->
+        <div class="map-overlay-top">
+          <div class="sos-banner" style="cursor:pointer">
+            <div class="sos-banner-icon">🚨</div>
+            <div class="sos-banner-body">
+              <div class="sos-banner-title">Carlos M. necesita ayuda</div>
+              <div class="sos-banner-subtitle">Toca para ver acciones</div>
+            </div>
+            <div class="sos-banner-actions">
+              <button class="sos-action-btn sos-action-call">📞 Llamar</button>
+              <button class="sos-action-btn sos-action-locate">📍 Localizar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="map-overlay-bottom">
+          <div style="flex:1"></div>
+          <div class="icon-btn" style="width:44px;height:44px;backdrop-filter:blur(12px);margin-bottom:8px">⊙</div>
+          <div class="sos-fab">SOS</div>
+        </div>
+      </div>
+
+      <div class="riders-panel">
+        <div class="panel-handle"></div>
+        <div class="panel-title">Riders en la rodada · 5</div>
+        <div class="rider-row">
+          <div class="rider-row-avatar sos-row">CM</div>
+          <div class="rider-row-name">Carlos M.</div>
+          <span class="rider-row-status sos">🚨 SOS activo</span>
+        </div>
+        <div class="rider-row">
+          <div class="rider-row-avatar">JR</div>
+          <div class="rider-row-name">Juan Rodríguez (Yo)</div>
+          <span class="rider-row-status">En ruta</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================
+       State 4: SOS Banner — Rider sin teléfono registrado
+       "Llamar" NO aparece; solo "Localizar"
+       ===================================================== -->
+  <div>
+    <p class="phone-label">SOS — Sin teléfono registrado (solo Localizar)</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons"><span>●●●</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="app-bar">
+        <div class="icon-btn">←</div>
+        <div>
+          <div class="app-bar-title">Páramo del Sumapaz</div>
+          <div class="app-bar-subtitle">En curso · 5 riders</div>
+        </div>
+      </div>
+      <div class="map-canvas">
+        <div class="map-grid"></div>
+        <div class="map-road h" style="top:50%"></div>
+        <div class="map-road v" style="left:30%"></div>
+
+        <!-- SOS rider -->
+        <div class="rider-marker" style="top:280px;left:130px;z-index:20">
+          <div style="position:relative">
+            <div class="sos-ring"></div>
+            <div class="rider-avatar sos">AP</div>
+          </div>
+          <div class="rider-dot sos"></div>
+        </div>
+
+        <!-- SOS Banner — no "Llamar", only "Localizar" -->
+        <div class="map-overlay-top">
+          <div class="sos-banner">
+            <div class="sos-banner-icon">🚨</div>
+            <div class="sos-banner-body">
+              <div class="sos-banner-title">Ana Pérez necesita ayuda</div>
+              <div class="sos-banner-subtitle">Sin teléfono registrado</div>
+            </div>
+            <div class="sos-banner-actions">
+              <!-- No "Llamar" button when phone is null -->
+              <button class="sos-action-btn sos-action-locate">📍 Localizar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="map-overlay-bottom">
+          <div style="flex:1"></div>
+          <div class="sos-fab">SOS</div>
+        </div>
+      </div>
+
+      <div class="riders-panel" style="padding:12px 16px">
+        <div class="panel-handle"></div>
+        <!-- Design note visible in panel -->
+        <div style="
+          background:var(--surface-2);
+          border:1px solid var(--border);
+          border-radius:var(--r-sm);
+          padding:10px 12px;
+          font-size:12px;
+          color:var(--text-secondary);
+          display:flex;
+          gap:8px;
+          align-items:flex-start;
+        ">
+          <span>ℹ️</span>
+          <span>El botón "Llamar" solo aparece cuando el rider tiene un número de teléfono registrado en su perfil.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

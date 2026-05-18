@@ -1,0 +1,41 @@
+{
+  "slug": "map-fix-mapbox",
+  "phase": "qa",
+  "status": "pass",
+  "updatedAt": "2026-05-16T22:46:37Z",
+  "summary": "QA passed — 0 dart analyze errors, 1 pre-existing test failure only (TC-2-28), no android/cubit/domain/data files changed; 2 dart format fixes applied by QA (whitespace only)",
+  "metrics": { "tokens": 0, "costUsd": 0.0 },
+  "artifacts": ["docs/custom-iters/map-fix-mapbox/handoffs/qa.md"],
+  "qualityGates": [
+    {
+      "name": "dart_analyze_0_errors",
+      "status": "pass",
+      "detail": "0 errors; 2 pre-existing info-level deprecation warnings in route_map_preview.dart (cameraForCoordinates, cameraOptions) — unchanged from baseline"
+    },
+    {
+      "name": "dart_format_clean",
+      "status": "pass",
+      "detail": "route_map_preview.dart and live_map_body.dart required formatting; QA applied dart format (no semantic changes). Post-fix: 0 files unformatted."
+    },
+    {
+      "name": "no_android_files_changed",
+      "status": "pass",
+      "detail": "git diff --name-only shows no android/ files in the working tree diff"
+    },
+    {
+      "name": "no_domain_data_cubits_changed",
+      "status": "pass",
+      "detail": "git diff --name-only filtered for cubit/, domain/, data/ — no matches found"
+    },
+    {
+      "name": "flutter_test_baseline_held",
+      "status": "pass",
+      "detail": "47 passed, 1 failed (TC-2-28: pre-existing RiderProfilePage email finder failure — unchanged from baseline)"
+    },
+    {
+      "name": "all_changes_verified_by_code_review",
+      "status": "pass",
+      "detail": "All 8 claimed files read and verified: assert in main.dart, MBXAccessToken literal token in Info.plist, _mapLoadError field + onMapLoadErrorListener in route_map_preview.dart, onMapError callback in live_map_widget.dart, removeCurrentSnackBar+showSnackBar in live_map_body.dart, map_loadError key in app_es.arb and both generated l10n files"
+    }
+  ]
+}

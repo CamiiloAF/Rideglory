@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
@@ -12,13 +11,20 @@ import 'package:rideglory/features/events/presentation/form/widgets/sections/eve
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_difficulty_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_event_type_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_locations_section.dart';
+import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_max_participants_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_multi_brand_section.dart';
+import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_price_section.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/cover_preview_widget.dart';
 import 'package:rideglory/shared/cubits/form_image_cubit.dart';
 import 'package:rideglory/shared/widgets/form/form_image_section.dart';
 
+/// Main scrollable content of the event form.
+///
+/// Section order matches Pencil frame zbCa0:
+/// Cover → Información Básica → Fecha y Hora → Dificultad → Ruta →
+/// Tipo de Evento → Marcas Permitidas → Máximo de Participantes → Precio
 class EventFormContent extends StatelessWidget {
   const EventFormContent({super.key});
 
@@ -26,7 +32,7 @@ class EventFormContent extends StatelessWidget {
     if (!cubit.isEditing) {
       return {
         EventFormFields.difficulty: EventDifficulty.one,
-        EventFormFields.eventType: EventType.offRoad,
+        EventFormFields.eventType: EventType.tourism,
         EventFormFields.isMultiDay: false,
         EventFormFields.dateRange: DateTimeRange(
           start: DateTime.now(),
@@ -41,6 +47,8 @@ class EventFormContent extends StatelessWidget {
         ),
         EventFormFields.isMultiBrand: true,
         EventFormFields.allowedBrands: <String>[],
+        EventFormFields.maxParticipants: null,
+        EventFormFields.isFreeEvent: false,
       };
     }
     final event = cubit.editingEvent!;
@@ -62,6 +70,8 @@ class EventFormContent extends StatelessWidget {
       EventFormFields.isMultiBrand: event.allowedBrands.isEmpty,
       EventFormFields.allowedBrands: event.allowedBrands,
       EventFormFields.price: event.price?.toString() ?? '',
+      EventFormFields.maxParticipants: event.maxParticipants,
+      EventFormFields.isFreeEvent: event.isFree,
     };
   }
 
@@ -77,6 +87,7 @@ class EventFormContent extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // ── Cover ──────────────────────────────────────────────────
             BlocBuilder<EventFormCubit, EventFormState>(
               buildWhen: (previous, current) =>
                   previous.coverGenerationResult !=
@@ -134,6 +145,7 @@ class EventFormContent extends StatelessWidget {
                 );
               },
             ),
+            // ── Información Básica ─────────────────────────────────────
             AppSpacing.gapXxl,
             EventFormBasicInfoSection(
               isEditing: cubit.isEditing,
@@ -146,10 +158,13 @@ class EventFormContent extends StatelessWidget {
                 );
               },
             ),
+            // ── Fecha y Hora ───────────────────────────────────────────
             AppSpacing.gapXxl,
             const EventFormDateTimeSection(),
+            // ── Dificultad ─────────────────────────────────────────────
             AppSpacing.gapXxl,
             const EventFormDifficultySection(),
+            // ── Ruta ───────────────────────────────────────────────────
             AppSpacing.gapXxl,
             FormSectionTitle(
               title: context.l10n.event_routeAndMap,
@@ -157,28 +172,22 @@ class EventFormContent extends StatelessWidget {
             ),
             AppSpacing.gapLg,
             const EventFormLocationsSection(),
+            // ── Tipo de Evento ─────────────────────────────────────────
             AppSpacing.gapXxl,
             FormSectionTitle(
               title: context.l10n.event_eventType,
               icon: Icons.category_outlined,
             ),
             const EventFormEventTypeSection(),
+            // ── Marcas Permitidas ──────────────────────────────────────
             AppSpacing.gapXxl,
             const EventFormMultiBrandSection(),
+            // ── Máximo de Participantes ────────────────────────────────
             AppSpacing.gapXxl,
-            AppTextField(
-              name: EventFormFields.price,
-              labelText: context.l10n.event_price,
-              hintText: context.l10n.event_priceHint,
-              prefixIcon: Icons.attach_money,
-              keyboardType: TextInputType.number,
-              validator: FormBuilderValidators.compose([
-                FormBuilderValidators.numeric(
-                  errorText: context.l10n.event_invalidPrice,
-                  checkNullOrEmpty: false,
-                ),
-              ]),
-            ),
+            const EventFormMaxParticipantsSection(),
+            // ── Precio de Inscripción ──────────────────────────────────
+            AppSpacing.gapXxl,
+            const EventFormPriceSection(),
           ],
         ),
       ),

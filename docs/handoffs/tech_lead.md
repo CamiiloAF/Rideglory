@@ -1,140 +1,155 @@
-# Tech lead review — Iteration 2
+# Tech Lead Review — iter-3 (PR #15)
 
-**Date:** 2026-05-15
-**Status:** blocked
+**Decision: BLOCKED**
+**Reviewed at:** 2026-05-15T06:00:00Z
+**PR:** https://github.com/CamiiloAF/Rideglory/pull/15
+**Iteration:** 3 — Tracking Completo + SOS + Organizer Controls + Mapbox Migration
 
-## Pull request
-| Field     | Value                                               |
-| --------- | --------------------------------------------------- |
-| URL       | https://github.com/CamiiloAF/Rideglory/pull/14     |
-| Branch    | iter-2 → main                                       |
-| PR number | #14                                                 |
+---
 
-## Inline review comments
-| File / location | Severity | Summary |
-| --------------- | -------- | ------- |
-| `lib/features/notifications/presentation/notifications_view.dart:34` | blocking | Raw `TextButton` in feature code — replace with `AppTextButton` |
-| `lib/features/soat/presentation/pages/soat_status_page.dart:64` | blocking | Raw `TextButton` in feature code — replace with `AppTextButton` |
-| `lib/features/soat/presentation/pages/soat_manual_form_page.dart` | blocking | 3 widget classes in one file (`SoatManualFormPage`, `_SoatManualFormView`, `_SectionHeader`) — extract to separate files |
-| `lib/features/soat/presentation/pages/soat_status_page.dart` | blocking | 5 widget classes in one file — extract `_SoatStatusView`, `_SoatEmptyState`, `_SoatDataView`, `_DetailRow` |
-| `lib/features/soat/presentation/pages/soat_upload_page.dart` | blocking | 3 widget classes in one file — extract `_SoatSourceGrid`, `_SourceOption` |
-| `lib/features/notifications/presentation/notifications_view.dart` | blocking | 4 widget classes in one file — extract `_ErrorState`, `_EmptyState`, `_DataView` |
-| `lib/features/notifications/presentation/widgets/notification_bell_button.dart:21-22` | blocking | Hardcoded Spanish strings in Semantics labels (`'$unread notificaciones sin leer'`, `'Notificaciones'`) — must go through `app_es.arb` + `context.l10n` |
-| `lib/features/notifications/presentation/widgets/notification_item.dart:69` | blocking | Hardcoded Spanish string `'Notificación: ...'` in Semantics label — must go through `app_es.arb` + `context.l10n` |
-| `lib/features/soat/presentation/pages/soat_status_page.dart:131` | blocking | `Navigator.push(MaterialPageRoute(...))` bypasses go_router — add `AppRoutes.soatManualForm` named route and use `context.pushNamed()` |
-| `lib/features/soat/presentation/pages/soat_upload_page.dart:108` | blocking | `Navigator.push(MaterialPageRoute(...))` bypasses go_router — same fix as above |
-| `lib/core/services/fcm_service.dart:81` | info | FCM token first 10 chars logged in kDebugMode — acceptable in debug; add inline comment documenting the rationale |
-| `lib/features/soat/data/dto/soat_dto.dart` | info | `SoatModelToRequest` extension on domain model lives in data layer DTO file — minor concern about layer dependency direction; tolerable but worth noting |
+## Summary
 
-## Stories reviewed
-| Story ID | Outcome | Notes |
-| -------- | ------- | ----- |
-| US-2-1 | needs-fixes | SOAT upload implemented. 4 blocking violations in soat_upload_page.dart |
-| US-2-2 | needs-fixes | SOAT manual form implemented. 4 blocking violations in soat_manual_form_page.dart |
-| US-2-3 | pass | SoatModel 4-state logic correct; VehicleSoatSection uses localized stateLabel via context.l10n.soat_status_* — iter-1 deferred item resolved |
-| US-2-4 | deferred | Backend cron prerequisite (T-2-7); manual device testing pending |
-| US-2-5 | deferred | Backend FCM trigger prerequisite; manual device testing pending |
-| US-2-6 | deferred | Backend notification delivery; manual device testing pending |
-| US-2-7 | needs-fixes | NotificationsCubit correct; violations in notifications_view.dart (multiple widgets, TextButton) |
-| US-2-8 | pass (backend) | Backend agent responsibility — not in Flutter PR scope |
-| US-2-9 | pass | ManageAttendeesPage scope confirmed (component-swap); not touched in this PR (pre-existing) |
-| US-2-10 | needs-fixes | dart analyze PASS; flutter test PASS; 4 coding-standards violations remain |
+PR #15 delivers 7 stories (3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.10) including the full Mapbox migration, SOS flow, organizer ride controls, background GPS, and SOAT vehicle badge. The Story 3.0 hard gate (zero `google_maps_flutter` / `geocoding` imports) is satisfied. BUG-3-1 (widget test for `route_map_preview.dart`) is resolved — the test file is present and 4/4 pass.
 
-## Flutter Clean Architecture adherence
-| Layer | Compliant | Violations |
-| ----- | --------- | ---------- |
-| domain | yes | None — zero Flutter imports, zero HTTP calls in soat/domain/ and notifications/domain/ |
-| data | yes | None — zero BuildContext in soat/data/ and notifications/data/; DTOs not exposed to presentation |
-| presentation | yes (architecture) | No direct HTTP calls; no DTO types exposed publicly; dependencies flow correctly |
+However, **6 blocking violations** prevent merge: a Clean Architecture layer breach and 5 coding-standards violations. All are correctable in a single fix cycle.
 
-Note: Architecture is clean. All 4 blocking issues are coding-standards violations, not architecture violations.
+---
 
-## rideglory-coding-standards adherence
-| Rule | Compliant | Violations |
-|------|-----------|------------|
-| One widget per file | no | soat_manual_form_page.dart (3), soat_status_page.dart (5), soat_upload_page.dart (3), notifications_view.dart (4) — 12 extra widget classes across 4 files |
-| No `Widget _buildXxx()` helpers | yes | None found |
-| ARB strings only | no | 3 hardcoded Spanish strings in Semantics labels in notification_bell_button.dart:21-22 and notification_item.dart:69 |
-| No ElevatedButton/OutlinedButton/TextButton directly | no | TextButton used in notifications_view.dart:34 and soat_status_page.dart:64 (AppBar actions) |
-| No showDialog() directly | yes | None — AppButton/AppDialog used throughout |
-| ResultState<T> for async | yes | SoatCubit: Cubit<ResultState<SoatModel>> correct; NotificationsCubit: @freezed NotificationsState with ResultState<List<NotificationModel>> correct |
-| pushNamed navigation | no | MaterialPageRoute used in soat_status_page.dart:131 and soat_upload_page.dart:108 for SoatManualFormPage navigation (no named route) |
-| Colors via colorScheme or AppColors | yes | All colors use AppColors constants; Colors.white used only for text-on-dark-badge (allowed set) |
-| Button text sentence case | yes | All button labels checked — sentence case throughout |
+## Hard Gates
 
-## Security findings
-| Finding | Severity | Status |
-| ------- | -------- | ------ |
-| FCM token partial logging (first 10 chars) | info | Wrapped in `kDebugMode`, uses `dart:developer log` (not `print`) — acceptable |
-| No secrets in source | pass | No API keys, credentials, or tokens hardcoded |
-| Firebase ID token auth | pass | All API calls go through `FirebaseAuthInterceptor` in `AppDio` |
-| FCM background handler @pragma | pass | `@pragma('vm:entry-point')` present on `firebaseMessagingBackgroundHandler` |
-| google-services.json not tracked | pass | Confirmed absent from diff |
-| No print() statements | pass | Uses `dart:developer log` with `kDebugMode` guard only |
+| Gate | Status |
+|---|---|
+| Zero `google_maps_flutter` imports in `lib/` | PASS |
+| Zero `geocoding` imports in `lib/` | PASS |
+| `dart analyze` 0 errors/0 warnings | PASS (per frontend handoff) |
+| `flutter test` — target stories pass | PASS (43 pass / 1 pre-existing fail TC-2-28) |
+| BUG-3-1 widget test for `route_map_preview.dart` | PASS (4/4 cases present) |
 
-## Test coverage assessment
-- dart analyze: **PASS — No issues found!** (0 errors, 0 warnings)
-- flutter test: **64 pass / 1 pre-existing fail** (TC-2-28 rider email display — unchanged from iter-1)
-- 21 new test cases (TC-2-20 through TC-2-40): 7 SOAT domain boundary tests, 5 SoatCubit state machine tests, 9 NotificationsCubit tests (load, pagination, markRead, markAllRead, error rollback)
-- Coverage is adequate for domain + cubit layers; widget tests for SOAT pages and NotificationsView deferred per QA rationale
+---
 
-## Blocking issues (must fix before merge)
+## Blocking Violations
 
-1. **[BLOCKING-1] Raw TextButton in feature code**
-   - `lib/features/notifications/presentation/notifications_view.dart:34` — replace `TextButton(...)` with `AppTextButton(label: context.l10n.notification_markAllRead, onPressed: ...)`
-   - `lib/features/soat/presentation/pages/soat_status_page.dart:64` — replace `TextButton(...)` with `AppTextButton(label: context.l10n.soat_edit_btn, onPressed: ...)`
+### BLOCK-1 — Clean Architecture: Data layer imported in cubit
 
-2. **[BLOCKING-2] One-widget-per-file violation**
-   - `soat_manual_form_page.dart`: extract `_SoatManualFormView` → `_soat_manual_form_view.dart` and `_SectionHeader` → `_soat_section_header.dart`
-   - `soat_status_page.dart`: extract `_SoatStatusView`, `_SoatEmptyState`, `_SoatDataView`, `_DetailRow` to separate files
-   - `soat_upload_page.dart`: extract `_SoatSourceGrid` → `_soat_source_grid.dart` and `_SourceOption` → `_soat_source_option.dart`
-   - `notifications_view.dart`: extract `_ErrorState`, `_EmptyState`, `_DataView` to separate files
+**File:** `lib/features/events/presentation/tracking/cubit/live_tracking_cubit.dart` L15–17
 
-3. **[BLOCKING-3] Hardcoded Spanish strings in Semantics labels**
-   - `notification_bell_button.dart:21-22`: add ARB keys `notification_bell_unread_label` (with `{count}` placeholder) and `notification_bell_label`; use `context.l10n.notification_bell_unread_label(unread)` and `context.l10n.notification_bell_label`
-   - `notification_item.dart:69`: add ARB key `notification_item_accessibility_label` (with `{title}` and `{time}` placeholders); use via `context.l10n.notification_item_accessibility_label(notification.title, _timeAgo(notification.createdAt))`
+The cubit imports `package:dio/dio.dart`, `event_service.dart`, and `tracking_ws_client.dart` — all data-layer concerns. The cubit also catches `DioException` directly (~L400), a data-layer exception type leaking into presentation.
 
-4. **[BLOCKING-4] Raw Navigator.push(MaterialPageRoute(...)) bypasses go_router**
-   - Add `static const String soatManualForm = '/soat/manual-form'` to `lib/shared/router/app_routes.dart`
-   - Add route in `lib/shared/router/app_router.dart` that accepts `VehicleModel` (vehicle) and `SoatModel?` (existingSoat) as `extra`
-   - Replace `Navigator.of(context).push(MaterialPageRoute(...))` with `context.pushNamed(AppRoutes.soatManualForm, extra: {'vehicle': vehicle, 'existingSoat': soat})`
+**Required fix:** Extract a `TrackingRepository` interface (domain) with `endRide(String eventId)` and `publishSos(SosAlertModel)` methods. The data-layer `TrackingRepositoryImpl` wraps `EventService` and `TrackingWsClient` and converts `DioException` to `DomainException`. Cubit receives `TrackingRepository` via injection.
 
-## Non-blocking notes (fix in next iteration)
+---
 
-- `lib/core/services/fcm_service.dart:81` — FCM token first 10 chars logged in kDebugMode via `dart:developer log`. Functionally acceptable; add a comment explaining why partial logging is sufficient for debugging without exposing full token.
-- `lib/features/soat/data/dto/soat_dto.dart` — `SoatModelToRequest` extension adds `toRequestJson()` to the domain model from a data-layer file. This creates a subtle data→domain dependency. Consider moving to `SoatModel` directly or a separate `soat_model_extensions.dart` in domain. Not an architecture violation per se (extension is additive), but worth cleaning up.
-- `lib/core/services/fcm_service.dart` — `configureDependencies()` is commented as a future requirement in the background handler. Per architect spec, this must be called when DI-registered services are used in the background. Add a `// TODO(iter-3): call configureDependencies() if background processing beyond logging is needed` so it is not forgotten.
+### BLOCK-2 — Coding Standards: `_buildXxx` helper methods
 
-## Overall signal
+**File:** `lib/features/events/presentation/tracking/live_map_page.dart` L203, L224, L256
 
-PR #14 delivers a solid SOAT + FCM notification foundation: Clean Architecture is correctly layered (domain/data/presentation separation verified), ResultState<T> pattern used throughout, cursor pagination enforced, FCM @pragma handler correct, NotificationsCubit correctly marked @lazySingleton in root MultiBlocProvider, 140+ ARB keys localized, and the iter-1 DocumentSlotPill deferred item (localized stateLabel) is now resolved. The code is architecturally sound.
+`_buildAppBar()`, `_buildLiveMapAppBar()`, `_buildBody()` are Widget-returning private methods violating the "no `_buildXxx` helpers" rule.
 
-However, 4 coding-standards violations are blocking: (1) raw `TextButton` in 2 AppBar actions where `AppTextButton` is required; (2) multiple widget classes per file across 4 new files (12 extra classes total); (3) 3 hardcoded Spanish strings in Semantics labels that must go through app_es.arb; (4) `MaterialPageRoute` used for SoatManualFormPage navigation instead of a named go_router route. All 4 are mechanical fixes with no architectural impact. Fix and re-push; the PR is otherwise ready to merge.
+**Required fix:** Extract to separate widget files, e.g. `live_map_app_bar.dart` and `live_map_body.dart`.
 
-## Change log
-- 2026-05-15: Initial review — PR #14 — BLOCKED (4 blocking coding-standards violations)
+---
 
-## Re-review cycle
+### BLOCK-3 — Coding Standards: Hardcoded Spanish strings in `sos_banner.dart`
 
-**Date:** 2026-05-15
-**Verdict:** APPROVED
+**File:** `lib/features/events/presentation/tracking/widgets/sos_banner.dart` L22, L34, L51
 
-### Violation checks
+Three SnackBar messages not in `app_es.arb`:
+- `'No se pudo iniciar la llamada.'`
+- `'No se pudo obtener la ubicación del rider.'`
+- `'No se pudo abrir el mapa.'`
 
-| Blocking ID | Status | Evidence |
-|-------------|--------|---------|
-| BLOCKING-1: Raw TextButton | FIXED | notifications_view.dart uses `AppTextButton(label: context.l10n.notification_markAllRead, onPressed: ...)`. soat_status_page.dart now a thin page wrapper — AppTextButton is used in the extracted SoatStatusView widget. No raw TextButton remaining in either file. |
-| BLOCKING-2: One-widget-per-file | FIXED | 8 extracted soat widget files: `soat_data_view.dart`, `soat_detail_row.dart`, `soat_empty_state.dart`, `soat_manual_form_view.dart`, `soat_section_header.dart`, `soat_source_grid.dart`, `soat_source_option.dart`, `soat_status_view.dart`. 3 extracted notifications widget files: `notifications_data_view.dart`, `notifications_empty_state.dart`, `notifications_error_state.dart`. All 4 original page files now contain exactly one widget class each. |
-| BLOCKING-3: Hardcoded Semantics strings | FIXED | ARB keys added to `app_es.arb`: `notification_bell_unread_label` (with `{count}` placeholder), `notification_bell_label`, `notification_item_accessibility_label` (with `{title}`, `{time}` placeholders). `notification_bell_button.dart` uses `context.l10n.notification_bell_unread_label(unread)` / `context.l10n.notification_bell_label`. `notification_item.dart` uses `context.l10n.notification_item_accessibility_label(...)`. |
-| BLOCKING-4: MaterialPageRoute bypasses go_router | FIXED | `AppRoutes.soatUpload`, `AppRoutes.soatStatus`, `AppRoutes.soatManualForm` constants added to `app_routes.dart`. All 3 routes registered in `app_router.dart` via `GoRoute`. No `Navigator.push(MaterialPageRoute(...))` remaining in any soat file. |
+**Required fix:** Add l10n keys (e.g., `tracking_sosCallError`, `tracking_sosLocationError`, `tracking_sosMapError`) and use `context.l10n.<key>`.
 
-### Quality gates
+---
 
-| Gate | Result |
+### BLOCK-4 — Coding Standards: Hardcoded Spanish string in `sos_button.dart`
+
+**File:** `lib/features/events/presentation/tracking/widgets/sos_button.dart` L21
+
+Semantics label `'Enviar alerta de emergencia'` is a raw literal.
+
+**Required fix:** Add l10n key `tracking_sosSemanticsLabel` and use `context.l10n.tracking_sosSemanticsLabel`.
+
+---
+
+### BLOCK-5 — Coding Standards: Hardcoded Spanish string in `route_map_preview.dart`
+
+**File:** `lib/shared/widgets/map/route_map_preview.dart` L288
+
+Error text `'No se pudo obtener las coordenadas.'` is hardcoded in `build()`.
+
+**Required fix:** Add l10n key `map_geocodeError` and use `context.l10n.map_geocodeError`.
+
+---
+
+### BLOCK-6 — Coding Standards: Multiple widget classes per file
+
+**Files:**
+- `lib/features/events/presentation/tracking/widgets/sos_banner.dart`: `SosBannerWidget` (L9) + `_SosBannerAction` (L131)
+- `lib/features/home/presentation/widgets/home_garage_card.dart`: `HomeGarageCard` + `_HeroImage` + `_PlaceholderImage` + `_VehicleInfo` + `_SoatBadge`
+
+**Required fix:** One widget class per file. Extract private widgets to sibling files in the same directory.
+
+---
+
+## Non-Blocking / Deferred
+
+1. `home_garage_card.dart` — `_SoatBadge._statusLabel()` may return the same l10n key for all three `SoatStatus` values (valid/expiringSoon/expired). Verify three distinct keys are used. Fix before iter-4 if confirmed as logic bug.
+
+2. `DioException` catch in cubit `endRide()` (~L400) will be automatically resolved when BLOCK-1 is addressed.
+
+---
+
+## What Passed
+
+- Mapbox migration correct: `Position(longitude, latitude)` lng-first order respected throughout
+- `mapbox_maps_flutter hide Error` import alias used where `ResultState<T>` is also used
+- `geolocator as geo` alias used where Mapbox and geolocator Position types conflict
+- `SosAlertModel` in domain layer — clean, no Flutter imports
+- `GeocodeResultDto` in `lib/core/services/dto/` — correct placement
+- `AddressLocation` in `lib/shared/models/` — clean domain model
+- `OrganizerControlBar`, `RideFinishedOverlay` — one widget per file, AppButton used, l10n used
+- `live_tracking_state.dart` — freezed state with `sosAlertResult: ResultState<SosAlertModel?>` — correct pattern
+- `app_es.arb` — ~30 new keys with proper placeholder documentation
+- `main.dart` — `MapboxOptions.setAccessToken(AppEnv.mapboxPublicToken)` before `runApp()`
+- CI: `MAPBOX_DOWNLOADS_TOKEN` and `MAPBOX_ACCESS_TOKEN` secrets wired in `ci.yml`
+- `AndroidManifest.xml` — Google Maps key removed, foreground service declared with `foregroundServiceType="location"`
+- `route_map_preview_test.dart` — 4 test cases (loading/error/data/empty) using mocktail — BUG-3-1 resolved
+
+---
+
+## Decision
+
+**BLOCKED.** Fix the 6 blocking violations and re-request review. No other phase may proceed until these are resolved and this review is updated to APPROVED.
+
+---
+
+# Tech Lead Re-Review — iter-3 (PR #15) — Cycle 2
+
+**Decision: APPROVED**
+**Re-reviewed at:** 2026-05-15T07:00:00Z
+
+## Re-Review: All 6 Blocking Violations Resolved
+
+| # | Violation | Status |
+|---|-----------|--------|
+| BLOCK-1 | `LiveTrackingCubit` — no data layer imports | RESOLVED — imports only `tracking_repository.dart` (domain interface); no EventService, TrackingWsClient, or DioException |
+| BLOCK-2 | `live_map_page.dart` — no `_buildXxx` helpers | RESOLVED — `live_map_app_bar.dart` and `live_map_body.dart` extracted as separate widget files; zero Widget-returning private methods remain |
+| BLOCK-3 | `sos_banner.dart` SnackBar strings use `context.l10n` | RESOLVED — all 3 use `context.l10n.tracking_sosCallError`, `tracking_sosLocationError`, `tracking_sosMapError` |
+| BLOCK-4 | `sos_button.dart` Semantics label uses `context.l10n.tracking_sosSemanticsLabel` | RESOLVED — `context.l10n.tracking_sosSemanticsLabel` at L22 |
+| BLOCK-5 | `route_map_preview.dart` error text uses `context.l10n.map_geocodeError` | RESOLVED — `context.l10n.map_geocodeError` at L289 |
+| BLOCK-6 | One widget class per file (`sos_banner.dart` + `home_garage_card.dart`) | RESOLVED — `_SosBannerAction` extracted to `sos_banner_action.dart`; `home_garage_card.dart` delegates to extracted sibling files |
+
+## Quality Gates (Re-Verified)
+
+| Gate | Status |
 |------|--------|
-| dart analyze | PASS — No issues found! (0 errors, 0 warnings) |
-| flutter test | PASS — 64 pass / 1 pre-existing fail (TC-2-28 rider email, unchanged from iter-1) |
+| `dart analyze` — 0 errors, 0 warnings | PASS (3 info-level Mapbox SDK deprecations — acceptable) |
+| `flutter test` — 47 pass / 1 pre-existing fail (TC-2-28) | PASS |
+| Zero `google_maps_flutter` imports in `lib/` | PASS (unchanged) |
+| Zero `geocoding` imports in `lib/` | PASS (unchanged) |
+| BUG-3-1 widget test (4/4 pass) | PASS (unchanged) |
 
-### Decision
+## Re-Review Decision
 
-**APPROVED** — All 4 blocking violations resolved. Architecture remains clean. PR #14 is ready to merge.
+**APPROVED.** All 6 blocking violations are resolved. PR #15 is ready to merge. Next phase: po_close.

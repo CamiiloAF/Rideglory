@@ -23,7 +23,7 @@ void main() {
     ownerId: 'owner-1',
     name: 'Test Event',
     description: 'Test event description',
-    eventType: EventType.onRoad,
+    eventType: EventType.tourism,
     difficulty: EventDifficulty.two,
     city: 'Medellín',
     startDate: DateTime(2026, 5, 20),
@@ -91,7 +91,7 @@ void main() {
       },
       build: () => eventsCubit,
       act: (cubit) {
-        const filters = EventFilters(types: {EventType.onRoad});
+        const filters = EventFilters(types: {EventType.tourism});
         cubit.updateFilters(filters);
       },
       expect: () => [
@@ -178,7 +178,7 @@ void main() {
       build: () => eventsCubit,
       act: (cubit) {
         final filters = EventFilters(
-          types: {EventType.onRoad},
+          types: {EventType.tourism},
           startDate: DateTime(2026, 5, 20),
           endDate: DateTime(2026, 5, 25),
           city: 'Medellín',
@@ -250,7 +250,7 @@ void main() {
 
     // TC-2-9: EventFilters.hasFilters returns true when type filter is set
     test('TC-2-9: EventFilters.hasFilters is true with type filter', () {
-      const filters = EventFilters(types: {EventType.onRoad});
+      const filters = EventFilters(types: {EventType.tourism});
       expect(filters.hasFilters, true);
     });
 

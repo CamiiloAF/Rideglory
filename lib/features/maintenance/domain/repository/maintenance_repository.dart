@@ -8,13 +8,26 @@ import '../../../../core/exceptions/domain_exception.dart';
 
 abstract class MaintenanceRepository {
   Future<Either<DomainException, MaintenanceUserListAggregate>>
-      getMaintenancesByUserId();
+      getMaintenancesByUserId({
+    List<MaintenanceType>? types,
+    DateTime? startDate,
+    DateTime? endDate,
+  });
 
   Future<Either<DomainException, MaintenanceVehicleListResult>>
-      getMaintenancesByVehicleId(String vehicleId);
+      getMaintenancesByVehicleId(
+    String vehicleId, {
+    List<MaintenanceType>? types,
+    DateTime? startDate,
+    DateTime? endDate,
+  });
 
-  Future<Either<DomainException, MaintenanceModel>> addMaintenance(
+  /// Returns a list of 1 or 2 models:
+  /// - 1 model when mode == scheduled or no next fields provided
+  /// - 2 models when mode == completed AND next fields provided (auto-created scheduled record)
+  Future<Either<DomainException, List<MaintenanceModel>>> addMaintenance(
     MaintenanceModel maintenance,
+    int? nextKmInterval,
   );
 
   Future<Either<DomainException, MaintenanceModel>> updateMaintenance(

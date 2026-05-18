@@ -1,61 +1,29 @@
-# PO Handoff — Iteration 2
+# PO Handoff — Iteration 3
 
-**Date:** 2026-05-14
+**Date:** 2026-05-15
 **Status:** in progress
 
 ---
 
 ## Iteration goal
 
-Allow riders to register and track their SOAT (mandatory insurance) per vehicle and receive push notifications for critical lifecycle events, while establishing the FCM infrastructure and persistent notification backend that iter-3, iter-4, and iter-5 depend on. Also completes ManageAttendeesPage redesign (Story 2.9) deferred from iter-1.
+Complete the real-time tracking experience with SOS alert, organizer ride controls, background GPS, date-based maintenance reminders, and migrate the maps SDK from `google_maps_flutter` to `mapbox_maps_flutter` as a single unified SDK — leaving riders fully connected during active events.
 
 ---
 
 ## Stories for this iteration
 
 | ID | Story | Acceptance criteria | Primary agent |
-| --- | ----- | ------------------- | ------------- |
-| US-2-1 | As a rider, I can upload my SOAT document (photo or PDF from gallery/camera) for a vehicle in my garage and save the policy data (policy number, dates, insurer) in the backend. | Document is saved; vehicle badge changes to "Vigente" or "Por vencer" based on expiry date. All upload errors (network, file-too-large) shown as snackbars in Spanish. | frontend + backend |
-| US-2-2 | As a rider, I can manually enter my SOAT data (policy number, start date, expiry date, insurer) when I do not want to upload a document. | Expiry date is required and validated; on save, SOAT state badge reflects the correct validity logic (4 states). Empty or invalid dates show inline validation error. | frontend + backend |
-| US-2-3 | As a rider, I see a SOAT status badge (Sin SOAT / Vigente / Por vencer / Vencido) on my vehicle detail page and can tap the badge to navigate to the SOAT flow. | Four states calculated correctly based on expiry date vs. today (>30d → Vigente, ≤30d → Por vencer, past → Vencido, none → Sin SOAT). Badge is tappable and navigates to the correct flow. | frontend + backend |
-| US-2-4 | As a rider, I receive a push notification 30 days before, 7 days before, and on the day my SOAT expires, including the affected vehicle's name. | All three notifications arrive at the device on the correct dates and appear in the notification center. (Tap navigation → iter-5.) | backend |
-| US-2-5 | As an event organizer, I receive a push notification when a new rider registers for my event. | Notification appears in the notification center; unread badge on the bell icon increments. (Tap navigation → iter-5.) | backend + frontend |
-| US-2-6 | As a registered rider, I receive a push notification when my registration is approved or rejected. | Notification arrives within 30 seconds of the organizer's action; the "My Registrations" screen already reflects the updated status when opened. (Tap navigation → iter-5.) | backend + frontend |
-| US-2-7 | As a rider, I can open the notification center from the bell icon on Home and view all my notifications, distinguishing unread (orange dot) from read. Tapping a notification or using "Mark all as read" persists the state in the backend. | List loads from backend with cursor pagination (?cursor=<lastId>&limit=20, response { data, nextCursor }); marking read calls PATCH /api/notifications/:id/read; "Mark all" calls PATCH /api/notifications/read-all; bell badge reflects unread count from backend; empty state "Aún no tienes notificaciones" visible. | frontend + backend |
-| US-2-8 | As the dev team, the backend persists all notifications in a notifications table in api-gateway and exposes endpoints to list them, mark them as read, and register the FCM token. | GET /api/notifications?cursor=<lastId>&limit=20 returns { data: Notification[], nextCursor: string | null } for the authenticated user ordered by createdAt desc; PATCH /api/notifications/:id/read updates isRead=true; PATCH /api/notifications/read-all updates all unread for the user; POST /api/notifications/fcm-token receives { fcmToken: string } and updates fcmToken String? field on users-ms User model (called from AuthCubit post-login); all four endpoints require Bearer token with Firebase Auth guard; notifications table fields: id, userId, type, payload (JSON), isRead, createdAt. | backend |
-| US-2-9 | As an event organizer, the attendees management page (Pencil frame dUc9h) matches the rideglory.pen design — using design system components, correct color tokens, and consistent loading/empty states. | ManageAttendeesPage uses AppButton, AppDialog throughout; no hardcoded color literals; loading, empty, and error states visually correct per confirmed Pencil frame dUc9h. If frame covers list + edit, full layout is implemented; if edit-only, scope is limited to component-swap and color tokenization with no layout rework. | frontend |
-| US-2-10 | As the dev team, SOAT and notification features have full automated test coverage — unit tests for business logic, cubit tests for all state transitions, and widget tests for all new pages. | Unit: SOAT badge state logic (4 states, boundary dates); NotificationsCubit — initial load, cursor pagination, markRead, markAllRead (5 BLoC test cases minimum per cubit). Widget: SoatUploadPage, SoatManualFormPage, NotificationCenterPage — loading skeleton, data render, empty state, error banner per page. dart analyze passes with zero violations; flutter test passes with zero new failures. | qa |
-
----
-
-## Assumptions and open questions
-
-- **Story 2.9 frame scope (assumption):** Frame dUc9h may cover list + edit view or edit-only. Design gate must confirm before implementation. If ambiguous, limit to component-swap and color tokenization without layout rework.
-- **FCM background isolate DI (confirmed):** The FCM background message handler runs in a separate Dart isolate. `configureDependencies()` must be re-called inside the handler. The top-level handler function requires `@pragma('vm:entry-point')`.
-- **Notification read state is backend-sourced (confirmed):** `SharedPreferences` may be used only as a local badge-count cache for optimization; the source of truth is the `notifications` table in api-gateway.
-- **Testing order (confirmed):** Story 2.8 (backend endpoints) must be complete before Story 2.7 (mark as read) can be fully implemented and tested. Order: 2.8 → 2.7 → 2.4/2.5/2.6.
-- **Cursor pagination throughout (confirmed):** All notification endpoints use cursor-based pagination (`?cursor=<lastId>&limit=20`). Offset/limit must NOT be used.
-- **api-gateway Prisma first-time setup (confirmed):** api-gateway has no existing `prisma/` directory. This is `prisma init` + schema creation + `prisma migrate dev` — NOT `prisma migrate reset`. A full pre-flight day is budgeted.
-- **DocumentSlotPill caller contract (from iter-1 tech_lead):** `DocumentSlotPill` has hardcoded Spanish fallback strings. Callers MUST pass a localized `stateLabel` via `context.l10n.<key>`. The SOAT implementation in iter-2 must follow this pattern explicitly.
-- **Pre-existing test failures (from iter-1 QA):** 4 test failures caused by stale `.g.dart` files (`user_service.g.dart` missing `getUserById`, `event_service.g.dart` signature mismatch). These will clear during iter-2 pre-flight when `build_runner` regenerates code for new SOAT/notification DTOs.
-- **Pre-existing non-blockers from tech_lead (deferred to iter-2):** `mileage_info_dialog.dart` uses raw `AlertDialog`; `event_form_multi_brand_section.dart` uses raw `TextFormField`; `info_chip_tooltip.dart` uses raw `showDialog()`; `home_view_all_events_button.dart` uses `context.goNamed()`. These are not assigned to dedicated iter-2 stories but the frontend agent should address them if files are touched.
-- **Home Dashboard SOAT badge NOT in iter-2:** SOAT badge on the Home Dashboard main vehicle card is deferred to iter-3 per PLAN.md.
-
----
-
-## Out of scope (this iteration)
-
-- **Home Dashboard SOAT badge:** Deferred to iter-3. Vehicle detail SOAT badge IS in scope (US-2-3).
-- **Notification tap routing:** Stories 2.4/2.5/2.6/2.7 deliver notification display only. Tapping a notification navigates to the Home screen for now. Full routing (to specific screens) is iter-5 (Story 5.5).
-- **OCR auto-fill for SOAT:** Alta complejidad; entrada manual (US-2-2) is sufficient for MVP. Deferred post-iter-5.
-- **SOAT push reminders via FCM to the user's own device before Cron runs:** The cron scheduler sends push at 30d/7d/day-of. No on-save immediate reminder.
-- **Mandatory documents beyond SOAT:** Tech review (Revisión Técnico-Mecánica) is out of scope for iter-2. DTO is extensible but only SOAT in v1.
-- **Maintenance reminders:** Deferred to iter-3 (Story 3.6).
-- **Event 24h reminders:** Deferred to iter-3 (Story 3.7).
-- **Deep links, Apple Sign-In, notification routing to specific screens:** iter-5.
-- **Follow system, complete profiles:** iter-4.
-- **Mapbox migration:** Story 3.0 (iter-3).
-- **SOS alert feature:** iter-3.
+|----|-------|---------------------|---------------|
+| US-3-0 | As the dev team, the project uses `mapbox_maps_flutter` as the sole maps SDK; `google_maps_flutter` and `geocoding` have been eliminated completely. | `pubspec.yaml` declares `mapbox_maps_flutter ^2.2.0`; `google_maps_flutter` and `geocoding` are absent from `pubspec.yaml` and `pubspec.lock`. `dart analyze` passes with zero errors or warnings in `lib/`. Zero `google_maps_flutter` or `geocoding` imports remain in `lib/`. `live_map_widget.dart`, `live_map_page.dart`, `initials_marker_icon.dart`, and `route_map_preview.dart` compile and render correctly on a physical device. `route_map_preview.dart` uses `PlaceService` (Retrofit async) for address lookup; loading and error states handled with `ResultState`. `AndroidManifest.xml` contains Mapbox token meta-data; `Info.plist` contains `MBXAccessToken`; no Google Maps API key remains in native config. iOS CocoaPods install completed; app builds in simulator. This story must be merged and `dart analyze` must be clean **before any other iter-3 story begins**. | frontend |
+| US-3-1 | As a rider in an active event, I can press the red SOS button visible on the tracking map, confirm the alert in a dialog, and all other riders in the event receive an emergency push notification with my name and location. | SOS alert processed in under 5 seconds from confirmation tap. The rider's map marker changes to a red pulsing indicator on all other participants' maps. A red banner with the rider's name appears on all other participants' screens. The confirming rider sees a "SOS enviado" confirmation. If the rider's phone number is not registered, only the "Localizar" action appears (not "Llamar"). | frontend, backend |
+| US-3-2 | As a rider seeing an SOS alert on the tracking map, I can tap the SOS banner for the rider in crisis and access two actions: Call (native dialer) and Locate (Google Maps / Apple Maps with navigation). | Both actions are functional on iOS and Android. "Llamar" is only shown if the rider has a registered phone number. "Localizar" deep-links to Google Maps (Android) or Apple Maps (iOS) with navigation to the rider's last known coordinates. Actions visible to any participant, not just the organizer. | frontend |
+| US-3-3 | As the organizer of a scheduled event, I can start the ride from the event detail screen, transitioning the event to `in_progress` state and enabling live tracking for all approved registrants. | "Iniciar rodada" button is only visible to the event organizer on the event detail page. Tapping it shows a confirmation dialog. On confirmation, the backend transitions the event to `in_progress`; all approved riders immediately see the CTA on the event detail change to "Ver rastreo". | frontend, backend |
+| US-3-4 | As the organizer of an active event, I can end the ride from the tracking screen, transitioning the event to `finished` and closing the tracking screen for all connected riders. | "Terminar rodada" button visible only to the organizer on the tracking screen. On confirmation, event transitions to `finished` in the backend; all connected WebSocket clients receive a termination signal and the tracking screen closes for all participants; a push notification "La rodada ha terminado" arrives in under 10 seconds. | frontend, backend |
+| US-3-5 | As a rider in an active event with the app in the background, the app continues sending my location to the WebSocket every 5 seconds. On Android, a non-dismissable persistent notification "Rideglory — Rodada activa" is displayed. On iOS, the system location indicator is visible. | Android: location updates continue with app in background; foreground service notification is visible and non-dismissable (verified on physical device). iOS: location updates continue; system blue location indicator is visible (native behavior, verified on physical device). Logs from both platforms attached to the PR. | frontend |
+| US-3-6 | As a rider with a scheduled maintenance record (date-based), I receive a push notification 30 days before the scheduled date. | Push is scheduled when the maintenance record is saved with a future date. Notification text includes the service type and motorcycle name in Spanish. Push arrives within a 5-minute window of the scheduled time. Notification appears in the notification center. | backend, frontend |
+| US-3-7 | As an approved registrant of a future event, I receive a push reminder notification 24 hours before the event start time. | Push arrives between 23h 55min and 24h 5min before the event's scheduled start time. Notification text includes the event name. Notification appears in the notification center. | backend |
+| US-3-8 | As the dev team, `dart analyze` passes with zero violations, all existing tests remain green, and Story 3.0's Mapbox migration passes a widget test before merging. | `dart analyze`: 0 errors, 0 warnings on the final feature branch. `flutter test`: all pre-existing passing tests continue to pass (no new failures). Widget test for `route_map_preview.dart` passes before Story 3.0 PR merges. No hardcoded Spanish strings — all new user-visible text in `app_es.arb`. No `google_maps_flutter` or `geocoding` imports in `lib/`. Location usage descriptions in `Info.plist` written in clear Spanish. Physical device logs for background GPS (Android + iOS) attached to PR. | qa |
 
 ---
 
@@ -63,65 +31,83 @@ Allow riders to register and track their SOAT (mandatory insurance) per vehicle 
 
 | Task ID | Description | Agent | Status |
 |---------|-------------|-------|--------|
-| T-2-1 | Design gate: confirm/create Pencil frames for SOAT upload, SOAT manual form, SOAT status detail, notification center, vehicle detail with 4-state SOAT badge, generic notification row template. Confirm frame dUc9h scope for Story 2.9. | design | todo |
-| T-2-2 | Pre-flight backend: create seed.ts in vehicles-ms (2+ test vehicles) and events-ms (1 scheduled event + 1 registration); run prisma migrate reset on 4 existing services; prisma init + prisma migrate dev in api-gateway; verify GET /api/vehicles returns 200. | backend | todo |
-| T-2-3 | Backend: implement SOAT endpoints in vehicles-ms (POST /api/vehicles/:vehicleId/soat, GET /api/vehicles/:vehicleId/soat) with Soat Prisma model; add soatStatus computed logic. | backend | todo |
-| T-2-4 | Backend: add fcmToken String? to users-ms User model (Prisma migration); implement POST /api/notifications/fcm-token in api-gateway; add Firebase Auth guard. | backend | todo |
-| T-2-5 | Backend: create notifications table in api-gateway Prisma (id, userId, type, payload JSON, isRead, createdAt); implement GET /api/notifications (cursor), PATCH /:id/read, PATCH /read-all with Firebase Auth guard. | backend | todo |
-| T-2-6 | Backend: add FCM push trigger in events-ms registration approval/rejection flow; each push inserts a row in api-gateway notifications table. | backend | todo |
-| T-2-7 | Backend: install @nestjs/schedule; implement NotificationSchedulerService with @Cron for SOAT reminders (30d, 7d, day-of); America/Bogota timezone; each push inserts row in notifications table. | backend | todo |
-| T-2-8 | Flutter: implement lib/features/soat/ — domain (SoatModel, SoatRepository), data (SoatDto, SoatService Retrofit, SoatRepositoryImpl), presentation (SoatCubit, SoatUploadPage, SoatManualFormPage, SoatStatusPage). | frontend | todo |
-| T-2-9 | Flutter: implement lib/features/notifications/ — domain (NotificationModel, NotificationsRepository), data (NotificationsService with cursor pagination), presentation (NotificationsCubit, NotificationCenterPage); bell icon with unread badge on Home shell. | frontend | todo |
-| T-2-10 | Flutter: initialize FCM in AuthCubit post-login — permission request, token registration (POST /api/notifications/fcm-token); configure flutter_local_notifications for iOS foreground banners; Android notification channel; top-level background handler with @pragma('vm:entry-point') and DI re-init. | frontend | todo |
-| T-2-11 | Flutter: implement Story 2.9 — ManageAttendeesPage redesign per confirmed Pencil frame dUc9h (AppButton, AppDialog, no hardcoded colors, loading/empty/error states). | frontend | todo |
-| T-2-12 | QA: run dart analyze + flutter test; write unit tests (SoatCubit 4-state badge logic, NotificationsCubit — initial/pagination/markRead/markAllRead); write widget tests (SoatUploadPage, SoatManualFormPage, NotificationCenterPage); verify 6 notification types on device/emulator. | qa | todo |
-| T-2-13 | Tech Lead: review all PRs for Clean Architecture compliance — layer violations, cursor pagination enforcement, FCM background handler pattern, DocumentSlotPill caller pattern, SOAT badge state logic, app_es.arb completeness. | tech_lead | todo |
+| T-3-1 | Migrate `google_maps_flutter` → `mapbox_maps_flutter`: update `pubspec.yaml`, native configs (AndroidManifest.xml, Info.plist), refactor `live_map_widget.dart`, `live_map_page.dart`, `initials_marker_icon.dart`, `route_map_preview.dart`. Add widget test for `route_map_preview.dart`. Must be merged before T-3-2 begins. | frontend | backlog |
+| T-3-2 | Backend: implement `POST /api/events/:eventId/tracking/start` and `POST /api/events/:eventId/tracking/end` in `api-gateway/src/tracking/`. Guard: organizer only. | backend | backlog |
+| T-3-3 | Backend: implement SOS handler in `TrackingGateway` — receive `{ type: "sos" }` WS message, broadcast `sos_alert` to all event participants via WebSocket, dispatch FCM multicast push to all approved registrants; deduplicate with `sosTriggeredAt` on events-ms. | backend | backlog |
+| T-3-4 | Backend: implement `GET /api/events/:eventId/route` in events-ms returning `routeGeoJson` (GeoJSON LineString, stored as `routeGeoJson Json?` on Event model). | backend | backlog |
+| T-3-5 | Backend: add `NotificationSchedulerService` cron entries in api-gateway for maintenance date-based reminder (30d, America/Bogota timezone) and 24h event reminder. Uses `@nestjs/schedule`. | backend | backlog |
+| T-3-6 | Flutter: implement SOS button + confirmation dialog on tracking map; SOS banner with Llamar/Localizar actions; red pulsing marker for rider in SOS state using `mapbox_maps_flutter` annotations API. | frontend | backlog |
+| T-3-7 | Flutter: implement organizer "Iniciar rodada" / "Terminar rodada" controls in `EventDetailPage` and `EventTrackingPage`; `LiveTrackingCubit` emits `TrackingFinished` on `tracking.event.ended` WebSocket event; tracking screen auto-closes for all riders. | frontend | backlog |
+| T-3-8 | Flutter: implement background GPS — `flutter_foreground_task` on Android (foreground service isolate + `IsolateNameServer`; `configureDependencies()` called in `onStart()`); `geolocator` with `AppleSettings(activityType: ActivityType.automotiveNavigation)` on iOS. | frontend | backlog |
+| T-3-9 | Flutter: render event route as GeoJSON LineString on tracking map using `GeoJsonSource + LineLayer`; implement route adherence chip ("En ruta ✓" / "Fuera de ruta ⚠") with 200m Haversine check client-side. | frontend | backlog |
+| T-3-10 | Flutter: add `soatStatus` and `soatExpiryDate` to `VehicleModel`; display Home Dashboard SOAT badge on main vehicle card (deferred from iter-2). | frontend | backlog |
+| T-3-11 | QA: widget test for `route_map_preview.dart` (pre-condition for T-3-1 merge); `dart analyze` + `flutter test` gate; physical device background GPS logs; verify zero `google_maps_flutter`/`geocoding` imports; verify `app_es.arb` updated for all new strings. | qa | backlog |
+| T-3-12 | DevOps: update CocoaPods cache key in GitHub Actions CI immediately after Story 3.0 (T-3-1) merges (~200MB Mapbox binary framework). Update `DEPLOY.md` with background GPS device test requirements. | devops | backlog |
+
+---
+
+## Assumptions and open questions
+
+- **Story 3.0 is an absolute blocker (confirmed):** No iter-3 story other than 3.0 may be implemented until the Mapbox migration is merged and `dart analyze` is clean. This is documented in the PLAN.md definition of done and enforced by the iteration checkpoint.
+- **GeoJSON LineString format (confirmed by architect):** Route polyline is stored as `routeGeoJson Json?` on the Event model in events-ms, not as a Google-encoded polyline string per PRD §17.2. Prisma migrate reset discards existing event data so no legacy migration is needed. Flutter renders with `GeoJsonSource + LineLayer` — not `PolylineAnnotationManager`.
+- **Date-based maintenance reminders only (confirmed):** Story 3.6 covers only date-based reminders (30 days before scheduled date). Km-based reminders (requiring odometer tracking) are deferred post-MVP per PLAN.md deferred items.
+- **Android foreground service untestable in emulator (known risk):** Physical device testing is mandatory for US-3-5 on both Android and iOS. CI pipeline cannot substitute for device verification. Logs must be attached to the PR.
+- **SOS is send-only in v1 (confirmed):** The SOS sender cannot cancel their own SOS alert in the MVP. Only the WebSocket reconnection or event end will clear SOS state. This is documented as a scope decision.
+- **FCM for SOS (confirmed by PLAN.md):** SOS alerts are sent via both WebSocket (in-app, real-time) and FCM push (for riders with app in background). The iter-2 FCM infrastructure is already deployed and can be reused.
+- **Home Dashboard SOAT badge (moved from iter-2):** The PLAN.md and iter-2 DoD both explicitly defer the Home Dashboard SOAT badge to iter-3. `VehicleModel.soatStatus` and `VehicleModel.soatExpiryDate` are added in this iteration.
+- **iter-2 infrastructure available:** This iteration depends on the FCM infrastructure (iter-2): push dispatch from api-gateway, `notifications` table, `NotificationSchedulerService` skeleton. These are assumed complete per iter-2's definition of done.
+
+---
+
+## Out of scope (this iteration)
+
+- **Km-based maintenance reminders:** Requires automatic odometer tracking system not defined in the PRD. Deferred post-MVP.
+- **SOS sender cancel / dismiss:** Organizer SOS dismiss deferred to post-MVP per skill scope boundaries.
+- **Followers and social layer:** Iter-4.
+- **Deep links (event sharing):** Iter-5.
+- **Apple Sign-In:** Iter-5.
+- **Notification tap routing (deep navigation from push):** Iter-5 (NotificationRouteHandler).
+- **SOAT OCR auto-fill:** Deferred post-MVP per PLAN.md.
+- **New vehicle management screens** beyond SOAT badge update: no form changes.
 
 ---
 
 ## Next agent needs to know
 
 ### architect
-- **New features, full stack:** Iter-2 touches domain, data, presentation (Flutter), and backend (NestJS). All layers are in scope.
-- **FCM background isolate:** The background message handler must be a top-level Dart function annotated with `@pragma('vm:entry-point')`. `configureDependencies()` must be called inside the handler before any service is used. Document this pattern explicitly — it is the most critical correctness constraint in iter-2.
-- **api-gateway Prisma first-time setup:** No `prisma/` directory exists in api-gateway. Must run `npx prisma init`, create `schema.prisma` with Notification model, configure DATABASE_URL, run `npx prisma migrate dev --name init_notifications`. This is categorically different from the `prisma migrate reset` run on the 4 existing microservices.
-- **cursor pagination:** All notification list endpoints must use `?cursor=<lastId>&limit=20` pattern with `{ data, nextCursor }` response shape. Offset/limit is explicitly forbidden.
-- **DocumentSlotPill contract:** Callers must pass a localized `stateLabel` string — the molecule has no `BuildContext` and cannot self-localize. Enforce this in the architecture handoff to frontend.
-- **SOAT badge state logic (boundary rules):** >30 days remaining → Vigente, ≤30 days → Por vencer, past expiry → Vencido, no SOAT record → Sin SOAT.
-- **Story 2.9 constraint:** Pure presentation-layer change (same as iter-1 redesign stories). No domain/data changes. Scope depends on Pencil frame dUc9h confirmation.
-- **GoRouter DI assessment:** Document whether `app_router.dart` creates GoRouter as a top-level variable or via GetIt. This assessment is needed by iter-4. If the assessment is trivial to do now, note it.
-
-### design
-- **Design gate is a hard pre-condition:** No Flutter implementation may begin until all SOAT and notification Pencil frames are confirmed in `rideglory.pen`.
-- **Frame dUc9h scope clarification is critical:** If the frame covers list + edit, full layout is implemented. If edit-only, scope is limited. Resolve this ambiguity before Story 2.9 begins.
-- **Required frames:** SOAT upload page, SOAT manual form page, SOAT status/detail page, vehicle detail page with 4-state SOAT badge (Sin SOAT / Vigente / Por vencer / Vencido), notification center page, generic notification row template with icon slot per notification type (6 types), ManageAttendeesPage (confirm frame dUc9h).
-- **DocumentSlotPill integration:** The `DocumentSlotPill` molecule from iter-1 is the foundation for the SOAT badge in the vehicle detail. Design must show how the DocumentSlotPill's 4 states map to the SOAT badge states.
-
-### frontend (flutter_dev)
-- **Build runner required:** `dart run build_runner build --delete-conflicting-outputs` is mandatory in pre-flight. New DTOs for SOAT and notifications require code generation. The 4 pre-existing test failures should clear after this run.
-- **DocumentSlotPill caller contract:** When wiring up the SOAT badge in vehicle detail, always pass `stateLabel: context.l10n.vehicle_soat_<state>` — do not rely on the molecule's hardcoded fallback strings.
-- **FCM background isolate pattern:** Follow the `@pragma('vm:entry-point')` + `configureDependencies()` pattern exactly. This is a correctness constraint, not a style preference.
-- **New l10n keys needed:** All SOAT and notification UI copy must be added to `lib/l10n/app_es.arb` before any string is used in a widget. Key prefix: `soat_` and `notification_`.
-- **Scope of Story 2.9:** Wait for design gate confirmation on frame dUc9h scope before beginning ManageAttendeesPage changes. If frame is edit-only, do not add list layout.
-- **Feature structure:** `lib/features/soat/` (domain, data, presentation) and `lib/features/notifications/` (domain, data, presentation) — create both from scratch following existing features as reference.
+- Story 3.0 (Mapbox migration) is the highest-risk task. Review the 4 Dart files (`live_map_widget.dart`, `live_map_page.dart`, `initials_marker_icon.dart`, `route_map_preview.dart`) and 4 native/config files. Confirm `PlaceService` (Retrofit async) replaces the synchronous `geocoding` call in `route_map_preview.dart` with proper `ResultState` handling.
+- Confirm `GeoJsonSource + LineLayer` API usage pattern for the route polyline (NOT `PolylineAnnotationManager`).
+- Confirm `flutter_foreground_task` + `IsolateNameServer` bridge pattern for Android background GPS; `configureDependencies()` must be called in `onStart()`.
+- Confirm `VehicleModel` extension: `soatStatus` and `soatExpiryDate` fields added cleanly; `VehicleDto` updates accordingly.
+- Document whether `TrackingGateway` SOS handler should sit in api-gateway (WebSocket gateway) or events-ms (where `sosTriggeredAt` deduplication lives). Clear the boundary.
 
 ### backend
-- **Pre-flight is the first task:** Complete seed.ts setup and prisma operations before writing any feature code. Verify `GET /api/vehicles` returns 200 and `GET /api/notifications` returns 200 empty list before proceeding.
-- **Notification table ownership:** The `notifications` table lives in api-gateway's Prisma schema. It is NOT in events-ms or users-ms. api-gateway proxies the FCM push and inserts the notification row after proxying.
-- **FCM dispatch:** firebase-admin is already installed in api-gateway. Use it for FCM multicast. No new package required.
-- **@nestjs/schedule:** `npm install @nestjs/schedule`. Add `ScheduleModule.forRoot()` to api-gateway AppModule. All cron expressions must use `America/Bogota` timezone.
-- **SOAT model in vehicles-ms:** Add `Soat` entity with fields: id, vehicleId, policyNumber, startDate, expiryDate, insurer, documentUrl (nullable), createdAt, updatedAt. One-to-one with Vehicle.
-- **Testing order:** Implement in order: T-2-4 (fcm-token endpoint) → T-2-5 (notifications table + endpoints) → T-2-3 (SOAT endpoints) → T-2-6 (FCM triggers) → T-2-7 (cron scheduler).
+- **Start with T-3-2** (tracking start/end endpoints) and T-3-4 (route GeoJSON endpoint) before T-3-3 (SOS handler). The SOS handler depends on being able to look up event participants.
+- SOS deduplication guard: add `sosTriggeredAt DateTime?` to the Event model in events-ms; SOS WS handler checks if `sosTriggeredAt` is already set — if so, do not re-broadcast or re-send FCM.
+- Cron expressions for T-3-5 must use `America/Bogota` timezone. Use `@nestjs/schedule`'s `ScheduleModule` (already configured in api-gateway from iter-2).
+- FCM multicast for SOS must target all approved registrant tokens for the event. Reuse the token lookup pattern from iter-2.
+- `GET /api/events/:eventId/route` must return GeoJSON LineString (`routeGeoJson` field from events-ms Event model).
+
+### frontend (Flutter Dev)
+- **Do not start any story other than 3.0 until T-3-1 is merged and `dart analyze` is clean.**
+- For Story 3.0: the sync `geocoding` lookup in `route_map_preview.dart` must become a debounced async `PlaceService` Retrofit call with `ResultState<AddressModel>` state (loading skeleton, error banner, data render).
+- For the SOS marker: use `mapbox_maps_flutter` annotations API to add a custom annotation for the rider in SOS state. If pulsing animation is not natively available, use a `AnimationController` with an overlay widget as fallback — document the approach in the PR.
+- Background GPS: `FOREGROUND_SERVICE` and `FOREGROUND_SERVICE_LOCATION` permissions must be declared in `AndroidManifest.xml`. Include Play Store policy note in PR description.
+- Route adherence Haversine check is client-side over GeoJSON coordinate array. No Mapbox decoder library needed.
+- `VehicleModel.soatStatus` must use the existing `SoatStatus` enum or equivalent domain value from iter-2. Coordinate with architect.
 
 ### qa
-- **Build runner pre-flight:** Run `dart run build_runner build --delete-conflicting-outputs` first. Verify the 4 pre-existing test failures now pass (or confirm they clear with the new .g.dart files).
-- **Test targets:** Unit: SoatCubit (4-state boundary logic), NotificationsCubit (initial → loading → data → empty → error for each method). Widget: SoatUploadPage, SoatManualFormPage, NotificationCenterPage — 4 test cases each (loading, data, empty, error). dart analyze: must be 0 errors/warnings (no new violations).
-- **6 notification types to verify on device/emulator:** SOAT 30d, SOAT 7d, SOAT day-of, new registration (organizer), registration approved, registration rejected. Testing 2.4/2.5/2.6 requires a physical device or emulator with Firebase project configured.
-- **ManageAttendeesPage (Story 2.9):** No new cubit tests required (no new state management). Verify no hardcoded colors, correct design system component usage, loading/empty/error states.
-- **Scope reduction rule:** If Story 2.7 back-end read persistence is at risk near the end of the iteration, the unread badge may be reset locally (SharedPreferences) as a provisional measure. The backend endpoints (Story 2.8) must be complete regardless.
+- **Widget test for `route_map_preview.dart` is a hard gate for T-3-1 merge.** Write the test before the frontend opens the PR.
+- `dart analyze` must pass with zero violations after T-3-1 merges (especially no lingering `google_maps_flutter` imports).
+- Background GPS physical device test is mandatory: two platforms, separate test plans (Android foreground service + iOS background location). Logs must be attached to PR as evidence.
+- Verify `Info.plist` location usage descriptions are in clear Spanish (required for App Store review).
+
+### devops
+- Update CocoaPods cache key in GitHub Actions **immediately after T-3-1 merges**. The Mapbox binary framework is ~200MB and will break CI if the cache key is stale.
+- Document background GPS physical device test steps in `DEPLOY.md`.
 
 ---
 
 ## Change log
 
-- 2026-05-14: Iteration 2 scoped from PLAN.md (approved plan v3, iter-2 section). 10 user stories defined (US-2-1 through US-2-10). 13 tasks defined (T-2-1 through T-2-13). 1 QA task (T-2-12, agent: qa). Design gate is mandatory pre-condition. Pre-existing non-blockers from iter-1 tech_lead noted. Testing order documented (2.8 → 2.7 → 2.4/2.5/2.6). Home Dashboard SOAT badge confirmed out of scope.
+- 2026-05-15: Iteration 3 scoped from approved PLAN.md. 8 user stories (US-3-0 through US-3-8). 12 tasks (T-3-1 through T-3-12). Scope decisions: Story 3.0 absolute blocker; GeoJSON LineString format confirmed; date-only maintenance reminders; km reminders deferred; Home Dashboard SOAT badge moved from iter-2; SOS sender-cancel deferred post-MVP; CocoaPods cache update added as devops task.

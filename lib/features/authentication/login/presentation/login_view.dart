@@ -19,8 +19,12 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormBuilderState>();
+  bool _emailLoading = false;
 
   void _onAuthStateChanged(BuildContext context, AuthState state) {
+    if (!state.isLoading) {
+      setState(() => _emailLoading = false);
+    }
     if (state.isAuthenticated) {
       context.pushReplacementNamed(AppRoutes.home);
     } else if (state.hasError) {
@@ -35,6 +39,7 @@ class _LoginViewState extends State<LoginView> {
 
   void _handleLogin(BuildContext context) {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
+      setState(() => _emailLoading = true);
       final data = _formKey.currentState!.value;
       context.read<AuthCubit>().signInWithEmail(
         email: (data[AuthFormFields.email] as String).trim(),
@@ -76,6 +81,7 @@ class _LoginViewState extends State<LoginView> {
                   const SizedBox(height: 32),
                   _LoginForm(
                     formKey: _formKey,
+                    isLoading: _emailLoading,
                     onLogin: () => _handleLogin(context),
                   ),
                   const SizedBox(height: 24),
@@ -148,10 +154,12 @@ class _LoginHeading extends StatelessWidget {
 class _LoginForm extends StatelessWidget {
   const _LoginForm({
     required this.formKey,
+    required this.isLoading,
     required this.onLogin,
   });
 
   final GlobalKey<FormBuilderState> formKey;
+  final bool isLoading;
   final VoidCallback onLogin;
 
   @override
@@ -205,14 +213,10 @@ class _LoginForm extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          BlocBuilder<AuthCubit, AuthState>(
-            builder: (context, state) {
-              return AppButton(
-                label: context.l10n.auth_sign_in,
-                onPressed: onLogin,
-                isLoading: state.isLoading,
-              );
-            },
+          AppButton(
+            label: context.l10n.auth_sign_in,
+            onPressed: onLogin,
+            isLoading: isLoading,
           ),
         ],
       ),
@@ -247,37 +251,61 @@ class _LoginDivider extends StatelessWidget {
   }
 }
 
-class _LoginSocialSection extends StatelessWidget {
+enum _AuthProvider { google, apple }
+
+class _LoginSocialSection extends StatefulWidget {
   const _LoginSocialSection();
 
   @override
+  State<_LoginSocialSection> createState() => _LoginSocialSectionState();
+}
+
+class _LoginSocialSectionState extends State<_LoginSocialSection> {
+  _AuthProvider? _loadingProvider;
+
+  void _onPressed(_AuthProvider provider, VoidCallback action) {
+    setState(() => _loadingProvider = provider);
+    action();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthCubit, AuthState>(
-      builder: (context, state) {
-        final isLoading = state.isLoading;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _SocialButton(
-              label: context.l10n.auth_continue_with_google,
-              icon: Icons.g_mobiledata_rounded,
-              backgroundColor: Colors.white,
-              textColor: Colors.black,
-              isLoading: isLoading,
-              onPressed: () => context.read<AuthCubit>().signInWithGoogle(),
-            ),
-            const SizedBox(height: 12),
-            _SocialButton(
-              label: context.l10n.auth_appleLabel,
-              icon: Icons.apple,
-              backgroundColor: Colors.black,
-              textColor: Colors.white,
-              isLoading: isLoading,
-              onPressed: () => context.read<AuthCubit>().signInWithApple(),
-            ),
-          ],
-        );
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (!state.isLoading) {
+          setState(() => _loadingProvider = null);
+        }
       },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _SocialButton(
+            label: context.l10n.auth_continue_with_google,
+            icon: Icons.g_mobiledata_rounded,
+            backgroundColor: Colors.white,
+            textColor: Colors.black,
+            isLoading: _loadingProvider == _AuthProvider.google,
+            isDisabled: _loadingProvider != null,
+            onPressed: () => _onPressed(
+              _AuthProvider.google,
+              () => context.read<AuthCubit>().signInWithGoogle(),
+            ),
+          ),
+          const SizedBox(height: 12),
+          _SocialButton(
+            label: context.l10n.auth_appleLabel,
+            icon: Icons.apple,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+            isLoading: _loadingProvider == _AuthProvider.apple,
+            isDisabled: _loadingProvider != null,
+            onPressed: () => _onPressed(
+              _AuthProvider.apple,
+              () => context.read<AuthCubit>().signInWithApple(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -289,6 +317,7 @@ class _SocialButton extends StatelessWidget {
     required this.backgroundColor,
     required this.textColor,
     required this.isLoading,
+    required this.isDisabled,
     required this.onPressed,
   });
 
@@ -297,6 +326,7 @@ class _SocialButton extends StatelessWidget {
   final Color backgroundColor;
   final Color textColor;
   final bool isLoading;
+  final bool isDisabled;
   final VoidCallback onPressed;
 
   @override
@@ -307,7 +337,7 @@ class _SocialButton extends StatelessWidget {
         color: backgroundColor,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
-          onTap: isLoading ? null : onPressed,
+          onTap: isDisabled ? null : onPressed,
           borderRadius: BorderRadius.circular(12),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
