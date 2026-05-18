@@ -10,19 +10,32 @@ import 'package:rideglory/design_system/design_system.dart';
 class RiderTelemetryPanel extends StatefulWidget {
   const RiderTelemetryPanel({super.key});
 
+  static const double _headerHeight = 56.0;
+  static const double _dividerHeight = 1.0;
+  // 128 px content + 8 px slack so font-metric variance never overflows
+  static const double _contentHeight = 136.0;
+  static const double collapsedHeight = 64.0;
+
+  /// Base expanded height without bottom safe-area inset.
+  /// +4 px buffer absorbs SafeArea fractional insets and font-metric variance.
+  static const double expandedBaseHeight =
+      _headerHeight + _dividerHeight + _contentHeight + 4.0;
+
   @override
   State<RiderTelemetryPanel> createState() => _RiderTelemetryPanelState();
 }
 
 class _RiderTelemetryPanelState extends State<RiderTelemetryPanel> {
+
   bool _isExpanded = true;
 
   @override
   Widget build(BuildContext context) {
-    final mqHeight = MediaQuery.of(context).size.height;
-    final expandedHeight = mqHeight * 0.30;
-    const collapsedHeight = 64.0;
-    final height = _isExpanded ? expandedHeight : collapsedHeight;
+    final bottomInset = MediaQuery.of(context).padding.bottom;
+    final expandedHeight = RiderTelemetryPanel.expandedBaseHeight + bottomInset;
+    final height = _isExpanded
+        ? expandedHeight
+        : RiderTelemetryPanel.collapsedHeight;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
@@ -49,7 +62,7 @@ class _RiderTelemetryPanelState extends State<RiderTelemetryPanel> {
         child: ClipRRect(
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.max,
             children: [
               // Drag handle + header row
               GestureDetector(
@@ -131,15 +144,14 @@ class _RiderTelemetryPanelState extends State<RiderTelemetryPanel> {
                   ),
                 ),
               ),
-              // Divider
               if (_isExpanded)
-                const Divider(
-                  height: 1,
-                  thickness: 1,
+                const ColoredBox(
                   color: AppColors.darkBorderPrimary,
+                  child: SizedBox(height: 1, width: double.infinity),
                 ),
               if (_isExpanded)
-                Expanded(
+                SizedBox(
+                  height: RiderTelemetryPanel._contentHeight,
                   child: BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
                     builder: (context, state) {
                       return RiderTelemetryRidersContent(

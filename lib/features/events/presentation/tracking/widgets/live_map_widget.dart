@@ -73,7 +73,7 @@ class _LiveMapWidgetState extends State<LiveMapWidget> {
       final bytes = await InitialsMarkerIcon.createBytes(
         fullName: rider.fullName,
         colorScheme: context.colorScheme,
-        size: isLead ? 60 : 56,
+        size: isLead ? 80 : 75,
         backgroundColor: context.colorScheme.primary,
         borderColor: context.colorScheme.primary,
         highlight: isLead,
@@ -144,8 +144,11 @@ class _LiveMapWidgetState extends State<LiveMapWidget> {
       ),
       styleUri: MapboxStyles.DARK,
       onMapCreated: (mapboxMap) async {
-        _annotationManager =
-            await mapboxMap.annotations.createPointAnnotationManager();
+        await mapboxMap.scaleBar.updateSettings(
+          ScaleBarSettings(enabled: false),
+        );
+        _annotationManager = await mapboxMap.annotations
+            .createPointAnnotationManager();
         widget.onMapReady(LiveMapController(mapboxMap));
         await _updateAnnotations();
       },

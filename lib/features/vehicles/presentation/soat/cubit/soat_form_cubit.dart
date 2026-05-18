@@ -14,6 +14,11 @@ part 'soat_form_cubit.freezed.dart';
 @freezed
 class SoatFormState with _$SoatFormState {
   const factory SoatFormState.initial() = _Initial;
+  const factory SoatFormState.datesUpdated({
+    required DateTime? startDate,
+    required DateTime? expiryDate,
+  }) = _DatesUpdated;
+  const factory SoatFormState.soatLoaded(SoatModel soat) = _SoatLoaded;
   const factory SoatFormState.loading() = _Loading;
   const factory SoatFormState.success(SoatModel soat) = _Success;
   const factory SoatFormState.error(DomainException error) = _Error;
@@ -28,9 +33,52 @@ class SoatFormCubit extends Cubit<SoatFormState> {
   final ImageStorageService _imageStorageService;
   final formKey = GlobalKey<FormBuilderState>();
 
+  DateTime? _startDate;
+  DateTime? _expiryDate;
+  String? _existingDocumentUrl;
+
+  DateTime? get currentStartDate => _startDate;
+  DateTime? get currentExpiryDate => _expiryDate;
+
+  bool get areDatesValid =>
+      _startDate != null &&
+      _expiryDate != null &&
+      _startDate!.isBefore(_expiryDate!);
+
+  void onDatesChanged({DateTime? startDate, DateTime? expiryDate}) {
+    if (startDate != null) _startDate = startDate;
+    if (expiryDate != null) _expiryDate = expiryDate;
+    emit(SoatFormState.datesUpdated(
+      startDate: _startDate,
+      expiryDate: _expiryDate,
+    ));
+  }
+
+  Future<void> loadExistingSoat(String vehicleId) async {
+    final result = await _vehicleRepository.getSoat(vehicleId);
+    result.fold(
+      (_) {},
+      (soat) {
+        _startDate = soat.startDate;
+        _expiryDate = soat.expiryDate;
+        _existingDocumentUrl = soat.documentUrl;
+        emit(SoatFormState.soatLoaded(soat));
+      },
+    );
+  }
+
   Future<void> submit(String vehicleId, {XFile? documentImage}) async {
     final form = formKey.currentState;
     if (form == null || !form.saveAndValidate()) return;
+
+    if (_startDate == null || _expiryDate == null) return;
+
+    if (!_startDate!.isBefore(_expiryDate!)) {
+      emit(const SoatFormState.error(
+        DomainException(message: 'La fecha de inicio debe ser anterior a la fecha de vencimiento'),
+      ));
+      return;
+    }
 
     emit(const SoatFormState.loading());
 
@@ -41,8 +89,11 @@ class SoatFormCubit extends Cubit<SoatFormState> {
           image: documentImage,
           storagePath: 'soat/$vehicleId/${DateTime.now().millisecondsSinceEpoch}.jpg',
         );
-      } on DomainException catch (e) {
-        emit(SoatFormState.error(e));
+      } catch (e) {
+        final msg = e is DomainException
+            ? e.message
+            : 'Error al subir el documento';
+        emit(SoatFormState.error(DomainException(message: msg)));
         return;
       }
     }
@@ -50,11 +101,11 @@ class SoatFormCubit extends Cubit<SoatFormState> {
     final values = form.value;
     final soat = SoatModel(
       vehicleId: vehicleId,
-      policyNumber: (values['policyNumber'] as String?) ?? '',
+      policyNumber: values['policyNumber'] as String?,
       insurer: values['insurer'] as String,
-      startDate: values['startDate'] as DateTime,
-      expiryDate: values['expiryDate'] as DateTime,
-      documentUrl: documentUrl,
+      startDate: _startDate!,
+      expiryDate: _expiryDate!,
+      documentUrl: documentUrl ?? _existingDocumentUrl,
     );
 
     final result = await _vehicleRepository.upsertSoat(

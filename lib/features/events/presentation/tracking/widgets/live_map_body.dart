@@ -42,9 +42,8 @@ class LiveMapBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final initialCamera = initialCameraOptions;
 
-    return SafeArea(
-      child: Stack(
-        children: [
+    return Stack(
+      children: [
           // Map layer
           Positioned.fill(
             child: initialCamera != null
@@ -151,7 +150,9 @@ class LiveMapBody extends StatelessWidget {
             builder: (context, state) {
               return Positioned(
                 right: 16,
-                bottom: MediaQuery.of(context).size.height * 0.32,
+                bottom: RiderTelemetryPanel.expandedBaseHeight +
+                    MediaQuery.of(context).padding.bottom +
+                    12,
                 child: SosButton(
                   label: context.l10n.map_sos,
                   isActive: state.hasSentSos,
@@ -161,7 +162,7 @@ class LiveMapBody extends StatelessWidget {
             },
           ),
 
-          // // Telemetry panel (bottom)
+          // Telemetry panel (bottom)
           const Positioned(
             left: 0,
             right: 0,
@@ -169,7 +170,6 @@ class LiveMapBody extends StatelessWidget {
             child: RiderTelemetryPanel(),
           ),
         ],
-      ),
     );
   }
 }

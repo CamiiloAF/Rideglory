@@ -6793,8 +6793,44 @@ abstract class AppLocalizations {
   /// No description provided for @vehicle_soat_status_valid_desc.
   ///
   /// In es, this message translates to:
-  /// **'Tu SOAT estará vigente por 365 días más'**
-  String get vehicle_soat_status_valid_desc;
+  /// **'Tu SOAT estará vigente por {days} días más'**
+  String vehicle_soat_status_valid_desc(int days);
+
+  /// No description provided for @vehicle_soat_status_expires_today.
+  ///
+  /// In es, this message translates to:
+  /// **'Vence hoy'**
+  String get vehicle_soat_status_expires_today;
+
+  /// No description provided for @vehicle_soat_status_expired_title.
+  ///
+  /// In es, this message translates to:
+  /// **'SOAT vencido'**
+  String get vehicle_soat_status_expired_title;
+
+  /// No description provided for @vehicle_soat_status_expired_desc.
+  ///
+  /// In es, this message translates to:
+  /// **'Venció hace {days} días'**
+  String vehicle_soat_status_expired_desc(int days);
+
+  /// No description provided for @vehicle_soat_status_invalid_dates_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Fechas inválidas'**
+  String get vehicle_soat_status_invalid_dates_title;
+
+  /// No description provided for @vehicle_soat_status_invalid_dates_desc.
+  ///
+  /// In es, this message translates to:
+  /// **'La fecha de inicio debe ser anterior al vencimiento'**
+  String get vehicle_soat_status_invalid_dates_desc;
+
+  /// No description provided for @vehicle_soat_status_pending.
+  ///
+  /// In es, this message translates to:
+  /// **'Estado del SOAT'**
+  String get vehicle_soat_status_pending;
 
   /// No description provided for @vehicle_soat_upload_failed.
   ///
@@ -7012,6 +7048,12 @@ abstract class AppLocalizations {
   /// **'Próximo servicio'**
   String get garage_nextService;
 
+  /// No description provided for @garage_completedServiceBadge.
+  ///
+  /// In es, this message translates to:
+  /// **'HECHO'**
+  String get garage_completedServiceBadge;
+
   /// No description provided for @garage_otherVehiclesSection.
   ///
   /// In es, this message translates to:
@@ -7033,7 +7075,7 @@ abstract class AppLocalizations {
   /// No description provided for @garage_mainVehicleBadge.
   ///
   /// In es, this message translates to:
-  /// **'Moto principal'**
+  /// **'Principal'**
   String get garage_mainVehicleBadge;
 
   /// No description provided for @garage_odometerLabel.

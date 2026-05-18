@@ -22,7 +22,7 @@ class TelemetryMetric extends StatelessWidget {
 
     return Expanded(
       child: Container(
-        height: 64,
+        height: 50,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
           color: AppColors.darkCard,

@@ -1,7 +1,7 @@
 class SoatModel {
   final String? id;
   final String vehicleId;
-  final String policyNumber;
+  final String? policyNumber;
   final DateTime startDate;
   final DateTime expiryDate;
   final String insurer;
@@ -10,7 +10,7 @@ class SoatModel {
   const SoatModel({
     this.id,
     required this.vehicleId,
-    required this.policyNumber,
+    this.policyNumber,
     required this.startDate,
     required this.expiryDate,
     required this.insurer,

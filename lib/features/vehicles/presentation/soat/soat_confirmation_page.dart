@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/soat/cubit/soat_form_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/soat/widgets/soat_confirm_cta_bar.dart';
 import 'package:rideglory/features/vehicles/presentation/soat/widgets/soat_doc_preview.dart';
@@ -16,61 +18,82 @@ class SoatConfirmationPage extends StatelessWidget {
     super.key,
     required this.vehicle,
     this.documentImage,
-    this.onSuccess,
   });
 
   final VehicleModel vehicle;
   final XFile? documentImage;
-  final VoidCallback? onSuccess;
 
   bool get _isManual => documentImage == null;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<SoatFormCubit>(),
+      create: (_) {
+        final cubit = getIt<SoatFormCubit>();
+        if (vehicle.soatStatus != null) {
+          cubit.loadExistingSoat(vehicle.id!);
+        }
+        return cubit;
+      },
       child: _SoatConfirmationView(
         vehicle: vehicle,
         documentImage: documentImage,
         isManual: _isManual,
-        onSuccess: onSuccess,
       ),
     );
   }
 }
 
-class _SoatConfirmationView extends StatelessWidget {
+class _SoatConfirmationView extends StatefulWidget {
   const _SoatConfirmationView({
     required this.vehicle,
     required this.documentImage,
     required this.isManual,
-    this.onSuccess,
   });
 
   final VehicleModel vehicle;
   final XFile? documentImage;
   final bool isManual;
-  final VoidCallback? onSuccess;
 
+  @override
+  State<_SoatConfirmationView> createState() => _SoatConfirmationViewState();
+}
+
+class _SoatConfirmationViewState extends State<_SoatConfirmationView> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<SoatFormCubit, SoatFormState>(
       listener: (context, state) {
         state.whenOrNull(
+          soatLoaded: (soat) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              context.read<SoatFormCubit>().formKey.currentState?.patchValue({
+                'policyNumber': soat.policyNumber ?? '',
+                'insurer': soat.insurer,
+                'startDate': soat.startDate,
+                'expiryDate': soat.expiryDate,
+              });
+            });
+          },
           success: (soat) {
-            ScaffoldMessenger.of(context).showSnackBar(
+            final vehicleId = widget.vehicle.id;
+            if (vehicleId != null) {
+              context.read<VehicleCubit>().updateSoatLocally(
+                vehicleId,
+                expiryDate: soat.expiryDate,
+              );
+            }
+            final router = GoRouter.of(context);
+            final messenger = ScaffoldMessenger.of(context);
+            final successMsg = context.l10n.vehicle_soat_saved_successfully;
+            Navigator.of(context).pop();
+            router.pop();
+            messenger.showSnackBar(
               SnackBar(
-                content: Text(context.l10n.vehicle_soat_saved_successfully),
+                content: Text(successMsg),
                 backgroundColor: AppColors.success,
               ),
             );
-            if (onSuccess != null) {
-              onSuccess!();
-            } else {
-              Navigator.of(context).popUntil(
-                (route) => route.settings.name == '/vehicles/soat' || route.isFirst,
-              );
-            }
           },
           error: (error) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -92,7 +115,7 @@ class _SoatConfirmationView extends StatelessWidget {
             onPressed: () => Navigator.of(context).pop(),
           ),
           title: Text(
-            isManual
+            widget.isManual
                 ? context.l10n.vehicle_soat_form_title
                 : context.l10n.vehicle_soat_confirm_title,
             style: const TextStyle(
@@ -110,15 +133,15 @@ class _SoatConfirmationView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    if (!isManual) ...[
-                      SoatDocPreview(imageFile: documentImage!),
+                    if (!widget.isManual) ...[
+                      SoatDocPreview(imageFile: widget.documentImage!),
                       const SizedBox(height: 20),
                     ],
                     _FormSectionHeader(
-                      title: isManual
+                      title: widget.isManual
                           ? context.l10n.vehicle_soat_manual_section_title
                           : context.l10n.vehicle_soat_confirm_verify,
-                      subtitle: isManual
+                      subtitle: widget.isManual
                           ? context.l10n.vehicle_soat_manual_section_sub
                           : context.l10n.vehicle_soat_confirm_verify_sub,
                     ),
@@ -134,9 +157,9 @@ class _SoatConfirmationView extends StatelessWidget {
               ),
             ),
             SoatConfirmCtaBar(
-              vehicleId: vehicle.id!,
-              documentImage: documentImage,
-              isManual: isManual,
+              vehicleId: widget.vehicle.id!,
+              documentImage: widget.documentImage,
+              isManual: widget.isManual,
             ),
           ],
         ),
@@ -184,6 +207,7 @@ class _SoatFormFields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<SoatFormCubit>();
     return FormBuilder(
       key: formKey,
       child: Column(
@@ -212,6 +236,7 @@ class _SoatFormFields extends StatelessWidget {
                   isRequired: true,
                   firstDate: DateTime(2000),
                   lastDate: DateTime(2100),
+                  onChanged: (date) => cubit.onDatesChanged(startDate: date),
                 ),
               ),
               const SizedBox(width: 12),
@@ -222,6 +247,7 @@ class _SoatFormFields extends StatelessWidget {
                   isRequired: true,
                   firstDate: DateTime(2000),
                   lastDate: DateTime(2100),
+                  onChanged: (date) => cubit.onDatesChanged(expiryDate: date),
                 ),
               ),
             ],

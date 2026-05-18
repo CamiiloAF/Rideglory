@@ -3534,8 +3534,30 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_soat_status_valid => 'SOAT vigente';
 
   @override
-  String get vehicle_soat_status_valid_desc =>
-      'Tu SOAT estará vigente por 365 días más';
+  String vehicle_soat_status_valid_desc(int days) {
+    return 'Tu SOAT estará vigente por $days días más';
+  }
+
+  @override
+  String get vehicle_soat_status_expires_today => 'Vence hoy';
+
+  @override
+  String get vehicle_soat_status_expired_title => 'SOAT vencido';
+
+  @override
+  String vehicle_soat_status_expired_desc(int days) {
+    return 'Venció hace $days días';
+  }
+
+  @override
+  String get vehicle_soat_status_invalid_dates_title => 'Fechas inválidas';
+
+  @override
+  String get vehicle_soat_status_invalid_dates_desc =>
+      'La fecha de inicio debe ser anterior al vencimiento';
+
+  @override
+  String get vehicle_soat_status_pending => 'Estado del SOAT';
 
   @override
   String get vehicle_soat_upload_failed =>
@@ -3652,6 +3674,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get garage_nextService => 'Próximo servicio';
 
   @override
+  String get garage_completedServiceBadge => 'HECHO';
+
+  @override
   String get garage_otherVehiclesSection => 'OTROS VEHÍCULOS';
 
   @override
@@ -3663,7 +3688,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get garage_mainVehicleBadge => 'Moto principal';
+  String get garage_mainVehicleBadge => 'Principal';
 
   @override
   String get garage_odometerLabel => 'odómetro';

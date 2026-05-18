@@ -1264,7 +1264,23 @@
   "vehicle_soat_manual_section_sub": "Completa la información de tu seguro",
   "vehicle_soat_doc_uploaded": "Documento subido exitosamente",
   "vehicle_soat_status_valid": "SOAT vigente",
-  "vehicle_soat_status_valid_desc": "Tu SOAT estará vigente por 365 días más",
+  "vehicle_soat_status_valid_desc": "Tu SOAT estará vigente por {days} días más",
+  "@vehicle_soat_status_valid_desc": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "vehicle_soat_status_expires_today": "Vence hoy",
+  "vehicle_soat_status_expired_title": "SOAT vencido",
+  "vehicle_soat_status_expired_desc": "Venció hace {days} días",
+  "@vehicle_soat_status_expired_desc": {
+    "placeholders": {
+      "days": { "type": "int" }
+    }
+  },
+  "vehicle_soat_status_invalid_dates_title": "Fechas inválidas",
+  "vehicle_soat_status_invalid_dates_desc": "La fecha de inicio debe ser anterior al vencimiento",
+  "vehicle_soat_status_pending": "Estado del SOAT",
   "vehicle_soat_upload_failed": "No se pudo seleccionar el documento",
   "tracking_sosCallError": "No se pudo iniciar la llamada.",
   "tracking_sosLocationError": "No se pudo obtener la ubicación del rider.",
@@ -1305,6 +1321,7 @@
   "garage_viewMaintenanceHistory": "Ver historial de mantenimientos",
   "garage_lastService": "Último servicio",
   "garage_nextService": "Próximo servicio",
+  "garage_completedServiceBadge": "HECHO",
   "garage_otherVehiclesSection": "OTROS VEHÍCULOS",
   "garage_upToDate": "Al día",
   "garage_upcomingCount": "{count} próximo",
@@ -1315,7 +1332,7 @@
       }
     }
   },
-  "garage_mainVehicleBadge": "Moto principal",
+  "garage_mainVehicleBadge": "Principal",
   "garage_odometerLabel": "odómetro",
   "garage_healthHeader": "Estado de mantenimientos",
   "garage_healthServicesCount": "{count} servicios",

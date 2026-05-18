@@ -51,7 +51,11 @@ class GarageVehiclesContent extends StatelessWidget {
           child: Column(
             children: [
               _GarageHeader(onAdd: () => _addVehicle(context)),
-              Expanded(child: GarageEmptyState(onVehicleSavedLocally: ([_]) => loadVehicles())),
+              Expanded(
+                child: GarageEmptyState(
+                  onVehicleSavedLocally: ([_]) => loadVehicles(),
+                ),
+              ),
             ],
           ),
         ),
@@ -62,7 +66,9 @@ class GarageVehiclesContent extends StatelessWidget {
       (v) => v.isMainVehicle,
       orElse: () => vehicles.first,
     );
-    final otherVehicles = vehicles.where((v) => v.id != mainVehicle.id).toList(growable: false);
+    final otherVehicles = vehicles
+        .where((v) => v.id != mainVehicle.id)
+        .toList(growable: false);
 
     return Scaffold(
       backgroundColor: AppColors.darkBgPrimary,
@@ -74,7 +80,9 @@ class GarageVehiclesContent extends StatelessWidget {
           onRefresh: loadVehicles,
           child: CustomScrollView(
             slivers: [
-              SliverToBoxAdapter(child: _GarageHeader(onAdd: () => _addVehicle(context))),
+              SliverToBoxAdapter(
+                child: _GarageHeader(onAdd: () => _addVehicle(context)),
+              ),
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 100),
                 sliver: SliverList(
@@ -87,7 +95,8 @@ class GarageVehiclesContent extends StatelessWidget {
                         mainVehicle,
                         onGarageListUpdatedLocally: ([_]) => loadVehicles(),
                         onMaintenanceCreated: onMaintenanceCreated,
-                        onMaintenanceRefreshRequested: onMaintenanceRefreshRequested,
+                        onMaintenanceRefreshRequested:
+                            onMaintenanceRefreshRequested,
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -111,9 +120,11 @@ class GarageVehiclesContent extends StatelessWidget {
                             onOptionsTap: () => GarageOptionsBottomSheet.show(
                               context,
                               vehicle,
-                              onGarageListUpdatedLocally: ([_]) => loadVehicles(),
+                              onGarageListUpdatedLocally: ([_]) =>
+                                  loadVehicles(),
                               onMaintenanceCreated: onMaintenanceCreated,
-                              onMaintenanceRefreshRequested: onMaintenanceRefreshRequested,
+                              onMaintenanceRefreshRequested:
+                                  onMaintenanceRefreshRequested,
                             ),
                           ),
                         ),
@@ -163,7 +174,11 @@ class _GarageHeader extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.add, size: 16, color: AppColors.darkBgPrimary),
+                  const Icon(
+                    Icons.add,
+                    size: 16,
+                    color: AppColors.darkBgPrimary,
+                  ),
                   const SizedBox(width: 6),
                   Text(
                     context.l10n.vehicle_addShort,
@@ -185,9 +200,7 @@ class _GarageHeader extends StatelessWidget {
 
 // ─── Main Vehicle Card ───────────────────────────────────────────────────────
 
-typedef _HealthCounts = ({int overdue, int upcoming, int onTime});
-
-class _MainVehicleCard extends StatefulWidget {
+class _MainVehicleCard extends StatelessWidget {
   const _MainVehicleCard({
     required this.vehicle,
     required this.onTap,
@@ -199,52 +212,9 @@ class _MainVehicleCard extends StatefulWidget {
   final VoidCallback onOptionsTap;
 
   @override
-  State<_MainVehicleCard> createState() => _MainVehicleCardState();
-}
-
-class _MainVehicleCardState extends State<_MainVehicleCard> {
-  bool _healthExpanded = true;
-  late final Future<_HealthCounts> _healthFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _healthFuture = _loadHealthCounts();
-  }
-
-  Future<_HealthCounts> _loadHealthCounts() async {
-    final vehicleId = widget.vehicle.id;
-    if (vehicleId == null) return (overdue: 0, upcoming: 0, onTime: 0);
-
-    final useCase = getIt<GetMaintenancesByVehicleIdUseCase>();
-    final result = await useCase.execute(vehicleId);
-
-    return result.fold(
-      (_) => (overdue: 0, upcoming: 0, onTime: 0),
-      (page) {
-        final scheduled = page.items.where((m) => m.mode == MaintenanceMode.scheduled).toList();
-        var overdue = 0;
-        var upcoming = 0;
-        var onTime = 0;
-        for (final m in scheduled) {
-          final status = MaintenanceModel.calculateStatus(m, widget.vehicle.currentMileage);
-          if (status == MaintenanceStatus.overdue) {
-            overdue++;
-          } else if (status == MaintenanceStatus.next) {
-            upcoming++;
-          } else {
-            onTime++;
-          }
-        }
-        return (overdue: overdue, upcoming: upcoming, onTime: onTime);
-      },
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.darkCard,
@@ -255,15 +225,12 @@ class _MainVehicleCardState extends State<_MainVehicleCard> {
         child: Column(
           children: [
             _VehicleImageSection(
-              vehicle: widget.vehicle,
-              onOptionsTap: widget.onOptionsTap,
+              vehicle: vehicle,
+              onOptionsTap: onOptionsTap,
             ),
             _VehicleContentSection(
-              vehicle: widget.vehicle,
-              healthFuture: _healthFuture,
-              healthExpanded: _healthExpanded,
-              onToggleHealth: () => setState(() => _healthExpanded = !_healthExpanded),
-              onDetailTap: widget.onTap,
+              vehicle: vehicle,
+              onDetailTap: onTap,
             ),
           ],
         ),
@@ -275,7 +242,10 @@ class _MainVehicleCardState extends State<_MainVehicleCard> {
 // ─── Image Section ───────────────────────────────────────────────────────────
 
 class _VehicleImageSection extends StatelessWidget {
-  const _VehicleImageSection({required this.vehicle, required this.onOptionsTap});
+  const _VehicleImageSection({
+    required this.vehicle,
+    required this.onOptionsTap,
+  });
 
   final VehicleModel vehicle;
   final VoidCallback onOptionsTap;
@@ -317,15 +287,13 @@ class _VehicleImageSection extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withValues(alpha: 0.7),
+                  ],
                 ),
               ),
             ),
-          ),
-          Positioned(
-            top: 14,
-            left: 14,
-            child: _MainBadge(label: context.l10n.garage_mainVehicleBadge),
           ),
           Positioned(
             top: 12,
@@ -341,43 +309,59 @@ class _VehicleImageSection extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                 ),
                 alignment: Alignment.center,
-                child: const Icon(Icons.more_horiz, size: 16, color: Colors.white),
+                child: const Icon(
+                  Icons.more_horiz,
+                  size: 16,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
           Positioned(
-            top: 122,
             left: 20,
             right: 60,
-            child: Text(
-              vehicle.name,
-              style: const TextStyle(
-                color: AppColors.textOnDarkPrimary,
-                fontSize: 28,
-                fontWeight: FontWeight.w700,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+            bottom: 16,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        vehicle.name,
+                        style: const TextStyle(
+                          color: AppColors.textOnDarkPrimary,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    _MainBadge(label: context.l10n.garage_mainVehicleBadge),
+                  ],
+                ),
+                if (subtitle.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Opacity(
+                    opacity: 0.9,
+                    child: Text(
+                      subtitle,
+                      style: const TextStyle(
+                        color: AppColors.textOnDarkPrimary,
+                        fontSize: 12,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ],
             ),
           ),
-          if (subtitle.isNotEmpty)
-            Positioned(
-              top: 156,
-              left: 20,
-              right: 20,
-              child: Opacity(
-                opacity: 0.9,
-                child: Text(
-                  subtitle,
-                  style: const TextStyle(
-                    color: AppColors.textOnDarkPrimary,
-                    fontSize: 12,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ),
         ],
       ),
     );
@@ -391,34 +375,28 @@ class _MainBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-      decoration: BoxDecoration(
-        color: AppColors.primary,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 6,
-            height: 6,
-            decoration: const BoxDecoration(
-              color: AppColors.darkBgPrimary,
-              shape: BoxShape.circle,
-            ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 6,
+          height: 6,
+          decoration: const BoxDecoration(
+            color: AppColors.primary,
+            shape: BoxShape.circle,
           ),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: const TextStyle(
-              color: AppColors.darkBgPrimary,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          label.toUpperCase(),
+          style: const TextStyle(
+            color: AppColors.textOnDarkSecondary,
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.5,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -431,7 +409,11 @@ class _VehiclePlaceholder extends StatelessWidget {
     return Container(
       color: AppColors.darkBgSecondary,
       child: const Center(
-        child: Icon(Icons.two_wheeler, size: 56, color: AppColors.darkBorderLight),
+        child: Icon(
+          Icons.two_wheeler,
+          size: 56,
+          color: AppColors.darkBorderLight,
+        ),
       ),
     );
   }
@@ -442,16 +424,10 @@ class _VehiclePlaceholder extends StatelessWidget {
 class _VehicleContentSection extends StatelessWidget {
   const _VehicleContentSection({
     required this.vehicle,
-    required this.healthFuture,
-    required this.healthExpanded,
-    required this.onToggleHealth,
     required this.onDetailTap,
   });
 
   final VehicleModel vehicle;
-  final Future<_HealthCounts> healthFuture;
-  final bool healthExpanded;
-  final VoidCallback onToggleHealth;
   final VoidCallback onDetailTap;
 
   @override
@@ -462,17 +438,6 @@ class _VehicleContentSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _PlateOdoRow(vehicle: vehicle),
-          const SizedBox(height: 16),
-          const Divider(height: 1, thickness: 1, color: AppColors.darkBorderPrimary),
-          const SizedBox(height: 16),
-          _HealthSection(
-            vehicle: vehicle,
-            healthFuture: healthFuture,
-            isExpanded: healthExpanded,
-            onToggle: onToggleHealth,
-          ),
-          const SizedBox(height: 16),
-          const Divider(height: 1, thickness: 1, color: AppColors.darkBorderPrimary),
           const SizedBox(height: 16),
           _DetailFooter(onTap: onDetailTap),
         ],
@@ -487,9 +452,9 @@ class _PlateOdoRow extends StatelessWidget {
   final VehicleModel vehicle;
 
   String _formatKm(int km) => km.toString().replaceAllMapped(
-        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-        (m) => '${m[1]},',
-      );
+    RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+    (m) => '${m[1]},',
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -521,7 +486,11 @@ class _PlateOdoRow extends StatelessWidget {
           ),
         Row(
           children: [
-            const Icon(Icons.speed, size: 16, color: AppColors.textOnDarkSecondary),
+            const Icon(
+              Icons.speed,
+              size: 16,
+              color: AppColors.textOnDarkSecondary,
+            ),
             const SizedBox(width: 6),
             Text(
               '${_formatKm(vehicle.currentMileage)} km',
@@ -542,198 +511,6 @@ class _PlateOdoRow extends StatelessWidget {
           ],
         ),
       ],
-    );
-  }
-}
-
-// ─── Health Section ──────────────────────────────────────────────────────────
-
-class _HealthSection extends StatelessWidget {
-  const _HealthSection({
-    required this.vehicle,
-    required this.healthFuture,
-    required this.isExpanded,
-    required this.onToggle,
-  });
-
-  final VehicleModel vehicle;
-  final Future<_HealthCounts> healthFuture;
-  final bool isExpanded;
-  final VoidCallback onToggle;
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<_HealthCounts>(
-      future: healthFuture,
-      builder: (context, snapshot) {
-        final counts = snapshot.data ?? (overdue: 0, upcoming: 0, onTime: 0);
-        final total = counts.overdue + counts.upcoming + counts.onTime;
-
-        return Column(
-          children: [
-            _HealthHeader(
-              total: total,
-              isExpanded: isExpanded,
-              onTap: onToggle,
-            ),
-            if (isExpanded) ...[
-              const SizedBox(height: 12),
-              _HealthCountersRow(counts: counts),
-            ],
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _HealthHeader extends StatelessWidget {
-  const _HealthHeader({
-    required this.total,
-    required this.isExpanded,
-    required this.onTap,
-  });
-
-  final int total;
-  final bool isExpanded;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 44,
-        padding: const EdgeInsets.symmetric(horizontal: 14),
-        decoration: BoxDecoration(
-          color: AppColors.darkBgSecondary,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.show_chart, size: 16, color: AppColors.primary),
-                const SizedBox(width: 10),
-                Text(
-                  context.l10n.garage_healthHeader,
-                  style: const TextStyle(
-                    color: AppColors.textOnDarkPrimary,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Text(
-                  context.l10n.garage_healthServicesCount(total),
-                  style: const TextStyle(
-                    color: AppColors.textOnDarkTertiary,
-                    fontSize: 12,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Icon(
-                  isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                  size: 18,
-                  color: AppColors.textOnDarkSecondary,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _HealthCountersRow extends StatelessWidget {
-  const _HealthCountersRow({required this.counts});
-
-  final _HealthCounts counts;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _HealthCounter(
-            count: counts.overdue,
-            label: context.l10n.garage_healthOverdue,
-            color: AppColors.error,
-            backgroundColor: const Color(0x14EF4444),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: _HealthCounter(
-            count: counts.upcoming,
-            label: context.l10n.garage_healthUpcoming,
-            color: const Color(0xFFEAB308),
-            backgroundColor: const Color(0x14EAB308),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: _HealthCounter(
-            count: counts.onTime,
-            label: context.l10n.garage_upToDate,
-            color: const Color(0xFF22C55E),
-            backgroundColor: const Color(0x1422C55E),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _HealthCounter extends StatelessWidget {
-  const _HealthCounter({
-    required this.count,
-    required this.label,
-    required this.color,
-    required this.backgroundColor,
-  });
-
-  final int count;
-  final String label;
-  final Color color;
-  final Color backgroundColor;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            '$count',
-            style: TextStyle(
-              color: color,
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: TextStyle(
-              color: color,
-              fontSize: 10,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.3,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -778,7 +555,11 @@ class _DetailFooter extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 4),
-                const Icon(Icons.chevron_right, size: 14, color: AppColors.primary),
+                const Icon(
+                  Icons.chevron_right,
+                  size: 14,
+                  color: AppColors.primary,
+                ),
               ],
             ),
           ],
@@ -790,10 +571,16 @@ class _DetailFooter extends StatelessWidget {
 
 // ─── Maintenance Widget ──────────────────────────────────────────────────────
 
-typedef _MaintenanceSummary = ({MaintenanceModel? last, MaintenanceModel? next});
+typedef _MaintenanceSummary = ({
+  MaintenanceModel? last,
+  MaintenanceModel? next,
+});
 
 class _MaintenanceWidget extends StatelessWidget {
-  const _MaintenanceWidget({required this.vehicle, required this.onViewHistoryTap});
+  const _MaintenanceWidget({
+    required this.vehicle,
+    required this.onViewHistoryTap,
+  });
 
   final VehicleModel vehicle;
   final VoidCallback onViewHistoryTap;
@@ -805,33 +592,28 @@ class _MaintenanceWidget extends StatelessWidget {
     final useCase = getIt<GetMaintenancesByVehicleIdUseCase>();
     final result = await useCase.execute(vehicleId);
 
-    return result.fold(
-      (_) => (last: null, next: null),
-      (page) {
-        final completed = page.items
-            .where((m) => m.mode == MaintenanceMode.completed)
-            .toList()
-          ..sort((a, b) {
-            final dateA = a.serviceDate ?? a.createdDate ?? DateTime(0);
-            final dateB = b.serviceDate ?? b.createdDate ?? DateTime(0);
-            return dateB.compareTo(dateA);
-          });
+    return result.fold((_) => (last: null, next: null), (page) {
+      final completed =
+          page.items.where((m) => m.mode == MaintenanceMode.completed).toList()
+            ..sort((a, b) {
+              final dateA = a.serviceDate ?? a.createdDate ?? DateTime(0);
+              final dateB = b.serviceDate ?? b.createdDate ?? DateTime(0);
+              return dateB.compareTo(dateA);
+            });
 
-        final scheduled = page.items
-            .where((m) => m.mode == MaintenanceMode.scheduled)
-            .toList()
-          ..sort((a, b) {
-            if (a.nextDate != null && b.nextDate != null) {
-              return a.nextDate!.compareTo(b.nextDate!);
-            }
-            if (a.nextDate != null) return -1;
-            if (b.nextDate != null) return 1;
-            return (a.nextOdometer ?? 0).compareTo(b.nextOdometer ?? 0);
-          });
+      final scheduled =
+          page.items.where((m) => m.mode == MaintenanceMode.scheduled).toList()
+            ..sort((a, b) {
+              if (a.nextDate != null && b.nextDate != null) {
+                return a.nextDate!.compareTo(b.nextDate!);
+              }
+              if (a.nextDate != null) return -1;
+              if (b.nextDate != null) return 1;
+              return (a.nextOdometer ?? 0).compareTo(b.nextOdometer ?? 0);
+            });
 
-        return (last: completed.firstOrNull, next: scheduled.firstOrNull);
-      },
-    );
+      return (last: completed.firstOrNull, next: scheduled.firstOrNull);
+    });
   }
 
   @override
@@ -849,8 +631,12 @@ class _MaintenanceWidget extends StatelessWidget {
           builder: (context, snapshot) {
             final last = snapshot.data?.last;
             final next = snapshot.data?.next;
-            final isOverdue = next != null &&
-                MaintenanceModel.calculateStatus(next, vehicle.currentMileage) ==
+            final isOverdue =
+                next != null &&
+                MaintenanceModel.calculateStatus(
+                      next,
+                      vehicle.currentMileage,
+                    ) ==
                     MaintenanceStatus.overdue;
 
             return Column(
@@ -901,11 +687,12 @@ class _MaintenanceCard extends StatelessWidget {
   final bool isOverdue;
 
   String _formatKm(int km) => km.toString().replaceAllMapped(
-        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-        (m) => '${m[1]},',
-      );
+    RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+    (m) => '${m[1]},',
+  );
 
-  String _formatDate(DateTime date) => DateFormat('MMM yyyy', 'es').format(date);
+  String _formatDate(DateTime date) =>
+      DateFormat('MMM yyyy', 'es').format(date);
 
   String get _dateText {
     if (maintenance == null) return '—';
@@ -947,11 +734,11 @@ class _MaintenanceCard extends StatelessWidget {
   }
 
   Color get _iconBg {
-    if (!isNext) return AppColors.primarySubtle;
+    if (!isNext) return const Color(0xFF2D2117);
     return isOverdue ? const Color(0x20EF4444) : const Color(0x20EAB308);
   }
 
-  Color get _dotColor {
+  Color get _badgeColor {
     if (!isNext) return const Color(0xFF22C55E);
     return isOverdue ? AppColors.error : const Color(0xFFEAB308);
   }
@@ -963,9 +750,11 @@ class _MaintenanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final topLabel = isNext
-        ? context.l10n.garage_nextService
-        : context.l10n.garage_lastService;
+    final badgeLabel = isNext
+        ? context.l10n.garage_healthUpcoming.toUpperCase()
+        : context.l10n.garage_completedServiceBadge;
+
+    final badgeIcon = isNext ? Icons.schedule : Icons.task_alt;
 
     return Container(
       decoration: BoxDecoration(
@@ -973,7 +762,7 @@ class _MaintenanceCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: _cardBorder),
       ),
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -982,18 +771,15 @@ class _MaintenanceCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Container(
-                    width: 6,
-                    height: 6,
-                    decoration: BoxDecoration(color: _dotColor, shape: BoxShape.circle),
-                  ),
-                  const SizedBox(width: 6),
+                  Icon(badgeIcon, size: 12, color: _badgeColor),
+                  const SizedBox(width: 4),
                   Text(
-                    topLabel,
+                    badgeLabel,
                     style: TextStyle(
-                      color: _dotColor,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
+                      color: _badgeColor,
+                      fontSize: 9,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1,
                     ),
                   ),
                 ],
@@ -1002,43 +788,49 @@ class _MaintenanceCard extends StatelessWidget {
                 _dateText,
                 style: const TextStyle(
                   color: AppColors.textOnDarkTertiary,
-                  fontSize: 11,
+                  fontSize: 10,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: _iconBg,
-              borderRadius: BorderRadius.circular(18),
-            ),
-            alignment: Alignment.center,
-            child: Icon(
-              isNext ? Icons.build : Icons.water_drop,
-              size: 18,
-              color: _iconColor,
-            ),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  color: _iconBg,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                alignment: Alignment.center,
+                child: Icon(
+                  isNext ? Icons.build : Icons.water_drop,
+                  size: 14,
+                  color: _iconColor,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  maintenance?.name ?? '—',
+                  style: const TextStyle(
+                    color: AppColors.textOnDarkPrimary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 10),
-          Text(
-            maintenance?.name ?? '—',
-            style: const TextStyle(
-              color: AppColors.textOnDarkPrimary,
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-            ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 6),
           Text(
             _valueText,
             style: TextStyle(
               color: _valueColor,
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: isNext ? FontWeight.w600 : FontWeight.normal,
             ),
           ),
@@ -1067,7 +859,11 @@ class _ViewHistoryButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.list, size: 16, color: AppColors.textOnDarkPrimary),
+            const Icon(
+              Icons.list,
+              size: 16,
+              color: AppColors.textOnDarkPrimary,
+            ),
             const SizedBox(width: 8),
             Text(
               context.l10n.garage_viewMaintenanceHistory,
@@ -1078,7 +874,11 @@ class _ViewHistoryButton extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            const Icon(Icons.chevron_right, size: 16, color: AppColors.textOnDarkTertiary),
+            const Icon(
+              Icons.chevron_right,
+              size: 16,
+              color: AppColors.textOnDarkTertiary,
+            ),
           ],
         ),
       ),
@@ -1184,9 +984,9 @@ class _OtherVehicleItem extends StatelessWidget {
   final VoidCallback onOptionsTap;
 
   String _formatKm(int km) => km.toString().replaceAllMapped(
-        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-        (m) => '${m[1]},',
-      );
+    RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+    (m) => '${m[1]},',
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -1279,7 +1079,11 @@ class _OtherVehicleItem extends StatelessWidget {
               children: [
                 _VehicleStatusBadge(vehicle: vehicle),
                 const SizedBox(height: 6),
-                const Icon(Icons.chevron_right, size: 16, color: AppColors.textOnDarkTertiary),
+                const Icon(
+                  Icons.chevron_right,
+                  size: 16,
+                  color: AppColors.textOnDarkTertiary,
+                ),
               ],
             ),
           ],
@@ -1303,7 +1107,8 @@ class _VehicleStatusBadge extends StatelessWidget {
 
     return result.fold(
       (_) => 0,
-      (page) => page.items.where((m) => m.mode == MaintenanceMode.scheduled).length,
+      (page) =>
+          page.items.where((m) => m.mode == MaintenanceMode.scheduled).length,
     );
   }
 
@@ -1315,8 +1120,12 @@ class _VehicleStatusBadge extends StatelessWidget {
         final count = snapshot.data ?? 0;
         final isUpToDate = count == 0;
 
-        final dotColor = isUpToDate ? const Color(0xFF22C55E) : const Color(0xFFEAB308);
-        final badgeBg = isUpToDate ? const Color(0x2022C55E) : const Color(0x20EAB308);
+        final dotColor = isUpToDate
+            ? const Color(0xFF22C55E)
+            : const Color(0xFFEAB308);
+        final badgeBg = isUpToDate
+            ? const Color(0x2022C55E)
+            : const Color(0x20EAB308);
         final label = isUpToDate
             ? context.l10n.garage_upToDate
             : context.l10n.garage_upcomingCount(count);
@@ -1333,7 +1142,10 @@ class _VehicleStatusBadge extends StatelessWidget {
               Container(
                 width: 6,
                 height: 6,
-                decoration: BoxDecoration(color: dotColor, shape: BoxShape.circle),
+                decoration: BoxDecoration(
+                  color: dotColor,
+                  shape: BoxShape.circle,
+                ),
               ),
               const SizedBox(width: 4),
               Text(

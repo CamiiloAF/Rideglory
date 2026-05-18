@@ -92,6 +92,24 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
     _emitLoadedOrEmpty();
   }
 
+  void updateSoatLocally(String vehicleId, {required DateTime expiryDate}) {
+    _vehicles = _vehicles.map((v) {
+      if (v.id != vehicleId) return v;
+      return v.copyWith(
+        soatStatus: _soatStatusFrom(expiryDate),
+        soatExpiryDate: expiryDate,
+      );
+    }).toList();
+    _emitLoadedOrEmpty();
+  }
+
+  SoatStatus _soatStatusFrom(DateTime expiryDate) {
+    final daysRemaining = expiryDate.difference(DateTime.now()).inDays;
+    if (daysRemaining < 0) return SoatStatus.expired;
+    if (daysRemaining <= 30) return SoatStatus.expiringSoon;
+    return SoatStatus.valid;
+  }
+
   void deleteVehicleLocally(String vehicleId) {
     final wasSelection =
         currentVehicle?.id == vehicleId || _selectedVehicleId == vehicleId;

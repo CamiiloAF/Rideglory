@@ -28,14 +28,16 @@ class SoatConfirmCtaBar extends StatelessWidget {
       child: BlocBuilder<SoatFormCubit, SoatFormState>(
         builder: (context, state) {
           final isLoading = state.maybeWhen(loading: () => true, orElse: () => false);
+          final cubit = context.read<SoatFormCubit>();
+          final canSave = cubit.areDatesValid;
           return AppButton(
             label: isManual
                 ? context.l10n.vehicle_soat_save_button
                 : context.l10n.vehicle_soat_confirm_button,
             isLoading: isLoading,
-            onPressed: () => context
-                .read<SoatFormCubit>()
-                .submit(vehicleId, documentImage: documentImage),
+            onPressed: canSave
+                ? () => cubit.submit(vehicleId, documentImage: documentImage)
+                : null,
           );
         },
       ),

@@ -7,7 +7,7 @@ part 'soat_dto.g.dart';
 class SoatDto {
   final String? id;
   final String vehicleId;
-  final String policyNumber;
+  final String? policyNumber;
   final String startDate;
   final String expiryDate;
   final String insurer;
@@ -16,7 +16,7 @@ class SoatDto {
   const SoatDto({
     this.id,
     required this.vehicleId,
-    required this.policyNumber,
+    this.policyNumber,
     required this.startDate,
     required this.expiryDate,
     required this.insurer,
