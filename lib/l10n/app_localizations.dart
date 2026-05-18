@@ -6832,6 +6832,12 @@ abstract class AppLocalizations {
   /// **'No se pudo obtener las coordenadas.'**
   String get map_geocodeError;
 
+  /// Shown as a SnackBar when the Mapbox map fails to load tiles or style during a live ride.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo cargar el mapa.'**
+  String get map_loadError;
+
   /// No description provided for @maintenance_summary_title.
   ///
   /// In es, this message translates to:

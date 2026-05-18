@@ -16,11 +16,13 @@ class LiveMapWidget extends StatefulWidget {
     required this.onMapReady,
     required this.initialCameraOptions,
     required this.riders,
+    this.onMapError,
   });
 
   final LiveMapReadyCallback onMapReady;
   final CameraOptions initialCameraOptions;
   final List<RiderTrackingModel> riders;
+  final ValueChanged<String>? onMapError;
 
   @override
   State<LiveMapWidget> createState() => _LiveMapWidgetState();
@@ -95,7 +97,7 @@ class _LiveMapWidgetState extends State<LiveMapWidget> {
     if (manager == null || !_iconsLoaded) return;
 
     // Remove annotations for riders no longer present.
-    final currentIds = widget.riders.map((r) => r.userId).toSet();
+    final currentIds = widget.riders.map((rider) => rider.userId).toSet();
     final toRemove = _annotationsById.keys
         .where((id) => !currentIds.contains(id))
         .toList();
@@ -140,12 +142,15 @@ class _LiveMapWidgetState extends State<LiveMapWidget> {
         center: widget.initialCameraOptions.center,
         zoom: widget.initialCameraOptions.zoom,
       ),
-      styleUri: MapboxStyles.STANDARD,
+      styleUri: MapboxStyles.DARK,
       onMapCreated: (mapboxMap) async {
-        _annotationManager = await mapboxMap.annotations
-            .createPointAnnotationManager();
+        _annotationManager =
+            await mapboxMap.annotations.createPointAnnotationManager();
         widget.onMapReady(LiveMapController(mapboxMap));
         await _updateAnnotations();
+      },
+      onMapLoadErrorListener: (MapLoadingErrorEventData data) {
+        widget.onMapError?.call(data.message);
       },
     );
   }

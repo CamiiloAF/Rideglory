@@ -3558,6 +3558,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get map_geocodeError => 'No se pudo obtener las coordenadas.';
 
   @override
+  String get map_loadError => 'No se pudo cargar el mapa.';
+
+  @override
   String get maintenance_summary_title => 'Resumen de Mantenimientos';
 
   @override

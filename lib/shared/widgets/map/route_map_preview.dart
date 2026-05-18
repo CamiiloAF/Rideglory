@@ -32,6 +32,7 @@ class RouteMapPreview extends StatefulWidget {
 class _RouteMapPreviewState extends State<RouteMapPreview> {
   MapboxMap? _mapboxMap;
   PointAnnotationManager? _annotationManager;
+  bool _mapLoadError = false;
 
   ResultState<AddressLocation> _originResult = const ResultState.initial();
   ResultState<AddressLocation> _destResult = const ResultState.initial();
@@ -72,7 +73,10 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
     ]);
   }
 
-  Future<void> _geocodeAddress(String? address, {required bool isOrigin}) async {
+  Future<void> _geocodeAddress(
+    String? address, {
+    required bool isOrigin,
+  }) async {
     if (address == null || address.trim().length < 4) return;
 
     setState(() {
@@ -149,9 +153,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
     } else if (dest != null) {
       await mapboxMap.flyTo(
         CameraOptions(
-          center: Point(
-            coordinates: Position(dest.longitude, dest.latitude),
-          ),
+          center: Point(coordinates: Position(dest.longitude, dest.latitude)),
           zoom: 13,
         ),
         MapAnimationOptions(duration: 400),
@@ -181,9 +183,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
     if (dest != null) {
       await manager.create(
         PointAnnotationOptions(
-          geometry: Point(
-            coordinates: Position(dest.longitude, dest.latitude),
-          ),
+          geometry: Point(coordinates: Position(dest.longitude, dest.latitude)),
         ),
       );
     }
@@ -196,11 +196,9 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
     super.dispose();
   }
 
-  bool get _isLoading =>
-      _originResult is Loading || _destResult is Loading;
+  bool get _isLoading => _originResult is Loading || _destResult is Loading;
 
-  bool get _hasError =>
-      (_originResult is Error) || (_destResult is Error);
+  bool get _hasError => (_originResult is Error) || (_destResult is Error);
 
   bool get _hasCoordsToShow => _origin != null || _dest != null;
 
@@ -222,7 +220,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
           clipBehavior: Clip.antiAlias,
           child: Stack(
             children: [
-              if (_hasCoordsToShow)
+              if (_hasCoordsToShow && !_mapLoadError)
                 MapWidget(
                   cameraOptions: CameraOptions(
                     center: Point(
@@ -239,6 +237,10 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                     _annotationManager = await mapboxMap.annotations
                         .createPointAnnotationManager();
                     await _fitMapBounds();
+                  },
+                  onMapLoadErrorListener: (MapLoadingErrorEventData data) {
+                    if (!mounted) return;
+                    setState(() => _mapLoadError = true);
                   },
                 )
               else

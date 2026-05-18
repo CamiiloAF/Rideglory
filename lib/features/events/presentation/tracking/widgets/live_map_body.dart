@@ -42,133 +42,134 @@ class LiveMapBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final initialCamera = initialCameraOptions;
 
-    return Stack(
-      children: [
-        // Map layer
-        Positioned.fill(
-          child: initialCamera != null
-              ? BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
-                  buildWhen: (prev, next) =>
-                      prev.ridersResult != next.ridersResult,
-                  builder: (context, state) {
-                    final riders = state.ridersResult.when(
-                      initial: () => <RiderTrackingModel>[],
-                      loading: () => <RiderTrackingModel>[],
-                      data: (data) => data,
-                      empty: () => <RiderTrackingModel>[],
-                      error: (_) => <RiderTrackingModel>[],
-                    );
-                    return LiveMapWidget(
-                      initialCameraOptions: initialCamera,
-                      riders: riders,
-                      onMapReady: (controller) =>
-                          mapController.value = controller,
-                    );
-                  },
-                )
-              : const ColoredBox(
-                  color: AppColors.trackingMapBg,
-                  child: Center(
-                    child: AppLoadingIndicator(
-                      variant: AppLoadingIndicatorVariant.inline,
+    return SafeArea(
+      child: Stack(
+        children: [
+          // Map layer
+          Positioned.fill(
+            child: initialCamera != null
+                ? BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
+                    buildWhen: (prev, next) =>
+                        prev.ridersResult != next.ridersResult,
+                    builder: (context, state) {
+                      if (state.isFinished) {
+                        return RideFinishedOverlay(eventName: event.name);
+                      }
+
+                      final riders = state.ridersResult.maybeWhen(
+                        data: (data) => data,
+                        orElse: () => <RiderTrackingModel>[],
+                      );
+
+                      return LiveMapWidget(
+                        initialCameraOptions: initialCamera,
+                        riders: riders,
+                        onMapReady: (controller) =>
+                            mapController.value = controller,
+                        onMapError: (message) {
+                          final messenger = ScaffoldMessenger.of(context);
+                          messenger.removeCurrentSnackBar();
+                          messenger.showSnackBar(
+                            SnackBar(content: Text(context.l10n.map_loadError)),
+                          );
+                        },
+                      );
+                    },
+                  )
+                : const ColoredBox(
+                    color: AppColors.trackingMapBg,
+                    child: Center(
+                      child: AppLoadingIndicator(
+                        variant: AppLoadingIndicatorVariant.inline,
+                      ),
                     ),
                   ),
-                ),
-        ),
+          ),
 
-        // Organizer control bar (top, only when organizer)
-        if (isOrganizer)
+          // Organizer control bar (top, only when organizer)
+          if (isOrganizer)
+            Positioned(
+              top: kToolbarHeight + MediaQuery.of(context).padding.top + 4,
+              left: 0,
+              right: 0,
+              child: BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
+                buildWhen: (prev, next) => prev.isFinished != next.isFinished,
+                builder: (context, state) {
+                  return OrganizerControlBar(onEndRide: onEndRidePressed);
+                },
+              ),
+            ),
+
+          // // SOS banner (below organizer bar)
           Positioned(
-            top: kToolbarHeight + MediaQuery.of(context).padding.top + 4,
+            top:
+                kToolbarHeight +
+                MediaQuery.of(context).padding.top +
+                (isOrganizer ? 60 : 4),
             left: 0,
             right: 0,
             child: BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
-              buildWhen: (prev, next) => prev.isFinished != next.isFinished,
+              buildWhen: (prev, next) =>
+                  prev.sosAlertResult != next.sosAlertResult,
               builder: (context, state) {
-                return OrganizerControlBar(onEndRide: onEndRidePressed);
+                final sosAlert = state.sosAlertResult.whenOrNull(
+                  data: (alert) => alert,
+                );
+                if (sosAlert == null) return const SizedBox.shrink();
+                return SosBannerWidget(sosAlert: sosAlert);
               },
             ),
           ),
 
-        // SOS banner (below organizer bar)
-        Positioned(
-          top: kToolbarHeight +
-              MediaQuery.of(context).padding.top +
-              (isOrganizer ? 60 : 4),
-          left: 0,
-          right: 0,
-          child: BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
-            buildWhen: (prev, next) =>
-                prev.sosAlertResult != next.sosAlertResult,
+          // Map controls (top-right)
+          Positioned(
+            right: 12,
+            top: kToolbarHeight + MediaQuery.of(context).padding.top + 12,
+            child: ValueListenableBuilder<LiveMapController?>(
+              valueListenable: mapController,
+              builder: (context, controller, _) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    MapZoomControls(controller: controller),
+                    AppSpacing.gapMd,
+                    MyLocationButton(
+                      isEnabled: controller != null,
+                      onTap: controller == null
+                          ? null
+                          : () => controller.centerOnMyLocation(),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+
+          // // SOS button (bottom-right, above telemetry panel)
+          BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
+            buildWhen: (prev, next) => prev.hasSentSos != next.hasSentSos,
             builder: (context, state) {
-              final sosAlert = state.sosAlertResult.whenOrNull(
-                data: (alert) => alert,
-              );
-              if (sosAlert == null) return const SizedBox.shrink();
-              return SosBannerWidget(sosAlert: sosAlert);
-            },
-          ),
-        ),
-
-        // Map controls (top-right)
-        Positioned(
-          right: 12,
-          top: kToolbarHeight + MediaQuery.of(context).padding.top + 12,
-          child: ValueListenableBuilder<LiveMapController?>(
-            valueListenable: mapController,
-            builder: (context, controller, _) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  MapZoomControls(controller: controller),
-                  AppSpacing.gapMd,
-                  MyLocationButton(
-                    isEnabled: controller != null,
-                    onTap: controller == null
-                        ? null
-                        : () => controller.centerOnMyLocation(),
-                  ),
-                ],
+              return Positioned(
+                right: 16,
+                bottom: MediaQuery.of(context).size.height * 0.32,
+                child: SosButton(
+                  label: context.l10n.map_sos,
+                  isActive: state.hasSentSos,
+                  onPressed: onSosPressed,
+                ),
               );
             },
           ),
-        ),
 
-        // SOS button (bottom-right, above telemetry panel)
-        BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
-          buildWhen: (prev, next) => prev.hasSentSos != next.hasSentSos,
-          builder: (context, state) {
-            return Positioned(
-              right: 16,
-              bottom: MediaQuery.of(context).size.height * 0.32,
-              child: SosButton(
-                label: context.l10n.map_sos,
-                isActive: state.hasSentSos,
-                onPressed: onSosPressed,
-              ),
-            );
-          },
-        ),
-
-        // Telemetry panel (bottom)
-        const Positioned(
-          left: 0,
-          right: 0,
-          bottom: 0,
-          child: RiderTelemetryPanel(),
-        ),
-
-        // Ride finished overlay
-        BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
-          buildWhen: (prev, next) => prev.isFinished != next.isFinished,
-          builder: (context, state) {
-            if (!state.isFinished) return const SizedBox.shrink();
-            return Positioned.fill(
-              child: RideFinishedOverlay(eventName: event.name),
-            );
-          },
-        ),
-      ],
+          // // Telemetry panel (bottom)
+          const Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: RiderTelemetryPanel(),
+          ),
+        ],
+      ),
     );
   }
 }

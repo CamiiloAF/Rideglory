@@ -1271,6 +1271,10 @@
   "tracking_sosMapError": "No se pudo abrir el mapa.",
   "tracking_sosSemanticsLabel": "Enviar alerta de emergencia",
   "map_geocodeError": "No se pudo obtener las coordenadas.",
+  "map_loadError": "No se pudo cargar el mapa.",
+  "@map_loadError": {
+    "description": "Shown as a SnackBar when the Mapbox map fails to load tiles or style during a live ride."
+  },
   "maintenance_summary_title": "Resumen de Mantenimientos",
   "maintenance_services_count": "Servicios",
   "maintenance_total_spent": "Total gastado",

@@ -43,11 +43,6 @@
             android:foregroundServiceType="location"
             android:exported="false" />
 
-        <!-- Mapbox public access token — value injected from local.properties via manifest placeholder -->
-        <meta-data
-            android:name="MAPBOX_ACCESS_TOKEN"
-            android:value="${MAPBOX_ACCESS_TOKEN}" />
-
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

@@ -37,10 +37,12 @@ Future<void> main() async {
   await ApiRemoteConfig.initialize(FirebaseRemoteConfig.instance);
   await initializeDateFormatting();
 
-  const mapboxToken = AppEnv.mapboxPublicToken;
-  if (mapboxToken != null && mapboxToken.isNotEmpty) {
-    MapboxOptions.setAccessToken(mapboxToken);
-  }
+  const mapboxToken = AppEnv.mapboxAccessToken;
+  assert(
+    mapboxToken != null && mapboxToken.isNotEmpty,
+    'MAPBOX_ACCESS_TOKEN must be set in .env',
+  );
+  MapboxOptions.setAccessToken(mapboxToken!);
 
   configureDependencies();
 

@@ -22,11 +22,6 @@ val mapsApiKey =
         ?: System.getenv("MAPS_API_KEY")
         ?: "")
 
-val mapboxAccessToken =
-    (localProperties.getProperty("MAPBOX_ACCESS_TOKEN")
-        ?: System.getenv("MAPBOX_ACCESS_TOKEN")
-        ?: "")
-
 android {
     namespace = "com.camiloagudelo.rideglory"
     compileSdk = 36
@@ -50,8 +45,6 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
-        manifestPlaceholders["MAPBOX_ACCESS_TOKEN"] = mapboxAccessToken
-        resValue("string", "mapbox_access_token", mapboxAccessToken)
     }
 
     buildTypes {

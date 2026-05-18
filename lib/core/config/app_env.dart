@@ -35,9 +35,9 @@ abstract class AppEnv {
   @EnviedField(optional: true)
   static const String? firebaseIosBundleId = _AppEnv.firebaseIosBundleId;
 
-  /// Mapbox public token (pk.*) used to initialize the Mapbox SDK at runtime.
+  /// Mapbox access token (sk.*) used to initialize the Mapbox SDK at runtime.
   @EnviedField(optional: true)
-  static const String? mapboxPublicToken = _AppEnv.mapboxPublicToken;
+  static const String? mapboxAccessToken = _AppEnv.mapboxAccessToken;
 
   /// Optional override for the local API base URL. When set, [ApiBaseUrlResolver]
   /// uses this value instead of the platform-specific localhost defaults
