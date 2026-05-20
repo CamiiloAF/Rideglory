@@ -29,6 +29,18 @@ class RiderProfileContent extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
+        if (user.email != null && user.email!.isNotEmpty) ...[
+          AppSpacing.gapXs,
+          Center(
+            child: Text(
+              user.email!,
+              style: const TextStyle(
+                fontSize: 13,
+                color: AppColors.textOnDarkSecondary,
+              ),
+            ),
+          ),
+        ],
         if (user.residenceCity != null &&
             user.residenceCity!.isNotEmpty) ...[
           AppSpacing.gapXs,
