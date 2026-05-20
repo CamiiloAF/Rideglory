@@ -28,14 +28,14 @@ jobs:
           cat > .env << 'EOF'
           FIREBASE_ANDROID_API_KEY=${{ secrets.FIREBASE_ANDROID_API_KEY }}
           FIREBASE_ANDROID_APP_ID=${{ secrets.FIREBASE_ANDROID_APP_ID }}
-          FIREBASE_IOS_API_KEY=${{ secrets.FIREBASE_IOS_API_KEY }}
-          FIREBASE_IOS_APP_ID=${{ secrets.FIREBASE_IOS_APP_ID }}
+          # FIREBASE_IOS_API_KEY=${{ secrets.FIREBASE_IOS_API_KEY }}
+          # FIREBASE_IOS_APP_ID=${{ secrets.FIREBASE_IOS_APP_ID }}
           FIREBASE_MESSAGING_SENDER_ID=${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
           FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }}
           FIREBASE_STORAGE_BUCKET=${{ secrets.FIREBASE_STORAGE_BUCKET }}
           FIREBASE_ANDROID_CLIENT_ID=${{ secrets.FIREBASE_ANDROID_CLIENT_ID }}
-          FIREBASE_IOS_CLIENT_ID=${{ secrets.FIREBASE_IOS_CLIENT_ID }}
-          FIREBASE_IOS_BUNDLE_ID=${{ secrets.FIREBASE_IOS_BUNDLE_ID }}
+          # FIREBASE_IOS_CLIENT_ID=${{ secrets.FIREBASE_IOS_CLIENT_ID }}
+          # FIREBASE_IOS_BUNDLE_ID=${{ secrets.FIREBASE_IOS_BUNDLE_ID }}
           LOCAL_API_BASE_URL=${{ secrets.LOCAL_API_BASE_URL }}
           # UNSPLASH_ACCESS_KEY=${{ secrets.UNSPLASH_ACCESS_KEY }}
           EOF
@@ -46,11 +46,11 @@ jobs:
           mkdir -p android/app
           echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > android/app/google-services.json
 
-      - name: Create Firebase iOS config
-        if: secrets.GOOGLE_SERVICE_INFO_PLIST != ''
-        run: |
-          mkdir -p ios/Runner
-          echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}" | base64 -d > ios/Runner/GoogleService-Info.plist
+      # - name: Create Firebase iOS config
+      #   if: secrets.GOOGLE_SERVICE_INFO_PLIST != ''
+      #   run: |
+      #     mkdir -p ios/Runner
+      #     echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}" | base64 -d > ios/Runner/GoogleService-Info.plist
 
       - name: Get dependencies
         run: flutter pub get
@@ -86,14 +86,14 @@ jobs:
           cat > .env << 'EOF'
           FIREBASE_ANDROID_API_KEY=${{ secrets.FIREBASE_ANDROID_API_KEY }}
           FIREBASE_ANDROID_APP_ID=${{ secrets.FIREBASE_ANDROID_APP_ID }}
-          FIREBASE_IOS_API_KEY=${{ secrets.FIREBASE_IOS_API_KEY }}
-          FIREBASE_IOS_APP_ID=${{ secrets.FIREBASE_IOS_APP_ID }}
+          # FIREBASE_IOS_API_KEY=${{ secrets.FIREBASE_IOS_API_KEY }}
+          # FIREBASE_IOS_APP_ID=${{ secrets.FIREBASE_IOS_APP_ID }}
           FIREBASE_MESSAGING_SENDER_ID=${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
           FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }}
           FIREBASE_STORAGE_BUCKET=${{ secrets.FIREBASE_STORAGE_BUCKET }}
           FIREBASE_ANDROID_CLIENT_ID=${{ secrets.FIREBASE_ANDROID_CLIENT_ID }}
-          FIREBASE_IOS_CLIENT_ID=${{ secrets.FIREBASE_IOS_CLIENT_ID }}
-          FIREBASE_IOS_BUNDLE_ID=${{ secrets.FIREBASE_IOS_BUNDLE_ID }}
+          # FIREBASE_IOS_CLIENT_ID=${{ secrets.FIREBASE_IOS_CLIENT_ID }}
+          # FIREBASE_IOS_BUNDLE_ID=${{ secrets.FIREBASE_IOS_BUNDLE_ID }}
           LOCAL_API_BASE_URL=${{ secrets.LOCAL_API_BASE_URL }}
           # UNSPLASH_ACCESS_KEY=${{ secrets.UNSPLASH_ACCESS_KEY }}
           EOF
