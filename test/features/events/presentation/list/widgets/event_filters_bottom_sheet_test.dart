@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/services/place_service.dart';
 import 'package:rideglory/design_system/foundation/theme/app_theme.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
@@ -11,6 +13,8 @@ import 'package:rideglory/features/events/presentation/list/widgets/event_filter
 import 'package:rideglory/l10n/app_localizations.dart';
 
 class MockEventsCubit extends Mock implements EventsCubit {}
+
+class MockPlaceService extends Mock implements PlaceService {}
 
 Widget _buildTestWidget(MockEventsCubit mockCubit) {
   return MaterialApp(
@@ -37,14 +41,29 @@ Widget _buildTestWidget(MockEventsCubit mockCubit) {
 
 void main() {
   late MockEventsCubit mockEventsCubit;
+  final getIt = GetIt.instance;
 
   setUp(() {
+    if (!getIt.isRegistered<PlaceService>()) {
+      final mockPlaceService = MockPlaceService();
+      when(
+        () => mockPlaceService.autocomplete(any(), any()),
+      ).thenAnswer((_) async => []);
+      getIt.registerSingleton<PlaceService>(mockPlaceService);
+    }
+
     mockEventsCubit = MockEventsCubit();
     when(() => mockEventsCubit.filters).thenReturn(const EventFilters());
     when(() => mockEventsCubit.state).thenReturn(
       const ResultState<List<EventModel>>.data(data: []),
     );
     when(() => mockEventsCubit.stream).thenAnswer((_) => const Stream.empty());
+  });
+
+  tearDown(() async {
+    if (getIt.isRegistered<PlaceService>()) {
+      await getIt.unregister<PlaceService>();
+    }
   });
 
   group('EventFiltersBottomSheet — Filter Tests (US-2-1, US-2-2)', () {
