@@ -1,0 +1,114 @@
+name: 🐛 Reporte de error
+description: Reporta un bug encontrado durante QA
+title: "[BUG] "
+labels: ["bug", "qa"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por reportar este error. Completa todos los campos para que podamos reproducirlo y resolverlo rápido.
+
+  - type: dropdown
+    id: feature
+    attributes:
+      label: Módulo / Feature
+      description: ¿En qué parte de la app ocurre el error?
+      options:
+        - Autenticación
+        - Home / Garaje
+        - Vehículos — Agregar / Editar
+        - Vehículos — SOAT
+        - Vehículos — Mantenimiento
+        - Eventos — Listado / Detalle
+        - Eventos — Registro
+        - Eventos — Mapa en vivo
+        - Perfil de usuario
+        - Notificaciones
+        - Otro
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severidad
+      options:
+        - 🔴 Crítico — bloquea el flujo principal
+        - 🟠 Alto — funcionalidad importante no funciona
+        - 🟡 Medio — funciona con workaround
+        - 🟢 Bajo — visual / cosmético
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción del error
+      description: ¿Qué pasó? Sé específico.
+      placeholder: "Al tocar el botón 'Guardar vehículo', la app se cierra inesperadamente."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducir
+      description: Pasos exactos para que otro dev pueda ver el error.
+      placeholder: |
+        1. Abrir la app e iniciar sesión
+        2. Ir a Garaje → Agregar vehículo
+        3. Completar todos los campos
+        4. Tocar "Guardar"
+        5. La app se cierra
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamiento esperado
+      placeholder: "El vehículo se guarda y vuelvo al listado del garaje."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Comportamiento actual
+      placeholder: "La app se cierra sin mensaje de error."
+    validations:
+      required: true
+
+  - type: input
+    id: device
+    attributes:
+      label: Dispositivo
+      placeholder: "Samsung Galaxy S23 / iPhone 14 Pro"
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Sistema operativo y versión
+      placeholder: "Android 14 / iOS 17.2"
+    validations:
+      required: true
+
+  - type: input
+    id: app_version
+    attributes:
+      label: Versión de la app / branch
+      placeholder: "1.0.0 / iter-4"
+
+  - type: textarea
+    id: media
+    attributes:
+      label: Capturas de pantalla o video
+      description: Arrastra imágenes o un video aquí. Muy útil para bugs visuales.
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notas adicionales
+      description: Logs, contexto extra, frecuencia del error, etc.
