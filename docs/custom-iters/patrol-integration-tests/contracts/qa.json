@@ -1,0 +1,81 @@
+{
+  "slug": "patrol-integration-tests",
+  "phase": "qa",
+  "status": "conditional",
+  "updatedAt": "2026-05-20T00:00:00Z",
+  "summary": "Three localization string bugs found across home_patrol_test (2 bugs: wrong case for 'Mi garaje' and 'Ver todas') and profile_patrol_test (1 bug: wrong error message string). Tests pass because OR-assertions have valid fallback branches, but the broken branches silently reduce coverage. One-line fixes required in two files.",
+  "artifacts": [
+    "integration_test/events_patrol_test.dart",
+    "integration_test/profile_patrol_test.dart",
+    "integration_test/home_patrol_test.dart"
+  ],
+  "qualityGates": [
+    {
+      "gate": "uses_TextField_not_TextFormField",
+      "status": "pass",
+      "files": ["events_patrol_test.dart", "profile_patrol_test.dart", "home_patrol_test.dart"]
+    },
+    {
+      "gate": "handles_location_permission",
+      "status": "pass",
+      "notes": "All three tests guard permission dialogs at 4 points: splash, login load, post-login, post-tab-navigation"
+    },
+    {
+      "gate": "waitUntilVisible_before_interaction",
+      "status": "pass",
+      "notes": "TextField, tab icons, and AppBar title are all waited before interaction or assertion"
+    },
+    {
+      "gate": "meaningful_assertions",
+      "status": "conditional",
+      "notes": "profile_patrol_test has a strong hard assertion on 'Mi perfil'. events_patrol_test OR-assertion includes tab label which is trivially true. home_patrol_test OR-assertion has two branches that will never match due to string case bugs."
+    },
+    {
+      "gate": "handles_data_and_empty_state",
+      "status": "conditional",
+      "notes": "All tests structurally handle both states. Error-state branch in profile_patrol_test uses wrong string. Empty-state soft checks in home_patrol_test use wrong case."
+    },
+    {
+      "gate": "timeout_set",
+      "status": "pass",
+      "notes": "All tests use Timeout(Duration(minutes: 3))"
+    },
+    {
+      "gate": "l10n_strings_correct",
+      "status": "fail",
+      "bugs": [
+        {
+          "file": "home_patrol_test.dart",
+          "line": 108,
+          "found": "Mi garaje",
+          "expected": "MI GARAJE",
+          "reason": "home_sectionGarage rendered with .toUpperCase()"
+        },
+        {
+          "file": "home_patrol_test.dart",
+          "line": 110,
+          "found": "Ver todas",
+          "expected": "VER TODAS",
+          "reason": "home_viewAllLink rendered with .toUpperCase()"
+        },
+        {
+          "file": "profile_patrol_test.dart",
+          "line": 96,
+          "found": "Error al cargar el perfil",
+          "expected": "No pudimos cargar tu perfil",
+          "reason": "profile_loadingError ARB value does not match hardcoded string"
+        }
+      ]
+    },
+    {
+      "gate": "imports_correct",
+      "status": "pass",
+      "notes": "No unused imports in any test file"
+    },
+    {
+      "gate": "credentials_via_env",
+      "status": "pass",
+      "notes": "String.fromEnvironment used for TEST_EMAIL and TEST_PASSWORD in all files"
+    }
+  ]
+}

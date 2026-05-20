@@ -1,0 +1,80 @@
+{
+  "slug": "patrol-integration-tests",
+  "phase": "tech_lead",
+  "status": "needs_changes",
+  "updatedAt": "2026-05-20T00:00:00Z",
+  "summary": "Three localization string bugs silently disable OR-assertion branches in home_patrol_test (2) and profile_patrol_test (1). No security issues. No architecture violations. No commits were made. All test files correctly scoped to integration_test/. One-line fixes required before iteration close-out.",
+  "artifacts": [
+    "integration_test/events_patrol_test.dart",
+    "integration_test/profile_patrol_test.dart",
+    "integration_test/home_patrol_test.dart",
+    "docs/custom-iters/patrol-integration-tests/handoffs/qa.md",
+    "docs/custom-iters/patrol-integration-tests/handoffs/tech_lead.md"
+  ],
+  "qualityGates": [
+    {
+      "gate": "no_commits_made",
+      "status": "pass"
+    },
+    {
+      "gate": "no_protected_files_touched",
+      "status": "pass",
+      "protectedFiles": ["docs/PRD.md", "docs/PLAN.md", "workflow/state.json", ".claude/skills/"]
+    },
+    {
+      "gate": "source_code_unchanged",
+      "status": "pass",
+      "notes": "Frontend agent confirmed zero source code changes; only integration_test/ files created"
+    },
+    {
+      "gate": "test_files_scoped_to_integration_test",
+      "status": "pass"
+    },
+    {
+      "gate": "credentials_via_env_vars",
+      "status": "pass",
+      "notes": "String.fromEnvironment with non-functional placeholder defaults"
+    },
+    {
+      "gate": "no_hardcoded_credentials",
+      "status": "pass"
+    },
+    {
+      "gate": "no_security_issues",
+      "status": "pass"
+    },
+    {
+      "gate": "l10n_accuracy",
+      "status": "fail",
+      "findings": [
+        {
+          "file": "integration_test/home_patrol_test.dart",
+          "line": 108,
+          "severity": "medium",
+          "issue": "$('Mi garaje') never matches — rendered as MI GARAJE",
+          "fix": "Change to $('MI GARAJE')"
+        },
+        {
+          "file": "integration_test/home_patrol_test.dart",
+          "line": 110,
+          "severity": "medium",
+          "issue": "$('Ver todas') never matches — rendered as VER TODAS",
+          "fix": "Change to $('VER TODAS')"
+        },
+        {
+          "file": "integration_test/profile_patrol_test.dart",
+          "line": 96,
+          "severity": "low",
+          "issue": "$('Error al cargar el perfil') — ARB profile_loadingError = 'No pudimos cargar tu perfil'",
+          "fix": "Change to $('No pudimos cargar tu perfil')"
+        }
+      ]
+    },
+    {
+      "gate": "architecture_clean",
+      "status": "pass",
+      "notes": "Tests import only patrol, flutter_test, and rideglory/main.dart. No layer violations."
+    }
+  ],
+  "recommendedCommitMessage": "feat(tests): add Patrol integration tests for events, profile, and home features"
+}

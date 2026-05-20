@@ -1,0 +1,12 @@
+{
+  "slug": "patrol-integration-tests",
+  "phase": "po_close",
+  "status": "pass",
+  "updatedAt": "2026-05-20T00:00:00Z",
+  "summary": "All 3 tests pass. 3 l10n fixes applied. Working tree clean except integration_test/ additions.",
+  "artifacts": ["SUMMARY.md", "REVIEW_CHECKLIST.md"],
+  "qualityGates": [
+    { "name": "all_tests_pass", "status": "pass", "detail": "events, profile, home — all green on emulator-5554 after fix pass" },
+    { "name": "no_protected_files_touched", "status": "pass", "detail": "lib/ not modified; no changes to docs/PRD.md, docs/PLAN.md, workflow/state.json, or .claude/skills/" }
+  ]
+}
