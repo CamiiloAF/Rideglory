@@ -62,8 +62,8 @@ class TrackingWsClient {
         'data': {
           'eventId': eventId,
           'userId': userId,
-          if (latitude != null) 'latitude': latitude,
-          if (longitude != null) 'longitude': longitude,
+          'latitude': ?latitude,
+          'longitude': ?longitude,
         },
       }),
     );

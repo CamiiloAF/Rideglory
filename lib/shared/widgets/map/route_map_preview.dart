@@ -133,8 +133,9 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
         Point(coordinates: Position(origin.longitude, origin.latitude)),
         Point(coordinates: Position(dest.longitude, dest.latitude)),
       ];
-      final camera = await mapboxMap.cameraForCoordinates(
+      final camera = await mapboxMap.cameraForCoordinatesPadding(
         coordinates,
+        CameraOptions(),
         MbxEdgeInsets(top: 60, left: 60, bottom: 60, right: 60),
         null,
         null,
@@ -222,7 +223,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
             children: [
               if (_hasCoordsToShow && !_mapLoadError)
                 MapWidget(
-                  cameraOptions: CameraOptions(
+                  viewport: CameraViewportState(
                     center: Point(
                       coordinates: Position(
                         (_origin ?? _dest!).longitude,

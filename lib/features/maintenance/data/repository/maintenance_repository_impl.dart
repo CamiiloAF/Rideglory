@@ -152,7 +152,7 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
         'odometerAtService': maintenance.odometerAtService,
       if (maintenance.workshop != null) 'workshop': maintenance.workshop,
       if (maintenance.notes != null) 'notes': maintenance.notes,
-      if (nextKmInterval != null) 'nextKmInterval': nextKmInterval,
+      'nextKmInterval': ?nextKmInterval,
       if (maintenance.nextOdometer != null) 'nextOdometer': maintenance.nextOdometer,
       if (maintenance.nextDate != null)
         'nextDate': maintenance.nextDate!.toUtc().toIso8601String(),
