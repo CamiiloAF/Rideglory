@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
+      GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
     steps:
       - name: Checkout code
@@ -41,7 +42,7 @@ jobs:
           EOF
 
       - name: Create Firebase Android config
-        if: secrets.GOOGLE_SERVICES_JSON != ''
+        if: env.GOOGLE_SERVICES_JSON != ''
         run: |
           mkdir -p android/app
           echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > android/app/google-services.json
@@ -70,6 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
+      GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
 
     steps:
       - name: Checkout code
@@ -99,7 +101,7 @@ jobs:
           EOF
 
       - name: Create Firebase Android config
-        if: secrets.GOOGLE_SERVICES_JSON != ''
+        if: env.GOOGLE_SERVICES_JSON != ''
         run: |
           mkdir -p android/app
           echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > android/app/google-services.json
