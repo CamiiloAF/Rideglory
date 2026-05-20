@@ -48,11 +48,9 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
       initialChildSize: 0.75,
       maxChildSize: 0.95,
       minChildSize: 0.5,
-      builder: (_, scrollController) => Container(
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        ),
+      builder: (_, scrollController) => Material(
+        color: theme.colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         child: FormBuilder(
           key: _formKey,
           initialValue: {
