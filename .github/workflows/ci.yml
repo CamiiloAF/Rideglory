@@ -3,6 +3,7 @@ name: CI — Flutter Analyze & Test
 on:
   push:
     branches: ['iter-*', 'main']
+    tags: ['v*']
   pull_request:
     branches: ['main']
 
