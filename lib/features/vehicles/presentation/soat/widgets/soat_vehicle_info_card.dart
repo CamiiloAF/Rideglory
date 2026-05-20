@@ -101,6 +101,8 @@ class _SoatStatusBadge extends StatelessWidget {
         return const Color(0xFFEAB308);
       case SoatStatus.expired:
         return AppColors.error;
+      case SoatStatus.noSoat:
+        return AppColors.textOnDarkSecondary;
     }
   }
 
@@ -112,6 +114,8 @@ class _SoatStatusBadge extends StatelessWidget {
         return 'Por vencer';
       case SoatStatus.expired:
         return 'Vencido';
+      case SoatStatus.noSoat:
+        return 'Sin SOAT';
     }
   }
 }

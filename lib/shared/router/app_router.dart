@@ -40,7 +40,7 @@ import '../../features/maintenance/presentation/list/maintenances/maintenances_p
 import '../../features/splash/presentation/splash_screen.dart';
 import '../../features/vehicles/presentation/form/vehicle_form_page.dart';
 import '../../features/vehicles/presentation/garage/garage_page.dart';
-import '../../features/vehicles/presentation/soat/soat_upload_page.dart';
+import '../../features/vehicles/presentation/soat/soat_upload_page.dart' as vehicle_soat;
 import '../widgets/main_shell.dart';
 import 'app_routes.dart';
 
@@ -207,7 +207,7 @@ class AppRouter {
         name: AppRoutes.vehicleSoat,
         builder: (context, state) {
           final vehicle = state.extra as VehicleModel;
-          return SoatUploadPage(vehicle: vehicle);
+          return vehicle_soat.SoatUploadPage(vehicle: vehicle);
         },
       ),
 

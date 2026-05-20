@@ -124,6 +124,7 @@ class VehicleSoatCard extends StatelessWidget {
         return const Color(0xFFEAB308);
       case SoatStatus.expired:
         return const Color(0xFFEF4444);
+      case SoatStatus.noSoat:
       case null:
         return AppColors.textOnDarkSecondary;
     }
@@ -137,6 +138,7 @@ class VehicleSoatCard extends StatelessWidget {
         return 'Por vencer';
       case SoatStatus.expired:
         return context.l10n.maintenance_expired_label;
+      case SoatStatus.noSoat:
       case null:
         return context.l10n.vehicle_soat_tap_to_add;
     }

@@ -14,7 +14,7 @@ class HomeGarageSoatBadge extends StatelessWidget {
       SoatStatus.valid => AppColors.successSubtle,
       SoatStatus.expiringSoon => AppColors.warningSubtle,
       SoatStatus.expired => AppColors.errorSubtle,
-      null => AppColors.infoSubtle,
+      SoatStatus.noSoat || null => AppColors.infoSubtle,
     };
   }
 
@@ -23,7 +23,7 @@ class HomeGarageSoatBadge extends StatelessWidget {
       SoatStatus.valid => AppColors.success,
       SoatStatus.expiringSoon => AppColors.warning,
       SoatStatus.expired => AppColors.error,
-      null => AppColors.info,
+      SoatStatus.noSoat || null => AppColors.info,
     };
   }
 
@@ -32,7 +32,7 @@ class HomeGarageSoatBadge extends StatelessWidget {
       SoatStatus.valid => context.l10n.vehicle_doc_soat_label,
       SoatStatus.expiringSoon => context.l10n.vehicle_doc_soat_label,
       SoatStatus.expired => context.l10n.vehicle_doc_soat_label,
-      null => context.l10n.vehicle_doc_soat_label,
+      SoatStatus.noSoat || null => context.l10n.vehicle_doc_soat_label,
     };
   }
 

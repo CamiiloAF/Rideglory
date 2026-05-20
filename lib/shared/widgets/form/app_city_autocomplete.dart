@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/data/colombia_cities_data.dart';
+import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/services/place_service.dart';
 import 'package:rideglory/shared/widgets/form/app_autocomplete_field.dart';
 
-/// Shared city autocomplete field using Colombian cities.
-/// Use in event form, filters, or any form that needs a city picker.
 class AppCityAutocomplete extends StatelessWidget {
   const AppCityAutocomplete({
     super.key,
@@ -36,6 +35,7 @@ class AppCityAutocomplete extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final placeService = getIt<PlaceService>();
     final effectiveValidator = validator ??
         (isRequired
             ? (value) {
@@ -57,7 +57,11 @@ class AppCityAutocomplete extends StatelessWidget {
       focusNode: focusNode,
       textInputAction: textInputAction,
       onFieldSubmitted: onFieldSubmitted,
-      suggestions: ColombiaCitiesData.search,
+      suggestions: (_) => const <String>[],
+      remoteSuggestions: (query) async {
+        if (query.trim().length < 2) return const <String>[];
+        return placeService.autocomplete(query.trim(), 'cities');
+      },
       suggestionsPrefixIcon: Icons.location_city_outlined,
     );
   }

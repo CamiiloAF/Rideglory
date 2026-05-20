@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/di/injection.dart';
-import 'package:rideglory/core/services/place_service.dart';
-import 'package:rideglory/shared/widgets/form/app_autocomplete_field.dart';
+import 'package:rideglory/shared/widgets/form/app_text_field.dart';
 
 enum PlaceAutocompleteType {
   cities('cities'),
@@ -39,28 +37,12 @@ class AppPlaceAutocompleteField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final placeService = getIt<PlaceService>();
-    return AppAutocompleteField(
+    return AppTextField(
       name: name,
       labelText: labelText,
-      hintText: hintText,
-      isRequired: isRequired,
-      validator: validator,
-      onSelected: onSelected,
-      focusNode: focusNode,
-      textInputAction: textInputAction,
-      onFieldSubmitted: onFieldSubmitted,
-      suggestions: (_) => const <String>[],
-      remoteSuggestions: (query) async {
-        if (query.trim().length < 2) {
-          return const <String>[];
-        }
-        return placeService.autocomplete(query.trim(), placeType.value);
-      },
-      suggestionsPrefixIcon: placeType == PlaceAutocompleteType.cities
-          ? Icons.location_city_outlined
-          : Icons.place_outlined,
-      suffixIcon: const Icon(Icons.search),
+      hintText: 'Próximamente disponible',
+      enabled: false,
+      suffixIcon: const Icon(Icons.place_outlined),
     );
   }
 }

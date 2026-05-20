@@ -1,8 +1,6 @@
-enum SoatStatus {
-  valid,
-  expiringSoon,
-  expired,
-}
+import 'package:rideglory/features/soat/domain/models/soat_model.dart';
+
+export 'package:rideglory/features/soat/domain/models/soat_model.dart' show SoatStatus;
 
 class VehicleModel {
   final String? id;

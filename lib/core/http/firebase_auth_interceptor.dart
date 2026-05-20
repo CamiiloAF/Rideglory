@@ -25,4 +25,40 @@ class FirebaseAuthInterceptor extends Interceptor {
 
     handler.next(options);
   }
+
+  @override
+  Future<void> onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
+    if (err.response?.statusCode == 401) {
+      try {
+        final freshToken =
+            await _firebaseAuth.currentUser?.getIdToken(true);
+        if (freshToken != null && freshToken.isNotEmpty) {
+          final options = err.requestOptions;
+          options.headers['Authorization'] = 'Bearer $freshToken';
+
+          if (kDebugMode) {
+            log('Retrying with fresh Firebase token');
+          }
+
+          final dio = Dio(
+            BaseOptions(
+              baseUrl: options.baseUrl,
+              headers: options.headers,
+              connectTimeout: options.connectTimeout,
+              receiveTimeout: options.receiveTimeout,
+              sendTimeout: options.sendTimeout,
+            ),
+          );
+
+          final response = await dio.fetch(options);
+          return handler.resolve(response);
+        }
+      } catch (_) {}
+    }
+
+    handler.next(err);
+  }
 }
