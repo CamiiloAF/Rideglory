@@ -26,6 +26,7 @@ abstract class AppRoutes {
   // Events routes
   static const String events = '/events';
   static const String myEvents = '/events/mine';
+  static const String myDrafts = '/events/drafts';
   static const String createEvent = '/events/create';
   static const String editEvent = '/events/edit';
   static const String eventDetail = '/events/detail';

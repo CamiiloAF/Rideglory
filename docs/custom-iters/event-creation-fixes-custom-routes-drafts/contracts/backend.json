@@ -1,0 +1,60 @@
+{
+  "phase": "backend",
+  "status": "pass",
+  "testedAt": "2026-05-20T22:06:00Z",
+  "baseline": {
+    "suites": 2,
+    "tests": 19,
+    "failures": 0
+  },
+  "final": {
+    "suites": 2,
+    "tests": 26,
+    "failures": 0
+  },
+  "newTests": 7,
+  "filesChanged": [
+    "rideglory-contracts/src/events/enums/event.enums.ts",
+    "rideglory-contracts/src/events/dto/create-event.dto.ts",
+    "events-ms/prisma/schema.prisma",
+    "events-ms/prisma/migrations/20260520220000_draft_state_and_waypoints/migration.sql",
+    "events-ms/src/events/events.service.ts",
+    "events-ms/src/events/events.controller.ts",
+    "events-ms/src/events/events.service.spec.ts",
+    "events-ms/src/events/events.service.iter3.spec.ts",
+    "api-gateway/src/events/events.controller.ts"
+  ],
+  "pendingHumanAction": [
+    "Run `cd events-ms && npx prisma migrate deploy && npx prisma generate` on each target environment before deploying"
+  ],
+  "apiContract": {
+    "newEndpoints": [
+      {
+        "method": "PATCH",
+        "path": "/api/events/:id/publish",
+        "auth": "required",
+        "body": null,
+        "responses": {
+          "200": "Updated event object with state: SCHEDULED",
+          "403": "Not the event owner",
+          "404": "Event not found or caller is not owner of draft",
+          "409": "Event is not in DRAFT state"
+        }
+      }
+    ],
+    "modifiedEndpoints": [
+      {
+        "method": "GET",
+        "path": "/api/events/:id",
+        "change": "Now auth-aware: draft events return 404 for non-owners; owner sees own draft. Auth header now required.",
+        "previousBehaviour": "Returned any event by ID with no auth check"
+      }
+    ],
+    "newFields": {
+      "EventState": ["DRAFT"],
+      "CreateEventDto": ["waypoints?: string[]"],
+      "UpdateEventDto": ["waypoints?: string[] (via PartialType inheritance)"],
+      "Event": ["waypoints: string[] (default [])"]
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "slug": "event-creation-fixes-custom-routes-drafts",
+  "phase": "design-route-builder",
+  "status": "pass",
+  "updatedAt": "2026-05-20T04:00:00Z",
+  "summary": "Custom route builder screen designed in rideglory.pen — 4 frames (empty, 3 waypoints, 9/9 limit, active search). Design system tokens extracted from rideglory.pen and applied exactly.",
+  "artifacts": [
+    "rideglory.pen",
+    "docs/custom-iters/event-creation-fixes-custom-routes-drafts/handoffs/design-route-builder.md",
+    "docs/custom-iters/event-creation-fixes-custom-routes-drafts/analysis/design/route-builder/IMyvf.png",
+    "docs/custom-iters/event-creation-fixes-custom-routes-drafts/analysis/design/route-builder/veaGt.png",
+    "docs/custom-iters/event-creation-fixes-custom-routes-drafts/analysis/design/route-builder/kY0VR.png",
+    "docs/custom-iters/event-creation-fixes-custom-routes-drafts/analysis/design/route-builder/z58GM.png"
+  ],
+  "frames": [
+    {
+      "name": "Custom Route Builder — Vacío",
+      "id": "IMyvf",
+      "state": "empty",
+      "description": "No waypoints, map with tap hint overlay, disabled Add/Continue CTAs"
+    },
+    {
+      "name": "Custom Route Builder — Con Waypoints",
+      "id": "veaGt",
+      "state": "populated",
+      "waypointCount": 3,
+      "description": "3 numbered pins on map with route polyline, waypoint cards list, active orange Continuar CTA"
+    },
+    {
+      "name": "Custom Route Builder — Límite 9/9",
+      "id": "kY0VR",
+      "state": "at_limit",
+      "waypointCount": 9,
+      "description": "9 pins on map, orange warning banner, disabled Add button with max hint, active Continuar"
+    },
+    {
+      "name": "Custom Route Builder — Búsqueda Activa",
+      "id": "z58GM",
+      "state": "searching",
+      "waypointCount": 2,
+      "description": "Active search with autocomplete dropdown visible, map dimmed, keyboard placeholder at bottom"
+    }
+  ],
+  "designTokens": {
+    "extracted_from": "rideglory.pen variables",
+    "bgPrimary": "#0D0D0F",
+    "bgSecondary": "#1A1A1F",
+    "bgCard": "#1E1E24",
+    "bgTertiary": "#242429",
+    "border": "#2A2A32",
+    "borderLight": "#3A3A44",
+    "accent": "#F98C1F",
+    "accentSubtle": "#2D2117",
+    "success": "#22C55E",
+    "error": "#EF4444",
+    "textPrimary": "#FFFFFF",
+    "textSecondary": "#9CA3AF",
+    "textTertiary": "#6B7280",
+    "textInverse": "#0D0D0F",
+    "font": "Space Grotesk",
+    "borderRadius": {
+      "searchField": 8,
+      "waypointCard": 8,
+      "ctaButton": 26,
+      "counterBadge": 10,
+      "backButton": 20
+    }
+  },
+  "qualityGates": [
+    {
+      "name": "used_existing_pen_file",
+      "status": "pass",
+      "detail": "Edited rideglory.pen directly. Did NOT create a new .pen file."
+    },
+    {
+      "name": "design_matches_existing_system",
+      "status": "pass",
+      "detail": "All colors, typography, spacing, and border radius values extracted from rideglory.pen variables and matched to existing screen patterns (Crear Evento, Events List, Registration Form)."
+    },
+    {
+      "name": "four_required_frames_created",
+      "status": "pass",
+      "detail": "Empty state, populated (3 waypoints), at limit (9/9), and active search — all four frames created and verified via screenshot."
+    },
+    {
+      "name": "screenshots_exported",
+      "status": "pass",
+      "detail": "4 PNGs exported to docs/custom-iters/event-creation-fixes-custom-routes-drafts/analysis/design/route-builder/"
+    },
+    {
+      "name": "no_git_commits",
+      "status": "pass",
+      "detail": "No git add/commit/push performed."
+    }
+  ]
+}

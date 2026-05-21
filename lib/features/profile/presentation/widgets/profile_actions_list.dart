@@ -36,6 +36,12 @@ class ProfileActionsList extends StatelessWidget {
           ),
           const _MenuDivider(),
           _ProfileMenuItem(
+            icon: Icons.edit_note_rounded,
+            label: context.l10n.draft_myDraftsTitle,
+            onTap: () => context.pushNamed(AppRoutes.myDrafts),
+          ),
+          const _MenuDivider(),
+          _ProfileMenuItem(
             icon: Icons.build_outlined,
             label: context.l10n.profile_maintenances,
             onTap: () => context.pushNamed(AppRoutes.maintenances),

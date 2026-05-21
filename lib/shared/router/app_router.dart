@@ -15,6 +15,7 @@ import 'package:rideglory/features/events/presentation/detail/params.dart';
 import 'package:rideglory/features/events/presentation/form/event_form_page.dart';
 import 'package:rideglory/features/events/presentation/list/events_page.dart';
 import 'package:rideglory/features/events/presentation/detail/event_detail_by_id_page.dart';
+import 'package:rideglory/features/events/presentation/drafts/my_drafts_page.dart';
 import 'package:rideglory/features/events/presentation/tracking/live_map_page.dart';
 import 'package:rideglory/features/events/presentation/tracking/participants/participants_placeholder_page.dart';
 import 'package:rideglory/features/home/presentation/home_page.dart';
@@ -245,6 +246,11 @@ class AppRouter {
         },
       ),
 
+      GoRoute(
+        path: AppRoutes.myDrafts,
+        name: AppRoutes.myDrafts,
+        builder: (context, state) => const MyDraftsPage(),
+      ),
       GoRoute(
         path: AppRoutes.createEvent,
         name: AppRoutes.createEvent,

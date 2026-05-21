@@ -22,6 +22,8 @@ abstract class EventFormState with _$EventFormState {
   const factory EventFormState({
     @Default(ResultState<EventModel>.initial()) ResultState<EventModel> saveResult,
     @Default(ResultState<String>.initial()) ResultState<String> coverGenerationResult,
+    @Default(<String>[]) List<String> waypoints,
+    @Default(RouteType.simple) RouteType routeType,
   }) = _EventFormState;
 }
 
@@ -50,7 +52,24 @@ class EventFormCubit extends Cubit<EventFormState> {
 
   void initialize({EventModel? event}) {
     _editingEvent = event;
-    emit(const EventFormState());
+    emit(EventFormState(
+      waypoints: event?.waypoints ?? const [],
+    ));
+  }
+
+  void addWaypoint(String waypoint) {
+    if (state.waypoints.length >= 9) return;
+    emit(state.copyWith(waypoints: [...state.waypoints, waypoint]));
+  }
+
+  void removeWaypoint(int index) {
+    if (index < 0 || index >= state.waypoints.length) return;
+    final updated = List<String>.from(state.waypoints)..removeAt(index);
+    emit(state.copyWith(waypoints: updated));
+  }
+
+  void clearWaypoints() {
+    emit(state.copyWith(waypoints: const []));
   }
 
   Future<void> saveEvent(
@@ -207,6 +226,11 @@ class EventFormCubit extends Cubit<EventFormState> {
     final maxParticipants =
         formData[EventFormFields.maxParticipants] as int?;
 
+    final routeType =
+        formData[EventFormFields.routeType] as RouteType? ?? state.routeType;
+    final waypointsToSave =
+        routeType == RouteType.custom ? state.waypoints : const <String>[];
+
     return EventModel(
       id: _editingEvent?.id,
       ownerId: userId,
@@ -225,6 +249,107 @@ class EventFormCubit extends Cubit<EventFormState> {
       maxParticipants: maxParticipants,
       imageUrl: _editingEvent?.imageUrl,
       state: _editingEvent?.state ?? EventState.scheduled,
+      waypoints: waypointsToSave,
+    );
+  }
+
+  Future<EventModel?> buildDraftToSave() async {
+    formKey.currentState?.save();
+    final formData = formKey.currentState?.value ?? {};
+
+    final name = formData[EventFormFields.name] as String?;
+    if (name == null || name.trim().isEmpty) {
+      emit(state.copyWith(
+        saveResult: const ResultState.error(
+          error: DomainException(
+            message: 'El nombre del evento es requerido para guardar el borrador.',
+          ),
+        ),
+      ));
+      return null;
+    }
+
+    final userId = await _resolveOwnerId();
+    if (userId == null) return null;
+
+    final dateRange = formData[EventFormFields.dateRange] as DateTimeRange?;
+    final now = DateTime.now();
+
+    final isMultiBrand =
+        formData[EventFormFields.isMultiBrand] as bool? ?? true;
+    final allowedBrands = isMultiBrand
+        ? <String>[]
+        : (formData[EventFormFields.allowedBrands] as List<String>? ??
+              <String>[]);
+
+    final isFreeEvent = formData[EventFormFields.isFreeEvent] as bool? ?? false;
+    final priceStr = formData[EventFormFields.price] as String?;
+    final price = isFreeEvent
+        ? null
+        : (priceStr != null && priceStr.isNotEmpty
+            ? int.tryParse(priceStr)
+            : null);
+
+    final maxParticipants = formData[EventFormFields.maxParticipants] as int?;
+
+    final routeType =
+        formData[EventFormFields.routeType] as RouteType? ?? state.routeType;
+    final waypointsToSave =
+        routeType == RouteType.custom ? state.waypoints : const <String>[];
+
+    return EventModel(
+      id: _editingEvent?.id,
+      ownerId: userId,
+      name: name.trim(),
+      description:
+          (formData[EventFormFields.description] as String?)?.trim() ?? '',
+      city: (formData[EventFormFields.city] as String?)?.trim() ?? '',
+      startDate: dateRange?.start ?? now,
+      endDate: dateRange?.end != dateRange?.start ? dateRange?.end : null,
+      difficulty: formData[EventFormFields.difficulty] as EventDifficulty? ??
+          EventDifficulty.one,
+      meetingPoint:
+          (formData[EventFormFields.meetingPoint] as String?)?.trim() ?? '',
+      destination:
+          (formData[EventFormFields.destination] as String?)?.trim() ?? '',
+      meetingTime: formData[EventFormFields.meetingTime] as DateTime? ?? now,
+      eventType:
+          formData[EventFormFields.eventType] as EventType? ?? EventType.tourism,
+      allowedBrands: allowedBrands,
+      price: price,
+      maxParticipants: maxParticipants,
+      imageUrl: _editingEvent?.imageUrl,
+      state: EventState.draft,
+      waypoints: waypointsToSave,
+    );
+  }
+
+  Future<void> saveDraft({
+    String? localCoverImagePath,
+    String? remoteCoverImageUrl,
+  }) async {
+    emit(state.copyWith(saveResult: const ResultState.loading()));
+
+    final eventToSave = await buildDraftToSave();
+    if (eventToSave == null) return;
+
+    final result = isEditing
+        ? await _saveExistingEvent(
+            eventToSave,
+            localCoverImagePath: localCoverImagePath,
+            remoteCoverImageUrl: remoteCoverImageUrl,
+          )
+        : await _createNewEvent(
+            eventToSave,
+            localCoverImagePath: localCoverImagePath,
+            remoteCoverImageUrl: remoteCoverImageUrl,
+          );
+
+    result.fold(
+      (error) =>
+          emit(state.copyWith(saveResult: ResultState.error(error: error))),
+      (event) =>
+          emit(state.copyWith(saveResult: ResultState.data(data: event))),
     );
   }
 

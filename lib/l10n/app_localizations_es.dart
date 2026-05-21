@@ -3982,4 +3982,94 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get soat_upload_error_label => 'Error al subir';
+
+  @override
+  String get event_draftBadge => 'Borrador';
+
+  @override
+  String get draft_myDraftsTitle => 'Mis borradores';
+
+  @override
+  String get draft_noDrafts => 'No tienes borradores';
+
+  @override
+  String get draft_noDraftsHint =>
+      'Guarda un evento como borrador para editarlo y publicarlo después';
+
+  @override
+  String get draft_publish => 'Publicar evento';
+
+  @override
+  String get draft_publishConfirmTitle => '¿Publicar evento?';
+
+  @override
+  String get draft_publishConfirmMessage =>
+      'El evento será visible para todos los usuarios.';
+
+  @override
+  String get draft_savedSuccess => 'Borrador guardado exitosamente';
+
+  @override
+  String get draft_publishedSuccess => 'Evento publicado exitosamente';
+
+  @override
+  String get route_typeLabel => 'Tipo de ruta';
+
+  @override
+  String get route_simpleLabel => 'Ruta simple (A→B)';
+
+  @override
+  String get route_customLabel => 'Ruta personalizada';
+
+  @override
+  String get route_builder_title => 'Crear ruta personalizada';
+
+  @override
+  String get route_builder_hint_tap => 'Toca el mapa para agregar un punto';
+
+  @override
+  String get route_builder_hint_search => 'O usa el buscador de arriba';
+
+  @override
+  String get route_builder_search_placeholder => 'Buscar un lugar...';
+
+  @override
+  String get route_builder_search_placeholder_disabled =>
+      'Límite de 9 puntos alcanzado';
+
+  @override
+  String get route_builder_section_title => 'PUNTOS DE RUTA';
+
+  @override
+  String route_builder_counter(int count) {
+    return '$count/9 puntos';
+  }
+
+  @override
+  String get route_builder_empty_hint => 'Agrega puntos para construir tu ruta';
+
+  @override
+  String get route_builder_add_button => 'Agregar punto';
+
+  @override
+  String get route_builder_add_button_at_limit => 'Agregar punto (máx. 9)';
+
+  @override
+  String get route_builder_continue => 'Continuar';
+
+  @override
+  String get route_builder_limit_banner =>
+      'Has alcanzado el límite de 9 puntos. Elimina uno para agregar otro.';
+
+  @override
+  String get route_builder_scroll_hint => 'Desliza para ver todos';
+
+  @override
+  String get route_waypointsLabel => 'Puntos intermedios';
+
+  @override
+  String get route_placeSearchError => 'No se pudo cargar sugerencias';
+
+  @override
+  String get route_noPlacesFound => 'No se encontraron resultados';
 }

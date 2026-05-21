@@ -1,0 +1,33 @@
+{
+  "slug": "event-creation-fixes-custom-routes-drafts",
+  "phase": "po",
+  "status": "pass",
+  "updatedAt": "2026-05-20T00:00:00Z",
+  "summary": "Scoped 4 improvements: autocomplete activation (AppPlaceAutocompleteField), custom multi-waypoint route builder (max 9, new domain field), cupos stepper manual text input, and draft event support (DRAFT state in contracts+Prisma, publish endpoint, UI badge + Mis borradores section). 15 ACs, 10 regression guardrails, all phases required (design, backend, frontend, db).",
+  "artifacts": [
+    "docs/custom-iters/event-creation-fixes-custom-routes-drafts/PRD_NORMALIZED.md",
+    "docs/custom-iters/event-creation-fixes-custom-routes-drafts/handoffs/po.md"
+  ],
+  "qualityGates": [
+    {
+      "name": "required_artifacts_present",
+      "status": "pass",
+      "detail": "PRD_NORMALIZED.md, handoffs/po.md, contracts/po.json, and _meta.json phaseLog entry all created."
+    },
+    {
+      "name": "no_protected_files_touched",
+      "status": "pass",
+      "detail": "docs/PRD.md, docs/PLAN.md, workflow/state.json, and all docs/handoffs/<role>.md files were not modified. All writes went to docs/custom-iters/event-creation-fixes-custom-routes-drafts/."
+    },
+    {
+      "name": "source_prd_fully_mapped",
+      "status": "pass",
+      "detail": "All 4 items from SOURCE_PRD.md (autocomplete, custom routes, cupos, drafts) and all 4 user clarifications (tap+search UX, 9 waypoints max, immediate publish, both Mis borradores + Mis eventos tag) are addressed in PRD_NORMALIZED.md ACs and affected areas table."
+    },
+    {
+      "name": "affected_files_opened",
+      "status": "pass",
+      "detail": "Opened and read: app_place_autocomplete.dart, event_form_locations_section.dart, event_form_max_participants_section.dart, event_form_cubit.dart, event_model.dart, event_dto.dart, event_service.dart, event_repository.dart, events_cubit.dart, place_service.dart, route_map_preview.dart, events-ms/events.service.ts, events-ms/events.controller.ts, events-ms/prisma/schema.prisma, rideglory-contracts/src/events/enums/event.enums.ts."
+    }
+  ]
+}

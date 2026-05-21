@@ -38,6 +38,7 @@ class EventCard extends StatelessWidget {
 
   String _badgeLabel(BuildContext context) {
     return switch (event.state) {
+      EventState.draft => context.l10n.event_draftBadge,
       EventState.scheduled => context.l10n.event_comingSoonPill,
       EventState.inProgress => context.l10n.event_eventLiveNow,
       EventState.finished => context.l10n.event_eventFinished.toUpperCase(),
@@ -47,6 +48,7 @@ class EventCard extends StatelessWidget {
 
   Color _badgeColor() {
     return switch (event.state) {
+      EventState.draft => AppColors.primary,
       EventState.scheduled => AppColors.info,
       EventState.inProgress => AppColors.success,
       EventState.finished => AppColors.tabInactive,

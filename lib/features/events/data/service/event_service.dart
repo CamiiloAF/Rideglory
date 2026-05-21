@@ -43,4 +43,7 @@ abstract class EventService {
 
   @POST('${ApiRoutes.events}/{id}/tracking/end')
   Future<EventDto> endRide(@Path('id') String eventId);
+
+  @PATCH('${ApiRoutes.events}/{id}/publish')
+  Future<EventDto> publishEvent(@Path('id') String id);
 }

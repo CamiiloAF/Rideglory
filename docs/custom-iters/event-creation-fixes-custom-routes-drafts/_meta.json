@@ -1,0 +1,89 @@
+{
+  "slug": "event-creation-fixes-custom-routes-drafts",
+  "sourcePrdPath": "docs/custom-iters/event-creation-fixes-custom-routes-drafts/SOURCE_PRD.md",
+  "project": "Rideglory",
+  "existingBase": "/Users/cami/Developer/Personal/Rideglory",
+  "backendPath": "/Users/cami/Developer/Personal/rideglory-api",
+  "startedAt": "2026-05-20T00:00:00Z",
+  "status": "ready_for_human_review",
+  "completedAt": "2026-05-20T23:55:00Z",
+  "phaseLog": [
+    {
+      "phase": "po",
+      "agent": "po",
+      "at": "2026-05-20T00:00:00Z",
+      "summary": "Scoped 4 areas: autocomplete activation, custom multi-waypoint routes, cupos stepper manual input, draft event support (backend + UI). 15 ACs, 10 regression guardrails, phase plan: design+backend+frontend+db all required."
+    },
+    {
+      "phase": "architect",
+      "agent": "architect",
+      "at": "2026-05-20T00:00:00Z",
+      "summary": "Produced change map (7 backend + 27 frontend files), API contract (PATCH /events/:id/publish, new findOneEventForViewer RPC, EventState+DRAFT, CreateEventDto.waypoints), and Prisma migration plan (single additive migration: ALTER TYPE ADD VALUE + ADD COLUMN waypoints String[]). Resolved draft findOne auth via separate findOneEventForViewer RPC so existing callers are untouched. Top risk: non-exhaustive EventState switches in 4 Flutter files break compilation when draft is added."
+    },
+    {
+      "phase": "backend",
+      "agent": "backend",
+      "at": "2026-05-20T22:06:00Z",
+      "summary": "Applied all 5 architect change areas: DRAFT added to EventState enum in contracts + Prisma schema; waypoints String[] added to schema + CreateEventDto; migration file hand-authored (idempotent SQL); findAll/findUpcoming exclude drafts; findOneEventForViewer + publishEvent added to service and controller; gateway wired with PATCH :id/publish and auth-aware GET :id. Tests: 19 baseline → 26 final (7 new), all passing."
+    },
+    {
+      "phase": "design",
+      "agent": "design",
+      "at": "2026-05-20T02:00:00Z",
+      "summary": "Designed 8 screens in event-creation-v2.pen: (1) AppPlaceAutocompleteField all states (idle/loading/results/empty/error), (2) RouteTypeSelector segmented control with simple vs custom toggle, (3) CustomRouteBuilder with map placeholder + waypoint cards + counter + add/disabled buttons, (4) Cupos stepper with inline editable field (null/value/editing/validation states), (5) EventFormBottomBar with draft confirmation bottom sheet, (6) MyDraftsPage with draft cards + empty state, (7) EventCardMyEventBadge variants (Mi Evento gradient vs BORRADOR orange outline), (8) EventDetail draft owner view with Publicar CTA bar. Key decisions: Mis borradores via profile page menu; segmented control for route type; free-integer [5,500] for cupos; getIt injection for PlaceService. 29 new l10n keys specified. 8 PNG screenshots exported."
+    },
+    {
+      "phase": "design-route-builder",
+      "agent": "design",
+      "at": "2026-05-20T04:00:00Z",
+      "summary": "Added 4 Custom Route Builder frames directly to rideglory.pen (NOT a separate file): (1) Empty state with tap-hint map overlay and disabled CTAs, (2) 3-waypoint state with numbered pins, route polyline, waypoint cards, and active Continuar CTA, (3) 9/9 limit state with warning banner, all 9 waypoints listed, disabled Add button, (4) Active search state with autocomplete dropdown, dimmed map, and keyboard placeholder. Design tokens extracted from rideglory.pen variables. 4 PNGs exported to analysis/design/route-builder/. Handoff: docs/custom-iters/event-creation-fixes-custom-routes-drafts/handoffs/design-route-builder.md"
+    },
+    {
+      "phase": "frontend",
+      "agent": "frontend",
+      "at": "2026-05-20T22:30:00Z",
+      "summary": "Implemented all 4 areas: (1) AppPlaceAutocompleteField rewritten as StatefulWidget with debounced PlaceService.autocomplete(), OverlayPortal dropdown, loading/empty/error states; (2) EventFormMaxParticipantsSection stepper upgraded to StatefulWidget with inline TextField, clamp [5,500] on focus loss; (3) EventState.draft added to enum, waypoints field added to EventModel/EventDto, RouteType enum created, EventRouteTypeSelector + WaypointItemCard + CustomRouteBuilderSection created, EventFormLocationsSection wired; EventFormCubit gains addWaypoint/removeWaypoint/clearWaypoints + buildDraftToSave + saveDraft; (4) Draft support: EventStateConverter updated, EventCard/_EventHeaderSection/home_event_card/event_detail_header_info all patched for draft case; EventDetailOwnerLifecycleBar gains _OwnerDraftBar + onPublish; EventDetailCubit gains publishEvent via PublishEventUseCase; EventFormBottomBar._DraftLink wired to saveDraft; MyDraftsPage + route /events/drafts + profile menu entry added. dart analyze: 0 new errors/warnings (34 pre-existing info/deprecated). flutter test: 69 passed, 0 failed."
+    },
+    {
+      "phase": "qa",
+      "agent": "qa",
+      "at": "2026-05-20T23:00:00Z",
+      "summary": "flutter test: 69 passed, 0 failed. dart analyze: 0 new errors/warnings (2 pre-existing in api_base_url_resolver.dart). Backend: 26 passed, 0 failed. Sign-off: conditional. BUG-1: 2 hardcoded Spanish strings in app_place_autocomplete.dart (AC-14 violation). BUG-2: multiple widget classes per file in 3 files (coding standards). 7 test coverage gaps identified (no new tests for AppPlaceAutocompleteField, CustomRouteBuilderSection, EventFormCubit.saveDraft, EventCardDraftBadge, EventStateConverter DRAFT, EventDetailCubit.publishEvent, cupos clamp). 23 manual probes required."
+    },
+    {
+      "phase": "tech_lead",
+      "agent": "tech_lead",
+      "at": "2026-05-20T23:30:00Z",
+      "summary": "Verdict: needs_changes. Confirmed BUG-1 (2 hardcoded Spanish strings in app_place_autocomplete.dart missing from app_es.arb: route_placeSearchError, route_noPlacesFound) and BUG-2 (one-widget-per-file violations in 3 files: app_place_autocomplete.dart 2 classes, custom_route_builder_section.dart 5 classes, event_card_my_event_badge.dart 2 classes). Architecture is sound, API contract correct, auth/security clean. Pre-existing multi-widget files (event_detail_owner_lifecycle_bar.dart, event_form_max_participants_section.dart) accepted. Fix agent must: add 2 arb keys, replace hardcoded strings, extract 6 widget classes to own files, fix _EmptyWaypointsHint BuildContext constructor anti-pattern."
+    },
+    {
+      "phase": "tech_lead_cycle2",
+      "agent": "tech_lead",
+      "at": "2026-05-20T23:45:00Z",
+      "summary": "Verdict: ready_for_human_review. All cycle 1 blockers resolved: BUG-1 (route_placeSearchError + route_noPlacesFound in app_es.arb, context.l10n.* in AppPlaceSuggestionsDropdown.build), BUG-2 (6 widget classes extracted to own files, _EmptyWaypointsHint BuildContext anti-pattern removed). 1 new low-severity finding: Widget _buildContainer() in AppPlaceSuggestionsDropdown — accepted, does not block merge. dart analyze: 0 new issues. flutter test: 96 passed, 1 pre-existing failure (auth_cubit_test.dart — unrelated)."
+    },
+    {
+      "phase": "po_close",
+      "agent": "po",
+      "at": "2026-05-20T23:55:00Z",
+      "summary": "Iteration complete — ready for human review. Produced REVIEW_CHECKLIST.md (23 manual probes, AC sign-off table, regression watchlist, files changed) and SUMMARY.md (goal, what changed per area, test results, deploy steps, recommended commit message)."
+    }
+  ],
+  "decisions": {
+    "uiChanges": true,
+    "backendChanges": true,
+    "frontendChanges": true,
+    "dbChanges": true,
+    "needsDesign": true
+  },
+  "preExistingDirtyTree": true,
+  "preExistingDirtyFiles": [
+    "android/app/build.gradle.kts",
+    "ios/Podfile",
+    "ios/Runner.xcodeproj/project.pbxproj",
+    "ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme",
+    "lib/core/http/api_base_url_resolver.dart",
+    "pubspec.yaml",
+    "rideglory.pen"
+  ]
+}

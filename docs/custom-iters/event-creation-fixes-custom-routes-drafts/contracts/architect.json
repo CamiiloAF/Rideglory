@@ -1,0 +1,97 @@
+{
+  "phase": "architect",
+  "slug": "event-creation-fixes-custom-routes-drafts",
+  "completedAt": "2026-05-20T00:00:00Z",
+  "status": "complete",
+  "summary": "Defined change map, API contract, and Prisma migration plan for autocomplete activation, custom multi-waypoint routes, cupos manual input, and draft events. All EventState changes are additive; non-exhaustive switch breakage flagged as the top risk.",
+  "decisionsResolved": {
+    "draftFindOneAuthGuard": "New RPC pattern findOneEventForViewer({id, authUserId}) used only by gateway GET :id; existing findOneEvent (id-only) untouched so tracking/registrations/cron callers do not break. Non-owner draft -> 404 (does not leak existence).",
+    "publishEndpointAuth": "Gateway resolves ownerId via existing getAuthenticatedUser (email -> findUserByEmail -> user.id), same as findMyEvents.",
+    "createDraftApproach": "No separate createDraft endpoint; client sends state:'DRAFT' on POST /events. CreateEventDto.state already optional with SCHEDULED default.",
+    "waypointsStorage": "String[] column on Event with @default([]); no separate Waypoint table.",
+    "migrationStrategy": "Single hand-authored migration: ALTER TYPE ADD VALUE + ALTER TABLE ADD COLUMN (column does not reference the new enum value, so one file is transactionally safe).",
+    "routeMapPreviewWaypoints": "Recommended: show waypoint markers (no polyline) on RouteMapPreview - DESIGN to confirm.",
+    "myDraftsPlacement": "Recommended: entry point on the profile page - DESIGN to confirm."
+  },
+  "apiContract": {
+    "newEndpoint": {
+      "method": "PATCH",
+      "path": "/api/events/:id/publish",
+      "auth": "Firebase token (existing middleware)",
+      "requestBody": null,
+      "rpcPattern": "publishEvent",
+      "rpcPayload": { "id": "string", "ownerId": "string" },
+      "response": "full Event object with state SCHEDULED",
+      "errors": { "404": "event not found", "403": "requester not owner", "409": "event state not DRAFT" }
+    },
+    "modifiedEndpoint": {
+      "method": "GET",
+      "path": "/api/events/:id",
+      "change": "switches RPC to findOneEventForViewer({id, authUserId}); non-owner draft -> 404"
+    },
+    "newRpcPatterns": ["publishEvent", "findOneEventForViewer"],
+    "enumChange": { "enum": "EventState", "add": "DRAFT" },
+    "dtoChange": { "dto": "CreateEventDto", "add": "waypoints?: string[] (optional, IsArray IsString each)" }
+  },
+  "dataModel": {
+    "migration": "events-ms/prisma/migrations/<ts>_draft_state_and_waypoints/migration.sql",
+    "enumDelta": "EventState += DRAFT",
+    "columnDelta": "Event.waypoints String[] @default([])",
+    "newTables": [],
+    "backfillRequired": false
+  },
+  "envDelta": "none",
+  "filesToModify": {
+    "backend": [
+      "rideglory-contracts/src/events/enums/event.enums.ts",
+      "rideglory-contracts/src/events/dto/create-event.dto.ts",
+      "events-ms/prisma/schema.prisma",
+      "events-ms/prisma/migrations/<ts>_draft_state_and_waypoints/migration.sql",
+      "events-ms/src/events/events.service.ts",
+      "events-ms/src/events/events.controller.ts",
+      "api-gateway/src/events/events.controller.ts"
+    ],
+    "frontend": [
+      "lib/shared/widgets/form/app_place_autocomplete.dart",
+      "lib/features/events/constants/event_form_fields.dart",
+      "lib/features/events/domain/model/event_model.dart",
+      "lib/features/events/data/dto/event_dto.dart",
+      "lib/features/events/data/dto/event_dto_converters.dart",
+      "lib/features/events/data/service/event_service.dart",
+      "lib/features/events/domain/repository/event_repository.dart",
+      "lib/features/events/data/repository/event_repository_impl.dart",
+      "lib/features/events/domain/use_cases/publish_event_use_case.dart",
+      "lib/features/events/presentation/form/cubit/event_form_cubit.dart",
+      "lib/features/events/presentation/form/widgets/sections/event_form_locations_section.dart",
+      "lib/features/events/presentation/form/widgets/sections/event_route_type_selector.dart",
+      "lib/features/events/presentation/form/widgets/sections/custom_route_builder_section.dart",
+      "lib/features/events/presentation/form/widgets/sections/waypoint_item_card.dart",
+      "lib/features/events/presentation/form/widgets/sections/event_form_max_participants_section.dart",
+      "lib/features/events/presentation/form/widgets/event_form_bottom_bar.dart",
+      "lib/features/events/presentation/list/widgets/event_card_my_event_badge.dart",
+      "lib/features/events/presentation/list/widgets/event_card.dart",
+      "lib/features/events/presentation/list/widgets/events_data_view.dart",
+      "lib/features/events/presentation/detail/event_detail_view.dart",
+      "lib/features/events/presentation/detail/widgets/event_detail_owner_lifecycle_bar.dart",
+      "lib/features/events/presentation/detail/cubit/event_detail_cubit.dart",
+      "lib/features/events/presentation/drafts/my_drafts_page.dart",
+      "lib/shared/router/app_routes.dart",
+      "lib/shared/router/app_router.dart",
+      "lib/l10n/app_es.arb"
+    ]
+  },
+  "topRisks": [
+    "Adding EventState.draft breaks exhaustive switches in event_dto_converters.dart, event_card.dart, event_detail_view.dart, event_detail_owner_lifecycle_bar.dart - must patch all in the same change set.",
+    "saveDraft must bypass full form validation - requires a separate buildDraftToSave path filling safe defaults for required EventModel fields.",
+    "Autocomplete rewrite must keep the FormBuilderField<String> contract so RouteMapPreview keeps reading form values; debounce timer + overlay must be disposed."
+  ],
+  "outputs": [
+    "handoffs/architect.md",
+    "handoffs/architect-for-backend.md",
+    "handoffs/architect-for-frontend.md",
+    "handoffs/architect-for-qa.md",
+    "analysis/MIGRATION_PLAN.md",
+    "contracts/architect.json"
+  ],
+  "nextPhase": "design + backend (parallel); frontend blocked on both"
+}

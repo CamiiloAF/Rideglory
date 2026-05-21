@@ -12,16 +12,13 @@ class EventDetailHeaderInfo extends StatelessWidget {
   final EventModel event;
 
   String _badgeLabel(BuildContext context) {
-    switch (event.state) {
-      case EventState.scheduled:
-        return context.l10n.event_comingSoonPill;
-      case EventState.inProgress:
-        return context.l10n.event_eventLiveNow;
-      case EventState.cancelled:
-        return event.state.label.toUpperCase();
-      case EventState.finished:
-        return context.l10n.event_eventFinished.toUpperCase();
-    }
+    return switch (event.state) {
+      EventState.draft => context.l10n.event_draftBadge,
+      EventState.scheduled => context.l10n.event_comingSoonPill,
+      EventState.inProgress => context.l10n.event_eventLiveNow,
+      EventState.cancelled => event.state.label.toUpperCase(),
+      EventState.finished => context.l10n.event_eventFinished.toUpperCase(),
+    };
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -49,6 +50,7 @@ class EventFormMaxParticipantsSection extends StatelessWidget {
                   field.didChange(count + _step);
                 }
               },
+              onManualChange: field.didChange,
             ),
             const SizedBox(height: 6),
             _MaxParticipantsHint(context: context),
@@ -105,11 +107,13 @@ class _MaxParticipantsCard extends StatelessWidget {
     required this.count,
     required this.onDecrement,
     required this.onIncrement,
+    required this.onManualChange,
   });
 
   final int? count;
   final VoidCallback onDecrement;
   final VoidCallback onIncrement;
+  final void Function(int?) onManualChange;
 
   @override
   Widget build(BuildContext context) {
@@ -128,6 +132,7 @@ class _MaxParticipantsCard extends StatelessWidget {
             count: count,
             onDecrement: onDecrement,
             onIncrement: onIncrement,
+            onManualChange: onManualChange,
           ),
         ],
       ),
@@ -169,16 +174,70 @@ class _MaxParticipantsCardLabels extends StatelessWidget {
   }
 }
 
-class _MaxParticipantsStepper extends StatelessWidget {
+class _MaxParticipantsStepper extends StatefulWidget {
   const _MaxParticipantsStepper({
     required this.count,
     required this.onDecrement,
     required this.onIncrement,
+    required this.onManualChange,
   });
 
   final int? count;
   final VoidCallback onDecrement;
   final VoidCallback onIncrement;
+  final void Function(int?) onManualChange;
+
+  @override
+  State<_MaxParticipantsStepper> createState() =>
+      _MaxParticipantsStepperState();
+}
+
+class _MaxParticipantsStepperState extends State<_MaxParticipantsStepper> {
+  static const int _min = 5;
+  static const int _max = 500;
+
+  late final TextEditingController _textController;
+  bool _isEditing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _textController = TextEditingController(
+      text: widget.count != null ? '${widget.count}' : '',
+    );
+  }
+
+  @override
+  void didUpdateWidget(_MaxParticipantsStepper oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!_isEditing && oldWidget.count != widget.count) {
+      _textController.text = widget.count != null ? '${widget.count}' : '';
+    }
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+
+  void _onFocusLost() {
+    _isEditing = false;
+    final text = _textController.text;
+    if (text.isEmpty) {
+      widget.onManualChange(null);
+      return;
+    }
+    final parsed = int.tryParse(text);
+    if (parsed == null) {
+      // Revert to previous valid value
+      _textController.text = widget.count != null ? '${widget.count}' : '';
+    } else {
+      final clamped = parsed.clamp(_min, _max);
+      _textController.text = '$clamped';
+      widget.onManualChange(clamped);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +250,10 @@ class _MaxParticipantsStepper extends StatelessWidget {
       child: Row(
         children: [
           _StepperButton(
-            onTap: onDecrement,
+            onTap: () {
+              setState(() => _isEditing = false);
+              widget.onDecrement();
+            },
             child: const Icon(
               Icons.remove,
               size: 16,
@@ -204,19 +266,39 @@ class _MaxParticipantsStepper extends StatelessWidget {
             color: AppColors.darkBorderPrimary,
           ),
           SizedBox(
-            width: 52,
+            width: 64,
             height: 40,
-            child: Center(
-              child: Text(
-                count != null ? '$count' : '—',
+            child: Focus(
+              onFocusChange: (hasFocus) {
+                if (!hasFocus) _onFocusLost();
+              },
+              child: TextField(
+                controller: _textController,
+                textAlign: TextAlign.center,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 style: TextStyle(
                   fontFamily: 'Space Grotesk',
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: count != null
+                  color: widget.count != null
                       ? AppColors.textOnDarkPrimary
                       : AppColors.textOnDarkTertiary,
                 ),
+                decoration: const InputDecoration(
+                  hintText: '—',
+                  hintStyle: TextStyle(
+                    fontFamily: 'Space Grotesk',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textOnDarkTertiary,
+                  ),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.zero,
+                  isDense: true,
+                ),
+                onChanged: (_) => setState(() => _isEditing = true),
+                onSubmitted: (_) => _onFocusLost(),
               ),
             ),
           ),
@@ -226,7 +308,10 @@ class _MaxParticipantsStepper extends StatelessWidget {
             color: AppColors.darkBorderPrimary,
           ),
           _StepperButton(
-            onTap: onIncrement,
+            onTap: () {
+              setState(() => _isEditing = false);
+              widget.onIncrement();
+            },
             child: const Icon(
               Icons.add,
               size: 16,

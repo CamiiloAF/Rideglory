@@ -65,6 +65,7 @@ class _CardImage extends StatelessWidget {
             child: AppEventBadge(
               label: event.state.label,
               variant: switch (event.state) {
+                EventState.draft => EventBadgeVariant.comingSoon,
                 EventState.scheduled => EventBadgeVariant.scheduled,
                 EventState.inProgress => EventBadgeVariant.inProgress,
                 EventState.finished => EventBadgeVariant.finished,

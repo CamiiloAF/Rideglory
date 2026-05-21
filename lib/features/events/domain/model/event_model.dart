@@ -27,6 +27,7 @@ enum EventDifficulty {
 }
 
 enum EventState {
+  draft('Borrador'),
   scheduled('Programado'),
   inProgress('En curso'),
   cancelled('Cancelado'),
@@ -56,6 +57,7 @@ class EventModel {
   final DateTime? createdDate;
   final DateTime? updatedDate;
   final EventState state;
+  final List<String> waypoints;
 
   const EventModel({
     this.id,
@@ -77,6 +79,7 @@ class EventModel {
     this.createdDate,
     this.updatedDate,
     this.state = EventState.scheduled,
+    this.waypoints = const [],
   });
 
   bool get isFree => price == null || price == 0;
@@ -105,6 +108,7 @@ class EventModel {
     DateTime? createdDate,
     DateTime? updatedDate,
     EventState? state,
+    List<String>? waypoints,
   }) {
     return EventModel(
       id: id ?? this.id,
@@ -126,6 +130,7 @@ class EventModel {
       createdDate: createdDate ?? this.createdDate,
       updatedDate: updatedDate ?? this.updatedDate,
       state: state ?? this.state,
+      waypoints: waypoints ?? this.waypoints,
     );
   }
 

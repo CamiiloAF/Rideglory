@@ -93,6 +93,15 @@ class EventRepositoryImpl implements EventRepository {
   }
 
   @override
+  Future<Either<DomainException, EventModel>> publishEvent(String id) {
+    return executeService(
+      function: () async {
+        return _eventService.publishEvent(id);
+      },
+    );
+  }
+
+  @override
   Future<Either<DomainException, String>> uploadEventImage(
     UploadEventImageRequest request,
   ) {

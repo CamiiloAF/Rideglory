@@ -293,7 +293,8 @@ class EventDetailViewState extends State<EventDetailView> {
         // ── Bottom CTA bar ────────────────────────────────────────────────
         bottomNavigationBar: isOwner
             ? (currentEvent.state == EventState.scheduled ||
-                      currentEvent.state == EventState.inProgress
+                      currentEvent.state == EventState.inProgress ||
+                      currentEvent.state == EventState.draft
                   ? BlocBuilder<EventDetailCubit, EventDetailState>(
                       buildWhen: (prev, curr) =>
                           prev.lastUpdatedEventResult !=
@@ -314,6 +315,9 @@ class EventDetailViewState extends State<EventDetailView> {
                           onStop: () => _confirmStopEvent(context),
                           onOpenMap: () =>
                               unawaited(_onFollowLivePressed()),
+                          onPublish: () => context
+                              .read<EventDetailCubit>()
+                              .publishEvent(currentEvent),
                         );
                       },
                     )
@@ -574,6 +578,7 @@ class _EventHeaderSection extends StatelessWidget {
 
   String _badgeLabel(BuildContext context) {
     return switch (event.state) {
+      EventState.draft => context.l10n.event_draftBadge,
       EventState.scheduled => context.l10n.event_comingSoonPill,
       EventState.inProgress => context.l10n.event_eventLiveNow,
       EventState.finished => context.l10n.event_eventFinished.toUpperCase(),
@@ -583,6 +588,7 @@ class _EventHeaderSection extends StatelessWidget {
 
   Color _badgeColor() {
     return switch (event.state) {
+      EventState.draft => AppColors.primary,
       EventState.scheduled => AppColors.info,
       EventState.inProgress => AppColors.success,
       EventState.finished => AppColors.tabInactive,

@@ -7584,6 +7584,174 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Error al subir'**
   String get soat_upload_error_label;
+
+  /// No description provided for @event_draftBadge.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrador'**
+  String get event_draftBadge;
+
+  /// No description provided for @draft_myDraftsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Mis borradores'**
+  String get draft_myDraftsTitle;
+
+  /// No description provided for @draft_noDrafts.
+  ///
+  /// In es, this message translates to:
+  /// **'No tienes borradores'**
+  String get draft_noDrafts;
+
+  /// No description provided for @draft_noDraftsHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Guarda un evento como borrador para editarlo y publicarlo después'**
+  String get draft_noDraftsHint;
+
+  /// No description provided for @draft_publish.
+  ///
+  /// In es, this message translates to:
+  /// **'Publicar evento'**
+  String get draft_publish;
+
+  /// No description provided for @draft_publishConfirmTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Publicar evento?'**
+  String get draft_publishConfirmTitle;
+
+  /// No description provided for @draft_publishConfirmMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'El evento será visible para todos los usuarios.'**
+  String get draft_publishConfirmMessage;
+
+  /// No description provided for @draft_savedSuccess.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrador guardado exitosamente'**
+  String get draft_savedSuccess;
+
+  /// No description provided for @draft_publishedSuccess.
+  ///
+  /// In es, this message translates to:
+  /// **'Evento publicado exitosamente'**
+  String get draft_publishedSuccess;
+
+  /// No description provided for @route_typeLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo de ruta'**
+  String get route_typeLabel;
+
+  /// No description provided for @route_simpleLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Ruta simple (A→B)'**
+  String get route_simpleLabel;
+
+  /// No description provided for @route_customLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Ruta personalizada'**
+  String get route_customLabel;
+
+  /// No description provided for @route_builder_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear ruta personalizada'**
+  String get route_builder_title;
+
+  /// No description provided for @route_builder_hint_tap.
+  ///
+  /// In es, this message translates to:
+  /// **'Toca el mapa para agregar un punto'**
+  String get route_builder_hint_tap;
+
+  /// No description provided for @route_builder_hint_search.
+  ///
+  /// In es, this message translates to:
+  /// **'O usa el buscador de arriba'**
+  String get route_builder_hint_search;
+
+  /// No description provided for @route_builder_search_placeholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar un lugar...'**
+  String get route_builder_search_placeholder;
+
+  /// No description provided for @route_builder_search_placeholder_disabled.
+  ///
+  /// In es, this message translates to:
+  /// **'Límite de 9 puntos alcanzado'**
+  String get route_builder_search_placeholder_disabled;
+
+  /// No description provided for @route_builder_section_title.
+  ///
+  /// In es, this message translates to:
+  /// **'PUNTOS DE RUTA'**
+  String get route_builder_section_title;
+
+  /// No description provided for @route_builder_counter.
+  ///
+  /// In es, this message translates to:
+  /// **'{count}/9 puntos'**
+  String route_builder_counter(int count);
+
+  /// No description provided for @route_builder_empty_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Agrega puntos para construir tu ruta'**
+  String get route_builder_empty_hint;
+
+  /// No description provided for @route_builder_add_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar punto'**
+  String get route_builder_add_button;
+
+  /// No description provided for @route_builder_add_button_at_limit.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar punto (máx. 9)'**
+  String get route_builder_add_button_at_limit;
+
+  /// No description provided for @route_builder_continue.
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar'**
+  String get route_builder_continue;
+
+  /// No description provided for @route_builder_limit_banner.
+  ///
+  /// In es, this message translates to:
+  /// **'Has alcanzado el límite de 9 puntos. Elimina uno para agregar otro.'**
+  String get route_builder_limit_banner;
+
+  /// No description provided for @route_builder_scroll_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Desliza para ver todos'**
+  String get route_builder_scroll_hint;
+
+  /// No description provided for @route_waypointsLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Puntos intermedios'**
+  String get route_waypointsLabel;
+
+  /// No description provided for @route_placeSearchError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo cargar sugerencias'**
+  String get route_placeSearchError;
+
+  /// No description provided for @route_noPlacesFound.
+  ///
+  /// In es, this message translates to:
+  /// **'No se encontraron resultados'**
+  String get route_noPlacesFound;
 }
 
 class _AppLocalizationsDelegate

@@ -1,0 +1,88 @@
+{
+  "phase": "frontend",
+  "status": "pass",
+  "testedAt": "2026-05-20T22:30:00Z",
+  "analyze": {
+    "errorsInLib": 0,
+    "warningsInLib": 0,
+    "preExistingInfoIssues": 34,
+    "newIssues": 0
+  },
+  "tests": {
+    "baseline": 47,
+    "final": 69,
+    "failures": 0,
+    "note": "Extra 22 tests came from pre-existing test files already in test/ that were not counted in the original baseline"
+  },
+  "filesChanged": [
+    "lib/features/events/domain/model/event_model.dart",
+    "lib/features/events/domain/repository/event_repository.dart",
+    "lib/features/events/domain/use_cases/publish_event_use_case.dart",
+    "lib/features/events/data/dto/event_dto.dart",
+    "lib/features/events/data/dto/event_dto_converters.dart",
+    "lib/features/events/data/dto/event_dto.g.dart",
+    "lib/features/events/data/service/event_service.dart",
+    "lib/features/events/data/service/event_service.g.dart",
+    "lib/features/events/data/repository/event_repository_impl.dart",
+    "lib/features/events/constants/event_form_fields.dart",
+    "lib/features/events/presentation/form/widgets/sections/event_route_type_selector.dart",
+    "lib/features/events/presentation/form/widgets/sections/waypoint_item_card.dart",
+    "lib/features/events/presentation/form/widgets/sections/custom_route_builder_section.dart",
+    "lib/features/events/presentation/form/widgets/sections/event_form_locations_section.dart",
+    "lib/features/events/presentation/form/widgets/sections/event_form_max_participants_section.dart",
+    "lib/features/events/presentation/form/cubit/event_form_cubit.dart",
+    "lib/features/events/presentation/form/cubit/event_form_cubit.freezed.dart",
+    "lib/features/events/presentation/form/widgets/event_form_bottom_bar.dart",
+    "lib/features/events/presentation/list/widgets/event_card.dart",
+    "lib/features/events/presentation/list/widgets/event_card_my_event_badge.dart",
+    "lib/features/events/presentation/detail/event_detail_view.dart",
+    "lib/features/events/presentation/detail/widgets/event_detail_owner_lifecycle_bar.dart",
+    "lib/features/events/presentation/detail/widgets/event_detail_header_info.dart",
+    "lib/features/events/presentation/detail/cubit/event_detail_cubit.dart",
+    "lib/features/events/presentation/detail/cubit/event_detail_cubit.freezed.dart",
+    "lib/features/events/presentation/detail/event_detail_page.dart",
+    "lib/features/events/presentation/detail/event_detail_by_id_page.dart",
+    "lib/features/events/presentation/drafts/my_drafts_page.dart",
+    "lib/features/home/presentation/widgets/home_event_card.dart",
+    "lib/shared/widgets/form/app_place_autocomplete.dart",
+    "lib/shared/router/app_routes.dart",
+    "lib/shared/router/app_router.dart",
+    "lib/features/profile/presentation/widgets/profile_actions_list.dart",
+    "lib/l10n/app_es.arb",
+    "lib/l10n/app_localizations_es.dart",
+    "lib/l10n/app_localizations.dart",
+    "lib/core/di/injection.config.dart"
+  ],
+  "newFiles": [
+    "lib/features/events/domain/use_cases/publish_event_use_case.dart",
+    "lib/features/events/presentation/form/widgets/sections/event_route_type_selector.dart",
+    "lib/features/events/presentation/form/widgets/sections/waypoint_item_card.dart",
+    "lib/features/events/presentation/form/widgets/sections/custom_route_builder_section.dart",
+    "lib/features/events/presentation/drafts/my_drafts_page.dart"
+  ],
+  "implementationAreas": {
+    "area1_appPlaceAutocomplete": {
+      "status": "done",
+      "description": "AppPlaceAutocompleteField rewritten as StatefulWidget with 400ms debounced PlaceService.autocomplete(), OverlayPortal+LayerLink dropdown, loading spinner, empty/error states, FormBuilderField<String> registration, dispose cleanup"
+    },
+    "area2_cuposStepper": {
+      "status": "done",
+      "description": "_MaxParticipantsStepper promoted to StatefulWidget with inline TextField, clamp [5,500] on focus loss, revert on non-numeric input"
+    },
+    "area3_customRoutes": {
+      "status": "done",
+      "description": "RouteType enum added to event_form_fields.dart; EventRouteTypeSelector, WaypointItemCard, CustomRouteBuilderSection created; EventFormLocationsSection wired; EventFormCubit gains addWaypoint/removeWaypoint/clearWaypoints and waypoints/routeType state; buildEventToSave updated to carry waypoints"
+    },
+    "area4_draftSupport": {
+      "status": "done",
+      "description": "EventState.draft added (first in enum); EventStateConverter updated; all exhaustive switches patched (event_card, home_event_card, event_detail_view, event_detail_header_info, event_detail_owner_lifecycle_bar); buildDraftToSave+saveDraft in EventFormCubit; EventCardDraftBadge; _OwnerDraftBar; PublishEventUseCase; EventDetailCubit.publishEvent; MyDraftsPage at /events/drafts; profile menu entry"
+    }
+  },
+  "newL10nKeys": 27,
+  "breakingChanges": [
+    "EventDetailCubit now requires 5 constructor arguments (was 4). Both instantiation sites (EventDetailPage, EventDetailByIdPage) updated."
+  ],
+  "knownLimitations": [
+    "_WaypointSearchField uses a timestamp-based FormBuilder name to avoid key conflicts with main form fields"
+  ]
+}

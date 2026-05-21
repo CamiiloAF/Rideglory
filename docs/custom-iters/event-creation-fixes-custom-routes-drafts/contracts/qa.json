@@ -1,0 +1,63 @@
+{
+  "phase": "qa",
+  "status": "conditional",
+  "signOff": "conditional",
+  "signOffReason": "All automated tests pass (69 Flutter + 26 backend, 0 failures). Zero new dart analyze errors/warnings. Conditional on: (1) BUG-1 fix — 2 hardcoded Spanish strings in app_place_autocomplete.dart must be moved to app_es.arb (AC-14 violation); (2) BUG-2 Tech Lead review — multiple widget classes per file in 3 new/modified files; (3) human manual probes M-1 through M-23 against live environment; (4) Prisma migration applied to target environment.",
+  "testResults": {
+    "flutterTest": {
+      "passed": 69,
+      "failed": 0,
+      "baseline": 47,
+      "command": "flutter test"
+    },
+    "dartAnalyze": {
+      "newErrors": 0,
+      "newWarnings": 0,
+      "preExistingIssues": 2,
+      "preExistingNote": "dead_code + prefer_const_declarations in api_base_url_resolver.dart (pre-existing dirty file)",
+      "command": "dart analyze lib/"
+    },
+    "backendTest": {
+      "passed": 26,
+      "failed": 0,
+      "baseline": 19,
+      "command": "cd events-ms && npm test"
+    }
+  },
+  "bugsFound": [
+    {
+      "id": "BUG-1",
+      "severity": "low",
+      "layer": "frontend",
+      "file": "lib/shared/widgets/form/app_place_autocomplete.dart",
+      "lines": [102, 363],
+      "description": "Hardcoded Spanish strings ('No se pudo cargar sugerencias', 'No se encontraron resultados') not in app_es.arb",
+      "acViolated": "AC-14",
+      "fix": "Add route_placeSearchError and route_noPlacesFound to app_es.arb; use context.l10n in widget"
+    },
+    {
+      "id": "BUG-2",
+      "severity": "medium",
+      "layer": "frontend",
+      "files": [
+        "lib/features/events/presentation/form/widgets/sections/custom_route_builder_section.dart",
+        "lib/shared/widgets/form/app_place_autocomplete.dart",
+        "lib/features/events/presentation/list/widgets/event_card_my_event_badge.dart"
+      ],
+      "description": "Multiple widget classes per file violates 'un widget por archivo' coding standard",
+      "acViolated": "coding-standards",
+      "fix": "Extract private widget classes into own files, or Tech Lead explicitly accepts"
+    }
+  ],
+  "testCoverageGaps": [
+    "AppPlaceAutocompleteField — no widget tests (debounce, suggestions, loading, empty, error, selection)",
+    "CustomRouteBuilderSection — no widget tests (add/delete waypoints, 9-limit behavior)",
+    "EventFormCubit.saveDraft / buildDraftToSave — no unit tests",
+    "EventCardDraftBadge — no widget test for isDraft rendering",
+    "EventStateConverter DRAFT round-trip — no unit test",
+    "EventDetailCubit.publishEvent — no unit test",
+    "EventFormMaxParticipantsSection manual input — no test for clamp/revert behavior"
+  ],
+  "manualProbesRequired": 23,
+  "generatedAt": "2026-05-20T00:00:00Z"
+}

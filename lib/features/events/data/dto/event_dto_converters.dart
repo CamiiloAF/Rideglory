@@ -65,6 +65,8 @@ class EventStateConverter extends JsonConverter<EventState, String?> {
   const EventStateConverter();
 
   static const _map = {
+    'draft': EventState.draft,
+    'DRAFT': EventState.draft,
     'scheduled': EventState.scheduled,
     'inProgress': EventState.inProgress,
     'cancelled': EventState.cancelled,
@@ -83,15 +85,12 @@ class EventStateConverter extends JsonConverter<EventState, String?> {
 
   @override
   String toJson(EventState object) {
-    switch (object) {
-      case EventState.scheduled:
-        return 'SCHEDULED';
-      case EventState.inProgress:
-        return 'IN_PROGRESS';
-      case EventState.cancelled:
-        return 'CANCELLED';
-      case EventState.finished:
-        return 'FINISHED';
-    }
+    return switch (object) {
+      EventState.draft => 'DRAFT',
+      EventState.scheduled => 'SCHEDULED',
+      EventState.inProgress => 'IN_PROGRESS',
+      EventState.cancelled => 'CANCELLED',
+      EventState.finished => 'FINISHED',
+    };
   }
 }

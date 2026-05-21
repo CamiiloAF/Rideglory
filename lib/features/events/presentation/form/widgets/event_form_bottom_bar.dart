@@ -2,7 +2,6 @@ import 'dart:math' show max;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -128,7 +127,7 @@ class _DraftLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.pop(),
+      onTap: () => _onSaveDraft(context),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -147,6 +146,21 @@ class _DraftLink extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _onSaveDraft(BuildContext context) async {
+    final cubit = context.read<EventFormCubit>();
+    final imageCubit = context.read<FormImageCubit>();
+    final imageState = imageCubit.state;
+    final imageData = imageState.whenOrNull(data: (data) => data);
+    await cubit.saveDraft(
+      localCoverImagePath: imageData?.hasLocalImage == true
+          ? imageData?.localImagePath
+          : null,
+      remoteCoverImageUrl: imageData?.hasLocalImage != true
+          ? imageData?.remoteImageUrl
+          : null,
     );
   }
 }

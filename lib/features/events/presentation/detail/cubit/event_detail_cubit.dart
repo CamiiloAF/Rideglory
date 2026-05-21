@@ -9,6 +9,7 @@ import 'package:rideglory/features/event_registration/domain/model/event_registr
 import 'package:rideglory/features/event_registration/domain/use_cases/cancel_event_registration_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/get_my_registration_for_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_event_by_id_use_case.dart';
+import 'package:rideglory/features/events/domain/use_cases/publish_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
 import 'package:rideglory/features/events/presentation/tracking/live_tracking_session_holder.dart';
 
@@ -21,6 +22,7 @@ class EventDetailCubit extends Cubit<EventDetailState> {
     this._cancelRegistrationUseCase,
     this._getEventByIdUseCase,
     this._updateEventUseCase,
+    this._publishEventUseCase,
   ) : super(
         const EventDetailState(
           registrationResult: ResultState.initial(),
@@ -33,6 +35,7 @@ class EventDetailCubit extends Cubit<EventDetailState> {
   final GetMyRegistrationForEventUseCase _getMyRegistrationUseCase;
   final CancelEventRegistrationUseCase _cancelRegistrationUseCase;
   final UpdateEventUseCase _updateEventUseCase;
+  final PublishEventUseCase _publishEventUseCase;
 
   EventRegistrationModel? _registration;
 
@@ -125,6 +128,30 @@ class EventDetailCubit extends Cubit<EventDetailState> {
           ),
         );
       },
+    );
+  }
+
+  Future<void> publishEvent(EventModel event) async {
+    final id = event.id;
+    if (id == null || id.isEmpty) {
+      return;
+    }
+
+    emit(state.copyWith(lastUpdatedEventResult: const ResultState.loading()));
+
+    final result = await _publishEventUseCase(id);
+    result.fold(
+      (error) => emit(
+        state.copyWith(
+          lastUpdatedEventResult: ResultState.error(error: error),
+        ),
+      ),
+      (saved) => emit(
+        state.copyWith(
+          lastUpdatedEventResult: ResultState.data(data: saved),
+          eventResult: ResultState.data(data: saved),
+        ),
+      ),
     );
   }
 

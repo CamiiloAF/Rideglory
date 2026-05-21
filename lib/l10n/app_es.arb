@@ -1495,5 +1495,42 @@
   "soat_uploading": "Subiendo…",
   "soat_upload_error": "Error al subir. Archivo demasiado grande (máx. 10 MB).",
   "soat_save_error": "No se pudo guardar el SOAT. Verifica tu conexión e intenta de nuevo.",
-  "soat_upload_error_label": "Error al subir"
+  "soat_upload_error_label": "Error al subir",
+
+  "event_draftBadge": "Borrador",
+  "draft_myDraftsTitle": "Mis borradores",
+  "draft_noDrafts": "No tienes borradores",
+  "draft_noDraftsHint": "Guarda un evento como borrador para editarlo y publicarlo después",
+  "draft_publish": "Publicar evento",
+  "draft_publishConfirmTitle": "¿Publicar evento?",
+  "draft_publishConfirmMessage": "El evento será visible para todos los usuarios.",
+  "draft_savedSuccess": "Borrador guardado exitosamente",
+  "draft_publishedSuccess": "Evento publicado exitosamente",
+
+  "route_typeLabel": "Tipo de ruta",
+  "route_simpleLabel": "Ruta simple (A→B)",
+  "route_customLabel": "Ruta personalizada",
+  "route_builder_title": "Crear ruta personalizada",
+  "route_builder_hint_tap": "Toca el mapa para agregar un punto",
+  "route_builder_hint_search": "O usa el buscador de arriba",
+  "route_builder_search_placeholder": "Buscar un lugar...",
+  "route_builder_search_placeholder_disabled": "Límite de 9 puntos alcanzado",
+  "route_builder_section_title": "PUNTOS DE RUTA",
+  "@route_builder_counter": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "route_builder_counter": "{count}/9 puntos",
+  "route_builder_empty_hint": "Agrega puntos para construir tu ruta",
+  "route_builder_add_button": "Agregar punto",
+  "route_builder_add_button_at_limit": "Agregar punto (máx. 9)",
+  "route_builder_continue": "Continuar",
+  "route_builder_limit_banner": "Has alcanzado el límite de 9 puntos. Elimina uno para agregar otro.",
+  "route_builder_scroll_hint": "Desliza para ver todos",
+  "route_waypointsLabel": "Puntos intermedios",
+  "route_placeSearchError": "No se pudo cargar sugerencias",
+  "route_noPlacesFound": "No se encontraron resultados"
 }

@@ -14,4 +14,8 @@ abstract class EventFormFields {
   static const String price = 'price';
   static const String maxParticipants = 'maxParticipants';
   static const String isFreeEvent = 'isFreeEvent';
+  static const String routeType = 'routeType';
+  static const String waypoints = 'waypoints';
 }
+
+enum RouteType { simple, custom }
