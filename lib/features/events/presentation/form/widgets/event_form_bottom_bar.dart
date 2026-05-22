@@ -39,8 +39,9 @@ class EventFormBottomBar extends StatelessWidget {
         children: [
           _PublishButton(isLoading: isLoading, isEditing: isEditing),
           if (!isEditing) ...[
-            const SizedBox(height: 8),
+            const SizedBox(height: 16),
             _DraftLink(),
+            const SizedBox(height: 16),
           ],
         ],
       ),

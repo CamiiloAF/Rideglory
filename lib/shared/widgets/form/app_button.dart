@@ -5,6 +5,8 @@ enum AppButtonVariant { primary, secondary, danger, success }
 
 enum AppButtonStyle { filled, outlined, text }
 
+enum AppButtonShape { rounded, pill }
+
 class AppButton extends StatelessWidget {
   final String label;
   final VoidCallback? onPressed;
@@ -16,6 +18,7 @@ class AppButton extends StatelessWidget {
   final EdgeInsets? padding;
   final double? width;
   final double? height;
+  final AppButtonShape shape;
 
   const AppButton({
     super.key,
@@ -29,6 +32,7 @@ class AppButton extends StatelessWidget {
     this.padding,
     this.width,
     this.height = 48,
+    this.shape = AppButtonShape.rounded,
   });
 
   @override
@@ -57,11 +61,13 @@ class AppButton extends StatelessWidget {
 
     final hasBorder = style == AppButtonStyle.outlined;
 
+    final radius = shape == AppButtonShape.pill ? 25.0 : 8.0;
+
     final buttonWidget = Container(
       width: isFullWidth ? double.infinity : width,
       height: height,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(radius),
         color: backgroundColor,
         border: Border.all(color: borderColor, width: hasBorder ? 1.5 : 0),
       ),
@@ -69,7 +75,7 @@ class AppButton extends StatelessWidget {
         color: cs.surface.withValues(alpha: 0),
         child: InkWell(
           onTap: onPressed == null || isLoading ? null : onPressed,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(radius),
           child: Padding(
             padding:
                 padding ??

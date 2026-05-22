@@ -1,3 +1,5 @@
+import 'package:rideglory/shared/models/address_location.dart';
+
 enum EventType {
   tourism('Turismo'),
   urban('Urbana'),
@@ -58,6 +60,7 @@ class EventModel {
   final DateTime? updatedDate;
   final EventState state;
   final List<String> waypoints;
+  final Map<String, dynamic>? routeGeoJson;
 
   const EventModel({
     this.id,
@@ -80,9 +83,26 @@ class EventModel {
     this.updatedDate,
     this.state = EventState.scheduled,
     this.waypoints = const [],
+    this.routeGeoJson,
   });
 
   bool get isFree => price == null || price == 0;
+
+  /// Parses [routeGeoJson] into ordered [AddressLocation] points for map rendering.
+  List<AddressLocation> get routePoints {
+    final data = routeGeoJson;
+    if (data == null) return const [];
+    final list = data['points'] as List<dynamic>?;
+    if (list == null) return const [];
+    return list.map((p) {
+      final map = p as Map<String, dynamic>;
+      return AddressLocation(
+        latitude: (map['lat'] as num).toDouble(),
+        longitude: (map['lng'] as num).toDouble(),
+        label: map['label'] as String?,
+      );
+    }).toList();
+  }
 
   bool get isMultiBrand => allowedBrands.isEmpty;
 
@@ -109,6 +129,7 @@ class EventModel {
     DateTime? updatedDate,
     EventState? state,
     List<String>? waypoints,
+    Map<String, dynamic>? routeGeoJson,
   }) {
     return EventModel(
       id: id ?? this.id,
@@ -131,6 +152,7 @@ class EventModel {
       updatedDate: updatedDate ?? this.updatedDate,
       state: state ?? this.state,
       waypoints: waypoints ?? this.waypoints,
+      routeGeoJson: routeGeoJson ?? this.routeGeoJson,
     );
   }
 

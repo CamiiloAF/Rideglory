@@ -60,7 +60,8 @@ class AppCityAutocomplete extends StatelessWidget {
       suggestions: (_) => const <String>[],
       remoteSuggestions: (query) async {
         if (query.trim().length < 2) return const <String>[];
-        return placeService.autocomplete(query.trim(), 'cities');
+        final suggestions = await placeService.autocomplete(query.trim(), 'cities');
+        return suggestions.map((s) => s.name).toList();
       },
       suggestionsPrefixIcon: Icons.location_city_outlined,
     );

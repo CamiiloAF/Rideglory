@@ -667,6 +667,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_dateRangeLabel => 'Fecha (rango)';
 
   @override
+  String get event_route => 'RUTA';
+
+  @override
   String get event_routeAndMap => 'Ruta y mapa';
 
   @override
@@ -676,7 +679,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_viewOnMap => 'Ver en mapa';
 
   @override
-  String get event_multiBrandLabel => 'Multimarca';
+  String get event_multiBrandLabel => 'Marcas permitidas';
 
   @override
   String get event_multiBrandAllowAny =>
@@ -1005,6 +1008,25 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_difficultyRequired => 'La dificultad es requerida';
+
+  @override
+  String event_form_difficulty_description(String level) {
+    String _temp0 = intl.Intl.selectLogic(level, {
+      '1': 'Fácil — ideal para principiantes y rodadas familiares',
+      '2': 'Moderado — experiencia básica en ruta recomendada',
+      '3': 'Intermedio — requiere experiencia en rutas largas',
+      '4': 'Difícil — habilidades avanzadas necesarias',
+      '5': 'Extrema — solo para riders expertos',
+      'other': 'Selecciona el nivel de dificultad',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get event_form_difficulty_section_title => 'DIFICULTAD';
+
+  @override
+  String get event_form_difficulty_level_label => 'Nivel de dificultad';
 
   @override
   String get event_eventTypeRequired => 'El tipo de evento es requerido';
@@ -2786,6 +2808,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_form_free_event_label => 'Evento gratuito';
 
   @override
+  String get event_form_price_free_hint =>
+      'Si el precio es 0, el evento será gratuito';
+
+  @override
   String get vehicle_garage_title => 'Mi garaje';
 
   @override
@@ -4065,6 +4091,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get route_builder_scroll_hint => 'Desliza para ver todos';
 
   @override
+  String get route_builder_pick_mode_button => 'Seleccionar en mapa';
+
+  @override
+  String get route_builder_pick_mode_confirm => 'Añadir este punto';
+
+  @override
   String get route_waypointsLabel => 'Puntos intermedios';
 
   @override
@@ -4072,4 +4104,40 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get route_noPlacesFound => 'No se encontraron resultados';
+
+  @override
+  String get map_pickLocation => 'Seleccionar en el mapa';
+
+  @override
+  String get map_dragToPosition => 'Mueve el mapa para posicionar el punto';
+
+  @override
+  String get map_confirmLocation => 'Confirmar ubicación';
+
+  @override
+  String get map_searchingAddress => 'Buscando dirección...';
+
+  @override
+  String get map_addressNotFound => 'Dirección no encontrada';
+
+  @override
+  String get event_route_config_title => 'Configurar ruta';
+
+  @override
+  String get event_route_configure_button => 'Configurar ruta';
+
+  @override
+  String get event_route_summary_meeting => 'Punto de encuentro';
+
+  @override
+  String get event_route_summary_destination => 'Destino';
+
+  @override
+  String get event_route_save_button => 'Guardar ruta';
+
+  @override
+  String get event_route_meeting_point_hint => 'Punto de encuentro';
+
+  @override
+  String get event_route_destination_hint => 'Destino final';
 }

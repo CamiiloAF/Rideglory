@@ -28,7 +28,6 @@ class EventCard extends StatelessWidget {
   final bool isRegistered;
   final VoidCallback? onStartEvent;
 
-  static const String _placeholderAsset = 'assets/images/event.jpeg';
 
   String _formattedDate(BuildContext context) {
     final locale = Localizations.localeOf(context).toString();
@@ -83,12 +82,9 @@ class EventCard extends StatelessWidget {
                       ? Image.network(
                           imageUrl,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => Image.asset(
-                            _placeholderAsset,
-                            fit: BoxFit.cover,
-                          ),
+                          errorBuilder: (_, _, _) => const _EventPlaceholder(),
                         )
-                      : Image.asset(_placeholderAsset, fit: BoxFit.cover),
+                      : const _EventPlaceholder(),
                   // Status badge — top-left overlay
                   Positioned(
                     top: 12,
@@ -295,6 +291,24 @@ class _InscribedBadge extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _EventPlaceholder extends StatelessWidget {
+  const _EventPlaceholder();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: AppColors.darkBgSecondary,
+      child: const Center(
+        child: Icon(
+          Icons.two_wheeler_rounded,
+          color: AppColors.darkBorderPrimary,
+          size: 48,
+        ),
       ),
     );
   }

@@ -5,7 +5,6 @@ import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
-import 'package:rideglory/features/events/presentation/form/widgets/form_section_title.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_basic_info_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_date_time_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_difficulty_section.dart';
@@ -52,7 +51,12 @@ class EventFormContent extends StatelessWidget {
       };
     }
     final event = cubit.editingEvent!;
+    final routeType = event.waypoints.isNotEmpty ||
+            (event.routeGeoJson?['routeType'] == 'custom')
+        ? RouteType.custom
+        : RouteType.simple;
     return {
+      EventFormFields.routeType: routeType,
       EventFormFields.name: event.name,
       EventFormFields.description: event.description,
       EventFormFields.city: event.city,
@@ -161,23 +165,14 @@ class EventFormContent extends StatelessWidget {
             // ── Fecha y Hora ───────────────────────────────────────────
             AppSpacing.gapXxl,
             const EventFormDateTimeSection(),
+            // ── Ruta ───────────────────────────────────────────────────
+            AppSpacing.gapXxl,
+            const EventFormLocationsSection(),
             // ── Dificultad ─────────────────────────────────────────────
             AppSpacing.gapXxl,
             const EventFormDifficultySection(),
-            // ── Ruta ───────────────────────────────────────────────────
-            AppSpacing.gapXxl,
-            FormSectionTitle(
-              title: context.l10n.event_routeAndMap,
-              icon: Icons.route_outlined,
-            ),
-            AppSpacing.gapLg,
-            const EventFormLocationsSection(),
             // ── Tipo de Evento ─────────────────────────────────────────
             AppSpacing.gapXxl,
-            FormSectionTitle(
-              title: context.l10n.event_eventType,
-              icon: Icons.category_outlined,
-            ),
             const EventFormEventTypeSection(),
             // ── Marcas Permitidas ──────────────────────────────────────
             AppSpacing.gapXxl,

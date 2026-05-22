@@ -6,51 +6,24 @@ import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
-/// Redesigned price section matching Pencil frame zbCa0 — "PRECIO DE INSCRIPCIÓN":
-/// - Section header with "Opcional" badge
-/// - Price input card: "$" symbol + divider + text input
-/// - "Evento gratuito" checkbox — when checked, price card collapses (AnimatedSize)
-///   and the price field value is cleared.
+/// Price section for the event form.
+///
+/// Always shows the price input. A helper note below the field explains that
+/// a price of 0 means the event is free — no checkbox needed.
 class EventFormPriceSection extends StatelessWidget {
   const EventFormPriceSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return FormBuilderField<bool>(
-      name: EventFormFields.isFreeEvent,
-      initialValue: false,
-      builder: (freeField) {
-        final isFree = freeField.value ?? false;
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _PriceSectionHeader(context: context),
-            const SizedBox(height: 10),
-            AnimatedSize(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
-              child: isFree
-                  ? const SizedBox.shrink()
-                  : Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: _PriceInputCard(isFree: isFree),
-                    ),
-            ),
-            _FreeEventRow(
-              isFree: isFree,
-              onToggle: () {
-                freeField.didChange(!isFree);
-                if (!isFree) {
-                  FormBuilder.of(context)
-                      ?.fields[EventFormFields.price]
-                      ?.didChange(null);
-                }
-              },
-            ),
-          ],
-        );
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _PriceSectionHeader(context: context),
+        const SizedBox(height: 10),
+        const _PriceInputCard(),
+        const SizedBox(height: 6),
+        _PriceFreeHint(context: context),
+      ],
     );
   }
 }
@@ -97,9 +70,7 @@ class _PriceSectionHeader extends StatelessWidget {
 }
 
 class _PriceInputCard extends StatelessWidget {
-  const _PriceInputCard({required this.isFree});
-
-  final bool isFree;
+  const _PriceInputCard();
 
   @override
   Widget build(BuildContext context) {
@@ -128,14 +99,13 @@ class _PriceInputCard extends StatelessWidget {
           Expanded(
             child: FormBuilderTextField(
               name: EventFormFields.price,
-              enabled: !isFree,
               keyboardType: const TextInputType.numberWithOptions(decimal: false),
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               style: const TextStyle(
                 fontFamily: 'Space Grotesk',
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: AppColors.textOnDarkTertiary,
+                color: AppColors.textOnDarkPrimary,
               ),
               decoration: const InputDecoration(
                 hintText: '0',
@@ -164,44 +134,35 @@ class _PriceInputCard extends StatelessWidget {
   }
 }
 
-class _FreeEventRow extends StatelessWidget {
-  const _FreeEventRow({required this.isFree, required this.onToggle});
+class _PriceFreeHint extends StatelessWidget {
+  const _PriceFreeHint({required this.context});
 
-  final bool isFree;
-  final VoidCallback onToggle;
+  final BuildContext context;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onToggle,
-      child: Row(
-        children: [
-          Container(
-            width: 18,
-            height: 18,
-            decoration: BoxDecoration(
-              color: isFree ? AppColors.primary : Colors.transparent,
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(
-                color: isFree ? AppColors.primary : AppColors.darkBorderPrimary,
-              ),
-            ),
-            child: isFree
-                ? const Icon(Icons.check, size: 12, color: Colors.white)
-                : null,
-          ),
-          const SizedBox(width: 8),
-          Text(
-            context.l10n.event_form_free_event_label,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Icon(
+          Icons.info_outline,
+          size: 13,
+          color: AppColors.textOnDarkTertiary,
+        ),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            context.l10n.event_form_price_free_hint,
             style: const TextStyle(
               fontFamily: 'Space Grotesk',
-              fontSize: 13,
-              fontWeight: FontWeight.w500,
-              color: AppColors.textOnDarkSecondary,
+              fontSize: 11,
+              fontWeight: FontWeight.normal,
+              color: AppColors.textOnDarkTertiary,
+              height: 1.4,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

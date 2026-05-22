@@ -13,8 +13,8 @@ class ApiBaseUrlResolver {
         .getString(ApiRemoteConfig.apiBaseUrlKey)
         .trim();
 
-    final shouldUseLocalApi = remoteBaseUrl.isEmpty;
-    // final shouldUseLocalApi = true;
+    // final shouldUseLocalApi = remoteBaseUrl.isEmpty;
+    final shouldUseLocalApi = true;
 
     final baseUrl = shouldUseLocalApi ? _localBaseUrl : remoteBaseUrl;
     return _withoutTrailingSlash(baseUrl);

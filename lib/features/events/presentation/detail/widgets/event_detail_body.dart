@@ -30,7 +30,9 @@ class EventDetailBody extends StatelessWidget {
           EventDetailDestinationCard(destination: event.destination),
           AppSpacing.gapXxl,
           EventDetailMeetingPointSection(
-            location: event.meetingPoint,
+            meetingPoint: event.meetingPoint,
+            destination: event.destination.isNotEmpty ? event.destination : null,
+            routePoints: event.routePoints,
             onViewMap: onViewMap,
           ),
           AppSpacing.gapXxl,

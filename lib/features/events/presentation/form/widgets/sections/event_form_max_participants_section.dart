@@ -125,14 +125,16 @@ class _MaxParticipantsCard extends StatelessWidget {
       ),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _MaxParticipantsCardLabels(context: context),
-          _MaxParticipantsStepper(
-            count: count,
-            onDecrement: onDecrement,
-            onIncrement: onIncrement,
-            onManualChange: onManualChange,
+          const SizedBox(width: 12),
+          Expanded(
+            child: _MaxParticipantsStepper(
+              count: count,
+              onDecrement: onDecrement,
+              onIncrement: onIncrement,
+              onManualChange: onManualChange,
+            ),
           ),
         ],
       ),
@@ -260,14 +262,8 @@ class _MaxParticipantsStepperState extends State<_MaxParticipantsStepper> {
               color: AppColors.textOnDarkSecondary,
             ),
           ),
-          Container(
-            width: 1,
-            height: 24,
-            color: AppColors.darkBorderPrimary,
-          ),
-          SizedBox(
-            width: 64,
-            height: 40,
+          Container(width: 1, height: 24, color: AppColors.darkBorderPrimary),
+          Expanded(
             child: Focus(
               onFocusChange: (hasFocus) {
                 if (!hasFocus) _onFocusLost();
@@ -275,6 +271,7 @@ class _MaxParticipantsStepperState extends State<_MaxParticipantsStepper> {
               child: TextField(
                 controller: _textController,
                 textAlign: TextAlign.center,
+                textAlignVertical: TextAlignVertical.center,
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 style: TextStyle(
@@ -302,21 +299,13 @@ class _MaxParticipantsStepperState extends State<_MaxParticipantsStepper> {
               ),
             ),
           ),
-          Container(
-            width: 1,
-            height: 24,
-            color: AppColors.darkBorderPrimary,
-          ),
+          Container(width: 1, height: 24, color: AppColors.darkBorderPrimary),
           _StepperButton(
             onTap: () {
               setState(() => _isEditing = false);
               widget.onIncrement();
             },
-            child: const Icon(
-              Icons.add,
-              size: 16,
-              color: AppColors.primary,
-            ),
+            child: const Icon(Icons.add, size: 16, color: AppColors.primary),
           ),
         ],
       ),
@@ -334,11 +323,7 @@ class _StepperButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: SizedBox(
-        width: 40,
-        height: 40,
-        child: Center(child: child),
-      ),
+      child: SizedBox(width: 40, height: 40, child: Center(child: child)),
     );
   }
 }

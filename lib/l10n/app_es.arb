@@ -215,10 +215,11 @@
   "event_pickImageError": "No se pudo seleccionar la imagen.",
   "event_originCity": "Ciudad de origen",
   "event_dateRangeLabel": "Fecha (rango)",
+  "event_route": "RUTA",
   "event_routeAndMap": "Ruta y mapa",
   "event_meetingPointPreview": "Vista previa del punto de encuentro",
   "event_viewOnMap": "Ver en mapa",
-  "event_multiBrandLabel": "Multimarca",
+  "event_multiBrandLabel": "Marcas permitidas",
   "event_multiBrandAllowAny": "Permitir motos de cualquier fabricante",
   "event_selectBrands": "Seleccionar marcas permitidas",
   "event_registrationPriceOptional": "Precio de inscripción (opcional)",
@@ -324,6 +325,14 @@
   "event_meetingPointRequired": "El punto de encuentro es requerido",
   "event_destinationRequired": "El destino es requerido",
   "event_difficultyRequired": "La dificultad es requerida",
+  "event_form_difficulty_description": "{level, select, 1{Fácil — ideal para principiantes y rodadas familiares} 2{Moderado — experiencia básica en ruta recomendada} 3{Intermedio — requiere experiencia en rutas largas} 4{Difícil — habilidades avanzadas necesarias} 5{Extrema — solo para riders expertos} other{Selecciona el nivel de dificultad}}",
+  "@event_form_difficulty_description": {
+    "placeholders": {
+      "level": {}
+    }
+  },
+  "event_form_difficulty_section_title": "DIFICULTAD",
+  "event_form_difficulty_level_label": "Nivel de dificultad",
   "event_eventTypeRequired": "El tipo de evento es requerido",
   "event_minCharacters": "Mínimo 3 caracteres",
   "event_invalidLatitude": "Latitud inválida (-90 a 90)",
@@ -965,6 +974,7 @@
   "event_form_price_section_title": "PRECIO DE INSCRIPCIÓN",
   "event_form_price_subtitle": "Precio de inscripción (COP)",
   "event_form_free_event_label": "Evento gratuito",
+  "event_form_price_free_hint": "Si el precio es 0, el evento será gratuito",
 
   "vehicle_garage_title": "Mi garaje",
   "vehicle_main_badge": "⭐ Principal",
@@ -1530,7 +1540,22 @@
   "route_builder_continue": "Continuar",
   "route_builder_limit_banner": "Has alcanzado el límite de 9 puntos. Elimina uno para agregar otro.",
   "route_builder_scroll_hint": "Desliza para ver todos",
+  "route_builder_pick_mode_button": "Seleccionar en mapa",
+  "route_builder_pick_mode_confirm": "Añadir este punto",
   "route_waypointsLabel": "Puntos intermedios",
   "route_placeSearchError": "No se pudo cargar sugerencias",
-  "route_noPlacesFound": "No se encontraron resultados"
+  "route_noPlacesFound": "No se encontraron resultados",
+  "map_pickLocation": "Seleccionar en el mapa",
+  "map_dragToPosition": "Mueve el mapa para posicionar el punto",
+  "map_confirmLocation": "Confirmar ubicación",
+  "map_searchingAddress": "Buscando dirección...",
+  "map_addressNotFound": "Dirección no encontrada",
+
+  "event_route_config_title": "Configurar ruta",
+  "event_route_configure_button": "Configurar ruta",
+  "event_route_summary_meeting": "Punto de encuentro",
+  "event_route_summary_destination": "Destino",
+  "event_route_save_button": "Guardar ruta",
+  "event_route_meeting_point_hint": "Punto de encuentro",
+  "event_route_destination_hint": "Destino final"
 }

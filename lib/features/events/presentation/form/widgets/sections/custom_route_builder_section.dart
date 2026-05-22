@@ -51,8 +51,11 @@ class CustomRouteBuilderSection extends StatelessWidget {
             // Search field to add waypoint (disabled at limit)
             if (!atLimit)
               WaypointSearchField(
-                onSelected: (place) {
-                  context.read<EventFormCubit>().addWaypoint(place);
+                onPlaceSelected: (name, location) {
+                  final cubit = context.read<EventFormCubit>();
+                  final index = cubit.state.waypoints.length;
+                  cubit.addWaypoint(name);
+                  if (location != null) cubit.setWaypointLocation(index, location);
                 },
               ),
             if (!atLimit) const SizedBox(height: 10),

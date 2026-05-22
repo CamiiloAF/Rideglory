@@ -16,7 +16,6 @@ class EventRouteTypeSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return FormBuilderField<RouteType>(
       name: EventFormFields.routeType,
-      initialValue: RouteType.simple,
       builder: (field) {
         final selected = field.value ?? RouteType.simple;
         return Column(

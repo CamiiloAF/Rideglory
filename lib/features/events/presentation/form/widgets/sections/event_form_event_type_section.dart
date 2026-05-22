@@ -41,7 +41,17 @@ class EventFormEventTypeSection extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AppSpacing.gapMd,
+            const Text(
+              'TIPO DE EVENTO',
+              style: TextStyle(
+                fontFamily: 'Space Grotesk',
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.8,
+                color: AppColors.textOnDarkTertiary,
+              ),
+            ),
+            const SizedBox(height: 10),
             _EventTypeRow(
               types: _row1,
               selected: selected,
@@ -130,9 +140,7 @@ class _EventTypeChip extends StatelessWidget {
             fontFamily: 'Space Grotesk',
             fontSize: 13,
             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-            color: isSelected
-                ? Colors.white
-                : AppColors.textOnDarkSecondary,
+            color: isSelected ? Colors.white : AppColors.textOnDarkSecondary,
           ),
         ),
       ),

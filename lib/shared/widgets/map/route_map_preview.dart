@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide Error;
@@ -10,20 +13,77 @@ import 'package:rideglory/core/services/place_service.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/shared/models/address_location.dart';
 
+/// Creates a circular numbered pin bitmap for use as a Mapbox annotation image.
+Future<Uint8List> buildNumberedPinImage(int number, Color color) async {
+  const double size = 28.0;
+  final recorder = ui.PictureRecorder();
+  final canvas = Canvas(recorder, const Rect.fromLTWH(0, 0, size, size));
+
+  canvas.drawCircle(
+    const Offset(size / 2, size / 2),
+    size / 2,
+    Paint()..color = color,
+  );
+
+  final textPainter = TextPainter(
+    text: TextSpan(
+      text: '$number',
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 13,
+        fontWeight: FontWeight.w700,
+      ),
+    ),
+    textDirection: ui.TextDirection.ltr,
+  );
+  textPainter.layout();
+  textPainter.paint(
+    canvas,
+    Offset((size - textPainter.width) / 2, (size - textPainter.height) / 2),
+  );
+
+  final picture = recorder.endRecording();
+  final img = await picture.toImage(size.toInt(), size.toInt());
+  final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
+  return byteData!.buffer.asUint8List();
+}
+
 /// A widget that shows a Mapbox map preview with origin and destination
 /// markers. It geocodes address strings asynchronously via [PlaceService]
 /// and renders a [MapWidget].
+///
+/// [inCard] mode renders at 130px height with bottom-only rounded corners and
+/// no outer border, matching the Route Card design.
+///
+/// When [meetingPointCoords] or [destinationCoords] are provided, geocoding is
+/// skipped for those points and the coordinates are used directly.
+///
+/// When [waypointCoords] is provided, the map renders numbered pins at each
+/// waypoint and draws an orange polyline connecting them in order. The
+/// [meetingPoint]/[destination] params are ignored in this mode.
 class RouteMapPreview extends StatefulWidget {
   const RouteMapPreview({
     super.key,
     this.meetingPoint,
     this.destination,
+    this.meetingPointCoords,
+    this.destinationCoords,
+    this.waypointCoords,
     this.onViewMapTap,
+    this.inCard = false,
   });
 
   final String? meetingPoint;
   final String? destination;
+  final AddressLocation? meetingPointCoords;
+  final AddressLocation? destinationCoords;
+
+  /// When non-null, renders numbered pins + polyline for custom routes instead
+  /// of the simple meeting-point/destination pair.
+  final List<AddressLocation>? waypointCoords;
+
   final VoidCallback? onViewMapTap;
+  final bool inCard;
 
   @override
   State<RouteMapPreview> createState() => _RouteMapPreviewState();
@@ -40,25 +100,64 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
   Timer? _debounceOrigin;
   Timer? _debounceDest;
 
+  static const _routeSourceId = 'rg-route-source';
+  static const _routeLayerId = 'rg-route-layer';
+  bool _routeLayerAdded = false;
+
   AddressLocation? get _origin => _originResult.whenOrNull(data: (d) => d);
   AddressLocation? get _dest => _destResult.whenOrNull(data: (d) => d);
+
+  bool get _isWaypointMode => widget.waypointCoords != null;
 
   @override
   void initState() {
     super.initState();
+    _initCoords();
+  }
+
+  void _initCoords() {
+    if (widget.meetingPointCoords != null) {
+      _originResult = ResultState.data(data: widget.meetingPointCoords!);
+    }
+    if (widget.destinationCoords != null) {
+      _destResult = ResultState.data(data: widget.destinationCoords!);
+    }
     _geocodeBoth();
   }
 
   @override
   void didUpdateWidget(RouteMapPreview old) {
     super.didUpdateWidget(old);
-    if (old.meetingPoint != widget.meetingPoint) {
+
+    if (_isWaypointMode) {
+      if (old.waypointCoords != widget.waypointCoords) {
+        unawaited(_renderWaypointMode());
+      }
+      return;
+    }
+
+    if (old.meetingPointCoords != widget.meetingPointCoords &&
+        widget.meetingPointCoords != null) {
+      setState(() {
+        _originResult = ResultState.data(data: widget.meetingPointCoords!);
+      });
+      unawaited(_fitMapBounds());
+    } else if (old.meetingPoint != widget.meetingPoint &&
+        widget.meetingPointCoords == null) {
       _debounceOrigin?.cancel();
       _debounceOrigin = Timer(const Duration(milliseconds: 800), () {
         _geocodeAddress(widget.meetingPoint, isOrigin: true);
       });
     }
-    if (old.destination != widget.destination) {
+
+    if (old.destinationCoords != widget.destinationCoords &&
+        widget.destinationCoords != null) {
+      setState(() {
+        _destResult = ResultState.data(data: widget.destinationCoords!);
+      });
+      unawaited(_fitMapBounds());
+    } else if (old.destination != widget.destination &&
+        widget.destinationCoords == null) {
       _debounceDest?.cancel();
       _debounceDest = Timer(const Duration(milliseconds: 800), () {
         _geocodeAddress(widget.destination, isOrigin: false);
@@ -67,10 +166,16 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
   }
 
   Future<void> _geocodeBoth() async {
+    if (_isWaypointMode) return;
     await Future.wait([
-      _geocodeAddress(widget.meetingPoint, isOrigin: true),
-      _geocodeAddress(widget.destination, isOrigin: false),
+      if (widget.meetingPointCoords == null)
+        _geocodeAddress(widget.meetingPoint, isOrigin: true),
+      if (widget.destinationCoords == null)
+        _geocodeAddress(widget.destination, isOrigin: false),
     ]);
+    if (widget.meetingPointCoords != null || widget.destinationCoords != null) {
+      await _fitMapBounds();
+    }
   }
 
   Future<void> _geocodeAddress(
@@ -125,8 +230,21 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
     final mapboxMap = _mapboxMap;
     if (mapboxMap == null) return;
 
+    if (_isWaypointMode) {
+      await _renderWaypointMode();
+      return;
+    }
+
     final origin = _origin;
     final dest = _dest;
+
+    final simplePoints = [
+      if (origin != null) origin,
+      if (dest != null) dest,
+    ];
+
+    await _updateWaypointAnnotations(simplePoints);
+    await _updatePolyline(mapboxMap, simplePoints);
 
     if (origin != null && dest != null) {
       final coordinates = [
@@ -160,35 +278,124 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
         MapAnimationOptions(duration: 400),
       );
     }
-    await _updateAnnotations();
   }
 
-  Future<void> _updateAnnotations() async {
+  Future<void> _renderWaypointMode() async {
+    final mapboxMap = _mapboxMap;
+    if (mapboxMap == null) return;
+
+    final waypoints = widget.waypointCoords ?? [];
+
+    await _updateWaypointAnnotations(waypoints);
+    await _updatePolyline(mapboxMap, waypoints);
+
+    if (waypoints.isEmpty) return;
+
+    if (waypoints.length == 1) {
+      await mapboxMap.flyTo(
+        CameraOptions(
+          center: Point(
+            coordinates: Position(
+              waypoints.first.longitude,
+              waypoints.first.latitude,
+            ),
+          ),
+          zoom: 13,
+        ),
+        MapAnimationOptions(duration: 400),
+      );
+      return;
+    }
+
+    final points = waypoints
+        .map((w) => Point(coordinates: Position(w.longitude, w.latitude)))
+        .toList();
+    final camera = await mapboxMap.cameraForCoordinatesPadding(
+      points,
+      CameraOptions(),
+      MbxEdgeInsets(top: 60, left: 60, bottom: 60, right: 60),
+      null,
+      null,
+    );
+    await mapboxMap.flyTo(camera, MapAnimationOptions(duration: 500));
+  }
+
+  Future<void> _updateWaypointAnnotations(List<AddressLocation> waypoints) async {
     final manager = _annotationManager;
     if (manager == null) return;
 
     await manager.deleteAll();
 
-    final origin = _origin;
-    final dest = _dest;
-
-    if (origin != null) {
+    for (var i = 0; i < waypoints.length; i++) {
+      final w = waypoints[i];
+      final color = i == 0 ? AppColors.success : AppColors.primary;
+      final image = await buildNumberedPinImage(i + 1, color);
       await manager.create(
         PointAnnotationOptions(
-          geometry: Point(
-            coordinates: Position(origin.longitude, origin.latitude),
-          ),
-        ),
-      );
-    }
-    if (dest != null) {
-      await manager.create(
-        PointAnnotationOptions(
-          geometry: Point(coordinates: Position(dest.longitude, dest.latitude)),
+          geometry: Point(coordinates: Position(w.longitude, w.latitude)),
+          image: image,
+          iconSize: 1.0,
         ),
       );
     }
   }
+
+  Future<void> _updatePolyline(
+    MapboxMap mapboxMap,
+    List<AddressLocation> waypoints,
+  ) async {
+    // LineString requires at least 2 positions; use empty coords to clear the line.
+    final coordinates = waypoints.length >= 2
+        ? waypoints.map((w) => [w.longitude, w.latitude]).toList()
+        : <List<double>>[];
+
+    final geojson = jsonEncode({
+      'type': 'Feature',
+      'geometry': {
+        'type': 'LineString',
+        'coordinates': coordinates,
+      },
+    });
+
+    try {
+      if (_routeLayerAdded) {
+        await mapboxMap.style.setStyleSourceProperty(
+          _routeSourceId,
+          'data',
+          geojson,
+        );
+      } else {
+        final sourceExists =
+            await mapboxMap.style.styleSourceExists(_routeSourceId);
+        if (!sourceExists) {
+          await mapboxMap.style.addSource(
+            GeoJsonSource(id: _routeSourceId, data: geojson),
+          );
+        } else {
+          await mapboxMap.style.setStyleSourceProperty(
+            _routeSourceId,
+            'data',
+            geojson,
+          );
+        }
+
+        final layerExists =
+            await mapboxMap.style.styleLayerExists(_routeLayerId);
+        if (!layerExists) {
+          await mapboxMap.style.addLayer(
+            LineLayer(
+              id: _routeLayerId,
+              sourceId: _routeSourceId,
+              lineColor: 0xFFF98C1F,
+              lineWidth: 3.0,
+            ),
+          );
+        }
+        _routeLayerAdded = true;
+      }
+    } catch (_) {}
+  }
+
 
   @override
   void dispose() {
@@ -201,43 +408,72 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
 
   bool get _hasError => (_originResult is Error) || (_destResult is Error);
 
-  bool get _hasCoordsToShow => _origin != null || _dest != null;
+  bool get _hasCoordsToShow {
+    if (_isWaypointMode) {
+      return widget.waypointCoords?.isNotEmpty ?? false;
+    }
+    return _origin != null || _dest != null;
+  }
 
   @override
   Widget build(BuildContext context) {
     final cs = context.colorScheme;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppSpacing.gapMd,
-        Container(
-          height: 200,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: cs.outlineVariant),
-            color: cs.surfaceContainerHighest,
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: Stack(
+    final double height = widget.inCard ? 180 : 260;
+    final BorderRadius borderRadius = widget.inCard
+        ? const BorderRadius.only(
+            bottomLeft: Radius.circular(12),
+            bottomRight: Radius.circular(12),
+          )
+        : BorderRadius.circular(12);
+
+    final mapContainer = Container(
+      height: height,
+      decoration: BoxDecoration(
+        borderRadius: borderRadius,
+        border: widget.inCard ? null : Border.all(color: cs.outlineVariant),
+        color: widget.inCard
+            ? AppColors.darkBgPrimary
+            : cs.surfaceContainerHighest,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
             children: [
               if (_hasCoordsToShow && !_mapLoadError)
                 MapWidget(
                   viewport: CameraViewportState(
                     center: Point(
-                      coordinates: Position(
-                        (_origin ?? _dest!).longitude,
-                        (_origin ?? _dest!).latitude,
-                      ),
+                      coordinates: _isWaypointMode
+                          ? Position(
+                              widget.waypointCoords!.first.longitude,
+                              widget.waypointCoords!.first.latitude,
+                            )
+                          : Position(
+                              (_origin ?? _dest!).longitude,
+                              (_origin ?? _dest!).latitude,
+                            ),
                     ),
                     zoom: 12,
                   ),
                   styleUri: MapboxStyles.DARK,
                   onMapCreated: (mapboxMap) async {
                     _mapboxMap = mapboxMap;
+                    await mapboxMap.scaleBar.updateSettings(
+                      ScaleBarSettings(enabled: false),
+                    );
+                    await mapboxMap.logo.updateSettings(
+                      LogoSettings(marginLeft: -200, marginBottom: -200),
+                    );
+                    await mapboxMap.attribution.updateSettings(
+                      AttributionSettings(iconColor: 0x00000000),
+                    );
                     _annotationManager = await mapboxMap.annotations
                         .createPointAnnotationManager();
-                    await _fitMapBounds();
+                    if (_isWaypointMode) {
+                      await _renderWaypointMode();
+                    } else {
+                      await _fitMapBounds();
+                    }
                   },
                   onMapLoadErrorListener: (MapLoadingErrorEventData data) {
                     if (!mounted) return;
@@ -273,7 +509,6 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                   ),
                 ),
 
-              // Error banner
               if (_hasError)
                 Positioned(
                   top: 8,
@@ -299,7 +534,6 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                   ),
                 ),
 
-              // View-on-map button
               if (widget.onViewMapTap != null)
                 Positioned(
                   left: 0,
@@ -352,7 +586,6 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                   ),
                 ),
 
-              // Loading spinner
               if (_isLoading)
                 Positioned(
                   top: 8,
@@ -374,7 +607,15 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
                 ),
             ],
           ),
-        ),
+        );
+
+    if (widget.inCard) return mapContainer;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AppSpacing.gapMd,
+        mapContainer,
       ],
     );
   }

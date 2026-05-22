@@ -69,24 +69,24 @@ class EventDetailCTABar extends StatelessWidget {
     // Registration exists → render state-specific bar
     return switch (registration!.status) {
       RegistrationStatus.pending => _PendingBar(
-          registration: registration!,
-          onCancel: onRegistrationStatusTap != null
-              ? () => onRegistrationStatusTap!(registration!)
-              : null,
-        ),
+        registration: registration!,
+        onCancel: onRegistrationStatusTap != null
+            ? () => onRegistrationStatusTap!(registration!)
+            : null,
+      ),
       RegistrationStatus.approved => _ApprovedBar(
-          registration: registration!,
-          onCancel: onRegistrationStatusTap != null
-              ? () => onRegistrationStatusTap!(registration!)
-              : null,
-        ),
+        registration: registration!,
+        onCancel: onRegistrationStatusTap != null
+            ? () => onRegistrationStatusTap!(registration!)
+            : null,
+      ),
       RegistrationStatus.rejected => const _RejectedBar(),
       RegistrationStatus.cancelled => const _CancelledEventBar(),
       RegistrationStatus.readyForEdit => _ReadyForEditBar(
-          onEdit: onRegistrationStatusTap != null
-              ? () => onRegistrationStatusTap!(registration!)
-              : null,
-        ),
+        onEdit: onRegistrationStatusTap != null
+            ? () => onRegistrationStatusTap!(registration!)
+            : null,
+      ),
     };
   }
 }
@@ -134,27 +134,14 @@ class _DefaultBar extends StatelessWidget {
 
         const SizedBox(width: 12),
 
-        // Register button
         Expanded(
-          child: GestureDetector(
-            onTap: onRegister,
-            child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-              decoration: BoxDecoration(
-                color: AppColors.primary,
-                borderRadius: BorderRadius.circular(25),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                context.l10n.event_registerMe,
-                style: const TextStyle(
-                  color: AppColors.darkBgPrimary,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
+          child: AppButton(
+            label: context.l10n.event_registerMe,
+            onPressed: onRegister,
+            height: 48,
+            style: AppButtonStyle.filled,
+            variant: AppButtonVariant.primary,
+            shape: AppButtonShape.pill,
           ),
         ),
       ],
@@ -162,6 +149,7 @@ class _DefaultBar extends StatelessWidget {
   }
 }
 
+// TODO   Revisar widgets privados
 /// PENDING: yellow badge + "Tu solicitud está en revisión" + "Cancelar" button.
 class _PendingBar extends StatelessWidget {
   const _PendingBar({required this.registration, this.onCancel});
@@ -185,8 +173,11 @@ class _PendingBar extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.timer_outlined,
-                  color: AppColors.warning, size: 14),
+              const Icon(
+                Icons.timer_outlined,
+                color: AppColors.warning,
+                size: 14,
+              ),
               const SizedBox(width: 6),
               Text(
                 context.l10n.event_pendingBadgeSuffix,
@@ -259,8 +250,11 @@ class _ApprovedBar extends StatelessWidget {
         // Left: icon + status text
         Row(
           children: [
-            const Icon(Icons.check_circle_rounded,
-                color: AppColors.success, size: 24),
+            const Icon(
+              Icons.check_circle_rounded,
+              color: AppColors.success,
+              size: 24,
+            ),
             const SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -293,8 +287,7 @@ class _ApprovedBar extends StatelessWidget {
           GestureDetector(
             onTap: onCancel,
             child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
                 color: const Color(0xFF1F0F0F),
                 borderRadius: BorderRadius.circular(20),
@@ -341,8 +334,11 @@ class _RejectedBar extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.cancel_outlined,
-                  color: AppColors.error, size: 14),
+              const Icon(
+                Icons.cancel_outlined,
+                color: AppColors.error,
+                size: 14,
+              ),
               const SizedBox(width: 6),
               Text(
                 context.l10n.event_registrationRejected,
@@ -387,8 +383,11 @@ class _CancelledEventBar extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.block_outlined,
-                  color: AppColors.textOnDarkTertiary, size: 14),
+              const Icon(
+                Icons.block_outlined,
+                color: AppColors.textOnDarkTertiary,
+                size: 14,
+              ),
               const SizedBox(width: 6),
               Text(
                 context.l10n.event_eventCancelled,
@@ -463,8 +462,7 @@ class _LiveUserBar extends StatelessWidget {
       onTap: onFollowLive,
       child: Container(
         width: double.infinity,
-        padding:
-            const EdgeInsets.symmetric(horizontal: 28, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 15),
         decoration: BoxDecoration(
           color: AppColors.primary,
           borderRadius: BorderRadius.circular(25),
@@ -472,8 +470,11 @@ class _LiveUserBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.navigation_rounded,
-                color: AppColors.darkBgPrimary, size: 18),
+            const Icon(
+              Icons.navigation_rounded,
+              color: AppColors.darkBgPrimary,
+              size: 18,
+            ),
             const SizedBox(width: 10),
             Text(
               context.l10n.event_followRideLive,

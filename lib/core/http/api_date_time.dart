@@ -20,7 +20,7 @@ class NullableApiDateTimeConverter implements JsonConverter<DateTime?, String?> 
   @override
   DateTime? fromJson(String? json) {
     if (json == null || json.isEmpty) return null;
-    return DateTime.tryParse(json);
+    return DateTime.tryParse(json)?.toLocal();
   }
 
   @override

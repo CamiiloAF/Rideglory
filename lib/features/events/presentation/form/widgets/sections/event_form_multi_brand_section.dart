@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:rideglory/core/data/colombia_motos_brands_data.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
-import 'package:rideglory/features/events/presentation/form/widgets/event_form_section_card.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
+/// Brands section matching Pencil frame zbCa0 — "MARCAS PERMITIDAS" section:
+/// - Section header
+/// - Card: left column (label + subtitle) + right toggle switch
+/// - Hint box with info text
+/// - Brand chips when multibrand is off
 class EventFormMultiBrandSection extends StatelessWidget {
   const EventFormMultiBrandSection({super.key});
 
@@ -15,47 +19,97 @@ class EventFormMultiBrandSection extends StatelessWidget {
       name: EventFormFields.isMultiBrand,
       builder: (isField) {
         final isMultiBrand = isField.value ?? true;
-        return EventFormSectionCard(
-          icon: Icons.two_wheeler,
-          title: context.l10n.event_multiBrandLabel,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(child: Text(context.l10n.event_multiBrandAllowAny)),
-                  Switch(
-                    value: isMultiBrand,
-                    onChanged: (v) => isField.didChange(v),
-                  ),
-                ],
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              context.l10n.event_multiBrandLabel.toUpperCase(),
+              style: const TextStyle(
+                fontFamily: 'Space Grotesk',
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.8,
+                color: AppColors.textOnDarkTertiary,
               ),
-
-              if (!isMultiBrand) ...[
-                AppSpacing.gapLg,
-
-                Text(
-                  context.l10n.event_selectBrands.toUpperCase(),
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: context.colorScheme.primary,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.8,
-                  ),
+            ),
+            const SizedBox(height: 10),
+            _MultiBrandToggleCard(
+              isMultiBrand: isMultiBrand,
+              onChanged: isField.didChange,
+            ),
+            const SizedBox(height: 8),
+            if (!isMultiBrand) ...[
+              const SizedBox(height: 12),
+              FormBuilderField<List<String>>(
+                name: EventFormFields.allowedBrands,
+                builder: (listField) => _BrandChipsInline(
+                  field: listField,
+                  suggestions: ColombiaMotosBrandsData.search,
                 ),
-                AppSpacing.gapMd,
-                FormBuilderField<List<String>>(
-                  name: EventFormFields.allowedBrands,
-                  builder: (listField) => _BrandChipsInline(
-                    field: listField,
-                    suggestions: ColombiaMotosBrandsData.search,
-                  ),
-                ),
-              ],
+              ),
             ],
-          ),
+          ],
         );
       },
+    );
+  }
+}
+
+class _MultiBrandToggleCard extends StatelessWidget {
+  const _MultiBrandToggleCard({
+    required this.isMultiBrand,
+    required this.onChanged,
+  });
+
+  final bool isMultiBrand;
+  final void Function(bool?) onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.darkCard,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.darkBorderPrimary),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                context.l10n.event_multiBrandLabel,
+                style: const TextStyle(
+                  fontFamily: 'Space Grotesk',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.textOnDarkPrimary,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                isMultiBrand
+                    ? context.l10n.event_multiBrandAllowAny
+                    : context.l10n.event_selectBrands,
+                style: const TextStyle(
+                  fontFamily: 'Space Grotesk',
+                  fontSize: 11,
+                  fontWeight: FontWeight.normal,
+                  color: AppColors.textOnDarkTertiary,
+                ),
+              ),
+            ],
+          ),
+          Switch(
+            value: isMultiBrand,
+            onChanged: onChanged,
+            activeThumbColor: Colors.black,
+            activeTrackColor: AppColors.primary,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -113,9 +167,9 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
               child: Container(
                 constraints: const BoxConstraints(maxHeight: 220),
                 decoration: BoxDecoration(
-                  color: context.colorScheme.surface,
+                  color: AppColors.darkCard,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: context.colorScheme.outlineVariant),
+                  border: Border.all(color: AppColors.darkBorderPrimary),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.3),
@@ -129,8 +183,10 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
                   physics: const BouncingScrollPhysics(),
                   padding: EdgeInsets.zero,
                   itemCount: _filtered.length,
-                  separatorBuilder: (_, _) =>
-                      Divider(height: 1, color: context.colorScheme.outlineVariant),
+                  separatorBuilder: (_, _) => Container(
+                    height: 1,
+                    color: AppColors.darkBorderPrimary,
+                  ),
                   itemBuilder: (_, i) => InkWell(
                     onTap: () => _add(_filtered[i]),
                     child: Padding(
@@ -140,17 +196,17 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
                       ),
                       child: Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.two_wheeler,
                             size: 16,
-                            color: context.colorScheme.primary,
+                            color: AppColors.primary,
                           ),
                           AppSpacing.hGapSm,
                           Expanded(
                             child: Text(
                               _filtered[i],
-                              style: TextStyle(
-                                color: context.colorScheme.onSurface,
+                              style: const TextStyle(
+                                color: AppColors.textOnDarkPrimary,
                                 fontSize: 14,
                               ),
                             ),
@@ -179,19 +235,56 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          context.l10n.event_selectBrands.toUpperCase(),
+          style: const TextStyle(
+            fontFamily: 'Space Grotesk',
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.8,
+            color: AppColors.primary,
+          ),
+        ),
+        const SizedBox(height: 8),
         CompositedTransformTarget(
           link: _layerLink,
-          child: TextFormField(
-            controller: _controller,
-            onChanged: _onChanged,
-            decoration: InputDecoration(
-              hintText: context.l10n.event_searchBrandsPlaceholder,
-              suffixIcon: Icon(Icons.search, color: context.appColors.inputIcon),
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.darkBgSecondary,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: AppColors.darkBorderPrimary),
+            ),
+            child: TextField(
+              controller: _controller,
+              onChanged: _onChanged,
+              style: const TextStyle(
+                fontFamily: 'Space Grotesk',
+                color: AppColors.textOnDarkPrimary,
+                fontSize: 14,
+              ),
+              decoration: InputDecoration(
+                hintText: context.l10n.event_searchBrandsPlaceholder,
+                hintStyle: const TextStyle(
+                  fontFamily: 'Space Grotesk',
+                  color: AppColors.textOnDarkTertiary,
+                  fontSize: 14,
+                ),
+                suffixIcon: const Icon(
+                  Icons.search,
+                  color: AppColors.textOnDarkTertiary,
+                  size: 18,
+                ),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
+              ),
             ),
           ),
         ),
         if (chips.isNotEmpty) ...[
-          AppSpacing.gapMd,
+          const SizedBox(height: 10),
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -202,8 +295,8 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: context.colorScheme.primary.withValues(alpha: 0.9),
-                  borderRadius: BorderRadius.circular(8),
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -211,12 +304,13 @@ class _BrandChipsInlineState extends State<_BrandChipsInline> {
                     Text(
                       entry.value,
                       style: const TextStyle(
+                        fontFamily: 'Space Grotesk',
                         color: Colors.white,
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
                       ),
                     ),
-                    AppSpacing.hGapXs,
+                    const SizedBox(width: 6),
                     GestureDetector(
                       onTap: () => _remove(entry.key),
                       child: const Icon(

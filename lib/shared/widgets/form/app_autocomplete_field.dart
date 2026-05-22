@@ -170,8 +170,16 @@ class _AppAutocompleteFieldState extends State<AppAutocompleteField> {
                 textInputAction: widget.textInputAction,
                 onFieldSubmitted: widget.onFieldSubmitted,
                 onChanged: (v) => _onChanged(v, field),
+                style: const TextStyle(
+                  fontFamily: 'Space Grotesk',
+                  fontSize: 14,
+                ),
                 decoration: InputDecoration(
                   hintText: widget.hintText,
+                  hintStyle: const TextStyle(
+                    fontFamily: 'Space Grotesk',
+                    fontSize: 14,
+                  ),
                   errorText: field.errorText,
                   suffixIcon: _controller.text.isNotEmpty
                       ? IconButton(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
@@ -7,21 +8,12 @@ class WaypointsEmptyHint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.darkCard,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: AppColors.darkBorderPrimary,
-          style: BorderStyle.solid,
-        ),
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
       child: Column(
         children: [
           const Icon(
-            Icons.route_outlined,
+            LucideIcons.navigation2,
             color: AppColors.textOnDarkTertiary,
             size: 28,
           ),
@@ -29,6 +21,7 @@ class WaypointsEmptyHint extends StatelessWidget {
           Text(
             context.l10n.route_builder_empty_hint,
             style: const TextStyle(
+              fontFamily: 'Space Grotesk',
               color: AppColors.textOnDarkTertiary,
               fontSize: 13,
             ),

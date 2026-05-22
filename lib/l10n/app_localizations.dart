@@ -1354,6 +1354,12 @@ abstract class AppLocalizations {
   /// **'Fecha (rango)'**
   String get event_dateRangeLabel;
 
+  /// No description provided for @event_route.
+  ///
+  /// In es, this message translates to:
+  /// **'RUTA'**
+  String get event_route;
+
   /// No description provided for @event_routeAndMap.
   ///
   /// In es, this message translates to:
@@ -1375,7 +1381,7 @@ abstract class AppLocalizations {
   /// No description provided for @event_multiBrandLabel.
   ///
   /// In es, this message translates to:
-  /// **'Multimarca'**
+  /// **'Marcas permitidas'**
   String get event_multiBrandLabel;
 
   /// No description provided for @event_multiBrandAllowAny.
@@ -2007,6 +2013,24 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'La dificultad es requerida'**
   String get event_difficultyRequired;
+
+  /// No description provided for @event_form_difficulty_description.
+  ///
+  /// In es, this message translates to:
+  /// **'{level, select, 1{Fácil — ideal para principiantes y rodadas familiares} 2{Moderado — experiencia básica en ruta recomendada} 3{Intermedio — requiere experiencia en rutas largas} 4{Difícil — habilidades avanzadas necesarias} 5{Extrema — solo para riders expertos} other{Selecciona el nivel de dificultad}}'**
+  String event_form_difficulty_description(String level);
+
+  /// No description provided for @event_form_difficulty_section_title.
+  ///
+  /// In es, this message translates to:
+  /// **'DIFICULTAD'**
+  String get event_form_difficulty_section_title;
+
+  /// No description provided for @event_form_difficulty_level_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Nivel de dificultad'**
+  String get event_form_difficulty_level_label;
 
   /// No description provided for @event_eventTypeRequired.
   ///
@@ -5362,6 +5386,12 @@ abstract class AppLocalizations {
   /// **'Evento gratuito'**
   String get event_form_free_event_label;
 
+  /// No description provided for @event_form_price_free_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Si el precio es 0, el evento será gratuito'**
+  String get event_form_price_free_hint;
+
   /// No description provided for @vehicle_garage_title.
   ///
   /// In es, this message translates to:
@@ -7735,6 +7765,18 @@ abstract class AppLocalizations {
   /// **'Desliza para ver todos'**
   String get route_builder_scroll_hint;
 
+  /// No description provided for @route_builder_pick_mode_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Seleccionar en mapa'**
+  String get route_builder_pick_mode_button;
+
+  /// No description provided for @route_builder_pick_mode_confirm.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadir este punto'**
+  String get route_builder_pick_mode_confirm;
+
   /// No description provided for @route_waypointsLabel.
   ///
   /// In es, this message translates to:
@@ -7752,6 +7794,78 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No se encontraron resultados'**
   String get route_noPlacesFound;
+
+  /// No description provided for @map_pickLocation.
+  ///
+  /// In es, this message translates to:
+  /// **'Seleccionar en el mapa'**
+  String get map_pickLocation;
+
+  /// No description provided for @map_dragToPosition.
+  ///
+  /// In es, this message translates to:
+  /// **'Mueve el mapa para posicionar el punto'**
+  String get map_dragToPosition;
+
+  /// No description provided for @map_confirmLocation.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirmar ubicación'**
+  String get map_confirmLocation;
+
+  /// No description provided for @map_searchingAddress.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscando dirección...'**
+  String get map_searchingAddress;
+
+  /// No description provided for @map_addressNotFound.
+  ///
+  /// In es, this message translates to:
+  /// **'Dirección no encontrada'**
+  String get map_addressNotFound;
+
+  /// No description provided for @event_route_config_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Configurar ruta'**
+  String get event_route_config_title;
+
+  /// No description provided for @event_route_configure_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Configurar ruta'**
+  String get event_route_configure_button;
+
+  /// No description provided for @event_route_summary_meeting.
+  ///
+  /// In es, this message translates to:
+  /// **'Punto de encuentro'**
+  String get event_route_summary_meeting;
+
+  /// No description provided for @event_route_summary_destination.
+  ///
+  /// In es, this message translates to:
+  /// **'Destino'**
+  String get event_route_summary_destination;
+
+  /// No description provided for @event_route_save_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar ruta'**
+  String get event_route_save_button;
+
+  /// No description provided for @event_route_meeting_point_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Punto de encuentro'**
+  String get event_route_meeting_point_hint;
+
+  /// No description provided for @event_route_destination_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Destino final'**
+  String get event_route_destination_hint;
 }
 
 class _AppLocalizationsDelegate

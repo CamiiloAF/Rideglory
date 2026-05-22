@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/core/services/dto/place_suggestion_dto.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
 class AppPlaceSuggestionsDropdown extends StatelessWidget {
@@ -11,10 +12,10 @@ class AppPlaceSuggestionsDropdown extends StatelessWidget {
     required this.onSelect,
   });
 
-  final List<String> suggestions;
+  final List<PlaceSuggestionDto> suggestions;
   final bool isLoading;
   final bool hasError;
-  final void Function(String) onSelect;
+  final void Function(PlaceSuggestionDto) onSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +95,7 @@ class AppPlaceSuggestionsDropdown extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      suggestion,
+                      suggestion.name,
                       style: TextStyle(
                         color: i == 0
                             ? AppColors.textOnDarkPrimary

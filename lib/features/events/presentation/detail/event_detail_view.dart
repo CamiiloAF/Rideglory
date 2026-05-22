@@ -19,6 +19,7 @@ import 'package:rideglory/features/events/presentation/detail/cubit/event_detail
 import 'package:rideglory/features/events/presentation/detail/params.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_cta_bar.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_header_background_image.dart';
+import 'package:rideglory/features/events/presentation/detail/event_route_map_screen.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_meeting_point_section.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_owner_lifecycle_bar.dart';
 import 'package:rideglory/features/events/presentation/shared/dialogs/cancel_registration_dialog.dart';
@@ -263,14 +264,27 @@ class EventDetailViewState extends State<EventDetailView> {
                       _AboutSection(event: currentEvent),
                       const SizedBox(height: 24),
 
-                      // Meeting point
+                      // Meeting point + route map
                       EventDetailMeetingPointSection(
-                        location: currentEvent.meetingPoint,
-                        onViewMap: () => unawaited(
-                          MapLauncherHelper.openSearchByAddress(
-                            currentEvent.meetingPoint,
-                          ),
-                        ),
+                        meetingPoint: currentEvent.meetingPoint,
+                        destination: currentEvent.destination.isNotEmpty
+                            ? currentEvent.destination
+                            : null,
+                        routePoints: currentEvent.routePoints,
+                        onViewMap: currentEvent.routePoints.isNotEmpty
+                            ? () => Navigator.of(context).push(
+                                  MaterialPageRoute<void>(
+                                    builder: (_) => EventRouteMapScreen(
+                                      points: currentEvent.routePoints,
+                                      title: currentEvent.name,
+                                    ),
+                                  ),
+                                )
+                            : () => unawaited(
+                                  MapLauncherHelper.openSearchByAddress(
+                                    currentEvent.meetingPoint,
+                                  ),
+                                ),
                       ),
                       const SizedBox(height: 24),
 
@@ -280,8 +294,9 @@ class EventDetailViewState extends State<EventDetailView> {
                         const SizedBox(height: 24),
                       ],
 
-                      // Participants
-                      _ParticipantsSection(event: currentEvent),
+                      // Participants — owner only
+                      if (isOwner)
+                        _ParticipantsSection(event: currentEvent),
                     ],
                   ),
                 ),

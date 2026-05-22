@@ -31,6 +31,7 @@ class EventDto extends EventModel {
     @JsonKey(name: 'updatedAt') super.updatedDate,
     super.state = EventState.scheduled,
     super.waypoints = const [],
+    @JsonKey(name: 'routeGeoJson') super.routeGeoJson,
   });
 
   factory EventDto.fromJson(Map<String, dynamic> json) =>
@@ -66,5 +67,6 @@ extension EventModelExtension on EventModel {
     updatedDate: updatedDate,
     state: state,
     waypoints: waypoints,
+    routeGeoJson: routeGeoJson,
   ).toJson();
 }
