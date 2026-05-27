@@ -80,20 +80,10 @@ class EventFormView extends StatelessWidget {
             elevation: 0,
             automaticallyImplyLeading: false,
             // "Cancelar" — left
-            leading: TextButton(
+            leading: AppTextButton(
+              label: context.l10n.event_form_cancel_action,
               onPressed: () => context.pop(),
-              style: TextButton.styleFrom(
-                foregroundColor: AppColors.textOnDarkSecondary,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-              ),
-              child: Text(
-                context.l10n.event_form_cancel_action,
-                style: const TextStyle(
-                  color: AppColors.textOnDarkSecondary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
+              variant: AppTextButtonVariant.muted,
             ),
             // Title — center
             centerTitle: true,
@@ -109,22 +99,10 @@ class EventFormView extends StatelessWidget {
             ),
             // "Publicar" — right
             actions: [
-              TextButton(
+              AppTextButton(
+                label: context.l10n.event_form_publish_action,
                 onPressed: isSaving ? null : () => _onPublish(context),
-                style: TextButton.styleFrom(
-                  foregroundColor: AppColors.primary,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                ),
-                child: Text(
-                  context.l10n.event_form_publish_action,
-                  style: TextStyle(
-                    color: isSaving
-                        ? AppColors.primary.withValues(alpha: 0.5)
-                        : AppColors.primary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+                isLoading: isSaving,
               ),
             ],
           ),

@@ -72,27 +72,9 @@ class RiderProfileContent extends StatelessWidget {
           followingLabel: context.l10n.rider_statsFollowing,
         ),
         AppSpacing.gapXxl,
-        SizedBox(
-          width: double.infinity,
-          height: 48,
-          child: ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: AppColors.darkBgPrimary,
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            child: Text(
-              context.l10n.rider_follow,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
+        AppButton(
+          label: context.l10n.rider_follow,
+          onPressed: () {},
         ),
       ],
     );

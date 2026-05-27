@@ -580,23 +580,10 @@ class _RouteMapArea extends StatelessWidget {
                 color: AppColors.darkBgPrimary.withValues(alpha: 0.93),
                 child: Row(
                   children: [
-                    TextButton(
+                    AppTextButton(
+                      label: context.l10n.cancel,
                       onPressed: onTogglePickMode,
-                      style: TextButton.styleFrom(
-                        foregroundColor: AppColors.textOnDarkSecondary,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
-                      ),
-                      child: Text(
-                        context.l10n.cancel,
-                        style: const TextStyle(
-                          fontFamily: 'Space Grotesk',
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                      variant: AppTextButtonVariant.muted,
                     ),
                     const SizedBox(width: 8),
                     Expanded(
