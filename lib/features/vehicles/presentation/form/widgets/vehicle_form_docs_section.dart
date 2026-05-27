@@ -5,6 +5,7 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
+import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_add_more_doc_slot.dart';
 import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_section_header.dart';
 import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_soat_form_slot.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_params.dart';
@@ -96,7 +97,7 @@ class VehicleFormDocsSection extends StatelessWidget {
                   : null,
             ),
             const SizedBox(height: 12),
-            const _AddMoreDocSlot(),
+            const VehicleFormAddMoreDocSlot(),
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -165,67 +166,5 @@ Future<void> _onSoatTap(BuildContext context, VehicleModel? vehicle) async {
     context.pushNamed(AppRoutes.soatStatus, extra: vehicle);
   } else {
     context.pushNamed(AppRoutes.vehicleSoat, extra: vehicle);
-  }
-}
-
-class _AddMoreDocSlot extends StatelessWidget {
-  const _AddMoreDocSlot();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.darkBorderLight),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: AppColors.darkCard,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: AppColors.darkBorderPrimary),
-            ),
-            child: const Icon(
-              Icons.add,
-              size: 20,
-              color: AppColors.textOnDarkSecondary,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  context.l10n.vehicle_form_add_doc_title,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.textOnDarkSecondary,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  context.l10n.vehicle_form_add_doc_subtitle,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: AppColors.textOnDarkTertiary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Icon(
-            Icons.chevron_right,
-            size: 18,
-            color: AppColors.textOnDarkTertiary,
-          ),
-        ],
-      ),
-    );
   }
 }
