@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_params.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_source_option.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
-import 'package:rideglory/features/vehicles/presentation/soat/soat_manual_capture_page.dart';
+import 'package:rideglory/shared/router/app_routes.dart';
 
 class SoatSourceGrid extends StatelessWidget {
   const SoatSourceGrid({super.key, required this.vehicle});
@@ -16,15 +18,14 @@ class SoatSourceGrid extends StatelessWidget {
   }
 
   void _navigateToManual(BuildContext context) {
-    Navigator.of(context)
+    context
         .push<bool>(
-          MaterialPageRoute(
-            builder: (_) => SoatManualCapturePage(vehicle: vehicle),
-          ),
+          AppRoutes.soatManualCapture,
+          extra: SoatManualCaptureParams(vehicle: vehicle),
         )
         .then((result) {
       if (result == true && context.mounted) {
-        Navigator.of(context).pop(true);
+        context.pop(true);
       }
     });
   }

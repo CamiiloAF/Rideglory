@@ -7,8 +7,8 @@ import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_section_header.dart';
 import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_soat_form_slot.dart';
-import 'package:rideglory/features/vehicles/presentation/soat/soat_manual_capture_page.dart';
-import 'package:rideglory/features/vehicles/presentation/soat/widgets/vehicle_soat_options_sheet.dart';
+import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_params.dart';
+import 'package:rideglory/features/soat/presentation/widgets/soat_vehicle_options_sheet.dart';
 import 'package:rideglory/features/vehicles/presentation/widgets/vehicle_document_upload_slot.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
@@ -133,7 +133,7 @@ Future<void> _onSoatTap(BuildContext context, VehicleModel? vehicle) async {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (_) => const VehicleSoatOptionsSheet(),
+      builder: (_) => const SoatVehicleOptionsSheet(),
     );
 
     if (!context.mounted) return;
@@ -146,12 +146,9 @@ Future<void> _onSoatTap(BuildContext context, VehicleModel? vehicle) async {
 
     if (result is SoatOptionsUpload || result is SoatOptionsManual) {
       if (!context.mounted) return;
-      final pendingData = await Navigator.of(context).push<PendingManualSoat>(
-        MaterialPageRoute<PendingManualSoat>(
-          builder: (_) => SoatManualCapturePage(
-            initialLocalImagePath: preselectedPath,
-          ),
-        ),
+      final pendingData = await context.push<PendingManualSoat>(
+        AppRoutes.soatManualCapture,
+        extra: SoatManualCaptureParams(initialLocalImagePath: preselectedPath),
       );
       if (pendingData != null && context.mounted) {
         context.read<VehicleFormCubit>().storePendingManualSoat(pendingData);

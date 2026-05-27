@@ -11,8 +11,8 @@ import 'package:rideglory/features/soat/domain/models/soat_model.dart';
 import 'package:rideglory/features/soat/domain/usecases/save_soat_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
-import 'package:rideglory/features/vehicles/presentation/soat/widgets/soat_document_section.dart';
-import 'package:rideglory/features/vehicles/presentation/soat/widgets/soat_validity_card.dart';
+import 'package:rideglory/features/soat/presentation/widgets/soat_document_section.dart';
+import 'package:rideglory/features/soat/presentation/widgets/soat_validity_card.dart';
 
 /// Formulario unificado para **registrar o editar** el SOAT manualmente.
 ///
@@ -100,7 +100,9 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
               AppButton(
                 label: context.l10n.soat_source_camera,
                 icon: Icons.camera_alt_outlined,
-                onPressed: () => Navigator.of(sheetCtx).pop(0),
+                onPressed: () =>
+                    // Custom: sheetCtx.pop() — required pattern for showModalBottomSheet typed result return.
+                    Navigator.of(sheetCtx).pop(0),
                 variant: AppButtonVariant.secondary,
                 style: AppButtonStyle.outlined,
               ),
@@ -108,7 +110,9 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
               AppButton(
                 label: context.l10n.soat_source_gallery,
                 icon: Icons.photo_library_outlined,
-                onPressed: () => Navigator.of(sheetCtx).pop(1),
+                onPressed: () =>
+                    // Custom: sheetCtx.pop() — required pattern for showModalBottomSheet typed result return.
+                    Navigator.of(sheetCtx).pop(1),
                 variant: AppButtonVariant.secondary,
                 style: AppButtonStyle.outlined,
               ),
@@ -116,7 +120,9 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
               AppButton(
                 label: context.l10n.soat_source_pdf,
                 icon: Icons.picture_as_pdf_outlined,
-                onPressed: () => Navigator.of(sheetCtx).pop(2),
+                onPressed: () =>
+                    // Custom: sheetCtx.pop() — required pattern for showModalBottomSheet typed result return.
+                    Navigator.of(sheetCtx).pop(2),
                 variant: AppButtonVariant.secondary,
                 style: AppButtonStyle.outlined,
               ),
@@ -237,7 +243,7 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
         _saving = false;
         _error = error.message;
       }),
-      (_) => Navigator.of(context).pop(true),
+      (_) => context.pop(true),
     );
   }
 
@@ -258,9 +264,7 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
             color: AppColors.textOnDarkPrimary,
             size: 20,
           ),
-          onPressed: () => _isEditMode
-              ? Navigator.of(context).pop()
-              : context.pop(),
+          onPressed: () => context.pop(),
         ),
         title: Text(
           _isEditMode

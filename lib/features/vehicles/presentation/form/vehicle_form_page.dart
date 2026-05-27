@@ -17,7 +17,7 @@ import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubi
 import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_delete_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/form/vehicle_form_body.dart';
 import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_nav_header.dart';
-import 'package:rideglory/features/vehicles/presentation/soat/soat_confirmation_page.dart';
+import 'package:rideglory/features/soat/presentation/pages/soat_confirmation_page.dart';
 import 'package:rideglory/shared/cubits/form_image_cubit.dart';
 
 class VehicleFormPage extends StatelessWidget {
@@ -170,6 +170,7 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
         final soatPath = state.soatLocalPath;
         if (!state.isEditing && soatPath != null && savedVehicle.id != null) {
           if (!context.mounted) return;
+          // Custom: pushReplacement — VehicleFormPage must not remain in back stack after SOAT confirmation.
           Navigator.of(context).pushReplacement(
             MaterialPageRoute<void>(
               builder: (_) => SoatConfirmationPage(

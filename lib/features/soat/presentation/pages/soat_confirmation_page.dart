@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -8,10 +10,7 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
-import 'package:rideglory/features/vehicles/presentation/soat/cubit/soat_form_cubit.dart';
-import 'package:rideglory/features/vehicles/presentation/soat/widgets/soat_confirm_cta_bar.dart';
-import 'package:rideglory/features/vehicles/presentation/soat/widgets/soat_doc_preview.dart';
-import 'package:rideglory/features/vehicles/presentation/soat/widgets/soat_valid_alert.dart';
+import 'package:rideglory/features/soat/presentation/cubit/soat_form_cubit.dart';
 
 class SoatConfirmationPage extends StatelessWidget {
   const SoatConfirmationPage({
@@ -149,7 +148,7 @@ class _SoatConfirmationViewState extends State<_SoatConfirmationView> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     if (!widget.isManual) ...[
-                      SoatDocPreview(imageFile: widget.documentImage!),
+                      _SoatDocPreview(imageFile: widget.documentImage!),
                       const SizedBox(height: 20),
                     ],
                     _FormSectionHeader(
@@ -165,13 +164,13 @@ class _SoatConfirmationViewState extends State<_SoatConfirmationView> {
                       formKey: context.read<SoatFormCubit>().formKey,
                     ),
                     const SizedBox(height: 16),
-                    const SoatValidAlert(),
+                    const _SoatValidAlert(),
                     const SizedBox(height: 24),
                   ],
                 ),
               ),
             ),
-            SoatConfirmCtaBar(
+            _SoatConfirmCtaBar(
               vehicleId: widget.vehicle.id!,
               documentImage: widget.documentImage,
               isManual: widget.isManual,
@@ -268,6 +267,248 @@ class _SoatFormFields extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ── Inlined from soat_doc_preview.dart (deleted file) ────────────────────────
+
+class _SoatDocPreview extends StatelessWidget {
+  const _SoatDocPreview({required this.imageFile});
+
+  final XFile imageFile;
+
+  bool get _isPdf => imageFile.path.toLowerCase().endsWith('.pdf');
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isPdf) {
+      return Container(
+        height: 120,
+        decoration: BoxDecoration(
+          color: AppColors.darkCard,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.info.withValues(alpha: 0.5)),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.picture_as_pdf_outlined,
+              size: 44,
+              color: AppColors.info,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              imageFile.path.split('/').last,
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppColors.textOnDarkSecondary,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: SizedBox(
+        height: 180,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.file(File(imageFile.path), fit: BoxFit.cover),
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.center,
+                  end: Alignment.bottomCenter,
+                  colors: [Colors.transparent, AppColors.darkCard],
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 10,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Text(
+                  context.l10n.vehicle_soat_doc_uploaded,
+                  style: const TextStyle(
+                    color: AppColors.textOnDarkSecondary,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ── Inlined from soat_valid_alert.dart (deleted file) ────────────────────────
+
+class _SoatValidAlert extends StatelessWidget {
+  const _SoatValidAlert();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SoatFormCubit, SoatFormState>(
+      builder: (context, state) {
+        final cubit = context.read<SoatFormCubit>();
+        final startDate = cubit.currentStartDate;
+        final expiryDate = cubit.currentExpiryDate;
+
+        if (startDate == null || expiryDate == null) {
+          return _AlertRow(
+            icon: Icons.shield_outlined,
+            iconColor: AppColors.textOnDarkTertiary,
+            bgColor: AppColors.darkTertiary,
+            title: context.l10n.vehicle_soat_status_pending,
+            subtitle: '—',
+            subtitleColor: AppColors.textOnDarkTertiary,
+          );
+        }
+
+        if (!startDate.isBefore(expiryDate)) {
+          return _AlertRow(
+            icon: Icons.error_outline,
+            iconColor: AppColors.error,
+            bgColor: AppColors.error.withAlpha(26),
+            title: context.l10n.vehicle_soat_status_invalid_dates_title,
+            subtitle: context.l10n.vehicle_soat_status_invalid_dates_desc,
+            subtitleColor: AppColors.textOnDarkSecondary,
+          );
+        }
+
+        final daysRemaining = expiryDate.difference(DateTime.now()).inDays;
+
+        if (daysRemaining < 0) {
+          return _AlertRow(
+            icon: Icons.shield_outlined,
+            iconColor: AppColors.error,
+            bgColor: AppColors.error.withAlpha(26),
+            title: context.l10n.vehicle_soat_status_expired_title,
+            subtitle: context.l10n
+                .vehicle_soat_status_expired_desc(daysRemaining.abs()),
+            subtitleColor: AppColors.textOnDarkSecondary,
+          );
+        }
+
+        return _AlertRow(
+          icon: Icons.verified_user_outlined,
+          iconColor: const Color(0xFF22C55E),
+          bgColor: const Color(0xFF22C55E).withAlpha(26),
+          title: context.l10n.vehicle_soat_status_valid,
+          subtitle: daysRemaining == 0
+              ? context.l10n.vehicle_soat_status_expires_today
+              : context.l10n.vehicle_soat_status_valid_desc(daysRemaining),
+          subtitleColor: AppColors.textOnDarkSecondary,
+        );
+      },
+    );
+  }
+}
+
+class _AlertRow extends StatelessWidget {
+  const _AlertRow({
+    required this.icon,
+    required this.iconColor,
+    required this.bgColor,
+    required this.title,
+    required this.subtitle,
+    required this.subtitleColor,
+  });
+
+  final IconData icon;
+  final Color iconColor;
+  final Color bgColor;
+  final String title;
+  final String subtitle;
+  final Color subtitleColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: iconColor),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: iconColor,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: TextStyle(color: subtitleColor, fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ── Inlined from soat_confirm_cta_bar.dart (deleted file) ────────────────────
+
+class _SoatConfirmCtaBar extends StatelessWidget {
+  const _SoatConfirmCtaBar({
+    required this.vehicleId,
+    required this.isManual,
+    this.documentImage,
+  });
+
+  final String vehicleId;
+  final bool isManual;
+  final XFile? documentImage;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+      decoration: const BoxDecoration(
+        color: AppColors.darkBgPrimary,
+        border: Border(top: BorderSide(color: AppColors.darkBorderPrimary)),
+      ),
+      child: BlocBuilder<SoatFormCubit, SoatFormState>(
+        builder: (context, state) {
+          final isLoading =
+              state.maybeWhen(loading: () => true, orElse: () => false);
+          final cubit = context.read<SoatFormCubit>();
+          final canSave = cubit.areDatesValid;
+          return AppButton(
+            label: isManual
+                ? context.l10n.vehicle_soat_save_button
+                : context.l10n.vehicle_soat_confirm_button,
+            isLoading: isLoading,
+            onPressed: canSave
+                ? () => cubit.submit(vehicleId, documentImage: documentImage)
+                : null,
+          );
+        },
       ),
     );
   }
