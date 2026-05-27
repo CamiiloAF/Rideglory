@@ -1,155 +1,92 @@
-# Tech Lead Review — iter-3 (PR #15)
+# Tech Lead review — Iteration 6 (refactor-01)
 
-**Decision: BLOCKED**
-**Reviewed at:** 2026-05-15T06:00:00Z
-**PR:** https://github.com/CamiiloAF/Rideglory/pull/15
-**Iteration:** 3 — Tracking Completo + SOS + Organizer Controls + Mapbox Migration
+> Status: **complete**
+> Phase: tech_lead (9 of 10)
+> Updated: 2026-05-27
+> PR: #23 — https://github.com/CamiiloAF/Rideglory/pull/23
+> Decision: **APPROVED ✅** (merge blocked by pre-existing CI failure; see Caveats)
 
----
+## Scope reviewed
 
-## Summary
+Full diff: 348 files changed, +17,336 / −18,747 lines, 85 commits on `iter-6` vs `main`. Pure internal refactor — zero new features, zero API changes, zero domain model changes.
 
-PR #15 delivers 7 stories (3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.10) including the full Mapbox migration, SOS flow, organizer ride controls, background GPS, and SOAT vehicle badge. The Story 3.0 hard gate (zero `google_maps_flutter` / `geocoding` imports) is satisfied. BUG-3-1 (widget test for `route_map_preview.dart`) is resolved — the test file is present and 4/4 pass.
+## Clean Architecture sweep — PASS
 
-However, **6 blocking violations** prevent merge: a Clean Architecture layer breach and 5 coding-standards violations. All are correctable in a single fix cycle.
-
----
-
-## Hard Gates
-
-| Gate | Status |
+| Check | Result |
 |---|---|
-| Zero `google_maps_flutter` imports in `lib/` | PASS |
-| Zero `geocoding` imports in `lib/` | PASS |
-| `dart analyze` 0 errors/0 warnings | PASS (per frontend handoff) |
-| `flutter test` — target stories pass | PASS (43 pass / 1 pre-existing fail TC-2-28) |
-| BUG-3-1 widget test for `route_map_preview.dart` | PASS (4/4 cases present) |
+| Domain doesn't import Flutter/HTTP/`dart:io` | ✅ verified |
+| Data doesn't import widgets or use `BuildContext` | ✅ `grep "BuildContext" lib/features/*/data/` → 0 results |
+| Presentation doesn't call HTTP clients directly | ✅ `grep "DioException\|data/(dto\|service\|repository)"` in presentation → 0 results |
+| Dependencies flow inward only | ✅ |
+| `EventDetailViewState.currentEvent` mutable state preserved post-extraction | ✅ (REFACTOR-05a critical pattern) |
+| `NotificationsState.isLoadingMore` documented exception | ✅ 3-line `// Exception:` per Architect decision C |
 
----
+## rideglory-coding-standards sweep — PASS
 
-## Blocking Violations
+| Rule | Result |
+|---|---|
+| One widget per file | 0 violations |
+| No `Widget _build*` helper methods | 0 violations |
+| No raw `ElevatedButton`/`OutlinedButton`/`TextButton` | 0 (excl. `// Custom:`) |
+| No `FormBuilderTextField` | 0 |
+| `Navigator.of(context).` excl. `// Custom:` | 0 |
+| `Navigator.pop(context` excl. `// Custom:` | 0 |
+| `context.goNamed` excl. `// Intentional:` | 0 (3 shell-tab calls annotated) |
+| `Color(0x` excl. `// Intentional:` | 0 |
+| No `showDialog(` direct calls excl. `AppDialog`/`// Custom:` | 0 (1 annotated) |
+| `dart analyze lib/` | 0 errors, 0 warnings |
+| `flutter test` | 119/119 pass |
 
-### BLOCK-1 — Clean Architecture: Data layer imported in cubit
+## Design system additions — APPROVED
 
-**File:** `lib/features/events/presentation/tracking/cubit/live_tracking_cubit.dart` L15–17
+- **`AppCircleIconButton`** (atom): 36×36, 3 variants (`surface`/`accent`/`translucent`), `.back()` factory. Locks long-tail of leading-back-button inconsistencies. 3 per-feature widgets deleted (`VehicleDetailNavButton`, `MaintenanceDetailIconButton`, `MaintenancesAppBarIconButton`).
+- **`AppFormNavHeader`** (molecule): sealed `AppFormNavAction` (text/icon/pillText), `bottom` slot, `preferredSize` accounts for status bar + slot + border. Delegates pill-icon to `AppCircleIconButton` — cross-design-system reuse, good.
+- 3 new `AppColors` tokens are additions, not remaps — pixel-exact preservation per Architect decision D.
 
-The cubit imports `package:dio/dio.dart`, `event_service.dart`, and `tracking_ws_client.dart` — all data-layer concerns. The cubit also catches `DioException` directly (~L400), a data-layer exception type leaking into presentation.
+## Risks called out (non-blocking)
 
-**Required fix:** Extract a `TrackingRepository` interface (domain) with `endRide(String eventId)` and `publishSos(SosAlertModel)` methods. The data-layer `TrackingRepositoryImpl` wraps `EventService` and `TrackingWsClient` and converts `DioException` to `DomainException`. Cubit receives `TrackingRepository` via injection.
+1. **`event_detail_cta_bar` 8 state variants have no widget tests.** Manual smoke TC-6-S4 covered all 4 main states. Recommend follow-up to add widget tests.
+2. **l10n cleanup reduced ARB by 43.4%** (vs. ≥10% target). 11 `notification_*` keys explicitly preserved; 10 SOAT keys restored after a regression caught in human review. Residual risk: non-Dart references (Android strings.xml, backend templates) could break silently. Recommend backend-side spot-check before production rollout.
+3. **MaintenanceFormView trailing pill is a no-op** (`onTap: () {}`). Save is triggered from bottom CTA bar — matches pre-refactor behavior but worth flagging.
+4. **`AppFormNavHeader.preferredSize`** uses fixed proxies (`_bottomSlotHeight = 24`, `_maxStatusBarHeight = 48`). Only `MaintenanceFormProgressBars` (~12px) consumes the bottom slot today, so safe. If a future form needs a taller `bottom` widget, refactor to compute height via `LayoutBuilder`.
 
----
+## Mid-iteration regressions (all resolved)
 
-### BLOCK-2 — Coding Standards: `_buildXxx` helper methods
+- `event_filters_bottom_sheet_test.dart::TC-2-20` — fixed in `ea59e3c`.
+- `AppFormNavHeader.preferredSize` 1px overflow — fixed in `7ff04fb`.
+- SOAT 2-card UX regression — fixed in `4db6f94` (restored cubit + 4 widgets + 10 l10n keys).
+- Maintenance primary buttons white-on-orange (broke design rule) — fixed in `97f711d` (now `colorScheme.onPrimary`).
+- Leading back buttons inconsistent shapes/sizes — fixed in `d61fffb` + atom unification commit.
 
-**File:** `lib/features/events/presentation/tracking/live_map_page.dart` L203, L224, L256
+## Security review — PASS
 
-`_buildAppBar()`, `_buildLiveMapAppBar()`, `_buildBody()` are Widget-returning private methods violating the "no `_buildXxx` helpers" rule.
+No new endpoints, no new auth flows, no new secrets, no new packages with security implications. `FirebaseAuthInterceptor` and request signing paths untouched. The re-introduced `SoatUploadCubit` is functionally identical to the legacy version (verbatim restore from git history, same `@injectable` annotation).
 
-**Required fix:** Extract to separate widget files, e.g. `live_map_app_bar.dart` and `live_map_body.dart`.
+## Test coverage assessment
 
----
+- 119 pre-existing automated tests preserved (0 regressions).
+- 1 test file updated mid-batch (`event_filters_bottom_sheet_test.dart`) to align with go_router migration — then reverted alongside production code revert.
+- No new automated tests added (refactor-only, would only test refactor mechanics — covered by DoD grep matrix).
+- 11 manual smoke tests passed before merge.
 
-### BLOCK-3 — Coding Standards: Hardcoded Spanish strings in `sos_banner.dart`
+## Security findings
 
-**File:** `lib/features/events/presentation/tracking/widgets/sos_banner.dart` L22, L34, L51
+None.
 
-Three SnackBar messages not in `app_es.arb`:
-- `'No se pudo iniciar la llamada.'`
-- `'No se pudo obtener la ubicación del rider.'`
-- `'No se pudo abrir el mapa.'`
+## Overall signal
 
-**Required fix:** Add l10n keys (e.g., `tracking_sosCallError`, `tracking_sosLocationError`, `tracking_sosMapError`) and use `context.l10n.<key>`.
+**APPROVED.** The refactor is faithful to the plan: 17 stories delivered, all DoD grep checks pass, all 11 manual smoke tests pass, Clean Architecture compliance verified, design system genuinely improved (atom + molecule add long-term consistency). The 5 mid-iteration regressions were caught and resolved before sign-off, none persist.
 
----
+## Caveats / merge gate
 
-### BLOCK-4 — Coding Standards: Hardcoded Spanish string in `sos_button.dart`
+- **CI is failing on `iter-6` AND on `main`** due to `lucide_icons 0.257.0` extending Flutter's `final IconData` class. This failure is **pre-existing** (verified: same error on main runs `26523075925`, `26522649039`, `26520626824`). iter-6 does NOT regress CI status, but merge is blocked by branch protection until `lucide_icons` is pinned to a compatible version or upgraded.
+- **Recommended path:** open a separate small PR fixing `lucide_icons` version pinning, merge that first, then iter-6 will go green on rebase.
+- Alternatively, an administrator can override branch protection to merge iter-6, then fix `lucide_icons` as the first commit on `main` post-merge.
 
-**File:** `lib/features/events/presentation/tracking/widgets/sos_button.dart` L21
+## Blocking issues
 
-Semantics label `'Enviar alerta de emergencia'` is a raw literal.
+None from iter-6 itself. Only external CI blocker (`lucide_icons` package, pre-existing).
 
-**Required fix:** Add l10n key `tracking_sosSemanticsLabel` and use `context.l10n.tracking_sosSemanticsLabel`.
+## Change log
 
----
-
-### BLOCK-5 — Coding Standards: Hardcoded Spanish string in `route_map_preview.dart`
-
-**File:** `lib/shared/widgets/map/route_map_preview.dart` L288
-
-Error text `'No se pudo obtener las coordenadas.'` is hardcoded in `build()`.
-
-**Required fix:** Add l10n key `map_geocodeError` and use `context.l10n.map_geocodeError`.
-
----
-
-### BLOCK-6 — Coding Standards: Multiple widget classes per file
-
-**Files:**
-- `lib/features/events/presentation/tracking/widgets/sos_banner.dart`: `SosBannerWidget` (L9) + `_SosBannerAction` (L131)
-- `lib/features/home/presentation/widgets/home_garage_card.dart`: `HomeGarageCard` + `_HeroImage` + `_PlaceholderImage` + `_VehicleInfo` + `_SoatBadge`
-
-**Required fix:** One widget class per file. Extract private widgets to sibling files in the same directory.
-
----
-
-## Non-Blocking / Deferred
-
-1. `home_garage_card.dart` — `_SoatBadge._statusLabel()` may return the same l10n key for all three `SoatStatus` values (valid/expiringSoon/expired). Verify three distinct keys are used. Fix before iter-4 if confirmed as logic bug.
-
-2. `DioException` catch in cubit `endRide()` (~L400) will be automatically resolved when BLOCK-1 is addressed.
-
----
-
-## What Passed
-
-- Mapbox migration correct: `Position(longitude, latitude)` lng-first order respected throughout
-- `mapbox_maps_flutter hide Error` import alias used where `ResultState<T>` is also used
-- `geolocator as geo` alias used where Mapbox and geolocator Position types conflict
-- `SosAlertModel` in domain layer — clean, no Flutter imports
-- `GeocodeResultDto` in `lib/core/services/dto/` — correct placement
-- `AddressLocation` in `lib/shared/models/` — clean domain model
-- `OrganizerControlBar`, `RideFinishedOverlay` — one widget per file, AppButton used, l10n used
-- `live_tracking_state.dart` — freezed state with `sosAlertResult: ResultState<SosAlertModel?>` — correct pattern
-- `app_es.arb` — ~30 new keys with proper placeholder documentation
-- `main.dart` — `MapboxOptions.setAccessToken(AppEnv.mapboxPublicToken)` before `runApp()`
-- CI: `MAPBOX_DOWNLOADS_TOKEN` and `MAPBOX_ACCESS_TOKEN` secrets wired in `ci.yml`
-- `AndroidManifest.xml` — Google Maps key removed, foreground service declared with `foregroundServiceType="location"`
-- `route_map_preview_test.dart` — 4 test cases (loading/error/data/empty) using mocktail — BUG-3-1 resolved
-
----
-
-## Decision
-
-**BLOCKED.** Fix the 6 blocking violations and re-request review. No other phase may proceed until these are resolved and this review is updated to APPROVED.
-
----
-
-# Tech Lead Re-Review — iter-3 (PR #15) — Cycle 2
-
-**Decision: APPROVED**
-**Re-reviewed at:** 2026-05-15T07:00:00Z
-
-## Re-Review: All 6 Blocking Violations Resolved
-
-| # | Violation | Status |
-|---|-----------|--------|
-| BLOCK-1 | `LiveTrackingCubit` — no data layer imports | RESOLVED — imports only `tracking_repository.dart` (domain interface); no EventService, TrackingWsClient, or DioException |
-| BLOCK-2 | `live_map_page.dart` — no `_buildXxx` helpers | RESOLVED — `live_map_app_bar.dart` and `live_map_body.dart` extracted as separate widget files; zero Widget-returning private methods remain |
-| BLOCK-3 | `sos_banner.dart` SnackBar strings use `context.l10n` | RESOLVED — all 3 use `context.l10n.tracking_sosCallError`, `tracking_sosLocationError`, `tracking_sosMapError` |
-| BLOCK-4 | `sos_button.dart` Semantics label uses `context.l10n.tracking_sosSemanticsLabel` | RESOLVED — `context.l10n.tracking_sosSemanticsLabel` at L22 |
-| BLOCK-5 | `route_map_preview.dart` error text uses `context.l10n.map_geocodeError` | RESOLVED — `context.l10n.map_geocodeError` at L289 |
-| BLOCK-6 | One widget class per file (`sos_banner.dart` + `home_garage_card.dart`) | RESOLVED — `_SosBannerAction` extracted to `sos_banner_action.dart`; `home_garage_card.dart` delegates to extracted sibling files |
-
-## Quality Gates (Re-Verified)
-
-| Gate | Status |
-|------|--------|
-| `dart analyze` — 0 errors, 0 warnings | PASS (3 info-level Mapbox SDK deprecations — acceptable) |
-| `flutter test` — 47 pass / 1 pre-existing fail (TC-2-28) | PASS |
-| Zero `google_maps_flutter` imports in `lib/` | PASS (unchanged) |
-| Zero `geocoding` imports in `lib/` | PASS (unchanged) |
-| BUG-3-1 widget test (4/4 pass) | PASS (unchanged) |
-
-## Re-Review Decision
-
-**APPROVED.** All 6 blocking violations are resolved. PR #15 is ready to merge. Next phase: po_close.
+- 2026-05-27 (iter-6 tech_lead): Full diff reviewed. Clean Architecture and rideglory-coding-standards sweeps PASS. Design system additions approved. 4 non-blocking risks called out. 5 mid-iteration regressions verified resolved. Decision: APPROVED. Merge blocked only by pre-existing CI failure on `lucide_icons` package incompatibility — not introduced by iter-6.

@@ -1,0 +1,23 @@
+{
+  "iteration": 6,
+  "phase": "pr",
+  "status": "pass",
+  "updatedAt": "2026-05-27T18:25:00Z",
+  "summary": "PR #23 opened: refactor(iter-6) Refactor & Cleanup Extremo — 17 stories. 348 files changed, 85 commits. Manual smoke tests passed before opening.",
+  "metrics": {
+    "tokens": 0,
+    "costUsd": 0
+  },
+  "artifacts": [
+    "docs/handoffs/contracts/iter-6/pr.json",
+    "workflow/state.json"
+  ],
+  "prNumber": 23,
+  "prUrl": "https://github.com/CamiiloAF/Rideglory/pull/23",
+  "baseBranch": "main",
+  "headBranch": "iter-6",
+  "qualityGates": [
+    { "name": "required_artifacts_present", "status": "pass" },
+    { "name": "pr_opened", "status": "pass" }
+  ]
+}
