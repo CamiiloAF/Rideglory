@@ -3,6 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
+import 'package:rideglory/features/events/presentation/list/widgets/event_inscribed_badge.dart';
+import 'package:rideglory/features/events/presentation/list/widgets/event_owner_indicator.dart';
+import 'package:rideglory/features/events/presentation/list/widgets/event_placeholder.dart';
+import 'package:rideglory/features/events/presentation/list/widgets/event_status_badge.dart';
 
 /// Event card matching the Pencil design:
 /// - Full-width card, radius 12, bg #1E1E24
@@ -27,7 +31,6 @@ class EventCard extends StatelessWidget {
   final bool isOwner;
   final bool isRegistered;
   final VoidCallback? onStartEvent;
-
 
   String _formattedDate(BuildContext context) {
     final locale = Localizations.localeOf(context).toString();
@@ -82,14 +85,14 @@ class EventCard extends StatelessWidget {
                       ? Image.network(
                           imageUrl,
                           fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => const _EventPlaceholder(),
+                          errorBuilder: (_, _, _) => const EventPlaceholder(),
                         )
-                      : const _EventPlaceholder(),
+                      : const EventPlaceholder(),
                   // Status badge — top-left overlay
                   Positioned(
                     top: 12,
                     left: 12,
-                    child: _StatusBadge(
+                    child: EventStatusBadge(
                       label: _badgeLabel(context),
                       color: _badgeColor(),
                     ),
@@ -99,7 +102,7 @@ class EventCard extends StatelessWidget {
                     Positioned(
                       top: 12,
                       left: 12 + _estimateBadgeWidth(context) + 8,
-                      child: const _OwnerIndicator(),
+                      child: const EventOwnerIndicator(),
                     ),
                 ],
               ),
@@ -153,7 +156,7 @@ class EventCard extends StatelessWidget {
 
                   // Registered badge (if applicable)
                   if (isRegistered) ...[
-                    const _InscribedBadge(),
+                    const EventInscribedBadge(),
                     const SizedBox(height: 8),
                   ],
 
@@ -218,98 +221,5 @@ class EventCard extends StatelessWidget {
   static String _formatPrice(int price) {
     final formatter = NumberFormat('#,###', 'es_CO');
     return formatter.format(price);
-  }
-}
-
-class _StatusBadge extends StatelessWidget {
-  const _StatusBadge({required this.label, required this.color});
-
-  final String label;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 11,
-          fontWeight: FontWeight.w700,
-          height: 1.0,
-        ),
-      ),
-    );
-  }
-}
-
-class _OwnerIndicator extends StatelessWidget {
-  const _OwnerIndicator();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: AppColors.primarySubtle,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.primary, width: 1),
-      ),
-      child: const Icon(Icons.star_rounded, color: AppColors.primary, size: 12),
-    );
-  }
-}
-
-class _InscribedBadge extends StatelessWidget {
-  const _InscribedBadge();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: AppColors.successSubtle,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.check_circle_outline,
-              color: AppColors.success, size: 12),
-          const SizedBox(width: 4),
-          Text(
-            context.l10n.event_registrationsTab,
-            style: const TextStyle(
-              color: AppColors.success,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _EventPlaceholder extends StatelessWidget {
-  const _EventPlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.darkBgSecondary,
-      child: const Center(
-        child: Icon(
-          Icons.two_wheeler_rounded,
-          color: AppColors.darkBorderPrimary,
-          size: 48,
-        ),
-      ),
-    );
   }
 }
