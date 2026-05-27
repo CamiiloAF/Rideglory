@@ -3,7 +3,6 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
 import 'package:rideglory/features/profile/presentation/widgets/profile_actions_list.dart';
-import 'package:rideglory/features/profile/presentation/widgets/profile_garage_section.dart';
 import 'package:rideglory/features/profile/presentation/widgets/profile_header.dart';
 import 'package:rideglory/features/profile/presentation/widgets/profile_stats_row.dart';
 
@@ -24,10 +23,6 @@ class ProfileContent extends StatelessWidget {
           kmLabel: context.l10n.profile_statsKm,
           followersLabel: context.l10n.profile_statsFollowers,
         ),
-        AppSpacing.gapXxl,
-        _SectionLabel(label: context.l10n.profile_garage),
-        AppSpacing.gapMd,
-        const ProfileGarageSection(),
         AppSpacing.gapXxl,
         _SectionLabel(label: context.l10n.profile_settings),
         AppSpacing.gapMd,

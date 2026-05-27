@@ -36732,6 +36732,1362 @@
       "fontFamily": "Inter",
       "fontSize": 12,
       "fontWeight": "normal"
+    },
+    {
+      "type": "frame",
+      "id": "TY2Cq",
+      "x": 10859,
+      "y": 0,
+      "name": "Mantenimientos — Desde Perfil (sin selección)",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-primary",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "B2zuF",
+          "name": "statusBar",
+          "width": "fill_container",
+          "height": 44,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "l9CjDg",
+              "fill": "$text-primary",
+              "content": "9:41",
+              "fontFamily": "$font-primary",
+              "fontSize": 13,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "TGkvJ",
+              "name": "sbIcons",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "G5tck",
+                  "width": 14,
+                  "height": 14,
+                  "iconFontName": "signal",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "sroOj",
+                  "width": 14,
+                  "height": 14,
+                  "iconFontName": "wifi",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "ET9ms",
+                  "width": 14,
+                  "height": 14,
+                  "iconFontName": "battery-full",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "v3ZYVQ",
+          "name": "header",
+          "width": "fill_container",
+          "height": 52,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "zzyxN",
+              "name": "backBtn",
+              "width": 36,
+              "height": 36,
+              "fill": "$bg-card",
+              "cornerRadius": 18,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "$border"
+              },
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "bGU7V",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "arrow-left",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "x4VFNi",
+              "fill": "$text-primary",
+              "content": "Mantenimientos",
+              "fontFamily": "$font-primary",
+              "fontSize": 18,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "KZ6jr",
+              "name": "rightActions",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "YUyw7",
+                  "name": "filterBtn",
+                  "width": 36,
+                  "height": 36,
+                  "fill": "$bg-card",
+                  "cornerRadius": 18,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "$border"
+                  },
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "PlaEy",
+                      "width": 16,
+                      "height": 16,
+                      "iconFontName": "sliders-horizontal",
+                      "iconFontFamily": "lucide",
+                      "fill": "$text-primary"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qXPsm",
+                  "name": "addBtn",
+                  "width": 36,
+                  "height": 36,
+                  "fill": "$accent",
+                  "cornerRadius": 18,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "Lb1Iz",
+                      "width": 16,
+                      "height": 16,
+                      "iconFontName": "plus",
+                      "iconFontFamily": "lucide",
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "B6NUws",
+          "name": "scrollContent",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            8,
+            20,
+            16,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "NtRtH",
+              "width": "fill_container",
+              "fill": "$bg-card",
+              "cornerRadius": 12,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "$border"
+              },
+              "padding": [
+                12,
+                14
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "FUDWu",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "V8tGXy",
+                      "width": 32,
+                      "height": 32,
+                      "fill": "$bg-primary",
+                      "cornerRadius": 16,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "$border"
+                      },
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "W33rG",
+                          "width": 16,
+                          "height": 16,
+                          "iconFontName": "bike",
+                          "iconFontFamily": "lucide",
+                          "fill": "$text-tertiary"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "k7H4z",
+                      "fill": "$text-tertiary",
+                      "content": "Seleccionar vehículo",
+                      "fontFamily": "$font-primary",
+                      "fontSize": 14,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "icon_font",
+                  "id": "hmdwf",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "chevron-down",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-tertiary"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "yOngL",
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "C3AoDw",
+                  "width": 64,
+                  "height": 64,
+                  "fill": "$bg-card",
+                  "cornerRadius": 32,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "$border"
+                  },
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "RFVwh",
+                      "width": 28,
+                      "height": 28,
+                      "iconFontName": "wrench",
+                      "iconFontFamily": "lucide",
+                      "fill": "$text-tertiary"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "M1LLbQ",
+                  "fill": "$text-primary",
+                  "textGrowth": "fixed-width",
+                  "width": 280,
+                  "content": "Selecciona un vehículo",
+                  "textAlign": "center",
+                  "fontFamily": "$font-primary",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "Wzqgq",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": 260,
+                  "content": "para ver sus mantenimientos aquí",
+                  "textAlign": "center",
+                  "fontFamily": "$font-primary",
+                  "fontSize": 13
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "P0wes",
+          "type": "ref",
+          "ref": "VMmN0",
+          "name": "tabBar",
+          "width": "fill_container",
+          "descendants": {
+            "PhMdo": {
+              "fill": "$accent"
+            },
+            "Q9xwhf": {
+              "fill": "$text-inverse"
+            },
+            "tGqK5": {
+              "fill": "$text-inverse"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "o94lI",
+      "x": 11359,
+      "y": 0,
+      "name": "Mantenimientos — Desde Perfil (con selección)",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg-primary",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "U7Umo",
+          "name": "statusBar",
+          "width": "fill_container",
+          "height": 44,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "BwyVB",
+              "fill": "$text-primary",
+              "content": "9:41",
+              "fontFamily": "$font-primary",
+              "fontSize": 13,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "x4CD0",
+              "name": "sbIcons",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "E3AMA",
+                  "width": 14,
+                  "height": 14,
+                  "iconFontName": "signal",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "CUR6N",
+                  "width": 14,
+                  "height": 14,
+                  "iconFontName": "wifi",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                },
+                {
+                  "type": "icon_font",
+                  "id": "z8SPyx",
+                  "width": 14,
+                  "height": 14,
+                  "iconFontName": "battery-full",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "iWG9v",
+          "name": "header",
+          "width": "fill_container",
+          "height": 52,
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "IdlBX",
+              "name": "backBtn",
+              "width": 36,
+              "height": 36,
+              "fill": "$bg-card",
+              "cornerRadius": 18,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "$border"
+              },
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "M5CHB",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "arrow-left",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-primary"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "aPoZ8",
+              "fill": "$text-primary",
+              "content": "Mantenimientos",
+              "fontFamily": "$font-primary",
+              "fontSize": 18,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "DZQEb",
+              "name": "rightActions",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "e0p7x",
+                  "name": "filterBtn",
+                  "width": 36,
+                  "height": 36,
+                  "fill": "$bg-card",
+                  "cornerRadius": 18,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "$border"
+                  },
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "ohIoP",
+                      "width": 16,
+                      "height": 16,
+                      "iconFontName": "sliders-horizontal",
+                      "iconFontFamily": "lucide",
+                      "fill": "$text-primary"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qqqiv",
+                  "name": "addBtn",
+                  "width": 36,
+                  "height": 36,
+                  "fill": "$accent",
+                  "cornerRadius": 18,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "t8kO7s",
+                      "width": 16,
+                      "height": 16,
+                      "iconFontName": "plus",
+                      "iconFontFamily": "lucide",
+                      "fill": "#FFFFFF"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "tbbAW",
+          "name": "scrollContent",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            8,
+            20,
+            16,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "dgyz1",
+              "width": "fill_container",
+              "fill": "$bg-card",
+              "cornerRadius": 12,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "$border"
+              },
+              "padding": [
+                12,
+                14
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "zrUcl",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "wTLcG",
+                      "width": 36,
+                      "height": 36,
+                      "fill": "#f98c1f20",
+                      "cornerRadius": 18,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "OsxwU",
+                          "width": 18,
+                          "height": 18,
+                          "iconFontName": "bike",
+                          "iconFontFamily": "lucide",
+                          "fill": "$accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "rZrss",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "mtnQD",
+                          "fill": "$text-primary",
+                          "content": "Honda CB500F",
+                          "fontFamily": "$font-primary",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "l0I6w",
+                          "fill": "$text-tertiary",
+                          "content": "2022 · 650 cc · Cambiar",
+                          "fontFamily": "$font-primary",
+                          "fontSize": 11
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "icon_font",
+                  "id": "EcZKV",
+                  "width": 16,
+                  "height": 16,
+                  "iconFontName": "chevron-down",
+                  "iconFontFamily": "lucide",
+                  "fill": "$text-secondary"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "yJYJo",
+              "name": "dashSection",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "DSDSb",
+                  "name": "summaryCard",
+                  "width": "fill_container",
+                  "fill": "$bg-card",
+                  "cornerRadius": "$radius-md",
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "$border"
+                  },
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "eIKdZ",
+                      "name": "summaryHeader",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Zf9av",
+                          "name": "summaryTitle",
+                          "fill": "$text-secondary",
+                          "content": "Resumen de Mantenimientos",
+                          "fontFamily": "$font-primary",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "icon_font",
+                          "id": "UjY6L",
+                          "name": "wrenchIcon",
+                          "width": 16,
+                          "height": 16,
+                          "iconFontName": "wrench",
+                          "iconFontFamily": "lucide",
+                          "fill": "$accent"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "sVUm6",
+                      "name": "divider",
+                      "fill": "$border",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "yhasy",
+                      "name": "summaryStats",
+                      "width": "fill_container",
+                      "gap": 16,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "ALo0c",
+                          "name": "statLeft",
+                          "width": "fill_container",
+                          "fill": "$bg-secondary",
+                          "cornerRadius": "$radius-sm",
+                          "layout": "vertical",
+                          "gap": 4,
+                          "padding": [
+                            12,
+                            8
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "EAJGg",
+                              "name": "statLeftValue",
+                              "fill": "$accent",
+                              "content": "5",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 28,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "fiKhL",
+                              "name": "statLeftLabel",
+                              "fill": "$text-secondary",
+                              "content": "Servicios",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 11,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "T3naMR",
+                          "name": "statRight",
+                          "width": "fill_container",
+                          "fill": "$bg-secondary",
+                          "cornerRadius": "$radius-sm",
+                          "layout": "vertical",
+                          "gap": 4,
+                          "padding": [
+                            12,
+                            8
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "EIknY",
+                              "name": "statRightValue",
+                              "fill": "$accent",
+                              "content": "$847.500",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 24,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "KJlv3",
+                              "name": "statRightLabel",
+                              "fill": "$text-secondary",
+                              "content": "Total gastado",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 11,
+                              "fontWeight": "500"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "LZfDV",
+              "name": "listSection",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "FYlXV",
+                  "name": "secAtrasado",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ZnNq5",
+                      "name": "secHeader",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "padding": [
+                        8,
+                        0,
+                        4,
+                        0
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 2,
+                          "id": "Q5YbE6",
+                          "fill": "$error",
+                          "width": 3,
+                          "height": 14
+                        },
+                        {
+                          "type": "text",
+                          "id": "DnSr3",
+                          "fill": "$error",
+                          "content": "ATRASADO",
+                          "fontFamily": "$font-primary",
+                          "fontSize": 11,
+                          "fontWeight": "700",
+                          "letterSpacing": 1
+                        },
+                        {
+                          "type": "text",
+                          "id": "ttcXz",
+                          "fill": "$text-tertiary",
+                          "content": "1 servicio",
+                          "fontFamily": "$font-primary",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "w3yRhs",
+                      "name": "itemOverdue",
+                      "width": "fill_container",
+                      "fill": "#EF444410",
+                      "cornerRadius": "$radius-md",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#EF444430"
+                      },
+                      "gap": 12,
+                      "padding": 14,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "DK0XG",
+                          "name": "ovdIcon",
+                          "width": 40,
+                          "height": 40,
+                          "fill": "#EF444420",
+                          "cornerRadius": 20,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "KzoWU",
+                              "width": 18,
+                              "height": 18,
+                              "iconFontName": "disc-3",
+                              "iconFontFamily": "lucide",
+                              "fill": "$error"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "eixuV",
+                          "name": "info",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "UDiYl",
+                              "fill": "$text-primary",
+                              "content": "Revisión de frenos",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 14,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "VIqsD",
+                              "fill": "$text-tertiary",
+                              "content": "Venció en 38.900 km · actual 42.000 km",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "LG8Nf",
+                          "name": "kmBadge",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "GNd3w",
+                              "fill": "$error",
+                              "content": "3.100 km",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 15,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "oDAHX",
+                              "fill": "$error",
+                              "content": "vencido",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 10,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "RLBrh",
+                  "name": "secProx",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "G75A8",
+                      "name": "secHeader",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "padding": [
+                        8,
+                        0,
+                        4,
+                        0
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 2,
+                          "id": "xUHN2",
+                          "fill": "$warning",
+                          "width": 3,
+                          "height": 14
+                        },
+                        {
+                          "type": "text",
+                          "id": "wBZFL",
+                          "fill": "$warning",
+                          "content": "PRÓXIMAMENTE",
+                          "fontFamily": "$font-primary",
+                          "fontSize": 11,
+                          "fontWeight": "700",
+                          "letterSpacing": 1
+                        },
+                        {
+                          "type": "text",
+                          "id": "GMjKt",
+                          "fill": "$text-tertiary",
+                          "content": "1 servicio",
+                          "fontFamily": "$font-primary",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "XHWNi",
+                      "name": "itemSoon",
+                      "width": "fill_container",
+                      "fill": "#EAB30810",
+                      "cornerRadius": "$radius-md",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#EAB30830"
+                      },
+                      "gap": 12,
+                      "padding": 14,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "L9uFm",
+                          "name": "soonIcon",
+                          "width": 40,
+                          "height": 40,
+                          "fill": "#EAB30820",
+                          "cornerRadius": 20,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "Kgkvg",
+                              "width": 18,
+                              "height": 18,
+                              "iconFontName": "droplets",
+                              "iconFontFamily": "lucide",
+                              "fill": "$warning"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "CwzwL",
+                          "name": "info",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "gJc4B",
+                              "fill": "$text-primary",
+                              "content": "Cambio de aceite",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 14,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "K7iVu",
+                              "fill": "$text-tertiary",
+                              "content": "Programado en 43.200 km",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ceZrT",
+                          "name": "kmBadge",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "JrKmO",
+                              "fill": "$warning",
+                              "content": "1.200 km",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 15,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "nTwMd",
+                              "fill": "$warning",
+                              "content": "faltan",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 10,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "eacSB",
+                  "name": "secOk",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "r0y37",
+                      "name": "secHeader",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "padding": [
+                        8,
+                        0,
+                        4,
+                        0
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 2,
+                          "id": "zCMZl",
+                          "fill": "$success",
+                          "width": 3,
+                          "height": 14
+                        },
+                        {
+                          "type": "text",
+                          "id": "uCdh2",
+                          "fill": "$success",
+                          "content": "AL DÍA",
+                          "fontFamily": "$font-primary",
+                          "fontSize": 11,
+                          "fontWeight": "700",
+                          "letterSpacing": 1
+                        },
+                        {
+                          "type": "text",
+                          "id": "W4D5m",
+                          "fill": "$text-tertiary",
+                          "content": "2 servicios",
+                          "fontFamily": "$font-primary",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "K3Cn7k",
+                      "name": "item3",
+                      "width": "fill_container",
+                      "fill": "$bg-card",
+                      "cornerRadius": "$radius-md",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "$border"
+                      },
+                      "gap": 12,
+                      "padding": 14,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "s8ePd",
+                          "name": "ico3",
+                          "width": 40,
+                          "height": 40,
+                          "fill": "#3B82F620",
+                          "cornerRadius": 20,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "hsqKK",
+                              "width": 18,
+                              "height": 18,
+                              "iconFontName": "circle-dot",
+                              "iconFontFamily": "lucide",
+                              "fill": "$info"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "z2lqx",
+                          "name": "info",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "CzxKT",
+                              "fill": "$text-primary",
+                              "content": "Cambio de llantas",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 14,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "N9wPha",
+                              "fill": "$text-tertiary",
+                              "content": "Próximo en 51.200 km",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "q0xrr",
+                          "name": "kmBadge",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "UCPwh",
+                              "fill": "$text-secondary",
+                              "content": "9.200 km",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 15,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "x8I2Kj",
+                              "fill": "$text-tertiary",
+                              "content": "faltan",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 10,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "B2w17",
+                      "name": "item4",
+                      "width": "fill_container",
+                      "fill": "$bg-card",
+                      "cornerRadius": "$radius-md",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "$border"
+                      },
+                      "gap": 12,
+                      "padding": 14,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "o1yX4",
+                          "name": "ico4",
+                          "width": 40,
+                          "height": 40,
+                          "fill": "#22C55E20",
+                          "cornerRadius": 20,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon_font",
+                              "id": "gBNXH",
+                              "width": 18,
+                              "height": 18,
+                              "iconFontName": "wrench",
+                              "iconFontFamily": "lucide",
+                              "fill": "$success"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "xbPKR",
+                          "name": "info",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 3,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "AahOn",
+                              "fill": "$text-primary",
+                              "content": "Revisión general",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 14,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "W43hp",
+                              "fill": "$text-tertiary",
+                              "content": "Próximo en 50.100 km",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "sTpdr",
+                          "name": "kmBadge",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "alignItems": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "wAhvC",
+                              "fill": "$text-secondary",
+                              "content": "8.100 km",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 15,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "kr6fd",
+                              "fill": "$text-tertiary",
+                              "content": "faltan",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 10,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "lcg6K",
+          "type": "ref",
+          "ref": "VMmN0",
+          "name": "tabBar",
+          "width": "fill_container",
+          "descendants": {
+            "PhMdo": {
+              "fill": "$accent"
+            },
+            "Q9xwhf": {
+              "fill": "$text-inverse"
+            },
+            "tGqK5": {
+              "fill": "$text-inverse"
+            }
+          }
+        }
+      ]
     }
   ],
   "variables": {

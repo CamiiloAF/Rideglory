@@ -18,10 +18,17 @@ class SoatConfirmationPage extends StatelessWidget {
     super.key,
     required this.vehicle,
     this.documentImage,
+    this.isFromVehicleCreation = false,
   });
 
   final VehicleModel vehicle;
   final XFile? documentImage;
+
+  /// `true` cuando la página fue abierta vía `Navigator.pushReplacement` desde
+  /// `VehicleFormPage` al crear un vehículo nuevo con foto de SOAT. En ese caso
+  /// el éxito solo necesita UN pop (vuelve directamente al garage); no se debe
+  /// llamar `router.pop()` adicional.
+  final bool isFromVehicleCreation;
 
   bool get _isManual => documentImage == null;
 
@@ -39,6 +46,7 @@ class SoatConfirmationPage extends StatelessWidget {
         vehicle: vehicle,
         documentImage: documentImage,
         isManual: _isManual,
+        isFromVehicleCreation: isFromVehicleCreation,
       ),
     );
   }
@@ -49,11 +57,13 @@ class _SoatConfirmationView extends StatefulWidget {
     required this.vehicle,
     required this.documentImage,
     required this.isManual,
+    required this.isFromVehicleCreation,
   });
 
   final VehicleModel vehicle;
   final XFile? documentImage;
   final bool isManual;
+  final bool isFromVehicleCreation;
 
   @override
   State<_SoatConfirmationView> createState() => _SoatConfirmationViewState();
@@ -86,8 +96,13 @@ class _SoatConfirmationViewState extends State<_SoatConfirmationView> {
             final router = GoRouter.of(context);
             final messenger = ScaffoldMessenger.of(context);
             final successMsg = context.l10n.vehicle_soat_saved_successfully;
+            // Cuando proviene de la creación de un vehículo (Navigator.pushReplacement),
+            // SoatConfirmationPage reemplazó a VehicleFormPage en el stack de GoRouter.
+            // Un solo pop regresa al garage; el segundo pop adicional sobresaldría un nivel.
             Navigator.of(context).pop();
-            router.pop();
+            if (!widget.isFromVehicleCreation) {
+              router.pop();
+            }
             messenger.showSnackBar(
               SnackBar(
                 content: Text(successMsg),

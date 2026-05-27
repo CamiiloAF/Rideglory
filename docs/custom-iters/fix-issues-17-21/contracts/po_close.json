@@ -1,0 +1,45 @@
+{
+  "phase": "po_close",
+  "agent": "po",
+  "at": "2026-05-22T23:59:00Z",
+  "slug": "fix-issues-17-21",
+  "status": "ready_for_human_review",
+  "automatedGates": {
+    "dartAnalyze": "0 new issues (45 pre-existing unchanged)",
+    "flutterTest": "119/119 passing",
+    "oneWidgetPerFile": "verified — all 3 new widget files compliant",
+    "noHardcodedStrings": "verified — all l10n keys used",
+    "noWidgetReturningMethods": "verified — all UI in build() only",
+    "hardRules": "no commits made, no protected files touched"
+  },
+  "artifacts": [
+    "docs/custom-iters/fix-issues-17-21/REVIEW_CHECKLIST.md",
+    "docs/custom-iters/fix-issues-17-21/SUMMARY.md",
+    "docs/custom-iters/fix-issues-17-21/contracts/po_close.json"
+  ],
+  "manualProbesRequired": [
+    "AC-1/AC-2: SOAT creation happy path — verify SoatConfirmationPage opens and SOAT badge appears in garage",
+    "AC-3: Create vehicle without SOAT — verify direct pop, no SOAT page",
+    "AC-4: Airplane mode on SoatConfirmationPage — verify vehicle preserved without SOAT",
+    "Regression: Edit existing vehicle — verify no SOAT redirect, badge unchanged",
+    "AC-5: Registration with allowedBrands=['*'] — verify vehicle selector shows vehicles",
+    "AC-7: Registration with zero vehicles — verify empty state + CTA",
+    "Fix #20 regression: event type filter",
+    "Fix #16 regression: SOAT options sheet"
+  ],
+  "openRisks": [
+    {
+      "id": "nav-double-pop",
+      "severity": "medium",
+      "description": "SoatConfirmationPage.success calls Navigator.pop() + router.pop(). Second pop may over-pop GoRouter stack when page entered via Navigator.pushReplacement.",
+      "remediation": "If AC-1 probe lands on blank/wrong screen: remove router.pop() from SoatConfirmationPage success handler or add a navigatedViaReplacement source flag."
+    },
+    {
+      "id": "context-mounted",
+      "severity": "low",
+      "description": "No context.mounted guard before Navigator.pushReplacement in BlocListener. Near-zero risk but inconsistent with project convention.",
+      "remediation": "Add if (!context.mounted) return; before the Navigator call as a follow-up."
+    }
+  ],
+  "recommendedCommitMessage": "fix(vehicles,registration): persist SOAT after vehicle creation and fix vehicle selector loading state\n\n- Fix #17: VehicleFormPage._formListener now redirects to SoatConfirmationPage\n  (via Navigator.pushReplacement) when a new vehicle is created with a pending\n  soatLocalPath, reusing the existing SOAT upload + confirmation flow so\n  dates/insurer are captured before persisting.\n- Fix #21: RegistrationFormContent BlocBuilder now uses state.when() snapshot\n  instead of context.read().availableVehicles, correctly showing a spinner\n  (initial/loading), vehicle selector (data with vehicles), or empty CTA\n  (data empty / empty / error).\n- Extract VehicleSelectorLoading, VehicleSelectorEmpty, VehicleSelectorField\n  widgets per rideglory one-widget-per-file coding standard.\n- Add 11 new tests: 3 VehicleSelectorLoading, 3 VehicleSelectorEmpty,\n  5 VehicleFormCubit soatLocalPath unit tests. Total: 119/119 passing.\n- dart analyze: 0 new issues in changed/new files.\n\nCloses #17, #21"
+}

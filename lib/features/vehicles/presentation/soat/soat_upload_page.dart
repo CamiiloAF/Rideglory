@@ -7,6 +7,7 @@ import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/soat/cubit/soat_upload_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/soat/soat_confirmation_page.dart';
+import 'package:rideglory/features/vehicles/presentation/soat/soat_manual_capture_page.dart';
 import 'package:rideglory/features/vehicles/presentation/soat/widgets/soat_manual_option_card.dart';
 import 'package:rideglory/features/vehicles/presentation/soat/widgets/soat_upload_option_card.dart';
 import 'package:rideglory/features/vehicles/presentation/soat/widgets/soat_upload_question_header.dart';
@@ -93,6 +94,8 @@ class _SoatUploadViewState extends State<_SoatUploadView> {
                         context.read<SoatUploadCubit>().pickFromCamera(),
                     onGalleryTap: () =>
                         context.read<SoatUploadCubit>().pickFromGallery(),
+                    onFileTap: () =>
+                        context.read<SoatUploadCubit>().pickFromFile(),
                   ),
                   const SizedBox(height: 20),
                   SoatManualOptionCard(onTap: _navigateToManualForm),
@@ -116,11 +119,14 @@ class _SoatUploadViewState extends State<_SoatUploadView> {
     );
   }
 
-  void _navigateToManualForm() {
-    Navigator.of(context).push(
+  Future<void> _navigateToManualForm() async {
+    final saved = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
-        builder: (_) => SoatConfirmationPage(vehicle: widget.vehicle),
+        builder: (_) => SoatManualCapturePage(vehicle: widget.vehicle),
       ),
     );
+    if (saved == true && mounted) {
+      Navigator.of(context).pop(true);
+    }
   }
 }

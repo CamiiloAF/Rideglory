@@ -9,6 +9,8 @@ class VehicleDocumentUploadSlot extends StatelessWidget {
     required this.subtitle,
     required this.onUploadTap,
     this.localPath,
+    this.hasData = false,
+    this.dataLabel,
     this.onClear,
   });
 
@@ -16,13 +18,23 @@ class VehicleDocumentUploadSlot extends StatelessWidget {
   final String subtitle;
   final VoidCallback onUploadTap;
   final String? localPath;
+
+  /// Fuerza el estado "documento agregado" aunque [localPath] sea nulo.
+  /// Útil cuando el SOAT fue ingresado manualmente sin adjuntar archivo.
+  final bool hasData;
+
+  /// Texto que se muestra como subtítulo cuando [hasData] es `true` pero
+  /// [localPath] es nulo (no hay archivo local para mostrar el nombre).
+  final String? dataLabel;
+
   final VoidCallback? onClear;
 
-  bool get _hasDocument => localPath != null;
+  bool get _hasDocument => localPath != null || hasData;
 
-  String _fileName() {
-    if (localPath == null) return '';
-    return localPath!.split('/').last;
+  String _displaySubtitle() {
+    if (!_hasDocument) return subtitle;
+    if (localPath != null) return localPath!.split('/').last;
+    return dataLabel ?? '';
   }
 
   @override
@@ -52,7 +64,7 @@ class VehicleDocumentUploadSlot extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  _hasDocument ? _fileName() : subtitle,
+                  _displaySubtitle(),
                   style: TextStyle(
                     fontSize: 11,
                     color: _hasDocument

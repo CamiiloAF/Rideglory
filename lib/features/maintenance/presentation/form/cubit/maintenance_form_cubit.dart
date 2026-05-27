@@ -73,10 +73,15 @@ class MaintenanceFormCubit extends Cubit<ResultState<MaintenanceModel>> {
     emit(const ResultState.initial());
   }
 
-  Future<void> saveMaintenance({int? nextKmInterval}) async {
-    final maintenance = buildMaintenanceToSave();
-    if (maintenance == null) return;
-
+  /// Persists [maintenance] to the backend.
+  ///
+  /// [maintenance] must already be validated and built via [buildMaintenanceToSave]
+  /// before calling this method. [nextKmInterval] is the relative km interval read
+  /// from the form after [buildMaintenanceToSave] (i.e. after saveAndValidate()).
+  Future<void> saveMaintenance(
+    MaintenanceModel maintenance, {
+    int? nextKmInterval,
+  }) async {
     emit(const ResultState.loading());
 
     if (maintenance.id != null) {

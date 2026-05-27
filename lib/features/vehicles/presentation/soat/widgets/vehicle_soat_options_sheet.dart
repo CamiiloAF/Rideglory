@@ -70,6 +70,8 @@ class _SheetContent extends StatelessWidget {
                         context.read<SoatUploadCubit>().pickFromCamera(),
                     onGalleryTap: () =>
                         context.read<SoatUploadCubit>().pickFromGallery(),
+                    onFileTap: () =>
+                        context.read<SoatUploadCubit>().pickFromFile(),
                   ),
                   const SizedBox(height: 16),
                   SoatManualOptionCard(

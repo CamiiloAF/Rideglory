@@ -6694,11 +6694,23 @@ abstract class AppLocalizations {
   /// **'Fecha de inicio'**
   String get vehicle_soat_start_date_label;
 
+  /// No description provided for @vehicle_soat_start_date_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'dd/mm/aaaa'**
+  String get vehicle_soat_start_date_hint;
+
   /// No description provided for @vehicle_soat_expiry_date_label.
   ///
   /// In es, this message translates to:
   /// **'Fecha de vencimiento'**
   String get vehicle_soat_expiry_date_label;
+
+  /// No description provided for @vehicle_soat_expiry_date_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'dd/mm/aaaa'**
+  String get vehicle_soat_expiry_date_hint;
 
   /// No description provided for @vehicle_soat_save_button.
   ///
@@ -6711,6 +6723,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'SOAT registrado exitosamente'**
   String get vehicle_soat_saved_successfully;
+
+  /// No description provided for @vehicle_soat_data_added.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos del SOAT agregados'**
+  String get vehicle_soat_data_added;
 
   /// No description provided for @vehicle_soat_section_title.
   ///
@@ -6739,7 +6757,7 @@ abstract class AppLocalizations {
   /// No description provided for @vehicle_soat_option_upload_desc.
   ///
   /// In es, this message translates to:
-  /// **'Toma una foto o selecciona desde tu galería el documento del SOAT vigente'**
+  /// **'Sube una foto, imagen de galería o PDF del documento del SOAT vigente'**
   String get vehicle_soat_option_upload_desc;
 
   /// No description provided for @vehicle_soat_camera_button.
@@ -6753,6 +6771,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Galería'**
   String get vehicle_soat_gallery_button;
+
+  /// No description provided for @vehicle_soat_file_button.
+  ///
+  /// In es, this message translates to:
+  /// **'PDF'**
+  String get vehicle_soat_file_button;
 
   /// No description provided for @vehicle_soat_option_manual_title.
   ///
@@ -7590,6 +7614,78 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Editar'**
   String get soat_edit_btn;
+
+  /// No description provided for @soat_edit_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar SOAT'**
+  String get soat_edit_title;
+
+  /// No description provided for @soat_doc_view.
+  ///
+  /// In es, this message translates to:
+  /// **'Abrir'**
+  String get soat_doc_view;
+
+  /// No description provided for @soat_doc_download.
+  ///
+  /// In es, this message translates to:
+  /// **'Descargar'**
+  String get soat_doc_download;
+
+  /// No description provided for @soat_doc_tap_to_open.
+  ///
+  /// In es, this message translates to:
+  /// **'Toca para abrir'**
+  String get soat_doc_tap_to_open;
+
+  /// No description provided for @soat_download_success.
+  ///
+  /// In es, this message translates to:
+  /// **'Archivo guardado en Descargas'**
+  String get soat_download_success;
+
+  /// No description provided for @soat_download_error.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo descargar el archivo'**
+  String get soat_download_error;
+
+  /// No description provided for @soat_downloading.
+  ///
+  /// In es, this message translates to:
+  /// **'Descargando…'**
+  String get soat_downloading;
+
+  /// No description provided for @soat_open_downloads.
+  ///
+  /// In es, this message translates to:
+  /// **'Abrir'**
+  String get soat_open_downloads;
+
+  /// No description provided for @soat_doc_replace.
+  ///
+  /// In es, this message translates to:
+  /// **'Reemplazar archivo'**
+  String get soat_doc_replace;
+
+  /// No description provided for @soat_doc_change.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar archivo'**
+  String get soat_doc_change;
+
+  /// No description provided for @soat_doc_add_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar documento SOAT'**
+  String get soat_doc_add_label;
+
+  /// No description provided for @soat_doc_add_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Opcional · Imagen o PDF'**
+  String get soat_doc_add_hint;
 
   /// No description provided for @soat_uploading.
   ///

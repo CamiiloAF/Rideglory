@@ -10,12 +10,14 @@ import 'package:rideglory/features/maintenance/domain/model/maintenance_model.da
 import 'package:rideglory/features/maintenance/domain/use_cases/get_maintenance_list_use_case.dart';
 import 'package:rideglory/features/maintenance/presentation/delete/cubit/maintenance_delete_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/maintenances_cubit.dart';
+import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenance_vehicle_selector.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_data_widget.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_empty_widget.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_error_widget.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_loading_widget.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters_bottom_sheet.dart';
+import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
@@ -26,13 +28,29 @@ class MaintenancesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final vehicleCubit = context.read<VehicleCubit>();
+
+    // When no specific vehicle is provided (entered from Profile),
+    // default to the user's main vehicle so the list is never empty on open.
+    final effectiveVehicleId =
+        initialVehicleId ?? vehicleCubit.currentVehicle?.id;
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (context) {
             final cubit = MaintenancesCubit(getIt<GetMaintenanceListUseCase>());
-            if (initialVehicleId != null) {
-              cubit.setInitialVehicleFilter(initialVehicleId!);
+            if (effectiveVehicleId != null) {
+              cubit.setInitialVehicleFilter(effectiveVehicleId);
+              try {
+                final vehicle = vehicleCubit.availableVehicles
+                    .firstWhere((vehicle) => vehicle.id == effectiveVehicleId);
+                cubit.setCurrentVehicleMileage(vehicle.currentMileage);
+              } catch (_) {
+                cubit.setCurrentVehicleMileage(vehicleCubit.currentMileage ?? 0);
+              }
+            } else {
+              cubit.setCurrentVehicleMileage(vehicleCubit.currentMileage ?? 0);
             }
             cubit.fetchMaintenances();
             return cubit;
@@ -40,13 +58,16 @@ class MaintenancesPage extends StatelessWidget {
         ),
         BlocProvider(create: (context) => getIt<MaintenanceDeleteCubit>()),
       ],
-      child: const _MaintenancesPageView(),
+      // Show vehicle selector only when entered without a specific vehicle (from Profile).
+      child: _MaintenancesPageView(showVehicleSelector: initialVehicleId == null),
     );
   }
 }
 
 class _MaintenancesPageView extends StatefulWidget {
-  const _MaintenancesPageView();
+  final bool showVehicleSelector;
+
+  const _MaintenancesPageView({required this.showVehicleSelector});
 
   @override
   State<_MaintenancesPageView> createState() => _MaintenancesPageViewState();
@@ -56,13 +77,17 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
   Future<void> _showFiltersBottomSheet() async {
     final cubit = context.read<MaintenancesCubit>();
     final vehicleCubit = context.read<VehicleCubit>();
+    final currentFilters = cubit.filters;
 
+    // Strip vehicleIds before passing to the sheet — they are managed externally
+    // (set via setInitialVehicleFilter) and are not configurable inside the sheet.
+    // This prevents the sheet from opening with a phantom active filter indicator.
     final result = await showModalBottomSheet<MaintenanceFilters>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => MaintenanceFiltersBottomSheet(
-        initialFilters: cubit.filters,
+        initialFilters: currentFilters.copyWith(vehicleIds: []),
         availableVehicles: vehicleCubit.availableVehicles
             .where((vehicle) => !vehicle.isArchived)
             .toList(),
@@ -70,8 +95,20 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
     );
 
     if (result != null && mounted) {
-      await cubit.updateFilters(result);
+      // Restore vehicleIds that are not managed by the sheet.
+      await cubit.updateFilters(
+        result.copyWith(vehicleIds: currentFilters.vehicleIds),
+      );
     }
+  }
+
+  Future<void> _onVehicleChanged(VehicleModel vehicle) async {
+    if (vehicle.id == null) return;
+    final cubit = context.read<MaintenancesCubit>();
+    cubit.setCurrentVehicleMileage(vehicle.currentMileage);
+    await cubit.updateFilters(
+      cubit.filters.copyWith(vehicleIds: [vehicle.id!]),
+    );
   }
 
   Future<void> _onTap(MaintenanceModel maintenance) async {
@@ -105,6 +142,19 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
 
   Future<void> _onRefresh() =>
       context.read<MaintenancesCubit>().fetchMaintenances();
+
+  VehicleModel? _resolveSelectedVehicle(BuildContext context) {
+    final vehicleIds = context.read<MaintenancesCubit>().filters.vehicleIds;
+    if (vehicleIds.isEmpty) return null;
+    try {
+      return context
+          .read<VehicleCubit>()
+          .availableVehicles
+          .firstWhere((vehicle) => vehicle.id == vehicleIds.first);
+    } catch (_) {
+      return null;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -191,26 +241,49 @@ class _MaintenancesPageViewState extends State<_MaintenancesPageView> {
             },
           ),
         ],
-        child: BlocBuilder<MaintenancesCubit, ResultState<List<MaintenanceModel>>>(
-          builder: (context, state) => state.maybeWhen(
-            loading: () => MaintenancesLoadingWidget(onRefresh: _onRefresh),
-            error: (error) => MaintenancesErrorWidget(
-              error: error.message,
-              onRefresh: _onRefresh,
+        child: Column(
+          children: [
+            if (widget.showVehicleSelector)
+              BlocBuilder<MaintenancesCubit, ResultState<List<MaintenanceModel>>>(
+                builder: (context, _) {
+                  final selectedVehicle = _resolveSelectedVehicle(context);
+                  final availableVehicles = context
+                      .read<VehicleCubit>()
+                      .availableVehicles
+                      .where((vehicle) => !vehicle.isArchived)
+                      .toList();
+                  if (selectedVehicle == null) return const SizedBox.shrink();
+                  return MaintenanceVehicleSelector(
+                    selectedVehicle: selectedVehicle,
+                    availableVehicles: availableVehicles,
+                    onVehicleChanged: _onVehicleChanged,
+                  );
+                },
+              ),
+            Expanded(
+              child: BlocBuilder<MaintenancesCubit, ResultState<List<MaintenanceModel>>>(
+                builder: (context, state) => state.maybeWhen(
+                  loading: () => MaintenancesLoadingWidget(onRefresh: _onRefresh),
+                  error: (error) => MaintenancesErrorWidget(
+                    error: error.message,
+                    onRefresh: _onRefresh,
+                  ),
+                  empty: () => MaintenancesEmptyWidget(
+                    onRefresh: _onRefresh,
+                    onActionPressed: _onAddMaintenance,
+                  ),
+                  data: (maintenances) => MaintenancesDataWidget(
+                    maintenances: maintenances,
+                    onRefresh: _onRefresh,
+                    onTap: _onTap,
+                    onFilterPressed: _showFiltersBottomSheet,
+                    onAddPressed: _onAddMaintenance,
+                  ),
+                  orElse: () => MaintenancesLoadingWidget(onRefresh: _onRefresh),
+                ),
+              ),
             ),
-            empty: () => MaintenancesEmptyWidget(
-              onRefresh: _onRefresh,
-              onActionPressed: _onAddMaintenance,
-            ),
-            data: (maintenances) => MaintenancesDataWidget(
-              maintenances: maintenances,
-              onRefresh: _onRefresh,
-              onTap: _onTap,
-              onFilterPressed: _showFiltersBottomSheet,
-              onAddPressed: _onAddMaintenance,
-            ),
-            orElse: () => MaintenancesLoadingWidget(onRefresh: _onRefresh),
-          ),
+          ],
         ),
       ),
     );

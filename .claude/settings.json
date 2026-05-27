@@ -5,5 +5,20 @@
       "Write",
       "Edit"
     ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /Users/cami/Developer/Personal/Rideglory/.claude/hooks/load-feature-docs.py 2>/dev/null || true",
+            "statusMessage": "Cargando documentación del feature…",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   }
 }

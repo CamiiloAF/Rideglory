@@ -92,7 +92,7 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
     emit(const ResultState.loading());
     final filters = _filters;
     final result = await _fetchFn(
-      type: filters.types.isNotEmpty ? filters.types.first.name : null,
+      type: filters.types.isNotEmpty ? filters.types.first.name.toUpperCase() : null,
       dateFrom: filters.startDate?.toIso8601String().substring(0, 10),
       dateTo: filters.endDate?.toIso8601String().substring(0, 10),
       city: filters.city,

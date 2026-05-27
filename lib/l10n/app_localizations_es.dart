@@ -3492,13 +3492,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_soat_start_date_label => 'Fecha de inicio';
 
   @override
+  String get vehicle_soat_start_date_hint => 'dd/mm/aaaa';
+
+  @override
   String get vehicle_soat_expiry_date_label => 'Fecha de vencimiento';
+
+  @override
+  String get vehicle_soat_expiry_date_hint => 'dd/mm/aaaa';
 
   @override
   String get vehicle_soat_save_button => 'Guardar SOAT';
 
   @override
   String get vehicle_soat_saved_successfully => 'SOAT registrado exitosamente';
+
+  @override
+  String get vehicle_soat_data_added => 'Datos del SOAT agregados';
 
   @override
   String get vehicle_soat_section_title => 'Documentos';
@@ -3515,13 +3524,16 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get vehicle_soat_option_upload_desc =>
-      'Toma una foto o selecciona desde tu galería el documento del SOAT vigente';
+      'Sube una foto, imagen de galería o PDF del documento del SOAT vigente';
 
   @override
   String get vehicle_soat_camera_button => 'Cámara';
 
   @override
   String get vehicle_soat_gallery_button => 'Galería';
+
+  @override
+  String get vehicle_soat_file_button => 'PDF';
 
   @override
   String get vehicle_soat_option_manual_title => 'Ingresar manualmente';
@@ -3994,6 +4006,42 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get soat_edit_btn => 'Editar';
+
+  @override
+  String get soat_edit_title => 'Editar SOAT';
+
+  @override
+  String get soat_doc_view => 'Abrir';
+
+  @override
+  String get soat_doc_download => 'Descargar';
+
+  @override
+  String get soat_doc_tap_to_open => 'Toca para abrir';
+
+  @override
+  String get soat_download_success => 'Archivo guardado en Descargas';
+
+  @override
+  String get soat_download_error => 'No se pudo descargar el archivo';
+
+  @override
+  String get soat_downloading => 'Descargando…';
+
+  @override
+  String get soat_open_downloads => 'Abrir';
+
+  @override
+  String get soat_doc_replace => 'Reemplazar archivo';
+
+  @override
+  String get soat_doc_change => 'Cambiar archivo';
+
+  @override
+  String get soat_doc_add_label => 'Agregar documento SOAT';
+
+  @override
+  String get soat_doc_add_hint => 'Opcional · Imagen o PDF';
 
   @override
   String get soat_uploading => 'Subiendo…';

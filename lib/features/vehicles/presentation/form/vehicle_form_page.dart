@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/core/services/image_storage_service.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_form_fields.dart';
+import 'package:rideglory/features/vehicles/domain/models/soat_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/features/vehicles/domain/repository/vehicle_repository.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_delete_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/form/vehicle_form_body.dart';
 import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_nav_header.dart';
+import 'package:rideglory/features/vehicles/presentation/soat/soat_confirmation_page.dart';
 import 'package:rideglory/shared/cubits/form_image_cubit.dart';
 
 class VehicleFormPage extends StatelessWidget {
@@ -160,6 +165,32 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
             backgroundColor: AppColors.success,
           ),
         );
+
+        // Caso 1: SOAT con imagen adjuntada — navegar a SoatConfirmationPage
+        final soatPath = state.soatLocalPath;
+        if (!state.isEditing && soatPath != null && savedVehicle.id != null) {
+          if (!context.mounted) return;
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute<void>(
+              builder: (_) => SoatConfirmationPage(
+                vehicle: savedVehicle,
+                documentImage: XFile(soatPath),
+                isFromVehicleCreation: true,
+              ),
+            ),
+          );
+          return;
+        }
+
+        // Caso 2: SOAT manual capturado antes de crear el vehículo — guardarlo ahora
+        final pendingManualSoat = state.pendingManualSoat;
+        if (!state.isEditing &&
+            pendingManualSoat != null &&
+            savedVehicle.id != null) {
+          _savePendingManualSoatAndPop(context, savedVehicle, pendingManualSoat);
+          return;
+        }
+
         context.pop(savedVehicle);
       },
       error: (error) {
@@ -172,6 +203,73 @@ class _VehicleFormViewState extends State<_VehicleFormView> {
       },
     );
   }
+
+  /// Guarda el SOAT manual pendiente en el backend y luego cierra el formulario.
+  /// El vehículo ya fue creado exitosamente en este punto.
+  Future<void> _savePendingManualSoatAndPop(
+    BuildContext context,
+    VehicleModel savedVehicle,
+    PendingManualSoat pendingManualSoat,
+  ) async {
+    final vehicleId = savedVehicle.id!;
+    final repository = getIt<VehicleRepository>();
+
+    // Subir imagen adjunta si el usuario seleccionó una durante el formulario
+    String? documentUrl;
+    final localImagePath = pendingManualSoat.localImagePath;
+    if (localImagePath != null) {
+      final ext = localImagePath.split('.').last.toLowerCase();
+      try {
+        documentUrl = await getIt<ImageStorageService>().uploadImage(
+          image: XFile(localImagePath),
+          storagePath:
+              'soat/$vehicleId/${DateTime.now().millisecondsSinceEpoch}.$ext',
+        );
+      } catch (_) {
+        // La imagen falló pero el vehículo y el SOAT se guardan igual.
+      }
+    }
+
+    final result = await repository.upsertSoat(
+      vehicleId: vehicleId,
+      soat: SoatModel(
+        vehicleId: vehicleId,
+        policyNumber: pendingManualSoat.policyNumber,
+        insurer: pendingManualSoat.insurer,
+        startDate: pendingManualSoat.startDate,
+        expiryDate: pendingManualSoat.expiryDate,
+        documentUrl: documentUrl,
+      ),
+    );
+
+    if (!context.mounted) return;
+
+    result.fold(
+      (error) {
+        // El vehículo se creó correctamente; solo falló el SOAT. Informar y continuar.
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              '${context.l10n.savedSuccessfully}. ${_soatErrorMsg(error)}',
+            ),
+            backgroundColor: AppColors.warning,
+          ),
+        );
+      },
+      (soat) {
+        context.read<VehicleCubit>().updateSoatLocally(
+          vehicleId,
+          expiryDate: soat.expiryDate,
+        );
+      },
+    );
+
+    if (!context.mounted) return;
+    context.pop(savedVehicle);
+  }
+
+  String _soatErrorMsg(DomainException error) =>
+      'Error al guardar SOAT: ${error.message}';
 
   void _deleteListener(BuildContext context, VehicleDeleteState state) {
     state.when(

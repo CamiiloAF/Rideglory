@@ -1,0 +1,60 @@
+{
+  "phase": "qa",
+  "slug": "fix-issues-17-21",
+  "status": "pass",
+  "signOff": "conditional",
+  "signOffReason": "Automated tests (119/119) and dart analyze (0 new issues) pass. Deferred to human E2E: AC-1 SOAT badge after real creation, AC-2 badge status values, AC-4 SOAT upload failure recovery, AC-5 registration form with real VehicleCubit data.",
+  "completedAt": "2026-05-22T23:45:00Z",
+  "testExecution": {
+    "command": "flutter test",
+    "previousCount": 108,
+    "newCount": 119,
+    "passed": 119,
+    "failed": 0,
+    "result": "pass"
+  },
+  "dartAnalyze": {
+    "newIssues": 0,
+    "preExistingIssues": 45,
+    "result": "pass"
+  },
+  "newTestFiles": [
+    "test/features/event_registration/presentation/widgets/vehicle_selector_loading_test.dart",
+    "test/features/event_registration/presentation/widgets/vehicle_selector_empty_test.dart",
+    "test/features/vehicles/presentation/cubit/vehicle_form_cubit_soat_test.dart"
+  ],
+  "acCoverage": {
+    "AC-1": "partial — unit covers soatLocalPath set; E2E manual needed for badge display",
+    "AC-2": "existing (soat_model_test.dart badge logic) + E2E manual",
+    "AC-3": "automated (TC-vform-soat-1, TC-vform-soat-4) + manual",
+    "AC-4": "automated (state stays after cubit emits data); E2E manual for network failure path",
+    "AC-5": "automated (widget + existing suite); E2E manual for full integration",
+    "AC-6": "automated (TC-vsel-1, TC-vsel-2, TC-vsel-3)",
+    "AC-7": "automated (TC-vempty-1, TC-vempty-2, TC-vempty-3)",
+    "AC-8": "automated (dart analyze: 0 new issues)"
+  },
+  "codeQuality": {
+    "oneWidgetPerFile": "pass — all 3 new widget files have exactly 1 widget class",
+    "noWidgetMethods": "pass",
+    "noHardcodedStrings": "pass — all strings via context.l10n",
+    "resultStatePattern": "pass — BlocBuilder uses state.when() with all 5 branches"
+  },
+  "bugsFound": [
+    {
+      "file": "lib/features/vehicles/presentation/soat/soat_confirmation_page.dart",
+      "lines": "171-259",
+      "severity": "low",
+      "description": "Pre-existing violation: _FormSectionHeader and _SoatFormFields private widget classes in same file (one-widget-per-file rule). Not introduced by this change.",
+      "action": "open_separate_bug"
+    }
+  ],
+  "manualProbesRequired": [
+    "AC-1: Create vehicle + SOAT → badge visible in garage",
+    "AC-2: Badge shows correct status (Vigente/Por vencer/Vencido)",
+    "AC-3: Create vehicle without SOAT → pop directly, no SOAT page",
+    "AC-4: Create vehicle + SOAT → airplane mode on confirmation → vehicle preserved + error SnackBar",
+    "AC-5: Open registration for event with allowedBrands=['*'] → vehicles shown",
+    "Regression: edit vehicle → SOAT unchanged",
+    "Regression: brand-restricted event → validation error on wrong brand"
+  ]
+}
