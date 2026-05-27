@@ -7,6 +7,7 @@ import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/delete/cubit/event_delete_cubit.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
+import 'package:rideglory/features/events/presentation/list/widgets/create_event_fab.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/events_state_widgets.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
@@ -23,7 +24,7 @@ class EventsPageView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.darkBgPrimary,
-      floatingActionButton: _CreateEventFab(showMyEvents: showMyEvents),
+      floatingActionButton: CreateEventFab(showMyEvents: showMyEvents),
       body: SafeArea(
         child: MultiBlocListener(
           listeners: [
@@ -129,37 +130,3 @@ class EventsPageView extends StatelessWidget {
   }
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
-
-class _CreateEventFab extends StatelessWidget {
-  const _CreateEventFab({required this.showMyEvents});
-
-  final bool showMyEvents;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () async {
-        final result =
-            await context.pushNamed<EventModel?>(AppRoutes.createEvent);
-        if (result != null && context.mounted) {
-          context.read<EventsCubit>().addEvent(result);
-        }
-      },
-      child: Container(
-        height: 48,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        decoration: BoxDecoration(
-          color: AppColors.primary,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.add, color: AppColors.darkBgPrimary, size: 18),
-          ],
-        ),
-      ),
-    );
-  }
-}
