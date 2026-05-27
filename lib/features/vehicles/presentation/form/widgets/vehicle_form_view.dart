@@ -16,7 +16,6 @@ import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dar
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_delete_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/form/vehicle_form_body.dart';
-import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_nav_header.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_confirmation_page.dart';
 import 'package:rideglory/shared/cubits/form_image_cubit.dart';
 
@@ -282,11 +281,20 @@ class _VehicleFormViewState extends State<VehicleFormView> {
       builder: (context, formState) {
         return Scaffold(
           backgroundColor: AppColors.darkBgPrimary,
-          appBar: VehicleFormNavHeader(
-            isEditing: _isEditing,
-            isLoading: formState.isLoading,
-            onCancel: () => context.pop(),
-            onSave: _saveVehicle,
+          appBar: AppFormNavHeader(
+            title: _isEditing
+                ? context.l10n.vehicle_editVehicle
+                : context.l10n.vehicle_addVehicle,
+            leading: AppFormNavAction.text(
+              label: context.l10n.vehicle_form_nav_cancel,
+              onTap: () => context.pop(),
+            ),
+            trailing: AppFormNavAction.text(
+              label: context.l10n.vehicle_form_nav_save,
+              onTap: _saveVehicle,
+              emphasized: true,
+              isLoading: formState.isLoading,
+            ),
           ),
           body: MultiBlocListener(
             listeners: [
