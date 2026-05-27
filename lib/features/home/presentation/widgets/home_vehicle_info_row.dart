@@ -106,11 +106,11 @@ class HomeVehicleInfoRow extends StatelessWidget {
 
               final isOverdue = alert.level == _AlertLevel.overdue;
               final color = isOverdue
-                  ? AppColors.error
-                  : const Color(0xFFEAB308);
+                  ? AppColors.statusError
+                  : AppColors.statusWarning;
               final bgColor = isOverdue
-                  ? const Color(0x1AEF4444)
-                  : const Color(0x1AEAB308);
+                  ? AppColors.statusError.withValues(alpha: 0.1)
+                  : AppColors.statusWarning.withValues(alpha: 0.1);
               final icon = isOverdue
                   ? Icons.warning_amber_outlined
                   : Icons.schedule_outlined;

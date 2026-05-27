@@ -48,9 +48,9 @@ class MaintenanceGroupedListItem extends StatelessWidget {
     required this.onTap,
   });
 
-  static const _successColor = Color(0xFF22C55E);
-  static const _warningColor = Color(0xFFEAB308);
-  static const _completedColor = Color(0xFF6B7280);
+  static const _successColor = AppColors.statusGreen;
+  static const _warningColor = AppColors.statusWarning;
+  static const _completedColor = AppColors.textOnDarkTertiary;
 
   Color get _statusColor => switch (status) {
     MaintenanceItemStatus.overdue => AppColors.error,
@@ -60,22 +60,22 @@ class MaintenanceGroupedListItem extends StatelessWidget {
   };
 
   Color get _cardBackground => switch (status) {
-    MaintenanceItemStatus.overdue => const Color(0xFF1A0A0A),
-    MaintenanceItemStatus.upcoming => const Color(0xFF1A1600),
+    MaintenanceItemStatus.overdue => AppColors.errorSubtle,
+    MaintenanceItemStatus.upcoming => AppColors.warningSubtle,
     MaintenanceItemStatus.current => AppColors.darkCard,
     MaintenanceItemStatus.completed => AppColors.darkCard,
   };
 
   Color get _cardBorder => switch (status) {
-    MaintenanceItemStatus.overdue => const Color(0x30EF4444),
-    MaintenanceItemStatus.upcoming => const Color(0x30EAB308),
+    MaintenanceItemStatus.overdue => AppColors.statusError.withValues(alpha: 0.19),
+    MaintenanceItemStatus.upcoming => AppColors.statusWarning.withValues(alpha: 0.19),
     MaintenanceItemStatus.current => AppColors.darkBorderPrimary,
     MaintenanceItemStatus.completed => AppColors.darkBorderPrimary,
   };
 
   Color get _iconBackground => switch (status) {
-    MaintenanceItemStatus.overdue => const Color(0x20EF4444),
-    MaintenanceItemStatus.upcoming => const Color(0x20EAB308),
+    MaintenanceItemStatus.overdue => AppColors.statusError.withValues(alpha: 0.13),
+    MaintenanceItemStatus.upcoming => AppColors.statusWarning.withValues(alpha: 0.13),
     MaintenanceItemStatus.current => MaintenanceTypeStyle.color(
       maintenance.type,
     ).withValues(alpha: 0.12),

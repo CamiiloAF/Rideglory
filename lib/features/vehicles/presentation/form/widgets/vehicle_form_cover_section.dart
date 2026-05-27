@@ -140,10 +140,10 @@ class _VehicleCoverImagePreview extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.5),
+                color: AppColors.darkBgPrimary.withValues(alpha: 0.5),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.close, size: 16, color: Colors.white),
+              child: const Icon(Icons.close, size: 16, color: AppColors.textOnDarkPrimary),
             ),
           ),
         ),

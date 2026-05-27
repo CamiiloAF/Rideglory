@@ -177,11 +177,11 @@ class _VehicleSoatCardState extends State<VehicleSoatCard> {
   Color _statusColor(SoatStatus? status) {
     switch (status) {
       case SoatStatus.valid:
-        return const Color(0xFF22C55E);
+        return AppColors.statusGreen;
       case SoatStatus.expiringSoon:
-        return const Color(0xFFEAB308);
+        return AppColors.statusWarning;
       case SoatStatus.expired:
-        return const Color(0xFFEF4444);
+        return AppColors.statusError;
       case SoatStatus.noSoat:
       case null:
         return AppColors.textOnDarkSecondary;

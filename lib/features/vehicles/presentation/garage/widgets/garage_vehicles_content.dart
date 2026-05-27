@@ -288,8 +288,8 @@ class _VehicleImageSection extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.transparent,
-                    Colors.black.withValues(alpha: 0.7),
+                    Colors.transparent, // Intentional: gradient stop — transparent start
+                    AppColors.darkBgPrimary.withValues(alpha: 0.7),
                   ],
                 ),
               ),
@@ -305,14 +305,14 @@ class _VehicleImageSection extends StatelessWidget {
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.5),
+                  color: AppColors.darkBgPrimary.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 alignment: Alignment.center,
                 child: const Icon(
                   Icons.more_horiz,
                   size: 16,
-                  color: Colors.white,
+                  color: AppColors.textOnDarkPrimary,
                 ),
               ),
             ),
@@ -720,32 +720,32 @@ class _MaintenanceCard extends StatelessWidget {
 
   Color get _cardBg {
     if (!isNext) return AppColors.darkCard;
-    return isOverdue ? const Color(0x1AEF4444) : const Color(0x0FEAB308);
+    return isOverdue ? AppColors.statusError.withValues(alpha: 0.1) : AppColors.statusWarning.withValues(alpha: 0.06);
   }
 
   Color get _cardBorder {
     if (!isNext) return AppColors.darkBorderPrimary;
-    return isOverdue ? const Color(0x40EF4444) : const Color(0x30EAB308);
+    return isOverdue ? AppColors.statusError.withValues(alpha: 0.25) : AppColors.statusWarning.withValues(alpha: 0.19);
   }
 
   Color get _iconColor {
     if (!isNext) return AppColors.primary;
-    return isOverdue ? AppColors.error : const Color(0xFFEAB308);
+    return isOverdue ? AppColors.statusError : AppColors.statusWarning;
   }
 
   Color get _iconBg {
-    if (!isNext) return const Color(0xFF2D2117);
-    return isOverdue ? const Color(0x20EF4444) : const Color(0x20EAB308);
+    if (!isNext) return AppColors.primarySubtle;
+    return isOverdue ? AppColors.statusError.withValues(alpha: 0.13) : AppColors.statusWarning.withValues(alpha: 0.13);
   }
 
   Color get _badgeColor {
-    if (!isNext) return const Color(0xFF22C55E);
-    return isOverdue ? AppColors.error : const Color(0xFFEAB308);
+    if (!isNext) return AppColors.statusGreen;
+    return isOverdue ? AppColors.statusError : AppColors.statusWarning;
   }
 
   Color get _valueColor {
     if (!isNext) return AppColors.textOnDarkSecondary;
-    return isOverdue ? AppColors.error : const Color(0xFFEAB308);
+    return isOverdue ? AppColors.statusError : AppColors.statusWarning;
   }
 
   @override
@@ -1121,11 +1121,11 @@ class _VehicleStatusBadge extends StatelessWidget {
         final isUpToDate = count == 0;
 
         final dotColor = isUpToDate
-            ? const Color(0xFF22C55E)
-            : const Color(0xFFEAB308);
+            ? AppColors.statusGreen
+            : AppColors.statusWarning;
         final badgeBg = isUpToDate
-            ? const Color(0x2022C55E)
-            : const Color(0x20EAB308);
+            ? AppColors.statusGreen.withValues(alpha: 0.13)
+            : AppColors.statusWarning.withValues(alpha: 0.13);
         final label = isUpToDate
             ? context.l10n.garage_upToDate
             : context.l10n.garage_upcomingCount(count);

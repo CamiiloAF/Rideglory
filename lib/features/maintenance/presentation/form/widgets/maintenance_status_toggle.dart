@@ -31,8 +31,8 @@ class MaintenanceStatusToggle extends StatelessWidget {
                 duration: const Duration(milliseconds: 150),
                 decoration: BoxDecoration(
                   color: isCompleted
-                      ? const Color(0xFF22C55E)
-                      : Colors.transparent,
+                      ? AppColors.statusGreen
+                      : Colors.transparent, // Intentional: toggle background resets to transparent when inactive
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Center(
@@ -42,7 +42,7 @@ class MaintenanceStatusToggle extends StatelessWidget {
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: isCompleted
-                          ? Colors.white
+                          ? AppColors.textOnDarkPrimary
                           : AppColors.textOnDarkSecondary,
                     ),
                   ),
@@ -58,7 +58,7 @@ class MaintenanceStatusToggle extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: !isCompleted
                       ? AppColors.primary
-                      : Colors.transparent,
+                      : Colors.transparent, // Intentional: toggle background resets to transparent when inactive
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Center(
@@ -68,7 +68,7 @@ class MaintenanceStatusToggle extends StatelessWidget {
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: !isCompleted
-                          ? Colors.white
+                          ? AppColors.textOnDarkPrimary
                           : AppColors.textOnDarkSecondary,
                     ),
                   ),

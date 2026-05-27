@@ -165,17 +165,17 @@ class _HeroImage extends StatelessWidget {
                   errorWidget: (_, _, _) => const _ImagePlaceholder(),
                 )
               : const _ImagePlaceholder(),
-          const DecoratedBox(
+          DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.transparent,
-                  Color(0xCC0D0D0F),
-                  Color(0xFF0D0D0F),
+                  Colors.transparent, // Intentional: gradient stop — transparent start
+                  AppColors.darkBgPrimary.withValues(alpha: 0.8),
+                  AppColors.darkBgPrimary,
                 ],
-                stops: [0.3, 0.8, 1.0],
+                stops: const [0.3, 0.8, 1.0],
               ),
             ),
           ),

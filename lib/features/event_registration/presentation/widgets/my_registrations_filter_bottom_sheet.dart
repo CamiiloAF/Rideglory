@@ -17,7 +17,7 @@ class MyRegistrationsFilterBottomSheet extends StatefulWidget {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.transparent, // Intentional: bottom sheet uses transparent bg to show rounded custom container
       builder: (_) => MyRegistrationsFilterBottomSheet(cubitContext: context),
     );
   }

@@ -10,7 +10,7 @@ class HomeEventViewDetailsButton extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.textOnDarkPrimary,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -19,13 +19,13 @@ class HomeEventViewDetailsButton extends StatelessWidget {
           Text(
             context.l10n.home_viewDetails,
             style: const TextStyle(
-              color: Colors.black87,
+              color: AppColors.darkBgPrimary,
               fontSize: 11,
               fontWeight: FontWeight.w600,
             ),
           ),
           AppSpacing.hGapXxs,
-          const Icon(Icons.arrow_forward, size: 12, color: Colors.black87),
+          const Icon(Icons.arrow_forward, size: 12, color: AppColors.darkBgPrimary),
         ],
       ),
     );

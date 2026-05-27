@@ -78,7 +78,7 @@ class InscriptionCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Material(
-        color: Colors.transparent,
+        color: Colors.transparent, // Intentional: Material requires transparent color to show InkWell splash correctly
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(12),

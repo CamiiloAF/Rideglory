@@ -40,7 +40,7 @@ class _MaintenanceFiltersBottomSheetState
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFF1E1E24),
+        color: AppColors.darkCard,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         border: Border(
           top: BorderSide(color: AppColors.darkBorderPrimary),
@@ -108,7 +108,7 @@ class _HandleBar extends StatelessWidget {
       width: 36,
       height: 4,
       decoration: BoxDecoration(
-        color: const Color(0xFF3A3A44),
+        color: AppColors.darkBorderLight,
         borderRadius: BorderRadius.circular(2),
       ),
     );
@@ -133,7 +133,7 @@ class _PanelHeader extends StatelessWidget {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: Colors.white,
+              color: AppColors.textOnDarkPrimary,
             ),
           ),
           if (hasActiveFilters)
@@ -159,7 +159,7 @@ class _Divider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Divider(height: 1, color: Color(0xFF2A2A32));
+    return const Divider(height: 1, color: AppColors.darkBorderPrimary);
   }
 }
 
@@ -225,12 +225,12 @@ class _TypeChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : const Color(0xFF1A1A1F),
+          color: isSelected ? AppColors.primary : AppColors.darkBgSecondary,
           borderRadius: BorderRadius.circular(20),
           border: isSelected
               ? null
               : const Border.fromBorderSide(
-                  BorderSide(color: Color(0xFF2A2A32)),
+                  BorderSide(color: AppColors.darkBorderPrimary),
                 ),
         ),
         child: Text(
@@ -238,7 +238,7 @@ class _TypeChip extends StatelessWidget {
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: isSelected ? Colors.black : const Color(0xFF9CA3AF),
+            color: isSelected ? AppColors.darkBgPrimary : AppColors.textOnDarkSecondary,
           ),
         ),
       ),
@@ -267,33 +267,33 @@ class _StatusSection extends StatelessWidget {
             children: [
               _StatusChip(
                 label: context.l10n.maintenance_filter_status_all,
-                textColor: const Color(0xFF9CA3AF),
-                fillColor: const Color(0xFF1A1A1F),
-                borderColor: const Color(0xFF2A2A32),
+                textColor: AppColors.textOnDarkSecondary,
+                fillColor: AppColors.darkBgSecondary,
+                borderColor: AppColors.darkBorderPrimary,
                 isSelected: selected == MaintenanceStatusFilter.all,
                 onTap: () => onChanged(MaintenanceStatusFilter.all),
               ),
               _StatusChip(
                 label: context.l10n.maintenance_filter_status_overdue,
-                textColor: const Color(0xFFEF4444),
-                fillColor: const Color(0x20EF4444),
-                borderColor: const Color(0x50EF4444),
+                textColor: AppColors.statusError,
+                fillColor: AppColors.statusError.withValues(alpha: 0.13),
+                borderColor: AppColors.statusError.withValues(alpha: 0.31),
                 isSelected: selected == MaintenanceStatusFilter.overdue,
                 onTap: () => onChanged(MaintenanceStatusFilter.overdue),
               ),
               _StatusChip(
                 label: context.l10n.maintenance_filter_status_upcoming,
-                textColor: const Color(0xFFEAB308),
-                fillColor: const Color(0x20EAB308),
-                borderColor: const Color(0x50EAB308),
+                textColor: AppColors.statusWarning,
+                fillColor: AppColors.statusWarning.withValues(alpha: 0.13),
+                borderColor: AppColors.statusWarning.withValues(alpha: 0.31),
                 isSelected: selected == MaintenanceStatusFilter.next,
                 onTap: () => onChanged(MaintenanceStatusFilter.next),
               ),
               _StatusChip(
                 label: context.l10n.maintenance_filter_status_on_track,
-                textColor: const Color(0xFF22C55E),
-                fillColor: const Color(0x2022C55E),
-                borderColor: const Color(0x5022C55E),
+                textColor: AppColors.statusGreen,
+                fillColor: AppColors.statusGreen.withValues(alpha: 0.13),
+                borderColor: AppColors.statusGreen.withValues(alpha: 0.31),
                 isSelected: selected == MaintenanceStatusFilter.upToDate,
                 onTap: () => onChanged(MaintenanceStatusFilter.upToDate),
               ),
@@ -387,7 +387,7 @@ class _DateRangeSection extends StatelessWidget {
                       label,
                       style: const TextStyle(
                         fontSize: 14,
-                        color: Colors.white,
+                        color: AppColors.textOnDarkPrimary,
                       ),
                     ),
                     _RadioIndicator(isSelected: isSelected),
@@ -423,7 +423,7 @@ class _RadioIndicator extends StatelessWidget {
             height: 8,
             child: DecoratedBox(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.textOnDarkPrimary,
                 shape: BoxShape.circle,
               ),
             ),
@@ -435,9 +435,9 @@ class _RadioIndicator extends StatelessWidget {
       width: 20,
       height: 20,
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1F),
+        color: AppColors.darkBgSecondary,
         shape: BoxShape.circle,
-        border: Border.all(color: const Color(0xFF2A2A32), width: 1.5),
+        border: Border.all(color: AppColors.darkBorderPrimary, width: 1.5),
       ),
     );
   }
@@ -455,7 +455,7 @@ class _SectionLabel extends StatelessWidget {
       style: const TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w700,
-        color: Color(0xFF9CA3AF),
+        color: AppColors.textOnDarkSecondary,
         letterSpacing: 0.5,
       ),
     );
@@ -485,10 +485,10 @@ class _CtaBar extends StatelessWidget {
               child: Container(
                 height: 48,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1A1A1F),
+                  color: AppColors.darkBgSecondary,
                   borderRadius: BorderRadius.circular(12),
                   border: const Border.fromBorderSide(
-                    BorderSide(color: Color(0xFF2A2A32)),
+                    BorderSide(color: AppColors.darkBorderPrimary),
                   ),
                 ),
                 child: Center(
@@ -497,7 +497,7 @@ class _CtaBar extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF9CA3AF),
+                      color: AppColors.textOnDarkSecondary,
                     ),
                   ),
                 ),
@@ -522,7 +522,7 @@ class _CtaBar extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: Colors.white,
+                        color: AppColors.textOnDarkPrimary,
                       ),
                     ),
                     if (activeFilterCount > 0) ...[
@@ -533,7 +533,7 @@ class _CtaBar extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.white.withAlpha(77),
+                          color: AppColors.textOnDarkPrimary.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
@@ -541,7 +541,7 @@ class _CtaBar extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
-                            color: Colors.white,
+                            color: AppColors.textOnDarkPrimary,
                           ),
                         ),
                       ),

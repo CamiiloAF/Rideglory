@@ -167,7 +167,7 @@ class _PendingBar extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
           decoration: BoxDecoration(
-            color: const Color(0xFF2D2A10),
+            color: AppColors.warningSubtle,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
@@ -289,9 +289,9 @@ class _ApprovedBar extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
-                color: const Color(0xFF1F0F0F),
+                color: AppColors.errorSubtle,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: const Color(0xFF5A1A1A)),
+                border: Border.all(color: AppColors.statusError.withValues(alpha: 0.35)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,

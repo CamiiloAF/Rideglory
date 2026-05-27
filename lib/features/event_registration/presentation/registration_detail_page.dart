@@ -34,7 +34,7 @@ class RegistrationDetailPage extends StatelessWidget {
           ),
         ),
         backgroundColor: AppColors.darkBgPrimary,
-        surfaceTintColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent, // Intentional: remove Material3 surface tint
         centerTitle: true,
         elevation: 0,
       ),

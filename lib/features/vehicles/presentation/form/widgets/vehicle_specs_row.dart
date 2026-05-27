@@ -60,7 +60,7 @@ class _VehicleSpecsRowState extends State<VehicleSpecsRow> {
           onTap: _isEditing ? null : _startEditing,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-            color: Colors.transparent,
+            color: Colors.transparent, // Intentional: tap target container with no fill — relies on parent card background
             child: Row(
               children: [
                 SizedBox(

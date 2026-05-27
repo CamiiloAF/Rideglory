@@ -104,7 +104,7 @@ class _OwnerStartBar extends StatelessWidget {
             padding:
                 const EdgeInsets.symmetric(horizontal: 22, vertical: 13),
             decoration: BoxDecoration(
-              color: const Color(0xFF166534), // dark green bg
+              color: AppColors.successSubtle,
               borderRadius: BorderRadius.circular(25),
             ),
             child: isLoading
@@ -219,7 +219,7 @@ class _OwnerLiveBar extends StatelessWidget {
               padding:
                   const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: const Color(0xFF2D1010),
+                color: AppColors.errorSubtle,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
@@ -263,7 +263,7 @@ class _OwnerLiveBar extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 22),
             decoration: BoxDecoration(
-              color: Colors.transparent,
+              color: Colors.transparent, // Intentional: outlined button with no fill
               borderRadius: BorderRadius.circular(25),
               border: Border.all(color: AppColors.primary, width: 1.5),
             ),
@@ -293,7 +293,7 @@ class _OwnerLiveBar extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 22),
             decoration: BoxDecoration(
-              color: const Color(0xFF1F0808),
+              color: AppColors.errorSubtle,
               borderRadius: BorderRadius.circular(25),
               border: Border.all(color: AppColors.error, width: 1.5),
             ),

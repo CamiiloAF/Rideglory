@@ -167,7 +167,7 @@ class _ViewDetailsButton extends StatelessWidget {
       width: double.infinity,
       height: 36,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.textOnDarkPrimary,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(

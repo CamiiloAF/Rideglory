@@ -371,7 +371,7 @@ class EventDetailViewState extends State<EventDetailView> {
   ) async {
     await showModalBottomSheet<void>(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.transparent, // Intentional: showModalBottomSheet requires transparent to show custom Container decoration
       builder: (sheetCtx) => Container(
         decoration: const BoxDecoration(
           color: AppColors.darkCard,
@@ -507,10 +507,10 @@ class _CircleButton extends StatelessWidget {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: const Color(0x990D0D0F), // #0D0D0F with 60% opacity
+          color: AppColors.darkBgPrimary.withValues(alpha: 0.6), // #0D0D0F with 60% opacity
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Icon(icon, color: Colors.white, size: 20),
+        child: Icon(icon, color: AppColors.textOnDarkPrimary, size: 20),
       ),
     );
   }
@@ -535,10 +535,10 @@ class _OwnerMenuButton extends StatelessWidget {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: const Color(0x990D0D0F),
+          color: AppColors.darkBgPrimary.withValues(alpha: 0.6),
           borderRadius: BorderRadius.circular(20),
         ),
-        child: const Icon(Icons.more_vert, color: Colors.white, size: 20),
+        child: const Icon(Icons.more_vert, color: AppColors.textOnDarkPrimary, size: 20),
       ),
       onSelected: (value) {
         switch (value) {
@@ -631,7 +631,7 @@ class _EventHeaderSection extends StatelessWidget {
                 child: Text(
                   _badgeLabel(context),
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: AppColors.textOnDarkPrimary,
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     height: 1.0,
