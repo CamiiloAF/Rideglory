@@ -15,13 +15,13 @@
   "plan": {
     "generatedAt": "2026-05-13T00:00:00Z",
     "feedbackIncorporated": true,
-    "summary": "Five sequential iterations complete Rideglory's MVP. Iter-1 is a pure UI/UX Redesign pass covering 15 existing screens with no new features or backend changes \u2014 establishing a consistent design system baseline before new capabilities are layered on. Iter-2 delivers SOAT registration, FCM notification infrastructure, and the ManageAttendeesPage redesign (Story 2.9) deferred from iter-1. Iter-3 completes real-time tracking with SOS, organizer controls, background GPS, and the Mapbox SDK migration as explicit Story 3.0. Iter-4 activates the social layer with the follow system and complete public profiles, and provisions the deep link domain for iter-1. Iter-1 closes the release gate with Android App Links + iOS Universal Links event sharing, Apple Sign-In, and full notification tap routing. All FEEDBACK_REPLAN changes incorporated: Story 1.11 (ManageAttendeesPage) deferred from iter-1 to iter-2 as Story 2.9; iter-1 scope set to 15 screens (1.10 included, 1.11 deferred); auth frames gate added as iter-1 pre-flight item; module-scoped PRs (max 40 files) added to iter-1 DoD; 5 manual smoke tests added to iter-1 DoD; app_event_badge atom extraction added as pre-condition for Story 1.5; document slot pill molecule extraction added during Story 1.7; iter-1 title normalized to 'Deep Links + Apple Sign-In + Notification Routing'; iter-1 redesign regression risk added to risks.",
+    "summary": "Five sequential iterations complete Rideglory's MVP. Iter-1 is a pure UI/UX Redesign pass covering 15 existing screens with no new features or backend changes — establishing a consistent design system baseline before new capabilities are layered on. Iter-2 delivers SOAT registration, FCM notification infrastructure, and the ManageAttendeesPage redesign (Story 2.9) deferred from iter-1. Iter-3 completes real-time tracking with SOS, organizer controls, background GPS, and the Mapbox SDK migration as explicit Story 3.0. Iter-4 activates the social layer with the follow system and complete public profiles, and provisions the deep link domain for iter-1. Iter-1 closes the release gate with Android App Links + iOS Universal Links event sharing, Apple Sign-In, and full notification tap routing. All FEEDBACK_REPLAN changes incorporated: Story 1.11 (ManageAttendeesPage) deferred from iter-1 to iter-2 as Story 2.9; iter-1 scope set to 15 screens (1.10 included, 1.11 deferred); auth frames gate added as iter-1 pre-flight item; module-scoped PRs (max 40 files) added to iter-1 DoD; 5 manual smoke tests added to iter-1 DoD; app_event_badge atom extraction added as pre-condition for Story 1.5; document slot pill molecule extraction added during Story 1.7; iter-1 title normalized to 'Deep Links + Apple Sign-In + Notification Routing'; iter-1 redesign regression risk added to risks.",
     "proposedStack": {
       "frontend": {
         "framework": "Flutter",
         "stateManagement": "BLoC/Cubit + ResultState<T>",
         "styling": "Dark theme, orange primary #f98c1f, Space Grotesk",
-        "rationale": "Existing stack confirmed \u2014 Clean Architecture, Retrofit, GetIt/Injectable, go_router all proven and correctly established. No refactoring needed. Iter-1 is presentation-layer only: no code generation, no domain changes, no DI changes."
+        "rationale": "Existing stack confirmed — Clean Architecture, Retrofit, GetIt/Injectable, go_router all proven and correctly established. No refactoring needed. Iter-1 is presentation-layer only: no code generation, no domain changes, no DI changes."
       },
       "backend": {
         "runtime": "Node.js",
@@ -30,13 +30,13 @@
       },
       "database": {
         "engine": "PostgreSQL (per microservice via Prisma)",
-        "rationale": "Existing per-MS Prisma schemas. New entities in iter-2: Soat (vehicles-ms), Notification (api-gateway \u2014 first-time Prisma setup). fcmToken field added to User (users-ms). New entity in iter-4: Follow (users-ms).",
+        "rationale": "Existing per-MS Prisma schemas. New entities in iter-2: Soat (vehicles-ms), Notification (api-gateway — first-time Prisma setup). fcmToken field added to User (users-ms). New entity in iter-4: Follow (users-ms).",
         "migrationTool": "Prisma Migrate"
       }
     },
     "assumptions": [
       {
-        "text": "mapbox_maps_flutter is absent from pubspec.yaml and pubspec.lock \u2014 it has never been installed. google_maps_flutter ^2.10.0 is the live SDK. The migration in Story 3.0 is a real task (4 Dart files + 4 native files), not a documentation cleanup.",
+        "text": "mapbox_maps_flutter is absent from pubspec.yaml and pubspec.lock — it has never been installed. google_maps_flutter ^2.10.0 is the live SDK. The migration in Story 3.0 is a real task (4 Dart files + 4 native files), not a documentation cleanup.",
         "madeBy": "architect",
         "impact": "Story 3.0 is the first story of iter-3 and a hard blocker for all other iter-3 stories. Estimated 1-2 days of work for an experienced Flutter developer."
       },
@@ -61,7 +61,7 @@
         "impact": "Allot a full pre-flight day for api-gateway Prisma initialization. Docker Compose DB network and DATABASE_URL must be configured before migrate dev can run."
       },
       {
-        "text": "iOS persistent notification for background GPS (iter-3) is the system-managed blue location indicator in the status bar. A custom notification text ('Rideglory \u2014 Rodada activa') is Android-only (foreground service). iOS users will see different behavior than Android users.",
+        "text": "iOS persistent notification for background GPS (iter-3) is the system-managed blue location indicator in the status bar. A custom notification text ('Rideglory — Rodada activa') is Android-only (foreground service). iOS users will see different behavior than Android users.",
         "madeBy": "plan_reviewer",
         "impact": "UX discrepancy between platforms is acceptable for MVP and must be communicated via onboarding copy or in-app tooltip."
       },
@@ -71,7 +71,7 @@
         "impact": "Iter-1 pre-flight must include this configuration step. Allow 1 business day for provisioning profile propagation."
       },
       {
-        "text": "Route polyline should be stored as GeoJSON LineString (routeGeoJson Json?) in events-ms, not as a Google-encoded polyline string as specified in PRD \u00a717.2. prisma migrate reset discards all existing event data so no legacy format migration is needed.",
+        "text": "Route polyline should be stored as GeoJSON LineString (routeGeoJson Json?) in events-ms, not as a Google-encoded polyline string as specified in PRD §17.2. prisma migrate reset discards all existing event data so no legacy format migration is needed.",
         "madeBy": "architect",
         "impact": "Backend developer must coordinate GeoJSON contract with Flutter developer before iter-3 tracking stories begin."
       },
@@ -83,19 +83,19 @@
     ],
     "risks": [
       {
-        "text": "Pre-flight for iter-1 takes longer than expected \u2014 auth frames missing in rideglory.pen, donut chart scope ambiguity, 15-screen gap analysis \u2014 delaying code start.",
+        "text": "Pre-flight for iter-1 takes longer than expected — auth frames missing in rideglory.pen, donut chart scope ambiguity, 15-screen gap analysis — delaying code start.",
         "likelihood": "high",
-        "mitigation": "Enforce design gate strictly: no Flutter code until gap analysis is complete and reviewed. Parallelize: Designer inspects Pencil while Developer runs dart analyze baseline on main. Auth frames gate is per-story (blocks Story 1.3 only, not 1.2 or 1.4\u20131.10)."
+        "mitigation": "Enforce design gate strictly: no Flutter code until gap analysis is complete and reviewed. Parallelize: Designer inspects Pencil while Developer runs dart analyze baseline on main. Auth frames gate is per-story (blocks Story 1.3 only, not 1.2 or 1.4–1.10)."
       },
       {
         "text": "Iter-4 AI cover generation widget breaks during event form refactor (Story 1.6).",
         "likelihood": "medium",
-        "mitigation": "Mandatory smoke test: generate cover \u2192 select image \u2192 save event \u2192 confirm functional. Treat as a blocking acceptance criterion. Documented in iter-1 DoD."
+        "mitigation": "Mandatory smoke test: generate cover → select image → save event → confirm functional. Treat as a blocking acceptance criterion. Documented in iter-1 DoD."
       },
       {
-        "text": "95\u2013135 file diff across 6 modules is unreviewable as a single PR.",
+        "text": "95–135 file diff across 6 modules is unreviewable as a single PR.",
         "likelihood": "high",
-        "mitigation": "Split into 5\u20136 module-scoped PRs (max 40 files each) merged into a feature branch. dart analyze + flutter test green required before each module PR merges."
+        "mitigation": "Split into 5–6 module-scoped PRs (max 40 files each) merged into a feature branch. dart analyze + flutter test green required before each module PR merges."
       },
       {
         "text": "Iter-1 redesign causes regressions in existing functionality (iter-4 AI cover, event form Mapbox route preview, maintenance donut chart, CTA state variants).",
@@ -108,7 +108,7 @@
         "mitigation": "Mandate physical device testing from day 1 of iter-3. Write separate platform test plans for Android and iOS."
       },
       {
-        "text": "Deep link domain unresolved \u2014 iter-1 cannot start without assetlinks.json and apple-app-site-association live on a domain with valid TLS.",
+        "text": "Deep link domain unresolved — iter-1 cannot start without assetlinks.json and apple-app-site-association live on a domain with valid TLS.",
         "likelihood": "high",
         "mitigation": "Explicit iter-4 action item (not a story). Must be provisioned and verified with curl before iter-4 closes. Hard stop."
       },
@@ -120,7 +120,7 @@
       {
         "text": "Story 3.0 (Mapbox migration) consumes the full iter-3 sprint and blocks all other stories.",
         "likelihood": "medium",
-        "mitigation": "Story 3.0 is already gated as iter-blocking. Widget test for route_map_preview.dart required before 3.0 PR can merge. Stories 3.1\u20133.7 are explicitly blocked on 3.0 merge."
+        "mitigation": "Story 3.0 is already gated as iter-blocking. Widget test for route_map_preview.dart required before 3.0 PR can merge. Stories 3.1–3.7 are explicitly blocked on 3.0 merge."
       },
       {
         "text": "GoRouter is not currently registered in GetIt. NotificationRouteHandler (iter-1) needs a router reference and may require refactoring app_router.dart.",
@@ -140,29 +140,29 @@
         "candidate": "post-iter-1"
       },
       {
-        "item": "Recordatorio de mantenimiento por km (od\u00f3metro estimado)",
-        "reason": "Requiere sistema de tracking de od\u00f3metro autom\u00e1tico no definido en el PRD.",
+        "item": "Recordatorio de mantenimiento por km (odómetro estimado)",
+        "reason": "Requiere sistema de tracking de odómetro automático no definido en el PRD.",
         "candidate": "post-iter-1"
       },
       {
         "item": "Firebase Dynamic Links",
         "reason": "EOL agosto 2025. Reemplazado por app_links + Android App Links + iOS Universal Links en iter-1.",
-        "candidate": "never \u2014 replaced"
+        "candidate": "never — replaced"
       },
       {
         "item": "Dynamic Links para perfiles de riders",
-        "reason": "Bajo impacto vs. esfuerzo; los eventos son el caso de uso cr\u00edtico de sharing.",
+        "reason": "Bajo impacto vs. esfuerzo; los eventos son el caso de uso crítico de sharing.",
         "candidate": "post-iter-1"
       },
       {
         "item": "Sugerencias de riders a seguir",
-        "reason": "Sin demanda validada para MVP; el discovery es por b\u00fasqueda directa.",
+        "reason": "Sin demanda validada para MVP; el discovery es por búsqueda directa.",
         "candidate": "post-iter-1"
       },
       {
         "item": "Notificaciones read/unread local-only (SharedPreferences)",
-        "reason": "Descartado por decisi\u00f3n del human reviewer \u2014 fuente de verdad es el backend.",
-        "candidate": "never \u2014 replaced"
+        "reason": "Descartado por decisión del human reviewer — fuente de verdad es el backend.",
+        "candidate": "never — replaced"
       },
       {
         "item": "Pagos in-app (Wompi, MercadoPago)",
@@ -170,8 +170,8 @@
         "candidate": "post-MVP"
       },
       {
-        "item": "Verificaci\u00f3n autom\u00e1tica de SOAT via RUNT API",
-        "reason": "RUNT no tiene API p\u00fablica.",
+        "item": "Verificación automática de SOAT via RUNT API",
+        "reason": "RUNT no tiene API pública.",
         "candidate": "post-MVP"
       },
       {
@@ -185,7 +185,7 @@
         "candidate": "post-MVP"
       },
       {
-        "item": "Gamificaci\u00f3n (logros, retos)",
+        "item": "Gamificación (logros, retos)",
         "reason": "Fase posterior al MVP.",
         "candidate": "post-MVP"
       },
@@ -195,8 +195,8 @@
         "candidate": "post-MVP"
       },
       {
-        "item": "Idioma ingl\u00e9s",
-        "reason": "Fase posterior; MVP es solo espa\u00f1ol.",
+        "item": "Idioma inglés",
+        "reason": "Fase posterior; MVP es solo español.",
         "candidate": "post-MVP"
       },
       {
@@ -215,9 +215,9 @@
     },
     {
       "id": 1,
-      "goal": "UI/UX Redesign: bring 15 existing screens into alignment with rideglory.pen design \u2014 no new features, no backend changes. Establishes consistent design system baseline before new capabilities are layered on.",
+      "goal": "UI/UX Redesign: bring 15 existing screens into alignment with rideglory.pen design — no new features, no backend changes. Establishes consistent design system baseline before new capabilities are layered on.",
       "status": "done",
-      "notes": "Pre-flight: gap analysis and Pencil frame inspection BEFORE any Flutter code. Auth frames gate: Story 1.3 blocked until Login/Signup/PasswordRecovery frames confirmed in rideglory.pen; Stories 1.2 and 1.4\u20131.10 may proceed in parallel. app_event_badge.dart atom must be extracted before Story 1.5 begins. Document slot pill (aGqnv) extracted as molecule during Story 1.7. Implementation split into 5\u20136 module-scoped PRs (max 40 files each). 5 manual smoke tests required before final merge. Story 1.10 (RegistrationFormPage + RegistrationDetailPage) is included. Story 1.11 (ManageAttendeesPage) deferred to iter-2 as Story 2.9.",
+      "notes": "Pre-flight: gap analysis and Pencil frame inspection BEFORE any Flutter code. Auth frames gate: Story 1.3 blocked until Login/Signup/PasswordRecovery frames confirmed in rideglory.pen; Stories 1.2 and 1.4–1.10 may proceed in parallel. app_event_badge.dart atom must be extracted before Story 1.5 begins. Document slot pill (aGqnv) extracted as molecule during Story 1.7. Implementation split into 5–6 module-scoped PRs (max 40 files each). 5 manual smoke tests required before final merge. Story 1.10 (RegistrationFormPage + RegistrationDetailPage) is included. Story 1.11 (ManageAttendeesPage) deferred to iter-2 as Story 2.9.",
       "primaryAgents": [
         "po",
         "architect",
@@ -226,7 +226,7 @@
         "qa",
         "tech_lead"
       ],
-      "definitionOfDone": "- [ ] Design gate: all 15 screen frames inspected/confirmed in rideglory.pen via Pencil MCP before any Flutter code changes begin; gap analysis complete and reviewed\n- [ ] Auth frames gate satisfied: Pencil frames for Login, Signup, Password Recovery confirmed or created in rideglory.pen before Story 1.3 implementation begins\n- [ ] Implementation split into 5\u20136 module-scoped PRs (max 40 files each): splash+auth, home, events, garage, maintenance, registration\n- [ ] Each module PR: dart analyze + flutter test green before merge into feature branch\n- [ ] No single PR exceeds 40 files changed\n- [ ] All Color(0x...) and Colors.<named> hardcoded literals in lib/features/ replaced with colorScheme or AppColors constants\n- [ ] All ElevatedButton \u2192 AppButton; raw TextFormField \u2192 AppTextField; raw AlertDialog \u2192 AppDialog\n- [ ] dart analyze passes with zero new violations on the final feature branch\n- [ ] All 10 existing flutter test cases pass \u2014 zero regressions\n- [ ] app_event_badge.dart atom extracted from frame zKkmE before Story 1.5 implementation begins\n- [ ] Document slot pill (aGqnv) extracted as design system molecule during Story 1.7\n- [ ] AI cover generation widget (iter-4) remains functional \u2014 mandatory smoke test: generate cover \u2192 select image \u2192 save event \u2192 confirm functional\n- [ ] 5 manual smoke tests passed before final merge: (a) AI cover generation, (b) Event detail CTA state variants, (c) Maintenance donut chart rendering, (d) Home bottom nav pill bar, (e) Mapbox route preview in event form\n- [ ] Bottom navigation pill bar (VMmN0) verified to match frame exactly across all shell screens\n- [ ] All 3 events widget tests updated in the same PR that swaps their widgets \u2014 no test-rot merges\n- [ ] app_es.arb updated for any UI copy changes; flutter gen-l10n run and generated files committed\n- [ ] No new backend endpoints; no new domain models; no new use cases; no new routes introduced",
+      "definitionOfDone": "- [ ] Design gate: all 15 screen frames inspected/confirmed in rideglory.pen via Pencil MCP before any Flutter code changes begin; gap analysis complete and reviewed\n- [ ] Auth frames gate satisfied: Pencil frames for Login, Signup, Password Recovery confirmed or created in rideglory.pen before Story 1.3 implementation begins\n- [ ] Implementation split into 5–6 module-scoped PRs (max 40 files each): splash+auth, home, events, garage, maintenance, registration\n- [ ] Each module PR: dart analyze + flutter test green before merge into feature branch\n- [ ] No single PR exceeds 40 files changed\n- [ ] All Color(0x...) and Colors.<named> hardcoded literals in lib/features/ replaced with colorScheme or AppColors constants\n- [ ] All ElevatedButton → AppButton; raw TextFormField → AppTextField; raw AlertDialog → AppDialog\n- [ ] dart analyze passes with zero new violations on the final feature branch\n- [ ] All 10 existing flutter test cases pass — zero regressions\n- [ ] app_event_badge.dart atom extracted from frame zKkmE before Story 1.5 implementation begins\n- [ ] Document slot pill (aGqnv) extracted as design system molecule during Story 1.7\n- [ ] AI cover generation widget (iter-4) remains functional — mandatory smoke test: generate cover → select image → save event → confirm functional\n- [ ] 5 manual smoke tests passed before final merge: (a) AI cover generation, (b) Event detail CTA state variants, (c) Maintenance donut chart rendering, (d) Home bottom nav pill bar, (e) Mapbox route preview in event form\n- [ ] Bottom navigation pill bar (VMmN0) verified to match frame exactly across all shell screens\n- [ ] All 3 events widget tests updated in the same PR that swaps their widgets — no test-rot merges\n- [ ] app_es.arb updated for any UI copy changes; flutter gen-l10n run and generated files committed\n- [ ] No new backend endpoints; no new domain models; no new use cases; no new routes introduced",
       "stories": [
         {
           "id": "1.1",
@@ -245,32 +245,32 @@
         },
         {
           "id": "1.4",
-          "story": "As a rider on the Home Dashboard, the layout matches the rideglory.pen frame dyWWs \u2014 including the greeting header, garage card (main vehicle + empty state), upcoming rides section (horizontal scroll + empty state), and bottom navigation pill bar.",
+          "story": "As a rider on the Home Dashboard, the layout matches the rideglory.pen frame dyWWs — including the greeting header, garage card (main vehicle + empty state), upcoming rides section (horizontal scroll + empty state), and bottom navigation pill bar.",
           "acceptance": "Frame dyWWs matched: correct spacing, correct card border radius, correct color tokens. Bottom nav pill bar matches frame VMmN0. SOAT badge placeholder not included (iter-2). No layout regressions vs. current behavior."
         },
         {
           "id": "1.5",
-          "story": "As a rider browsing Events, the events list page and event detail page match the rideglory.pen frames Neipf and kAubW \u2014 including event cards, badges (zKkmE), filter chips, the filter bottom sheet, and the CTA bar on event detail. Pre-condition: lib/design_system/atoms/app_event_badge.dart must be extracted/created from frame zKkmE before this story's implementation begins.",
+          "story": "As a rider browsing Events, the events list page and event detail page match the rideglory.pen frames Neipf and kAubW — including event cards, badges (zKkmE), filter chips, the filter bottom sheet, and the CTA bar on event detail. Pre-condition: lib/design_system/atoms/app_event_badge.dart must be extracted/created from frame zKkmE before this story's implementation begins.",
           "acceptance": "Event list: search bar, filter chips, event cards (image overlay, badge, organizer avatar, chips) match frame Neipf. Event detail: hero image, metric chips, map preview, allowed brands chips, CTA bar match frame kAubW. Filter bottom sheet layout correct. app_event_badge.dart used in all event card contexts."
         },
         {
           "id": "1.6",
-          "story": "As a rider creating an event, the Create/Edit Event form matches the rideglory.pen frame zbCa0 \u2014 correct input fields, layout sections, difficulty selector, and button styles.",
+          "story": "As a rider creating an event, the Create/Edit Event form matches the rideglory.pen frame zbCa0 — correct input fields, layout sections, difficulty selector, and button styles.",
           "acceptance": "Form layout matches frame zbCa0. AI cover generation widget (iter-4 feature) is preserved and functional. Mapbox route preview widget unchanged. All inputs use AppTextField. AppButton used for primary actions."
         },
         {
           "id": "1.7",
-          "story": "As a rider viewing the Garage, the vehicle list page and vehicle detail page match rideglory.pen frames KCf6W and P1GSzZ \u2014 including the main vehicle card, 'other vehicles' list, spec chips, and document slots. Note: document slot pill (aGqnv) should be extracted as a design system molecule during this story.",
+          "story": "As a rider viewing the Garage, the vehicle list page and vehicle detail page match rideglory.pen frames KCf6W and P1GSzZ — including the main vehicle card, 'other vehicles' list, spec chips, and document slots. Note: document slot pill (aGqnv) should be extracted as a design system molecule during this story.",
           "acceptance": "Vehicle list matches frame KCf6W: main vehicle card with full-width image, stats chips, quick-access buttons; compact other-vehicles list. Vehicle detail matches frame P1GSzZ: specs, document badges, action buttons. All states (loading, empty, data, error) visually correct."
         },
         {
           "id": "1.8",
-          "story": "As a rider adding or editing a vehicle, the Add/Edit vehicle form matches rideglory.pen frame EqnMm \u2014 correct field layout, image upload UI, and step structure.",
+          "story": "As a rider adding or editing a vehicle, the Add/Edit vehicle form matches rideglory.pen frame EqnMm — correct field layout, image upload UI, and step structure.",
           "acceptance": "Form fields, image upload banner, and section layout match frame EqnMm. Document slot section (SOAT, tech review) UI is present but non-functional pending iter-2. AppTextField and AppButton used throughout."
         },
         {
           "id": "1.9",
-          "story": "As a rider viewing Maintenance, the dashboard, history list, and new maintenance forms match rideglory.pen frames Ako7u (dashboard), SykjL (history), J5h6P (step 1), eK2WW (step 2 \u2014 completed), and ELB5u (step 2 \u2014 scheduled).",
+          "story": "As a rider viewing Maintenance, the dashboard, history list, and new maintenance forms match rideglory.pen frames Ako7u (dashboard), SykjL (history), J5h6P (step 1), eK2WW (step 2 — completed), and ELB5u (step 2 — scheduled).",
           "acceptance": "All 5 maintenance frames matched. Dashboard: donut chart health indicator, urgency color coding (red/yellow/green) correct. History: year grouping, cost summary, chronological order. Filters bottom sheet (frame v6RqaX) layout correct. Step 1 grid 2x4 card layout correct. Step 2 tab (Completado / Programado) layout correct."
         },
         {
@@ -279,15 +279,15 @@
           "acceptance": "Registration list and detail pages use design system components throughout; no hardcoded colors; empty and loading states correct."
         }
       ],
-      "architectNotes": "Iter-1 is presentation-layer only. Confirmed: only 3 imports of core/data/ files in lib/features/*/presentation/, all referencing colombia_motos_brands_data.dart (static catalog). No domain models, DTOs, services, or code generation files need changes. File blast radius: ~95\u2013135 files touched. Heavy lift is color tokenization (~33 raw Color(0x...) literals + ~80 files with Colors.<named> references), not widget swapping. Component adoption already mature (only 3 files with ElevatedButton/TextFormField usage).",
-      "designNotes": "app_event_badge.dart atom must be extracted from frame zKkmE BEFORE Story 1.5 begins \u2014 not a DoD checkbox but a named pre-condition task in gap analysis. Document slot pill (aGqnv) extracted as molecule during Story 1.7 for reuse in iter-2 SOAT badge. Auth frame gap: if no Login/Signup/PasswordRecovery frames exist in rideglory.pen, Designer creates them before Story 1.3 begins. Donut chart (Ako7u): Designer must flag during pre-flight whether donut chart is 'swap colors only' or requires geometry/animation changes \u2014 if the latter, descope to colors-only for iter-1.",
-      "techLeadNotes": "All 3 events widget tests (attendees_list_navigation_test.dart, event_filters_bottom_sheet_test.dart, events_page_view_test.dart) will need finder updates when widgets are swapped \u2014 these updates are part of the story, not post-merge cleanup. Module-scoped PR strategy is mandatory: 5\u20136 PRs into a feature branch, each requiring dart analyze + flutter test green before merge. Maximum 40 files per PR. No test-rot merges allowed."
+      "architectNotes": "Iter-1 is presentation-layer only. Confirmed: only 3 imports of core/data/ files in lib/features/*/presentation/, all referencing colombia_motos_brands_data.dart (static catalog). No domain models, DTOs, services, or code generation files need changes. File blast radius: ~95–135 files touched. Heavy lift is color tokenization (~33 raw Color(0x...) literals + ~80 files with Colors.<named> references), not widget swapping. Component adoption already mature (only 3 files with ElevatedButton/TextFormField usage).",
+      "designNotes": "app_event_badge.dart atom must be extracted from frame zKkmE BEFORE Story 1.5 begins — not a DoD checkbox but a named pre-condition task in gap analysis. Document slot pill (aGqnv) extracted as molecule during Story 1.7 for reuse in iter-2 SOAT badge. Auth frame gap: if no Login/Signup/PasswordRecovery frames exist in rideglory.pen, Designer creates them before Story 1.3 begins. Donut chart (Ako7u): Designer must flag during pre-flight whether donut chart is 'swap colors only' or requires geometry/animation changes — if the latter, descope to colors-only for iter-1.",
+      "techLeadNotes": "All 3 events widget tests (attendees_list_navigation_test.dart, event_filters_bottom_sheet_test.dart, events_page_view_test.dart) will need finder updates when widgets are swapped — these updates are part of the story, not post-merge cleanup. Module-scoped PR strategy is mandatory: 5–6 PRs into a feature branch, each requiring dart analyze + flutter test green before merge. Maximum 40 files per PR. No test-rot merges allowed."
     },
     {
       "id": 2,
-      "goal": "SOAT + Notification Foundation: permitir a los riders registrar y rastrear su SOAT por veh\u00edculo, y recibir notificaciones push para los eventos m\u00e1s cr\u00edticos. Establece la infraestructura FCM y la tabla de notificaciones en el backend que iter-3, iter-4 e iter-1 requieren. Incluye Story 2.9 (ManageAttendeesPage redesign) diferida de iter-1.",
+      "goal": "SOAT + Notification Foundation: permitir a los riders registrar y rastrear su SOAT por vehículo, y recibir notificaciones push para los eventos más críticos. Establece la infraestructura FCM y la tabla de notificaciones en el backend que iter-3, iter-4 e iter-1 requieren. Incluye Story 2.9 (ManageAttendeesPage redesign) diferida de iter-1.",
       "status": "active",
-      "notes": "FCM token registration debe ser la primera story de backend. Home Dashboard SOAT badge se implementa en iter-3. Notificaciones 2.4/2.5/2.6: solo recepci\u00f3n y visualizaci\u00f3n \u2014 navegaci\u00f3n al tocar en iter-1. Testing order: 2.8 -> 2.7 -> 2.4/2.5/2.6. Notification pagination is cursor-based throughout (not offset/limit). POST /api/notifications/fcm-token is load-bearing for stories 2.4, 2.5, 2.6. Story 2.9: frame dUc9h must be confirmed to cover list + edit view \u2014 if ambiguous, descope to component-swap-only with no layout rework.",
+      "notes": "FCM token registration debe ser la primera story de backend. Home Dashboard SOAT badge se implementa en iter-3. Notificaciones 2.4/2.5/2.6: solo recepción y visualización — navegación al tocar en iter-1. Testing order: 2.8 -> 2.7 -> 2.4/2.5/2.6. Notification pagination is cursor-based throughout (not offset/limit). POST /api/notifications/fcm-token is load-bearing for stories 2.4, 2.5, 2.6. Story 2.9: frame dUc9h must be confirmed to cover list + edit view — if ambiguous, descope to component-swap-only with no layout rework.",
       "primaryAgents": [
         "po",
         "architect",
@@ -298,61 +298,61 @@
         "devops",
         "tech_lead"
       ],
-      "definitionOfDone": "- [ ] Design gate: SOAT upload, SOAT manual form, SOAT status detail, notification center frames in rideglory.pen \u2014 including vehicle detail page with 4-state badge and generic notification row template with icon slot \u2014 before implementation; frame dUc9h confirmed for Story 2.9 scope\n- [ ] Pre-flight verified: seed.ts in vehicles-ms and events-ms; prisma migrate reset on 4 services; prisma init + prisma migrate dev on api-gateway; GET /api/vehicles returns 200 empty list\n- [ ] Backend: POST /api/vehicles/:vehicleId/soat and GET /api/vehicles/:vehicleId/soat in vehicles-ms\n- [ ] Backend: POST /api/notifications/fcm-token operative; users-ms User model has fcmToken String? field\n- [ ] Backend: notifications table in api-gateway Prisma; GET /api/notifications (cursor ?cursor=<lastId>&limit=20), PATCH /api/notifications/:id/read, PATCH /api/notifications/read-all with Firebase Auth guard\n- [ ] Backend: FCM push trigger in registration approval/rejection flow; each push inserts row in notifications table\n- [ ] Backend: @nestjs/schedule with ScheduleModule.forRoot() in api-gateway AppModule; NotificationSchedulerService with @Cron for SOAT (30d, 7d, day-of); cron expressions use America/Bogota timezone\n- [ ] Flutter: lib/features/soat/ with domain (SoatModel), data (SoatDto, SoatService), presentation (SoatCubit, SoatUploadPage, SoatManualFormPage, SoatStatusPage)\n- [ ] Flutter: lib/features/notifications/ with domain (NotificationModel), data (NotificationsService with cursor pagination), presentation (NotificationsCubit, NotificationCenterPage)\n- [ ] Flutter: NotificationsCubit loads from GET /api/notifications (cursor); markRead(id) calls PATCH; markAllRead() calls read-all\n- [ ] FCM initialized in AuthCubit post-login: token registration + permission request; background message handler as top-level function with @pragma('vm:entry-point') and DI re-init documented\n- [ ] flutter_local_notifications configured for iOS foreground banners; Android notification channel configured\n- [ ] 6 notification types configured and tested on real device or emulator\n- [ ] dart analyze clean; app_es.arb updated with all new strings\n- [ ] Unit tests: SOAT badge logic (4 states); NotificationsCubit \u2014 initial load, cursor pagination, markRead, markAllRead\n- [ ] Widget tests: SoatUploadPage, SoatManualFormPage, NotificationCenterPage\n- [ ] Story 2.9 (ManageAttendeesPage): design system components used throughout; no hardcoded colors; loading/empty/error states correct\n- [ ] Scope reduction rule: if 2.7 read-persistence is at risk, simplify to local badge reset with follow-up task; backend endpoints (2.8) must be complete\n- [ ] Home Dashboard SOAT badge NOT included in this iteration \u2014 added in iter-3",
+      "definitionOfDone": "- [ ] Design gate: SOAT upload, SOAT manual form, SOAT status detail, notification center frames in rideglory.pen — including vehicle detail page with 4-state badge and generic notification row template with icon slot — before implementation; frame dUc9h confirmed for Story 2.9 scope\n- [ ] Pre-flight verified: seed.ts in vehicles-ms and events-ms; prisma migrate reset on 4 services; prisma init + prisma migrate dev on api-gateway; GET /api/vehicles returns 200 empty list\n- [ ] Backend: POST /api/vehicles/:vehicleId/soat and GET /api/vehicles/:vehicleId/soat in vehicles-ms\n- [ ] Backend: POST /api/notifications/fcm-token operative; users-ms User model has fcmToken String? field\n- [ ] Backend: notifications table in api-gateway Prisma; GET /api/notifications (cursor ?cursor=<lastId>&limit=20), PATCH /api/notifications/:id/read, PATCH /api/notifications/read-all with Firebase Auth guard\n- [ ] Backend: FCM push trigger in registration approval/rejection flow; each push inserts row in notifications table\n- [ ] Backend: @nestjs/schedule with ScheduleModule.forRoot() in api-gateway AppModule; NotificationSchedulerService with @Cron for SOAT (30d, 7d, day-of); cron expressions use America/Bogota timezone\n- [ ] Flutter: lib/features/soat/ with domain (SoatModel), data (SoatDto, SoatService), presentation (SoatCubit, SoatUploadPage, SoatManualFormPage, SoatStatusPage)\n- [ ] Flutter: lib/features/notifications/ with domain (NotificationModel), data (NotificationsService with cursor pagination), presentation (NotificationsCubit, NotificationCenterPage)\n- [ ] Flutter: NotificationsCubit loads from GET /api/notifications (cursor); markRead(id) calls PATCH; markAllRead() calls read-all\n- [ ] FCM initialized in AuthCubit post-login: token registration + permission request; background message handler as top-level function with @pragma('vm:entry-point') and DI re-init documented\n- [ ] flutter_local_notifications configured for iOS foreground banners; Android notification channel configured\n- [ ] 6 notification types configured and tested on real device or emulator\n- [ ] dart analyze clean; app_es.arb updated with all new strings\n- [ ] Unit tests: SOAT badge logic (4 states); NotificationsCubit — initial load, cursor pagination, markRead, markAllRead\n- [ ] Widget tests: SoatUploadPage, SoatManualFormPage, NotificationCenterPage\n- [ ] Story 2.9 (ManageAttendeesPage): design system components used throughout; no hardcoded colors; loading/empty/error states correct\n- [ ] Scope reduction rule: if 2.7 read-persistence is at risk, simplify to local badge reset with follow-up task; backend endpoints (2.8) must be complete\n- [ ] Home Dashboard SOAT badge NOT included in this iteration — added in iter-3",
       "stories": [
         {
           "id": "2.1",
-          "story": "Como rider, puedo subir el documento de mi SOAT (foto o PDF desde galer\u00eda/c\u00e1mara) para un veh\u00edculo de mi garaje y guardar los datos (n\u00famero de p\u00f3liza, fechas, aseguradora) en el backend.",
-          "acceptance": "El documento queda guardado; el badge del veh\u00edculo cambia a 'Vigente' o 'Por vencer' seg\u00fan la fecha de vencimiento."
+          "story": "Como rider, puedo subir el documento de mi SOAT (foto o PDF desde galería/cámara) para un vehículo de mi garaje y guardar los datos (número de póliza, fechas, aseguradora) en el backend.",
+          "acceptance": "El documento queda guardado; el badge del vehículo cambia a 'Vigente' o 'Por vencer' según la fecha de vencimiento."
         },
         {
           "id": "2.2",
-          "story": "Como rider, puedo ingresar manualmente los datos de mi SOAT (n\u00famero de p\u00f3liza, fecha inicio, fecha vencimiento, aseguradora) cuando no quiero subir el documento.",
-          "acceptance": "El formulario valida que la fecha de vencimiento sea obligatoria; al guardar el estado SOAT refleja la l\u00f3gica de vigencia correcta."
+          "story": "Como rider, puedo ingresar manualmente los datos de mi SOAT (número de póliza, fecha inicio, fecha vencimiento, aseguradora) cuando no quiero subir el documento.",
+          "acceptance": "El formulario valida que la fecha de vencimiento sea obligatoria; al guardar el estado SOAT refleja la lógica de vigencia correcta."
         },
         {
           "id": "2.3",
-          "story": "Como rider, veo en el detalle de mi veh\u00edculo un badge de estado SOAT (Sin SOAT / Vigente / Por vencer / Vencido) y puedo tocar el badge para ir al flujo de SOAT.",
+          "story": "Como rider, veo en el detalle de mi vehículo un badge de estado SOAT (Sin SOAT / Vigente / Por vencer / Vencido) y puedo tocar el badge para ir al flujo de SOAT.",
           "acceptance": "Los cuatro estados se calculan correctamente con base en la fecha de vencimiento vs. hoy; el badge es tap-able y navega al flujo correcto."
         },
         {
           "id": "2.4",
-          "story": "Como rider, recibo una notificaci\u00f3n push 30 d\u00edas antes, 7 d\u00edas antes y el d\u00eda del vencimiento de mi SOAT con el nombre de la moto afectada.",
-          "acceptance": "Las tres notificaciones llegan al dispositivo en las fechas correctas y se muestran en el centro de notificaciones. (Navegaci\u00f3n al tocar: iter-1.)"
+          "story": "Como rider, recibo una notificación push 30 días antes, 7 días antes y el día del vencimiento de mi SOAT con el nombre de la moto afectada.",
+          "acceptance": "Las tres notificaciones llegan al dispositivo en las fechas correctas y se muestran en el centro de notificaciones. (Navegación al tocar: iter-1.)"
         },
         {
           "id": "2.5",
-          "story": "Como organizador de evento, recibo una notificaci\u00f3n push cuando un nuevo rider se inscribe a mi evento.",
-          "acceptance": "La notificaci\u00f3n aparece en el centro de notificaciones; el badge de no le\u00eddas en el \u00edcono de campana se incrementa. (Navegaci\u00f3n al tocar: iter-1.)"
+          "story": "Como organizador de evento, recibo una notificación push cuando un nuevo rider se inscribe a mi evento.",
+          "acceptance": "La notificación aparece en el centro de notificaciones; el badge de no leídas en el ícono de campana se incrementa. (Navegación al tocar: iter-1.)"
         },
         {
           "id": "2.6",
-          "story": "Como rider inscrito, recibo una notificaci\u00f3n push cuando mi inscripci\u00f3n es aprobada o rechazada.",
-          "acceptance": "La notificaci\u00f3n llega dentro de los 30 segundos de la acci\u00f3n del organizador; el estado en 'Mis inscripciones' ya refleja el cambio al abrir la pantalla. (Navegaci\u00f3n al tocar: iter-1.)"
+          "story": "Como rider inscrito, recibo una notificación push cuando mi inscripción es aprobada o rechazada.",
+          "acceptance": "La notificación llega dentro de los 30 segundos de la acción del organizador; el estado en 'Mis inscripciones' ya refleja el cambio al abrir la pantalla. (Navegación al tocar: iter-1.)"
         },
         {
           "id": "2.7",
-          "story": "Como rider, puedo abrir el centro de notificaciones desde el \u00edcono de campana del Home y ver todas mis notificaciones, diferenciando las no le\u00eddas (punto naranja) de las le\u00eddas. Al tocar una notificaci\u00f3n o usar 'Marcar todas como le\u00eddas', el estado se persiste en el backend.",
-          "acceptance": "La lista muestra notificaciones cargadas desde el backend con paginaci\u00f3n cursor (?cursor=<lastId>&limit=20, respuesta { data, nextCursor }); marcar como le\u00eddo llama a PATCH /api/notifications/:id/read; 'Marcar todas' llama a PATCH /api/notifications/read-all; badge del \u00edcono refleja conteo de no le\u00eddas desde backend; empty state 'A\u00fan no tienes notificaciones' visible."
+          "story": "Como rider, puedo abrir el centro de notificaciones desde el ícono de campana del Home y ver todas mis notificaciones, diferenciando las no leídas (punto naranja) de las leídas. Al tocar una notificación o usar 'Marcar todas como leídas', el estado se persiste en el backend.",
+          "acceptance": "La lista muestra notificaciones cargadas desde el backend con paginación cursor (?cursor=<lastId>&limit=20, respuesta { data, nextCursor }); marcar como leído llama a PATCH /api/notifications/:id/read; 'Marcar todas' llama a PATCH /api/notifications/read-all; badge del ícono refleja conteo de no leídas desde backend; empty state 'Aún no tienes notificaciones' visible."
         },
         {
           "id": "2.8",
-          "story": "Como desarrollador, el backend persiste todas las notificaciones en una tabla notifications en api-gateway y expone endpoints para listarlas, marcarlas como le\u00eddas y registrar el token FCM.",
-          "acceptance": "GET /api/notifications?cursor=<lastId>&limit=20 retorna { data: Notification[], nextCursor: string | null } del usuario autenticado, ordenadas por createdAt desc; PATCH /api/notifications/:id/read actualiza isRead = true; PATCH /api/notifications/read-all actualiza todas las no le\u00eddas del usuario; POST /api/notifications/fcm-token recibe { fcmToken: string }, actualiza el campo fcmToken String? en el modelo User de users-ms, es llamado desde AuthCubit post-login; los cuatro endpoints requieren Bearer token con guard de Firebase Auth; tabla notifications con campos id, userId, type, payload (JSON), isRead, createdAt."
+          "story": "Como desarrollador, el backend persiste todas las notificaciones en una tabla notifications en api-gateway y expone endpoints para listarlas, marcarlas como leídas y registrar el token FCM.",
+          "acceptance": "GET /api/notifications?cursor=<lastId>&limit=20 retorna { data: Notification[], nextCursor: string | null } del usuario autenticado, ordenadas por createdAt desc; PATCH /api/notifications/:id/read actualiza isRead = true; PATCH /api/notifications/read-all actualiza todas las no leídas del usuario; POST /api/notifications/fcm-token recibe { fcmToken: string }, actualiza el campo fcmToken String? en el modelo User de users-ms, es llamado desde AuthCubit post-login; los cuatro endpoints requieren Bearer token con guard de Firebase Auth; tabla notifications con campos id, userId, type, payload (JSON), isRead, createdAt."
         },
         {
           "id": "2.9",
-          "story": "As an event organizer, the attendees management page (frame dUc9h) matches rideglory.pen design \u2014 using design system components, correct color tokens, and consistent loading/empty states.",
+          "story": "As an event organizer, the attendees management page (frame dUc9h) matches rideglory.pen design — using design system components, correct color tokens, and consistent loading/empty states.",
           "acceptance": "ManageAttendeesPage uses AppButton, AppTextField, AppDialog throughout; no hardcoded color literals; loading, empty, and error states visually correct per Pencil frame dUc9h. If frame dUc9h covers list + edit, full layout is implemented. If frame covers edit only, scope is limited to component-swap and color tokenization (no layout rework without a confirmed frame)."
         }
       ],
-      "architectNotes": "api-gateway Prisma initialization is first-time setup (prisma init + prisma migrate dev), NOT reset. Distinct from the 4 existing microservices. Notifications table lives in api-gateway (no new microservice). firebase-admin messaging added to api-gateway \u2014 no new package needed. @nestjs/schedule cron expressions must use America/Bogota timezone. fcmToken field added to users-ms User model. Story 2.9 is presentation-layer only \u2014 same constraints as iter-1.",
+      "architectNotes": "api-gateway Prisma initialization is first-time setup (prisma init + prisma migrate dev), NOT reset. Distinct from the 4 existing microservices. Notifications table lives in api-gateway (no new microservice). firebase-admin messaging added to api-gateway — no new package needed. @nestjs/schedule cron expressions must use America/Bogota timezone. fcmToken field added to users-ms User model. Story 2.9 is presentation-layer only — same constraints as iter-1.",
       "designNotes": "SOAT status badge: 4 states (Sin SOAT / Vigente / Por vencer / Vencido) must be confirmed in Pencil frame for vehicle detail page. Notification center: define generic notification row template with icon slot for 6 notification types before implementing Story 2.7. Story 2.9: confirm frame dUc9h scope (list + edit, or edit only) during design gate.",
-      "techLeadNotes": "@pragma('vm:entry-point') annotation required on top-level FCM background handler. DI re-initialization (configureDependencies()) inside handler is mandatory and must be in code review checklist. Notification pagination is cursor-based throughout \u2014 offset/limit must not be used. Story 2.9 scope depends on frame dUc9h confirmation: if list is not in the frame, limit to component-swap only."
+      "techLeadNotes": "@pragma('vm:entry-point') annotation required on top-level FCM background handler. DI re-initialization (configureDependencies()) inside handler is mandatory and must be in code review checklist. Notification pagination is cursor-based throughout — offset/limit must not be used. Story 2.9 scope depends on frame dUc9h confirmation: if list is not in the frame, limit to component-swap only."
     },
     {
       "id": 3,
-      "goal": "Tracking Completo + SOS + Maintenance Reminders: completar la experiencia de rastreo con bot\u00f3n SOS, controles del organizador, GPS en background, recordatorios de mantenimiento basados en fecha, y migraci\u00f3n completa a mapbox_maps_flutter como \u00fanico SDK de mapas (Story 3.0).",
+      "goal": "Tracking Completo + SOS + Maintenance Reminders: completar la experiencia de rastreo con botón SOS, controles del organizador, GPS en background, recordatorios de mantenimiento basados en fecha, y migración completa a mapbox_maps_flutter como único SDK de mapas (Story 3.0).",
       "status": "done",
       "notes": "Story 3.0 (Mapbox migration) completed as hard blocker. Date-based maintenance reminders implemented (30d before scheduled date, 24h before event). Home Dashboard SOAT badge (4-state display) added. Route stored as GeoJSON LineString (routeGeoJson Json?) in events-ms. PR #15 approved by tech lead 2026-05-15T07:00:00Z, pending human merge.",
       "primaryAgents": [
@@ -365,27 +365,27 @@
         "devops",
         "tech_lead"
       ],
-      "definitionOfDone": "- [ ] Design gate: frame qonbS in Pencil confirmed with SOS button + confirmation dialog, organizer control bar (conditionally visible), red pulsing SOS marker, Android foreground service notification text, empty state for 'no phone' in story 3.2\n- [ ] Story 3.0 merged and dart analyze clean before any other story begins\n- [ ] Zero google_maps_flutter or geocoding imports in lib/ (verified by grep in PR review)\n- [ ] iOS Cocoapods cache updated in CI/CD after 3.0 merge\n- [ ] Backend: POST /api/events/:eventId/tracking/start and POST /api/events/:eventId/tracking/end in api-gateway/src/tracking/\n- [ ] Backend: sos handler in TrackingGateway \u2014 broadcast sos_alert via WebSocket + FCM multicast; deduplication guard with sosTriggeredAt in events-ms\n- [ ] Backend: GET /api/events/:eventId/route in events-ms returning routeGeoJson (GeoJSON LineString, routeGeoJson Json? field on Event model)\n- [ ] Backend: scheduler entries for maintenance (30d date-based) and 24h event reminder; America/Bogota timezone\n- [ ] Flutter: route rendered with GeoJsonSource + LineLayer (NOT PolylineAnnotationManager); GeoJSON coordinates from backend\n- [ ] Flutter: route adherence chip (En ruta / Fuera de ruta) with 200m Haversine check client-side over GeoJSON coordinates\n- [ ] Flutter: SOS button + confirmation dialog; SOS banner with Llamar/Localizar; red pulsing marker with mapbox_maps_flutter annotations API\n- [ ] Flutter: organizer Iniciar/Terminar controls in EventDetailPage and EventTrackingPage; LiveTrackingCubit emits TrackingFinished on tracking.event.ended WebSocket event\n- [ ] Flutter: flutter_foreground_task on Android (foreground service isolate + IsolateNameServer; configureDependencies() called in onStart()); geolocator with AppleSettings(activityType: ActivityType.automotiveNavigation) on iOS\n- [ ] Flutter: VehicleModel with soatStatus and soatExpiryDate; Home Dashboard SOAT badge on main vehicle card\n- [ ] dart analyze clean; FOREGROUND_SERVICE + FOREGROUND_SERVICE_LOCATION permissions in AndroidManifest.xml reviewed against Play Store policy\n- [ ] Physical device test for background GPS (Android foreground service + iOS background location) \u2014 logs attached to PR\n- [ ] Separate Android/iOS manual test plans for background GPS\n- [ ] app_es.arb updated; location usage descriptions in Info.plist in clear Spanish",
+      "definitionOfDone": "- [ ] Design gate: frame qonbS in Pencil confirmed with SOS button + confirmation dialog, organizer control bar (conditionally visible), red pulsing SOS marker, Android foreground service notification text, empty state for 'no phone' in story 3.2\n- [ ] Story 3.0 merged and dart analyze clean before any other story begins\n- [ ] Zero google_maps_flutter or geocoding imports in lib/ (verified by grep in PR review)\n- [ ] iOS Cocoapods cache updated in CI/CD after 3.0 merge\n- [ ] Backend: POST /api/events/:eventId/tracking/start and POST /api/events/:eventId/tracking/end in api-gateway/src/tracking/\n- [ ] Backend: sos handler in TrackingGateway — broadcast sos_alert via WebSocket + FCM multicast; deduplication guard with sosTriggeredAt in events-ms\n- [ ] Backend: GET /api/events/:eventId/route in events-ms returning routeGeoJson (GeoJSON LineString, routeGeoJson Json? field on Event model)\n- [ ] Backend: scheduler entries for maintenance (30d date-based) and 24h event reminder; America/Bogota timezone\n- [ ] Flutter: route rendered with GeoJsonSource + LineLayer (NOT PolylineAnnotationManager); GeoJSON coordinates from backend\n- [ ] Flutter: route adherence chip (En ruta / Fuera de ruta) with 200m Haversine check client-side over GeoJSON coordinates\n- [ ] Flutter: SOS button + confirmation dialog; SOS banner with Llamar/Localizar; red pulsing marker with mapbox_maps_flutter annotations API\n- [ ] Flutter: organizer Iniciar/Terminar controls in EventDetailPage and EventTrackingPage; LiveTrackingCubit emits TrackingFinished on tracking.event.ended WebSocket event\n- [ ] Flutter: flutter_foreground_task on Android (foreground service isolate + IsolateNameServer; configureDependencies() called in onStart()); geolocator with AppleSettings(activityType: ActivityType.automotiveNavigation) on iOS\n- [ ] Flutter: VehicleModel with soatStatus and soatExpiryDate; Home Dashboard SOAT badge on main vehicle card\n- [ ] dart analyze clean; FOREGROUND_SERVICE + FOREGROUND_SERVICE_LOCATION permissions in AndroidManifest.xml reviewed against Play Store policy\n- [ ] Physical device test for background GPS (Android foreground service + iOS background location) — logs attached to PR\n- [ ] Separate Android/iOS manual test plans for background GPS\n- [ ] app_es.arb updated; location usage descriptions in Info.plist in clear Spanish",
       "stories": [
         {
           "id": "3.0",
-          "story": "Como desarrollador, el proyecto usa mapbox_maps_flutter como \u00fanico SDK de mapas. google_maps_flutter y geocoding han sido eliminados completamente.",
-          "acceptance": "pubspec.yaml declara mapbox_maps_flutter ^2.2.0; google_maps_flutter y geocoding eliminados. dart analyze pasa con cero errores o warnings en lib/. Sin imports de google_maps_flutter o geocoding en lib/. live_map_widget.dart, live_map_page.dart, initials_marker_icon.dart y route_map_preview.dart compilan y renderizan correctamente en device f\u00edsico. route_map_preview.dart usa PlaceService (Retrofit async) para lookup de direcci\u00f3n; estados loading y error manejados con patr\u00f3n ResultState. AndroidManifest.xml contiene Mapbox token meta-data; Info.plist contiene MBXAccessToken; ninguna API key de Google Maps permanece en native config. iOS Cocoapods install completado; app builds en simulator."
+          "story": "Como desarrollador, el proyecto usa mapbox_maps_flutter como único SDK de mapas. google_maps_flutter y geocoding han sido eliminados completamente.",
+          "acceptance": "pubspec.yaml declara mapbox_maps_flutter ^2.2.0; google_maps_flutter y geocoding eliminados. dart analyze pasa con cero errores o warnings en lib/. Sin imports de google_maps_flutter o geocoding en lib/. live_map_widget.dart, live_map_page.dart, initials_marker_icon.dart y route_map_preview.dart compilan y renderizan correctamente en device físico. route_map_preview.dart usa PlaceService (Retrofit async) para lookup de dirección; estados loading y error manejados con patrón ResultState. AndroidManifest.xml contiene Mapbox token meta-data; Info.plist contiene MBXAccessToken; ninguna API key de Google Maps permanece en native config. iOS Cocoapods install completado; app builds en simulator."
         },
         {
           "id": "3.1",
-          "story": "Como rider en una rodada activa, puedo presionar el bot\u00f3n SOS rojo visible en el mapa, confirmar la alerta en un di\u00e1logo, y todos los dem\u00e1s riders de la rodada reciben una notificaci\u00f3n push de emergencia con mi nombre y ubicaci\u00f3n.",
+          "story": "Como rider en una rodada activa, puedo presionar el botón SOS rojo visible en el mapa, confirmar la alerta en un diálogo, y todos los demás riders de la rodada reciben una notificación push de emergencia con mi nombre y ubicación.",
           "acceptance": "La alerta SOS se procesa en menos de 5 segundos; el marcador en el mapa de todos los participantes cambia a rojo pulsante; aparece un banner rojo con el nombre del rider en crisis."
         },
         {
           "id": "3.2",
-          "story": "Como rider que ve una alerta SOS en el mapa, puedo tocar el banner del rider en crisis y acceder a Llamar (dialer nativo) y Localizar (Google Maps / Apple Maps con navegaci\u00f3n).",
-          "acceptance": "Las dos acciones funcionales en iOS y Android; el tel\u00e9fono del rider solo aparece si lo tiene registrado; si no tiene tel\u00e9fono, solo se muestra Localizar."
+          "story": "Como rider que ve una alerta SOS en el mapa, puedo tocar el banner del rider en crisis y acceder a Llamar (dialer nativo) y Localizar (Google Maps / Apple Maps con navegación).",
+          "acceptance": "Las dos acciones funcionales en iOS y Android; el teléfono del rider solo aparece si lo tiene registrado; si no tiene teléfono, solo se muestra Localizar."
         },
         {
           "id": "3.3",
           "story": "Como organizador de un evento, puedo iniciar la rodada desde la pantalla de detalle del evento, cambiando el estado a in_progress y habilitando el rastreo para todos los inscritos aprobados.",
-          "acceptance": "Bot\u00f3n 'Iniciar rodada' solo visible para el organizador; al confirmar, estado actualizado en backend; riders ven CTA 'Ver rastreo' en detalle del evento."
+          "acceptance": "Botón 'Iniciar rodada' solo visible para el organizador; al confirmar, estado actualizado en backend; riders ven CTA 'Ver rastreo' en detalle del evento."
         },
         {
           "id": "3.4",
@@ -394,12 +394,12 @@
         },
         {
           "id": "3.5",
-          "story": "Como rider en una rodada activa con app en background, el app sigue enviando mi ubicaci\u00f3n al WebSocket cada 5 segundos. Android: notificaci\u00f3n persistente no descartable 'Rideglory \u2014 Rodada activa'. iOS: indicador de ubicaci\u00f3n azul del sistema.",
-          "acceptance": "Android: ubicaci\u00f3n actualiza con app en background, foreground service visible y no descartable (device f\u00edsico requerido). iOS: ubicaci\u00f3n actualiza, indicador sistema visible (comportamiento nativo, device f\u00edsico requerido)."
+          "story": "Como rider en una rodada activa con app en background, el app sigue enviando mi ubicación al WebSocket cada 5 segundos. Android: notificación persistente no descartable 'Rideglory — Rodada activa'. iOS: indicador de ubicación azul del sistema.",
+          "acceptance": "Android: ubicación actualiza con app en background, foreground service visible y no descartable (device físico requerido). iOS: ubicación actualiza, indicador sistema visible (comportamiento nativo, device físico requerido)."
         },
         {
           "id": "3.6",
-          "story": "Como rider con un mantenimiento programado, recibo una push 30 d\u00edas antes de la fecha programada. (Solo fecha \u2014 sin km.)",
+          "story": "Como rider con un mantenimiento programado, recibo una push 30 días antes de la fecha programada. (Solo fecha — sin km.)",
           "acceptance": "Push generada al guardar mantenimiento con fecha futura; texto incluye tipo de servicio y nombre de moto."
         },
         {
@@ -408,15 +408,15 @@
           "acceptance": "Push llega entre 23h 55min y 24h 5min antes de la hora de inicio del evento."
         }
       ],
-      "architectNotes": "Route polyline must be stored as GeoJSON LineString (routeGeoJson Json? field on Event model in events-ms). Render on map using GeoJsonSource + LineLayer \u2014 NOT PolylineAnnotationManager. Route adherence (200m check) computed client-side using Haversine formula over GeoJSON coordinate array \u2014 no Mapbox decoder library needed. Mapbox token goes into AndroidManifest.xml and Info.plist natively (public token starting pk. \u2014 safe to commit). configureDependencies() must be called inside flutter_foreground_task handler's onStart() method.",
+      "architectNotes": "Route polyline must be stored as GeoJSON LineString (routeGeoJson Json? field on Event model in events-ms). Render on map using GeoJsonSource + LineLayer — NOT PolylineAnnotationManager. Route adherence (200m check) computed client-side using Haversine formula over GeoJSON coordinate array — no Mapbox decoder library needed. Mapbox token goes into AndroidManifest.xml and Info.plist natively (public token starting pk. — safe to commit). configureDependencies() must be called inside flutter_foreground_task handler's onStart() method.",
       "designNotes": "Story 3.0 migration is invisible to users if done correctly. SOS button placement, organizer control bar visibility rules, and red pulsing marker animation spec must be confirmed in frame qonbS before implementation. Empty state for 'rider has no phone number' in story 3.2 must be specified (show only Localizar button).",
-      "techLeadNotes": "Story 3.0 is the highest-risk item: 4 Dart files + 4 native/config files. route_map_preview.dart geocoding replacement is the most architecturally complex piece \u2014 sync call becomes debounced async Retrofit call with ResultState error handling. Widget test required. iOS Cocoapods rebuild with ~200MB Mapbox binary framework is a CI time bomb \u2014 DevOps must update cache key immediately after 3.0 merges."
+      "techLeadNotes": "Story 3.0 is the highest-risk item: 4 Dart files + 4 native/config files. route_map_preview.dart geocoding replacement is the most architecturally complex piece — sync call becomes debounced async Retrofit call with ResultState error handling. Widget test required. iOS Cocoapods rebuild with ~200MB Mapbox binary framework is a CI time bomb — DevOps must update cache key immediately after 3.0 merges."
     },
     {
       "id": 4,
-      "goal": "Sistema de Seguidores + Perfil Completo: activar el sistema social b\u00e1sico con seguir/dejar de seguir, listas de seguidores/siguiendo, y completar las pantallas de perfil. Provisionar el dominio de deep links durante esta iteraci\u00f3n (bloqueante para iter-1).",
+      "goal": "Sistema de Seguidores + Perfil Completo: activar el sistema social básico con seguir/dejar de seguir, listas de seguidores/siguiendo, y completar las pantallas de perfil. Provisionar el dominio de deep links durante esta iteración (bloqueante para iter-1).",
       "status": "planned",
-      "notes": "Story 4.5: solo recepci\u00f3n y visualizaci\u00f3n \u2014 navegaci\u00f3n al tocar en iter-1. FollowCubit usa estado optimista con @freezed FollowState (excepci\u00f3n documentada al patr\u00f3n ResultState<T>). Design gate: frame A7qDd (Profile) debe tener dise\u00f1o final antes de implementaci\u00f3n. ACTION ITEM during iter-4 (hard blocker for iter-1): provision custom domain for Android App Links + iOS Universal Links \u2014 TLS valid, assetlinks.json + apple-app-site-association deployed and publicly reachable. GoRouter DI assessment required as DoD item.",
+      "notes": "Story 4.5: solo recepción y visualización — navegación al tocar en iter-1. FollowCubit usa estado optimista con @freezed FollowState (excepción documentada al patrón ResultState<T>). Design gate: frame A7qDd (Profile) debe tener diseño final antes de implementación. ACTION ITEM during iter-4 (hard blocker for iter-1): provision custom domain for Android App Links + iOS Universal Links — TLS valid, assetlinks.json + apple-app-site-association deployed and publicly reachable. GoRouter DI assessment required as DoD item.",
       "primaryAgents": [
         "po",
         "architect",
@@ -427,43 +427,43 @@
         "devops",
         "tech_lead"
       ],
-      "definitionOfDone": "- [ ] Design gate: frame A7qDd (Profile) updated to final design in rideglory.pen; FollowersListPage and FollowingListPage frames created \u2014 including follow button in loading/in-flight state, quick-follow in list, empty states\n- [ ] Deep link domain provisioned: assetlinks.json and apple-app-site-association accessible publicly at chosen domain; valid TLS; verified with curl before iter-4 closes\n- [ ] Backend: Follow entity (followerId, followingId, createdAt, composite unique index) in users-ms Prisma; POST /api/users/:userId/follow, DELETE /api/users/:userId/follow, GET /api/users/:userId/followers?page=&limit=, GET /api/users/:userId/following?page=&limit=\n- [ ] Backend: _count.followers and _count.following included in user profile response\n- [ ] Backend: GET /api/vehicles?userId=:userId returns PublicVehicleDto (separate class from VehicleDto, without licensePlate or insurance fields)\n- [ ] Backend: FCM push 'nuevo seguidor' dispatched from api-gateway post-proxy; row inserted in notifications table\n- [ ] Flutter: FollowCubit with optimistic state (@freezed FollowState { isFollowing, followerCount, isLoading, error }); registered as factory with userId parameter in DI (exception documented)\n- [ ] Flutter: FollowersListPage and FollowingListPage with offset/limit load-more pagination and explicit empty states\n- [ ] Flutter: complete profile with bio, ciudad, real counters, public vehicles (via PublicVehicleDto), organized events\n- [ ] NEW_FOLLOWER type handled in NotificationsCubit; appears in notification center\n- [ ] GoRouter DI assessment complete: confirm if GoRouter is registered in GetIt or refactoring needed before NotificationRouteHandler in iter-1; if refactoring needed, create task and plan as Story 1.0\n- [ ] dart analyze clean; app_es.arb updated\n- [ ] Unit tests: optimistic update + revert on error for FollowCubit; list pagination\n- [ ] Widget tests: FollowersListPage, FollowingListPage",
+      "definitionOfDone": "- [ ] Design gate: frame A7qDd (Profile) updated to final design in rideglory.pen; FollowersListPage and FollowingListPage frames created — including follow button in loading/in-flight state, quick-follow in list, empty states\n- [ ] Deep link domain provisioned: assetlinks.json and apple-app-site-association accessible publicly at chosen domain; valid TLS; verified with curl before iter-4 closes\n- [ ] Backend: Follow entity (followerId, followingId, createdAt, composite unique index) in users-ms Prisma; POST /api/users/:userId/follow, DELETE /api/users/:userId/follow, GET /api/users/:userId/followers?page=&limit=, GET /api/users/:userId/following?page=&limit=\n- [ ] Backend: _count.followers and _count.following included in user profile response\n- [ ] Backend: GET /api/vehicles?userId=:userId returns PublicVehicleDto (separate class from VehicleDto, without licensePlate or insurance fields)\n- [ ] Backend: FCM push 'nuevo seguidor' dispatched from api-gateway post-proxy; row inserted in notifications table\n- [ ] Flutter: FollowCubit with optimistic state (@freezed FollowState { isFollowing, followerCount, isLoading, error }); registered as factory with userId parameter in DI (exception documented)\n- [ ] Flutter: FollowersListPage and FollowingListPage with offset/limit load-more pagination and explicit empty states\n- [ ] Flutter: complete profile with bio, ciudad, real counters, public vehicles (via PublicVehicleDto), organized events\n- [ ] NEW_FOLLOWER type handled in NotificationsCubit; appears in notification center\n- [ ] GoRouter DI assessment complete: confirm if GoRouter is registered in GetIt or refactoring needed before NotificationRouteHandler in iter-1; if refactoring needed, create task and plan as Story 1.0\n- [ ] dart analyze clean; app_es.arb updated\n- [ ] Unit tests: optimistic update + revert on error for FollowCubit; list pagination\n- [ ] Widget tests: FollowersListPage, FollowingListPage",
       "stories": [
         {
           "id": "4.1",
-          "story": "Como rider, puedo ver el perfil de otro rider y tocar 'Seguir'; el contador de seguidores se incrementa inmediatamente (optimistic update) y el backend registra la relaci\u00f3n.",
-          "acceptance": "Bot\u00f3n cambia a 'Siguiendo' al instante; si el request falla, el estado revierte y muestra snackbar de error; contador correcto al refrescar el perfil."
+          "story": "Como rider, puedo ver el perfil de otro rider y tocar 'Seguir'; el contador de seguidores se incrementa inmediatamente (optimistic update) y el backend registra la relación.",
+          "acceptance": "Botón cambia a 'Siguiendo' al instante; si el request falla, el estado revierte y muestra snackbar de error; contador correcto al refrescar el perfil."
         },
         {
           "id": "4.2",
-          "story": "Como rider que ya sigue a alguien, puedo tocar 'Siguiendo', confirmar en un di\u00e1logo, y dejar de seguirlo; el contador disminuye de inmediato.",
-          "acceptance": "Flujo sim\u00e9trico al de seguir; confirmaci\u00f3n requerida para evitar toques accidentales; backend actualiza la relaci\u00f3n."
+          "story": "Como rider que ya sigue a alguien, puedo tocar 'Siguiendo', confirmar en un diálogo, y dejar de seguirlo; el contador disminuye de inmediato.",
+          "acceptance": "Flujo simétrico al de seguir; confirmación requerida para evitar toques accidentales; backend actualiza la relación."
         },
         {
           "id": "4.3",
-          "story": "Como rider, puedo tocar el n\u00famero de 'seguidores' o 'siguiendo' en mi perfil y ver una lista con foto, nombre y bot\u00f3n r\u00e1pido seguir/dejar de seguir a cada uno.",
-          "acceptance": "Lista pagina correctamente (>20 riders con offset/limit load-more); navegar al rider abre su perfil; empty states visibles ('A\u00fan no tienes seguidores' / 'A\u00fan no sigues a ning\u00fan rider')."
+          "story": "Como rider, puedo tocar el número de 'seguidores' o 'siguiendo' en mi perfil y ver una lista con foto, nombre y botón rápido seguir/dejar de seguir a cada uno.",
+          "acceptance": "Lista pagina correctamente (>20 riders con offset/limit load-more); navegar al rider abre su perfil; empty states visibles ('Aún no tienes seguidores' / 'Aún no sigues a ningún rider')."
         },
         {
           "id": "4.4",
-          "story": "Como rider, mi perfil muestra bio, ciudad, n\u00famero de seguidores, n\u00famero de siguiendo, eventos creados y motos registradas (sin datos sensibles).",
-          "acceptance": "Todos los campos con empty states apropiados; eventos ordenados con pr\u00f3ximos primero."
+          "story": "Como rider, mi perfil muestra bio, ciudad, número de seguidores, número de siguiendo, eventos creados y motos registradas (sin datos sensibles).",
+          "acceptance": "Todos los campos con empty states apropiados; eventos ordenados con próximos primero."
         },
         {
           "id": "4.5",
           "story": "Como rider, cuando alguien empieza a seguirme recibo una push 'Te sigue {nombre}' que aparece en el centro de notificaciones.",
-          "acceptance": "Push en menos de 30s; centro de notificaciones muestra el \u00edtem con badge actualizado; fila insertada en tabla notifications. (Navegaci\u00f3n al tocar: iter-1.)"
+          "acceptance": "Push en menos de 30s; centro de notificaciones muestra el ítem con badge actualizado; fila insertada en tabla notifications. (Navegación al tocar: iter-1.)"
         }
       ],
-      "architectNotes": "FollowCubit must be registered as a factory with userId parameter in DI \u2014 documented exception to the @injectable singleton pattern. DI module comment must explain this to prevent future developers from marking it as @singleton. PublicVehicleDto must be a separate class from VehicleDto \u2014 not VehicleDto with null fields. The distinction matters for Clean Architecture (domain model must not carry null fields representing hidden data).",
+      "architectNotes": "FollowCubit must be registered as a factory with userId parameter in DI — documented exception to the @injectable singleton pattern. DI module comment must explain this to prevent future developers from marking it as @singleton. PublicVehicleDto must be a separate class from VehicleDto — not VehicleDto with null fields. The distinction matters for Clean Architecture (domain model must not carry null fields representing hidden data).",
       "designNotes": "Follower/following list: quick-follow button must be visually distinguishable from the profile-level follow button. Confirm in frame. Optimistic update visual: follow button must show loading state during API call and revert visually on failure. Deep link domain provisioning is a DevOps action item, not a design concern.",
-      "techLeadNotes": "GoRouter DI assessment is a mandatory DoD item. If app_router.dart creates GoRouter as a top-level variable (not DI-registered), NotificationRouteHandler in iter-1 cannot inject it \u2014 refactoring will be needed. Assess before iter-4 closes to avoid blocking iter-1."
+      "techLeadNotes": "GoRouter DI assessment is a mandatory DoD item. If app_router.dart creates GoRouter as a top-level variable (not DI-registered), NotificationRouteHandler in iter-1 cannot inject it — refactoring will be needed. Assess before iter-4 closes to avoid blocking iter-1."
     },
     {
       "id": 5,
-      "goal": "Deep Links + Apple Sign-In + Notification Routing: activar el flujo de compartir eventos con Android App Links e iOS Universal Links, a\u00f1adir Apple Sign-In, y completar el routing de notificaciones push a las pantallas destino.",
+      "goal": "Deep Links + Apple Sign-In + Notification Routing: activar el flujo de compartir eventos con Android App Links e iOS Universal Links, añadir Apple Sign-In, y completar el routing de notificaciones push a las pantallas destino.",
       "status": "planned",
-      "notes": "Firebase Dynamic Links is EOL \u2014 NOT to be used. Domain with TLS + assetlinks.json + apple-app-site-association must be provisioned in iter-4 and verified in iter-1 pre-flight. Story 1.5 completes notification routing for all types from iter-2, iter-3, and iter-4. GoRouter DI: if iter-4 assessment determined refactoring is needed, complete as Story 1.0 before implementing NotificationRouteHandler.",
+      "notes": "Firebase Dynamic Links is EOL — NOT to be used. Domain with TLS + assetlinks.json + apple-app-site-association must be provisioned in iter-4 and verified in iter-1 pre-flight. Story 1.5 completes notification routing for all types from iter-2, iter-3, and iter-4. GoRouter DI: if iter-4 assessment determined refactoring is needed, complete as Story 1.0 before implementing NotificationRouteHandler.",
       "primaryAgents": [
         "po",
         "architect",
@@ -474,43 +474,43 @@
         "devops",
         "tech_lead"
       ],
-      "definitionOfDone": "- [ ] Design gate: share button in EventDetailPage and Apple Sign-In button in login confirmed in frames; Apple Sign-In uses black button with Apple logo (HIG compliance)\n- [ ] Pre-flight: com.apple.developer.applesignin entitlement added in Xcode; provisioning profile generated; Apple provider enabled in Firebase Console and Apple Developer Portal\n- [ ] Pre-flight: domain verified \u2014 curl https://<domain>/.well-known/assetlinks.json and curl https://<domain>/.well-known/apple-app-site-association return 200 with correct content\n- [ ] Pre-flight: GoRouter DI refactoring complete if needed (from iter-4 assessment)\n- [ ] Backend: GET /api/events/:eventId/share-metadata with Cache-Control: public, max-age=3600\n- [ ] Backend (or Firebase Hosting): serves /.well-known/assetlinks.json and /.well-known/apple-app-site-association\n- [ ] Backend (or Firebase Hosting): redirect page detects User-Agent and redirects to Play Store / App Store; page shows minimal Rideglory branding (not a bare HTTP redirect)\n- [ ] Flutter: app_links ^2.x integrated; AndroidManifest.xml with intent-filter for App Links; iOS Associated Domains entitlement\n- [ ] Flutter: sign_in_with_apple ^2.x integrated; button only on iOS (defaultTargetPlatform == TargetPlatform.iOS)\n- [ ] Flutter: NotificationRouteHandler in lib/core/services/ \u2014 @singleton in DI, registered before GoRouter in main.dart; handles onMessageOpenedApp (background) and getInitialMessage (cold start); graceful error if target entity no longer exists\n- [ ] dart analyze clean; app_es.arb updated (share button, error messages)\n- [ ] Privacy policy URL in Info.plist\n- [ ] Physical device test iOS: cold-start Universal Link + Apple Sign-In\n- [ ] Physical device test Android: cold-start App Link\n- [ ] All 7 notification types verified routing to correct screens (story 1.5 complete)",
+      "definitionOfDone": "- [ ] Design gate: share button in EventDetailPage and Apple Sign-In button in login confirmed in frames; Apple Sign-In uses black button with Apple logo (HIG compliance)\n- [ ] Pre-flight: com.apple.developer.applesignin entitlement added in Xcode; provisioning profile generated; Apple provider enabled in Firebase Console and Apple Developer Portal\n- [ ] Pre-flight: domain verified — curl https://<domain>/.well-known/assetlinks.json and curl https://<domain>/.well-known/apple-app-site-association return 200 with correct content\n- [ ] Pre-flight: GoRouter DI refactoring complete if needed (from iter-4 assessment)\n- [ ] Backend: GET /api/events/:eventId/share-metadata with Cache-Control: public, max-age=3600\n- [ ] Backend (or Firebase Hosting): serves /.well-known/assetlinks.json and /.well-known/apple-app-site-association\n- [ ] Backend (or Firebase Hosting): redirect page detects User-Agent and redirects to Play Store / App Store; page shows minimal Rideglory branding (not a bare HTTP redirect)\n- [ ] Flutter: app_links ^2.x integrated; AndroidManifest.xml with intent-filter for App Links; iOS Associated Domains entitlement\n- [ ] Flutter: sign_in_with_apple ^2.x integrated; button only on iOS (defaultTargetPlatform == TargetPlatform.iOS)\n- [ ] Flutter: NotificationRouteHandler in lib/core/services/ — @singleton in DI, registered before GoRouter in main.dart; handles onMessageOpenedApp (background) and getInitialMessage (cold start); graceful error if target entity no longer exists\n- [ ] dart analyze clean; app_es.arb updated (share button, error messages)\n- [ ] Privacy policy URL in Info.plist\n- [ ] Physical device test iOS: cold-start Universal Link + Apple Sign-In\n- [ ] Physical device test Android: cold-start App Link\n- [ ] All 7 notification types verified routing to correct screens (story 1.5 complete)",
       "stories": [
         {
           "id": "1.1",
-          "story": "Como rider, puedo tocar el bot\u00f3n de compartir en el detalle de un evento y el app abre el share sheet nativo con un link listo para enviar.",
+          "story": "Como rider, puedo tocar el botón de compartir en el detalle de un evento y el app abre el share sheet nativo con un link listo para enviar.",
           "acceptance": "Link generado en menos de 3 segundos; share sheet nativo con preview (nombre del evento + imagen de portada) en tarjeta de WhatsApp."
         },
         {
           "id": "1.2",
           "story": "Como rider que recibe un link de evento y tiene la app instalada, al tocar el link la app abre directamente el detalle de ese evento.",
-          "acceptance": "Navegaci\u00f3n funciona desde cold start y background; error apropiado si evento no existe o fue cancelado."
+          "acceptance": "Navegación funciona desde cold start y background; error apropiado si evento no existe o fue cancelado."
         },
         {
           "id": "1.3",
           "story": "Como persona sin la app, al tocar el link en el navegador mobile es redirigida a la Play Store (Android) o App Store (iOS).",
-          "acceptance": "Redirecci\u00f3n correcta en ambas plataformas; p\u00e1gina de fallback muestra branding m\u00ednimo de Rideglory (no es un HTTP redirect vac\u00edo)."
+          "acceptance": "Redirección correcta en ambas plataformas; página de fallback muestra branding mínimo de Rideglory (no es un HTTP redirect vacío)."
         },
         {
           "id": "1.4",
-          "story": "Como usuario de iPhone, puedo iniciar sesi\u00f3n o registrarme con Apple Sign-In en la pantalla de login.",
-          "acceptance": "Flujo de auth completo; perfil creado igual que con Google Sign-In; bot\u00f3n solo visible en iOS."
+          "story": "Como usuario de iPhone, puedo iniciar sesión o registrarme con Apple Sign-In en la pantalla de login.",
+          "acceptance": "Flujo de auth completo; perfil creado igual que con Google Sign-In; botón solo visible en iOS."
         },
         {
           "id": "1.5",
-          "story": "Como rider, cuando toco cualquier notificaci\u00f3n push la app navega directamente a la pantalla relevante sin pasar por Home.",
-          "acceptance": "7 tipos de notificaci\u00f3n enrutan correctamente: SOAT \u2192 detalle veh\u00edculo, inscripci\u00f3n aprobada/rechazada \u2192 detalle inscripci\u00f3n, nuevo inscrito \u2192 gesti\u00f3n inscritos, mantenimiento \u2192 detalle mantenimiento, seguidor \u2192 perfil rider. Funciona desde cold start y background. NotificationRouteHandler muestra error apropiado si la entidad destino ya no existe (no crash)."
+          "story": "Como rider, cuando toco cualquier notificación push la app navega directamente a la pantalla relevante sin pasar por Home.",
+          "acceptance": "7 tipos de notificación enrutan correctamente: SOAT → detalle vehículo, inscripción aprobada/rechazada → detalle inscripción, nuevo inscrito → gestión inscritos, mantenimiento → detalle mantenimiento, seguidor → perfil rider. Funciona desde cold start y background. NotificationRouteHandler muestra error apropiado si la entidad destino ya no existe (no crash)."
         }
       ],
-      "architectNotes": "NotificationRouteHandler must be @singleton in DI, registered in main.dart before GoRouter initialization. GoRouter instance must be injectable \u2014 if app_router.dart creates it as a top-level variable, it must be refactored to register in GetIt (scope as Story 1.0 pre-flight if needed from iter-4 assessment). Both onMessageOpenedApp and getInitialMessage streams must be handled.",
-      "designNotes": "Apple Sign-In button must follow Apple HIG strictly (black button, white Apple logo, 'Continuar con Apple' text) \u2014 App Store review will reject non-compliant implementations. Store redirect fallback page (story 1.3) should show Rideglory logo and a clear CTA, not a blank redirect.",
-      "techLeadNotes": "assetlinks.json and apple-app-site-association must be verified reachable (not just deployed) before any App Links / Universal Links code is merged. Test Universal Links with a release build on physical iOS device \u2014 debug builds do not honor Associated Domains in the same way. All 7 notification routing types must be tested end-to-end from cold start on physical device before story 1.5 is considered done."
+      "architectNotes": "NotificationRouteHandler must be @singleton in DI, registered in main.dart before GoRouter initialization. GoRouter instance must be injectable — if app_router.dart creates it as a top-level variable, it must be refactored to register in GetIt (scope as Story 1.0 pre-flight if needed from iter-4 assessment). Both onMessageOpenedApp and getInitialMessage streams must be handled.",
+      "designNotes": "Apple Sign-In button must follow Apple HIG strictly (black button, white Apple logo, 'Continuar con Apple' text) — App Store review will reject non-compliant implementations. Store redirect fallback page (story 1.3) should show Rideglory logo and a clear CTA, not a blank redirect.",
+      "techLeadNotes": "assetlinks.json and apple-app-site-association must be verified reachable (not just deployed) before any App Links / Universal Links code is merged. Test Universal Links with a release build on physical iOS device — debug builds do not honor Associated Domains in the same way. All 7 notification routing types must be tested end-to-end from cold start on physical device before story 1.5 is considered done."
     },
     {
       "id": 6,
       "number": "refactor-01",
       "title": "Refactor & Cleanup Extremo",
-      "goal": "Refactor & Cleanup Extremo \u2014 17 stories de refactor interno del Flutter app. Cero features nuevos, cero cambios de API, cero cambios de DB. Bug fix SOAT, consolidaci\u00f3n de carpeta SOAT, extracci\u00f3n widget-por-archivo (vehicles/events/maintenance/home/profile/registration), tokenizaci\u00f3n de colores, migraci\u00f3n Navigator\u2192go_router, AppFormNavHeader centralizado, limpieza de app_es.arb.",
+      "goal": "Refactor & Cleanup Extremo — 17 stories de refactor interno del Flutter app. Cero features nuevos, cero cambios de API, cero cambios de DB. Bug fix SOAT, consolidación de carpeta SOAT, extracción widget-por-archivo (vehicles/events/maintenance/home/profile/registration), tokenización de colores, migración Navigator→go_router, AppFormNavHeader centralizado, limpieza de app_es.arb.",
       "type": "refactoring",
       "status": "active",
       "stories": [
@@ -651,7 +651,7 @@
         },
         {
           "id": "REFACTOR-13",
-          "title": "Fix direct showDialog call \u2014 use AppDialog wrapper",
+          "title": "Fix direct showDialog call — use AppDialog wrapper",
           "effort": "S",
           "risk": "Low",
           "violationType": "showDialog(...) called directly instead of AppDialog/ConfirmationDialog wrapper",
@@ -712,7 +712,7 @@
             "lib/features/vehicles/presentation/form/widgets/vehicle_form_cover_section.dart"
           ],
           "acceptanceCriteria": [
-            "First commit: add AppColors.statusGreen = Color(0xFF22C55E) and AppColors.statusWarning = Color(0xFFEAB308) to lib/core/theme/app_colors.dart (do NOT map to existing success/warning tokens \u2014 colors differ visually)",
+            "First commit: add AppColors.statusGreen = Color(0xFF22C55E) and AppColors.statusWarning = Color(0xFFEAB308) to lib/core/theme/app_colors.dart (do NOT map to existing success/warning tokens — colors differ visually)",
             "Audit and add AppColors.statusError and AppColors.primarySubtle if missing",
             "grep -rn Color(0x lib/features/ --include=*.dart | grep -v // Intentional: returns 0 results",
             "grep -rn Colors. lib/features/ --include=*.dart | grep -v // Intentional: returns 0 results or <=5 annotated exceptions",
@@ -726,7 +726,7 @@
         },
         {
           "id": "REFACTOR-04",
-          "title": "Widget extraction \u2014 Authentication feature",
+          "title": "Widget extraction — Authentication feature",
           "effort": "M",
           "risk": "Low",
           "violationType": "Multiple widget classes per file: forgot_password_view.dart (9), login_view.dart (8), signup_view.dart (6)",
@@ -749,7 +749,7 @@
         },
         {
           "id": "REFACTOR-03a",
-          "title": "Widget extraction \u2014 Vehicles (garage content + vehicle detail)",
+          "title": "Widget extraction — Vehicles (garage content + vehicle detail)",
           "effort": "L",
           "risk": "High",
           "violationType": "Multiple widget classes per file: garage_vehicles_content.dart (16 + 2 widget-returning methods), vehicle_detail_view.dart (13)",
@@ -770,7 +770,7 @@
         },
         {
           "id": "REFACTOR-03b",
-          "title": "Widget extraction \u2014 Vehicles (form + docs + soat section)",
+          "title": "Widget extraction — Vehicles (form + docs + soat section)",
           "effort": "M",
           "risk": "Medium",
           "violationType": "Multiple widget classes per file across vehicle form files",
@@ -796,7 +796,7 @@
         },
         {
           "id": "REFACTOR-05a",
-          "title": "Widget extraction \u2014 Events (detail + CTA bar)",
+          "title": "Widget extraction — Events (detail + CTA bar)",
           "effort": "L",
           "risk": "High",
           "violationType": "Multiple widget classes per file: event_detail_view.dart (9), event_detail_cta_bar.dart (8 + _buildContent method), plus 4 other detail files",
@@ -816,7 +816,7 @@
             "EventRouteMapScreen unnamed push decision documented: annotate // Custom: or add named route",
             "dart analyze lib/ passes with 0 errors",
             "flutter test passes with 0 regressions",
-            "Manual smoke: Event detail CTA bar renders correctly in all 4 state variants (registered / pending / closed / full) \u2014 HARD AC"
+            "Manual smoke: Event detail CTA bar renders correctly in all 4 state variants (registered / pending / closed / full) — HARD AC"
           ],
           "dependsOn": [
             "REFACTOR-07",
@@ -825,7 +825,7 @@
         },
         {
           "id": "REFACTOR-05b",
-          "title": "Widget extraction \u2014 Events (form + list + tracking + drafts)",
+          "title": "Widget extraction — Events (form + list + tracking + drafts)",
           "effort": "L",
           "risk": "Medium",
           "violationType": "Multiple widget classes per file across 19 event form/list/tracking/drafts files",
@@ -865,7 +865,7 @@
         },
         {
           "id": "REFACTOR-06a",
-          "title": "Widget extraction \u2014 Maintenance feature",
+          "title": "Widget extraction — Maintenance feature",
           "effort": "M",
           "risk": "Medium",
           "violationType": "Multiple widget classes per file in maintenance: maintenance_filters_bottom_sheet.dart (12), plus 5 other files with 2-3 widgets each",
@@ -893,7 +893,7 @@
         },
         {
           "id": "REFACTOR-06b",
-          "title": "Widget extraction \u2014 Home + Profile + Registration features",
+          "title": "Widget extraction — Home + Profile + Registration features",
           "effort": "M",
           "risk": "Low-Medium",
           "violationType": "Multiple widget classes per file across home, profile, users, and event_registration features",
@@ -967,7 +967,7 @@
           "title": "Document bool isLoadingMore exception in NotificationsState",
           "effort": "S",
           "risk": "Low",
-          "violationType": "Primitive boolean flag for loading state in @freezed state class \u2014 should be ResultState<T> per coding standards",
+          "violationType": "Primitive boolean flag for loading state in @freezed state class — should be ResultState<T> per coding standards",
           "filesAffected": [
             "lib/features/notifications/presentation/cubit/notifications_state.dart"
           ],
@@ -983,7 +983,7 @@
       ],
       "definitionOfDone": [
         "dart analyze lib/ returns 0 errors, 0 warnings",
-        "flutter test passes \u2014 all pre-existing tests pass, 0 new failures",
+        "flutter test passes — all pre-existing tests pass, 0 new failures",
         "Widget-class check (macOS-compatible): find lib/features -name '*.dart' | while read f; do count=$(grep -cE 'extends (StatelessWidget|StatefulWidget|PreferredSizeWidget)' \"$f\" 2>/dev/null); if [ \"${count:-0}\" -gt 1 ] 2>/dev/null; then echo \"$count $f\"; fi; done must return 0 lines",
         "grep -rn Widget _build lib/features/ --include=*.dart | grep -v // returns 0 results",
         "grep -rn ElevatedButton|OutlinedButton|TextButton lib/features/ --include=*.dart | grep -v // Custom: returns 0 results",
@@ -1001,16 +1001,16 @@
         "SOAT upload to confirmation to status: vehicle detail SOAT badge to upload page to manual capture to save to status page refreshes; verify all 6 vehicleSoat callers navigate to correct upload page (REFACTOR-02)",
         "SOAT vehicle creation: create new vehicle to SOAT photo section to attachment to confirmation page renders correctly (REFACTOR-02)",
         "Login to Forgot Password to back to Login: navigation works in both directions, no stack accumulation (REFACTOR-04, REFACTOR-10)",
-        "Event detail CTA bar \u2014 all 4 state variants: registered / pending / closed / full all render the correct CTA (REFACTOR-05a)",
+        "Event detail CTA bar — all 4 state variants: registered / pending / closed / full all render the correct CTA (REFACTOR-05a)",
         "Maintenance filters: Maintenance list to filters to apply to list updates correctly (REFACTOR-06a, REFACTOR-09)",
-        "Garage vehicle options: Garage to vehicle options menu to archive / delete / set main \u2014 all three actions function after Navigator migration (REFACTOR-09)",
+        "Garage vehicle options: Garage to vehicle options menu to archive / delete / set main — all three actions function after Navigator migration (REFACTOR-09)",
         "Signup end-to-end: full signup flow from start to home screen (REFACTOR-04)"
       ],
       "risks": [
         "SOAT consolidation blast perimeter (REFACTOR-02): five external files import from the legacy folder and 6 active callers use AppRoutes.vehicleSoat. New named route, typed-result Navigator migration, and DI regeneration must all happen in one story. Run grep -r vehicles/presentation/soat lib/ before deleting and fix all results first.",
         "Widget extraction with shared state (REFACTOR-03a, REFACTOR-05a): garage_vehicles_content.dart (16 classes) and event_detail_cta_bar.dart (8 state-variant classes) are the highest-risk extractions. Extract one widget per commit, run flutter test after each commit. Never extract a widget that reads parent State<T> fields directly.",
         "Color value mismatch (REFACTOR-11): Color(0xFF22C55E) and Color(0xFFEAB308) differ from existing AppColors.success/warning tokens. Add new AppColors.statusGreen and AppColors.statusWarning tokens as the first commit of REFACTOR-11 to preserve exact rendered colors.",
-        "Navigator.pop(context) form invisible to standard grep (REFACTOR-09): six calls in garage_options_bottom_sheet.dart, maintenance_options_bottom_sheet.dart, and maintenance_filters_bottom_sheet.dart use Navigator.pop(context) without .of \u2014 not caught by Navigator\\.of(context)\\. DoD grep. DoD includes a separate grep for this form.",
+        "Navigator.pop(context) form invisible to standard grep (REFACTOR-09): six calls in garage_options_bottom_sheet.dart, maintenance_options_bottom_sheet.dart, and maintenance_filters_bottom_sheet.dart use Navigator.pop(context) without .of — not caught by Navigator\\.of(context)\\. DoD grep. DoD includes a separate grep for this form.",
         "Event CTA bar extraction has no widget tests (REFACTOR-05a): extraction failures in event_detail_cta_bar.dart are silent at compile time. Manual smoke test of all 4 state variants is a hard AC, not advisory."
       ],
       "estimatedDays": 7,
@@ -1039,8 +1039,8 @@
     },
     "backend": {
       "status": "idle",
-      "lastAction": "2026-05-15T03:00:00Z",
-      "focus": "iter-3 backend complete: tracking start/end organizer endpoints, SOS WS handler with FCM multicast + dedup, GET /events/:id/route GeoJSON, GET /places/geocode Mapbox proxy, maintenance 30d cron + event 24h cron. 44 unit tests pass. events-ms + maintenances-ms Prisma migrations created."
+      "lastAction": "2026-05-27T16:25:00Z",
+      "focus": "iter-6 (refactor-01) stand-down — no rideglory-api changes required"
     },
     "frontend": {
       "status": "idle",
@@ -1087,27 +1087,27 @@
     {
       "id": "T-1-3",
       "iteration": 1,
-      "description": "Implement US-1-2 (Splash) + US-1-3 (Auth screens) \u2014 module PR 1: splash+auth (max 40 files). Auth frames gate must be satisfied before US-1-3 begins.",
+      "description": "Implement US-1-2 (Splash) + US-1-3 (Auth screens) — module PR 1: splash+auth (max 40 files). Auth frames gate must be satisfied before US-1-3 begins.",
       "agent": "frontend",
       "status": "backlog",
       "storyRef": "US-1-2, US-1-3",
-      "title": "Implement US-1-2 (Splash) + US-1-3 (Auth screens) \u2014 module PR 1: splash+auth (ma",
+      "title": "Implement US-1-2 (Splash) + US-1-3 (Auth screens) — module PR 1: splash+auth (ma",
       "updatedAt": "2026-05-14T04:30:00Z"
     },
     {
       "id": "T-1-4",
       "iteration": 1,
-      "description": "Implement US-1-4 (Home Dashboard) \u2014 module PR 2: home (max 40 files)",
+      "description": "Implement US-1-4 (Home Dashboard) — module PR 2: home (max 40 files)",
       "agent": "frontend",
       "status": "backlog",
       "storyRef": "US-1-4",
-      "title": "Implement US-1-4 (Home Dashboard) \u2014 module PR 2: home (max 40 files)",
+      "title": "Implement US-1-4 (Home Dashboard) — module PR 2: home (max 40 files)",
       "updatedAt": "2026-05-14T04:30:00Z"
     },
     {
       "id": "T-1-5",
       "iteration": 1,
-      "description": "Extract app_event_badge.dart atom from frame zKkmE; implement US-1-5 (Events list + detail) + US-1-6 (Create/Edit Event form) \u2014 module PR 3: events (max 40 files)",
+      "description": "Extract app_event_badge.dart atom from frame zKkmE; implement US-1-5 (Events list + detail) + US-1-6 (Create/Edit Event form) — module PR 3: events (max 40 files)",
       "agent": "frontend",
       "status": "backlog",
       "storyRef": "US-1-5, US-1-6",
@@ -1117,7 +1117,7 @@
     {
       "id": "T-1-6",
       "iteration": 1,
-      "description": "Extract document slot pill (aGqnv) as design system molecule; implement US-1-7 (Garage list + detail) + US-1-8 (Add/Edit vehicle form) \u2014 module PR 4: garage (max 40 files)",
+      "description": "Extract document slot pill (aGqnv) as design system molecule; implement US-1-7 (Garage list + detail) + US-1-8 (Add/Edit vehicle form) — module PR 4: garage (max 40 files)",
       "agent": "frontend",
       "status": "backlog",
       "storyRef": "US-1-7, US-1-8",
@@ -1127,7 +1127,7 @@
     {
       "id": "T-1-7",
       "iteration": 1,
-      "description": "Implement US-1-9 (Maintenance dashboard, history, forms) + US-1-10 (Registrations) \u2014 module PR 5: maintenance+registration (max 40 files)",
+      "description": "Implement US-1-9 (Maintenance dashboard, history, forms) + US-1-10 (Registrations) — module PR 5: maintenance+registration (max 40 files)",
       "agent": "frontend",
       "status": "backlog",
       "storyRef": "US-1-9, US-1-10",
@@ -1167,11 +1167,11 @@
     {
       "id": "T-3-1",
       "iteration": 3,
-      "description": "Migrate google_maps_flutter \u2192 mapbox_maps_flutter: update pubspec.yaml, native configs (AndroidManifest.xml, Info.plist), refactor live_map_widget.dart, live_map_page.dart, initials_marker_icon.dart, route_map_preview.dart. Add widget test for route_map_preview.dart. Must be merged and dart analyze clean before any other iter-3 story begins.",
+      "description": "Migrate google_maps_flutter → mapbox_maps_flutter: update pubspec.yaml, native configs (AndroidManifest.xml, Info.plist), refactor live_map_widget.dart, live_map_page.dart, initials_marker_icon.dart, route_map_preview.dart. Add widget test for route_map_preview.dart. Must be merged and dart analyze clean before any other iter-3 story begins.",
       "agent": "frontend",
       "status": "done",
       "storyRef": "US-3-0",
-      "title": "Mapbox SDK migration \u2014 Story 3.0 blocker",
+      "title": "Mapbox SDK migration — Story 3.0 blocker",
       "updatedAt": "2026-05-14T20:00:00Z"
     },
     {
@@ -1187,11 +1187,11 @@
     {
       "id": "T-3-3",
       "iteration": 3,
-      "description": "Backend: implement SOS handler in TrackingGateway \u2014 receive WS sos message, broadcast sos_alert to all event participants via WebSocket, dispatch FCM multicast push to all approved registrants; deduplication guard with sosTriggeredAt on events-ms Event model.",
+      "description": "Backend: implement SOS handler in TrackingGateway — receive WS sos message, broadcast sos_alert to all event participants via WebSocket, dispatch FCM multicast push to all approved registrants; deduplication guard with sosTriggeredAt on events-ms Event model.",
       "agent": "backend",
       "status": "done",
       "storyRef": "US-3-1, US-3-2",
-      "title": "Backend SOS handler \u2014 WebSocket broadcast + FCM multicast",
+      "title": "Backend SOS handler — WebSocket broadcast + FCM multicast",
       "updatedAt": "2026-05-15T03:00:00Z"
     },
     {
@@ -1211,7 +1211,7 @@
       "agent": "backend",
       "status": "done",
       "storyRef": "US-3-6, US-3-7",
-      "title": "Backend cron scheduler \u2014 maintenance + event reminders",
+      "title": "Backend cron scheduler — maintenance + event reminders",
       "updatedAt": "2026-05-15T03:00:00Z"
     },
     {
@@ -1237,11 +1237,11 @@
     {
       "id": "T-3-8",
       "iteration": 3,
-      "description": "Flutter: background GPS \u2014 flutter_foreground_task on Android (foreground service isolate + IsolateNameServer; configureDependencies() in onStart()); geolocator with AppleSettings(activityType: ActivityType.automotiveNavigation) on iOS. FOREGROUND_SERVICE + FOREGROUND_SERVICE_LOCATION in AndroidManifest.xml.",
+      "description": "Flutter: background GPS — flutter_foreground_task on Android (foreground service isolate + IsolateNameServer; configureDependencies() in onStart()); geolocator with AppleSettings(activityType: ActivityType.automotiveNavigation) on iOS. FOREGROUND_SERVICE + FOREGROUND_SERVICE_LOCATION in AndroidManifest.xml.",
       "agent": "frontend",
       "status": "done",
       "storyRef": "US-3-5",
-      "title": "Flutter background GPS \u2014 Android foreground service + iOS",
+      "title": "Flutter background GPS — Android foreground service + iOS",
       "updatedAt": "2026-05-14T20:00:00Z"
     },
     {
@@ -1271,7 +1271,7 @@
       "agent": "qa",
       "status": "backlog",
       "storyRef": "US-3-8",
-      "title": "QA quality gate \u2014 Mapbox widget test + background GPS device logs",
+      "title": "QA quality gate — Mapbox widget test + background GPS device logs",
       "updatedAt": "2026-05-15T01:30:00Z"
     },
     {
@@ -1357,8 +1357,8 @@
     {
       "id": "T-6-8",
       "iteration": 6,
-      "title": "Widget extraction \u2014 Authentication feature (REFACTOR-04)",
-      "description": "Split forgot_password_view.dart (9 widgets), login_view.dart (8 widgets), signup_view.dart (6 widgets) into one-widget-per-file. Create widgets/ subdirectory when extracting 4+ from a single file. Manual smoke: Login\u2194ForgotPassword, Signup end-to-end.",
+      "title": "Widget extraction — Authentication feature (REFACTOR-04)",
+      "description": "Split forgot_password_view.dart (9 widgets), login_view.dart (8 widgets), signup_view.dart (6 widgets) into one-widget-per-file. Create widgets/ subdirectory when extracting 4+ from a single file. Manual smoke: Login↔ForgotPassword, Signup end-to-end.",
       "agent": "frontend",
       "status": "backlog",
       "storyRef": "US-6-8",
@@ -1367,7 +1367,7 @@
     {
       "id": "T-6-9",
       "iteration": 6,
-      "title": "Widget extraction \u2014 Vehicles garage content + vehicle detail (REFACTOR-03a)",
+      "title": "Widget extraction — Vehicles garage content + vehicle detail (REFACTOR-03a)",
       "description": "Split garage_vehicles_content.dart (16 widgets + 2 widget-returning methods) and vehicle_detail_view.dart (13 widgets) into one-widget-per-file. Classify each class as pure-display / state-consumer / state-mutator before extracting. Extract one widget per commit; run flutter test after each. Color literals in _MaintenanceCard replaced with AppColors.statusGreen/statusWarning in same commit.",
       "agent": "frontend",
       "status": "backlog",
@@ -1377,7 +1377,7 @@
     {
       "id": "T-6-10",
       "iteration": 6,
-      "title": "Widget extraction \u2014 Vehicles form + docs + soat section (REFACTOR-03b)",
+      "title": "Widget extraction — Vehicles form + docs + soat section (REFACTOR-03b)",
       "description": "Split vehicle_form.dart (9), vehicle_document_upload_slot.dart (4), vehicle_form_page.dart (2), vehicle_form_cover_section.dart (4), vehicle_form_id_section.dart (3), vehicle_form_docs_section.dart (2), vehicle_card.dart (method). Maintain GlobalKey<FormBuilderState> constructor-injection pattern. Preserve vehicle_form_page.dart // Custom: annotations (pushReplacement + modal pop).",
       "agent": "frontend",
       "status": "backlog",
@@ -1387,7 +1387,7 @@
     {
       "id": "T-6-11",
       "iteration": 6,
-      "title": "Widget extraction \u2014 Events detail + CTA bar (REFACTOR-05a)",
+      "title": "Widget extraction — Events detail + CTA bar (REFACTOR-05a)",
       "description": "Split event_detail_view.dart (9), event_detail_cta_bar.dart (8 + _buildContent method), event_detail_owner_lifecycle_bar.dart (4), event_detail_meeting_point_section.dart (4), event_detail_header.dart (2), event_detail_header_background_image.dart (2), event_detail_by_id_page.dart (method). Extract ~8 CTA variants to detail/widgets/cta/. Keep onEdit as typed callback in EventDetailViewState. Document EventRouteMapScreen unnamed-push decision. HARD AC: smoke test all 4 CTA state variants.",
       "agent": "frontend",
       "status": "backlog",
@@ -1397,7 +1397,7 @@
     {
       "id": "T-6-12",
       "iteration": 6,
-      "title": "Widget extraction \u2014 Events form + list + tracking + drafts (REFACTOR-05b)",
+      "title": "Widget extraction — Events form + list + tracking + drafts (REFACTOR-05b)",
       "description": "Split 19 source files across events form/list/tracking/drafts (2-7 widgets each + 2 widget-returning methods). Document EventRouteConfigScreen unnamed-push decision. Verify existing widget tests (event_filters_bottom_sheet, events_page_view, attendees_list_navigation) still pass.",
       "agent": "frontend",
       "status": "backlog",
@@ -1407,8 +1407,8 @@
     {
       "id": "T-6-13",
       "iteration": 6,
-      "title": "Widget extraction \u2014 Maintenance feature + showDialog fix (REFACTOR-06a)",
-      "description": "Split maintenance_filters_bottom_sheet.dart (12 widgets \u2014 keep outer StatefulWidget+State in one file; extract only stateless sub-components), maintenances_page.dart (3), maintenance_detail_page.dart (3), maintenance_summary_widget.dart (2), maintenance_next_service_card.dart (2), maintenance_grouped_list_item.dart (method). Migrate maintenance_filters_bottom_sheet.dart:95 Navigator.pop(context, _filters) to context.pop(_filters). Manual smoke test: maintenance filters apply.",
+      "title": "Widget extraction — Maintenance feature + showDialog fix (REFACTOR-06a)",
+      "description": "Split maintenance_filters_bottom_sheet.dart (12 widgets — keep outer StatefulWidget+State in one file; extract only stateless sub-components), maintenances_page.dart (3), maintenance_detail_page.dart (3), maintenance_summary_widget.dart (2), maintenance_next_service_card.dart (2), maintenance_grouped_list_item.dart (method). Migrate maintenance_filters_bottom_sheet.dart:95 Navigator.pop(context, _filters) to context.pop(_filters). Manual smoke test: maintenance filters apply.",
       "agent": "frontend",
       "status": "backlog",
       "storyRef": "US-6-13",
@@ -1417,7 +1417,7 @@
     {
       "id": "T-6-14",
       "iteration": 6,
-      "title": "Widget extraction \u2014 Home + Profile + Users + EventRegistration (REFACTOR-06b)",
+      "title": "Widget extraction — Home + Profile + Users + EventRegistration (REFACTOR-06b)",
       "description": "Split 13 source files across home (home_event_card.dart 5, home_page.dart 2, home_garage_section.dart 2), profile (edit_profile_page.dart 3, profile_stats_row.dart 3, profile_actions_list.dart 3, profile_header.dart 2, profile_garage_section.dart 2, profile_content.dart 2), users (rider_profile_content.dart 4), event_registration (event_registration_page.dart 2, registration_detail_page.dart 2, inscription_card.dart 2).",
       "agent": "frontend",
       "status": "backlog",
@@ -1427,7 +1427,7 @@
     {
       "id": "T-6-15",
       "iteration": 6,
-      "title": "Migrate remaining Navigator.of \u2192 go_router (REFACTOR-09)",
+      "title": "Migrate remaining Navigator.of → go_router (REFACTOR-09)",
       "description": "Migrate Navigator.of(context).push*/pop() and Navigator.pop(context) calls across 16 feature files to context.pop()/context.push(). Document EventRouteConfigScreen and EventRouteMapScreen unnamed-push decisions. Six Navigator.pop(context) form calls (garage_options_bottom_sheet, maintenance_options_bottom_sheet, maintenance_filters_bottom_sheet) require separate grep check. Annotate justified exceptions with // Custom:. Manual smoke: maintenance filters pop-with-result, garage archive/delete/set-main.",
       "agent": "frontend",
       "status": "backlog",
@@ -1448,7 +1448,7 @@
       "id": "T-6-17",
       "iteration": 6,
       "title": "Audit and clean app_es.arb (REFACTOR-15)",
-      "description": "Phase 1: audit unused keys (jq + grep for each key). Phase 2: identify duplicate values unifiable to common_* prefix. Phase 3: apply \u2014 add common_* keys, mass-replace in lib/features/, delete old keys, run flutter gen-l10n. Target: \u226510% reduction from 1357 to \u22641220 keys. Commit per phase for rollback safety. 15-screen navigation smoke test confirms no missing-translation strings.",
+      "description": "Phase 1: audit unused keys (jq + grep for each key). Phase 2: identify duplicate values unifiable to common_* prefix. Phase 3: apply — add common_* keys, mass-replace in lib/features/, delete old keys, run flutter gen-l10n. Target: ≥10% reduction from 1357 to ≤1220 keys. Commit per phase for rollback safety. 15-screen navigation smoke test confirms no missing-translation strings.",
       "agent": "frontend",
       "status": "backlog",
       "storyRef": "US-6-17",
@@ -1457,8 +1457,8 @@
     {
       "id": "T-6-18",
       "iteration": 6,
-      "title": "QA full iteration gate \u2014 DoD grep checks + 7 smoke tests + regression guard",
-      "description": "1. Capture dart analyze + flutter test baseline on iter-6 pre-refactor (document any pre-existing failures). 2. Post-refactor: run all DoD grep checks from PLAN.md Definition of Done. 3. Run 7 manual smoke tests: (a) SOAT upload\u2192confirmation\u2192status + 6 vehicleSoat callers; (b) SOAT vehicle creation; (c) Login\u2194ForgotPassword; (d) Event detail CTA all 4 variants \u2014 HARD AC; (e) Maintenance filters apply; (f) Garage options archive/delete/set-main; (g) Signup end-to-end. 4. AI cover generation regression: generate \u2192 select \u2192 save event \u2192 confirm functional. 5. Mapbox route preview regression: renders in event form post-extraction. 6. Confirm api_base_url_resolver.dart NOT touched (its 2 warnings remain and are acceptable). 7. Confirm lib/features/vehicles/presentation/soat/ folder is gone.",
+      "title": "QA full iteration gate — DoD grep checks + 7 smoke tests + regression guard",
+      "description": "1. Capture dart analyze + flutter test baseline on iter-6 pre-refactor (document any pre-existing failures). 2. Post-refactor: run all DoD grep checks from PLAN.md Definition of Done. 3. Run 7 manual smoke tests: (a) SOAT upload→confirmation→status + 6 vehicleSoat callers; (b) SOAT vehicle creation; (c) Login↔ForgotPassword; (d) Event detail CTA all 4 variants — HARD AC; (e) Maintenance filters apply; (f) Garage options archive/delete/set-main; (g) Signup end-to-end. 4. AI cover generation regression: generate → select → save event → confirm functional. 5. Mapbox route preview regression: renders in event form post-extraction. 6. Confirm api_base_url_resolver.dart NOT touched (its 2 warnings remain and are acceptable). 7. Confirm lib/features/vehicles/presentation/soat/ folder is gone.",
       "agent": "qa",
       "status": "backlog",
       "storyRef": "QA-gate",
@@ -1477,7 +1477,7 @@
     {
       "id": "BUG-3-1",
       "iteration": 3,
-      "description": "HARD GATE BLOCKER: Widget test for route_map_preview.dart must be created and passing before Story 3.0 PR can merge. Test file: test/shared/widgets/map/route_map_preview_test.dart. Minimum 4 test cases required: (1) Loading state \u2014 stub PlaceService.geocode to hang, expect spinner overlay visible. (2) Error state \u2014 stub to throw DioException, expect error banner rendered, no crash. (3) Data state \u2014 stub to return GeocodeResultDto with coordinates, expect MapWidget rendered. (4) Empty state \u2014 both meetingPoint and destination null, expect placeholder text. Use mocktail for PlaceService mocking. After test passes: run 'flutter test test/shared/widgets/map/route_map_preview_test.dart' and verify PASS before Story 3.0 PR opens.",
+      "description": "HARD GATE BLOCKER: Widget test for route_map_preview.dart must be created and passing before Story 3.0 PR can merge. Test file: test/shared/widgets/map/route_map_preview_test.dart. Minimum 4 test cases required: (1) Loading state — stub PlaceService.geocode to hang, expect spinner overlay visible. (2) Error state — stub to throw DioException, expect error banner rendered, no crash. (3) Data state — stub to return GeocodeResultDto with coordinates, expect MapWidget rendered. (4) Empty state — both meetingPoint and destination null, expect placeholder text. Use mocktail for PlaceService mocking. After test passes: run 'flutter test test/shared/widgets/map/route_map_preview_test.dart' and verify PASS before Story 3.0 PR opens.",
       "agent": "frontend",
       "status": "backlog",
       "storyRef": "US-3-0",
@@ -1534,7 +1534,7 @@
       "iteration": 1,
       "at": "2026-05-13T10:00:00Z",
       "agent": "po",
-      "detail": "Iteration 1 scoped: UI/UX Redesign \u2014 11 user stories (US-1-1 through US-1-11), 10 tasks (T-1-1 through T-1-10), 2 QA tasks (T-1-8, T-1-9). No backend changes. 5-module PR strategy. Auth frames gate and donut chart scope to be confirmed by design in pre-flight."
+      "detail": "Iteration 1 scoped: UI/UX Redesign — 11 user stories (US-1-1 through US-1-11), 10 tasks (T-1-1 through T-1-10), 2 QA tasks (T-1-8, T-1-9). No backend changes. 5-module PR strategy. Auth frames gate and donut chart scope to be confirmed by design in pre-flight."
     },
     {
       "type": "architect_plan",
@@ -1542,7 +1542,7 @@
       "phase": "architect",
       "agent": "architect",
       "at": "2026-05-14T05:00:00Z",
-      "detail": "Iter-1 architecture confirmed presentation-layer only. Zero rideglory-api / domain / data / DI / router changes. Two design-system primitives specified: AppEventBadge atom (lib/design_system/atoms/badges/, frame zKkmE) and DocumentSlotPill molecule (lib/design_system/molecules/feedback/, frame aGqnv \u2014 reusable for iter-2 SOAT). 3-tier color tokenization policy defined (colorScheme \u2192 AppColors \u2192 status palette). Module PR cadence (5 PRs \u2264 40 files) validated. Slim handoffs delivered to backend (stand-down), frontend, devops (no-op), qa. DIAGRAMS.md initialized."
+      "detail": "Iter-1 architecture confirmed presentation-layer only. Zero rideglory-api / domain / data / DI / router changes. Two design-system primitives specified: AppEventBadge atom (lib/design_system/atoms/badges/, frame zKkmE) and DocumentSlotPill molecule (lib/design_system/molecules/feedback/, frame aGqnv — reusable for iter-2 SOAT). 3-tier color tokenization policy defined (colorScheme → AppColors → status palette). Module PR cadence (5 PRs ≤ 40 files) validated. Slim handoffs delivered to backend (stand-down), frontend, devops (no-op), qa. DIAGRAMS.md initialized."
     },
     {
       "type": "design_iteration",
@@ -1580,7 +1580,7 @@
       "iteration": 1,
       "at": "2026-05-14T08:00:00Z",
       "agent": "system",
-      "detail": "Iteration 1 DONE. Phases: po_scope \u2192 architect \u2192 design \u2192 backend \u2192 frontend \u2192 qa \u2192 devops \u2192 pr \u2192 tech_lead \u2192 po_close. PR #13: https://github.com/CamiiloAF/Rideglory/pull/13 (merged SHA ed3eb0cf)."
+      "detail": "Iteration 1 DONE. Phases: po_scope → architect → design → backend → frontend → qa → devops → pr → tech_lead → po_close. PR #13: https://github.com/CamiiloAF/Rideglory/pull/13 (merged SHA ed3eb0cf)."
     },
     {
       "type": "iteration_started",
@@ -1641,14 +1641,14 @@
       "iteration": 3,
       "at": "2026-05-15T07:35:00Z",
       "agent": "system",
-      "detail": "Iteration 3 DONE. Phases: po_scope \u2192 architect \u2192 design \u2192 backend \u2192 frontend \u2192 qa \u2192 devops \u2192 pr \u2192 tech_lead \u2192 po_close. PR #15: https://github.com/CamiiloAF/Rideglory/pull/15 (approved, NOT merged \u2014 sin mezclar PR). Tech lead: APPROVED cycle 2."
+      "detail": "Iteration 3 DONE. Phases: po_scope → architect → design → backend → frontend → qa → devops → pr → tech_lead → po_close. PR #15: https://github.com/CamiiloAF/Rideglory/pull/15 (approved, NOT merged — sin mezclar PR). Tech lead: APPROVED cycle 2."
     },
     {
       "type": "plan_drafted",
       "iteration": 6,
       "at": "2026-05-27T00:00:00Z",
       "agent": "po",
-      "detail": "Refactor & Cleanup Extremo \u2014 FRESH run, 16 stories, 7 days estimated"
+      "detail": "Refactor & Cleanup Extremo — FRESH run, 16 stories, 7 days estimated"
     },
     {
       "type": "plan_approved",
@@ -1702,7 +1702,7 @@
       "phase": "design",
       "agent": "design",
       "at": "2026-05-27T12:00:00Z",
-      "detail": "Stand-down \u2014 AppFormNavHeader API approved, color tokens approved, 6-screenshot regression checklist issued"
+      "detail": "Stand-down — AppFormNavHeader API approved, color tokens approved, 6-screenshot regression checklist issued"
     },
     {
       "type": "phase_complete",
@@ -1710,7 +1710,15 @@
       "phase": "design",
       "agent": "design",
       "at": "2026-05-27T12:00:00Z",
-      "detail": "Stand-down \u2014 visual approvals + regression checklist"
+      "detail": "Stand-down — visual approvals + regression checklist"
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 6,
+      "phase": "backend",
+      "agent": "system",
+      "at": "2026-05-27T16:25:00Z",
+      "detail": "Backend stand-down — no rideglory-api changes for iter-6 (pure Flutter refactor)"
     }
   ]
 }

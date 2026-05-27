@@ -14,18 +14,19 @@
 **Codename:** refactor-01 — Refactor & Cleanup Extremo
 **Type:** REFACTORING ONLY — zero new features, zero API changes
 
-**Last completed phase:** design (Design — stand-down)
+**Last completed phase:** backend (System — stand-down)
 **Next phase:** frontend
 
 **Phase sequence for refactor-01:**
 1. ✅ `po_scope` — PO: 17 stories + 19 tasks written; handoff complete
 2. ✅ `architect` — Decisions A-G resolved: AppFormNavHeader API locked; unnamed-route Option B; REFACTOR-12 exception; 3 new color tokens; AppButton contract verified; DI regen sequence; REFACTOR-15 strategy. 5 slim handoffs written.
 3. ✅ `design` — Stand-down. AppFormNavHeader API approved for 3 callsites. Critical risk: MaintenanceFormPage preferredSize bottom-slot proxy must be verified (kBottomNavigationBarHeight * 0.5 = 28px vs actual progress bar height). Color tokens statusGreen/statusWarning/statusError approved as non-breaking additions. 6-screenshot regression checklist issued.
-4. ⬜ `frontend` — 17 implementation tasks in linear order (T-6-1 → T-6-17)
-4. ⬜ `qa` — T-6-18: baseline capture + DoD grep checks + 14 smoke tests
-5. ⬜ `devops` — T-6-19: CI no-op verification on iter-6 branch
-6. ⬜ `tech_lead` — code review; Clean Architecture compliance; DoD grep verification
-7. ⬜ `po_close` — iteration summary, history, product status, next context
+4. ✅ `backend` — Stand-down. No rideglory-api changes for iter-6.
+5. ⬜ `frontend` — 17 implementation tasks in linear order (T-6-1 → T-6-17)
+6. ⬜ `qa` — T-6-18: baseline capture + DoD grep checks + 14 smoke tests
+7. ⬜ `devops` — T-6-19: CI no-op verification on iter-6 branch
+8. ⬜ `tech_lead` — code review; Clean Architecture compliance; DoD grep verification
+9. ⬜ `po_close` — iteration summary, history, product status, next context
 
 **Note:** Backend is fully stand-down. Design is stand-down (no Pencil frames). Frontend is the dominant phase.
 
