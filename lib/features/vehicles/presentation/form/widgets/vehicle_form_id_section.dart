@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_form_fields.dart';
+import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_placa_field.dart';
 import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_section_header.dart';
+import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_vin_field.dart';
 
 class VehicleFormIdSection extends StatelessWidget {
   const VehicleFormIdSection({super.key});
@@ -18,134 +18,15 @@ class VehicleFormIdSection extends StatelessWidget {
           title: context.l10n.vehicle_form_id_section,
         ),
         const SizedBox(height: 14),
-        const _VehiclePlacaField(),
+        const VehicleFormPlacaField(),
         const SizedBox(height: 14),
-        const _VehicleVinField(),
+        const VehicleFormVinField(),
         const SizedBox(height: 14),
         AppDatePicker(
           fieldName: VehicleFormFields.purchaseDate,
           labelText: context.l10n.vehicle_purchaseDate,
           lastDate: DateTime.now(),
           hintText: context.l10n.vehicle_purchaseDateHint,
-        ),
-      ],
-    );
-  }
-}
-
-class _VehiclePlacaField extends StatelessWidget {
-  const _VehiclePlacaField();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          children: [
-            Text(
-              context.l10n.vehicle_form_plate_label,
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: AppColors.textOnDarkSecondary,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
-              height: 20,
-              decoration: BoxDecoration(
-                color: AppColors.primarySubtle,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                context.l10n.vehicle_form_placa_required_badge,
-                style: const TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.primary,
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 6),
-        FormBuilderTextField(
-          name: VehicleFormFields.licensePlate,
-          style: GoogleFonts.spaceMono(
-            fontSize: 16,
-            letterSpacing: 2,
-            color: AppColors.textOnDarkPrimary,
-          ),
-          textCapitalization: TextCapitalization.characters,
-          maxLength: 6,
-          decoration: InputDecoration(
-            hintText: context.l10n.vehicle_vehiclePlateHint,
-            hintStyle: GoogleFonts.spaceMono(
-              fontSize: 16,
-              letterSpacing: 2,
-              color: AppColors.textOnDarkTertiary,
-            ),
-            counterText: '',
-          ),
-          textInputAction: TextInputAction.next,
-        ),
-      ],
-    );
-  }
-}
-
-class _VehicleVinField extends StatelessWidget {
-  const _VehicleVinField();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          children: [
-            Text(
-              context.l10n.vehicle_vehicleVin,
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: AppColors.textOnDarkSecondary,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              context.l10n.vehicle_form_vin_optional_label,
-              style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.normal,
-                color: AppColors.textOnDarkTertiary,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 6),
-        FormBuilderTextField(
-          name: VehicleFormFields.vin,
-          style: GoogleFonts.spaceMono(
-            fontSize: 13,
-            letterSpacing: 0.5,
-            color: AppColors.textOnDarkPrimary,
-          ),
-          textCapitalization: TextCapitalization.characters,
-          maxLength: 17,
-          decoration: InputDecoration(
-            hintText: context.l10n.vehicle_vehicleVinHint,
-            hintStyle: GoogleFonts.spaceMono(
-              fontSize: 13,
-              letterSpacing: 0.5,
-              color: AppColors.textOnDarkTertiary,
-            ),
-            counterText: '',
-          ),
-          textInputAction: TextInputAction.next,
         ),
       ],
     );

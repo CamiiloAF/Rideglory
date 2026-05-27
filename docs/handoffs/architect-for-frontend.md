@@ -1,5 +1,220 @@
 > Slim handoff — read this before docs/handoffs/architect.md
 
+# Architect → Frontend (Flutter) — Iteration 6 (refactor-01)
+
+**Date:** 2026-05-27
+**Execution order:** implement T-6-1 through T-6-17 in strict linear sequence. One commit minimum per task. `dart analyze && flutter test` before each commit.
+
+---
+
+## Pre-flight baseline
+
+```bash
+dart analyze lib/ 2>&1 | tee /tmp/analyze_baseline.txt
+flutter test 2>&1 | tail -5 | tee /tmp/test_baseline.txt
+```
+
+Expected: 2 warnings in `api_base_url_resolver.dart` (lines 17–19 — do NOT touch), 0 elsewhere. TC-2-28 pre-existing failure is acceptable — record it.
+
+---
+
+## T-6-1: REFACTOR-01 — Fix SOAT loading-button bug
+
+**File:** `lib/features/soat/presentation/widgets/soat_data_view.dart`
+
+Replace label-swap pattern with:
+```dart
+AppButton(
+  label: context.l10n.soat_view_document,
+  isLoading: _openingDocument,
+  onPressed: _openDocument,  // AppButton.isLoading internally guards — no null-guard needed
+)
+```
+
+DoD: `grep "soat_downloading" soat_data_view.dart` = 0; `grep "isLoading: _openingDocument"` = 1.
+
+---
+
+## T-6-2: REFACTOR-02 — Consolidate SOAT feature (+ REFACTOR-12)
+
+High-risk. Full detail: PLAN.md §REFACTOR-02.
+
+**MOVE** (update import paths):
+- `vehicles/presentation/soat/soat_manual_capture_page.dart` → `soat/presentation/pages/`
+- `vehicles/presentation/soat/soat_confirmation_page.dart` → `soat/presentation/pages/`
+- `vehicles/presentation/soat/cubit/soat_form_cubit.dart` + `.freezed.dart` → `soat/presentation/cubit/`
+- `vehicles/presentation/soat/widgets/soat_document_section.dart` → `soat/presentation/widgets/`
+- `vehicles/presentation/soat/widgets/soat_validity_card.dart` → `soat/presentation/widgets/`
+- `vehicles/presentation/soat/widgets/vehicle_soat_options_sheet.dart` → `soat/presentation/widgets/soat_vehicle_options_sheet.dart`
+
+**DELETE** (superseded):
+`soat_upload_page.dart`, `soat_upload_cubit.dart` (triggers DI regen), `soat_upload_option_card.dart`, `soat_manual_option_card.dart`, `soat_upload_question_header.dart`, `soat_vehicle_info_card.dart`, `soat_doc_preview.dart`, `soat_confirm_cta_bar.dart`, `soat_valid_alert.dart`
+
+**DI regen immediately after deleting `soat_upload_cubit.dart`:**
+```bash
+dart run build_runner build --delete-conflicting-outputs
+grep -rn "SoatUploadCubit" lib/ --include="*.dart"  # must be 0
+dart analyze lib/
+```
+
+**Router:** keep `/vehicles/soat` route wired to new `SoatUploadPage`; add `AppRoutes.soatManualCapture = '/soat/manual-capture'` and corresponding `GoRoute`.
+
+**NEW file:** `soat/presentation/pages/soat_manual_capture_params.dart` (params class).
+
+**Justified Navigator annotations** (copy verbatim):
+```dart
+// Custom: sheetCtx.pop() — required pattern for showModalBottomSheet typed result return
+// Custom: pushReplacement — VehicleFormPage must not remain in back stack after SOAT confirmation
+```
+
+**REFACTOR-12 (bundle here):** add 3-line exception comment in `notifications_state.dart`:
+```dart
+// Exception: isLoadingMore is a secondary loading indicator for cursor-based pagination append.
+// It cannot be replaced by a second ResultState<List> because listResult must remain in Data
+// state while additional pages are loading. Documented exception to the no-primitive-flag rule.
+```
+
+---
+
+## T-6-3: REFACTOR-10 — context.goNamed violations
+
+**Keep + annotate** (do NOT change) in PopScope of `profile_page.dart`, `garage_page.dart`, `events_page.dart`:
+```dart
+// Intentional: shell-tab navigation resets stack to prevent back-stack accumulation in StatefulShellRoute
+```
+
+**Replace** in `forgot_password_view.dart` ×2: `context.goNamed(AppRoutes.login)` → `context.pop()`
+
+---
+
+## T-6-4: REFACTOR-08 — FormBuilderTextField → AppTextField
+
+5 occurrences in 4 files: `vehicle_specs_row.dart` (1), `vehicle_form_id_section.dart` (2), `maintenance_next_km_pill.dart` (1), `event_form_price_section.dart` (1). Map `name`, `labelText`, `validators` directly.
+
+---
+
+## T-6-5: REFACTOR-07 — Raw buttons → AppButton/AppTextButton
+
+8 instances in 6 files. `sos_active_overlay.dart` OutlinedButton: verify `AppButton(style: AppButtonStyle.outlined)` matches the style; if not: `// Custom: SOS overlay requires OutlinedButton — AppButton outlined style does not match this context`.
+
+Pre-condition: check `rider_profile_page_test.dart` for `find.byType(ElevatedButton)` — update test in same commit if found.
+
+---
+
+## T-6-6: REFACTOR-13 — showDialog fix
+
+**File:** `info_chip_tooltip.dart` — replace `showDialog(...)` with `AppDialog`. If info-only with no action buttons: `// Custom: MileageInfoDialog is an info-only tooltip — AppDialog requires action buttons`. Also replace `Colors.black.withValues(...)` with `AppColors.*` or `colorScheme.*`.
+
+---
+
+## T-6-7: REFACTOR-11 — Color tokenization
+
+**First commit: add new tokens to `lib/design_system/foundation/theme/app_colors.dart`:**
+```dart
+static const Color statusGreen = Color(0xFF22C55E);   // Tailwind green-500
+static const Color statusWarning = Color(0xFFEAB308); // Tailwind yellow-500
+static const Color statusError = Color(0xFFEF4444);   // Tailwind red-500
+```
+
+`primarySubtle` already exists. For `Color(0x66F98C1F)` → `colorScheme.primary.withValues(alpha: 0.4)`.
+
+Annotations: `// Intentional: remove Material3 surface tint` for `Colors.transparent` in `surfaceTintColor`; `// Intentional: gradient stop` for gradient `Colors.transparent`.
+
+Do color work in same commit as widget extraction (T-6-9/T-6-11) where files overlap, to avoid double-editing.
+
+---
+
+## T-6-8 through T-6-14: Widget extraction stories
+
+See PLAN.md for each story's file list and extraction strategy. Key rules for all:
+- One widget class per file (State<T> may coexist with its StatefulWidget)
+- No `BuildContext` constructor params
+- No widget-returning methods
+- State mutators: typed callback constructor param
+- State consumers: encapsulate BlocBuilder inside new widget file
+- Extract one widget per commit; `flutter test` after each commit
+
+**T-6-9 specific:** Classify each of `garage_vehicles_content.dart`'s 16 classes (pure-display / state-consumer / state-mutator) BEFORE touching the file.
+
+**T-6-11 specific:** HARD AC — manually smoke-test all 4 CTA state variants (registered/pending/closed/full) for `event_detail_cta_bar.dart`.
+
+**Unnamed-route decision (T-6-11, T-6-12):** Option B — annotate with:
+```dart
+// Custom: EventRouteConfigScreen has no go_router named route — anonymous push preserved.
+// Reason: ephemeral form sub-screen, no deep-link requirement, router surface kept minimal.
+// Custom: EventRouteMapScreen has no go_router named route — anonymous push preserved.
+// Reason: ephemeral map preview, no deep-link requirement, router surface kept minimal.
+```
+
+---
+
+## T-6-15: REFACTOR-09 — Migrate remaining Navigator calls
+
+Two greps required (do both):
+```bash
+grep -rn "Navigator\.of(context)\." lib/features/ --include="*.dart" | grep -v "// Custom:"
+grep -rn "Navigator\.pop(context" lib/features/ --include="*.dart" | grep -v "SystemNavigator\|// Custom:"
+```
+
+Justified exceptions (already annotated in T-6-2 — do not re-annotate):
+- `vehicle_form_page.dart` pushReplacement
+- `soat_manual_capture_page.dart` sheetCtx.pop ×3
+
+For `maintenance_filters_bottom_sheet.dart` `Navigator.pop(context, _filters)` → `context.pop(_filters)` (if not done in T-6-13).
+
+---
+
+## T-6-16: REFACTOR-14 — AppFormNavHeader molecule
+
+**Create:** `lib/design_system/molecules/app_form_nav_header.dart`
+
+Implement the locked API from `architect.md §Decision A`:
+- `AppFormNavAction` sealed class with `.text({label, onTap, emphasized, isLoading})`, `.icon({icon, onTap, pill})`, `.pillText({label, onTap, isLoading})`
+- `AppFormNavHeader` with `title`, `leading`, `trailing`, `bottom`, `height=56`, `showBottomBorder=true`, `centerTitle=true`
+- `PreferredSizeWidget` implementation; `preferredSize` accounts for `bottom` slot height
+
+Migration:
+| Old | New leading | New trailing | height |
+|-----|------------|-------------|--------|
+| `VehicleFormNavHeader` | `.text("Cancelar")` | `.text("Guardar", emphasized: true, isLoading: ...)` | 56 |
+| `MaintenanceFormNavHeader` | `.icon(back, pill: true)` | `.pillText("Listo", isLoading: ...)` | 52 |
+| `event_form_view.dart` AppBar | `.text("Cancelar")` | `.text("Publicar"/"Guardar cambios", emphasized: true, isLoading: ...)` | 56 |
+
+Delete old feature-level nav header files after migration. Screenshot smoke test all 3 forms.
+
+---
+
+## T-6-17: REFACTOR-15 — ARB cleanup (execute LAST)
+
+Target: 1357 → ≤1220 keys. 3 phases, one commit per phase.
+
+```bash
+jq -r 'keys[] | select(startswith("@") | not)' lib/l10n/app_es.arb | wc -l
+```
+
+DO NOT DELETE keys matching dynamic patterns:
+```bash
+grep -rn "l10n\.\${" lib/ --include="*.dart"
+grep -rn "l10n\.\w\+('" lib/ --include="*.dart" | grep -v "^lib/l10n/"
+```
+
+Spot-check families: `maintenanceType*`, `eventStatus*`, `registrationStatus*`, `notification_*`.
+
+Run `flutter gen-l10n` and commit generated files after Phase 3.
+
+---
+
+## Hard constraints
+
+- No new packages in `pubspec.yaml`
+- No domain/ or data/ layer changes
+- No API contract changes
+- `api_base_url_resolver.dart` — DO NOT TOUCH (its 2 warnings are accepted out-of-scope)
+
+> Full detail: docs/handoffs/architect.md
+
+---
+
 # Architect → Frontend (Flutter) — Iteration 3
 
 **Story 3.0 is the absolute blocker. Do NOT start any other story until 3.0 is merged and `dart analyze` passes with zero errors/warnings in `lib/`.**

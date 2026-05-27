@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
 class WaypointLimitBanner extends StatelessWidget {
@@ -19,7 +18,7 @@ class WaypointLimitBanner extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(LucideIcons.info, color: AppColors.primary, size: 16),
+          const Icon(Icons.info_outline, color: AppColors.primary, size: 16),
           const SizedBox(width: 8),
           Expanded(
             child: Text(

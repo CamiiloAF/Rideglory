@@ -105,7 +105,7 @@ class GarageOptionsBottomSheet extends StatelessWidget {
               style: context.bodyLarge?.copyWith(color: Colors.white),
             ),
             onTap: () async {
-              Navigator.pop(context);
+              context.pop();
               final result = await GoRouter.of(
                 parentContext,
               ).pushNamed(AppRoutes.editVehicle, extra: vehicle);
@@ -122,7 +122,7 @@ class GarageOptionsBottomSheet extends StatelessWidget {
               style: context.bodyLarge?.copyWith(color: Colors.white),
             ),
             onTap: () async {
-              Navigator.pop(context);
+              context.pop();
               final result = await parentContext.pushNamed<dynamic>(
                 AppRoutes.createMaintenance,
                 extra: vehicle,
@@ -146,7 +146,7 @@ class GarageOptionsBottomSheet extends StatelessWidget {
               style: context.bodyLarge?.copyWith(color: AppColors.error),
             ),
             onTap: () async {
-              Navigator.pop(context);
+              context.pop();
               final confirm = await ConfirmationDialog.show(
                 context: parentContext,
                 title: parentContext.l10n.vehicle_deleteVehicle,

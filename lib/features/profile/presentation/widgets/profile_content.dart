@@ -4,6 +4,7 @@ import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
 import 'package:rideglory/features/profile/presentation/widgets/profile_actions_list.dart';
 import 'package:rideglory/features/profile/presentation/widgets/profile_header.dart';
+import 'package:rideglory/features/profile/presentation/widgets/profile_section_label.dart';
 import 'package:rideglory/features/profile/presentation/widgets/profile_stats_row.dart';
 
 class ProfileContent extends StatelessWidget {
@@ -24,29 +25,10 @@ class ProfileContent extends StatelessWidget {
           followersLabel: context.l10n.profile_statsFollowers,
         ),
         AppSpacing.gapXxl,
-        _SectionLabel(label: context.l10n.profile_settings),
+        ProfileSectionLabel(label: context.l10n.profile_settings),
         AppSpacing.gapMd,
         const ProfileActionsList(),
       ],
-    );
-  }
-}
-
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      label.toUpperCase(),
-      style: const TextStyle(
-        fontSize: 11,
-        fontWeight: FontWeight.w700,
-        color: AppColors.textOnDarkSecondary,
-        letterSpacing: 1.5,
-      ),
     );
   }
 }

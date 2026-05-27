@@ -1,254 +1,261 @@
-# Existing System Scan — Rideglory
+# Existing System Scan — Rideglory (Refactor & Cleanup)
 
-> Generated: 2026-05-13
+> Generated: 2026-05-27
 > Flutter app: /Users/cami/Developer/Personal/Rideglory/lib/
 > Backend: /Users/cami/Developer/Personal/rideglory-api
+> PRD: docs/prd-refactor-cleanup.md
+> Coding standards: .cursor/rules/rideglory-coding-standards.mdc
 
 ---
 
-## 1. Flutter Feature Inventory
+## Flutter Feature Inventory
 
-| Feature | Domain Models | Data (DTOs/Services) | Presentation (Cubits/Pages) | Status |
-|---------|---------|---------|---------|---------|
-| **Authentication** | — | Firebase Auth integration | AuthCubit, LoginPage, SignupPage, PasswordRecoveryPage | Implemented |
-| **Splash** | — | Catalog loaders (brands, cities, event types, service types) | SplashCubit, SplashPage | Implemented |
-| **Home Dashboard** | HomeData | HomeDashboardService | HomeCubit, HomePage | Implemented |
-| **Events** | EventModel, RiderProfileModel, RiderTrackingModel | EventDto, EventService, TrackingService, TrackingWsClient | EventsCubit, EventDetailCubit, EventDeleteCubit, EventFormCubit, LiveTrackingCubit, EventListPage, EventDetailPage, CreateEventPage, EventTrackingPage, AttendeesPage, AttendeesManagementPage | **Implemented** (includes iter-2: filters + iter-4: AI cover generation) |
-| **Event Registration** | EventRegistrationModel, VehicleSummaryModel, RegistrationWithEvent | EventRegistrationDto, RegistrationService | RegistrationFormCubit, MyRegistrationsCubit, RegistrationFormPage, RegistrationDetailPage, ManageRegistrationPage | Implemented |
-| **Real-time Tracking** | RiderTrackingModel, UpdateLocationRequest | TrackingWsClient (WebSocket), RiderTrackingDto | LiveTrackingCubit, TrackingPage, TrackingParticipantsPage | **Implemented** — WebSocket client active, cubit for live state |
-| **Vehicles (Garage)** | VehicleModel | VehicleDto, VehicleService | VehicleCubit, VehicleFormCubit, VehicleDeleteCubit, VehicleMaintenancesCubit | Implemented |
-| **Maintenance** | MaintenanceModel, MaintenanceListSummary | MaintenanceDto, MaintenanceService | MaintenancesCubit, MaintenanceFormCubit, MaintenanceDeleteCubit | Implemented |
-| **SOAT** | — | — | — | **Not started** — no domain model, DTO, or cubit found |
-| **Profile** | UserModel | UserDto, UserService | ProfileCubit, RiderProfileCubit | Partial — user profile exists, follower system not yet implemented |
-| **Notifications** | — | — | HomeNotificationButton widget | **Stub only** — UI placeholder, no FCM integration or notification center |
-| **Deep Links** | — | — | — | **Not started** — no Firebase Dynamic Links integration |
-| **Users (Discovery)** | UserModel | UserDto, UserService | RiderProfileCubit | Implemented — rider profile pages work |
+| Feature | Domain models | Data (DTOs/services) | Presentation (cubits/pages/widgets) | Status |
+|---------|--------------|---------------------|-------------------------------------|--------|
+| **authentication** | AuthModel | AuthDto, AuthService | AuthCubit, LoginPage, SignupPage, ForgotPasswordPage, misc. pages (9+ widgets) | Core |
+| **home** | — | — | HomePageShell, HomeEventCardList, HomeGarageCard, 7+ view widgets | Core |
+| **vehicles** | VehicleModel, BrandModel | VehicleDto, VehicleService, BrandService | VehicleCubit, GaragePage, VehicleFormPage, VehicleDetailPage, 16+ widgets in garage_vehicles_content.dart | Core |
+| **events** | EventModel, EventRegistrationModel | EventDto, EventService, TrackingWsClient | EventsCubit, EventDetailCubit, EventFormCubit, EventsPage, EventDetailPage, EventFormPage, 9+ widgets per page | Core |
+| **maintenance** | MaintenanceModel | MaintenanceDto, MaintenanceService | MaintenanceCubit, MaintenancesPage, MaintenanceDetailPage, MaintenanceFormPage, 12+ widgets in filters_bottom_sheet | Core |
+| **event_registration** | EventRegistrationModel | EventRegistrationDto, EventRegistrationService | RegistrationCubit, RegistrationFormPage, RegistrationDetailPage | Feature |
+| **notifications** | NotificationModel | NotificationDto, NotificationsService | NotificationsCubit, NotificationCenterPage | Feature |
+| **profile** | UserModel | UserDto, UserService | ProfileCubit, ProfilePage, EditProfilePage, 3+ page-level widgets | Feature |
+| **users** | UserModel, RiderProfileModel | UserDto, UserService | UsersCubit, RiderProfilePage, RiderProfileContent (4+ widgets) | Feature |
+| **soat** | SoatModel | SoatDto, SoatService | SoatCubit, SoatUploadPage, SoatStatusPage, SoatManualFormPage | Feature (new) |
+| **splash** | — | — | SplashPage | Core |
 
 ---
 
-## 2. Key Dependencies
+## Key Dependencies
 
-| Category | Package | Purpose |
-|----------|---------|---------|
-| **State management** | flutter_bloc, bloc | Cubit pattern for all async operations |
-| **Code generation** | freezed, freezed_annotation, json_serializable | Immutable models, union types, JSON serialization |
-| **DI** | get_it, injectable | Service locator + auto-registration |
-| **HTTP** | retrofit, dio | REST client generation + HTTP layer |
-| **Router** | go_router | Declarative routing with auth guards |
-| **Firebase** | firebase_core, firebase_auth, cloud_firestore, firebase_storage, firebase_remote_config | Auth, storage, remote config for API base URL |
-| **OAuth** | google_sign_in | Google Sign-In |
-| **Maps** | google_maps_flutter, geocoding | Map display and geocoding |
-| **Real-time** | web_socket_channel | WebSocket for event tracking |
-| **Forms** | flutter_form_builder, form_builder_validators | Multi-step forms, field validation |
-| **Localization** | intl, flutter_localizations | Spanish (es) localization via ARB |
-| **Rich text** | flutter_quill | Rich text editor for event descriptions |
-| **Images** | image_picker, cached_network_image, firebase_storage | Photo selection, caching, upload |
-| **Device** | geolocator, battery_plus, permission_handler | GPS, battery level, permissions |
-| **Storage** | shared_preferences, flutter_secure_storage | Local persistence, secure token storage |
-| **UI utilities** | google_fonts, shimmer | Typography (Space Grotesk), loading placeholders |
-| **Functional** | dartz | Either/Right/Left for error handling |
-
----
-
-## 3. rideglory-api Surface
-
-Backend is **microservices architecture** with API Gateway pattern.
-
-### Modules & Controllers
-
-| Module | Endpoints | Purpose | Auth guard |
-|--------|-----------|---------|-----------|
-| **API Gateway** | — | Routes, aggregates, serves frontend | — |
-| **Auth** (`api-gateway/auth`) | `POST /auth/login`, `POST /auth/signup`, `POST /auth/refresh` (inferred) | Firebase token validation, user profile setup | Firebase ID token |
-| **Events** (`events-ms/events`) | `POST /events/generate-cover`, `GET /events`, `GET /events/my`, `GET /events/upcoming`, `POST /events`, `GET /events/:id`, `PATCH /events/:id`, `DELETE /events/:id` | Event CRUD, AI cover generation (iter-4 completed), listing with filters (iter-2 completed) | Bearer token |
-| **Registrations** (`events-ms/registrations`) | Inferred: `POST /registrations`, `GET /registrations/:id`, `PATCH /registrations/:id`, `DELETE /registrations/:id` | Event signup workflow, approval/rejection by organizer | Bearer token |
-| **Vehicles** (`vehicles-ms/vehicles`) | `GET /vehicles`, `POST /vehicles`, `GET /vehicles/my`, `POST /vehicles/my/:vehicleId/main`, `GET /vehicles/:id`, `PATCH /vehicles/:id`, `DELETE /vehicles/hard-delete/:id` | Vehicle CRUD, set primary vehicle | Bearer token |
-| **Tracking** (`events-ms/tracking`) | `GET /tracking/ws` (WebSocket), `POST /tracking/start` (inferred), `POST /tracking/end` (inferred), `GET /tracking/status` (inferred), `GET /events/:eventId/route` (inferred) | WebSocket for live rider location broadcasts | Bearer token + event context |
-| **Maintenances** (`maintenances-ms/maintenances`) | Inferred: CRUD for maintenance records | Maintenance log, reminders | Bearer token |
-| **Users** (`users-ms/users`) | Profile, followers (inferred) | User data, discovery, follow system | Bearer token |
-| **Places** (`api-gateway/places`) | Inferred: Mapbox Geocoding, directions | Location search, route calculation | API key (backend-only) |
-| **Home** (`api-gateway/home`) | Inferred: Dashboard aggregation | Fetch user's vehicles, upcoming events, maintenance alerts | Bearer token |
-| **Catalogs** (`api-gateway/catalogs`) | `GET /catalogs/brands`, `GET /catalogs/cities`, `GET /catalogs/event-types`, `GET /catalogs/service-types` (inferred from PRD §6.2) | Static lookup tables, cached 24h | Public (no auth) |
-
-### Key Backend Gaps (PRD §17)
-
-| Endpoint | Status | Notes |
-|----------|--------|-------|
-| **SOAT endpoints** | Not found | `POST /vehicles/:vehicleId/soat`, `GET /vehicles/:vehicleId/soat` |
-| **Event route** | Not found | `GET /events/:eventId/route` for polyline |
-| **Tracking control** | Not found | `POST /events/:eventId/tracking/start`, `POST /events/:eventId/tracking/end` |
-| **Tracking status** | Not found | `GET /events/:eventId/tracking/status` |
-| **AI quota check** | Not found | `GET /events/generate-cover/quota` |
-| **Notification schedule** | Not found | `POST /notifications/schedule`, `DELETE /notifications/schedule/:id` |
-| **Follower endpoints** | Not found | `POST /users/:userId/follow`, `DELETE /users/:userId/follow`, `GET /users/:userId/followers`, `GET /users/:userId/following` |
-| **Share metadata** | Not found | `GET /events/:eventId/share-metadata` |
+| Category | Package | Purpose | Version |
+|----------|---------|---------|---------|
+| **State Management** | flutter_bloc, bloc | Cubit pattern | 9.1.1, 9.1.0 |
+| **Code Generation** | freezed, freezed_annotation | Immutable models | 3.2.3, 3.1.0 |
+| **JSON Serialization** | json_serializable, json_annotation | DTO serialization | 6.11.2, 4.9.0 |
+| **Forms** | flutter_form_builder, form_builder_validators | Form UI & validation | 10.2.0, 11.0.0 |
+| **Firebase** | firebase_core, firebase_auth, cloud_firestore, firebase_messaging, firebase_storage, firebase_remote_config | Auth, DB, FCM, Storage, Config | 4.2.1, 6.1.2, 6.1.0, 16.2.0, 13.1.0, 6.4.0 |
+| **Notifications** | flutter_local_notifications | Local push handling | 18.0.1 |
+| **Social Auth** | google_sign_in | OAuth | 6.2.1 |
+| **DI** | get_it, injectable | Service locator | 9.2.0, 2.7.1+2 |
+| **Routing** | go_router | Declarative routing | 17.0.0 |
+| **Storage** | shared_preferences, flutter_secure_storage | Local persistence | 2.3.5, 10.1.0 |
+| **Maps** | mapbox_maps_flutter | Interactive maps | 2.2.0 |
+| **Background GPS** | flutter_foreground_task, geolocator | Android foreground service, location | 8.14.0, 14.0.2 |
+| **Utilities** | dartz, intl, url_launcher, app_links | FP, i18n, linking | 0.10.1, 0.20.2, 6.3.1, 6.3.2 |
+| **UI/UX** | flutter_quill, google_fonts, image_picker, permission_handler, cached_network_image, shimmer, lucide_icons, file_picker | Rich text, fonts, images, icons | 11.0.0, 8.0.2, 1.2.1, 11.3.1, 3.4.1, 3.0.0, —, 11.0.2 |
+| **HTTP** | dio, retrofit | HTTP client framework | 5.9.2, 4.9.2 |
+| **WebSocket** | web_socket_channel | Real-time tracking | 3.0.3 |
+| **Config** | envied | Environment variables | 1.3.3 |
+| **Testing** | mocktail, bloc_test, patrol, network_image_mock, integration_test | Test utilities | 1.0.4, 10.0.0, 4.5.0, 2.1.1 |
 
 ---
 
-## 4. Design Artifacts
+## Violations Inventory
 
-| Artifact | Description |
-|---------|-------------|
-| **rideglory.pen** | Pencil design file (exists at project root) — source of truth for all screen designs, components, and layout. Contains 26+ frames covering all PRD modules with dark theme (Asphalt palette). |
-| **Design system components** | Atoms (buttons, inputs), Molecules (composite UI), Organisms (feature-level components) in `lib/design_system/` |
-| **Theme** | Dark mode only; primary color orange (`#f98c1f`), Space Grotesk font, 8px border radius standard. Implemented in `lib/core/theme/` |
-| **Localization** | Spanish (Colombian) ARB file at `lib/l10n/app_es.arb`; generated localization files in `lib/l10n/` |
+### 3.1 Multiple Widget Classes Per File
+
+| Violation Count | Severity | Impact |
+|---|---|---|
+| **68 files** with 2+ widget classes | 🔴 Critical | Architecture integrity, maintainability |
+
+**Top 10 most-violating files:**
+| File | Widget Count | Category |
+|------|---|---|
+| `lib/features/vehicles/presentation/garage/widgets/garage_vehicles_content.dart` | **16** | Garage list view with nested cards + filters |
+| `lib/features/vehicles/presentation/garage/widgets/vehicle_detail_view.dart` | **13** | Vehicle detail page composition |
+| `lib/features/maintenance/presentation/list/maintenances/widgets/maintenance_filters_bottom_sheet.dart` | **12** | Maintenance filter UI |
+| `lib/features/vehicles/presentation/form/vehicle_form.dart` | **9** | Multi-step vehicle form |
+| `lib/features/authentication/login/presentation/forgot_password_view.dart` | **9** | Password recovery flow |
+| `lib/features/events/presentation/detail/widgets/event_detail_view.dart` | **9** | Event detail page composition |
+| `lib/features/authentication/login/presentation/login_view.dart` | **8** | Login screen |
+| `lib/features/events/presentation/detail/widgets/event_detail_cta_bar.dart` | **8** | Event CTA bar with states |
+| `lib/features/events/presentation/form/widgets/sections/event_form_max_participants_section.dart` | **7** | Max participants input section |
+| `lib/features/authentication/signup/presentation/signup_view.dart` | **6** | Signup screen |
+
+**Additional 4-5 widget files (24 files total):** soat_confirmation_page (4), rider_profile_content (4), live_map_app_bar (4), events_data_view (4), event_route_config_screen (4), event_form_price_section (4), event_detail_owner_lifecycle_bar (4), event_detail_meeting_point_section (4), + 8 more with 2-3 widgets.
 
 ---
 
-## 5. PRD Gap Analysis
+### 3.2 Widget-Returning Methods
 
-| PRD Module | Status | What exists | What's missing |
+| Method Count | Files Affected |
+|---|---|
+| **8 violations** | 8 distinct files |
+
+| File | Methods |
+|------|---------|
+| `lib/features/vehicles/presentation/garage/widgets/garage_vehicles_content.dart` | `Widget _buildContainer()`, `Widget _buildPlaceholderIcon()` |
+| `lib/features/events/presentation/detail/event_detail_by_id_page.dart` | `Widget _shell(BuildContext context, Widget body)` |
+| `lib/features/events/presentation/detail/widgets/event_detail_cta_bar.dart` | `Widget _buildContent(BuildContext context)` |
+| `lib/features/maintenance/presentation/list/maintenances/widgets/maintenance_grouped_list_item.dart` | `Widget _rightBadge(BuildContext context, int currentMileage)` |
+| `lib/features/events/presentation/tracking/participants/participants_placeholder_page.dart` | `Widget _buildEmptyState(BuildContext context)`, `Widget _buildRiderList(BuildContext context)` |
+| `lib/features/events/presentation/list/widgets/event_card_header.dart` | `Widget _buildPopupMenu(BuildContext context)` |
+| `lib/features/vehicles/presentation/widgets/vehicle_card.dart` | `Widget _buildPlaceholderIcon(BuildContext context)` |
+
+---
+
+### 3.3 Raw Button Usage (ElevatedButton/TextButton/OutlinedButton)
+
+| Violation Count | Files Affected | Risk |
+|---|---|---|
+| **6 confirmed** (ElevatedButton 1, TextButton 3, OutlinedButton 1, plus more) | 6 feature files | Medium — UX inconsistency |
+
+| File | Instances | Button Type |
+|------|---|---|
+| `lib/features/users/presentation/widgets/rider_profile_content.dart` | 1 | ElevatedButton + styleFrom |
+| `lib/features/events/presentation/form/screens/event_route_config_screen.dart` | 1 | TextButton + styleFrom |
+| `lib/features/events/presentation/form/widgets/event_form_view.dart` | 3 | TextButton (3×) |
+| Other occurrences in list filters, dialogs (sampled, not exhaustive) | — | Mixed |
+
+**Note:** AppTextButton and AppButton are correctly used in most places; raw buttons are legacy remnants.
+
+---
+
+### 3.4 FormBuilderTextField vs AppTextField
+
+| Violation Count | Files Affected |
+|---|---|
+| **5 occurrences** | 5 files |
+
+| File | Count |
+|------|-------|
+| `lib/features/vehicles/presentation/form/widgets/vehicle_specs_row.dart` | 1 |
+| `lib/features/vehicles/presentation/form/widgets/vehicle_form_id_section.dart` | 2 |
+| `lib/features/maintenance/presentation/form/widgets/maintenance_next_km_pill.dart` | 1 |
+| `lib/features/events/presentation/form/widgets/sections/event_form_price_section.dart` | 1 |
+
+**Mitigation:** AppTextField exists and should replace all 5 uses.
+
+---
+
+### 3.5 Navigation: Navigator.of(context) in Features
+
+| Violation Count | Files Affected | Risk |
+|---|---|---|
+| **31 occurrences** | Multiple features | Medium — inconsistent with go_router |
+
+**Primary areas:**
+- `lib/features/vehicles/presentation/soat/` (entire folder, old implementation)
+- `lib/features/maintenance/form/maintenance_form_page.dart`
+- `lib/features/event_registration/presentation/widgets/`
+- Scattered in various list/detail workflows
+
+---
+
+### 3.6 Navigation: context.goNamed() Instead of pushNamed()
+
+| Violation Count | Files Affected | Risk |
+|---|---|---|
+| **5 occurrences** | 3 files | Low–Medium — mostly in PopScope |
+
+| File | Usage | Context |
+|------|-------|---------|
+| `lib/features/profile/presentation/profile_page.dart` | `context.goNamed(AppRoutes.home)` | PopScope (potentially intentional) |
+| `lib/features/vehicles/presentation/garage/garage_page.dart` | `context.goNamed(AppRoutes.home)` | PopScope |
+| `lib/features/events/presentation/list/events_page.dart` | `context.goNamed(AppRoutes.home)` | PopScope |
+| `lib/features/authentication/login/presentation/forgot_password_view.dart` | `context.goNamed(AppRoutes.login)` | 2× (return from password recovery) |
+
+**Recommendation:** Review each usage — PopScope cases may be intentional (clearing stack), but forgot_password navigation should use pushNamed.
+
+---
+
+### 3.7 Hardcoded Colors
+
+| Violation Count | Severity |
+|---|---|
+| **~10–15 instances** | Medium — inconsistent with design system |
+
+| File | Examples |
+|------|----------|
+| `lib/features/home/presentation/widgets/home_event_view_details_button.dart` | `Colors.white`, `Colors.black87` |
+| `lib/features/home/presentation/widgets/home_view_all_events_button.dart` | `Colors.transparent` |
+| `lib/features/home/presentation/widgets/home_vehicle_info_row.dart` | Color literals for SOAT status (should use AppColors) |
+
+**Status:** Most colors are already using AppColors or colorScheme; a small number of legacy Colors.* remain.
+
+---
+
+### 3.8 dart analyze Warnings
+
+| Issue | File | Line | Type |
 |---|---|---|---|
-| **5. Authentication** | ✅ Implemented | Login (email/password), Signup, Password recovery; Firebase Auth + Google Sign-In | Apple Sign-In (not in code) |
-| **6. Splash** | ✅ Implemented | Logo, tagline, catalog loading in parallel (brands, cities, event types, service types), max 3s timeout, auth redirect | — |
-| **7. Home Dashboard** | ✅ Implemented | Header with greeting, notification bell, my garage section (main vehicle card), upcoming events carousel | SOAT alerts inline; maintenance alerts inline (needs SOAT + maintenance model) |
-| **8. Events** | ✅ Implemented (partial) | List with search, filters (date, city, type, difficulty), event cards with state badge, detail page with info, map preview, CTA bar; create/edit form with Mapbox geocoding, image upload, AI cover generation (iter-4); polyline route setup in form | Event state machine (scheduled / in_progress / finished / cancelled) — logic may be partial; "max participants" cap validation; event type/difficulty chips display |
-| **9. Registrations** | ✅ Implemented | 4-step form (personal, medical, emergency, vehicle), registration detail page with QR code stub, approval/rejection workflow for organizer, manage attendees page with search/filter | Edit registration after creation (if event not started); message from organizer on rejection |
-| **10. Tracking** | ✅ Implemented (partial) | WebSocket client (TrackingWsClient), cubit managing live state, tracking page layout, participant list with search/filter, speed/battery display, rider SOS state handling in model | SOS button UI + action; "end ride" button for organizer; adherence to route (200m radius check); push notifications on SOS; GPS in background with persistent notification; center-on-me button; speed average aggregation |
-| **11. Garage** | ✅ Implemented | Vehicle list (main + others), detail page with specs, add/edit form with Mapbox brands autocomplete, set primary vehicle, edit/archive options | Document upload (SOAT, technical review) UI stubs in form; OCR for license plate scanning |
-| **12. Maintenance** | ✅ Implemented | Dashboard with donut chart health %, 3-urgency sections (overdue/upcoming/on-time), historial grouped by year, 3-step form (type selection, completed/programmed tabs, vehicle picker), filters (type, state, date range) | Maintenance reminder push notifications (30d before, when km approaching); next service calculations |
-| **13. SOAT** | ❌ Not started | Zero implementation | All 5 steps: upload/manual form, OCR extraction, status badge (vigente/por vencer/vencido), reminder push notifications (30d, 7d, day-of) |
-| **14. Profile** | ⚠️ Partial | User profile page, edit form, rider profile page, events created by user, follower counts in UI | Follow/Unfollow buttons + logic; followed list; follower list; bio display |
-| **15. Notifications** | ❌ Stub only | UI placeholder (bell icon) in home header | FCM integration, notification center page, deep link routing, 11 notification types per PRD §15 |
-| **16. Deep links** | ❌ Not started | Zero implementation | Firebase Dynamic Links: `https://rideglory.page.link/event/{eventId}` with fallback to Play Store/App Store |
-| **17.1 SOAT endpoints** | ❌ Not started | — | Backend endpoints + frontend DTO/service integration |
-| **17.2 Tracking endpoints** | ⚠️ Partial | WebSocket (GET /tracking/ws) active | Missing: start, end, status HTTP endpoints; route polyline endpoint |
-| **17.3 AI quota endpoint** | ✅ Partial | `POST /events/generate-cover` works (iter-4) | `GET /events/generate-cover/quota` missing (quota check happens in response on 429) |
-| **17.4 Notification scheduling** | ❌ Not started | — | Backend scheduler endpoints + frontend calls |
-| **17.5 Followers** | ❌ Not started | — | Backend endpoints + UI (follow button, lists) |
-| **17.6 Share metadata** | ❌ Not started | — | Backend endpoint for Dynamic Link preview |
-| **17.7 Catalogs** | ✅ Implemented | Brands, cities, event types, service types cached in splash; public endpoints | — |
+| **dead_code** | `lib/core/http/api_base_url_resolver.dart` | 19 | Unreachable code (conditional branch) |
+| **prefer_const_declarations** | `lib/core/http/api_base_url_resolver.dart` | 17 | Final variable should be const |
+
+**Status:** Only 2 low-severity issues; easily fixable.
 
 ---
 
-## 6. Key Architectural Patterns
+### 3.9 Primitive Flags in State (bool isLoadingMore)
 
-### Clean Architecture
-- **Domain**: Pure Dart models, repository interfaces, use cases — no Flutter/HTTP imports
-- **Data**: DTOs (freezed + json_serializable), service clients (Retrofit), repository implementations
-- **Presentation**: Cubits (Cubit<ResultState<T>>), pages, widgets — no HTTP calls, no DTO exposure
+| Issue | File | Field | Risk |
+|---|---|---|---|
+| **Pagination flag** | `lib/features/notifications/data/notifications_state.dart` | `@Default(false) bool isLoadingMore` | Low — acceptable exception for pagination incremental loading |
 
-### State Management
-- **ResultState<T>**: Freezed union (initial, loading, data, empty, error) — universal pattern for async ops
-- **Cubit pattern**: Simple ops use `Cubit<ResultState<T>>` directly; complex state uses `@freezed` state class with multiple `ResultState<T>` fields
-- **Example**: `EventDetailCubit` extends `Cubit<EventDetailState>` where state has separate `ResultState` fields for event data, registrations, attendees
-
-### HTTP & Error Handling
-- **Dio + Retrofit**: Auto-generated REST clients from annotated service interfaces
-- **FirebaseAuthInterceptor**: Injects Firebase ID token into all requests
-- **Error mapping**: `rest_client_functions.dart` wraps calls, maps exceptions to user-friendly Spanish messages, returns `Either<DomainException, Model>`
-- **Timeout**: 20s per Dio config
-
-### Dependency Injection
-- **GetIt + Injectable**: Services marked `@injectable`, `@singleton`, `@lazySingleton`; repositories marked `@Injectable(as: InterfaceType)`
-- **DI initialization**: `configureDependencies()` called in main.dart
-- **Firebase module**: Custom DI module provides singleton Firebase instances
-
-### Routing
-- **go_router**: Declarative, auth guard redirects unauthenticated users to `/login`
-- **Named routes**: 17 routes defined (splash, login, home, events, garage, etc.)
-- **Navigation conventions**: `context.pushNamed()` for normal transitions, `context.goAndClearStack()` for auth state changes, `context.goNamed()` for tab navigation
-
-### Localization
-- **ARB format**: `app_es.arb` (Spanish only in MVP)
-- **Code generation**: `flutter gen-l10n` produces `app_localizations.dart`
-- **Usage**: `context.l10n.<keyName>` in widgets; extension defined in `l10n_extensions.dart`
-
-### WebSocket
-- **TrackingWsClient**: Managed connection to `/api/tracking/ws?eventId={id}`
-- **Message contract**: Client sends `{ type, lat, lng, speed, heading, batteryLevel, status }`, server broadcasts `{ type: "riders_update", riders: [...] }`
-- **Auto-reconnect**: Exponential backoff on disconnect
+**Status:** Documented as exception per PRD; technically violates pattern but justified for cursor-based pagination.
 
 ---
 
-## 7. Code Quality & Conventions
+### 3.10 SOAT Duplication
 
-| Aspect | Status | Notes |
-|--------|--------|-------|
-| **Linting** | Active | `analysis_options.yaml` enforced; `dart analyze` pre-commit |
-| **Testing** | Minimal | BLoC tests exist for some cubits; widget tests not comprehensive |
-| **Naming** | Good | Follows conventions: feature-prefixed localization keys, descriptive variable names, one widget per file |
-| **Architecture adherence** | Good | Layer violations rare; domain imports Flutter only in tests |
-| **Code generation** | Working | `dart run build_runner build` generates code; no missing part directives observed |
+| Location | Status | Scope |
+|---|---|---|
+| `lib/features/soat/` | **New** (complete domain/data/presentation) | Full feature with 3 layers |
+| `lib/features/vehicles/presentation/soat/` | **Legacy** (presentation only, old impl) | Pages: SoatUploadPage, SoatConfirmationPage, SoatManualCapturePage + cubit + widgets (7+ files) |
 
----
+**Router:** Both are active:
+- `/vehicles/soat` → legacy SoatUploadPage
+- `/soat/upload`, `/soat/status` → new SoatUploadPage, SoatStatusPage
+- soat_status_view.dart (new) imports SoatManualCapturePage (legacy)
 
-## 8. Core Infrastructure
-
-| Component | Location | Purpose |
-|-----------|----------|---------|
-| **Router** | `lib/shared/router/app_router.dart` | go_router configuration, routes, auth guard |
-| **DI** | `lib/core/di/injection.dart` | GetIt + injectable setup |
-| **HTTP** | `lib/core/http/` | Dio config (AppDio), Retrofit client base, error mapping (rest_client_functions.dart), FirebaseAuthInterceptor |
-| **Theme** | `lib/core/theme/` | Dark mode, color scheme, typography |
-| **Services** | `lib/core/services/` | AuthService (Firebase), LocationService (geolocator), UserStorageService (SharedPreferences), ImageStorageService (Firebase Storage), PlaceService (Mapbox Geocoding) |
-| **Extensions** | `lib/core/extensions/` | Context extensions (l10n, navigation), DateTime, String utilities |
-| **Exceptions** | `lib/core/exceptions/` | DomainException hierarchy for error handling |
-| **Result state** | `lib/core/domain/result_state.dart` | Freezed union for all async operations |
-| **Design system** | `lib/design_system/` | Atoms, molecules, organisms, foundation (spacing, sizing) |
-| **Shared widgets** | `lib/shared/widgets/` | Reusable UI: AppButton, AppDialog, EmptyStateWidget, VehicleListItem, etc. |
+**Action:** Consolidate into `features/soat/`, eliminate `vehicles/presentation/soat/`, update routes.
 
 ---
 
-## 9. Planning Implications
+## Code Duplication & Dead Code
 
-### Completed & Validated
-1. **Iter-2 (Event Discovery Filters)**: Event list filters by date, city, type, difficulty implemented; filter state managed in EventsCubit
-2. **Iter-4 (AI Cover Image Generation)**: `POST /events/generate-cover` integrated; bottom sheet UI shows 2×2 grid of generated images; quota logic returns 429 on limit
-
-### Critical Gaps to Address (in order)
-1. **SOAT module** (0% complete): Requires domain model, DTO, service integration, UI (upload/manual form, OCR stub, status badge, reminder scheduling). Blocks home dashboard alert display.
-2. **Notifications** (5% complete): Stub button only; needs FCM integration, notification center page, 11 notification types (registration updates, SOAT reminders, maintenance alerts, SOS broadcasts, event status changes). Core to user engagement.
-3. **Tracking SOS + organizer controls** (40% complete): WebSocket client works, cubit manages state; missing SOS button UI + confirmation, "end ride" button for organizer, push notification on SOS, persistent background notification during active ride.
-4. **Followers system** (0% complete): No backend endpoints, no UI (follow button, follower/following lists). Lower priority but part of user discovery.
-5. **Deep links** (0% complete): Firebase Dynamic Links not integrated; blocks event sharing feature.
-6. **Backend endpoints** (60% complete): SOAT endpoints, tracking control (start/end/status), notification scheduling, follower endpoints, share metadata all missing from backend.
-
-### Architectural Readiness
-- Clean Architecture patterns well-established; no refactoring needed
-- State management (ResultState, Cubit) proven pattern; scales well
-- DI system solid; no bottlenecks
-- Routing & navigation conventions in place
-- Localization framework ready (Spanish only; English deferred)
-- Error handling unified; user messages Spanish-first
-
-### Next Iteration Recommendations
-- **Iter-5 (SOAT + Notifications)**: Address 2 of the 3 top gaps; unlock dashboard alerts + user engagement
-  - Backend: SOAT endpoints, notification scheduler
-  - Frontend: SOAT flow, notification center, FCM setup
-  - Design: Re-use rideglory.pen (SOAT screens likely designed; notification center may need finalization)
-- **Iter-6 (Tracking Finalization + Followers)**: Complete tracking UX (SOS, organizer controls); add follower system
-- **Iter-7 (Deep Links + Polish)**: Share feature, final testing, deployment prep
-
-### Known Limitations (by design, not bugs)
-- No offline mode; requires internet always
-- No English localization (MVP is Spanish-only)
-- No payment processing in-app (prices are informative)
-- SOAT verification is manual, not automated via RUNT API
-- No chat; WhatsApp/native call only for rider contact
+| Issue | Files | Impact |
+|---|---|---|
+| **SOAT implementation duplication** | `features/soat/` + `features/vehicles/presentation/soat/` | Maintenance burden; inconsistent implementations |
+| **Unused imports** | Scattered across features | Low impact; cleanup needed during refactoring |
+| **api_base_url_resolver.dart dead code** | 1 file | Reachable dead code in conditional branch |
 
 ---
 
-## 10. File Paths Summary
+## Design Artifacts
 
-| Category | Path |
-|----------|------|
-| **Flutter app root** | `/Users/cami/Developer/Personal/Rideglory/` |
-| **Features** | `/Users/cami/Developer/Personal/Rideglory/lib/features/` |
-| **Core (DI, routing, services)** | `/Users/cami/Developer/Personal/Rideglory/lib/core/` |
-| **Design system** | `/Users/cami/Developer/Personal/Rideglory/lib/design_system/` |
-| **Shared widgets** | `/Users/cami/Developer/Personal/Rideglory/lib/shared/` |
-| **Localization** | `/Users/cami/Developer/Personal/Rideglory/lib/l10n/` |
-| **Design file (Pencil)** | `/Users/cami/Developer/Personal/Rideglory/rideglory.pen` |
-| **Backend root** | `/Users/cami/Developer/Personal/rideglory-api/` |
-| **API Gateway** | `/Users/cami/Developer/Personal/rideglory-api/api-gateway/src/` |
-| **Events microservice** | `/Users/cami/Developer/Personal/rideglory-api/events-ms/src/` |
-| **Vehicles microservice** | `/Users/cami/Developer/Personal/rideglory-api/vehicles-ms/src/` |
-| **Users microservice** | `/Users/cami/Developer/Personal/rideglory-api/users-ms/src/` |
-| **Maintenances microservice** | `/Users/cami/Developer/Personal/rideglory-api/maintenances-ms/src/` |
-| **Contracts (shared DTOs)** | `/Users/cami/Developer/Personal/rideglory-api/rideglory-contracts/src/` |
+| Folder | Iterations | Screens Covered | Status |
+|---|---|---|---|
+| `docs/design/html-mockups/iter-2/` | Iteration 2 | SOAT registration flow, notification UI, attendees mgmt | Complete |
+| `docs/design/html-mockups/iter-3/` | Iteration 3 | Tracking map, SOS flow, organizer controls, maintenance reminders | Complete |
+
+**Note:** No iter-1, iter-4, iter-5 mockup folders present. Pencil design file `rideglory.pen` is the source of truth for visual design.
 
 ---
 
-*Scan completed by System Scanner agent. No modifications made to codebase. Ready for PO/Architect handoff.*
+## Planning Implications
+
+1. **Scope is substantial but scoped:** 68 files with widget violations, 5 sub-categories of refactoring. The PRD divides work into 3 sub-iterations (A: bug fix + dead code; B: widget extraction; C: primitives + navigation), reducing risk of regression per sub-iteration.
+
+2. **SOAT consolidation is critical blocker:** Before iter-2 (SOAT feature) can ship, the duplication must be resolved. Both old and new implementations are active in the router — this creates maintenance debt and potential runtime conflicts. Recommend completion in Sub-iter A to unblock downstream work.
+
+3. **Widget extraction effort is the bulk:** Files like `garage_vehicles_content.dart` (16 widgets) and `vehicle_detail_view.dart` (13 widgets) require careful refactoring to preserve StatefulWidget state sharing and callback chains. Sub-iter B estimates are appropriate for experienced Flutter developers.
+
+4. **No functional changes required:** All refactoring is internal architecture; business logic and API contracts remain untouched. This reduces testing burden and allows `flutter test` baseline to remain stable throughout.
+
+5. **Color tokenization is partially done:** ~47 Color(0x...) literals already replaced in iter-1 redesign (PR #13); 10–15 remaining Colors.* hardcodes are mostly in gradients, overlays, or SOAT-specific state colors. Recommend targeting AppColors or colorScheme during Sub-iter C.
+
+6. **Navigation migration is low-risk:** 31 Navigator.of() calls are concentrated in SOAT (legacy folder) and maintenance/registration forms. Systematic replacement with go_router extensions (pushNamed/goAndClearStack) poses minimal regression risk if tested per sub-iter.
+
+7. **Testing gates are clear:** `dart analyze` (0 warnings) and `flutter test` (100% pass) must hold steady across all sub-iterations. BUG-3-1 (route_map_preview widget test from iter-3) is already resolved; no new test debt expected from this refactoring.
+
+8. **Timeline estimates:** Sub-iter A (bug + SOAT + dead code) = 1 day; Sub-iter B (widget extraction, 12+ files) = 2–3 days; Sub-iter C (primitives + colors + navigation) = 1–2 days. Total: 4–6 days for a focused developer or pair.
+
+---
+
+## Next Steps
+
+1. **Run `/solo-plan` or `/iter Refactor-01`** to formalize the 3 sub-iterations into a phased execution plan with stories and acceptance criteria.
+2. **Assign Sub-iter A as highest priority** to resolve SOAT duplication and unblock iter-2 feature work.
+3. **Use code review checklist** from CLAUDE.md to gate each sub-iter PR: verify no new Color(0x...) literals, AppButton/AppTextField adoption, 1-widget-per-file rule, no Widget _buildXxx methods.

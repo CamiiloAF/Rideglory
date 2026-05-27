@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide Error;
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/shared/models/address_location.dart';
@@ -134,21 +135,11 @@ class _EventRouteMapScreenState extends State<EventRouteMapScreen> {
       appBar: AppBar(
         backgroundColor: AppColors.darkBgPrimary,
         elevation: 0,
-        leading: GestureDetector(
-          onTap: () => Navigator.of(context).pop(),
-          child: Container(
-            margin: const EdgeInsets.all(8),
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: AppColors.darkTertiary,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Icon(
-              Icons.arrow_back,
-              color: AppColors.textOnDarkPrimary,
-              size: 20,
-            ),
+        leading: Padding(
+          padding: const EdgeInsets.all(10),
+          child: AppCircleIconButton.back(
+            surfaceColor: AppColors.darkTertiary,
+            onTap: () => context.pop(),
           ),
         ),
         title: Text(

@@ -113,25 +113,10 @@ class _SosConfirmSheet extends StatelessWidget {
               ),
               AppSpacing.gapMd,
               // Cancel button
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed: () => Navigator.of(sheetContext).pop(false),
-                  style: TextButton.styleFrom(
-                    foregroundColor: AppColors.textOnDarkSecondary,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Text(
-                    context.l10n.cancel,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+              AppTextButton(
+                label: context.l10n.cancel,
+                onPressed: () => Navigator.of(sheetContext).pop(false),
+                variant: AppTextButtonVariant.muted,
               ),
             ],
           ),

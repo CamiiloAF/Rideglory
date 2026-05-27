@@ -59,7 +59,7 @@ class _MaintenanceNextDatePillState extends State<MaintenanceNextDatePill> {
                 height: 32,
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1A1A1F),
+                  color: AppColors.darkBgSecondary,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: hasDate ? AppColors.primary : AppColors.darkBorderPrimary,

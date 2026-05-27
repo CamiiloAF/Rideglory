@@ -74,59 +74,20 @@ class EventFormView extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: AppColors.darkBgPrimary,
-          appBar: AppBar(
-            backgroundColor: AppColors.darkBgPrimary,
-            foregroundColor: AppColors.textOnDarkPrimary,
-            elevation: 0,
-            automaticallyImplyLeading: false,
-            // "Cancelar" — left
-            leading: TextButton(
-              onPressed: () => context.pop(),
-              style: TextButton.styleFrom(
-                foregroundColor: AppColors.textOnDarkSecondary,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-              ),
-              child: Text(
-                context.l10n.event_form_cancel_action,
-                style: const TextStyle(
-                  color: AppColors.textOnDarkSecondary,
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
+          appBar: AppFormNavHeader(
+            title: isEditing
+                ? context.l10n.event_editEvent
+                : context.l10n.event_newEvent,
+            leading: AppFormNavAction.text(
+              label: context.l10n.cancel,
+              onTap: () => context.pop(),
             ),
-            // Title — center
-            centerTitle: true,
-            title: Text(
-              isEditing
-                  ? context.l10n.event_editEvent
-                  : context.l10n.event_newEvent,
-              style: const TextStyle(
-                color: AppColors.textOnDarkPrimary,
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-              ),
+            trailing: AppFormNavAction.text(
+              label: context.l10n.event_form_publish_action,
+              onTap: () => _onPublish(context),
+              emphasized: true,
+              isLoading: isSaving,
             ),
-            // "Publicar" — right
-            actions: [
-              TextButton(
-                onPressed: isSaving ? null : () => _onPublish(context),
-                style: TextButton.styleFrom(
-                  foregroundColor: AppColors.primary,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                ),
-                child: Text(
-                  context.l10n.event_form_publish_action,
-                  style: TextStyle(
-                    color: isSaving
-                        ? AppColors.primary.withValues(alpha: 0.5)
-                        : AppColors.primary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ],
           ),
           body: const EventFormContent(),
           bottomNavigationBar: EventFormBottomBar(

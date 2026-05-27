@@ -17,7 +17,7 @@ class HomeViewAllEventsButton extends StatelessWidget {
           width: double.infinity,
           height: 48,
           decoration: BoxDecoration(
-            color: Colors.transparent,
+            color: Colors.transparent, // Intentional: outlined button with no fill
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: AppColors.darkBorderLight),
           ),

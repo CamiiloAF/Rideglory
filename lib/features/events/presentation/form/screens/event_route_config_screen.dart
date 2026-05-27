@@ -4,15 +4,17 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide Error;
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
+import 'package:rideglory/features/events/presentation/form/screens/route_cta_bar.dart';
+import 'package:rideglory/features/events/presentation/form/screens/route_map_area.dart';
+import 'package:rideglory/features/events/presentation/form/screens/route_search_bar.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/waypoint_counter.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/waypoint_item_card.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/waypoint_limit_banner.dart';
-import 'package:rideglory/features/events/presentation/form/widgets/sections/waypoint_search_field.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/waypoints_empty_hint.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/services/place_service.dart';
@@ -22,11 +24,6 @@ import 'package:rideglory/shared/models/address_location.dart';
 const int _maxWaypoints = 9;
 const _routeSourceId = 'config-route-source';
 const _routeLayerId = 'config-route-layer';
-
-// Colombia center — default camera when no waypoints are loaded.
-const _colombiaLng = -73.0;
-const _colombiaLat = 4.0;
-const _colombiaZoom = 5.0;
 
 /// Full-screen custom route builder.
 ///
@@ -260,21 +257,11 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
           appBar: AppBar(
             backgroundColor: AppColors.darkBgPrimary,
             elevation: 0,
-            leading: GestureDetector(
-              onTap: () => Navigator.of(context).pop(),
-              child: Container(
-                margin: const EdgeInsets.all(8),
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: AppColors.darkTertiary,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(
-                  Icons.arrow_back,
-                  color: AppColors.textOnDarkPrimary,
-                  size: 20,
-                ),
+            leading: Padding(
+              padding: const EdgeInsets.all(10),
+              child: AppCircleIconButton.back(
+                surfaceColor: AppColors.darkTertiary,
+                onTap: () => context.pop(),
               ),
             ),
             title: Text(
@@ -294,7 +281,7 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
                 child: FormBuilder(
                   key: _searchFormKey,
-                  child: _RouteSearchBar(
+                  child: RouteSearchBar(
                     atLimit: atLimit,
                     onPlaceSelected: _onWaypointAdded,
                   ),
@@ -303,7 +290,7 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
               const SizedBox(height: 12),
 
               // Map with pick mode support
-              _RouteMapArea(
+              RouteMapArea(
                 atLimit: atLimit,
                 isPickMode: _isPickMode,
                 onMapCreated: (map, manager) {
@@ -376,263 +363,9 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
               ),
             ],
           ),
-          bottomNavigationBar: _RouteCtaBar(hasWaypoints: hasWaypoints),
+          bottomNavigationBar: RouteCtaBar(hasWaypoints: hasWaypoints),
         );
       },
-    );
-  }
-}
-
-class _RouteSearchBar extends StatelessWidget {
-  const _RouteSearchBar({
-    required this.atLimit,
-    required this.onPlaceSelected,
-  });
-
-  final bool atLimit;
-  final void Function(String name, AddressLocation? location) onPlaceSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return Opacity(
-      opacity: atLimit ? 0.6 : 1.0,
-      child: Container(
-        decoration: BoxDecoration(
-          color: atLimit ? AppColors.darkTertiary : AppColors.darkBgSecondary,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.darkBorderPrimary),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 14),
-        child: Row(
-          children: [
-            const Icon(
-              LucideIcons.search,
-              size: 16,
-              color: AppColors.textOnDarkTertiary,
-            ),
-            const SizedBox(width: 10),
-            if (atLimit)
-              Expanded(
-                child: Text(
-                  context.l10n.route_builder_search_placeholder_disabled,
-                  style: const TextStyle(
-                    fontFamily: 'Space Grotesk',
-                    color: AppColors.textOnDarkTertiary,
-                    fontSize: 14,
-                  ),
-                ),
-              )
-            else
-              Expanded(
-                child: WaypointSearchField(
-                  onPlaceSelected: onPlaceSelected,
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _RouteMapArea extends StatelessWidget {
-  const _RouteMapArea({
-    required this.atLimit,
-    required this.isPickMode,
-    required this.onMapCreated,
-    required this.onTogglePickMode,
-    required this.onConfirmPickMode,
-    required this.onCenterOnLocation,
-  });
-
-  final bool atLimit;
-  final bool isPickMode;
-  final void Function(MapboxMap, PointAnnotationManager) onMapCreated;
-  final VoidCallback onTogglePickMode;
-  final VoidCallback onConfirmPickMode;
-  final VoidCallback onCenterOnLocation;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 300,
-      child: Stack(
-        children: [
-          // Map
-          MapWidget(
-            styleUri: MapboxStyles.DARK,
-            viewport: CameraViewportState(
-              center: Point(
-                coordinates: Position(_colombiaLng, _colombiaLat),
-              ),
-              zoom: _colombiaZoom,
-            ),
-            onMapCreated: (mapboxMap) async {
-              await mapboxMap.scaleBar.updateSettings(
-                ScaleBarSettings(enabled: false),
-              );
-              await mapboxMap.logo.updateSettings(
-                LogoSettings(marginLeft: -200, marginBottom: -200),
-              );
-              await mapboxMap.attribution.updateSettings(
-                AttributionSettings(iconColor: 0x00000000),
-              );
-              final manager = await mapboxMap.annotations
-                  .createPointAnnotationManager();
-              onMapCreated(mapboxMap, manager);
-            },
-          ),
-
-          // Centered pin shown in pick mode — IgnorePointer so map stays pannable
-          if (isPickMode)
-            IgnorePointer(
-              child: Center(
-                child: Transform.translate(
-                  offset: const Offset(0, -22),
-                  child: const Icon(
-                    Icons.location_pin,
-                    size: 44,
-                    color: AppColors.primary,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black54,
-                        blurRadius: 10,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-          // Current location button — top-right, always visible
-          Positioned(
-            top: 12,
-            right: 12,
-            child: GestureDetector(
-              onTap: onCenterOnLocation,
-              child: Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: AppColors.darkBgSecondary,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.darkBorderPrimary),
-                ),
-                child: const Icon(
-                  Icons.my_location,
-                  size: 18,
-                  color: AppColors.textOnDarkPrimary,
-                ),
-              ),
-            ),
-          ),
-
-          // "Seleccionar en mapa" toggle button — bottom-right when not in pick mode
-          if (!atLimit && !isPickMode)
-            Positioned(
-              bottom: 12,
-              right: 12,
-              child: GestureDetector(
-                onTap: onTogglePickMode,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.darkBgSecondary,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColors.darkBorderPrimary),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        LucideIcons.mapPin,
-                        size: 14,
-                        color: AppColors.primary,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        context.l10n.route_builder_pick_mode_button,
-                        style: const TextStyle(
-                          fontFamily: 'Space Grotesk',
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.textOnDarkPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-          // Pick mode confirm bar at bottom of map
-          if (isPickMode)
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-                color: AppColors.darkBgPrimary.withValues(alpha: 0.93),
-                child: Row(
-                  children: [
-                    TextButton(
-                      onPressed: onTogglePickMode,
-                      style: TextButton.styleFrom(
-                        foregroundColor: AppColors.textOnDarkSecondary,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
-                      ),
-                      child: Text(
-                        context.l10n.cancel,
-                        style: const TextStyle(
-                          fontFamily: 'Space Grotesk',
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: AppButton(
-                        label: context.l10n.route_builder_pick_mode_confirm,
-                        onPressed: onConfirmPickMode,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _RouteCtaBar extends StatelessWidget {
-  const _RouteCtaBar({required this.hasWaypoints});
-
-  final bool hasWaypoints;
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-        child: Opacity(
-          opacity: hasWaypoints ? 1.0 : 0.4,
-          child: AppButton(
-            label: context.l10n.route_builder_continue,
-            onPressed: hasWaypoints ? () => Navigator.of(context).pop() : null,
-          ),
-        ),
-      ),
     );
   }
 }

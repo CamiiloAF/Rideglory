@@ -20,8 +20,10 @@ import 'package:rideglory/features/events/presentation/tracking/live_map_page.da
 import 'package:rideglory/features/events/presentation/tracking/participants/participants_placeholder_page.dart';
 import 'package:rideglory/features/home/presentation/home_page.dart';
 import 'package:rideglory/features/notifications/presentation/notifications_page.dart';
-import 'package:rideglory/features/soat/presentation/pages/soat_upload_page.dart';
+import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_page.dart';
+import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_params.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_status_page.dart';
+import 'package:rideglory/features/soat/presentation/pages/soat_upload_page.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
@@ -40,7 +42,6 @@ import '../../features/splash/presentation/splash_screen.dart';
 import '../../features/vehicles/presentation/detail/vehicle_detail_page.dart';
 import '../../features/vehicles/presentation/form/vehicle_form_page.dart';
 import '../../features/vehicles/presentation/garage/garage_page.dart';
-import '../../features/vehicles/presentation/soat/soat_upload_page.dart' as vehicle_soat;
 import '../widgets/main_shell.dart';
 import 'app_routes.dart';
 
@@ -225,7 +226,7 @@ class AppRouter {
         name: AppRoutes.vehicleSoat,
         builder: (context, state) {
           final vehicle = state.extra as VehicleModel;
-          return vehicle_soat.SoatUploadPage(vehicle: vehicle);
+          return SoatUploadPage(vehicle: vehicle);
         },
       ),
 
@@ -371,6 +372,18 @@ class AppRouter {
         builder: (context, state) {
           final vehicle = state.extra as VehicleModel;
           return SoatStatusPage(vehicle: vehicle);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.soatManualCapture,
+        name: AppRoutes.soatManualCapture,
+        builder: (context, state) {
+          final params = state.extra as SoatManualCaptureParams;
+          return SoatManualCapturePage(
+            vehicle: params.vehicle,
+            existingSoat: null,
+            initialLocalImagePath: params.initialLocalImagePath,
+          );
         },
       ),
     ],

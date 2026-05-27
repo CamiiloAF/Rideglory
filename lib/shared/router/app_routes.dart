@@ -46,4 +46,5 @@ abstract class AppRoutes {
   // SOAT routes
   static const String soatUpload = '/soat/upload';
   static const String soatStatus = '/soat/status';
+  static const String soatManualCapture = '/soat/manual-capture';
 }

@@ -8,21 +8,19 @@ class LoginHeading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          context.l10n.auth_loginTitle,
-          textAlign: TextAlign.center,
-          style: context.textTheme.displayMedium?.copyWith(
-            color: context.colorScheme.onSurface,
+          context.l10n.auth_welcome_title,
+          style: context.textTheme.displaySmall?.copyWith(
+            color: AppColors.textOnDarkPrimary,
           ),
         ),
-        AppSpacing.gapXs,
+        const SizedBox(height: 6),
         Text(
-          context.l10n.auth_loginSubtitleStitch,
-          textAlign: TextAlign.center,
+          context.l10n.auth_welcome_subtitle,
           style: context.textTheme.bodyMedium?.copyWith(
-            color: context.colorScheme.primary,
-            fontWeight: FontWeight.w500,
+            color: AppColors.textOnDarkSecondary,
           ),
         ),
       ],

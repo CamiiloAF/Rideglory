@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:rideglory/features/events/constants/event_form_fields.dart';
-import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/features/events/constants/event_form_fields.dart';
+import 'package:rideglory/features/events/domain/model/event_model.dart';
+import 'package:rideglory/features/events/presentation/form/widgets/sections/event_type/event_type_row.dart';
 
 /// Event type selector matching Pencil frame zbCa0 — "TIPO DE EVENTO" section.
 ///
@@ -52,13 +53,13 @@ class EventFormEventTypeSection extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            _EventTypeRow(
+            EventTypeRow(
               types: _row1,
               selected: selected,
               onSelect: field.didChange,
             ),
             const SizedBox(height: 8),
-            _EventTypeRow(
+            EventTypeRow(
               types: _row2,
               selected: selected,
               onSelect: field.didChange,
@@ -75,75 +76,6 @@ class EventFormEventTypeSection extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-}
-
-class _EventTypeRow extends StatelessWidget {
-  const _EventTypeRow({
-    required this.types,
-    required this.selected,
-    required this.onSelect,
-  });
-
-  final List<EventType> types;
-  final EventType selected;
-  final void Function(EventType) onSelect;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: types
-          .map(
-            (type) => Padding(
-              padding: EdgeInsets.only(right: type != types.last ? 8 : 0),
-              child: _EventTypeChip(
-                type: type,
-                isSelected: selected == type,
-                onTap: () => onSelect(type),
-              ),
-            ),
-          )
-          .toList(),
-    );
-  }
-}
-
-class _EventTypeChip extends StatelessWidget {
-  const _EventTypeChip({
-    required this.type,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  final EventType type;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : AppColors.darkCard,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.darkBorderPrimary,
-          ),
-        ),
-        child: Text(
-          type.label,
-          style: TextStyle(
-            fontFamily: 'Space Grotesk',
-            fontSize: 13,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-            color: isSelected ? Colors.white : AppColors.textOnDarkSecondary,
-          ),
-        ),
-      ),
     );
   }
 }

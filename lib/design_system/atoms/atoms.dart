@@ -1,4 +1,5 @@
 export 'buttons/app_button.dart';
+export 'buttons/app_circle_icon_button.dart';
 export 'buttons/app_text_button.dart';
 
 export 'inputs/app_text_field.dart';

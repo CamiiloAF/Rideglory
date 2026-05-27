@@ -30,7 +30,7 @@ class VehicleScanBanner extends StatelessWidget {
               child: const Icon(
                 Icons.document_scanner_outlined,
                 size: 22,
-                color: Colors.white,
+                color: AppColors.textOnDarkPrimary,
               ),
             ),
             const SizedBox(width: 12),

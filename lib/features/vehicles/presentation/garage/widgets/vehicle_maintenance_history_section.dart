@@ -195,9 +195,9 @@ class _ServiceCard extends StatelessWidget {
         : overdue
             ? context.l10n.maintenance_statusOverdue
             : context.l10n.maintenance_legend_warning;
-    final bgColor = overdue ? const Color(0x1AEF4444) : AppColors.darkCard;
+    final bgColor = overdue ? AppColors.statusError.withValues(alpha: 0.1) : AppColors.darkCard;
     final borderColor =
-        overdue ? const Color(0x40EF4444) : AppColors.darkBorderPrimary;
+        overdue ? AppColors.statusError.withValues(alpha: 0.25) : AppColors.darkBorderPrimary;
     final primary = _primaryValue();
     final secondary = _secondaryValue();
 

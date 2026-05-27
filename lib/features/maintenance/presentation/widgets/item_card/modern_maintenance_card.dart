@@ -23,12 +23,12 @@ class ModernMaintenanceCard extends StatelessWidget {
 
   Color get _typeColor => switch (maintenance.type) {
         MaintenanceType.oilChange => AppColors.primary,
-        MaintenanceType.brakeCheck => const Color(0xFFEAB308),
-        MaintenanceType.tireChange => const Color(0xFF3B82F6),
-        MaintenanceType.preventive => const Color(0xFF22C55E),
-        MaintenanceType.airFilter => const Color(0xFF8B5CF6),
+        MaintenanceType.brakeCheck => AppColors.statusWarning,
+        MaintenanceType.tireChange => AppColors.info,
+        MaintenanceType.preventive => AppColors.statusGreen,
+        MaintenanceType.airFilter => AppColors.eventShortDistance,
         MaintenanceType.chainSprocket => AppColors.textOnDarkTertiary,
-        MaintenanceType.electrical => const Color(0xFFFBBF24),
+        MaintenanceType.electrical => AppColors.warningLight,
         MaintenanceType.other => AppColors.darkTertiary,
       };
 

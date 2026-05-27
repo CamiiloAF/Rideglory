@@ -150,3 +150,7 @@ Commands: `flutter pub get`, `dart run build_runner build --delete-conflicting-o
 
 ## Change log
 - 2026-05-13 (plan v3 approval): CI considerations per iteration documented. Mapbox cache bust and Firebase secrets requirements noted.
+
+
+## Change log (refactor-01 approval)
+- 2026-05-27 (refactor-01 approval): Refactor & Cleanup Extremo approved — 17 stories. **DevOps is fully stand-down for refactor-01.** No CI changes, no new pipeline steps, no new env vars, no new secrets, no new caches. Existing CI requirements still apply per merge: Flutter stable channel, `flutter pub get` → `dart run build_runner build --delete-conflicting-outputs` (REFACTOR-02 deletes `soat_upload_cubit.dart` — DI regen will modify generated files; verify CI re-runs build_runner) → `dart analyze` (must show 0 errors AND 0 warnings post-refactor — stricter than the historical baseline) → `flutter test` → `flutter build apk --release`. Branch is `iter-refactor-01`. No deploy step required — refactor-01 is a pure code-quality iteration. If a story unexpectedly touches `pubspec.yaml`, `analysis_options.yaml`, `.github/workflows/`, or any native config, escalate to architect before proceeding.

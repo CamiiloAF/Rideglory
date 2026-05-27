@@ -1,7 +1,322 @@
-# Architect handoff — Iteration 3
+# Architect handoff — Iteration 6 (refactor-01)
 
-**Date:** 2026-05-15
+**Date:** 2026-05-27
 **Status:** done
+**Type:** REFACTORING ONLY — zero new features, zero API changes, zero DB changes
+
+---
+
+## Iteration scope
+
+Pure internal Flutter refactor. 17 stories. No new packages, no new API contracts, no new Retrofit endpoints, no new domain models, no new DTOs, no rideglory-api changes. Backend is fully on stand-down. Architect's work is entirely Flutter-layer decisions and component API specification.
+
+---
+
+## Story-to-layer mapping
+
+All 17 stories are **presentation-layer only**. Exceptions noted:
+
+| Story (REFACTOR-ID) | Flutter layer | Files touched | Notes |
+|---------------------|--------------|---------------|-------|
+| REFACTOR-01 | Presentation | `soat/presentation/widgets/soat_data_view.dart` | Single prop swap on AppButton |
+| REFACTOR-02 | Presentation + DI | `vehicles/presentation/soat/*` → `soat/presentation/*`; `app_router.dart`; `app_routes.dart`; `injection.config.dart` (regen) | Only story touching DI; requires `build_runner` |
+| REFACTOR-03a | Presentation | `vehicles/presentation/garage/widgets/*` | Widget extraction only |
+| REFACTOR-03b | Presentation | `vehicles/presentation/form/*`, `vehicles/presentation/widgets/*` | Widget extraction only |
+| REFACTOR-04 | Presentation | `authentication/login/presentation/*`, `authentication/signup/presentation/*` | Widget extraction only |
+| REFACTOR-05a | Presentation | `events/presentation/detail/*` | Widget extraction; unnamed-route decision applies (see §Decision B) |
+| REFACTOR-05b | Presentation | `events/presentation/form/*`, `events/presentation/tracking/*`, `events/presentation/list/*`, `events/presentation/drafts/*` | Widget extraction; unnamed-route decision applies (see §Decision B) |
+| REFACTOR-06a | Presentation | `maintenance/presentation/*` | Widget extraction + `showDialog` fix (REFACTOR-13 bundled) |
+| REFACTOR-06b | Presentation | `home/presentation/*`, `profile/presentation/*`, `users/presentation/widgets/*`, `event_registration/presentation/*` | Widget extraction |
+| REFACTOR-07 | Presentation | 6 feature files | Raw button replacement |
+| REFACTOR-08 | Presentation | 4 feature files | FormBuilderTextField → AppTextField |
+| REFACTOR-09 | Presentation | 13+ feature files | Navigator.of → go_router |
+| REFACTOR-10 | Presentation | `profile_page.dart`, `garage_page.dart`, `events_page.dart`, `forgot_password_view.dart` | goNamed annotations/replacements |
+| REFACTOR-11 | Presentation | 25+ feature files | Color token replacement; `app_colors.dart` addition |
+| REFACTOR-12 | Presentation | `notifications/presentation/cubit/notifications_state.dart` | Comment-only addition |
+| REFACTOR-13 | Presentation | `maintenance/presentation/widgets/item_card/info_chip_tooltip.dart` | showDialog → AppDialog/annotation |
+| REFACTOR-14 | Design system | `lib/design_system/molecules/app_form_nav_header.dart` (NEW); 3 feature form headers deleted | New molecule; 3 migration targets |
+| REFACTOR-15 | Localization | `lib/l10n/app_es.arb` + generated files | ARB audit, 3-phase cleanup |
+
+**No domain/ or data/ layer changes in any story.**
+
+---
+
+## API contracts (rideglory-api changes)
+
+None. Backend stand-down this iteration.
+
+---
+
+## New models and DTOs
+
+None. Refactor only.
+
+---
+
+## Environment variables
+
+None. No new `.env` keys.
+
+---
+
+## Architectural decisions resolved
+
+### A. AppFormNavHeader API (REFACTOR-14)
+
+**Locked API — implement exactly as specified:**
+
+```dart
+// lib/design_system/molecules/app_form_nav_header.dart
+
+/// Sealed variants for leading/trailing actions on form nav headers.
+/// Use [AppFormNavAction.text] for text buttons (Cancelar, Guardar, Publicar).
+/// Use [AppFormNavAction.icon] for icon-only buttons (back arrow, optionally in pill).
+/// Use [AppFormNavAction.pillText] for pill-styled primary action buttons (Listo).
+sealed class AppFormNavAction {
+  const factory AppFormNavAction.text({
+    required String label,
+    required VoidCallback onTap,
+    bool emphasized,    // true → semi-bold/primary color (e.g. "Guardar", "Publicar")
+    bool isLoading,     // true → shows inline spinner, disables tap
+  }) = AppFormNavActionText;
+
+  const factory AppFormNavAction.icon({
+    required IconData icon,
+    required VoidCallback onTap,
+    bool pill,          // true → 36×36 pill container (Maintenance back button)
+  }) = AppFormNavActionIcon;
+
+  const factory AppFormNavAction.pillText({
+    required String label,
+    required VoidCallback onTap,
+    bool isLoading,     // true → shows inline spinner, disables tap
+  }) = AppFormNavActionPillText;
+}
+
+/// Centralized form navigation header.
+/// Replaces: VehicleFormNavHeader (56px), MaintenanceFormNavHeader (52px),
+/// and the inline AppBar in event_form_view.dart.
+/// Implements [PreferredSizeWidget] — plug directly into Scaffold.appBar.
+class AppFormNavHeader extends StatelessWidget implements PreferredSizeWidget {
+  const AppFormNavHeader({
+    super.key,
+    required this.title,
+    this.leading,
+    this.trailing,
+    this.bottom,        // optional slot: progress bars (Maintenance form)
+    this.height = 56.0, // Vehicle=56, Maintenance=52; set per caller
+    this.showBottomBorder = true,
+    this.centerTitle = true,
+  });
+
+  final String title;
+  final AppFormNavAction? leading;
+  final AppFormNavAction? trailing;
+  final Widget? bottom;
+  final double height;
+  final bool showBottomBorder;
+  final bool centerTitle;
+
+  @override
+  Size get preferredSize => Size.fromHeight(
+    bottom != null ? height + kBottomNavigationBarHeight * 0.5 : height,
+  );
+}
+```
+
+**Migration map:**
+
+| Old file | Leading | Trailing | height | bottom |
+|----------|---------|---------|--------|--------|
+| `VehicleFormNavHeader` | `text("Cancelar", emphasized: false)` | `text("Guardar", emphasized: true, isLoading: ...)` | 56 | null |
+| `MaintenanceFormNavHeader` | `icon(backIcon, pill: true)` | `pillText("Listo", isLoading: ...)` | 52 | `MaintenanceProgressBars(...)` (extract as separate widget) |
+| `event_form_view.dart` AppBar | `text("Cancelar")` | `text("Publicar"/"Guardar cambios", emphasized: true, isLoading: ...)` | 56 | null |
+
+**Out of scope:** `LiveMapSimpleAppBar`, `LiveMapOverlayAppBar`, `MaintenancesPageAppBar`.
+
+**String unification:** Coordinate with REFACTOR-15. `vehicle_form_nav_cancel` / `event_form_nav_cancel` / `maintenance_form_nav_cancel` (all = "Cancelar") → collapse to `common_cancel`.
+
+---
+
+### B. Unnamed-route decision (REFACTOR-05a, 05b, 09)
+
+**Decision: Option B — annotate `// Custom:`, do NOT add named routes.**
+
+Justification: `EventRouteConfigScreen` and `EventRouteMapScreen` are ephemeral form sub-flows launched from a single callsite each, with no deep-link requirements. Adding named routes would require router changes and `extra` serialization — disproportionate complexity for a refactor-only iteration. Option B preserves intent transparently.
+
+**Exact annotation to apply (copy verbatim):**
+
+```dart
+// Custom: EventRouteConfigScreen has no go_router named route — anonymous push preserved.
+// Reason: ephemeral form sub-screen, no deep-link requirement, router surface kept minimal.
+Navigator.of(context).push(MaterialPageRoute(builder: (_) => const EventRouteConfigScreen()));
+
+// Custom: EventRouteMapScreen has no go_router named route — anonymous push preserved.
+// Reason: ephemeral map preview, no deep-link requirement, router surface kept minimal.
+Navigator.of(context).push(MaterialPageRoute(builder: (_) => EventRouteMapScreen(route: route)));
+```
+
+---
+
+### C. REFACTOR-12 exception pattern (`bool isLoadingMore`)
+
+**Decision: Option A confirmed.** Keep `bool isLoadingMore`. Add this exact 3-line comment block immediately above the field:
+
+```dart
+// Exception: isLoadingMore is a secondary loading indicator for cursor-based pagination append.
+// It cannot be replaced by a second ResultState<List> because listResult must remain in Data
+// state while additional pages are loading. Documented exception to the no-primitive-flag rule.
+@Default(false) bool isLoadingMore,
+```
+
+**Canonical exception template for any future ResultState<T> deviation:**
+```
+// Exception: <field> is <purpose>.
+// It cannot be replaced by ResultState<T> because <reason>.
+// Documented exception to the no-primitive-flag rule.
+```
+
+---
+
+### D. Color tokens (REFACTOR-11)
+
+**Decision: Add new tokens. Do NOT remap to existing `success`/`warning`/`error`.**
+
+Current `AppColors` status tokens are Tailwind amber/emerald variants (≠ green-500/yellow-500). Add to `lib/design_system/foundation/theme/app_colors.dart`:
+
+```dart
+// ─── Status — Tailwind-exact (distinct from success/warning/error variants) ──
+/// Tailwind green-500 — status badge "active/vigente"
+static const Color statusGreen = Color(0xFF22C55E);
+/// Tailwind yellow-500 — status badge "expiring/por vencer"
+static const Color statusWarning = Color(0xFFEAB308);
+/// Tailwind red-500 — status badge "expired/vencido" (aliases AppColors.error)
+static const Color statusError = Color(0xFFEF4444);
+```
+
+**Note:** `primarySubtle` already exists (`Color(0xFF2D2117)`). Do NOT add a new one. For `Color(0x66F98C1F)` use `colorScheme.primary.withValues(alpha: 0.4)` inline.
+
+Rationale: `statusGreen` (0xFF22C55E) ≠ `success` (0xFF10B981); `statusWarning` (0xFFEAB308) ≠ `warning` (0xFFF59E0B). Blind remapping changes rendered SOAT badge colors — a visual regression disguised as a refactor.
+
+---
+
+### E. `AppButton.isLoading` contract (REFACTOR-01)
+
+**Verified from `lib/shared/widgets/form/app_button.dart` line 77:**
+
+```dart
+onTap: onPressed == null || isLoading ? null : onPressed,
+```
+
+`AppButton` **internally guards `onPressed` when `isLoading: true`**. Therefore REFACTOR-01 only needs:
+
+```dart
+AppButton(
+  label: context.l10n.soat_view_document,
+  isLoading: _openingDocument,
+  onPressed: _openDocument,  // no null-guard needed — AppButton handles it
+)
+```
+
+The dual-condition fallback (`onPressed: _openingDocument ? null : _openDocument`) is NOT needed.
+
+---
+
+### F. DI regeneration sequence (REFACTOR-02)
+
+**Exact command sequence after deleting `soat_upload_cubit.dart`:**
+
+```bash
+# Step 1: delete the file
+rm lib/features/vehicles/presentation/soat/cubit/soat_upload_cubit.dart
+
+# Step 2: regenerate all generated files
+dart run build_runner build --delete-conflicting-outputs
+
+# Step 3: verify clean
+grep -rn "SoatUploadCubit\|soat_upload_cubit" lib/ --include="*.dart"
+# Must return 0 results
+
+grep "SoatUploadCubit" lib/core/di/injection.config.dart
+# Must return 0 results
+
+dart analyze lib/
+# Must return 0 errors
+```
+
+Run this before any other REFACTOR-02 steps that depend on clean compile.
+
+---
+
+### G. REFACTOR-15 l10n cleanup strategy
+
+**3-phase approach confirmed.** Target: ≥10% reduction (1357 → ≤1220 keys).
+
+**Key extraction command:**
+```bash
+jq -r 'keys[] | select(startswith("@") | not)' lib/l10n/app_es.arb | wc -l
+jq -r 'keys[] | select(startswith("@") | not)' lib/l10n/app_es.arb > /tmp/arb_keys.txt
+```
+
+**Usage grep pattern:**
+```bash
+grep -rn "context\.l10n\." lib/features/ --include="*.dart" \
+  | awk -F'context.l10n.' '{print $2}' \
+  | awk -F'[^a-zA-Z0-9_]' '{print $1}' \
+  | sort -u > /tmp/used_keys.txt
+
+comm -23 <(sort /tmp/arb_keys.txt) /tmp/used_keys.txt > /tmp/unused_candidates.txt
+```
+
+**High-risk dynamic-reference patterns — DO NOT DELETE even if grep returns 0:**
+1. Keys assembled via string interpolation: `context.l10n.${'prefix_$suffix'}`
+2. Keys with `@` metadata `"placeholders"` — method-style generated accessors (check `.dart` file, not `.arb` consumers)
+3. `switch`-assembled key families: `maintenanceType*`, `eventStatus*`, `registrationStatus*`
+4. FCM notification type routing keys: `notification_*` selected at runtime from payload
+
+**Dynamic reference detection:**
+```bash
+grep -rn "l10n\.\${" lib/ --include="*.dart"
+grep -rn "l10n\.\w\+('" lib/ --include="*.dart" | grep -v "^lib/l10n/"
+```
+
+**Phase 2 unification targets (high-confidence common_ keys):**
+`common_cancel`, `common_save`, `common_back`, `common_continue`, `common_accept`, `common_confirm`, `common_delete`, `common_edit`, `common_close`, `common_done`, `common_yes`, `common_no`, `common_retry`.
+
+---
+
+## No DIAGRAMS.md update
+
+SOAT consolidation is a file move within the same feature — no data model boundary changes, no new sequence flows. Existing DIAGRAMS.md SOAT-save sequence (iter-2) remains accurate. No new diagrams needed.
+
+---
+
+## Risks and open questions
+
+| Risk | Mitigation |
+|------|-----------|
+| SOAT blast perimeter — missed import causes compile error | `grep -r "vehicles/presentation/soat" lib/` before any deletion |
+| `garage_vehicles_content.dart` shared state during extraction | Classify each class before touching; one extract per commit with `flutter test` after each |
+| `event_detail_cta_bar.dart` has no widget tests — silent regression | 4-variant CTA smoke test is HARD acceptance criterion (not optional) |
+| REFACTOR-15 deletes dynamically-referenced key → runtime crash | Run `flutter gen-l10n` + debug app after each batch; commit per phase |
+| `Navigator.pop(context)` invisible to standard grep | Separate grep: `grep -rn "Navigator\.pop(context"` |
+| statusGreen ≠ existing success token | New tokens committed first as standalone commit |
+
+---
+
+## Next agent: frontend
+
+Frontend implements all 17 tasks in linear order T-6-1 → T-6-17. See `architect-for-frontend.md` for the feature-by-feature change list. Key constraints:
+- REFACTOR-01 first (single-file baseline fix)
+- REFACTOR-02 second (high-risk SOAT consolidation + DI regen)
+- REFACTOR-11 color tokens committed as a standalone commit BEFORE any literal replacement
+- REFACTOR-15 executed last, after all other stories have added/removed keys
+
+---
+
+## Change log
+
+- 2026-05-27: Iteration 6 (refactor-01) architect phase complete. Decisions A-G resolved. AppFormNavHeader API locked. Unnamed-route Option B selected. REFACTOR-12 exception pattern confirmed. 3 new AppColors status tokens specified. AppButton.isLoading internal guard verified. DI regen sequence documented. REFACTOR-15 strategy confirmed. 4 slim handoffs written.
 
 Iteration 3 completes real-time tracking (SOS, organizer ride controls, background GPS), adds date-based maintenance + 24h event reminders, and migrates the maps SDK from `google_maps_flutter`/`geocoding` to `mapbox_maps_flutter` as the single maps SDK (Story 3.0 — blocking).
 

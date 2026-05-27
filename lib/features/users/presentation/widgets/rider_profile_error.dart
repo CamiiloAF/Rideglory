@@ -48,7 +48,7 @@ class RiderProfileError extends StatelessWidget {
           ),
           AppSpacing.gapLg,
           AppButton(
-            label: context.l10n.rider_errorRetry,
+            label: context.l10n.retry,
             onPressed: onRetry,
           ),
         ],

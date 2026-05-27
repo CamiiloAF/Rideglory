@@ -6,6 +6,8 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/profile/presentation/cubits/profile_cubit.dart';
+import 'package:rideglory/features/profile/presentation/widgets/profile_menu_divider.dart';
+import 'package:rideglory/features/profile/presentation/widgets/profile_menu_item.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
@@ -29,25 +31,25 @@ class ProfileActionsList extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _ProfileMenuItem(
+          ProfileMenuItem(
             icon: Icons.event_note_outlined,
             label: context.l10n.profile_registrations,
             onTap: () => context.pushNamed(AppRoutes.myRegistrations),
           ),
-          const _MenuDivider(),
-          _ProfileMenuItem(
+          const ProfileMenuDivider(),
+          ProfileMenuItem(
             icon: Icons.edit_note_rounded,
             label: context.l10n.draft_myDraftsTitle,
             onTap: () => context.pushNamed(AppRoutes.myDrafts),
           ),
-          const _MenuDivider(),
-          _ProfileMenuItem(
+          const ProfileMenuDivider(),
+          ProfileMenuItem(
             icon: Icons.build_outlined,
             label: context.l10n.profile_maintenances,
             onTap: () => context.pushNamed(AppRoutes.maintenances),
           ),
-          const _MenuDivider(),
-          _ProfileMenuItem(
+          const ProfileMenuDivider(),
+          ProfileMenuItem(
             icon: Icons.logout_outlined,
             label: context.l10n.auth_logout,
             iconColor: AppColors.error,
@@ -67,69 +69,6 @@ class ProfileActionsList extends StatelessWidget {
             },
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _MenuDivider extends StatelessWidget {
-  const _MenuDivider();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Divider(
-      height: 1,
-      thickness: 1,
-      color: AppColors.darkBorderPrimary,
-    );
-  }
-}
-
-class _ProfileMenuItem extends StatelessWidget {
-  const _ProfileMenuItem({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-    this.iconColor = AppColors.textOnDarkSecondary,
-    this.labelColor = AppColors.textOnDarkPrimary,
-    this.showChevron = true,
-  });
-
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-  final Color iconColor;
-  final Color labelColor;
-  final bool showChevron;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        child: Row(
-          children: [
-            Icon(icon, color: iconColor, size: 20),
-            AppSpacing.hGapMd,
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: labelColor,
-                ),
-              ),
-            ),
-            if (showChevron)
-              const Icon(
-                Icons.chevron_right,
-                color: AppColors.textOnDarkTertiary,
-                size: 20,
-              ),
-          ],
-        ),
       ),
     );
   }

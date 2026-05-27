@@ -14,6 +14,7 @@ class MaintenanceCtaBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       padding: EdgeInsets.fromLTRB(
         20,
@@ -41,16 +42,16 @@ class MaintenanceCtaBar extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.edit_outlined,
-                      color: AppColors.textOnDarkPrimary,
+                      color: colorScheme.onPrimary,
                       size: 16,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       context.l10n.edit,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: AppColors.textOnDarkPrimary,
+                        color: colorScheme.onPrimary,
                         fontWeight: FontWeight.w700,
                         fontSize: 15,
                       ),

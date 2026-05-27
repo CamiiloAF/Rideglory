@@ -96,7 +96,8 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                           });
                           _formKey.currentState?.reset();
                           cubit.clearFilters();
-                          Navigator.of(context).pop();
+                          // Custom: Navigator.pop preserved — closes showModalBottomSheet route, not a go_router route.
+                          Navigator.pop(context);
                         },
                       ),
                   ],
@@ -246,7 +247,8 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                     );
 
                     cubit.updateFilters(filters);
-                    Navigator.of(context).pop();
+                    // Custom: Navigator.pop preserved — closes showModalBottomSheet route, not a go_router route.
+                    Navigator.pop(context);
                   },
                 ),
               ),

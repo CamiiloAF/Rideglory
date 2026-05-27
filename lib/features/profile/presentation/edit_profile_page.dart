@@ -3,6 +3,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/features/profile/presentation/widgets/profile_edit_avatar.dart';
+import 'package:rideglory/features/profile/presentation/widgets/profile_form_section_header.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -34,9 +36,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
           child: ListView(
             padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
             children: [
-              _ProfileEditAvatar(user: widget.user),
+              ProfileEditAvatar(user: widget.user),
               AppSpacing.gapXxl,
-              _SectionHeader(label: context.l10n.profile_sectionPersonal),
+              ProfileFormSectionHeader(label: context.l10n.profile_sectionPersonal),
               AppSpacing.gapMd,
               AppTextField(
                 name: 'fullName',
@@ -68,7 +70,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 textInputAction: TextInputAction.next,
               ),
               AppSpacing.gapXxl,
-              _SectionHeader(label: context.l10n.profile_sectionEmergency),
+              ProfileFormSectionHeader(label: context.l10n.profile_sectionEmergency),
               AppSpacing.gapMd,
               AppTextField(
                 name: 'emergencyContactName',
@@ -92,102 +94,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _ProfileEditAvatar extends StatelessWidget {
-  const _ProfileEditAvatar({required this.user});
-
-  final UserModel user;
-
-  @override
-  Widget build(BuildContext context) {
-    final initials = user.fullName != null && user.fullName!.isNotEmpty
-        ? user.fullName!
-            .trim()
-            .split(RegExp(r'\s+'))
-            .where((part) => part.isNotEmpty)
-            .take(2)
-            .map((part) => part[0].toUpperCase())
-            .join()
-        : '?';
-
-    return Center(
-      child: Stack(
-        children: [
-          Container(
-            width: 88,
-            height: 88,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  AppColors.primary,
-                  Color(0x66F98C1F),
-                ],
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(3),
-              child: Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.darkCard,
-                ),
-                child: Center(
-                  child: Text(
-                    initials,
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textOnDarkPrimary,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: Container(
-              width: 28,
-              height: 28,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.primary,
-              ),
-              child: const Icon(
-                Icons.camera_alt_outlined,
-                size: 16,
-                color: AppColors.darkBgPrimary,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      label.toUpperCase(),
-      style: const TextStyle(
-        fontSize: 11,
-        fontWeight: FontWeight.w700,
-        color: AppColors.textOnDarkSecondary,
-        letterSpacing: 1.5,
       ),
     );
   }

@@ -27,8 +27,8 @@ class MaintenancesDataWidget extends StatelessWidget {
     required this.onAddPressed,
   });
 
-  static const _successColor = Color(0xFF22C55E);
-  static const _warningColor = Color(0xFFEAB308);
+  static const _successColor = AppColors.statusGreen;
+  static const _warningColor = AppColors.statusWarning;
 
   int _vehicleMileage(BuildContext context) {
     final vehicleCubit = context.read<VehicleCubit>();

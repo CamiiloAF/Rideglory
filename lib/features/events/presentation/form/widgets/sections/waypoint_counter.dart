@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
@@ -21,7 +20,7 @@ class WaypointCounter extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            LucideIcons.mapPin,
+            Icons.location_on_outlined,
             size: 12,
             color: isActive ? AppColors.primary : AppColors.textOnDarkTertiary,
           ),

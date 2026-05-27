@@ -46,7 +46,7 @@ class NotificationsErrorState extends StatelessWidget {
             ),
             AppSpacing.gapLg,
             AppButton(
-              label: context.l10n.notification_retry,
+              label: context.l10n.retry,
               onPressed: onRetry,
               isFullWidth: false,
             ),

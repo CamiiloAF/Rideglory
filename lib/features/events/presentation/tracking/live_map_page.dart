@@ -14,6 +14,7 @@ import 'package:rideglory/features/events/presentation/tracking/cubit/live_track
 import 'package:rideglory/features/events/presentation/tracking/live_tracking_session_holder.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/live_map_app_bar.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/live_map_body.dart';
+import 'package:rideglory/features/events/presentation/tracking/widgets/live_map_simple_app_bar.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/live_map_widget.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/sos_confirm_dialog.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';

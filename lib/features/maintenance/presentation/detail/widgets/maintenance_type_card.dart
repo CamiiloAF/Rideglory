@@ -26,10 +26,10 @@ class MaintenanceTypeCard extends StatelessWidget {
     this.vehicle,
   });
 
-  static const _successColor = Color(0xFF22C55E);
-  static const _successSubtle = Color(0x1A22C55E);
-  static const _warningColor = Color(0xFFEAB308);
-  static const _warningSubtle = Color(0x1AEAB308);
+  static const _successColor = AppColors.statusGreen;
+  static const _successSubtle = Color(0x1A22C55E); // Intentional: alpha variant of statusGreen, no token for subtle exists
+  static const _warningColor = AppColors.statusWarning;
+  static const _warningSubtle = Color(0x1AEAB308); // Intentional: alpha variant of statusWarning, no token for subtle exists
 
   bool get _isDone => maintenance.mode == MaintenanceMode.completed;
 
@@ -48,7 +48,7 @@ class MaintenanceTypeCard extends StatelessWidget {
     return switch (status) {
       MaintenanceStatus.overdue => _BadgeStyle(
         color: AppColors.error,
-        background: const Color(0x1AEF4444),
+        background: AppColors.statusError.withValues(alpha: 0.1),
         label: context.l10n.maintenance_status_overdue,
       ),
       MaintenanceStatus.next => _BadgeStyle(

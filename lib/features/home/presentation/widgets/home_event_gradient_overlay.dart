@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
 
 class HomeEventGradientOverlay extends StatelessWidget {
   const HomeEventGradientOverlay({super.key});
@@ -6,12 +7,15 @@ class HomeEventGradientOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Colors.transparent, Colors.black87],
-          stops: [0.3, 1.0],
+          colors: [
+            Colors.transparent, // Intentional: gradient stop — transparent start
+            AppColors.darkBgPrimary.withValues(alpha: 0.87),
+          ],
+          stops: const [0.3, 1.0],
         ),
       ),
     );

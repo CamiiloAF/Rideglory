@@ -4,6 +4,7 @@ import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
+import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_next_service_row.dart';
 
 class MaintenanceNextServiceCard extends StatelessWidget {
   final MaintenanceModel maintenance;
@@ -44,13 +45,13 @@ class MaintenanceNextServiceCard extends StatelessWidget {
           Column(
             children: [
               if (hasDate)
-                _NextRow(
+                MaintenanceNextServiceRow(
                   label: context.l10n.maintenance_next_date_label,
                   value: maintenance.nextDate!.formattedDate,
                 ),
               if (hasDate && hasMileage) const SizedBox(height: 8),
               if (hasMileage)
-                _NextRow(
+                MaintenanceNextServiceRow(
                   label: context.l10n.maintenance_next_odometer_label,
                   value:
                       '${numberFormat.format(maintenance.nextOdometer)} km',
@@ -59,37 +60,6 @@ class MaintenanceNextServiceCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _NextRow extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _NextRow({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: AppColors.textOnDarkSecondary,
-            fontSize: 13,
-          ),
-        ),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: AppColors.textOnDarkPrimary,
-            fontWeight: FontWeight.w600,
-            fontSize: 13,
-          ),
-        ),
-      ],
     );
   }
 }

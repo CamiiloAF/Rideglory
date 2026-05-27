@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
@@ -63,7 +64,7 @@ class _MaintenanceFormPageState extends State<MaintenanceFormPage> {
               );
               // Pop with the full list of saved records (1 or 2 for auto-created scheduled)
               final saved = _cubit.lastSavedRecords ?? [maintenance];
-              Navigator.of(context).pop(saved);
+              context.pop(saved);
             },
             error: (error) {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -81,7 +82,7 @@ class _MaintenanceFormPageState extends State<MaintenanceFormPage> {
                   _cubit.updateSelectedType(type);
                   setState(() => _selectedType = type);
                 },
-                onBack: () => Navigator.of(context).pop(),
+                onBack: () => context.pop(),
               )
             : MaintenanceFormView(
                 selectedType: _selectedType!,

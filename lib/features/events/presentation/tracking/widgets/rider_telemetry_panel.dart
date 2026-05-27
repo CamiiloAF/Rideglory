@@ -41,19 +41,19 @@ class _RiderTelemetryPanelState extends State<RiderTelemetryPanel> {
       duration: const Duration(milliseconds: 250),
       curve: Curves.easeOutCubic,
       height: height,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: AppColors.darkCard,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        border: Border(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        border: const Border(
           top: BorderSide(color: AppColors.darkBorderPrimary),
           left: BorderSide(color: AppColors.darkBorderPrimary),
           right: BorderSide(color: AppColors.darkBorderPrimary),
         ),
         boxShadow: [
           BoxShadow(
-            color: Color(0x59000000),
+            color: AppColors.darkBgPrimary.withValues(alpha: 0.35),
             blurRadius: 28,
-            offset: Offset(0, -12),
+            offset: const Offset(0, -12),
           ),
         ],
       ),

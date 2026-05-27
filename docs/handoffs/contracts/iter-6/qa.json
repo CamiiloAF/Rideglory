@@ -1,0 +1,23 @@
+{
+  "iteration": 6,
+  "phase": "qa",
+  "status": "pass",
+  "updatedAt": "2026-05-27T18:10:00Z",
+  "summary": "QA sign-off GREEN. 119/119 automated tests pass, 11/11 manual smoke tests pass, 17/17 DoD grep checks pass, 0 blocking bugs filed. 5 mid-iteration regressions resolved in-iteration.",
+  "metrics": {
+    "tokens": 0,
+    "costUsd": 0
+  },
+  "artifacts": [
+    "docs/handoffs/qa.md",
+    "docs/handoffs/contracts/iter-6/qa.json",
+    "workflow/state.json"
+  ],
+  "qualityGates": [
+    { "name": "required_artifacts_present", "status": "pass" },
+    { "name": "tests_passed_or_accepted", "status": "pass" },
+    { "name": "manual_smoke_tests_passed", "status": "pass" },
+    { "name": "dod_grep_checks_passed", "status": "pass" },
+    { "name": "no_blocking_bugs", "status": "pass" }
+  ]
+}

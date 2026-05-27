@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/date_extensions.dart';
-import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
+import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenance_right_badge.dart';
 import 'package:rideglory/features/maintenance/presentation/maintenance_type_style.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
@@ -48,9 +48,9 @@ class MaintenanceGroupedListItem extends StatelessWidget {
     required this.onTap,
   });
 
-  static const _successColor = Color(0xFF22C55E);
-  static const _warningColor = Color(0xFFEAB308);
-  static const _completedColor = Color(0xFF6B7280);
+  static const _successColor = AppColors.statusGreen;
+  static const _warningColor = AppColors.statusWarning;
+  static const _completedColor = AppColors.textOnDarkTertiary;
 
   Color get _statusColor => switch (status) {
     MaintenanceItemStatus.overdue => AppColors.error,
@@ -60,22 +60,22 @@ class MaintenanceGroupedListItem extends StatelessWidget {
   };
 
   Color get _cardBackground => switch (status) {
-    MaintenanceItemStatus.overdue => const Color(0xFF1A0A0A),
-    MaintenanceItemStatus.upcoming => const Color(0xFF1A1600),
+    MaintenanceItemStatus.overdue => AppColors.errorSubtle,
+    MaintenanceItemStatus.upcoming => AppColors.warningSubtle,
     MaintenanceItemStatus.current => AppColors.darkCard,
     MaintenanceItemStatus.completed => AppColors.darkCard,
   };
 
   Color get _cardBorder => switch (status) {
-    MaintenanceItemStatus.overdue => const Color(0x30EF4444),
-    MaintenanceItemStatus.upcoming => const Color(0x30EAB308),
+    MaintenanceItemStatus.overdue => AppColors.statusError.withValues(alpha: 0.19),
+    MaintenanceItemStatus.upcoming => AppColors.statusWarning.withValues(alpha: 0.19),
     MaintenanceItemStatus.current => AppColors.darkBorderPrimary,
     MaintenanceItemStatus.completed => AppColors.darkBorderPrimary,
   };
 
   Color get _iconBackground => switch (status) {
-    MaintenanceItemStatus.overdue => const Color(0x20EF4444),
-    MaintenanceItemStatus.upcoming => const Color(0x20EAB308),
+    MaintenanceItemStatus.overdue => AppColors.statusError.withValues(alpha: 0.13),
+    MaintenanceItemStatus.upcoming => AppColors.statusWarning.withValues(alpha: 0.13),
     MaintenanceItemStatus.current => MaintenanceTypeStyle.color(
       maintenance.type,
     ).withValues(alpha: 0.12),
@@ -95,12 +95,6 @@ class MaintenanceGroupedListItem extends StatelessWidget {
     ),
   };
 
-  int? _kmDelta(int currentMileage) {
-    final next = maintenance.nextOdometer;
-    if (next == null) return null;
-    return (next - currentMileage).abs();
-  }
-
   String _subtitle(BuildContext context, int currentMileage) {
     final numberFormat = NumberFormat('#,###');
     if (maintenance.mode == MaintenanceMode.completed) {
@@ -114,8 +108,8 @@ class MaintenanceGroupedListItem extends StatelessWidget {
     }
 
     if (maintenance.nextOdometer != null) {
-      final delta = _kmDelta(currentMileage);
-      final km = numberFormat.format(delta ?? maintenance.nextOdometer);
+      final delta = (maintenance.nextOdometer! - currentMileage).abs();
+      final km = numberFormat.format(delta);
       if (status == MaintenanceItemStatus.overdue) return 'Atrasado por $km km';
       return 'Próximo en $km km';
     }
@@ -126,43 +120,6 @@ class MaintenanceGroupedListItem extends StatelessWidget {
       return 'Próximo el ${maintenance.nextDate!.formattedDate}';
     }
     return maintenance.type.label;
-  }
-
-  Widget _rightBadge(BuildContext context, int currentMileage) {
-    final numberFormat = NumberFormat('#,###');
-    if (maintenance.mode == MaintenanceMode.completed) {
-      return const SizedBox.shrink();
-    }
-    if (maintenance.nextOdometer != null) {
-      final delta = _kmDelta(currentMileage);
-      final km = numberFormat.format(delta ?? maintenance.nextOdometer);
-      final label = status == MaintenanceItemStatus.overdue
-          ? context.l10n.maintenance_expired_label
-          : context.l10n.maintenance_km_remaining;
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
-            '$km km',
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: _statusColor,
-              fontWeight: FontWeight.w700,
-              fontSize: 15,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: _statusColor,
-              fontWeight: FontWeight.w600,
-              fontSize: 10,
-            ),
-          ),
-        ],
-      );
-    }
-    return const SizedBox.shrink();
   }
 
   int _currentMileageFor(VehicleCubit cubit) {
@@ -232,7 +189,12 @@ class MaintenanceGroupedListItem extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                _rightBadge(context, currentMileage),
+                MaintenanceRightBadge(
+                  maintenance: maintenance,
+                  status: status,
+                  statusColor: _statusColor,
+                  currentMileage: currentMileage,
+                ),
               ],
             ),
           ),

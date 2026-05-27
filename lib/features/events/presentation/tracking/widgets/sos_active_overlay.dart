@@ -61,26 +61,11 @@ class SosActiveOverlay extends StatelessWidget {
               ),
               AppSpacing.gapXxl,
               AppSpacing.gapXxl,
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton(
-                  onPressed: onDismiss,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.error,
-                    side: const BorderSide(color: AppColors.error, width: 1.5),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Text(
-                    context.l10n.map_sosDismiss,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 15,
-                    ),
-                  ),
-                ),
+              AppButton(
+                label: context.l10n.map_sosDismiss,
+                onPressed: onDismiss,
+                variant: AppButtonVariant.danger,
+                style: AppButtonStyle.outlined,
               ),
             ],
           ),

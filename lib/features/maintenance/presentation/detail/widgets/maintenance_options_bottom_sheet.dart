@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
@@ -40,7 +41,7 @@ class MaintenanceOptionsBottomSheet extends StatelessWidget {
               style: context.bodyLarge?.copyWith(color: Colors.white),
             ),
             onTap: () {
-              Navigator.pop(context, MaintenanceAction.edit);
+              context.pop(MaintenanceAction.edit);
             },
           ),
           ListTile(
@@ -50,7 +51,7 @@ class MaintenanceOptionsBottomSheet extends StatelessWidget {
               style: context.bodyLarge?.copyWith(color: AppColors.error),
             ),
             onTap: () {
-              Navigator.pop(context, MaintenanceAction.delete);
+              context.pop(MaintenanceAction.delete);
             },
           ),
           AppSpacing.gapLg,

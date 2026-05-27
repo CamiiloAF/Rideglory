@@ -274,3 +274,8 @@ New frames to create (pattern: `[Feature] — [Screen] — [State]`):
 - `Tracking — Organizer — Control Bar`
 - `Tracking — Ride Finished Overlay`
 - `Event Detail — Iniciar Rodada Dialog`
+
+
+## Change log (refactor-01 approval)
+- 2026-05-27 (refactor-01 approval): Refactor & Cleanup Extremo approved — 17 stories. No new design work expected from `design` agent for refactor-01: zero new screens, zero new flows, zero copy changes (beyond unifying duplicate l10n keys in REFACTOR-15). One design-system addition: `AppFormNavHeader` molecule in `lib/design_system/molecules/` (REFACTOR-14) — parametrizable header consolidating `VehicleFormNavHeader`, `MaintenanceFormNavHeader`, and the inline `AppBar` in `event_form_view.dart`. UX guardrail for the developer: visual parity is mandatory across all 3 form screens (vehicle add/edit, maintenance add/edit, event create/edit) — verify with before/after screenshots before merging REFACTOR-14. The maintenance variant requires the `bottom` slot for progress bars (height 52, pill-style "Listo" button); the vehicle/event variants use text actions (height 56, text "Guardar"/"Publicar"). Out of scope: any change to live map overlay headers (`LiveMapSimpleAppBar`, `LiveMapOverlayAppBar`) or list page headers (`MaintenancesPageAppBar`).
+- 2026-05-27 (iter-6 refactor-01 design): Stand-down. AppFormNavHeader API approved for 3 callsites. statusGreen/statusWarning/statusError are additions, not replacements. 6-screenshot regression checklist issued. No new screens, no mockups, no copy.

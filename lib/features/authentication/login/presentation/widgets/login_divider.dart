@@ -9,26 +9,20 @@ class LoginDivider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          child: Divider(
-            color: context.colorScheme.outlineVariant,
-            height: 1,
-          ),
+        const Expanded(
+          child: Divider(height: 1, color: AppColors.darkBorderPrimary),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text(
             context.l10n.auth_orContinueWithStitch,
             style: context.textTheme.labelSmall?.copyWith(
-              color: context.colorScheme.onSurfaceVariant,
+              color: AppColors.textOnDarkSecondary,
             ),
           ),
         ),
-        Expanded(
-          child: Divider(
-            color: context.colorScheme.outlineVariant,
-            height: 1,
-          ),
+        const Expanded(
+          child: Divider(height: 1, color: AppColors.darkBorderPrimary),
         ),
       ],
     );

@@ -1,0 +1,68 @@
+{
+  "iteration": 6,
+  "phase": "po_scope",
+  "status": "pass",
+  "updatedAt": "2026-05-27T10:00:00Z",
+  "summary": "17 violation-framed user stories (US-6-1..US-6-17) mapped to REFACTOR-01..15; 19 tasks created; backend stand-down confirmed; architect next for AppFormNavHeader API and unnamed-route decisions",
+  "metrics": {
+    "tokens": 0,
+    "costUsd": 0
+  },
+  "artifacts": [
+    "docs/handoffs/po.md",
+    "workflow/state.json",
+    "docs/handoffs/iteration_checkpoint.md",
+    "docs/handoffs/contracts/iter-6/po_scope.json",
+    ".claude/skills/po-skill.md"
+  ],
+  "qualityGates": [
+    {
+      "name": "required_artifacts_present",
+      "status": "pass"
+    },
+    {
+      "name": "scope_defined",
+      "status": "pass"
+    },
+    {
+      "name": "17 user stories written (US-6-1..US-6-17)",
+      "status": "pass"
+    },
+    {
+      "name": "19 tasks added to workflow/state.json (T-6-1..T-6-19)",
+      "status": "pass"
+    },
+    {
+      "name": "Backend stand-down documented",
+      "status": "pass"
+    },
+    {
+      "name": "Scope decisions documented (5 items)",
+      "status": "pass"
+    },
+    {
+      "name": "Assumptions documented (6 items)",
+      "status": "pass"
+    },
+    {
+      "name": "Risks documented (6 items)",
+      "status": "pass"
+    },
+    {
+      "name": "Bridge for Architect written (5 items)",
+      "status": "pass"
+    },
+    {
+      "name": "iteration_checkpoint.md updated to active / po_scope done",
+      "status": "pass"
+    },
+    {
+      "name": "api_base_url_resolver.dart excluded from scope",
+      "status": "pass"
+    },
+    {
+      "name": "REFACTOR-12 bundled with T-6-2 (not a standalone story)",
+      "status": "pass"
+    }
+  ]
+}
