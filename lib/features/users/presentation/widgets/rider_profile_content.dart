@@ -3,6 +3,8 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/core/utils/initials.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
+import 'package:rideglory/features/users/presentation/widgets/rider_avatar.dart';
+import 'package:rideglory/features/users/presentation/widgets/rider_stats_row.dart';
 
 class RiderProfileContent extends StatelessWidget {
   const RiderProfileContent({super.key, required this.user});
@@ -16,7 +18,7 @@ class RiderProfileContent extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
       children: [
-        _RiderAvatar(initials: initials),
+        RiderAvatar(initials: initials),
         AppSpacing.gapMd,
         Center(
           child: Text(
@@ -66,7 +68,7 @@ class RiderProfileContent extends StatelessWidget {
           ),
         ],
         AppSpacing.gapXxl,
-        _RiderStatsRow(
+        RiderStatsRow(
           eventsLabel: context.l10n.rider_statsEvents,
           followersLabel: context.l10n.rider_statsFollowers,
           followingLabel: context.l10n.rider_statsFollowing,
@@ -77,118 +79,6 @@ class RiderProfileContent extends StatelessWidget {
           onPressed: () {},
         ),
       ],
-    );
-  }
-}
-
-class _RiderAvatar extends StatelessWidget {
-  const _RiderAvatar({required this.initials});
-
-  final String initials;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 88,
-        height: 88,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppColors.primary,
-              AppColors.primary.withValues(alpha: 0.4), // Intentional: gradient stop — alpha variant of primary
-            ],
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(3),
-          child: Container(
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.darkCard,
-            ),
-            child: Center(
-              child: Text(
-                initials,
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textOnDarkPrimary,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _RiderStatsRow extends StatelessWidget {
-  const _RiderStatsRow({
-    required this.eventsLabel,
-    required this.followersLabel,
-    required this.followingLabel,
-  });
-
-  final String eventsLabel;
-  final String followersLabel;
-  final String followingLabel;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        _StatCell(value: '0', label: eventsLabel),
-        const SizedBox(width: 8),
-        _StatCell(value: '0', label: followersLabel),
-        const SizedBox(width: 8),
-        _StatCell(value: '0', label: followingLabel),
-      ],
-    );
-  }
-}
-
-class _StatCell extends StatelessWidget {
-  const _StatCell({required this.value, required this.label});
-
-  final String value;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: BoxDecoration(
-          color: AppColors.darkCard,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textOnDarkPrimary,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 11,
-                color: AppColors.textOnDarkSecondary,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
