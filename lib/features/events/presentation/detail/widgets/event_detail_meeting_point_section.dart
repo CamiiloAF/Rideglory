@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/features/events/presentation/detail/widgets/sections/event_detail_address_text.dart';
+import 'package:rideglory/features/events/presentation/detail/widgets/sections/event_detail_view_map_pill.dart';
 import 'package:rideglory/shared/models/address_location.dart';
 
 /// Route section in the event detail.
@@ -76,7 +78,7 @@ class EventDetailMeetingPointSection extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: _AddressText(
+                      child: EventDetailAddressText(
                         meetingPoint: meetingPoint,
                         destination: destination,
                         routePoints: routePoints,
@@ -85,7 +87,7 @@ class EventDetailMeetingPointSection extends StatelessWidget {
                     ),
                     if (onViewMap != null && hasRoute) ...[
                       const SizedBox(width: 12),
-                      _ViewMapPill(onTap: onViewMap!),
+                      EventDetailViewMapPill(onTap: onViewMap!),
                     ],
                   ],
                 ),
@@ -94,120 +96,6 @@ class EventDetailMeetingPointSection extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _AddressText extends StatelessWidget {
-  const _AddressText({
-    required this.meetingPoint,
-    required this.destination,
-    required this.routePoints,
-    required this.hasRoute,
-  });
-
-  final String meetingPoint;
-  final String? destination;
-  final List<AddressLocation> routePoints;
-  final bool hasRoute;
-
-  @override
-  Widget build(BuildContext context) {
-    // Custom route: show all waypoint labels from routeGeoJson
-    if (hasRoute && routePoints.isNotEmpty) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (var i = 0; i < routePoints.length; i++) ...[
-            if (i > 0) const SizedBox(height: 4),
-            _RoutePointText(
-              color: i == 0 ? AppColors.success : AppColors.primary,
-              label: routePoints[i].label ?? (i == 0 ? meetingPoint : destination ?? ''),
-            ),
-          ],
-        ],
-      );
-    }
-
-    // Simple route: show meetingPoint text only
-    return Text(
-      meetingPoint,
-      style: const TextStyle(
-        color: AppColors.textOnDarkSecondary,
-        fontSize: 13,
-      ),
-    );
-  }
-}
-
-class _RoutePointText extends StatelessWidget {
-  const _RoutePointText({required this.color, required this.label});
-
-  final Color color;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          width: 8,
-          height: 8,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        ),
-        const SizedBox(width: 6),
-        Expanded(
-          child: Text(
-            label,
-            style: const TextStyle(
-              color: AppColors.textOnDarkSecondary,
-              fontSize: 12,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ViewMapPill extends StatelessWidget {
-  const _ViewMapPill({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: AppColors.primary,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              Icons.location_on_outlined,
-              color: AppColors.darkBgPrimary,
-              size: 12,
-            ),
-            const SizedBox(width: 4),
-            Text(
-              context.l10n.event_viewMap,
-              style: const TextStyle(
-                color: AppColors.darkBgPrimary,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
