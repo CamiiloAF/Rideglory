@@ -24,7 +24,11 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
 
   void setCurrentVehicleMileage(int mileage) {
     _currentVehicleMileage = mileage;
-    _applyClientFiltersAndEmit();
+    // Only re-filter if data is already loaded; otherwise fetchMaintenances will
+    // pick up the correct mileage when it resolves.
+    if (_allMaintenances.isNotEmpty) {
+      _applyClientFiltersAndEmit();
+    }
   }
 
   void setInitialVehicleFilter(String vehicleId) {

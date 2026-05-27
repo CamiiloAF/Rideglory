@@ -20,10 +20,8 @@ import 'package:rideglory/features/events/presentation/tracking/live_map_page.da
 import 'package:rideglory/features/events/presentation/tracking/participants/participants_placeholder_page.dart';
 import 'package:rideglory/features/home/presentation/home_page.dart';
 import 'package:rideglory/features/notifications/presentation/notifications_page.dart';
-import 'package:rideglory/features/soat/presentation/pages/soat_manual_form_page.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_upload_page.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_status_page.dart';
-import 'package:rideglory/features/soat/domain/models/soat_model.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
@@ -39,6 +37,7 @@ import '../../features/maintenance/presentation/detail/maintenance_detail_page.d
 import '../../features/maintenance/presentation/form/maintenance_form_page.dart';
 import '../../features/maintenance/presentation/list/maintenances/maintenances_page.dart';
 import '../../features/splash/presentation/splash_screen.dart';
+import '../../features/vehicles/presentation/detail/vehicle_detail_page.dart';
 import '../../features/vehicles/presentation/form/vehicle_form_page.dart';
 import '../../features/vehicles/presentation/garage/garage_page.dart';
 import '../../features/vehicles/presentation/soat/soat_upload_page.dart' as vehicle_soat;
@@ -193,6 +192,14 @@ class AppRouter {
         name: AppRoutes.createVehicle,
         builder: (context, state) {
           return const VehicleFormPage();
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.vehicleDetail,
+        name: AppRoutes.vehicleDetail,
+        builder: (context, state) {
+          final vehicle = state.extra as VehicleModel;
+          return VehicleDetailPage(vehicle: vehicle);
         },
       ),
       GoRoute(
@@ -354,16 +361,6 @@ class AppRouter {
         builder: (context, state) {
           final vehicle = state.extra as VehicleModel;
           return SoatStatusPage(vehicle: vehicle);
-        },
-      ),
-      GoRoute(
-        path: AppRoutes.soatManualForm,
-        name: AppRoutes.soatManualForm,
-        builder: (context, state) {
-          final extra = state.extra as Map<String, dynamic>;
-          final vehicle = extra['vehicle'] as VehicleModel;
-          final existingSoat = extra['existingSoat'] as SoatModel?;
-          return SoatManualFormPage(vehicle: vehicle, existingSoat: existingSoat);
         },
       ),
     ],

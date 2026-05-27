@@ -1,0 +1,107 @@
+name: ✨ Mejora / Improvement
+description: Propone una mejora a una funcionalidad existente de la app
+title: "[IMPROVEMENT] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Usa este template para proponer mejoras a funcionalidades que ya existen en la app.
+        Para nuevas funcionalidades desde cero, abre un issue de tipo **Feature Request**.
+
+  - type: dropdown
+    id: feature
+    attributes:
+      label: Módulo / Feature
+      description: ¿Qué parte de la app se mejoraría?
+      options:
+        - Autenticación
+        - Home / Garaje
+        - Vehículos — Agregar / Editar
+        - Vehículos — SOAT
+        - Vehículos — Mantenimiento
+        - Eventos — Listado / Detalle
+        - Eventos — Registro
+        - Eventos — Mapa en vivo
+        - Perfil de usuario
+        - Notificaciones
+        - Diseño / UI general
+        - Rendimiento
+        - Otro
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área de impacto
+      description: ¿Qué tipo de mejora es?
+      options:
+        - 🎨 UI / Visual — apariencia, espaciado, colores
+        - 🧭 UX / Flujo — navegación, interacción, feedback
+        - ⚡ Rendimiento — velocidad, carga, memoria
+        - ♿ Accesibilidad — tamaños de fuente, contraste, lector de pantalla
+        - 🔒 Seguridad / Privacidad
+        - 🔧 Técnica — refactor, deuda técnica, arquitectura
+        - 📝 Contenido / Texto — copy, traducciones, mensajes de error
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridad sugerida
+      options:
+        - 🔴 Alta — impacta flujos principales o muchos usuarios
+        - 🟠 Media — mejora notable pero tiene workaround
+        - 🟢 Baja — pulido, nice-to-have
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_behavior
+    attributes:
+      label: Comportamiento actual
+      description: Describe cómo funciona hoy la funcionalidad que quieres mejorar.
+      placeholder: "Al registrarme en un evento, el botón 'Confirmar' no da ningún feedback visual mientras carga."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_improvement
+    attributes:
+      label: Mejora propuesta
+      description: Describe con claridad qué debería cambiar y cómo debería funcionar después del cambio.
+      placeholder: |
+        Mostrar un indicador de carga (spinner) dentro del botón mientras se procesa el registro,
+        y deshabilitar el botón para evitar doble envío.
+    validations:
+      required: true
+
+  - type: textarea
+    id: user_impact
+    attributes:
+      label: Impacto en el usuario
+      description: ¿Por qué esta mejora vale la pena? ¿Qué problema del usuario resuelve?
+      placeholder: "El usuario no sabe si su acción fue registrada, lo que genera confusión y posibles clics duplicados."
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Criterios de aceptación
+      description: Lista las condiciones que deben cumplirse para considerar esta mejora completa.
+      placeholder: |
+        - [ ] El botón muestra un spinner mientras carga
+        - [ ] El botón queda deshabilitado durante la petición
+        - [ ] Al completar, el botón vuelve a su estado normal
+        - [ ] Si falla, se muestra un mensaje de error claro
+    validations:
+      required: false
+
+  - type: textarea
+    id: references
+    attributes:
+      label: Referencias visuales o contexto adicional
+      description: Capturas de pantalla, videos, enlaces a diseños en Pencil, o cualquier contexto que ayude a entender la mejora.

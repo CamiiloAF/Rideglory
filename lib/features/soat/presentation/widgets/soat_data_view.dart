@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/soat/domain/models/soat_model.dart';
+import 'package:rideglory/features/soat/presentation/cubit/soat_cubit.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_detail_row.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/shared/helpers/document_downloader.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-class SoatDataView extends StatelessWidget {
+class SoatDataView extends StatefulWidget {
   const SoatDataView({
     super.key,
     required this.vehicle,
@@ -19,8 +21,15 @@ class SoatDataView extends StatelessWidget {
   final VehicleModel vehicle;
   final SoatModel soat;
 
+  @override
+  State<SoatDataView> createState() => _SoatDataViewState();
+}
+
+class _SoatDataViewState extends State<SoatDataView> {
+  bool _openingDocument = false;
+
   Color _heroColor() {
-    return switch (soat.status) {
+    return switch (widget.soat.status) {
       SoatStatus.valid => AppColors.success,
       SoatStatus.expiringSoon => AppColors.warning,
       SoatStatus.expired => AppColors.error,
@@ -29,7 +38,7 @@ class SoatDataView extends StatelessWidget {
   }
 
   String _heroTitle(BuildContext context) {
-    return switch (soat.status) {
+    return switch (widget.soat.status) {
       SoatStatus.valid => context.l10n.soat_valid_title,
       SoatStatus.expiringSoon => context.l10n.soat_expiring_title,
       SoatStatus.expired => context.l10n.soat_expired_title,
@@ -38,8 +47,8 @@ class SoatDataView extends StatelessWidget {
   }
 
   String _daysChip(BuildContext context) {
-    final days = soat.daysUntilExpiry;
-    return switch (soat.status) {
+    final days = widget.soat.daysUntilExpiry;
+    return switch (widget.soat.status) {
       SoatStatus.valid => context.l10n.soat_valid_days_remaining(days),
       SoatStatus.expiringSoon =>
         context.l10n.soat_expiring_days_remaining(days),
@@ -49,11 +58,25 @@ class SoatDataView extends StatelessWidget {
   }
 
   String? _warningText(BuildContext context) {
-    return switch (soat.status) {
+    return switch (widget.soat.status) {
       SoatStatus.expiringSoon => context.l10n.soat_expiring_warning,
       SoatStatus.expired => context.l10n.soat_expired_warning,
       _ => null,
     };
+  }
+
+  Future<void> _openDocument() async {
+    if (_openingDocument) return;
+    setState(() => _openingDocument = true);
+    try {
+      final url = widget.soat.documentUrl!;
+      await DocumentDownloader.openRemote(
+        url,
+        DocumentDownloader.fileNameFromUrl(url),
+      );
+    } finally {
+      if (mounted) setState(() => _openingDocument = false);
+    }
   }
 
   @override
@@ -117,13 +140,13 @@ class SoatDataView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: (soat.status == SoatStatus.expired
+                color: (widget.soat.status == SoatStatus.expired
                         ? AppColors.error
                         : AppColors.warning)
                     .withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: (soat.status == SoatStatus.expired
+                  color: (widget.soat.status == SoatStatus.expired
                           ? AppColors.error
                           : AppColors.warning)
                       .withValues(alpha: 0.3),
@@ -135,7 +158,7 @@ class SoatDataView extends StatelessWidget {
                   Icon(
                     Icons.warning_amber_rounded,
                     size: 18,
-                    color: soat.status == SoatStatus.expired
+                    color: widget.soat.status == SoatStatus.expired
                         ? AppColors.error
                         : AppColors.warning,
                   ),
@@ -144,7 +167,7 @@ class SoatDataView extends StatelessWidget {
                     child: Text(
                       warningText,
                       style: TextStyle(
-                        color: soat.status == SoatStatus.expired
+                        color: widget.soat.status == SoatStatus.expired
                             ? AppColors.error
                             : AppColors.warning,
                         fontSize: 13,
@@ -168,45 +191,50 @@ class SoatDataView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (soat.policyNumber != null)
+                if (widget.soat.policyNumber != null)
                   SoatDetailRow(
                     label: context.l10n.soat_field_policy_number,
-                    value: soat.policyNumber!,
+                    value: widget.soat.policyNumber!,
                   ),
-                if (soat.insurer != null)
+                if (widget.soat.insurer != null)
                   SoatDetailRow(
                     label: context.l10n.soat_field_insurer,
-                    value: soat.insurer!,
+                    value: widget.soat.insurer!,
                   ),
-                if (soat.startDate != null)
+                if (widget.soat.startDate != null)
                   SoatDetailRow(
                     label: context.l10n.soat_field_start_date,
-                    value: dateFormat.format(soat.startDate!),
+                    value: dateFormat.format(widget.soat.startDate!),
                   ),
                 SoatDetailRow(
                   label: context.l10n.soat_field_expiry_date,
-                  value: dateFormat.format(soat.expiryDate),
+                  value: dateFormat.format(widget.soat.expiryDate),
                   isLast: true,
                 ),
               ],
             ),
           ),
-          if (soat.documentUrl != null) ...[
+          if (widget.soat.documentUrl != null) ...[
             const SizedBox(height: 16),
             AppButton(
-              label: context.l10n.soat_view_document,
-              onPressed: () => launchUrl(Uri.parse(soat.documentUrl!)),
+              label: _openingDocument
+                  ? context.l10n.soat_downloading
+                  : context.l10n.soat_view_document,
+              onPressed: _openingDocument ? null : _openDocument,
               isFullWidth: true,
             ),
           ],
           const SizedBox(height: 12),
-          if (soat.status == SoatStatus.expired)
+          if (widget.soat.status == SoatStatus.expired)
             AppButton(
               label: context.l10n.soat_renew_btn,
-              onPressed: () => context.pushNamed(
-                AppRoutes.soatUpload,
-                extra: vehicle,
-              ),
+              onPressed: () => context
+                  .pushNamed(AppRoutes.vehicleSoat, extra: widget.vehicle)
+                  .then((_) {
+                if (context.mounted) {
+                  context.read<SoatCubit>().load(widget.vehicle.id ?? '');
+                }
+              }),
               isFullWidth: true,
             ),
           const SizedBox(height: 32),

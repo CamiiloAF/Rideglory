@@ -128,7 +128,11 @@ class GarageOptionsBottomSheet extends StatelessWidget {
                 extra: vehicle,
               );
               if (!parentContext.mounted || result == null) return;
-              if (result is MaintenanceModel) {
+              // The form pops with List<MaintenanceModel> (1 primary + optional scheduled).
+              // Fall back to a single MaintenanceModel for legacy callers.
+              if (result is List<MaintenanceModel> && result.isNotEmpty) {
+                onMaintenanceCreated?.call(result.first);
+              } else if (result is MaintenanceModel) {
                 onMaintenanceCreated?.call(result);
               } else if (vehicle.id != null) {
                 onMaintenanceRefreshRequested?.call(vehicle.id!);

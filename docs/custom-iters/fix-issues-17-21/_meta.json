@@ -1,0 +1,55 @@
+{
+  "slug": "fix-issues-17-21",
+  "sourcePrdPath": "improvements/fix-issues-17-21.md",
+  "project": "Rideglory",
+  "existingBase": "/Users/cami/Developer/Personal/Rideglory",
+  "startedAt": "2026-05-22T00:00:00Z",
+  "status": "ready_for_human_review",
+  "completedAt": "2026-05-22T23:59:00Z",
+  "phaseLog": [
+    {
+      "phase": "po",
+      "agent": "po",
+      "at": "2026-05-22T21:40:00Z",
+      "summary": "PO analysis complete: 2 bugs mapped to code — #17 soatLocalPath not sent to backend on vehicle create (vehicle_form_page.dart + vehicle_form_cubit.dart), #21 missing loading state in registration vehicle selector (registration_form_content.dart). No backend changes needed. PRD and handoff written."
+    },
+    {
+      "phase": "architect",
+      "agent": "architect",
+      "at": "2026-05-22T22:10:00Z",
+      "summary": "Architect analysis complete. Fix #17 reuses SoatConfirmationPage by redirecting from vehicle_form_page._formListener after successful creation when soatLocalPath is set (no cubit/state/contract changes; SoatModel requires dates+insurer which user supplies in confirmation page). Fix #21 refactors BlocBuilder in registration_form_content.dart to drive UI from ResultState.when (spinner on initial/loading, selector on data, empty CTA on empty/error), with 3 new widget files extracted per rideglory-coding-standards one-widget-per-file rule. No backend, no DB, no design, no ARB. Frontend and QA slim handoffs written."
+    },
+    {
+      "phase": "frontend",
+      "agent": "frontend",
+      "at": "2026-05-22T23:00:00Z",
+      "summary": "Implementation complete. Fix #17: vehicle_form_page.dart _formListener now checks soatLocalPath on new vehicle creation; if present, uses Navigator.pushReplacement with MaterialPageRoute to open SoatConfirmationPage (which handles upload + VehicleCubit.updateSoatLocally + double-pop on success). Fix #21: BlocBuilder in registration_form_content.dart refactored to use state.when() snapshot; 3 new widget files created (VehicleSelectorLoading, VehicleSelectorEmpty, VehicleSelectorField). dart analyze: 0 new issues in modified/created files (45 pre-existing). flutter test: 108/108 passed, 0 regressions."
+    },
+    {
+      "phase": "qa",
+      "agent": "qa",
+      "at": "2026-05-22T23:45:00Z",
+      "summary": "QA complete. 11 new tests added (3 VehicleSelectorLoading widget tests, 3 VehicleSelectorEmpty widget tests, 5 VehicleFormCubit soat unit tests). Full suite: 119/119 passed. dart analyze: 0 new issues in changed/new files (45 pre-existing unchanged). Code quality: all 3 new widget files comply with one-widget-per-file rule, no hardcoded strings, ResultState.when() correctly covers all 5 branches. Pre-existing violation in soat_confirmation_page.dart (multiple widgets) noted but out of scope. Sign-off: conditional — pending human E2E smoke test for AC-1, AC-2, AC-3, AC-4 on device/simulator."
+    },
+    {
+      "phase": "tech_lead",
+      "agent": "tech_lead",
+      "at": "2026-05-22T00:00:00Z",
+      "summary": "Tech Lead review complete. Verdict: ready_for_human_review. All automated gates pass (119/119 tests, dart analyze 0 new issues). Two major findings: (1) missing context.mounted guard before Navigator.pushReplacement in _formListener (low actual risk in BlocListener, but inconsistent with project conventions); (2) SoatConfirmationPage double-pop (Navigator.pop + router.pop) may over-pop go_router stack when reached via Navigator.pushReplacement — must be validated on device. Fix #21 (BlocBuilder refactor + 3 extracted widgets) is clean with no concerns. Architecture compliance: full pass. Required manual probes: AC-1 full SOAT creation navigation flow, AC-3 no-SOAT regression, AC-4 airplane mode SOAT error, edit-vehicle regression."
+    },
+    {
+      "phase": "po_close",
+      "agent": "po",
+      "at": "2026-05-22T23:59:00Z",
+      "summary": "PO close complete. REVIEW_CHECKLIST.md and SUMMARY.md written. _meta.json updated to ready_for_human_review. 9 manual probes defined (4 for Fix #17 SOAT navigation, 3 for Fix #21 selector, 2 regression checks for pre-existing fixes #16/#20). Medium-risk nav double-pop watchpoint called out as the only non-automated gate. Commit message carried from tech_lead handoff."
+    }
+  ],
+  "decisions": {
+    "uiChanges": false,
+    "backendChanges": false,
+    "frontendChanges": true,
+    "dbChanges": false,
+    "needsDesign": false
+  },
+  "preExistingDirtyTree": true
+}

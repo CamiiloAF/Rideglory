@@ -7,11 +7,13 @@ class SoatUploadOptionCard extends StatelessWidget {
     super.key,
     required this.onCameraTap,
     required this.onGalleryTap,
+    required this.onFileTap,
     required this.isLoading,
   });
 
   final VoidCallback onCameraTap;
   final VoidCallback onGalleryTap;
+  final VoidCallback onFileTap;
   final bool isLoading;
 
   @override
@@ -76,6 +78,16 @@ class SoatUploadOptionCard extends StatelessWidget {
                   isPrimary: false,
                   isLoading: isLoading,
                   onTap: onGalleryTap,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: _SourceButton(
+                  icon: Icons.picture_as_pdf_outlined,
+                  label: context.l10n.vehicle_soat_file_button,
+                  isPrimary: false,
+                  isLoading: isLoading,
+                  onTap: onFileTap,
                 ),
               ),
             ],

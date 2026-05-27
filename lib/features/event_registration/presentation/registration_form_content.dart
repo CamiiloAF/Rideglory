@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/domain/result_state.dart';
@@ -9,6 +8,9 @@ import 'package:rideglory/features/event_registration/domain/model/event_registr
 import 'package:rideglory/features/event_registration/presentation/cubit/registration_form_cubit.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_form_section_card.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/save_to_profile_checkbox.dart';
+import 'package:rideglory/features/event_registration/presentation/widgets/vehicle_selector_empty.dart';
+import 'package:rideglory/features/event_registration/presentation/widgets/vehicle_selector_field.dart';
+import 'package:rideglory/features/event_registration/presentation/widgets/vehicle_selector_loading.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
@@ -44,6 +46,22 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
   late final FormFocusChain _focusChain = FormFocusChain(
     _registrationFocusChainFields,
   );
+
+  @override
+  void initState() {
+    super.initState();
+    // Si los vehículos aún no se han cargado (el usuario llegó directo sin
+    // pasar por el garaje), disparar el fetch para que el selector no quede
+    // en spinner infinito.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<VehicleCubit>().state.maybeWhen(
+        initial: () => context.read<VehicleCubit>().fetchMyVehicles(),
+        orElse: () {},
+      );
+    });
+  }
+
   @override
   void dispose() {
     _focusChain.dispose();
@@ -405,75 +423,26 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
           icon: Icons.two_wheeler_outlined,
           title: context.l10n.registration_vehicleData,
           child: BlocBuilder<VehicleCubit, ResultState<List<VehicleModel>>>(
-            builder: (context, _) {
-              final availableVehicles = context
-                  .read<VehicleCubit>()
-                  .availableVehicles
-                  .where((vehicle) => !vehicle.isArchived)
-                  .toList();
-
-              if (availableVehicles.isEmpty) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      context.l10n.registration_vehicleEmptyStateTitle,
-                      style: context.bodyMedium?.copyWith(
-                        color: context.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    AppSpacing.gapMd,
-                    AppButton(
-                      label: context.l10n.registration_createVehicleCta,
-                      onPressed: () => _openCreateVehicle(context),
-                      style: AppButtonStyle.outlined,
-                    ),
-                  ],
-                );
-              }
-
-              return FormBuilderField<String>(
-                name: RegistrationFormFields.vehicleId,
-                validator: FormBuilderValidators.required(
-                  errorText: context.l10n.registration_vehicleBrandRequired,
-                ),
-                builder: (field) {
-                  final selectedVehicle = availableVehicles
-                      .where((v) => v.id == field.value)
-                      .firstOrNull;
-                  final displayText = selectedVehicle != null
-                      ? '${selectedVehicle.brand ?? ''} ${selectedVehicle.model ?? ''} - ${selectedVehicle.licensePlate ?? ''}'
-                            .trim()
-                      : context.l10n.registration_selectVehicleToPreload;
-
-                  return GestureDetector(
-                    onTap: () async {
-                      final picked = await VehicleSelectionBottomSheet.show(
-                        context: context,
-                        vehicles: availableVehicles,
-                        selectedVehicleId: field.value,
-                      );
-                      if (picked != null) {
-                        field.didChange(picked.id);
-                      }
-                    },
-                    child: InputDecorator(
-                      decoration: InputDecoration(
-                        labelText: context.l10n.registration_vehicleData,
-                        suffixIcon: const Icon(Icons.keyboard_arrow_down),
-                        errorText: field.errorText,
-                      ),
-                      child: Text(
-                        displayText,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: selectedVehicle != null
-                              ? context.colorScheme.onSurface
-                              : context.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ),
-                  );
+            builder: (context, state) {
+              return state.when(
+                initial: () => const VehicleSelectorLoading(),
+                loading: () => const VehicleSelectorLoading(),
+                data: (vehicles) {
+                  final available =
+                      vehicles.where((vehicle) => !vehicle.isArchived).toList();
+                  if (available.isEmpty) {
+                    return VehicleSelectorEmpty(
+                      onCreate: () => _openCreateVehicle(context),
+                    );
+                  }
+                  return VehicleSelectorField(availableVehicles: available);
                 },
+                empty: () => VehicleSelectorEmpty(
+                  onCreate: () => _openCreateVehicle(context),
+                ),
+                error: (_) => VehicleSelectorEmpty(
+                  onCreate: () => _openCreateVehicle(context),
+                ),
               );
             },
           ),

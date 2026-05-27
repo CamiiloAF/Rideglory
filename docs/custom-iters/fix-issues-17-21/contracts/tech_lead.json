@@ -1,0 +1,80 @@
+{
+  "phase": "tech_lead",
+  "verdict": "ready_for_human_review",
+  "completedAt": "2026-05-22T00:00:00Z",
+  "reviewedFiles": [
+    "lib/features/vehicles/presentation/form/vehicle_form_page.dart",
+    "lib/features/vehicles/presentation/cubit/vehicle_form_cubit.dart",
+    "lib/features/event_registration/presentation/registration_form_content.dart",
+    "lib/features/event_registration/presentation/widgets/vehicle_selector_loading.dart",
+    "lib/features/event_registration/presentation/widgets/vehicle_selector_empty.dart",
+    "lib/features/event_registration/presentation/widgets/vehicle_selector_field.dart",
+    "lib/features/events/presentation/list/events_cubit.dart",
+    "lib/features/vehicles/presentation/form/widgets/vehicle_form_docs_section.dart",
+    "test/features/event_registration/presentation/widgets/vehicle_selector_loading_test.dart",
+    "test/features/event_registration/presentation/widgets/vehicle_selector_empty_test.dart",
+    "test/features/vehicles/presentation/cubit/vehicle_form_cubit_soat_test.dart"
+  ],
+  "findings": [
+    {
+      "file": "lib/features/vehicles/presentation/form/vehicle_form_page.dart",
+      "line": "168-175",
+      "severity": "major",
+      "category": "defensive_coding",
+      "issue": "Missing context.mounted guard before Navigator.of(context).pushReplacement inside BlocListener callback",
+      "fix": "Add `if (!context.mounted) return;` before Navigator.of(context).pushReplacement call",
+      "blocker": false
+    },
+    {
+      "file": "lib/features/vehicles/presentation/form/vehicle_form_page.dart",
+      "line": "168-175",
+      "severity": "major",
+      "category": "navigation",
+      "issue": "SoatConfirmationPage.success calls Navigator.pop() + router.pop(). When reached via Navigator.pushReplacement(MaterialPageRoute), the double-pop may over-pop the go_router stack causing unexpected navigation destination. Requires manual device validation.",
+      "fix": "Human must verify AC-1 flow lands on garage correctly. If blank screen or wrong screen, remove router.pop() from SoatConfirmationPage success handler or pass a source flag.",
+      "blocker": false,
+      "requiresManualProbe": true
+    }
+  ],
+  "automatedGates": {
+    "dartAnalyze": {
+      "newIssues": 0,
+      "preExistingIssues": 45,
+      "status": "pass"
+    },
+    "flutterTest": {
+      "total": 119,
+      "passed": 119,
+      "failed": 0,
+      "newTests": 11,
+      "status": "pass"
+    }
+  },
+  "acCoverage": {
+    "AC-1": "partial_manual_required",
+    "AC-2": "pass_preexisting",
+    "AC-3": "pass_automated",
+    "AC-4": "pass_manual_recommended",
+    "AC-5": "pass_code_review",
+    "AC-6": "pass_automated",
+    "AC-7": "pass_automated",
+    "AC-8": "pass_automated"
+  },
+  "architectureCompliance": {
+    "layerBoundaries": "pass",
+    "localization": "pass",
+    "oneWidgetPerFile": "pass",
+    "noWidgetReturningMethods": "pass",
+    "resultStatePattern": "pass",
+    "noHardcodedStrings": "pass"
+  },
+  "securityFindings": [],
+  "regressionRisk": "low_with_medium_navigation_concern",
+  "requiredManualProbes": [
+    "AC-1: Full SOAT creation flow - verify landing screen after SoatConfirmationPage success",
+    "AC-3: Create vehicle without SOAT - verify no SOAT confirmation page appears",
+    "AC-4: SOAT upload error with airplane mode - verify vehicle preserved in garage",
+    "Regression: Edit existing vehicle - verify pops normally without SOAT redirect"
+  ],
+  "recommendedCommitMessage": "fix(vehicles,registration): persist SOAT after vehicle creation and fix vehicle selector loading state"
+}

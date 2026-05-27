@@ -52,11 +52,9 @@ class _VehicleSoatSectionState extends State<VehicleSoatSection> {
 
   void _onSoatTap(BuildContext context, SoatModel? soat) {
     if (soat == null) {
-      context.pushNamed(AppRoutes.soatUpload, extra: widget.vehicle).then(
-        (result) {
-          if (result == true && mounted) {
-            setState(_load);
-          }
+      context.pushNamed(AppRoutes.vehicleSoat, extra: widget.vehicle).then(
+        (_) {
+          if (mounted) setState(_load);
         },
       );
     } else {

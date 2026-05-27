@@ -1,0 +1,108 @@
+{
+  "slug": "fix-issues-17-21",
+  "phase": "architect",
+  "completedAt": "2026-05-22T22:10:00Z",
+  "summary": "Architect analysis complete. Fix #17 reuses existing SoatConfirmationPage by redirecting from vehicle_form_page._formListener after creation when soatLocalPath is set; no cubit/state/contract changes. Fix #21 refactors BlocBuilder in registration_form_content.dart to drive UI from ResultState (initial/loading/data/empty/error) instead of reading availableVehicles directly, with 3 new widget files extracted per coding standards. No backend, no DB, no design, no ARB changes.",
+  "decisions": {
+    "uiChanges": false,
+    "backendChanges": false,
+    "frontendChanges": true,
+    "dbChanges": false,
+    "needsDesign": false,
+    "needsBuildRunner": false,
+    "needsArbRegen": false
+  },
+  "changeMap": [
+    {
+      "path": "lib/features/vehicles/presentation/form/vehicle_form_page.dart",
+      "action": "modify",
+      "scope": "_formListener data branch",
+      "reason": "After successful vehicle creation, if state.soatLocalPath != null push SoatConfirmationPage with savedVehicle + XFile to persist SOAT via existing flow.",
+      "risk": "med"
+    },
+    {
+      "path": "lib/features/event_registration/presentation/registration_form_content.dart",
+      "action": "modify",
+      "scope": "BlocBuilder<VehicleCubit, ResultState<List<VehicleModel>>> at L407-479",
+      "reason": "Use state.when(...) snapshot instead of reading availableVehicles directly; render loading spinner when initial/loading.",
+      "risk": "low"
+    },
+    {
+      "path": "lib/features/event_registration/presentation/widgets/vehicle_selector_loading.dart",
+      "action": "create",
+      "scope": "new widget",
+      "reason": "Spinner shown while VehicleCubit is initial/loading.",
+      "risk": "low"
+    },
+    {
+      "path": "lib/features/event_registration/presentation/widgets/vehicle_selector_empty.dart",
+      "action": "create",
+      "scope": "new widget",
+      "reason": "Extracted empty state with create CTA.",
+      "risk": "low"
+    },
+    {
+      "path": "lib/features/event_registration/presentation/widgets/vehicle_selector_field.dart",
+      "action": "create",
+      "scope": "new widget",
+      "reason": "Extracted FormBuilderField + VehicleSelectionBottomSheet UI.",
+      "risk": "low"
+    }
+  ],
+  "filesUntouched": [
+    "lib/features/vehicles/presentation/cubit/vehicle_form_cubit.dart",
+    "lib/features/vehicles/presentation/cubit/vehicle_form_state.dart",
+    "lib/features/vehicles/presentation/form/widgets/vehicle_form_docs_section.dart",
+    "lib/features/vehicles/presentation/soat/cubit/soat_form_cubit.dart",
+    "lib/features/vehicles/presentation/soat/soat_confirmation_page.dart",
+    "lib/features/vehicles/presentation/cubit/vehicle_cubit.dart",
+    "lib/features/vehicles/domain/repository/vehicle_repository.dart",
+    "lib/features/vehicles/data/repository/vehicle_repository_impl.dart"
+  ],
+  "fixes": {
+    "issue17": {
+      "approach": "reuse-soat-confirmation-page",
+      "rationale": "SoatModel requires startDate/expiryDate/insurer non-null and the user does not provide these during vehicle creation; SoatConfirmationPage already handles capture + upload + backend persist + VehicleCubit.updateSoatLocally. Reusing it avoids backend changes and avoids placeholder data.",
+      "entryPoint": "vehicle_form_page.dart#_formListener",
+      "triggerCondition": "!state.isEditing && state.soatLocalPath != null && savedVehicle.id != null",
+      "navigation": "context.pushReplacement(MaterialPageRoute(SoatConfirmationPage(vehicle: savedVehicle, documentImage: XFile(soatPath))))",
+      "fallback": "If pushReplacement+go_router misbehaves, pop with savedVehicle then push SoatConfirmationPage in Future.microtask.",
+      "errorHandling": "If SOAT upsert fails inside SoatConfirmationPage, vehicle remains created; user gets SnackBar — satisfies AC-4."
+    },
+    "issue21": {
+      "approach": "state-driven-blocbuilder",
+      "rationale": "Current builder ignores state snapshot and reads availableVehicles from cubit, which is empty during Loading/Initial. Driving UI from ResultState.when guarantees correct rendering per state.",
+      "branches": {
+        "initial": "VehicleSelectorLoading",
+        "loading": "VehicleSelectorLoading",
+        "data_non_empty": "VehicleSelectorField",
+        "data_all_archived": "VehicleSelectorEmpty",
+        "empty": "VehicleSelectorEmpty",
+        "error": "VehicleSelectorEmpty"
+      },
+      "fetchTrigger": "Out of scope — VehicleCubit fetch remains owned by current callers."
+    }
+  },
+  "regressionTestSurface": [
+    "Vehicle creation with SOAT (manual E2E)",
+    "Vehicle creation without SOAT (manual E2E + AC-3)",
+    "Cancel SOAT confirmation post-creation (manual E2E + AC-4)",
+    "Edit vehicle with existing SOAT (manual E2E)",
+    "Registration selector — VehicleCubit Loading state (widget test + E2E + AC-6)",
+    "Registration selector — VehicleCubit Data with vehicles (E2E + AC-5)",
+    "Registration selector — VehicleCubit Empty (E2E + AC-7)",
+    "Registration brand validation regression (E2E)",
+    "dart analyze 0/0 baseline (AC-8)",
+    "flutter test green baseline"
+  ],
+  "contractImpact": "none",
+  "dataModelImpact": "none",
+  "buildRunnerRequired": false,
+  "arbRegenRequired": false,
+  "openQuestions": [],
+  "artifacts": {
+    "fullHandoff": "docs/custom-iters/fix-issues-17-21/handoffs/architect.md",
+    "frontendHandoff": "docs/custom-iters/fix-issues-17-21/handoffs/architect-for-frontend.md",
+    "qaHandoff": "docs/custom-iters/fix-issues-17-21/handoffs/architect-for-qa.md"
+  }
+}

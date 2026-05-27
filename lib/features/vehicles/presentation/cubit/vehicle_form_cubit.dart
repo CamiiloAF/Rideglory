@@ -43,8 +43,20 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
     }
   }
 
+  void setSoatFromLocalPath(String path) {
+    emit(state.copyWith(soatLocalPath: path));
+  }
+
   void clearSoatDocument() {
     emit(state.copyWith(soatLocalPath: null));
+  }
+
+  void storePendingManualSoat(PendingManualSoat data) {
+    emit(state.copyWith(pendingManualSoat: data));
+  }
+
+  void clearPendingManualSoat() {
+    emit(state.copyWith(pendingManualSoat: null));
   }
 
   Future<void> pickTechReviewDocument() async {

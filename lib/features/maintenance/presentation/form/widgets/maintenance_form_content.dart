@@ -94,9 +94,14 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
       _isCompleted ? MaintenanceMode.completed : MaintenanceMode.scheduled,
     );
 
-    final nextKmInterval = cubit.buildNextKmInterval();
+    // buildMaintenanceToSave() must be called first: it invokes saveAndValidate(),
+    // which flushes form field values into FormBuilderState._savedValue.
+    // buildNextKmInterval() reads formKey.currentState!.value (= _savedValue only),
+    // so it must run after saveAndValidate() to avoid returning null.
     final maintenanceToSave = cubit.buildMaintenanceToSave();
     if (maintenanceToSave == null) return;
+
+    final nextKmInterval = cubit.buildNextKmInterval();
 
     if (!_isCompleted && maintenanceToSave.nextDate == null && maintenanceToSave.nextOdometer == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -114,7 +119,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
       vehicleCubit.updateMileage(maintenanceToSave.odometerAtService!);
     }
 
-    cubit.saveMaintenance(nextKmInterval: nextKmInterval);
+    cubit.saveMaintenance(maintenanceToSave, nextKmInterval: nextKmInterval);
   }
 
   @override

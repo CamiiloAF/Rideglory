@@ -10,8 +10,42 @@ class SoatDocPreview extends StatelessWidget {
 
   final XFile imageFile;
 
+  bool get _isPdf => imageFile.path.toLowerCase().endsWith('.pdf');
+
   @override
   Widget build(BuildContext context) {
+    if (_isPdf) {
+      return Container(
+        height: 120,
+        decoration: BoxDecoration(
+          color: AppColors.darkCard,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: AppColors.info.withValues(alpha: 0.5)),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.picture_as_pdf_outlined,
+              size: 44,
+              color: AppColors.info,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              imageFile.path.split('/').last,
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppColors.textOnDarkSecondary,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
       child: SizedBox(

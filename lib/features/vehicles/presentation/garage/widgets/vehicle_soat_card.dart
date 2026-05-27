@@ -1,18 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/features/soat/domain/models/soat_model.dart';
+import 'package:rideglory/features/soat/domain/usecases/get_soat_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
-class VehicleSoatCard extends StatelessWidget {
+class VehicleSoatCard extends StatefulWidget {
+  const VehicleSoatCard({super.key, required this.vehicle});
+
   final VehicleModel vehicle;
 
-  const VehicleSoatCard({super.key, required this.vehicle});
+  @override
+  State<VehicleSoatCard> createState() => _VehicleSoatCardState();
+}
+
+class _VehicleSoatCardState extends State<VehicleSoatCard> {
+  SoatModel? _soat;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSoat();
+  }
+
+  Future<void> _loadSoat() async {
+    final vehicleId = widget.vehicle.id;
+    if (vehicleId == null) {
+      if (mounted) setState(() => _isLoading = false);
+      return;
+    }
+    final result = await getIt<GetSoatUseCase>()(vehicleId);
+    if (mounted) {
+      setState(() {
+        _soat = result.fold((_) => null, (soat) => soat);
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _onTap(BuildContext context) async {
+    if (_soat != null) {
+      await context.pushNamed(AppRoutes.soatStatus, extra: widget.vehicle);
+    } else {
+      await context.pushNamed(AppRoutes.vehicleSoat, extra: widget.vehicle);
+    }
+    if (mounted) {
+      setState(() => _isLoading = true);
+      _loadSoat();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final soatStatus = _soat?.status;
+
     return Container(
       decoration: BoxDecoration(
         color: AppColors.darkCard,
@@ -45,70 +91,82 @@ class VehicleSoatCard extends StatelessWidget {
               ],
             ),
           ),
-          const Divider(height: 1, thickness: 1, color: AppColors.darkBorderPrimary),
+          const Divider(
+            height: 1,
+            thickness: 1,
+            color: AppColors.darkBorderPrimary,
+          ),
           InkWell(
-            onTap: () => context.pushNamed(
-              AppRoutes.vehicleSoat,
-              extra: vehicle,
-            ),
+            onTap: _isLoading ? null : () => _onTap(context),
             child: Padding(
               padding: const EdgeInsets.all(14),
-              child: Row(
-                children: [
-                  Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      color: _statusColor(vehicle.soatStatus).withAlpha(30),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(
-                      Icons.assignment_outlined,
-                      size: 18,
-                      color: _statusColor(vehicle.soatStatus),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              child: _isLoading
+                  ? const SizedBox(
+                      height: 36,
+                      child: Center(
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      ),
+                    )
+                  : Row(
                       children: [
-                        Text(
-                          context.l10n.vehicle_doc_soat_label,
-                          style: const TextStyle(
-                            color: AppColors.textOnDarkTertiary,
-                            fontSize: 11,
+                        Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: _statusColor(soatStatus).withAlpha(30),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            Icons.assignment_outlined,
+                            size: 18,
+                            color: _statusColor(soatStatus),
                           ),
                         ),
-                        const SizedBox(height: 2),
-                        Text(
-                          _statusLabel(context),
-                          style: TextStyle(
-                            color: _statusColor(vehicle.soatStatus),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                context.l10n.vehicle_doc_soat_label,
+                                style: const TextStyle(
+                                  color: AppColors.textOnDarkTertiary,
+                                  fontSize: 11,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                _statusLabel(context, soatStatus),
+                                style: TextStyle(
+                                  color: _statusColor(soatStatus),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              if (_soat?.expiryDate != null) ...[
+                                const SizedBox(height: 2),
+                                Text(
+                                  'Vence ${DateFormat.yMMMd('es').format(_soat!.expiryDate)}',
+                                  style: const TextStyle(
+                                    color: AppColors.textOnDarkTertiary,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              ],
+                            ],
                           ),
                         ),
-                        if (vehicle.soatExpiryDate != null) ...[
-                          const SizedBox(height: 2),
-                          Text(
-                            'Vence ${DateFormat.yMMMd('es').format(vehicle.soatExpiryDate!)}',
-                            style: const TextStyle(
-                              color: AppColors.textOnDarkTertiary,
-                              fontSize: 11,
-                            ),
-                          ),
-                        ],
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 14,
+                          color: AppColors.textOnDarkTertiary,
+                        ),
                       ],
                     ),
-                  ),
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 14,
-                    color: AppColors.textOnDarkTertiary,
-                  ),
-                ],
-              ),
             ),
           ),
         ],
@@ -130,8 +188,8 @@ class VehicleSoatCard extends StatelessWidget {
     }
   }
 
-  String _statusLabel(BuildContext context) {
-    switch (vehicle.soatStatus) {
+  String _statusLabel(BuildContext context, SoatStatus? status) {
+    switch (status) {
       case SoatStatus.valid:
         return 'Vigente';
       case SoatStatus.expiringSoon:

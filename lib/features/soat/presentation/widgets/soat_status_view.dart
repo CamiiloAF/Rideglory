@@ -9,7 +9,7 @@ import 'package:rideglory/features/soat/presentation/cubit/soat_cubit.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_data_view.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_empty_state.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
-import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/features/vehicles/presentation/soat/soat_manual_capture_page.dart';
 
 class SoatStatusView extends StatelessWidget {
   const SoatStatusView({super.key, required this.vehicle});
@@ -45,12 +45,23 @@ class SoatStatusView extends StatelessWidget {
           BlocBuilder<SoatCubit, ResultState<SoatModel>>(
             builder: (context, state) {
               if (state is! Data<SoatModel>) return const SizedBox.shrink();
+              final soatData = state.data;
               return AppTextButton(
                 label: context.l10n.soat_edit_btn,
-                onPressed: () => context.pushNamed(
-                  AppRoutes.soatManualForm,
-                  extra: {'vehicle': vehicle, 'existingSoat': state.data},
-                ),
+                onPressed: () => Navigator.of(context)
+                    .push<bool>(
+                      MaterialPageRoute(
+                        builder: (_) => SoatManualCapturePage(
+                          vehicle: vehicle,
+                          existingSoat: soatData,
+                        ),
+                      ),
+                    )
+                    .then((_) {
+                  if (context.mounted) {
+                    context.read<SoatCubit>().load(vehicle.id ?? '');
+                  }
+                }),
               );
             },
           ),
