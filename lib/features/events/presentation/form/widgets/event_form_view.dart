@@ -74,37 +74,20 @@ class EventFormView extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: AppColors.darkBgPrimary,
-          appBar: AppBar(
-            backgroundColor: AppColors.darkBgPrimary,
-            foregroundColor: AppColors.textOnDarkPrimary,
-            elevation: 0,
-            automaticallyImplyLeading: false,
-            // "Cancelar" — left
-            leading: AppTextButton(
+          appBar: AppFormNavHeader(
+            title: isEditing
+                ? context.l10n.event_editEvent
+                : context.l10n.event_newEvent,
+            leading: AppFormNavAction.text(
               label: context.l10n.event_form_cancel_action,
-              onPressed: () => context.pop(),
-              variant: AppTextButtonVariant.muted,
+              onTap: () => context.pop(),
             ),
-            // Title — center
-            centerTitle: true,
-            title: Text(
-              isEditing
-                  ? context.l10n.event_editEvent
-                  : context.l10n.event_newEvent,
-              style: const TextStyle(
-                color: AppColors.textOnDarkPrimary,
-                fontSize: 17,
-                fontWeight: FontWeight.w700,
-              ),
+            trailing: AppFormNavAction.text(
+              label: context.l10n.event_form_publish_action,
+              onTap: () => _onPublish(context),
+              emphasized: true,
+              isLoading: isSaving,
             ),
-            // "Publicar" — right
-            actions: [
-              AppTextButton(
-                label: context.l10n.event_form_publish_action,
-                onPressed: isSaving ? null : () => _onPublish(context),
-                isLoading: isSaving,
-              ),
-            ],
           ),
           body: const EventFormContent(),
           bottomNavigationBar: EventFormBottomBar(
