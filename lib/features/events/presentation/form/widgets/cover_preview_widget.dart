@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/features/events/presentation/form/widgets/cover_placeholder_view.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
 import 'package:rideglory/shared/widgets/form/app_text_button.dart';
 
@@ -56,12 +57,12 @@ class CoverPreviewWidget extends StatelessWidget {
                     placeholder: (context, url) => Container(
                       color: colorScheme.surfaceContainerHighest,
                     ),
-                    errorWidget: (context, url, error) => _PlaceholderView(
+                    errorWidget: (context, url, error) => CoverPlaceholderView(
                       colorScheme: colorScheme,
                     ),
                   )
                 else
-                  _PlaceholderView(colorScheme: colorScheme),
+                  CoverPlaceholderView(colorScheme: colorScheme),
                 if (isGenerating)
                   Positioned.fill(
                     child: Container(
@@ -122,34 +123,3 @@ class CoverPreviewWidget extends StatelessWidget {
   }
 }
 
-class _PlaceholderView extends StatelessWidget {
-  const _PlaceholderView({required this.colorScheme});
-
-  final ColorScheme colorScheme;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: colorScheme.surfaceContainerHighest,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.image_outlined,
-            size: 40,
-            color: colorScheme.onSurfaceVariant,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            context.l10n.event_addEventCoverHint,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: colorScheme.onSurfaceVariant,
-              fontSize: 12,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
