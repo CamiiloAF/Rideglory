@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
-import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/features/vehicles/presentation/widgets/vehicle_card_placeholder_icon.dart';
 
 class VehicleCard extends StatelessWidget {
   final VehicleModel vehicle;
@@ -58,9 +59,9 @@ class VehicleCard extends StatelessWidget {
                                 vehicle.imageUrl!,
                                 fit: BoxFit.cover,
                                 errorBuilder: (_, _, _) =>
-                                    _buildPlaceholderIcon(context),
+                                    const VehicleCardPlaceholderIcon(),
                               )
-                            : _buildPlaceholderIcon(context),
+                            : const VehicleCardPlaceholderIcon(),
                       ),
                     ),
                     AppSpacing.hGapMd,
@@ -299,11 +300,4 @@ class VehicleCard extends StatelessWidget {
     );
   }
 
-  Widget _buildPlaceholderIcon(BuildContext context) {
-    return Icon(
-      Icons.two_wheeler_rounded,
-      color: context.colorScheme.primary,
-      size: 28,
-    );
-  }
 }
