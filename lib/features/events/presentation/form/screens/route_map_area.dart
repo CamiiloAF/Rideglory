@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide Error;
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -124,7 +123,7 @@ class RouteMapArea extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(
-                        LucideIcons.mapPin,
+                        Icons.location_on_outlined,
                         size: 14,
                         color: AppColors.primary,
                       ),

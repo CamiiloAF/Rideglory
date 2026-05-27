@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/waypoint_search_field.dart';
@@ -29,7 +28,7 @@ class RouteSearchBar extends StatelessWidget {
         child: Row(
           children: [
             const Icon(
-              LucideIcons.search,
+              Icons.search,
               size: 16,
               color: AppColors.textOnDarkTertiary,
             ),

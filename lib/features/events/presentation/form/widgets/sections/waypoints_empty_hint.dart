@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
@@ -13,7 +12,7 @@ class WaypointsEmptyHint extends StatelessWidget {
       child: Column(
         children: [
           const Icon(
-            LucideIcons.navigation2,
+            Icons.navigation,
             color: AppColors.textOnDarkTertiary,
             size: 28,
           ),

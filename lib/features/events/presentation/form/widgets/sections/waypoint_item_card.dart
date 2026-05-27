@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/number_badge.dart';
 
@@ -47,7 +46,7 @@ class WaypointItemCard extends StatelessWidget {
             child: const Padding(
               padding: EdgeInsets.all(4),
               child: Icon(
-                LucideIcons.x,
+                Icons.close,
                 size: 16,
                 color: AppColors.textOnDarkTertiary,
               ),
