@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/item_card/mileage_info_dialog.dart';
 
@@ -16,9 +17,9 @@ class InfoChipTooltip extends StatelessWidget {
   final MaintenanceModel maintenance;
 
   void _showMileageDialog(BuildContext context) {
-    showDialog(
+    showDialog( // Custom: MileageInfoDialog is an info-only tooltip — AppDialog requires action buttons
       context: context,
-      barrierColor: Colors.black.withValues(alpha: .4),
+      barrierColor: AppColors.darkBgPrimary.withValues(alpha: .4),
       builder: (context) => MileageInfoDialog(
         typeColor: typeColor,
         currentMileage: currentMileage,
@@ -33,7 +34,7 @@ class InfoChipTooltip extends StatelessWidget {
       message: context.l10n.maintenance_currentMileage,
       preferBelow: false,
       child: Material(
-        color: Colors.transparent,
+        color: Colors.transparent, // Intentional: Material requires transparent color to show InkWell splash correctly
         child: InkWell(
           onTap: () => _showMileageDialog(context),
           customBorder: const CircleBorder(),
