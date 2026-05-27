@@ -83,30 +83,35 @@ class AppFormNavHeader extends StatelessWidget implements PreferredSizeWidget {
   final bool showBottomBorder;
   final bool centerTitle;
 
-  // CRITICAL (per Design handoff): bottom slot must add its measured height,
-  // not a hardcoded proxy. If bottom is null, total preferredSize is `height`.
-  // If bottom is non-null, the consumer should pass a height-known widget
-  // (e.g., MaintenanceProgressBars) and the Scaffold will layout accordingly.
-  // We use a conservative 32px estimate when bottom != null — callers should
-  // verify visually that no content shifts under the AppBar.
+  // preferredSize accounts for: status bar (up to 48px), the action row height,
+  // the optional bottom slot height, and the 1px bottom border. The Scaffold
+  // gives the AppBar exactly `preferredSize.height` and SafeArea consumes the
+  // status bar inset internally, so the AppBar content fits without overflow.
   @override
-  Size get preferredSize =>
-      Size.fromHeight(height + (bottom != null ? 32 : 0));
+  Size get preferredSize => Size.fromHeight(
+        height +
+            (bottom != null ? _bottomSlotHeight : 0) +
+            (showBottomBorder ? 1 : 0) +
+            _maxStatusBarHeight,
+      );
+
+  static const double _bottomSlotHeight = 24;
+  static const double _maxStatusBarHeight = 48;
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      bottom: false,
-      child: Container(
-        decoration: showBottomBorder
-            ? const BoxDecoration(
-                color: AppColors.darkBgPrimary,
-                border: Border(
-                  bottom:
-                      BorderSide(color: AppColors.darkBorderPrimary, width: 1),
-                ),
-              )
-            : const BoxDecoration(color: AppColors.darkBgPrimary),
+    return Container(
+      decoration: showBottomBorder
+          ? const BoxDecoration(
+              color: AppColors.darkBgPrimary,
+              border: Border(
+                bottom:
+                    BorderSide(color: AppColors.darkBorderPrimary, width: 1),
+              ),
+            )
+          : const BoxDecoration(color: AppColors.darkBgPrimary),
+      child: SafeArea(
+        bottom: false,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
