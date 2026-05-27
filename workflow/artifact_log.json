@@ -205,6 +205,20 @@
         "docs/handoffs/iteration_checkpoint.md",
         "workflow/state.json"
       ]
+    },
+    {
+      "at": "2026-05-27T16:18:42Z",
+      "iteration": 6,
+      "phase": "design",
+      "agent": "design",
+      "action": "update",
+      "paths": [
+        "claude/skills/design-skill.md",
+        "docs/handoffs/contracts/iter-6/design.json",
+        "docs/handoffs/design.md",
+        "docs/handoffs/iteration_checkpoint.md",
+        "workflow/state.json"
+      ]
     }
   ]
 }
