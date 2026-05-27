@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
-import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_detail_nav_button.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
 class VehicleDetailNav extends StatelessWidget {
@@ -25,7 +24,10 @@ class VehicleDetailNav extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
-              VehicleDetailNavButton(icon: Icons.arrow_back, onTap: onBack),
+              AppCircleIconButton.back(
+                surfaceColor: AppColors.darkBgSecondary,
+                onTap: onBack,
+              ),
               Expanded(
                 child: Text(
                   vehicle.name,
@@ -39,9 +41,11 @@ class VehicleDetailNav extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              VehicleDetailNavButton(
+              AppCircleIconButton(
                 icon: Icons.edit_outlined,
-                onTap: () => context.pushNamed(AppRoutes.editVehicle, extra: vehicle),
+                surfaceColor: AppColors.darkBgSecondary,
+                onTap: () =>
+                    context.pushNamed(AppRoutes.editVehicle, extra: vehicle),
               ),
             ],
           ),

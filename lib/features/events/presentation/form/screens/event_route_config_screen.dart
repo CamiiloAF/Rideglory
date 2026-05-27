@@ -257,21 +257,11 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
           appBar: AppBar(
             backgroundColor: AppColors.darkBgPrimary,
             elevation: 0,
-            leading: GestureDetector(
-              onTap: () => context.pop(),
-              child: Container(
-                margin: const EdgeInsets.all(10),
-                width: 36,
-                height: 36,
-                decoration: const BoxDecoration(
-                  color: AppColors.darkTertiary,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.arrow_back,
-                  color: AppColors.textOnDarkPrimary,
-                  size: 18,
-                ),
+            leading: Padding(
+              padding: const EdgeInsets.all(10),
+              child: AppCircleIconButton.back(
+                surfaceColor: AppColors.darkTertiary,
+                onTap: () => context.pop(),
               ),
             ),
             title: Text(

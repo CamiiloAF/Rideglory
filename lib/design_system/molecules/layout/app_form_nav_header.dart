@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
+import 'package:rideglory/design_system/atoms/buttons/app_circle_icon_button.dart';
 
 /// Variants of left/right actions in [AppFormNavHeader].
 sealed class AppFormNavAction {
@@ -176,20 +177,10 @@ class AppFormNavHeader extends StatelessWidget implements PreferredSizeWidget {
     }
     if (action is _IconAction) {
       if (action.pill) {
-        return GestureDetector(
+        return AppCircleIconButton(
+          icon: action.icon,
           onTap: action.onTap,
-          child: Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: AppColors.darkCard,
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.darkBorderPrimary, width: 1),
-            ),
-            alignment: Alignment.center,
-            child:
-                Icon(action.icon, color: AppColors.textOnDarkPrimary, size: 18),
-          ),
+          hasBorder: true,
         );
       }
       return IconButton(

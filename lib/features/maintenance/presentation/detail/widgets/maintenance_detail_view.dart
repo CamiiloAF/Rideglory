@@ -7,7 +7,6 @@ import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/presentation/delete/cubit/maintenance_delete_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_cta_bar.dart';
-import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_detail_icon_button.dart';
 import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_info_card.dart';
 import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_next_service_card.dart';
 import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_notes_card.dart';
@@ -132,8 +131,8 @@ class _MaintenanceDetailViewState extends State<MaintenanceDetailView> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
-                  MaintenanceDetailIconButton(
-                    icon: Icons.arrow_back,
+                  AppCircleIconButton.back(
+                    surfaceColor: AppColors.darkTertiary,
                     onTap: _popWithResult,
                   ),
                   const SizedBox(width: 8),
@@ -147,8 +146,9 @@ class _MaintenanceDetailViewState extends State<MaintenanceDetailView> {
                       ),
                     ),
                   ),
-                  MaintenanceDetailIconButton(
+                  AppCircleIconButton(
                     icon: Icons.more_vert,
+                    surfaceColor: AppColors.darkTertiary,
                     onTap: _showOptions,
                   ),
                 ],

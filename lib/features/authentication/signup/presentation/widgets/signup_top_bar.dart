@@ -9,24 +9,11 @@ class SignupTopBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        GestureDetector(
+        AppCircleIconButton.back(
+          hasBorder: true,
           onTap: () {
             if (context.canPop()) context.pop();
           },
-          child: Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: AppColors.darkCard,
-              shape: BoxShape.circle,
-              border: Border.all(color: AppColors.darkBorderPrimary),
-            ),
-            child: const Icon(
-              Icons.arrow_back,
-              color: AppColors.textOnDarkPrimary,
-              size: 18,
-            ),
-          ),
         ),
       ],
     );

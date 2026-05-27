@@ -9,7 +9,6 @@ import 'package:rideglory/features/maintenance/domain/model/maintenance_model.da
 import 'package:rideglory/features/maintenance/presentation/delete/cubit/maintenance_delete_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/maintenances_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenance_vehicle_selector.dart';
-import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_app_bar_icon_button.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_data_widget.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_empty_widget.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/widgets/maintenances_error_widget.dart';
@@ -125,8 +124,7 @@ class _MaintenancesPageViewState extends State<MaintenancesPageView> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
-              MaintenancesAppBarIconButton(
-                icon: Icons.arrow_back,
+              AppCircleIconButton.back(
                 hasBorder: true,
                 onTap: () {
                   if (context.canPop()) {
@@ -149,16 +147,15 @@ class _MaintenancesPageViewState extends State<MaintenancesPageView> {
               ),
               Row(
                 children: [
-                  MaintenancesAppBarIconButton(
+                  AppCircleIconButton(
                     icon: Icons.tune,
                     hasBorder: true,
                     onTap: _showFiltersBottomSheet,
                   ),
                   const SizedBox(width: 8),
-                  MaintenancesAppBarIconButton(
+                  AppCircleIconButton(
                     icon: Icons.add,
-                    hasBorder: false,
-                    isAccent: true,
+                    variant: AppCircleIconButtonVariant.accent,
                     onTap: _onAddMaintenance,
                   ),
                 ],
