@@ -2,7 +2,7 @@
   "project": "Rideglory",
   "prdPath": "REQUIREMENTS.md",
   "planStatus": "approved",
-  "currentIteration": 6,
+  "currentIteration": 4,
   "existingSystem": {
     "basePath": "/Users/cami/Developer/Personal/Rideglory",
     "backendPath": "/Users/cami/Developer/Personal/rideglory-api",
@@ -512,7 +512,7 @@
       "title": "Refactor & Cleanup Extremo",
       "goal": "Refactor & Cleanup Extremo — 17 stories de refactor interno del Flutter app. Cero features nuevos, cero cambios de API, cero cambios de DB. Bug fix SOAT, consolidación de carpeta SOAT, extracción widget-por-archivo (vehicles/events/maintenance/home/profile/registration), tokenización de colores, migración Navigator→go_router, AppFormNavHeader centralizado, limpieza de app_es.arb.",
       "type": "refactoring",
-      "status": "active",
+      "status": "done",
       "stories": [
         {
           "id": "REFACTOR-01",
@@ -1024,42 +1024,42 @@
   "agents": {
     "po": {
       "status": "idle",
-      "lastAction": "2026-05-27T10:00:00Z",
+      "lastAction": "2026-05-27T18:45:00Z",
       "focus": "iter-6 (refactor-01) po_scope complete. 17 user stories (US-6-1..US-6-17) + 19 tasks (T-6-1..T-6-17 frontend, T-6-18 qa, T-6-19 devops). Backend stand-down. Architect next: AppFormNavHeader API + unnamed-route decisions."
     },
     "architect": {
       "status": "idle",
-      "lastAction": "2026-05-27T11:00:00Z",
+      "lastAction": "2026-05-27T18:45:00Z",
       "focus": "iter-6 (refactor-01) architect complete. Decisions A-G resolved: AppFormNavHeader API locked, unnamed-route Option B, REFACTOR-12 exception pattern confirmed, 3 new AppColors status tokens specified, AppButton.isLoading guard verified, DI regen sequence documented, REFACTOR-15 3-phase strategy confirmed. 5 slim handoffs written. Frontend next."
     },
     "design": {
       "status": "idle",
-      "lastAction": "2026-05-27T12:00:00Z",
+      "lastAction": "2026-05-27T18:45:00Z",
       "focus": "iter-6 (refactor-01) design stand-down complete. AppFormNavHeader API approved for 3 callsites (VehicleFormPage, MaintenanceFormPage, EventFormView). Critical risk documented: MaintenanceFormPage preferredSize bottom-slot proxy must be verified. statusGreen/statusWarning/statusError tokens approved as additions. 6-screenshot regression checklist issued. Frontend next."
     },
     "backend": {
       "status": "idle",
-      "lastAction": "2026-05-27T16:25:00Z",
+      "lastAction": "2026-05-27T18:45:00Z",
       "focus": "iter-6 (refactor-01) stand-down — no rideglory-api changes required"
     },
     "frontend": {
       "status": "idle",
-      "lastAction": "2026-05-14T20:00:00Z",
+      "lastAction": "2026-05-27T18:45:00Z",
       "focus": "iter-3 frontend complete: Mapbox migration (Story 3.0), SOS button/banner (3.1/3.2), organizer start/end controls (3.3/3.4), background GPS (3.5), VehicleModel SOAT fields + Home badge (3.10). dart analyze 0 errors/0 warnings. 43 tests pass (1 pre-existing failure). GeocodeResultDto, AddressLocation, SosAlertModel, SosBannerWidget, OrganizerControlBar, RideFinishedOverlay all new. MapboxOptions initialized in main(). geolocator/mapbox Position conflict resolved with 'as geo' prefix."
     },
     "qa": {
       "status": "idle",
-      "lastAction": "2026-05-15T05:00:00Z",
+      "lastAction": "2026-05-27T18:45:00Z",
       "focus": "iter-3 QA blocked: hard gate BUG-3-1 unresolved. dart analyze 0 errors/0 warnings (3 Mapbox SDK info hints acceptable), flutter test 43 pass/1 pre-existing fail (TC-2-28, unrelated), google_maps_flutter/geocoding imports = 0 (PASS), app_es.arb updated (PASS), Info.plist Spanish (PASS). CRITICAL: widget test for route_map_preview.dart does not exist. Must be created before Story 3.0 PR can merge."
     },
     "devops": {
       "status": "idle",
-      "lastAction": "2026-05-15T05:30:00Z",
+      "lastAction": "2026-05-27T18:45:00Z",
       "focus": "iter-3 devops complete: Mapbox CI secrets added (MAPBOX_DOWNLOADS_TOKEN + MAPBOX_ACCESS_TOKEN), .env generation updated, DEPLOY.md with background GPS test requirements, CocoaPods cache key update deferred to post-merge. CI ready for Story 3.0 (awaiting secret configuration)."
     },
     "tech_lead": {
       "status": "idle",
-      "lastAction": "2026-05-15T07:00:00Z",
+      "lastAction": "2026-05-27T18:45:00Z",
       "focus": "iter-3 PR #15 re-reviewed (cycle 2). Decision: APPROVED. All 6 blocking violations resolved: (1) LiveTrackingCubit uses TrackingRepository domain interface only; (2) live_map_page.dart helpers extracted to separate widget files; (3) sos_banner.dart SnackBar strings use context.l10n; (4) sos_button.dart Semantics label uses context.l10n.tracking_sosSemanticsLabel; (5) route_map_preview.dart error uses context.l10n.map_geocodeError; (6) one widget class per file enforced. dart analyze: 0 errors/0 warnings. flutter test: 47 pass/1 pre-existing fail. PR #15 approved. Next phase: po_close."
     }
   },
@@ -1673,28 +1673,12 @@
       "detail": "Iter-6 (refactor-01) scoped: 17 violation-framed user stories (US-6-1..US-6-17) + 19 tasks (17 frontend T-6-1..T-6-17, 1 QA T-6-18, 1 DevOps T-6-19). Backend stand-down confirmed. Architect next."
     },
     {
-      "type": "phase_complete",
-      "iteration": 6,
-      "phase": "po_scope",
-      "agent": "po",
-      "at": "2026-05-27T10:00:00Z",
-      "detail": "po_scope complete: 17 stories (US-6-1..US-6-17) mapped to REFACTOR-01..15 (incl. 03a/b, 05a/b, 06a/b, 14, 15); 19 tasks created; backend stand-down; architect next for AppFormNavHeader API + unnamed-route decisions."
-    },
-    {
       "type": "architect_plan",
       "iteration": 6,
       "phase": "architect",
       "agent": "architect",
       "at": "2026-05-27T11:00:00Z",
       "detail": "Refactor-01 architecture: decisions A-G resolved, AppFormNavHeader API locked, 5 slim handoffs written"
-    },
-    {
-      "type": "phase_complete",
-      "iteration": 6,
-      "phase": "architect",
-      "agent": "architect",
-      "at": "2026-05-27T11:00:00Z",
-      "detail": "decisions A-G resolved, 5 slim handoffs written; frontend next"
     },
     {
       "type": "design_iteration",
@@ -1705,20 +1689,19 @@
       "detail": "Stand-down — AppFormNavHeader API approved, color tokens approved, 6-screenshot regression checklist issued"
     },
     {
-      "type": "phase_complete",
+      "type": "po_close",
       "iteration": 6,
-      "phase": "design",
-      "agent": "design",
-      "at": "2026-05-27T12:00:00Z",
-      "detail": "Stand-down — visual approvals + regression checklist"
+      "phase": "po_close",
+      "agent": "po",
+      "at": "2026-05-27T18:40:00Z",
+      "detail": "iter-6 closed. ITERATION_SUMMARY_6 + ITERATION_HISTORY + iteration_context updated."
     },
     {
-      "type": "phase_complete",
+      "type": "iteration_summary",
       "iteration": 6,
-      "phase": "backend",
+      "at": "2026-05-27T18:45:00Z",
       "agent": "system",
-      "at": "2026-05-27T16:25:00Z",
-      "detail": "Backend stand-down — no rideglory-api changes for iter-6 (pure Flutter refactor)"
+      "detail": "Iteration 6 (refactor-01) DONE. Phases: po_scope -> architect -> design -> backend -> frontend -> qa -> devops -> pr -> tech_lead -> po_close. 4 phase_complete events compacted. PR #23: https://github.com/CamiiloAF/Rideglory/pull/23 (APPROVED by tech_lead)."
     }
   ]
 }
