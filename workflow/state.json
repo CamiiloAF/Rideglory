@@ -2,7 +2,7 @@
   "project": "Rideglory",
   "prdPath": "REQUIREMENTS.md",
   "planStatus": "approved",
-  "currentIteration": 3,
+  "currentIteration": 6,
   "existingSystem": {
     "basePath": "/Users/cami/Developer/Personal/Rideglory",
     "backendPath": "/Users/cami/Developer/Personal/rideglory-api",
@@ -507,11 +507,12 @@
       "techLeadNotes": "assetlinks.json and apple-app-site-association must be verified reachable (not just deployed) before any App Links / Universal Links code is merged. Test Universal Links with a release build on physical iOS device \u2014 debug builds do not honor Associated Domains in the same way. All 7 notification routing types must be tested end-to-end from cold start on physical device before story 1.5 is considered done."
     },
     {
-      "id": "refactor-01",
+      "id": 6,
       "number": "refactor-01",
       "title": "Refactor & Cleanup Extremo",
+      "goal": "Refactor & Cleanup Extremo — 17 stories de refactor interno del Flutter app. Cero features nuevos, cero cambios de API, cero cambios de DB. Bug fix SOAT, consolidación de carpeta SOAT, extracción widget-por-archivo (vehicles/events/maintenance/home/profile/registration), tokenización de colores, migración Navigator→go_router, AppFormNavHeader centralizado, limpieza de app_es.arb.",
       "type": "refactoring",
-      "status": "planned",
+      "status": "active",
       "stories": [
         {
           "id": "REFACTOR-01",
@@ -1454,15 +1455,24 @@
     },
     {
       "type": "plan_drafted",
-      "iteration": "refactor-01",
-      "timestamp": "2026-05-27T00:00:00Z",
-      "note": "Refactor & Cleanup Extremo \u2014 FRESH run, 16 stories, 7 days estimated"
+      "iteration": 6,
+      "at": "2026-05-27T00:00:00Z",
+      "agent": "po",
+      "detail": "Refactor & Cleanup Extremo \u2014 FRESH run, 16 stories, 7 days estimated"
     },
     {
       "type": "plan_approved",
-      "iteration": "refactor-01",
-      "timestamp": "2026-05-27T00:00:00Z",
-      "detail": "Plan approved. Refactor-01 locked with 17 stories (REFACTOR-01..15 incl. 03a/b, 05a/b, 06a/b, plus REFACTOR-14 AppFormNavHeader and REFACTOR-15 limpieza app_es.arb). Domain skills updated. iter-refactor-01 branch created."
+      "iteration": 6,
+      "at": "2026-05-27T00:00:00Z",
+      "agent": "system",
+      "detail": "Plan approved. Iter-6 (Refactor & Cleanup Extremo) locked with 17 stories (REFACTOR-01..15 incl. 03a/b, 05a/b, 06a/b, plus REFACTOR-14 AppFormNavHeader and REFACTOR-15 limpieza app_es.arb). Domain skills updated. iter-6 branch created."
+    },
+    {
+      "type": "iteration_started",
+      "iteration": 6,
+      "at": "2026-05-27T00:00:00Z",
+      "agent": "system",
+      "detail": "Full /iter 6 (refactor-01) run starting."
     }
   ]
 }
