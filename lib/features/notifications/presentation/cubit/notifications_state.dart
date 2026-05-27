@@ -11,6 +11,9 @@ abstract class NotificationsState with _$NotificationsState {
     ResultState<List<NotificationModel>> listResult,
     @Default(null) String? nextCursor,
     @Default(0) int unreadCount,
+    // Exception: isLoadingMore is a secondary loading indicator for cursor-based
+    // pagination append. It cannot be replaced by a second ResultState<List> because
+    // listResult must remain in Data state while additional pages are loading.
     @Default(false) bool isLoadingMore,
   }) = _NotificationsState;
 }
