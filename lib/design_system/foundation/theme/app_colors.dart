@@ -74,6 +74,14 @@ class AppColors {
   static const Color infoLight = Color(0xFF60A5FA);
   static const Color infoDark = Color(0xFF2563EB);
 
+  // ─── Status (semantic — distinct from legacy success/warning/error) ──────────
+  /// Status green — Tailwind green-500 (#22C55E); distinct from success (#10B981)
+  static const Color statusGreen = Color(0xFF22C55E);
+  /// Status warning — Tailwind yellow-500 (#EAB308); distinct from warning (#F59E0B)
+  static const Color statusWarning = Color(0xFFEAB308);
+  /// Status error — Tailwind red-500 (#EF4444); semantic alias for error token
+  static const Color statusError = Color(0xFFEF4444);
+
   // ─── Icons ──────────────────────────────────────────────────────────────────
   static const Color iconPrimary = primary;
   static const Color iconSecondary = darkTextSecondary;
