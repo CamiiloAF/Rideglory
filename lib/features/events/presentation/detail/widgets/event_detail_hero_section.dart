@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_circle_button.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_header_background_image.dart';
