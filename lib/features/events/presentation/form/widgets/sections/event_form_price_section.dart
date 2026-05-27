@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -97,29 +96,11 @@ class _PriceInputCard extends StatelessWidget {
           Container(width: 1, height: 24, color: AppColors.darkBorderPrimary),
           const SizedBox(width: 10),
           Expanded(
-            child: FormBuilderTextField(
+            child: AppTextField(
               name: EventFormFields.price,
               keyboardType: const TextInputType.numberWithOptions(decimal: false),
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              style: const TextStyle(
-                fontFamily: 'Space Grotesk',
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: AppColors.textOnDarkPrimary,
-              ),
-              decoration: const InputDecoration(
-                hintText: '0',
-                hintStyle: TextStyle(
-                  color: AppColors.textOnDarkTertiary,
-                  fontSize: 16,
-                ),
-                border: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
-                isDense: true,
-                errorStyle: TextStyle(height: 0),
-              ),
+              hintText: '0',
               validator: FormBuilderValidators.compose([
                 FormBuilderValidators.numeric(
                   errorText: context.l10n.event_invalidPrice,

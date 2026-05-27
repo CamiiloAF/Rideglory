@@ -77,28 +77,12 @@ class _VehicleSpecsRowState extends State<VehicleSpecsRow> {
                 const SizedBox(width: 12),
                 Expanded(
                   child: _isEditing
-                      ? FormBuilderTextField(
+                      ? AppTextField(
                           name: widget.fieldName,
                           focusNode: _focusNode,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.textOnDarkPrimary,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: widget.hintText,
-                            hintStyle: const TextStyle(
-                              fontSize: 14,
-                              color: AppColors.textOnDarkTertiary,
-                            ),
-                            isDense: true,
-                            contentPadding: EdgeInsets.zero,
-                            border: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                          ),
+                          hintText: widget.hintText,
                           textInputAction: TextInputAction.done,
-                          onSubmitted: (_) =>
+                          onFieldSubmitted: (_) =>
                               setState(() => _isEditing = false),
                         )
                       : FormBuilderField<String>(

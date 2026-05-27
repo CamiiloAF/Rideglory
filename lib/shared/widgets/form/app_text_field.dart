@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
@@ -30,6 +31,7 @@ class AppTextField extends StatefulWidget {
   final FocusNode? focusNode;
   final TextCapitalization? textCapitalization;
   final bool readonly;
+  final List<TextInputFormatter>? inputFormatters;
 
   const AppTextField({
     super.key,
@@ -58,6 +60,7 @@ class AppTextField extends StatefulWidget {
     this.focusNode,
     this.textCapitalization,
     this.readonly = false,
+    this.inputFormatters,
   });
 
   @override
@@ -133,6 +136,7 @@ class _AppTextFieldState extends State<AppTextField> {
           focusNode: _focusNode,
           textCapitalization:
               widget.textCapitalization ?? TextCapitalization.sentences,
+          inputFormatters: widget.inputFormatters,
         ),
       ],
     );

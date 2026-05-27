@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_form_fields.dart';
@@ -72,24 +70,11 @@ class _VehiclePlacaField extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 6),
-        FormBuilderTextField(
+        AppTextField(
           name: VehicleFormFields.licensePlate,
-          style: GoogleFonts.spaceMono(
-            fontSize: 16,
-            letterSpacing: 2,
-            color: AppColors.textOnDarkPrimary,
-          ),
           textCapitalization: TextCapitalization.characters,
           maxLength: 6,
-          decoration: InputDecoration(
-            hintText: context.l10n.vehicle_vehiclePlateHint,
-            hintStyle: GoogleFonts.spaceMono(
-              fontSize: 16,
-              letterSpacing: 2,
-              color: AppColors.textOnDarkTertiary,
-            ),
-            counterText: '',
-          ),
+          hintText: context.l10n.vehicle_vehiclePlateHint,
           textInputAction: TextInputAction.next,
         ),
       ],
@@ -127,24 +112,11 @@ class _VehicleVinField extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 6),
-        FormBuilderTextField(
+        AppTextField(
           name: VehicleFormFields.vin,
-          style: GoogleFonts.spaceMono(
-            fontSize: 13,
-            letterSpacing: 0.5,
-            color: AppColors.textOnDarkPrimary,
-          ),
           textCapitalization: TextCapitalization.characters,
           maxLength: 17,
-          decoration: InputDecoration(
-            hintText: context.l10n.vehicle_vehicleVinHint,
-            hintStyle: GoogleFonts.spaceMono(
-              fontSize: 13,
-              letterSpacing: 0.5,
-              color: AppColors.textOnDarkTertiary,
-            ),
-            counterText: '',
-          ),
+          hintText: context.l10n.vehicle_vehicleVinHint,
           textInputAction: TextInputAction.next,
         ),
       ],
