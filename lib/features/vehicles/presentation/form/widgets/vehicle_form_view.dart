@@ -143,8 +143,7 @@ class _VehicleFormViewState extends State<VehicleFormView> {
         final soatPath = state.soatLocalPath;
         if (!state.isEditing && soatPath != null && savedVehicle.id != null) {
           if (!context.mounted) return;
-          // Custom: pushReplacement — VehicleFormPage must not remain in back stack after SOAT confirmation.
-          Navigator.of(context).pushReplacement(
+          Navigator.of(context).pushReplacement( // Custom: pushReplacement — VehicleFormPage must not remain in back stack after SOAT confirmation.
             MaterialPageRoute<void>(
               builder: (_) => SoatConfirmationPage(
                 vehicle: savedVehicle,

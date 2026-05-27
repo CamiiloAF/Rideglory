@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rideglory/features/events/constants/event_filter_form_fields.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
@@ -96,7 +97,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                           });
                           _formKey.currentState?.reset();
                           cubit.clearFilters();
-                          Navigator.of(context).pop();
+                          context.pop();
                         },
                       ),
                   ],
@@ -246,7 +247,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                     );
 
                     cubit.updateFilters(filters);
-                    Navigator.of(context).pop();
+                    context.pop();
                   },
                 ),
               ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_form_fields.dart';
@@ -292,7 +293,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
           ),
         MaintenanceFormCtaBar(
           onSave: _saveMaintenance,
-          onDiscard: () => Navigator.of(context).pop(),
+          onDiscard: () => context.pop(),
         ),
       ],
     );

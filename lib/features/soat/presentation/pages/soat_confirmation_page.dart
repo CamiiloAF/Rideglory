@@ -95,10 +95,7 @@ class _SoatConfirmationViewState extends State<_SoatConfirmationView> {
             final router = GoRouter.of(context);
             final messenger = ScaffoldMessenger.of(context);
             final successMsg = context.l10n.vehicle_soat_saved_successfully;
-            // Cuando proviene de la creación de un vehículo (Navigator.pushReplacement),
-            // SoatConfirmationPage reemplazó a VehicleFormPage en el stack de GoRouter.
-            // Un solo pop regresa al garage; el segundo pop adicional sobresaldría un nivel.
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(); // Custom: SoatConfirmationPage was pushed via pushReplacement from VehicleFormPage — popping from the Navigator stack (not GoRouter) to return to the garage correctly.
             if (!widget.isFromVehicleCreation) {
               router.pop();
             }
@@ -126,7 +123,7 @@ class _SoatConfirmationViewState extends State<_SoatConfirmationView> {
           elevation: 0,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: AppColors.textOnDarkPrimary),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => context.pop(),
           ),
           title: Text(
             widget.isManual

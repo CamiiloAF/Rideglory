@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/filter_sheet/filter_cta_bar.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/filter_sheet/filter_date_range_section.dart';
@@ -97,8 +98,7 @@ class _MaintenanceFiltersBottomSheetState
           FilterCtaBar(
             activeFilterCount: _filters.activeFilterCount,
             onClear: _clearAll,
-            // Intentional: Navigator.pop with result — migrated to context.pop in REFACTOR-09
-            onApply: () => Navigator.pop(context, _filters),
+            onApply: () => context.pop(_filters),
           ),
         ],
       ),

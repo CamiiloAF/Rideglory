@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/shared/widgets/form/app_button.dart';
 
@@ -16,7 +17,7 @@ class RouteCtaBar extends StatelessWidget {
           opacity: hasWaypoints ? 1.0 : 0.4,
           child: AppButton(
             label: context.l10n.route_builder_continue,
-            onPressed: hasWaypoints ? () => Navigator.of(context).pop() : null,
+            onPressed: hasWaypoints ? () => context.pop() : null,
           ),
         ),
       ),

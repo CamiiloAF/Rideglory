@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -110,7 +111,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                       style: AppButtonStyle.outlined,
                       onPressed: () {
                         saveMaintenance(maintenanceToSave);
-                        Navigator.of(context).pop();
+                        context.pop();
                       },
                     ),
                   ),
@@ -125,7 +126,7 @@ class ChangeVehicleMileageBottomSheet extends StatelessWidget {
                           maintenanceToSave.odometerAtService ?? 0,
                         );
                         saveMaintenance(maintenanceToSave);
-                        Navigator.of(context).pop();
+                        context.pop();
                       },
                     ),
                   ),

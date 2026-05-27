@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
@@ -173,7 +174,7 @@ class _AttendeesFilterBottomSheetState
               ),
               child: AppButton(
                 label: context.l10n.event_applyFilters,
-                onPressed: () => Navigator.of(context).pop(_selected),
+                onPressed: () => context.pop(_selected),
               ),
             ),
           ],

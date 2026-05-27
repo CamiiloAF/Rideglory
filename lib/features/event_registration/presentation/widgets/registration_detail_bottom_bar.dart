@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
@@ -39,7 +40,7 @@ class RegistrationDetailBottomBar extends StatelessWidget {
                   onPressed: () async {
                     final ok = await params.onCancelRegistration!();
                     if (ok && context.mounted) {
-                      Navigator.of(context).pop();
+                      context.pop();
                     }
                   },
                   isFullWidth: true,

@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -33,7 +34,7 @@ class _SoatVehicleOptionsSheetState extends State<SoatVehicleOptionsSheet> {
         imageQuality: 85,
       );
       if (file != null && mounted) {
-        Navigator.of(context).pop(SoatOptionsUpload(file));
+        context.pop(SoatOptionsUpload(file));
       } else if (mounted) {
         setState(() => _isLoading = false);
       }
@@ -59,7 +60,7 @@ class _SoatVehicleOptionsSheetState extends State<SoatVehicleOptionsSheet> {
         imageQuality: 85,
       );
       if (file != null && mounted) {
-        Navigator.of(context).pop(SoatOptionsUpload(file));
+        context.pop(SoatOptionsUpload(file));
       } else if (mounted) {
         setState(() => _isLoading = false);
       }
@@ -85,9 +86,7 @@ class _SoatVehicleOptionsSheetState extends State<SoatVehicleOptionsSheet> {
         allowedExtensions: ['pdf'],
       );
       if (result != null && result.files.single.path != null && mounted) {
-        Navigator.of(context).pop(
-          SoatOptionsUpload(XFile(result.files.single.path!)),
-        );
+        context.pop(SoatOptionsUpload(XFile(result.files.single.path!)));
       } else if (mounted) {
         setState(() => _isLoading = false);
       }
@@ -153,7 +152,7 @@ class _SoatVehicleOptionsSheetState extends State<SoatVehicleOptionsSheet> {
               icon: Icons.edit_note_outlined,
               onPressed: _isLoading
                   ? null
-                  : () => Navigator.of(context).pop(SoatOptionsManual()),
+                  : () => context.pop(SoatOptionsManual()),
               variant: AppButtonVariant.secondary,
               style: AppButtonStyle.outlined,
             ),
