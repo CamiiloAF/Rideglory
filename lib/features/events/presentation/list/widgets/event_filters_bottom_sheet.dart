@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:go_router/go_router.dart';
 import 'package:rideglory/features/events/constants/event_filter_form_fields.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
@@ -97,7 +96,8 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                           });
                           _formKey.currentState?.reset();
                           cubit.clearFilters();
-                          context.pop();
+                          // Custom: Navigator.pop preserved — closes showModalBottomSheet route, not a go_router route.
+                          Navigator.pop(context);
                         },
                       ),
                   ],
@@ -247,7 +247,8 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                     );
 
                     cubit.updateFilters(filters);
-                    context.pop();
+                    // Custom: Navigator.pop preserved — closes showModalBottomSheet route, not a go_router route.
+                    Navigator.pop(context);
                   },
                 ),
               ),
