@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/features/events/presentation/form/widgets/sections/number_badge.dart';
 
 class WaypointItemCard extends StatelessWidget {
   const WaypointItemCard({
@@ -25,7 +26,7 @@ class WaypointItemCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _NumberBadge(number: index + 1),
+          NumberBadge(number: index + 1),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -53,41 +54,6 @@ class WaypointItemCard extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _NumberBadge extends StatelessWidget {
-  const _NumberBadge({required this.number});
-
-  final int number;
-
-  Color get _color {
-    if (number == 1) return AppColors.success;
-    if (number == 9) return AppColors.error;
-    return AppColors.primary;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 28,
-      height: 28,
-      decoration: BoxDecoration(
-        color: _color,
-        shape: BoxShape.circle,
-      ),
-      child: Center(
-        child: Text(
-          '$number',
-          style: const TextStyle(
-            fontFamily: 'Space Grotesk',
-            color: Colors.white,
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
       ),
     );
   }
