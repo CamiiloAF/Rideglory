@@ -17,6 +17,14 @@
   ],
   "qualityGates": [
     {
+      "name": "required_artifacts_present",
+      "status": "pass"
+    },
+    {
+      "name": "scope_defined",
+      "status": "pass"
+    },
+    {
       "name": "17 user stories written (US-6-1..US-6-17)",
       "status": "pass"
     },
