@@ -7,7 +7,6 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/authentication/constants/auth_form_fields.dart';
-import 'package:rideglory/shared/router/app_routes.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
@@ -216,7 +215,7 @@ class _BackToLoginLink extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: GestureDetector(
-        onTap: () => context.goNamed(AppRoutes.login),
+        onTap: () => context.pop(),
         child: Text(
           context.l10n.auth_recovery_back,
           style: context.textTheme.bodySmall?.copyWith(
@@ -287,7 +286,7 @@ class _EmailSentContent extends StatelessWidget {
           const Spacer(),
           AppButton(
             label: context.l10n.auth_recovery_back_home,
-            onPressed: () => context.goNamed(AppRoutes.login),
+            onPressed: () => context.pop(),
           ),
           const SizedBox(height: 16),
           Center(
