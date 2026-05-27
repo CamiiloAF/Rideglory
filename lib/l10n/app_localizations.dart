@@ -4548,6 +4548,66 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Destino final'**
   String get event_route_destination_hint;
+
+  /// Restored SOAT upload UI key: vehicle_soat_camera_button
+  ///
+  /// In es, this message translates to:
+  /// **'Cámara'**
+  String get vehicle_soat_camera_button;
+
+  /// Restored SOAT upload UI key: vehicle_soat_file_button
+  ///
+  /// In es, this message translates to:
+  /// **'PDF'**
+  String get vehicle_soat_file_button;
+
+  /// Restored SOAT upload UI key: vehicle_soat_gallery_button
+  ///
+  /// In es, this message translates to:
+  /// **'Galería'**
+  String get vehicle_soat_gallery_button;
+
+  /// Restored SOAT upload UI key: vehicle_soat_option_manual_cta
+  ///
+  /// In es, this message translates to:
+  /// **'Completar formulario'**
+  String get vehicle_soat_option_manual_cta;
+
+  /// Restored SOAT upload UI key: vehicle_soat_option_manual_desc
+  ///
+  /// In es, this message translates to:
+  /// **'Completa los datos del SOAT de forma manual sin necesidad de subir un documento'**
+  String get vehicle_soat_option_manual_desc;
+
+  /// Restored SOAT upload UI key: vehicle_soat_option_manual_title
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresar manualmente'**
+  String get vehicle_soat_option_manual_title;
+
+  /// Restored SOAT upload UI key: vehicle_soat_option_upload_desc
+  ///
+  /// In es, this message translates to:
+  /// **'Sube una foto, imagen de galería o PDF del documento del SOAT vigente'**
+  String get vehicle_soat_option_upload_desc;
+
+  /// Restored SOAT upload UI key: vehicle_soat_option_upload_title
+  ///
+  /// In es, this message translates to:
+  /// **'Subir documento'**
+  String get vehicle_soat_option_upload_title;
+
+  /// Restored SOAT upload UI key: vehicle_soat_upload_question
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cómo deseas registrar tu SOAT?'**
+  String get vehicle_soat_upload_question;
+
+  /// Restored SOAT upload UI key: vehicle_soat_upload_subtitle
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona una opción para actualizar el SOAT de tu vehículo'**
+  String get vehicle_soat_upload_subtitle;
 }
 
 class _AppLocalizationsDelegate

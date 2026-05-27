@@ -949,5 +949,45 @@
   "map_searchingAddress": "Buscando dirección...",
   "map_addressNotFound": "Dirección no encontrada",
   "event_route_meeting_point_hint": "Punto de encuentro",
-  "event_route_destination_hint": "Destino final"
+  "event_route_destination_hint": "Destino final",
+  "vehicle_soat_camera_button": "Cámara",
+  "@vehicle_soat_camera_button": {
+    "description": "Restored SOAT upload UI key: vehicle_soat_camera_button"
+  },
+  "vehicle_soat_file_button": "PDF",
+  "@vehicle_soat_file_button": {
+    "description": "Restored SOAT upload UI key: vehicle_soat_file_button"
+  },
+  "vehicle_soat_gallery_button": "Galería",
+  "@vehicle_soat_gallery_button": {
+    "description": "Restored SOAT upload UI key: vehicle_soat_gallery_button"
+  },
+  "vehicle_soat_option_manual_cta": "Completar formulario",
+  "@vehicle_soat_option_manual_cta": {
+    "description": "Restored SOAT upload UI key: vehicle_soat_option_manual_cta"
+  },
+  "vehicle_soat_option_manual_desc": "Completa los datos del SOAT de forma manual sin necesidad de subir un documento",
+  "@vehicle_soat_option_manual_desc": {
+    "description": "Restored SOAT upload UI key: vehicle_soat_option_manual_desc"
+  },
+  "vehicle_soat_option_manual_title": "Ingresar manualmente",
+  "@vehicle_soat_option_manual_title": {
+    "description": "Restored SOAT upload UI key: vehicle_soat_option_manual_title"
+  },
+  "vehicle_soat_option_upload_desc": "Sube una foto, imagen de galería o PDF del documento del SOAT vigente",
+  "@vehicle_soat_option_upload_desc": {
+    "description": "Restored SOAT upload UI key: vehicle_soat_option_upload_desc"
+  },
+  "vehicle_soat_option_upload_title": "Subir documento",
+  "@vehicle_soat_option_upload_title": {
+    "description": "Restored SOAT upload UI key: vehicle_soat_option_upload_title"
+  },
+  "vehicle_soat_upload_question": "¿Cómo deseas registrar tu SOAT?",
+  "@vehicle_soat_upload_question": {
+    "description": "Restored SOAT upload UI key: vehicle_soat_upload_question"
+  },
+  "vehicle_soat_upload_subtitle": "Selecciona una opción para actualizar el SOAT de tu vehículo",
+  "@vehicle_soat_upload_subtitle": {
+    "description": "Restored SOAT upload UI key: vehicle_soat_upload_subtitle"
+  }
 }

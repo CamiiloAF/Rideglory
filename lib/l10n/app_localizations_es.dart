@@ -2392,4 +2392,37 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_route_destination_hint => 'Destino final';
+
+  @override
+  String get vehicle_soat_camera_button => 'Cámara';
+
+  @override
+  String get vehicle_soat_file_button => 'PDF';
+
+  @override
+  String get vehicle_soat_gallery_button => 'Galería';
+
+  @override
+  String get vehicle_soat_option_manual_cta => 'Completar formulario';
+
+  @override
+  String get vehicle_soat_option_manual_desc =>
+      'Completa los datos del SOAT de forma manual sin necesidad de subir un documento';
+
+  @override
+  String get vehicle_soat_option_manual_title => 'Ingresar manualmente';
+
+  @override
+  String get vehicle_soat_option_upload_desc =>
+      'Sube una foto, imagen de galería o PDF del documento del SOAT vigente';
+
+  @override
+  String get vehicle_soat_option_upload_title => 'Subir documento';
+
+  @override
+  String get vehicle_soat_upload_question => '¿Cómo deseas registrar tu SOAT?';
+
+  @override
+  String get vehicle_soat_upload_subtitle =>
+      'Selecciona una opción para actualizar el SOAT de tu vehículo';
 }
