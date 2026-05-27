@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/core/utils/initials.dart';
 import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
+import 'package:rideglory/features/profile/presentation/widgets/profile_avatar.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
@@ -17,7 +18,7 @@ class ProfileHeader extends StatelessWidget {
 
     return Column(
       children: [
-        _ProfileAvatar(initials: initials),
+        ProfileAvatar(initials: initials),
         const SizedBox(height: 12),
         if (user.fullName != null && user.fullName!.isNotEmpty)
           Text(
@@ -84,50 +85,6 @@ class ProfileHeader extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _ProfileAvatar extends StatelessWidget {
-  const _ProfileAvatar({required this.initials});
-
-  final String initials;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 88,
-      height: 88,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.primary,
-            AppColors.primary.withValues(alpha: 0.4), // Intentional: gradient stop — alpha variant of primary
-          ],
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(3),
-        child: Container(
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: AppColors.darkCard,
-          ),
-          child: Center(
-            child: Text(
-              initials,
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textOnDarkPrimary,
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
