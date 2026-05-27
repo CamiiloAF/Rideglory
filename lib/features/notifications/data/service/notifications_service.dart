@@ -18,7 +18,7 @@ abstract class NotificationsService {
     @Query('limit') int limit = 20,
   });
 
-  @PATCH('{notificationId}/read')
+  @PATCH('/notifications/{notificationId}/read')
   Future<void> markRead(
     @Path('notificationId') String notificationId,
   );

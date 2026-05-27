@@ -47,6 +47,16 @@ import 'app_routes.dart';
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 class AppRouter {
+  /// Navega a partir de una URI con scheme `rideglory://`.
+  /// `rideglory://events/detail-by-id?id=xxx` → push `/events/detail-by-id?id=xxx`
+  static void pushDeepLink(String ridegloryUri) {
+    final uri = Uri.tryParse(ridegloryUri);
+    if (uri == null || uri.scheme != 'rideglory') return;
+    final path = '/${uri.host}${uri.path}';
+    final routerPath = uri.hasQuery ? '$path?${uri.query}' : path;
+    appRouter.push(routerPath);
+  }
+
   static final GoRouter appRouter = GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: AppRoutes.splash,

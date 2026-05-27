@@ -117,6 +117,7 @@ class AuthCubit extends Cubit<AuthState> {
       (firebaseUser) async {
         if (firebaseUser != null) {
           emit(AuthState.authenticated(_authService.currentUser));
+          _fcmService.initialize().ignore();
         } else {
           emit(const AuthState.error('Apple sign-in failed'));
         }

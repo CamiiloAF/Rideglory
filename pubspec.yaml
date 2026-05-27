@@ -73,6 +73,7 @@ dependencies:
   dartz: 0.10.1
   intl: ^0.20.2
   url_launcher: ^6.3.1
+  app_links: ^6.3.2
 
   # Maps
   mapbox_maps_flutter: ^2.2.0

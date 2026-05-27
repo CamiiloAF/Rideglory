@@ -31,11 +31,12 @@ class NotificationDto {
     return NotificationModel(
       id: id,
       type: _parseType(type),
-      title: _titleFromPayload(),
-      body: _bodyFromPayload(),
+      title: _titleFromType(),
+      body: _bodyFromType(),
       createdAt: createdAt ?? DateTime.now(),
       isRead: isRead,
       payload: payload,
+      route: payload['route'] as String?,
     );
   }
 
@@ -51,12 +52,36 @@ class NotificationDto {
     };
   }
 
-  String _titleFromPayload() {
-    return payload['title'] as String? ?? '';
+  String _titleFromType() {
+    return switch (type) {
+      'NEW_REGISTRATION' => 'Nueva inscripción',
+      'REGISTRATION_APPROVED' => 'Inscripción aprobada',
+      'REGISTRATION_REJECTED' => 'Inscripción rechazada',
+      'SOAT_30D' => 'Tu SOAT vence en 30 días',
+      'SOAT_7D' => 'Tu SOAT vence en 7 días',
+      'SOAT_DAY_OF' => 'Tu SOAT vence hoy',
+      'MAINTENANCE_DATE_REMINDER' => 'Recordatorio de mantenimiento',
+      'EVENT_REMINDER' => 'Recordatorio de rodada',
+      'SOS_ALERT' => 'Alerta SOS',
+      'TRACKING_ENDED' => 'Rodada finalizada',
+      _ => 'Notificación',
+    };
   }
 
-  String _bodyFromPayload() {
-    return payload['body'] as String? ?? '';
+  String _bodyFromType() {
+    return switch (type) {
+      'NEW_REGISTRATION' => 'Un rider se inscribió a tu evento',
+      'REGISTRATION_APPROVED' => 'Tu inscripción fue aprobada',
+      'REGISTRATION_REJECTED' => 'Tu inscripción fue rechazada',
+      'SOAT_30D' => 'El SOAT de tu moto vence en 30 días',
+      'SOAT_7D' => 'El SOAT de tu moto vence en 7 días',
+      'SOAT_DAY_OF' => 'El SOAT de tu moto vence hoy',
+      'MAINTENANCE_DATE_REMINDER' => 'Tu mantenimiento está programado en 30 días',
+      'EVENT_REMINDER' => 'Tu rodada comienza en 24 horas',
+      'SOS_ALERT' => 'Un rider ha enviado una alerta SOS',
+      'TRACKING_ENDED' => 'La rodada ha finalizado',
+      _ => '',
+    };
   }
 }
 

@@ -54,6 +54,18 @@
 	<array>
 		<string>location</string>
 	</array>
+	<!-- Deep links: rideglory://... -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>rideglory</string>
+			</array>
+		</dict>
+	</array>
 	<!--
 		The keys below are wrapped with a preprocessor guard and only kept on
 		Debug builds. The macro is defined in Debug.xcconfig and stripped from

@@ -74,17 +74,13 @@ class NotificationItem extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
-        child: Opacity(
-          opacity: isUnread ? 1.0 : 0.7,
-          child: Container(
+        child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isUnread ? AppColors.darkCard : AppColors.darkBgSecondary,
+              color: AppColors.darkCard,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: isUnread
-                    ? AppColors.primary.withValues(alpha: 0.25)
-                    : AppColors.darkBorderPrimary,
+                color: AppColors.primary.withValues(alpha: 0.25),
               ),
             ),
             child: Row(
@@ -162,7 +158,6 @@ class NotificationItem extends StatelessWidget {
                 ),
               ],
             ),
-          ),
         ),
       ),
     );

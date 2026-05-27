@@ -5,6 +5,7 @@ import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/notifications/domain/model/notification_model.dart';
 import 'package:rideglory/features/notifications/presentation/cubit/notifications_cubit.dart';
 import 'package:rideglory/features/notifications/presentation/widgets/notification_item.dart';
+import 'package:rideglory/shared/router/app_router.dart';
 
 class NotificationsDataView extends StatelessWidget {
   const NotificationsDataView({
@@ -76,9 +77,14 @@ class NotificationsDataView extends StatelessWidget {
                   final notification = unread[index];
                   return NotificationItem(
                     notification: notification,
-                    onTap: () => context
-                        .read<NotificationsCubit>()
-                        .markRead(notification.id),
+                    onTap: () {
+                      context
+                          .read<NotificationsCubit>()
+                          .markRead(notification.id);
+                      if (notification.route != null) {
+                        AppRouter.pushDeepLink(notification.route!);
+                      }
+                    },
                   );
                 },
               ),
@@ -108,7 +114,11 @@ class NotificationsDataView extends StatelessWidget {
                   final notification = read[index];
                   return NotificationItem(
                     notification: notification,
-                    onTap: () {},
+                    onTap: () {
+                      if (notification.route != null) {
+                        AppRouter.pushDeepLink(notification.route!);
+                      }
+                    },
                   );
                 },
               ),
