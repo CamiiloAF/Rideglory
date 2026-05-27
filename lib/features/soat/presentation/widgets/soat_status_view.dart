@@ -99,7 +99,7 @@ class SoatStatusView extends StatelessWidget {
                     ),
                     AppSpacing.gapLg,
                     AppButton(
-                      label: context.l10n.soat_retry,
+                      label: context.l10n.retry,
                       onPressed: () =>
                           context.read<SoatCubit>().load(vehicle.id ?? ''),
                       isFullWidth: false,

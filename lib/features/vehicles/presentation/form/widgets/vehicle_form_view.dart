@@ -286,11 +286,11 @@ class _VehicleFormViewState extends State<VehicleFormView> {
                 ? context.l10n.vehicle_editVehicle
                 : context.l10n.vehicle_addVehicle,
             leading: AppFormNavAction.text(
-              label: context.l10n.vehicle_form_nav_cancel,
+              label: context.l10n.cancel,
               onTap: () => context.pop(),
             ),
             trailing: AppFormNavAction.text(
-              label: context.l10n.vehicle_form_nav_save,
+              label: context.l10n.save,
               onTap: _saveVehicle,
               emphasized: true,
               isLoading: formState.isLoading,

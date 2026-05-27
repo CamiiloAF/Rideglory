@@ -79,7 +79,7 @@ class EventFormView extends StatelessWidget {
                 ? context.l10n.event_editEvent
                 : context.l10n.event_newEvent,
             leading: AppFormNavAction.text(
-              label: context.l10n.event_form_cancel_action,
+              label: context.l10n.cancel,
               onTap: () => context.pop(),
             ),
             trailing: AppFormNavAction.text(

@@ -42,9 +42,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get retry => 'Reintentar';
 
   @override
-  String get back => 'Volver';
-
-  @override
   String get continue_ => 'Continuar';
 
   @override
@@ -78,12 +75,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get errorOccurred => 'Ocurrió un error';
 
   @override
-  String get tryAgain => 'Intentar nuevamente';
-
-  @override
-  String get noInternet => 'Sin conexión a internet';
-
-  @override
   String get locationPermissionTitle => 'Permiso de ubicación';
 
   @override
@@ -102,9 +93,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se pudo completar la subida. Intenta de nuevo en unos segundos.';
 
   @override
-  String get noData => 'No hay datos';
-
-  @override
   String get noResults => 'No se encontraron resultados';
 
   @override
@@ -114,13 +102,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get notAvailable => 'N/A';
 
   @override
-  String get noSearchResults => 'No se encontraron resultados para tu búsqueda';
-
-  @override
   String get loading => 'Cargando...';
-
-  @override
-  String get pleaseWait => 'Por favor espera';
 
   @override
   String get success => 'Éxito';
@@ -135,9 +117,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get updatedSuccessfully => 'Actualizado exitosamente';
 
   @override
-  String get settings => 'Configuración';
-
-  @override
   String get comingSoon => 'próximamente';
 
   @override
@@ -145,9 +124,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get mustBeNumber => 'Debe ser un número';
-
-  @override
-  String get invalidValue => 'Valor inválido';
 
   @override
   String get mustBeGreaterThanZero => 'Debe ser mayor a 0';
@@ -161,62 +137,13 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get auth_loginTitle => 'Bienvenido';
-
-  @override
-  String get auth_loginSubtitleStitch => 'Acelera tu experiencia';
-
-  @override
-  String get auth_emailLabel => 'Correo electrónico';
-
-  @override
   String get auth_emailHint => 'correo@ejemplo.com';
-
-  @override
-  String get auth_passwordLabel => 'Contraseña';
-
-  @override
-  String get auth_passwordHint => 'Mínimo 8 caracteres';
-
-  @override
-  String get auth_forgotPassword => '¿Olvidaste tu contraseña?';
-
-  @override
-  String get auth_signInButton => 'Iniciar sesión';
 
   @override
   String get auth_orContinueWithStitch => 'O continúa con';
 
   @override
-  String get auth_noAccountQuestion => '¿No tienes una cuenta?';
-
-  @override
-  String get auth_registerFreeLink => 'Regístrate gratis';
-
-  @override
-  String get auth_googleLabel => 'Google';
-
-  @override
   String get auth_appleLabel => 'Apple';
-
-  @override
-  String get auth_signingInLabel => 'Iniciando sesión...';
-
-  @override
-  String get auth_registerTitle => 'Únete a la comunidad';
-
-  @override
-  String get auth_registerSubtitle =>
-      'Crea tu cuenta para empezar a rodar con nosotros.';
-
-  @override
-  String get auth_registerSignInQuestion => '¿Ya tienes una cuenta?';
-
-  @override
-  String get auth_registerSignInLink => 'Inicia sesión';
-
-  @override
-  String get auth_nameField => 'Nombre completo';
 
   @override
   String get auth_nameHint => 'Ej. Juan Pérez';
@@ -252,51 +179,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get auth_termsSuffix => ' de MotoConnect.';
 
   @override
-  String get auth_letsStart => 'Comencemos';
-
-  @override
-  String get auth_loginSubtitle =>
-      'Inicia sesión o crea una cuenta para gestionar tus vehículos';
-
-  @override
   String get auth_signIn => 'Ingresar';
 
   @override
-  String get auth_signUp => 'Registrarse';
-
-  @override
-  String get auth_createAccount => 'Crear Cuenta';
-
-  @override
-  String get auth_joinToday => 'Únete Hoy';
-
-  @override
-  String get auth_signupSubtitleSocial => 'Elige cómo crear tu cuenta';
-
-  @override
-  String get auth_signupSubtitleEmail =>
-      'Crea tu cuenta con email y contraseña';
-
-  @override
-  String get auth_alreadyHaveAccount => '¿Ya tienes cuenta?';
-
-  @override
-  String get auth_dontHaveAccount => '¿No tienes cuenta?';
-
-  @override
-  String get auth_signUpHere => 'Regístrate aquí';
-
-  @override
-  String get auth_signInHere => 'Inicia sesión aquí';
-
-  @override
-  String get auth_createAccountLink => 'Crear una';
-
-  @override
   String get auth_signInLink => 'aquí';
-
-  @override
-  String get auth_orContinueWith => 'O continúa con';
 
   @override
   String get auth_email => 'Correo electrónico';
@@ -305,16 +191,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get auth_password => 'Contraseña';
 
   @override
-  String get auth_confirmPassword => 'Confirmar contraseña';
-
-  @override
   String get auth_enterEmail => 'Ingrese su correo electrónico';
 
   @override
   String get auth_enterPassword => 'Ingresa tu contraseña';
-
-  @override
-  String get auth_createPassword => 'Crea una contraseña';
 
   @override
   String get auth_confirmYourPassword => 'Confirma tu contraseña';
@@ -349,27 +229,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get auth_passwordsDoNotMatch => 'Las contraseñas no coinciden';
-
-  @override
-  String get auth_continueWithEmail => 'Continuar con correo';
-
-  @override
-  String get auth_continueWithGoogle => 'Continuar con Google';
-
-  @override
-  String get auth_continueWithApple => 'Continuar con Apple';
-
-  @override
-  String get auth_acceptTerms => 'Acepto los ';
-
-  @override
-  String get auth_termsOfService => 'Términos de Servicio';
-
-  @override
-  String get auth_privacyPolicy => 'Política de Privacidad';
-
-  @override
-  String get auth_termsAndConditions => 'términos y condiciones';
 
   @override
   String get auth_acceptTermsError =>
@@ -465,22 +324,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_allBrands => 'Todas las marcas';
 
   @override
-  String get event_basicInfo => 'Información básica';
-
-  @override
-  String get event_dateAndTime => 'Fecha y hora';
-
-  @override
-  String get event_locations => 'Ubicaciones';
-
-  @override
-  String get event_eventDetails => 'Detalles del evento';
-
-  @override
   String get event_eventName => 'Nombre del evento';
-
-  @override
-  String get event_eventDescription => 'Descripción';
 
   @override
   String get event_eventCity => 'Ciudad';
@@ -514,9 +358,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_difficulty => 'Dificultad';
 
   @override
-  String get event_rideDifficulty => 'Dificultad de la Ruta';
-
-  @override
   String get event_eventType => 'Tipo de evento';
 
   @override
@@ -524,27 +365,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_searchBrandsPlaceholder => 'Escribe para buscar marcas...';
-
-  @override
-  String get event_meetingPoint => 'Punto de encuentro';
-
-  @override
-  String get event_meetingPointHint => 'Ej: Parque principal, Cra 5 #10-20';
-
-  @override
-  String get event_meetingPointLocation => 'Ubicación del punto de encuentro';
-
-  @override
-  String get event_destination => 'Destino';
-
-  @override
-  String get event_latitude => 'Latitud';
-
-  @override
-  String get event_longitude => 'Longitud';
-
-  @override
-  String get event_isMultiBrand => 'Evento multimarca (abierto a todos)';
 
   @override
   String get event_allowedBrands => 'Marcas permitidas';
@@ -557,50 +377,11 @@ class AppLocalizationsEs extends AppLocalizations {
       'Separar con coma. Dejar vacío si acepta todas las marcas.';
 
   @override
-  String get event_addBrand => 'Agregar marca';
-
-  @override
   String get event_price => 'Precio del evento (opcional)';
-
-  @override
-  String get event_priceHint => '0 para evento gratuito';
-
-  @override
-  String get event_freeEvent => 'Evento gratuito';
 
   @override
   String get event_startDateMustBeBeforeEndDate =>
       'La fecha de inicio debe ser anterior a la fecha de fin';
-
-  @override
-  String get event_difficultyOne => 'Fácil';
-
-  @override
-  String get event_difficultyTwo => 'Moderado';
-
-  @override
-  String get event_difficultyThree => 'Intermedio';
-
-  @override
-  String get event_difficultyFour => 'Difícil';
-
-  @override
-  String get event_difficultyFive => 'Muy difícil';
-
-  @override
-  String get event_offRoad => 'Off-Road';
-
-  @override
-  String get event_onRoad => 'On-Road';
-
-  @override
-  String get event_exhibition => 'Exhibición';
-
-  @override
-  String get event_charitable => 'Benéfico';
-
-  @override
-  String get event_saveEvent => 'Guardar Evento';
 
   @override
   String get event_updateEvent => 'Actualizar Evento';
@@ -610,12 +391,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_newEvent => 'Nuevo evento';
-
-  @override
-  String get event_publish => 'Publicar';
-
-  @override
-  String get event_aiSuggestDescription => 'Sugerir con IA';
 
   @override
   String get event_addEventCover => 'Agregar portada del evento';
@@ -631,12 +406,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_generateWithAI => 'Generar';
 
   @override
-  String get event_coverGenerating => 'Generando portada...';
-
-  @override
-  String get event_coverGenerated => 'Portada generada';
-
-  @override
   String get event_coverGenerateError =>
       'No pudimos generar la portada. Sube tu propia imagen.';
 
@@ -647,36 +416,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_coverGeneratingOverlay => 'Generando con IA...';
 
   @override
-  String get event_photoPermissionDenied =>
-      'Se necesita acceso a la galería para elegir la portada del evento.';
-
-  @override
-  String get event_photoPermissionPermanentlyDenied =>
-      'El acceso a la galería está desactivado. Actívalo en Ajustes para subir una imagen.';
-
-  @override
-  String get event_openSettings => 'Abrir ajustes';
-
-  @override
-  String get event_pickImageError => 'No se pudo seleccionar la imagen.';
-
-  @override
-  String get event_originCity => 'Ciudad de origen';
-
-  @override
-  String get event_dateRangeLabel => 'Fecha (rango)';
-
-  @override
   String get event_route => 'RUTA';
-
-  @override
-  String get event_routeAndMap => 'Ruta y mapa';
-
-  @override
-  String get event_meetingPointPreview => 'Vista previa del punto de encuentro';
-
-  @override
-  String get event_viewOnMap => 'Ver en mapa';
 
   @override
   String get event_multiBrandLabel => 'Marcas permitidas';
@@ -687,10 +427,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_selectBrands => 'Seleccionar marcas permitidas';
-
-  @override
-  String get event_registrationPriceOptional =>
-      'Precio de inscripción (opcional)';
 
   @override
   String get event_descriptionAndRecommendations =>
@@ -719,13 +455,6 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get event_noEventsDescription =>
       'Sé el primero en crear un evento para la comunidad';
-
-  @override
-  String get event_noMyEvents => 'No has creado eventos';
-
-  @override
-  String get event_noMyEventsDescription =>
-      'Crea tu primer evento y compártelo con la comunidad';
 
   @override
   String get event_searchEvents => 'Buscar eventos';
@@ -785,9 +514,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_viewMap => 'Ver mapa';
 
   @override
-  String get event_creatorRecommendations => 'RECOMENDACIONES DEL CREADOR';
-
-  @override
   String get event_allowedBrandsTitle => 'Marcas Permitidas';
 
   @override
@@ -806,19 +532,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_cancelRegistration => 'Cancelar inscripción';
 
   @override
-  String get event_viewRecommendations => 'Ver recomendaciones';
-
-  @override
   String get event_viewAttendees => 'Ver inscritos';
 
   @override
-  String get event_openInMaps => 'Abrir en Google Maps';
-
-  @override
   String get event_meetingPointLabel => 'Punto de encuentro';
-
-  @override
-  String get event_destinationLabel => 'Destino';
 
   @override
   String get event_comingSoon => 'Próximamente';
@@ -843,12 +560,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_eventFinished => 'Finalizado';
 
   @override
-  String get event_dateLabel => 'Fecha';
-
-  @override
-  String get event_priceLabel => 'Precio';
-
-  @override
   String get event_free => 'Gratuito';
 
   @override
@@ -856,21 +567,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_eventCardMyEvent => 'Mi evento';
-
-  @override
-  String get event_difficultyLabel => 'Dificultad';
-
-  @override
-  String get event_typeLabel => 'Tipo';
-
-  @override
-  String get event_organizer => 'Organizador';
-
-  @override
-  String get event_brandRestriction => 'Marcas';
-
-  @override
-  String get event_openToAllBrands => 'Abierto a todos';
 
   @override
   String get event_pending => 'Pendiente';
@@ -882,31 +578,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_rejected => 'Rechazado';
 
   @override
-  String get event_cancelled => 'Cancelado';
-
-  @override
-  String get event_readyForEdit => 'Listo para editar';
-
-  @override
-  String get event_pendingDescription =>
-      'Tu inscripción está pendiente de aprobación';
-
-  @override
-  String get event_approvedDescription => '¡Tu inscripción fue aprobada!';
-
-  @override
-  String get event_rejectedDescription =>
-      'Tu inscripción fue rechazada. No puedes volver a inscribirte a este evento.';
-
-  @override
   String get event_cancelledDescription => 'Cancelaste tu inscripción.';
-
-  @override
-  String get event_readyForEditDescription =>
-      'El organizador habilitó la edición de tu inscripción.';
-
-  @override
-  String get event_attendees => 'Inscritos';
 
   @override
   String get event_participants => 'Participantes';
@@ -921,21 +593,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_rejectRegistration => 'Rechazar';
 
   @override
-  String get event_setReadyForEdit => 'Habilitar edición';
-
-  @override
-  String get event_contactAttendee => 'Contactar';
-
-  @override
-  String get event_callAttendee => 'Llamar';
-
-  @override
-  String get event_emailAttendee => 'Enviar correo';
-
-  @override
-  String get event_whatsappAttendee => 'WhatsApp';
-
-  @override
   String get event_noAttendees => 'No hay inscritos aún';
 
   @override
@@ -948,9 +605,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_processedSection => 'YA PROCESADOS';
 
   @override
-  String get event_allProcessed => 'Todos';
-
-  @override
   String get event_approvedBadge => 'APROBADO';
 
   @override
@@ -958,9 +612,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_searchAttendees => 'Buscar participantes';
-
-  @override
-  String get event_filterAttendees => 'Filtrar participantes';
 
   @override
   String get event_cancelRegistrationTitle => 'Cancelar inscripción';
@@ -977,12 +628,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_errorLoadingEvents => 'Error al cargar los eventos';
 
   @override
-  String get event_errorSavingEvent => 'Error al guardar el evento';
-
-  @override
-  String get event_errorDeletingEvent => 'Error al eliminar el evento';
-
-  @override
   String get event_nameRequired => 'El nombre es requerido';
 
   @override
@@ -996,9 +641,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_startDateRequired => 'La fecha de inicio es requerida';
-
-  @override
-  String get event_meetingTimeRequired => 'La hora de encuentro es requerida';
 
   @override
   String get event_meetingPointRequired => 'El punto de encuentro es requerido';
@@ -1035,38 +677,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_minCharacters => 'Mínimo 3 caracteres';
 
   @override
-  String get event_invalidLatitude => 'Latitud inválida (-90 a 90)';
-
-  @override
-  String get event_invalidLongitude => 'Longitud inválida (-180 a 180)';
-
-  @override
   String get event_invalidPrice => 'Precio inválido';
-
-  @override
-  String get map_liveTrackingTitle => 'Rider Telemetry & Map';
-
-  @override
-  String get map_rideLabelPrefix => 'Rodada: ';
-
-  @override
-  String get map_activeRidersChip => 'Activos:';
 
   @override
   String get map_riderTelemetry => 'Rider telemetry';
 
   @override
-  String get map_participantsList => 'Lista de participantes';
-
-  @override
-  String get map_participantsPlaceholder =>
-      'Participant List (placeholder)\n\nImplementación próximamente.';
-
-  @override
   String get map_speed => 'Velocidad';
-
-  @override
-  String get map_distance => 'Distancia';
 
   @override
   String get map_distanceFromYou => 'Desde ti';
@@ -1082,27 +699,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get map_riderRole => 'Rider';
-
-  @override
-  String get map_mockRiderAlex => 'Alex';
-
-  @override
-  String get map_mockRiderMarkThompson => 'Mark Thompson';
-
-  @override
-  String get map_mockRiderSarahJenkins => 'Sarah Jenkins';
-
-  @override
-  String get map_mockDeviceGarmin1040 => 'Garmin Edge 1040';
-
-  @override
-  String get map_mockDeviceGarmin530 => 'Garmin Edge 530';
-
-  @override
-  String get map_mockDeviceWahooElemnt => 'Wahoo ELEMNT';
-
-  @override
-  String get map_endRide => 'Finalizar rodada';
 
   @override
   String get map_endRideConfirmTitle => '¿Finalizar rodada?';
@@ -1133,12 +729,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get map_sosSend => 'Enviar SOS';
-
-  @override
-  String get map_mySpeed => 'MI VEL';
-
-  @override
-  String get map_myDistance => 'MI DIST';
 
   @override
   String get map_participantsTitle => 'Participantes';
@@ -1175,12 +765,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_maintenanceDetail => 'Detalle de mantenimiento';
 
   @override
-  String get maintenance_newRecord => 'Nuevo Registro';
-
-  @override
-  String get maintenance_editRecord => 'Editar Registro';
-
-  @override
   String get maintenance_deleteMaintenanceMessage =>
       '¿Estás seguro de que deseas eliminar este mantenimiento?\nEsta acción no se puede deshacer.';
 
@@ -1192,50 +776,11 @@ class AppLocalizationsEs extends AppLocalizations {
       'Comienza a registrar los mantenimientos de tu vehículo para llevar un control completo';
 
   @override
-  String get maintenance_receiveMaintenanceAlert =>
-      'Recibe una notificación cuando se acerque el próximo mantenimiento';
-
-  @override
-  String get maintenance_mileageAlert => 'Alerta por kilometraje';
-
-  @override
-  String get maintenance_mileageAlertHint =>
-      'Notificar cuando falten 500 km para el mantenimiento';
-
-  @override
-  String get maintenance_dateAlert => 'Alerta por fecha';
-
-  @override
-  String get maintenance_dateAlertHint =>
-      'Notificar una semana antes de la fecha programada';
-
-  @override
   String get maintenance_maintenanceDeletedSuccessfully =>
       'Mantenimiento eliminado correctamente';
 
   @override
-  String get maintenance_errorLoadingRecords => 'Error cargando registros';
-
-  @override
-  String get maintenance_noRecordsYet => 'Aún no hay registros';
-
-  @override
-  String get maintenance_maintenanceType => 'Tipo de Mantenimiento';
-
-  @override
-  String get maintenance_maintenanceDate => 'Fecha de Mantenimiento';
-
-  @override
   String get maintenance_maintenanceNotes => 'Notas / Observaciones';
-
-  @override
-  String get maintenance_maintenanceCost => 'Costo del Mantenimiento';
-
-  @override
-  String get maintenance_maintenanceMileage => 'Kilometraje Actual';
-
-  @override
-  String get maintenance_nextMaintenance => 'Próximo mantenimiento';
 
   @override
   String get maintenance_nextMaintenanceMileage =>
@@ -1248,31 +793,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_serviceNotes => 'Notas de servicio';
 
   @override
-  String get maintenance_estimatedDate => 'Fecha estimada';
-
-  @override
-  String get maintenance_suggested => 'Sugerido';
-
-  @override
   String get maintenance_routine => 'Rutina';
-
-  @override
-  String get maintenance_alertByMileage => 'Por kilometraje';
-
-  @override
-  String get maintenance_alertByDate => 'Por fecha';
-
-  @override
-  String get maintenance_mileageAlertBefore => '500 km antes';
-
-  @override
-  String get maintenance_dateAlertBefore => '7 días antes';
-
-  @override
-  String get maintenance_urgent => 'Urgente';
-
-  @override
-  String get maintenance_urgentOnly => 'Solo urgentes';
 
   @override
   String get maintenance_filters => 'Filtros';
@@ -1281,34 +802,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_myVehicles => 'Mis Vehículos';
 
   @override
-  String get maintenance_applyFilters => 'Aplicar filtros';
-
-  @override
-  String get maintenance_clearFilters => 'Limpiar filtros';
-
-  @override
-  String get maintenance_mileage => 'Kilometraje';
-
-  @override
   String get maintenance_currentMileage => 'Kilometraje Actual';
 
   @override
   String get maintenance_updateMileage => 'Actualizar kilometraje';
 
   @override
-  String get maintenance_mileageUnit => 'Unidad';
-
-  @override
-  String get maintenance_kilometers => 'Kilómetros';
-
-  @override
-  String get maintenance_miles => 'Millas';
-
-  @override
   String get maintenance_km => 'km';
-
-  @override
-  String get maintenance_mi => 'mi';
 
   @override
   String get maintenance_current => 'Actual:';
@@ -1379,24 +879,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_update => 'Actualizar';
 
   @override
-  String get maintenance_sortBy => 'Ordenar por';
-
-  @override
-  String get maintenance_maintenanceTypes => 'Tipos de mantenimiento';
-
-  @override
-  String get maintenance_vehicles => 'Vehículos';
-
-  @override
-  String get maintenance_dateRange => 'Rango de fechas';
-
-  @override
-  String get maintenance_startDate => 'Inicio';
-
-  @override
-  String get maintenance_endDate => 'Fin';
-
-  @override
   String get maintenance_sortByNextMaintenance => 'Próximo mantenimiento';
 
   @override
@@ -1406,18 +888,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_sortByName => 'Nombre';
 
   @override
-  String get maintenance_urgentOnlyDescription =>
-      'Próximo mantenimiento en 7 días o menos';
-
-  @override
   String get maintenance_vehicle => 'Vehículo';
-
-  @override
-  String get maintenance_selectVehicle => 'Seleccionar Vehículo';
-
-  @override
-  String get maintenance_chooseVehicleForMaintenance =>
-      'Elige el vehículo para este mantenimiento';
 
   @override
   String get maintenance_next => 'Próximo';
@@ -1430,53 +901,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Calcular distancia restante';
 
   @override
-  String get maintenance_maintenanceName => 'Nombre del Mantenimiento';
-
-  @override
-  String get maintenance_nextMaintenanceDate => 'PRÓXIMA FECHA';
-
-  @override
   String get maintenance_maintenanceDateLabel => 'Fecha de Servicio';
 
   @override
-  String get maintenance_nextMaintenanceMileageLabel => 'PRÓXIMO KM';
-
-  @override
-  String get maintenance_nameRequired => 'El nombre es requerido';
-
-  @override
-  String get maintenance_minCharacters => 'Mínimo 3 caracteres';
-
-  @override
-  String get maintenance_typeRequired => 'El tipo es requerido';
-
-  @override
-  String get maintenance_sectionBasicInfo => 'INFORMACIÓN BÁSICA';
-
-  @override
   String get maintenance_sectionDetails => 'DETALLES DEL SERVICIO';
-
-  @override
-  String get maintenance_sectionAlerts => 'ALERTAS DE PRÓXIMO SERVICIO';
-
-  @override
-  String get maintenance_nextDateLabel => 'Próxima fecha de servicio';
-
-  @override
-  String get maintenance_nextMileageLabel => 'Próximo kilometraje';
-
-  @override
-  String get maintenance_remindersLabel => 'Recibe recordatorios automáticos';
-
-  @override
-  String get maintenance_nextServiceAlerts => 'Alertas de próximo servicio';
-
-  @override
-  String get maintenance_alertsConfiguration => 'Configuración de alertas';
-
-  @override
-  String get maintenance_alertsActivatedDesc =>
-      'Las alertas están activadas para este mantenimiento.';
 
   @override
   String get maintenance_searchMaintenances =>
@@ -1486,35 +914,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_allVehicles => 'Todos los vehículos';
 
   @override
-  String get maintenance_recentRecords => 'Registros recientes';
-
-  @override
-  String get maintenance_lastService => 'Último servicio';
-
-  @override
-  String get maintenance_nextService => 'Próximo servicio';
-
-  @override
-  String get maintenance_filter => 'Filtrar';
-
-  @override
   String get vehicle_addShort => 'Agregar';
-
-  @override
-  String get vehicle_mainBadge => 'Moto principal';
-
-  @override
-  String get vehicle_viewDetail => 'Ver detalle';
-
-  @override
-  String get vehicle_otherVehicles => 'Otras motos';
-
-  @override
-  String get vehicle_plateSectionTitle => 'PLACA';
-
-  @override
-  String get vehicle_viewMaintenanceHistory =>
-      'Ver historial de mantenimientos';
 
   @override
   String get vehicle_specBrand => 'Marca';
@@ -1524,18 +924,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get vehicle_specYear => 'Año';
-
-  @override
-  String get vehicle_specCc => 'Cilindraje';
-
-  @override
-  String get vehicle_specColor => 'Color';
-
-  @override
-  String get vehicle_specMileage => 'Kilometraje inicial';
-
-  @override
-  String get vehicle_specVin => 'VIN';
 
   @override
   String get vehicle_specPurchaseDate => 'Fecha de compra';
@@ -1553,19 +941,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_vinLabel => 'VIN / No. de Serie';
 
   @override
-  String get vehicle_vehicles => 'Vehículos';
-
-  @override
-  String get vehicle_myVehicles => 'Mis Vehículos';
-
-  @override
   String get vehicle_myGarage => 'Mi Garaje';
 
   @override
   String get vehicle_addVehicle => 'Agregar vehículo';
-
-  @override
-  String get vehicle_saveVehicle => 'Guardar vehículo';
 
   @override
   String get vehicle_editVehicle => 'Editar vehículo';
@@ -1580,27 +959,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_selectVehicle => 'Seleccionar vehículo';
 
   @override
-  String get vehicle_changeVehicle => 'Cambiar vehículo';
-
-  @override
-  String get vehicle_setAsMainVehicle => 'Establecer como vehículo principal';
-
-  @override
-  String get vehicle_setAsMain => 'Establecer como principal';
-
-  @override
   String get vehicle_archiveVehicle => 'Archivar';
 
   @override
   String get vehicle_unarchiveVehicle => 'Desarchivar';
-
-  @override
-  String get vehicle_deleteVehicleMessage =>
-      '¿Estás seguro de que deseas eliminar';
-
-  @override
-  String get vehicle_deleteVehicleWarning =>
-      'Esta acción eliminará todos los mantenimientos asociados a este vehículo y no se podrá deshacer.';
 
   @override
   String vehicle_deleteVehicleConfirmContent(String vehicleName) {
@@ -1611,32 +973,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_vehicleDeleted => 'Vehículo eliminado exitosamente';
 
   @override
-  String get vehicle_vehicleSetAsMain => 'establecido como vehículo principal';
-
-  @override
-  String get vehicle_vehicleArchived => 'archivado';
-
-  @override
-  String get vehicle_vehicleUnarchived => 'desarchivado';
-
-  @override
   String get vehicle_noVehicles => 'No tienes vehículos registrados';
 
   @override
-  String get vehicle_noVehiclesDescription =>
-      'Crea tu primer vehículo y empieza a registrar sus mantenimientos';
-
-  @override
-  String get vehicle_noVehiclesAvailable => 'No hay vehículos disponibles';
-
-  @override
-  String get vehicle_noArchivedVehicles => 'No hay vehículos archivados';
-
-  @override
   String get vehicle_mainVehicle => 'Vehículo principal';
-
-  @override
-  String get vehicle_thisWillBeMainVehicle => 'Este será tu vehículo principal';
 
   @override
   String get vehicle_archivedVehicle => 'Vehículo Archivado';
@@ -1646,30 +986,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'Este vehículo está archivado. ¿Deseas continuar editándolo?\nSi actualizas su información, el vehículo será desarchivado y volverá a estar disponible en tu lista de vehículos activos.';
 
   @override
-  String get vehicle_exitSetup => '¿Salir de la configuración?';
-
-  @override
-  String get vehicle_exitSetupMessage =>
-      'Si sales ahora, perderás el progreso de la configuración del vehículo.';
-
-  @override
-  String get vehicle_completeRequiredFields =>
-      'Por favor completa todos los campos requeridos';
-
-  @override
-  String get vehicle_searchVehicles => 'Buscar por nombre, placa o marca';
-
-  @override
   String get vehicle_vehicleName => 'Nombre del vehículo';
-
-  @override
-  String get vehicle_vehicleType => 'Tipo de vehículo';
-
-  @override
-  String get vehicle_vehicleBrand => 'Marca';
-
-  @override
-  String get vehicle_vehicleModel => 'Modelo';
 
   @override
   String get vehicle_vehicleYear => 'Año';
@@ -1699,61 +1016,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_vehicleVinHint => '17 caracteres';
 
   @override
-  String get vehicle_vehiclePhoto => 'Foto del vehículo';
-
-  @override
-  String get vehicle_uploadPhoto => 'Subir foto';
-
-  @override
-  String get vehicle_selectImage => 'Seleccionar imagen';
-
-  @override
-  String get vehicle_changePhoto => 'Cambiar foto';
-
-  @override
-  String get vehicle_viewArchived => 'Ver archivados';
-
-  @override
-  String get vehicle_showActiveVehicles => 'Mostrar activos';
-
-  @override
-  String get vehicle_addFirstVehicle =>
-      'Agrega tu primer vehículo para comenzar';
-
-  @override
-  String get vehicle_adjustSearch => 'Intenta ajustar la búsqueda';
-
-  @override
-  String get vehicle_archiveVehiclesDescription =>
-      'Archiva vehículos que ya no uses';
-
-  @override
-  String get vehicle_maintenancesTooltip => 'Mantenimientos';
-
-  @override
-  String get vehicle_addVehicleTooltip => 'Agregar vehículo';
-
-  @override
-  String get vehicle_removeVehicleTooltip => 'Eliminar vehículo';
-
-  @override
-  String get vehicle_addAnotherVehicleTooltip => 'Agregar otro vehículo';
-
-  @override
-  String get vehicle_welcome => '¡Bienvenido! 🎉';
-
-  @override
-  String get vehicle_addAtLeastOneVehicle =>
-      'Agrega al menos un vehículo para comenzar';
-
-  @override
-  String get vehicle_completeSetup => 'Completar configuración';
-
-  @override
   String get vehicle_nameRequired => 'El nombre es requerido';
-
-  @override
-  String get vehicle_vehicleTypeRequired => 'El tipo de vehículo es requerido';
 
   @override
   String get vehicle_brandRequired => 'La marca es requerida';
@@ -1781,12 +1044,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_purchaseDateHint => 'Ej. 24/12/2025';
 
   @override
-  String get vehicle_car => 'Carro';
-
-  @override
-  String get vehicle_motorcycle => 'Moto';
-
-  @override
   String get vehicle_quickInfo => 'Info rápida';
 
   @override
@@ -1808,15 +1065,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_allVehicles => 'Todos';
 
   @override
-  String get vehicle_maintenanceHistory => 'Historial de Registros';
-
-  @override
-  String get vehicle_seeAll => 'Ver todos';
-
-  @override
-  String get profile_profile => 'Perfil';
-
-  @override
   String get profile_title => 'Mi perfil';
 
   @override
@@ -1826,9 +1074,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get profile_noVehicle => 'Sin vehículos';
 
   @override
-  String get profile_errorRetry => 'Reintentar';
-
-  @override
   String get profile_loadingError => 'No pudimos cargar tu perfil';
 
   @override
@@ -1836,12 +1081,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get profile_editSave => 'Guardar cambios';
-
-  @override
-  String get profile_editCancel => 'Cancelar';
-
-  @override
-  String get profile_editSuccess => 'Perfil actualizado correctamente';
 
   @override
   String get profile_fieldFullName => 'Nombre completo';
@@ -1880,12 +1119,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get profile_statsFollowers => 'Seguidores';
 
   @override
-  String get profile_garage => 'Garaje';
-
-  @override
-  String get profile_viewAll => 'Ver todo';
-
-  @override
   String get profile_settings => 'Configuración';
 
   @override
@@ -1896,9 +1129,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get registration_registrationPageTitle => 'Inscripción al Evento';
-
-  @override
-  String get registration_registrationForm => 'Formulario de inscripción';
 
   @override
   String get registration_myRegistrations => 'Mis inscripciones';
@@ -1919,16 +1149,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_vehicleData => 'Datos del Vehículo';
 
   @override
-  String get registration_personalInfo => 'Información personal';
-
-  @override
   String get registration_emergencyContact => 'Contacto de emergencia';
-
-  @override
-  String get registration_vehicleInfo => 'Información del vehículo';
-
-  @override
-  String get registration_vehicleRegistered => 'Vehículo registrado';
 
   @override
   String get registration_fullName => 'Nombre completo';
@@ -1967,18 +1188,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_emergencyContactPhone => 'Celular contacto';
 
   @override
-  String get registration_vehicleBrand => 'Marca';
-
-  @override
-  String get registration_vehicleReference => 'Referencia';
-
-  @override
-  String get registration_licensePlate => 'Placa';
-
-  @override
-  String get registration_vin => 'VIN (Serial)';
-
-  @override
   String get registration_fullNameRequired => 'El nombre completo es requerido';
 
   @override
@@ -2000,9 +1209,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_epsHint => 'Nombre EPS';
 
   @override
-  String get registration_bloodTypeSelect => 'Seleccione';
-
-  @override
   String get registration_bloodTypeHint => 'RH';
 
   @override
@@ -2014,21 +1220,6 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get registration_medicalInsuranceHint =>
       'Entidad de medicina prepagada';
-
-  @override
-  String get registration_vehicleBrandHint => 'Ej. Yamaha';
-
-  @override
-  String get registration_vehicleReferenceHint => 'Ej. MT-09';
-
-  @override
-  String get registration_licensePlateHint => 'ABC-12D';
-
-  @override
-  String get registration_vinHint => '17 Caracteres';
-
-  @override
-  String get registration_preloadFromVehicle => 'Precargar vehículo';
 
   @override
   String get registration_selectVehicleToPreload => 'Selecciona un vehículo';
@@ -2063,10 +1254,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'Inscripción actualizada exitosamente.';
 
   @override
-  String get registration_registrationCancelledSuccess =>
-      'Inscripción cancelada exitosamente.';
-
-  @override
   String get registration_noRegistrations => 'No tienes inscripciones';
 
   @override
@@ -2080,10 +1267,6 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get registration_idInvalidLength =>
       'La cédula debe tener entre 6 y 10 dígitos (estándar Colombia)';
-
-  @override
-  String get registration_birthDateRequired =>
-      'La fecha de nacimiento es requerida';
 
   @override
   String get registration_phoneRequired => 'El celular es requerido';
@@ -2125,13 +1308,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'La marca del vehículo es requerida';
 
   @override
-  String get registration_vehicleReferenceRequired =>
-      'La referencia del vehículo es requerida';
-
-  @override
-  String get registration_licensePlateRequired => 'La placa es requerida';
-
-  @override
   String get registration_minCharacters => 'Mínimo 2 caracteres';
 
   @override
@@ -2139,14 +1315,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'Error al cargar las inscripciones';
 
   @override
-  String get registration_errorSendingRegistration =>
-      'Error al enviar la inscripción';
-
-  @override
   String get registration_viewDetail => 'Ver detalle';
-
-  @override
-  String get registration_viewEvent => 'Ver evento';
 
   @override
   String get registration_goToEvents => 'Ir a eventos';
@@ -2164,19 +1333,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_reRegister => 'Re-inscribirse';
 
   @override
-  String get registration_registrationDetail => 'Detalle de inscripción';
-
-  @override
-  String get registration_registrationDetailTitle => 'Detalle de Registro';
-
-  @override
   String get registration_requestDetailsTitle => 'Detalle de solicitud';
-
-  @override
-  String get registration_eventInfo => 'Información del evento';
-
-  @override
-  String get registration_inscriptionDate => 'Fecha de inscripción';
 
   @override
   String get registration_appliedOnPrefix => 'Inscrito el ';
@@ -2200,19 +1357,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_identificationIdLabel => 'Identificación (ID)';
 
   @override
-  String get registration_birthDateLabel => 'Fecha de Nacimiento';
-
-  @override
   String get registration_bloodTypeLabel => 'Tipo de Sangre';
 
   @override
   String get registration_epsOrInsuranceLabel => 'EPS / Seguro';
-
-  @override
-  String get registration_brandModelLabel => 'Marca / Modelo';
-
-  @override
-  String get registration_cityLabel => 'Ciudad';
 
   @override
   String get registration_motorcycleLabel => 'Motocicleta';
@@ -2239,24 +1387,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_whatsappLabel => 'WhatsApp';
 
   @override
-  String get splash_appName => 'RIDEGLORY';
-
-  @override
-  String get splash_appNameRide => 'RIDE';
-
-  @override
-  String get splash_appNameGlory => 'GLORY';
-
-  @override
-  String get splash_tagline => 'CONNECT. RIDE. EXPLORE.';
-
-  @override
-  String get splash_initializingLabel => 'INITIALIZING SYSTEMS';
-
-  @override
-  String get splash_versionLabel => 'VERSION 2.4.0';
-
-  @override
   String get splash_retryLabel => 'REINTENTAR';
 
   @override
@@ -2266,45 +1396,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get home_greeting => 'Hola, Rider';
 
   @override
-  String get home_myGarage => 'Mi garaje';
-
-  @override
-  String get home_viewAll => 'Ver todas';
-
-  @override
-  String get home_upcomingRides => 'Próximas rodadas';
-
-  @override
-  String get home_viewAllEvents => 'Ver catálogo completo de eventos';
-
-  @override
-  String get home_addVehicle => 'Agregar vehículo';
-
-  @override
-  String get home_addMaintenance => 'Agregar mantenimiento';
-
-  @override
-  String get home_addEvent => 'Agregar evento';
-
-  @override
-  String get home_nextOilChange => 'Próximo cambio de aceite en';
-
-  @override
   String get home_viewDetails => 'Ver detalles';
-
-  @override
-  String get home_emptyGarage => 'Sin vehículos en tu garaje';
-
-  @override
-  String get home_emptyGarageDescription =>
-      'Agrega tu primera moto para comenzar';
-
-  @override
-  String get home_emptyEvents => 'Sin rodadas próximas';
-
-  @override
-  String get home_emptyEventsDescription =>
-      'Explora el catálogo de eventos disponibles';
 
   @override
   String get appfields_mileageRequired => 'El kilometraje es requerido';
@@ -2345,11 +1437,6 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String event_setReadyForEditConfirmMessage(Object name) {
-    return '¿Habilitar edición para $name?';
-  }
-
-  @override
   String maintenance_performedOn(Object date) {
     return 'Completado el $date';
   }
@@ -2360,41 +1447,10 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String event_difficultyLevel(String level) {
-    String _temp0 = intl.Intl.selectLogic(level, {
-      '1': 'Fácil',
-      '2': 'Moderado',
-      '3': 'Intermedio',
-      '4': 'Difícil',
-      '5': 'Muy difícil',
-      'other': 'Intermedio',
-    });
-    return '$_temp0';
-  }
-
-  @override
-  String get event_filterTitle => 'Filtros de eventos';
-
-  @override
-  String get event_filterType => 'Tipo de evento';
-
-  @override
-  String get event_filterDateRange => 'Rango de fechas';
-
-  @override
-  String get event_filterCity => 'Ciudad';
-
-  @override
   String get event_noResultsFiltered => 'No hay eventos con estos filtros';
 
   @override
   String get rider_profileTitle => 'Perfil del motorista';
-
-  @override
-  String get rider_noVehicles => 'Sin vehículos registrados';
-
-  @override
-  String get rider_errorRetry => 'Reintentar';
 
   @override
   String get rider_follow => 'Seguir';
@@ -2407,19 +1463,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get rider_statsFollowing => 'Siguiendo';
-
-  @override
-  String get rider_location => 'Ubicación';
-
-  @override
-  String get app_tagline => 'Rodadas. Comunidad. Aventura.';
-
-  @override
-  String get splash_error_message =>
-      'No se pudo conectar. Verifica tu conexión a internet.';
-
-  @override
-  String get splash_retry => 'Reintentar';
 
   @override
   String get auth_welcome_title => 'Bienvenido';
@@ -2480,9 +1523,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get auth_sign_in_link => 'Inicia sesión';
 
   @override
-  String get auth_recovery_title => 'Recuperar contraseña';
-
-  @override
   String get auth_recovery_heading => '¿Olvidaste tu contraseña?';
 
   @override
@@ -2510,57 +1550,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get auth_recovery_resend => 'No recibí el correo — reenviar';
 
   @override
-  String get home_greeting_morning => 'Buenos días,';
-
-  @override
-  String get home_greeting_afternoon => 'Buenas tardes,';
-
-  @override
-  String get home_greeting_evening => 'Buenas noches,';
-
-  @override
-  String get home_main_vehicle_badge => '⭐ Principal';
-
-  @override
-  String get home_no_vehicle_title => 'Agrega tu primera moto';
-
-  @override
-  String get home_no_vehicle_subtitle =>
-      'Lleva el control de tu garaje y mantenimientos';
-
-  @override
-  String get home_no_vehicle_cta => 'Agregar moto';
-
-  @override
-  String get home_upcoming_rides => 'Próximas rodadas';
-
-  @override
-  String get home_quick_access => 'Acceso rápido';
-
-  @override
-  String get home_my_registrations => 'Mis inscripciones';
-
-  @override
-  String get home_view_all_events => 'Ver todas';
-
-  @override
-  String get home_no_events_title => 'No tienes rodadas próximas';
-
-  @override
-  String get home_no_events_subtitle =>
-      'Explora los eventos disponibles y únete a la comunidad';
-
-  @override
-  String get home_explore_events => 'Ver eventos';
-
-  @override
-  String get home_error_message =>
-      'No se pudieron cargar tus datos. Verifica tu conexión e inténtalo de nuevo.';
-
-  @override
-  String get home_helloAgain => 'Hola de nuevo';
-
-  @override
   String get home_sectionGarage => 'Mi garaje';
 
   @override
@@ -2568,30 +1557,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get home_viewAllLink => 'Ver todas';
-
-  @override
-  String get home_statKmTotal => 'Kilómetros';
-
-  @override
-  String get home_statPromService => 'Próx. servicio';
-
-  @override
-  String get home_statLastService => 'Último servicio';
-
-  @override
-  String get home_vehicleViewDetail => 'Ver detalle';
-
-  @override
-  String get home_vehicleMaintenance => 'Mantenimiento';
-
-  @override
-  String get home_vehicleDocuments => 'Documentos';
-
-  @override
-  String get home_otherVehicles => 'Otras motos';
-
-  @override
-  String get home_eventViewDetails => 'Ver detalles';
 
   @override
   String get home_viewCatalog => 'Ver catálogo completo de eventos';
@@ -2617,168 +1582,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get home_emptyEventsCta => 'Ver eventos';
 
   @override
-  String get event_badge_scheduled => 'Programado';
-
-  @override
-  String get event_badge_inProgress => 'En curso';
-
-  @override
-  String get event_badge_finished => 'Finalizado';
-
-  @override
-  String get event_badge_cancelled => 'Cancelado';
-
-  @override
-  String get event_badge_free => 'Gratis';
-
-  @override
-  String get event_badge_paid => 'De pago';
-
-  @override
-  String get event_search_placeholder => 'Buscar eventos…';
-
-  @override
-  String get event_filter_all => 'Todos';
-
-  @override
-  String get event_filter_on_road => 'On road';
-
-  @override
-  String get event_filter_off_road => 'Off road';
-
-  @override
-  String get event_filter_exhibition => 'Exposición';
-
-  @override
-  String get event_filter_btn => 'Filtros';
-
-  @override
-  String get event_no_events_title => 'No hay eventos disponibles';
-
-  @override
-  String get event_no_events_subtitle =>
-      'Sé el primero en crear un evento para la comunidad';
-
-  @override
-  String get event_create_cta => 'Crear evento';
-
-  @override
-  String get event_filter_modal_title => 'Filtrar eventos';
-
-  @override
-  String get event_filter_type_label => 'Tipo';
-
-  @override
-  String get event_filter_type_all => 'Todos los tipos';
-
-  @override
-  String get event_filter_cost_label => 'Costo';
-
-  @override
-  String get event_filter_cost_all => 'Gratuitos y de pago';
-
-  @override
-  String get event_filter_cost_free => 'Solo gratuitos';
-
-  @override
-  String get event_filter_cost_paid => 'Solo de pago';
-
-  @override
-  String get event_filter_clear => 'Limpiar';
-
-  @override
-  String get event_filter_apply => 'Aplicar';
-
-  @override
-  String get event_cta_register => 'Inscribirse';
-
-  @override
-  String get event_cta_view_registration => 'Ver inscripción';
-
-  @override
-  String get event_cta_cancel => 'Cancelar';
-
-  @override
-  String get event_cta_no_spots => 'Sin cupos disponibles';
-
-  @override
-  String get event_cta_closed => 'Cerrado';
-
-  @override
-  String get event_organizer_label => 'Organizador';
-
-  @override
-  String event_spots_remaining(Object count) {
-    return 'Quedan $count cupos';
-  }
-
-  @override
-  String get event_allowed_brands => 'Marcas permitidas';
-
-  @override
-  String get event_detail_description => 'Descripción';
-
-  @override
-  String get event_detail_route => 'Ruta';
-
-  @override
-  String get event_detail_share => 'Compartir';
-
-  @override
-  String get event_form_name_label => 'Nombre del evento';
-
-  @override
-  String get event_form_name_placeholder => 'Ej: Páramo del Sumapaz 2025';
-
-  @override
-  String get event_form_description_label => 'Descripción';
-
-  @override
-  String get event_form_description_placeholder =>
-      'Describe el recorrido, punto de encuentro, etc.';
-
-  @override
-  String get event_form_date_label => 'Fecha';
-
-  @override
-  String get event_form_time_label => 'Hora';
-
-  @override
-  String get event_form_city_label => 'Ciudad de inicio';
-
-  @override
   String get event_form_max_participants_label => 'Cupos disponibles';
-
-  @override
-  String get event_form_cost_label => 'Costo (COP)';
-
-  @override
-  String get event_form_cost_placeholder => '0 = gratis';
-
-  @override
-  String get event_form_difficulty_low => 'Baja';
-
-  @override
-  String get event_form_difficulty_medium => 'Media';
-
-  @override
-  String get event_form_difficulty_high => 'Alta';
-
-  @override
-  String get event_form_cover_upload_label =>
-      'Toca para subir imagen de portada';
-
-  @override
-  String get event_form_cover_ai_label => 'o generar con IA';
-
-  @override
-  String get event_form_publish => 'Publicar evento';
-
-  @override
-  String get event_form_save => 'Guardar';
-
-  @override
-  String get event_form_cancel_action => 'Cancelar';
 
   @override
   String get event_form_publish_action => 'Publicar';
@@ -2802,96 +1606,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_form_price_section_title => 'PRECIO DE INSCRIPCIÓN';
 
   @override
-  String get event_form_price_subtitle => 'Precio de inscripción (COP)';
-
-  @override
-  String get event_form_free_event_label => 'Evento gratuito';
-
-  @override
   String get event_form_price_free_hint =>
       'Si el precio es 0, el evento será gratuito';
-
-  @override
-  String get vehicle_garage_title => 'Mi garaje';
-
-  @override
-  String get vehicle_main_badge => '⭐ Principal';
-
-  @override
-  String get vehicle_empty_title => 'Tu garaje está vacío';
-
-  @override
-  String get vehicle_empty_subtitle =>
-      'Agrega tu primera moto para llevar el control de mantenimientos y documentos';
-
-  @override
-  String get vehicle_empty_cta => 'Agregar moto';
-
-  @override
-  String get vehicle_other_vehicles => 'Otras motos';
-
-  @override
-  String get vehicle_add_cta => '+ Agregar';
-
-  @override
-  String get vehicle_quick_taller => 'Taller';
-
-  @override
-  String get vehicle_quick_detail => 'Detalle';
-
-  @override
-  String get vehicle_quick_edit => 'Editar';
-
-  @override
-  String get vehicle_detail_specs_marca => 'Marca';
-
-  @override
-  String get vehicle_detail_specs_modelo => 'Modelo';
-
-  @override
-  String get vehicle_detail_specs_anio => 'Año';
-
-  @override
-  String get vehicle_detail_specs_cc => 'Cilindraje';
-
-  @override
-  String get vehicle_detail_specs_km => 'Kilometraje';
-
-  @override
-  String get vehicle_detail_specs_color => 'Color';
-
-  @override
-  String get vehicle_detail_documents => 'Documentos';
 
   @override
   String get vehicle_doc_soat_label => 'SOAT';
 
   @override
   String get vehicle_doc_techreview_label => 'Técnico-mecánica';
-
-  @override
-  String get vehicle_doc_state_empty => 'Sin registrar';
-
-  @override
-  String get vehicle_doc_state_valid => 'Vigente';
-
-  @override
-  String get vehicle_doc_state_expiringSoon => 'Por vencer';
-
-  @override
-  String get vehicle_doc_state_expired => 'Vencido';
-
-  @override
-  String get vehicle_view_maintenances => 'Ver mantenimientos';
-
-  @override
-  String get vehicle_edit => 'Editar moto';
-
-  @override
-  String get vehicle_form_title_add => 'Agregar moto';
-
-  @override
-  String get vehicle_form_title_edit => 'Editar moto';
 
   @override
   String get vehicle_form_brand_label => 'Marca';
@@ -2903,9 +1625,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_form_year_label => 'Año';
 
   @override
-  String get vehicle_form_cc_label => 'Cilindraje (cc)';
-
-  @override
   String get vehicle_form_color_label => 'Color';
 
   @override
@@ -2913,12 +1632,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get vehicle_form_km_label => 'Kilometraje actual';
-
-  @override
-  String get vehicle_form_photo_label => 'Foto de la moto (opcional)';
-
-  @override
-  String get vehicle_form_photo_upload => 'Toca para subir';
 
   @override
   String get vehicle_form_cover_title => 'Agregar foto de portada';
@@ -2958,9 +1671,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_form_techreview_subtitle => 'Rev. técnica del vehículo';
 
   @override
-  String get vehicle_form_docs_upload => 'Subir';
-
-  @override
   String get vehicle_form_add_doc_title => 'Agregar otro documento';
 
   @override
@@ -2971,12 +1681,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get vehicle_form_save => 'Guardar moto';
-
-  @override
-  String get vehicle_form_nav_cancel => 'Cancelar';
-
-  @override
-  String get vehicle_form_nav_save => 'Guardar';
 
   @override
   String get vehicle_form_delete_vehicle => 'Eliminar vehículo';
@@ -3015,12 +1719,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_form_specs_weight_hint => 'Ej. 179 kg';
 
   @override
-  String get maintenance_dashboard_title => 'Mantenimientos';
-
-  @override
-  String get maintenance_history_title => 'Historial';
-
-  @override
   String get maintenance_form_new_title => 'Nuevo Mantenimiento';
 
   @override
@@ -3038,30 +1736,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get maintenance_form_tab_scheduled => 'Programado';
-
-  @override
-  String get maintenance_form_date_done_label => 'Fecha de realización';
-
-  @override
-  String get maintenance_form_km_done_label => 'Kilometraje al realizar';
-
-  @override
-  String get maintenance_form_cost_label => 'Costo (COP)';
-
-  @override
-  String get maintenance_form_place_label => 'Lugar / taller';
-
-  @override
-  String get maintenance_form_notes_label => 'Notas (opcional)';
-
-  @override
-  String get maintenance_form_next_section => 'Próximo mantenimiento';
-
-  @override
-  String get maintenance_form_next_km_label => 'En km';
-
-  @override
-  String get maintenance_form_next_date_label => 'O en fecha';
 
   @override
   String get maintenance_form_save_done => 'Guardar mantenimiento';
@@ -3089,20 +1763,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_form_notes_section => 'NOTAS';
 
   @override
-  String get maintenance_form_next_section_header => 'PRÓXIMO MANTENIMIENTO';
-
-  @override
   String get maintenance_form_date_scheduled_label => 'Fecha programada';
-
-  @override
-  String get maintenance_form_km_estimated_label => 'Kilometraje estimado';
-
-  @override
-  String get maintenance_form_reminder_note =>
-      '🔔 Recibirás un recordatorio 30 días antes de la fecha programada.';
-
-  @override
-  String get maintenance_form_save_scheduled => 'Guardar recordatorio';
 
   @override
   String get maintenance_scheduled_requires_date_or_km =>
@@ -3110,18 +1771,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get maintenance_prox_service_in => 'Próximo servicio en';
-
-  @override
-  String get maintenance_prox_days_left => 'Faltan para el servicio';
-
-  @override
-  String get maintenance_history_search_placeholder => 'Buscar mantenimiento…';
-
-  @override
-  String get maintenance_filters_title => 'Filtrar mantenimientos';
-
-  @override
-  String get maintenance_filter_vehicle_label => 'Moto';
 
   @override
   String get maintenance_filter_type_label => 'Tipo de mantenimiento';
@@ -3142,15 +1791,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_filter_status_on_track => 'Al día';
 
   @override
-  String get maintenance_filter_status_done => 'Completados';
-
-  @override
-  String get maintenance_filter_status_scheduled => 'Programados';
-
-  @override
-  String get maintenance_filter_status_urgent => 'Urgentes';
-
-  @override
   String get maintenance_filter_date_range_label => 'Rango de fecha';
 
   @override
@@ -3166,83 +1806,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_filter_date_custom => 'Personalizado';
 
   @override
-  String get maintenance_filter_period_label => 'Período';
-
-  @override
-  String get maintenance_filter_from => 'Desde';
-
-  @override
-  String get maintenance_filter_to => 'Hasta';
-
-  @override
   String get maintenance_filter_clear => 'Limpiar';
 
   @override
   String get maintenance_filter_clear_all => 'Limpiar todo';
 
   @override
-  String get maintenance_filter_apply => 'Aplicar';
-
-  @override
-  String get maintenance_legend_urgent => 'Urgente';
-
-  @override
   String get maintenance_legend_warning => 'Próximo';
-
-  @override
-  String get maintenance_legend_ok => 'Al día';
 
   @override
   String get maintenance_status_overdue => 'atrasado';
 
   @override
   String get maintenance_km_remaining => 'faltan';
-
-  @override
-  String get registration_my_registrations_title => 'Mis inscripciones';
-
-  @override
-  String get registration_filter_all => 'Todas';
-
-  @override
-  String get registration_filter_pending => 'Pendientes';
-
-  @override
-  String get registration_filter_approved => 'Aprobadas';
-
-  @override
-  String get registration_filter_rejected => 'Rechazadas';
-
-  @override
-  String get registration_empty_title => 'No tienes inscripciones';
-
-  @override
-  String get registration_empty_subtitle =>
-      'Explora los eventos disponibles e inscríbete';
-
-  @override
-  String get registration_explore_events => 'Explorar eventos';
-
-  @override
-  String get registration_detail_rider_section => 'Datos del rider';
-
-  @override
-  String get registration_detail_vehicle_section => 'Vehículo';
-
-  @override
-  String get registration_detail_notes_section => 'Notas';
-
-  @override
-  String get registration_detail_cancel => 'Cancelar inscripción';
-
-  @override
-  String get registration_status_approved => 'Aprobada';
-
-  @override
-  String get registration_status_pending => 'Pendiente';
-
-  @override
-  String get registration_status_rejected => 'Rechazada';
 
   @override
   String get nav_inicio => 'Inicio';
@@ -3255,38 +1831,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get nav_perfil => 'Perfil';
-
-  @override
-  String get auth_forgotPasswordTitle => '¿Olvidaste tu contraseña?';
-
-  @override
-  String get auth_forgotPasswordBody =>
-      'Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.';
-
-  @override
-  String get auth_sendLink => 'Enviar enlace';
-
-  @override
-  String get auth_rememberPassword => '¿Ya la recordaste?';
-
-  @override
-  String get auth_signInLink2 => 'Inicia sesión';
-
-  @override
-  String get auth_emailSentTitle => '¡Revisa tu correo!';
-
-  @override
-  String get auth_emailSentBody =>
-      'Enviamos instrucciones para recuperar tu contraseña. Si no lo encuentras, revisa tu carpeta de spam.';
-
-  @override
-  String get auth_backToLogin => 'Volver al inicio de sesión';
-
-  @override
-  String get auth_resendEmail => '¿No recibiste el correo? Reenviar';
-
-  @override
-  String get nav_addEvent => 'Nueva Rodada';
 
   @override
   String get notification_centerTitle => 'Notificaciones';
@@ -3323,33 +1867,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_statusBadgeReadyForEdit => 'Para editar';
 
   @override
-  String get event_myEventsTab => 'Mis eventos';
-
-  @override
   String get event_registrationsTab => 'Inscritos';
 
   @override
-  String get event_eventRegistrationsTitle => 'Inscripciones del Evento';
-
-  @override
   String get event_manageAttendeesTitle => 'Gestionar inscritos';
-
-  @override
-  String get sos_button_label => 'SOS';
-
-  @override
-  String get sos_confirm_title => '¿Enviar alerta SOS?';
-
-  @override
-  String get sos_confirm_body =>
-      'Todos los participantes serán notificados de tu emergencia. Esta acción no se puede deshacer.';
-
-  @override
-  String get sos_confirm_action => 'Enviar SOS';
-
-  @override
-  String get sos_sent_confirmation =>
-      'SOS enviado — los riders han sido notificados';
 
   @override
   String get sos_banner_subtitle_with_phone => 'Toca para ver acciones';
@@ -3369,16 +1890,6 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get tracking_start_ride => 'Iniciar rodada';
-
-  @override
-  String get tracking_start_ride_confirm_title => '¿Iniciar rodada?';
-
-  @override
-  String get tracking_start_ride_confirm_body =>
-      'Los riders aprobados recibirán acceso al mapa de rastreo en tiempo real.';
-
-  @override
   String get tracking_end_ride => 'Terminar rodada';
 
   @override
@@ -3387,12 +1898,6 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get tracking_end_ride_confirm_body =>
       'La pantalla de rastreo se cerrará para todos los riders conectados. Esta acción no se puede deshacer.';
-
-  @override
-  String get tracking_route_on_route => 'En ruta ✓';
-
-  @override
-  String get tracking_route_off_route => 'Fuera de ruta ⚠';
 
   @override
   String get tracking_ride_finished => '¡La rodada ha terminado!';
@@ -3412,69 +1917,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get tracking_organizer_label => 'Control de rodada';
 
   @override
-  String tracking_riders_count(int count) {
-    return 'Riders en la rodada · $count';
-  }
-
-  @override
-  String get tracking_rider_status_on_route => 'En ruta';
-
-  @override
-  String get tracking_rider_status_sos => '🚨 SOS activo';
-
-  @override
-  String get tracking_fg_service_title => 'Rideglory — Rodada activa';
-
-  @override
-  String get tracking_fg_service_body =>
-      'Tu ubicación se está compartiendo con los riders de la rodada.';
-
-  @override
-  String get sos_push_title => '¡Alerta de emergencia!';
-
-  @override
-  String sos_push_body(String riderName, String eventName) {
-    return '$riderName ha activado el SOS en $eventName.';
-  }
-
-  @override
-  String get maintenance_push_title => 'Mantenimiento próximo';
-
-  @override
-  String maintenance_push_body(String serviceType, String vehicleName) {
-    return 'El $serviceType de tu $vehicleName está programado en 30 días.';
-  }
-
-  @override
-  String get event_reminder_push_title => '¡Tu rodada es mañana!';
-
-  @override
-  String event_reminder_push_body(String eventName) {
-    return '$eventName comienza mañana. ¡Prepara tu moto!';
-  }
-
-  @override
-  String get tracking_ride_ended_push_title => 'La rodada ha terminado';
-
-  @override
-  String tracking_ride_ended_push_body(String eventName) {
-    return '$eventName ha finalizado. ¡Hasta la próxima!';
-  }
-
-  @override
-  String get vehicle_soat_badge_label => 'SOAT';
-
-  @override
   String get vehicle_soat_tap_to_add => 'Sin registrar · Agregar →';
 
   @override
-  String get vehicle_soat_update => 'Actualizar →';
-
-  @override
   String get vehicle_soat_form_title => 'Registrar SOAT';
-
-  @override
-  String get vehicle_soat_form_edit_title => 'Actualizar SOAT';
 
   @override
   String get vehicle_soat_policy_number_label => 'Número de póliza';
@@ -3511,39 +1957,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get vehicle_soat_section_title => 'Documentos';
-
-  @override
-  String get vehicle_soat_upload_question => '¿Cómo deseas registrar tu SOAT?';
-
-  @override
-  String get vehicle_soat_upload_subtitle =>
-      'Selecciona una opción para actualizar el SOAT de tu vehículo';
-
-  @override
-  String get vehicle_soat_option_upload_title => 'Subir documento';
-
-  @override
-  String get vehicle_soat_option_upload_desc =>
-      'Sube una foto, imagen de galería o PDF del documento del SOAT vigente';
-
-  @override
-  String get vehicle_soat_camera_button => 'Cámara';
-
-  @override
-  String get vehicle_soat_gallery_button => 'Galería';
-
-  @override
-  String get vehicle_soat_file_button => 'PDF';
-
-  @override
-  String get vehicle_soat_option_manual_title => 'Ingresar manualmente';
-
-  @override
-  String get vehicle_soat_option_manual_desc =>
-      'Completa los datos del SOAT de forma manual sin necesidad de subir un documento';
-
-  @override
-  String get vehicle_soat_option_manual_cta => 'Completar formulario';
 
   @override
   String get vehicle_soat_confirm_title => 'Confirmar SOAT';
@@ -3596,10 +2009,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get vehicle_soat_status_pending => 'Estado del SOAT';
-
-  @override
-  String get vehicle_soat_upload_failed =>
-      'No se pudo seleccionar el documento';
 
   @override
   String get tracking_sosCallError => 'No se pudo iniciar la llamada.';
@@ -3666,50 +2075,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_expired_label => 'vencido';
 
   @override
-  String get maintenance_modeCompleted => 'Realizado';
-
-  @override
   String get maintenance_modeScheduled => 'Programado';
 
   @override
   String get maintenance_statusOverdue => 'Vencido';
 
   @override
-  String get maintenance_statusNext => 'Próximo';
-
-  @override
-  String get maintenance_statusUpToDate => 'Al día';
-
-  @override
-  String get maintenance_noNextService => 'Sin próximo servicio';
-
-  @override
-  String get maintenance_noServicesRegistered => 'Sin servicios registrados';
-
-  @override
-  String get maintenance_validationNextFieldRequired =>
-      'Agrega al menos un criterio para el próximo servicio (km o fecha).';
-
-  @override
-  String get maintenance_validationNextDateMustBeFuture =>
-      'La fecha del próximo servicio debe ser futura';
-
-  @override
-  String get maintenance_validationServiceDateRequired =>
-      'La fecha del servicio es requerida';
-
-  @override
-  String get maintenance_validationOdometerRequired =>
-      'El odómetro es requerido';
-
-  @override
   String get garage_viewMaintenanceHistory => 'Ver historial de mantenimientos';
-
-  @override
-  String get garage_lastService => 'Último servicio';
-
-  @override
-  String get garage_nextService => 'Próximo servicio';
 
   @override
   String get garage_completedServiceBadge => 'HECHO';
@@ -3732,17 +2104,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get garage_odometerLabel => 'odómetro';
 
   @override
-  String get garage_healthHeader => 'Estado de mantenimientos';
-
-  @override
-  String garage_healthServicesCount(int count) {
-    return '$count servicios';
-  }
-
-  @override
-  String get garage_healthOverdue => 'Atrasado';
-
-  @override
   String get garage_healthUpcoming => 'Próximo';
 
   @override
@@ -3750,41 +2111,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get garage_seeDetail => 'Ver detalle';
-
-  @override
-  String get event_filter_pending => 'Pendientes';
-
-  @override
-  String get event_filter_approved => 'Aprobados';
-
-  @override
-  String get event_filter_rejected => 'Rechazados';
-
-  @override
-  String get event_reject_confirm_title => 'Rechazar inscripción';
-
-  @override
-  String event_reject_confirm_body(String name) {
-    return '¿Estás seguro de que quieres rechazar la inscripción de $name? Esta acción no se puede deshacer.';
-  }
-
-  @override
-  String get event_reject_confirm_btn => 'Sí, rechazar';
-
-  @override
-  String get event_approve_action => 'Aprobar';
-
-  @override
-  String get event_reject_action => 'Rechazar';
-
-  @override
-  String get event_edit_status => 'Editar estado';
-
-  @override
-  String get event_filters_title => 'Filtrar inscritos';
-
-  @override
-  String get event_filter_status_label => 'Estado';
 
   @override
   String get notification_loadMore => 'Cargar más notificaciones';
@@ -3796,9 +2122,6 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get notification_loadErrorSubtitle =>
       'Verifica tu conexión a internet e intenta de nuevo.';
-
-  @override
-  String get notification_retry => 'Reintentar';
 
   @override
   String get notification_soat30d_title => 'SOAT vence en 30 días';
@@ -3863,9 +2186,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get soat_page_upload_title => 'Subir SOAT';
 
   @override
-  String get soat_page_manual_title => 'Ingresar SOAT';
-
-  @override
   String get soat_page_status_title => 'Mi SOAT';
 
   @override
@@ -3891,20 +2211,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get soat_source_manual => 'Ingresar manualmente';
 
   @override
-  String get soat_section_data => 'Datos del SOAT';
-
-  @override
   String get soat_field_policy_number => 'N.° de póliza';
 
   @override
-  String get soat_field_policy_placeholder => 'Ej: SOAT-2024-123456';
-
-  @override
   String get soat_field_insurer => 'Aseguradora';
-
-  @override
-  String get soat_field_insurer_placeholder =>
-      'Ej: Sura, Allianz, AXA Colpatria…';
 
   @override
   String get soat_field_start_date => 'Fecha inicio';
@@ -3913,46 +2223,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get soat_field_expiry_date => 'Fecha vencimiento';
 
   @override
-  String get soat_field_date_format => 'DD/MM/AAAA';
-
-  @override
-  String get soat_field_expiry_required =>
-      'La fecha de vencimiento es obligatoria.';
-
-  @override
-  String get soat_field_date_invalid =>
-      'Fecha inválida. Usa el formato DD/MM/AAAA.';
-
-  @override
-  String get soat_field_required => 'Este campo es obligatorio.';
-
-  @override
-  String get soat_save_btn => 'Guardar SOAT';
-
-  @override
   String get soat_save_data_btn => 'Guardar datos';
-
-  @override
-  String get soat_update_btn => 'Actualizar SOAT';
 
   @override
   String get soat_saving => 'Guardando…';
 
   @override
-  String get soat_retry => 'Reintentar';
-
-  @override
   String get soat_manual_note =>
       'Puedes subir el documento físico más adelante desde el detalle del vehículo.';
-
-  @override
-  String get soat_switch_to_upload => 'Subir documento en cambio';
-
-  @override
-  String get soat_section_document => 'Documento';
-
-  @override
-  String get soat_document_attached => 'Adjunto';
 
   @override
   String get soat_status_no_soat => 'Sin registrar';
@@ -4011,25 +2289,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get soat_edit_title => 'Editar SOAT';
 
   @override
-  String get soat_doc_view => 'Abrir';
-
-  @override
-  String get soat_doc_download => 'Descargar';
-
-  @override
   String get soat_doc_tap_to_open => 'Toca para abrir';
-
-  @override
-  String get soat_download_success => 'Archivo guardado en Descargas';
-
-  @override
-  String get soat_download_error => 'No se pudo descargar el archivo';
-
-  @override
-  String get soat_downloading => 'Descargando…';
-
-  @override
-  String get soat_open_downloads => 'Abrir';
 
   @override
   String get soat_doc_replace => 'Reemplazar archivo';
@@ -4044,18 +2304,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get soat_doc_add_hint => 'Opcional · Imagen o PDF';
 
   @override
-  String get soat_uploading => 'Subiendo…';
-
-  @override
   String get soat_upload_error =>
       'Error al subir. Archivo demasiado grande (máx. 10 MB).';
-
-  @override
-  String get soat_save_error =>
-      'No se pudo guardar el SOAT. Verifica tu conexión e intenta de nuevo.';
-
-  @override
-  String get soat_upload_error_label => 'Error al subir';
 
   @override
   String get event_draftBadge => 'Borrador';
@@ -4074,19 +2324,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get draft_publish => 'Publicar evento';
 
   @override
-  String get draft_publishConfirmTitle => '¿Publicar evento?';
-
-  @override
-  String get draft_publishConfirmMessage =>
-      'El evento será visible para todos los usuarios.';
-
-  @override
-  String get draft_savedSuccess => 'Borrador guardado exitosamente';
-
-  @override
-  String get draft_publishedSuccess => 'Evento publicado exitosamente';
-
-  @override
   String get route_typeLabel => 'Tipo de ruta';
 
   @override
@@ -4097,12 +2334,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get route_builder_title => 'Crear ruta personalizada';
-
-  @override
-  String get route_builder_hint_tap => 'Toca el mapa para agregar un punto';
-
-  @override
-  String get route_builder_hint_search => 'O usa el buscador de arriba';
 
   @override
   String get route_builder_search_placeholder => 'Buscar un lugar...';
@@ -4123,12 +2354,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get route_builder_empty_hint => 'Agrega puntos para construir tu ruta';
 
   @override
-  String get route_builder_add_button => 'Agregar punto';
-
-  @override
-  String get route_builder_add_button_at_limit => 'Agregar punto (máx. 9)';
-
-  @override
   String get route_builder_continue => 'Continuar';
 
   @override
@@ -4136,16 +2361,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Has alcanzado el límite de 9 puntos. Elimina uno para agregar otro.';
 
   @override
-  String get route_builder_scroll_hint => 'Desliza para ver todos';
-
-  @override
   String get route_builder_pick_mode_button => 'Seleccionar en mapa';
 
   @override
   String get route_builder_pick_mode_confirm => 'Añadir este punto';
-
-  @override
-  String get route_waypointsLabel => 'Puntos intermedios';
 
   @override
   String get route_placeSearchError => 'No se pudo cargar sugerencias';
@@ -4167,21 +2386,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get map_addressNotFound => 'Dirección no encontrada';
-
-  @override
-  String get event_route_config_title => 'Configurar ruta';
-
-  @override
-  String get event_route_configure_button => 'Configurar ruta';
-
-  @override
-  String get event_route_summary_meeting => 'Punto de encuentro';
-
-  @override
-  String get event_route_summary_destination => 'Destino';
-
-  @override
-  String get event_route_save_button => 'Guardar ruta';
 
   @override
   String get event_route_meeting_point_hint => 'Punto de encuentro';
