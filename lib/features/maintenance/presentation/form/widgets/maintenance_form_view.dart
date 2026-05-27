@@ -33,9 +33,10 @@ class MaintenanceFormView extends StatelessWidget {
               onTap: onChangeType,
               pill: true,
             ),
-            trailing: AppFormNavAction.pillText(
+            trailing: AppFormNavAction.text(
               label: context.l10n.maintenance_form_save_done.split(' ').first,
               onTap: () {}, // Save is triggered from the bottom CTA bar
+              emphasized: true,
               isLoading: isLoading,
             ),
             bottom: const MaintenanceFormProgressBars(),

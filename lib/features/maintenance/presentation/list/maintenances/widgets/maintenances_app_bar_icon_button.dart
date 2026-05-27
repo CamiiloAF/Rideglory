@@ -17,6 +17,7 @@ class MaintenancesAppBarIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -31,7 +32,9 @@ class MaintenancesAppBarIconButton extends StatelessWidget {
         ),
         child: Icon(
           icon,
-          color: AppColors.textOnDarkPrimary,
+          color: isAccent
+              ? colorScheme.onPrimary
+              : AppColors.textOnDarkPrimary,
           size: 16,
         ),
       ),

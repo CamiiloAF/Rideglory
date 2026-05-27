@@ -197,6 +197,7 @@ class AppFormNavHeader extends StatelessWidget implements PreferredSizeWidget {
       );
     }
     if (action is _PillTextAction) {
+      final onPrimary = Theme.of(context).colorScheme.onPrimary;
       return GestureDetector(
         onTap: action.isLoading ? null : action.onTap,
         child: Container(
@@ -209,10 +210,10 @@ class AppFormNavHeader extends StatelessWidget implements PreferredSizeWidget {
           ),
           child: Text(
             action.label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: AppColors.textOnDarkPrimary,
+              color: onPrimary,
             ),
           ),
         ),
