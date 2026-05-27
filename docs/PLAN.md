@@ -329,3 +329,771 @@ iter-1 (Deep Links + Apple Sign-In + Notification Routing)
 2. **Deep link domain**: ¿Cuál es el dominio a usar para Android App Links e iOS Universal Links? ¿`links.rideglory.app` (subdomain + Firebase Hosting), o api-gateway sirve los archivos `.well-known/`? Este dominio debe estar decidido durante iter-4 action-item phase.
 
 3. **`notifications` microservice scope futuro**: Para MVP, `notifications` vive en api-gateway. ¿Existe intención de extraerlo a un `notifications-ms` independiente después del MVP, o se consolida en api-gateway permanentemente?
+
+---
+
+## Refactor-01 — Refactor & Cleanup Extremo
+
+> Status: AWAITING HUMAN APPROVAL
+> Generated: 2026-05-27
+> Run mode: FRESH (new PRD)
+> Type: REFACTORING ONLY — zero new features, zero API changes
+
+### Summary
+
+This iteration eliminates the technical debt accumulated across 68+ feature files during recent product iterations. The work is pure internal refactoring: consolidate the duplicated SOAT implementation, extract one widget class per file, replace raw Flutter primitives with design system components, tokenize all hardcoded color literals, migrate navigation to go_router, and fix one confirmed UX bug. When the iteration closes, `dart analyze` reports 0 errors and 0 warnings, every feature file contains at most one widget class, and all shared-component adoption rules are mechanically verifiable by grep — with zero functional or visual changes for end users.
+
+---
+
+### Stories
+
+---
+
+#### REFACTOR-01: Fix SOAT loading-button bug
+
+**Violation type:** UX bug — when `_openingDocument = true`, the "Ver documento" button changes its label to `soat_downloading` instead of passing `isLoading: true` to `AppButton`, breaking the design system's loading-spinner contract.
+
+**Files affected:**
+- `lib/features/soat/presentation/widgets/soat_data_view.dart`
+
+**Acceptance criteria:**
+- [ ] Before coding: verify `lib/shared/widgets/form/app_button.dart` — when `isLoading: true`, `AppButton` must disable `onPressed` internally. If it does not guard the callback, the correct fix is `isLoading: _openingDocument` AND `onPressed: _openingDocument ? null : _openDocument` (both conditions simultaneously).
+- [ ] `grep "soat_downloading" lib/features/soat/presentation/widgets/soat_data_view.dart` returns 0 results
+- [ ] `grep "isLoading: _openingDocument" lib/features/soat/presentation/widgets/soat_data_view.dart` returns 1 result
+- [ ] `AppButton.isLoading=true` disables `onPressed` — confirmed in `app_button.dart` before implementation or guarded with null-onPressed fallback
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+
+**Risk:** Low — single-file change, no logic change, only button prop swap.
+**Effort:** S (<1h)
+**Depends on:** none
+
+---
+
+#### REFACTOR-02: Consolidate SOAT feature (move + router + DI regen)
+
+**Violation type:** Code duplication — two active SOAT implementations convive; `vehicles/presentation/soat/` is partially dead code but several pages/cubits are still imported by the new `features/soat/` implementation and the router. Naive deletion causes compile errors.
+
+**Files affected — MOVE (not delete):**
+- `vehicles/presentation/soat/soat_manual_capture_page.dart` → `features/soat/presentation/pages/soat_manual_capture_page.dart`
+- `vehicles/presentation/soat/soat_confirmation_page.dart` → `features/soat/presentation/pages/soat_confirmation_page.dart`
+- `vehicles/presentation/soat/cubit/soat_form_cubit.dart` + `soat_form_cubit.freezed.dart` → `features/soat/presentation/cubit/`
+- `vehicles/presentation/soat/widgets/soat_document_section.dart` → `features/soat/presentation/widgets/`
+- `vehicles/presentation/soat/widgets/soat_validity_card.dart` → `features/soat/presentation/widgets/`
+- `vehicles/presentation/soat/widgets/vehicle_soat_options_sheet.dart` → `features/soat/presentation/widgets/soat_vehicle_options_sheet.dart`
+
+**Files affected — DELETE outright** (superseded, not imported externally):
+- `vehicles/presentation/soat/soat_upload_page.dart` (legacy — replaced by new `soat_upload_page.dart`)
+- `vehicles/presentation/soat/cubit/soat_upload_cubit.dart` (marked `@injectable` — regen DI after deletion)
+- `vehicles/presentation/soat/widgets/soat_upload_option_card.dart`
+- `vehicles/presentation/soat/widgets/soat_manual_option_card.dart`
+- `vehicles/presentation/soat/widgets/soat_upload_question_header.dart`
+- `vehicles/presentation/soat/widgets/soat_vehicle_info_card.dart`
+- `vehicles/presentation/soat/widgets/soat_doc_preview.dart`
+- `vehicles/presentation/soat/widgets/soat_confirm_cta_bar.dart`
+- `vehicles/presentation/soat/widgets/soat_valid_alert.dart`
+
+**Files affected — update imports + blast perimeter:**
+- `lib/shared/router/app_router.dart` — remove legacy alias import; rewire `/vehicles/soat` route builder to use new `SoatUploadPage`; add named `GoRoute` for `AppRoutes.soatManualCapture`
+- `lib/shared/router/app_routes.dart` — add `static const String soatManualCapture = '/soat/manual-capture'`
+- `lib/features/soat/presentation/pages/soat_manual_capture_params.dart` — NEW: simple params class (`VehicleModel?`, `SoatModel?`, `String? initialLocalImagePath`)
+- `lib/features/soat/presentation/widgets/soat_status_view.dart` — update import; migrate `Navigator.of(context).push<bool>(SoatManualCapturePage)` → `context.push<bool>(AppRoutes.soatManualCapture, extra: SoatManualCaptureParams(...))`; migrate page-level `Navigator.of(context).pop(true)` → `context.pop(true)`
+- `lib/features/soat/presentation/widgets/soat_source_grid.dart` — update import; migrate `Navigator.of(context).push<bool>(SoatManualCapturePage)` → `context.push<bool>(AppRoutes.soatManualCapture, extra: SoatManualCaptureParams(...))`
+- `lib/features/vehicles/presentation/form/vehicle_form_docs_section.dart` — update imports; migrate `Navigator.of(context).push<PendingManualSoat>(SoatManualCapturePage)` → `context.push<PendingManualSoat>(AppRoutes.soatManualCapture, extra: SoatManualCaptureParams(...))`
+- `lib/features/vehicles/presentation/form/vehicle_form_page.dart` — update import path for `SoatConfirmationPage`; annotate `Navigator.of(context).pushReplacement(...)` with `// Custom: pushReplacement — VehicleFormPage must not remain in back stack after SOAT confirmation`
+- `soat_manual_capture_page.dart` (after move) — annotate 3× `Navigator.of(sheetCtx).pop(0/1/2)` calls inside `showModalBottomSheet` builder with `// Custom: sheetCtx.pop() — required pattern for showModalBottomSheet typed result return`; migrate page-level `Navigator.of(context).pop()` (line 262) → `context.pop()`
+- Run `dart run build_runner build --delete-conflicting-outputs` after deleting `soat_upload_cubit.dart`
+
+**Acceptance criteria:**
+- [ ] `find lib/features/vehicles/presentation/soat -name "*.dart" 2>/dev/null | wc -l` returns 0
+- [ ] `grep -r "vehicles/presentation/soat" lib/ --include="*.dart"` returns 0 results
+- [ ] `grep "\/vehicles\/soat" lib/shared/router/app_router.dart` still returns 1 result (route kept, wired to new `SoatUploadPage`)
+- [ ] `grep "soatManualCapture" lib/shared/router/app_routes.dart` returns 1 result
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+- [ ] Manual smoke test: vehicle detail SOAT badge → upload page → manual capture form → save → back — all steps navigate correctly
+- [ ] Manual smoke test: vehicle creation → SOAT photo section → photo attachment → confirmation page — works end to end
+- [ ] Manual smoke test: SOAT status view → "Edit" button → manual capture form → save → status refreshes
+- [ ] Manual smoke test: all 6 `vehicleSoat` callers (vehicle detail, vehicle form, SOAT data view, SOAT empty state, etc.) still navigate to the upload page correctly
+
+**Risk:** High — 5 external files import from the legacy folder; 6 active callers use `AppRoutes.vehicleSoat`; a new named route for `SoatManualCapturePage` must be created; DI must be regenerated after deleting `SoatUploadCubit`; 3 typed-result `Navigator.of().push<bool>()` calls must be migrated.
+**Effort:** M (2–3h)
+**Depends on:** REFACTOR-01
+
+---
+
+#### REFACTOR-10: Fix `context.goNamed` navigation violations
+
+**Violation type:** `context.goNamed()` used for navigation where `context.pushNamed()` or `context.pop()` is required.
+
+**Files affected:**
+- `lib/features/profile/presentation/profile_page.dart` — `context.goNamed(AppRoutes.home)` in `PopScope`
+- `lib/features/vehicles/presentation/garage/garage_page.dart` — `context.goNamed(AppRoutes.home)` in `PopScope`
+- `lib/features/events/presentation/list/events_page.dart` — `context.goNamed(AppRoutes.home)` in `PopScope`
+- `lib/features/authentication/login/presentation/forgot_password_view.dart` — `context.goNamed(AppRoutes.login)` ×2
+
+**Decision rules (confirmed by Architect):**
+- `profile_page.dart`, `garage_page.dart`, `events_page.dart` in `PopScope`: **keep as `context.goNamed`** — shell-tab navigation must replace the stack or the `StatefulShellRoute` state machine breaks. Annotate each with `// Intentional: shell-tab navigation resets stack to prevent back-stack accumulation in StatefulShellRoute`.
+- `forgot_password_view.dart` ×2: the view is pushed via `context.pushNamed(AppRoutes.forgotPassword)`, so returning should use `context.pop()`. Change both calls to `context.pop()`.
+
+**Acceptance criteria:**
+- [ ] `grep -rn "context\.goNamed" lib/features/ --include="*.dart" | grep -v "// Intentional:"` returns 0 results
+- [ ] All 3 shell-tab `context.goNamed` calls annotated with `// Intentional: shell-tab navigation resets stack to prevent back-stack accumulation in StatefulShellRoute`
+- [ ] Both `context.goNamed(AppRoutes.login)` calls in `forgot_password_view.dart` replaced with `context.pop()`
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+
+**Risk:** Low — 5 isolated navigation calls. Shell-tab calls remain as-is with annotation.
+**Effort:** S (1h)
+**Depends on:** REFACTOR-02 (clean baseline)
+
+---
+
+#### REFACTOR-08: Replace FormBuilderTextField with AppTextField
+
+**Violation type:** Prohibited use of `FormBuilderTextField` where `AppTextField` exists.
+
+**Files affected (5 occurrences in 4 files):**
+- `lib/features/vehicles/presentation/form/widgets/vehicle_specs_row.dart` — 1 instance
+- `lib/features/vehicles/presentation/form/widgets/vehicle_form_id_section.dart` — 2 instances
+- `lib/features/maintenance/presentation/form/widgets/maintenance_next_km_pill.dart` — 1 instance
+- `lib/features/events/presentation/form/widgets/sections/event_form_price_section.dart` — 1 instance
+
+**Acceptance criteria:**
+- [ ] `grep -rn "FormBuilderTextField" lib/features/ --include="*.dart"` returns 0 results
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+
+**Risk:** Low — `AppTextField` is a direct wrapper around `FormBuilderTextField`; verify each instance's `name` prop and validators map correctly.
+**Effort:** S (1h)
+**Depends on:** REFACTOR-02 (clean baseline)
+
+---
+
+#### REFACTOR-07: Replace raw Flutter buttons with AppButton/AppTextButton
+
+**Violation type:** Prohibited use of `ElevatedButton`, `TextButton`, `OutlinedButton` directly in feature files.
+
+**Files affected (8 instances across 6 files):**
+- `lib/features/users/presentation/widgets/rider_profile_content.dart` — 1× `ElevatedButton`
+- `lib/features/events/presentation/form/widgets/event_form_view.dart` — 3× `TextButton`
+- `lib/features/events/presentation/form/screens/event_route_config_screen.dart` — 1× `TextButton`
+- `lib/features/events/presentation/tracking/widgets/end_ride_confirm_dialog.dart` — 1× `TextButton`
+- `lib/features/events/presentation/tracking/widgets/sos_active_overlay.dart` — 1× `OutlinedButton`
+- `lib/features/events/presentation/tracking/widgets/sos_confirm_dialog.dart` — 1× `TextButton`
+
+**Note:** `sos_active_overlay.dart` OutlinedButton may require `// Custom: SOS overlay requires OutlinedButton — AppButton does not expose outline variant with this styling` if `AppButton` does not cover the required style. Verify before replacing.
+
+**Pre-condition for REFACTOR-07:** Inspect `test/features/users/rider_profile_page_test.dart` — if it uses `find.byType(ElevatedButton)`, it will fail after replacement. Update the test in the same commit.
+
+**Acceptance criteria:**
+- [ ] `grep -rn "ElevatedButton\|OutlinedButton\|TextButton" lib/features/ --include="*.dart" | grep -v "// Custom:"` returns 0 results
+- [ ] Any retained raw button is annotated with `// Custom: <reason>` on the same line
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+
+**Risk:** Low — `AppButton` and `AppTextButton` cover all required variants. SOS overlay may need annotation.
+**Effort:** S (1–2h)
+**Depends on:** REFACTOR-02 (clean baseline)
+
+---
+
+#### REFACTOR-11: Tokenize hardcoded colors (all 25 files)
+
+**Violation type:** `Color(0x...)` and `Colors.*` literals used directly in feature `build()` methods.
+
+**Pre-condition — color value decision (must be committed first):**
+
+Before touching any color literal, audit `lib/core/theme/app_colors.dart` and document the decision:
+- For `Color(0xFF22C55E)` (Tailwind green-500) and `Color(0xFFEAB308)` (Tailwind yellow-500): add `AppColors.statusGreen = Color(0xFF22C55E)` and `AppColors.statusWarning = Color(0xFFEAB308)` as new tokens — this preserves the exact rendered color vs. mapping to the existing (different) `AppColors.success`/`AppColors.warning` tokens.
+- For `Color(0x66F98C1F)` (primary at 40% opacity): add `AppColors.primarySubtle` or use `colorScheme.primary.withValues(alpha: 0.4)`.
+- For `Color(0xFFEF4444)` (Tailwind red-500): add `AppColors.statusError` if not already present.
+- Verify `AppColors.success` (#10B981), `AppColors.warning` (#F59E0B), `AppColors.error` (#EF4444) exist; add missing ones.
+- `surfaceTintColor: Colors.transparent` — acceptable Flutter Material3 idiom; annotate `// Intentional: remove Material3 surface tint`.
+- Gradient overlay stops with `Colors.transparent` — annotate `// Intentional: gradient stop`.
+- `Colors.white` / `Colors.black` inside dark-mode containers: prefer `colorScheme.onSurface`, `colorScheme.onPrimary`, or `colorScheme.surface` where semantically correct.
+
+**Files affected — `Color(0x...)` literals (7 confirmed + 18 additional):**
+- `lib/features/home/presentation/widgets/home_vehicle_info_row.dart`
+- `lib/features/vehicles/presentation/garage/widgets/garage_vehicles_content.dart`
+- `lib/features/vehicles/presentation/garage/widgets/vehicle_detail_view.dart`
+- `lib/features/vehicles/presentation/garage/widgets/vehicle_soat_card.dart`
+- `lib/features/profile/presentation/edit_profile_page.dart`
+- `lib/features/profile/presentation/widgets/profile_header.dart`
+- `lib/features/users/presentation/widgets/rider_profile_content.dart`
+- `lib/features/maintenance/presentation/widgets/maintenance_type_style.dart`
+- `lib/features/maintenance/presentation/detail/widgets/maintenance_next_service_card.dart`
+- `lib/features/maintenance/presentation/list/maintenances/widgets/maintenance_status_toggle.dart`
+- `lib/features/maintenance/presentation/list/maintenances/widgets/maintenance_next_date_pill.dart`
+- `lib/features/maintenance/presentation/form/widgets/maintenance_next_km_pill.dart`
+- `lib/features/maintenance/presentation/detail/maintenance_type_card.dart`
+- `lib/features/maintenance/presentation/list/maintenances/widgets/maintenance_grouped_list_item.dart`
+- `lib/features/maintenance/presentation/list/maintenances/maintenances_data_widget.dart`
+- `lib/features/maintenance/presentation/widgets/maintenance_filters_bottom_sheet.dart`
+- `lib/features/maintenance/presentation/widgets/item_card/modern_maintenance_card.dart`
+- `lib/features/events/presentation/detail/event_detail_view.dart`
+- `lib/features/events/presentation/detail/widgets/event_detail_cta_bar.dart`
+- `lib/features/events/presentation/detail/widgets/event_detail_owner_lifecycle_bar.dart`
+- `lib/features/events/presentation/tracking/widgets/rider_telemetry_panel.dart`
+- `lib/features/vehicles/presentation/garage/widgets/vehicle_maintenance_history_section.dart`
+
+**Files affected — `Colors.*` literals:**
+- `lib/features/home/presentation/widgets/home_event_view_details_button.dart`
+- `lib/features/home/presentation/widgets/home_view_all_events_button.dart`
+- `lib/features/home/presentation/widgets/home_event_card.dart`
+- `lib/features/home/presentation/widgets/home_event_gradient_overlay.dart`
+- `lib/features/home/presentation/widgets/home_event_difficulty_badge.dart`
+- `lib/features/event_registration/presentation/registration_detail_page.dart`
+- `lib/features/event_registration/presentation/my_registrations_view.dart`
+- `lib/features/event_registration/presentation/widgets/inscription_card.dart`
+- `lib/features/event_registration/presentation/widgets/my_registrations_filter_bottom_sheet.dart`
+- `lib/features/vehicles/presentation/form/widgets/vehicle_scan_banner.dart`
+- `lib/features/vehicles/presentation/form/widgets/vehicle_specs_row.dart`
+- `lib/features/vehicles/presentation/form/widgets/vehicle_form_cover_section.dart`
+
+**Note:** Color tokenization for files shared with widget-extraction stories (e.g., `garage_vehicles_content.dart`, `event_detail_view.dart`) should be done in the same commit as the widget extraction to avoid double-editing.
+
+**Acceptance criteria:**
+- [ ] New color tokens (`AppColors.statusGreen`, `AppColors.statusWarning`) committed to `lib/core/theme/app_colors.dart` as the first commit of this story
+- [ ] `grep -rn "Color(0x" lib/features/ --include="*.dart" | grep -v "// Intentional:"` returns 0 results
+- [ ] `grep -rn "Colors\." lib/features/ --include="*.dart" | grep -v "// Intentional:"` returns 0 results (or ≤5 annotated exceptions)
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+
+**Risk:** Low-Medium — purely cosmetic; status colors require new tokens (not blind mapping to existing ones) to preserve exact rendered color.
+**Effort:** M (2–3h)
+**Depends on:** REFACTOR-03a, REFACTOR-06a (do color work after files are split to avoid double-editing)
+
+---
+
+#### REFACTOR-13: Fix direct `showDialog` call — use AppDialog wrapper
+
+**Violation type:** `showDialog(...)` called directly instead of using the `AppDialog`/`ConfirmationDialog` wrapper. Rule: coding standards §Components — "Prohibido llamar `showDialog(...)` directamente."
+
+**Files affected:**
+- `lib/features/maintenance/presentation/widgets/item_card/info_chip_tooltip.dart`
+
+**Decision for developer:** `MileageInfoDialog` is an info-only tooltip with no CTA buttons. If `AppDialog` requires action buttons and does not support an info-only variant, annotate with `// Custom: MileageInfoDialog is an info-only tooltip — AppDialog requires action buttons`. Otherwise migrate to use `AppDialog`.
+
+**Acceptance criteria:**
+- [ ] `grep -rn "showDialog(" lib/features/ --include="*.dart" | grep -v "// Custom:\|AppDialog\|ConfirmationDialog"` returns 0 results
+- [ ] `Colors.black.withValues` usage in `info_chip_tooltip.dart` also replaced with `AppColors.*` or `colorScheme.*`
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+
+**Risk:** Low — single-file change.
+**Effort:** S (<1h)
+**Depends on:** REFACTOR-02 (clean baseline)
+
+---
+
+#### REFACTOR-04: Widget extraction — Authentication feature
+
+**Violation type:** Multiple widget classes per file. `forgot_password_view.dart` (9 widgets), `login_view.dart` (8 widgets), `signup_view.dart` (6 widgets).
+
+**Files affected (extract FROM):**
+- `lib/features/authentication/login/presentation/forgot_password_view.dart`
+- `lib/features/authentication/login/presentation/login_view.dart`
+- `lib/features/authentication/signup/presentation/signup_view.dart`
+
+**Extraction strategy:** Auth screens are typically stateless forms — straightforward extraction. Create a `widgets/` subdirectory when extracting 4+ widgets from a single file.
+
+**Acceptance criteria:**
+- [ ] `find lib/features/authentication -name "*.dart" | while read f; do count=$(grep -cE "extends (StatelessWidget|StatefulWidget|PreferredSizeWidget)" "$f" 2>/dev/null); if [ "${count:-0}" -gt 1 ] 2>/dev/null; then echo "$count $f"; fi; done` returns 0 lines
+- [ ] `grep "Widget _build\|Widget _[a-z]" lib/features/authentication/ --include="*.dart" -rn | grep -v "//"` returns 0 results
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+- [ ] Manual smoke test: Login → Forgot Password → back to Login; Signup flow start to end
+
+**Risk:** Low — auth screens are stateless forms; no complex shared state.
+**Effort:** M (3–4h)
+**Depends on:** REFACTOR-10 (both touch `forgot_password_view.dart`)
+
+---
+
+#### REFACTOR-03a: Widget extraction — Vehicles (garage content + vehicle detail)
+
+**Violation type:** Multiple widget classes per file. `garage_vehicles_content.dart` (16 widgets + 2 widget-returning methods), `vehicle_detail_view.dart` (13 widgets). These are the highest-risk extractions in the entire iteration.
+
+**Files affected (extract FROM):**
+- `lib/features/vehicles/presentation/garage/widgets/garage_vehicles_content.dart`
+- `lib/features/vehicles/presentation/garage/widgets/vehicle_detail_view.dart`
+
+**Extraction strategy (mandatory approach for `garage_vehicles_content.dart`):**
+1. Audit: classify each of the 16 classes as pure-display (all data via constructor), state-consumer (calls `context.read<VehicleCubit>()`), or state-mutator (triggers cubit methods).
+2. Extract pure-display classes first, one per commit; run `dart analyze && flutter test` after each.
+3. State consumers: extract with `BlocBuilder` encapsulated inside the new widget file — do NOT pass `BuildContext` as a constructor param.
+4. State mutators: pass typed callback as constructor param — extracted widget never calls cubit directly.
+5. `_buildPlaceholderIcon()` → extract as `GaragePlaceholderIcon` (pure leaf).
+6. `_buildContainer()` → extract as `GarageVehicleCard`, passing all data as constructor params.
+7. Color literals (`Color(0xFF22C55E)`, `Color(0xFFEAB308)` in `_MaintenanceCard`) must be replaced with `AppColors.statusGreen`/`AppColors.statusWarning` in the same commit as extraction.
+
+**Acceptance criteria:**
+- [ ] `find lib/features/vehicles/presentation/garage -name "*.dart" | while read f; do count=$(grep -cE "extends (StatelessWidget|StatefulWidget|PreferredSizeWidget)" "$f" 2>/dev/null); if [ "${count:-0}" -gt 1 ] 2>/dev/null; then echo "$count $f"; fi; done` returns 0 lines
+- [ ] `grep "Widget _build\|Widget _[a-z]" lib/features/vehicles/presentation/garage/ --include="*.dart" -rn | grep -v "//"` returns 0 results
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+
+**Risk:** High — `garage_vehicles_content.dart` has 16 classes; `_MaintenanceWidget` calls `getIt<GetMaintenancesByVehicleIdUseCase>()` (correct, preserve). Extract one widget per commit and run `flutter test` after each.
+**Effort:** L (5–6h)
+**Depends on:** REFACTOR-08
+
+---
+
+#### REFACTOR-03b: Widget extraction — Vehicles (form + docs + soat section)
+
+**Violation type:** Multiple widget classes per file. `vehicle_form.dart` (9 widgets), `vehicle_document_upload_slot.dart` (4 widgets), `vehicle_form_page.dart` (2 widgets), `vehicle_form_cover_section.dart` (4 widgets), `vehicle_form_id_section.dart` (3 widgets), `vehicle_form_docs_section.dart` (2 widgets), `vehicle_card.dart` (widget-returning method `_buildPlaceholderIcon()`).
+
+**Files affected (extract FROM):**
+- `lib/features/vehicles/presentation/widgets/vehicle_form.dart`
+- `lib/features/vehicles/presentation/widgets/vehicle_document_upload_slot.dart`
+- `lib/features/vehicles/presentation/form/vehicle_form_page.dart`
+- `lib/features/vehicles/presentation/form/widgets/vehicle_form_cover_section.dart`
+- `lib/features/vehicles/presentation/form/widgets/vehicle_form_id_section.dart`
+- `lib/features/vehicles/presentation/form/widgets/vehicle_form_docs_section.dart`
+- `lib/features/vehicles/presentation/widgets/vehicle_card.dart`
+
+**Note:** `vehicle_form_page.dart`'s `Navigator.of(context).pushReplacement(...)` and modal bottom sheet `pop()` calls are JUSTIFIED EXCEPTIONS — they are already annotated with `// Custom:` per REFACTOR-02. Do NOT migrate them here.
+
+**Extraction strategy:** Each section receives `GlobalKey<FormBuilderState>` via constructor (existing pattern); maintain this pattern for safe extraction.
+
+**Acceptance criteria:**
+- [ ] `find lib/features/vehicles/presentation -name "*.dart" | while read f; do count=$(grep -cE "extends (StatelessWidget|StatefulWidget|PreferredSizeWidget)" "$f" 2>/dev/null); if [ "${count:-0}" -gt 1 ] 2>/dev/null; then echo "$count $f"; fi; done` returns 0 lines
+- [ ] `grep "Widget _build\|Widget _[a-z]" lib/features/vehicles/presentation/ --include="*.dart" -rn | grep -v "//"` returns 0 results
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+
+**Risk:** Medium — multi-step form with `GlobalKey<FormBuilderState>` shared across sections. Maintain constructor-injection pattern.
+**Effort:** M (3–4h)
+**Depends on:** REFACTOR-03a
+
+---
+
+#### REFACTOR-05a: Widget extraction — Events (detail + CTA bar)
+
+**Violation type:** Multiple widget classes per file. `event_detail_view.dart` (9 widgets + 1 widget-returning method `_shell()`), `event_detail_cta_bar.dart` (8 widgets + `Widget _buildContent()` method), `event_detail_owner_lifecycle_bar.dart` (4 widgets), `event_detail_meeting_point_section.dart` (4 widgets), `event_detail_header.dart` (2 widgets), `event_detail_header_background_image.dart` (2 widgets), `event_detail_by_id_page.dart` (widget-returning method).
+
+**Files affected (extract FROM):**
+- `lib/features/events/presentation/detail/event_detail_view.dart`
+- `lib/features/events/presentation/detail/widgets/event_detail_cta_bar.dart`
+- `lib/features/events/presentation/detail/widgets/event_detail_owner_lifecycle_bar.dart`
+- `lib/features/events/presentation/detail/widgets/event_detail_meeting_point_section.dart`
+- `lib/features/events/presentation/detail/widgets/event_detail_header.dart`
+- `lib/features/events/presentation/detail/widgets/event_detail_header_background_image.dart`
+- `lib/features/events/presentation/detail/event_detail_by_id_page.dart`
+
+**Critical patterns to preserve:**
+- `EventDetailViewState.currentEvent` is mutable local state — inner widgets receive `event` as constructor params (confirmed safe). After extraction, `onEdit` must remain as a typed callback; `setState(() => currentEvent = result)` must stay in `EventDetailViewState`.
+- `event_detail_cta_bar.dart`: `_buildContent` method → extract as `EventDetailCtaBarContent extends StatelessWidget`. Each of the ~8 variants (e.g. `EventDetailRegisteredBanner`, `EventDetailPendingBanner`) becomes its own file in `detail/widgets/cta/`.
+- `event_detail_meeting_point_section.dart` line 275: `Navigator.of(context).push(MaterialPageRoute(...EventRouteMapScreen...))` — `EventRouteMapScreen` has no named route. Developer must choose: (a) add `AppRoutes.eventRouteMap` to router and migrate, or (b) annotate `// Custom: EventRouteMapScreen has no go_router named route — anonymous push preserved`.
+
+**Acceptance criteria:**
+- [ ] `find lib/features/events/presentation/detail -name "*.dart" | while read f; do count=$(grep -cE "extends (StatelessWidget|StatefulWidget|PreferredSizeWidget)" "$f" 2>/dev/null); if [ "${count:-0}" -gt 1 ] 2>/dev/null; then echo "$count $f"; fi; done` returns 0 lines
+- [ ] `grep "Widget _build\|Widget _shell\|Widget _[a-z]" lib/features/events/presentation/detail/ --include="*.dart" -rn | grep -v "//"` returns 0 results
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+- [ ] Manual smoke test: Event detail CTA bar renders correctly in all 4 state variants (registered / pending / closed / full) — hard AC, no widget tests exist for this component
+
+**Risk:** High — `event_detail_cta_bar.dart` has 8 state-variant widgets with no existing widget tests; extraction failures are silent at compile time.
+**Effort:** L (5–6h)
+**Depends on:** REFACTOR-07, REFACTOR-09
+
+---
+
+#### REFACTOR-05b: Widget extraction — Events (form + list + tracking + drafts)
+
+**Violation type:** Multiple widget classes per file across events form, list, tracking, and drafts subsections.
+
+**Files affected (extract FROM):**
+- `lib/features/events/presentation/form/widgets/sections/event_form_max_participants_section.dart` (7 widgets)
+- `lib/features/events/presentation/form/widgets/sections/event_form_locations_section.dart` (6 widgets)
+- `lib/features/events/presentation/form/widgets/sections/event_form_price_section.dart` (4 widgets)
+- `lib/features/events/presentation/form/widgets/event_form_bottom_bar.dart` (3 widgets)
+- `lib/features/events/presentation/form/widgets/sections/event_form_details_section.dart` (3 widgets)
+- `lib/features/events/presentation/form/widgets/sections/event_form_difficulty_section.dart` (3 widgets)
+- `lib/features/events/presentation/form/widgets/sections/event_form_event_type_section.dart` (3 widgets)
+- `lib/features/events/presentation/form/widgets/sections/event_form_multi_brand_section.dart` (3 widgets)
+- `lib/features/events/presentation/form/widgets/sections/waypoint_item_card.dart` (2 widgets)
+- `lib/features/events/presentation/form/widgets/sections/event_route_type_selector.dart` (2 widgets)
+- `lib/features/events/presentation/form/widgets/cover_preview_widget.dart` (2 widgets)
+- `lib/features/events/presentation/form/screens/event_route_config_screen.dart` (4 widgets)
+- `lib/features/events/presentation/tracking/participants/participants_placeholder_page.dart` (3 widgets + 2 widget-returning methods)
+- `lib/features/events/presentation/tracking/widgets/live_map_app_bar.dart` (4 widgets)
+- `lib/features/events/presentation/list/widgets/event_card.dart` (5 widgets)
+- `lib/features/events/presentation/list/widgets/events_data_view.dart` (4 widgets)
+- `lib/features/events/presentation/list/widgets/events_page_view.dart` (2 widgets)
+- `lib/features/events/presentation/list/widgets/event_card_header.dart` (widget-returning method `_buildPopupMenu()`)
+- `lib/features/events/presentation/drafts/my_drafts_page.dart` (2 widgets)
+
+**Note:** `event_form_locations_section.dart` contains `Navigator.of(context).push(MaterialPageRoute(...EventRouteConfigScreen...))` — same decision as REFACTOR-05a for unnamed routes.
+
+**Acceptance criteria:**
+- [ ] `find lib/features/events/presentation/form lib/features/events/presentation/tracking lib/features/events/presentation/list lib/features/events/presentation/drafts -name "*.dart" | while read f; do count=$(grep -cE "extends (StatelessWidget|StatefulWidget|PreferredSizeWidget)" "$f" 2>/dev/null); if [ "${count:-0}" -gt 1 ] 2>/dev/null; then echo "$count $f"; fi; done` returns 0 lines
+- [ ] `grep "Widget _buildEmptyState\|Widget _buildRiderList\|Widget _buildPopupMenu" lib/features/events/ --include="*.dart" -rn` returns 0 results
+- [ ] All event_form_*_section.dart files: each returns ≤1 on the widget-class check
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions (widget tests for `event_filters_bottom_sheet`, `events_page_view`, `attendees_list_navigation` must continue to pass)
+
+**Risk:** Medium — 19 source files; form sections are tightly coupled but pattern of explicit constructor params is consistent.
+**Effort:** L (5–7h)
+**Depends on:** REFACTOR-05a
+
+---
+
+#### REFACTOR-06a: Widget extraction — Maintenance feature + showDialog fix
+
+**Violation type:** Multiple widget classes per file in maintenance feature + direct `showDialog` call.
+
+**Files affected (extract FROM):**
+- `lib/features/maintenance/presentation/widgets/maintenance_filters_bottom_sheet.dart` (12 widgets — `StatefulWidget` using `setState` for `_filters` local state; keep outer `StatefulWidget` + `State` pair in one file; extract only stateless sub-components: filter chips, section headers, type selectors)
+- `lib/features/maintenance/presentation/list/maintenances/maintenances_page.dart` (3 widgets)
+- `lib/features/maintenance/presentation/detail/maintenance_detail_page.dart` (3 widgets)
+- `lib/features/maintenance/presentation/list/maintenances/widgets/maintenance_summary_widget.dart` (2 widgets)
+- `lib/features/maintenance/presentation/detail/widgets/maintenance_next_service_card.dart` (2 widgets)
+- `lib/features/maintenance/presentation/list/maintenances/widgets/maintenance_grouped_list_item.dart` (widget-returning method `_rightBadge()`)
+- `lib/features/maintenance/presentation/widgets/item_card/info_chip_tooltip.dart` — `showDialog` violation (see REFACTOR-13); may be combined with this story if REFACTOR-13 is not done first
+
+**Note:** `maintenance_filters_bottom_sheet.dart:95` has `Navigator.pop(context, _filters)` — this is a pop-with-result that must be migrated to `context.pop(_filters)` in this story or REFACTOR-09.
+
+**Acceptance criteria:**
+- [ ] `find lib/features/maintenance -name "*.dart" | while read f; do count=$(grep -cE "extends (StatelessWidget|StatefulWidget|PreferredSizeWidget)" "$f" 2>/dev/null); if [ "${count:-0}" -gt 1 ] 2>/dev/null; then echo "$count $f"; fi; done` returns 0 lines
+- [ ] `grep "Widget _rightBadge\|Widget _build\|Widget _[a-z]" lib/features/maintenance/ --include="*.dart" -rn | grep -v "//"` returns 0 results
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+- [ ] Manual smoke test: Maintenance list → open filters → select type → apply → list filters correctly
+
+**Risk:** Medium — `maintenance_filters_bottom_sheet.dart` (12 classes) holds local selection state in `StatefulWidget`; extract only stateless sub-components.
+**Effort:** M (3–4h)
+**Depends on:** REFACTOR-04
+
+---
+
+#### REFACTOR-06b: Widget extraction — Home + Profile + Registration features
+
+**Violation type:** Multiple widget classes per file across home, profile, users, and event_registration features.
+
+**Files affected (extract FROM):**
+- `lib/features/home/presentation/widgets/home_event_card.dart` (5 widgets)
+- `lib/features/home/presentation/home_page.dart` (2 widgets)
+- `lib/features/home/presentation/widgets/home_garage_section.dart` (2 widgets)
+- `lib/features/profile/presentation/edit_profile_page.dart` (3 widgets)
+- `lib/features/profile/presentation/widgets/profile_stats_row.dart` (3 widgets)
+- `lib/features/profile/presentation/widgets/profile_actions_list.dart` (3 widgets)
+- `lib/features/profile/presentation/widgets/profile_header.dart` (2 widgets)
+- `lib/features/profile/presentation/widgets/profile_garage_section.dart` (2 widgets)
+- `lib/features/profile/presentation/widgets/profile_content.dart` (2 widgets)
+- `lib/features/users/presentation/widgets/rider_profile_content.dart` (4 widgets)
+- `lib/features/event_registration/presentation/event_registration_page.dart` (2 widgets)
+- `lib/features/event_registration/presentation/registration_detail_page.dart` (2 widgets)
+- `lib/features/event_registration/presentation/widgets/inscription_card.dart` (2 widgets)
+
+**Acceptance criteria:**
+- [ ] `find lib/features/home lib/features/profile lib/features/users lib/features/event_registration -name "*.dart" | while read f; do count=$(grep -cE "extends (StatelessWidget|StatefulWidget|PreferredSizeWidget)" "$f" 2>/dev/null); if [ "${count:-0}" -gt 1 ] 2>/dev/null; then echo "$count $f"; fi; done` returns 0 lines
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+
+**Risk:** Low-Medium — profile and registration files are small and isolated; `home_event_card.dart` (5 classes) is the heaviest file.
+**Effort:** M (3–4h)
+**Depends on:** REFACTOR-06a
+
+---
+
+#### REFACTOR-09: Migrate Navigator.of → go_router (remaining)
+
+**Violation type:** Prohibited use of `Navigator.of(context).push*` / `.pop()` and `Navigator.pop(context)` form where go_router should be used.
+
+**Files affected — `Navigator.of(context).` simple pops (safe to replace with `context.pop()`):**
+- `lib/features/maintenance/presentation/form/maintenance_form_page.dart` (2 calls; one returns `List<MaintenanceModel>` — verify caller reads future)
+- `lib/features/maintenance/presentation/form/widgets/change_vehicle_mileage_bottom_sheet.dart` (2 calls)
+- `lib/features/maintenance/presentation/form/widgets/maintenance_form_content.dart` (1 call)
+- `lib/features/events/presentation/list/widgets/event_filters_bottom_sheet.dart` (2 calls)
+- `lib/features/events/presentation/form/screens/event_route_config_screen.dart` (2 calls)
+- `lib/features/events/presentation/form/widgets/sections/event_form_locations_section.dart` (1 call)
+- `lib/features/events/presentation/detail/event_detail_view.dart` (1 call)
+- `lib/features/events/presentation/detail/event_route_map_screen.dart` (1 call)
+- `lib/features/events/presentation/attendees/widgets/attendees_filter_bottom_sheet.dart` (1 call)
+- `lib/features/event_registration/presentation/widgets/my_registrations_filter_bottom_sheet.dart` (2 calls)
+- `lib/features/event_registration/presentation/widgets/registration_detail_bottom_bar.dart` (2 calls)
+- `lib/features/vehicles/presentation/form/widgets/vehicle_form_docs_section.dart` (1 simple back navigation call)
+- `lib/features/soat/presentation/widgets/soat_source_grid.dart` (1 call — if not already migrated in REFACTOR-02)
+
+**Files affected — `Navigator.pop(context)` form (additional 6 calls not caught by `Navigator\.of(context)\.` grep):**
+- `lib/features/vehicles/presentation/garage/widgets/garage_options_bottom_sheet.dart` (3 simple pops: archive, delete, set-main — verify all 3 actions function post-migration)
+- `lib/features/maintenance/presentation/detail/widgets/maintenance_options_bottom_sheet.dart` (2 pops with typed result `MaintenanceAction.*` — verify caller reads future)
+- `lib/features/maintenance/presentation/widgets/maintenance_filters_bottom_sheet.dart` (1 pop with result `_filters` — verify `showModalBottomSheet` caller reads returned future; may be already done in REFACTOR-06a)
+
+**Justified exceptions (annotate, do not migrate):**
+- `vehicle_form_page.dart`: `Navigator.of(context).pushReplacement(...)` → already annotated in REFACTOR-02 with `// Custom: pushReplacement — VehicleFormPage must not remain in back stack after SOAT confirmation`
+- `soat_manual_capture_page.dart`: 3× `Navigator.of(sheetCtx).pop(0/1/2)` inside `showModalBottomSheet` builder → already annotated in REFACTOR-02 with `// Custom: sheetCtx.pop() — required pattern for showModalBottomSheet typed result return`
+
+**Decision required before implementation:** For `EventRouteConfigScreen` and `EventRouteMapScreen` (no named routes in `app_routes.dart`): choose Option A (add named routes) or Option B (annotate `// Custom: screen has no go_router named route — anonymous push preserved`). Document the choice.
+
+**Acceptance criteria:**
+- [ ] `grep -rn "Navigator\.of(context)\." lib/features/ --include="*.dart" | grep -v "// Custom:"` returns 0 results
+- [ ] `grep -rn "Navigator\.pop(context" lib/features/ --include="*.dart" | grep -v "SystemNavigator\|// Custom:"` returns 0 results
+- [ ] All remaining `Navigator.of`/`Navigator.pop` calls annotated with `// Custom: <reason>`
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+- [ ] Manual smoke test: Maintenance list → open filters → apply → list filters correctly (verifies `maintenance_filters_bottom_sheet.dart` pop-with-result)
+- [ ] Manual smoke test: Garage → vehicle options (archive / delete / set main) — all three actions function after migration
+
+**Risk:** Medium — `Navigator.pop(context)` form not caught by standard grep; pop-with-result cases must be verified individually.
+**Effort:** M (3–4h)
+**Depends on:** REFACTOR-02, REFACTOR-05a, REFACTOR-06a
+
+---
+
+#### REFACTOR-14: Centralizar header de navegación de forms (AppFormNavHeader)
+
+**Violation type:** Duplicación de UI — el patrón "header de form con acción izquierda + título centrado + acción derecha + borde inferior" está re-implementado ad-hoc en al menos 3 features (vehículos, mantenimiento, eventos) con pequeñas variaciones de estilo, tipografía, alturas y colores. No existe un componente compartido y cualquier cambio de diseño requiere editar N archivos.
+
+**Inventario actual (auditado):**
+
+| Archivo | Tipo | Altura | Izq. | Centro | Der. | Notas |
+|---|---|---|---|---|---|---|
+| `lib/features/vehicles/presentation/form/widgets/vehicle_form_nav_header.dart` | `PreferredSizeWidget` | 56 | "Cancelar" texto | título dinámico (add/edit) | "Guardar" texto, opacity loading | borde inferior, dark bg |
+| `lib/features/maintenance/presentation/form/widgets/maintenance_form_nav_header.dart` | `PreferredSizeWidget` | 52 | back icon en pill 36×36 | título + 2 barras de progreso | "Listo" en pill primary | BLoC-aware loading |
+| `lib/features/events/presentation/form/widgets/event_form_view.dart` (AppBar embebido, líneas ~77-130) | `AppBar` | kToolbar | `TextButton` "Cancelar" | título dinámico (new/edit) | `TextButton` "Publicar" + loading | no es PreferredSize custom |
+
+**Out of scope (variantes distintas — no se incluyen en este refactor):**
+- `lib/features/events/presentation/tracking/widgets/live_map_app_bar.dart` — `LiveMapSimpleAppBar` y `LiveMapOverlayAppBar` son overlays transparentes sobre mapa con badge live; patrón visual distinto.
+- `lib/features/maintenance/presentation/list/maintenances/widgets/maintenances_page_app_bar.dart` — ya usa `AppAppBar` del design system, no es form header.
+
+**Files affected — CREATE:**
+- `lib/design_system/molecules/app_form_nav_header.dart` — NEW: widget parametrizable que implementa `PreferredSizeWidget`.
+
+**API propuesta (a confirmar por design durante implementación):**
+```dart
+class AppFormNavHeader extends StatelessWidget implements PreferredSizeWidget {
+  const AppFormNavHeader({
+    super.key,
+    required this.title,
+    this.leading,           // AppFormNavAction (text o icon)
+    this.trailing,          // AppFormNavAction (text, pill o icon) — soporta isLoading
+    this.bottom,            // Widget opcional para slot inferior (ej: progress bars de maintenance)
+    this.height = 56,
+    this.showBottomBorder = true,
+    this.centerTitle = true,
+  });
+  // ...
+}
+
+// Sealed class para variantes de acción:
+sealed class AppFormNavAction {
+  const factory AppFormNavAction.text({required String label, required VoidCallback onTap, bool emphasized, bool isLoading}) = _TextAction;
+  const factory AppFormNavAction.icon({required IconData icon, required VoidCallback onTap, bool pill}) = _IconAction;
+  const factory AppFormNavAction.pillText({required String label, required VoidCallback onTap, bool isLoading}) = _PillTextAction;
+}
+```
+
+**Files affected — MIGRATE & DELETE:**
+- `lib/features/vehicles/presentation/form/widgets/vehicle_form_nav_header.dart` → usar `AppFormNavHeader` con `leading: text("Cancelar")`, `trailing: text("Guardar", emphasized: true, isLoading: ...)`. Archivo eliminado tras migrar callers.
+- `lib/features/maintenance/presentation/form/widgets/maintenance_form_nav_header.dart` → `AppFormNavHeader` con `leading: icon(back, pill: true)`, `trailing: pillText("Listo", isLoading: ...)`, `bottom: MaintenanceFormProgressBars(...)` (extraer barras de progreso como widget separado). Altura ajustada a 52 vía param; archivo eliminado tras migrar.
+- `lib/features/events/presentation/form/widgets/event_form_view.dart` (AppBar interno) → reemplazar `AppBar` por `AppFormNavHeader` montado en `Scaffold.appBar` (acepta `PreferredSizeWidget`).
+
+**Callers a actualizar (inventario rápido — confirmar con grep durante implementación):**
+- `lib/features/vehicles/presentation/form/vehicle_form_page.dart` (usa `VehicleFormNavHeader`)
+- `lib/features/maintenance/presentation/form/maintenance_form_page.dart` (usa `MaintenanceFormNavHeader`)
+- `lib/features/events/presentation/form/widgets/event_form_view.dart` (AppBar inline)
+
+**Acceptance criteria:**
+- [ ] `lib/design_system/molecules/app_form_nav_header.dart` existe y exporta `AppFormNavHeader` + `AppFormNavAction` sealed class
+- [ ] `find lib/features -name "*_form_nav_header.dart" -o -name "*_nav_header.dart" | xargs grep -l "class.*extends StatelessWidget.*PreferredSizeWidget"` retorna 0 resultados (todos los headers viejos eliminados)
+- [ ] `grep -rn "VehicleFormNavHeader\|MaintenanceFormNavHeader" lib/` retorna 0 resultados
+- [ ] `event_form_view.dart` usa `AppFormNavHeader` en lugar de `AppBar` con `TextButton` leading/actions
+- [ ] Cero regresiones visuales: las 3 pantallas (vehicle form, maintenance form, event form) renderizan idénticamente a antes — verificado por smoke test manual con screenshots antes/después
+- [ ] `dart analyze lib/` pasa con 0 errores
+- [ ] `flutter test` pasa con 0 regresiones
+- [ ] Strings localizados — si los labels actuales tienen claves específicas por feature (ej: `vehicle_form_nav_cancel`, `event_form_nav_cancel`), evaluar unificación contra REFACTOR-15 (mismo ciclo)
+- [ ] Smoke test manual: (a) abrir vehicle form (crear y editar) → header renderiza correctamente, loading state al guardar funciona; (b) abrir maintenance form → progress bars visibles en slot `bottom`, pill "Listo" funciona; (c) abrir event form (crear y editar) → ambas variantes "Nuevo Evento" / "Editar Evento" funcionan, loading state visible al publicar
+
+**Risk:** Medium — 3 features dependen del header; cambio simultáneo en widget compartido. Maintenance tiene la variación más rica (altura 52, slot inferior con progress bars, pill-style buttons). Riesgo de regresión visual mitigado con screenshots y verificación pantalla por pantalla.
+**Effort:** M (3–4h)
+**Depends on:** REFACTOR-03b (vehicles form extraction), REFACTOR-05b (events form extraction), REFACTOR-06a (maintenance extraction) — todos los archivos involucrados deben haber pasado por widget-extraction antes para evitar doble edición.
+
+---
+
+#### REFACTOR-15: Limpieza de `app_es.arb` (unused keys + duplicados)
+
+**Violation type:** Deuda de localización — `lib/l10n/app_es.arb` tiene 1357 entradas acumuladas a lo largo de múltiples iteraciones; muchas son legacy de pantallas eliminadas o variantes que pueden unificarse (ej: "Cancelar", "Guardar", "Volver", "Confirmar", "Continuar" repetidas bajo prefijos distintos como `vehicle_*`, `event_*`, `maintenance_*`, `auth_*`). Cada key extra inflama los generated files y dificulta encontrar la clave correcta al implementar nuevas pantallas.
+
+**Files affected:**
+- `lib/l10n/app_es.arb` (audit + delete + rename)
+- `lib/l10n/app_localizations.dart` y `app_localizations_es.dart` (regenerados por `flutter gen-l10n`)
+- Cualquier archivo en `lib/features/` que use una key renombrada (refactor mecánico via search-and-replace)
+
+**Estrategia (3 fases, secuenciales):**
+
+**Fase 1 — Auditoría de keys no usadas:**
+1. Extraer todas las keys del ARB: `jq -r 'keys[] | select(startswith("@") | not)' lib/l10n/app_es.arb > /tmp/arb_keys.txt`
+2. Para cada key, verificar uso con `grep -rn "\.<key>" lib/ --include="*.dart"` (filtrando `app_localizations*.dart`)
+3. Producir lista de keys con 0 referencias → candidatas a eliminación
+4. Revisar manualmente la lista (algunas keys pueden referenciarse dinámicamente via `intl` o concatenación; en tal caso anotar y conservar)
+5. Eliminar keys confirmadas como muertas, junto con sus metadata `@<key>`
+
+**Fase 2 — Identificación de duplicados unificables:**
+1. Extraer pares `(key, value)` del ARB; agrupar por value normalizado (lowercase, sin tildes finales, sin signos)
+2. Producir reporte de grupos con value idéntico/cuasi-idéntico (ej: `vehicle_cancel`, `event_cancel`, `auth_cancel`, `common_cancel`, todas = "Cancelar")
+3. Decisión por grupo:
+   - **Unificar a `common_*` o `shared_*`** cuando el value es genuinamente neutro (Cancelar, Guardar, Volver, Continuar, Aceptar, Confirmar, Eliminar, Editar, Cerrar, Listo, Atrás, Sí, No, Reintentar)
+   - **Conservar separadas** cuando el contexto de género/tono/pantalla justifica versiones distintas (ej: "Eliminar evento" vs "Eliminar vehículo" — son strings completos, no botones)
+4. Listar el plan de unificación final antes de aplicar
+
+**Fase 3 — Aplicación:**
+1. Añadir las nuevas keys `common_*` al ARB
+2. Reemplazo masivo en `lib/features/`: `context.l10n.<old_key>` → `context.l10n.<new_key>` (script + revisión manual)
+3. Eliminar las keys viejas (las que ya no están referenciadas)
+4. Ejecutar `flutter gen-l10n`; commitear los `app_localizations*.dart` regenerados
+5. `dart analyze lib/` → 0 errores
+6. `flutter test` → 0 regresiones
+
+**Acceptance criteria:**
+- [ ] Reporte de auditoría commiteado en `docs/handoffs/iteration_checkpoint.md` (o adjunto al PR): (a) total de keys antes/después, (b) listado de keys eliminadas, (c) listado de unificaciones aplicadas con su key destino
+- [ ] Reducción mínima esperada: ≥10% de keys (de 1357 a ≤1220) — si la auditoría revela menos deuda, documentar y ajustar; si revela más, aprovechar
+- [ ] Nuevas keys neutras documentadas con metadata `@<key>` y descripción en el ARB
+- [ ] `grep -r "context\.l10n\." lib/features/ --include="*.dart" | awk -F'context.l10n.' '{print $2}' | awk -F'[^a-zA-Z0-9_]' '{print $1}' | sort -u` produce un conjunto que es subconjunto de las keys actuales del ARB (sin referencias a keys eliminadas)
+- [ ] `flutter gen-l10n` ejecutado y archivos generados commiteados
+- [ ] `dart analyze lib/` pasa con 0 errores
+- [ ] `flutter test` pasa con 0 regresiones
+- [ ] Smoke test manual: navegar las 15 pantallas principales y confirmar que todos los textos siguen apareciendo (sin "missing translation" strings)
+- [ ] No se introducen strings hardcoded en este refactor — la limpieza es 100% sobre el ARB y referencias existentes
+
+**Risk:** Medium — eliminar una key referenciada dinámicamente causa runtime error (no compile-time). Mitigación: ejecutar `flutter gen-l10n` después de cada paso y correr la app en debug antes de eliminar masivamente. Mantener un commit-por-fase para rollback fácil.
+**Effort:** M (3–4h)
+**Depends on:** REFACTOR-14 (si REFACTOR-14 introduce strings nuevos, deben armonizarse con la limpieza). Conviene ejecutar último para capturar todas las claves recién añadidas/eliminadas durante el resto del refactor.
+
+---
+
+#### REFACTOR-12: Document `bool isLoadingMore` exception in NotificationsState
+
+**Violation type:** Primitive boolean flag for a loading state in a `@freezed` state class, where `ResultState<T>` is the required pattern.
+
+**Files affected:**
+- `lib/features/notifications/presentation/cubit/notifications_state.dart`
+
+**Decision (Option A — recommended for this iteration):** Keep `bool isLoadingMore` and add the exception comment: `// Exception: isLoadingMore is a secondary loading indicator for cursor-based pagination append. It cannot be replaced by a second ResultState<List> because listResult must remain in Data state while additional pages are loading.`
+
+**Acceptance criteria:**
+- [ ] `notifications_state.dart` contains the `// Exception:` comment on the `isLoadingMore` field
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+
+**Risk:** Low — Option A is a single comment addition.
+**Effort:** S (<1h)
+**Depends on:** REFACTOR-02 (clean baseline)
+
+---
+
+### Definition of Done
+
+- [ ] `dart analyze lib/` returns 0 errors, 0 warnings
+- [ ] `flutter test` passes — all pre-existing tests pass, 0 new failures
+
+- [ ] Widget-class check (macOS-compatible):
+  ```bash
+  find lib/features -name "*.dart" | while read f; do
+    count=$(grep -cE "extends (StatelessWidget|StatefulWidget|PreferredSizeWidget)" "$f" 2>/dev/null)
+    if [ "${count:-0}" -gt 1 ] 2>/dev/null; then echo "$count $f"; fi
+  done
+  # Must return 0 lines
+  ```
+
+- [ ] `grep -rn "Widget _build\|Widget _[a-z]" lib/features/ --include="*.dart" | grep -v "//"` returns 0 results (no widget-returning methods)
+
+- [ ] `grep -rn "ElevatedButton\|OutlinedButton\|TextButton" lib/features/ --include="*.dart" | grep -v "// Custom:"` returns 0 results
+
+- [ ] `grep -rn "FormBuilderTextField" lib/features/ --include="*.dart"` returns 0 results
+
+- [ ] `grep -rn "Navigator\.of(context)\." lib/features/ --include="*.dart" | grep -v "// Custom:"` returns 0 results
+
+- [ ] `grep -rn "Navigator\.pop(context" lib/features/ --include="*.dart" | grep -v "SystemNavigator\|// Custom:"` returns 0 results
+
+- [ ] `grep -rn "context\.goNamed" lib/features/ --include="*.dart" | grep -v "// Intentional:"` returns 0 results
+
+- [ ] `grep -rn "Color(0x" lib/features/ --include="*.dart" | grep -v "// Intentional:"` returns 0 results
+
+- [ ] `grep -rn "Colors\." lib/features/ --include="*.dart" | grep -v "// Intentional:"` returns 0 results (or ≤5 annotated exceptions)
+
+- [ ] `find lib/features/vehicles/presentation/soat -name "*.dart" 2>/dev/null | wc -l` returns 0 (legacy SOAT folder deleted)
+
+- [ ] `grep -r "vehicles/presentation/soat" lib/ --include="*.dart"` returns 0 results
+
+- [ ] `grep -rn "showDialog(" lib/features/ --include="*.dart" | grep -v "// Custom:\|AppDialog\|ConfirmationDialog"` returns 0 results
+
+---
+
+### Smoke tests required
+
+1. **SOAT upload → confirmation → status flow** (REFACTOR-02): vehicle detail SOAT badge → upload page → manual capture form → save → status page refreshes. Verify all 6 `vehicleSoat` callers navigate to the correct upload page.
+2. **SOAT vehicle creation flow** (REFACTOR-02): create new vehicle → SOAT photo section → photo attachment → confirmation page renders correctly.
+3. **Login → Forgot Password → back to Login** (REFACTOR-04, REFACTOR-10): navigation works correctly in both directions; no stack accumulation.
+4. **Event detail CTA bar — all 4 state variants** (REFACTOR-05a): registered / pending / closed / full variants all render the correct CTA.
+5. **Maintenance filters** (REFACTOR-06a, REFACTOR-09): Maintenance list → open filters → select type → apply → list updates correctly.
+6. **Garage vehicle options** (REFACTOR-09): Garage → vehicle options menu → archive / delete / set main — all three actions function after Navigator migration.
+7. **Signup end-to-end** (REFACTOR-04): full signup flow from start to home screen.
+
+---
+
+### Risks
+
+- **SOAT consolidation blast perimeter (REFACTOR-02):** Five external files import from the legacy folder and 6 active callers use `AppRoutes.vehicleSoat`. A new named route for `SoatManualCapturePage`, typed-result Navigator migration, and DI regeneration must all happen in one story. Any missed step causes a compile error or silent runtime crash. Run `grep -r "vehicles/presentation/soat" lib/` before deleting and fix all results first.
+- **Widget extraction with shared state (REFACTOR-03a, REFACTOR-05a):** `garage_vehicles_content.dart` (16 classes) and `event_detail_cta_bar.dart` (8 state-variant classes) are the highest-risk extractions. Extract one widget per commit, run `flutter test` after each commit (not just after each story). Never extract a widget that reads parent `State<T>` fields directly.
+- **Color value mismatch (REFACTOR-11):** `Color(0xFF22C55E)` (green-500) and `Color(0xFFEAB308)` (yellow-500) differ from existing `AppColors.success`/`AppColors.warning` tokens. Replacing with existing tokens changes the rendered color. Add new `AppColors.statusGreen` and `AppColors.statusWarning` tokens as the first commit of REFACTOR-11.
+- **Navigator.pop(context) form invisible to standard grep (REFACTOR-09):** Six calls in `garage_options_bottom_sheet.dart`, `maintenance_options_bottom_sheet.dart`, and `maintenance_filters_bottom_sheet.dart` use `Navigator.pop(context)` (without `.of`) — not caught by `Navigator\.of(context)\.` DoD grep. The DoD now includes a separate grep for this form.
+- **Event CTA bar extraction has no widget tests (REFACTOR-05a):** Extraction failures in `event_detail_cta_bar.dart` are silent at compile time — the app builds but the wrong CTA variant may render. Manual smoke test of all 4 state variants is a hard AC, not advisory.
+
+---
+
+### Execution order
+
+```
+REFACTOR-01 (SOAT button bug)
+  └─→ REFACTOR-02 (SOAT consolidation — expanded scope)
+        ├─→ REFACTOR-10 (goNamed fixes)
+        │     └─→ REFACTOR-04 (auth widget extraction)
+        │           └─→ REFACTOR-06a (maintenance extraction + showDialog)
+        │                 └─→ REFACTOR-06b (home + profile + registration)
+        ├─→ REFACTOR-08 (FormBuilderTextField replacements)
+        │     └─→ REFACTOR-07 (raw button replacements)
+        │           └─→ REFACTOR-13 (showDialog fix — if not done in REFACTOR-06a)
+        │                 └─→ REFACTOR-11 (color tokenization — after files split)
+        │                       └─→ REFACTOR-09 (remaining Navigator.of → go_router)
+        │                             ├─→ REFACTOR-03a (vehicles garage extraction)
+        │                             │     └─→ REFACTOR-03b (vehicles form extraction)
+        │                             └─→ REFACTOR-05a (events detail extraction)
+        │                                   └─→ REFACTOR-05b (events form + list + tracking)
+        ├─→ REFACTOR-14 (AppFormNavHeader — depende de 03b + 05b + 06a)
+        │     └─→ REFACTOR-15 (limpieza ARB — último, captura strings de todo el refactor)
+        └─→ REFACTOR-12 (isLoadingMore comment — trivial, any time after REFACTOR-02)
+```
+
+Recommended linear order: REFACTOR-01 → 02 → 10 → 08 → 07 → 13 → 11 → 04 → 03a → 03b → 05a → 05b → 06a → 06b → 09 → 14 → 15 → 12
+
+---
+
+### Story totals
+
+| Stories | Total effort | Estimated days | Risk level |
+|---------|-------------|----------------|------------|
+| 17 stories (REFACTOR-01 through 15, with 03a/03b, 05a/05b, 06a/06b) | S×6 + M×8 + L×3 ≈ 42–58h raw work | 8 developer days | Medium-High (SOAT consolidation + large widget files + no CTA bar tests are the risk drivers; AppFormNavHeader y limpieza ARB se concentran al final) |
+
+| ID | Title | Effort | Risk |
+|----|-------|--------|------|
+| REFACTOR-01 | Fix SOAT loading-button bug | S | Low |
+| REFACTOR-02 | Consolidate SOAT feature (move + router + DI regen) | M | High |
+| REFACTOR-10 | Fix context.goNamed violations | S | Low |
+| REFACTOR-08 | Replace FormBuilderTextField → AppTextField | S | Low |
+| REFACTOR-07 | Replace raw buttons → AppButton/AppTextButton | S | Low |
+| REFACTOR-13 | Fix direct showDialog → AppDialog wrapper | S | Low |
+| REFACTOR-11 | Tokenize hardcoded colors (all 25 files) | M | Low-Medium |
+| REFACTOR-04 | Widget extraction — Authentication | M | Low |
+| REFACTOR-03a | Widget extraction — Vehicles (garage + detail) | L | High |
+| REFACTOR-03b | Widget extraction — Vehicles (form + docs) | M | Medium |
+| REFACTOR-05a | Widget extraction — Events (detail + CTA bar) | L | High |
+| REFACTOR-05b | Widget extraction — Events (form + list + tracking) | L | Medium |
+| REFACTOR-06a | Widget extraction — Maintenance | M | Medium |
+| REFACTOR-06b | Widget extraction — Home + Profile + Registration | M | Low-Medium |
+| REFACTOR-09 | Migrate Navigator.of → go_router (remaining) | M | Medium |
+| REFACTOR-14 | Centralizar header de forms (AppFormNavHeader) | M | Medium |
+| REFACTOR-15 | Limpieza app_es.arb (unused + duplicados) | M | Medium |
+| REFACTOR-12 | Document bool isLoadingMore exception | S | Low |

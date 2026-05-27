@@ -164,3 +164,7 @@ Repo: `/Users/cami/Developer/Personal/rideglory-api`
 
 ## Change log
 - 2026-05-13 (plan v3 approval): Backend scope documented per iteration. Pre-flight order for iter-2 established.
+
+
+## Change log (refactor-01 approval)
+- 2026-05-27 (refactor-01 approval): Refactor & Cleanup Extremo approved. **Backend agent is fully stand-down for refactor-01.** Zero API contract changes, zero new endpoints, zero DTO modifications, zero database migrations. The refactor is 100% internal to the Flutter app (`lib/`). Confirm at iteration kickoff: if any story unexpectedly proposes a backend change, escalate to the architect before implementing.

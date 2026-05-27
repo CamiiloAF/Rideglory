@@ -1,325 +1,461 @@
-# PO Proposal — Rideglory Iterations (Redesign-First Replan)
+# PO Proposal — Refactor & Cleanup Extremo (Refactor-01)
 
-> Generated: 2026-05-13
-> Run mode: FEEDBACK_REPLAN
-> Key change: Redesign iteration inserted as iter-5; prior iters shifted to 6–9
-
----
-
-## Summary
-
-The human reviewer has flagged that the existing screens require significant visual and UX updates to align with the final `rideglory.pen` design system before new features are layered on top. Shipping a polished, consistent UI baseline first avoids compounding visual debt across every new screen built in iters 6–9.
-
-**Iter-5** is now a pure UI/UX Redesign iteration covering 14 existing screens across splash, auth, home, events, garage, and maintenances. No new features. No new backend endpoints. No domain logic changes. Frontend-only visual polish pass.
-
-All prior iterations are renumbered +1. Their content is unchanged.
-
-Critical path: iter-5 → iter-6 → iter-7 → iter-8 → iter-9. No parallelization possible.
+> Generated: 2026-05-27
+> Author: PO Agent
+> Based on: `docs/prd-refactor-cleanup.md` + `docs/handoffs/planning/00-existing-system-scan.md`
+> Iteration number: **Refactor-01** (separate from product iterations 1–5)
 
 ---
 
-## Iteration numbering change
+## Iteration summary
 
-| Prior ID | New ID | Goal |
-|----------|--------|------|
-| 5 | 6 | SOAT + Notification Foundation |
-| 6 | 7 | Tracking Completo + SOS + Maintenance Reminders |
-| 7 | 8 | Seguidores + Perfil Completo |
-| 8 | 9 | Deep Links + Apple Sign-In + Notification Routing |
+This iteration eliminates the technical debt that has accumulated across 62 feature files during the recent product-feature iterations. No new features, API changes, or backend changes are introduced. The work is pure internal refactoring: extract one widget per file, replace Flutter primitives with shared-design-system components, consolidate the duplicated SOAT implementation, migrate navigation to go_router, tokenize hardcoded colors, and fix one confirmed UX bug. When the iteration closes, `dart analyze` reports 0 errors and 0 warnings, every feature file contains at most one widget class, and all shared-component adoption rules are mechanically verifiable by grep.
 
 ---
 
-## Proposed iterations
+## Stories
 
 ---
 
-### Iteration 5: UI/UX Redesign
+### REFACTOR-01: Fix SOAT loading-button bug
 
-**Goal:** Bring all existing screens into alignment with the final `rideglory.pen` design system — typography, spacing, color tokens, component usage, empty states, loading states.
+**Violation type:** UX bug — `_openingDocument` changes the button label to `soat_downloading` instead of passing `isLoading: true` to `AppButton`, breaking the design system's loading-spinner contract.
 
-**Scope:** 14 screens across splash, auth, home, events, garage, and maintenances.
+**Files affected:**
+- `lib/features/soat/presentation/widgets/soat_data_view.dart`
 
-**What this is NOT:** New features. No new backend endpoints. No new domain logic. No new routes. The features already work — this is a visual and UX polish pass only.
+**Acceptance criteria:**
+- [ ] `grep "soat_downloading" lib/features/soat/presentation/widgets/soat_data_view.dart` returns 0 results
+- [ ] `grep "isLoading: _openingDocument" lib/features/soat/presentation/widgets/soat_data_view.dart` returns 1 result
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
 
-**What redesign means concretely:**
-- Layout fixes and spacing corrections to match Pencil frames
-- Typography alignment (Space Grotesk applied consistently, correct weights and sizes)
-- Component replacements: `ElevatedButton` → `AppButton`, raw `TextFormField` → `AppTextField`, raw `AlertDialog` → `AppDialog`
-- Color token fixes: hardcoded hex literals replaced with `Theme.of(context).colorScheme.<property>` or `AppColors` constants
-- Empty state improvements (correct illustrations, correct copy from `app_es.arb`)
-- Loading state improvements (correct shimmer or spinner placement, correct sizing)
-- Bottom navigation pill bar aligned with Pencil frame `VMmN0`
-- Preservation of all iter-4 features (AI cover generation widget must remain fully functional after redesign)
+**Risk:** Low — single-file change, no logic change, only button prop swap.
 
-**Pre-flight (before any code):**
-- [ ] Designer runs `solo-design` to inspect all relevant Pencil frames in `rideglory.pen` via Pencil MCP
-- [ ] Gap analysis document written listing every screen with specific mismatches (component, spacing, color, typography) before any Flutter code is touched
-- [ ] Design gate confirmed: all 14 frames inspected, HTML mockups produced for any frame requiring clarification
-- [ ] `dart analyze` passing cleanly on `main` branch before redesign begins (no pre-existing violations)
-
-**Stories:**
-
-| ID | Story | Acceptance |
-|----|-------|-----------|
-| 5.1 | As a designer reviewing existing screens, I can identify all visual gaps between the current implementation and `rideglory.pen` frames, documented in a gap analysis. | Gap analysis document lists every screen (all 14) with specific mismatches: component name, spacing value, color token, typography rule. Document reviewed and approved before any Flutter code changes begin. |
-| 5.2 | As a rider opening the app, I see the splash screen with the correct logo, loading state indicator, and overall layout matching the `rideglory.pen` design. | Splash screen layout, logo sizing, background color, and loading indicator match the Pencil frame exactly. Catalog loading states (loading, error, success) handled visually. No hardcoded colors. |
-| 5.3 | As a rider on the auth screens (login, signup, password recovery), the pages use `AppButton`, `AppTextField`, `AppPasswordTextField`, correct typography, and the exact color tokens from the design system. | No `ElevatedButton`, no `TextFormField` direct usage, no hardcoded color literals on any auth screen. `AppButton` used for all primary and secondary actions. Space Grotesk applied. Password recovery confirmation screen matches design. |
-| 5.4 | As a rider on the Home Dashboard, the layout matches the `rideglory.pen` frame `dyWWs` — including the greeting header, garage card (main vehicle + empty state), upcoming rides section (horizontal scroll + empty state), and bottom navigation pill bar. | Frame `dyWWs` matched: correct spacing, correct card border radius (12px cards, 24px bottom sheets), correct color tokens. Bottom nav pill bar matches frame `VMmN0`. SOAT badge placeholder not included (iter-6). No layout regressions vs. current behavior. |
-| 5.5 | As a rider browsing Events, the events list page and event detail page match the `rideglory.pen` frames `Neipf` and `kAubW` — including event cards, badges (`zKkmE`), filter chips, the filter bottom sheet, and the CTA bar on event detail. | Event list: search bar, filter chips, event cards (image overlay, badge, organizer avatar, chips) match frame `Neipf`. Event detail: hero image, metric chips, map preview, allowed brands chips, CTA bar match frame `kAubW`. Filter bottom sheet layout correct. |
-| 5.6 | As a rider creating an event, the Create/Edit Event form matches the `rideglory.pen` frame `zbCa0` — correct input fields, layout sections, difficulty selector, and button styles. | Form layout matches frame `zbCa0`. AI cover generation widget (iter-4 feature) is preserved and functional. Mapbox route preview widget unchanged. All inputs use `AppTextField`. `AppButton` used for primary actions. |
-| 5.7 | As a rider viewing the Garage, the vehicle list page and vehicle detail page match `rideglory.pen` frames `KCf6W` and `P1GSzZ` — including the main vehicle card, "other vehicles" list, spec chips, and document slots. | Vehicle list matches frame `KCf6W`: main vehicle card with full-width image, stats chips, quick-access buttons; compact other-vehicles list. Vehicle detail matches frame `P1GSzZ`: specs, document badges, action buttons. All states (loading, empty, data, error) visually correct. |
-| 5.8 | As a rider adding or editing a vehicle, the Add/Edit vehicle form matches `rideglory.pen` frame `EqnMm` — correct field layout, image upload UI, and step structure. | Form fields, image upload banner, and section layout match frame `EqnMm`. Document slot section (SOAT, tech review) UI is present but non-functional pending iter-6. `AppTextField` and `AppButton` used throughout. |
-| 5.9 | As a rider viewing Maintenance, the dashboard, history list, and new maintenance forms match `rideglory.pen` frames `Ako7u` (dashboard), `SykjL` (history), `J5h6P` (step 1), `eK2WW` (step 2 — completed), and `ELB5u` (step 2 — scheduled). | All 5 maintenance frames matched. Dashboard: donut chart health indicator, urgency color coding (red/yellow/green) correct. History: year grouping, cost summary, chronological order. Filters bottom sheet (frame `v6RqaX`) layout correct. Step 1 grid 2×4 card layout correct. Step 2 tab (Completado / Programado) layout correct. |
-
-**Optional story (include if scope permits — flag for architect assessment):**
-
-| ID | Story | Acceptance |
-|----|-------|-----------|
-| 5.10 | As a rider viewing their registrations, the My Registrations list and Registration Detail pages match `rideglory.pen` frames `oUv12` and the registration list layout. | Registration list and detail pages use design system components throughout; no hardcoded colors; empty and loading states correct. |
-
-**Definition of done:**
-- [ ] Design gate: Pencil MCP used to inspect all 14 `rideglory.pen` frames before implementation; HTML mockups produced for any frame requiring clarification
-- [ ] Gap analysis document written and reviewed before any Flutter code changes begin
-- [ ] `dart analyze` passes with zero new violations (violations pre-existing before iter-5 are tracked but not required to be fixed in this iteration)
-- [ ] All existing `flutter test` cases pass — zero regressions
-- [ ] No new backend endpoints (this is frontend-only)
-- [ ] All replaced components use design system atoms: `AppButton`, `AppTextField`, `AppPasswordTextField`, `AppDialog`, `ConfirmationDialog`
-- [ ] All hardcoded color hex literals replaced with `Theme.of(context).colorScheme.<property>` or `AppColors` constants
-- [ ] `app_es.arb` updated if any UI copy changes were made during redesign
-- [ ] Bottom navigation pill bar (`VMmN0`) implemented consistently across all shell screens
-- [ ] Event badge component (`zKkmE`) used in all event card contexts
-- [ ] Iter-4 AI cover generation widget verified functional after all changes
-- [ ] No new routes, no new domain models, no new use cases introduced
+**Effort:** S (<1h)
 
 ---
 
-### Iteration 6: SOAT + Notification Foundation
+### REFACTOR-02: Consolidate SOAT duplication — eliminate `vehicles/presentation/soat/`
 
-**Goal:** Allow riders to register and track their SOAT per vehicle, and receive push notifications for critical lifecycle events. Establishes the FCM infrastructure and persistent notification backend that every later iteration depends on.
+**Violation type:** Code duplication — two active SOAT implementations; legacy folder uses `Navigator.of(context)` throughout and is still wired to the router at `/vehicles/soat`.
 
-> Same as prior iter-5. All stories renumbered 5.x → 6.x. Pre-flight, DoD, and risks unchanged.
+**Files affected (delete the entire legacy folder):**
+- `lib/features/vehicles/presentation/soat/soat_upload_page.dart`
+- `lib/features/vehicles/presentation/soat/soat_confirmation_page.dart`
+- `lib/features/vehicles/presentation/soat/soat_manual_capture_page.dart`
+- `lib/features/vehicles/presentation/soat/cubit/` (entire subfolder)
+- `lib/features/vehicles/presentation/soat/widgets/` (entire subfolder: `soat_document_section.dart`, `vehicle_soat_options_sheet.dart`, `soat_vehicle_info_card.dart`, `soat_valid_alert.dart`, `soat_upload_option_card.dart`)
 
-**Pre-flight (before any code):**
-- [ ] Create `seed.ts` in `vehicles-ms` with at least 2 test vehicles; add `"prisma": { "seed": "ts-node prisma/seed.ts" }` to `package.json`
-- [ ] Create `seed.ts` in `events-ms` with at least 1 test event in `scheduled` state and 1 test registration
-- [ ] Create `seed.ts` stubs in `users-ms` and `maintenances-ms` (empty, with comments for future data)
-- [ ] Run `npx prisma migrate reset --force` in `events-ms`, `vehicles-ms`, `users-ms`, `maintenances-ms`
-- [ ] Run `npx prisma migrate status` in each of the 4 services to verify migration history is clean
-- [ ] In `api-gateway/` (FIRST-TIME setup, not reset): run `npx prisma init`, create `schema.prisma` with `Notification` model, configure `DATABASE_URL`, run `npx prisma migrate dev --name init_notifications`, generate client
-- [ ] Add `@nestjs/schedule` to `api-gateway/package.json`: `npm install @nestjs/schedule`
-- [ ] Verify `GET /api/vehicles` returns 200 with empty list in local environment
+**Files affected (update router + cross-imports):**
+- `lib/shared/router/app_router.dart` — remove `/vehicles/soat` route; redirect any callers to `/soat/upload`
+- `lib/features/soat/presentation/` — remove any import of `vehicles/presentation/soat/` (e.g. `SoatManualCapturePage` import in `soat_status_view.dart`)
 
-**Stories:**
+**Acceptance criteria:**
+- [ ] `find lib/features/vehicles/presentation/soat -name "*.dart" | wc -l` returns 0
+- [ ] `grep -r "vehicles/presentation/soat" lib/` returns 0 results
+- [ ] `grep "\/vehicles\/soat" lib/shared/router/` returns 0 results (route removed or redirected)
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+- [ ] Manual smoke test: SOAT upload flow navigates correctly from vehicle detail badge
 
-| ID | Story | Acceptance |
-|----|-------|-----------|
-| 6.1 | Como rider, puedo subir el documento de mi SOAT (foto o PDF desde galería/cámara) para un vehículo de mi garaje y guardar los datos (número de póliza, fechas, aseguradora) en el backend. | El documento queda guardado; el badge del vehículo cambia a "Vigente" o "Por vencer" según la fecha de vencimiento. |
-| 6.2 | Como rider, puedo ingresar manualmente los datos de mi SOAT (número de póliza, fecha inicio, fecha vencimiento, aseguradora) cuando no quiero subir el documento. | El formulario valida que la fecha de vencimiento sea obligatoria; al guardar el estado SOAT refleja la lógica de vigencia correcta. |
-| 6.3 | Como rider, veo en el detalle de mi vehículo un badge de estado SOAT (Sin SOAT / Vigente / Por vencer / Vencido) y puedo tocar el badge para ir al flujo de SOAT. | Los cuatro estados se calculan correctamente con base en la fecha de vencimiento vs. hoy; el badge es tap-able y navega al flujo correcto. |
-| 6.4 | Como rider, recibo una notificación push 30 días antes, 7 días antes y el día del vencimiento de mi SOAT con el nombre de la moto afectada. | Las tres notificaciones llegan al dispositivo en las fechas correctas y se muestran en el centro de notificaciones. (Navegación al tocar la notificación: iter-9.) |
-| 6.5 | Como organizador de evento, recibo una notificación push cuando un nuevo rider se inscribe a mi evento. | La notificación aparece en el centro de notificaciones; el badge de no leídas en el ícono de campana se incrementa. (Navegación al tocar la notificación: iter-9.) |
-| 6.6 | Como rider inscrito, recibo una notificación push cuando mi inscripción es aprobada o rechazada. | La notificación llega dentro de los 30 segundos de la acción del organizador; el estado en "Mis inscripciones" ya refleja el cambio al abrir la pantalla. (Navegación al tocar la notificación: iter-9.) |
-| 6.7 | Como rider, puedo abrir el centro de notificaciones desde el ícono de campana del Home y ver todas mis notificaciones, diferenciando las no leídas (punto naranja) de las leídas. Al tocar una notificación o usar "Marcar todas como leídas", el estado se persiste en el backend. | La lista muestra notificaciones cargadas desde el backend con paginación cursor (`?cursor=<lastId>&limit=20`, respuesta `{ data, nextCursor }`); marcar como leído llama a `PATCH /api/notifications/:id/read`; "Marcar todas" llama a `PATCH /api/notifications/read-all`; badge del ícono refleja conteo de no leídas desde backend; empty state "Aún no tienes notificaciones" visible. |
-| 6.8 | Como desarrollador, el backend persiste todas las notificaciones en una tabla `notifications` en api-gateway y expone endpoints para listarlas, marcarlas como leídas y registrar el token FCM. | `GET /api/notifications?cursor=<lastId>&limit=20` retorna `{ data: Notification[], nextCursor: string \| null }` del usuario autenticado, ordenadas por `createdAt desc`; `PATCH /api/notifications/:id/read` actualiza `isRead = true`; `PATCH /api/notifications/read-all` actualiza todas las no leídas del usuario; `POST /api/notifications/fcm-token` recibe `{ fcmToken: string }`, actualiza el campo `fcmToken String?` en el modelo User de `users-ms`; tabla `notifications` con campos `id`, `userId`, `type`, `payload` (JSON), `isRead`, `createdAt`. |
+**Risk:** Medium — router change + cross-import removal can cause runtime 404. Mitigation: verify all entry points to old route and update each one before deleting files.
 
-**Definition of done (same as prior iter-5 DoD, renumbered):**
-- [ ] Design gate: Pantallas SOAT upload, SOAT manual form, SOAT status detail y notification center tienen frame en `rideglory.pen` antes de comenzar implementación — incluyendo vehicle detail page actualizada con badge de 4 estados y plantilla genérica de fila de notificación con slot de ícono por tipo
-- [ ] Pre-flight verificado: seed.ts en `vehicles-ms` y `events-ms`; `prisma migrate reset` completado en 4 servicios; `prisma init` + `prisma migrate dev` completado en `api-gateway`; `GET /api/vehicles` retorna 200
-- [ ] Backend: `POST /api/vehicles/:vehicleId/soat` y `GET /api/vehicles/:vehicleId/soat` operativos en `vehicles-ms`
-- [ ] Backend: `POST /api/notifications/fcm-token` operativo; `users-ms` User model tiene `fcmToken String?`
-- [ ] Backend: tabla `notifications` en `api-gateway` Prisma; endpoints GET (cursor), PATCH read, PATCH read-all operativos con guard Firebase Auth
-- [ ] Backend: FCM push trigger en flujo de aprobación/rechazo en `events-ms`; cada push inserta fila en `notifications`
-- [ ] Backend: `@nestjs/schedule` con `ScheduleModule.forRoot()` en `api-gateway AppModule`; `NotificationSchedulerService` con `@Cron` para SOAT (30d, 7d, día-de); expresiones cron usan timezone `America/Bogota`
-- [ ] Flutter: `lib/features/soat/` con dominio (`SoatModel`), datos (`SoatDto`, `SoatService`), y presentación (`SoatCubit`, `SoatUploadPage`, `SoatManualFormPage`, `SoatStatusPage`)
-- [ ] Flutter: `lib/features/notifications/` con dominio (`NotificationModel`), datos (`NotificationsService` con cursor pagination), y presentación (`NotificationsCubit`, `NotificationCenterPage`)
-- [ ] FCM inicializado en `AuthCubit` post-login: token registration + permission request; background message handler con `@pragma('vm:entry-point')` y re-inicialización de DI documentada
-- [ ] `flutter_local_notifications` configurado para banners iOS en primer plano; canal de notificación Android configurado
-- [ ] 6 tipos de notificación configurados y probados en device real o emulador
-- [ ] `dart analyze` sin errores; `app_es.arb` actualizado con todas las nuevas cadenas
-- [ ] Unit tests: lógica de badge SOAT (4 estados); `NotificationsCubit` — carga inicial, cursor pagination, markRead, markAllRead
-- [ ] Widget tests: `SoatUploadPage`, `SoatManualFormPage`, `NotificationCenterPage`
-- [ ] **Scope reduction rule**: si 6.7 ("marcar como leído" en backend) está en riesgo al final de la iteración, el badge reset puede simplificarse a local (SharedPreferences) como medida provisional; los endpoints backend (6.8) deben estar completos
-- [ ] **Home Dashboard SOAT badge NO incluido en esta iteración** — se agrega en iter-7
+**Effort:** M (2–3h)
 
 ---
 
-### Iteration 7: Tracking Completo + SOS + Maintenance Reminders
+### REFACTOR-03: Widget extraction — Vehicles feature (garage + form)
 
-**Goal:** Completar la experiencia de rastreo en tiempo real con botón SOS, controles del organizador, GPS en background con notificación persistente, recordatorios de mantenimiento por fecha, y migración completa a Mapbox como único SDK de mapas.
+**Violation type:** Multiple widget classes per file (zero-tolerance rule). Files: `garage_vehicles_content.dart` (16 widgets), `vehicle_detail_view.dart` (13 widgets), `vehicle_form.dart` (9 widgets), plus widget-returning methods in `garage_vehicles_content.dart` (`Widget _buildContainer()`, `Widget _buildPlaceholderIcon()`), in `vehicle_card.dart` (`Widget _buildPlaceholderIcon()`).
 
-> Same as prior iter-6. All stories renumbered 6.x → 7.x. Pre-flight, DoD, and risks unchanged.
+**Files affected (extract FROM):**
+- `lib/features/vehicles/presentation/garage/widgets/garage_vehicles_content.dart`
+- `lib/features/vehicles/presentation/garage/widgets/vehicle_detail_view.dart`
+- `lib/features/vehicles/presentation/garage/widgets/vehicle_maintenance_history_section.dart` (4 widgets)
+- `lib/features/vehicles/presentation/widgets/vehicle_form.dart`
+- `lib/features/vehicles/presentation/widgets/vehicle_document_upload_slot.dart` (4 widgets)
+- `lib/features/vehicles/presentation/form/vehicle_form_page.dart` (2 widgets)
+- `lib/features/vehicles/presentation/form/widgets/vehicle_form_cover_section.dart` (4 widgets)
+- `lib/features/vehicles/presentation/form/widgets/vehicle_form_id_section.dart` (3 widgets)
+- `lib/features/vehicles/presentation/form/widgets/vehicle_form_docs_section.dart` (2 widgets)
+- `lib/features/vehicles/presentation/widgets/vehicle_card.dart` (widget-returning method)
 
-**Pre-flight:**
-- (None — the Mapbox SDK migration is Story 7.0, the first story of this iteration. Stories 7.1–7.7 are blocked on 7.0's PR being merged and `dart analyze` passing cleanly.)
+**Acceptance criteria:**
+- [ ] `grep -c "extends StatelessWidget\|extends StatefulWidget\|extends PreferredSizeWidget" lib/features/vehicles/presentation/garage/widgets/garage_vehicles_content.dart` returns ≤1
+- [ ] `grep -c "extends StatelessWidget\|extends StatefulWidget\|extends PreferredSizeWidget" lib/features/vehicles/presentation/garage/widgets/vehicle_detail_view.dart` returns ≤1
+- [ ] `grep -c "extends StatelessWidget\|extends StatefulWidget\|extends PreferredSizeWidget" lib/features/vehicles/presentation/widgets/vehicle_form.dart` returns ≤1
+- [ ] `grep "Widget _build\|Widget _" lib/features/vehicles/presentation/garage/widgets/garage_vehicles_content.dart` returns 0 results
+- [ ] `grep "Widget _build\|Widget _" lib/features/vehicles/presentation/widgets/vehicle_card.dart` returns 0 results
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
 
-**Stories:**
+**Risk:** Medium — `garage_vehicles_content.dart` has 16 classes sharing potential state/callbacks. Mitigation: extract leaf widgets first (pure display), then intermediate composers; use constructor parameters for data, never shared state mutation.
 
-| ID | Story | Acceptance |
-|----|-------|-----------|
-| 7.0 | Como desarrollador, el proyecto usa `mapbox_maps_flutter` como único SDK de mapas. `google_maps_flutter` y `geocoding` han sido eliminados completamente. | `pubspec.yaml` declara `mapbox_maps_flutter ^2.6.0`; `google_maps_flutter` y `geocoding` eliminados. `dart analyze` pasa con cero errores o warnings en `lib/`. Sin imports de `google_maps_flutter` o `geocoding` en `lib/`. `live_map_widget.dart`, `live_map_page.dart`, `initials_marker_icon.dart` y `route_map_preview.dart` compilan y renderizan correctamente en device físico. `route_map_preview.dart` usa `PlaceService` (Retrofit async) para lookup de dirección; estados loading y error manejados con patrón `ResultState`. `AndroidManifest.xml` contiene Mapbox token meta-data; `Info.plist` contiene `MBXAccessToken`; ninguna API key de Google Maps permanece en native config. iOS Cocoapods install completado; app builds en simulator. |
-| 7.1 | Como rider en una rodada activa, puedo presionar el botón SOS rojo visible en el mapa, confirmar la alerta en un diálogo, y todos los demás riders de la rodada reciben una notificación push de emergencia con mi nombre y ubicación. | La alerta SOS se procesa en menos de 5 segundos; el marcador en el mapa de todos los participantes cambia a rojo pulsante; aparece un banner rojo con el nombre del rider en crisis. |
-| 7.2 | Como rider que ve una alerta SOS en el mapa, puedo tocar el banner del rider en crisis y acceder a Llamar (dialer nativo) y Localizar (Google Maps / Apple Maps con navegación). | Las dos acciones funcionales en iOS y Android; el teléfono del rider solo aparece si lo tiene registrado; si no tiene teléfono, solo se muestra Localizar. |
-| 7.3 | Como organizador de un evento, puedo iniciar la rodada desde la pantalla de detalle del evento, cambiando el estado a `in_progress` y habilitando el rastreo para todos los inscritos aprobados. | Botón "Iniciar rodada" solo visible para el organizador; al confirmar, estado actualizado en backend; riders ven CTA "Ver rastreo" en detalle del evento. |
-| 7.4 | Como organizador de un evento activo, puedo terminar la rodada desde la pantalla de rastreo, cambiando el estado a `finished` y cerrando la pantalla para todos. | Estado cambia a `finished`; pantalla de rastreo cierra en todos los dispositivos conectados al WebSocket; push "La rodada ha terminado" llega en menos de 10s. |
-| 7.5 | Como rider en una rodada activa con app en background, el app sigue enviando mi ubicación al WebSocket cada 5 segundos. Android: notificación persistente no descartable "Rideglory — Rodada activa". iOS: indicador de ubicación azul del sistema. | Android: ubicación actualiza con app en background, foreground service visible y no descartable (device físico requerido). iOS: ubicación actualiza, indicador sistema visible (comportamiento nativo, device físico requerido). |
-| 7.6 | Como rider con un mantenimiento programado, recibo una push 30 días antes de la fecha programada. (Solo fecha — sin km.) | Push generada al guardar mantenimiento con fecha futura; texto incluye tipo de servicio y nombre de moto. |
-| 7.7 | Como rider inscrito y aprobado a un evento, recibo una push de recordatorio 24 horas antes del evento. | Push llega entre 23h 55min y 24h 5min antes de la hora de inicio del evento. |
-
-**Definition of done (same as prior iter-6 DoD, renumbered):**
-- [ ] Design gate: Frame `qonbS` del Pencil confirmado con: botón SOS + diálogo de confirmación, barra de controles del organizador (Iniciar/Terminar rodada) condicionalmente visible, marcador rojo pulsante SOS, texto Android foreground service ("Rideglory — Rodada activa"), empty state "no tiene teléfono" para acción Llamar en story 7.2
-- [ ] **Story 7.0 mergeada y `dart analyze` limpio antes de cualquier otra story**
-- [ ] Cero imports `google_maps_flutter` o `geocoding` en `lib/` (verificado por grep en PR review)
-- [ ] iOS Cocoapods cache actualizado en CI/CD post-merge de 7.0
-- [ ] Backend: `POST /api/events/:eventId/tracking/start` y `POST /api/events/:eventId/tracking/end` en `api-gateway/src/tracking/`
-- [ ] Backend: handler `sos` en `TrackingGateway` — broadcast `sos_alert` via WebSocket + FCM multicast a participantes; guard de deduplicación con `sosTriggeredAt`
-- [ ] Backend: `GET /api/events/:eventId/route` en `events-ms` retornando `routeGeoJson` (GeoJSON LineString)
-- [ ] Backend: scheduler entries para mantenimiento (30d fecha) y recordatorio 24h evento; timezone `America/Bogota`
-- [ ] Flutter: ruta naranja dibujada con `GeoJsonSource + LineLayer` (NO `PolylineAnnotationManager`); coordenadas GeoJSON recibidas del backend
-- [ ] Flutter: chip de adherencia a ruta ("En ruta ✓" / "Fuera de ruta ⚠") con lógica 200m usando Haversine client-side sobre coordenadas GeoJSON
-- [ ] Flutter: botón SOS + diálogo de confirmación; banner SOS con Llamar/Localizar; marcador rojo pulsante con `mapbox_maps_flutter` annotations API
-- [ ] Flutter: controles organizador Iniciar/Terminar rodada en `EventDetailPage` y `EventTrackingPage`; `LiveTrackingCubit` emite `TrackingFinished` al recibir `tracking.event.ended` via WebSocket
-- [ ] Flutter: `flutter_foreground_task` en Android (foreground service isolate + `IsolateNameServer`; `configureDependencies()` llamado en `onStart()`); `geolocator` con `AppleSettings(activityType: ActivityType.automotiveNavigation)` en iOS
-- [ ] Flutter: `VehicleModel` con `soatStatus` y `soatExpiryDate`; Home Dashboard badge SOAT en card de vehículo principal
-- [ ] `dart analyze` sin errores; permisos `FOREGROUND_SERVICE` + `FOREGROUND_SERVICE_LOCATION` en `AndroidManifest.xml`
-- [ ] Prueba en device físico para background GPS (Android foreground service + iOS background location) — logs adjuntos al PR
-- [ ] `app_es.arb` actualizado; descripciones de uso de ubicación en `Info.plist` en español claro
+**Effort:** L (6–8h)
 
 ---
 
-### Iteration 8: Seguidores + Perfil Completo
+### REFACTOR-04: Widget extraction — Authentication feature
 
-**Goal:** Activar el sistema social básico de Rideglory: seguir/dejar de seguir otros riders, ver listas de seguidores/siguiendo, y completar los datos en las pantallas de perfil propio y de otro rider.
+**Violation type:** Multiple widget classes per file. `forgot_password_view.dart` (9 widgets), `login_view.dart` (8 widgets), `signup_view.dart` (6 widgets). Also covers `context.goNamed` violations in `forgot_password_view.dart` (2 occurrences — should be `context.pushNamed` or `context.goAndClearStack` on return from password recovery).
 
-**Action item during iter-8 (hard prerequisite for iter-9):** Provisionar el dominio para Android App Links e iOS Universal Links. Esto incluye: elegir y configurar el dominio (`links.rideglory.app` u otro), obtener certificado TLS válido, desplegar `/.well-known/assetlinks.json` y `/.well-known/apple-app-site-association`, y verificar que ambos archivos sean accesibles públicamente. Este paso debe completarse antes de cerrar iter-8 — es un bloqueante absoluto para iter-9.
+**Files affected:**
+- `lib/features/authentication/login/presentation/forgot_password_view.dart`
+- `lib/features/authentication/login/presentation/login_view.dart`
+- `lib/features/authentication/signup/presentation/signup_view.dart`
 
-> Same as prior iter-7. All stories renumbered 7.x → 8.x. Pre-flight, DoD, and risks unchanged.
+**Acceptance criteria:**
+- [ ] `grep -c "extends StatelessWidget\|extends StatefulWidget\|extends PreferredSizeWidget" lib/features/authentication/login/presentation/forgot_password_view.dart` returns ≤1
+- [ ] `grep -c "extends StatelessWidget\|extends StatefulWidget\|extends PreferredSizeWidget" lib/features/authentication/login/presentation/login_view.dart` returns ≤1
+- [ ] `grep -c "extends StatelessWidget\|extends StatefulWidget\|extends PreferredSizeWidget" lib/features/authentication/signup/presentation/signup_view.dart` returns ≤1
+- [ ] `grep "context\.goNamed" lib/features/authentication/login/presentation/forgot_password_view.dart` returns 0 results
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+- [ ] Manual smoke test: Login → Forgot Password → back to Login; Signup flow start to end
 
-**Pre-flight:**
-- (Ninguno — sin reset de base de datos ni migración de SDK requerida para iter-8.)
+**Risk:** Low — auth screens are stateless forms; no complex shared state between extracted widgets.
 
-**Stories:**
-
-| ID | Story | Acceptance |
-|----|-------|-----------|
-| 8.1 | Como rider, puedo ver el perfil de otro rider y tocar "Seguir"; el contador de seguidores se incrementa inmediatamente (optimistic update) y el backend registra la relación. | Botón cambia a "Siguiendo" al instante; si el request falla, el estado revierte y muestra snackbar de error; contador correcto al refrescar el perfil. |
-| 8.2 | Como rider que ya sigue a alguien, puedo tocar "Siguiendo", confirmar en un diálogo, y dejar de seguirlo; el contador disminuye de inmediato. | Flujo simétrico al de seguir; confirmación requerida para evitar toques accidentales; backend actualiza la relación. |
-| 8.3 | Como rider, puedo tocar el número de "seguidores" o "siguiendo" en mi perfil y ver una lista con foto, nombre y botón rápido seguir/dejar de seguir a cada uno. | Lista pagina correctamente (>20 riders con offset/limit load-more); navegar al rider abre su perfil; empty states visibles ("Aún no tienes seguidores" / "Aún no sigues a ningún rider"). |
-| 8.4 | Como rider, mi perfil muestra bio, ciudad, número de seguidores, número de siguiendo, eventos creados y motos registradas (sin datos sensibles). | Todos los campos con empty states apropiados; eventos ordenados con próximos primero. |
-| 8.5 | Como rider, cuando alguien empieza a seguirme recibo una push "Te sigue {nombre}" que aparece en el centro de notificaciones. | Push en menos de 30s; centro de notificaciones muestra el ítem con badge actualizado; fila insertada en tabla `notifications`. (Navegación al tocar: iter-9.) |
-
-**Definition of done (same as prior iter-7 DoD, renumbered):**
-- [ ] Design gate: Frame `A7qDd` (Profile) actualizado a estado final en `rideglory.pen`; frames para `FollowersListPage` y `FollowingListPage` creados antes de implementación — incluyendo botón seguir en estado cargando (optimistic in-flight), quick-follow en lista, empty states
-- [ ] **Dominio de deep link provisionado**: `assetlinks.json` y `apple-app-site-association` accesibles públicamente en el dominio elegido; TLS válido; verificado con `curl` antes del cierre de iter-8
-- [ ] Backend: entidad `Follow` (`followerId`, `followingId`, `createdAt`, índice compuesto único) en `users-ms` Prisma; `POST /api/users/:userId/follow`, `DELETE /api/users/:userId/follow`, `GET /api/users/:userId/followers?page=&limit=`, `GET /api/users/:userId/following?page=&limit=`
-- [ ] Backend: `_count.followers` y `_count.following` incluidos en respuesta de perfil de usuario
-- [ ] Backend: `GET /api/vehicles?userId=:userId` retorna `PublicVehicleDto` (clase separada de `VehicleDto`, sin `licensePlate` ni campos de seguro)
-- [ ] Backend: FCM push "nuevo seguidor" disparado desde `api-gateway` post-proxy; fila insertada en tabla `notifications`
-- [ ] Flutter: `FollowCubit` con estado optimista (`@freezed FollowState { isFollowing, followerCount, isLoading, error }`); registrado como factory con parámetro userId en DI
-- [ ] Flutter: `FollowersListPage` y `FollowingListPage` con paginación offset/limit, load-more, empty states explícitos
-- [ ] Flutter: perfil completo con bio, ciudad, contadores reales, vehículos públicos (via `PublicVehicleDto`), eventos organizados
-- [ ] Tipo `NEW_FOLLOWER` manejado en `NotificationsCubit`; aparece en centro de notificaciones
-- [ ] **GoRouter DI assessment**: confirmar si `GoRouter` está registrado en GetIt o requiere refactoring antes de `NotificationRouteHandler` en iter-9; si es necesario, crear tarea y planificar como Story 9.0
-- [ ] `dart analyze` sin errores; `app_es.arb` actualizado
-- [ ] Unit tests: optimistic update + revert en error para `FollowCubit`; paginación de listas
-- [ ] Widget tests: `FollowersListPage`, `FollowingListPage`
+**Effort:** M (3–4h)
 
 ---
 
-### Iteration 9: Deep Links + Compartir Evento + Apple Sign-In
+### REFACTOR-05: Widget extraction — Events feature (detail + form + tracking + list)
 
-**Goal:** Activar el flujo de compartir eventos externamente con Android App Links e iOS Universal Links, añadir Apple Sign-In (requisito App Store), y completar el routing de notificaciones push a las pantallas destino.
+**Violation type:** Multiple widget classes per file. `event_detail_view.dart` (9 widgets), `event_detail_cta_bar.dart` (8 widgets + `Widget _buildContent()` method), `event_form_max_participants_section.dart` (7 widgets), `event_form_locations_section.dart` (6 widgets), `event_form_price_section.dart` (4 widgets), `event_detail_owner_lifecycle_bar.dart` (4 widgets), `event_detail_meeting_point_section.dart` (4 widgets), `event_route_config_screen.dart` (4 widgets), `live_map_app_bar.dart` (4 widgets), `events_data_view.dart` (4 widgets), `event_card.dart` (5 widgets), plus widget-returning methods in `event_detail_by_id_page.dart` (`Widget _shell()`), `participants_placeholder_page.dart` (`Widget _buildEmptyState()`, `Widget _buildRiderList()`), and `event_card_header.dart` (`Widget _buildPopupMenu()`).
 
-> Same as prior iter-8. All stories renumbered 8.x → 9.x. Pre-flight, DoD, and risks unchanged.
+**Files affected:**
+- `lib/features/events/presentation/detail/event_detail_view.dart`
+- `lib/features/events/presentation/detail/widgets/event_detail_cta_bar.dart`
+- `lib/features/events/presentation/detail/widgets/event_detail_owner_lifecycle_bar.dart`
+- `lib/features/events/presentation/detail/widgets/event_detail_meeting_point_section.dart`
+- `lib/features/events/presentation/detail/widgets/event_detail_header.dart` (2 widgets)
+- `lib/features/events/presentation/detail/widgets/event_detail_header_background_image.dart` (2 widgets)
+- `lib/features/events/presentation/detail/event_detail_by_id_page.dart` (widget-returning method)
+- `lib/features/events/presentation/form/widgets/sections/event_form_max_participants_section.dart`
+- `lib/features/events/presentation/form/widgets/sections/event_form_locations_section.dart`
+- `lib/features/events/presentation/form/widgets/sections/event_form_price_section.dart`
+- `lib/features/events/presentation/form/widgets/event_form_bottom_bar.dart` (3 widgets)
+- `lib/features/events/presentation/form/widgets/sections/event_form_details_section.dart`
+- `lib/features/events/presentation/form/widgets/sections/event_form_difficulty_section.dart`
+- `lib/features/events/presentation/form/widgets/sections/event_form_event_type_section.dart`
+- `lib/features/events/presentation/form/widgets/sections/event_form_multi_brand_section.dart`
+- `lib/features/events/presentation/form/widgets/sections/waypoint_item_card.dart` (2 widgets)
+- `lib/features/events/presentation/form/widgets/sections/event_route_type_selector.dart` (2 widgets)
+- `lib/features/events/presentation/form/widgets/cover_preview_widget.dart` (2 widgets)
+- `lib/features/events/presentation/form/screens/event_route_config_screen.dart` (4 widgets)
+- `lib/features/events/presentation/tracking/participants/participants_placeholder_page.dart` (3 widgets + 2 widget-returning methods)
+- `lib/features/events/presentation/tracking/widgets/live_map_app_bar.dart` (4 widgets)
+- `lib/features/events/presentation/list/widgets/event_card.dart` (5 widgets)
+- `lib/features/events/presentation/list/widgets/events_data_view.dart` (4 widgets)
+- `lib/features/events/presentation/list/widgets/events_page_view.dart` (2 widgets)
+- `lib/features/events/presentation/list/widgets/event_card_header.dart` (widget-returning method)
+- `lib/features/events/presentation/drafts/my_drafts_page.dart` (2 widgets)
 
-**Pre-flight:**
-- [ ] `com.apple.developer.applesignin` entitlement añadido en Xcode; nuevo provisioning profile generado (permitir 1 día hábil para propagación)
-- [ ] Apple provider habilitado en Firebase Console y Apple Developer Portal
-- [ ] Dominio (provisionado en iter-8): verificar `curl https://<domain>/.well-known/assetlinks.json` y `curl https://<domain>/.well-known/apple-app-site-association` retornan 200 con contenido correcto
-- [ ] GoRouter DI: si el assessment de iter-8 determinó que se requiere refactoring, completarlo como Story 9.0 antes de implementar `NotificationRouteHandler`
+**Acceptance criteria:**
+- [ ] `grep -c "extends StatelessWidget\|extends StatefulWidget\|extends PreferredSizeWidget" lib/features/events/presentation/detail/event_detail_view.dart` returns ≤1
+- [ ] `grep -c "extends StatelessWidget\|extends StatefulWidget\|extends PreferredSizeWidget" lib/features/events/presentation/detail/widgets/event_detail_cta_bar.dart` returns ≤1
+- [ ] `grep "Widget _build\|Widget _" lib/features/events/presentation/detail/widgets/event_detail_cta_bar.dart` returns 0
+- [ ] `grep "Widget _shell\|Widget _build" lib/features/events/presentation/detail/event_detail_by_id_page.dart` returns 0
+- [ ] `grep "Widget _buildEmptyState\|Widget _buildRiderList" lib/features/events/presentation/tracking/participants/participants_placeholder_page.dart` returns 0
+- [ ] `grep "Widget _buildPopupMenu" lib/features/events/presentation/list/widgets/event_card_header.dart` returns 0
+- [ ] All `event_form_*_section.dart` files: each returns ≤1 on the widget-class grep
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions (widget tests for `event_filters_bottom_sheet`, `events_page_view`, `attendees_list_navigation` must continue to pass)
 
-**Stories:**
+**Risk:** Medium — `event_detail_cta_bar.dart` has 8 state-variant widgets and the form has many tightly coupled sections. Extract widgets independently; verify CTA bar state variants after extraction.
 
-| ID | Story | Acceptance |
-|----|-------|-----------|
-| 9.1 | Como rider, puedo tocar el botón de compartir en el detalle de un evento y el app abre el share sheet nativo con un link listo para enviar. | Link generado en menos de 3 segundos; share sheet nativo con preview (nombre del evento + imagen de portada) en tarjeta de WhatsApp. |
-| 9.2 | Como rider que recibe un link de evento y tiene la app instalada, al tocar el link la app abre directamente el detalle de ese evento. | Navegación funciona desde cold start y background; error apropiado si evento no existe o fue cancelado. |
-| 9.3 | Como persona sin la app, al tocar el link en el navegador mobile es redirigida a la Play Store (Android) o App Store (iOS). | Redirección correcta en ambas plataformas; página de fallback muestra branding mínimo de Rideglory (no es un HTTP redirect vacío). |
-| 9.4 | Como usuario de iPhone, puedo iniciar sesión o registrarme con Apple Sign-In en la pantalla de login. | Flujo de auth completo; perfil creado igual que con Google Sign-In; botón solo visible en iOS. |
-| 9.5 | Como rider, cuando toco cualquier notificación push la app navega directamente a la pantalla relevante sin pasar por Home. | 7 tipos de notificación enrutan correctamente: SOAT → detalle vehículo, inscripción aprobada/rechazada → detalle inscripción, nuevo inscrito → gestión inscritos, mantenimiento → detalle mantenimiento, seguidor → perfil rider. Funciona desde cold start y background. `NotificationRouteHandler` muestra error apropiado si la entidad destino ya no existe (no crash). |
-
-**Definition of done (same as prior iter-8 DoD, renumbered):**
-- [ ] Design gate: Botón de compartir en `EventDetailPage` y botón Apple Sign-In en login confirmados en frames; Apple Sign-In usa botón negro con logo Apple (HIG compliance)
-- [ ] Backend: `GET /api/events/:eventId/share-metadata` con `Cache-Control: public, max-age=3600`
-- [ ] Backend (o Firebase Hosting): sirve `/.well-known/assetlinks.json` y `/.well-known/apple-app-site-association`; página de redirect detecta User-Agent y redirige a Play Store / App Store con branding Rideglory mínimo
-- [ ] Flutter: `app_links ^6.x` integrado; `AndroidManifest.xml` con intent-filter para App Links; iOS Associated Domains entitlement
-- [ ] Flutter: `sign_in_with_apple ^6.x` integrado; botón solo en iOS (`defaultTargetPlatform == TargetPlatform.iOS`)
-- [ ] Flutter: `NotificationRouteHandler` en `lib/core/services/` — `@singleton` en DI, registrado antes de `GoRouter` en `main.dart`; maneja `onMessageOpenedApp` (background) y `getInitialMessage` (cold start); graceful error si entidad destino no existe
-- [ ] `dart analyze` sin errores; `app_es.arb` actualizado (botón compartir, mensajes de error)
-- [ ] Privacy policy URL en `Info.plist`
-- [ ] Prueba en device físico iOS: cold-start Universal Link + Apple Sign-In
-- [ ] Prueba en device físico Android: cold-start App Link
-- [ ] 7 tipos de notificación verificados que enrutan correctamente a pantallas destino (story 9.5 completa)
-
----
-
-## Dependencies and sequencing
-
-```
-iter-5 (UI/UX Redesign — frontend only)
-  |  Establishes: consistent design system baseline across all existing screens
-  |  Pre-condition: gap analysis and Pencil frame inspection BEFORE any code
-  |  Output: all 14 existing screens aligned with rideglory.pen
-  v
-iter-6 (SOAT + Notification Foundation)
-  |  Establishes: FCM infrastructure, notifications table in api-gateway,
-  |               notification center UI, SOAT domain, cursor pagination contract
-  v
-iter-7 (Tracking Completo + SOS + Maintenance Reminders)
-  |  Story 7.0 (Mapbox migration) must merge before 7.1–7.7 begin
-  |  Depends on iter-6: push notification infrastructure for SOS FCM multicast
-  |  Establishes: Mapbox-only SDK, background GPS, GeoJSON route, SOS UI
-  v
-iter-8 (Seguidores + Perfil Completo)
-  |  Depends on iter-6: notification center and notifications table
-  |                     (follower push inserts into same table)
-  |  Action item: provision deep link domain (blocker for iter-9)
-  v
-iter-9 (Deep Links + Apple Sign-In + Notification Routing)
-     Depends on iter-6: all notification types required for routing (story 9.5)
-     Depends on iter-8: follower notification type + deep link domain provisioned
-```
+**Effort:** L (6–8h)
 
 ---
 
-## Open questions for Architect
+### REFACTOR-06: Widget extraction — Maintenance + Home + Profile + Registration features
 
-1. **Iter-5 scope — ManageAttendeesPage**: Should `ManageAttendeesPage` (organizer view for managing registrations) be included in the redesign scope? It exists in the codebase but is not listed in the 14 screens above. Flag for Architect and Design to assess frame coverage in `rideglory.pen`.
+**Violation type:** Multiple widget classes per file. Maintenance: `maintenance_filters_bottom_sheet.dart` (12 widgets), `maintenances_page.dart` (3 widgets), `maintenance_detail_page.dart` (3 widgets), `maintenance_summary_widget.dart` (2 widgets), `maintenance_next_service_card.dart` (2 widgets), plus widget-returning method `Widget _rightBadge()` in `maintenance_grouped_list_item.dart`. Home: `home_event_card.dart` (5 widgets), `home_page.dart` (2 widgets), `home_garage_section.dart` (2 widgets). Profile: `edit_profile_page.dart` (3 widgets), `profile_stats_row.dart` (3 widgets), `profile_actions_list.dart` (3 widgets), `profile_header.dart` (2 widgets), `profile_garage_section.dart` (2 widgets), `profile_content.dart` (2 widgets). Users: `rider_profile_content.dart` (4 widgets). Event Registration: `event_registration_page.dart` (2 widgets), `registration_detail_page.dart` (2 widgets), `inscription_card.dart` (2 widgets).
 
-2. **Registration form pages in iter-5**: The 4-step registration form (`pQCmS`) and `RegistrationDetailPage` (`oUv12`) exist and may have visual debt. They are listed as optional story 5.10. Architect to confirm whether these are included or deferred given the scope already covers 14 screens.
+**Files affected:**
+- `lib/features/maintenance/presentation/widgets/maintenance_filters_bottom_sheet.dart`
+- `lib/features/maintenance/presentation/list/maintenances/maintenances_page.dart`
+- `lib/features/maintenance/presentation/detail/maintenance_detail_page.dart`
+- `lib/features/maintenance/presentation/list/maintenances/widgets/maintenance_summary_widget.dart`
+- `lib/features/maintenance/presentation/detail/widgets/maintenance_next_service_card.dart`
+- `lib/features/maintenance/presentation/list/maintenances/widgets/maintenance_grouped_list_item.dart` (widget-returning method)
+- `lib/features/home/presentation/widgets/home_event_card.dart`
+- `lib/features/home/presentation/home_page.dart`
+- `lib/features/home/presentation/widgets/home_garage_section.dart`
+- `lib/features/profile/presentation/edit_profile_page.dart`
+- `lib/features/profile/presentation/widgets/profile_stats_row.dart`
+- `lib/features/profile/presentation/widgets/profile_actions_list.dart`
+- `lib/features/profile/presentation/widgets/profile_header.dart`
+- `lib/features/profile/presentation/widgets/profile_garage_section.dart`
+- `lib/features/profile/presentation/widgets/profile_content.dart`
+- `lib/features/users/presentation/widgets/rider_profile_content.dart`
+- `lib/features/event_registration/presentation/event_registration_page.dart`
+- `lib/features/event_registration/presentation/registration_detail_page.dart`
+- `lib/features/event_registration/presentation/widgets/inscription_card.dart`
 
-3. **`routeGeoJson` backend contract** (carried from prior plan): The Architect recommends storing the route as GeoJSON LineString (`routeGeoJson Json?`) rather than the `"polyline": "encoded_string"` in PRD §17.2. Confirm this decision before beginning iter-7.
+**Acceptance criteria:**
+- [ ] `grep -c "extends StatelessWidget\|extends StatefulWidget\|extends PreferredSizeWidget" lib/features/maintenance/presentation/widgets/maintenance_filters_bottom_sheet.dart` returns ≤1
+- [ ] `grep "Widget _rightBadge" lib/features/maintenance/presentation/list/maintenances/widgets/maintenance_grouped_list_item.dart` returns 0
+- [ ] `grep -c "extends StatelessWidget\|extends StatefulWidget\|extends PreferredSizeWidget" lib/features/home/presentation/widgets/home_event_card.dart` returns ≤1
+- [ ] All listed profile, users, event_registration files: each returns ≤1 on the widget-class grep
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
 
-4. **Deep link domain** (carried from prior plan): Which domain is used for Android App Links and iOS Universal Links? (`links.rideglory.app` or api-gateway serving `.well-known/`?) Must be decided before iter-8 closes.
+**Risk:** Low-Medium — `maintenance_filters_bottom_sheet.dart` is the heaviest file in this story (12 classes) but all are pure display/selection widgets. Profile and registration files are small and isolated.
 
-5. **`notifications` microservice scope** (carried from prior plan): For MVP, `notifications` lives in api-gateway. Is there intent to extract it to a `notifications-ms` after MVP, or does it consolidate in api-gateway permanently?
+**Effort:** L (5–7h)
 
 ---
 
-## Deferred (out of MVP scope)
+### REFACTOR-07: Replace raw buttons with AppButton/AppTextButton
 
-| Item | Reason | Candidate |
-|------|--------|-----------|
-| OCR auto-fill del SOAT | Alta complejidad (ML Kit / Cloud Vision); entrada manual es suficiente para MVP | post-iter-9 |
-| Recordatorio de mantenimiento por km (odómetro) | Requiere sistema de tracking de odómetro no definido en el PRD | post-iter-9 |
-| Dynamic Links para perfiles de riders | Bajo impacto vs. esfuerzo; eventos son el caso de uso crítico de sharing | post-iter-9 |
-| Sugerencias de riders a seguir | Sin demanda validada para MVP | post-iter-9 |
-| Notificaciones read/unread local-only (SharedPreferences) | Descartado — fuente de verdad es el backend | — |
-| Firebase Dynamic Links | EOL agosto 2025. Reemplazado por `app_links` + Android App Links + iOS Universal Links | never — replaced |
-| Pagos in-app (Wompi, MercadoPago) | Complejidad legal; cobro es externo al MVP | post-MVP |
-| Verificación automática de SOAT via RUNT API | RUNT no tiene API pública | post-MVP |
-| Chat interno en la app | Solo WhatsApp/llamada nativa en MVP | post-MVP |
-| Feed social de publicaciones / fotos de rodadas | Fase posterior al MVP | post-MVP |
-| Gamificación (logros, retos) | Fase posterior al MVP | post-MVP |
-| Modo offline / descarga de mapas | No requerido para MVP | post-MVP |
-| Idioma inglés | Fase posterior; MVP es solo español | post-MVP |
-| Marketplace de repuestos | Fase posterior al MVP | post-MVP |
+**Violation type:** Prohibited use of `ElevatedButton`, `TextButton`, `OutlinedButton` directly in feature files.
+
+**Files affected (14 raw-button instances across 6 files):**
+- `lib/features/users/presentation/widgets/rider_profile_content.dart` — 1x `ElevatedButton`
+- `lib/features/events/presentation/form/widgets/event_form_view.dart` — 3x `TextButton`
+- `lib/features/events/presentation/form/screens/event_route_config_screen.dart` — 1x `TextButton`
+- `lib/features/events/presentation/tracking/widgets/end_ride_confirm_dialog.dart` — 1x `TextButton`
+- `lib/features/events/presentation/tracking/widgets/sos_active_overlay.dart` — 1x `OutlinedButton`
+- `lib/features/events/presentation/tracking/widgets/sos_confirm_dialog.dart` — 1x `TextButton`
+
+**Acceptance criteria:**
+- [ ] `grep -rn "ElevatedButton\|OutlinedButton\|TextButton" lib/features/ --include="*.dart" | grep -v "// Custom:"` returns 0 results
+- [ ] If any raw button is retained for a justified reason (e.g. SOS overlay with custom styling not supported by AppButton), it is annotated with `// Custom: <reason>` on the same line
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+
+**Risk:** Low — AppButton and AppTextButton already support `isLoading`, `variant`, and `icon`. The only possible exception is `sos_active_overlay.dart` which may require a specific `OutlinedButton` styling; document if so.
+
+**Effort:** S (1–2h)
+
+---
+
+### REFACTOR-08: Replace FormBuilderTextField with AppTextField
+
+**Violation type:** Prohibited use of `FormBuilderTextField` where `AppTextField` exists.
+
+**Files affected (5 occurrences in 4 files):**
+- `lib/features/vehicles/presentation/form/widgets/vehicle_specs_row.dart` — 1 instance
+- `lib/features/vehicles/presentation/form/widgets/vehicle_form_id_section.dart` — 2 instances
+- `lib/features/maintenance/presentation/form/widgets/maintenance_next_km_pill.dart` — 1 instance
+- `lib/features/events/presentation/form/widgets/sections/event_form_price_section.dart` — 1 instance
+
+**Acceptance criteria:**
+- [ ] `grep -rn "FormBuilderTextField" lib/features/ --include="*.dart"` returns 0 results
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+
+**Risk:** Low — `AppTextField` is a direct wrapper around `FormBuilderTextField`; it accepts the same `name` prop and validation hooks. The only risk is a missing prop mapping; verify each instance against `AppTextField`'s constructor.
+
+**Effort:** S (1h)
+
+---
+
+### REFACTOR-09: Migrate navigation — eliminate `Navigator.of(context)` in features
+
+**Violation type:** Prohibited use of `Navigator.of(context).push*` / `.pop()` where go_router should be used.
+
+**Files affected (29 occurrences across 18 files):**
+
+Note: 10 of these 29 occurrences live in the legacy SOAT folder (`vehicles/presentation/soat/`) and are automatically resolved when REFACTOR-02 deletes that folder. Only the 13 remaining files below need explicit fixes.
+
+Files with explicit Navigator.of calls to fix:
+- `lib/features/maintenance/presentation/form/maintenance_form_page.dart` (2 calls)
+- `lib/features/maintenance/presentation/form/widgets/change_vehicle_mileage_bottom_sheet.dart` (2 calls)
+- `lib/features/maintenance/presentation/form/widgets/maintenance_form_content.dart` (1 call)
+- `lib/features/events/presentation/list/widgets/event_filters_bottom_sheet.dart` (2 calls)
+- `lib/features/events/presentation/form/screens/event_route_config_screen.dart` (2 calls)
+- `lib/features/events/presentation/form/widgets/sections/event_form_locations_section.dart` (1 call)
+- `lib/features/events/presentation/detail/event_detail_view.dart` (1 call)
+- `lib/features/events/presentation/detail/event_route_map_screen.dart` (1 call)
+- `lib/features/events/presentation/attendees/widgets/attendees_filter_bottom_sheet.dart` (1 call)
+- `lib/features/event_registration/presentation/widgets/my_registrations_filter_bottom_sheet.dart` (2 calls)
+- `lib/features/event_registration/presentation/widgets/registration_detail_bottom_bar.dart` (2 calls)
+- `lib/features/vehicles/presentation/form/vehicle_form_page.dart` (1 call)
+- `lib/features/vehicles/presentation/form/widgets/vehicle_form_docs_section.dart` (1 call)
+- `lib/features/soat/presentation/widgets/soat_source_grid.dart` (1 call)
+
+**Acceptance criteria:**
+- [ ] `grep -rn "Navigator\.of(context)\." lib/features/ --include="*.dart" | grep -v "// Custom:"` returns 0 results
+- [ ] For bottom sheets that use `Navigator.of(context).pop(result)` to return a value: replaced with a callback pattern or `context.pop(result)` (go_router 14+); document with `// Custom:` only if pop-with-result cannot be replaced
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+
+**Risk:** Medium — `Navigator.of(context).pop(result)` (bottom sheets that return a value to caller) cannot be mechanically replaced by `context.pop()` without verifying the caller reads the result via `showModalBottomSheet`'s returned future. Review each case individually before replacing.
+
+**Effort:** M (3–4h)
+
+---
+
+### REFACTOR-10: Fix `context.goNamed` navigation violations
+
+**Violation type:** `context.goNamed()` used for normal navigation where `context.pushNamed()` or `context.goAndClearStack()` is required.
+
+**Files affected:**
+- `lib/features/profile/presentation/profile_page.dart` — `context.goNamed(AppRoutes.home)` in PopScope
+- `lib/features/vehicles/presentation/garage/garage_page.dart` — `context.goNamed(AppRoutes.home)` in PopScope
+- `lib/features/events/presentation/list/events_page.dart` — `context.goNamed(AppRoutes.home)` in PopScope
+- `lib/features/authentication/login/presentation/forgot_password_view.dart` — `context.goNamed(AppRoutes.login)` x2
+
+**Decision rules per case:**
+- `profile_page.dart`, `garage_page.dart`, `events_page.dart` in `PopScope`: these are shell tabs that should not stack onto each other. `context.goNamed` (replaces stack) may be intentional here. Each case must be evaluated: if the intent is "prevent double-tab back to previous tab", keep as `goNamed` and annotate `// Intentional: shell-tab navigation resets stack`; if not intentional, change to `pushNamed`.
+- `forgot_password_view.dart` x2: returning to login from password recovery should use `context.goAndClearStack(AppRoutes.login)` or `context.pop()` if the view is pushed. Evaluate and fix.
+
+**Acceptance criteria:**
+- [ ] `grep -rn "context\.goNamed" lib/features/ --include="*.dart" | grep -v "// Intentional:"` returns 0 results
+- [ ] All remaining `context.goNamed` calls are annotated with `// Intentional: <reason>`
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+
+**Risk:** Low — 5 isolated navigation calls. PopScope cases likely remain as `goNamed` with annotation.
+
+**Effort:** S (1h)
+
+---
+
+### REFACTOR-11: Tokenize hardcoded colors in features
+
+**Violation type:** `Color(0x...)` and `Colors.*` literals used directly in feature `build()` methods instead of `AppColors.*` or `colorScheme.*`.
+
+**Files affected:**
+
+`Color(0x...)` literals (confirmed):
+- `lib/features/home/presentation/widgets/home_vehicle_info_row.dart` — `Color(0xFFEAB308)`, `Color(0x1AEF4444)`, `Color(0x1AEAB308)` (SOAT status colors)
+- `lib/features/vehicles/presentation/garage/widgets/garage_vehicles_content.dart` — 10+ `Color(0x...)` for maintenance overdue/warning states
+- `lib/features/vehicles/presentation/garage/widgets/vehicle_detail_view.dart` — `Color(0xCC0D0D0F)`, `Color(0xFF0D0D0F)` (gradient overlay)
+- `lib/features/vehicles/presentation/garage/widgets/vehicle_soat_card.dart` — `Color(0xFF22C55E)`, `Color(0xFFEAB308)`, `Color(0xFFEF4444)` (status colors)
+- `lib/features/profile/presentation/edit_profile_page.dart` — `Color(0x66F98C1F)` (primary tint)
+- `lib/features/profile/presentation/widgets/profile_header.dart` — `Color(0x66F98C1F)`
+- `lib/features/users/presentation/widgets/rider_profile_content.dart` — `Color(0x66F98C1F)`
+
+`Colors.*` literals (confirmed in features):
+- `lib/features/home/presentation/widgets/home_event_view_details_button.dart` — `Colors.white`, `Colors.black87` x2
+- `lib/features/home/presentation/widgets/home_view_all_events_button.dart` — `Colors.transparent`
+- `lib/features/home/presentation/widgets/home_event_card.dart` — `Colors.white`
+- `lib/features/home/presentation/widgets/home_event_gradient_overlay.dart` — `Colors.transparent`, `Colors.black87`
+- `lib/features/home/presentation/widgets/home_event_difficulty_badge.dart` — `Colors.white`
+- `lib/features/event_registration/presentation/registration_detail_page.dart` — `Colors.transparent` (surfaceTintColor)
+- `lib/features/event_registration/presentation/my_registrations_view.dart` — `Colors.transparent` (surfaceTintColor)
+- `lib/features/event_registration/presentation/widgets/inscription_card.dart` — `Colors.transparent`
+- `lib/features/event_registration/presentation/widgets/my_registrations_filter_bottom_sheet.dart` — `Colors.transparent`
+- `lib/features/vehicles/presentation/form/widgets/vehicle_scan_banner.dart` — `Colors.white`
+- `lib/features/vehicles/presentation/form/widgets/vehicle_specs_row.dart` — `Colors.transparent`
+- `lib/features/vehicles/presentation/form/widgets/vehicle_form_cover_section.dart` — `Colors.black`, `Colors.white`
+
+**Tokenization strategy:**
+- SOAT status colors (`#22C55E`, `#EAB308`, `#EF4444`) — verify `AppColors.success`, `AppColors.warning`, `AppColors.error` exist; add to `lib/core/theme/app_colors.dart` if missing
+- `Color(0x66F98C1F)` (primary at 40% opacity) — add `AppColors.primarySubtle` or use `context.colorScheme.primary.withValues(alpha: 0.4)`
+- `surfaceTintColor: Colors.transparent` — acceptable Flutter idiom for removing Material3 surface tint; annotate `// Intentional: remove Material3 surface tint`
+- Gradient overlay stops with `Colors.transparent` — annotate `// Intentional: gradient stop`
+
+**Acceptance criteria:**
+- [ ] `grep -rn "Color(0x" lib/features/ --include="*.dart" | grep -v "// Intentional:"` returns 0 results
+- [ ] `grep -rn "Colors\." lib/features/ --include="*.dart" | grep -v "// Intentional:"` returns 0 results (or ≤5 fully justified exceptions all annotated)
+- [ ] Any new color constants are added to `lib/core/theme/app_colors.dart` with a named identifier
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+
+**Risk:** Low — purely cosmetic; colors in build methods have no behavioral side effects. Gradient stops and `surfaceTintColor` are the main ambiguity but do not affect behavior.
+
+**Effort:** M (2–3h)
+
+---
+
+### REFACTOR-12: Document or resolve `bool isLoadingMore` in NotificationsState
+
+**Violation type:** Primitive boolean flag for a loading state in a `@freezed` state class, where `ResultState<T>` is the required pattern.
+
+**Files affected:**
+- `lib/features/notifications/presentation/cubit/notifications_state.dart`
+- `lib/features/notifications/presentation/cubit/notifications_cubit.dart`
+- `lib/features/notifications/presentation/widgets/notifications_data_view.dart`
+- `lib/features/notifications/presentation/notifications_view.dart`
+
+**Decision:** `isLoadingMore` represents incremental pagination loading (appending to an existing list), which is distinct from the primary `listResult: ResultState<List<NotificationModel>>`. The correct resolution is:
+
+- **Option A (recommended for this iteration):** Keep `bool isLoadingMore` and add a comment in `notifications_state.dart`: `// Exception: isLoadingMore is a secondary loading indicator for cursor-based pagination append. It cannot be replaced by a second ResultState<List> because listResult must remain in Data state while additional pages are loading.`
+- **Option B (full compliance, deferred):** Replace with a second `ResultState<List<NotificationModel>> paginationResult` field and merge results in the cubit.
+
+**Acceptance criteria:**
+- [ ] `notifications_state.dart` contains either: (a) the `// Exception:` comment on the `isLoadingMore` field OR (b) zero `bool isLoadingMore` fields (Option B)
+- [ ] `dart analyze lib/` passes with 0 errors
+- [ ] `flutter test` passes with 0 regressions
+
+**Risk:** Low — Option A is a single comment addition. Option B requires regenerating the freezed file.
+
+**Effort:** S (<1h for Option A)
+
+---
+
+## Iteration totals
+
+| Stories | Total effort | Estimated days | Risk level |
+|---------|-------------|----------------|------------|
+| 12 stories | S×4 + M×4 + L×3 ≈ 34–46h raw work | 5–6 developer days | Medium (SOAT consolidation + large widget files are the risk drivers) |
+
+Effort breakdown:
+- S stories (REFACTOR-01, 07, 08, 10, 12): ~6–8h
+- M stories (REFACTOR-02, 04, 09, 11): ~12–14h
+- L stories (REFACTOR-03, 05, 06): ~18–23h
+
+---
+
+## Recommended execution order
+
+Execute in this order to minimize risk and avoid rework:
+
+1. **REFACTOR-01** — bug fix, no dependencies, immediate UX win
+2. **REFACTOR-02** — SOAT consolidation; auto-resolves 10 of the 29 Navigator.of calls in REFACTOR-09
+3. **REFACTOR-08** — quick win, no dependencies (5 file changes)
+4. **REFACTOR-07** — quick win, no dependencies (6 file changes)
+5. **REFACTOR-10** — quick win, no dependencies (4 files)
+6. **REFACTOR-12** — trivial comment addition
+7. **REFACTOR-11** — color tokenization; some files overlap with widget-extraction stories; do color work on already-modified files to avoid duplicate PRs
+8. **REFACTOR-09** — remaining Navigator.of migrations (REFACTOR-02 has already removed the bulk)
+9. **REFACTOR-04** — auth widget extraction; isolated feature, low regression risk
+10. **REFACTOR-06** — maintenance + home + profile + registration extraction; medium blast radius
+11. **REFACTOR-03** — vehicles widget extraction (largest single file with 16 widgets)
+12. **REFACTOR-05** — events widget extraction (most files, highest test coverage risk); run `flutter test` after each extracted widget
+
+---
+
+## Definition of Done (iteration-level)
+
+- [ ] `dart analyze lib/` returns 0 errors, 0 warnings
+- [ ] `flutter test` passes — all pre-existing tests pass, 0 new failures
+- [ ] `find lib/features -name "*.dart" | xargs grep -lc "extends StatelessWidget\|extends StatefulWidget\|extends PreferredSizeWidget" | while read line; do file=$(echo "$line" | cut -d: -f1); count=$(echo "$line" | cut -d: -f2); if [ "$count" -gt 1 ]; then echo "$count $file"; fi; done` returns 0 lines (every feature file has ≤1 widget class)
+- [ ] `grep -rn "Widget _build\|Widget _[a-z]" lib/features/ --include="*.dart" | grep -v "//"` returns 0 results (no widget-returning methods)
+- [ ] `grep -rn "ElevatedButton\|OutlinedButton\|TextButton" lib/features/ --include="*.dart" | grep -v "// Custom:"` returns 0 results
+- [ ] `grep -rn "FormBuilderTextField" lib/features/ --include="*.dart"` returns 0 results
+- [ ] `grep -rn "Navigator\.of(context)\." lib/features/ --include="*.dart" | grep -v "// Custom:"` returns 0 results
+- [ ] `grep -rn "context\.goNamed" lib/features/ --include="*.dart" | grep -v "// Intentional:"` returns 0 results
+- [ ] `grep -rn "Color(0x" lib/features/ --include="*.dart" | grep -v "// Intentional:"` returns 0 results
+- [ ] `find lib/features/vehicles/presentation/soat -name "*.dart" 2>/dev/null | wc -l` returns 0 (legacy SOAT folder deleted)
+- [ ] Manual smoke test: SOAT upload flow (vehicle detail badge → upload page → status page) works end to end
+- [ ] Manual smoke test: Login → Forgot Password → back to Login navigates correctly
+- [ ] Manual smoke test: Event detail CTA bar renders in all state variants (registered / pending / closed / full)
+
+---
+
+## Risks
+
+- **SOAT router consolidation (REFACTOR-02):** The `/vehicles/soat` route and all cross-imports (including `soat_status_view.dart` importing `SoatManualCapturePage` from the legacy folder) must all be updated before the legacy folder is deleted. Missing one import causes a compile error. Mitigation: run `grep -r "vehicles/presentation/soat" lib/` before deleting and fix all results first.
+
+- **Widget extraction with shared state (REFACTOR-03, 05, 06):** Files like `garage_vehicles_content.dart` (16 classes) likely have inner private widget classes that access parent state or callbacks via closure. Extracting them requires converting closures to explicit constructor parameters or lifting state to the cubit. Never extract a widget that reads parent `State<T>` fields directly; convert to constructor params first.
+
+- **Navigator.of pop-with-result (REFACTOR-09):** Bottom sheets that return a value via `Navigator.of(context).pop(result)` cannot be replaced with `context.pop(result)` without verifying the caller's `showModalBottomSheet` return future is consumed. Review each of the 14 non-SOAT files individually before replacing.
+
+- **Color tokenization gaps (REFACTOR-11):** Some status colors (`#22C55E` success green, `#EAB308` warning yellow, `#EF4444` danger red) may not yet have named constants in `AppColors`. Adding them requires updating `lib/core/theme/app_colors.dart` and running `dart analyze`. Audit `AppColors` first and add missing constants before replacing literals.
+
+- **Test stability during widget extraction (REFACTOR-03, 05, 06):** Existing widget tests reference finders by type (e.g. `find.byType(EventCard)`). Extracting private inner classes changes the widget tree and may break finder assertions. Run `flutter test` after each extracted story, not only at the end of the iteration.
+
+---
+
+## Deferred
+
+- **`app_place_suggestions_dropdown.dart` `Widget _buildContainer()` method:** Lives in `lib/shared/widgets/` (not `lib/features/`), outside primary feature scope. Defer to a shared-widgets cleanup pass.
+- **`splash_screen.dart` (2 widgets):** Deferred if it conflicts with iter-1's redesign scope (Story 1.2 touched this file). Evaluate during REFACTOR-06 pre-flight.
+- **Full replacement of `bool isLoadingMore` with `ResultState`** (Option B of REFACTOR-12): Deferred unless full compliance is explicitly required this iteration.
+- **Patrol integration test `native` deprecations:** These are Patrol framework warnings, not Rideglory code. Explicitly out of scope per PRD §4.
