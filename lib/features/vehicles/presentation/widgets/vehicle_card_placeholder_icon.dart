@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleCardPlaceholderIcon extends StatelessWidget {
   const VehicleCardPlaceholderIcon({super.key});

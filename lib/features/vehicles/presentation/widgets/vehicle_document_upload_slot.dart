@@ -1,6 +1,7 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
+import 'package:rideglory/features/vehicles/presentation/widgets/vehicle_document_icon_slot.dart';
+import 'package:rideglory/features/vehicles/presentation/widgets/vehicle_document_upload_button.dart';
 
 class VehicleDocumentUploadSlot extends StatelessWidget {
   const VehicleDocumentUploadSlot({
@@ -48,7 +49,7 @@ class VehicleDocumentUploadSlot extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _IconSlot(hasDocument: _hasDocument, localPath: localPath),
+          VehicleDocumentIconSlot(hasDocument: _hasDocument, localPath: localPath),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -95,95 +96,8 @@ class VehicleDocumentUploadSlot extends StatelessWidget {
               ),
             )
           else
-            _UploadButton(onTap: onUploadTap),
+            VehicleDocumentUploadButton(onTap: onUploadTap),
         ],
-      ),
-    );
-  }
-}
-
-class _IconSlot extends StatelessWidget {
-  const _IconSlot({required this.hasDocument, this.localPath});
-
-  final bool hasDocument;
-  final String? localPath;
-
-  @override
-  Widget build(BuildContext context) {
-    if (hasDocument && localPath != null) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: SizedBox(
-          width: 40,
-          height: 40,
-          child: Image.file(
-            File(localPath!),
-            fit: BoxFit.cover,
-            errorBuilder: (ctx, e, s) => const _DefaultIconSlot(hasDocument: true),
-          ),
-        ),
-      );
-    }
-    return _DefaultIconSlot(hasDocument: hasDocument);
-  }
-}
-
-class _DefaultIconSlot extends StatelessWidget {
-  const _DefaultIconSlot({required this.hasDocument});
-
-  final bool hasDocument;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        color: hasDocument ? AppColors.primarySubtle : AppColors.darkTertiary,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Icon(
-        Icons.description_outlined,
-        size: 20,
-        color: hasDocument
-            ? AppColors.primary
-            : AppColors.textOnDarkSecondary,
-      ),
-    );
-  }
-}
-
-class _UploadButton extends StatelessWidget {
-  const _UploadButton({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-        decoration: BoxDecoration(
-          color: AppColors.darkTertiary,
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: AppColors.darkBorderLight),
-        ),
-        child: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.upload, size: 14, color: AppColors.textOnDarkSecondary),
-            SizedBox(width: 6),
-            Text(
-              'Subir',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textOnDarkSecondary,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
