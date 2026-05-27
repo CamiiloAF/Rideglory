@@ -12,17 +12,17 @@ class ForgotPasswordBackButton extends StatelessWidget {
         if (context.canPop()) context.pop();
       },
       child: Container(
-        width: 40,
-        height: 40,
+        width: 36,
+        height: 36,
         decoration: BoxDecoration(
           color: AppColors.darkCard,
-          borderRadius: BorderRadius.circular(12),
+          shape: BoxShape.circle,
           border: Border.all(color: AppColors.darkBorderPrimary),
         ),
         child: const Icon(
           Icons.arrow_back,
           color: AppColors.textOnDarkPrimary,
-          size: 20,
+          size: 18,
         ),
       ),
     );

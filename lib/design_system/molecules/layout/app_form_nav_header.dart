@@ -183,11 +183,12 @@ class AppFormNavHeader extends StatelessWidget implements PreferredSizeWidget {
             height: 36,
             decoration: BoxDecoration(
               color: AppColors.darkCard,
-              borderRadius: BorderRadius.circular(12),
+              shape: BoxShape.circle,
               border: Border.all(color: AppColors.darkBorderPrimary, width: 1),
             ),
             alignment: Alignment.center,
-            child: Icon(action.icon, color: AppColors.textOnDarkPrimary, size: 20),
+            child:
+                Icon(action.icon, color: AppColors.textOnDarkPrimary, size: 18),
           ),
         );
       }

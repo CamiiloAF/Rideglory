@@ -138,17 +138,17 @@ class _EventRouteMapScreenState extends State<EventRouteMapScreen> {
         leading: GestureDetector(
           onTap: () => context.pop(),
           child: Container(
-            margin: const EdgeInsets.all(8),
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
+            margin: const EdgeInsets.all(10),
+            width: 36,
+            height: 36,
+            decoration: const BoxDecoration(
               color: AppColors.darkTertiary,
-              borderRadius: BorderRadius.circular(10),
+              shape: BoxShape.circle,
             ),
             child: const Icon(
               Icons.arrow_back,
               color: AppColors.textOnDarkPrimary,
-              size: 20,
+              size: 18,
             ),
           ),
         ),
