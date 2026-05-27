@@ -217,10 +217,9 @@ class _SoatDataViewState extends State<SoatDataView> {
           if (widget.soat.documentUrl != null) ...[
             const SizedBox(height: 16),
             AppButton(
-              label: _openingDocument
-                  ? context.l10n.soat_downloading
-                  : context.l10n.soat_view_document,
-              onPressed: _openingDocument ? null : _openDocument,
+              label: context.l10n.soat_view_document,
+              onPressed: _openDocument,
+              isLoading: _openingDocument,
               isFullWidth: true,
             ),
           ],
