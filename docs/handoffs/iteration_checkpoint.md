@@ -8,10 +8,24 @@
 
 ---
 
-## Status: idle
+## Status: active — Iteration 6 (refactor-01)
 
-No active iteration checkpoint. Run **`/iter N`** or **`/resume-iter`** to continue work.
+**Current iteration:** 6
+**Codename:** refactor-01 — Refactor & Cleanup Extremo
+**Type:** REFACTORING ONLY — zero new features, zero API changes
 
-When an iteration closes, the PO overwrites this section and sets **Last closed** below.
+**Last completed phase:** po_scope (PO)
+**Next phase:** architect
+
+**Phase sequence for refactor-01:**
+1. ✅ `po_scope` — PO: 17 stories + 19 tasks written; handoff complete
+2. ⬜ `architect` — API for AppFormNavHeader molecule; unnamed-route decisions; REFACTOR-12 confirmation
+3. ⬜ `frontend` — 17 implementation tasks in linear order (T-6-1 → T-6-17)
+4. ⬜ `qa` — T-6-18: baseline capture + DoD grep checks + 7 smoke tests + AI cover + Mapbox regressions
+5. ⬜ `devops` — T-6-19: CI no-op verification on iter-6 branch
+6. ⬜ `tech_lead` — code review; Clean Architecture compliance; DoD grep verification
+7. ⬜ `po_close` — iteration summary, history, product status, next context
+
+**Note:** Backend is fully stand-down this iteration. Design is light (AppFormNavHeader spec only — no Pencil frames, no HTML mockups).
 
 *Last closed: —*

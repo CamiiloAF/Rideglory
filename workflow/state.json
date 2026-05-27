@@ -1024,8 +1024,8 @@
   "agents": {
     "po": {
       "status": "idle",
-      "lastAction": "2026-05-15T07:30:00Z",
-      "focus": "iter-3 closed: Tracking Completo + SOS + Maintenance Reminders. 7 stories delivered (US-3-0 through US-3-10, excluding T-3-9 route rendering deferred to backlog). Story 3.0 (Mapbox migration) completed as hard blocker. PR #15 approved, pending human merge. Next: iter-4 (social follow system)."
+      "lastAction": "2026-05-27T10:00:00Z",
+      "focus": "iter-6 (refactor-01) po_scope complete. 17 user stories (US-6-1..US-6-17) + 19 tasks (T-6-1..T-6-17 frontend, T-6-18 qa, T-6-19 devops). Backend stand-down. Architect next: AppFormNavHeader API + unnamed-route decisions."
     },
     "architect": {
       "status": "idle",
@@ -1285,6 +1285,196 @@
       "updatedAt": "2026-05-15T05:30:00Z"
     },
     {
+      "id": "T-6-1",
+      "iteration": 6,
+      "title": "Fix SOAT loading-button bug (REFACTOR-01)",
+      "description": "Fix soat_data_view.dart: replace label swap ('Descargando...') with isLoading: _openingDocument on AppButton. Verify AppButton.isLoading disables onPressed internally; if not, also pass onPressed: _openingDocument ? null : _openDocument.",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-6-1",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
+      "id": "T-6-2",
+      "iteration": 6,
+      "title": "Consolidate SOAT feature + document isLoadingMore exception (REFACTOR-02 + REFACTOR-12)",
+      "description": "MOVE 6 files from vehicles/presentation/soat/ to features/soat/presentation/; DELETE 9 legacy files; update app_router.dart + app_routes.dart + 5 import sites; add SoatManualCaptureParams; annotate 3 justified Navigator exceptions with // Custom:; run dart run build_runner build. Also: add // Exception: comment to isLoadingMore field in notifications_state.dart (REFACTOR-12). Run 4 SOAT smoke tests before closing.",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-6-2",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
+      "id": "T-6-3",
+      "iteration": 6,
+      "title": "Fix context.goNamed navigation violations (REFACTOR-10)",
+      "description": "Annotate 3 shell-tab context.goNamed calls (profile_page, garage_page, events_page) with // Intentional: shell-tab navigation resets stack to prevent back-stack accumulation in StatefulShellRoute. Replace 2 context.goNamed(AppRoutes.login) calls in forgot_password_view.dart with context.pop().",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-6-3",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
+      "id": "T-6-4",
+      "iteration": 6,
+      "title": "Replace FormBuilderTextField with AppTextField (REFACTOR-08)",
+      "description": "Replace all 5 FormBuilderTextField usages across 4 files (vehicle_specs_row.dart, vehicle_form_id_section.dart x2, maintenance_next_km_pill.dart, event_form_price_section.dart) with AppTextField. Verify name prop and validators map correctly.",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-6-4",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
+      "id": "T-6-5",
+      "iteration": 6,
+      "title": "Replace raw Flutter buttons with AppButton/AppTextButton (REFACTOR-07)",
+      "description": "Replace 8 raw button usages across 6 feature files. Verify AppButton covers OutlinedButton SOS overlay style; annotate // Custom: if not. Update rider_profile_page_test.dart if it uses find.byType(ElevatedButton).",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-6-5",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
+      "id": "T-6-6",
+      "iteration": 6,
+      "title": "Fix direct showDialog call in info_chip_tooltip.dart (REFACTOR-13)",
+      "description": "Replace showDialog(...) in lib/features/maintenance/presentation/widgets/item_card/info_chip_tooltip.dart with AppDialog wrapper or annotate // Custom: if AppDialog requires action buttons (info-only tooltip). Also replace Colors.black.withValues with AppColors.* or colorScheme.*.",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-6-6",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
+      "id": "T-6-7",
+      "iteration": 6,
+      "title": "Tokenize hardcoded colors across 25+ files (REFACTOR-11)",
+      "description": "First commit: add AppColors.statusGreen (0xFF22C55E), AppColors.statusWarning (0xFFEAB308), AppColors.statusError (0xFFEF4444), AppColors.primarySubtle to lib/core/theme/app_colors.dart. Then replace all Color(0x...) and Colors.* literals in 25+ feature files with AppColors.* or colorScheme.* tokens. Annotate justified exceptions (gradient stops, Material3 surfaceTintColor).",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-6-7",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
+      "id": "T-6-8",
+      "iteration": 6,
+      "title": "Widget extraction — Authentication feature (REFACTOR-04)",
+      "description": "Split forgot_password_view.dart (9 widgets), login_view.dart (8 widgets), signup_view.dart (6 widgets) into one-widget-per-file. Create widgets/ subdirectory when extracting 4+ from a single file. Manual smoke: Login↔ForgotPassword, Signup end-to-end.",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-6-8",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
+      "id": "T-6-9",
+      "iteration": 6,
+      "title": "Widget extraction — Vehicles garage content + vehicle detail (REFACTOR-03a)",
+      "description": "Split garage_vehicles_content.dart (16 widgets + 2 widget-returning methods) and vehicle_detail_view.dart (13 widgets) into one-widget-per-file. Classify each class as pure-display / state-consumer / state-mutator before extracting. Extract one widget per commit; run flutter test after each. Color literals in _MaintenanceCard replaced with AppColors.statusGreen/statusWarning in same commit.",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-6-9",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
+      "id": "T-6-10",
+      "iteration": 6,
+      "title": "Widget extraction — Vehicles form + docs + soat section (REFACTOR-03b)",
+      "description": "Split vehicle_form.dart (9), vehicle_document_upload_slot.dart (4), vehicle_form_page.dart (2), vehicle_form_cover_section.dart (4), vehicle_form_id_section.dart (3), vehicle_form_docs_section.dart (2), vehicle_card.dart (method). Maintain GlobalKey<FormBuilderState> constructor-injection pattern. Preserve vehicle_form_page.dart // Custom: annotations (pushReplacement + modal pop).",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-6-10",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
+      "id": "T-6-11",
+      "iteration": 6,
+      "title": "Widget extraction — Events detail + CTA bar (REFACTOR-05a)",
+      "description": "Split event_detail_view.dart (9), event_detail_cta_bar.dart (8 + _buildContent method), event_detail_owner_lifecycle_bar.dart (4), event_detail_meeting_point_section.dart (4), event_detail_header.dart (2), event_detail_header_background_image.dart (2), event_detail_by_id_page.dart (method). Extract ~8 CTA variants to detail/widgets/cta/. Keep onEdit as typed callback in EventDetailViewState. Document EventRouteMapScreen unnamed-push decision. HARD AC: smoke test all 4 CTA state variants.",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-6-11",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
+      "id": "T-6-12",
+      "iteration": 6,
+      "title": "Widget extraction — Events form + list + tracking + drafts (REFACTOR-05b)",
+      "description": "Split 19 source files across events form/list/tracking/drafts (2-7 widgets each + 2 widget-returning methods). Document EventRouteConfigScreen unnamed-push decision. Verify existing widget tests (event_filters_bottom_sheet, events_page_view, attendees_list_navigation) still pass.",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-6-12",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
+      "id": "T-6-13",
+      "iteration": 6,
+      "title": "Widget extraction — Maintenance feature + showDialog fix (REFACTOR-06a)",
+      "description": "Split maintenance_filters_bottom_sheet.dart (12 widgets — keep outer StatefulWidget+State in one file; extract only stateless sub-components), maintenances_page.dart (3), maintenance_detail_page.dart (3), maintenance_summary_widget.dart (2), maintenance_next_service_card.dart (2), maintenance_grouped_list_item.dart (method). Migrate maintenance_filters_bottom_sheet.dart:95 Navigator.pop(context, _filters) to context.pop(_filters). Manual smoke test: maintenance filters apply.",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-6-13",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
+      "id": "T-6-14",
+      "iteration": 6,
+      "title": "Widget extraction — Home + Profile + Users + EventRegistration (REFACTOR-06b)",
+      "description": "Split 13 source files across home (home_event_card.dart 5, home_page.dart 2, home_garage_section.dart 2), profile (edit_profile_page.dart 3, profile_stats_row.dart 3, profile_actions_list.dart 3, profile_header.dart 2, profile_garage_section.dart 2, profile_content.dart 2), users (rider_profile_content.dart 4), event_registration (event_registration_page.dart 2, registration_detail_page.dart 2, inscription_card.dart 2).",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-6-14",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
+      "id": "T-6-15",
+      "iteration": 6,
+      "title": "Migrate remaining Navigator.of → go_router (REFACTOR-09)",
+      "description": "Migrate Navigator.of(context).push*/pop() and Navigator.pop(context) calls across 16 feature files to context.pop()/context.push(). Document EventRouteConfigScreen and EventRouteMapScreen unnamed-push decisions. Six Navigator.pop(context) form calls (garage_options_bottom_sheet, maintenance_options_bottom_sheet, maintenance_filters_bottom_sheet) require separate grep check. Annotate justified exceptions with // Custom:. Manual smoke: maintenance filters pop-with-result, garage archive/delete/set-main.",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-6-15",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
+      "id": "T-6-16",
+      "iteration": 6,
+      "title": "Create AppFormNavHeader molecule + migrate 3 feature headers (REFACTOR-14)",
+      "description": "Create lib/design_system/molecules/app_form_nav_header.dart with AppFormNavHeader (PreferredSizeWidget) + AppFormNavAction sealed class (.text, .icon, .pillText). Migrate VehicleFormNavHeader (height 56), MaintenanceFormNavHeader (height 52, bottom slot for progress bars), event_form_view.dart AppBar inline. Delete old feature-level nav header files. Screenshot before/after smoke test for all 3 forms.",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-6-16",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
+      "id": "T-6-17",
+      "iteration": 6,
+      "title": "Audit and clean app_es.arb (REFACTOR-15)",
+      "description": "Phase 1: audit unused keys (jq + grep for each key). Phase 2: identify duplicate values unifiable to common_* prefix. Phase 3: apply — add common_* keys, mass-replace in lib/features/, delete old keys, run flutter gen-l10n. Target: ≥10% reduction from 1357 to ≤1220 keys. Commit per phase for rollback safety. 15-screen navigation smoke test confirms no missing-translation strings.",
+      "agent": "frontend",
+      "status": "backlog",
+      "storyRef": "US-6-17",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
+      "id": "T-6-18",
+      "iteration": 6,
+      "title": "QA full iteration gate — DoD grep checks + 7 smoke tests + regression guard",
+      "description": "1. Capture dart analyze + flutter test baseline on iter-6 pre-refactor (document any pre-existing failures). 2. Post-refactor: run all DoD grep checks from PLAN.md Definition of Done. 3. Run 7 manual smoke tests: (a) SOAT upload→confirmation→status + 6 vehicleSoat callers; (b) SOAT vehicle creation; (c) Login↔ForgotPassword; (d) Event detail CTA all 4 variants — HARD AC; (e) Maintenance filters apply; (f) Garage options archive/delete/set-main; (g) Signup end-to-end. 4. AI cover generation regression: generate → select → save event → confirm functional. 5. Mapbox route preview regression: renders in event form post-extraction. 6. Confirm api_base_url_resolver.dart NOT touched (its 2 warnings remain and are acceptable). 7. Confirm lib/features/vehicles/presentation/soat/ folder is gone.",
+      "agent": "qa",
+      "status": "backlog",
+      "storyRef": "QA-gate",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
+      "id": "T-6-19",
+      "iteration": 6,
+      "title": "DevOps CI no-op verification on iter-6 branch",
+      "description": "Verify dart analyze and flutter test pass in CI on the iter-6 branch after all refactor PRs are merged. Confirm: no new packages in pubspec.yaml, no new build steps required, CI pipeline unchanged (no new secrets, no new cache keys). Document confirmation in devops handoff.",
+      "agent": "devops",
+      "status": "backlog",
+      "storyRef": "DevOps-gate",
+      "updatedAt": "2026-05-27T10:00:00Z"
+    },
+    {
       "id": "BUG-3-1",
       "iteration": 3,
       "description": "HARD GATE BLOCKER: Widget test for route_map_preview.dart must be created and passing before Story 3.0 PR can merge. Test file: test/shared/widgets/map/route_map_preview_test.dart. Minimum 4 test cases required: (1) Loading state \u2014 stub PlaceService.geocode to hang, expect spinner overlay visible. (2) Error state \u2014 stub to throw DioException, expect error banner rendered, no crash. (3) Data state \u2014 stub to return GeocodeResultDto with coordinates, expect MapWidget rendered. (4) Empty state \u2014 both meetingPoint and destination null, expect placeholder text. Use mocktail for PlaceService mocking. After test passes: run 'flutter test test/shared/widgets/map/route_map_preview_test.dart' and verify PASS before Story 3.0 PR opens.",
@@ -1473,6 +1663,22 @@
       "at": "2026-05-27T00:00:00Z",
       "agent": "system",
       "detail": "Full /iter 6 (refactor-01) run starting."
+    },
+    {
+      "type": "po_plan",
+      "iteration": 6,
+      "phase": "po_scope",
+      "agent": "po",
+      "at": "2026-05-27T10:00:00Z",
+      "detail": "Iter-6 (refactor-01) scoped: 17 violation-framed user stories (US-6-1..US-6-17) + 19 tasks (17 frontend T-6-1..T-6-17, 1 QA T-6-18, 1 DevOps T-6-19). Backend stand-down confirmed. Architect next."
+    },
+    {
+      "type": "phase_complete",
+      "iteration": 6,
+      "phase": "po_scope",
+      "agent": "po",
+      "at": "2026-05-27T10:00:00Z",
+      "detail": "po_scope complete: 17 stories (US-6-1..US-6-17) mapped to REFACTOR-01..15 (incl. 03a/b, 05a/b, 06a/b, 14, 15); 19 tasks created; backend stand-down; architect next for AppFormNavHeader API + unnamed-route decisions."
     }
   ]
 }
