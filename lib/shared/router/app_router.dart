@@ -381,7 +381,7 @@ class AppRouter {
           final params = state.extra as SoatManualCaptureParams;
           return SoatManualCapturePage(
             vehicle: params.vehicle,
-            existingSoat: null,
+            existingSoat: params.soat,
             initialLocalImagePath: params.initialLocalImagePath,
           );
         },

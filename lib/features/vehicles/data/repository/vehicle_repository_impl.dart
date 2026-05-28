@@ -23,7 +23,7 @@ class VehicleRepositoryImpl implements VehicleRepository {
     return executeService(
       function: () async {
         final vehicles = await _vehicleService.getMyVehicles();
-        return vehicles.map((vehicle) => vehicle.toModel()).toList();
+        return List<VehicleModel>.from(vehicles);
       },
     );
   }

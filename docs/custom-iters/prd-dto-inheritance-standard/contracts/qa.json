@@ -1,0 +1,70 @@
+{
+  "phase": "qa",
+  "slug": "prd-dto-inheritance-standard",
+  "completedAt": "2026-05-28T19:00:00Z",
+  "signOff": "conditional",
+  "signOffReason": "All automated checks green. 8 manual probes required before merge (app must be launched to verify runtime behavior of migrated DTOs). api_base_url_resolver.dart local-API toggle must be reverted before release build.",
+  "testResults": {
+    "dartAnalyze": {
+      "errors": 0,
+      "warnings": 0,
+      "info": 45,
+      "newViolations": 0,
+      "exitCode": 2,
+      "note": "Exit code 2 = issues found, but all 45 are info-level and pre-existing. Zero new violations introduced."
+    },
+    "flutterTest": {
+      "passed": 119,
+      "failed": 0,
+      "total": 119,
+      "exitCode": 0
+    }
+  },
+  "wireFormatChecks": {
+    "allPass": true,
+    "checksRun": 11,
+    "details": [
+      { "file": "maintenance_dto.g.dart", "check": "fromJson reads createdAt key", "result": "pass" },
+      { "file": "maintenance_dto.g.dart", "check": "fromJson reads updatedAt key", "result": "pass" },
+      { "file": "maintenance_dto.g.dart", "check": "toJson writes createdAt key (not createdDate)", "result": "pass" },
+      { "file": "maintenance_dto.g.dart", "check": "toJson writes updatedAt key (not updatedDate)", "result": "pass" },
+      { "file": "event_registration_dto.g.dart", "check": "vehicleSummary via _VehicleSummaryConverter", "result": "pass" },
+      { "file": "event_registration_dto.dart", "check": "birthDate override via apiEncodeRequiredDateTime preserved", "result": "pass" },
+      { "file": "soat_dto.g.dart (soat feature)", "check": "expiryDate is DateTime.parse (required, non-nullable)", "result": "pass" },
+      { "file": "soat_dto.g.dart (soat feature)", "check": "No ?? DateTime.now() fallback", "result": "pass" },
+      { "file": "vehicle_summary_dto.g.dart", "check": "fields id/brand/model/licensePlate/vin with correct nullability", "result": "pass" },
+      { "file": "user_dto.g.dart", "check": "key set unchanged vs pre-refactor", "result": "pass" },
+      { "file": "vehicle_dto.g.dart", "check": "key set unchanged vs pre-refactor", "result": "pass" }
+    ]
+  },
+  "grepGuardrails": {
+    "allClean": true,
+    "results": [
+      { "command": "grep -rn '\\.toModel()' lib/features/home/", "hits": 0, "result": "pass" },
+      { "command": "grep -rn 'MaintenanceDto\\.fromModel|\\.toModel()' lib/features/maintenance/data/repository/", "hits": 0, "result": "pass" },
+      { "command": "grep -rn '\\.toDto()|\\.toModel()' lib/features/event_registration/data/repository/", "hits": 0, "result": "pass" },
+      { "command": "grep -rn 'UserDto\\.fromModel' lib/features/users/", "hits": 0, "result": "pass" },
+      { "command": "grep -rn '\\.toModel()' lib/features/vehicles/", "hits": 3, "note": "All hits are in deferred vehicles/soat_dto.dart and vehicle_repository_impl.dart SOAT methods — expected exceptions per PRD §8", "result": "pass (expected exceptions)" },
+      { "command": "grep -rn '\\.toModel()' lib/features/maintenance/", "hits": 1, "note": "MaintenanceListSummaryDto.toModel() composite wrapper exception per architect notes", "result": "pass (expected exception)" }
+    ]
+  },
+  "bugsFound": [],
+  "manualProbesRequired": [
+    "MP-1: Maintenance create flow",
+    "MP-2: Maintenance update flow",
+    "MP-3: Event registration create with vehicle",
+    "MP-4: My registrations list render",
+    "MP-5: SOAT load (vehicle with SOAT)",
+    "MP-6: SOAT load (vehicle without SOAT — 404 path)",
+    "MP-7: Home screen main vehicle + events render",
+    "MP-8: User profile persistence after logout/login"
+  ],
+  "openActions": [
+    {
+      "action": "Revert api_base_url_resolver.dart local-API toggle before release",
+      "owner": "human",
+      "blocking": false
+    }
+  ],
+  "pass": true
+}

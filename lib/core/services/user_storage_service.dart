@@ -19,7 +19,7 @@ class UserStorageService {
   }) {
     return _storage.write(
       key: _key(firebaseUid),
-      value: jsonEncode(UserDto.fromModel(user).toJson()),
+      value: jsonEncode(user.toJson()),
     );
   }
 

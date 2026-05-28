@@ -83,9 +83,13 @@ class _MaintenancesPageViewState extends State<MaintenancesPageView> {
   }
 
   Future<void> _onAddMaintenance() async {
-    // Form pops with List<MaintenanceModel> (1 or 2 records if auto-created scheduled)
+    // Form pops with List<MaintenanceModel> (1 or 2 records if auto-created scheduled).
+    // Pasamos el vehículo activo del filtro para que el form lo preseleccione
+    // y el nuevo registro caiga en el mismo vehículo que está viendo el usuario.
+    final activeVehicle = _resolveSelectedVehicle(context);
     final result = await context.pushNamed<dynamic>(
       AppRoutes.createMaintenance,
+      extra: activeVehicle,
     );
     if (!mounted) return;
     if (result is List<MaintenanceModel>) {

@@ -85,7 +85,7 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
           filter: filter.isEmpty ? null : filter,
         );
         return MaintenanceVehicleListResult(
-          items: response.items.map((dto) => dto.toModel()).toList(),
+          items: List<MaintenanceModel>.from(response.items),
           summary: response.summary.toModel(),
         );
       },
@@ -179,9 +179,9 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
         final dto = await _maintenanceService.update(
           vehicleId,
           id,
-          MaintenanceDto.fromModel(maintenance).toJson(),
+          maintenance.toJson(),
         );
-        return dto.toModel();
+        return dto;
       },
     );
   }
