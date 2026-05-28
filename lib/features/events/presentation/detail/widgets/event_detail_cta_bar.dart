@@ -25,6 +25,7 @@ class EventDetailCTABar extends StatelessWidget {
     required this.registration,
     required this.onRegister,
     this.onRegistrationStatusTap,
+    this.onOpenRegistrationDetail,
     this.onFollowLive,
   });
 
@@ -32,6 +33,7 @@ class EventDetailCTABar extends StatelessWidget {
   final EventRegistrationModel? registration;
   final VoidCallback onRegister;
   final void Function(EventRegistrationModel)? onRegistrationStatusTap;
+  final void Function(EventRegistrationModel)? onOpenRegistrationDetail;
   final VoidCallback? onFollowLive;
 
   @override
@@ -53,6 +55,7 @@ class EventDetailCTABar extends StatelessWidget {
         registration: registration,
         onRegister: onRegister,
         onRegistrationStatusTap: onRegistrationStatusTap,
+        onOpenRegistrationDetail: onOpenRegistrationDetail,
         onFollowLive: onFollowLive,
       ),
     );

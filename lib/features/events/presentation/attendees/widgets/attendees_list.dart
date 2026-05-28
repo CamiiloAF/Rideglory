@@ -28,20 +28,25 @@ class AttendeesList extends StatelessWidget {
 
   static bool _isProcessed(EventRegistrationModel registration) =>
       registration.status == RegistrationStatus.approved ||
-      registration.status == RegistrationStatus.rejected;
+      registration.status == RegistrationStatus.rejected ||
+      registration.status == RegistrationStatus.cancelled;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = context.colorScheme;
     final textTheme = context.textTheme;
-    final pendingAll = registrations.where(_isPending).toList();
-    final pending = pendingAll
+    // Owner del evento nunca debe aparecer en ninguna lista de inscritos
+    // (su "inscripción automática" no es relevante para gestión de asistentes).
+    final visible = registrations
         .where((registration) => registration.userId != event.ownerId)
         .toList();
-    final processed = registrations.where(_isProcessed).toList();
+    final pending = visible.where(_isPending).toList();
+    final processed = visible.where(_isProcessed).toList();
 
     return RefreshIndicator(
-      onRefresh: () => context.read<AttendeesCubit>().fetchAttendees(event.id!),
+      onRefresh: () => context
+          .read<AttendeesCubit>()
+          .fetchAttendees(event.id!, forceRefresh: true),
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         children: [

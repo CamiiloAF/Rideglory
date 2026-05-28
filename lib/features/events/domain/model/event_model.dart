@@ -42,6 +42,7 @@ enum EventState {
 class EventModel {
   final String? id;
   final String ownerId;
+  final String? ownerName;
   final String name;
   final String description;
   final String city;
@@ -65,6 +66,7 @@ class EventModel {
   const EventModel({
     this.id,
     required this.ownerId,
+    this.ownerName,
     required this.name,
     required this.description,
     required this.city,
@@ -111,6 +113,7 @@ class EventModel {
   EventModel copyWith({
     String? id,
     String? ownerId,
+    String? ownerName,
     String? name,
     String? description,
     String? city,
@@ -134,6 +137,7 @@ class EventModel {
     return EventModel(
       id: id ?? this.id,
       ownerId: ownerId ?? this.ownerId,
+      ownerName: ownerName ?? this.ownerName,
       name: name ?? this.name,
       description: description ?? this.description,
       city: city ?? this.city,

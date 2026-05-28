@@ -13,6 +13,7 @@ class EventDto extends EventModel {
   const EventDto({
     required super.id,
     required super.ownerId,
+    super.ownerName,
     required super.name,
     required super.description,
     required super.city,

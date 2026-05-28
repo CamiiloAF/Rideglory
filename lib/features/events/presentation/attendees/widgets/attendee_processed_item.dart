@@ -32,13 +32,17 @@ class AttendeeProcessedItem extends StatelessWidget {
         registration.vehicleSummary?.displayName.isNotEmpty == true
         ? registration.vehicleSummary!.displayName
         : context.l10n.notAvailable;
-    final isApproved =
-        registration.status == RegistrationStatus.approved;
-    final statusLabel = isApproved
-        ? context.l10n.event_approvedBadge
-        : context.l10n.event_rejectedBadge;
-    final statusColor =
-        isApproved ? context.appColors.success : colorScheme.error;
+    final statusLabel = switch (registration.status) {
+      RegistrationStatus.approved => context.l10n.event_approvedBadge,
+      RegistrationStatus.cancelled =>
+        context.l10n.registration_statusBadgeCancelled,
+      _ => context.l10n.event_rejectedBadge,
+    };
+    final statusColor = switch (registration.status) {
+      RegistrationStatus.approved => context.appColors.success,
+      RegistrationStatus.cancelled => colorScheme.onSurfaceVariant,
+      _ => colorScheme.error,
+    };
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

@@ -3610,6 +3610,30 @@ abstract class AppLocalizations {
   /// **'Gestionar inscritos'**
   String get event_manageAttendeesTitle;
 
+  /// No description provided for @event_attendee_joinedDaysAgo.
+  ///
+  /// In es, this message translates to:
+  /// **'Se unió hace {days} días'**
+  String event_attendee_joinedDaysAgo(int days);
+
+  /// No description provided for @event_attendee_joinedHoursAgo.
+  ///
+  /// In es, this message translates to:
+  /// **'Se unió hace {hours} h'**
+  String event_attendee_joinedHoursAgo(int hours);
+
+  /// No description provided for @event_attendee_joinedMinutesAgo.
+  ///
+  /// In es, this message translates to:
+  /// **'Se unió hace {minutes} min'**
+  String event_attendee_joinedMinutesAgo(int minutes);
+
+  /// No description provided for @event_attendee_joinedRecently.
+  ///
+  /// In es, this message translates to:
+  /// **'Se unió hace un momento'**
+  String get event_attendee_joinedRecently;
+
   /// No description provided for @sos_banner_subtitle_with_phone.
   ///
   /// In es, this message translates to:

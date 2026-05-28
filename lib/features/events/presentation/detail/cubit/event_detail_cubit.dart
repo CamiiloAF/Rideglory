@@ -6,10 +6,14 @@ import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/event_registration/domain/use_cases/approve_registration_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/cancel_event_registration_use_case.dart';
+import 'package:rideglory/features/event_registration/domain/use_cases/get_event_registrations_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/get_my_registration_for_event_use_case.dart';
+import 'package:rideglory/features/event_registration/domain/use_cases/reject_registration_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_event_by_id_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/publish_event_use_case.dart';
+import 'package:rideglory/features/events/data/cache/attendees_cache.dart';
 import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
 import 'package:rideglory/features/events/presentation/tracking/live_tracking_session_holder.dart';
 
@@ -23,6 +27,9 @@ class EventDetailCubit extends Cubit<EventDetailState> {
     this._getEventByIdUseCase,
     this._updateEventUseCase,
     this._publishEventUseCase,
+    this._getEventRegistrationsUseCase,
+    this._approveRegistrationUseCase,
+    this._rejectRegistrationUseCase,
   ) : super(
         const EventDetailState(
           registrationResult: ResultState.initial(),
@@ -36,8 +43,77 @@ class EventDetailCubit extends Cubit<EventDetailState> {
   final CancelEventRegistrationUseCase _cancelRegistrationUseCase;
   final UpdateEventUseCase _updateEventUseCase;
   final PublishEventUseCase _publishEventUseCase;
+  final GetEventRegistrationsUseCase _getEventRegistrationsUseCase;
+  final ApproveRegistrationUseCase _approveRegistrationUseCase;
+  final RejectRegistrationUseCase _rejectRegistrationUseCase;
 
   EventRegistrationModel? _registration;
+  String? _attendeesEventId;
+
+  /// Carga la lista COMPLETA de inscripciones del evento (no `/me`).
+  /// Siempre golpea el backend en cada entrada al detalle para mostrar el
+  /// conteo real y refrescar el caché. El caché solo se usa downstream desde
+  /// la pantalla de "Gestionar inscritos" para evitar una segunda llamada
+  /// dentro de la misma sesión.
+  Future<void> loadAttendees(String eventId) async {
+    _attendeesEventId = eventId;
+    emit(state.copyWith(attendeesResult: const ResultState.loading()));
+    final result = await _getEventRegistrationsUseCase(eventId);
+    result.fold(
+      (error) => emit(
+        state.copyWith(attendeesResult: ResultState.error(error: error)),
+      ),
+      (registrations) {
+        getIt<AttendeesCache>().write(eventId, registrations);
+        if (registrations.isEmpty) {
+          emit(state.copyWith(attendeesResult: const ResultState.empty()));
+        } else {
+          emit(
+            state.copyWith(
+              attendeesResult: ResultState.data(data: registrations),
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  /// Actualiza localmente el estado de una inscripción y dispara la llamada
+  /// al backend en segundo plano. Mantiene sincronizado el caché compartido
+  /// para que la pantalla de gestión de inscritos refleje el cambio sin
+  /// re-fetch.
+  void _updateAttendeeStatusLocally(
+    String registrationId,
+    RegistrationStatus status,
+  ) {
+    final current = state.attendeesResult.maybeWhen(
+      data: (regs) => regs,
+      orElse: () => const <EventRegistrationModel>[],
+    );
+    final index = current.indexWhere((r) => r.id == registrationId);
+    if (index < 0) return;
+    final updated = current[index].copyWith(status: status);
+    final newList = List<EventRegistrationModel>.from(current)..[index] = updated;
+    // `EventRegistrationModel.==` solo compara por id, así que el deep equality
+    // de la lista da true aunque el status haya cambiado. Forzamos un cambio
+    // visible para Bloc emitiendo un estado intermedio antes del nuevo data.
+    emit(state.copyWith(attendeesResult: const ResultState.initial()));
+    emit(state.copyWith(attendeesResult: ResultState.data(data: newList)));
+    final eventId = _attendeesEventId;
+    if (eventId != null) {
+      getIt<AttendeesCache>().updateStatus(eventId, registrationId, status);
+    }
+  }
+
+  Future<void> approveAttendee(String registrationId) async {
+    _updateAttendeeStatusLocally(registrationId, RegistrationStatus.approved);
+    unawaited(_approveRegistrationUseCase(registrationId));
+  }
+
+  Future<void> rejectAttendee(String registrationId) async {
+    _updateAttendeeStatusLocally(registrationId, RegistrationStatus.rejected);
+    unawaited(_rejectRegistrationUseCase(registrationId));
+  }
 
   Future<void> loadEvent(String eventId) async {
     emit(state.copyWith(eventResult: const ResultState.loading()));
