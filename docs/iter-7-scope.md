@@ -90,7 +90,7 @@ Cualquier aseguradora con "regex genérica" se beneficia automáticamente cuando
 - [ ] `git merge main --no-edit` (regla del proyecto)
 - [ ] Confirmar que iter-6 está merged y `main` está limpio
 - [ ] Confirmar versión actual de `google_mlkit_text_recognition` compatible con la versión de Flutter del proyecto
-- [ ] Diseño Pencil revisado: ¿necesitamos un frame nuevo para `SoatScanPage` (loader) o reutilizamos el modal genérico?
+- [ ] Diseño Pencil revisado: ¿necesitamos un frame nuevo para `SoatScanPage` (loader) o reutilizamos el modal genérico? R//: Si es necesario un nuevo frame en pencil.
 
 ---
 
