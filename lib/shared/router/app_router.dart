@@ -22,6 +22,8 @@ import 'package:rideglory/features/home/presentation/home_page.dart';
 import 'package:rideglory/features/notifications/presentation/notifications_page.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_page.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_params.dart';
+import 'package:rideglory/features/soat/presentation/pages/soat_scan_page.dart';
+import 'package:rideglory/features/soat/presentation/pages/soat_scan_params.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_status_page.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_upload_page.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
@@ -340,7 +342,9 @@ class AppRouter {
         name: AppRoutes.eventDetailById,
         builder: (context, state) {
           final eventIdFromQuery = state.uri.queryParameters['id'];
-          final eventIdFromExtra = state.extra is String ? state.extra as String : null;
+          final eventIdFromExtra = state.extra is String
+              ? state.extra as String
+              : null;
           final eventId = eventIdFromQuery ?? eventIdFromExtra ?? '';
           return EventDetailByIdPage(eventId: eventId);
         },
@@ -383,7 +387,16 @@ class AppRouter {
             vehicle: params.vehicle,
             existingSoat: params.soat,
             initialLocalImagePath: params.initialLocalImagePath,
+            extraction: params.extraction,
           );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.soatScan,
+        name: AppRoutes.soatScan,
+        builder: (context, state) {
+          final params = state.extra as SoatScanParams;
+          return SoatScanPage(params: params);
         },
       ),
     ],

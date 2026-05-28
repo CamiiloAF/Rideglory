@@ -122,7 +122,9 @@ class _SourceButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: isPrimary ? AppColors.primary : AppColors.darkBgPrimary,
           borderRadius: BorderRadius.circular(8),
-          border: isPrimary ? null : Border.all(color: AppColors.darkBorderPrimary),
+          border: isPrimary
+              ? null
+              : Border.all(color: AppColors.darkBorderPrimary),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -130,13 +132,17 @@ class _SourceButton extends StatelessWidget {
             Icon(
               icon,
               size: 16,
-              color: isPrimary ? AppColors.darkBgPrimary : AppColors.textOnDarkPrimary,
+              color: isPrimary
+                  ? AppColors.darkBgPrimary
+                  : AppColors.textOnDarkPrimary,
             ),
             const SizedBox(width: 6),
             Text(
               label,
               style: TextStyle(
-                color: isPrimary ? AppColors.darkBgPrimary : AppColors.textOnDarkPrimary,
+                color: isPrimary
+                    ? AppColors.darkBgPrimary
+                    : AppColors.textOnDarkPrimary,
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
               ),

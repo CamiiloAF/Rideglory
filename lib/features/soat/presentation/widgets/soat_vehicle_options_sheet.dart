@@ -77,8 +77,7 @@ class _SheetContent extends StatelessWidget {
                   const SizedBox(height: 16),
                   SoatManualOptionCard(
                     // Custom: Navigator.pop preserved — closes showModalBottomSheet route with typed result.
-                    onTap: () =>
-                        Navigator.of(context).pop(SoatOptionsManual()),
+                    onTap: () => Navigator.of(context).pop(SoatOptionsManual()),
                   ),
                 ],
               ),

@@ -59,10 +59,10 @@ class SoatEmptyState extends StatelessWidget {
               onPressed: () => context
                   .pushNamed(AppRoutes.vehicleSoat, extra: vehicle)
                   .then((_) {
-                if (context.mounted) {
-                  context.read<SoatCubit>().load(vehicle.id ?? '');
-                }
-              }),
+                    if (context.mounted) {
+                      context.read<SoatCubit>().load(vehicle.id ?? '');
+                    }
+                  }),
             ),
           ],
         ),

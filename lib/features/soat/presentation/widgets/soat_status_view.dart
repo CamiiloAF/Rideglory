@@ -57,10 +57,10 @@ class SoatStatusView extends StatelessWidget {
                       ),
                     )
                     .then((_) {
-                  if (context.mounted) {
-                    context.read<SoatCubit>().load(vehicle.id ?? '');
-                  }
-                }),
+                      if (context.mounted) {
+                        context.read<SoatCubit>().load(vehicle.id ?? '');
+                      }
+                    }),
               );
             },
           ),

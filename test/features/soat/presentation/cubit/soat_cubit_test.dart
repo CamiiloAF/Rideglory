@@ -46,8 +46,9 @@ void main() {
     blocTest<SoatCubit, ResultState<SoatModel>>(
       'TC-2-27: load() emits loading then data when SOAT exists',
       setUp: () {
-        when(() => mockGetSoatUseCase(vehicleId))
-            .thenAnswer((_) async => Right(mockSoat));
+        when(
+          () => mockGetSoatUseCase(vehicleId),
+        ).thenAnswer((_) async => Right(mockSoat));
       },
       build: () => soatCubit,
       act: (cubit) => cubit.load(vehicleId),
@@ -64,8 +65,9 @@ void main() {
     blocTest<SoatCubit, ResultState<SoatModel>>(
       'TC-2-28: load() emits empty when no SOAT registered',
       setUp: () {
-        when(() => mockGetSoatUseCase(vehicleId))
-            .thenAnswer((_) async => const Right(null));
+        when(
+          () => mockGetSoatUseCase(vehicleId),
+        ).thenAnswer((_) async => const Right(null));
       },
       build: () => soatCubit,
       act: (cubit) => cubit.load(vehicleId),
@@ -101,10 +103,12 @@ void main() {
     blocTest<SoatCubit, ResultState<SoatModel>>(
       'TC-2-30: save() returns true and emits data on success',
       setUp: () {
-        when(() => mockSaveSoatUseCase(
-              vehicleId: vehicleId,
-              soat: any(named: 'soat'),
-            )).thenAnswer((_) async => Right(mockSoat));
+        when(
+          () => mockSaveSoatUseCase(
+            vehicleId: vehicleId,
+            soat: any(named: 'soat'),
+          ),
+        ).thenAnswer((_) async => Right(mockSoat));
       },
       build: () => soatCubit,
       act: (cubit) => cubit.save(vehicleId: vehicleId, soat: mockSoat),
@@ -115,10 +119,12 @@ void main() {
         ),
       ],
       verify: (cubit) {
-        verify(() => mockSaveSoatUseCase(
-              vehicleId: vehicleId,
-              soat: any(named: 'soat'),
-            )).called(1);
+        verify(
+          () => mockSaveSoatUseCase(
+            vehicleId: vehicleId,
+            soat: any(named: 'soat'),
+          ),
+        ).called(1);
       },
     );
 
@@ -126,10 +132,12 @@ void main() {
     blocTest<SoatCubit, ResultState<SoatModel>>(
       'TC-2-31: save() returns false and emits error on failure',
       setUp: () {
-        when(() => mockSaveSoatUseCase(
-              vehicleId: vehicleId,
-              soat: any(named: 'soat'),
-            )).thenAnswer(
+        when(
+          () => mockSaveSoatUseCase(
+            vehicleId: vehicleId,
+            soat: any(named: 'soat'),
+          ),
+        ).thenAnswer(
           (_) async => const Left(DomainException(message: 'Guardado fallido')),
         );
       },

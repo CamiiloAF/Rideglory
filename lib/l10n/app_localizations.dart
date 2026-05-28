@@ -4237,6 +4237,54 @@ abstract class AppLocalizations {
   /// **'Ingresar manualmente'**
   String get soat_source_manual;
 
+  /// No description provided for @soat_scan_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Escanear SOAT'**
+  String get soat_scan_button;
+
+  /// No description provided for @soat_scan_sheet_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Escanear documento'**
+  String get soat_scan_sheet_title;
+
+  /// No description provided for @soat_scan_loading.
+  ///
+  /// In es, this message translates to:
+  /// **'Leyendo documento…'**
+  String get soat_scan_loading;
+
+  /// No description provided for @soat_scan_banner.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos extraídos del documento — revisa antes de guardar'**
+  String get soat_scan_banner;
+
+  /// No description provided for @soat_scan_banner_review.
+  ///
+  /// In es, this message translates to:
+  /// **'Revisa con cuidado los campos resaltados antes de guardar'**
+  String get soat_scan_banner_review;
+
+  /// No description provided for @soat_scan_field_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Dato extraído del documento'**
+  String get soat_scan_field_hint;
+
+  /// No description provided for @soat_scan_error_unreadable.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos leer el documento, ingresa los datos manualmente'**
+  String get soat_scan_error_unreadable;
+
+  /// No description provided for @soat_scan_error_permission.
+  ///
+  /// In es, this message translates to:
+  /// **'Necesitamos permiso de cámara o archivos para escanear el documento'**
+  String get soat_scan_error_permission;
+
   /// No description provided for @soat_field_policy_number.
   ///
   /// In es, this message translates to:

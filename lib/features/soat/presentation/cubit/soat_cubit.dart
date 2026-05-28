@@ -7,10 +7,8 @@ import 'package:rideglory/features/soat/domain/usecases/save_soat_usecase.dart';
 
 @injectable
 class SoatCubit extends Cubit<ResultState<SoatModel>> {
-  SoatCubit(
-    this._getSoatUseCase,
-    this._saveSoatUseCase,
-  ) : super(const ResultState.initial());
+  SoatCubit(this._getSoatUseCase, this._saveSoatUseCase)
+    : super(const ResultState.initial());
 
   final GetSoatUseCase _getSoatUseCase;
   final SaveSoatUseCase _saveSoatUseCase;
@@ -18,16 +16,13 @@ class SoatCubit extends Cubit<ResultState<SoatModel>> {
   Future<void> load(String vehicleId) async {
     emit(const ResultState.loading());
     final result = await _getSoatUseCase(vehicleId);
-    result.fold(
-      (error) => emit(ResultState.error(error: error)),
-      (soat) {
-        if (soat == null) {
-          emit(const ResultState.empty());
-        } else {
-          emit(ResultState.data(data: soat));
-        }
-      },
-    );
+    result.fold((error) => emit(ResultState.error(error: error)), (soat) {
+      if (soat == null) {
+        emit(const ResultState.empty());
+      } else {
+        emit(ResultState.data(data: soat));
+      }
+    });
   }
 
   Future<bool> save({

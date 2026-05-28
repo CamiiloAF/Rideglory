@@ -45,7 +45,9 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Rideglory necesita acceso a tus fotos para elegir la portada del evento.</string>
+	<string>Rideglory necesita acceso a tus fotos para elegir la portada del evento y escanear tu SOAT.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Rideglory necesita acceso a la cámara para tomar una foto y escanear tu SOAT.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Rideglory usa tu ubicación para mostrar tu posición y seguir la rodada en vivo.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

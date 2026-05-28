@@ -29,12 +29,12 @@ class SoatDto {
   Map<String, dynamic> toJson() => _$SoatDtoToJson(this);
 
   SoatModel toModel() => SoatModel(
-        id: id,
-        vehicleId: vehicleId,
-        policyNumber: policyNumber,
-        startDate: DateTime.parse(startDate),
-        expiryDate: DateTime.parse(expiryDate),
-        insurer: insurer,
-        documentUrl: documentUrl,
-      );
+    id: id,
+    vehicleId: vehicleId,
+    policyNumber: policyNumber,
+    startDate: DateTime.parse(startDate),
+    expiryDate: DateTime.parse(expiryDate),
+    insurer: insurer,
+    documentUrl: documentUrl,
+  );
 }

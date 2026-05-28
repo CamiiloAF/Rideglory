@@ -90,11 +90,13 @@ class SoatValidityCard extends StatelessWidget {
     }
 
     final daysRemaining = expiryDate!
-        .difference(DateTime(
-          DateTime.now().year,
-          DateTime.now().month,
-          DateTime.now().day,
-        ))
+        .difference(
+          DateTime(
+            DateTime.now().year,
+            DateTime.now().month,
+            DateTime.now().day,
+          ),
+        )
         .inDays;
 
     // SOAT vencido
@@ -108,11 +110,7 @@ class SoatValidityCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(
-              Icons.shield_outlined,
-              size: 20,
-              color: AppColors.error,
-            ),
+            const Icon(Icons.shield_outlined, size: 20, color: AppColors.error),
             const SizedBox(width: 10),
             Expanded(
               child: Column(
@@ -128,8 +126,9 @@ class SoatValidityCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    context.l10n
-                        .vehicle_soat_status_expired_desc(daysRemaining.abs()),
+                    context.l10n.vehicle_soat_status_expired_desc(
+                      daysRemaining.abs(),
+                    ),
                     style: const TextStyle(
                       color: AppColors.textOnDarkSecondary,
                       fontSize: 12,
@@ -154,11 +153,7 @@ class SoatValidityCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.verified_user_outlined,
-            size: 20,
-            color: validColor,
-          ),
+          const Icon(Icons.verified_user_outlined, size: 20, color: validColor),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -176,8 +171,9 @@ class SoatValidityCard extends StatelessWidget {
                 Text(
                   daysRemaining == 0
                       ? context.l10n.vehicle_soat_status_expires_today
-                      : context.l10n
-                          .vehicle_soat_status_valid_desc(daysRemaining),
+                      : context.l10n.vehicle_soat_status_valid_desc(
+                          daysRemaining,
+                        ),
                   style: const TextStyle(
                     color: AppColors.textOnDarkSecondary,
                     fontSize: 12,

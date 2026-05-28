@@ -7,11 +7,16 @@ import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/core/services/image_storage_service.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/features/soat/domain/models/soat_extraction.dart';
 import 'package:rideglory/features/soat/domain/models/soat_model.dart';
 import 'package:rideglory/features/soat/domain/usecases/save_soat_usecase.dart';
+import 'package:rideglory/features/soat/presentation/scan/soat_scan_launcher.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
+import 'package:rideglory/features/soat/presentation/widgets/soat_autofill_badge.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_document_section.dart';
+import 'package:rideglory/features/soat/presentation/widgets/soat_ocr_banner.dart';
+import 'package:rideglory/features/soat/presentation/widgets/soat_scan_button.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_validity_card.dart';
 
 /// Formulario unificado para **registrar o editar** el SOAT manualmente.
@@ -31,6 +36,7 @@ class SoatManualCapturePage extends StatefulWidget {
     this.vehicle,
     this.existingSoat,
     this.initialLocalImagePath,
+    this.extraction,
   });
 
   /// Vehículo al que pertenece el SOAT.
@@ -46,6 +52,10 @@ class SoatManualCapturePage extends StatefulWidget {
   /// superior y el usuario puede cambiarlo o eliminarlo desde aquí.
   final String? initialLocalImagePath;
 
+  /// Resultado del OCR. Cuando llega y supera el umbral de prellenado, los
+  /// campos se inicializan con sus valores y se marcan como auto-rellenados.
+  final SoatExtraction? extraction;
+
   @override
   State<SoatManualCapturePage> createState() => _SoatManualCapturePageState();
 }
@@ -56,16 +66,46 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
   DateTime? _expiryDate;
   String? _localImagePath;
   bool _saving = false;
+  bool _scanning = false;
   String? _error;
+  SoatExtraction? _extraction;
 
   bool get _isEditMode => widget.vehicle?.id != null;
+
+  /// OCR data is only applied when it cleared the prefill threshold.
+  SoatExtraction? get _prefill =>
+      (_extraction?.shouldPrefill ?? false) ? _extraction : null;
 
   @override
   void initState() {
     super.initState();
-    _startDate = widget.existingSoat?.startDate;
-    _expiryDate = widget.existingSoat?.expiryDate;
+    _extraction = widget.extraction;
+    _startDate = _prefill?.startDate ?? widget.existingSoat?.startDate;
+    _expiryDate = _prefill?.expiryDate ?? widget.existingSoat?.expiryDate;
     _localImagePath = widget.initialLocalImagePath;
+  }
+
+  String? _initialPolicyNumber() =>
+      _prefill?.policyNumber ?? widget.existingSoat?.policyNumber;
+
+  String? _initialInsurer() =>
+      _prefill?.insurer ?? widget.existingSoat?.insurer;
+
+  Future<void> _rescan() async {
+    setState(() => _scanning = true);
+    final outcome = await SoatScanLauncher.launch(context);
+    if (!mounted) return;
+    setState(() {
+      _scanning = false;
+      if (outcome != null) {
+        _extraction = outcome.extraction;
+        _localImagePath = outcome.filePath;
+        if (_prefill != null) {
+          _startDate = _prefill!.startDate ?? _startDate;
+          _expiryDate = _prefill!.expiryDate ?? _expiryDate;
+        }
+      }
+    });
   }
 
   // ── Selección de imagen ──────────────────────────────────────────────────
@@ -145,10 +185,11 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
       }
     } else {
       // Cámara o galería
-      final source =
-          choice == 0 ? ImageSource.camera : ImageSource.gallery;
-      final file =
-          await ImagePicker().pickImage(source: source, imageQuality: 85);
+      final source = choice == 0 ? ImageSource.camera : ImageSource.gallery;
+      final file = await ImagePicker().pickImage(
+        source: source,
+        imageQuality: 85,
+      );
       if (file != null && mounted) {
         setState(() => _localImagePath = file.path);
       }
@@ -295,6 +336,14 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
                 ),
                 const SizedBox(height: 16),
               ],
+              SoatScanButton(onPressed: _rescan, isLoading: _scanning),
+              const SizedBox(height: 16),
+              if (_prefill != null) ...[
+                SoatOcrBanner(
+                  needsCarefulReview: _prefill!.hasMediumConfidence,
+                ),
+                const SizedBox(height: 16),
+              ],
               SoatDocumentSection(
                 localImagePath: _localImagePath,
                 remoteDocumentUrl: _localImagePath == null
@@ -306,19 +355,36 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
               ),
               const SizedBox(height: 20),
               AppTextField(
+                key: ValueKey('policyNumber_${_prefill?.policyNumber}'),
                 name: 'policyNumber',
                 labelText: context.l10n.vehicle_soat_policy_number_label,
                 hintText: context.l10n.vehicle_soat_policy_number_hint,
-                initialValue: widget.existingSoat?.policyNumber,
+                initialValue: _initialPolicyNumber(),
+                suffixIcon:
+                    (_prefill?.isFieldAutofilled(SoatField.policyNumber) ??
+                        false)
+                    ? SoatAutofillBadge(
+                        confidence: _prefill!.confidenceOf(
+                          SoatField.policyNumber,
+                        ),
+                      )
+                    : null,
                 textInputAction: TextInputAction.next,
                 enabled: !_saving,
               ),
               const SizedBox(height: 12),
               AppTextField(
+                key: ValueKey('insurer_${_prefill?.insurer}'),
                 name: 'insurer',
                 labelText: context.l10n.vehicle_soat_insurer_label,
                 hintText: context.l10n.vehicle_soat_insurer_hint,
-                initialValue: widget.existingSoat?.insurer,
+                initialValue: _initialInsurer(),
+                suffixIcon:
+                    (_prefill?.isFieldAutofilled(SoatField.insurer) ?? false)
+                    ? SoatAutofillBadge(
+                        confidence: _prefill!.confidenceOf(SoatField.insurer),
+                      )
+                    : null,
                 isRequired: true,
                 textInputAction: TextInputAction.done,
                 enabled: !_saving,
@@ -328,10 +394,13 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
                 children: [
                   Expanded(
                     child: AppDatePicker(
+                      key: ValueKey(
+                        'startDate_${_startDate?.toIso8601String()}',
+                      ),
                       fieldName: 'startDate',
                       labelText: context.l10n.vehicle_soat_start_date_label,
                       hintText: context.l10n.vehicle_soat_start_date_hint,
-                      initialValue: widget.existingSoat?.startDate,
+                      initialValue: _startDate,
                       isRequired: true,
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
@@ -341,10 +410,13 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: AppDatePicker(
+                      key: ValueKey(
+                        'expiryDate_${_expiryDate?.toIso8601String()}',
+                      ),
                       fieldName: 'expiryDate',
                       labelText: context.l10n.vehicle_soat_expiry_date_label,
                       hintText: context.l10n.vehicle_soat_expiry_date_hint,
-                      initialValue: widget.existingSoat?.expiryDate,
+                      initialValue: _expiryDate,
                       isRequired: true,
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
@@ -354,10 +426,7 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
                 ],
               ),
               const SizedBox(height: 12),
-              SoatValidityCard(
-                startDate: _startDate,
-                expiryDate: _expiryDate,
-              ),
+              SoatValidityCard(startDate: _startDate, expiryDate: _expiryDate),
               if (_error != null) ...[
                 const SizedBox(height: 16),
                 Container(
@@ -381,8 +450,8 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
                 label: _saving
                     ? context.l10n.soat_saving
                     : _isEditMode
-                        ? context.l10n.soat_save_data_btn
-                        : context.l10n.vehicle_soat_confirm_button,
+                    ? context.l10n.soat_save_data_btn
+                    : context.l10n.vehicle_soat_confirm_button,
                 onPressed: _saving ? null : _submit,
               ),
             ],

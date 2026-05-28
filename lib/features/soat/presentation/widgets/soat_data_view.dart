@@ -12,11 +12,7 @@ import 'package:rideglory/shared/helpers/document_downloader.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
 class SoatDataView extends StatefulWidget {
-  const SoatDataView({
-    super.key,
-    required this.vehicle,
-    required this.soat,
-  });
+  const SoatDataView({super.key, required this.vehicle, required this.soat});
 
   final VehicleModel vehicle;
   final SoatModel soat;
@@ -50,8 +46,9 @@ class _SoatDataViewState extends State<SoatDataView> {
     final days = widget.soat.daysUntilExpiry;
     return switch (widget.soat.status) {
       SoatStatus.valid => context.l10n.soat_valid_days_remaining(days),
-      SoatStatus.expiringSoon =>
-        context.l10n.soat_expiring_days_remaining(days),
+      SoatStatus.expiringSoon => context.l10n.soat_expiring_days_remaining(
+        days,
+      ),
       SoatStatus.expired => context.l10n.soat_expired_days_ago(days.abs()),
       SoatStatus.noSoat => '',
     };
@@ -140,16 +137,18 @@ class _SoatDataViewState extends State<SoatDataView> {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: (widget.soat.status == SoatStatus.expired
-                        ? AppColors.error
-                        : AppColors.warning)
-                    .withValues(alpha: 0.08),
+                color:
+                    (widget.soat.status == SoatStatus.expired
+                            ? AppColors.error
+                            : AppColors.warning)
+                        .withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: (widget.soat.status == SoatStatus.expired
-                          ? AppColors.error
-                          : AppColors.warning)
-                      .withValues(alpha: 0.3),
+                  color:
+                      (widget.soat.status == SoatStatus.expired
+                              ? AppColors.error
+                              : AppColors.warning)
+                          .withValues(alpha: 0.3),
                 ),
               ),
               child: Row(
@@ -230,10 +229,10 @@ class _SoatDataViewState extends State<SoatDataView> {
               onPressed: () => context
                   .pushNamed(AppRoutes.vehicleSoat, extra: widget.vehicle)
                   .then((_) {
-                if (context.mounted) {
-                  context.read<SoatCubit>().load(widget.vehicle.id ?? '');
-                }
-              }),
+                    if (context.mounted) {
+                      context.read<SoatCubit>().load(widget.vehicle.id ?? '');
+                    }
+                  }),
               isFullWidth: true,
             ),
           const SizedBox(height: 32),

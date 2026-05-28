@@ -63,9 +63,7 @@ void main() {
         predicate<VehicleFormState>(
           (state) => state.soatLocalPath == '/tmp/soat.jpg',
         ),
-        predicate<VehicleFormState>(
-          (state) => state.soatLocalPath == null,
-        ),
+        predicate<VehicleFormState>((state) => state.soatLocalPath == null),
       ],
     );
 

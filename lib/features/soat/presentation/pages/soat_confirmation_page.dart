@@ -95,7 +95,9 @@ class _SoatConfirmationViewState extends State<_SoatConfirmationView> {
             final router = GoRouter.of(context);
             final messenger = ScaffoldMessenger.of(context);
             final successMsg = context.l10n.vehicle_soat_saved_successfully;
-            Navigator.of(context).pop(); // Custom: SoatConfirmationPage was pushed via pushReplacement from VehicleFormPage — popping from the Navigator stack (not GoRouter) to return to the garage correctly.
+            Navigator.of(
+              context,
+            ).pop(); // Custom: SoatConfirmationPage was pushed via pushReplacement from VehicleFormPage — popping from the Navigator stack (not GoRouter) to return to the garage correctly.
             if (!widget.isFromVehicleCreation) {
               router.pop();
             }
@@ -122,7 +124,10 @@ class _SoatConfirmationViewState extends State<_SoatConfirmationView> {
           backgroundColor: AppColors.darkBgPrimary,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColors.textOnDarkPrimary),
+            icon: const Icon(
+              Icons.arrow_back,
+              color: AppColors.textOnDarkPrimary,
+            ),
             onPressed: () => context.pop(),
           ),
           title: Text(
@@ -393,8 +398,9 @@ class _SoatValidAlert extends StatelessWidget {
             iconColor: AppColors.error,
             bgColor: AppColors.error.withAlpha(26),
             title: context.l10n.vehicle_soat_status_expired_title,
-            subtitle: context.l10n
-                .vehicle_soat_status_expired_desc(daysRemaining.abs()),
+            subtitle: context.l10n.vehicle_soat_status_expired_desc(
+              daysRemaining.abs(),
+            ),
             subtitleColor: AppColors.textOnDarkSecondary,
           );
         }
@@ -492,8 +498,10 @@ class _SoatConfirmCtaBar extends StatelessWidget {
       ),
       child: BlocBuilder<SoatFormCubit, SoatFormState>(
         builder: (context, state) {
-          final isLoading =
-              state.maybeWhen(loading: () => true, orElse: () => false);
+          final isLoading = state.maybeWhen(
+            loading: () => true,
+            orElse: () => false,
+          );
           final cubit = context.read<SoatFormCubit>();
           final canSave = cubit.areDatesValid;
           return AppButton(

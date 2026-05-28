@@ -84,8 +84,9 @@ class _VehicleSoatFormSlotState extends State<VehicleSoatFormSlot> {
     final days = _soat!.daysUntilExpiry;
     return switch (_soat!.status) {
       SoatStatus.valid => context.l10n.soat_valid_days_remaining(days),
-      SoatStatus.expiringSoon =>
-        context.l10n.soat_expiring_days_remaining(days),
+      SoatStatus.expiringSoon => context.l10n.soat_expiring_days_remaining(
+        days,
+      ),
       SoatStatus.expired => context.l10n.soat_expired_days_ago(days.abs()),
       _ => null,
     };

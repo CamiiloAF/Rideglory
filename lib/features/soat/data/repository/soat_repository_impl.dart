@@ -15,9 +15,7 @@ class SoatRepositoryImpl implements SoatRepository {
   final SoatService _soatService;
 
   @override
-  Future<Either<DomainException, SoatModel?>> getSoat(
-    String vehicleId,
-  ) async {
+  Future<Either<DomainException, SoatModel?>> getSoat(String vehicleId) async {
     try {
       final dto = await _soatService.getSoat(vehicleId);
       return Right(dto);
@@ -25,13 +23,17 @@ class SoatRepositoryImpl implements SoatRepository {
       if (dioException.response?.statusCode == 404) {
         return const Right(null);
       }
-      return const Left(DomainException(
-        message: 'No se pudo cargar el SOAT. Intenta de nuevo.',
-      ));
+      return const Left(
+        DomainException(
+          message: 'No se pudo cargar el SOAT. Intenta de nuevo.',
+        ),
+      );
     } catch (error) {
-      return const Left(DomainException(
-        message: 'No se pudo cargar el SOAT. Intenta de nuevo.',
-      ));
+      return const Left(
+        DomainException(
+          message: 'No se pudo cargar el SOAT. Intenta de nuevo.',
+        ),
+      );
     }
   }
 

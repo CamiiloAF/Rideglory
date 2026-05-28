@@ -27,9 +27,9 @@ class _VehicleSoatSectionState extends State<VehicleSoatSection> {
   }
 
   void _load() {
-    _soatFuture = getIt<GetSoatUseCase>()(widget.vehicle.id ?? '').then(
-      (result) => result.fold((_) => null, (soat) => soat),
-    );
+    _soatFuture = getIt<GetSoatUseCase>()(
+      widget.vehicle.id ?? '',
+    ).then((result) => result.fold((_) => null, (soat) => soat));
   }
 
   DocumentSlotState _toSlotState(SoatStatus status) {
@@ -52,17 +52,13 @@ class _VehicleSoatSectionState extends State<VehicleSoatSection> {
 
   void _onSoatTap(BuildContext context, SoatModel? soat) {
     if (soat == null) {
-      context.pushNamed(AppRoutes.vehicleSoat, extra: widget.vehicle).then(
-        (_) {
-          if (mounted) setState(_load);
-        },
-      );
+      context.pushNamed(AppRoutes.vehicleSoat, extra: widget.vehicle).then((_) {
+        if (mounted) setState(_load);
+      });
     } else {
-      context.pushNamed(AppRoutes.soatStatus, extra: widget.vehicle).then(
-        (_) {
-          if (mounted) setState(_load);
-        },
-      );
+      context.pushNamed(AppRoutes.soatStatus, extra: widget.vehicle).then((_) {
+        if (mounted) setState(_load);
+      });
     }
   }
 
@@ -82,9 +78,7 @@ class _VehicleSoatSectionState extends State<VehicleSoatSection> {
                 name: context.l10n.vehicle_doc_soat_label,
                 state: _toSlotState(status),
                 stateLabel: _stateLabel(context, status),
-                expiryLabel: soat != null
-                    ? _expiryLabel(context, soat)
-                    : null,
+                expiryLabel: soat != null ? _expiryLabel(context, soat) : null,
                 isInfoType: true,
               ),
             ],
@@ -100,10 +94,10 @@ class _VehicleSoatSectionState extends State<VehicleSoatSection> {
     final days = soat.daysUntilExpiry;
     return switch (soat.status) {
       SoatStatus.valid => context.l10n.soat_valid_days_remaining(days),
-      SoatStatus.expiringSoon =>
-        context.l10n.soat_expiring_days_remaining(days),
-      SoatStatus.expired =>
-        context.l10n.soat_expired_days_ago(days.abs()),
+      SoatStatus.expiringSoon => context.l10n.soat_expiring_days_remaining(
+        days,
+      ),
+      SoatStatus.expired => context.l10n.soat_expired_days_ago(days.abs()),
       SoatStatus.noSoat => null,
     };
   }

@@ -2229,6 +2229,34 @@ class AppLocalizationsEs extends AppLocalizations {
   String get soat_source_manual => 'Ingresar manualmente';
 
   @override
+  String get soat_scan_button => 'Escanear SOAT';
+
+  @override
+  String get soat_scan_sheet_title => 'Escanear documento';
+
+  @override
+  String get soat_scan_loading => 'Leyendo documento…';
+
+  @override
+  String get soat_scan_banner =>
+      'Datos extraídos del documento — revisa antes de guardar';
+
+  @override
+  String get soat_scan_banner_review =>
+      'Revisa con cuidado los campos resaltados antes de guardar';
+
+  @override
+  String get soat_scan_field_hint => 'Dato extraído del documento';
+
+  @override
+  String get soat_scan_error_unreadable =>
+      'No pudimos leer el documento, ingresa los datos manualmente';
+
+  @override
+  String get soat_scan_error_permission =>
+      'Necesitamos permiso de cámara o archivos para escanear el documento';
+
+  @override
   String get soat_field_policy_number => 'N.° de póliza';
 
   @override

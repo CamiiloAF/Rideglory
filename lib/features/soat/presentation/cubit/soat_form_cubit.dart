@@ -27,7 +27,7 @@ class SoatFormState with _$SoatFormState {
 @injectable
 class SoatFormCubit extends Cubit<SoatFormState> {
   SoatFormCubit(this._vehicleRepository, this._imageStorageService)
-      : super(const SoatFormState.initial());
+    : super(const SoatFormState.initial());
 
   final VehicleRepository _vehicleRepository;
   final ImageStorageService _imageStorageService;
@@ -48,23 +48,22 @@ class SoatFormCubit extends Cubit<SoatFormState> {
   void onDatesChanged({DateTime? startDate, DateTime? expiryDate}) {
     if (startDate != null) _startDate = startDate;
     if (expiryDate != null) _expiryDate = expiryDate;
-    emit(SoatFormState.datesUpdated(
-      startDate: _startDate,
-      expiryDate: _expiryDate,
-    ));
+    emit(
+      SoatFormState.datesUpdated(
+        startDate: _startDate,
+        expiryDate: _expiryDate,
+      ),
+    );
   }
 
   Future<void> loadExistingSoat(String vehicleId) async {
     final result = await _vehicleRepository.getSoat(vehicleId);
-    result.fold(
-      (_) {},
-      (soat) {
-        _startDate = soat.startDate;
-        _expiryDate = soat.expiryDate;
-        _existingDocumentUrl = soat.documentUrl;
-        emit(SoatFormState.soatLoaded(soat));
-      },
-    );
+    result.fold((_) {}, (soat) {
+      _startDate = soat.startDate;
+      _expiryDate = soat.expiryDate;
+      _existingDocumentUrl = soat.documentUrl;
+      emit(SoatFormState.soatLoaded(soat));
+    });
   }
 
   Future<void> submit(String vehicleId, {XFile? documentImage}) async {
@@ -74,9 +73,14 @@ class SoatFormCubit extends Cubit<SoatFormState> {
     if (_startDate == null || _expiryDate == null) return;
 
     if (!_startDate!.isBefore(_expiryDate!)) {
-      emit(const SoatFormState.error(
-        DomainException(message: 'La fecha de inicio debe ser anterior a la fecha de vencimiento'),
-      ));
+      emit(
+        const SoatFormState.error(
+          DomainException(
+            message:
+                'La fecha de inicio debe ser anterior a la fecha de vencimiento',
+          ),
+        ),
+      );
       return;
     }
 
@@ -87,7 +91,8 @@ class SoatFormCubit extends Cubit<SoatFormState> {
       try {
         documentUrl = await _imageStorageService.uploadImage(
           image: documentImage,
-          storagePath: 'soat/$vehicleId/${DateTime.now().millisecondsSinceEpoch}.jpg',
+          storagePath:
+              'soat/$vehicleId/${DateTime.now().millisecondsSinceEpoch}.jpg',
         );
       } catch (e) {
         final msg = e is DomainException

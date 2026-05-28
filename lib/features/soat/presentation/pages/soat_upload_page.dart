@@ -8,7 +8,9 @@ import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/soat/presentation/cubit/soat_upload_cubit.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_confirmation_page.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_params.dart';
+import 'package:rideglory/features/soat/presentation/scan/soat_scan_launcher.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_manual_option_card.dart';
+import 'package:rideglory/features/soat/presentation/widgets/soat_scan_button.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_upload_option_card.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_upload_question_header.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_vehicle_info_card.dart';
@@ -93,6 +95,8 @@ class _SoatUploadViewState extends State<_SoatUploadView> {
                   const SizedBox(height: 20),
                   const SoatUploadQuestionHeader(),
                   const SizedBox(height: 20),
+                  SoatScanButton(onPressed: _scanSoat),
+                  const SizedBox(height: 20),
                   SoatUploadOptionCard(
                     isLoading: isLoading,
                     onCameraTap: () =>
@@ -116,10 +120,8 @@ class _SoatUploadViewState extends State<_SoatUploadView> {
   void _navigateToConfirmation(XFile image) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => SoatConfirmationPage(
-          vehicle: widget.vehicle,
-          documentImage: image,
-        ),
+        builder: (_) =>
+            SoatConfirmationPage(vehicle: widget.vehicle, documentImage: image),
       ),
     );
   }
@@ -128,6 +130,23 @@ class _SoatUploadViewState extends State<_SoatUploadView> {
     final saved = await context.push<bool>(
       AppRoutes.soatManualCapture,
       extra: SoatManualCaptureParams(vehicle: widget.vehicle),
+    );
+    if (saved == true && mounted) {
+      context.pop(true);
+    }
+  }
+
+  Future<void> _scanSoat() async {
+    final outcome = await SoatScanLauncher.launch(context);
+    if (outcome == null || !mounted) return;
+
+    final saved = await context.push<bool>(
+      AppRoutes.soatManualCapture,
+      extra: SoatManualCaptureParams(
+        vehicle: widget.vehicle,
+        extraction: outcome.extraction,
+        initialLocalImagePath: outcome.filePath,
+      ),
     );
     if (saved == true && mounted) {
       context.pop(true);

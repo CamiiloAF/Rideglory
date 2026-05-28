@@ -36,7 +36,7 @@ El **SOAT** (Seguro Obligatorio de Accidentes de Tránsito) es la póliza obliga
 2. **Visualización del estado** (`valid` / `expiringSoon` / `expired`) calculado por días hasta vencimiento.
 3. **Renovación**: editar SOAT existente, reemplazar documento.
 
-> **No hay OCR**. La app no extrae datos automáticamente de la foto del SOAT. El usuario digita manualmente todos los campos. La imagen/PDF es solo un comprobante visual.
+> **OCR opcional (autocompletar SOAT).** Desde iter OCR, la app puede leer la foto/PDF del SOAT **on-device** (ML Kit, sin backend ni nube) y **prellenar** los cuatro campos. El usuario siempre confirma antes de guardar; la entrada manual sigue disponible y es la fuente de verdad. Ver [§6.4 Sub-flujo OCR](#64-sub-flujo-ocr-autocompletar-soat).
 
 El feature **convive con `vehicles`** porque la API expone el SOAT bajo `/vehicles/{id}/soat`. Hay duplicación intencional:
 - `vehicles/data/dto/soat_dto.dart` + `VehicleRepository.upsertSoat()` (vista del feature vehicles).
@@ -352,6 +352,40 @@ SoatManualCapturePage(vehicle, existingSoat?, initialLocalImagePath?)
    - Al guardar el vehículo, `VehicleFormView._savePendingManualSoatAndPop()` sube imagen (si hay) + llama `VehicleRepository.upsertSoat(vehicleId, soat)` + pop.
 
 Más detalles en [vehicles.md §13](./vehicles.md#13-patrones-y-trampas-conocidas).
+
+### 6.4 Sub-flujo OCR (autocompletar SOAT)
+
+Autocompletado **on-device** del SOAT desde foto/galería/PDF. Privacidad total: ni la imagen ni el texto reconocido salen del dispositivo (ML Kit local; no hay backend ni Cloud Vision).
+
+**Disparadores.** Botón **"Escanear SOAT"** (`SoatScanButton`) en `SoatUploadPage` y en `SoatManualCapturePage`.
+
+**Recorrido.**
+1. `SoatScanLauncher.launch(context)` abre `SoatScanSourceSheet` (cámara / galería / PDF) y selecciona el archivo con `image_picker` o `file_picker`.
+2. Navega a `SoatScanPage` (ruta `AppRoutes.soatScan`, extra `SoatScanParams`), que muestra `SoatScanLoader` ("Leyendo documento…").
+3. `SoatScanCubit.scan()` ejecuta `ScanSoatUseCase`:
+   - Si la fuente es PDF, `SoatPdfRasterizer` rasteriza la página 1 a PNG (`pdfx`) antes del OCR.
+   - `MlKitOcrService.recognizeText()` → `OcrResult` (texto + bloques con bounding box).
+   - `ParseSoatTextUseCase` → `SoatParser.parse()` → `SoatExtraction` con confianza por campo.
+4. `SoatScanPage` hace `pop` con el `SoatExtraction` (éxito) o `pop(null)` + toast (fallo silencioso al manual).
+5. La página origen abre `SoatManualCapturePage` con `extraction` + `initialLocalImagePath`. Si `SoatExtraction.shouldPrefill` (≥2 campos `high`), los campos se prellenan; cada campo OCR muestra `SoatAutofillBadge` (verde=high, naranja=medium) y se ve `SoatOcrBanner`.
+
+**Capas / archivos.**
+- Core: `lib/core/services/ocr/` (`OcrService`, `MlKitOcrService`, `OcrResult`/`OcrBlock`); `lib/core/services/analytics/` (`AnalyticsService`, `FirebaseAnalyticsService`).
+- Domain: `soat/domain/models/soat_extraction.dart`, `soat_scan_result.dart`; `soat/domain/usecases/parse_soat_text_usecase.dart`, `scan_soat_usecase.dart`.
+- Data: `soat/data/parser/soat_parser.dart`, `soat_insurer_rules.dart`, `soat_pdf_rasterizer.dart`.
+- Presentation: `soat/presentation/cubit/soat_scan_cubit.dart`; `pages/soat_scan_page.dart`, `soat_scan_params.dart`; `scan/soat_scan_launcher.dart`; widgets `soat_scan_button`, `soat_scan_source_sheet`, `soat_scan_loader`, `soat_ocr_banner`, `soat_autofill_badge`.
+
+**Reglas del parser** (`SoatParser`, Dart puro y testeable):
+- **Aseguradora:** matching por substring normalizado (sin tildes) sobre las 10 autorizadas (Fasecolda 2026). Empate → mayor área de bloque en el cuarto superior (logo). 
+- **Póliza:** cascada — label `póliza` → regex específica por aseguradora (top-5) → regex genérica.
+- **Fechas:** regex multi-formato (`DD/MM/AAAA`, `DD-MM-AAAA`, `DD mmm AAAA`, ISO). Asociación a labels (`vigencia desde`/`hasta`/`vence`). **Validación dura: 360–370 días**; si falla, ambas fechas quedan `low` y no se prellenan.
+- **Umbral global:** `<2` campos `high` → no se prellena nada + toast (caída silenciosa al manual).
+
+**Telemetría** (Firebase Analytics, anónima): `soat_scan_attempted`; `soat_scan_success` (`fields_extracted_count`, `insurer_detected`, `had_pdf`); `soat_scan_failed` (`failure_reason`: `no_text_detected` / `low_confidence` / `validation_failed` / `permission_denied` / `unknown_error`).
+
+**Permisos:** `CAMERA` + `READ_MEDIA_IMAGES` en `AndroidManifest.xml`; `NSCameraUsageDescription` + `NSPhotoLibraryUsageDescription` en `Info.plist`.
+
+> **Nota de build:** el paquete transitivo `objective_c` (de `google_mlkit_text_recognition`) declara native build hooks, lo que rompe la compilación AOT del script de build_runner en el SDK actual. Generar código con `dart run build_runner build --force-jit` (JIT) en lugar del AOT por defecto.
 
 ---
 

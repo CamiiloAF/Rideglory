@@ -50,11 +50,7 @@ class HomeGarageSoatBadge extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                Icons.description_outlined,
-                size: 12,
-                color: _badgeText(),
-              ),
+              Icon(Icons.description_outlined, size: 12, color: _badgeText()),
               const SizedBox(width: 4),
               Text(
                 _statusLabel(context),
