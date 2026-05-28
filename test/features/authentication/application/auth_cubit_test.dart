@@ -67,7 +67,7 @@ void main() {
             ),
           ).thenAnswer(
             (_) async =>
-                Left(DomainException(message: 'Credenciales inválidas')),
+                const Left(DomainException(message: 'Credenciales inválidas')),
           );
         },
         build: () => authCubit,
@@ -95,7 +95,7 @@ void main() {
               password: any(named: 'password'),
             ),
           ).thenAnswer(
-            (_) async => Left(DomainException(message: 'Email ya registrado')),
+            (_) async => const Left(DomainException(message: 'Email ya registrado')),
           );
         },
         build: () => authCubit,
@@ -151,7 +151,7 @@ void main() {
           when(
             () => mockAuthService.sendPasswordResetEmail(any()),
           ).thenAnswer(
-            (_) async => Left(DomainException(message: 'Email no encontrado')),
+            (_) async => const Left(DomainException(message: 'Email no encontrado')),
           );
         },
         build: () => authCubit,
@@ -180,7 +180,7 @@ void main() {
             password: any(named: 'password'),
           ),
         ).thenAnswer(
-          (_) async => Left(DomainException(message: 'error test')),
+          (_) async => const Left(DomainException(message: 'error test')),
         );
         await authCubit.signInWithEmail(
           email: 'x@x.com',
@@ -196,7 +196,7 @@ void main() {
             email: any(named: 'email'),
             password: any(named: 'password'),
           ),
-        ).thenAnswer((_) async => Left(DomainException(message: 'err')));
+        ).thenAnswer((_) async => const Left(DomainException(message: 'err')));
         // We can't easily test mid-emission but we can test the helper
         expect(authCubit.state.isLoading, isFalse);
       });

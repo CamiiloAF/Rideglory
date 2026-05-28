@@ -31,8 +31,8 @@ void main() {
       await $.pumpAndSettle();
 
       // 1. Splash — aceptar permiso de ubicación si aparece antes de que termine
-      if (await $.native.isPermissionDialogVisible()) {
-        await $.native.grantPermissionWhenInUse();
+      if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
+        await $.platformAutomator.mobile.grantPermissionWhenInUse();
         await $.pumpAndSettle();
       }
 
@@ -43,8 +43,8 @@ void main() {
       );
 
       // 3. Permiso de ubicación si aparece justo al cargar el login
-      if (await $.native.isPermissionDialogVisible()) {
-        await $.native.grantPermissionWhenInUse();
+      if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
+        await $.platformAutomator.mobile.grantPermissionWhenInUse();
         await $.pumpAndSettle();
       }
 
@@ -63,8 +63,8 @@ void main() {
       await $.pumpAndSettle(timeout: const Duration(seconds: 20));
 
       // 7. Permiso de ubicación en Home (puede pedirse al cargar el mapa)
-      if (await $.native.isPermissionDialogVisible()) {
-        await $.native.grantPermissionWhenInUse();
+      if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
+        await $.platformAutomator.mobile.grantPermissionWhenInUse();
         await $.pumpAndSettle();
       }
 

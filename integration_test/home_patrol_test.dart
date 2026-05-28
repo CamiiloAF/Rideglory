@@ -31,8 +31,8 @@ void main() {
       await $.pumpAndSettle();
 
       // 1. Splash — handle location permission
-      if (await $.native.isPermissionDialogVisible()) {
-        await $.native.grantPermissionWhenInUse();
+      if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
+        await $.platformAutomator.mobile.grantPermissionWhenInUse();
         await $.pumpAndSettle();
       }
 
@@ -42,8 +42,8 @@ void main() {
       );
 
       // 3. Handle location permission if it appears at login
-      if (await $.native.isPermissionDialogVisible()) {
-        await $.native.grantPermissionWhenInUse();
+      if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
+        await $.platformAutomator.mobile.grantPermissionWhenInUse();
         await $.pumpAndSettle();
       }
 
@@ -60,8 +60,8 @@ void main() {
       await $.pumpAndSettle(timeout: const Duration(seconds: 20));
 
       // 7. Handle location permission after login
-      if (await $.native.isPermissionDialogVisible()) {
-        await $.native.grantPermissionWhenInUse();
+      if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
+        await $.platformAutomator.mobile.grantPermissionWhenInUse();
         await $.pumpAndSettle();
       }
 
@@ -78,8 +78,8 @@ void main() {
       await $.pumpAndSettle(timeout: const Duration(seconds: 15));
 
       // 10. Handle location permission a final time if it appears after data loads
-      if (await $.native.isPermissionDialogVisible()) {
-        await $.native.grantPermissionWhenInUse();
+      if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
+        await $.platformAutomator.mobile.grantPermissionWhenInUse();
         await $.pumpAndSettle();
       }
 

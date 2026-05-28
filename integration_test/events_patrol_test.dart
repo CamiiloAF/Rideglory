@@ -31,8 +31,8 @@ void main() {
       await $.pumpAndSettle();
 
       // 1. Splash — handle location permission
-      if (await $.native.isPermissionDialogVisible()) {
-        await $.native.grantPermissionWhenInUse();
+      if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
+        await $.platformAutomator.mobile.grantPermissionWhenInUse();
         await $.pumpAndSettle();
       }
 
@@ -42,8 +42,8 @@ void main() {
       );
 
       // 3. Handle location permission if it appears at login
-      if (await $.native.isPermissionDialogVisible()) {
-        await $.native.grantPermissionWhenInUse();
+      if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
+        await $.platformAutomator.mobile.grantPermissionWhenInUse();
         await $.pumpAndSettle();
       }
 
@@ -60,8 +60,8 @@ void main() {
       await $.pumpAndSettle(timeout: const Duration(seconds: 20));
 
       // 7. Handle location permission after login (Home loads map)
-      if (await $.native.isPermissionDialogVisible()) {
-        await $.native.grantPermissionWhenInUse();
+      if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
+        await $.platformAutomator.mobile.grantPermissionWhenInUse();
         await $.pumpAndSettle();
       }
 
@@ -73,8 +73,8 @@ void main() {
       await $.pumpAndSettle(timeout: const Duration(seconds: 15));
 
       // 9. Handle location permission if it appears on Events tab
-      if (await $.native.isPermissionDialogVisible()) {
-        await $.native.grantPermissionWhenInUse();
+      if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
+        await $.platformAutomator.mobile.grantPermissionWhenInUse();
         await $.pumpAndSettle();
       }
 
@@ -83,8 +83,8 @@ void main() {
       await $.pumpAndSettle(timeout: const Duration(seconds: 20));
 
       // 11. Handle location permission if it appears again after events page loads
-      if (await $.native.isPermissionDialogVisible()) {
-        await $.native.grantPermissionWhenInUse();
+      if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
+        await $.platformAutomator.mobile.grantPermissionWhenInUse();
         await $.pumpAndSettle();
       }
 
