@@ -22,7 +22,7 @@ class HomeDto {
   Map<String, dynamic> toJson() => _$HomeDtoToJson(this);
 
   HomeData toHomeData() => HomeData(
-        mainVehicle: mainVehicle?.toModel(),
+        mainVehicle: mainVehicle,
         upcomingEvents: List<EventModel>.from(upcomingEvents),
       );
 }

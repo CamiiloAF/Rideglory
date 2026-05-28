@@ -19,5 +19,5 @@ class CreateMaintenanceResponseDto {
 
   final List<MaintenanceDto> created;
 
-  List<MaintenanceModel> toModels() => created.map((dto) => dto.toModel()).toList();
+  List<MaintenanceModel> toModels() => List<MaintenanceModel>.from(created);
 }

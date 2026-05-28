@@ -193,3 +193,47 @@ abstract class EventDetailState with _$EventDetailState {
 | --- | --- |
 | 1 resultado asíncrono | `Cubit<ResultState<T>>` |
 | 2+ resultados o estado mixto | `Cubit<XState>` con `@freezed` + archivo `x_state.dart` |
+
+---
+
+## 🗃️ DTOs — Patrón obligatorio (Patrón B)
+
+Todo DTO que representa un modelo de dominio con relación 1:1 **DEBE** heredar del modelo:
+
+```dart
+// ✅ Patrón B — canónico
+@JsonSerializable(converters: apiJsonDateTimeConverters)
+class XDto extends XModel {
+  const XDto({required super.fieldA, @JsonKey(name: 'api_name') super.fieldB, ...});
+
+  factory XDto.fromJson(Map<String, dynamic> json) => _$XDtoFromJson(json);
+  Map<String, dynamic> toJson() => _$XDtoToJson(this);
+}
+
+extension XModelExtension on XModel {
+  Map<String, dynamic> toJson() => XDto(fieldA: fieldA, fieldB: fieldB, ...).toJson();
+}
+```
+
+**Prohibido en código nuevo:**
+- `XModel toModel()` — el DTO ya ES el modelo por herencia; no se necesita conversión.
+- `factory XDto.fromModel(XModel m)` — usar la extension `toJson()` en el modelo.
+- `.toDto()` extensions — eliminadas junto con `fromModel()`.
+
+**Referencia canónica:** `lib/features/events/data/dto/event_dto.dart`
+
+### Excepciones documentadas (mantener Patrón A)
+
+Los siguientes DTOs quedan **excluidos** del estándar por las razones indicadas. No migrar sin abrir un PRD específico:
+
+| DTO | Razón |
+|-----|-------|
+| `HomeDto` | Respuesta compuesta (`VehicleDto?` + `List<EventDto>`); no tiene modelo 1:1 |
+| `CreateMaintenanceResponseDto` | Respuesta compuesta (`List<MaintenanceDto>`); no tiene modelo 1:1 |
+| `VehicleMaintenancesListResponseDto` / `MaintenanceListSummaryDto` | Wrappers sin modelo de dominio equivalente |
+| `CreateUserDto` | Request DTO minimal (2 campos); no representa un modelo de la app |
+| `NotificationDto` | `toModel()` contiene lógica de negocio (switch de tipos, construcción de título/body); extraer a mapper primero |
+| `vehicles/data/dto/soat_dto.dart` | Usa tipos distintos (`String` para fechas) al `vehicles/SoatModel`; requiere unificar los dos `SoatModel` primero |
+| `GeocodeResultDto`, `PlaceSuggestionDto` | DTOs de API externa sin modelo de dominio en la app |
+
+> Ver `docs/prds/prd-dto-inheritance-standard.md` §4 para el razonamiento completo de cada excepción.

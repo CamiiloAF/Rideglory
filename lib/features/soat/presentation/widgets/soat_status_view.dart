@@ -51,7 +51,10 @@ class SoatStatusView extends StatelessWidget {
                 onPressed: () => context
                     .push<bool>(
                       AppRoutes.soatManualCapture,
-                      extra: SoatManualCaptureParams(vehicle: vehicle),
+                      extra: SoatManualCaptureParams(
+                        vehicle: vehicle,
+                        soat: state.data,
+                      ),
                     )
                     .then((_) {
                   if (context.mounted) {

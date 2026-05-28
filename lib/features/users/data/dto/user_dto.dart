@@ -28,23 +28,25 @@ class UserDto extends UserModel {
   factory UserDto.fromJson(Map<String, dynamic> json) =>
       _$UserDtoFromJson(json);
 
-  factory UserDto.fromModel(UserModel model) => UserDto(
-    id: model.id,
-    fullName: model.fullName,
-    email: model.email,
-    identificationNumber: model.identificationNumber,
-    birthDate: model.birthDate,
-    phone: model.phone,
-    residenceCity: model.residenceCity,
-    eps: model.eps,
-    medicalInsurance: model.medicalInsurance,
-    bloodType: model.bloodType,
-    emergencyContactName: model.emergencyContactName,
-    emergencyContactPhone: model.emergencyContactPhone,
-    isDeleted: model.isDeleted,
-    createdAt: model.createdAt,
-    updatedAt: model.updatedAt,
-  );
-
   Map<String, dynamic> toJson() => _$UserDtoToJson(this);
+}
+
+extension UserModelExtension on UserModel {
+  Map<String, dynamic> toJson() => UserDto(
+    id: id,
+    fullName: fullName,
+    email: email,
+    identificationNumber: identificationNumber,
+    birthDate: birthDate,
+    phone: phone,
+    residenceCity: residenceCity,
+    eps: eps,
+    medicalInsurance: medicalInsurance,
+    bloodType: bloodType,
+    emergencyContactName: emergencyContactName,
+    emergencyContactPhone: emergencyContactPhone,
+    isDeleted: isDeleted,
+    createdAt: createdAt,
+    updatedAt: updatedAt,
+  ).toJson();
 }

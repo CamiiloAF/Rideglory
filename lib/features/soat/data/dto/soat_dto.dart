@@ -5,47 +5,24 @@ import 'package:rideglory/features/soat/domain/models/soat_model.dart';
 part 'soat_dto.g.dart';
 
 @JsonSerializable(converters: apiJsonDateTimeConverters)
-class SoatDto {
+class SoatDto extends SoatModel {
   const SoatDto({
-    required this.id,
-    required this.vehicleId,
-    this.policyNumber,
-    this.startDate,
-    required this.expiryDate,
-    this.insurer,
-    this.documentUrl,
-    this.createdAt,
-    this.updatedAt,
+    required super.id,
+    required super.vehicleId,
+    super.policyNumber,
+    super.startDate,
+    // Backend contract guarantees non-null expiryDate when a SOAT exists (404 → no SOAT).
+    required super.expiryDate,
+    super.insurer,
+    super.documentUrl,
+    super.createdAt,
+    super.updatedAt,
   });
-
-  final String id;
-  final String vehicleId;
-  final String? policyNumber;
-  final DateTime? startDate;
-  final DateTime? expiryDate;
-  final String? insurer;
-  final String? documentUrl;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
 
   factory SoatDto.fromJson(Map<String, dynamic> json) =>
       _$SoatDtoFromJson(json);
 
   Map<String, dynamic> toJson() => _$SoatDtoToJson(this);
-
-  SoatModel toModel() {
-    return SoatModel(
-      id: id,
-      vehicleId: vehicleId,
-      policyNumber: policyNumber,
-      startDate: startDate,
-      expiryDate: expiryDate ?? DateTime.now(),
-      insurer: insurer,
-      documentUrl: documentUrl,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
-    );
-  }
 }
 
 extension SoatModelToRequest on SoatModel {
