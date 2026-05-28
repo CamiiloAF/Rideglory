@@ -286,7 +286,7 @@
     {
       "id": 2,
       "goal": "SOAT + Notification Foundation: permitir a los riders registrar y rastrear su SOAT por vehículo, y recibir notificaciones push para los eventos más críticos. Establece la infraestructura FCM y la tabla de notificaciones en el backend que iter-3, iter-4 e iter-1 requieren. Incluye Story 2.9 (ManageAttendeesPage redesign) diferida de iter-1.",
-      "status": "active",
+      "status": "done",
       "notes": "FCM token registration debe ser la primera story de backend. Home Dashboard SOAT badge se implementa en iter-3. Notificaciones 2.4/2.5/2.6: solo recepción y visualización — navegación al tocar en iter-1. Testing order: 2.8 -> 2.7 -> 2.4/2.5/2.6. Notification pagination is cursor-based throughout (not offset/limit). POST /api/notifications/fcm-token is load-bearing for stories 2.4, 2.5, 2.6. Story 2.9: frame dUc9h must be confirmed to cover list + edit view — if ambiguous, descope to component-swap-only with no layout rework.",
       "primaryAgents": [
         "po",
