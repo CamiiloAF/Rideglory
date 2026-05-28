@@ -207,8 +207,19 @@ lib/features/event_registration/presentation/
 │   └── registration_form_cubit.dart                (@injectable)
 ├── my_registrations_cubit.dart                     (@injectable, global)
 ├── event_registration_page.dart
-├── registration_form_view.dart
-├── registration_form_content.dart
+├── registration_form_view.dart                     (FormBuilder único que envuelve el wizard)
+├── registration_form_content.dart                  (orquestador del wizard multipaso)
+├── wizard/
+│   ├── registration_wizard_controller.dart          (ChangeNotifier: paso actual + next/previous)
+│   ├── registration_step_indicator.dart             (dots 1-2-3-4, Pencil dotsRow)
+│   ├── registration_step_header.dart                (icono + título + subtítulo por paso)
+│   ├── registration_blood_type_selector.dart        (grid de chips RH 4x2, Pencil bts)
+│   ├── registration_wizard_navigation_bar.dart      (Atrás / Siguiente / Confirmar)
+│   └── steps/
+│       ├── registration_personal_step.dart          (paso 1)
+│       ├── registration_medical_step.dart           (paso 2)
+│       ├── registration_emergency_step.dart         (paso 3)
+│       └── registration_vehicle_step.dart           (paso 4 + SaveToProfileCheckbox)
 ├── my_registrations_page.dart
 ├── my_registrations_view.dart
 ├── my_registrations_data_view.dart
@@ -221,16 +232,14 @@ lib/features/event_registration/presentation/
     ├── vehicle_selector_empty.dart
     ├── vehicle_selector_loading.dart
     ├── save_to_profile_checkbox.dart
-    ├── registration_form_section_card.dart
     ├── registration_form_scaffold.dart
-    ├── registration_detail_header.dart
-    ├── registration_detail_section_card.dart
+    ├── registration_detail_rider_summary.dart      (banda owner — Pencil y1Ci1)
+    ├── registration_detail_status_banner.dart       (banner piloto — Pencil f0lXw)
+    ├── registration_detail_data_card.dart           (tarjeta no colapsable con icono)
+    ├── registration_detail_data_row.dart            (fila etiqueta/valor)
+    ├── registration_status_pill.dart                (píldora de estado compartida)
     ├── registration_detail_bottom_bar.dart
-    ├── registration_detail_info_row.dart
-    ├── registration_detail_emergency_card.dart
-    ├── registration_vehicle_detail_content.dart
-    ├── my_registrations_filter_bottom_sheet.dart
-    └── expandable_container.dart
+    └── my_registrations_filter_bottom_sheet.dart
 ```
 
 ---
@@ -418,15 +427,19 @@ Esto previene loading infinito cuando el usuario llega directo al form sin pasar
 
 `RegistrationFormCubit` se crea localmente con `getIt` y se inicializa con `eventId` + `eventName` + `existingRegistration?`.
 
-Estructura del form (`RegistrationFormContent`):
-1. **Datos personales** — fullName, identificationNumber, birthDate, phone, residenceCity, email.
-2. **Datos médicos** — eps, bloodType (dropdown), medicalInsurance (opcional).
-3. **Contacto de emergencia** — name + phone.
-4. **Vehículo** — selector con estados.
-5. **Guardar en perfil** (checkbox, solo si `!isPreloadedFromProfile`).
-6. **Botones** — Enviar / Cancelar.
+El formulario es un **wizard multipaso** (4 pasos, diseño Pencil `pQCmS` "Registration Form V2"). `RegistrationFormContent` mantiene un único `FormBuilder` (en `registration_form_view.dart`) y un `IndexedStack` que conserva todos los pasos montados, de modo que los valores y `saveAndValidate()` cubren todo el form. El paso activo lo gobierna `RegistrationWizardController` (`ChangeNotifier`).
 
-**Focus chain** (`_registrationFocusChainFields`): orden de tab `fullName → identificationNumber → phone → residenceCity → email → eps → bloodType → medicalInsurance → emergencyContactName → emergencyContactPhone`. `birthDate` y `vehicleId` no entran en la chain (se manejan con pickers).
+Pasos (cada uno es su propio widget en `wizard/steps/`):
+1. **Información Personal** — fullName, identificationNumber, birthDate, phone, email, residenceCity.
+2. **Información Médica** — eps, medicalInsurance (opcional), bloodType (**grid de chips RH 4x2**, no dropdown — `RegistrationBloodTypeSelector`).
+3. **Contacto de Emergencia** — emergencyContactName + emergencyContactPhone.
+4. **Vehículo de Inscripción** — selector con estados + `SaveToProfileCheckbox` (solo si `!isPreloadedFromProfile`).
+
+**Navegación** (`RegistrationWizardNavigationBar`, barra inferior fija): "Atrás" (oculto en el paso 1), "Siguiente" valida solo los campos del paso actual vía `RegistrationFormCubit.validateStepFields(...)` antes de avanzar; en el último paso el botón es "Confirmar Inscripción" (o "Actualizar inscripción" en edición) y dispara `saveRegistration()` (flujo de submit existente, incluida la validación de `allowedBrands`). El mapeo paso→campos vive en `RegistrationWizardSteps.fieldsByStep`.
+
+**Indicador de pasos** (`RegistrationStepIndicator`): dots numerados 1-2-3-4 unidos por conectores; los pasos alcanzados se resaltan en `AppColors.primary`.
+
+**Focus chain** (`_registrationFocusChainFields`): orden de tab `fullName → identificationNumber → phone → email → residenceCity → eps → medicalInsurance → bloodType → emergencyContactName → emergencyContactPhone`. `birthDate` y `vehicleId` no entran en la chain (se manejan con pickers).
 
 ### Mis inscripciones (`/events/my-registrations`)
 
@@ -450,21 +463,28 @@ Estructura del form (`RegistrationFormContent`):
 | `rejected` | "Razón" | Navega a detail |
 | `cancelled` | "Re-Registrarse" | Navega al form en modo create |
 
+**Botón "Detalles" (`onDetails`):** ahora pasa por `_openDetail`, que construye `RegistrationDetailExtra` con `onCancelRegistration` (pending/approved/readyForEdit) y `onEditRegistration` (solo `readyForEdit`, abre el form vía `_openEditForm` y propaga el resultado con `onChangeRegistration`). Así el detalle del piloto muestra los CTA correctos del rediseño.
+
 ### Detalle de inscripción (`/events/registration-detail`)
 
 `RegistrationDetailPage(params: RegistrationDetailExtra)` con:
 - `registration: EventRegistrationModel`.
 - `eventOwnerId: String?` (para determinar visibilidad de acciones).
-- Callbacks opcionales: `onCancelRegistration`, `onApprove`, `onReject`.
+- Callbacks opcionales: `onCancelRegistration`, `onApprove`, `onReject`, `onRequestEdit` (organizador habilita READY_FOR_EDIT), `onEditRegistration` (piloto abre el form en modo edición).
 
-**Estructura:**
-1. `RegistrationDetailHeader` (avatar + status chip).
-2. Si **no** es el registrante: `ContactPopupMenuButton` (llamar / WhatsApp).
-3. Secciones expandibles (`RegistrationDetailSectionCard` + `ExpandableContainer`):
-   - Datos personales.
-   - Salud y emergencia.
-   - Vehículo.
-4. `RegistrationDetailBottomBar` con CTA dinámico según rol y status (cancelar, aprobar, rechazar).
+**Estructura (rediseño alineado a Pencil `f0lXw` rider / `y1Ci1` owner):**
+1. **Vista organizador** (`!isRegistrantViewer`): banda `RegistrationDetailRiderSummary` (avatar + nombre + fecha + `RegistrationStatusPill`).
+   **Vista piloto** (`isRegistrantViewer`): `RegistrationDetailStatusBanner` (banner de estado pendiente/rechazada/para-editar; oculto si aprobada).
+2. Cuatro tarjetas `RegistrationDetailDataCard` **no colapsables** (encabezado con icono coloreado + `RegistrationDetailDataRow` etiqueta/valor):
+   - Datos Personales (icono naranja).
+   - Información Médica (icono rojo).
+   - Contacto de Emergencia (icono rojo).
+   - Datos de Participación (icono naranja).
+3. `RegistrationDetailBottomBar` con CTA dinámico según rol y status:
+   - **Organizador**: `Aprobar` (verde, full-width) + fila `Rechazar` (outlined rojo) / `Solicitar edición` (neutral).
+   - **Piloto**: `Editar inscripción` (naranja, solo si `readyForEdit`) + `Cancelar inscripción` (outlined rojo).
+
+> El antiguo `RegistrationDetailHeader`, las secciones expandibles (`RegistrationDetailSectionCard` + `ExpandableContainer`), `RegistrationDetailInfoRow`, `RegistrationDetailEmergencyCard`, `RegistrationVehicleDetailContent` y el `ContactPopupMenuButton` del detalle fueron eliminados en el rediseño.
 
 ---
 

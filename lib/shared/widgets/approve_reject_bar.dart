@@ -8,12 +8,14 @@ class ApproveRejectBar extends StatelessWidget {
     required this.approveLabel,
     required this.onReject,
     required this.onApprove,
+    this.approveStyle = AppButtonStyle.filled,
   });
 
   final String rejectLabel;
   final String approveLabel;
   final VoidCallback onReject;
   final VoidCallback onApprove;
+  final AppButtonStyle approveStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class ApproveRejectBar extends StatelessWidget {
             icon: Icons.check_rounded,
             onPressed: onApprove,
             variant: AppButtonVariant.success,
-            style: AppButtonStyle.outlined,
+            style: approveStyle,
             isFullWidth: true,
           ),
         ),

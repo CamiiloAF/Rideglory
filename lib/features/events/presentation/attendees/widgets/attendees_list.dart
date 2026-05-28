@@ -7,6 +7,7 @@ import 'package:rideglory/features/event_registration/presentation/registration_
 import 'package:rideglory/features/events/presentation/attendees/attendees_cubit.dart';
 import 'package:rideglory/features/events/presentation/attendees/widgets/attendee_pending_request_card.dart';
 import 'package:rideglory/features/events/presentation/attendees/widgets/attendee_processed_item.dart';
+import 'package:rideglory/features/events/presentation/attendees/widgets/attendees_section_header.dart';
 import 'package:rideglory/features/events/presentation/attendees/attendee_action_confirmation.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
@@ -33,8 +34,6 @@ class AttendeesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-    final textTheme = context.textTheme;
     // Owner del evento nunca debe aparecer en ninguna lista de inscritos
     // (su "inscripción automática" no es relevante para gestión de asistentes).
     final visible = registrations
@@ -44,41 +43,20 @@ class AttendeesList extends StatelessWidget {
     final processed = visible.where(_isProcessed).toList();
 
     return RefreshIndicator(
-      onRefresh: () => context
-          .read<AttendeesCubit>()
-          .fetchAttendees(event.id!, forceRefresh: true),
+      onRefresh: () => context.read<AttendeesCubit>().fetchAttendees(
+        event.id!,
+        forceRefresh: true,
+      ),
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         children: [
           if (pending.isNotEmpty) ...[
-            Row(
-              children: [
-                Text(
-                  context.l10n.event_newRequestsSection,
-                  style: textTheme.titleSmall?.copyWith(
-                    color: colorScheme.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                AppSpacing.hGapSm,
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: colorScheme.primary,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Text(
-                    context.l10n.event_pendingCountBadge(pending.length),
-                    style: textTheme.labelSmall?.copyWith(
-                      color: colorScheme.onPrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
+            AttendeesSectionHeader(
+              label: context.l10n.event_newRequestsSection,
+              labelColor: AppColors.textOnDarkTertiary,
+              count: pending.length,
+              countBackgroundColor: AppColors.statusWarning,
+              countTextColor: AppColors.darkBgPrimary,
             ),
             AppSpacing.gapMd,
             ...pending.map(
@@ -121,6 +99,16 @@ class AttendeesList extends StatelessWidget {
                                   },
                                 )
                           : null,
+                      onRequestEdit: registration.id != null
+                          ? (detailContext) {
+                              context.read<AttendeesCubit>().setReadyForEdit(
+                                registration.id!,
+                              );
+                              if (detailContext.mounted) {
+                                detailContext.pop();
+                              }
+                            }
+                          : null,
                     ),
                   ),
                 ),
@@ -128,21 +116,12 @@ class AttendeesList extends StatelessWidget {
             ),
             AppSpacing.gapXxl,
           ],
-          Row(
-            children: [
-              Text(
-                context.l10n.event_processedSection,
-                style: textTheme.titleSmall?.copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Spacer(),
-              AppTextButton(
-                label: context.l10n.event_allWithCount(processed.length),
-                onPressed: processed.isEmpty ? null : () {},
-              ),
-            ],
+          AttendeesSectionHeader(
+            label: context.l10n.event_processedSection,
+            labelColor: AppColors.textOnDarkTertiary,
+            count: processed.length,
+            countBackgroundColor: AppColors.darkTertiary,
+            countTextColor: AppColors.textOnDarkSecondary,
           ),
           AppSpacing.gapMd,
           if (processed.isEmpty)
@@ -150,8 +129,9 @@ class AttendeesList extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 24),
               child: Text(
                 context.l10n.event_noAttendees,
-                style: textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
+                style: const TextStyle(
+                  color: AppColors.textOnDarkSecondary,
+                  fontSize: 14,
                 ),
               ),
             )

@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/approve_registration_use_case.dart';
@@ -23,6 +25,15 @@ class AttendeesCubit extends Cubit<ResultState<List<EventRegistrationModel>>> {
   final RejectRegistrationUseCase _rejectUseCase;
   final SetRegistrationReadyForEditUseCase _setReadyForEditUseCase;
   final AttendeesCache _cache;
+
+  /// Canal lateral para errores transitorios de acciones (aprobar/rechazar/
+  /// solicitar edición). Se mantiene aparte del [state] de lista para no
+  /// reemplazar el listado por una pantalla de error; la página lo escucha y
+  /// muestra un mensaje (SnackBar).
+  final StreamController<DomainException> _actionErrorController =
+      StreamController<DomainException>.broadcast();
+
+  Stream<DomainException> get actionErrors => _actionErrorController.stream;
 
   String? _eventId;
   List<EventRegistrationModel> _registrations = [];
@@ -58,12 +69,13 @@ class AttendeesCubit extends Cubit<ResultState<List<EventRegistrationModel>>> {
     });
   }
 
-  void _updateRegistrationStatusLocally(
+  RegistrationStatus? _updateRegistrationStatusLocally(
     String registrationId,
     RegistrationStatus status,
   ) {
     final index = _registrations.indexWhere((r) => r.id == registrationId);
-    if (index < 0) return;
+    if (index < 0) return null;
+    final previousStatus = _registrations[index].status;
     final updated = _registrations[index].copyWith(status: status);
     final newList = List<EventRegistrationModel>.from(_registrations)
       ..[index] = updated;
@@ -73,31 +85,59 @@ class AttendeesCubit extends Cubit<ResultState<List<EventRegistrationModel>>> {
       _cache.updateStatus(eventId, registrationId, status);
     }
 
-    emit(const ResultState.initial());
     emit(ResultState.data(data: _registrations));
+    return previousStatus;
   }
 
-  Future<void> approveRegistration(String registrationId) async {
-    _updateRegistrationStatusLocally(
+  /// Actualización optimista: refleja el nuevo estado de inmediato y, si el
+  /// backend falla, revierte al estado previo para no mostrar un resultado
+  /// engañoso.
+  Future<void> _updateStatusOptimistically(
+    String registrationId,
+    RegistrationStatus newStatus,
+    Future<Either<DomainException, EventRegistrationModel>> Function(String)
+    action,
+  ) async {
+    final previousStatus = _updateRegistrationStatusLocally(
+      registrationId,
+      newStatus,
+    );
+    if (previousStatus == null) return;
+
+    final result = await action(registrationId);
+    result.fold((error) {
+      _updateRegistrationStatusLocally(registrationId, previousStatus);
+      _actionErrorController.add(error);
+    }, (_) {});
+  }
+
+  Future<void> approveRegistration(String registrationId) {
+    return _updateStatusOptimistically(
       registrationId,
       RegistrationStatus.approved,
+      _approveUseCase.call,
     );
-    unawaited(_approveUseCase(registrationId));
   }
 
-  Future<void> rejectRegistration(String registrationId) async {
-    _updateRegistrationStatusLocally(
+  Future<void> rejectRegistration(String registrationId) {
+    return _updateStatusOptimistically(
       registrationId,
       RegistrationStatus.rejected,
+      _rejectUseCase.call,
     );
-    unawaited(_rejectUseCase(registrationId));
   }
 
   Future<void> setReadyForEdit(String registrationId) async {
     final result = await _setReadyForEditUseCase(registrationId);
     result.fold(
-      (error) => null,
+      (error) => _actionErrorController.add(error),
       (_) => _eventId != null ? fetchAttendees(_eventId!) : null,
     );
+  }
+
+  @override
+  Future<void> close() {
+    _actionErrorController.close();
+    return super.close();
   }
 }

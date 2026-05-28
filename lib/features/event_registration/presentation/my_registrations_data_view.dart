@@ -93,23 +93,7 @@ class MyRegistrationsDataView extends StatelessWidget {
                           AppRoutes.eventDetailById,
                           extra: item.registration.eventId,
                         ),
-                        onDetails: () {
-                          final event = item.event;
-                          if (event != null) {
-                            context.pushNamed(
-                              AppRoutes.registrationDetail,
-                              extra: RegistrationDetailExtra(
-                                registration: item.registration,
-                                eventOwnerId: event.ownerId,
-                              ),
-                            );
-                          } else {
-                            context.pushNamed(
-                              AppRoutes.eventDetailById,
-                              extra: item.registration.eventId,
-                            );
-                          }
-                        },
+                        onDetails: () => _openDetail(context, item),
                         onSecondaryAction:
                             item.registration.status ==
                                 RegistrationStatus.readyForEdit
@@ -122,6 +106,57 @@ class MyRegistrationsDataView extends StatelessWidget {
               ),
       ],
     );
+  }
+
+  void _openDetail(BuildContext context, RegistrationWithEvent item) {
+    final registration = item.registration;
+    final event = item.event;
+    if (event == null) {
+      context.pushNamed(AppRoutes.eventDetailById, extra: registration.eventId);
+      return;
+    }
+
+    final cubit = context.read<MyRegistrationsCubit>();
+    final status = registration.status;
+    final canCancel =
+        registration.id != null &&
+        (status == RegistrationStatus.pending ||
+            status == RegistrationStatus.approved ||
+            status == RegistrationStatus.readyForEdit);
+
+    context.pushNamed(
+      AppRoutes.registrationDetail,
+      extra: RegistrationDetailExtra(
+        registration: registration,
+        eventOwnerId: event.ownerId,
+        onCancelRegistration: canCancel
+            ? () async => cubit.cancelRegistration(registration.id!)
+            : null,
+        onEditRegistration: status == RegistrationStatus.readyForEdit
+            ? (detailContext) => _openEditForm(detailContext, item)
+            : null,
+      ),
+    );
+  }
+
+  Future<void> _openEditForm(
+    BuildContext context,
+    RegistrationWithEvent item,
+  ) async {
+    final event = item.event;
+    if (event == null) return;
+    final cubit = context.read<MyRegistrationsCubit>();
+    final result = await context.pushNamed<EventRegistrationModel?>(
+      AppRoutes.eventRegistration,
+      extra: EventRegistrationParams(
+        event: event,
+        registration: item.registration,
+      ),
+    );
+    if (result != null && context.mounted) {
+      cubit.onChangeRegistration(result);
+      context.pop();
+    }
   }
 
   Future<void> _showFilters(BuildContext context) async {
@@ -155,13 +190,15 @@ class MyRegistrationsDataView extends StatelessWidget {
           extra: RegistrationDetailExtra(
             registration: registration,
             eventOwnerId: event?.ownerId,
+            onCancelRegistration: registration.id != null
+                ? () async => cubit.cancelRegistration(registration.id!)
+                : null,
           ),
         );
         break;
       case RegistrationStatus.readyForEdit:
         if (event != null) {
-          final currentUserId =
-              context.read<AuthCubit>().state.currentUser?.id;
+          final currentUserId = context.read<AuthCubit>().state.currentUser?.id;
           if (currentUserId != null && event.ownerId == currentUserId) {
             context.pushNamed(
               AppRoutes.eventDetailById,
@@ -197,10 +234,8 @@ class MyRegistrationsDataView extends StatelessWidget {
         break;
       case RegistrationStatus.cancelled:
         if (event != null) {
-          final currentUserId =
-              context.read<AuthCubit>().state.currentUser?.id;
-          if (currentUserId != null &&
-              event.ownerId == currentUserId) {
+          final currentUserId = context.read<AuthCubit>().state.currentUser?.id;
+          if (currentUserId != null && event.ownerId == currentUserId) {
             context.pushNamed(
               AppRoutes.eventDetailById,
               extra: registration.eventId,

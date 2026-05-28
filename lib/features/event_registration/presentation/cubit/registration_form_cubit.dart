@@ -179,6 +179,19 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
     });
   }
 
+  /// Validates only the given field names (one wizard step). Returns true when
+  /// every field passes. Validating a single field also surfaces its error UI.
+  bool validateStepFields(List<String> fieldNames) {
+    final formState = formKey.currentState;
+    if (formState == null) return false;
+    var isValid = true;
+    for (final fieldName in fieldNames) {
+      final fieldValidates = formState.fields[fieldName]?.validate() ?? true;
+      isValid = isValid && fieldValidates;
+    }
+    return isValid;
+  }
+
   Future<void> saveRegistration() async {
     final registration = _buildRegistration();
 

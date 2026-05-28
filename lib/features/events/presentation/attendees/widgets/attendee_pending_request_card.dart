@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
+import 'package:rideglory/features/event_registration/presentation/widgets/registration_status_pill.dart';
 import 'package:rideglory/features/events/presentation/attendees/attendees_cubit.dart';
 import 'package:rideglory/features/events/presentation/attendees/attendee_action_confirmation.dart';
 import 'package:rideglory/features/events/presentation/shared/widgets/initials_avatar.dart';
@@ -17,22 +18,12 @@ class AttendeePendingRequestCard extends StatelessWidget {
     this.onTap,
   });
 
-  String _timeAgo(BuildContext context, DateTime? createdAt) {
-    if (createdAt == null) return '';
-    final now = DateTime.now();
-    final diff = now.difference(createdAt);
-    if (diff.inDays > 0) return context.l10n.event_timeAgoDays(diff.inDays);
-    if (diff.inHours > 0) return context.l10n.event_timeAgoHours(diff.inHours);
-    return context.l10n.event_timeAgoMinutes(diff.inMinutes.clamp(0, 59));
-  }
-
   @override
   Widget build(BuildContext context) {
     final vehicleText =
         registration.vehicleSummary?.displayName.isNotEmpty == true
-            ? registration.vehicleSummary!.displayName
-            : context.l10n.notAvailable;
-    final timeAgo = _timeAgo(context, registration.createdAt);
+        ? registration.vehicleSummary!.displayName
+        : context.l10n.notAvailable;
 
     return Container(
       decoration: BoxDecoration(
@@ -103,14 +94,7 @@ class AttendeePendingRequestCard extends StatelessWidget {
                         ],
                       ),
                     ),
-                    if (timeAgo.isNotEmpty)
-                      Text(
-                        timeAgo,
-                        style: const TextStyle(
-                          color: AppColors.textOnDarkTertiary,
-                          fontSize: 12,
-                        ),
-                      ),
+                    RegistrationStatusPill(status: registration.status),
                   ],
                 ),
               ),
