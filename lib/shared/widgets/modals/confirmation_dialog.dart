@@ -13,6 +13,7 @@ class ConfirmationDialog {
     void Function(BuildContext dialogContext)? onCancel,
     String? cancelLabel,
     String? confirmLabel,
+    IconData? icon,
     DialogActionType confirmType = DialogActionType.primary,
     DialogType dialogType = DialogType.confirmation,
     bool isDismissible = false,
@@ -20,11 +21,19 @@ class ConfirmationDialog {
     final resolvedCancelLabel = cancelLabel ?? context.l10n.cancel;
     final resolvedConfirmLabel = confirmLabel ?? context.l10n.confirm;
 
+    // A destructive confirm drives the whole modal into the `destructive`
+    // variant (red icon + red button) so the icon and button stay consistent;
+    // otherwise the modal follows the requested [dialogType].
+    final variant = confirmType == DialogActionType.danger
+        ? AppModalVariant.destructive
+        : dialogType.variant;
+
     return AppModal.show<bool>(
       context: context,
       title: title,
       description: content,
-      variant: dialogType.variant,
+      variant: variant,
+      icon: icon,
       barrierDismissible: isDismissible,
       actions: [
         AppModalAction(

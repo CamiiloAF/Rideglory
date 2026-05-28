@@ -65,10 +65,17 @@ class AppDialog extends StatelessWidget {
               )
               .toList();
 
+    final hasDangerAction = actions.any(
+      (action) => action.type == DialogActionType.danger,
+    );
+    final variant = hasDangerAction
+        ? AppModalVariant.destructive
+        : type.variant;
+
     return AppModal(
       title: title,
       description: content,
-      variant: type.variant,
+      variant: variant,
       icon: customIcon,
       iconColor: customIconColor,
       actions: resolvedActions,
