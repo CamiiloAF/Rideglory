@@ -7,6 +7,7 @@ import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/cancel_event_registration_use_case.dart';
+import 'package:rideglory/features/event_registration/domain/use_cases/get_event_registrations_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/get_my_registration_for_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_event_by_id_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/publish_event_use_case.dart';
@@ -23,6 +24,7 @@ class EventDetailCubit extends Cubit<EventDetailState> {
     this._getEventByIdUseCase,
     this._updateEventUseCase,
     this._publishEventUseCase,
+    this._getEventRegistrationsUseCase,
   ) : super(
         const EventDetailState(
           registrationResult: ResultState.initial(),
@@ -36,8 +38,33 @@ class EventDetailCubit extends Cubit<EventDetailState> {
   final CancelEventRegistrationUseCase _cancelRegistrationUseCase;
   final UpdateEventUseCase _updateEventUseCase;
   final PublishEventUseCase _publishEventUseCase;
+  final GetEventRegistrationsUseCase _getEventRegistrationsUseCase;
 
   EventRegistrationModel? _registration;
+
+  /// Carga la lista COMPLETA de inscripciones del evento (no `/me`).
+  /// Usado por el participants section del event detail para mostrar el
+  /// conteo real de asistentes.
+  Future<void> loadAttendees(String eventId) async {
+    emit(state.copyWith(attendeesResult: const ResultState.loading()));
+    final result = await _getEventRegistrationsUseCase(eventId);
+    result.fold(
+      (error) => emit(
+        state.copyWith(attendeesResult: ResultState.error(error: error)),
+      ),
+      (registrations) {
+        if (registrations.isEmpty) {
+          emit(state.copyWith(attendeesResult: const ResultState.empty()));
+        } else {
+          emit(
+            state.copyWith(
+              attendeesResult: ResultState.data(data: registrations),
+            ),
+          );
+        }
+      },
+    );
+  }
 
   Future<void> loadEvent(String eventId) async {
     emit(state.copyWith(eventResult: const ResultState.loading()));

@@ -7,6 +7,7 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/cancel_event_registration_use_case.dart';
+import 'package:rideglory/features/event_registration/domain/use_cases/get_event_registrations_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/get_my_registration_for_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_event_by_id_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/publish_event_use_case.dart';
@@ -29,8 +30,11 @@ class _EventDetailByIdPageState extends State<EventDetailByIdPage> {
 
   void _listener(BuildContext context, EventDetailState state) {
     state.eventResult.whenOrNull(
-      data: (data) =>
-          context.read<EventDetailCubit>().loadMyRegistration(data.id!),
+      data: (data) {
+        context.read<EventDetailCubit>()
+          ..loadMyRegistration(data.id!)
+          ..loadAttendees(data.id!);
+      },
     );
   }
 
@@ -50,6 +54,7 @@ class _EventDetailByIdPageState extends State<EventDetailByIdPage> {
           getIt<GetEventByIdUseCase>(),
           getIt<UpdateEventUseCase>(),
           getIt<PublishEventUseCase>(),
+          getIt<GetEventRegistrationsUseCase>(),
         )..loadEvent(widget.eventId),
         child: BlocConsumer<EventDetailCubit, EventDetailState>(
           listener: _listener,
