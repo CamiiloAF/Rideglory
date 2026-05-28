@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
+import 'package:rideglory/shared/router/app_routes.dart';
 
 /// "Inscritos" section showing count badge + view-all link.
 class EventDetailParticipantsSection extends StatelessWidget {
   const EventDetailParticipantsSection({super.key, required this.event});
 
   final EventModel event;
+
+  void _openAttendees(BuildContext context) {
+    context.pushNamed(AppRoutes.eventAttendees, extra: event);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +53,8 @@ class EventDetailParticipantsSection extends StatelessWidget {
 
         // View all link
         GestureDetector(
-          onTap: () {},
+          behavior: HitTestBehavior.opaque,
+          onTap: () => _openAttendees(context),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
