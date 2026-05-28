@@ -22,6 +22,18 @@ val mapsApiKey =
         ?: System.getenv("MAPS_API_KEY")
         ?: "")
 
+// Release signing — loads from android/key.properties when present.
+// On CI the file is created from secrets; locally it is gitignored.
+// When absent, release falls back to debug signing so contributors can still
+// run `flutter build apk --release` without setting up signing.
+val keystoreProperties = Properties().apply {
+    val keystorePropertiesFile = rootProject.file("key.properties")
+    if (keystorePropertiesFile.exists()) {
+        keystorePropertiesFile.inputStream().use { load(it) }
+    }
+}
+val hasReleaseSigning = keystoreProperties.isNotEmpty()
+
 android {
     namespace = "com.camiloagudelo.rideglory"
     compileSdk = 36
@@ -54,10 +66,27 @@ android {
         execution = "ANDROIDX_TEST_ORCHESTRATOR"
     }
 
+    signingConfigs {
+        if (hasReleaseSigning) {
+            create("release") {
+                keyAlias = keystoreProperties.getProperty("keyAlias")
+                keyPassword = keystoreProperties.getProperty("keyPassword")
+                storeFile = keystoreProperties.getProperty("storeFile")
+                    ?.let { rootProject.file(it) }
+                storePassword = keystoreProperties.getProperty("storePassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = if (hasReleaseSigning) {
+                signingConfigs.getByName("release")
+            } else {
+                // Fallback: debug signing so `flutter build apk --release` works
+                // for contributors without key.properties. NOT for distribution.
+                signingConfigs.getByName("debug")
+            }
         }
     }
 }

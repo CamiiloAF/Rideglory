@@ -148,6 +148,66 @@ flutter build apk         # Build debug APK (faster for testing)
 
 ---
 
+## Release Signing (Android)
+
+### One-time setup
+
+1. **Generate a release keystore** (run once; keep the file + passwords in a password manager — losing them is unrecoverable for Play Store updates):
+   ```bash
+   keytool -genkey -v -keystore ~/upload-keystore.jks \
+     -keyalg RSA -keysize 2048 -validity 10000 \
+     -alias upload
+   ```
+   When prompted for "keystore password", invent a new one (≥12 chars).
+
+2. **Capture SHA-1 and SHA-256** fingerprints:
+   ```bash
+   keytool -list -v -keystore ~/upload-keystore.jks -alias upload
+   ```
+
+3. **Register both fingerprints in Firebase Console**:
+   - Open <https://console.firebase.google.com/project/rideglory-f7383/settings/general/android:com.camiloagudelo.rideglory>
+   - Click **Add fingerprint** → paste SHA-1
+   - Click **Add fingerprint** → paste SHA-256
+   - Download the regenerated `google-services.json` (now contains both debug AND release certificate hashes)
+   - Replace `android/app/google-services.json` locally with the new file
+   - Also update the `GOOGLE_SERVICES_JSON` secret in GitHub (base64-encoded)
+
+4. **Create `android/key.properties`** locally (gitignored):
+   ```properties
+   storePassword=<your_store_password>
+   keyPassword=<your_key_password>
+   keyAlias=upload
+   storeFile=/Users/<you>/upload-keystore.jks
+   ```
+   `android/app/build.gradle.kts` reads this file at build time. When absent, release builds fall back to the debug keystore (signed for development only — Google Sign-In and other SHA-1-bound services will NOT work on those APKs).
+
+5. **Configure GitHub secrets** for CI release signing. Repo → Settings → Secrets and variables → Actions → New repository secret:
+
+   | Secret | Value |
+   |---|---|
+   | `RELEASE_KEYSTORE_BASE64` | `base64 -i ~/upload-keystore.jks \| tr -d '\n'` |
+   | `RELEASE_KEYSTORE_PASSWORD` | your storePassword |
+   | `RELEASE_KEY_ALIAS` | `upload` |
+   | `RELEASE_KEY_PASSWORD` | your keyPassword |
+
+   The CI workflow auto-detects these 4 secrets and signs the release APK with them. If they are missing, CI emits a warning and falls back to the ephemeral debug keystore (Google Sign-In will fail in that APK).
+
+### Play App Signing (production rollout)
+
+When publishing to Google Play, enable **Play App Signing**. Google generates a separate App Signing Key on their side. Add its SHA-1 (Play Console → Setup → App Signing → SHA-1 certificate fingerprint) to Firebase Console as a third fingerprint so that production-installed APKs from the Play Store also work with Google Sign-In.
+
+### Verifying the APK signature locally
+
+```bash
+flutter build apk --release
+apksigner verify --print-certs build/app/outputs/flutter-apk/app-release.apk | grep SHA
+```
+
+The printed SHA-1 must match one of the fingerprints registered in Firebase Console.
+
+---
+
 ## Release Workflow
 
 ### Creating a Release
