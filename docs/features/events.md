@@ -1,7 +1,9 @@
-# Documentación del Feature: Eventos & Registro
+# Documentación del Feature: Events
 
-> Última actualización: 2026-05-26  
-> Alcance: `lib/features/events/` y `lib/features/event_registration/`
+> Última actualización: 2026-05-28  
+> Alcance: `lib/features/events/`
+
+> Esta documentación cubre únicamente el feature `events/`. El feature de inscripciones, antes incluido aquí, se separó a [event_registration.md](./event_registration.md).
 
 ---
 
@@ -11,43 +13,33 @@
 2. [Modelo de dominio](#2-modelo-de-dominio)
 3. [Ciclo de vida de un evento](#3-ciclo-de-vida-de-un-evento)
 4. [Arquitectura por capas](#4-arquitectura-por-capas)
-   - 4.1 [Domain — Events](#41-domain--events)
-   - 4.2 [Data — Events](#42-data--events)
-   - 4.3 [Presentation — Events](#43-presentation--events)
-   - 4.4 [Domain — Event Registration](#44-domain--event-registration)
-   - 4.5 [Data — Event Registration](#45-data--event-registration)
-   - 4.6 [Presentation — Event Registration](#46-presentation--event-registration)
-5. [Cubits y estados — mapa completo](#5-cubits-y-estados--mapa-completo)
+   - 4.1 [Domain](#41-domain)
+   - 4.2 [Data](#42-data)
+   - 4.3 [Presentation](#43-presentation)
+5. [Cubits y estados](#5-cubits-y-estados)
 6. [Flujo de tracking en vivo](#6-flujo-de-tracking-en-vivo)
-7. [Rutas de navegación](#7-rutas-de-navegación)
-8. [API endpoints](#8-api-endpoints)
-9. [Sub-features en detalle](#9-sub-features-en-detalle)
-   - 9.1 [Lista de eventos (`/events`)](#91-lista-de-eventos-events)
-   - 9.2 [Formulario de evento](#92-formulario-de-evento)
-   - 9.3 [Constructor de ruta personalizada](#93-constructor-de-ruta-personalizada)
-   - 9.4 [Detalle de evento](#94-detalle-de-evento)
-   - 9.5 [Formulario de inscripción](#95-formulario-de-inscripción)
-   - 9.6 [Gestión de asistentes (organizador)](#96-gestión-de-asistentes-organizador)
-   - 9.7 [Live Tracking (mapa en vivo)](#97-live-tracking-mapa-en-vivo)
-   - 9.8 [Mis inscripciones](#98-mis-inscripciones)
-   - 9.9 [Mis borradores](#99-mis-borradores)
-10. [Patrones y trampas conocidas](#10-patrones-y-trampas-conocidas)
-11. [Archivos clave de referencia rápida](#11-archivos-clave-de-referencia-rápida)
+7. [Sub-features](#7-sub-features)
+8. [Rutas de navegación](#8-rutas-de-navegación)
+9. [API endpoints](#9-api-endpoints)
+10. [Conexiones con otros features](#10-conexiones-con-otros-features)
+11. [Patrones y trampas conocidas](#11-patrones-y-trampas-conocidas)
+12. [Archivos clave de referencia rápida](#12-archivos-clave-de-referencia-rápida)
 
 ---
 
 ## 1. Visión general
 
-El feature de **Eventos** es el núcleo de Rideglory. Permite a los organizadores crear, publicar y gestionar rodadas de motociclismo; y a los riders explorar, inscribirse y seguir el evento en tiempo real.
+El feature **Events** es el núcleo de Rideglory. Permite a los organizadores **crear, publicar y gestionar rodadas de motociclismo** y a los riders **explorar, ver detalle y seguir en tiempo real** los eventos.
 
-Se divide en **dos features Flutter** con sus propias carpetas:
+Responsabilidades:
+- CRUD completo de eventos (lista, detalle, crear, editar, publicar, eliminar).
+- Constructor de rutas (simple y custom con hasta 9 waypoints) con Mapbox.
+- Tracking en vivo via WebSocket (`/tracking/ws`) durante un evento `inProgress`.
+- Gestión de asistentes (aprobación/rechazo desde el organizador).
+- Generación de portadas con IA (`POST /events/generate-cover`).
+- SOS broadcast durante el tracking.
 
-| Feature Flutter | Responsabilidad |
-|---|---|
-| `events/` | CRUD de eventos, listado/filtrado, detalle, tracking en vivo |
-| `event_registration/` | Inscripción de riders, aprobación/rechazo por organizador, historial |
-
-Ambos features comparten modelos: `EventModel` (definido en `events/domain/`) es importado por `event_registration/`.
+> El feature de inscripciones (`event_registration/`) consume `EventModel` y se documenta aparte. Las pantallas de eventos pueden navegar al form de inscripción, pero la lógica del registro vive en su propio feature.
 
 ---
 
@@ -58,86 +50,57 @@ Ambos features comparten modelos: `EventModel` (definido en `events/domain/`) es
 
 ```
 EventModel
-  id: String?              — null si aún no persiste (nuevo o borrador sin guardar)
-  ownerId: String          — userId Firebase del organizador
-  name: String
-  description: String      — rich-text (almacenado como JSON de Quill Delta)
-  city: String
-  startDate: DateTime
-  endDate: DateTime?       — null = evento de un solo día
-  difficulty: EventDifficulty  (1–5 chiles)
-  meetingPoint: String     — nombre textual del punto de encuentro
-  destination: String      — nombre textual del destino
-  meetingTime: DateTime    — hora de concentración (ignora la fecha, solo hora)
-  eventType: EventType
-  allowedBrands: List<String>  — vacío = multi-marca
-  price: int?              — null o 0 = gratis
-  maxParticipants: int?    — null = sin límite
-  imageUrl: String?        — URL en Firebase Storage
-  state: EventState        — ciclo de vida (ver §3)
-  waypoints: List<String>  — nombres de waypoints (ruta custom)
-  routeGeoJson: Map?       — {routeType, points: [{lat, lng, label}]}
+  id: String?                              — null si no persiste aún
+  ownerId: String                          — userId del organizador (requerido)
+  name: String                             (requerido)
+  description: String                      — rich-text (JSON Quill Delta serializado como string)
+  city: String                             (requerido)
+  startDate: DateTime                      (requerido)
+  endDate: DateTime?                       — null = evento de un día
+  difficulty: EventDifficulty              (requerido, 1–5)
+  meetingPoint: String                     — nombre textual
+  destination: String                      — nombre textual
+  meetingTime: DateTime                    — la fecha es ignorada, solo hora
+  eventType: EventType                     (requerido)
+  allowedBrands: List<String>              (default [])
+  price: int?                              — null o 0 = gratis
+  maxParticipants: int?                    — null = sin límite
+  imageUrl: String?                        — URL Firebase Storage
+  createdDate: DateTime?
+  updatedDate: DateTime?
+  state: EventState                        (default scheduled)
+  waypoints: List<String>                  (default []) — nombres textuales
+  routeGeoJson: Map<String, dynamic>?      — {routeType, points: [{lat, lng, label}]}
 ```
 
 **Getters calculados:**
-- `isFree` → `price == null || price == 0`
-- `isMultiBrand` → `allowedBrands.isEmpty`
-- `isMultiDay` → `endDate != null`
-- `routePoints` → parsea `routeGeoJson.points` → `List<AddressLocation>`
+- `isFree` → `price == null || price == 0`.
+- `isMultiBrand` → `allowedBrands.isEmpty`.
+- `isMultiDay` → `endDate != null`.
+- `routePoints` → parsea `routeGeoJson['points']` a `List<AddressLocation>` para Mapbox.
 
-**Igualdad:** basada únicamente en `id` (dos instancias con mismo `id` son iguales).
+**Igualdad**: solo por `id` (`==` y `hashCode`). **Trampa**: dos eventos con `id == null` se consideran iguales (hash 0).
 
----
+### Enums
 
-### `EventType` (enum)
-```
-tourism, urban, offRoad, competition, solidarity, shortDistance
-```
-Cada valor tiene un `label` en español para mostrar en la UI.
+**`EventType`**
+| Enum | Label |
+|---|---|
+| `tourism` | Turismo |
+| `urban` | Urbana |
+| `offRoad` | Off-road |
+| `competition` | Competición |
+| `solidarity` | Solidaria |
+| `shortDistance` | Corta distancia |
 
----
+**`EventDifficulty`** — 5 niveles con `value: int` (1–5), `label` con chiles y `shortLabel`. `fromValue(int)` hace lookup inverso (default `one` si no coincide).
 
-### `EventDifficulty` (enum)
-```
-one(1, 'Fácil 🌶', 'FÁCIL')  …  five(5, 'Muy difícil 🌶🌶🌶🌶🌶', 'MUY DIFÍCIL')
-```
-Serializado como entero (`value`). `fromValue(int)` hace la conversión inversa.
+**`EventState`** — `draft`, `scheduled`, `inProgress`, `cancelled`, `finished`.
 
----
-
-### `EventState` (enum)
-```
-draft → scheduled → inProgress → finished
-                  ↘ cancelled
-```
-Ver §3 para las transiciones permitidas.
-
----
-
-### `EventRegistrationModel`
-> `lib/features/event_registration/domain/model/event_registration_model.dart`
-
-```
-EventRegistrationModel
-  id: String?
-  eventId: String
-  eventName: String
-  userId: String
-  status: RegistrationStatus      (pending, approved, rejected, cancelled, readyForEdit)
-  fullName / identificationNumber / birthDate / phone / email / residenceCity
-  eps / medicalInsurance? / bloodType: BloodType
-  emergencyContactName / emergencyContactPhone
-  vehicleId: String?              — ID del vehículo seleccionado
-  vehicleSummary: VehicleSummaryModel?   — placa + marca (snapshot)
-  createdAt / updatedAt
-```
-
----
+**`RouteType`** (en `constants/event_form_fields.dart`) — `simple`, `custom`.
 
 ### `RiderTrackingModel`
-> `lib/features/events/domain/model/rider_tracking_model.dart`
-
-Snapshot en tiempo real de un rider dentro de la sesión de tracking:
+> `domain/model/rider_tracking_model.dart`
 
 ```
 userId / fullName / role: RiderTrackingRole (lead | rider)
@@ -145,26 +108,34 @@ latitude / longitude / speedKmh / distanceMeters
 batteryPercent / isActive / deviceLabel / lastUpdated
 ```
 
----
+`RiderTrackingRole.fromStorage(String?)` parsea `'lead'` → `lead`, todo lo demás → `rider`.
 
 ### `RiderProfileModel`
-> `lib/features/events/domain/model/rider_profile_model.dart`
+> `domain/model/rider_profile_model.dart`
 
-Datos del rider guardados para pre-llenar futuras inscripciones:
+Datos persistidos del rider para pre-llenar futuras inscripciones:
 ```
-userId, fullName, identificationNumber, birthDate, phone, email,
-residenceCity, eps, medicalInsurance, bloodType,
-emergencyContactName, emergencyContactPhone
+id, userId, fullName, identificationNumber, birthDate,
+phone, email, residenceCity,
+eps, medicalInsurance, bloodType,
+emergencyContactName, emergencyContactPhone,
+updatedDate
 ```
-Se persiste en backend via `SaveRiderProfileUseCase`. Al crear/editar inscripción se carga con `GetRiderProfileUseCase` y se usa para pre-rellenar el form.
-
----
 
 ### `SosAlertModel`
 ```
-userId / riderName / latitude? / longitude? / phone?
+userId, riderName, latitude?, longitude?, phone?
 ```
-Broadcast por WebSocket tipo `tracking.sos.alert`.
+
+### `UpdateLocationRequest`
+```
+eventId, userId, latitude, longitude, speedKmh, distanceMeters, batteryPercent
+```
+
+### `UploadEventImageRequest`
+```
+localImagePath, eventId?, ownerId?
+```
 
 ---
 
@@ -174,172 +145,195 @@ Broadcast por WebSocket tipo `tracking.sos.alert`.
 [NUEVA CREACIÓN]
      │
      ▼
-  draft  ──────────── publishEvent() ──────────────▶  scheduled
-     │                                                    │
-     │ (también se puede guardar directamente             │ startEvent() (organizador)
-     │  como scheduled si se publica al guardar)          ▼
-     │                                               inProgress
-     │                                                    │
-     │                                                    │ stopEvent() (organizador)
-     │                                                    ▼
-     │                                               finished
+  draft ────── publishEvent() ──────▶ scheduled
+     │                                    │
+     │                                    │ startEvent() (organizador)
+     │                                    ▼
+     │                               inProgress
+     │                                    │
+     │                                    │ stopEvent() (organizador)
+     │                                    ▼
+     │                                finished
      │
-     └──── (se puede eliminar mientras sea draft o scheduled)
+     └── deleteEvent() válido en draft y scheduled
 ```
 
-**Transiciones de estado:**
-| Acción | Método Cubit | Endpoint API | Restricción |
+| Acción | Cubit method | Endpoint | Restricción |
 |---|---|---|---|
 | Guardar borrador | `EventFormCubit.saveDraft()` | `POST/PATCH /events` | `state=draft`, solo requiere `name` |
-| Publicar desde detalle | `EventDetailCubit.publishEvent()` | `PATCH /events/:id/publish` | Solo owner |
-| Iniciar rodada | `EventDetailCubit.startEvent()` | `PATCH /events/:id` (state=inProgress) | Solo owner, estado actual = scheduled |
-| Finalizar rodada | `EventDetailCubit.stopEvent()` | `PATCH /events/:id` (state=finished) | Solo owner, estado actual = inProgress |
+| Publicar | `EventDetailCubit.publishEvent()` | `PATCH /events/:id/publish` | Solo owner |
+| Iniciar | `EventDetailCubit.startEvent()` | `POST /events/:id/tracking/start` | Solo owner, estado scheduled |
+| Finalizar | `EventDetailCubit.stopEvent()` | `POST /events/:id/tracking/end` | Solo owner, estado inProgress |
 | Eliminar | `EventDeleteCubit.deleteEvent()` | `DELETE /events/:id` | Solo owner |
 
 ---
 
 ## 4. Arquitectura por capas
 
-### 4.1 Domain — Events
+### 4.1 Domain
 ```
 lib/features/events/domain/
 ├── model/
-│   ├── event_model.dart              ← modelo principal
+│   ├── event_model.dart
 │   ├── rider_tracking_model.dart
 │   ├── rider_profile_model.dart
 │   ├── sos_alert_model.dart
-│   ├── update_location_request.dart  ← payload WS de ubicación
+│   ├── update_location_request.dart
 │   └── upload_event_image_request.dart
 ├── repository/
-│   ├── event_repository.dart         ← interfaz CRUD + upload
-│   ├── tracking_repository.dart      ← interfaz tracking
-│   ├── event_cover_repository.dart   ← interfaz cover AI
+│   ├── event_repository.dart
+│   ├── tracking_repository.dart
+│   ├── event_cover_repository.dart
 │   └── rider_profile_repository.dart
 └── use_cases/
     ├── create_event_use_case.dart
     ├── update_event_use_case.dart
     ├── delete_event_use_case.dart
-    ├── get_events_use_case.dart       ← con filtros opcionales
+    ├── get_events_use_case.dart
     ├── get_my_events_use_case.dart
     ├── get_event_by_id_use_case.dart
     ├── publish_event_use_case.dart
     ├── upload_event_image_use_case.dart
-    ├── get_generate_cover_use_case.dart  ← genera cover con IA
+    ├── get_generate_cover_use_case.dart
     ├── start_tracking_use_case.dart
     ├── stop_tracking_use_case.dart
     ├── update_location_use_case.dart
-    ├── watch_active_riders_use_case.dart ← retorna Stream
+    ├── watch_active_riders_use_case.dart
     ├── get_rider_profile_use_case.dart
     └── save_rider_profile_use_case.dart
 ```
 
-**Contratos de repositories:**
-
-`EventRepository`:
+**`EventRepository`** (signatures):
 ```dart
 getEvents({type?, dateFrom?, dateTo?, city?}) → Either<DomainException, List<EventModel>>
-getMyEvents()                                  → Either<…, List<EventModel>>
-getEventById(String id)                        → Either<…, EventModel>
-createEvent(EventModel)                        → Either<…, EventModel>
-updateEvent(EventModel)                        → Either<…, EventModel>   // requiere id != null
-deleteEvent(String id)                         → Either<…, Nothing>
-uploadEventImage(UploadEventImageRequest)      → Either<…, String>       // retorna URL
-publishEvent(String id)                        → Either<…, EventModel>
+getMyEvents() → Either<…, List<EventModel>>
+getEventById(String id) → Either<…, EventModel>
+createEvent(EventModel) → Either<…, EventModel>
+updateEvent(EventModel) → Either<…, EventModel>     // requiere id != null
+deleteEvent(String id) → Either<…, Nothing>
+uploadEventImage(UploadEventImageRequest) → Either<…, String>  // URL pública
+publishEvent(String id) → Either<…, EventModel>
 ```
 
-`TrackingRepository`:
+**`TrackingRepository`**:
 ```dart
-watchActiveRiders(String eventId)              → Stream<List<RiderTrackingModel>>
-startTracking({eventId, initialData})          → Future<Either<…, Nothing>>
-updateLocation(UpdateLocationRequest)          → Future<Either<…, Nothing>>
-stopTracking({eventId, userId})                → Future<Either<…, Nothing>>
-endRide(String eventId)                        → Future<Either<…, Nothing>>
-publishSos({eventId, userId, lat?, lng?})      → void
-sosAlerts                                      → Stream<SosAlertModel>
-eventEnded                                     → Stream<void>
+watchActiveRiders(String eventId) → Stream<List<RiderTrackingModel>>
+startTracking({eventId, initialData}) → Future<Either<…, Nothing>>
+updateLocation(UpdateLocationRequest) → Future<Either<…, Nothing>>
+stopTracking({eventId, userId}) → Future<Either<…, Nothing>>
+endRide(String eventId) → Future<Either<…, Nothing>>
+publishSos({eventId, userId, latitude?, longitude?}) → void          // sin retorno
+sosAlerts → Stream<SosAlertModel>
+eventEnded → Stream<void>
+```
+
+**`EventCoverRepository`**:
+```dart
+generateCover({title, eventType, city}) → Future<Either<…, String>>
+```
+
+**`RiderProfileRepository`**:
+```dart
+getMyRiderProfile() → Future<Either<…, RiderProfileModel?>>
+saveRiderProfile(RiderProfileModel) → Future<Either<…, RiderProfileModel>>
 ```
 
 ---
 
-### 4.2 Data — Events
+### 4.2 Data
 ```
 lib/features/events/data/
 ├── dto/
-│   ├── event_dto.dart                ← extends EventModel (patrón DTO-hereda-modelo)
-│   ├── event_dto.g.dart              ← generado
-│   ├── event_dto_converters.dart     ← converters Freezed para enums
+│   ├── event_dto.dart                (extends EventModel)
+│   ├── event_dto_converters.dart     (EventDifficultyConverter, EventTypeConverter, EventStateConverter)
+│   ├── rider_tracking_dto.dart       (extends RiderTrackingModel)
+│   ├── rider_profile_dto.dart        (extends RiderProfileModel)
 │   ├── cover_generation_dto.dart
-│   ├── rider_tracking_dto.dart
-│   └── rider_profile_dto.dart
+│   └── *.g.dart
 ├── repository/
-│   ├── event_repository_impl.dart    ← @Injectable(as: EventRepository)
-│   ├── tracking_repository_impl.dart ← @Injectable(as: TrackingRepository)
+│   ├── event_repository_impl.dart
+│   ├── tracking_repository_impl.dart
 │   ├── event_cover_repository_impl.dart
 │   └── rider_profile_repository_impl.dart
 └── service/
-    ├── event_service.dart            ← @singleton @RestApi() Retrofit
-    ├── event_service.g.dart
-    ├── event_cover_service.dart      ← @singleton @RestApi()
-    ├── tracking_service.dart         ← @singleton Dio manual (no Retrofit)
-    └── tracking_ws_client.dart       ← @lazySingleton WebSocket
+    ├── event_service.dart            (@singleton @RestApi)
+    ├── event_cover_service.dart      (@singleton @RestApi)
+    ├── tracking_service.dart         (Dio manual, sin Retrofit)
+    └── tracking_ws_client.dart       (@lazySingleton WebSocket)
 ```
 
-**Patrón DTO especial — `EventDto extends EventModel`:**
+**`EventDto extends EventModel`** — patrón inusual donde el DTO hereda del modelo. `EventModel.toJson()` se expone como extension (`EventModelExtension.toJson()` en `event_dto.dart`).
 
-`EventDto` hereda de `EventModel` en lugar de ser una clase separada. Esto permite:
-- `EventDto.fromJson()` para deserializar la respuesta del API.
-- `EventModelExtension.toJson()` (extension) para serializar cualquier `EventModel` sin castear.
-- Los `@JsonKey` ajustan nombres (`createdAt` → `createdDate`, etc.).
-- `toJson()` sobreescribe las fechas con `apiEncodeRequiredDateTime` para el formato correcto.
+**Converters Freezed-style** para enums:
+- `EventDifficultyConverter`: acepta `int` o `String` (`EASY`, `MODERATE`, `MEDIUM`, `HARD`, `VERY_HARD`).
+- `EventTypeConverter`: serializa como UPPER_SNAKE_CASE (`TOURISM`, `OFF_ROAD`, etc.).
+- `EventStateConverter`: maneja camelCase y UPPER_SNAKE_CASE; default `scheduled` si null.
 
-**Imagen de portada — Firebase Storage:**
-`EventRepositoryImpl.uploadEventImage()` sube directamente a Firebase Storage:
-```
-events/{eventId}/cover.jpg         (edición)
-events/{ownerId}-{timestamp}/cover.jpg   (creación antes de tener ID)
-```
+**`EventService` (Retrofit)**:
+| Método | HTTP | Path |
+|---|---|---|
+| `getEvents({type?, dateFrom?, dateTo?, city?})` | `GET` | `/events` |
+| `getMyEvents()` | `GET` | `/events/my` |
+| `getEventById(id)` | `GET` | `/events/{id}` |
+| `createEvent(body)` | `POST` | `/events` |
+| `updateEvent(id, body)` | `PATCH` | `/events/{id}` |
+| `deleteEvent(id)` | `DELETE` | `/events/{id}` |
+| `startRide(id)` | `POST` | `/events/{id}/tracking/start` |
+| `endRide(id)` | `POST` | `/events/{id}/tracking/end` |
+| `publishEvent(id)` | `PATCH` | `/events/{id}/publish` |
+
+**`TrackingService` (Dio manual)**:
+| Método | HTTP | Path | Body |
+|---|---|---|---|
+| `startSession({eventId, rider})` | `POST` | `/events/{id}/tracking/session/start` | `{rider: RiderTrackingDto.toJson()}` |
+| `stopSession({eventId, userId})` | `POST` | `/events/{id}/tracking/session/stop` | `{userId}` |
+| `snapshot(eventId)` | `GET` | `/events/{id}/tracking/snapshot` | — |
+
+**`EventCoverService`**:
+| Método | HTTP | Path |
+|---|---|---|
+| `generateCover(body)` | `POST` | `/events/generate-cover` |
+
+**`EventRepositoryImpl.uploadEventImage()`** sube a Firebase Storage en path:
+- Si tiene `eventId`: `events/{eventId}/cover.jpg`.
+- Si no (creación): `events/{ownerId}-{microseconds}/cover.jpg`.
+
 Retorna la URL de descarga pública.
-
-**Cover generada con IA:**
-`EventCoverService` → `POST /events/generate-cover` con `{title, eventType, city}`.  
-Retorna `CoverGenerationDto` con la URL de la imagen generada.
 
 ---
 
-### 4.3 Presentation — Events
-
-#### Sub-secciones de presentación:
-
+### 4.3 Presentation
 ```
 lib/features/events/presentation/
-├── list/                     ← Listado + filtros
+├── list/
 │   ├── events_cubit.dart
 │   ├── events_page.dart
 │   └── widgets/
-├── detail/                   ← Detalle de evento
-│   ├── cubit/
-│   │   ├── event_detail_cubit.dart
-│   │   └── event_detail_state.dart
-│   ├── event_detail_page.dart       ← recibe EventModel por extra
-│   ├── event_detail_by_id_page.dart ← recibe String id por pathParam
-│   ├── event_detail_view.dart       ← lógica + UI principal
-│   ├── event_route_map_screen.dart  ← pantalla full-screen de ruta
+├── detail/
+│   ├── cubit/event_detail_cubit.dart, event_detail_state.dart
+│   ├── event_detail_page.dart        (recibe EventModel)
+│   ├── event_detail_by_id_page.dart  (recibe String id, fetch al init)
+│   ├── event_detail_view.dart
+│   ├── event_route_map_screen.dart   (mapa full-screen de la ruta)
+│   ├── params.dart                   (EventDetailPageParams, EventRegistrationParams)
 │   └── widgets/
-├── form/                     ← Crear/editar evento
-│   ├── cubit/event_form_cubit.dart
+├── form/
+│   ├── cubit/event_form_cubit.dart, event_form_state.dart
 │   ├── event_form_page.dart
-│   ├── screens/event_route_config_screen.dart   ← constructor de ruta custom
+│   ├── screens/event_route_config_screen.dart    (constructor de ruta custom)
 │   └── widgets/
-│       └── sections/         ← una sección de form por archivo
-├── tracking/                 ← Live tracking
+│       └── sections/                              (una sección por archivo)
+├── tracking/
 │   ├── cubit/
 │   │   ├── live_tracking_cubit.dart
 │   │   ├── live_tracking_state.dart
 │   │   └── live_tracking_cubit_factory.dart
 │   ├── live_map_page.dart
-│   ├── live_tracking_session_holder.dart  ← @lazySingleton
+│   ├── live_tracking_session_holder.dart        (@lazySingleton)
+│   ├── tracking_location_settings.dart           (distance filter 12m, interval 4s)
+│   ├── participants/participants_placeholder_page.dart
 │   └── widgets/
-├── attendees/                ← Gestión de asistentes (owner)
+├── attendees/
 │   ├── attendees_cubit.dart
 │   ├── attendees_page.dart
 │   └── widgets/
@@ -356,300 +350,28 @@ lib/features/events/presentation/
 
 ---
 
-### 4.4 Domain — Event Registration
-```
-lib/features/event_registration/domain/
-├── model/
-│   ├── event_registration_model.dart   ← modelo principal con RegistrationStatus, BloodType
-│   ├── vehicle_summary_model.dart      ← snapshot placa+marca del vehículo
-│   └── registration_with_event.dart   ← agregado para "Mis Inscripciones"
-├── repository/
-│   └── event_registration_repository.dart
-└── use_cases/
-    ├── add_event_registration_use_case.dart
-    ├── update_event_registration_use_case.dart
-    ├── cancel_event_registration_use_case.dart
-    ├── get_event_registrations_use_case.dart   ← para el organizador
-    ├── get_my_registration_for_event_use_case.dart
-    ├── get_my_registrations_use_case.dart
-    ├── approve_registration_use_case.dart
-    ├── reject_registration_use_case.dart
-    └── set_registration_ready_for_edit_use_case.dart
-```
-
----
-
-### 4.5 Data — Event Registration
-```
-lib/features/event_registration/data/
-├── dto/
-│   ├── event_registration_dto.dart    ← @JsonSerializable
-│   └── vehicle_summary_dto.dart
-├── repository/
-│   └── event_registration_repository_impl.dart
-└── service/
-    └── registration_service.dart     ← Dio manual (no Retrofit)
-```
-
-`RegistrationService` es notable: acepta `saveToProfile: bool` en el body de create/update. Cuando es `true`, el backend persiste los datos del rider en su perfil.
-
----
-
-### 4.6 Presentation — Event Registration
-```
-lib/features/event_registration/presentation/
-├── cubit/
-│   └── registration_form_cubit.dart   ← @injectable
-├── event_registration_page.dart
-├── my_registrations_cubit.dart        ← @injectable, global en MultiBlocProvider
-├── my_registrations_page.dart
-├── my_registrations_view.dart
-├── my_registrations_data_view.dart
-├── registration_form_content.dart
-├── registration_form_view.dart
-├── registration_detail_page.dart
-├── registration_detail_extra.dart     ← params de navegación
-└── widgets/
-    ├── inscription_card.dart
-    ├── vehicle_selector_field.dart    ← selector de vehículo del garage
-    ├── vehicle_selector_empty.dart
-    ├── vehicle_selector_loading.dart
-    ├── save_to_profile_checkbox.dart
-    ├── expandable_container.dart
-    └── registration_detail_*.dart     ← secciones del detalle
-```
-
----
-
-## 5. Cubits y estados — mapa completo
+## 5. Cubits y estados
 
 | Cubit | Archivo | DI | Estado | Notas |
 |---|---|---|---|---|
-| `EventsCubit` | `list/events_cubit.dart` | manual (factory) | `ResultState<List<EventModel>>` | Soporta dos modos: `EventsCubit(...)` (todos) y `EventsCubit.myEvents(...)`. Tiene cache local `_allEvents` y filtrado en memoria |
-| `EventFormCubit` | `form/cubit/event_form_cubit.dart` | `@injectable` | `EventFormState` (freezed) | `saveResult + coverGenerationResult + waypoints + routeType + locations` |
-| `EventDetailCubit` | `detail/cubit/event_detail_cubit.dart` | manual | `EventDetailState` (freezed) | `eventResult + registrationResult + lastUpdatedEventResult` |
-| `EventDeleteCubit` | `delete/cubit/event_delete_cubit.dart` | `@injectable` | `ResultState<String>` | Emite el `eventId` al terminar con éxito |
-| `AttendeesCubit` | `attendees/attendees_cubit.dart` | manual | `ResultState<List<EventRegistrationModel>>` | Optimistic update en approve/reject |
-| `LiveTrackingCubit` | `tracking/cubit/live_tracking_cubit.dart` | vía factory | `LiveTrackingState` (freezed) | No se registra en DI directamente; se crea via `LiveTrackingCubitFactory` |
-| `RegistrationFormCubit` | `event_registration/presentation/cubit/` | `@injectable` | `ResultState<EventRegistrationModel>` | Pre-llena desde auth user → rider profile |
-| `MyRegistrationsCubit` | `event_registration/presentation/` | `@injectable` + global | `ResultState<List<RegistrationWithEvent>>` | Declarado en `main.dart` `MultiBlocProvider`. Combina registrations + eventos |
+| `EventsCubit` | `list/events_cubit.dart` | manual | `ResultState<List<EventModel>>` | Dos factories: `EventsCubit(GetEventsUseCase)` y `.myEvents(GetMyEventsUseCase)` |
+| `EventFormCubit` | `form/cubit/event_form_cubit.dart` | `@injectable` | `EventFormState` (freezed) | save + cover IA + waypoints + tipo de ruta |
+| `EventDetailCubit` | `detail/cubit/event_detail_cubit.dart` | manual | `EventDetailState` (freezed) | event + registration + lastUpdated |
+| `EventDeleteCubit` | `delete/cubit/event_delete_cubit.dart` | `@injectable` | `ResultState<String>` | Emite `eventId` al borrar |
+| `AttendeesCubit` | `attendees/attendees_cubit.dart` | manual | `ResultState<List<EventRegistrationModel>>` | Optimistic approve/reject |
+| `LiveTrackingCubit` | `tracking/cubit/live_tracking_cubit.dart` | factory custom | `LiveTrackingState` (freezed) | Ver §6 |
 
-### `EventFormState` — estructura detallada
-```dart
-@freezed
-class EventFormState {
-  ResultState<EventModel> saveResult;        // resultado del guardado
-  ResultState<String> coverGenerationResult; // URL de cover generada
-  List<String> waypoints;                    // nombres de waypoints (ruta custom)
-  List<AddressLocation?> waypointLocations;  // coordenadas paralelas
-  RouteType routeType;                       // simple | custom
-  String? meetingPointName;
-  String? destinationName;
-  AddressLocation? meetingPointLocation;
-  AddressLocation? destinationLocation;
-}
+### `EventsCubit`
+
+**Estado interno:**
+```
+_allEvents: List<EventModel>
+_filters: EventFilters
+_searchQuery: String
 ```
 
-### `EventDetailState` — estructura detallada
-```dart
-@freezed
-class EventDetailState {
-  ResultState<EventRegistrationModel?> registrationResult; // inscripción del usuario actual
-  ResultState<EventModel> eventResult;                     // datos del evento
-  ResultState<EventModel>? lastUpdatedEventResult;         // solo cuando hay start/stop/publish
-}
+**`EventFilters`** (value class):
 ```
-`lastUpdatedEventResult` se usa como canal de one-shot: el listener en la UI lo consume y llama `clearLastUpdatedEvent()` inmediatamente.
-
-### `LiveTrackingState` — estructura detallada
-```dart
-@freezed
-class LiveTrackingState {
-  ResultState<List<RiderTrackingModel>> ridersResult;
-  bool isTracking;                    // GPS activo y sesión iniciada
-  double totalDistanceMeters;         // distancia acumulada del device actual
-  double? currentUserLatitude;
-  double? currentUserLongitude;
-  ResultState<SosAlertModel?> sosAlertResult;  // alerta SOS entrante
-  bool hasSentSos;                    // si este usuario ya mandó SOS
-  bool isFinished;                    // organizador finalizó la rodada → auto-pop
-}
-```
-
----
-
-## 6. Flujo de tracking en vivo
-
-### Arquitectura de capas del tracking
-
-```
-LiveTrackingCubit
-    │
-    ├─ GPS (geolocator)          → posición del device cada N segundos
-    │                              máx 1 push al backend cada 4s
-    │
-    ├─ StartTrackingUseCase      → HTTP POST /events/:id/tracking/session/start
-    │                              registra al rider en el snapshot
-    │
-    ├─ UpdateLocationUseCase     → TrackingWsClient.publishLocation()
-    │                              mensaje WS tipo: tracking.location.update
-    │
-    ├─ WatchActiveRidersUseCase  → TrackingRepositoryImpl.watchActiveRiders()
-    │   │                          (Stream multi: WS + snapshot HTTP inicial)
-    │   └─ TrackingWsClient      → WebSocket wss://…/tracking/ws?eventId=…&token=…
-    │
-    └─ StopTrackingUseCase       → WS tracking.leave + HTTP POST session/stop
-```
-
-### Mensajes WebSocket (tipo `string` JSON)
-
-| Dirección | Tipo | Descripción |
-|---|---|---|
-| cliente → servidor | `tracking.join` | unirse a la sesión del evento |
-| cliente → servidor | `tracking.location.update` | lat/lng/speed/distance/battery |
-| cliente → servidor | `tracking.sos` | alerta SOS del rider |
-| cliente → servidor | `tracking.leave` | salida limpia de la sesión |
-| servidor → cliente | `tracking.snapshot` | estado completo de todos los riders activos |
-| servidor → cliente | `tracking.rider.updated` | actualización de un rider |
-| servidor → cliente | `tracking.rider.left` | rider salió |
-| servidor → cliente | `tracking.sos.alert` | SOS broadcast |
-| servidor → cliente | `tracking.event.ended` | organizador terminó la rodada |
-
-### `TrackingWsClient` — comportamiento interno
-
-- **Singleton `@lazySingleton`:** una sola instancia por sesión de app.
-- **Reconexión automática:** si el WS se desconecta inesperadamente, reintenta en 2 segundos. Se cancela si fue desconexión manual (`leaveSession`).
-- **Cache en memoria `_ridersByUserId`:** Map<userId, RiderTrackingModel>. Se actualiza con cada mensaje y se emite como lista al stream.
-- **Streams broadcast:** `_ridersController`, `_sosController`, `_eventEndedController` — todos broadcast para soportar múltiples listeners.
-- **Snapshot inicial HTTP:** `TrackingRepositoryImpl` pide el snapshot vía `TrackingService.snapshot()` para no esperar el primer mensaje WS.
-
-### `LiveTrackingSessionHolder` — keep-alive del cubit
-
-```dart
-@lazySingleton
-class LiveTrackingSessionHolder {
-  LiveTrackingCubit? _cubit;
-  String? _eventId;
-
-  LiveTrackingCubit obtainForEvent({eventId, eventOwnerId}) {
-    // Reutiliza el cubit si es el mismo evento
-    // Si es diferente evento → cierra el anterior, crea uno nuevo
-    // Llama cubit.start() automáticamente
-  }
-
-  stopSessionForEvent(String eventId) // llamado cuando organizador termina la rodada
-}
-```
-
-**Por qué existe:** cuando el usuario navega fuera del LiveMapPage, el cubit NO se cierra. El GPS y la sesión WS continúan activos hasta que el organizador termine la rodada o el usuario cierre sesión.
-
-### Throtling del backend push
-
-El cubit actualiza el estado de la UI con cada posición GPS, pero solo hace push al backend si han pasado **≥ 4 segundos** desde el último envío:
-```dart
-if (now.difference(_lastBackendPush!) < const Duration(seconds: 4)) {
-  // solo actualiza estado local, no envía al WS
-  emit(state.copyWith(totalDistanceMeters: ..., currentUserLatitude: ...));
-  return;
-}
-```
-
-### Roles en tracking
-
-- `RiderTrackingRole.lead` → el `ownerId` del evento
-- `RiderTrackingRole.rider` → todos los demás
-- El organizador (lead) puede ver `OrganizerControlBar` con el botón de "Terminar rodada".
-
----
-
-## 7. Rutas de navegación
-
-```dart
-// Definidas en lib/shared/router/app_routes.dart
-AppRoutes.events              → '/events'
-AppRoutes.myEvents            → '/events/mine'
-AppRoutes.myDrafts            → '/events/drafts'
-AppRoutes.createEvent         → '/events/create'
-AppRoutes.editEvent           → '/events/edit'           extra: EventModel
-AppRoutes.eventDetail         → '/events/detail'         extra: EventModel
-AppRoutes.eventDetailById     → '/events/detail-by-id'   extra: String (eventId)
-AppRoutes.eventRegistration   → '/events/registration'   extra: EventRegistrationParams
-AppRoutes.eventAttendees      → '/events/attendees'      extra: EventModel
-AppRoutes.liveMap             → '/events/live-map'       extra: EventModel
-AppRoutes.participants        → '/events/participants'
-AppRoutes.myRegistrations     → '/events/my-registrations'
-AppRoutes.registrationDetail  → '/events/registration-detail'  extra: RegistrationDetailExtra
-AppRoutes.riderProfile        → '/events/attendees/rider-profile'
-```
-
-**Consideraciones de navegación:**
-- `EventDetailPage` vs `EventDetailByIdPage`: la primera recibe el modelo completo (desde la lista), la segunda solo el `id` y lo carga desde el API (usado en deep links).
-- Al editar un evento, `context.pushNamed(AppRoutes.editEvent, extra: event)` y el resultado es `EventModel?` — si es no-null, el detalle actualiza su `currentEvent` local.
-- `EventDetailView` tiene `PopScope` custom: si viene desde `EventDetailByIdPage`, hace pop normal; si viene desde la lista, retorna el `EventModel` actualizado para que la lista lo refleje sin refetch.
-
----
-
-## 8. API endpoints
-
-### Eventos
-| Método | Endpoint | Descripción |
-|---|---|---|
-| `GET` | `/events` | Listar eventos (filtros: type, dateFrom, dateTo, city) |
-| `GET` | `/events/my` | Mis eventos como organizador |
-| `GET` | `/events/:id` | Detalle de evento |
-| `POST` | `/events` | Crear evento (body: `EventDto.toJson()`) |
-| `PATCH` | `/events/:id` | Actualizar evento |
-| `DELETE` | `/events/:id` | Eliminar evento |
-| `PATCH` | `/events/:id/publish` | Publicar borrador → scheduled |
-| `POST` | `/events/generate-cover` | Generar portada con IA (`{title, eventType, city}`) |
-
-### Tracking
-| Método | Endpoint | Descripción |
-|---|---|---|
-| `POST` | `/events/:id/tracking/start` | Iniciar rodada (state → inProgress) |
-| `POST` | `/events/:id/tracking/end` | Terminar rodada (state → finished) |
-| `POST` | `/events/:id/tracking/session/start` | Registrar rider en sesión tracking |
-| `POST` | `/events/:id/tracking/session/stop` | Retirar rider de sesión |
-| `GET` | `/events/:id/tracking/snapshot` | Estado actual de todos los riders |
-| `WS` | `/tracking/ws?eventId=…&token=…` | WebSocket de tracking en tiempo real |
-
-### Inscripciones
-| Método | Endpoint | Descripción |
-|---|---|---|
-| `POST` | `/events/:id/registrations` | Crear inscripción (+ `saveToProfile?`) |
-| `GET` | `/events/:id/registrations` | Listar inscripciones del evento (owner) |
-| `GET` | `/events/:id/registrations/me` | Mi inscripción en este evento |
-| `PATCH` | `/registrations/:id` | Actualizar inscripción |
-| `POST` | `/registrations/:id/cancel` | Cancelar |
-| `POST` | `/registrations/:id/approve` | Aprobar (owner) |
-| `POST` | `/registrations/:id/reject` | Rechazar (owner) |
-| `POST` | `/registrations/:id/ready-for-edit` | Permitir que el rider edite |
-| `GET` | `/registrations/me` | Mis inscripciones como rider |
-
----
-
-## 9. Sub-features en detalle
-
-### 9.1 Lista de eventos (`/events`)
-
-**Archivo principal:** `presentation/list/events_page.dart`  
-**Cubit:** `EventsCubit`
-
-`EventsCubit` tiene **dos constructores factory**:
-```dart
-EventsCubit(GetEventsUseCase, ...)          // todos los eventos
-EventsCubit.myEvents(GetMyEventsUseCase, .) // solo mis eventos como organizador
-```
-Ambos exponen la misma interfaz. La diferencia está en `_fetchFn` que se inyecta en el constructor.
-
-**Filtrado híbrido:**
-- Filtros de servidor: `type`, `dateFrom`, `dateTo`, `city` → enviados al API.
-- Filtros locales (en `_applyFiltersAndEmit()`): `difficulties`, `freeOnly`, `multiBrandOnly`, `searchQuery`.
-
-`_allEvents` es el cache en memoria. Cuando cambian filtros de servidor → `fetchEvents()`. Cuando cambian filtros locales o searchQuery → solo `_applyFiltersAndEmit()` sin refetch.
-
-**`EventFilters`** (clase value):
-```dart
 types: Set<EventType>
 difficulties: Set<EventDifficulty>
 city: String?
@@ -658,337 +380,384 @@ freeOnly: bool
 multiBrandOnly: bool
 ```
 
-**Actualización optimista de la lista:**
-- `addEvent(event)` → prepend al cache local, sin refetch.
-- `updateEvent(event)` → reemplaza in-place por ID.
-- `removeEvent(eventId)` → filtra del cache.
-- `startEvent(event)` → hace update al API y si éxito, llama `updateEvent`.
+**Filtros**:
+- **Server-side** (en `getEvents` query): `type`, `dateFrom`, `dateTo`, `city`.
+- **Client-side** (en `_applyFiltersAndEmit`): `difficulties`, `freeOnly`, `multiBrandOnly`, `searchQuery`.
+
+**Mutaciones locales (sin re-fetch):**
+- `addEvent(EventModel)` — prepend a cache.
+- `updateEvent(EventModel)` — reemplaza in-place por id.
+- `removeEvent(String eventId)` — filtra del cache.
+- `startEvent(EventModel)` — actualiza via API, si éxito → `updateEvent` local.
+
+> `_applyFiltersAndEmit()` primero emite `ResultState.initial()` y luego el dato filtrado. Esto fuerza rebuild incluso si el dato resultante es idéntico (workaround para `Equatable`).
+
+### `EventFormState` (freezed)
+```dart
+ResultState<EventModel> saveResult;
+ResultState<String> coverGenerationResult;
+List<String> waypoints;
+List<AddressLocation?> waypointLocations;
+RouteType routeType;
+String? meetingPointName, destinationName;
+AddressLocation? meetingPointLocation, destinationLocation;
+```
+
+Métodos clave:
+- `initialize({event?})` — modo create/edit + detecta routeType.
+- `setRoute({meetingPointName, destinationName, locations})`.
+- `addWaypoint(String)` (max 9), `setWaypointLocation(i, AddressLocation?)`, `removeWaypoint(i)`, `setRouteType(type)`, `clearWaypoints()`.
+- `_buildRouteGeoJson(RouteType)` → `{routeType, points: [{lat, lng, label}]}`.
+- `saveEvent(event, {localCoverImagePath?, remoteCoverImageUrl?})`.
+- `generateCover({title, eventType, city})`, `resetCoverGeneration()`.
+- `buildEventToSave() → EventModel?` — valida y construye.
+- `buildDraftToSave() → EventModel?` — solo requiere `name`.
+- `saveDraft({localCoverImagePath?, remoteCoverImageUrl?})`.
+
+### `EventDetailState` (freezed)
+```dart
+ResultState<EventRegistrationModel?> registrationResult;
+ResultState<EventModel> eventResult;
+ResultState<EventModel>? lastUpdatedEventResult;     // one-shot: consumir y limpiar
+```
+
+Métodos:
+- `loadEvent(id)`, `loadMyRegistration(eventId)`.
+- `cancelRegistration(registrationId)`, `updateRegistration(EventRegistrationModel)`.
+- `startEvent(event)`, `publishEvent(event)`, `stopEvent(event)`.
+- `clearLastUpdatedEvent()` — para liberar el canal one-shot.
+
+### `LiveTrackingState` (freezed)
+```dart
+ResultState<List<RiderTrackingModel>> ridersResult;
+bool isTracking;                         // GPS activo
+double totalDistanceMeters;              // del dispositivo actual
+double? currentUserLatitude, currentUserLongitude;
+ResultState<SosAlertModel?> sosAlertResult;
+bool hasSentSos;                         // ya envió SOS este usuario
+bool isFinished;                         // organizador terminó → auto-pop
+```
+
+### `AttendeesCubit`
+
+Métodos:
+- `fetchAttendees(eventId)`.
+- `approveRegistration(id)` — **optimistic + `unawaited`**: cambia state local primero, dispara API en background sin rollback.
+- `rejectRegistration(id)` — idem.
+- `setReadyForEdit(id)` — espera resultado y refetcha.
 
 ---
 
-### 9.2 Formulario de evento
+## 6. Flujo de tracking en vivo
 
-**Archivos clave:**
-- `event_form_page.dart` → provee `EventFormCubit` + `FormImageCubit`
-- `event_form_view.dart` → bottom bar con botones guardar/publicar
-- `event_form_content.dart` → scroll con todas las secciones
-- `event_form_cubit.dart` → lógica de negocio del form
+### Capas
 
-**Secciones del form (en orden de la UI):**
-1. Cover (imagen local o generada con IA)
-2. `EventFormBasicInfoSection` → nombre + descripción (Quill) + ciudad
-3. `EventFormDateTimeSection` → fecha rango + toggle multi-día + hora de concentración
-4. `EventFormLocationsSection` → tipo de ruta + punto encuentro + destino (o constructor custom)
-5. `EventFormDifficultySection` → selector de chiles (1–5)
-6. `EventFormEventTypeSection` → chips de tipo
-7. `EventFormMultiBrandSection` → toggle + selector de marcas
-8. `EventFormMaxParticipantsSection` → contador manual
-9. `EventFormPriceSection` → input precio (vacío = gratis)
-
-**Constantes de campos:** `EventFormFields` (clase abstracta con string constants).
-
-**Flujo de guardado:**
 ```
-Usuario toca "Guardar y publicar"
-  → EventFormCubit.buildEventToSave()    // valida form, construye EventModel
-  → EventFormCubit.saveEvent(event, localCoverImagePath?, remoteCoverImageUrl?)
-     → isEditing ? _saveExistingEvent() : _createNewEvent()
-        → Si hay imagen local: uploadEventImage() → PATCH/POST con imageUrl
-        → Si hay URL remota (IA): PATCH/POST con esa URL
-        → Si no hay imagen: PATCH/POST sin cambios de imagen
-
-Usuario toca "Guardar como borrador"
-  → EventFormCubit.buildDraftToSave()    // no valida, solo requiere nombre
-  → EventFormCubit.saveDraft()
-     → mismo flujo pero state = EventState.draft
+LiveTrackingCubit
+    │
+    ├─ GPS (geolocator)           → posición cada N segundos (filter 12m, interval 4s)
+    │                               throttle ≥ 4s entre pushes al backend
+    │
+    ├─ StartTrackingUseCase       → POST /events/:id/tracking/session/start (HTTP)
+    │                               registra al rider en el snapshot
+    │
+    ├─ UpdateLocationUseCase      → TrackingWsClient.publishLocation()
+    │                               WS message type: tracking.location.update
+    │
+    ├─ WatchActiveRidersUseCase   → TrackingRepositoryImpl.watchActiveRiders()
+    │   │                          (Stream.multi: snapshot HTTP inicial + WS updates)
+    │   └─ TrackingWsClient        → WebSocket wss://…/tracking/ws?eventId=…&token=…
+    │
+    └─ StopTrackingUseCase        → WS tracking.leave + POST session/stop
 ```
 
-**Construcción del `routeGeoJson`:**
+### Mensajes WebSocket
+
+| Dirección | Tipo | Descripción |
+|---|---|---|
+| client → server | `tracking.join` | unirse a sesión del evento |
+| client → server | `tracking.location.update` | lat/lng/speed/distance/battery |
+| client → server | `tracking.sos` | alerta SOS |
+| client → server | `tracking.leave` | salida limpia |
+| server → client | `tracking.snapshot` | estado completo de todos los riders |
+| server → client | `tracking.rider.updated` | actualización de un rider |
+| server → client | `tracking.rider.left` | rider salió |
+| server → client | `tracking.sos.alert` | SOS broadcast |
+| server → client | `tracking.event.ended` | organizador terminó |
+
+### `TrackingWsClient` (`@lazySingleton`)
+
+- **Cache** `_ridersByUserId: Map<String, RiderTrackingModel>` actualizado por cada mensaje, emitido como lista al stream.
+- **Streams broadcast**: `_ridersController`, `_sosController`, `_eventEndedController` — soportan múltiples listeners.
+- **Reconexión automática 2s** si la conexión se cae sin desconexión manual.
+- **Snapshot inicial HTTP** via `TrackingService.snapshot()` antes del primer mensaje WS.
+- **URI WS**: `parsedBase.scheme == 'https' ? 'wss' : 'ws'`, path `${baseUrl}/tracking/ws`, query `eventId=…&token=…`.
+
+### `LiveTrackingSessionHolder` — keep-alive
 ```dart
-_buildRouteGeoJson(routeType) → {
-  'routeType': 'simple' | 'custom',
-  'points': [{'lat': ..., 'lng': ..., 'label': ...}]
+@lazySingleton
+class LiveTrackingSessionHolder {
+  LiveTrackingCubit? _cubit;
+  String? _eventId;
+
+  LiveTrackingCubit obtainForEvent({eventId, eventOwnerId}) { ... }
+  void stopSessionForEvent(String eventId) { ... }
 }
 ```
-- `simple`: 2 puntos → meetingPoint + destination
-- `custom`: N waypoints (hasta 9) con sus coordenadas
 
----
+**Por qué existe:** cuando el usuario navega fuera de `LiveMapPage`, el cubit NO se cierra. El GPS y la sesión WS continúan activos hasta que el organizador termine la rodada o el usuario cierre sesión.
 
-### 9.3 Constructor de ruta personalizada
+### Throttling backend push
 
-**Archivo:** `presentation/form/screens/event_route_config_screen.dart`  
-**Límite:** 9 waypoints máximo (`_maxWaypoints = 9`)
-
-**Dos formas de agregar waypoints:**
-1. **Búsqueda textual** (`WaypointSearchField` → `PlaceService` Mapbox Geocoding) → devuelve nombre + coordenadas.
-2. **"Seleccionar en mapa" (pick mode):** overlay de pin centrado en el mapa → usuario mueve el mapa → confirma → geocodificación inversa del punto central.
-
-**Renderizado en mapa (Mapbox):**
-- Pin numerado de color (verde para el primero, naranja para el resto) via `buildNumberedPinImage`.
-- Polyline naranja (`#F98C1F`, ancho 3) como `LineLayer` sobre `GeoJsonSource`.
-- Al agregar/quitar waypoint → `_renderWaypointMode()` regenera pins y polilínea.
-- Camera se ajusta automáticamente con `cameraForCoordinatesPadding` para mostrar todos los puntos.
-
-**Persistencia del estado:** las coordenadas se guardan en el cubit como `waypointLocations: List<AddressLocation?>` (paralelas a `waypoints: List<String>`). Si el índice no tiene coordenadas, el pin no se renderiza pero el waypoint sí queda registrado.
-
----
-
-### 9.4 Detalle de evento
-
-**Archivos:**
-- `event_detail_page.dart` → recibe `EventModel` completo por `extra`
-- `event_detail_by_id_page.dart` → recibe `String id`, llama `loadEvent()` al init
-- `event_detail_view.dart` → StatefulWidget con `currentEvent` mutable local
-- `event_route_map_screen.dart` → pantalla full-screen con la ruta del evento en Mapbox
-
-**Lógica de `EventDetailView`:**
-- Mantiene `currentEvent` como estado local (actualizado por listeners de cubit).
-- Detecta si el usuario es owner (`currentEvent.ownerId == currentUserId`).
-- Si es owner: muestra `EventDetailOwnerLifecycleBar` (botones start/stop/publish/mapa).
-- Si no es owner: muestra `EventDetailCTABar` (botones inscribirse/seguir en vivo/estado inscripción).
-
-**Acciones del bottom bar:**
-
-*Owner (`EventDetailOwnerLifecycleBar`):*
-| Estado | Acciones disponibles |
-|---|---|
-| `draft` | Publicar |
-| `scheduled` | Iniciar rodada, Ver mapa en vivo |
-| `inProgress` | Terminar rodada, Ver mapa en vivo |
-| `finished` / `cancelled` | (sin barra) |
-
-*Rider (`EventDetailCTABar`):*
-| Estado inscripción | Acción |
-|---|---|
-| ninguna | Inscribirse |
-| `pending` | Ver estado (bottom sheet: ver detalle / cancelar) |
-| `approved` | Seguir en vivo + ver estado |
-| `cancelled` | Inscribirse de nuevo |
-| `readyForEdit` | Editar inscripción |
-
-**Manejo del `PopScope`:**
-Si viene de la lista de eventos (`isFromEventDetailByIdPage = false`), el pop retorna el `currentEvent` actualizado para que la lista actualice su cache sin refetch.
-
----
-
-### 9.5 Formulario de inscripción
-
-**Archivos:**
-- `event_registration_page.dart` → provee `RegistrationFormCubit`
-- `registration_form_view.dart` → scroll + bottom bar
-- `registration_form_content.dart` → campos del form
-
-**Cubit `RegistrationFormCubit`:**
-
-Pre-llenado en cascada (primer match gana, sin sobreescribir campos ya llenos):
-1. Si hay `existingRegistration` → pre-llena desde los datos existentes.
-2. Si es nueva inscripción → pre-llena desde `AuthService.currentUser`.
-3. Asíncrono (100ms delay) → intenta pre-llenar desde `RiderProfileModel`.
-
-**Modo edición vs. creación:**
-- `isEditing = (existingRegistration != null)`
-- En modo edición: `update()` al API (PATCH), no `create()`.
-- `resetFormToEmpty()` solo funciona si no está en modo edición.
-
-**`saveToProfile` checkbox:**
-Si el usuario marca "Guardar para futuros eventos", el flag se incluye en el body del request. El backend persiste los datos como `RiderProfileModel`. Localmente también se llama `SaveRiderProfileUseCase` al guardar con éxito.
-
-**Campos del form** (`RegistrationFormFields`):
-```
-fullName, identificationNumber, birthDate, phone, email, residenceCity,
-eps, medicalInsurance, bloodType, emergencyContactName, emergencyContactPhone,
-vehicleId
+```dart
+if (now.difference(_lastBackendPush!) < const Duration(seconds: 4)) {
+  // solo actualiza estado local, no envía al WS
+  emit(state.copyWith(totalDistanceMeters: ..., currentUserLatitude: ...));
+  return;
+}
 ```
 
-**Selector de vehículo:**
-- `VehicleSelectorField` lee del `VehicleCubit` (global).
-- Muestra `VehicleSelectorLoading` o `VehicleSelectorEmpty` según el estado.
-- El vehicleId seleccionado se guarda como form field.
+GPS updates a la UI = inmediato. WS push = max cada 4s.
 
----
+### Roles
 
-### 9.6 Gestión de asistentes (organizador)
+- `RiderTrackingRole.lead` → `user.id == eventOwnerId`.
+- `RiderTrackingRole.rider` → cualquier otro.
 
-**Archivos:**
-- `attendees/attendees_page.dart` → provee `AttendeesCubit`
-- `attendees/attendees_cubit.dart`
-- `attendees/attendee_action_confirmation.dart` → dialog de confirmación
-- `attendees/widgets/attendees_data_view.dart` → vista con filtros y lista
+El lead puede ver `OrganizerControlBar` con botón "Terminar rodada".
 
-**`AttendeesCubit`:**
-- `fetchAttendees(eventId)` → GET `/events/:id/registrations`
-- `approveRegistration(id)` → **optimistic**: actualiza estado local primero, luego llama API en background (`unawaited`). No hace refetch.
-- `rejectRegistration(id)` → igual que approve.
-- `setReadyForEdit(id)` → espera resultado, luego hace `fetchAttendees()` de nuevo.
+### Flujo SOS
 
-**Filtro de asistentes:**
-`AttendeeFilterBottomSheet` permite filtrar por `RegistrationStatus`.  
-Los registros se muestran en dos secciones:
-- Pendientes → `AttendeePendingRequestCard` (con botones aprobar/rechazar)
-- Procesados → `AttendeeProcessedItem`
-
----
-
-### 9.7 Live Tracking (mapa en vivo)
-
-**Archivos:**
-- `live_map_page.dart` → provee `LiveTrackingCubit` via `LiveTrackingSessionHolder`
-- `live_map_body.dart` → lógica de UI
-- `live_map_widget.dart` → Mapbox MapWidget con markers
-- `live_map_app_bar.dart`
-- `organizer_control_bar.dart` → botón "Terminar rodada" (solo lead)
-- `rider_telemetry_panel.dart` + `rider_telemetry_card.dart` → telemetría de riders
-- `sos_button.dart` / `sos_confirm_dialog.dart` / `sos_banner.dart` → flujo SOS
-
-**Flujo de inicio:**
 ```
-LiveMapPage.initState()
-  → LiveTrackingSessionHolder.obtainForEvent(eventId, eventOwnerId)
-     → crea LiveTrackingCubit via LiveTrackingCubitFactory
-     → llama cubit.start() automáticamente
+Rider tap SOS → SosConfirmDialog
+  → LiveTrackingCubit.triggerSos()
+     → TrackingRepository.publishSos() → WS 'tracking.sos'
+     → hasSentSos = true → muestra SosActiveOverlay
 
-cubit.start()
-  → pide permisos de ubicación
-  → obtiene posición inicial
-  → llama StartTrackingUseCase → POST session/start
-  → inicia GPS stream (_listenPosition)
-  → suscribe a riders WS stream (_subscribeToRiders)
-  → suscribe a SOS alerts (_subscribeToSosAlerts)
-  → suscribe a evento terminado (_subscribeToEventEnded)
+Otros riders reciben → sosAlertResult = Data(SosAlertModel)
+  → SosBanner con nombre + teléfono
 ```
 
-**Flujo de finalización por organizador:**
+### Flujo de finalización por organizador
+
 ```
-Usuario toca "Terminar rodada" → EndRideConfirmDialog
+Lead tap "Terminar rodada" → EndRideConfirmDialog
   → LiveTrackingCubit.endRide(eventId)
      → TrackingRepository.endRide() → POST /events/:id/tracking/end
-     → WS broadcast: tracking.event.ended
-  → Todos los riders: isFinished = true → auto-pop de LiveMapPage
-  → EventDetailCubit.stopEvent() también es llamado (actualiza estado del evento a finished)
-  → LiveTrackingSessionHolder.stopSessionForEvent() → cierra el cubit
+     → WS broadcast 'tracking.event.ended'
+  → Todos: isFinished = true → auto-pop de LiveMapPage
+  → EventDetailCubit.stopEvent() actualiza state local a finished
+  → LiveTrackingSessionHolder.stopSessionForEvent() → cierra cubit
 ```
-
-**Flujo SOS:**
-```
-Rider toca SOS → SosConfirmDialog
-  → LiveTrackingCubit.triggerSos()
-     → TrackingRepository.publishSos() → WS tracking.sos
-     → hasSentSos = true → muestra SosActiveOverlay
-Otros riders reciben: sosAlertResult = Data(SosAlertModel)
-  → SosBanner con nombre + teléfono del rider en emergencia
-```
-
-**Marcadores en el mapa:**
-- `InitialsMarkerIcon` → avatar con iniciales del rider (pintado como imagen PNG para Mapbox annotations).
-- Colores diferenciados: lead (verde), riders (naranja).
-- Actualización: cada vez que `ridersResult` cambia, se regeneran todas las annotations.
 
 ---
 
-### 9.8 Mis inscripciones
+## 7. Sub-features
 
-**Archivos:**
-- `my_registrations_page.dart` → top-level page
-- `my_registrations_cubit.dart` → `@injectable`, inyectado globalmente en `main.dart`
+### Lista (`/events`, `/events/mine`)
+`EventsCubit` con dos factories. Filtros server + client. Optimistic add/update/remove. Pull-to-refresh dispara `fetchEvents()`.
 
-**`MyRegistrationsCubit`** emite `List<RegistrationWithEvent>`:
-```dart
-class RegistrationWithEvent {
-  final EventRegistrationModel registration;
-  final EventModel? event;  // puede ser null si falló la carga
-}
-```
+### Formulario (`/events/create`, `/events/edit`)
+`EventFormPage` → provee `EventFormCubit` + `FormImageCubit`. `EventFormView` orquesta secciones:
 
-Al cargar, hace `Future.wait` para obtener el `EventModel` de cada inscripción (por `eventId`). Esto puede hacer muchas llamadas en paralelo si hay muchas inscripciones.
+1. Cover (local o IA via `generateCover`).
+2. Basic info: name + description (Quill) + city.
+3. Date/time: rango + toggle multi-day + meetingTime.
+4. Locations: tipo de ruta + meeting + destination (o constructor custom).
+5. Difficulty: 1–5 chiles.
+6. Event type: chips.
+7. Multi-brand: toggle + selector.
+8. Max participants.
+9. Price.
 
-**Filtros:**
-- `statusFilter: Set<RegistrationStatus>` → filtrado en memoria.
-- `searchQuery` → filtra por `fullName` y `eventName`.
+Constantes en `EventFormFields` (clase abstracta con string constants).
 
-**Al cancelar una inscripción:**
-- `cancelRegistration()` → llama API, actualiza `_registrations` localmente, re-emite.
-- `onChangeRegistration()` → actualizado desde `EventDetailView` cuando el rider cancela desde ahí.
+### Constructor de ruta personalizada (`form/screens/event_route_config_screen.dart`)
+- Hasta 9 waypoints.
+- Búsqueda textual (`PlaceService` Mapbox Geocoding) o "Seleccionar en mapa" (pin centrado + geocoding inverso).
+- Renderiza pin numerado (verde primer, naranja resto) + polyline naranja (`#F98C1F`).
+- `cameraForCoordinatesPadding` ajusta la cámara para mostrar todos los puntos.
+
+### Detalle (`/events/detail`, `/events/detail-by-id`)
+- `EventDetailPage` recibe `EventModel` completo.
+- `EventDetailByIdPage` recibe `String id`, llama `loadEvent()` (usado en deep links).
+- `EventDetailView` mantiene `currentEvent` mutable local; listener de `lastUpdatedEventResult` lo sincroniza.
+- Owner ve `EventDetailOwnerLifecycleBar` (start/stop/publish/mapa); rider ve `EventDetailCTABar` (inscribirse/seguir/cancelar según estado).
+- `PopScope` custom: si viene desde lista, pop retorna `EventModel` actualizado para refrescar el cache de la lista sin re-fetch.
+
+### Asistentes (`/events/attendees`)
+`AttendeesCubit` con optimistic approve/reject. Filtros por `RegistrationStatus`. Dos secciones: Pendientes + Procesados.
+
+### Live tracking (`/events/live-map`)
+Ver §6.
+
+### Borradores (`/events/drafts`)
+`MyDraftsPage` usa `EventsCubit.myEvents` con filtro local `EventState.draft`. Continúa edición via `editEvent`.
 
 ---
 
-### 9.9 Mis borradores
+## 8. Rutas de navegación
 
-**Archivo:** `drafts/my_drafts_page.dart`  
-Usa `EventsCubit.myEvents` con filtro `EventState.draft` aplicado localmente.  
-Desde aquí se puede continuar editando un borrador → navega a `AppRoutes.editEvent`.
+```dart
+AppRoutes.events              → '/events'
+AppRoutes.myEvents            → '/events/mine'
+AppRoutes.myDrafts            → '/events/drafts'
+AppRoutes.createEvent         → '/events/create'
+AppRoutes.editEvent           → '/events/edit'           extra: EventModel?
+AppRoutes.eventDetail         → '/events/detail'         extra: EventModel
+AppRoutes.eventDetailById     → '/events/detail-by-id'   extra: String | query 'id'
+AppRoutes.eventAttendees      → '/events/attendees'      extra: EventModel
+AppRoutes.liveMap             → '/events/live-map'       extra: EventModel
+AppRoutes.participants        → '/events/participants'   extra: EventModel
+AppRoutes.eventRegistration   → '/events/registration'   extra: EventRegistrationParams   (feature event_registration)
+AppRoutes.myRegistrations     → '/events/my-registrations'                                (feature event_registration)
+AppRoutes.registrationDetail  → '/events/registration-detail'  extra: RegistrationDetailExtra (feature event_registration)
+AppRoutes.riderProfile        → '/events/attendees/rider-profile'  extra: String userId   (feature users)
+```
+
+**Consideraciones:**
+- `EventDetailByIdPage` admite `eventId` por query string (`?id=xxx`) o por `extra`.
+- Guard de `AppRouter.redirect`: si la ruta es `eventRegistration` y el usuario es el owner del evento, se redirige a `eventDetailById?id=...`.
 
 ---
 
-## 10. Patrones y trampas conocidas
+## 9. API endpoints
 
-### DTO hereda de Model (patrón especial en eventos)
-`EventDto extends EventModel` es inusual. El resto del codebase usa DTOs separados.  
-**Impacto:** nunca crees un `EventDto` manualmente fuera del repositorio; usa siempre `EventModel` y la extension `toJson()`.
+### Eventos
+| Método | Endpoint |
+|---|---|
+| `GET` | `/events` (query: `type`, `dateFrom`, `dateTo`, `city`) |
+| `GET` | `/events/my` |
+| `GET` | `/events/:id` |
+| `POST` | `/events` |
+| `PATCH` | `/events/:id` |
+| `DELETE` | `/events/:id` |
+| `PATCH` | `/events/:id/publish` |
+| `POST` | `/events/generate-cover` (body: `{title, eventType, city}`) |
 
-### `routeGeoJson` y `waypoints` — dos representaciones
-Existe duplicación entre `waypoints: List<String>` (nombres) y `routeGeoJson.points` (coordenadas).  
-- `waypoints` se usa para mostrar la lista de paradas textuales.
-- `routeGeoJson.points` contiene coordenadas y se usa para renderizar el mapa.
-- Al detectar si es ruta custom: `waypoints.isNotEmpty || routeGeoJson['routeType'] == 'custom'`.
+### Tracking
+| Método | Endpoint |
+|---|---|
+| `POST` | `/events/:id/tracking/start` (state → inProgress) |
+| `POST` | `/events/:id/tracking/end` (state → finished) |
+| `POST` | `/events/:id/tracking/session/start` |
+| `POST` | `/events/:id/tracking/session/stop` |
+| `GET` | `/events/:id/tracking/snapshot` |
+| WS | `/tracking/ws?eventId=…&token=…` |
 
-### `_applyFiltersAndEmit()` emite `ResultState.initial()` antes del dato
+Definidos en `lib/core/http/api_routes.dart` (`ApiRoutes.events`, `eventTrackingStart(id)`, etc.).
+
+---
+
+## 10. Conexiones con otros features
+
+| Feature | Conexión |
+|---|---|
+| `event_registration` | Importa `EventModel`; `EventDetailCubit` lee la inscripción del usuario actual. CTA "Inscribirse" navega a `eventRegistration` |
+| `vehicles` | Vehículo se asocia a la inscripción del evento (en feature `event_registration`) |
+| `users` | `RiderProfilePage` se navega desde `AttendeesPage` para ver un asistente |
+| `home` | `HomeData.upcomingEvents` reutiliza `EventDto` y `EventModel` |
+| `notifications` | Tipos `newRegistration`, `registrationApproved`, `registrationRejected`, eventos del SOS y tracking |
+
+---
+
+## 11. Patrones y trampas conocidas
+
+### `EventDto extends EventModel`
+Patrón inusual: el DTO hereda del modelo. Permite `EventDto.fromJson` + `EventModelExtension.toJson` sin castear manualmente.
+
+### Igualdad por `id` solamente
+`EventModel ==` compara solo `id`. Dos eventos con `id == null` (no persistidos) se consideran iguales. **No usar `Set<EventModel>` o `List.contains()` con objetos no persistidos.**
+
+### `routeGeoJson` y `waypoints` duplican información
+- `waypoints: List<String>` — nombres textuales.
+- `routeGeoJson['points']` — coordenadas.
+
+Para detectar ruta custom: `waypoints.isNotEmpty || routeGeoJson?['routeType'] == 'custom'`.
+
+### `_applyFiltersAndEmit` emite `initial` antes del dato
 ```dart
-void _applyFiltersAndEmit() {
-  emit(const ResultState.initial());  // ← fuerza rebuild en la UI
-  // ...
-  emit(ResultState.data(data: filtered));
-}
+emit(const ResultState.initial());
+emit(ResultState.data(data: filtered));
 ```
-Esto es intencional para forzar que `BlocBuilder` detecte el cambio cuando el nuevo dato es idéntico al anterior.
+Workaround para forzar rebuild cuando el dato resultante es idéntico al anterior.
 
-### `AttendeesCubit` — approve/reject es fire-and-forget
-```dart
-unawaited(_approveUseCase(registrationId));
-```
-Si la llamada API falla, la UI ya mostró el estado aprobado. No hay rollback. Tener esto en cuenta si se implementa manejo de errores en el futuro.
+### `AttendeesCubit` approve/reject es fire-and-forget
+`unawaited(_approveUseCase(id))`. Si falla, la UI ya muestra "aprobado". No hay rollback. Para errores críticos, considerar manejar.
 
 ### `LiveTrackingCubit` no se registra en DI directamente
-Se crea via `LiveTrackingCubitFactory` que inyecta todas las dependencias. `LiveTrackingSessionHolder` es el único punto de acceso.
+Se crea via `LiveTrackingCubitFactory` que inyecta todas las dependencias. El acceso pasa por `LiveTrackingSessionHolder`.
 
-### Pre-llenado del form de inscripción — timing con delays
-`RegistrationFormCubit.initialize()` usa `Future.delayed` para pre-llenar campos:
-- 50ms → auth user
-- 100ms → existing registration
-- 120ms → rider profile
+### `MyRegistrationsCubit` — N+1 evento (en event_registration)
+Documentado en [event_registration.md §15](./event_registration.md#15-conexión-con-events-n1). Cada inscripción dispara un `getEventById` para enriquecer.
 
-Esto es necesario porque `formKey.currentState` puede ser null si el widget no ha montado aún. Si se refactoriza la inicialización, verificar que el form esté listo antes de llamar `patchValue`.
+### `EventDetailView.currentEvent` mutable
+Estado local de `State<EventDetailView>` sincronizado con `lastUpdatedEventResult` del cubit. Si refactorizas, mantener la sincronización.
 
-### `MyRegistrationsCubit.fetchMyRegistrations()` — N+1 de eventos
-Hace una llamada por evento distinto. Con muchas inscripciones esto puede ser lento.  
-Futuro: el backend podría retornar el snapshot del evento inline en la inscripción.
+### `TrackingWsClient.publishSos` usa null-aware map literal
+```dart
+{
+  'latitude': ?latitude,
+  'longitude': ?longitude,
+}
+```
+Sintaxis de Dart 3.x: si `latitude` es null, la key se omite. **Válida**, no es bug. Sin embargo no funciona en versiones anteriores a Dart 3.
 
-### `EventDetailView.currentEvent` — estado local mutable
-`currentEvent` es un campo de `State<EventDetailView>` que se actualiza via `setState()`.  
-Listeners de `EventDetailCubit.lastUpdatedEventResult` sincronizan este campo cuando el organizador cambia el estado del evento.
+### Conversor de dificultad acepta `int` o `String`
+`EventDifficultyConverter` admite valores `1..5` o strings `EASY/MODERATE/MEDIUM/HARD/VERY_HARD`. Si la API cambia el formato, ambos casos están cubiertos.
+
+### Firebase Storage path para nueva creación
+Antes de tener `eventId`, sube a `events/{ownerId}-{microseconds}/cover.jpg`. Permite múltiples versiones antes de persistir el evento. Limpiar archivos huérfanos sería un tema aparte (cron en backend).
+
+### `getMyEvents` no acepta filtros
+A diferencia de `getEvents`, `getMyEvents` no recibe query params. Todos los filtros para mis eventos se aplican client-side en `_applyFiltersAndEmit`.
+
+### Live tracking sin manejo de error de WS
+Si la conexión WS no se puede establecer (token expirado, sin red), `_ridersController.addError(StateError(...))`. La UI puede mostrar error pero no hay UI explícita de reintentar — depende del `2s reconnect`.
+
+### Geolocator distance filter 12m + interval Android 4s
+Ver `tracking_location_settings.dart`. Si se cambian estos valores, ajustar el throttle del cubit para evitar desbalance entre datos locales y servidor.
+
+### Apple sign-in es stub
+Mencionado en `authentication.md`. No es directamente del feature events, pero `AuthCubit` lo usa al autenticar para poder tracking.
+
+### `EventState` default es `scheduled`
+Si se omite el campo en el modelo (creación nueva sin pasar state), defaultea a `scheduled`. Para crear un borrador, hay que setearlo explícitamente a `EventState.draft`.
 
 ---
 
-## 11. Archivos clave de referencia rápida
+## 12. Archivos clave de referencia rápida
 
 | Qué buscar | Archivo |
 |---|---|
-| Modelo del evento | `lib/features/events/domain/model/event_model.dart` |
-| CRUD del evento (API) | `lib/features/events/data/service/event_service.dart` |
-| CRUD del evento (repo) | `lib/features/events/data/repository/event_repository_impl.dart` |
-| Listado + filtros cubit | `lib/features/events/presentation/list/events_cubit.dart` |
-| Formulario cubit | `lib/features/events/presentation/form/cubit/event_form_cubit.dart` |
-| Formulario UI (secciones) | `lib/features/events/presentation/form/widgets/event_form_content.dart` |
+| Modelo del evento + enums | `lib/features/events/domain/model/event_model.dart` |
+| Modelo tracking | `lib/features/events/domain/model/rider_tracking_model.dart` |
+| Modelo SOS | `lib/features/events/domain/model/sos_alert_model.dart` |
+| Repo events interface | `lib/features/events/domain/repository/event_repository.dart` |
+| Repo tracking interface | `lib/features/events/domain/repository/tracking_repository.dart` |
+| Use cases | `lib/features/events/domain/use_cases/` |
+| Service events Retrofit | `lib/features/events/data/service/event_service.dart` |
+| Service tracking (Dio manual) | `lib/features/events/data/service/tracking_service.dart` |
+| WS client | `lib/features/events/data/service/tracking_ws_client.dart` |
+| Service cover IA | `lib/features/events/data/service/event_cover_service.dart` |
+| DTO eventos | `lib/features/events/data/dto/event_dto.dart` |
+| Converters de enums | `lib/features/events/data/dto/event_dto_converters.dart` |
+| Cubit lista | `lib/features/events/presentation/list/events_cubit.dart` |
+| Cubit formulario | `lib/features/events/presentation/form/cubit/event_form_cubit.dart` |
+| Estado del form | `lib/features/events/presentation/form/cubit/event_form_state.dart` |
 | Constructor de ruta | `lib/features/events/presentation/form/screens/event_route_config_screen.dart` |
-| Detalle cubit | `lib/features/events/presentation/detail/cubit/event_detail_cubit.dart` |
-| Detalle UI principal | `lib/features/events/presentation/detail/event_detail_view.dart` |
-| WebSocket de tracking | `lib/features/events/data/service/tracking_ws_client.dart` |
-| Live tracking cubit | `lib/features/events/presentation/tracking/cubit/live_tracking_cubit.dart` |
-| Keep-alive tracking | `lib/features/events/presentation/tracking/live_tracking_session_holder.dart` |
-| Modelo inscripción | `lib/features/event_registration/domain/model/event_registration_model.dart` |
-| Form inscripción cubit | `lib/features/event_registration/presentation/cubit/registration_form_cubit.dart` |
-| Asistentes cubit | `lib/features/events/presentation/attendees/attendees_cubit.dart` |
-| Mis inscripciones cubit | `lib/features/event_registration/presentation/my_registrations_cubit.dart` |
-| Rutas de navegación | `lib/shared/router/app_routes.dart` |
-| Endpoints API | `lib/core/http/api_routes.dart` |
+| Cubit detalle | `lib/features/events/presentation/detail/cubit/event_detail_cubit.dart` |
+| View detalle (PopScope) | `lib/features/events/presentation/detail/event_detail_view.dart` |
+| Page detalle por id | `lib/features/events/presentation/detail/event_detail_by_id_page.dart` |
+| Cubit live tracking | `lib/features/events/presentation/tracking/cubit/live_tracking_cubit.dart` |
+| Estado live tracking | `lib/features/events/presentation/tracking/cubit/live_tracking_state.dart` |
+| Factory del cubit tracking | `lib/features/events/presentation/tracking/cubit/live_tracking_cubit_factory.dart` |
+| Session holder keep-alive | `lib/features/events/presentation/tracking/live_tracking_session_holder.dart` |
+| Settings de location | `lib/features/events/presentation/tracking/tracking_location_settings.dart` |
+| Page live map | `lib/features/events/presentation/tracking/live_map_page.dart` |
+| Cubit asistentes | `lib/features/events/presentation/attendees/attendees_cubit.dart` |
+| Cubit borrar | `lib/features/events/presentation/delete/cubit/event_delete_cubit.dart` |
+| Page borradores | `lib/features/events/presentation/drafts/my_drafts_page.dart` |
 | Constantes del form | `lib/features/events/constants/event_form_fields.dart` |
+| Endpoints API | `lib/core/http/api_routes.dart` |
+| Rutas app | `lib/shared/router/app_routes.dart` |
