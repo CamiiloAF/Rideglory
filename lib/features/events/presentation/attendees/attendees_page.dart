@@ -6,6 +6,7 @@ import 'package:rideglory/features/event_registration/domain/use_cases/approve_r
 import 'package:rideglory/features/event_registration/domain/use_cases/get_event_registrations_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/reject_registration_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/set_registration_ready_for_edit_use_case.dart';
+import 'package:rideglory/features/events/data/cache/attendees_cache.dart';
 import 'package:rideglory/features/events/presentation/attendees/attendees_cubit.dart';
 import 'package:rideglory/features/events/presentation/attendees/widgets/attendees_view.dart';
 
@@ -22,6 +23,7 @@ class AttendeesPage extends StatelessWidget {
         getIt<ApproveRegistrationUseCase>(),
         getIt<RejectRegistrationUseCase>(),
         getIt<SetRegistrationReadyForEditUseCase>(),
+        getIt<AttendeesCache>(),
       )..fetchAttendees(event.id!),
       child: AttendeesView(event: event),
     );

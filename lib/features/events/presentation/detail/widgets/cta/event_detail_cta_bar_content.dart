@@ -17,6 +17,7 @@ class EventDetailCtaBarContent extends StatelessWidget {
     required this.registration,
     required this.onRegister,
     this.onRegistrationStatusTap,
+    this.onOpenRegistrationDetail,
     this.onFollowLive,
   });
 
@@ -24,10 +25,16 @@ class EventDetailCtaBarContent extends StatelessWidget {
   final EventRegistrationModel? registration;
   final VoidCallback onRegister;
   final void Function(EventRegistrationModel)? onRegistrationStatusTap;
+  final void Function(EventRegistrationModel)? onOpenRegistrationDetail;
   final VoidCallback? onFollowLive;
 
   @override
   Widget build(BuildContext context) {
+    // Owner cancelled the event → cancelled event bar (overrides registration)
+    if (event.state == EventState.cancelled) {
+      return const EventDetailCancelledEventBar();
+    }
+
     // LIVE event + approved registration → full-width "Seguir rodada en vivo"
     final isLive = event.state == EventState.inProgress;
     if (isLive &&
@@ -36,13 +43,15 @@ class EventDetailCtaBarContent extends StatelessWidget {
       return EventDetailLiveUserBar(onFollowLive: onFollowLive!);
     }
 
-    // No registration → DEFAULT state
-    if (registration == null) {
+    // Sin inscripción o el usuario canceló la suya → DEFAULT (puede volver a inscribirse).
+    // Una cancelación voluntaria del usuario no debe pintarse como evento cancelado
+    // ni cerrar la posibilidad de reinscribirse.
+    if (registration == null ||
+        registration!.status == RegistrationStatus.cancelled) {
       return EventDetailDefaultBar(event: event, onRegister: onRegister);
     }
 
-    // Registration exists → render state-specific bar
-    return switch (registration!.status) {
+    final Widget bar = switch (registration!.status) {
       RegistrationStatus.pending => EventDetailPendingBar(
           registration: registration!,
           onCancel: onRegistrationStatusTap != null
@@ -56,12 +65,24 @@ class EventDetailCtaBarContent extends StatelessWidget {
               : null,
         ),
       RegistrationStatus.rejected => const EventDetailRejectedBar(),
-      RegistrationStatus.cancelled => const EventDetailCancelledEventBar(),
+      RegistrationStatus.cancelled =>
+        EventDetailDefaultBar(event: event, onRegister: onRegister),
       RegistrationStatus.readyForEdit => EventDetailReadyForEditBar(
           onEdit: onRegistrationStatusTap != null
               ? () => onRegistrationStatusTap!(registration!)
               : null,
         ),
     };
+    // Si el usuario canceló su inscripción mostramos el bar de "inscribirme",
+    // que no debe abrir el detalle al tocarlo (no hay inscripción activa).
+    if (registration!.status == RegistrationStatus.cancelled ||
+        onOpenRegistrationDetail == null) {
+      return bar;
+    }
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => onOpenRegistrationDetail!(registration!),
+      child: bar,
+    );
   }
 }

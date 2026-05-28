@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/features/event_registration/domain/use_cases/approve_registration_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/cancel_event_registration_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/get_event_registrations_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/get_my_registration_for_event_use_case.dart';
+import 'package:rideglory/features/event_registration/domain/use_cases/reject_registration_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_event_by_id_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/publish_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
@@ -31,6 +33,8 @@ class EventDetailPage extends StatelessWidget {
               getIt<UpdateEventUseCase>(),
               getIt<PublishEventUseCase>(),
               getIt<GetEventRegistrationsUseCase>(),
+              getIt<ApproveRegistrationUseCase>(),
+              getIt<RejectRegistrationUseCase>(),
             )
               ..loadMyRegistration(params.event.id!)
               ..loadAttendees(params.event.id!),

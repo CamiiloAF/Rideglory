@@ -108,7 +108,7 @@ class EventDetailHeaderSection extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    '${context.l10n.event_organizedBy} ${context.l10n.event_organizerPlaceholder}',
+                    '${context.l10n.event_organizedBy} ${event.ownerName ?? context.l10n.event_organizerPlaceholder}',
                     style: const TextStyle(
                       color: AppColors.primary,
                       fontSize: 12,

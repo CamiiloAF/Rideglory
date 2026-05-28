@@ -659,6 +659,19 @@
   "registration_statusBadgeReadyForEdit": "Para editar",
   "event_registrationsTab": "Inscritos",
   "event_manageAttendeesTitle": "Gestionar inscritos",
+  "event_attendee_joinedDaysAgo": "Se unió hace {days} días",
+  "@event_attendee_joinedDaysAgo": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "event_attendee_joinedHoursAgo": "Se unió hace {hours} h",
+  "@event_attendee_joinedHoursAgo": {
+    "placeholders": { "hours": { "type": "int" } }
+  },
+  "event_attendee_joinedMinutesAgo": "Se unió hace {minutes} min",
+  "@event_attendee_joinedMinutesAgo": {
+    "placeholders": { "minutes": { "type": "int" } }
+  },
+  "event_attendee_joinedRecently": "Se unió hace un momento",
   "sos_banner_subtitle_with_phone": "Toca para ver acciones",
   "sos_banner_subtitle_no_phone": "Sin teléfono registrado",
   "sos_call_action": "Llamar",

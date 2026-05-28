@@ -1873,6 +1873,24 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_manageAttendeesTitle => 'Gestionar inscritos';
 
   @override
+  String event_attendee_joinedDaysAgo(int days) {
+    return 'Se unió hace $days días';
+  }
+
+  @override
+  String event_attendee_joinedHoursAgo(int hours) {
+    return 'Se unió hace $hours h';
+  }
+
+  @override
+  String event_attendee_joinedMinutesAgo(int minutes) {
+    return 'Se unió hace $minutes min';
+  }
+
+  @override
+  String get event_attendee_joinedRecently => 'Se unió hace un momento';
+
+  @override
   String get sos_banner_subtitle_with_phone => 'Toca para ver acciones';
 
   @override

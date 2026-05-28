@@ -354,12 +354,19 @@ class EventDetailViewState extends State<EventDetailView> {
                       onRegistrationStatusTap: (reg) {
                         if (reg.status == RegistrationStatus.pending ||
                             reg.status == RegistrationStatus.approved) {
-                          _showRegistrationOptions(context, reg);
+                          confirmCancelRegistration(context, reg);
                         } else if (reg.status ==
                             RegistrationStatus.readyForEdit) {
                           navigateToRegistration(context, reg);
                         }
                       },
+                      onOpenRegistrationDetail: (reg) => context.pushNamed(
+                        AppRoutes.registrationDetail,
+                        extra: RegistrationDetailExtra(
+                          registration: reg,
+                          eventOwnerId: currentEvent.ownerId,
+                        ),
+                      ),
                     ),
                     orElse: () => const SizedBox.shrink(),
                   );
@@ -369,63 +376,4 @@ class EventDetailViewState extends State<EventDetailView> {
     );
   }
 
-  Future<void> _showRegistrationOptions(
-    BuildContext context,
-    EventRegistrationModel registration,
-  ) async {
-    await showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: Colors.transparent, // Intentional: showModalBottomSheet requires transparent to show custom Container decoration
-      builder: (sheetCtx) => Container(
-        decoration: const BoxDecoration(
-          color: AppColors.darkCard,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        padding: EdgeInsets.fromLTRB(
-          24,
-          16,
-          24,
-          MediaQuery.of(context).padding.bottom + 24,
-        ),
-        child: SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.info_outline_rounded,
-                    color: AppColors.textOnDarkPrimary),
-                title: Text(
-                  context.l10n.registration_viewDetail,
-                  style: const TextStyle(color: AppColors.textOnDarkPrimary),
-                ),
-                onTap: () {
-                  Navigator.of(sheetCtx).pop(); // Custom: closing a modal bottom sheet — context.pop() would close the parent route, not the sheet
-                  context.pushNamed(
-                    AppRoutes.registrationDetail,
-                    extra: RegistrationDetailExtra(
-                      registration: registration,
-                      eventOwnerId: currentEvent.ownerId,
-                    ),
-                  );
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.cancel_outlined,
-                    color: AppColors.error),
-                title: Text(
-                  context.l10n.event_cancelRegistration,
-                  style: const TextStyle(color: AppColors.error),
-                ),
-                onTap: () {
-                  Navigator.of(sheetCtx).pop(); // Custom: closing a modal bottom sheet — context.pop() would close the parent route, not the sheet
-                  confirmCancelRegistration(context, registration);
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }

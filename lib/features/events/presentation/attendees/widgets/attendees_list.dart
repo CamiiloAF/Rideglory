@@ -28,7 +28,8 @@ class AttendeesList extends StatelessWidget {
 
   static bool _isProcessed(EventRegistrationModel registration) =>
       registration.status == RegistrationStatus.approved ||
-      registration.status == RegistrationStatus.rejected;
+      registration.status == RegistrationStatus.rejected ||
+      registration.status == RegistrationStatus.cancelled;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,9 @@ class AttendeesList extends StatelessWidget {
     final processed = visible.where(_isProcessed).toList();
 
     return RefreshIndicator(
-      onRefresh: () => context.read<AttendeesCubit>().fetchAttendees(event.id!),
+      onRefresh: () => context
+          .read<AttendeesCubit>()
+          .fetchAttendees(event.id!, forceRefresh: true),
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         children: [
