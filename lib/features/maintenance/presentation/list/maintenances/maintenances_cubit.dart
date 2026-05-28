@@ -43,7 +43,12 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
   Future<void> fetchMaintenances() async {
     emit(const ResultState.loading());
     final (startDate, endDate) = _filters.dateWindow;
+    // Si el filtro tiene exactamente 1 vehículo, consultamos solo ese endpoint
+    // en vez de iterar todos los vehículos del usuario.
+    final scopedVehicleId =
+        _filters.vehicleIds.length == 1 ? _filters.vehicleIds.first : null;
     final result = await _getMaintenancesUseCase.execute(
+      vehicleId: scopedVehicleId,
       types: _filters.types.isEmpty ? null : _filters.types,
       startDate: startDate,
       endDate: endDate,
