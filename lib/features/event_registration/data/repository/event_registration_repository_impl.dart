@@ -23,10 +23,10 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
       function: () async {
         final dto = await _service.create(
           eventId: registration.eventId,
-          body: registration.toDto().toJson(),
+          body: registration.toJson(),
           saveToProfile: saveToProfile,
         );
-        return dto.toModel();
+        return dto;
       },
     );
   }
@@ -49,10 +49,10 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
       function: () async {
         final dto = await _service.update(
           registrationId: id,
-          body: registration.toDto().toJson(),
+          body: registration.toJson(),
           saveToProfile: saveToProfile,
         );
-        return dto.toModel();
+        return dto;
       },
     );
   }
@@ -75,7 +75,7 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
     return executeService(
       function: () async {
         final rows = await _service.findByEvent(eventId);
-        return rows.map((dto) => dto.toModel()).toList();
+        return List<EventRegistrationModel>.from(rows);
       },
     );
   }
@@ -86,7 +86,7 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
     return executeService(
       function: () async {
         final rows = await _service.findMyRegistrations();
-        return rows.map((dto) => dto.toModel()).toList();
+        return List<EventRegistrationModel>.from(rows);
       },
     );
   }
@@ -96,8 +96,7 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
   getMyRegistrationForEvent(String eventId) {
     return executeService(
       function: () async {
-        final dto = await _service.findMyRegistrationForEvent(eventId);
-        return dto?.toModel();
+        return await _service.findMyRegistrationForEvent(eventId);
       },
     );
   }
@@ -108,8 +107,7 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
   ) {
     return executeService(
       function: () async {
-        final dto = await _service.approve(registrationId);
-        return dto.toModel();
+        return await _service.approve(registrationId);
       },
     );
   }
@@ -120,8 +118,7 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
   ) {
     return executeService(
       function: () async {
-        final dto = await _service.reject(registrationId);
-        return dto.toModel();
+        return await _service.reject(registrationId);
       },
     );
   }
@@ -131,10 +128,8 @@ class EventRegistrationRepositoryImpl implements EventRegistrationRepository {
   setRegistrationReadyForEdit(String registrationId) {
     return executeService(
       function: () async {
-        final dto = await _service.setReadyForEdit(registrationId);
-        return dto.toModel();
+        return await _service.setReadyForEdit(registrationId);
       },
     );
   }
-
 }

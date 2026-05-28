@@ -20,7 +20,7 @@ class SoatRepositoryImpl implements SoatRepository {
   ) async {
     try {
       final dto = await _soatService.getSoat(vehicleId);
-      return Right(dto.toModel());
+      return Right(dto);
     } on DioException catch (dioException) {
       if (dioException.response?.statusCode == 404) {
         return const Right(null);
@@ -46,7 +46,7 @@ class SoatRepositoryImpl implements SoatRepository {
           vehicleId,
           soat.toRequestJson(),
         );
-        return dto.toModel();
+        return dto;
       },
     );
   }

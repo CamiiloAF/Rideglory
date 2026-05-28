@@ -83,7 +83,7 @@ Each feature is organized into three layers:
 - **Constraints:** No Flutter imports, no HTTP calls, no `dart:io`
 
 **Data** (`lib/features/<feature>/data/`)
-- **DTOs:** Data Transfer Objects for API serialization/deserialization (generated with `json_serializable`)
+- **DTOs:** Data Transfer Objects for API serialization/deserialization (generated with `json_serializable`). **Pattern B is mandatory:** every DTO with a 1:1 domain model MUST extend that model (`XDto extends XModel`) and define a companion `XModelExtension.toJson()` extension. `toModel()`, `fromModel()`, and `.toDto()` are forbidden. Canonical reference: `lib/features/events/data/dto/event_dto.dart`. Exceptions (composite DTOs, request-only DTOs) documented in `.cursor/rules/rideglory-coding-standards.mdc` and `docs/prds/prd-dto-inheritance-standard.md`.
 - **Repositories:** Concrete implementations of domain interfaces
 - **Services:** Retrofit clients for HTTP calls; WebSocket clients; Firebase integrations
 - **Constraints:** No UI/widgets; `BuildContext` forbidden
@@ -123,7 +123,7 @@ class ResultState<T> {
 2. **Data** (`lib/features/vehicles/data/`)
    - `VehicleDto`: JSON-serializable DTO matching API response
    - `VehicleService`: Retrofit-generated REST client with endpoints (`@GET`, `@POST`, etc.)
-   - `VehicleRepositoryImpl`: converts DTOs to domain models; handles Firebase image uploads; wraps HTTP errors in `Either<DomainException, Model>`
+   - `VehicleRepositoryImpl`: uses DTOs directly as domain models (Pattern B — DTO extends Model); handles Firebase image uploads; wraps HTTP errors in `Either<DomainException, Model>`
 
 3. **Presentation** (`lib/features/vehicles/presentation/`)
    - `VehicleCubit`: singleton cubit with `fetchMyVehicles()`, `selectVehicle()`, `addVehicleLocally()` methods

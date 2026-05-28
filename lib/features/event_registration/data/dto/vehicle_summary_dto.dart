@@ -4,31 +4,27 @@ import 'package:rideglory/features/event_registration/domain/model/vehicle_summa
 part 'vehicle_summary_dto.g.dart';
 
 @JsonSerializable()
-class VehicleSummaryDto {
+class VehicleSummaryDto extends VehicleSummaryModel {
   const VehicleSummaryDto({
-    required this.id,
-    this.brand,
-    this.model,
-    this.licensePlate,
-    this.vin,
+    required super.id,
+    super.brand,
+    super.model,
+    super.licensePlate,
+    super.vin,
   });
-
-  final String id;
-  final String? brand;
-  final String? model;
-  final String? licensePlate;
-  final String? vin;
 
   factory VehicleSummaryDto.fromJson(Map<String, dynamic> json) =>
       _$VehicleSummaryDtoFromJson(json);
 
   Map<String, dynamic> toJson() => _$VehicleSummaryDtoToJson(this);
+}
 
-  VehicleSummaryModel toModel() => VehicleSummaryModel(
+extension VehicleSummaryModelExtension on VehicleSummaryModel {
+  Map<String, dynamic> toJson() => VehicleSummaryDto(
     id: id,
     brand: brand,
     model: model,
     licensePlate: licensePlate,
     vin: vin,
-  );
+  ).toJson();
 }

@@ -34,32 +34,6 @@ class VehicleDto extends VehicleModel {
       _$VehicleDtoFromJson(json);
 
   Map<String, dynamic> toJson() => _$VehicleDtoToJson(this);
-
-  VehicleModel toModel() {
-    return VehicleModel(
-      id: id,
-      name: name,
-      brand: brand,
-      model: model,
-      year: year,
-      currentMileage: currentMileage,
-      licensePlate: licensePlate,
-      vin: vin,
-      purchaseDate: purchaseDate,
-      imageUrl: imageUrl,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
-      isArchived: isArchived,
-      isMainVehicle: isMainVehicle,
-      soatStatus: soatStatus,
-      soatExpiryDate: soatExpiryDate,
-      color: color,
-      engine: engine,
-      horsepower: horsepower,
-      torque: torque,
-      weight: weight,
-    );
-  }
 }
 
 extension VehicleModelExtension on VehicleModel {
