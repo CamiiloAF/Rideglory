@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
+/// Confirmation modal (affirmative + cancel) built on the unified [AppModal]
+/// design. Returns `true` when confirmed, `false`/`null` when cancelled.
 class ConfirmationDialog {
   static Future<bool?> show({
     required BuildContext context,
@@ -18,92 +20,30 @@ class ConfirmationDialog {
     final resolvedCancelLabel = cancelLabel ?? context.l10n.cancel;
     final resolvedConfirmLabel = confirmLabel ?? context.l10n.confirm;
 
-    return showDialog<bool>(
+    return AppModal.show<bool>(
       context: context,
+      title: title,
+      description: content,
+      variant: dialogType.variant,
       barrierDismissible: isDismissible,
-      builder: (dialogContext) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Header
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(
-                          dialogType.icon,
-                          color: dialogType.color,
-                          size: 28,
-                        ),
-                        AppSpacing.hGapMd,
-                        Expanded(
-                          child: Text(
-                            title,
-                            style: dialogContext.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    AppSpacing.gapLg,
-                    // Content
-                    Text(
-                      content,
-                      style: dialogContext.bodyMedium?.copyWith(height: 1.5),
-                    ),
-                  ],
-                ),
-              ),
-              // Actions
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 16,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: AppButton(
-                        label: resolvedCancelLabel,
-                        onPressed: onCancel != null
-                            ? () => onCancel(dialogContext)
-                            : () => Navigator.of(dialogContext).pop(false),
-                        variant: AppButtonVariant.primary,
-                        style: AppButtonStyle.outlined,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                    ),
-                    AppSpacing.hGapMd,
-                    Expanded(
-                      child: AppButton(
-                        label: resolvedConfirmLabel,
-                        onPressed: () {
-                          Navigator.of(dialogContext).pop(true);
-                          if (onConfirm != null) {
-                            onConfirm();
-                          }
-                        },
-                        variant: confirmType == DialogActionType.danger
-                            ? AppButtonVariant.danger
-                            : AppButtonVariant.primary,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+      actions: [
+        AppModalAction(
+          label: resolvedConfirmLabel,
+          emphasis: confirmType == DialogActionType.danger
+              ? AppModalActionEmphasis.danger
+              : AppModalActionEmphasis.primary,
+          onPressed: () {
+            Navigator.of(context).pop(true);
+            onConfirm?.call();
+          },
         ),
-      ),
+        AppModalAction.neutral(
+          label: resolvedCancelLabel,
+          onPressed: onCancel != null
+              ? () => onCancel(context)
+              : () => Navigator.of(context).pop(false),
+        ),
+      ],
     );
   }
 }
