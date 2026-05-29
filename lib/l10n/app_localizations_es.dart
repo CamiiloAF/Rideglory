@@ -1225,6 +1225,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_selectVehicleToPreload => 'Selecciona un vehículo';
 
   @override
+  String get registration_selectVehiclePlaceholder => 'Selecciona tu vehículo';
+
+  @override
+  String get registration_changeVehicle => 'Cambiar';
+
+  @override
+  String get registration_vehicleEmptyStateSubtitle =>
+      'Registra tu moto para inscribirte en el evento.';
+
+  @override
   String get registration_vehicleBrandNotAllowed =>
       'La marca seleccionada no está permitida para este evento. Las marcas pemitidas son';
 

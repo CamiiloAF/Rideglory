@@ -2410,6 +2410,24 @@ abstract class AppLocalizations {
   /// **'Selecciona un vehículo'**
   String get registration_selectVehicleToPreload;
 
+  /// No description provided for @registration_selectVehiclePlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona tu vehículo'**
+  String get registration_selectVehiclePlaceholder;
+
+  /// No description provided for @registration_changeVehicle.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar'**
+  String get registration_changeVehicle;
+
+  /// No description provided for @registration_vehicleEmptyStateSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Registra tu moto para inscribirte en el evento.'**
+  String get registration_vehicleEmptyStateSubtitle;
+
   /// No description provided for @registration_vehicleBrandNotAllowed.
   ///
   /// In es, this message translates to:

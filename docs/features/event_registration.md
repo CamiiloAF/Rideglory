@@ -229,6 +229,8 @@ lib/features/event_registration/presentation/
     ├── inscription_card.dart
     ├── inscription_secondary_action_button.dart
     ├── vehicle_selector_field.dart
+    ├── vehicle_selector_card.dart
+    ├── vehicle_selector_placeholder_card.dart
     ├── vehicle_selector_empty.dart
     ├── vehicle_selector_loading.dart
     ├── save_to_profile_checkbox.dart
@@ -378,7 +380,15 @@ Definido en `lib/features/events/domain/model/rider_profile_model.dart`. Se obti
 ### `VehicleSelectorField`
 > `presentation/widgets/vehicle_selector_field.dart`
 
-`FormBuilderField<String>` con nombre `RegistrationFormFields.vehicleId`. Validador `required`. Al tap abre `VehicleSelectionBottomSheet.show(context)` y al elegir `vehicle.id` lo emite con `field.didChange()`.
+`FormBuilderField<String>` con nombre `RegistrationFormFields.vehicleId`. Validador `required`. Al elegir un vehículo emite `vehicle.id` con `field.didChange()`. El `errorText` se pinta debajo del contenedor con `colorScheme.error`.
+
+Renderiza una tarjeta (radius 16, `AppColors.darkTertiary`, borde `darkBorderPrimary`) con dos sub-estados:
+- **Vehículo seleccionado** → `VehicleSelectorCard` (`vehicle_selector_card.dart`): cuadro de ícono `primarySubtle` 60x60 con `Icons.two_wheeler`, `${brand} ${model}`, chip de placa (`darkBgSecondary`, radius 8) + separador `·` + año, y botón "Cambiar" (`registration_changeVehicle`) en `primarySubtle`. Placa/año ausentes se omiten sin dejar el `·` colgando; si no hay marca/modelo cae a `vehicle.name`.
+- **Hay vehículos pero ninguno seleccionado** → `VehicleSelectorPlaceholderCard` (`vehicle_selector_placeholder_card.dart`): mismo contenedor en modo invitación con texto `registration_selectVehiclePlaceholder` ("Selecciona tu vehículo") y un chevron; tocar el contenedor abre el bottom sheet.
+
+Ambos sub-estados abren `VehicleSelectionBottomSheet.show(context)` para elegir/cambiar el vehículo.
+
+`VehicleSelectorEmpty` (`vehicle_selector_empty.dart`) — estado sin vehículos en el garage: tarjeta centrada con ícono de moto en cuadro `primarySubtle`, título (`registration_vehicleEmptyStateTitle`), subtítulo gris (`registration_vehicleEmptyStateSubtitle`) y un `AppButton` filled/pill (`registration_createVehicleCta`) que dispara `onCreate`.
 
 ### Estados manejados desde `RegistrationFormContent`
 
