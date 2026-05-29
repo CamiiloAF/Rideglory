@@ -221,6 +221,7 @@ class _SoatDataViewState extends State<SoatDataView> {
               label: context.l10n.soat_view_document,
               onPressed: _openDocument,
               isLoading: _openingDocument,
+              style: AppButtonStyle.outlined,
               isFullWidth: true,
             ),
           ],
