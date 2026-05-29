@@ -17,13 +17,13 @@ class InfoChipTooltip extends StatelessWidget {
   final MaintenanceModel maintenance;
 
   void _showMileageDialog(BuildContext context) {
-    showDialog( // Custom: MileageInfoDialog is an info-only tooltip — AppDialog requires action buttons
+    showDialog<void>(
       context: context,
-      barrierColor: AppColors.darkBgPrimary.withValues(alpha: .4),
-      builder: (context) => MileageInfoDialog(
+      barrierColor: AppColors.darkBgPrimary.withValues(alpha: 0.82),
+      builder: (dialogContext) => MileageInfoDialog(
         typeColor: typeColor,
         currentMileage: currentMileage,
-        distanceUnitLabel: context.l10n.maintenance_km,
+        distanceUnitLabel: dialogContext.l10n.maintenance_km,
       ),
     );
   }
@@ -34,7 +34,8 @@ class InfoChipTooltip extends StatelessWidget {
       message: context.l10n.maintenance_currentMileage,
       preferBelow: false,
       child: Material(
-        color: Colors.transparent, // Intentional: Material requires transparent color to show InkWell splash correctly
+        color: Colors
+            .transparent, // Intentional: Material requires transparent color to show InkWell splash correctly
         child: InkWell(
           onTap: () => _showMileageDialog(context),
           customBorder: const CircleBorder(),

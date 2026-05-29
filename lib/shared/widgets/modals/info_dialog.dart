@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
+/// Informational modal with a single dismiss button, built on the unified
+/// [AppModal] design.
 class InfoDialog {
   static Future<void> show({
     required BuildContext context,
@@ -11,62 +13,20 @@ class InfoDialog {
     DialogType type = DialogType.information,
   }) {
     final resolvedButtonLabel = buttonLabel ?? context.l10n.accept;
-    return showDialog<void>(
+    return AppModal.show<void>(
       context: context,
-      builder: (dialogContext) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Header
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(type.icon, color: type.color, size: 28),
-                        AppSpacing.hGapMd,
-                        Expanded(
-                          child: Text(
-                            title,
-                            style: dialogContext.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    AppSpacing.gapLg,
-                    // Content
-                    Text(
-                      content,
-                      style: dialogContext.bodyMedium?.copyWith(height: 1.5),
-                    ),
-                  ],
-                ),
-              ),
-              // Action
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 16,
-                ),
-                child: AppButton(
-                  label: resolvedButtonLabel,
-                  onPressed: () => Navigator.of(dialogContext).pop(),
-                  variant: AppButtonVariant.primary,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                ),
-              ),
-            ],
-          ),
+      title: title,
+      description: content,
+      variant: type.variant,
+      barrierDismissible: true,
+      actions: [
+        AppModalAction(
+          label: resolvedButtonLabel,
+          // Pop the root navigator: showDialog defaults to useRootNavigator,
+          // so the dialog route lives there, not on the caller's navigator.
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
         ),
-      ),
+      ],
     );
   }
 }

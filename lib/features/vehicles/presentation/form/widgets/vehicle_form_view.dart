@@ -107,7 +107,6 @@ class _VehicleFormViewState extends State<VehicleFormView> {
       cancelLabel: context.l10n.cancel,
       confirmLabel: context.l10n.delete,
       confirmType: DialogActionType.danger,
-      dialogType: DialogType.confirmation,
       onConfirm: () {
         final vehicles = context.read<VehicleCubit>().availableVehicles;
         context.read<VehicleDeleteCubit>().deleteVehicle(
