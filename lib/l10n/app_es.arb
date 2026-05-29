@@ -935,6 +935,7 @@
   "soat_edit_btn": "Editar",
   "soat_edit_title": "Editar SOAT",
   "soat_doc_tap_to_open": "Toca para abrir",
+  "soat_doc_attached_title": "Documento adjunto",
   "soat_doc_replace": "Reemplazar archivo",
   "soat_doc_change": "Cambiar archivo",
   "soat_doc_add_label": "Agregar documento SOAT",

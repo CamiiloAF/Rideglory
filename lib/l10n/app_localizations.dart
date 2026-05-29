@@ -4447,6 +4447,12 @@ abstract class AppLocalizations {
   /// **'Toca para abrir'**
   String get soat_doc_tap_to_open;
 
+  /// No description provided for @soat_doc_attached_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Documento adjunto'**
+  String get soat_doc_attached_title;
+
   /// No description provided for @soat_doc_replace.
   ///
   /// In es, this message translates to:

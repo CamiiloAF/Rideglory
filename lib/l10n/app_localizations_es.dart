@@ -2348,6 +2348,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get soat_doc_tap_to_open => 'Toca para abrir';
 
   @override
+  String get soat_doc_attached_title => 'Documento adjunto';
+
+  @override
   String get soat_doc_replace => 'Reemplazar archivo';
 
   @override
