@@ -65,7 +65,7 @@ class SoatUploadOptionCard extends StatelessWidget {
                 child: _SourceButton(
                   icon: Icons.camera_alt_rounded,
                   label: context.l10n.vehicle_soat_camera_button,
-                  isPrimary: true,
+                  isPrimary: false,
                   isLoading: isLoading,
                   onTap: onCameraTap,
                 ),
@@ -85,7 +85,7 @@ class SoatUploadOptionCard extends StatelessWidget {
                 child: _SourceButton(
                   icon: Icons.picture_as_pdf_outlined,
                   label: context.l10n.vehicle_soat_file_button,
-                  isPrimary: false,
+                  isPrimary: true,
                   isLoading: isLoading,
                   onTap: onFileTap,
                 ),
