@@ -139,18 +139,41 @@ class SoatParser {
       }
     }
 
-    // Strategy 3: generic regex over the full text.
+    // Strategy 3: generic regex over the full text. Phone numbers and dates
+    // share the SOAT with the policy, so skip those and prefer the candidate
+    // with the most digits (policy numbers are the longest numeric token).
+    String? best;
+    var bestDigits = 0;
     for (final match in _genericPolicyPattern.allMatches(
       ocr.fullText.toUpperCase(),
     )) {
       final value = match.group(1);
-      if (value != null && _isPlausiblePolicy(value) && _hasDigit(value)) {
-        return _FieldResult(value, OcrFieldConfidence.medium);
+      if (value == null || !_isPlausiblePolicy(value) || !_hasDigit(value)) {
+        continue;
+      }
+      if (_looksLikePhone(value) || _looksLikeDate(value)) continue;
+      final digits = _digitCount(value);
+      if (digits > bestDigits) {
+        bestDigits = digits;
+        best = value;
       }
     }
+    if (best != null) return _FieldResult(best, OcrFieldConfidence.medium);
 
     return const _FieldResult(null, OcrFieldConfidence.low);
   }
+
+  /// Colombian mobile numbers are exactly 10 digits starting with 3; they must
+  /// never be mistaken for a policy number.
+  bool _looksLikePhone(String value) {
+    final digits = value.replaceAll(RegExp(r'\D'), '');
+    return digits.length == 10 && digits.startsWith('3');
+  }
+
+  bool _looksLikeDate(String value) =>
+      RegExp(r'^\d{1,4}[-/.]\d{1,2}[-/.]\d{1,4}$').hasMatch(value);
+
+  int _digitCount(String value) => RegExp(r'\d').allMatches(value).length;
 
   String? _policyFromLabel(OcrResult ocr) {
     const labels = ['poliza', 'n poliza', 'no poliza', 'numero de poliza'];
@@ -168,8 +191,34 @@ class SoatParser {
         final token = _firstPolicyToken(neighbor.text);
         if (token != null) return token;
       }
+
+      // Table layout (e.g. Seguros del Estado): the value sits in the block
+      // right below the header label, in the same column.
+      final below = _closestBlockBelow(ocr, block);
+      if (below != null) {
+        final token = _firstPolicyToken(below.text);
+        if (token != null) return token;
+      }
     }
     return null;
+  }
+
+  OcrBlock? _closestBlockBelow(OcrResult ocr, OcrBlock label) {
+    OcrBlock? closest;
+    var bestDistance = double.infinity;
+    for (final block in ocr.blocks) {
+      if (identical(block, label)) continue;
+      final isBelow = block.top >= label.bottom - label.height * 0.5;
+      if (!isBelow) continue;
+      final sameColumn = (block.centerX - label.centerX).abs() <= label.width;
+      if (!sameColumn) continue;
+      final distance = block.top - label.bottom;
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        closest = block;
+      }
+    }
+    return closest;
   }
 
   OcrBlock? _closestBlockOnSameLine(OcrResult ocr, OcrBlock label) {
@@ -191,9 +240,11 @@ class SoatParser {
   String? _firstPolicyToken(String text) {
     for (final match in _genericPolicyPattern.allMatches(text.toUpperCase())) {
       final value = match.group(1);
-      if (value != null && _isPlausiblePolicy(value) && _hasDigit(value)) {
-        return value;
+      if (value == null || !_isPlausiblePolicy(value) || !_hasDigit(value)) {
+        continue;
       }
+      if (_looksLikePhone(value) || _looksLikeDate(value)) continue;
+      return value;
     }
     return null;
   }

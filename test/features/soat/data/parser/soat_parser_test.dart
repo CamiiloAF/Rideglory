@@ -82,6 +82,28 @@ Hasta 10 ene 2027
       expect(result.expiryDate, DateTime(2027, 1, 10));
     });
 
+    test('Seguros del Estado — póliza en fila separada, ignora celular', () {
+      // Layout real (tabla): el valor de la póliza va debajo del encabezado y
+      // el celular del tomador (10 dígitos, inicia en 3) no debe confundirse.
+      final result = parser.parse(
+        fixture('''
+SEGUROS DEL ESTADO S.A.
+No. DE PÓLIZA.
+15683400107070
+TELEFONO DEL TOMADOR
+3146432187
+No. DE DOCUMENTO DEL TOMADOR
+1004681124
+Vigencia desde 29/11/2024
+Hasta 28/11/2025
+'''),
+      );
+      expect(result.insurer, 'Seguros del Estado');
+      expect(result.policyNumber, '15683400107070');
+      expect(result.startDate, DateTime(2024, 11, 29));
+      expect(result.expiryDate, DateTime(2025, 11, 28));
+    });
+
     test('AXA Colpatria', () {
       final result = parser.parse(
         fixture('''
