@@ -55,6 +55,18 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
         stepCount: RegistrationWizardSteps.stepCount,
       );
 
+  final ScrollController _scrollController = ScrollController();
+
+  /// Returns the scroll view to the top so each step starts from the header
+  /// instead of inheriting the previous step's scroll offset.
+  void _resetScroll() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.jumpTo(0);
+      }
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -74,6 +86,7 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
   void dispose() {
     _wizard.dispose();
     _focusChain.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -101,12 +114,14 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
         .validateStepFields(stepFields);
     if (isStepValid) {
       _wizard.next();
+      _resetScroll();
     }
   }
 
   void _onBack() {
     FocusScope.of(context).unfocus();
     _wizard.previous();
+    _resetScroll();
   }
 
   void _submitRegistration() {
@@ -168,7 +183,7 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
         return Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
               child: RegistrationStepIndicator(
                 stepCount: _wizard.stepCount,
                 currentStep: _wizard.currentStep,
@@ -176,6 +191,7 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
             ),
             Expanded(
               child: SingleChildScrollView(
+                controller: _scrollController,
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
                 child: IndexedStack(
                   index: _wizard.currentStep,
