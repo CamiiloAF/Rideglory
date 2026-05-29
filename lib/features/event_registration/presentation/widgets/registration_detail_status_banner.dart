@@ -5,7 +5,7 @@ import 'package:rideglory/features/event_registration/domain/model/event_registr
 
 /// Banner de estado mostrado al piloto en su propia inscripción.
 /// Corresponde al nodo `statusBanner` (bHPyC) del diseño Pencil `f0lXw`.
-/// Devuelve [SizedBox.shrink] para estados que no requieren banner (aprobada).
+/// El color y el texto varían según el estado de la inscripción.
 class RegistrationDetailStatusBanner extends StatelessWidget {
   const RegistrationDetailStatusBanner({super.key, required this.status});
 
@@ -13,7 +13,7 @@ class RegistrationDetailStatusBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (Color? color, IconData? icon, String? text) = switch (status) {
+    final (Color color, IconData icon, String text) = switch (status) {
       RegistrationStatus.pending => (
         AppColors.warning,
         Icons.access_time_rounded,
@@ -24,17 +24,22 @@ class RegistrationDetailStatusBanner extends StatelessWidget {
         Icons.edit_outlined,
         context.l10n.registration_readyForEditBannerText,
       ),
+      RegistrationStatus.approved => (
+        AppColors.statusGreen,
+        Icons.check_circle_outline_rounded,
+        context.l10n.registration_approvedBannerText,
+      ),
       RegistrationStatus.rejected => (
         AppColors.error,
         Icons.cancel_outlined,
         context.l10n.registration_rejectedBannerText,
       ),
-      _ => (null, null, null),
+      RegistrationStatus.cancelled => (
+        AppColors.textOnDarkSecondary,
+        Icons.do_not_disturb_on_outlined,
+        context.l10n.registration_cancelledBannerText,
+      ),
     };
-
-    if (color == null || icon == null || text == null) {
-      return const SizedBox.shrink();
-    }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

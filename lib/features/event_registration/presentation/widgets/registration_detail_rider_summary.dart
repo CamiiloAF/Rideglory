@@ -9,9 +9,17 @@ import 'package:rideglory/features/events/presentation/shared/widgets/initials_a
 /// Banda de resumen del piloto en el detalle de inscripción (vista organizador).
 /// Corresponde al nodo `Rider Summary` (aM5uW) del diseño Pencil `y1Ci1`.
 class RegistrationDetailRiderSummary extends StatelessWidget {
-  const RegistrationDetailRiderSummary({super.key, required this.registration});
+  const RegistrationDetailRiderSummary({
+    super.key,
+    required this.registration,
+    this.onTap,
+  });
 
   final EventRegistrationModel registration;
+
+  /// Cuando se provee (vista organizador), tocar la banda abre el perfil del
+  /// piloto.
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +28,18 @@ class RegistrationDetailRiderSummary extends StatelessWidget {
         ? '${context.l10n.registration_appliedOnPrefix}${createdAt.formattedDate}'
         : '';
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      decoration: const BoxDecoration(
-        color: AppColors.darkCard,
-        border: Border(bottom: BorderSide(color: AppColors.darkBorderPrimary)),
-      ),
-      child: Row(
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        decoration: const BoxDecoration(
+          color: AppColors.darkCard,
+          border: Border(
+            bottom: BorderSide(color: AppColors.darkBorderPrimary),
+          ),
+        ),
+        child: Row(
         children: [
           InitialsAvatar(
             fullName: registration.fullName,
@@ -67,7 +80,16 @@ class RegistrationDetailRiderSummary extends StatelessWidget {
           ),
           AppSpacing.hGapMd,
           RegistrationStatusPill(status: registration.status),
+          if (onTap != null) ...[
+            AppSpacing.hGapSm,
+            const Icon(
+              Icons.chevron_right,
+              size: 18,
+              color: AppColors.textOnDarkTertiary,
+            ),
+          ],
         ],
+        ),
       ),
     );
   }

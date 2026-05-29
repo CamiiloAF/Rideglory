@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/extensions/date_extensions.dart';
+import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
@@ -45,7 +47,13 @@ class RegistrationDetailPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (!isRegistrantViewer)
-            RegistrationDetailRiderSummary(registration: registration),
+            RegistrationDetailRiderSummary(
+              registration: registration,
+              onTap: () => context.pushNamed(
+                AppRoutes.riderProfile,
+                extra: registration.userId,
+              ),
+            ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),

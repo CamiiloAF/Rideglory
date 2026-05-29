@@ -2920,6 +2920,18 @@ abstract class AppLocalizations {
   /// **'Puedes editar tu inscripción'**
   String get registration_readyForEditBannerText;
 
+  /// No description provided for @registration_approvedBannerText.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu inscripción fue aprobada'**
+  String get registration_approvedBannerText;
+
+  /// No description provided for @registration_cancelledBannerText.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelaste tu inscripción'**
+  String get registration_cancelledBannerText;
+
   /// No description provided for @splash_retryLabel.
   ///
   /// In es, this message translates to:

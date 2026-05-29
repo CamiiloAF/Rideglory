@@ -23,16 +23,20 @@ class RegistrationDetailBottomBar extends StatelessWidget {
         params.eventOwnerId == registration.userId;
     final showCancel = params.onCancelRegistration != null && !ownerSuppressed;
 
-    // Regla READY_FOR_EDIT: mientras la inscripción esté en este estado, el
-    // organizador SOLO puede rechazarla; no puede aprobar ni volver a solicitar
-    // edición. En PENDING dispone de las tres acciones. Solo el piloto (al
-    // editar su inscripción) la regresa a PENDING.
+    // El organizador solo gestiona inscripciones según su ESTADO, sin importar
+    // desde qué pantalla se abra el detalle (lista de inscritos o detalle del
+    // evento):
+    // - PENDING: aprobar + rechazar + solicitar edición.
+    // - READY_FOR_EDIT: solo rechazar.
+    // - aprobada / rechazada / cancelada: sin acciones de organizador.
+    final isPending = registration.status == RegistrationStatus.pending;
     final isReadyForEdit =
         registration.status == RegistrationStatus.readyForEdit;
+    final ownerCanAct = isPending || isReadyForEdit;
     final showOwnerActions =
-        params.onApprove != null || params.onReject != null;
-    final showApprove = !isReadyForEdit && params.onApprove != null;
-    final showRequestEdit = !isReadyForEdit && params.onRequestEdit != null;
+        ownerCanAct && (params.onApprove != null || params.onReject != null);
+    final showApprove = isPending && params.onApprove != null;
+    final showRequestEdit = isPending && params.onRequestEdit != null;
 
     final actions = _buildActions(
       context,

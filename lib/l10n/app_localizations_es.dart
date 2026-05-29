@@ -1501,6 +1501,12 @@ class AppLocalizationsEs extends AppLocalizations {
       'Puedes editar tu inscripción';
 
   @override
+  String get registration_approvedBannerText => 'Tu inscripción fue aprobada';
+
+  @override
+  String get registration_cancelledBannerText => 'Cancelaste tu inscripción';
+
+  @override
   String get splash_retryLabel => 'REINTENTAR';
 
   @override

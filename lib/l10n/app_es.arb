@@ -491,6 +491,8 @@
   "registration_pendingBannerText": "Tu inscripción está pendiente de revisión",
   "registration_rejectedBannerText": "Tu inscripción fue rechazada",
   "registration_readyForEditBannerText": "Puedes editar tu inscripción",
+  "registration_approvedBannerText": "Tu inscripción fue aprobada",
+  "registration_cancelledBannerText": "Cancelaste tu inscripción",
   "splash_retryLabel": "REINTENTAR",
   "splash_errorPrefix": "Error: ",
   "home_greeting": "Hola, Rider",
