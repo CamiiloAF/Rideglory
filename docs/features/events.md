@@ -1,6 +1,6 @@
 # Documentación del Feature: Events
 
-> Última actualización: 2026-05-28  
+> Última actualización: 2026-05-29  
 > Alcance: `lib/features/events/`
 
 > Esta documentación cubre únicamente el feature `events/`. El feature de inscripciones, antes incluido aquí, se separó a [event_registration.md](./event_registration.md).
@@ -418,14 +418,18 @@ Métodos clave:
 ```dart
 ResultState<EventRegistrationModel?> registrationResult;
 ResultState<EventModel> eventResult;
-ResultState<EventModel>? lastUpdatedEventResult;     // one-shot: consumir y limpiar
+ResultState<List<EventRegistrationModel>> attendeesResult;   // gestión de inscritos desde el detalle
+ResultState<EventModel>? lastUpdatedEventResult;             // one-shot: consumir y limpiar
 ```
 
 Métodos:
 - `loadEvent(id)`, `loadMyRegistration(eventId)`.
 - `cancelRegistration(registrationId)`, `updateRegistration(EventRegistrationModel)`.
 - `startEvent(event)`, `publishEvent(event)`, `stopEvent(event)`.
+- **Gestión de inscritos (desde el detalle):** `approveAttendee(id)`, `rejectAttendee(id)` y `setAttendeeReadyForEdit(id)` — todos **optimistas** vía `_updateAttendeeStatusLocally` (cambian el estado local primero con `unawaited(useCase)`). Soporta **solicitar edición** además de aprobar/rechazar.
 - `clearLastUpdatedEvent()` — para liberar el canal one-shot.
+
+> `_updateAttendeeStatusLocally` actualiza la lista sin refetch, pero como `EventRegistrationModel.==` compara **solo por id**, emite un estado intermedio (`ResultState.initial()`) antes del nuevo `data` para forzar el rebuild de Bloc (la deep equality no detectaría el cambio de `status`).
 
 ### `LiveTrackingState` (freezed)
 ```dart

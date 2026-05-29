@@ -16,7 +16,7 @@
 4. [Cubits y estados](#4-cubits-y-estados)
 5. [Cálculo de SoatStatus](#5-cálculo-de-soatstatus)
 6. [Flujos de captura](#6-flujos-de-captura)
-   - 6.1 [Flujo con documento (foto / PDF) — escaneo OCR desde el card](#61-flujo-con-documento-foto--pdf--escaneo-ocr-desde-el-card)
+   - 6.1 [Flujo con documento (galería / PDF) — `SoatEntryFlow`](#61-flujo-con-documento-galería--pdf--soatentryflow)
    - 6.2 [Pantalla de formulario unificada](#62-pantalla-de-formulario-unificada-soatmanualcapturepage)
    - 6.3 [Flujo durante creación de vehículo](#63-flujo-durante-creación-de-vehículo)
    - 6.4 [Sub-flujo OCR](#64-sub-flujo-ocr-autocompletar-soat)
@@ -34,12 +34,14 @@
 
 El **SOAT** (Seguro Obligatorio de Accidentes de Tránsito) es la póliza obligatoria para motos en Colombia. Este feature gestiona:
 
-1. **Captura del SOAT** asociado a un vehículo: número de póliza, aseguradora, fechas de inicio/expiración, opcionalmente foto o PDF del documento.
+1. **Captura del SOAT** asociado a un vehículo: número de póliza, aseguradora, fechas de inicio/expiración, opcionalmente documento del SOAT (imagen desde galería o PDF).
 2. **Visualización del estado** (`valid` / `expiringSoon` / `expired`) calculado por días hasta vencimiento.
 3. **Renovación**: editar SOAT existente, reemplazar documento.
-4. **Eliminación** del SOAT de un vehículo (`DELETE`), disponible desde varias pantallas.
+4. **Eliminación** del SOAT de un vehículo (`DELETE`), **solo** desde la pantalla "Mi SOAT" (ver [§6.5](#65-eliminar-el-soat-de-un-vehículo)).
 
-> **OCR opcional (autocompletar SOAT).** La app puede leer la foto/PDF del SOAT **on-device** (ML Kit, sin backend ni nube) para luego **ofrecer** el prellenado de los campos. El escaneo se dispara directamente desde el card de subida (botones Cámara / Galería / PDF); ya no existe un botón "Escanear SOAT" separado. El autocompletado es **opt-in**: tras detectar un SOAT válido se muestra un banner con el botón "Autocompletar campos" y el usuario decide. La entrada manual sigue disponible y es la fuente de verdad. Ver [§6.4 Sub-flujo OCR](#64-sub-flujo-ocr-autocompletar-soat).
+> **Documento solo desde galería o PDF.** La captura con **cámara fue retirada** (peor lectura OCR). El documento se sube desde **Galería** o **PDF** (PDF resaltado como opción primaria). La selección está centralizada en `SoatDocumentPicker` (`presentation/scan/soat_document_picker.dart`): galería a calidad 100 sin redimensionar (el texto pequeño del SOAT necesita resolución) y PDF vía `FilePicker`. Lo usan tanto `SoatUploadCubit` (bottom sheet de opciones) como el formulario (`SoatManualCapturePage`).
+
+> **OCR opcional (autocompletar SOAT).** La app puede leer el documento del SOAT **on-device** (ML Kit, sin backend ni nube) para luego **ofrecer** el prellenado de los campos. El OCR corre dentro de la captura (`SoatManualCapturePage`) vía `ScanSoatUseCase`; no existe una pantalla de escaneo separada. El autocompletado es **opt-in**: tras detectar un SOAT válido se muestra un banner con el botón "Autocompletar campos" y el usuario decide. La entrada manual sigue disponible y es la fuente de verdad. Si el documento no se reconoce como SOAT, se muestra un **aviso inline (warning, no bloqueante)**, no un snackbar. Ver [§6.4 Sub-flujo OCR](#64-sub-flujo-ocr-autocompletar-soat).
 
 El feature **convive con `vehicles`** porque la API expone el SOAT bajo `/vehicles/{id}/soat`. Hay duplicación intencional:
 - `vehicles/data/dto/soat_dto.dart` + `VehicleRepository.upsertSoat()` (vista del feature vehicles).
@@ -180,35 +182,31 @@ on DioException catch (e) {
 lib/features/soat/presentation/
 ├── cubit/
 │   ├── soat_cubit.dart            (estado SOAT cargado: load/save/delete)
-│   ├── soat_upload_cubit.dart     (selección de archivo; usado por soat_vehicle_options_sheet)
-│   └── soat_scan_cubit.dart       (OCR — ver §6.4)
+│   └── soat_upload_cubit.dart     (selección de archivo galería/PDF; usado por soat_vehicle_options_sheet)
 ├── pages/
-│   ├── soat_manual_capture_page.dart   (formulario unificado: escaneo/confirmación, registro manual y edición; sin Cubit dedicado)
+│   ├── soat_manual_capture_page.dart   (formulario unificado: captura/confirmación con OCR, registro manual y edición; sin Cubit dedicado)
 │   ├── soat_manual_capture_params.dart (extra de la ruta)
-│   ├── soat_scan_page.dart             (OCR — ver §6.4)
-│   ├── soat_scan_params.dart           (OCR — ver §6.4)
-│   └── soat_status_page.dart           (vista del SOAT existente)
+│   └── soat_status_page.dart           (vista del SOAT existente; provee SoatCubit)
 ├── scan/
-│   ├── soat_entry_flow.dart            (helper: muestra el sheet de opciones y navega a la captura manual)
-│   └── soat_scan_launcher.dart         (OCR — ver §6.4)
+│   ├── soat_document_picker.dart       (selección centralizada del documento: galería calidad 100 + PDF)
+│   └── soat_entry_flow.dart            (helper: muestra el sheet de opciones y navega a la captura manual)
 └── widgets/
     ├── soat_status_view.dart
-    ├── soat_data_view.dart              (vista "Mi SOAT": estado + datos + ver/renovar/eliminar)
+    ├── soat_data_view.dart              (vista "Mi SOAT": estado + datos + lista de acciones ver/eliminar + CTA renovar)
+    ├── soat_action_tile.dart            (fila de acción discreta ícono+label+chevron para la card de acciones)
     ├── soat_empty_state.dart
-    ├── soat_upload_option_card.dart     (botones Cámara/Galería/PDF que disparan OCR)
+    ├── soat_upload_option_card.dart     (card de subida: botones Galería + PDF, PDF resaltado)
     ├── soat_manual_option_card.dart
     ├── soat_vehicle_options_sheet.dart
-    ├── soat_add_document_sheet.dart     (sheet "Agregar documento" en captura manual: Cámara/Galería/PDF)
-    ├── soat_document_section.dart       (preview + reemplazo)
+    ├── soat_add_document_sheet.dart     (sheet "Agregar documento" en captura manual: Galería/PDF)
+    ├── soat_document_section.dart       (card del documento adjunto rediseñado: preview + cambiar/eliminar/abrir)
     ├── soat_not_recognized_warning.dart (aviso inline no bloqueante cuando el OCR no reconoce un SOAT)
     ├── soat_validity_card.dart          (cálculo de vigencia en tiempo real)
     ├── soat_autofill_banner.dart        (banner opt-in de autocompletado OCR)
-    ├── soat_delete_button.dart          (botón destructivo reutilizable con confirmación)
-    ├── soat_detail_row.dart
-    ├── soat_section_header.dart
-    ├── soat_scan_loader.dart            (OCR — ver §6.4)
-    └── soat_scan_source_sheet.dart      (OCR — ver §6.4)
+    └── soat_detail_row.dart
 ```
+
+> **Eliminados** en el rediseño: `soat_scan_cubit.dart`, `soat_scan_page.dart`, `soat_scan_params.dart`, `soat_scan_launcher.dart`, `soat_scan_loader.dart`, `soat_scan_source_sheet.dart`, `soat_delete_button.dart`, `soat_section_header.dart` (`SoatSectionHeader`), `SoatUploadPage` y la ruta `soatScan`. El OCR ahora corre on-the-fly dentro de `SoatManualCapturePage` (no hay launcher ni pantalla de escaneo dedicada).
 
 ---
 
@@ -217,8 +215,7 @@ lib/features/soat/presentation/
 | Cubit | Archivo | DI | Estado | Notas |
 |---|---|---|---|---|
 | `SoatCubit` | `cubit/soat_cubit.dart` | `@injectable` | `ResultState<SoatModel>` | Lectura/guardado/borrado del SOAT (status page) |
-| `SoatUploadCubit` | `cubit/soat_upload_cubit.dart` | `@injectable` | `SoatUploadState` (sealed class) | Selección de archivo; lo consume `SoatVehicleOptionsSheet` |
-| `SoatScanCubit` | `cubit/soat_scan_cubit.dart` | `@injectable` | `ResultState<SoatExtraction>` | OCR — ver §6.4 |
+| `SoatUploadCubit` | `cubit/soat_upload_cubit.dart` | `@injectable` | `SoatUploadState` (sealed class) | Selección de archivo (galería/PDF); lo consume `SoatVehicleOptionsSheet` |
 
 > `SoatFormCubit` fue **eliminado**. `SoatManualCapturePage` (formulario unificado) maneja su propio estado con `setState` e invoca los use cases directamente vía `getIt`.
 
@@ -241,11 +238,11 @@ final class SoatUploadImagePicked  extends SoatUploadState { final XFile image; 
 final class SoatUploadError        extends SoatUploadState { final String message; }
 ```
 
-Métodos:
-- `pickFromCamera()`, `pickFromGallery()` → `ImageStorageService.pickImage*()`.
-- `pickFromFile()` → `FilePicker` con `allowedExtensions: ['pdf']`.
+Métodos (la captura con **cámara fue retirada**):
+- `pickFromGallery()` → `SoatDocumentPicker.pickImageFromGallery()` (imagen calidad 100, sin redimensionar).
+- `pickFromFile()` → `SoatDocumentPicker.pickPdf()` (`FilePicker` con `allowedExtensions: ['pdf']`).
 
-Cualquiera de los tres emite `SoatUploadImagePicked(XFile)` al éxito y `SoatUploadInitial` si el usuario cancela.
+Cualquiera de los dos emite `SoatUploadImagePicked(XFile)` al éxito y `SoatUploadInitial` si el usuario cancela.
 
 > El único consumidor de este cubit es `SoatVehicleOptionsSheet`.
 
@@ -279,15 +276,15 @@ Umbral fijo: **30 días**. `noSoat` no se calcula aquí — se asigna externamen
 
 ## 6. Flujos de captura
 
-### 6.1 Flujo con documento (foto / PDF) — `SoatEntryFlow` + escaneo OCR
+### 6.1 Flujo con documento (galería / PDF) — `SoatEntryFlow`
 
-El punto de entrada único es el helper **`SoatEntryFlow.start(context, ...)`** (`scan/soat_entry_flow.dart`). Reemplazó a la antigua `SoatUploadPage`. Lo consumen todos los puntos que antes navegaban a `AppRoutes.vehicleSoat` (garage, form de vehículo, renovación en `SoatDataView`/`SoatEmptyState`, etc.).
+El punto de entrada único es el helper **`SoatEntryFlow.start(context, ...)`** (`scan/soat_entry_flow.dart`). Reemplazó a la antigua `SoatUploadPage`. Lo consumen todos los puntos que antes navegaban a `AppRoutes.vehicleSoat` (garage `vehicle_soat_card`/`vehicle_soat_section`, slot del form `vehicle_soat_form_slot`, sección de docs del form, renovación en `SoatDataView`/`SoatEmptyState`). Sirve tanto para **creación** como para **edición** de vehículo.
 
 ```
 SoatEntryFlow.start(context, vehicle?, onSaved?, formCubit?)
   └─ showModalBottomSheet(SoatVehicleOptionsSheet)
-        ├─ SoatUploadOptionCard (Cámara/Galería/PDF) → SoatOptionsUpload(image)
-        └─ SoatManualOptionCard                       → SoatOptionsManual()
+        ├─ SoatUploadOptionCard (Galería / PDF) → SoatOptionsUpload(image)
+        └─ SoatManualOptionCard                  → SoatOptionsManual()
   └─ Según resultado, navega a soatManualCapture:
         ├─ Vehículo existente (vehicle.id != null):
         │     SoatManualCaptureParams(vehicle, initialLocalImagePath: image?.path)
@@ -307,13 +304,19 @@ SoatManualCapturePage (ver §6.2)
 
 ### 6.2 Pantalla de formulario unificada (`SoatManualCapturePage`)
 
-Es la **única** pantalla de escaneo/confirmación, registro manual y edición. (`SoatConfirmationPage` y `SoatFormCubit` fueron eliminados.) No usa Cubit dedicado: estado local con `setState`, invoca los use cases vía `getIt`.
+Es la **única** pantalla de captura/confirmación, registro manual y edición. (`SoatConfirmationPage` y `SoatFormCubit` fueron eliminados.) No usa Cubit dedicado: estado local con `setState`, invoca los use cases vía `getIt`.
+
+**Título del AppBar** (`_appBarTitle`), según el caso:
+- `existingSoat != null` → "Editar" (`soat_edit_title`).
+- documento/OCR ya adjunto al abrir (`_isConfirmationMode`) → "Confirmar" (`vehicle_soat_confirm_title`).
+- en otro caso → "Registrar" (`vehicle_soat_form_title`).
 
 ```
 SoatManualCapturePage(vehicle?, existingSoat?, initialLocalImagePath?, extraction?)
-  ├─ SoatDocumentSection: preview + adjuntar/cambiar foto/PDF (_pickImage → bottom sheet)
-  ├─ Si extraction.shouldPrefill && !autofillApplied → SoatAutofillBanner
+  ├─ SoatDocumentSection: preview + adjuntar/cambiar (galería/PDF) o eliminar local (_pickImage → SoatAddDocumentSheet)
+  ├─ Si extraction.shouldPrefill && !autofillApplied → SoatAutofillBanner (opt-in)
   │     └─ "Autocompletar campos" → _applyAutofill() (patchValue + setState fechas)
+  ├─ Si el OCR no reconoce el documento → SoatNotRecognizedWarning (inline, no bloqueante)
   ├─ Form fields: policyNumber, insurer (requerido), startDate, expiryDate
   ├─ SoatValidityCard (vigencia en vivo a partir de las fechas)
   └─ Guardado (_submit):
@@ -321,10 +324,11 @@ SoatManualCapturePage(vehicle?, existingSoat?, initialLocalImagePath?, extractio
      │   ├─ Sube imagen/PDF nueva (si hay) a soat/{vehicleId}/{timestamp}.{ext}
      │   ├─ getIt<SaveSoatUseCase>(vehicleId, soat)
      │   └─ context.pop(true) si éxito
-     │   └─ Además: SoatDeleteButton al fondo (solo si existingSoat != null) — ver §6.5
      └─ Modo creación (vehicle == null o sin id):
          └─ context.pop(PendingManualSoat) — sin tocar backend; VehicleFormView lo guarda tras crear el vehículo
 ```
+
+> El borrado del SOAT **ya no vive en esta pantalla** (se quitó `SoatDeleteButton`). Eliminar solo es posible desde "Mi SOAT" (`SoatDataView`) — ver [§6.5](#65-eliminar-el-soat-de-un-vehículo).
 
 > El autocompletado es **opt-in**: aunque el OCR supere el umbral, los campos NO se prellenan solos. El usuario pulsa "Autocompletar campos" en el banner. Ya **no** existen los badges por campo (`SoatAutofillBadge`).
 
@@ -346,7 +350,7 @@ Más detalles en [vehicles.md §13](./vehicles.md#13-patrones-y-trampas-conocida
 
 Lectura **on-device** del SOAT desde foto/galería/PDF. Privacidad total: ni la imagen ni el texto reconocido salen del dispositivo (ML Kit local; no hay backend ni Cloud Vision).
 
-**Disparador.** El documento se elige en `SoatVehicleOptionsSheet` (vía `SoatEntryFlow`) o se cambia desde `SoatManualCapturePage` (sheet `SoatAddDocumentSheet`). El OCR corre **dentro de `SoatManualCapturePage`** (`_scanDocument`), no en un launcher previo. `SoatScanLauncher` / `SoatScanPage` siguen existiendo como mecanismo de escaneo on-device reutilizable.
+**Disparador.** El documento se elige en `SoatVehicleOptionsSheet` (vía `SoatEntryFlow`) o se cambia desde `SoatManualCapturePage` (sheet `SoatAddDocumentSheet`). El OCR corre **dentro de `SoatManualCapturePage`** (`_scanDocument`), no en un launcher ni pantalla previa (ambos eliminados).
 
 **Recorrido (OCR dentro de la captura manual).**
 1. `SoatManualCapturePage` recibe `initialLocalImagePath` (documento ya elegido) y, en `initState`, llama `_scanDocument(path, source, autoApply: true)`. Al cambiar el documento desde `_pickImage`, vuelve a escanear (sin autoApply; ofrece el banner opt-in).
@@ -357,40 +361,39 @@ Lectura **on-device** del SOAT desde foto/galería/PDF. Privacidad total: ni la 
 3. Si el escaneo detecta SOAT y `shouldPrefill` (≥2 campos `high`), se ofrece el `SoatAutofillBanner` (opt-in) o se aplica directamente cuando `autoApply` es true.
 4. Si el escaneo lanza `SoatScanException`, se marca `_documentNotRecognized = true` y se muestra `SoatNotRecognizedWarning` inline bajo el documento (sin SnackBar, no bloqueante). El flag se limpia al elegir/quitar documento o cuando un escaneo posterior sí detecta SOAT.
 
-> `SoatScanLauncher.launch` (que sí navega a `SoatScanPage` y devuelve `SoatScanOutcome`) sigue disponible para flujos que prefieran la pantalla de escaneo dedicada, pero el flujo principal de captura escanea on-the-fly dentro de la página.
+> El documento se elige solo desde **galería o PDF**; `SoatScanSource.camera` sigue existiendo en el enum pero ya no se usa (la captura con cámara se retiró). `SoatScanLauncher`, `SoatScanPage` y `SoatScanCubit` fueron eliminados: el flujo de captura escanea on-the-fly dentro de la página.
 
 **Capas / archivos.**
 - Core: `lib/core/services/ocr/` (`OcrService`, `MlKitOcrService`, `OcrResult`/`OcrBlock`); `lib/core/services/analytics/` (`AnalyticsService`, `FirebaseAnalyticsService`).
-- Domain: `soat/domain/models/soat_extraction.dart`, `soat_scan_result.dart`; `soat/domain/usecases/parse_soat_text_usecase.dart`, `scan_soat_usecase.dart`.
+- Domain: `soat/domain/models/soat_extraction.dart`, `soat_scan_result.dart` (define `SoatScanSource`/`SoatScanException`); `soat/domain/usecases/parse_soat_text_usecase.dart`, `scan_soat_usecase.dart`.
 - Data: `soat/data/parser/soat_parser.dart`, `soat_insurer_rules.dart`, `soat_pdf_rasterizer.dart`.
-- Presentation: `soat/presentation/cubit/soat_scan_cubit.dart`; `pages/soat_scan_page.dart`, `soat_scan_params.dart`; `scan/soat_scan_launcher.dart` (define `SoatScanOutcome`); widgets `soat_scan_source_sheet` (fallback, no usado por el flujo actual), `soat_scan_loader`, `soat_autofill_banner`. (Eliminados: `soat_scan_button`, `soat_ocr_banner`, `soat_autofill_badge`.)
+- Presentation: el OCR vive dentro de `pages/soat_manual_capture_page.dart` (`_scanDocument`); widgets `soat_not_recognized_warning`, `soat_autofill_banner`. (Eliminados: `soat_scan_cubit`, `soat_scan_page`, `soat_scan_params`, `soat_scan_launcher`, `soat_scan_loader`, `soat_scan_source_sheet`.)
 
 **Reglas del parser** (`SoatParser`, Dart puro y testeable):
-- **Aseguradora:** matching por substring normalizado (sin tildes) sobre las 10 autorizadas (Fasecolda 2026). Empate → mayor área de bloque en el cuarto superior (logo). 
-- **Póliza:** cascada — label `póliza` → regex específica por aseguradora (top-5) → regex genérica.
-- **Fechas:** regex multi-formato (`DD/MM/AAAA`, `DD-MM-AAAA`, `DD mmm AAAA`, ISO). Asociación a labels (`vigencia desde`/`hasta`/`vence`). **Validación dura: 360–370 días**; si falla, ambas fechas quedan `low` y no se prellenan.
-- **Umbral global:** `<2` campos `high` → no se prellena nada + toast (caída silenciosa al manual).
+- **Aseguradora:** matching por substring normalizado (sin tildes) sobre las autorizadas (Fasecolda). Empate → mayor área de bloque, ponderada x2 en el cuarto superior del documento (logo).
+- **Póliza:** cascada — label `póliza` → regex específica por aseguradora → regex genérica. Para el label en **layout de tabla**, ancla el valor en el bloque inmediatamente **debajo** del label en la misma columna (`_closestBlockBelow`), además del token en la misma línea. Descarta **celulares colombianos** (10 dígitos que inician en 3) y **fechas**, y entre candidatos prefiere el token con **más dígitos**.
+- **Fechas:** regex multi-formato (`DD/MM/AAAA`, `DD-MM-AAAA`, `DD mmm AAAA`, ISO). Asociación a labels (`vigencia desde`/`hasta`/`vence`). **Validación dura: 360–370 días**; si falla, ambas fechas quedan `low` (con `datesFailedValidation`) y no se prellenan.
+- **Umbral global:** `<2` campos `high` → no se prellena (no se ofrece el banner); el usuario completa a mano.
 
 **Telemetría** (Firebase Analytics, anónima): `soat_scan_attempted`; `soat_scan_success` (`fields_extracted_count`, `insurer_detected`, `had_pdf`); `soat_scan_failed` (`failure_reason`: `no_text_detected` / `low_confidence` / `validation_failed` / `permission_denied` / `unknown_error`).
 
-**Permisos:** `CAMERA` + `READ_MEDIA_IMAGES` en `AndroidManifest.xml`; `NSCameraUsageDescription` + `NSPhotoLibraryUsageDescription` en `Info.plist`.
+**Permisos:** `READ_MEDIA_IMAGES` en `AndroidManifest.xml`; `NSPhotoLibraryUsageDescription` en `Info.plist`. (La captura con cámara se retiró; el permiso `CAMERA` puede seguir declarado por otros features.)
 
 > **Nota de build:** el paquete transitivo `objective_c` (de `google_mlkit_text_recognition`) declara native build hooks, lo que rompe la compilación AOT del script de build_runner en el SDK actual. Generar código con `dart run build_runner build --force-jit` (JIT) en lugar del AOT por defecto.
 
 ### 6.5 Eliminar el SOAT de un vehículo
 
-El SOAT se puede eliminar (`DELETE /vehicles/{vehicleId}/soat`) desde **4 lugares**. Todos piden confirmación destructiva con `ConfirmationDialog` (`DialogActionType.danger`) y, tras éxito, refrescan el estado local con `VehicleCubit.clearSoatLocally(vehicleId)` y muestran el SnackBar `soat_deleted_success`.
+El borrado (`DELETE /vehicles/{vehicleId}/soat`) ahora es posible **únicamente desde la pantalla "Mi SOAT"** (`SoatDataView`, dentro de `SoatStatusPage`). Se quitó el borrado del detalle del vehículo (`vehicle_soat_card.dart`), del slot del form de edición (`vehicle_soat_form_slot.dart`) y del formulario de captura/edición (`SoatManualCapturePage`); esos puntos hoy solo inician `SoatEntryFlow` para agregar/renovar.
 
-| Origen | Archivo | Cómo borra | Estado tras éxito |
-|---|---|---|---|
-| Detalle del vehículo (card SOAT) | `vehicles/.../garage/widgets/vehicle_soat_card.dart` | `getIt<DeleteSoatUseCase>()` (ícono papelera inline) | `clearSoatLocally` + `setState(_soat=null)` |
-| Pantalla "Mi SOAT" | `soat/.../widgets/soat_data_view.dart` (en `SoatStatusPage`) | `SoatDeleteButton` → `context.read<SoatCubit>().delete()` | `clearSoatLocally` + `context.pop()` |
-| Editar SOAT | `SoatManualCapturePage` (modo edición, `existingSoat != null`) | `SoatDeleteButton` → `getIt<DeleteSoatUseCase>()` | `clearSoatLocally` + `context.pop(true)` |
-| Editar vehículo (slot SOAT) | `vehicles/.../form/widgets/vehicle_soat_form_slot.dart` | `getIt<DeleteSoatUseCase>()` (ícono papelera inline) | `clearSoatLocally` + `setState(_soat=null)` |
+En `SoatDataView` las acciones se presentan como una **lista discreta** (no botones de color apilados), con `SoatActionTile` (ícono + etiqueta + chevron) dentro de una card:
+- **Ver documento** (`soat_view_document`) — solo si `documentUrl != null`; abre el archivo remoto vía `DocumentDownloader.openRemote`.
+- **Eliminar** (`soat_delete_button`, tinte `error`) — pide confirmación con `ConfirmationDialog` (`DialogActionType.danger`) y, al confirmar, `context.read<SoatCubit>().delete(vehicleId)`; en éxito → `VehicleCubit.clearSoatLocally(vehicleId)` + SnackBar `soat_deleted_success` + `context.pop()`.
 
-**Capa:** `DeleteSoatUseCase` → `SoatRepository.deleteSoat` → `SoatService.deleteSoat`.
+Por separado, cuando el SOAT está **vencido**, la vista muestra un **único CTA principal** `AppButton` "Registrar nuevo SOAT" (`soat_renew_btn`) que lanza `SoatEntryFlow.start(...)` y recarga `SoatCubit` al guardar.
 
-**Widget reutilizable:** `SoatDeleteButton` (`soat/.../widgets/soat_delete_button.dart`) — botón `AppButtonVariant.danger` outlined que encapsula la confirmación; recibe `onDelete: Future<bool> Function()` (el borrado real) y `onDeleted: VoidCallback`. Lo usan `soat_data_view.dart` y `SoatManualCapturePage`. `vehicle_soat_card.dart` y `vehicle_soat_form_slot.dart` implementan su propio ícono de papelera inline (mismo `ConfirmationDialog`), no `SoatDeleteButton`.
+**Capa:** `DeleteSoatUseCase` → `SoatRepository.deleteSoat` → `SoatService.deleteSoat`. `SoatCubit.delete()` emite `empty` en éxito y retorna `true`.
+
+> El widget reutilizable `SoatDeleteButton` fue **eliminado**; el borrado lo encapsula directamente `SoatDataView` mediante `SoatActionTile`.
 
 ---
 
@@ -417,11 +420,10 @@ soat/{vehicleId}/{timestampMs}.{ext}
 |---|---|---|---|
 | `/soat/status` | `AppRoutes.soatStatus` | `SoatStatusPage(vehicle: extra as VehicleModel)` | `VehicleModel` |
 | `/soat/manual-capture` | `AppRoutes.soatManualCapture` | `SoatManualCapturePage(vehicle, existingSoat: params.soat, initialLocalImagePath, extraction)` | `SoatManualCaptureParams` |
-| `/soat/scan` | `AppRoutes.soatScan` | `SoatScanPage(params: extra as SoatScanParams)` | `SoatScanParams` |
 
-> Las rutas `AppRoutes.vehicleSoat` (`/vehicles/soat`) y `AppRoutes.soatUpload` (`/soat/upload`) y la pantalla `SoatUploadPage` fueron **eliminadas**. Para agregar/renovar SOAT usa `SoatEntryFlow.start(context, ...)` (ver §6.1).
+> Las rutas `AppRoutes.vehicleSoat` (`/vehicles/soat`), `AppRoutes.soatUpload` (`/soat/upload`), `AppRoutes.soatScan` (`/soat/scan`) y las pantallas `SoatUploadPage` / `SoatScanPage` fueron **eliminadas**. Solo quedan `soatStatus` y `soatManualCapture`. Para agregar/renovar SOAT usa `SoatEntryFlow.start(context, ...)` (ver §6.1).
 
-`soatManualCapture` es ahora la ruta única para escaneo/confirmación, registro manual y edición. El flujo de creación de vehículo con imagen de SOAT adjunta navega aquí con `pushReplacementNamed` (antes usaba `SoatConfirmationPage` por `Navigator.push`, hoy eliminada).
+`soatManualCapture` es ahora la ruta única para captura/confirmación, registro manual y edición. El flujo de creación de vehículo con documento de SOAT adjunto navega aquí con `pushReplacementNamed` (antes usaba `SoatConfirmationPage` por `Navigator.push`, hoy eliminada).
 
 **`SoatManualCaptureParams`** (`soat_manual_capture_params.dart`):
 ```
@@ -460,7 +462,7 @@ extraction: SoatExtraction?      — resultado OCR para ofrecer el autocompletad
 
 | Feature | Conexión |
 |---|---|
-| `vehicles` | `VehicleModel.soatStatus` + `soatExpiryDate` se actualizan vía `VehicleCubit.updateSoatLocally()` tras guardar y se limpian con `VehicleCubit.clearSoatLocally()` tras eliminar. `VehicleFormView` puede iniciar el flujo SOAT (`soatManualCapture`) durante la creación del vehículo; `vehicle_soat_card.dart` y `vehicle_soat_form_slot.dart` permiten eliminar el SOAT |
+| `vehicles` | `VehicleModel.soatStatus` + `soatExpiryDate` se actualizan vía `VehicleCubit.updateSoatLocally()` tras guardar y se limpian con `VehicleCubit.clearSoatLocally()` tras eliminar. `VehicleFormView` puede iniciar el flujo SOAT durante la creación del vehículo; `vehicle_soat_card.dart`, `vehicle_soat_section.dart` y `vehicle_soat_form_slot.dart` lanzan `SoatEntryFlow` para agregar/renovar (ya **no** borran: el borrado vive solo en "Mi SOAT") |
 | `home` | `HomeGarageSoatBadge` lee `VehicleModel.soatStatus` para mostrar pill de color |
 | `notifications` | Tipos `SOAT_30D`, `SOAT_7D`, `SOAT_DAY_OF` (notificaciones programadas server-side a partir de `expiryDate`) |
 
@@ -477,7 +479,10 @@ Existe uno en `lib/features/soat/domain/models/soat_model.dart` (este feature) y
 El OCR (ML Kit on-device) ofrece prellenar los campos, pero **nunca** lo hace solo: aunque `SoatExtraction.shouldPrefill` sea `true`, solo se muestra el `SoatAutofillBanner` y el usuario debe pulsar "Autocompletar campos". No hay badges por campo. Ver §6.4.
 
 ### `SoatManualCapturePage` no usa Cubit
-Estado local con `setState()`, invoca los use cases (`SaveSoatUseCase`, `DeleteSoatUseCase`) vía `getIt`. Inconsistente con el resto del codebase, pero es la pantalla unificada (escaneo/confirmación, manual y edición) tras eliminar `SoatFormCubit` y `SoatConfirmationPage`.
+Estado local con `setState()`, invoca los use cases (`SaveSoatUseCase`, `ScanSoatUseCase`) vía `getIt`. Inconsistente con el resto del codebase, pero es la pantalla unificada (captura/confirmación, manual y edición) tras eliminar `SoatFormCubit` y `SoatConfirmationPage`. No borra (ver §6.5).
+
+### Captura solo desde galería o PDF
+La cámara fue retirada (`SoatUploadCubit.pickFromCamera` ya no existe; `SoatDocumentPicker` solo expone galería + PDF). El enum `SoatScanSource` conserva `camera` pero no se usa.
 
 ### Path de upload usa la extensión real
 `SoatManualCapturePage._saveToBackend()` y `VehicleFormView._savePendingManualSoatAndPop()` construyen `soat/{vehicleId}/{ms}.{ext}` con la extensión real del archivo (`split('.').last`). Ya no se hardcodea `.jpg` (el viejo `SoatFormCubit` fue eliminado).
@@ -488,8 +493,8 @@ Si el backend devuelve `expiryDate: null` (no debería), `SoatDto.toModel()` usa
 ### 404 = SOAT no existe
 `SoatRepositoryImpl.getSoat()` mapea HTTP 404 a `Right(null)`. Esto es deliberado: significa "el vehículo aún no tiene SOAT registrado". Cualquier otro error sí va a `Left`.
 
-### Borrado replicado en 4 pantallas
-`vehicle_soat_card.dart` y `vehicle_soat_form_slot.dart` duplican la lógica de confirmación + `DeleteSoatUseCase` con un ícono de papelera inline, mientras `soat_data_view.dart` y `SoatManualCapturePage` reutilizan `SoatDeleteButton`. Si se cambia el copy/comportamiento de borrado, recordar los 4 sitios (ver §6.5). Todos llaman `clearSoatLocally` tras éxito.
+### Borrado centralizado en "Mi SOAT"
+El borrado del SOAT vive **solo** en `soat_data_view.dart` (`SoatActionTile` "Eliminar" → `SoatCubit.delete` → `clearSoatLocally`). Se quitó de `vehicle_soat_card.dart`, `vehicle_soat_form_slot.dart` y `SoatManualCapturePage`, y el widget `SoatDeleteButton` fue eliminado. Ver §6.5.
 
 ### `SoatStatus.noSoat` no proviene de `SoatModel.status`
 El getter solo retorna `valid` / `expiringSoon` / `expired`. `noSoat` se asigna externamente cuando no hay SOAT registrado (`VehicleModel.soatStatus == null`).
@@ -511,18 +516,18 @@ El getter solo retorna `valid` / `expiringSoon` / `expired`. `noSoat` se asigna 
 | Service Retrofit | `lib/features/soat/data/service/soat_service.dart` |
 | Repository impl (404 handling) | `lib/features/soat/data/repository/soat_repository_impl.dart` |
 | Cubit principal (carga/guardado/borrado) | `lib/features/soat/presentation/cubit/soat_cubit.dart` |
-| Cubit de upload | `lib/features/soat/presentation/cubit/soat_upload_cubit.dart` |
-| Cubit de escaneo OCR | `lib/features/soat/presentation/cubit/soat_scan_cubit.dart` |
+| Cubit de upload (galería/PDF) | `lib/features/soat/presentation/cubit/soat_upload_cubit.dart` |
+| Selección centralizada del documento | `lib/features/soat/presentation/scan/soat_document_picker.dart` |
 | Use case de borrado | `lib/features/soat/domain/usecases/delete_soat_usecase.dart` |
+| Use case de escaneo OCR | `lib/features/soat/domain/usecases/scan_soat_usecase.dart` |
 | Helper de entrada (sheet + navegación) | `lib/features/soat/presentation/scan/soat_entry_flow.dart` |
 | Page de status | `lib/features/soat/presentation/pages/soat_status_page.dart` |
-| Page unificada manual/edición/confirmación (sin cubit) | `lib/features/soat/presentation/pages/soat_manual_capture_page.dart` |
-| Launcher de escaneo (define SoatScanOutcome) | `lib/features/soat/presentation/scan/soat_scan_launcher.dart` |
+| Page unificada manual/edición/confirmación (sin cubit, con OCR inline) | `lib/features/soat/presentation/pages/soat_manual_capture_page.dart` |
 | Banner opt-in de autocompletado | `lib/features/soat/presentation/widgets/soat_autofill_banner.dart` |
-| Botón de borrado reutilizable | `lib/features/soat/presentation/widgets/soat_delete_button.dart` |
-| Vista "Mi SOAT" (ver/renovar/eliminar) | `lib/features/soat/presentation/widgets/soat_data_view.dart` |
+| Vista "Mi SOAT" (estado + acciones ver/eliminar + CTA renovar) | `lib/features/soat/presentation/widgets/soat_data_view.dart` |
+| Fila de acción discreta | `lib/features/soat/presentation/widgets/soat_action_tile.dart` |
 | Card de validez | `lib/features/soat/presentation/widgets/soat_validity_card.dart` |
-| Sección de documento | `lib/features/soat/presentation/widgets/soat_document_section.dart` |
-| Borrado desde detalle/edición de vehículo | `lib/features/vehicles/presentation/garage/widgets/vehicle_soat_card.dart`, `lib/features/vehicles/presentation/form/widgets/vehicle_soat_form_slot.dart` |
+| Sección de documento (rediseño) | `lib/features/soat/presentation/widgets/soat_document_section.dart` |
+| Inicio del flujo SOAT desde vehicles | `lib/features/vehicles/presentation/garage/widgets/vehicle_soat_card.dart`, `lib/features/vehicles/presentation/form/widgets/vehicle_soat_form_slot.dart` |
 | Update/clear local del status | `lib/features/vehicles/presentation/cubit/vehicle_cubit.dart` (`updateSoatLocally`, `clearSoatLocally`) |
 | Endpoint | `lib/core/http/api_routes.dart` (`vehicleSoat(id)`) |

@@ -260,7 +260,7 @@ El método valida el form y hace `context.pop()` sin llamar a un use case. **Si 
 Existe en `widgets/` pero no se renderiza en `ProfileContent`. Es una pieza de UI lista para uso futuro (mostrar el vehículo principal en el perfil).
 
 ### `bloodType` como TextField libre
-En `EditProfilePage`, `bloodType` es un `AppTextField` con `initialValue: user.bloodType?.name`. Esto produce el nombre del enum (ej. `"oPositive"`), no el label (`"O+"`). Cuando se implemente persistencia, conviene reemplazar por `AppDropdown` con `BloodType.values`.
+En `EditProfilePage`, `bloodType` es un `AppTextField` con `initialValue: user.bloodType?.name`. Esto produce el nombre del enum (ej. `"oPositive"`), no el label (`"O+"`). Cuando se implemente persistencia, conviene reemplazar por un selector de `BloodType.values` (p. ej. el selector de chips usado en el wizard de inscripción, `RegistrationBloodTypeSelector`).
 
 ### `PopScope` redirige a `/home` en lugar de hacer pop normal
 Es intencional: `ProfilePage` vive dentro de `StatefulShellRoute.indexedStack`, y un pop nativo podría desalinear el índice del shell. La redirección a `/home` resetea la pila del tab al estado inicial.

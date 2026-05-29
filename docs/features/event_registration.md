@@ -1,6 +1,6 @@
 # Documentación del Feature: Event Registration
 
-> Última actualización: 2026-05-28  
+> Última actualización: 2026-05-29  
 > Alcance: `lib/features/event_registration/`
 
 > Documentación complementaria: el feature de eventos (organización, tracking, etc.) está en [events.md](./events.md). Las inscripciones consumen `EventModel`, `RiderProfileModel`, `SaveRiderProfileUseCase`, `GetRiderProfileUseCase`, `GetEventByIdUseCase` del feature `events/`.
@@ -437,7 +437,7 @@ Esto previene loading infinito cuando el usuario llega directo al form sin pasar
 
 `RegistrationFormCubit` se crea localmente con `getIt` y se inicializa con `eventId` + `eventName` + `existingRegistration?`.
 
-El formulario es un **wizard multipaso** (4 pasos, diseño Pencil `pQCmS` "Registration Form V2"). `RegistrationFormContent` mantiene un único `FormBuilder` (en `registration_form_view.dart`) y un `IndexedStack` que conserva todos los pasos montados, de modo que los valores y `saveAndValidate()` cubren todo el form. El paso activo lo gobierna `RegistrationWizardController` (`ChangeNotifier`).
+El formulario es un **wizard multipaso** (4 pasos, diseño Pencil `pQCmS` "Registration Form V2"). `RegistrationFormContent` mantiene un único `FormBuilder` (en `registration_form_view.dart`) y un `IndexedStack` que conserva todos los pasos montados, de modo que los valores y `saveAndValidate()` cubren todo el form. El paso activo lo gobierna `RegistrationWizardController` (`ChangeNotifier`). Al cambiar de paso, `RegistrationFormContent` **reinicia el scroll al tope** (`_scrollController.jumpTo(0)`) para que cada paso empiece desde su encabezado y no herede el offset del anterior.
 
 Pasos (cada uno es su propio widget en `wizard/steps/`):
 1. **Información Personal** — fullName, identificationNumber, birthDate, phone, email, residenceCity.
@@ -483,8 +483,8 @@ Pasos (cada uno es su propio widget en `wizard/steps/`):
 - Callbacks opcionales: `onCancelRegistration`, `onApprove`, `onReject`, `onRequestEdit` (organizador habilita READY_FOR_EDIT), `onEditRegistration` (piloto abre el form en modo edición).
 
 **Estructura (rediseño alineado a Pencil `f0lXw` rider / `y1Ci1` owner):**
-1. **Vista organizador** (`!isRegistrantViewer`): banda `RegistrationDetailRiderSummary` (avatar + nombre + fecha + `RegistrationStatusPill`).
-   **Vista piloto** (`isRegistrantViewer`): `RegistrationDetailStatusBanner` (banner de estado pendiente/rechazada/para-editar; oculto si aprobada).
+1. **Vista organizador** (`!isRegistrantViewer`): banda `RegistrationDetailRiderSummary` (avatar + nombre + fecha + `RegistrationStatusPill`). Es **tappable** (`onTap` → `pushNamed(riderProfile, ...)`): tocarla abre el perfil del piloto y muestra un chevron a la derecha.
+   **Vista piloto** (`isRegistrantViewer`): `RegistrationDetailStatusBanner`, que **cubre todos los estados** con color e ícono propios: pendiente (ámbar/warning), en edición (azul/info), aprobada (verde/statusGreen), rechazada (roja/error), cancelada (gris).
 2. Cuatro tarjetas `RegistrationDetailDataCard` **no colapsables** (encabezado con icono coloreado + `RegistrationDetailDataRow` etiqueta/valor):
    - Datos Personales (icono naranja).
    - Información Médica (icono rojo).
