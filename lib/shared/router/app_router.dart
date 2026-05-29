@@ -22,8 +22,6 @@ import 'package:rideglory/features/home/presentation/home_page.dart';
 import 'package:rideglory/features/notifications/presentation/notifications_page.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_page.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_params.dart';
-import 'package:rideglory/features/soat/presentation/pages/soat_scan_page.dart';
-import 'package:rideglory/features/soat/presentation/pages/soat_scan_params.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_status_page.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
@@ -371,14 +369,6 @@ class AppRouter {
             initialLocalImagePath: params.initialLocalImagePath,
             extraction: params.extraction,
           );
-        },
-      ),
-      GoRoute(
-        path: AppRoutes.soatScan,
-        name: AppRoutes.soatScan,
-        builder: (context, state) {
-          final params = state.extra as SoatScanParams;
-          return SoatScanPage(params: params);
         },
       ),
     ],

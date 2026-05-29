@@ -32,16 +32,6 @@ class SoatUploadCubit extends Cubit<SoatUploadState> {
 
   final ImageStorageService _imageStorageService;
 
-  Future<void> pickFromCamera() async {
-    emit(const SoatUploadPicking());
-    final image = await _imageStorageService.pickImageFromCamera();
-    if (image != null) {
-      emit(SoatUploadImagePicked(image));
-    } else {
-      emit(const SoatUploadInitial());
-    }
-  }
-
   Future<void> pickFromGallery() async {
     emit(const SoatUploadPicking());
     final image = await _imageStorageService.pickImageFromGallery();

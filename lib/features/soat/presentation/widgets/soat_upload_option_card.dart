@@ -33,7 +33,7 @@ class SoatUploadOptionCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(32),
             ),
             child: const Icon(
-              Icons.camera_alt_outlined,
+              Icons.upload_file_rounded,
               size: 28,
               color: AppColors.primary,
             ),

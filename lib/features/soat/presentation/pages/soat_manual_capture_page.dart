@@ -151,7 +151,7 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
 
   // ── Selección de imagen ──────────────────────────────────────────────────
 
-  // 0 = cámara, 1 = galería, 2 = PDF
+  // 1 = galería, 2 = PDF
   Future<void> _pickImage() async {
     if (!mounted) return;
     final choice = await showModalBottomSheet<int>(
