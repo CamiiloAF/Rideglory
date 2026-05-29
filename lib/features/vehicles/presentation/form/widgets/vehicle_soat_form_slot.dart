@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/soat/domain/models/soat_model.dart';
-import 'package:rideglory/features/soat/domain/usecases/delete_soat_usecase.dart';
 import 'package:rideglory/features/soat/domain/usecases/get_soat_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
-import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
 /// Slot del formulario de edición de vehículo para el SOAT.
@@ -31,7 +28,6 @@ class VehicleSoatFormSlot extends StatefulWidget {
 class _VehicleSoatFormSlotState extends State<VehicleSoatFormSlot> {
   SoatModel? _soat;
   bool _loading = true;
-  bool _deleting = false;
 
   @override
   void initState() {
@@ -63,41 +59,6 @@ class _VehicleSoatFormSlotState extends State<VehicleSoatFormSlot> {
       });
       _loadSoat();
     }
-  }
-
-  Future<void> _confirmAndDelete() async {
-    final confirmed = await ConfirmationDialog.show(
-      context: context,
-      title: context.l10n.soat_delete_confirm_title,
-      content: context.l10n.soat_delete_confirm_message,
-      confirmLabel: context.l10n.soat_delete_button,
-      confirmType: DialogActionType.danger,
-      icon: Icons.delete_outline,
-    );
-    if (confirmed != true || !mounted) return;
-
-    setState(() => _deleting = true);
-    final result = await getIt<DeleteSoatUseCase>()(widget.vehicle.id!);
-    if (!mounted) return;
-
-    result.fold(
-      (_) {
-        setState(() => _deleting = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.errorOccurred)),
-        );
-      },
-      (_) {
-        context.read<VehicleCubit>().clearSoatLocally(widget.vehicle.id!);
-        setState(() {
-          _soat = null;
-          _deleting = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.soat_deleted_success)),
-        );
-      },
-    );
   }
 
   Color _statusColor() {
@@ -213,33 +174,6 @@ class _VehicleSoatFormSlotState extends State<VehicleSoatFormSlot> {
                 ],
               ),
             ),
-            if (_soat != null && _soat!.status != SoatStatus.noSoat) ...[
-              GestureDetector(
-                onTap: _deleting ? null : _confirmAndDelete,
-                child: Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    color: AppColors.darkTertiary,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: _deleting
-                      ? const Padding(
-                          padding: EdgeInsets.all(7),
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: AppColors.error,
-                          ),
-                        )
-                      : const Icon(
-                          Icons.delete_outline,
-                          size: 16,
-                          color: AppColors.error,
-                        ),
-                ),
-              ),
-              const SizedBox(width: 10),
-            ],
             const Icon(
               Icons.chevron_right,
               size: 18,

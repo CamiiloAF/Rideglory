@@ -1,6 +1,7 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,13 +11,12 @@ import 'package:rideglory/core/services/image_storage_service.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/soat/domain/models/soat_extraction.dart';
 import 'package:rideglory/features/soat/domain/models/soat_model.dart';
-import 'package:rideglory/features/soat/domain/usecases/delete_soat_usecase.dart';
+import 'package:rideglory/features/soat/domain/models/soat_scan_result.dart';
 import 'package:rideglory/features/soat/domain/usecases/save_soat_usecase.dart';
+import 'package:rideglory/features/soat/domain/usecases/scan_soat_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
-import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_autofill_banner.dart';
-import 'package:rideglory/features/soat/presentation/widgets/soat_delete_button.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_document_section.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_validity_card.dart';
 
@@ -67,9 +67,10 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
   DateTime? _expiryDate;
   String? _localImagePath;
   bool _saving = false;
+  bool _scanning = false;
   bool _autofillApplied = false;
   String? _error;
-  late final SoatExtraction? _extraction;
+  SoatExtraction? _extraction;
 
   bool get _isEditMode => widget.vehicle?.id != null;
 
@@ -174,25 +175,51 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
 
     if (choice == null || !mounted) return;
 
+    String? pickedPath;
+    final SoatScanSource scanSource;
+
     if (choice == 2) {
       // Seleccionar PDF
+      scanSource = SoatScanSource.pdf;
       final result = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['pdf'],
       );
-      if (result != null && result.files.single.path != null && mounted) {
-        setState(() => _localImagePath = result.files.single.path!);
-      }
+      pickedPath = result?.files.single.path;
     } else {
       // Cámara o galería
-      final source = choice == 0 ? ImageSource.camera : ImageSource.gallery;
+      scanSource = choice == 0 ? SoatScanSource.camera : SoatScanSource.gallery;
       final file = await ImagePicker().pickImage(
-        source: source,
+        source: choice == 0 ? ImageSource.camera : ImageSource.gallery,
         imageQuality: 85,
       );
-      if (file != null && mounted) {
-        setState(() => _localImagePath = file.path);
-      }
+      pickedPath = file?.path;
+    }
+
+    if (pickedPath == null || !mounted) return;
+    setState(() => _localImagePath = pickedPath);
+    await _scanDocument(pickedPath, scanSource);
+  }
+
+  /// Best-effort OCR over the document the user just picked: if a SOAT is
+  /// detected, the opt-in autofill banner is offered. Failures are swallowed so
+  /// the document still attaches even when nothing readable is found.
+  Future<void> _scanDocument(String path, SoatScanSource source) async {
+    setState(() => _scanning = true);
+    try {
+      final result = await getIt<ScanSoatUseCase>()(
+        file: File(path),
+        source: source,
+      );
+      if (!mounted) return;
+      setState(() {
+        _extraction = result.extraction;
+        _autofillApplied = false;
+      });
+    } on SoatScanException {
+      // No prefillable SOAT detected — keep the attached document, no banner.
+    } finally {
+      if (mounted) setState(() => _scanning = false);
     }
   }
 
@@ -288,24 +315,6 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
     );
   }
 
-  Future<bool> _deleteSoat() async {
-    final vehicleId = widget.vehicle?.id;
-    if (vehicleId == null) return false;
-    final result = await getIt<DeleteSoatUseCase>()(vehicleId);
-    return result.isRight();
-  }
-
-  void _onSoatDeleted() {
-    final vehicleId = widget.vehicle?.id;
-    if (vehicleId != null) {
-      context.read<VehicleCubit>().clearSoatLocally(vehicleId);
-    }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(context.l10n.soat_deleted_success)),
-    );
-    context.pop(true);
-  }
-
   // ── Build ────────────────────────────────────────────────────────────────
 
   @override
@@ -336,131 +345,156 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
           ),
         ),
       ),
-      body: FormBuilder(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              if (widget.vehicle != null) ...[
-                Text(
-                  context.l10n.soat_manual_subtitle(widget.vehicle!.name),
-                  style: const TextStyle(
-                    color: AppColors.textOnDarkSecondary,
-                    fontSize: 14,
-                    height: 1.5,
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-              if (_canOfferAutofill) ...[
-                SoatAutofillBanner(onAutofill: _applyAutofill),
-                const SizedBox(height: 16),
-              ],
-              SoatDocumentSection(
-                localImagePath: _localImagePath,
-                remoteDocumentUrl: _localImagePath == null
-                    ? widget.existingSoat?.documentUrl
-                    : null,
-                onPickImage: _pickImage,
-                onRemoveLocalImage: () =>
-                    setState(() => _localImagePath = null),
-              ),
-              const SizedBox(height: 20),
-              AppTextField(
-                name: 'policyNumber',
-                labelText: context.l10n.vehicle_soat_policy_number_label,
-                hintText: context.l10n.vehicle_soat_policy_number_hint,
-                initialValue: _initialPolicyNumber(),
-                textInputAction: TextInputAction.next,
-                enabled: !_saving,
-              ),
-              const SizedBox(height: 12),
-              AppTextField(
-                name: 'insurer',
-                labelText: context.l10n.vehicle_soat_insurer_label,
-                hintText: context.l10n.vehicle_soat_insurer_hint,
-                initialValue: _initialInsurer(),
-                isRequired: true,
-                textInputAction: TextInputAction.done,
-                enabled: !_saving,
-              ),
-              const SizedBox(height: 12),
-              Row(
+      body: Stack(
+        children: [
+          FormBuilder(
+            key: _formKey,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(
-                    child: AppDatePicker(
-                      key: ValueKey(
-                        'startDate_${_startDate?.toIso8601String()}',
+                  if (widget.vehicle != null) ...[
+                    Text(
+                      context.l10n.soat_manual_subtitle(widget.vehicle!.name),
+                      style: const TextStyle(
+                        color: AppColors.textOnDarkSecondary,
+                        fontSize: 14,
+                        height: 1.5,
                       ),
-                      fieldName: 'startDate',
-                      labelText: context.l10n.vehicle_soat_start_date_label,
-                      hintText: context.l10n.vehicle_soat_start_date_hint,
-                      initialValue: _startDate,
-                      isRequired: true,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2100),
-                      onChanged: (date) => setState(() => _startDate = date),
                     ),
+                    const SizedBox(height: 16),
+                  ],
+                  if (_canOfferAutofill) ...[
+                    SoatAutofillBanner(onAutofill: _applyAutofill),
+                    const SizedBox(height: 16),
+                  ],
+                  SoatDocumentSection(
+                    localImagePath: _localImagePath,
+                    remoteDocumentUrl: _localImagePath == null
+                        ? widget.existingSoat?.documentUrl
+                        : null,
+                    onPickImage: _pickImage,
+                    onRemoveLocalImage: () =>
+                        setState(() => _localImagePath = null),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: AppDatePicker(
-                      key: ValueKey(
-                        'expiryDate_${_expiryDate?.toIso8601String()}',
+                  const SizedBox(height: 20),
+                  AppTextField(
+                    name: 'policyNumber',
+                    labelText: context.l10n.vehicle_soat_policy_number_label,
+                    hintText: context.l10n.vehicle_soat_policy_number_hint,
+                    initialValue: _initialPolicyNumber(),
+                    textInputAction: TextInputAction.next,
+                    enabled: !_saving,
+                  ),
+                  const SizedBox(height: 12),
+                  AppTextField(
+                    name: 'insurer',
+                    labelText: context.l10n.vehicle_soat_insurer_label,
+                    hintText: context.l10n.vehicle_soat_insurer_hint,
+                    initialValue: _initialInsurer(),
+                    isRequired: true,
+                    textInputAction: TextInputAction.done,
+                    enabled: !_saving,
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: AppDatePicker(
+                          key: ValueKey(
+                            'startDate_${_startDate?.toIso8601String()}',
+                          ),
+                          fieldName: 'startDate',
+                          labelText: context.l10n.vehicle_soat_start_date_label,
+                          hintText: context.l10n.vehicle_soat_start_date_hint,
+                          initialValue: _startDate,
+                          isRequired: true,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                          onChanged: (date) =>
+                              setState(() => _startDate = date),
+                        ),
                       ),
-                      fieldName: 'expiryDate',
-                      labelText: context.l10n.vehicle_soat_expiry_date_label,
-                      hintText: context.l10n.vehicle_soat_expiry_date_hint,
-                      initialValue: _expiryDate,
-                      isRequired: true,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2100),
-                      onChanged: (date) => setState(() => _expiryDate = date),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: AppDatePicker(
+                          key: ValueKey(
+                            'expiryDate_${_expiryDate?.toIso8601String()}',
+                          ),
+                          fieldName: 'expiryDate',
+                          labelText:
+                              context.l10n.vehicle_soat_expiry_date_label,
+                          hintText: context.l10n.vehicle_soat_expiry_date_hint,
+                          initialValue: _expiryDate,
+                          isRequired: true,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                          onChanged: (date) =>
+                              setState(() => _expiryDate = date),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  SoatValidityCard(
+                    startDate: _startDate,
+                    expiryDate: _expiryDate,
+                  ),
+                  if (_error != null) ...[
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: AppColors.errorSubtle,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: AppColors.error),
+                      ),
+                      child: Text(
+                        _error!,
+                        style: const TextStyle(
+                          color: AppColors.error,
+                          fontSize: 13,
+                        ),
+                      ),
                     ),
+                  ],
+                  const SizedBox(height: 32),
+                  AppButton(
+                    label: _saving
+                        ? context.l10n.soat_saving
+                        : _isEditMode
+                        ? context.l10n.soat_save_data_btn
+                        : context.l10n.vehicle_soat_confirm_button,
+                    onPressed: _saving ? null : _submit,
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              SoatValidityCard(startDate: _startDate, expiryDate: _expiryDate),
-              if (_error != null) ...[
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppColors.errorSubtle,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppColors.error),
-                  ),
-                  child: Text(
-                    _error!,
-                    style: const TextStyle(
-                      color: AppColors.error,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-              ],
-              const SizedBox(height: 32),
-              AppButton(
-                label: _saving
-                    ? context.l10n.soat_saving
-                    : _isEditMode
-                    ? context.l10n.soat_save_data_btn
-                    : context.l10n.vehicle_soat_confirm_button,
-                onPressed: _saving ? null : _submit,
-              ),
-              if (_isEditMode && widget.existingSoat != null) ...[
-                const SizedBox(height: 12),
-                SoatDeleteButton(
-                  onDelete: _deleteSoat,
-                  onDeleted: _onSoatDeleted,
-                ),
-              ],
-            ],
+            ),
           ),
-        ),
+          if (_scanning)
+            Positioned.fill(
+              child: ColoredBox(
+                color: const Color(0xCC0D0D0F),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CircularProgressIndicator(color: AppColors.primary),
+                      const SizedBox(height: 16),
+                      Text(
+                        context.l10n.soat_scan_loading,
+                        style: const TextStyle(
+                          color: AppColors.textOnDarkPrimary,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

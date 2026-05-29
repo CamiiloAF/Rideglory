@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/soat/domain/models/soat_model.dart';
-import 'package:rideglory/features/soat/domain/usecases/delete_soat_usecase.dart';
 import 'package:rideglory/features/soat/domain/usecases/get_soat_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
-import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
 class VehicleSoatCard extends StatefulWidget {
@@ -24,7 +21,6 @@ class VehicleSoatCard extends StatefulWidget {
 class _VehicleSoatCardState extends State<VehicleSoatCard> {
   SoatModel? _soat;
   bool _isLoading = true;
-  bool _deleting = false;
 
   @override
   void initState() {
@@ -57,44 +53,6 @@ class _VehicleSoatCardState extends State<VehicleSoatCard> {
       setState(() => _isLoading = true);
       _loadSoat();
     }
-  }
-
-  Future<void> _confirmAndDelete(BuildContext context) async {
-    final vehicleId = widget.vehicle.id;
-    if (vehicleId == null) return;
-
-    final confirmed = await ConfirmationDialog.show(
-      context: context,
-      title: context.l10n.soat_delete_confirm_title,
-      content: context.l10n.soat_delete_confirm_message,
-      confirmLabel: context.l10n.soat_delete_button,
-      confirmType: DialogActionType.danger,
-      icon: Icons.delete_outline,
-    );
-    if (confirmed != true || !mounted) return;
-
-    setState(() => _deleting = true);
-    final result = await getIt<DeleteSoatUseCase>()(vehicleId);
-    if (!mounted) return;
-
-    result.fold(
-      (_) {
-        setState(() => _deleting = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.errorOccurred)),
-        );
-      },
-      (_) {
-        context.read<VehicleCubit>().clearSoatLocally(vehicleId);
-        setState(() {
-          _soat = null;
-          _deleting = false;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.soat_deleted_success)),
-        );
-      },
-    );
   }
 
   @override
@@ -202,35 +160,6 @@ class _VehicleSoatCardState extends State<VehicleSoatCard> {
                             ],
                           ),
                         ),
-                        if (_soat != null) ...[
-                          GestureDetector(
-                            onTap: _deleting
-                                ? null
-                                : () => _confirmAndDelete(context),
-                            child: Container(
-                              width: 28,
-                              height: 28,
-                              decoration: BoxDecoration(
-                                color: AppColors.darkTertiary,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: _deleting
-                                  ? const Padding(
-                                      padding: EdgeInsets.all(7),
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                        color: AppColors.error,
-                                      ),
-                                    )
-                                  : const Icon(
-                                      Icons.delete_outline,
-                                      size: 16,
-                                      color: AppColors.error,
-                                    ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                        ],
                         const Icon(
                           Icons.arrow_forward_ios,
                           size: 14,
