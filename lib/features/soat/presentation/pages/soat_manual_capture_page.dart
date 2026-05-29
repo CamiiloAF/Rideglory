@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
@@ -14,6 +13,7 @@ import 'package:rideglory/features/soat/domain/models/soat_model.dart';
 import 'package:rideglory/features/soat/domain/models/soat_scan_result.dart';
 import 'package:rideglory/features/soat/domain/usecases/save_soat_usecase.dart';
 import 'package:rideglory/features/soat/domain/usecases/scan_soat_usecase.dart';
+import 'package:rideglory/features/soat/presentation/scan/soat_document_picker.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_add_document_sheet.dart';
@@ -171,19 +171,11 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
     if (choice == 2) {
       // Seleccionar PDF
       scanSource = SoatScanSource.pdf;
-      final result = await FilePicker.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['pdf'],
-      );
-      pickedPath = result?.files.single.path;
+      pickedPath = await SoatDocumentPicker.pickPdf();
     } else {
       // Galería (la captura con cámara se retiró: peor lectura OCR).
       scanSource = SoatScanSource.gallery;
-      final file = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 100,
-      );
-      pickedPath = file?.path;
+      pickedPath = await SoatDocumentPicker.pickImageFromGallery();
     }
 
     if (pickedPath == null || !mounted) return;

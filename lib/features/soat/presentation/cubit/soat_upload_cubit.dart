@@ -1,8 +1,7 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
-import 'package:rideglory/core/services/image_storage_service.dart';
+import 'package:rideglory/features/soat/presentation/scan/soat_document_picker.dart';
 
 sealed class SoatUploadState {
   const SoatUploadState();
@@ -28,28 +27,23 @@ final class SoatUploadError extends SoatUploadState {
 
 @injectable
 class SoatUploadCubit extends Cubit<SoatUploadState> {
-  SoatUploadCubit(this._imageStorageService) : super(const SoatUploadInitial());
-
-  final ImageStorageService _imageStorageService;
+  SoatUploadCubit() : super(const SoatUploadInitial());
 
   Future<void> pickFromGallery() async {
     emit(const SoatUploadPicking());
-    final image = await _imageStorageService.pickImageFromGallery();
-    if (image != null) {
-      emit(SoatUploadImagePicked(image));
-    } else {
-      emit(const SoatUploadInitial());
-    }
+    final path = await SoatDocumentPicker.pickImageFromGallery();
+    _emitPicked(path);
   }
 
   Future<void> pickFromFile() async {
     emit(const SoatUploadPicking());
-    final result = await FilePicker.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    );
-    if (result != null && result.files.single.path != null) {
-      emit(SoatUploadImagePicked(XFile(result.files.single.path!)));
+    final path = await SoatDocumentPicker.pickPdf();
+    _emitPicked(path);
+  }
+
+  void _emitPicked(String? path) {
+    if (path != null) {
+      emit(SoatUploadImagePicked(XFile(path)));
     } else {
       emit(const SoatUploadInitial());
     }
