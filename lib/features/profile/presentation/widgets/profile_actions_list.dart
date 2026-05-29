@@ -63,7 +63,7 @@ class ProfileActionsList extends StatelessWidget {
                 cancelLabel: context.l10n.cancel,
                 confirmLabel: context.l10n.auth_logout,
                 confirmType: DialogActionType.danger,
-                dialogType: DialogType.warning,
+                icon: Icons.logout,
                 onConfirm: () => _logout(context),
               );
             },

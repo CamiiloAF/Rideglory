@@ -156,7 +156,6 @@ class GarageOptionsBottomSheet extends StatelessWidget {
                 cancelLabel: parentContext.l10n.cancel,
                 confirmLabel: parentContext.l10n.delete,
                 confirmType: DialogActionType.danger,
-                dialogType: DialogType.warning,
                 isDismissible: true,
               );
               if (confirm != true || !parentContext.mounted) return;

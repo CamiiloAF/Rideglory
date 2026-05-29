@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
-import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/shared/widgets/modals/app_modal.dart';
+import 'package:rideglory/shared/widgets/modals/app_modal_action.dart';
+import 'package:rideglory/shared/widgets/modals/dialog_type.dart';
 
 enum DialogActionType { primary, secondary, danger }
 
@@ -16,6 +18,8 @@ class DialogAction {
   });
 }
 
+/// Generic dialog built on the unified [AppModal] design. Accepts an arbitrary
+/// list of [DialogAction]s; falls back to a single "accept" button when empty.
 class AppDialog extends StatelessWidget {
   final String title;
   final String content;
@@ -23,7 +27,6 @@ class AppDialog extends StatelessWidget {
   final List<DialogAction> actions;
   final IconData? customIcon;
   final Color? customIconColor;
-  final bool isDismissible;
 
   const AppDialog({
     super.key,
@@ -33,80 +36,49 @@ class AppDialog extends StatelessWidget {
     required this.actions,
     this.customIcon,
     this.customIconColor,
-    this.isDismissible = false,
   });
 
-  Color _getIconColor() {
-    if (customIconColor != null) return customIconColor!;
-    return type.color;
-  }
-
-  IconData _getIcon() {
-    if (customIcon != null) return customIcon!;
-    return type.icon;
+  AppModalActionEmphasis _emphasisFor(DialogActionType actionType) {
+    return switch (actionType) {
+      DialogActionType.primary => AppModalActionEmphasis.primary,
+      DialogActionType.danger => AppModalActionEmphasis.danger,
+      DialogActionType.secondary => AppModalActionEmphasis.neutral,
+    };
   }
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      title: Row(
-        children: [
-          Icon(_getIcon(), color: _getIconColor(), size: 28),
-          AppSpacing.hGapMd,
-          Expanded(
-            child: Text(
-              title,
-              style: context.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+    final resolvedActions = actions.isEmpty
+        ? [
+            AppModalAction(
+              label: context.l10n.accept,
+              onPressed: () => Navigator.of(context).pop(),
             ),
-          ),
-        ],
-      ),
-      content: Text(content, style: context.bodyMedium?.copyWith(height: 1.5)),
-      actions: _buildActions(context),
-      actionsPadding: const EdgeInsets.all(16),
+          ]
+        : actions
+              .map(
+                (action) => AppModalAction(
+                  label: action.label,
+                  onPressed: action.onPressed,
+                  emphasis: _emphasisFor(action.type),
+                ),
+              )
+              .toList();
+
+    final hasDangerAction = actions.any(
+      (action) => action.type == DialogActionType.danger,
     );
-  }
+    final variant = hasDangerAction
+        ? AppModalVariant.destructive
+        : type.variant;
 
-  List<Widget> _buildActions(BuildContext context) {
-    if (actions.isEmpty) {
-      return [
-        AppButton(
-          label: context.l10n.accept,
-          onPressed: () => Navigator.of(_getContext()).pop(),
-          variant: AppButtonVariant.primary,
-          isFullWidth: false,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-        ),
-      ];
-    }
-
-    return actions.map((action) {
-      final isPrimary = action.type == DialogActionType.primary;
-      final isDanger = action.type == DialogActionType.danger;
-      final variant = isDanger
-          ? AppButtonVariant.danger
-          : AppButtonVariant.primary;
-      final style = isPrimary || isDanger
-          ? AppButtonStyle.filled
-          : AppButtonStyle.outlined;
-
-      return Expanded(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          child: AppButton(
-            label: action.label,
-            onPressed: action.onPressed,
-            variant: variant,
-            style: style,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-          ),
-        ),
-      );
-    }).toList();
-  }
-
-  BuildContext _getContext() {
-    throw UnimplementedError('Use ConfirmationDialog or InfoDialog instead');
+    return AppModal(
+      title: title,
+      description: content,
+      variant: variant,
+      icon: customIcon,
+      iconColor: customIconColor,
+      actions: resolvedActions,
+    );
   }
 }

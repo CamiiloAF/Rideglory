@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
+/// Confirmation modal (affirmative + cancel) built on the unified [AppModal]
+/// design. Returns `true` when confirmed, `false`/`null` when cancelled.
 class ConfirmationDialog {
   static Future<bool?> show({
     required BuildContext context,
@@ -11,6 +13,7 @@ class ConfirmationDialog {
     void Function(BuildContext dialogContext)? onCancel,
     String? cancelLabel,
     String? confirmLabel,
+    IconData? icon,
     DialogActionType confirmType = DialogActionType.primary,
     DialogType dialogType = DialogType.confirmation,
     bool isDismissible = false,
@@ -18,92 +21,41 @@ class ConfirmationDialog {
     final resolvedCancelLabel = cancelLabel ?? context.l10n.cancel;
     final resolvedConfirmLabel = confirmLabel ?? context.l10n.confirm;
 
-    return showDialog<bool>(
+    // A destructive confirm drives the whole modal into the `destructive`
+    // variant (red icon + red button) so the icon and button stay consistent;
+    // otherwise the modal follows the requested [dialogType].
+    final variant = confirmType == DialogActionType.danger
+        ? AppModalVariant.destructive
+        : dialogType.variant;
+
+    return AppModal.show<bool>(
       context: context,
+      title: title,
+      description: content,
+      variant: variant,
+      icon: icon,
       barrierDismissible: isDismissible,
-      builder: (dialogContext) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Header
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Icon(
-                          dialogType.icon,
-                          color: dialogType.color,
-                          size: 28,
-                        ),
-                        AppSpacing.hGapMd,
-                        Expanded(
-                          child: Text(
-                            title,
-                            style: dialogContext.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    AppSpacing.gapLg,
-                    // Content
-                    Text(
-                      content,
-                      style: dialogContext.bodyMedium?.copyWith(height: 1.5),
-                    ),
-                  ],
-                ),
-              ),
-              // Actions
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 16,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: AppButton(
-                        label: resolvedCancelLabel,
-                        onPressed: onCancel != null
-                            ? () => onCancel(dialogContext)
-                            : () => Navigator.of(dialogContext).pop(false),
-                        variant: AppButtonVariant.primary,
-                        style: AppButtonStyle.outlined,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                    ),
-                    AppSpacing.hGapMd,
-                    Expanded(
-                      child: AppButton(
-                        label: resolvedConfirmLabel,
-                        onPressed: () {
-                          Navigator.of(dialogContext).pop(true);
-                          if (onConfirm != null) {
-                            onConfirm();
-                          }
-                        },
-                        variant: confirmType == DialogActionType.danger
-                            ? AppButtonVariant.danger
-                            : AppButtonVariant.primary,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+      actions: [
+        AppModalAction(
+          label: resolvedConfirmLabel,
+          emphasis: confirmType == DialogActionType.danger
+              ? AppModalActionEmphasis.danger
+              : AppModalActionEmphasis.primary,
+          onPressed: () {
+            // The dialog is pushed on the root navigator (showDialog defaults
+            // to useRootNavigator: true), so it must be popped there — popping
+            // the caller's navigator would remove a page route instead.
+            Navigator.of(context, rootNavigator: true).pop(true);
+            onConfirm?.call();
+          },
         ),
-      ),
+        AppModalAction.neutral(
+          label: resolvedCancelLabel,
+          onPressed: onCancel != null
+              ? () => onCancel(context)
+              : () => Navigator.of(context, rootNavigator: true).pop(false),
+        ),
+      ],
     );
   }
 }

@@ -48,7 +48,6 @@ class MaintenanceCardActionsMenu extends StatelessWidget {
             cancelLabel: context.l10n.cancel,
             confirmLabel: context.l10n.delete,
             confirmType: DialogActionType.danger,
-            dialogType: DialogType.warning,
             onConfirm: () => onDelete?.call(),
           );
         }
