@@ -10,13 +10,10 @@ import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/soat/domain/models/soat_extraction.dart';
 import 'package:rideglory/features/soat/domain/models/soat_model.dart';
 import 'package:rideglory/features/soat/domain/usecases/save_soat_usecase.dart';
-import 'package:rideglory/features/soat/presentation/scan/soat_scan_launcher.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
-import 'package:rideglory/features/soat/presentation/widgets/soat_autofill_badge.dart';
+import 'package:rideglory/features/soat/presentation/widgets/soat_autofill_banner.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_document_section.dart';
-import 'package:rideglory/features/soat/presentation/widgets/soat_ocr_banner.dart';
-import 'package:rideglory/features/soat/presentation/widgets/soat_scan_button.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_validity_card.dart';
 
 /// Formulario unificado para **registrar o editar** el SOAT manualmente.
@@ -66,45 +63,44 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
   DateTime? _expiryDate;
   String? _localImagePath;
   bool _saving = false;
-  bool _scanning = false;
+  bool _autofillApplied = false;
   String? _error;
-  SoatExtraction? _extraction;
+  late final SoatExtraction? _extraction;
 
   bool get _isEditMode => widget.vehicle?.id != null;
 
-  /// OCR data is only applied when it cleared the prefill threshold.
-  SoatExtraction? get _prefill =>
-      (_extraction?.shouldPrefill ?? false) ? _extraction : null;
+  /// The scan detected a valid SOAT and the user has not autofilled yet, so the
+  /// opt-in banner should be offered (the user decides whether to autofill).
+  bool get _canOfferAutofill =>
+      !_autofillApplied && (_extraction?.shouldPrefill ?? false);
 
   @override
   void initState() {
     super.initState();
     _extraction = widget.extraction;
-    _startDate = _prefill?.startDate ?? widget.existingSoat?.startDate;
-    _expiryDate = _prefill?.expiryDate ?? widget.existingSoat?.expiryDate;
+    _startDate = widget.existingSoat?.startDate;
+    _expiryDate = widget.existingSoat?.expiryDate;
     _localImagePath = widget.initialLocalImagePath;
   }
 
-  String? _initialPolicyNumber() =>
-      _prefill?.policyNumber ?? widget.existingSoat?.policyNumber;
+  String? _initialPolicyNumber() => widget.existingSoat?.policyNumber;
 
-  String? _initialInsurer() =>
-      _prefill?.insurer ?? widget.existingSoat?.insurer;
+  String? _initialInsurer() => widget.existingSoat?.insurer;
 
-  Future<void> _rescan() async {
-    setState(() => _scanning = true);
-    final outcome = await SoatScanLauncher.launch(context);
-    if (!mounted) return;
+  /// Fills the form with the detected SOAT data when the user opts in via the
+  /// banner. Dates patch through [setState] so their pickers rebuild.
+  void _applyAutofill() {
+    final extraction = _extraction;
+    if (extraction == null) return;
+    _formKey.currentState?.patchValue({
+      if (extraction.policyNumber != null)
+        'policyNumber': extraction.policyNumber,
+      if (extraction.insurer != null) 'insurer': extraction.insurer,
+    });
     setState(() {
-      _scanning = false;
-      if (outcome != null) {
-        _extraction = outcome.extraction;
-        _localImagePath = outcome.filePath;
-        if (_prefill != null) {
-          _startDate = _prefill!.startDate ?? _startDate;
-          _expiryDate = _prefill!.expiryDate ?? _expiryDate;
-        }
-      }
+      _startDate = extraction.startDate ?? _startDate;
+      _expiryDate = extraction.expiryDate ?? _expiryDate;
+      _autofillApplied = true;
     });
   }
 
@@ -336,12 +332,8 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
                 ),
                 const SizedBox(height: 16),
               ],
-              SoatScanButton(onPressed: _rescan, isLoading: _scanning),
-              const SizedBox(height: 16),
-              if (_prefill != null) ...[
-                SoatOcrBanner(
-                  needsCarefulReview: _prefill!.hasMediumConfidence,
-                ),
+              if (_canOfferAutofill) ...[
+                SoatAutofillBanner(onAutofill: _applyAutofill),
                 const SizedBox(height: 16),
               ],
               SoatDocumentSection(
@@ -355,36 +347,19 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
               ),
               const SizedBox(height: 20),
               AppTextField(
-                key: ValueKey('policyNumber_${_prefill?.policyNumber}'),
                 name: 'policyNumber',
                 labelText: context.l10n.vehicle_soat_policy_number_label,
                 hintText: context.l10n.vehicle_soat_policy_number_hint,
                 initialValue: _initialPolicyNumber(),
-                suffixIcon:
-                    (_prefill?.isFieldAutofilled(SoatField.policyNumber) ??
-                        false)
-                    ? SoatAutofillBadge(
-                        confidence: _prefill!.confidenceOf(
-                          SoatField.policyNumber,
-                        ),
-                      )
-                    : null,
                 textInputAction: TextInputAction.next,
                 enabled: !_saving,
               ),
               const SizedBox(height: 12),
               AppTextField(
-                key: ValueKey('insurer_${_prefill?.insurer}'),
                 name: 'insurer',
                 labelText: context.l10n.vehicle_soat_insurer_label,
                 hintText: context.l10n.vehicle_soat_insurer_hint,
                 initialValue: _initialInsurer(),
-                suffixIcon:
-                    (_prefill?.isFieldAutofilled(SoatField.insurer) ?? false)
-                    ? SoatAutofillBadge(
-                        confidence: _prefill!.confidenceOf(SoatField.insurer),
-                      )
-                    : null,
                 isRequired: true,
                 textInputAction: TextInputAction.done,
                 enabled: !_saving,

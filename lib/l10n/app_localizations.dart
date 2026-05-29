@@ -4273,6 +4273,24 @@ abstract class AppLocalizations {
   /// **'Dato extraído del documento'**
   String get soat_scan_field_hint;
 
+  /// No description provided for @soat_autofill_banner_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Detectamos los datos de tu SOAT'**
+  String get soat_autofill_banner_title;
+
+  /// No description provided for @soat_autofill_banner_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Puedes autocompletar el formulario y revisar antes de guardar'**
+  String get soat_autofill_banner_subtitle;
+
+  /// No description provided for @soat_autofill_banner_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Autocompletar campos'**
+  String get soat_autofill_banner_button;
+
   /// No description provided for @soat_scan_error_unreadable.
   ///
   /// In es, this message translates to:
@@ -4660,13 +4678,13 @@ abstract class AppLocalizations {
   /// Restored SOAT upload UI key: vehicle_soat_option_upload_desc
   ///
   /// In es, this message translates to:
-  /// **'Sube una foto, imagen de galería o PDF del documento del SOAT vigente'**
+  /// **'Sube una foto o el PDF del SOAT y leeremos los datos automáticamente para ti'**
   String get vehicle_soat_option_upload_desc;
 
   /// Restored SOAT upload UI key: vehicle_soat_option_upload_title
   ///
   /// In es, this message translates to:
-  /// **'Subir documento'**
+  /// **'Escanea tu SOAT'**
   String get vehicle_soat_option_upload_title;
 
   /// Restored SOAT upload UI key: vehicle_soat_upload_question

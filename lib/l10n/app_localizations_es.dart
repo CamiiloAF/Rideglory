@@ -2249,6 +2249,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get soat_scan_field_hint => 'Dato extraído del documento';
 
   @override
+  String get soat_autofill_banner_title => 'Detectamos los datos de tu SOAT';
+
+  @override
+  String get soat_autofill_banner_subtitle =>
+      'Puedes autocompletar el formulario y revisar antes de guardar';
+
+  @override
+  String get soat_autofill_banner_button => 'Autocompletar campos';
+
+  @override
   String get soat_scan_error_unreadable =>
       'No pudimos leer el documento, ingresa los datos manualmente';
 
@@ -2460,10 +2470,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get vehicle_soat_option_upload_desc =>
-      'Sube una foto, imagen de galería o PDF del documento del SOAT vigente';
+      'Sube una foto o el PDF del SOAT y leeremos los datos automáticamente para ti';
 
   @override
-  String get vehicle_soat_option_upload_title => 'Subir documento';
+  String get vehicle_soat_option_upload_title => 'Escanea tu SOAT';
 
   @override
   String get vehicle_soat_upload_question => '¿Cómo deseas registrar tu SOAT?';

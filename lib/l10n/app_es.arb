@@ -885,6 +885,9 @@
   "soat_scan_banner": "Datos extraídos del documento — revisa antes de guardar",
   "soat_scan_banner_review": "Revisa con cuidado los campos resaltados antes de guardar",
   "soat_scan_field_hint": "Dato extraído del documento",
+  "soat_autofill_banner_title": "Detectamos los datos de tu SOAT",
+  "soat_autofill_banner_subtitle": "Puedes autocompletar el formulario y revisar antes de guardar",
+  "soat_autofill_banner_button": "Autocompletar campos",
   "soat_scan_error_unreadable": "No pudimos leer el documento, ingresa los datos manualmente",
   "soat_scan_error_permission": "Necesitamos permiso de cámara o archivos para escanear el documento",
   "soat_field_policy_number": "N.° de póliza",
@@ -995,11 +998,11 @@
   "@vehicle_soat_option_manual_title": {
     "description": "Restored SOAT upload UI key: vehicle_soat_option_manual_title"
   },
-  "vehicle_soat_option_upload_desc": "Sube una foto, imagen de galería o PDF del documento del SOAT vigente",
+  "vehicle_soat_option_upload_desc": "Sube una foto o el PDF del SOAT y leeremos los datos automáticamente para ti",
   "@vehicle_soat_option_upload_desc": {
     "description": "Restored SOAT upload UI key: vehicle_soat_option_upload_desc"
   },
-  "vehicle_soat_option_upload_title": "Subir documento",
+  "vehicle_soat_option_upload_title": "Escanea tu SOAT",
   "@vehicle_soat_option_upload_title": {
     "description": "Restored SOAT upload UI key: vehicle_soat_option_upload_title"
   },

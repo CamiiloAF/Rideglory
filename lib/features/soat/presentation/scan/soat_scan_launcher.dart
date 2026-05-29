@@ -28,13 +28,19 @@ class SoatScanOutcome {
 /// at any step or the scan does not yield prefillable data (the caller falls
 /// back silently to the manual flow).
 abstract final class SoatScanLauncher {
-  static Future<SoatScanOutcome?> launch(BuildContext context) async {
-    final source = await SoatScanSourceSheet.show(context);
-    if (source == null || !context.mounted) return null;
+  /// Runs the scan flow. When [source] is provided (e.g. the upload card already
+  /// asked camera/gallery/PDF) the source picker sheet is skipped; otherwise it
+  /// is shown first.
+  static Future<SoatScanOutcome?> launch(
+    BuildContext context, {
+    SoatScanSource? source,
+  }) async {
+    final resolvedSource = source ?? await SoatScanSourceSheet.show(context);
+    if (resolvedSource == null || !context.mounted) return null;
 
     final String? filePath;
     try {
-      filePath = await _pickFile(source);
+      filePath = await _pickFile(resolvedSource);
     } on PlatformException catch (exception) {
       if (!_isPermissionDenied(exception)) rethrow;
       await _logFailure(SoatScanFailureReason.permissionDenied);
@@ -45,7 +51,7 @@ abstract final class SoatScanLauncher {
 
     final extraction = await context.push<SoatExtraction>(
       AppRoutes.soatScan,
-      extra: SoatScanParams(filePath: filePath, source: source),
+      extra: SoatScanParams(filePath: filePath, source: resolvedSource),
     );
 
     if (extraction == null) return null;

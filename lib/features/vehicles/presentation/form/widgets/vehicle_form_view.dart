@@ -16,8 +16,9 @@ import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dar
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_delete_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/form/vehicle_form_body.dart';
-import 'package:rideglory/features/soat/presentation/pages/soat_confirmation_page.dart';
+import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_params.dart';
 import 'package:rideglory/shared/cubits/form_image_cubit.dart';
+import 'package:rideglory/shared/router/app_routes.dart';
 
 class VehicleFormView extends StatefulWidget {
   const VehicleFormView({super.key});
@@ -137,17 +138,16 @@ class _VehicleFormViewState extends State<VehicleFormView> {
           ),
         );
 
-        // Caso 1: SOAT con imagen adjuntada — navegar a SoatConfirmationPage
+        // Caso 1: SOAT con imagen adjuntada — abrir el formulario unificado de
+        // SOAT, reemplazando este form para no dejarlo en el back stack.
         final soatPath = state.soatLocalPath;
         if (!state.isEditing && soatPath != null && savedVehicle.id != null) {
           if (!context.mounted) return;
-          Navigator.of(context).pushReplacement( // Custom: pushReplacement — VehicleFormPage must not remain in back stack after SOAT confirmation.
-            MaterialPageRoute<void>(
-              builder: (_) => SoatConfirmationPage(
-                vehicle: savedVehicle,
-                documentImage: XFile(soatPath),
-                isFromVehicleCreation: true,
-              ),
+          context.pushReplacementNamed(
+            AppRoutes.soatManualCapture,
+            extra: SoatManualCaptureParams(
+              vehicle: savedVehicle,
+              initialLocalImagePath: soatPath,
             ),
           );
           return;
