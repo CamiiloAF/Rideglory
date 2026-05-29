@@ -1,6 +1,6 @@
 # Documentación del Feature: Vehicles
 
-> Última actualización: 2026-05-28  
+> Última actualización: 2026-05-29  
 > Alcance: `lib/features/vehicles/`
 
 ---
@@ -357,7 +357,7 @@ VehicleFormPage(vehicle?)
 
 **Listener en `VehicleFormView`** post-save (data state):
 1. `VehicleCubit.applySavedVehicleEdit(saved)` (si editaba) o `VehicleCubit.addVehicleLocally(saved)` (si creaba).
-2. **Si CREANDO + `soatLocalPath != null`** → `pushReplacement` a `SoatConfirmationPage` (mantiene VehicleForm fuera del back stack).
+2. **Si CREANDO + `soatLocalPath != null`** → `pushReplacementNamed(soatManualCapture, SoatManualCaptureParams(vehicle: saved, initialLocalImagePath: soatPath))` (mantiene VehicleForm fuera del back stack; `SoatConfirmationPage` fue eliminada).
 3. **Si CREANDO + `pendingManualSoat != null`** → `_savePendingManualSoatAndPop()` sube documento (si hay) + `upsertSoat()` + pop.
 4. Otro caso → `pop(savedVehicle)`.
 
@@ -387,7 +387,7 @@ Hay **dos imágenes** distintas:
 
 ### Documento SOAT (cuando se sube desde el form de vehículo)
 - Path Firebase: `soat/{vehicleId}/{timestamp}.{ext}`.
-- Manejado por `VehicleFormView._savePendingManualSoatAndPop()` para SOAT manual (modo creación) o por `SoatConfirmationPage` para SOAT con documento (post-creación).
+- Manejado por `VehicleFormView._savePendingManualSoatAndPop()` para SOAT manual (modo creación) o por `SoatManualCapturePage` (pantalla unificada) para SOAT con documento (post-creación).
 - Si la subida de imagen falla, el SOAT se guarda **sin documentUrl** (catch silencioso). Ver §13.
 
 ---
@@ -460,6 +460,7 @@ Bottom sheet alternativo al dropdown. Usado por `VehicleSelectorField` en el reg
 | Asignar principal | `PUT` | `/vehicles/my/{vehicleId}/main` |
 | Upsert SOAT | `POST` | `/vehicles/{vehicleId}/soat` |
 | Get SOAT | `GET` | `/vehicles/{vehicleId}/soat` |
+| Eliminar SOAT | `DELETE` | `/vehicles/{vehicleId}/soat` (vía `DeleteSoatUseCase`; ver `soat.md` §6.5) |
 
 Constantes en `lib/core/http/api_routes.dart` (`vehicles = '/vehicles'`, `myVehicles = '/vehicles/my'`, `vehicleSoat(id)`).
 
@@ -473,7 +474,7 @@ Constantes en `lib/core/http/api_routes.dart` (`vehicles = '/vehicles'`, `myVehi
 | `maintenance` | `MaintenanceRepositoryImpl.getMaintenancesByUserId()` consume `VehicleRepository.getMyVehicles()`; `MaintenanceFormCubit` lee `VehicleCubit.currentMileage` para pre-llenar odómetro y propone update si aumentó |
 | `profile` | Logout llama `VehicleCubit.clearVehicles()` |
 | `home` | `HomeGarageSection` lee `VehicleCubit.state` para destacar el vehículo principal (o el primer no archivado) — además del `HomeData.mainVehicle` que viene del API home |
-| `soat` | `VehicleFormView` puede iniciar el flujo SOAT (`SoatConfirmationPage`) durante la creación; el detalle del vehículo muestra el badge SOAT |
+| `soat` | `VehicleFormView` puede iniciar el flujo SOAT (`SoatManualCapturePage`, ruta `soatManualCapture`) durante la creación; el detalle del vehículo (`vehicle_soat_card.dart`) y el slot del form de edición (`vehicle_soat_form_slot.dart`) muestran el estado SOAT y permiten eliminarlo (`DeleteSoatUseCase` + `VehicleCubit.clearSoatLocally`) |
 
 ---
 
@@ -512,7 +513,7 @@ El body solo envía 14 campos. **No envía** `color`, `soatStatus`, `soatExpiryD
 `VehicleFormView._savePendingManualSoatAndPop()` envuelve `uploadImage()` en `try-catch (_) { }`. Si la imagen falla pero el SOAT (sin documentUrl) se guarda OK, se muestra un warning pero el usuario no sabe en qué falló. Considerar separar los errores.
 
 ### Dual flujo SOAT en creación
-- **Flujo "con imagen"**: usuario adjunta documento durante el form → al guardar, `pushReplacement` a `SoatConfirmationPage`.
+- **Flujo "con imagen"**: usuario adjunta documento durante el form → al guardar, `pushReplacementNamed(soatManualCapture, ...)` (la pantalla unificada `SoatManualCapturePage`).
 - **Flujo "manual"**: usuario llena `PendingManualSoat` (con o sin imagen) → al guardar el vehículo, `_savePendingManualSoatAndPop()` invoca `upsertSoat` + pop.
 
 Verificar en `VehicleFormView` listener cuál branch se ejecuta según el state del cubit.
