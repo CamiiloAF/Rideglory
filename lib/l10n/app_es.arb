@@ -508,6 +508,13 @@
       "name": {}
     }
   },
+  "registration_requestEditConfirmTitle": "Solicitar edición",
+  "registration_requestEditConfirmMessage": "¿Pedirle a {name} que edite su inscripción?",
+  "@registration_requestEditConfirmMessage": {
+    "placeholders": {
+      "name": {}
+    }
+  },
   "maintenance_performedOn": "Completado el {date}",
   "@maintenance_performedOn": {
     "placeholders": {

@@ -24,19 +24,22 @@ class RegistrationDetailBottomBar extends StatelessWidget {
     final showCancel = params.onCancelRegistration != null && !ownerSuppressed;
 
     // Regla READY_FOR_EDIT: mientras la inscripción esté en este estado, el
-    // organizador no puede aprobar, rechazar ni volver a solicitar edición.
-    // Solo el piloto (al editar su inscripción) la regresa a PENDING.
-    final ownerActionsLocked =
+    // organizador SOLO puede rechazarla; no puede aprobar ni volver a solicitar
+    // edición. En PENDING dispone de las tres acciones. Solo el piloto (al
+    // editar su inscripción) la regresa a PENDING.
+    final isReadyForEdit =
         registration.status == RegistrationStatus.readyForEdit;
-    final showApproveReject =
-        !ownerActionsLocked &&
-        (params.onApprove != null || params.onReject != null);
+    final showOwnerActions =
+        params.onApprove != null || params.onReject != null;
+    final showApprove = !isReadyForEdit && params.onApprove != null;
+    final showRequestEdit = !isReadyForEdit && params.onRequestEdit != null;
 
     final actions = _buildActions(
       context,
-      showApproveReject: showApproveReject,
+      showOwnerActions: showOwnerActions,
+      showApprove: showApprove,
+      showRequestEdit: showRequestEdit,
       showCancel: showCancel,
-      ownerActionsLocked: ownerActionsLocked,
     );
     if (actions.isEmpty) return const SizedBox.shrink();
 
@@ -61,12 +64,14 @@ class RegistrationDetailBottomBar extends StatelessWidget {
 
   List<Widget> _buildActions(
     BuildContext context, {
-    required bool showApproveReject,
+    required bool showOwnerActions,
+    required bool showApprove,
+    required bool showRequestEdit,
     required bool showCancel,
-    required bool ownerActionsLocked,
   }) {
     // Vista organizador: aprobar destacado + (rechazar / solicitar edición).
-    if (showApproveReject) {
+    // En READY_FOR_EDIT solo queda rechazar, que entonces ocupa todo el ancho.
+    if (showOwnerActions) {
       final secondaryButtons = <Widget>[
         if (params.onReject != null)
           Expanded(
@@ -75,9 +80,8 @@ class RegistrationDetailBottomBar extends StatelessWidget {
               onPressed: () => params.onReject!(context),
             ),
           ),
-        if (params.onReject != null && params.onRequestEdit != null)
-          AppSpacing.hGapSm,
-        if (params.onRequestEdit != null)
+        if (params.onReject != null && showRequestEdit) AppSpacing.hGapSm,
+        if (showRequestEdit)
           Expanded(
             child: RegistrationRequestEditButton(
               label: context.l10n.registration_requestEdit,
@@ -87,13 +91,12 @@ class RegistrationDetailBottomBar extends StatelessWidget {
       ];
 
       return [
-        if (params.onApprove != null)
+        if (showApprove)
           RegistrationApproveButton(
             label: context.l10n.registration_approve,
             onPressed: () => params.onApprove!(context),
           ),
-        if (params.onApprove != null && secondaryButtons.isNotEmpty)
-          AppSpacing.gapMd,
+        if (showApprove && secondaryButtons.isNotEmpty) AppSpacing.gapMd,
         if (secondaryButtons.isNotEmpty) Row(children: secondaryButtons),
       ];
     }

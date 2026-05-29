@@ -2962,6 +2962,18 @@ abstract class AppLocalizations {
   /// **'¿Rechazar la inscripción de {name}?'**
   String event_rejectConfirmMessage(Object name);
 
+  /// No description provided for @registration_requestEditConfirmTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Solicitar edición'**
+  String get registration_requestEditConfirmTitle;
+
+  /// No description provided for @registration_requestEditConfirmMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Pedirle a {name} que edite su inscripción?'**
+  String registration_requestEditConfirmMessage(Object name);
+
   /// No description provided for @maintenance_performedOn.
   ///
   /// In es, this message translates to:

@@ -1526,6 +1526,14 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get registration_requestEditConfirmTitle => 'Solicitar edición';
+
+  @override
+  String registration_requestEditConfirmMessage(Object name) {
+    return '¿Pedirle a $name que edite su inscripción?';
+  }
+
+  @override
   String maintenance_performedOn(Object date) {
     return 'Completado el $date';
   }

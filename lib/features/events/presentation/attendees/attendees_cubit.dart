@@ -85,6 +85,11 @@ class AttendeesCubit extends Cubit<ResultState<List<EventRegistrationModel>>> {
       _cache.updateStatus(eventId, registrationId, status);
     }
 
+    // `EventRegistrationModel.==` solo compara por id, así que el deep equality
+    // de la lista da true aunque el status haya cambiado y Bloc descartaría el
+    // emit. Forzamos un cambio visible emitiendo un estado intermedio antes del
+    // nuevo data para que la UI refleje el nuevo estado al volver del detalle.
+    emit(const ResultState.initial());
     emit(ResultState.data(data: _registrations));
     return previousStatus;
   }
@@ -127,11 +132,11 @@ class AttendeesCubit extends Cubit<ResultState<List<EventRegistrationModel>>> {
     );
   }
 
-  Future<void> setReadyForEdit(String registrationId) async {
-    final result = await _setReadyForEditUseCase(registrationId);
-    result.fold(
-      (error) => _actionErrorController.add(error),
-      (_) => _eventId != null ? fetchAttendees(_eventId!) : null,
+  Future<void> setReadyForEdit(String registrationId) {
+    return _updateStatusOptimistically(
+      registrationId,
+      RegistrationStatus.readyForEdit,
+      _setReadyForEditUseCase.call,
     );
   }
 

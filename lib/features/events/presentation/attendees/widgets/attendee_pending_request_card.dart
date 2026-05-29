@@ -99,33 +99,33 @@ class AttendeePendingRequestCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Regla READY_FOR_EDIT: mientras el piloto no edite (lo que regresa
-            // la inscripción a PENDING), el organizador no puede aprobar ni
-            // rechazar, así que ocultamos las acciones.
-            if (registration.status != RegistrationStatus.readyForEdit) ...[
-              const Divider(height: 1, color: AppColors.darkBorderPrimary),
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: ApproveRejectBar(
-                  rejectLabel: context.l10n.event_rejectRegistration,
-                  approveLabel: context.l10n.event_approveRegistration,
-                  onReject: () => AttendeeActionConfirmation.showReject(
-                    context,
-                    participantName: registration.fullName,
-                    onConfirm: () => context
-                        .read<AttendeesCubit>()
-                        .rejectRegistration(registration.id!),
-                  ),
-                  onApprove: () => AttendeeActionConfirmation.showApprove(
-                    context,
-                    participantName: registration.fullName,
-                    onConfirm: () => context
-                        .read<AttendeesCubit>()
-                        .approveRegistration(registration.id!),
-                  ),
+            // Regla READY_FOR_EDIT: mientras la inscripción esté en este estado
+            // el organizador SOLO puede rechazar (no aprobar). En PENDING se
+            // muestran ambas acciones.
+            const Divider(height: 1, color: AppColors.darkBorderPrimary),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: ApproveRejectBar(
+                rejectLabel: context.l10n.event_rejectRegistration,
+                approveLabel: context.l10n.event_approveRegistration,
+                showApprove:
+                    registration.status != RegistrationStatus.readyForEdit,
+                onReject: () => AttendeeActionConfirmation.showReject(
+                  context,
+                  participantName: registration.fullName,
+                  onConfirm: () => context
+                      .read<AttendeesCubit>()
+                      .rejectRegistration(registration.id!),
+                ),
+                onApprove: () => AttendeeActionConfirmation.showApprove(
+                  context,
+                  participantName: registration.fullName,
+                  onConfirm: () => context
+                      .read<AttendeesCubit>()
+                      .approveRegistration(registration.id!),
                 ),
               ),
-            ],
+            ),
           ],
         ),
       ),

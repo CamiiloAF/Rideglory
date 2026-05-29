@@ -10,6 +10,8 @@ class ApproveRejectBar extends StatelessWidget {
     required this.approveLabel,
     required this.onReject,
     required this.onApprove,
+    this.showReject = true,
+    this.showApprove = true,
     this.height = 44,
   });
 
@@ -17,27 +19,31 @@ class ApproveRejectBar extends StatelessWidget {
   final String approveLabel;
   final VoidCallback onReject;
   final VoidCallback onApprove;
+  final bool showReject;
+  final bool showApprove;
   final double height;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          child: RegistrationRejectButton(
-            label: rejectLabel,
-            onPressed: onReject,
-            height: height,
+        if (showReject)
+          Expanded(
+            child: RegistrationRejectButton(
+              label: rejectLabel,
+              onPressed: onReject,
+              height: height,
+            ),
           ),
-        ),
-        AppSpacing.hGapSm,
-        Expanded(
-          child: RegistrationApproveButton(
-            label: approveLabel,
-            onPressed: onApprove,
-            height: height,
+        if (showReject && showApprove) AppSpacing.hGapSm,
+        if (showApprove)
+          Expanded(
+            child: RegistrationApproveButton(
+              label: approveLabel,
+              onPressed: onApprove,
+              height: height,
+            ),
           ),
-        ),
       ],
     );
   }

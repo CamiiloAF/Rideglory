@@ -100,14 +100,19 @@ class AttendeesList extends StatelessWidget {
                                 )
                           : null,
                       onRequestEdit: registration.id != null
-                          ? (detailContext) {
-                              context.read<AttendeesCubit>().setReadyForEdit(
-                                registration.id!,
-                              );
-                              if (detailContext.mounted) {
-                                detailContext.pop();
-                              }
-                            }
+                          ? (detailContext) =>
+                                AttendeeActionConfirmation.showRequestEdit(
+                                  detailContext,
+                                  participantName: registration.fullName,
+                                  onConfirm: () {
+                                    context
+                                        .read<AttendeesCubit>()
+                                        .setReadyForEdit(registration.id!);
+                                    if (detailContext.mounted) {
+                                      detailContext.pop();
+                                    }
+                                  },
+                                )
                           : null,
                     ),
                   ),
