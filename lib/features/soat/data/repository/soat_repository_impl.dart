@@ -52,4 +52,14 @@ class SoatRepositoryImpl implements SoatRepository {
       },
     );
   }
+
+  @override
+  Future<Either<DomainException, Unit>> deleteSoat(String vehicleId) async {
+    return executeService(
+      function: () async {
+        await _soatService.deleteSoat(vehicleId);
+        return unit;
+      },
+    );
+  }
 }

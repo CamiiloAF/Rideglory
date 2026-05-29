@@ -9,4 +9,6 @@ abstract class SoatRepository {
     required String vehicleId,
     required SoatModel soat,
   });
+
+  Future<Either<DomainException, Unit>> deleteSoat(String vehicleId);
 }

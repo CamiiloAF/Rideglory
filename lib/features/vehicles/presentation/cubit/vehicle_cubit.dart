@@ -103,6 +103,37 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
     _emitLoadedOrEmpty();
   }
 
+  void clearSoatLocally(String vehicleId) {
+    _vehicles = _vehicles.map((v) {
+      if (v.id != vehicleId) return v;
+      // copyWith no puede setear `soatExpiryDate` a null (usa `?? this`), así
+      // que reconstruimos el modelo dejando el SOAT explícitamente vacío.
+      return VehicleModel(
+        id: v.id,
+        name: v.name,
+        brand: v.brand,
+        model: v.model,
+        year: v.year,
+        currentMileage: v.currentMileage,
+        licensePlate: v.licensePlate,
+        vin: v.vin,
+        purchaseDate: v.purchaseDate,
+        imageUrl: v.imageUrl,
+        createdAt: v.createdAt,
+        updatedAt: v.updatedAt,
+        isArchived: v.isArchived,
+        isMainVehicle: v.isMainVehicle,
+        soatStatus: SoatStatus.noSoat,
+        color: v.color,
+        engine: v.engine,
+        horsepower: v.horsepower,
+        torque: v.torque,
+        weight: v.weight,
+      );
+    }).toList();
+    _emitLoadedOrEmpty();
+  }
+
   SoatStatus _soatStatusFrom(DateTime expiryDate) {
     final daysRemaining = expiryDate.difference(DateTime.now()).inDays;
     if (daysRemaining < 0) return SoatStatus.expired;

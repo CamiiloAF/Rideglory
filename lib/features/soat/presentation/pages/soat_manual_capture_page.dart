@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,10 +10,13 @@ import 'package:rideglory/core/services/image_storage_service.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/soat/domain/models/soat_extraction.dart';
 import 'package:rideglory/features/soat/domain/models/soat_model.dart';
+import 'package:rideglory/features/soat/domain/usecases/delete_soat_usecase.dart';
 import 'package:rideglory/features/soat/domain/usecases/save_soat_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_autofill_banner.dart';
+import 'package:rideglory/features/soat/presentation/widgets/soat_delete_button.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_document_section.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_validity_card.dart';
 
@@ -284,6 +288,24 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
     );
   }
 
+  Future<bool> _deleteSoat() async {
+    final vehicleId = widget.vehicle?.id;
+    if (vehicleId == null) return false;
+    final result = await getIt<DeleteSoatUseCase>()(vehicleId);
+    return result.isRight();
+  }
+
+  void _onSoatDeleted() {
+    final vehicleId = widget.vehicle?.id;
+    if (vehicleId != null) {
+      context.read<VehicleCubit>().clearSoatLocally(vehicleId);
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(context.l10n.soat_deleted_success)),
+    );
+    context.pop(true);
+  }
+
   // ── Build ────────────────────────────────────────────────────────────────
 
   @override
@@ -429,6 +451,13 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
                     : context.l10n.vehicle_soat_confirm_button,
                 onPressed: _saving ? null : _submit,
               ),
+              if (_isEditMode && widget.existingSoat != null) ...[
+                const SizedBox(height: 12),
+                SoatDeleteButton(
+                  onDelete: _deleteSoat,
+                  onDeleted: _onSoatDeleted,
+                ),
+              ],
             ],
           ),
         ),

@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/features/soat/domain/models/soat_model.dart';
+import 'package:rideglory/features/soat/domain/usecases/delete_soat_usecase.dart';
 import 'package:rideglory/features/soat/domain/usecases/get_soat_usecase.dart';
 import 'package:rideglory/features/soat/domain/usecases/save_soat_usecase.dart';
 import 'package:rideglory/features/soat/presentation/cubit/soat_cubit.dart';
@@ -12,6 +13,8 @@ import 'package:rideglory/features/soat/presentation/cubit/soat_cubit.dart';
 class MockGetSoatUseCase extends Mock implements GetSoatUseCase {}
 
 class MockSaveSoatUseCase extends Mock implements SaveSoatUseCase {}
+
+class MockDeleteSoatUseCase extends Mock implements DeleteSoatUseCase {}
 
 class FakeSoatModel extends Fake implements SoatModel {}
 
@@ -21,6 +24,7 @@ void main() {
   });
   late MockGetSoatUseCase mockGetSoatUseCase;
   late MockSaveSoatUseCase mockSaveSoatUseCase;
+  late MockDeleteSoatUseCase mockDeleteSoatUseCase;
   late SoatCubit soatCubit;
 
   final mockSoat = SoatModel(
@@ -36,7 +40,12 @@ void main() {
   setUp(() {
     mockGetSoatUseCase = MockGetSoatUseCase();
     mockSaveSoatUseCase = MockSaveSoatUseCase();
-    soatCubit = SoatCubit(mockGetSoatUseCase, mockSaveSoatUseCase);
+    mockDeleteSoatUseCase = MockDeleteSoatUseCase();
+    soatCubit = SoatCubit(
+      mockGetSoatUseCase,
+      mockSaveSoatUseCase,
+      mockDeleteSoatUseCase,
+    );
   });
 
   tearDown(() => soatCubit.close());
@@ -149,6 +158,45 @@ void main() {
           (state) =>
               state is Error<SoatModel> &&
               state.error.message == 'Guardado fallido',
+        ),
+      ],
+    );
+  });
+
+  group('SoatCubit — delete', () {
+    blocTest<SoatCubit, ResultState<SoatModel>>(
+      'delete() returns true and emits loading then empty on success',
+      setUp: () {
+        when(
+          () => mockDeleteSoatUseCase(vehicleId),
+        ).thenAnswer((_) async => const Right(unit));
+      },
+      build: () => soatCubit,
+      act: (cubit) => cubit.delete(vehicleId),
+      expect: () => [
+        const ResultState<SoatModel>.loading(),
+        const ResultState<SoatModel>.empty(),
+      ],
+      verify: (_) {
+        verify(() => mockDeleteSoatUseCase(vehicleId)).called(1);
+      },
+    );
+
+    blocTest<SoatCubit, ResultState<SoatModel>>(
+      'delete() returns false and emits error on failure',
+      setUp: () {
+        when(() => mockDeleteSoatUseCase(vehicleId)).thenAnswer(
+          (_) async => const Left(DomainException(message: 'Borrado fallido')),
+        );
+      },
+      build: () => soatCubit,
+      act: (cubit) => cubit.delete(vehicleId),
+      expect: () => [
+        const ResultState<SoatModel>.loading(),
+        predicate<ResultState<SoatModel>>(
+          (state) =>
+              state is Error<SoatModel> &&
+              state.error.message == 'Borrado fallido',
         ),
       ],
     );

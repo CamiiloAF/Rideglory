@@ -4477,6 +4477,30 @@ abstract class AppLocalizations {
   /// **'Error al subir. Archivo demasiado grande (máx. 10 MB).'**
   String get soat_upload_error;
 
+  /// No description provided for @soat_delete_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar SOAT'**
+  String get soat_delete_button;
+
+  /// No description provided for @soat_delete_confirm_title.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar SOAT?'**
+  String get soat_delete_confirm_title;
+
+  /// No description provided for @soat_delete_confirm_message.
+  ///
+  /// In es, this message translates to:
+  /// **'Se eliminará la información del SOAT de este vehículo. Esta acción no se puede deshacer.'**
+  String get soat_delete_confirm_message;
+
+  /// No description provided for @soat_deleted_success.
+  ///
+  /// In es, this message translates to:
+  /// **'SOAT eliminado'**
+  String get soat_deleted_success;
+
   /// No description provided for @event_draftBadge.
   ///
   /// In es, this message translates to:

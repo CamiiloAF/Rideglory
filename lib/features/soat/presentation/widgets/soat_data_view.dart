@@ -6,8 +6,10 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/soat/domain/models/soat_model.dart';
 import 'package:rideglory/features/soat/presentation/cubit/soat_cubit.dart';
+import 'package:rideglory/features/soat/presentation/widgets/soat_delete_button.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_detail_row.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/helpers/document_downloader.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
@@ -235,6 +237,21 @@ class _SoatDataViewState extends State<SoatDataView> {
                   }),
               isFullWidth: true,
             ),
+          const SizedBox(height: 12),
+          SoatDeleteButton(
+            onDelete: () =>
+                context.read<SoatCubit>().delete(widget.vehicle.id ?? ''),
+            onDeleted: () {
+              final vehicleId = widget.vehicle.id;
+              if (vehicleId != null) {
+                context.read<VehicleCubit>().clearSoatLocally(vehicleId);
+              }
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(context.l10n.soat_deleted_success)),
+              );
+              context.pop();
+            },
+          ),
           const SizedBox(height: 32),
         ],
       ),

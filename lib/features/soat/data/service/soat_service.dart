@@ -20,4 +20,7 @@ abstract class SoatService {
     @Path('vehicleId') String vehicleId,
     @Body() Map<String, dynamic> request,
   );
+
+  @DELETE('${ApiRoutes.vehicles}/{vehicleId}/soat')
+  Future<void> deleteSoat(@Path('vehicleId') String vehicleId);
 }

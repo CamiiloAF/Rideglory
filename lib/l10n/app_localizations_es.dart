@@ -2364,6 +2364,19 @@ class AppLocalizationsEs extends AppLocalizations {
       'Error al subir. Archivo demasiado grande (máx. 10 MB).';
 
   @override
+  String get soat_delete_button => 'Eliminar SOAT';
+
+  @override
+  String get soat_delete_confirm_title => '¿Eliminar SOAT?';
+
+  @override
+  String get soat_delete_confirm_message =>
+      'Se eliminará la información del SOAT de este vehículo. Esta acción no se puede deshacer.';
+
+  @override
+  String get soat_deleted_success => 'SOAT eliminado';
+
+  @override
   String get event_draftBadge => 'Borrador';
 
   @override
