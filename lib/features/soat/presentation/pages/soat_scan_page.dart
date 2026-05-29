@@ -47,8 +47,14 @@ class _SoatScanView extends StatelessWidget {
               error: (error) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(error.message),
-                    backgroundColor: AppColors.darkCard,
+                    backgroundColor: AppColors.warning,
+                    content: Text(
+                      error.message,
+                      style: const TextStyle(
+                        color: AppColors.darkBgPrimary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 );
                 context.pop<SoatExtraction>();

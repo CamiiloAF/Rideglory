@@ -104,8 +104,14 @@ abstract final class SoatScanLauncher {
   static void _showPermissionDenied(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(RidegloryL10n.current.soat_scan_error_permission),
-        backgroundColor: AppColors.darkCard,
+        backgroundColor: AppColors.warning,
+        content: Text(
+          RidegloryL10n.current.soat_scan_error_permission,
+          style: const TextStyle(
+            color: AppColors.darkBgPrimary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
     );
   }

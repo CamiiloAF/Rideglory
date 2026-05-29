@@ -94,7 +94,13 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
     final initialPath = _localImagePath;
     if (initialPath != null && _extraction == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) _scanDocument(initialPath, _sourceForPath(initialPath));
+        if (mounted) {
+          _scanDocument(
+            initialPath,
+            _sourceForPath(initialPath),
+            autoApply: true,
+          );
+        }
       });
     }
   }
@@ -108,8 +114,9 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
 
   String? _initialInsurer() => widget.existingSoat?.insurer;
 
-  /// Fills the form with the detected SOAT data when the user opts in via the
-  /// banner. Dates patch through [setState] so their pickers rebuild.
+  /// Fills the form with the detected SOAT data. Patches every field through
+  /// the form (incl. dates) so existing values are overwritten when editing,
+  /// and mirrors the dates into state for the validity card.
   void _applyAutofill() {
     final extraction = _extraction;
     if (extraction == null) return;
@@ -117,6 +124,8 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
       if (extraction.policyNumber != null)
         'policyNumber': extraction.policyNumber,
       if (extraction.insurer != null) 'insurer': extraction.insurer,
+      if (extraction.startDate != null) 'startDate': extraction.startDate,
+      if (extraction.expiryDate != null) 'expiryDate': extraction.expiryDate,
     });
     setState(() {
       _startDate = extraction.startDate ?? _startDate;
@@ -217,10 +226,15 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
     await _scanDocument(pickedPath, scanSource);
   }
 
-  /// Best-effort OCR over the document the user just picked: if a SOAT is
-  /// detected, the opt-in autofill banner is offered. Failures are swallowed so
-  /// the document still attaches even when nothing readable is found.
-  Future<void> _scanDocument(String path, SoatScanSource source) async {
+  /// Best-effort OCR over a document. When [autoApply] is true (document already
+  /// chosen, e.g. from the vehicle-creation bottom sheet) the fields are filled
+  /// automatically; otherwise the opt-in autofill banner is offered. The
+  /// document stays attached even when nothing readable is found.
+  Future<void> _scanDocument(
+    String path,
+    SoatScanSource source, {
+    bool autoApply = false,
+  }) async {
     setState(() => _scanning = true);
     try {
       final result = await getIt<ScanSoatUseCase>()(
@@ -232,8 +246,21 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
         _extraction = result.extraction;
         _autofillApplied = false;
       });
+      if (autoApply) _applyAutofill();
     } on SoatScanException {
-      // No prefillable SOAT detected — keep the attached document, no banner.
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: AppColors.warning,
+          content: Text(
+            context.l10n.soat_scan_error_unreadable,
+            style: const TextStyle(
+              color: AppColors.darkBgPrimary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      );
     } finally {
       if (mounted) setState(() => _scanning = false);
     }
