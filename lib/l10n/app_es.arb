@@ -403,11 +403,26 @@
   "registration_emergencyContactPhoneHint": "300 000 0000",
   "registration_medicalInsuranceHint": "Entidad de medicina prepagada",
   "registration_selectVehicleToPreload": "Selecciona un vehículo",
+  "registration_selectVehiclePlaceholder": "Selecciona tu vehículo",
+  "registration_changeVehicle": "Cambiar",
+  "registration_vehicleEmptyStateSubtitle": "Registra tu moto para inscribirte en el evento.",
   "registration_vehicleBrandNotAllowed": "La marca seleccionada no está permitida para este evento. Las marcas pemitidas son",
   "registration_vehicleEmptyStateTitle": "No tienes vehículos disponibles para esta inscripción.",
   "registration_createVehicleCta": "Crear vehículo",
   "registration_sendRegistration": "Enviar inscripción",
   "registration_updateRegistration": "Actualizar inscripción",
+  "registration_finishRegistration": "Confirmar Inscripción",
+  "registration_nextStep": "Siguiente",
+  "registration_previousStep": "Atrás",
+  "registration_stepPersonalTitle": "Información Personal",
+  "registration_stepPersonalSubtitle": "Datos básicos del piloto",
+  "registration_stepMedicalTitle": "Información Médica",
+  "registration_stepMedicalSubtitle": "Datos de salud para el evento",
+  "registration_stepEmergencyTitle": "Contacto de Emergencia",
+  "registration_stepEmergencySubtitle": "Persona a contactar en caso de accidente",
+  "registration_stepVehicleTitle": "Vehículo de Inscripción",
+  "registration_stepVehicleSubtitle": "Moto con la que participarás en el evento",
+  "registration_bloodTypeSelectHint": "Selecciona tu grupo",
   "registration_saveToProfile": "Guardar mis datos para futuras inscripciones",
   "@registration_saveToProfile": {
     "description": "Checkbox label to opt-in to persist rider info to user profile after registering."
@@ -455,41 +470,34 @@
   "registration_contactLabel": "Contactar",
   "registration_callLabel": "Llamar",
   "registration_whatsappLabel": "WhatsApp",
+  "registration_emergencyContactTitle": "Contacto de Emergencia",
+  "registration_participationData": "Datos de Participación",
+  "registration_rowName": "Nombre",
+  "registration_rowIdentification": "Identificación",
+  "registration_rowBirthDate": "Fecha de nacimiento",
+  "registration_rowPhone": "Teléfono",
+  "registration_rowEmail": "Correo electrónico",
+  "registration_rowCity": "Ciudad",
+  "registration_rowEps": "EPS",
+  "registration_rowMedicalInsurance": "Seguro médico",
+  "registration_rowBloodType": "Tipo de sangre",
+  "registration_rowContactName": "Nombre del contacto",
+  "registration_rowVehicle": "Vehículo",
+  "registration_rowParticipationType": "Tipo de participación",
+  "registration_rowCompanions": "Acompañantes",
+  "registration_participationRiderPrincipal": "Rider principal",
+  "registration_requestEdit": "Solicitar edición",
+  "registration_editRegistrationCta": "Editar inscripción",
+  "registration_pendingBannerText": "Tu inscripción está pendiente de revisión",
+  "registration_rejectedBannerText": "Tu inscripción fue rechazada",
+  "registration_readyForEditBannerText": "Puedes editar tu inscripción",
+  "registration_approvedBannerText": "Tu inscripción fue aprobada",
+  "registration_cancelledBannerText": "Cancelaste tu inscripción",
   "splash_retryLabel": "REINTENTAR",
   "splash_errorPrefix": "Error: ",
   "home_greeting": "Hola, Rider",
   "home_viewDetails": "Ver detalles",
   "appfields_mileageRequired": "El kilometraje es requerido",
-  "event_pendingCountBadge": "{count} PENDIENTES",
-  "@event_pendingCountBadge": {
-    "placeholders": {
-      "count": {}
-    }
-  },
-  "event_allWithCount": "Todos ({count})",
-  "@event_allWithCount": {
-    "placeholders": {
-      "count": {}
-    }
-  },
-  "event_timeAgoHours": "Hace {hours}h",
-  "@event_timeAgoHours": {
-    "placeholders": {
-      "hours": {}
-    }
-  },
-  "event_timeAgoMinutes": "Hace {minutes}m",
-  "@event_timeAgoMinutes": {
-    "placeholders": {
-      "minutes": {}
-    }
-  },
-  "event_timeAgoDays": "Hace {days}d",
-  "@event_timeAgoDays": {
-    "placeholders": {
-      "days": {}
-    }
-  },
   "event_approveConfirmMessage": "¿Aprobar la inscripción de {name}?",
   "@event_approveConfirmMessage": {
     "placeholders": {
@@ -498,6 +506,13 @@
   },
   "event_rejectConfirmMessage": "¿Rechazar la inscripción de {name}?",
   "@event_rejectConfirmMessage": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "registration_requestEditConfirmTitle": "Solicitar edición",
+  "registration_requestEditConfirmMessage": "¿Pedirle a {name} que edite su inscripción?",
+  "@registration_requestEditConfirmMessage": {
     "placeholders": {
       "name": {}
     }

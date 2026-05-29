@@ -3,7 +3,7 @@ import 'package:rideglory/design_system/design_system.dart';
 
 enum AppButtonVariant { primary, secondary, danger, success }
 
-enum AppButtonStyle { filled, outlined, text }
+enum AppButtonStyle { filled, outlined, tonal, text }
 
 enum AppButtonShape { rounded, pill }
 
@@ -47,9 +47,12 @@ class AppButton extends StatelessWidget {
       AppButtonVariant.success => appColors.success,
     };
 
-    final backgroundColor = style == AppButtonStyle.filled
-        ? variantColor
-        : cs.surface.withValues(alpha: 0);
+    final backgroundColor = switch (style) {
+      AppButtonStyle.filled => variantColor,
+      // Soft/tonal fill: the variant color at low opacity, no border.
+      AppButtonStyle.tonal => variantColor.withValues(alpha: 0.1),
+      _ => cs.surface.withValues(alpha: 0),
+    };
 
     final foregroundColor = style == AppButtonStyle.filled
         ? cs.onPrimary

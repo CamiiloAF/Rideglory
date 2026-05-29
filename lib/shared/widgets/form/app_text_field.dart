@@ -91,7 +91,27 @@ class _AppTextFieldState extends State<AppTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final iconColor = _isFocused ? AppColors.darkInputIcon : null;
+    final iconColor =
+        _isFocused ? AppColors.primary : AppColors.textOnDarkSecondary;
+
+    // Prefix mirrors the Pencil field: a 52px icon block separated from the
+    // input text by a 1px vertical divider, shared across every app input.
+    final prefixIcon = widget.prefixIcon == null
+        ? null
+        : Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 52,
+                child: Icon(widget.prefixIcon, color: iconColor, size: 20),
+              ),
+              Container(
+                width: 1,
+                height: 20,
+                color: AppColors.darkBorderLight,
+              ),
+            ],
+          );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,9 +124,8 @@ class _AppTextFieldState extends State<AppTextField> {
         FormBuilderTextField(
           name: widget.name,
           decoration: InputDecoration(
-            prefixIcon: widget.prefixIcon != null
-                ? Icon(widget.prefixIcon, color: iconColor)
-                : null,
+            prefixIcon: prefixIcon,
+            prefixIconConstraints: const BoxConstraints(minWidth: 53),
             prefixText: widget.prefixText,
             suffixIcon: widget.suffixIcon,
             suffixIconColor: iconColor,

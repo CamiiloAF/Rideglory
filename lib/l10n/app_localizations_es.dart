@@ -1225,6 +1225,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_selectVehicleToPreload => 'Selecciona un vehículo';
 
   @override
+  String get registration_selectVehiclePlaceholder => 'Selecciona tu vehículo';
+
+  @override
+  String get registration_changeVehicle => 'Cambiar';
+
+  @override
+  String get registration_vehicleEmptyStateSubtitle =>
+      'Registra tu moto para inscribirte en el evento.';
+
+  @override
   String get registration_vehicleBrandNotAllowed =>
       'La marca seleccionada no está permitida para este evento. Las marcas pemitidas son';
 
@@ -1240,6 +1250,45 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get registration_updateRegistration => 'Actualizar inscripción';
+
+  @override
+  String get registration_finishRegistration => 'Confirmar Inscripción';
+
+  @override
+  String get registration_nextStep => 'Siguiente';
+
+  @override
+  String get registration_previousStep => 'Atrás';
+
+  @override
+  String get registration_stepPersonalTitle => 'Información Personal';
+
+  @override
+  String get registration_stepPersonalSubtitle => 'Datos básicos del piloto';
+
+  @override
+  String get registration_stepMedicalTitle => 'Información Médica';
+
+  @override
+  String get registration_stepMedicalSubtitle =>
+      'Datos de salud para el evento';
+
+  @override
+  String get registration_stepEmergencyTitle => 'Contacto de Emergencia';
+
+  @override
+  String get registration_stepEmergencySubtitle =>
+      'Persona a contactar en caso de accidente';
+
+  @override
+  String get registration_stepVehicleTitle => 'Vehículo de Inscripción';
+
+  @override
+  String get registration_stepVehicleSubtitle =>
+      'Moto con la que participarás en el evento';
+
+  @override
+  String get registration_bloodTypeSelectHint => 'Selecciona tu grupo';
 
   @override
   String get registration_saveToProfile =>
@@ -1387,6 +1436,77 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_whatsappLabel => 'WhatsApp';
 
   @override
+  String get registration_emergencyContactTitle => 'Contacto de Emergencia';
+
+  @override
+  String get registration_participationData => 'Datos de Participación';
+
+  @override
+  String get registration_rowName => 'Nombre';
+
+  @override
+  String get registration_rowIdentification => 'Identificación';
+
+  @override
+  String get registration_rowBirthDate => 'Fecha de nacimiento';
+
+  @override
+  String get registration_rowPhone => 'Teléfono';
+
+  @override
+  String get registration_rowEmail => 'Correo electrónico';
+
+  @override
+  String get registration_rowCity => 'Ciudad';
+
+  @override
+  String get registration_rowEps => 'EPS';
+
+  @override
+  String get registration_rowMedicalInsurance => 'Seguro médico';
+
+  @override
+  String get registration_rowBloodType => 'Tipo de sangre';
+
+  @override
+  String get registration_rowContactName => 'Nombre del contacto';
+
+  @override
+  String get registration_rowVehicle => 'Vehículo';
+
+  @override
+  String get registration_rowParticipationType => 'Tipo de participación';
+
+  @override
+  String get registration_rowCompanions => 'Acompañantes';
+
+  @override
+  String get registration_participationRiderPrincipal => 'Rider principal';
+
+  @override
+  String get registration_requestEdit => 'Solicitar edición';
+
+  @override
+  String get registration_editRegistrationCta => 'Editar inscripción';
+
+  @override
+  String get registration_pendingBannerText =>
+      'Tu inscripción está pendiente de revisión';
+
+  @override
+  String get registration_rejectedBannerText => 'Tu inscripción fue rechazada';
+
+  @override
+  String get registration_readyForEditBannerText =>
+      'Puedes editar tu inscripción';
+
+  @override
+  String get registration_approvedBannerText => 'Tu inscripción fue aprobada';
+
+  @override
+  String get registration_cancelledBannerText => 'Cancelaste tu inscripción';
+
+  @override
   String get splash_retryLabel => 'REINTENTAR';
 
   @override
@@ -1402,31 +1522,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get appfields_mileageRequired => 'El kilometraje es requerido';
 
   @override
-  String event_pendingCountBadge(Object count) {
-    return '$count PENDIENTES';
-  }
-
-  @override
-  String event_allWithCount(Object count) {
-    return 'Todos ($count)';
-  }
-
-  @override
-  String event_timeAgoHours(Object hours) {
-    return 'Hace ${hours}h';
-  }
-
-  @override
-  String event_timeAgoMinutes(Object minutes) {
-    return 'Hace ${minutes}m';
-  }
-
-  @override
-  String event_timeAgoDays(Object days) {
-    return 'Hace ${days}d';
-  }
-
-  @override
   String event_approveConfirmMessage(Object name) {
     return '¿Aprobar la inscripción de $name?';
   }
@@ -1434,6 +1529,14 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String event_rejectConfirmMessage(Object name) {
     return '¿Rechazar la inscripción de $name?';
+  }
+
+  @override
+  String get registration_requestEditConfirmTitle => 'Solicitar edición';
+
+  @override
+  String registration_requestEditConfirmMessage(Object name) {
+    return '¿Pedirle a $name que edite su inscripción?';
   }
 
   @override

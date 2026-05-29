@@ -13,3 +13,26 @@ abstract class RegistrationFormFields {
   static const String vehicleId = 'vehicleId';
   static const String saveToProfile = 'saveToProfile';
 }
+
+/// Field names grouped by wizard step, in display order. Used to validate only
+/// the current step's fields before advancing in the registration wizard.
+abstract class RegistrationWizardSteps {
+  static const List<List<String>> fieldsByStep = <List<String>>[
+    <String>[
+      RegistrationFormFields.fullName,
+      RegistrationFormFields.identificationNumber,
+      RegistrationFormFields.birthDate,
+      RegistrationFormFields.phone,
+      RegistrationFormFields.email,
+      RegistrationFormFields.residenceCity,
+    ],
+    <String>[RegistrationFormFields.eps, RegistrationFormFields.bloodType],
+    <String>[
+      RegistrationFormFields.emergencyContactName,
+      RegistrationFormFields.emergencyContactPhone,
+    ],
+    <String>[RegistrationFormFields.vehicleId],
+  ];
+
+  static int get stepCount => fieldsByStep.length;
+}

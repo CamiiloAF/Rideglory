@@ -4,6 +4,8 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/event_registration/constants/registration_form_fields.dart';
+import 'package:rideglory/features/event_registration/presentation/widgets/vehicle_selector_card.dart';
+import 'package:rideglory/features/event_registration/presentation/widgets/vehicle_selector_placeholder_card.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
 class VehicleSelectorField extends StatelessWidget {
@@ -22,37 +24,41 @@ class VehicleSelectorField extends StatelessWidget {
         final selectedVehicle = availableVehicles
             .where((vehicle) => vehicle.id == field.value)
             .firstOrNull;
-        final displayText = selectedVehicle != null
-            ? '${selectedVehicle.brand ?? ''} ${selectedVehicle.model ?? ''} - ${selectedVehicle.licensePlate ?? ''}'
-                  .trim()
-            : context.l10n.registration_selectVehicleToPreload;
 
-        return GestureDetector(
-          onTap: () async {
-            final picked = await VehicleSelectionBottomSheet.show(
-              context: context,
-              vehicles: availableVehicles,
-              selectedVehicleId: field.value,
-            );
-            if (picked != null) {
-              field.didChange(picked.id);
-            }
-          },
-          child: InputDecorator(
-            decoration: InputDecoration(
-              labelText: context.l10n.registration_vehicleData,
-              suffixIcon: const Icon(Icons.keyboard_arrow_down),
-              errorText: field.errorText,
-            ),
-            child: Text(
-              displayText,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: selectedVehicle != null
-                    ? context.colorScheme.onSurface
-                    : context.colorScheme.onSurfaceVariant,
+        Future<void> openPicker() async {
+          final picked = await VehicleSelectionBottomSheet.show(
+            context: context,
+            vehicles: availableVehicles,
+            selectedVehicleId: field.value,
+          );
+          if (picked != null) {
+            field.didChange(picked.id);
+          }
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (selectedVehicle != null)
+              VehicleSelectorCard(
+                vehicle: selectedVehicle,
+                onChange: openPicker,
+              )
+            else
+              VehicleSelectorPlaceholderCard(onTap: openPicker),
+            if (field.errorText != null) ...[
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Text(
+                  field.errorText!,
+                  style: context.bodySmall?.copyWith(
+                    color: context.colorScheme.error,
+                  ),
+                ),
               ),
-            ),
-          ),
+            ],
+          ],
         );
       },
     );

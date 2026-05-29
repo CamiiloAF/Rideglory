@@ -358,7 +358,7 @@ lib/features/events/presentation/
 | `EventFormCubit` | `form/cubit/event_form_cubit.dart` | `@injectable` | `EventFormState` (freezed) | save + cover IA + waypoints + tipo de ruta |
 | `EventDetailCubit` | `detail/cubit/event_detail_cubit.dart` | manual | `EventDetailState` (freezed) | event + registration + lastUpdated |
 | `EventDeleteCubit` | `delete/cubit/event_delete_cubit.dart` | `@injectable` | `ResultState<String>` | Emite `eventId` al borrar |
-| `AttendeesCubit` | `attendees/attendees_cubit.dart` | manual | `ResultState<List<EventRegistrationModel>>` | Optimistic approve/reject |
+| `AttendeesCubit` | `attendees/attendees_cubit.dart` | manual | `ResultState<List<EventRegistrationModel>>` | Optimistic approve/reject con rollback |
 | `LiveTrackingCubit` | `tracking/cubit/live_tracking_cubit.dart` | factory custom | `LiveTrackingState` (freezed) | Ver §6 |
 
 ### `EventsCubit`
@@ -442,7 +442,7 @@ bool isFinished;                         // organizador terminó → auto-pop
 
 Métodos:
 - `fetchAttendees(eventId)`.
-- `approveRegistration(id)` — **optimistic + `unawaited`**: cambia state local primero, dispara API en background sin rollback.
+- `approveRegistration(id)` — **optimistic con rollback**: cambia el state local primero (`_updateRegistrationStatusLocally` devuelve el estado previo), espera la API y, si falla, revierte al estado anterior.
 - `rejectRegistration(id)` — idem.
 - `setReadyForEdit(id)` — espera resultado y refetcha.
 
@@ -585,8 +585,13 @@ Constantes en `EventFormFields` (clase abstracta con string constants).
 - Owner ve `EventDetailOwnerLifecycleBar` (start/stop/publish/mapa); rider ve `EventDetailCTABar` (inscribirse/seguir/cancelar según estado).
 - `PopScope` custom: si viene desde lista, pop retorna `EventModel` actualizado para refrescar el cache de la lista sin re-fetch.
 
-### Asistentes (`/events/attendees`)
-`AttendeesCubit` con optimistic approve/reject. Filtros por `RegistrationStatus`. Dos secciones: Pendientes + Procesados.
+### Asistentes (`/events/attendees`) — "Gestionar Inscritos" (Pencil `IUxas`)
+`AttendeesCubit` con optimistic approve/reject (con rollback). UI alineada al diseño:
+- AppBar con título + badge naranja del conteo de pendientes (`AttendeesView._pendingCount`).
+- `AttendeesDataView`: buscador (`AppSearchBar`) + `AttendeesFilterChips` **inline** (Todos / Pendientes / Aprobados / Rechazados) — reemplaza el antiguo botón de filtros + `AttendeesFilterBottomSheet` (eliminado).
+- `AttendeesList`: dos secciones con `AttendeesSectionHeader` + badge de conteo (NUEVAS SOLICITUDES amarillo, YA PROCESADOS neutral).
+  - Pendientes: `AttendeePendingRequestCard` (avatar + nombre + vehículo + `RegistrationStatusPill` + barra Aprobar/Rechazar inline).
+  - Procesados: `AttendeeProcessedItem` con badge de estado sutil (fondo translúcido + texto coloreado).
 
 ### Live tracking (`/events/live-map`)
 Ver §6.
@@ -682,8 +687,8 @@ emit(ResultState.data(data: filtered));
 ```
 Workaround para forzar rebuild cuando el dato resultante es idéntico al anterior.
 
-### `AttendeesCubit` approve/reject es fire-and-forget
-`unawaited(_approveUseCase(id))`. Si falla, la UI ya muestra "aprobado". No hay rollback. Para errores críticos, considerar manejar.
+### `AttendeesCubit` approve/reject es optimista con rollback
+`_updateStatusOptimistically` cambia el state local y luego espera la API; en `Left` revierte al estado previo. Ya no usa `unawaited`. La confirmación visual al usuario sigue siendo inmediata (optimista).
 
 ### `LiveTrackingCubit` no se registra en DI directamente
 Se crea via `LiveTrackingCubitFactory` que inyecta todas las dependencias. El acceso pasa por `LiveTrackingSessionHolder`.

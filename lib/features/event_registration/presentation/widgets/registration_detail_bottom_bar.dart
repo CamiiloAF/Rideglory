@@ -2,8 +2,12 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/shared/widgets/registration_actions/registration_approve_button.dart';
+import 'package:rideglory/shared/widgets/registration_actions/registration_reject_button.dart';
+import 'package:rideglory/shared/widgets/registration_actions/registration_request_edit_button.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class RegistrationDetailBottomBar extends StatelessWidget {
@@ -14,74 +18,119 @@ class RegistrationDetailBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final registration = params.registration;
-    final ownerSuppressed = params.eventOwnerId != null &&
+    final ownerSuppressed =
+        params.eventOwnerId != null &&
         params.eventOwnerId == registration.userId;
-    final showCancel =
-        params.onCancelRegistration != null && !ownerSuppressed;
+    final showCancel = params.onCancelRegistration != null && !ownerSuppressed;
+
+    // El organizador solo gestiona inscripciones según su ESTADO, sin importar
+    // desde qué pantalla se abra el detalle (lista de inscritos o detalle del
+    // evento):
+    // - PENDING: aprobar + rechazar + solicitar edición.
+    // - READY_FOR_EDIT: solo rechazar.
+    // - aprobada / rechazada / cancelada: sin acciones de organizador.
+    final isPending = registration.status == RegistrationStatus.pending;
+    final isReadyForEdit =
+        registration.status == RegistrationStatus.readyForEdit;
+    final ownerCanAct = isPending || isReadyForEdit;
+    final showOwnerActions =
+        ownerCanAct && (params.onApprove != null || params.onReject != null);
+    final showApprove = isPending && params.onApprove != null;
+    final showRequestEdit = isPending && params.onRequestEdit != null;
+
+    final actions = _buildActions(
+      context,
+      showOwnerActions: showOwnerActions,
+      showApprove: showApprove,
+      showRequestEdit: showRequestEdit,
+      showCancel: showCancel,
+    );
+    if (actions.isEmpty) return const SizedBox.shrink();
+
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.darkBgPrimary,
-        border: Border(
-          top: BorderSide(color: AppColors.darkBorderPrimary),
-        ),
+        border: Border(top: BorderSide(color: AppColors.darkBorderPrimary)),
       ),
-      padding: EdgeInsets.fromLTRB(16, 12, 16, math.max(16, bottomPadding)),
+      padding: EdgeInsets.fromLTRB(20, 16, 20, math.max(16, bottomPadding)),
       child: SafeArea(
         top: false,
-        child: Row(
-          children: [
-            if (showCancel)
-              Expanded(
-                child: AppButton(
-                  label: context.l10n.registration_cancelRegistration,
-                  variant: AppButtonVariant.danger,
-                  onPressed: () async {
-                    final ok = await params.onCancelRegistration!();
-                    if (ok && context.mounted) {
-                      context.pop();
-                    }
-                  },
-                  isFullWidth: true,
-                ),
-              )
-            else if (params.onReject != null && params.onApprove != null)
-              Expanded(
-                child: ApproveRejectBar(
-                  rejectLabel: context.l10n.registration_reject,
-                  approveLabel: context.l10n.registration_approve,
-                  onReject: () => params.onReject!(context),
-                  onApprove: () => params.onApprove!(context),
-                ),
-              )
-            else ...[
-              if (params.onReject != null)
-                Expanded(
-                  child: AppButton(
-                    label: context.l10n.registration_reject,
-                    variant: AppButtonVariant.danger,
-                    icon: Icons.close_rounded,
-                    onPressed: () => params.onReject!(context),
-                    isFullWidth: true,
-                  ),
-                ),
-              if (params.onReject != null && params.onApprove != null)
-                AppSpacing.hGapSm,
-              if (params.onApprove != null)
-                Expanded(
-                  child: AppButton(
-                    label: context.l10n.registration_approve,
-                    variant: AppButtonVariant.primary,
-                    icon: Icons.check_rounded,
-                    onPressed: () => params.onApprove!(context),
-                    isFullWidth: true,
-                  ),
-                ),
-            ],
-          ],
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: actions,
         ),
       ),
     );
+  }
+
+  List<Widget> _buildActions(
+    BuildContext context, {
+    required bool showOwnerActions,
+    required bool showApprove,
+    required bool showRequestEdit,
+    required bool showCancel,
+  }) {
+    // Vista organizador: aprobar destacado + (rechazar / solicitar edición).
+    // En READY_FOR_EDIT solo queda rechazar, que entonces ocupa todo el ancho.
+    if (showOwnerActions) {
+      final secondaryButtons = <Widget>[
+        if (params.onReject != null)
+          Expanded(
+            child: RegistrationRejectButton(
+              label: context.l10n.registration_reject,
+              onPressed: () => params.onReject!(context),
+            ),
+          ),
+        if (params.onReject != null && showRequestEdit) AppSpacing.hGapSm,
+        if (showRequestEdit)
+          Expanded(
+            child: RegistrationRequestEditButton(
+              label: context.l10n.registration_requestEdit,
+              onPressed: () => params.onRequestEdit!(context),
+            ),
+          ),
+      ];
+
+      return [
+        if (showApprove)
+          RegistrationApproveButton(
+            label: context.l10n.registration_approve,
+            onPressed: () => params.onApprove!(context),
+          ),
+        if (showApprove && secondaryButtons.isNotEmpty) AppSpacing.gapMd,
+        if (secondaryButtons.isNotEmpty) Row(children: secondaryButtons),
+      ];
+    }
+
+    // Vista piloto: editar + cancelar.
+    return [
+      if (params.onEditRegistration != null) ...[
+        AppButton(
+          label: context.l10n.registration_editRegistrationCta,
+          icon: Icons.edit_outlined,
+          variant: AppButtonVariant.primary,
+          onPressed: () => params.onEditRegistration!(context),
+          isFullWidth: true,
+        ),
+        if (showCancel) AppSpacing.gapMd,
+      ],
+      if (showCancel)
+        AppButton(
+          label: context.l10n.registration_cancelRegistration,
+          variant: AppButtonVariant.danger,
+          style: AppButtonStyle.tonal,
+          shape: AppButtonShape.pill,
+          onPressed: () async {
+            final ok = await params.onCancelRegistration!();
+            if (ok && context.mounted) {
+              context.pop();
+            }
+          },
+          isFullWidth: true,
+        ),
+    ];
   }
 }

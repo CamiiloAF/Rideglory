@@ -13,14 +13,9 @@ class RegistrationFormView extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = context.read<RegistrationFormCubit>();
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-        child: FormBuilder(
-          key: cubit.formKey,
-          child: RegistrationFormContent(event: event),
-        ),
-      ),
+    return FormBuilder(
+      key: cubit.formKey,
+      child: RegistrationFormContent(event: event),
     );
   }
 }

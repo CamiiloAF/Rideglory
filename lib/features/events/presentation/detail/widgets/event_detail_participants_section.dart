@@ -42,31 +42,40 @@ class EventDetailParticipantsSection extends StatelessWidget {
         onApprove: registrationId == null
             ? null
             : (detailContext) => AttendeeActionConfirmation.showApprove(
-                  detailContext,
-                  participantName: registration.fullName,
-                  onConfirm: () {
-                    cubit.approveAttendee(registrationId);
-                    if (detailContext.mounted) detailContext.pop();
-                  },
-                ),
+                detailContext,
+                participantName: registration.fullName,
+                onConfirm: () {
+                  cubit.approveAttendee(registrationId);
+                  if (detailContext.mounted) detailContext.pop();
+                },
+              ),
         onReject: registrationId == null
             ? null
             : (detailContext) => AttendeeActionConfirmation.showReject(
-                  detailContext,
-                  participantName: registration.fullName,
-                  onConfirm: () {
-                    cubit.rejectAttendee(registrationId);
-                    if (detailContext.mounted) detailContext.pop();
-                  },
-                ),
+                detailContext,
+                participantName: registration.fullName,
+                onConfirm: () {
+                  cubit.rejectAttendee(registrationId);
+                  if (detailContext.mounted) detailContext.pop();
+                },
+              ),
+        onRequestEdit: registrationId == null
+            ? null
+            : (detailContext) => AttendeeActionConfirmation.showRequestEdit(
+                detailContext,
+                participantName: registration.fullName,
+                onConfirm: () {
+                  cubit.setAttendeeReadyForEdit(registrationId);
+                  if (detailContext.mounted) detailContext.pop();
+                },
+              ),
       ),
     );
   }
 
   List<EventRegistrationModel> _visible(
     List<EventRegistrationModel> registrations,
-  ) =>
-      registrations.where((r) => r.userId != event.ownerId).toList();
+  ) => registrations.where((r) => r.userId != event.ownerId).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +116,9 @@ class EventDetailParticipantsSection extends StatelessWidget {
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.info.withValues(alpha: 0.19),
                         borderRadius: BorderRadius.circular(20),
@@ -126,15 +137,18 @@ class EventDetailParticipantsSection extends StatelessWidget {
                       tooltip: context.l10n.retry,
                       visualDensity: VisualDensity.compact,
                       padding: EdgeInsets.zero,
-                      constraints:
-                          const BoxConstraints(minWidth: 32, minHeight: 32),
+                      constraints: const BoxConstraints(
+                        minWidth: 32,
+                        minHeight: 32,
+                      ),
                       iconSize: 18,
                       color: AppColors.textOnDarkSecondary,
                       onPressed: state.attendeesResult.maybeWhen(
                         loading: () => null,
-                        orElse: () => () => context
-                            .read<EventDetailCubit>()
-                            .loadAttendees(event.id!),
+                        orElse: () =>
+                            () => context
+                                .read<EventDetailCubit>()
+                                .loadAttendees(event.id!),
                       ),
                       icon: state.attendeesResult.maybeWhen(
                         loading: () => const SizedBox(
@@ -188,8 +202,11 @@ class EventDetailParticipantsSection extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 4),
-                  const Icon(Icons.chevron_right,
-                      color: AppColors.primary, size: 14),
+                  const Icon(
+                    Icons.chevron_right,
+                    color: AppColors.primary,
+                    size: 14,
+                  ),
                 ],
               ),
             ),

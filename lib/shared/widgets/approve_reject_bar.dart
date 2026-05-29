@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/shared/widgets/registration_actions/registration_approve_button.dart';
+import 'package:rideglory/shared/widgets/registration_actions/registration_reject_button.dart';
 
 class ApproveRejectBar extends StatelessWidget {
   const ApproveRejectBar({
@@ -8,38 +10,40 @@ class ApproveRejectBar extends StatelessWidget {
     required this.approveLabel,
     required this.onReject,
     required this.onApprove,
+    this.showReject = true,
+    this.showApprove = true,
+    this.height = 44,
   });
 
   final String rejectLabel;
   final String approveLabel;
   final VoidCallback onReject;
   final VoidCallback onApprove;
+  final bool showReject;
+  final bool showApprove;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          child: AppButton(
-            label: rejectLabel,
-            icon: Icons.close_rounded,
-            onPressed: onReject,
-            variant: AppButtonVariant.danger,
-            style: AppButtonStyle.outlined,
-            isFullWidth: true,
+        if (showReject)
+          Expanded(
+            child: RegistrationRejectButton(
+              label: rejectLabel,
+              onPressed: onReject,
+              height: height,
+            ),
           ),
-        ),
-        AppSpacing.hGapSm,
-        Expanded(
-          child: AppButton(
-            label: approveLabel,
-            icon: Icons.check_rounded,
-            onPressed: onApprove,
-            variant: AppButtonVariant.success,
-            style: AppButtonStyle.outlined,
-            isFullWidth: true,
+        if (showReject && showApprove) AppSpacing.hGapSm,
+        if (showApprove)
+          Expanded(
+            child: RegistrationApproveButton(
+              label: approveLabel,
+              onPressed: onApprove,
+              height: height,
+            ),
           ),
-        ),
       ],
     );
   }

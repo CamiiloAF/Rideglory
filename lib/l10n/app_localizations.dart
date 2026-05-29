@@ -2410,6 +2410,24 @@ abstract class AppLocalizations {
   /// **'Selecciona un vehículo'**
   String get registration_selectVehicleToPreload;
 
+  /// No description provided for @registration_selectVehiclePlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona tu vehículo'**
+  String get registration_selectVehiclePlaceholder;
+
+  /// No description provided for @registration_changeVehicle.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar'**
+  String get registration_changeVehicle;
+
+  /// No description provided for @registration_vehicleEmptyStateSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Registra tu moto para inscribirte en el evento.'**
+  String get registration_vehicleEmptyStateSubtitle;
+
   /// No description provided for @registration_vehicleBrandNotAllowed.
   ///
   /// In es, this message translates to:
@@ -2439,6 +2457,78 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Actualizar inscripción'**
   String get registration_updateRegistration;
+
+  /// No description provided for @registration_finishRegistration.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirmar Inscripción'**
+  String get registration_finishRegistration;
+
+  /// No description provided for @registration_nextStep.
+  ///
+  /// In es, this message translates to:
+  /// **'Siguiente'**
+  String get registration_nextStep;
+
+  /// No description provided for @registration_previousStep.
+  ///
+  /// In es, this message translates to:
+  /// **'Atrás'**
+  String get registration_previousStep;
+
+  /// No description provided for @registration_stepPersonalTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Información Personal'**
+  String get registration_stepPersonalTitle;
+
+  /// No description provided for @registration_stepPersonalSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos básicos del piloto'**
+  String get registration_stepPersonalSubtitle;
+
+  /// No description provided for @registration_stepMedicalTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Información Médica'**
+  String get registration_stepMedicalTitle;
+
+  /// No description provided for @registration_stepMedicalSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos de salud para el evento'**
+  String get registration_stepMedicalSubtitle;
+
+  /// No description provided for @registration_stepEmergencyTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Contacto de Emergencia'**
+  String get registration_stepEmergencyTitle;
+
+  /// No description provided for @registration_stepEmergencySubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Persona a contactar en caso de accidente'**
+  String get registration_stepEmergencySubtitle;
+
+  /// No description provided for @registration_stepVehicleTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Vehículo de Inscripción'**
+  String get registration_stepVehicleTitle;
+
+  /// No description provided for @registration_stepVehicleSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Moto con la que participarás en el evento'**
+  String get registration_stepVehicleSubtitle;
+
+  /// No description provided for @registration_bloodTypeSelectHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona tu grupo'**
+  String get registration_bloodTypeSelectHint;
 
   /// Checkbox label to opt-in to persist rider info to user profile after registering.
   ///
@@ -2704,6 +2794,144 @@ abstract class AppLocalizations {
   /// **'WhatsApp'**
   String get registration_whatsappLabel;
 
+  /// No description provided for @registration_emergencyContactTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Contacto de Emergencia'**
+  String get registration_emergencyContactTitle;
+
+  /// No description provided for @registration_participationData.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos de Participación'**
+  String get registration_participationData;
+
+  /// No description provided for @registration_rowName.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre'**
+  String get registration_rowName;
+
+  /// No description provided for @registration_rowIdentification.
+  ///
+  /// In es, this message translates to:
+  /// **'Identificación'**
+  String get registration_rowIdentification;
+
+  /// No description provided for @registration_rowBirthDate.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha de nacimiento'**
+  String get registration_rowBirthDate;
+
+  /// No description provided for @registration_rowPhone.
+  ///
+  /// In es, this message translates to:
+  /// **'Teléfono'**
+  String get registration_rowPhone;
+
+  /// No description provided for @registration_rowEmail.
+  ///
+  /// In es, this message translates to:
+  /// **'Correo electrónico'**
+  String get registration_rowEmail;
+
+  /// No description provided for @registration_rowCity.
+  ///
+  /// In es, this message translates to:
+  /// **'Ciudad'**
+  String get registration_rowCity;
+
+  /// No description provided for @registration_rowEps.
+  ///
+  /// In es, this message translates to:
+  /// **'EPS'**
+  String get registration_rowEps;
+
+  /// No description provided for @registration_rowMedicalInsurance.
+  ///
+  /// In es, this message translates to:
+  /// **'Seguro médico'**
+  String get registration_rowMedicalInsurance;
+
+  /// No description provided for @registration_rowBloodType.
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo de sangre'**
+  String get registration_rowBloodType;
+
+  /// No description provided for @registration_rowContactName.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre del contacto'**
+  String get registration_rowContactName;
+
+  /// No description provided for @registration_rowVehicle.
+  ///
+  /// In es, this message translates to:
+  /// **'Vehículo'**
+  String get registration_rowVehicle;
+
+  /// No description provided for @registration_rowParticipationType.
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo de participación'**
+  String get registration_rowParticipationType;
+
+  /// No description provided for @registration_rowCompanions.
+  ///
+  /// In es, this message translates to:
+  /// **'Acompañantes'**
+  String get registration_rowCompanions;
+
+  /// No description provided for @registration_participationRiderPrincipal.
+  ///
+  /// In es, this message translates to:
+  /// **'Rider principal'**
+  String get registration_participationRiderPrincipal;
+
+  /// No description provided for @registration_requestEdit.
+  ///
+  /// In es, this message translates to:
+  /// **'Solicitar edición'**
+  String get registration_requestEdit;
+
+  /// No description provided for @registration_editRegistrationCta.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar inscripción'**
+  String get registration_editRegistrationCta;
+
+  /// No description provided for @registration_pendingBannerText.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu inscripción está pendiente de revisión'**
+  String get registration_pendingBannerText;
+
+  /// No description provided for @registration_rejectedBannerText.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu inscripción fue rechazada'**
+  String get registration_rejectedBannerText;
+
+  /// No description provided for @registration_readyForEditBannerText.
+  ///
+  /// In es, this message translates to:
+  /// **'Puedes editar tu inscripción'**
+  String get registration_readyForEditBannerText;
+
+  /// No description provided for @registration_approvedBannerText.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu inscripción fue aprobada'**
+  String get registration_approvedBannerText;
+
+  /// No description provided for @registration_cancelledBannerText.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelaste tu inscripción'**
+  String get registration_cancelledBannerText;
+
   /// No description provided for @splash_retryLabel.
   ///
   /// In es, this message translates to:
@@ -2734,36 +2962,6 @@ abstract class AppLocalizations {
   /// **'El kilometraje es requerido'**
   String get appfields_mileageRequired;
 
-  /// No description provided for @event_pendingCountBadge.
-  ///
-  /// In es, this message translates to:
-  /// **'{count} PENDIENTES'**
-  String event_pendingCountBadge(Object count);
-
-  /// No description provided for @event_allWithCount.
-  ///
-  /// In es, this message translates to:
-  /// **'Todos ({count})'**
-  String event_allWithCount(Object count);
-
-  /// No description provided for @event_timeAgoHours.
-  ///
-  /// In es, this message translates to:
-  /// **'Hace {hours}h'**
-  String event_timeAgoHours(Object hours);
-
-  /// No description provided for @event_timeAgoMinutes.
-  ///
-  /// In es, this message translates to:
-  /// **'Hace {minutes}m'**
-  String event_timeAgoMinutes(Object minutes);
-
-  /// No description provided for @event_timeAgoDays.
-  ///
-  /// In es, this message translates to:
-  /// **'Hace {days}d'**
-  String event_timeAgoDays(Object days);
-
   /// No description provided for @event_approveConfirmMessage.
   ///
   /// In es, this message translates to:
@@ -2775,6 +2973,18 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'¿Rechazar la inscripción de {name}?'**
   String event_rejectConfirmMessage(Object name);
+
+  /// No description provided for @registration_requestEditConfirmTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Solicitar edición'**
+  String get registration_requestEditConfirmTitle;
+
+  /// No description provided for @registration_requestEditConfirmMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Pedirle a {name} que edite su inscripción?'**
+  String registration_requestEditConfirmMessage(Object name);
 
   /// No description provided for @maintenance_performedOn.
   ///

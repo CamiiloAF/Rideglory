@@ -18,7 +18,7 @@ class TextFieldLabel extends StatelessWidget {
     final labelColor =
         isDark ? AppColors.textOnDarkSecondary : AppColors.textSecondary;
     final labelStyle = TextStyle(
-      fontSize: 12,
+      fontSize: 13,
       fontWeight: FontWeight.w600,
       color: labelColor,
     );

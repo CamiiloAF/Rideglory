@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
-import 'package:rideglory/features/events/presentation/attendees/widgets/attendees_filter_bottom_sheet.dart';
+import 'package:rideglory/features/events/presentation/attendees/widgets/attendees_filter_chips.dart';
 import 'package:rideglory/features/events/presentation/attendees/widgets/attendees_list.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
@@ -24,20 +24,21 @@ class _AttendeesDataViewState extends State<AttendeesDataView> {
   String _searchQuery = '';
   Set<RegistrationStatus> _statusFilters = {};
 
-  bool get _hasFilters => _statusFilters.isNotEmpty;
-
   List<EventRegistrationModel> get _filteredRegistrations {
     var list = widget.registrations;
     if (_searchQuery.isNotEmpty) {
-      final q = _searchQuery.toLowerCase();
-      list = list.where((r) {
-        final name = r.fullName.toLowerCase();
-        final vehicle = (r.vehicleSummary?.displayName ?? '').toLowerCase();
-        return name.contains(q) || vehicle.contains(q);
+      final query = _searchQuery.toLowerCase();
+      list = list.where((registration) {
+        final name = registration.fullName.toLowerCase();
+        final vehicle = (registration.vehicleSummary?.displayName ?? '')
+            .toLowerCase();
+        return name.contains(query) || vehicle.contains(query);
       }).toList();
     }
     if (_statusFilters.isNotEmpty) {
-      list = list.where((r) => _statusFilters.contains(r.status)).toList();
+      list = list
+          .where((registration) => _statusFilters.contains(registration.status))
+          .toList();
     }
     return list;
   }
@@ -48,57 +49,19 @@ class _AttendeesDataViewState extends State<AttendeesDataView> {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-          child: Row(
-            children: [
-              Expanded(
-                child: AppSearchBar(
-                  hintText: context.l10n.event_searchAttendees,
-                  onSearchChanged: (query) =>
-                      setState(() => _searchQuery = query),
-                  padding: EdgeInsets.zero,
-                  darkMode: true,
-                ),
-              ),
-              AppSpacing.hGapMd,
-              SizedBox(
-                width: 48,
-                height: 48,
-                child: Material(
-                  color: context.colorScheme.primary,
-                  borderRadius: BorderRadius.circular(14),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(14),
-                    onTap: _showFilters,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Icon(
-                          Icons.tune_rounded,
-                          color: context.colorScheme.onPrimary,
-                          size: 24,
-                        ),
-                        if (_hasFilters)
-                          Positioned(
-                            right: 8,
-                            top: 8,
-                            child: Container(
-                              width: 8,
-                              height: 8,
-                              decoration: BoxDecoration(
-                                color: context.colorScheme.onPrimary,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
+          child: AppSearchBar(
+            hintText: context.l10n.event_searchAttendees,
+            onSearchChanged: (query) => setState(() => _searchQuery = query),
+            padding: EdgeInsets.zero,
+            darkMode: true,
           ),
         ),
         AppSpacing.gapSm,
+        AttendeesFilterChips(
+          selected: _statusFilters,
+          onSelected: (statuses) => setState(() => _statusFilters = statuses),
+        ),
+        AppSpacing.gapMd,
         Expanded(
           child: AttendeesList(
             registrations: _filteredRegistrations,
@@ -107,15 +70,5 @@ class _AttendeesDataViewState extends State<AttendeesDataView> {
         ),
       ],
     );
-  }
-
-  Future<void> _showFilters() async {
-    final selected = await AttendeesFilterBottomSheet.show(
-      context: context,
-      initialStatuses: Set.from(_statusFilters),
-    );
-    if (selected != null && mounted) {
-      setState(() => _statusFilters = selected);
-    }
   }
 }
