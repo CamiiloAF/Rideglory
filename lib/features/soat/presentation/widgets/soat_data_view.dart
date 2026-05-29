@@ -7,7 +7,7 @@ import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/soat/domain/models/soat_model.dart';
 import 'package:rideglory/features/soat/presentation/cubit/soat_cubit.dart';
 import 'package:rideglory/features/soat/presentation/scan/soat_entry_flow.dart';
-import 'package:rideglory/features/soat/presentation/widgets/soat_delete_button.dart';
+import 'package:rideglory/features/soat/presentation/widgets/soat_action_tile.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_detail_row.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
@@ -25,6 +25,41 @@ class SoatDataView extends StatefulWidget {
 
 class _SoatDataViewState extends State<SoatDataView> {
   bool _openingDocument = false;
+  bool _deleting = false;
+
+  Future<void> _confirmAndDelete() async {
+    final confirmed = await ConfirmationDialog.show(
+      context: context,
+      title: context.l10n.soat_delete_confirm_title,
+      content: context.l10n.soat_delete_confirm_message,
+      confirmLabel: context.l10n.soat_delete_button,
+      confirmType: DialogActionType.danger,
+      icon: Icons.delete_outline,
+    );
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _deleting = true);
+    final success = await context.read<SoatCubit>().delete(
+      widget.vehicle.id ?? '',
+    );
+    if (!mounted) return;
+
+    if (success) {
+      final vehicleId = widget.vehicle.id;
+      if (vehicleId != null) {
+        context.read<VehicleCubit>().clearSoatLocally(vehicleId);
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.soat_deleted_success)),
+      );
+      context.pop();
+    } else {
+      setState(() => _deleting = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.errorOccurred)),
+      );
+    }
+  }
 
   Color _heroColor() {
     return switch (widget.soat.status) {
@@ -215,18 +250,9 @@ class _SoatDataViewState extends State<SoatDataView> {
               ],
             ),
           ),
-          if (widget.soat.documentUrl != null) ...[
-            const SizedBox(height: 16),
-            AppButton(
-              label: context.l10n.soat_view_document,
-              onPressed: _openDocument,
-              isLoading: _openingDocument,
-              style: AppButtonStyle.outlined,
-              isFullWidth: true,
-            ),
-          ],
-          const SizedBox(height: 12),
-          if (widget.soat.status == SoatStatus.expired)
+          const SizedBox(height: 20),
+          // Única acción principal: renovar cuando el SOAT está vencido.
+          if (widget.soat.status == SoatStatus.expired) ...[
             AppButton(
               label: context.l10n.soat_renew_btn,
               onPressed: () => SoatEntryFlow.start(
@@ -240,20 +266,36 @@ class _SoatDataViewState extends State<SoatDataView> {
               ),
               isFullWidth: true,
             ),
-          const SizedBox(height: 12),
-          SoatDeleteButton(
-            onDelete: () =>
-                context.read<SoatCubit>().delete(widget.vehicle.id ?? ''),
-            onDeleted: () {
-              final vehicleId = widget.vehicle.id;
-              if (vehicleId != null) {
-                context.read<VehicleCubit>().clearSoatLocally(vehicleId);
-              }
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(context.l10n.soat_deleted_success)),
-              );
-              context.pop();
-            },
+            const SizedBox(height: 16),
+          ],
+          // Acciones secundarias agrupadas en una lista discreta para no
+          // saturar la pantalla de botones de color.
+          Container(
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              color: AppColors.darkCard,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.darkBorderPrimary),
+            ),
+            child: Column(
+              children: [
+                if (widget.soat.documentUrl != null)
+                  SoatActionTile(
+                    icon: Icons.description_outlined,
+                    label: context.l10n.soat_view_document,
+                    loading: _openingDocument,
+                    onTap: _openDocument,
+                  ),
+                SoatActionTile(
+                  icon: Icons.delete_outline_rounded,
+                  label: context.l10n.soat_delete_button,
+                  color: AppColors.error,
+                  loading: _deleting,
+                  showDivider: widget.soat.documentUrl != null,
+                  onTap: _confirmAndDelete,
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 32),
         ],
