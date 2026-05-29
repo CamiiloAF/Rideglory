@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/shared/widgets/registration_actions/registration_approve_button.dart';
+import 'package:rideglory/shared/widgets/registration_actions/registration_reject_button.dart';
 
 class ApproveRejectBar extends StatelessWidget {
   const ApproveRejectBar({
@@ -8,38 +10,32 @@ class ApproveRejectBar extends StatelessWidget {
     required this.approveLabel,
     required this.onReject,
     required this.onApprove,
-    this.approveStyle = AppButtonStyle.filled,
+    this.height = 44,
   });
 
   final String rejectLabel;
   final String approveLabel;
   final VoidCallback onReject;
   final VoidCallback onApprove;
-  final AppButtonStyle approveStyle;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(
-          child: AppButton(
+          child: RegistrationRejectButton(
             label: rejectLabel,
-            icon: Icons.close_rounded,
             onPressed: onReject,
-            variant: AppButtonVariant.danger,
-            style: AppButtonStyle.outlined,
-            isFullWidth: true,
+            height: height,
           ),
         ),
         AppSpacing.hGapSm,
         Expanded(
-          child: AppButton(
+          child: RegistrationApproveButton(
             label: approveLabel,
-            icon: Icons.check_rounded,
             onPressed: onApprove,
-            variant: AppButtonVariant.success,
-            style: approveStyle,
-            isFullWidth: true,
+            height: height,
           ),
         ),
       ],

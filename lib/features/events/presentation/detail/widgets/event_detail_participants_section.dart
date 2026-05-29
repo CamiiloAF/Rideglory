@@ -59,6 +59,12 @@ class EventDetailParticipantsSection extends StatelessWidget {
                     if (detailContext.mounted) detailContext.pop();
                   },
                 ),
+        onRequestEdit: registrationId == null
+            ? null
+            : (detailContext) {
+                cubit.setAttendeeReadyForEdit(registrationId);
+                if (detailContext.mounted) detailContext.pop();
+              },
       ),
     );
   }

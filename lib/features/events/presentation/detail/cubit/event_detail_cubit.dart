@@ -11,6 +11,7 @@ import 'package:rideglory/features/event_registration/domain/use_cases/cancel_ev
 import 'package:rideglory/features/event_registration/domain/use_cases/get_event_registrations_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/get_my_registration_for_event_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/reject_registration_use_case.dart';
+import 'package:rideglory/features/event_registration/domain/use_cases/set_registration_ready_for_edit_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_event_by_id_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/publish_event_use_case.dart';
 import 'package:rideglory/features/events/data/cache/attendees_cache.dart';
@@ -30,6 +31,7 @@ class EventDetailCubit extends Cubit<EventDetailState> {
     this._getEventRegistrationsUseCase,
     this._approveRegistrationUseCase,
     this._rejectRegistrationUseCase,
+    this._setReadyForEditUseCase,
   ) : super(
         const EventDetailState(
           registrationResult: ResultState.initial(),
@@ -46,6 +48,7 @@ class EventDetailCubit extends Cubit<EventDetailState> {
   final GetEventRegistrationsUseCase _getEventRegistrationsUseCase;
   final ApproveRegistrationUseCase _approveRegistrationUseCase;
   final RejectRegistrationUseCase _rejectRegistrationUseCase;
+  final SetRegistrationReadyForEditUseCase _setReadyForEditUseCase;
 
   EventRegistrationModel? _registration;
   String? _attendeesEventId;
@@ -113,6 +116,14 @@ class EventDetailCubit extends Cubit<EventDetailState> {
   Future<void> rejectAttendee(String registrationId) async {
     _updateAttendeeStatusLocally(registrationId, RegistrationStatus.rejected);
     unawaited(_rejectRegistrationUseCase(registrationId));
+  }
+
+  Future<void> setAttendeeReadyForEdit(String registrationId) async {
+    _updateAttendeeStatusLocally(
+      registrationId,
+      RegistrationStatus.readyForEdit,
+    );
+    unawaited(_setReadyForEditUseCase(registrationId));
   }
 
   Future<void> loadEvent(String eventId) async {

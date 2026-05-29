@@ -2,8 +2,12 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/shared/widgets/registration_actions/registration_approve_button.dart';
+import 'package:rideglory/shared/widgets/registration_actions/registration_reject_button.dart';
+import 'package:rideglory/shared/widgets/registration_actions/registration_request_edit_button.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 class RegistrationDetailBottomBar extends StatelessWidget {
@@ -18,13 +22,21 @@ class RegistrationDetailBottomBar extends StatelessWidget {
         params.eventOwnerId != null &&
         params.eventOwnerId == registration.userId;
     final showCancel = params.onCancelRegistration != null && !ownerSuppressed;
+
+    // Regla READY_FOR_EDIT: mientras la inscripción esté en este estado, el
+    // organizador no puede aprobar, rechazar ni volver a solicitar edición.
+    // Solo el piloto (al editar su inscripción) la regresa a PENDING.
+    final ownerActionsLocked =
+        registration.status == RegistrationStatus.readyForEdit;
     final showApproveReject =
-        params.onApprove != null || params.onReject != null;
+        !ownerActionsLocked &&
+        (params.onApprove != null || params.onReject != null);
 
     final actions = _buildActions(
       context,
       showApproveReject: showApproveReject,
       showCancel: showCancel,
+      ownerActionsLocked: ownerActionsLocked,
     );
     if (actions.isEmpty) return const SizedBox.shrink();
 
@@ -51,45 +63,34 @@ class RegistrationDetailBottomBar extends StatelessWidget {
     BuildContext context, {
     required bool showApproveReject,
     required bool showCancel,
+    required bool ownerActionsLocked,
   }) {
     // Vista organizador: aprobar destacado + (rechazar / solicitar edición).
     if (showApproveReject) {
       final secondaryButtons = <Widget>[
         if (params.onReject != null)
           Expanded(
-            child: AppButton(
+            child: RegistrationRejectButton(
               label: context.l10n.registration_reject,
-              icon: Icons.cancel_outlined,
-              variant: AppButtonVariant.danger,
-              style: AppButtonStyle.tonal,
-              shape: AppButtonShape.pill,
               onPressed: () => params.onReject!(context),
-              isFullWidth: true,
             ),
           ),
         if (params.onReject != null && params.onRequestEdit != null)
           AppSpacing.hGapSm,
         if (params.onRequestEdit != null)
           Expanded(
-            child: AppButton(
+            child: RegistrationRequestEditButton(
               label: context.l10n.registration_requestEdit,
-              icon: Icons.edit_outlined,
-              variant: AppButtonVariant.secondary,
-              style: AppButtonStyle.outlined,
               onPressed: () => params.onRequestEdit!(context),
-              isFullWidth: true,
             ),
           ),
       ];
 
       return [
         if (params.onApprove != null)
-          AppButton(
+          RegistrationApproveButton(
             label: context.l10n.registration_approve,
-            icon: Icons.check_rounded,
-            variant: AppButtonVariant.success,
             onPressed: () => params.onApprove!(context),
-            isFullWidth: true,
           ),
         if (params.onApprove != null && secondaryButtons.isNotEmpty)
           AppSpacing.gapMd,

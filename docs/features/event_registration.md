@@ -491,8 +491,9 @@ Pasos (cada uno es su propio widget en `wizard/steps/`):
    - Contacto de Emergencia (icono rojo).
    - Datos de Participación (icono naranja).
 3. `RegistrationDetailBottomBar` con CTA dinámico según rol y status:
-   - **Organizador**: `Aprobar` (verde, full-width) + fila `Rechazar` (outlined rojo) / `Solicitar edición` (neutral).
+   - **Organizador**: `Aprobar` (verde sólido `AppColors.statusGreen` + texto/ícono oscuros, full-width) + fila `Rechazar` (fondo `darkTertiary`, borde y texto `error`) / `Solicitar edición` (neutral: `darkCard` + borde). Los tres botones usan los widgets dedicados `RegistrationApproveButton` / `RegistrationRejectButton` / `RegistrationRequestEditButton` (no `AppButton`) para lograr los colores pixel-perfect del diseño TUJA0.
    - **Piloto**: `Editar inscripción` (naranja, solo si `readyForEdit`) + `Cancelar inscripción` (outlined rojo).
+   - **Regla READY_FOR_EDIT (organizador):** si `registration.status == readyForEdit`, la barra del organizador NO muestra Aprobar/Rechazar/Solicitar edición (queda oculta). Solo vuelve a habilitarse cuando el piloto edita su inscripción y esta regresa a `pending`. Las acciones del piloto no se ven afectadas. Esta misma regla oculta `ApproveRejectBar` en `AttendeePendingRequestCard`.
 
 > El antiguo `RegistrationDetailHeader`, las secciones expandibles (`RegistrationDetailSectionCard` + `ExpandableContainer`), `RegistrationDetailInfoRow`, `RegistrationDetailEmergencyCard`, `RegistrationVehicleDetailContent` y el `ContactPopupMenuButton` del detalle fueron eliminados en el rediseño.
 
