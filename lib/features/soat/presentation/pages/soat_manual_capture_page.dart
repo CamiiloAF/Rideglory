@@ -16,8 +16,10 @@ import 'package:rideglory/features/soat/domain/usecases/save_soat_usecase.dart';
 import 'package:rideglory/features/soat/domain/usecases/scan_soat_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
+import 'package:rideglory/features/soat/presentation/widgets/soat_add_document_sheet.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_autofill_banner.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_document_section.dart';
+import 'package:rideglory/features/soat/presentation/widgets/soat_not_recognized_warning.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_validity_card.dart';
 
 /// Formulario unificado para **registrar o editar** el SOAT manualmente.
@@ -69,10 +71,23 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
   bool _saving = false;
   bool _scanning = false;
   bool _autofillApplied = false;
+  bool _documentNotRecognized = false;
   String? _error;
   SoatExtraction? _extraction;
 
   bool get _isEditMode => widget.vehicle?.id != null;
+
+  /// The form was opened with a document/scan already attached, so the user is
+  /// confirming detected (or to-be-entered) data rather than starting from
+  /// scratch.
+  bool get _isConfirmationMode =>
+      widget.initialLocalImagePath != null || widget.extraction != null;
+
+  String _appBarTitle(BuildContext context) {
+    if (widget.existingSoat != null) return context.l10n.soat_edit_title;
+    if (_isConfirmationMode) return context.l10n.vehicle_soat_confirm_title;
+    return context.l10n.vehicle_soat_form_title;
+  }
 
   /// The scan detected a valid SOAT and the user has not autofilled yet, so the
   /// opt-in banner should be offered (the user decides whether to autofill).
@@ -145,57 +160,7 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
-      builder: (sheetCtx) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Center(
-                child: Container(
-                  width: 36,
-                  height: 4,
-                  margin: const EdgeInsets.only(bottom: 20),
-                  decoration: BoxDecoration(
-                    color: AppColors.darkBorderPrimary,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-              ),
-              AppButton(
-                label: context.l10n.soat_source_camera,
-                icon: Icons.camera_alt_outlined,
-                onPressed: () =>
-                    // Custom: sheetCtx.pop() — required pattern for showModalBottomSheet typed result return.
-                    Navigator.of(sheetCtx).pop(0),
-                variant: AppButtonVariant.secondary,
-                style: AppButtonStyle.outlined,
-              ),
-              const SizedBox(height: 12),
-              AppButton(
-                label: context.l10n.soat_source_gallery,
-                icon: Icons.photo_library_outlined,
-                onPressed: () =>
-                    // Custom: sheetCtx.pop() — required pattern for showModalBottomSheet typed result return.
-                    Navigator.of(sheetCtx).pop(1),
-                variant: AppButtonVariant.secondary,
-                style: AppButtonStyle.outlined,
-              ),
-              const SizedBox(height: 12),
-              AppButton(
-                label: context.l10n.soat_source_pdf,
-                icon: Icons.picture_as_pdf_outlined,
-                onPressed: () =>
-                    // Custom: sheetCtx.pop() — required pattern for showModalBottomSheet typed result return.
-                    Navigator.of(sheetCtx).pop(2),
-                variant: AppButtonVariant.secondary,
-                style: AppButtonStyle.outlined,
-              ),
-            ],
-          ),
-        ),
-      ),
+      builder: (_) => const SoatAddDocumentSheet(),
     );
 
     if (choice == null || !mounted) return;
@@ -222,7 +187,10 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
     }
 
     if (pickedPath == null || !mounted) return;
-    setState(() => _localImagePath = pickedPath);
+    setState(() {
+      _localImagePath = pickedPath;
+      _documentNotRecognized = false;
+    });
     await _scanDocument(pickedPath, scanSource);
   }
 
@@ -245,22 +213,14 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
       setState(() {
         _extraction = result.extraction;
         _autofillApplied = false;
+        _documentNotRecognized = false;
       });
       if (autoApply) _applyAutofill();
     } on SoatScanException {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: AppColors.warning,
-          content: Text(
-            context.l10n.soat_scan_error_unreadable,
-            style: const TextStyle(
-              color: AppColors.darkBgPrimary,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      );
+      // No bloqueamos al usuario: el documento queda adjunto y mostramos un
+      // aviso inline para que verifique el archivo o complete los datos a mano.
+      setState(() => _documentNotRecognized = true);
     } finally {
       if (mounted) setState(() => _scanning = false);
     }
@@ -378,9 +338,7 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          _isEditMode
-              ? context.l10n.soat_edit_title
-              : context.l10n.vehicle_soat_form_title,
+          _appBarTitle(context),
           style: const TextStyle(
             color: AppColors.textOnDarkPrimary,
             fontSize: 17,
@@ -418,9 +376,15 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
                         ? widget.existingSoat?.documentUrl
                         : null,
                     onPickImage: _pickImage,
-                    onRemoveLocalImage: () =>
-                        setState(() => _localImagePath = null),
+                    onRemoveLocalImage: () => setState(() {
+                      _localImagePath = null;
+                      _documentNotRecognized = false;
+                    }),
                   ),
+                  if (_documentNotRecognized) ...[
+                    const SizedBox(height: 10),
+                    const SoatNotRecognizedWarning(),
+                  ],
                   const SizedBox(height: 20),
                   AppTextField(
                     name: 'policyNumber',

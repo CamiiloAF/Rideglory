@@ -2360,6 +2360,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String get soat_doc_add_hint => 'Opcional · Imagen o PDF';
 
   @override
+  String get soat_document_not_recognized =>
+      'Parece que este documento no es un SOAT. Verifica el archivo o completa los datos manualmente.';
+
+  @override
+  String get soat_add_doc_sheet_title => 'Agregar documento';
+
+  @override
+  String get soat_add_doc_camera_subtitle => 'Toma una foto del documento';
+
+  @override
+  String get soat_add_doc_gallery_subtitle => 'Elige una imagen de tu galería';
+
+  @override
+  String get soat_add_doc_pdf_subtitle => 'Selecciona un archivo PDF';
+
+  @override
   String get soat_upload_error =>
       'Error al subir. Archivo demasiado grande (máx. 10 MB).';
 

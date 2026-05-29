@@ -5,6 +5,7 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/soat/domain/models/soat_model.dart';
 import 'package:rideglory/features/soat/domain/usecases/get_soat_usecase.dart';
+import 'package:rideglory/features/soat/presentation/scan/soat_entry_flow.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
@@ -50,7 +51,7 @@ class _VehicleSoatFormSlotState extends State<VehicleSoatFormSlot> {
     if (hasSoat) {
       await context.pushNamed(AppRoutes.soatStatus, extra: widget.vehicle);
     } else {
-      await context.pushNamed(AppRoutes.vehicleSoat, extra: widget.vehicle);
+      await SoatEntryFlow.start(context, vehicle: widget.vehicle);
     }
     if (mounted) {
       setState(() {

@@ -6,12 +6,12 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/soat/domain/models/soat_model.dart';
 import 'package:rideglory/features/soat/presentation/cubit/soat_cubit.dart';
+import 'package:rideglory/features/soat/presentation/scan/soat_entry_flow.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_delete_button.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_detail_row.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/helpers/document_downloader.dart';
-import 'package:rideglory/shared/router/app_routes.dart';
 
 class SoatDataView extends StatefulWidget {
   const SoatDataView({super.key, required this.vehicle, required this.soat});
@@ -228,13 +228,15 @@ class _SoatDataViewState extends State<SoatDataView> {
           if (widget.soat.status == SoatStatus.expired)
             AppButton(
               label: context.l10n.soat_renew_btn,
-              onPressed: () => context
-                  .pushNamed(AppRoutes.vehicleSoat, extra: widget.vehicle)
-                  .then((_) {
-                    if (context.mounted) {
-                      context.read<SoatCubit>().load(widget.vehicle.id ?? '');
-                    }
-                  }),
+              onPressed: () => SoatEntryFlow.start(
+                context,
+                vehicle: widget.vehicle,
+                onSaved: () {
+                  if (context.mounted) {
+                    context.read<SoatCubit>().load(widget.vehicle.id ?? '');
+                  }
+                },
+              ),
               isFullWidth: true,
             ),
           const SizedBox(height: 12),

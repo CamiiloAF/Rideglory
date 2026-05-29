@@ -5,6 +5,7 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/soat/domain/models/soat_model.dart';
 import 'package:rideglory/features/soat/domain/usecases/get_soat_usecase.dart';
+import 'package:rideglory/features/soat/presentation/scan/soat_entry_flow.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
@@ -52,9 +53,13 @@ class _VehicleSoatSectionState extends State<VehicleSoatSection> {
 
   void _onSoatTap(BuildContext context, SoatModel? soat) {
     if (soat == null) {
-      context.pushNamed(AppRoutes.vehicleSoat, extra: widget.vehicle).then((_) {
-        if (mounted) setState(_load);
-      });
+      SoatEntryFlow.start(
+        context,
+        vehicle: widget.vehicle,
+        onSaved: () {
+          if (mounted) setState(_load);
+        },
+      );
     } else {
       context.pushNamed(AppRoutes.soatStatus, extra: widget.vehicle).then((_) {
         if (mounted) setState(_load);

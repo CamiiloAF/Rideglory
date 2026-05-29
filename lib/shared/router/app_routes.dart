@@ -17,7 +17,6 @@ abstract class AppRoutes {
   static const String vehicleDetail = '/vehicles/detail';
   static const String createVehicle = '/vehicles/create';
   static const String editVehicle = '/vehicles/edit';
-  static const String vehicleSoat = '/vehicles/soat';
 
   static const String maintenances = '/maintenances';
   static const String createMaintenance = '/maintenances/create';
@@ -44,7 +43,6 @@ abstract class AppRoutes {
   static const String notifications = '/notifications';
 
   // SOAT routes
-  static const String soatUpload = '/soat/upload';
   static const String soatStatus = '/soat/status';
   static const String soatManualCapture = '/soat/manual-capture';
   static const String soatScan = '/soat/scan';

@@ -4471,6 +4471,36 @@ abstract class AppLocalizations {
   /// **'Opcional · Imagen o PDF'**
   String get soat_doc_add_hint;
 
+  /// No description provided for @soat_document_not_recognized.
+  ///
+  /// In es, this message translates to:
+  /// **'Parece que este documento no es un SOAT. Verifica el archivo o completa los datos manualmente.'**
+  String get soat_document_not_recognized;
+
+  /// No description provided for @soat_add_doc_sheet_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar documento'**
+  String get soat_add_doc_sheet_title;
+
+  /// No description provided for @soat_add_doc_camera_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Toma una foto del documento'**
+  String get soat_add_doc_camera_subtitle;
+
+  /// No description provided for @soat_add_doc_gallery_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Elige una imagen de tu galería'**
+  String get soat_add_doc_gallery_subtitle;
+
+  /// No description provided for @soat_add_doc_pdf_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona un archivo PDF'**
+  String get soat_add_doc_pdf_subtitle;
+
   /// No description provided for @soat_upload_error.
   ///
   /// In es, this message translates to:

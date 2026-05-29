@@ -443,7 +443,8 @@ Bottom sheet alternativo al dropdown. Usado por `VehicleSelectorField` en el reg
 | `/vehicles/detail` | `AppRoutes.vehicleDetail` | `VehicleDetailPage(vehicle: extra as VehicleModel)` | `VehicleModel` |
 | `/vehicles/create` | `AppRoutes.createVehicle` | `VehicleFormPage()` | — |
 | `/vehicles/edit` | `AppRoutes.editVehicle` | `VehicleFormPage(vehicle: extra as VehicleModel?)` | `VehicleModel?` |
-| `/vehicles/soat` | `AppRoutes.vehicleSoat` | `SoatUploadPage(vehicle: extra as VehicleModel)` | `VehicleModel` (delega a feature `soat`) |
+
+> La ruta `/vehicles/soat` (`AppRoutes.vehicleSoat`) y `SoatUploadPage` fueron eliminadas. Para agregar/renovar SOAT, la sección de documentos usa `SoatEntryFlow.start(context, ...)` del feature `soat`.
 
 `/garage` vive dentro del segundo `StatefulShellBranch` (tab del bottom nav).
 

@@ -8,8 +8,7 @@ import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubi
 import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_add_more_doc_slot.dart';
 import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_section_header.dart';
 import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_soat_form_slot.dart';
-import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_params.dart';
-import 'package:rideglory/features/soat/presentation/widgets/soat_vehicle_options_sheet.dart';
+import 'package:rideglory/features/soat/presentation/scan/soat_entry_flow.dart';
 import 'package:rideglory/features/vehicles/presentation/widgets/vehicle_document_upload_slot.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
@@ -24,11 +23,10 @@ class VehicleFormDocsSection extends StatelessWidget {
         final isEditing = state.vehicle?.id != null;
         final soatCounted = isEditing
             ? (state.vehicle!.soatStatus != null &&
-                state.vehicle!.soatStatus != SoatStatus.noSoat)
+                  state.vehicle!.soatStatus != SoatStatus.noSoat)
             : state.soatLocalPath != null || state.pendingManualSoat != null;
         final docCount =
-            (soatCounted ? 1 : 0) +
-            (state.techReviewLocalPath != null ? 1 : 0);
+            (soatCounted ? 1 : 0) + (state.techReviewLocalPath != null ? 1 : 0);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -36,8 +34,7 @@ class VehicleFormDocsSection extends StatelessWidget {
             VehicleFormSectionHeader(
               title: context.l10n.vehicle_form_docs_section,
               badge: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: AppColors.darkTertiary,
                   borderRadius: BorderRadius.circular(10),
@@ -68,12 +65,14 @@ class VehicleFormDocsSection extends StatelessWidget {
               VehicleDocumentUploadSlot(
                 title: context.l10n.vehicle_doc_soat_label,
                 subtitle: context.l10n.vehicle_form_soat_subtitle,
-                localPath: state.pendingManualSoat?.localImagePath ??
+                localPath:
+                    state.pendingManualSoat?.localImagePath ??
                     state.soatLocalPath,
                 hasData: state.pendingManualSoat != null,
                 dataLabel: context.l10n.vehicle_soat_data_added,
                 onUploadTap: () => _onSoatTap(context, state.vehicle),
-                onClear: (state.soatLocalPath != null ||
+                onClear:
+                    (state.soatLocalPath != null ||
                         state.pendingManualSoat != null)
                     ? () {
                         context.read<VehicleFormCubit>().clearSoatDocument();
@@ -92,8 +91,8 @@ class VehicleFormDocsSection extends StatelessWidget {
                   context.read<VehicleFormCubit>().pickTechReviewDocument(),
               onClear: state.techReviewLocalPath != null
                   ? () => context
-                      .read<VehicleFormCubit>()
-                      .clearTechReviewDocument()
+                        .read<VehicleFormCubit>()
+                        .clearTechReviewDocument()
                   : null,
             ),
             const SizedBox(height: 12),
@@ -127,44 +126,20 @@ class VehicleFormDocsSection extends StatelessWidget {
 Future<void> _onSoatTap(BuildContext context, VehicleModel? vehicle) async {
   // --- Vehículo nuevo (sin ID): mostrar opciones antes de crearlo ---
   if (vehicle?.id == null) {
-    final result = await showModalBottomSheet<SoatOptionsResult>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppColors.darkBgSecondary,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) => const SoatVehicleOptionsSheet(),
+    await SoatEntryFlow.start(
+      context,
+      formCubit: context.read<VehicleFormCubit>(),
     );
-
-    if (!context.mounted) return;
-
-    // Ambos flujos (subir archivo y entrada manual) terminan en el formulario
-    // de captura manual. En el caso de upload, la imagen ya seleccionada se
-    // pasa como initialLocalImagePath para que aparezca pre-cargada.
-    final String? preselectedPath =
-        result is SoatOptionsUpload ? result.image.path : null;
-
-    if (result is SoatOptionsUpload || result is SoatOptionsManual) {
-      if (!context.mounted) return;
-      final pendingData = await context.push<PendingManualSoat>(
-        AppRoutes.soatManualCapture,
-        extra: SoatManualCaptureParams(initialLocalImagePath: preselectedPath),
-      );
-      if (pendingData != null && context.mounted) {
-        context.read<VehicleFormCubit>().storePendingManualSoat(pendingData);
-      }
-    }
     return;
   }
 
-  // --- Vehículo existente: ir al detalle si ya tiene SOAT, al upload si no ---
-  final hasSoat = vehicle!.soatStatus != null &&
-      vehicle.soatStatus != SoatStatus.noSoat;
+  // --- Vehículo existente: ir al detalle si ya tiene SOAT, al flujo si no ---
+  final hasSoat =
+      vehicle!.soatStatus != null && vehicle.soatStatus != SoatStatus.noSoat;
 
   if (hasSoat) {
     context.pushNamed(AppRoutes.soatStatus, extra: vehicle);
   } else {
-    context.pushNamed(AppRoutes.vehicleSoat, extra: vehicle);
+    await SoatEntryFlow.start(context, vehicle: vehicle);
   }
 }

@@ -25,7 +25,6 @@ import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_p
 import 'package:rideglory/features/soat/presentation/pages/soat_scan_page.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_scan_params.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_status_page.dart';
-import 'package:rideglory/features/soat/presentation/pages/soat_upload_page.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
@@ -223,15 +222,6 @@ class AppRouter {
           return VehicleFormPage(vehicle: vehicle);
         },
       ),
-      GoRoute(
-        path: AppRoutes.vehicleSoat,
-        name: AppRoutes.vehicleSoat,
-        builder: (context, state) {
-          final vehicle = state.extra as VehicleModel;
-          return SoatUploadPage(vehicle: vehicle);
-        },
-      ),
-
       // Maintenance routes
       GoRoute(
         path: AppRoutes.maintenances,
@@ -361,14 +351,6 @@ class AppRouter {
         path: AppRoutes.notifications,
         name: AppRoutes.notifications,
         builder: (context, state) => const NotificationsPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.soatUpload,
-        name: AppRoutes.soatUpload,
-        builder: (context, state) {
-          final vehicle = state.extra as VehicleModel;
-          return SoatUploadPage(vehicle: vehicle);
-        },
       ),
       GoRoute(
         path: AppRoutes.soatStatus,

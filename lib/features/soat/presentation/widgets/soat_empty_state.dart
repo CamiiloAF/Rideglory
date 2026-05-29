@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/soat/presentation/cubit/soat_cubit.dart';
+import 'package:rideglory/features/soat/presentation/scan/soat_entry_flow.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
-import 'package:rideglory/shared/router/app_routes.dart';
 
 class SoatEmptyState extends StatelessWidget {
   const SoatEmptyState({super.key, required this.vehicle});
@@ -56,13 +55,15 @@ class SoatEmptyState extends StatelessWidget {
             AppSpacing.gapXxl,
             AppButton(
               label: context.l10n.soat_renew_btn,
-              onPressed: () => context
-                  .pushNamed(AppRoutes.vehicleSoat, extra: vehicle)
-                  .then((_) {
-                    if (context.mounted) {
-                      context.read<SoatCubit>().load(vehicle.id ?? '');
-                    }
-                  }),
+              onPressed: () => SoatEntryFlow.start(
+                context,
+                vehicle: vehicle,
+                onSaved: () {
+                  if (context.mounted) {
+                    context.read<SoatCubit>().load(vehicle.id ?? '');
+                  }
+                },
+              ),
             ),
           ],
         ),
