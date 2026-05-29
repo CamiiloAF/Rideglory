@@ -121,26 +121,18 @@ class AttendeesList extends StatelessWidget {
             ),
             AppSpacing.gapXxl,
           ],
-          AttendeesSectionHeader(
-            label: context.l10n.event_processedSection,
-            labelColor: AppColors.textOnDarkTertiary,
-            count: processed.length,
-            countBackgroundColor: AppColors.darkTertiary,
-            countTextColor: AppColors.textOnDarkSecondary,
-          ),
-          AppSpacing.gapMd,
-          if (processed.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24),
-              child: Text(
-                context.l10n.event_noAttendees,
-                style: const TextStyle(
-                  color: AppColors.textOnDarkSecondary,
-                  fontSize: 14,
-                ),
-              ),
-            )
-          else
+          // La sección "Ya procesados" solo aparece si tiene registros: sin
+          // ellos no mostramos un vacío que sugiera erróneamente que no hay
+          // ningún inscrito (la sección de nuevas solicitudes puede tener).
+          if (processed.isNotEmpty) ...[
+            AttendeesSectionHeader(
+              label: context.l10n.event_processedSection,
+              labelColor: AppColors.textOnDarkTertiary,
+              count: processed.length,
+              countBackgroundColor: AppColors.darkTertiary,
+              countTextColor: AppColors.textOnDarkSecondary,
+            ),
+            AppSpacing.gapMd,
             ...processed.map(
               (registration) => Padding(
                 padding: const EdgeInsets.only(bottom: 8),
@@ -154,6 +146,7 @@ class AttendeesList extends StatelessWidget {
                 ),
               ),
             ),
+          ],
         ],
       ),
     );
