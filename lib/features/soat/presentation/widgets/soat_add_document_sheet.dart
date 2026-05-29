@@ -6,7 +6,6 @@ import 'package:rideglory/design_system/design_system.dart';
 /// Contenido del bottom sheet "Agregar documento" del formulario de SOAT.
 ///
 /// Devuelve la opción elegida vía `Navigator.pop`:
-/// - `0` = Cámara
 /// - `1` = Galería
 /// - `2` = Archivo PDF
 class SoatAddDocumentSheet extends StatelessWidget {
@@ -41,14 +40,6 @@ class SoatAddDocumentSheet extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            _SoatAddDocumentOption(
-              icon: Icons.camera_alt_outlined,
-              label: context.l10n.soat_source_camera,
-              subtitle: context.l10n.soat_add_doc_camera_subtitle,
-              // Custom: typed-result pop is required for showModalBottomSheet.
-              onTap: () => context.pop(0),
-            ),
-            const SizedBox(height: 10),
             _SoatAddDocumentOption(
               icon: Icons.photo_library_outlined,
               label: context.l10n.soat_source_gallery,

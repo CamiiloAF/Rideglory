@@ -5,13 +5,11 @@ import 'package:rideglory/design_system/design_system.dart';
 class SoatUploadOptionCard extends StatelessWidget {
   const SoatUploadOptionCard({
     super.key,
-    required this.onCameraTap,
     required this.onGalleryTap,
     required this.onFileTap,
     required this.isLoading,
   });
 
-  final VoidCallback onCameraTap;
   final VoidCallback onGalleryTap;
   final VoidCallback onFileTap;
   final bool isLoading;
@@ -61,16 +59,6 @@ class SoatUploadOptionCard extends StatelessWidget {
           const SizedBox(height: 16),
           Row(
             children: [
-              Expanded(
-                child: _SourceButton(
-                  icon: Icons.camera_alt_rounded,
-                  label: context.l10n.vehicle_soat_camera_button,
-                  isPrimary: false,
-                  isLoading: isLoading,
-                  onTap: onCameraTap,
-                ),
-              ),
-              const SizedBox(width: 10),
               Expanded(
                 child: _SourceButton(
                   icon: Icons.photo_library_outlined,

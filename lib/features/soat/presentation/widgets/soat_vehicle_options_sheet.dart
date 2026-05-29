@@ -67,8 +67,6 @@ class _SheetContent extends StatelessWidget {
                   const SizedBox(height: 20),
                   SoatUploadOptionCard(
                     isLoading: isLoading,
-                    onCameraTap: () =>
-                        context.read<SoatUploadCubit>().pickFromCamera(),
                     onGalleryTap: () =>
                         context.read<SoatUploadCubit>().pickFromGallery(),
                     onFileTap: () =>

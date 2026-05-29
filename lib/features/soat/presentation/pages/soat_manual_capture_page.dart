@@ -177,11 +177,11 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
       );
       pickedPath = result?.files.single.path;
     } else {
-      // Cámara o galería
-      scanSource = choice == 0 ? SoatScanSource.camera : SoatScanSource.gallery;
+      // Galería (la captura con cámara se retiró: peor lectura OCR).
+      scanSource = SoatScanSource.gallery;
       final file = await ImagePicker().pickImage(
-        source: choice == 0 ? ImageSource.camera : ImageSource.gallery,
-        imageQuality: 85,
+        source: ImageSource.gallery,
+        imageQuality: 100,
       );
       pickedPath = file?.path;
     }
