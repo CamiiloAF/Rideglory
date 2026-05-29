@@ -15,8 +15,7 @@ class _VehicleSummaryConverter
       json == null ? null : VehicleSummaryDto.fromJson(json);
 
   @override
-  Map<String, dynamic>? toJson(VehicleSummaryModel? model) =>
-      model == null ? null : model.toJson();
+  Map<String, dynamic>? toJson(VehicleSummaryModel? model) => model?.toJson();
 }
 
 @JsonSerializable(converters: apiJsonDateTimeConverters)

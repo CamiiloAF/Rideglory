@@ -61,7 +61,8 @@ class RegistrationDetailBottomBar extends StatelessWidget {
               label: context.l10n.registration_reject,
               icon: Icons.cancel_outlined,
               variant: AppButtonVariant.danger,
-              style: AppButtonStyle.outlined,
+              style: AppButtonStyle.tonal,
+              shape: AppButtonShape.pill,
               onPressed: () => params.onReject!(context),
               isFullWidth: true,
             ),
@@ -112,7 +113,8 @@ class RegistrationDetailBottomBar extends StatelessWidget {
         AppButton(
           label: context.l10n.registration_cancelRegistration,
           variant: AppButtonVariant.danger,
-          style: AppButtonStyle.outlined,
+          style: AppButtonStyle.tonal,
+          shape: AppButtonShape.pill,
           onPressed: () async {
             final ok = await params.onCancelRegistration!();
             if (ok && context.mounted) {

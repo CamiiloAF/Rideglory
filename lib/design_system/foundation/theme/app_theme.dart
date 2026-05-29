@@ -306,32 +306,40 @@ class AppTheme {
         surfaceTintColor: Colors.transparent,
       ),
 
-      // Input decoration theme
+      // Input decoration theme — rounded field style shared across the whole
+      // app (Pencil registration form V2): solid tertiary fill, 16px radius and
+      // a permanent 1px border that turns primary on focus.
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: colorScheme.surfaceContainerHighest,
+        fillColor: AppColors.darkTertiary,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
-          vertical: 14,
+          vertical: 18,
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: colorScheme.primary),
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: AppColors.darkBorderPrimary),
         ),
-        enabledBorder: InputBorder.none,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: AppColors.darkBorderPrimary),
+        ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: colorScheme.primary, width: 2),
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: colorScheme.primary, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: colorScheme.error, width: 1.5),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide(color: colorScheme.error, width: 2),
         ),
-        hintStyle: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 16),
+        hintStyle: const TextStyle(
+          color: AppColors.textOnDarkTertiary,
+          fontSize: 14,
+        ),
         labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         floatingLabelStyle: TextStyle(
           color: colorScheme.primary,
