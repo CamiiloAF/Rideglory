@@ -86,7 +86,23 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
     _startDate = widget.existingSoat?.startDate;
     _expiryDate = widget.existingSoat?.expiryDate;
     _localImagePath = widget.initialLocalImagePath;
+
+    // Si llegamos con un documento ya elegido (p.ej. desde el bottom sheet de
+    // creación de vehículo) pero sin OCR previo, escanéalo al abrir para ofrecer
+    // el autocompletado. Cuando venimos del escaneo, [extraction] ya viene y no
+    // se re-escanea.
+    final initialPath = _localImagePath;
+    if (initialPath != null && _extraction == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _scanDocument(initialPath, _sourceForPath(initialPath));
+      });
+    }
   }
+
+  SoatScanSource _sourceForPath(String path) =>
+      path.toLowerCase().endsWith('.pdf')
+      ? SoatScanSource.pdf
+      : SoatScanSource.gallery;
 
   String? _initialPolicyNumber() => widget.existingSoat?.policyNumber;
 
