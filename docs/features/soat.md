@@ -1,6 +1,6 @@
 # Documentación del Feature: SOAT
 
-> Última actualización: 2026-05-29  
+> Última actualización: 2026-05-31  
 > Alcance: `lib/features/soat/`
 
 ---
@@ -380,6 +380,8 @@ Lectura **on-device** del SOAT desde foto/galería/PDF. Privacidad total: ni la 
 **Permisos:** `READ_MEDIA_IMAGES` en `AndroidManifest.xml`; `NSPhotoLibraryUsageDescription` en `Info.plist`. (La captura con cámara se retiró; el permiso `CAMERA` puede seguir declarado por otros features.)
 
 > **Nota de build:** el paquete transitivo `objective_c` (de `google_mlkit_text_recognition`) declara native build hooks, lo que rompe la compilación AOT del script de build_runner en el SDK actual. Generar código con `dart run build_runner build --force-jit` (JIT) en lugar del AOT por defecto.
+
+> **Nota de build (R8 / release APK):** `google_mlkit_text_recognition` referencia reconocedores de otros scripts (chino, devanagari, japonés, coreano) que la app **no** empaqueta (solo usa Latin). En el build release con minificación, R8 fallaba en `:app:minifyReleaseWithR8` por esas clases ausentes. Se resolvió con reglas `-dontwarn` en `android/app/proguard-rules.pro` (enlazado vía `proguardFiles(...)` en `buildTypes.release` de `android/app/build.gradle.kts`). Si en el futuro se agrega otro plugin de ML Kit con módulos de idioma opcionales (p. ej. barcode/face por script), añadir su `-dontwarn` correspondiente ahí.
 
 ### 6.5 Eliminar el SOAT de un vehículo
 
