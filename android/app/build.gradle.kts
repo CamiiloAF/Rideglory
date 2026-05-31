@@ -87,6 +87,10 @@ android {
                 // for contributors without key.properties. NOT for distribution.
                 signingConfigs.getByName("debug")
             }
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
 }
