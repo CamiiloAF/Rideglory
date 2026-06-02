@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/constants/event_filter_form_fields.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
-import 'package:rideglory/design_system/design_system.dart';
-import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/features/events/presentation/list/widgets/event_difficulty_filter_chip.dart';
+import 'package:rideglory/shared/widgets/filter/filter_cta_bar.dart';
+import 'package:rideglory/shared/widgets/filter/filter_divider.dart';
+import 'package:rideglory/shared/widgets/filter/filter_handle_bar.dart';
+import 'package:rideglory/shared/widgets/filter/filter_panel_header.dart';
+import 'package:rideglory/shared/widgets/filter/filter_section_label.dart';
+import 'package:rideglory/shared/widgets/filter/filter_type_chip.dart';
+import 'package:rideglory/shared/widgets/form/app_switch_tile.dart';
 
+/// Events filter bottom sheet. Reuses the shared `filter_sheet` components so it
+/// matches the maintenance filter design (handle, header, chips, CTA bar) per
+/// issue #29.
 class EventFiltersBottomSheet extends StatefulWidget {
   const EventFiltersBottomSheet({super.key, required this.cubitContext});
 
@@ -16,7 +27,9 @@ class EventFiltersBottomSheet extends StatefulWidget {
     return showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       backgroundColor: Colors.transparent,
+      barrierColor: AppColors.darkBgPrimary.withValues(alpha: 0.82),
       builder: (_) => EventFiltersBottomSheet(cubitContext: context),
     );
   }
@@ -31,229 +44,236 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
   late Set<EventType> _selectedTypes;
   late Set<EventDifficulty> _selectedDifficulties;
 
+  EventsCubit get _cubit => widget.cubitContext.read<EventsCubit>();
+
   @override
   void initState() {
     super.initState();
-    final cubit = widget.cubitContext.read<EventsCubit>();
-    _selectedTypes = Set.from(cubit.filters.types);
-    _selectedDifficulties = Set.from(cubit.filters.difficulties);
+    _selectedTypes = Set.from(_cubit.filters.types);
+    _selectedDifficulties = Set.from(_cubit.filters.difficulties);
+  }
+
+  int get _activeCount =>
+      _selectedTypes.length + _selectedDifficulties.length;
+
+  void _clearAll() {
+    setState(() {
+      _selectedTypes = {};
+      _selectedDifficulties = {};
+    });
+    // Clear to empty (not reset-to-initial) so an existing filter is wiped.
+    final form = _formKey.currentState;
+    form?.fields[EventFilterFormFields.city]?.didChange('');
+    form?.fields[EventFilterFormFields.startDate]?.didChange(null);
+    form?.fields[EventFilterFormFields.endDate]?.didChange(null);
+    form?.fields[EventFilterFormFields.freeOnly]?.didChange(false);
+    form?.fields[EventFilterFormFields.multiBrandOnly]?.didChange(false);
+  }
+
+  void _apply() {
+    _formKey.currentState?.save();
+    final values = _formKey.currentState?.value ?? {};
+    _cubit.updateFilters(
+      EventFilters(
+        types: _selectedTypes,
+        difficulties: _selectedDifficulties,
+        city: values[EventFilterFormFields.city] as String?,
+        startDate: values[EventFilterFormFields.startDate] as DateTime?,
+        endDate: values[EventFilterFormFields.endDate] as DateTime?,
+        freeOnly: values[EventFilterFormFields.freeOnly] as bool? ?? false,
+        multiBrandOnly:
+            values[EventFilterFormFields.multiBrandOnly] as bool? ?? false,
+      ),
+    );
+    // Custom: Navigator.pop closes the showModalBottomSheet route, not a
+    // go_router route.
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cubit = widget.cubitContext.read<EventsCubit>();
-
-    return DraggableScrollableSheet(
-      initialChildSize: 0.75,
-      maxChildSize: 0.95,
-      minChildSize: 0.5,
-      builder: (_, scrollController) => Material(
-        color: theme.colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        child: FormBuilder(
-          key: _formKey,
-          initialValue: {
-            EventFilterFormFields.city: cubit.filters.city ?? '',
-            EventFilterFormFields.freeOnly: cubit.filters.freeOnly,
-            EventFilterFormFields.multiBrandOnly: cubit.filters.multiBrandOnly,
-            EventFilterFormFields.startDate: cubit.filters.startDate,
-            EventFilterFormFields.endDate: cubit.filters.endDate,
-          },
-          child: Column(
-            children: [
-              // Handle
-              Container(
-                margin: const EdgeInsets.only(top: 12),
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              // Title
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      context.l10n.event_filters,
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    if (cubit.filters.hasFilters ||
-                        _selectedTypes.isNotEmpty ||
-                        _selectedDifficulties.isNotEmpty)
-                      AppTextButton(
-                        label: context.l10n.event_clearFilters,
-                        onPressed: () {
-                          setState(() {
-                            _selectedTypes.clear();
-                            _selectedDifficulties.clear();
-                          });
-                          _formKey.currentState?.reset();
-                          cubit.clearFilters();
-                          // Custom: Navigator.pop preserved — closes showModalBottomSheet route, not a go_router route.
-                          Navigator.pop(context);
-                        },
-                      ),
-                  ],
-                ),
-              ),
-              const Divider(height: 1),
-              // Filters content
-              Expanded(
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  padding: const EdgeInsets.all(16),
+    return Container(
+      decoration: const BoxDecoration(
+        color: AppColors.darkCard,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        border: Border(
+          top: BorderSide(color: AppColors.darkBorderPrimary),
+          left: BorderSide(color: AppColors.darkBorderPrimary),
+          right: BorderSide(color: AppColors.darkBorderPrimary),
+        ),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const FilterHandleBar(),
+            FilterPanelHeader(
+              hasActiveFilters: true,
+              onClearAll: _clearAll,
+            ),
+            const FilterDivider(),
+            Flexible(
+              child: SingleChildScrollView(
+                child: FormBuilder(
+                  key: _formKey,
+                  initialValue: {
+                    EventFilterFormFields.city: _cubit.filters.city ?? '',
+                    EventFilterFormFields.freeOnly: _cubit.filters.freeOnly,
+                    EventFilterFormFields.multiBrandOnly:
+                        _cubit.filters.multiBrandOnly,
+                    EventFilterFormFields.startDate: _cubit.filters.startDate,
+                    EventFilterFormFields.endDate: _cubit.filters.endDate,
+                  },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Event type filter
-                      Text(
-                        context.l10n.event_filterByType,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      AppSpacing.gapSm,
-                      Wrap(
-                        spacing: 8,
-                        children: EventType.values.map((type) {
-                          final selected = _selectedTypes.contains(type);
-                          return FilterChip(
-                            label: Text(type.label),
-                            selected: selected,
-                            onSelected: (_) {
-                              setState(() {
-                                selected
-                                    ? _selectedTypes.remove(type)
-                                    : _selectedTypes.add(type);
-                              });
-                            },
-                          );
-                        }).toList(),
-                      ),
-                      AppSpacing.gapLg,
-                      // Difficulty filter
-                      Text(
-                        context.l10n.event_filterByDifficulty,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      AppSpacing.gapSm,
-                      Wrap(
-                        spacing: 8,
-                        children: EventDifficulty.values.map((diff) {
-                          final selected = _selectedDifficulties.contains(diff);
-                          return FilterChip(
-                            label: Text('🌶' * diff.value),
-                            selected: selected,
-                            onSelected: (_) {
-                              setState(() {
-                                selected
-                                    ? _selectedDifficulties.remove(diff)
-                                    : _selectedDifficulties.add(diff);
-                              });
-                            },
-                          );
-                        }).toList(),
-                      ),
-                      AppSpacing.gapLg,
-                      // City filter
-                      AppCityAutocomplete(
-                        name: EventFilterFormFields.city,
-                        labelText: context.l10n.event_filterByCity,
-                        isRequired: false,
-                      ),
-                      AppSpacing.gapLg,
-                      // Date range
-                      Text(
-                        context.l10n.event_filterByDateRange,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      AppSpacing.gapSm,
-                      Row(
-                        children: [
-                          Expanded(
-                            child: AppDatePicker(
-                              fieldName: EventFilterFormFields.startDate,
-                              labelText: context.l10n.event_startDate,
-                              firstDate: DateTime(2020),
-                              lastDate: DateTime(2030),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FilterSectionLabel(context.l10n.event_filterByType),
+                            const SizedBox(height: 12),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: EventType.values.map((type) {
+                                final isSelected = _selectedTypes.contains(type);
+                                return FilterTypeChip(
+                                  label: type.label,
+                                  isSelected: isSelected,
+                                  onTap: () => setState(() {
+                                    isSelected
+                                        ? _selectedTypes.remove(type)
+                                        : _selectedTypes.add(type);
+                                  }),
+                                );
+                              }).toList(),
                             ),
-                          ),
-                          AppSpacing.hGapMd,
-                          Expanded(
-                            child: AppDatePicker(
-                              fieldName: EventFilterFormFields.endDate,
-                              labelText: context.l10n.event_endDate,
-                              firstDate: DateTime(2020),
-                              lastDate: DateTime(2030),
+                          ],
+                        ),
+                      ),
+                      const FilterDivider(),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FilterSectionLabel(
+                              context.l10n.event_filterByDifficulty,
                             ),
-                          ),
-                        ],
+                            const SizedBox(height: 12),
+                            Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: EventDifficulty.values.map((diff) {
+                                final isSelected =
+                                    _selectedDifficulties.contains(diff);
+                                return EventDifficultyFilterChip(
+                                  difficulty: diff,
+                                  isSelected: isSelected,
+                                  onTap: () => setState(() {
+                                    isSelected
+                                        ? _selectedDifficulties.remove(diff)
+                                        : _selectedDifficulties.add(diff);
+                                  }),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        ),
                       ),
-                      AppSpacing.gapLg,
-                      // Boolean filters
-                      AppCheckbox(
-                        name: EventFilterFormFields.freeOnly,
-                        title: context.l10n.event_filterByFreeOnly,
+                      const FilterDivider(),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FilterSectionLabel(context.l10n.event_filterByCity),
+                            const SizedBox(height: 12),
+                            const AppCityAutocomplete(
+                              name: EventFilterFormFields.city,
+                              // Label vacío: la sección ya muestra "CIUDAD".
+                              labelText: '',
+                              isRequired: false,
+                            ),
+                          ],
+                        ),
                       ),
-                      AppCheckbox(
-                        name: EventFilterFormFields.multiBrandOnly,
-                        title: context.l10n.event_filterByMultiBrand,
+                      const FilterDivider(),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FilterSectionLabel(
+                              context.l10n.event_filterByDateRange,
+                            ),
+                            const SizedBox(height: 12),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: AppDatePicker(
+                                    fieldName: EventFilterFormFields.startDate,
+                                    labelText: context.l10n.event_startDate,
+                                    hintText: context.l10n.event_filterDateHint,
+                                    prefixIcon: const Icon(
+                                      Icons.calendar_today_outlined,
+                                      size: 16,
+                                    ),
+                                    firstDate: DateTime(2020),
+                                    lastDate: DateTime(2030),
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: AppDatePicker(
+                                    fieldName: EventFilterFormFields.endDate,
+                                    labelText: context.l10n.event_endDate,
+                                    hintText: context.l10n.event_filterDateHint,
+                                    prefixIcon: const Icon(
+                                      Icons.calendar_today_outlined,
+                                      size: 16,
+                                    ),
+                                    firstDate: DateTime(2020),
+                                    lastDate: DateTime(2030),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                      AppSpacing.gapXxl,
+                      const FilterDivider(),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+                        child: Column(
+                          children: [
+                            AppSwitchTile(
+                              name: EventFilterFormFields.freeOnly,
+                              title: context.l10n.event_filterByFreeOnly,
+                            ),
+                            AppSwitchTile(
+                              name: EventFilterFormFields.multiBrandOnly,
+                              title: context.l10n.event_filterByMultiBrand,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const FilterDivider(),
                     ],
                   ),
                 ),
               ),
-              // Apply button
-              Padding(
-                padding: EdgeInsets.only(
-                  left: 16,
-                  right: 16,
-                  bottom: MediaQuery.of(context).viewInsets.bottom + 16,
-                  top: 8,
-                ),
-                child: AppButton(
-                  label: context.l10n.event_applyFilters,
-                  onPressed: () {
-                    _formKey.currentState?.save();
-                    final values = _formKey.currentState?.value ?? {};
-
-                    final filters = EventFilters(
-                      types: _selectedTypes,
-                      difficulties: _selectedDifficulties,
-                      city: values[EventFilterFormFields.city] as String?,
-                      startDate:
-                          values[EventFilterFormFields.startDate] as DateTime?,
-                      endDate:
-                          values[EventFilterFormFields.endDate] as DateTime?,
-                      freeOnly:
-                          values[EventFilterFormFields.freeOnly] as bool? ??
-                          false,
-                      multiBrandOnly:
-                          values[EventFilterFormFields.multiBrandOnly]
-                              as bool? ??
-                          false,
-                    );
-
-                    cubit.updateFilters(filters);
-                    // Custom: Navigator.pop preserved — closes showModalBottomSheet route, not a go_router route.
-                    Navigator.pop(context);
-                  },
-                ),
-              ),
-            ],
-          ),
+            ),
+            FilterCtaBar(
+              activeFilterCount: _activeCount,
+              secondaryLabel: context.l10n.cancel,
+              onSecondary: () => Navigator.pop(context),
+              onApply: _apply,
+            ),
+          ],
         ),
       ),
     );

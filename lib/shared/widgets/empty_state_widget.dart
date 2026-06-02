@@ -28,6 +28,9 @@ class EmptyStateWidget extends StatelessWidget {
   /// Whether to show an icon in the action button (defaults to true)
   final bool showButtonIcon;
 
+  /// Icon shown inside the action button (defaults to [Icons.add]).
+  final IconData actionButtonIcon;
+
   const EmptyStateWidget({
     super.key,
     required this.icon,
@@ -38,6 +41,7 @@ class EmptyStateWidget extends StatelessWidget {
     this.iconSize = 80,
     this.onRefresh,
     this.showButtonIcon = true,
+    this.actionButtonIcon = Icons.add,
   });
 
   @override
@@ -86,7 +90,7 @@ class EmptyStateWidget extends StatelessWidget {
                 AppButton(
                   label: actionButtonText!,
                   onPressed: onActionPressed,
-                  icon: showButtonIcon ? Icons.add : null,
+                  icon: showButtonIcon ? actionButtonIcon : null,
                   isFullWidth: false,
                   width: MediaQuery.of(context).size.width * 0.7,
                 ),

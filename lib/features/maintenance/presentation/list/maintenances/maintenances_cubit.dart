@@ -162,12 +162,14 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
       filtered = filtered.where((m) => _filters.types.contains(m.type)).toList();
     }
 
-    // Status filter: applies ONLY to scheduled records.
-    // Completed records are only shown when filter is 'all' or 'upToDate'.
+    // Status filter alineado con las secciones del listado:
+    // - "Vencidos" (overdue): programados vencidos.
+    // - "Próximos" (next): TODO programado no vencido (next + upToDate).
+    // - "Al día" (upToDate): solo el historial de completados.
     if (_filters.statusFilter != MaintenanceStatusFilter.all) {
       filtered = filtered.where((maintenance) {
         if (maintenance.mode == MaintenanceMode.completed) {
-          // Completed records only visible on 'all' (already handled above) or upToDate
+          // Un completado representa el historial "al día" del vehículo.
           return _filters.statusFilter == MaintenanceStatusFilter.upToDate;
         }
         final status = MaintenanceModel.calculateStatus(
@@ -178,9 +180,11 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
           case MaintenanceStatusFilter.overdue:
             return status == MaintenanceStatus.overdue;
           case MaintenanceStatusFilter.next:
-            return status == MaintenanceStatus.next;
+            return status == MaintenanceStatus.next ||
+                status == MaintenanceStatus.upToDate;
           case MaintenanceStatusFilter.upToDate:
-            return status == MaintenanceStatus.upToDate;
+            // Los programados ya no se consideran "al día".
+            return false;
           case MaintenanceStatusFilter.all:
             return true;
         }

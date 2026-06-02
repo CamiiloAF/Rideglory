@@ -263,13 +263,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_createEvent => 'Crear Evento';
 
   @override
-  String get event_editEvent => 'Editar Evento';
+  String get event_editEvent => 'Editar evento';
 
   @override
   String get event_eventDetail => 'Detalle del Evento';
 
   @override
   String get event_deleteEvent => 'Eliminar Evento';
+
+  @override
+  String get event_optionsTitle => 'Opciones del evento';
 
   @override
   String get event_edit => 'Editar';
@@ -331,6 +334,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_eventCityHint => 'Buscar ciudad y departamento...';
+
+  @override
+  String get event_filterDateHint => 'Seleccionar';
 
   @override
   String get event_startDate => 'Fecha de inicio';
@@ -1913,6 +1919,18 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get maintenance_filter_clear_all => 'Limpiar todo';
+
+  @override
+  String get filter_title => 'Filtros';
+
+  @override
+  String get filter_clearAll => 'Limpiar todo';
+
+  @override
+  String get filter_clear => 'Limpiar';
+
+  @override
+  String get filter_apply => 'Aplicar';
 
   @override
   String get maintenance_legend_warning => 'Próximo';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
 /// Filter chip for the events list screen.
-/// Matches Pencil design: h=34, radius=17, padding=[0,16]
+/// Matches Pencil design (node `Neipf`): h=40, radius=17, padding=[0,16]
 /// Active: fill=#F98C1F, text 13/600 #0D0D0F
 /// Inactive: fill=#242429, text 13/500 #9CA3AF
 class EventFilterChip extends StatelessWidget {
@@ -22,7 +22,7 @@ class EventFilterChip extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 34,
+        height: 40,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary : AppColors.darkTertiary,

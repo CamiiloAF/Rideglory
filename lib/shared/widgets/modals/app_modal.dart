@@ -5,10 +5,11 @@ import 'package:rideglory/shared/widgets/modals/app_modal_icon_circle.dart';
 
 export 'package:rideglory/shared/widgets/modals/app_modal_variant.dart';
 
-/// Centered dialog modal that implements the Pencil `Component/Modal` design
+/// Bottom-sheet modal that implements the Pencil `Component/Modal` design
 /// (node `VVrFh`) and its four semantic variants (node `ibKDx`).
 ///
 /// Structure (top to bottom):
+/// - drag handle pill,
 /// - optional glowing icon circle ([AppModalIconCircle]),
 /// - centered title,
 /// - optional centered description and/or a custom [child] body,
@@ -16,9 +17,10 @@ export 'package:rideglory/shared/widgets/modals/app_modal_variant.dart';
 ///
 /// The [variant] drives the default icon, icon color, icon circle fill + glow,
 /// primary button fill and primary label color. An explicit [icon] / [iconColor]
-/// overrides the variant defaults. Use [AppModal.show] to present it over the
-/// standard dark scrim. Behavior (callbacks, validation, navigation) lives in
-/// the caller's [actions] — this widget only owns presentation.
+/// overrides the variant defaults. Use [AppModal.show] to present it as a bottom
+/// sheet over the standard dark scrim. Behavior (callbacks, validation,
+/// navigation) lives in the caller's [actions] — this widget only owns
+/// presentation.
 class AppModal extends StatelessWidget {
   /// Internal gap between the title and the description / between stacked
   /// action buttons. The Pencil spec uses 10 px here (between the standard
@@ -50,75 +52,88 @@ class AppModal extends StatelessWidget {
     final resolvedIcon = icon ?? variant.icon;
     final resolvedIconColor = iconColor ?? variant.accentColor;
 
-    return Dialog(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 340),
-        decoration: BoxDecoration(
-          color: AppColors.darkCard,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: cs.outline),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x55000000),
-              blurRadius: 60,
-              offset: Offset(0, 20),
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: AppColors.darkCard,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        border: Border.all(color: cs.outline),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x55000000),
+            blurRadius: 60,
+            offset: Offset(0, 20),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        top: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Drag handle (Pencil `Component/Modal` handle pill).
+            Padding(
+              padding: const EdgeInsets.only(top: 12, bottom: 8),
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: cs.outline,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AppModalIconCircle(
+                    icon: resolvedIcon,
+                    iconColor: resolvedIconColor,
+                    circleFill: variant.circleFill,
+                    glowColor: variant.glowColor,
+                    glowBlur: variant.glowBlur,
+                    glowSpread: variant.glowSpread,
+                  ),
+                  AppSpacing.gapXl,
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: context.titleMedium?.copyWith(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  if (description != null) ...[
+                    _innerGap,
+                    Text(
+                      description!,
+                      textAlign: TextAlign.center,
+                      style: context.bodyMedium?.copyWith(height: 1.5),
+                    ),
+                  ],
+                  if (child != null) ...[AppSpacing.gapLg, child!],
+                  if (actions.isNotEmpty) ...[
+                    AppSpacing.gapXl,
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (var index = 0; index < actions.length; index++) ...[
+                          if (index > 0) _innerGap,
+                          AppModalActionButton(
+                            action: actions[index],
+                            primaryFill: _primaryFill(actions[index]),
+                            primaryLabelColor: _primaryLabelColor(actions[index]),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ],
+                ],
+              ),
             ),
           ],
-        ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                AppModalIconCircle(
-                  icon: resolvedIcon,
-                  iconColor: resolvedIconColor,
-                  circleFill: variant.circleFill,
-                  glowColor: variant.glowColor,
-                  glowBlur: variant.glowBlur,
-                  glowSpread: variant.glowSpread,
-                ),
-                AppSpacing.gapXl,
-                Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  style: context.titleMedium?.copyWith(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                if (description != null) ...[
-                  _innerGap,
-                  Text(
-                    description!,
-                    textAlign: TextAlign.center,
-                    style: context.bodyMedium?.copyWith(height: 1.5),
-                  ),
-                ],
-                if (child != null) ...[AppSpacing.gapLg, child!],
-                if (actions.isNotEmpty) ...[
-                  AppSpacing.gapXl,
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      for (var index = 0; index < actions.length; index++) ...[
-                        if (index > 0) _innerGap,
-                        AppModalActionButton(
-                          action: actions[index],
-                          primaryFill: _primaryFill(actions[index]),
-                          primaryLabelColor: _primaryLabelColor(actions[index]),
-                        ),
-                      ],
-                    ],
-                  ),
-                ],
-              ],
-            ),
-          ),
         ),
       ),
     );
@@ -138,8 +153,11 @@ class AppModal extends StatelessWidget {
       ? AppColors.textOnDarkPrimary
       : variant.primaryLabelColor;
 
-  /// Presents [AppModal] over the standard dark scrim and returns the value the
-  /// dialog is popped with.
+  /// Presents [AppModal] as a bottom sheet over the standard dark scrim and
+  /// returns the value the sheet is popped with.
+  ///
+  /// When [barrierDismissible] is false the sheet cannot be dismissed by tapping
+  /// the scrim or dragging it down, forcing the user to pick an action.
   static Future<T?> show<T>({
     required BuildContext context,
     required String title,
@@ -151,18 +169,29 @@ class AppModal extends StatelessWidget {
     AppModalVariant variant = AppModalVariant.info,
     bool barrierDismissible = false,
   }) {
-    return showDialog<T>(
+    return showModalBottomSheet<T>(
       context: context,
-      barrierDismissible: barrierDismissible,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
       barrierColor: AppColors.darkBgPrimary.withValues(alpha: 0.82),
-      builder: (_) => AppModal(
-        title: title,
-        description: description,
-        icon: icon,
-        iconColor: iconColor,
-        actions: actions,
-        variant: variant,
-        child: child,
+      isDismissible: barrierDismissible,
+      enableDrag: barrierDismissible,
+      builder: (sheetContext) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
+        ),
+        child: SingleChildScrollView(
+          child: AppModal(
+            title: title,
+            description: description,
+            icon: icon,
+            iconColor: iconColor,
+            actions: actions,
+            variant: variant,
+            child: child,
+          ),
+        ),
       ),
     );
   }

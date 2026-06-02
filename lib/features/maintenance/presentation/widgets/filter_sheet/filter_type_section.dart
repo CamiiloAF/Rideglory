@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
-import 'package:rideglory/features/maintenance/presentation/widgets/filter_sheet/filter_section_label.dart';
-import 'package:rideglory/features/maintenance/presentation/widgets/filter_sheet/filter_type_chip.dart';
+import 'package:rideglory/shared/widgets/filter/filter_section_label.dart';
+import 'package:rideglory/shared/widgets/filter/filter_type_chip.dart';
 
 class FilterTypeSection extends StatelessWidget {
   final List<MaintenanceType> selectedTypes;

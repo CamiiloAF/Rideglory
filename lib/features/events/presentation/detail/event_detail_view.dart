@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/domain/result_state.dart';
@@ -99,24 +98,6 @@ class EventDetailViewState extends State<EventDetailView> {
     if (openSettings == true) {
       await LocationPermissionHandler.openSettings();
     }
-  }
-
-  Future<void> _shareEvent(BuildContext context) async {
-    final encoded = Uri.encodeComponent(currentEvent.meetingPoint);
-    final text = [
-      currentEvent.name,
-      currentEvent.city,
-      '${context.l10n.event_meetingPointLabel}: ${currentEvent.meetingPoint}',
-      '${context.l10n.event_viewMap}: https://www.google.com/maps/search/?api=1&query=$encoded',
-    ].join('\n');
-    await Clipboard.setData(ClipboardData(text: text));
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(context.l10n.savedSuccessfully),
-        backgroundColor: AppColors.success,
-      ),
-    );
   }
 
   Future<void> confirmCancelRegistration(
@@ -229,7 +210,6 @@ class EventDetailViewState extends State<EventDetailView> {
                   event: currentEvent,
                   isOwner: isOwner,
                   onBack: _pop,
-                  onShare: () => unawaited(_shareEvent(context)),
                   onEdit: () => context
                       .pushNamed<EventModel?>(
                         AppRoutes.editEvent,

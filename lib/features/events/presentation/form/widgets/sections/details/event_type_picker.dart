@@ -66,8 +66,9 @@ class EventTypePicker extends StatelessWidget {
                     child: Text(
                       type.label,
                       style: TextStyle(
+                        // Texto oscuro sobre el color primario (nunca blanco).
                         color: isSelected
-                            ? Colors.white
+                            ? AppColors.darkBgPrimary
                             : context.colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w600,
                         fontSize: 13,

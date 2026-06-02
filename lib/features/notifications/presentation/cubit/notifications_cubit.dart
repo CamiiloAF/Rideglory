@@ -7,7 +7,7 @@ import 'package:rideglory/features/notifications/domain/usecases/mark_all_notifi
 import 'package:rideglory/features/notifications/domain/usecases/mark_notification_read_usecase.dart';
 import 'package:rideglory/features/notifications/presentation/cubit/notifications_state.dart';
 
-@lazySingleton
+@injectable
 class NotificationsCubit extends Cubit<NotificationsState> {
   NotificationsCubit(
     this._getNotificationsUseCase,

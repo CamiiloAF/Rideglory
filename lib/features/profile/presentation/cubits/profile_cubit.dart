@@ -4,7 +4,7 @@ import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/features/profile/domain/use_cases/get_my_profile_use_case.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
 
-@lazySingleton
+@injectable
 class ProfileCubit extends Cubit<ResultState<UserModel>> {
   ProfileCubit(this._getMyProfile) : super(const ResultState.initial());
 

@@ -47,7 +47,7 @@ class HomeEventCardContent extends StatelessWidget {
           const SizedBox(height: 6),
           Row(
             children: [
-              const Icon(Icons.terrain, size: 14, color: AppColors.textOnDarkTertiary),
+              const Icon(Icons.local_fire_department, size: 14, color: AppColors.textOnDarkTertiary),
               const SizedBox(width: 6),
               Text(
                 event.difficulty.shortLabel,

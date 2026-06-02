@@ -16,7 +16,10 @@ class MockEventsCubit extends Mock implements EventsCubit {}
 
 class MockPlaceService extends Mock implements PlaceService {}
 
-Widget _buildTestWidget(MockEventsCubit mockCubit) {
+/// Hosts the sheet behind a button so it is presented through a real
+/// `showModalBottomSheet` route (matching production), letting "Aplicar" pop
+/// the sheet without tearing down the test's root route.
+Widget _buildHost(MockEventsCubit mockCubit) {
   return MaterialApp(
     theme: AppTheme.lightTheme,
     darkTheme: AppTheme.darkTheme,
@@ -32,16 +35,31 @@ Widget _buildTestWidget(MockEventsCubit mockCubit) {
       value: mockCubit,
       child: Builder(
         builder: (context) => Scaffold(
-          body: EventFiltersBottomSheet(cubitContext: context),
+          body: Center(
+            child: ElevatedButton(
+              onPressed: () =>
+                  EventFiltersBottomSheet.show(context: context),
+              child: const Text('open'),
+            ),
+          ),
         ),
       ),
     ),
   );
 }
 
+Future<void> _openSheet(WidgetTester tester) async {
+  await tester.pumpWidget(_buildHost(_currentCubit));
+  await tester.tap(find.text('open'));
+  await tester.pumpAndSettle();
+}
+
+late MockEventsCubit _currentCubit;
+
 void main() {
-  late MockEventsCubit mockEventsCubit;
   final getIt = GetIt.instance;
+
+  setUpAll(() => registerFallbackValue(const EventFilters()));
 
   setUp(() {
     if (!getIt.isRegistered<PlaceService>()) {
@@ -52,12 +70,13 @@ void main() {
       getIt.registerSingleton<PlaceService>(mockPlaceService);
     }
 
-    mockEventsCubit = MockEventsCubit();
-    when(() => mockEventsCubit.filters).thenReturn(const EventFilters());
-    when(() => mockEventsCubit.state).thenReturn(
+    _currentCubit = MockEventsCubit();
+    when(() => _currentCubit.filters).thenReturn(const EventFilters());
+    when(() => _currentCubit.state).thenReturn(
       const ResultState<List<EventModel>>.data(data: []),
     );
-    when(() => mockEventsCubit.stream).thenAnswer((_) => const Stream.empty());
+    when(() => _currentCubit.stream).thenAnswer((_) => const Stream.empty());
+    when(() => _currentCubit.updateFilters(any())).thenReturn(null);
   });
 
   tearDown(() async {
@@ -68,49 +87,44 @@ void main() {
 
   group('EventFiltersBottomSheet — Filter Tests (US-2-1, US-2-2)', () {
     testWidgets(
-      'TC-2-18: Clear filters button is hidden when no filters active',
+      'TC-2-18: header "Limpiar todo" is always visible',
       (WidgetTester tester) async {
-        when(() => mockEventsCubit.filters).thenReturn(const EventFilters());
+        when(() => _currentCubit.filters).thenReturn(const EventFilters());
 
-        await tester.pumpWidget(_buildTestWidget(mockEventsCubit));
-        await tester.pump();
+        await _openSheet(tester);
 
-        expect(find.text('Limpiar filtros'), findsNothing);
+        expect(find.text('Limpiar todo'), findsOneWidget);
       },
     );
 
     testWidgets(
-      'TC-2-19: Clear filters button is visible when filters active',
+      'TC-2-19: tapping "Cancelar" closes the sheet without applying filters',
       (WidgetTester tester) async {
-        when(() => mockEventsCubit.filters).thenReturn(
-          const EventFilters(city: 'Medellín'),
-        );
+        when(() => _currentCubit.filters).thenReturn(const EventFilters());
 
-        await tester.pumpWidget(_buildTestWidget(mockEventsCubit));
-        await tester.pump();
+        await _openSheet(tester);
+        expect(find.text('Cancelar'), findsOneWidget);
 
-        expect(find.text('Limpiar filtros'), findsWidgets);
-      },
-    );
-
-    testWidgets(
-      'TC-2-20: Tapping clear filters button calls clearFilters()',
-      (WidgetTester tester) async {
-        when(() => mockEventsCubit.filters).thenReturn(
-          const EventFilters(city: 'Medellín'),
-        );
-        when(() => mockEventsCubit.clearFilters()).thenAnswer((_) async {});
-
-        await tester.pumpWidget(_buildTestWidget(mockEventsCubit));
-        await tester.pump();
-
-        final clearButton = find.text('Limpiar filtros');
-        expect(clearButton, findsWidgets);
-
-        await tester.tap(clearButton.first);
+        await tester.tap(find.text('Cancelar'));
         await tester.pumpAndSettle();
 
-        verify(() => mockEventsCubit.clearFilters()).called(1);
+        // Sheet closed and no filter change was committed.
+        expect(find.text('Cancelar'), findsNothing);
+        verifyNever(() => _currentCubit.updateFilters(any()));
+      },
+    );
+
+    testWidgets(
+      'TC-2-20: tapping "Aplicar" commits filters via updateFilters()',
+      (WidgetTester tester) async {
+        when(() => _currentCubit.filters).thenReturn(const EventFilters());
+
+        await _openSheet(tester);
+
+        await tester.tap(find.text('Aplicar'));
+        await tester.pumpAndSettle();
+
+        verify(() => _currentCubit.updateFilters(any())).called(1);
       },
     );
   });

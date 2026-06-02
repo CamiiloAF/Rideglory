@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/maintenance/presentation/widgets/filter_sheet/filter_cta_bar.dart';
+import 'package:rideglory/shared/widgets/filter/filter_cta_bar.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/filter_sheet/filter_date_range_section.dart';
-import 'package:rideglory/features/maintenance/presentation/widgets/filter_sheet/filter_divider.dart';
-import 'package:rideglory/features/maintenance/presentation/widgets/filter_sheet/filter_handle_bar.dart';
-import 'package:rideglory/features/maintenance/presentation/widgets/filter_sheet/filter_panel_header.dart';
+import 'package:rideglory/shared/widgets/filter/filter_divider.dart';
+import 'package:rideglory/shared/widgets/filter/filter_handle_bar.dart';
+import 'package:rideglory/shared/widgets/filter/filter_panel_header.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/filter_sheet/filter_status_section.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/filter_sheet/filter_type_section.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters.dart';
@@ -97,7 +98,8 @@ class _MaintenanceFiltersBottomSheetState
           ),
           FilterCtaBar(
             activeFilterCount: _filters.activeFilterCount,
-            onClear: _clearAll,
+            secondaryLabel: context.l10n.filter_clear,
+            onSecondary: _clearAll,
             onApply: () => context.pop(_filters),
           ),
         ],

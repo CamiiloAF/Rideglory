@@ -24,6 +24,7 @@ La app usa **gen-l10n** de Flutter con **`intl`**. La plantilla está en **`lib/
   colores que dependen del modo claro/oscuro o del tema activo.
   - `colorScheme.primary` → color primario (naranja `#f98c1f`)
   - `colorScheme.onPrimary` → texto/iconos sobre el color primario
+  - **REGLA CRÍTICA:** sobre el color primario/acento (`colorScheme.primary` / `AppColors.primary`, naranja `#f98c1f`) el texto, iconos y elementos van SIEMPRE en color oscuro (`colorScheme.onPrimary` o `AppColors.darkBgPrimary` `#0D0D0F`), NUNCA blanco. Prohibido hardcodear `AppColors.textOnDarkPrimary`/`Colors.white`/`#FFFFFF` sobre un fondo acento. Aplica a labels de botones, contadores/badges dentro de botones primarios y el knob de un switch encendido. Los badges sobre primario usan fondo oscuro translúcido (`darkBgPrimary.withValues(alpha: 0.15)`), no blanco translúcido.
   - `colorScheme.surface` / `colorScheme.onSurface` → fondos de tarjetas y texto principal
   - `colorScheme.onSurfaceVariant` → texto secundario / labels / hints
   - `colorScheme.error` → errores y estados de peligro
@@ -84,13 +85,18 @@ Antes de escribir cualquier widget de input o botón, **verificar en `lib/shared
 | Selector de fecha | `AppDatePicker` | `shared/widgets/form/app_date_picker.dart` |
 | Botón principal | `AppButton` | `shared/widgets/form/app_button.dart` |
 | Botón de texto / link | `AppTextButton` | `shared/widgets/form/app_text_button.dart` |
+| Switch (toggle) | `AppSwitch` (suelto) / `AppSwitchTile` (fila form-bound con título + subtítulo) | `shared/widgets/form/app_switch.dart`, `app_switch_tile.dart` |
 | Header de sección en formulario | `FormSectionHeader` | `shared/widgets/form/form_section_header.dart` |
+
+Hay UN solo estilo de switch en la app (el pill de los filtros: ON acento con knob oscuro, OFF `darkBgSecondary` con borde). Nunca usar `Switch`, `SwitchListTile`, `FormBuilderSwitch` ni `CupertinoSwitch`.
 
 ```dart
 // ❌ PROHIBIDO — usar primitivos de Flutter cuando existe equivalente shared
 FormBuilderTextField(name: 'field', ...)
 ElevatedButton(...)
 TextButton(...)
+Switch(value: x, onChanged: f)
+FormBuilderSwitch(name: 'x', ...)
 
 // ✅ CORRECTO — usar siempre el wrapper de shared/
 AppTextField(name: 'field', ...)

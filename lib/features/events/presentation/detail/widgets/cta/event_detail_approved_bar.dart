@@ -51,6 +51,13 @@ class EventDetailApprovedBar extends StatelessWidget {
                 ),
               ],
             ),
+            // Indica que tocar el estado abre el detalle de la inscripción.
+            const SizedBox(width: 6),
+            const Icon(
+              Icons.chevron_right,
+              color: AppColors.textOnDarkTertiary,
+              size: 18,
+            ),
           ],
         ),
 

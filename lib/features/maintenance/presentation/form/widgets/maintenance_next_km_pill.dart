@@ -11,7 +11,9 @@ class MaintenanceNextKmPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 110,
+      // Ancho justo para 5-6 dígitos (p. ej. 300.000) + sufijo "km", dejando
+      // espacio para que la etiqueta quepa en una sola línea.
+      width: 120,
       child: AppTextField(
         name: MaintenanceFormFields.nextMaintenanceMileage,
         keyboardType: TextInputType.number,

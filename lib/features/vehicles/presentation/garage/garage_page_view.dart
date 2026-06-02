@@ -44,7 +44,9 @@ class _GaragePageViewState extends State<GaragePageView> {
   Widget build(BuildContext context) {
     return BlocBuilder<VehicleCubit, ResultState<List<VehicleModel>>>(
       builder: (context, state) {
-        if (state is Loading) {
+        // Tratamos `Initial` como `Loading` para no mostrar por un instante la
+        // pantalla vacía antes de que arranque la primera carga.
+        if (state is Loading || state is Initial) {
           return PageLoadingStateWidget(onRefresh: widget.loadVehicles);
         }
         if (state is Error<List<VehicleModel>>) {

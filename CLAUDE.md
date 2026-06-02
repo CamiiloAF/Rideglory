@@ -126,7 +126,7 @@ class ResultState<T> {
    - `VehicleRepositoryImpl`: uses DTOs directly as domain models (Pattern B — DTO extends Model); handles Firebase image uploads; wraps HTTP errors in `Either<DomainException, Model>`
 
 3. **Presentation** (`lib/features/vehicles/presentation/`)
-   - `VehicleCubit`: singleton cubit with `fetchMyVehicles()`, `selectVehicle()`, `addVehicleLocally()` methods
+   - `VehicleCubit`: app-wide cubit (`@injectable`, single instance owned by the root `BlocProvider` in `main.dart`; access via `context.read`, never `getIt`) with `fetchMyVehicles()`, `selectVehicle()`, `addVehicleLocally()` methods
    - Uses `ResultState` to track loading, data, error states
    - Form cubit `VehicleFormCubit` for multi-step vehicle creation/editing
 
@@ -219,14 +219,16 @@ Spacing, sizing, border radius constants
 
 **Shared Widgets** (`lib/shared/widgets/`)
 App-wide reusable components:
-- `AppButton`, `AppTextButton`, `AppTextField`, `AppPasswordTextField` (from `form/`)
+- `AppButton`, `AppTextButton`, `AppTextField`, `AppPasswordTextField`, `AppSwitch`, `AppSwitchTile` (from `form/`)
 - `AppDialog`, `ConfirmationDialog` (from `modals/`)
+- **Switches:** the app has ONE switch style — `AppSwitch` (`value`/`onChanged` pill) and `AppSwitchTile` (form-bound row: title + optional subtitle + switch). Never use Material `Switch`/`SwitchListTile`, `FormBuilderSwitch` or `CupertinoSwitch`.
 - `EmptyStateWidget`, `NoSearchResultsEmptyWidget`, `VehicleListItem`, `VehicleSelectionBottomSheet`
 - Navigation bars, bottom sheets, detail pills, info chips
 
 **Color Scheme**:
 - Prefer `Theme.of(context).colorScheme.<property>` (semantically correct, respects theme mode)
 - Fallback to `AppColors` constants for colors not in colorScheme (dark backgrounds, borders)
+- **On the primary/accent color (`AppColors.primary`, orange `#f98c1f`) text, icons and elements MUST be dark, never white.** Use `colorScheme.onPrimary` or `AppColors.darkBgPrimary` (`#0D0D0F`) — never hardcode `AppColors.textOnDarkPrimary`/`Colors.white` on an accent fill. Applies to button labels, count badges inside primary buttons, and the knob of an "on" switch. Badges over primary use a dark translucent fill (e.g. `darkBgPrimary.withValues(alpha: 0.15)`), not white. Reference: `AppModalVariant.primaryLabelColor`, active filter chips.
 
 ## Code Standards (Summarized from `.cursor/rules/`)
 

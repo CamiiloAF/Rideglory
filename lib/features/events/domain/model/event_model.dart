@@ -1,23 +1,29 @@
 import 'package:rideglory/shared/models/address_location.dart';
 
 enum EventType {
-  tourism('Turismo'),
-  urban('Urbana'),
-  offRoad('Off-road'),
-  competition('Competición'),
-  solidarity('Solidaria'),
-  shortDistance('Corta distancia');
+  tourism('Turismo', 'TOURISM'),
+  urban('Urbana', 'URBAN'),
+  offRoad('Off-road', 'OFF_ROAD'),
+  competition('Competición', 'COMPETITION'),
+  solidarity('Solidaria', 'SOLIDARITY'),
+  shortDistance('Corta distancia', 'SHORT_DISTANCE');
 
   final String label;
-  const EventType(this.label);
+
+  /// Valor que espera la API para este tipo (debe coincidir con
+  /// [EventTypeConverter]). Evita derivarlo de `name`, que produciría
+  /// `OFFROAD`/`SHORTDISTANCE` y rompería el filtrado en el backend.
+  final String apiValue;
+
+  const EventType(this.label, this.apiValue);
 }
 
 enum EventDifficulty {
-  one(1, 'Fácil 🌶', 'FÁCIL'),
-  two(2, 'Moderado 🌶🌶', 'MODERADO'),
-  three(3, 'Intermedio 🌶🌶🌶', 'MEDIA'),
-  four(4, 'Difícil 🌶🌶🌶🌶', 'DIFÍCIL'),
-  five(5, 'Muy difícil 🌶🌶🌶🌶🌶', 'MUY DIFÍCIL');
+  one(1, 'Fácil', 'FÁCIL'),
+  two(2, 'Moderado', 'MODERADO'),
+  three(3, 'Intermedio', 'MEDIA'),
+  four(4, 'Difícil', 'DIFÍCIL'),
+  five(5, 'Muy difícil', 'MUY DIFÍCIL');
 
   final int value;
   final String label;

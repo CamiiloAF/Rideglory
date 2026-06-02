@@ -38,7 +38,7 @@ Es un feature **central**: otras features lo consumen como fuente de verdad para
 - `home` destaca el vehículo principal.
 - `soat` se ancla a un vehículo específico.
 
-`VehicleCubit` es `@singleton` y vive en el árbol global de `BlocProvider`s desde `main.dart` (no se recrea).
+`VehicleCubit` se registra como `@injectable` (factory) y su instancia única vive en el `BlocProvider` raíz desde `main.dart` (sobre `MaterialApp`); se comparte vía `context.read<VehicleCubit>()`, nunca por `getIt`.
 
 ---
 
@@ -233,7 +233,7 @@ lib/features/vehicles/presentation/
 
 | Cubit | Archivo | DI | Estado | Notas |
 |---|---|---|---|---|
-| `VehicleCubit` | `cubit/vehicle_cubit.dart` | `@singleton` | `ResultState<List<VehicleModel>>` | Mantiene `_vehicles` + `_selectedVehicleId` (memoria) |
+| `VehicleCubit` | `cubit/vehicle_cubit.dart` | `@injectable` (instancia única en BlocProvider raíz) | `ResultState<List<VehicleModel>>` | Mantiene `_vehicles` + `_selectedVehicleId` (memoria) |
 | `VehicleFormCubit` | `cubit/vehicle_form_cubit.dart` | `@injectable` | `VehicleFormState` (freezed) | Crea/edita, sube imagen, captura SOAT |
 | `VehicleDeleteCubit` | `delete/cubit/vehicle_delete_cubit.dart` | `@injectable` | `VehicleDeleteState` (freezed) | Emite `success(deletedId)` o error |
 | `VehicleMaintenancesCubit` | `garage/cubit/vehicle_maintenances_cubit.dart` | `@injectable` | `ResultState<List<MaintenanceModel>>` | Lista mantenimientos del vehículo en detalle |
@@ -528,8 +528,8 @@ El getter retorna toda la lista. Si un consumidor (como `VehicleSelector`) neces
 ### `currentVehicle` con lista grande es lineal
 `currentVehicle` itera para buscar por id. Hoy las listas son pequeñas (< 10 vehículos por usuario en promedio), pero si crece, considerar usar `Map<String, VehicleModel>`.
 
-### `VehicleCubit` es `@singleton`
-No crear instancias nuevas; siempre obtener via `getIt<VehicleCubit>()` o `context.read<VehicleCubit>()`. El BlocProvider raíz en `main.dart` ya lo expone.
+### `VehicleCubit` es global pero NO singleton de DI
+Está registrado como `@injectable` (factory). Su instancia única vive en el `BlocProvider` raíz de `main.dart` (sobre `MaterialApp`), que maneja su ciclo de vida. Para acceder a esa instancia compartida usar SIEMPRE `context.read<VehicleCubit>()` (nunca `getIt<VehicleCubit>()`, que crearía una instancia nueva y duplicaría el estado). El `StatefulShellRoute` la reexpone con `BlocProvider.value(value: context.read<VehicleCubit>())` en `main_shell.dart`.
 
 ---
 

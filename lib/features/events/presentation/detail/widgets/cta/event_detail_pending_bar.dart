@@ -20,32 +20,42 @@ class EventDetailPendingBar extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Badge
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: AppColors.warningSubtle,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.timer_outlined,
-                color: AppColors.warning,
-                size: 14,
+        // Badge + chevron (indica que el bar abre el detalle de la inscripción)
+        Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppColors.warningSubtle,
+                borderRadius: BorderRadius.circular(20),
               ),
-              const SizedBox(width: 6),
-              Text(
-                context.l10n.event_pendingBadgeSuffix,
-                style: const TextStyle(
-                  color: AppColors.warning,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.timer_outlined,
+                    color: AppColors.warning,
+                    size: 14,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    context.l10n.event_pendingBadgeSuffix,
+                    style: const TextStyle(
+                      color: AppColors.warning,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            const Spacer(),
+            const Icon(
+              Icons.chevron_right,
+              color: AppColors.textOnDarkTertiary,
+              size: 18,
+            ),
+          ],
         ),
         const SizedBox(height: 12),
 

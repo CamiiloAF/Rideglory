@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/shared/widgets/form/app_switch.dart';
 
 class MultiBrandToggleCard extends StatelessWidget {
   const MultiBrandToggleCard({
@@ -50,11 +51,9 @@ class MultiBrandToggleCard extends StatelessWidget {
               ),
             ],
           ),
-          Switch(
+          AppSwitch(
             value: isMultiBrand,
-            onChanged: onChanged,
-            activeThumbColor: Colors.black,
-            activeTrackColor: AppColors.primary,
+            onChanged: (value) => onChanged(value),
           ),
         ],
       ),

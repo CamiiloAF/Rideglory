@@ -9,7 +9,7 @@ import 'package:rideglory/features/vehicles/domain/usecases/update_vehicle_useca
 /// User vehicles plus UI selection (garage, dropdowns, home). When [state] is
 /// [Data], `data` is always the full list; [currentVehicle] is the focused row
 /// (explicit selection, else main vehicle, else first).
-@singleton
+@injectable
 class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
   VehicleCubit(
     this._getMyVehiclesUseCase,
@@ -57,11 +57,17 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
     _emitLoadedOrEmpty();
   }
 
-  Future<void> updateMileage(int newMileage) async {
-    final vehicle = currentVehicle;
-    if (vehicle == null) return;
+  /// Actualiza el kilometraje del vehículo [vehicleId] (o el actual si es null).
+  /// Solo avanza el odómetro: ignora valores menores o iguales al actual.
+  Future<void> updateMileage(int newMileage, {String? vehicleId}) async {
+    final targetId = vehicleId ?? currentVehicle?.id;
+    if (targetId == null) return;
+    final index = _vehicles.indexWhere((v) => v.id == targetId);
+    if (index == -1) return;
+    final vehicle = _vehicles[index];
+    if (newMileage <= vehicle.currentMileage) return;
     final updated = vehicle.copyWith(currentMileage: newMileage);
-    _vehicles = _vehicles.map((v) => v.id == vehicle.id ? updated : v).toList();
+    _vehicles = _vehicles.map((v) => v.id == targetId ? updated : v).toList();
     _emitLoadedOrEmpty();
     await _updateVehicleUseCase(updated);
   }

@@ -4,6 +4,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/shared/widgets/form/app_switch_tile.dart';
 
 class EventFormDateTimeSection extends StatefulWidget {
   const EventFormDateTimeSection({super.key});
@@ -41,15 +42,12 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        FormBuilderSwitch(
+        AppSwitchTile(
           name: EventFormFields.isMultiDay,
-          title: Text(context.l10n.event_isMultiDay),
-          decoration: const InputDecoration(
-            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          ),
+          title: context.l10n.event_isMultiDay,
           onChanged: (value) {
             setState(() {
-              _isMultiDay = value ?? false;
+              _isMultiDay = value;
 
               final formState = FormBuilder.of(context);
               formState?.fields[EventFormFields.dateRange]?.didChange(null);

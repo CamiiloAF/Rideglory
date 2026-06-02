@@ -30,7 +30,7 @@ class EventDetailMetaSection extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.local_fire_department_rounded,
+                  const Icon(Icons.local_fire_department,
                       color: AppColors.primary, size: 14),
                   const SizedBox(width: 6),
                   Text(
@@ -41,15 +41,7 @@ class EventDetailMetaSection extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(width: 4),
-                  const Text(
-                    '·',
-                    style: TextStyle(
-                      color: AppColors.textOnDarkTertiary,
-                      fontSize: 12,
-                    ),
-                  ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: 6),
                   Text(
                     difficulty.shortLabel,
                     style: const TextStyle(

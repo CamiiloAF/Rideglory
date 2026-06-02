@@ -15,39 +15,37 @@ class EventTypeFilterChips extends StatelessWidget {
     final selectedTypes = cubit.filters.types;
 
     return SizedBox(
-      height: 42,
-      child: ListView(
+      height: 48,
+      child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        children: [
-          EventFilterChip(
-            label: context.l10n.event_filterAll,
-            isSelected: selectedTypes.isEmpty,
-            onTap: () {
-              cubit.updateFilters(cubit.filters.copyWith(types: {}));
-            },
-          ),
-          AppSpacing.hGapSm,
-          ...EventType.values.map((type) {
-            final isSelected = selectedTypes.contains(type);
-            return Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: EventFilterChip(
-                label: type.label,
-                isSelected: isSelected,
-                onTap: () {
-                  final newTypes = Set<EventType>.from(selectedTypes);
-                  if (isSelected) {
-                    newTypes.remove(type);
-                  } else {
-                    newTypes.add(type);
-                  }
-                  cubit.updateFilters(cubit.filters.copyWith(types: newTypes));
-                },
-              ),
+        itemCount: EventType.values.length + 1,
+        separatorBuilder: (_, _) => AppSpacing.hGapSm,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return EventFilterChip(
+              label: context.l10n.event_filterAll,
+              isSelected: selectedTypes.isEmpty,
+              onTap: () =>
+                  cubit.updateFilters(cubit.filters.copyWith(types: {})),
             );
-          }),
-        ],
+          }
+          final type = EventType.values[index - 1];
+          final isSelected = selectedTypes.contains(type);
+          return EventFilterChip(
+            label: type.label,
+            isSelected: isSelected,
+            onTap: () {
+              final newTypes = Set<EventType>.from(selectedTypes);
+              if (isSelected) {
+                newTypes.remove(type);
+              } else {
+                newTypes.add(type);
+              }
+              cubit.updateFilters(cubit.filters.copyWith(types: newTypes));
+            },
+          );
+        },
       ),
     );
   }

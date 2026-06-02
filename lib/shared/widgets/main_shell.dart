@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/shared/widgets/home_bottom_navigation_bar.dart';
@@ -27,8 +26,12 @@ class MainShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentBarIndex = _branchIndexToBarIndex(navigationShell.currentIndex);
 
+    // Reexpone la MISMA instancia de VehicleCubit provista en la raíz
+    // (sobre MaterialApp) a las ramas del StatefulShellRoute. No se usa el
+    // contenedor de DI para evitar instancias duplicadas: el VehicleCubit ya
+    // no es singleton, su ciclo de vida lo maneja el BlocProvider raíz.
     return BlocProvider.value(
-      value: getIt<VehicleCubit>(),
+      value: context.read<VehicleCubit>(),
       child: Scaffold(
         body: navigationShell,
         bottomNavigationBar: HomeBottomNavigationBar(

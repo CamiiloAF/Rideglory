@@ -19,9 +19,9 @@ class FilterPanelHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
-            'Filtros',
-            style: TextStyle(
+          Text(
+            context.l10n.filter_title,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
               color: AppColors.textOnDarkPrimary,
@@ -31,7 +31,7 @@ class FilterPanelHeader extends StatelessWidget {
             GestureDetector(
               onTap: onClearAll,
               child: Text(
-                context.l10n.maintenance_filter_clear_all,
+                context.l10n.filter_clearAll,
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,

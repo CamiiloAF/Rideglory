@@ -28,11 +28,13 @@ MaintenanceItemStatus maintenanceStatusOf(
   switch (status) {
     case MaintenanceStatus.overdue:
       return MaintenanceItemStatus.overdue;
+    // Todo mantenimiento programado (esté próximo por fecha/km o aún lejano)
+    // pertenece a "Próximos mantenimientos". La sección "Al día" queda
+    // reservada para el historial de mantenimientos completados.
     case MaintenanceStatus.next:
-      return MaintenanceItemStatus.upcoming;
     case MaintenanceStatus.upToDate:
     case null:
-      return MaintenanceItemStatus.current;
+      return MaintenanceItemStatus.upcoming;
   }
 }
 

@@ -4,13 +4,19 @@ import 'package:rideglory/core/theme/app_colors.dart';
 
 class FilterCtaBar extends StatelessWidget {
   final int activeFilterCount;
-  final VoidCallback onClear;
+
+  /// Label of the left/secondary button (e.g. "Limpiar" or "Cancelar").
+  final String secondaryLabel;
+
+  /// Tapped on the left/secondary button.
+  final VoidCallback onSecondary;
   final VoidCallback onApply;
 
   const FilterCtaBar({
     super.key,
     required this.activeFilterCount,
-    required this.onClear,
+    required this.secondaryLabel,
+    required this.onSecondary,
     required this.onApply,
   });
 
@@ -22,7 +28,7 @@ class FilterCtaBar extends StatelessWidget {
         children: [
           Expanded(
             child: GestureDetector(
-              onTap: onClear,
+              onTap: onSecondary,
               child: Container(
                 height: 48,
                 decoration: BoxDecoration(
@@ -34,7 +40,7 @@ class FilterCtaBar extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    context.l10n.maintenance_filter_clear,
+                    secondaryLabel,
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -58,12 +64,13 @@ class FilterCtaBar extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      'Aplicar',
-                      style: TextStyle(
+                    Text(
+                      context.l10n.filter_apply,
+                      // Texto oscuro sobre el color primario (nunca blanco).
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.textOnDarkPrimary,
+                        color: AppColors.darkBgPrimary,
                       ),
                     ),
                     if (activeFilterCount > 0) ...[
@@ -74,7 +81,7 @@ class FilterCtaBar extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.textOnDarkPrimary.withValues(alpha: 0.3),
+                          color: AppColors.darkBgPrimary.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
@@ -82,7 +89,7 @@ class FilterCtaBar extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
-                            color: AppColors.textOnDarkPrimary,
+                            color: AppColors.darkBgPrimary,
                           ),
                         ),
                       ),

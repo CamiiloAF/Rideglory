@@ -117,7 +117,10 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
     if (_isCompleted &&
         maintenanceToSave.odometerAtService != null &&
         maintenanceToSave.odometerAtService! > vehicleKm) {
-      vehicleCubit.updateMileage(maintenanceToSave.odometerAtService!);
+      vehicleCubit.updateMileage(
+        maintenanceToSave.odometerAtService!,
+        vehicleId: maintenanceToSave.vehicleId,
+      );
     }
 
     cubit.saveMaintenance(maintenanceToSave, nextKmInterval: nextKmInterval);

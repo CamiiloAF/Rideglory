@@ -92,41 +92,27 @@ class EventDetailHeaderSection extends StatelessWidget {
 
           // Organizer row
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: 28,
-                    height: 28,
-                    decoration: const BoxDecoration(
-                      color: AppColors.darkTertiary,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(Icons.person_outline,
-                        color: AppColors.textOnDarkSecondary, size: 16),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '${context.l10n.event_organizedBy} ${event.ownerName ?? context.l10n.event_organizerPlaceholder}',
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-              // Small share/actions button
               Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: AppColors.darkCard,
-                  borderRadius: BorderRadius.circular(16),
+                width: 28,
+                height: 28,
+                decoration: const BoxDecoration(
+                  color: AppColors.darkTertiary,
+                  shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.share_outlined,
-                    color: AppColors.textOnDarkSecondary, size: 14),
+                child: const Icon(Icons.person_outline,
+                    color: AppColors.textOnDarkSecondary, size: 16),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  '${context.l10n.event_organizedBy} ${event.ownerName ?? context.l10n.event_organizerPlaceholder}',
+                  style: const TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ),
             ],
           ),

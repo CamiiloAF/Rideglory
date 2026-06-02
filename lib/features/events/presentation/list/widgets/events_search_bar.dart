@@ -33,7 +33,16 @@ class EventsSearchBar extends StatelessWidget {
             color: AppColors.textOnDarkTertiary,
             size: 18,
           ),
+          // Sin bordes del TextField: la forma redondeada la da el Container.
+          // (Evita que el focusedBorder del tema dibuje un contorno con radio
+          // distinto y "asome" un cuadrado detrás del input.)
+          filled: false,
           border: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+          errorBorder: InputBorder.none,
+          focusedErrorBorder: InputBorder.none,
+          disabledBorder: InputBorder.none,
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
           isDense: true,

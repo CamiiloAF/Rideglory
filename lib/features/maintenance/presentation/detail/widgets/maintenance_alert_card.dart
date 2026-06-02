@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/shared/widgets/form/app_switch.dart';
 
 class MaintenanceAlertCard extends StatelessWidget {
   const MaintenanceAlertCard({
@@ -40,10 +41,7 @@ class MaintenanceAlertCard extends StatelessWidget {
                 size: 20,
                 color: Theme.of(context).colorScheme.primary,
               ),
-              Switch(
-                value: isOn,
-                onChanged: null,
-              ),
+              AppSwitch(value: isOn),
             ],
           ),
           AppSpacing.gapSm,

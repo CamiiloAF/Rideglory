@@ -88,22 +88,25 @@ class EventCard extends StatelessWidget {
                           errorBuilder: (_, _, _) => const EventPlaceholder(),
                         )
                       : const EventPlaceholder(),
-                  // Status badge — top-left overlay
+                  // Status badge + owner indicator — top-left overlay.
+                  // Laid out in a Row so the owner pill never overlaps the
+                  // status badge regardless of the badge label width.
                   Positioned(
                     top: 12,
                     left: 12,
-                    child: EventStatusBadge(
-                      label: _badgeLabel(context),
-                      color: _badgeColor(),
+                    child: Row(
+                      children: [
+                        EventStatusBadge(
+                          label: _badgeLabel(context),
+                          color: _badgeColor(),
+                        ),
+                        if (isOwner) ...[
+                          const SizedBox(width: 8),
+                          const EventOwnerIndicator(),
+                        ],
+                      ],
                     ),
                   ),
-                  // Owner crown icon
-                  if (isOwner)
-                    Positioned(
-                      top: 12,
-                      left: 12 + _estimateBadgeWidth(context) + 8,
-                      child: const EventOwnerIndicator(),
-                    ),
                 ],
               ),
             ),
@@ -214,9 +217,6 @@ class EventCard extends StatelessWidget {
       ),
     );
   }
-
-  // Rough estimate to position owner indicator after badge
-  double _estimateBadgeWidth(BuildContext context) => 90;
 
   static String _formatPrice(int price) {
     final formatter = NumberFormat('#,###', 'es_CO');

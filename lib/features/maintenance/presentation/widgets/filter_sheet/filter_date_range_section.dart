@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/core/theme/app_colors.dart';
-import 'package:rideglory/features/maintenance/presentation/widgets/filter_sheet/filter_radio_indicator.dart';
+import 'package:rideglory/shared/widgets/filter/filter_radio_indicator.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters.dart';
-import 'package:rideglory/features/maintenance/presentation/widgets/filter_sheet/filter_section_label.dart';
+import 'package:rideglory/shared/widgets/filter/filter_section_label.dart';
 
 class FilterDateRangeSection extends StatelessWidget {
   final MaintenanceDateRange? selected;

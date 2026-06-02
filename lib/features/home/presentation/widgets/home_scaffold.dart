@@ -43,7 +43,7 @@ class HomeScaffold extends StatelessWidget {
               child: CustomScrollView(
                 slivers: [
                   const SliverToBoxAdapter(child: HomeHeader()),
-                  if (state is HomeLoading)
+                  if (state is HomeLoading || state is HomeInitial)
                     const SliverFillRemaining(
                       child: AppLoadingIndicator(
                         variant: AppLoadingIndicatorVariant.page,

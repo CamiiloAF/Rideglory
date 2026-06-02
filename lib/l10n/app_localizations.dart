@@ -577,7 +577,7 @@ abstract class AppLocalizations {
   /// No description provided for @event_editEvent.
   ///
   /// In es, this message translates to:
-  /// **'Editar Evento'**
+  /// **'Editar evento'**
   String get event_editEvent;
 
   /// No description provided for @event_eventDetail.
@@ -591,6 +591,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Eliminar Evento'**
   String get event_deleteEvent;
+
+  /// No description provided for @event_optionsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Opciones del evento'**
+  String get event_optionsTitle;
 
   /// No description provided for @event_edit.
   ///
@@ -705,6 +711,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Buscar ciudad y departamento...'**
   String get event_eventCityHint;
+
+  /// No description provided for @event_filterDateHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Seleccionar'**
+  String get event_filterDateHint;
 
   /// No description provided for @event_startDate.
   ///
@@ -3699,6 +3711,30 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Limpiar todo'**
   String get maintenance_filter_clear_all;
+
+  /// No description provided for @filter_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Filtros'**
+  String get filter_title;
+
+  /// No description provided for @filter_clearAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Limpiar todo'**
+  String get filter_clearAll;
+
+  /// No description provided for @filter_clear.
+  ///
+  /// In es, this message translates to:
+  /// **'Limpiar'**
+  String get filter_clear;
+
+  /// No description provided for @filter_apply.
+  ///
+  /// In es, this message translates to:
+  /// **'Aplicar'**
+  String get filter_apply;
 
   /// No description provided for @maintenance_legend_warning.
   ///

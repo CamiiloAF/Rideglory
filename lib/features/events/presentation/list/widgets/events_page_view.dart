@@ -83,12 +83,20 @@ class EventsPageView extends StatelessWidget {
                     final cubit = context.read<EventsCubit>();
                     return state.maybeWhen(
                       loading: () => const PageLoadingStateWidget(),
-                      error: (error) => PageErrorStateWidget(
-                        title: context.l10n.event_errorLoadingEvents,
-                        message: error.message,
-                        onRetry: () => cubit.fetchEvents(),
-                        onRefresh: () => cubit.fetchEvents(),
-                      ),
+                      error: (error) {
+                        // Si el error ocurrió con filtros activos, el reintento
+                        // los limpia para que el usuario no quede bloqueado
+                        // (p. ej. un tipo no soportado por el backend).
+                        final hasFilters = cubit.filters.hasFilters;
+                        return PageErrorStateWidget(
+                          title: context.l10n.event_errorLoadingEvents,
+                          message: error.message,
+                          onRetry: hasFilters
+                              ? () async => cubit.clearFilters()
+                              : () => cubit.fetchEvents(),
+                          onRefresh: () => cubit.fetchEvents(),
+                        );
+                      },
                       empty: () {
                         final hasFilters = cubit.filters.hasFilters;
                         return EmptyStateWidget(
@@ -102,6 +110,9 @@ class EventsPageView extends StatelessWidget {
                           actionButtonText: hasFilters
                               ? context.l10n.event_clearFilters
                               : context.l10n.event_createEvent,
+                          actionButtonIcon: hasFilters
+                              ? Icons.filter_alt_off_outlined
+                              : Icons.add,
                           onActionPressed: hasFilters
                               ? cubit.clearFilters
                               : () => _navigateToCreate(context),

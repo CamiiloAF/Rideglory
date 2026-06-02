@@ -155,10 +155,15 @@ class _AppAutocompleteFieldState extends State<AppAutocompleteField> {
           name: widget.name,
           validator: widget.validator,
           builder: (field) {
-            if (_controller.text.isEmpty && field.value != null) {
+            // Keep the internal controller in sync with the field value when it
+            // changes externally (e.g. FormBuilder reset, or didChange from a
+            // "clear filters" action). During typing they already match, so no
+            // sync runs mid-edit.
+            final fieldText = field.value ?? '';
+            if (fieldText != _controller.text) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (mounted && _controller.text.isEmpty && field.value != null) {
-                  _controller.text = field.value!;
+                if (mounted && (field.value ?? '') != _controller.text) {
+                  _controller.text = field.value ?? '';
                 }
               });
             }
