@@ -24,7 +24,10 @@ class ForgotPasswordForm extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: 24),
-          const ForgotPasswordBackButton(),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: ForgotPasswordBackButton(),
+          ),
           const SizedBox(height: 32),
           const ForgotPasswordHeading(),
           const SizedBox(height: 32),

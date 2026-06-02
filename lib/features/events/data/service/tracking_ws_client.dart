@@ -23,6 +23,8 @@ class TrackingWsClient {
       StreamController<List<RiderTrackingModel>>.broadcast();
   final StreamController<SosAlertModel> _sosController =
       StreamController<SosAlertModel>.broadcast();
+  final StreamController<String> _sosClearedController =
+      StreamController<String>.broadcast();
   final StreamController<void> _eventEndedController =
       StreamController<void>.broadcast();
   final Map<String, RiderTrackingModel> _ridersByUserId = {};
@@ -34,6 +36,9 @@ class TrackingWsClient {
 
   /// Stream of SOS alerts broadcast by other riders.
   Stream<SosAlertModel> get sosAlerts => _sosController.stream;
+
+  /// Stream emitting the userId of a rider whose SOS was cleared/cancelled.
+  Stream<String> get sosCleared => _sosClearedController.stream;
 
   /// Stream that emits once when the organizer ends the ride.
   Stream<void> get eventEnded => _eventEndedController.stream;
@@ -65,6 +70,16 @@ class TrackingWsClient {
           'latitude': ?latitude,
           'longitude': ?longitude,
         },
+      }),
+    );
+  }
+
+  /// Cancels (clears) the current user's SOS alert on the gateway.
+  void cancelSos({required String eventId, required String userId}) {
+    _channel?.sink.add(
+      jsonEncode({
+        'type': 'tracking.sos.cancel',
+        'data': {'eventId': eventId, 'userId': userId},
       }),
     );
   }
@@ -200,6 +215,10 @@ class TrackingWsClient {
       _handleSosAlert(data);
       return;
     }
+    if (type == 'tracking.sos.cleared') {
+      _handleSosCleared(data);
+      return;
+    }
     if (type == 'tracking.event.ended') {
       developer.log('Tracking WS received event.ended.');
       if (!_eventEndedController.isClosed) {
@@ -262,6 +281,15 @@ class TrackingWsClient {
     );
     if (!_sosController.isClosed) {
       _sosController.add(alert);
+    }
+  }
+
+  void _handleSosCleared(Object? payload) {
+    if (payload is! Map<String, dynamic>) return;
+    final userId = payload['userId'] as String?;
+    if (userId == null) return;
+    if (!_sosClearedController.isClosed) {
+      _sosClearedController.add(userId);
     }
   }
 

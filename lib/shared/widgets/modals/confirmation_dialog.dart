@@ -41,19 +41,13 @@ class ConfirmationDialog {
           emphasis: confirmType == DialogActionType.danger
               ? AppModalActionEmphasis.danger
               : AppModalActionEmphasis.primary,
-          onPressed: () {
-            // The dialog is pushed on the root navigator (showDialog defaults
-            // to useRootNavigator: true), so it must be popped there — popping
-            // the caller's navigator would remove a page route instead.
-            Navigator.of(context, rootNavigator: true).pop(true);
-            onConfirm?.call();
-          },
+          popResult: true,
+          onPressed: () => onConfirm?.call(),
         ),
         AppModalAction.neutral(
           label: resolvedCancelLabel,
-          onPressed: onCancel != null
-              ? () => onCancel(context)
-              : () => Navigator.of(context, rootNavigator: true).pop(false),
+          popResult: false,
+          onPressed: onCancel != null ? () => onCancel(context) : () {},
         ),
       ],
     );

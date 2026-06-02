@@ -2,8 +2,11 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/features/events/presentation/tracking/cubit/live_tracking_cubit.dart';
+import 'package:rideglory/features/events/presentation/tracking/live_tracking_session_holder.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/event_registration/presentation/event_registration_page.dart';
 import 'package:rideglory/features/event_registration/presentation/my_registrations_page.dart';
@@ -309,7 +312,14 @@ class AppRouter {
         name: AppRoutes.participants,
         builder: (context, state) {
           final event = state.extra as EventModel;
-          return ParticipantsPlaceholderPage(event: event);
+          final cubit = getIt<LiveTrackingSessionHolder>().obtainForEvent(
+            eventId: event.id ?? '',
+            eventOwnerId: event.ownerId,
+          );
+          return BlocProvider<LiveTrackingCubit>.value(
+            value: cubit,
+            child: ParticipantsPlaceholderPage(event: event),
+          );
         },
       ),
       GoRoute(

@@ -16,12 +16,13 @@ class SosConfirmDialog {
         AppModalAction(
           label: context.l10n.map_sosSend,
           emphasis: AppModalActionEmphasis.danger,
-          onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
+          popResult: true,
+          onPressed: () {},
         ),
         AppModalAction.neutral(
           label: context.l10n.cancel,
-          onPressed: () =>
-              Navigator.of(context, rootNavigator: true).pop(false),
+          popResult: false,
+          onPressed: () {},
         ),
       ],
     );

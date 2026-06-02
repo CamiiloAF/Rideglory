@@ -177,22 +177,42 @@ class AppModal extends StatelessWidget {
       barrierColor: AppColors.darkBgPrimary.withValues(alpha: 0.82),
       isDismissible: barrierDismissible,
       enableDrag: barrierDismissible,
-      builder: (sheetContext) => Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
-        ),
-        child: SingleChildScrollView(
-          child: AppModal(
-            title: title,
-            description: description,
-            icon: icon,
-            iconColor: iconColor,
-            actions: actions,
-            variant: variant,
-            child: child,
+      builder: (sheetContext) {
+        // Wrap every action so the sheet is closed via the sheet's own
+        // navigator (not the root navigator). Using rootNavigator: true from
+        // an outer context pops go_router's shell route instead of the sheet,
+        // because showModalBottomSheet uses the branch navigator by default.
+        final wrappedActions = actions
+            .map(
+              (action) => AppModalAction(
+                label: action.label,
+                emphasis: action.emphasis,
+                isLoading: action.isLoading,
+                onPressed: () {
+                  Navigator.of(sheetContext).pop(action.popResult as T?);
+                  action.onPressed();
+                },
+              ),
+            )
+            .toList();
+
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
           ),
-        ),
-      ),
+          child: SingleChildScrollView(
+            child: AppModal(
+              title: title,
+              description: description,
+              icon: icon,
+              iconColor: iconColor,
+              actions: wrappedActions,
+              variant: variant,
+              child: child,
+            ),
+          ),
+        );
+      },
     );
   }
 }

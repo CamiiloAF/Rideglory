@@ -130,7 +130,15 @@ class TrackingRepositoryImpl implements TrackingRepository {
   }
 
   @override
+  void cancelSos({required String eventId, required String userId}) {
+    _trackingWsClient.cancelSos(eventId: eventId, userId: userId);
+  }
+
+  @override
   Stream<SosAlertModel> get sosAlerts => _trackingWsClient.sosAlerts;
+
+  @override
+  Stream<String> get sosCleared => _trackingWsClient.sosCleared;
 
   @override
   Stream<void> get eventEnded => _trackingWsClient.eventEnded;

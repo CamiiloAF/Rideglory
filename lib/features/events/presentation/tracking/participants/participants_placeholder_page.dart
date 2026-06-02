@@ -1,28 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/model/rider_tracking_model.dart';
+import 'package:rideglory/features/events/presentation/tracking/cubit/live_tracking_cubit.dart';
 import 'package:rideglory/features/events/presentation/tracking/participants/participants_empty_state.dart';
 import 'package:rideglory/features/events/presentation/tracking/participants/participants_rider_list.dart';
 
 /// Participants / Riders panel (Pencil page 34).
 ///
-/// Shows an active-riders list sourced from [event]. When the full tracking
-/// cubit is in scope this widget can be upgraded to a BlocBuilder; for now it
-/// renders from whatever riders are passed in or shows a styled empty-state.
+/// Shows the live active-riders list from the [LiveTrackingCubit] in scope.
 class ParticipantsPlaceholderPage extends StatelessWidget {
-  const ParticipantsPlaceholderPage({
-    super.key,
-    required this.event,
-    this.riders = const [],
-  });
+  const ParticipantsPlaceholderPage({super.key, required this.event});
 
   final EventModel event;
-
-  /// Active riders to display; defaults to empty list when not provided.
-  final List<RiderTrackingModel> riders;
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +59,19 @@ class ParticipantsPlaceholderPage extends StatelessWidget {
           child: Container(height: 1, color: AppColors.darkBorderPrimary),
         ),
       ),
-      body: riders.isEmpty
-          ? const ParticipantsEmptyState()
-          : ParticipantsRiderList(riders: riders),
+      body: BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
+        buildWhen: (prev, next) => prev.ridersResult != next.ridersResult,
+        builder: (context, state) {
+          final riders = state.ridersResult.maybeWhen(
+            data: (data) => data,
+            orElse: () => <RiderTrackingModel>[],
+          );
+          if (riders.isEmpty) {
+            return const ParticipantsEmptyState();
+          }
+          return ParticipantsRiderList(riders: riders);
+        },
+      ),
     );
   }
 }

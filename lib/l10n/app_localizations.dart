@@ -2359,7 +2359,7 @@ abstract class AppLocalizations {
   /// No description provided for @registration_identificationHint.
   ///
   /// In es, this message translates to:
-  /// **'CC/TI/CE'**
+  /// **'Documento de identidad'**
   String get registration_identificationHint;
 
   /// No description provided for @registration_birthDateHint.
@@ -3903,6 +3903,42 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Localizar'**
   String get sos_locate_action;
+
+  /// No description provided for @sos_locate_sheet_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Localizar a {riderName}'**
+  String sos_locate_sheet_title(String riderName);
+
+  /// No description provided for @sos_locate_center_option.
+  ///
+  /// In es, this message translates to:
+  /// **'Centrar en el mapa'**
+  String get sos_locate_center_option;
+
+  /// No description provided for @sos_locate_external_option.
+  ///
+  /// In es, this message translates to:
+  /// **'Abrir en Google Maps'**
+  String get sos_locate_external_option;
+
+  /// No description provided for @sos_cancel_confirm_title.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Desactivar SOS?'**
+  String get sos_cancel_confirm_title;
+
+  /// No description provided for @sos_cancel_confirm_body.
+  ///
+  /// In es, this message translates to:
+  /// **'Se cancelará tu alerta de emergencia y los demás riders dejarán de verla.'**
+  String get sos_cancel_confirm_body;
+
+  /// No description provided for @sos_cancel_confirm_action.
+  ///
+  /// In es, this message translates to:
+  /// **'Desactivar SOS'**
+  String get sos_cancel_confirm_action;
 
   /// No description provided for @sos_banner_title.
   ///

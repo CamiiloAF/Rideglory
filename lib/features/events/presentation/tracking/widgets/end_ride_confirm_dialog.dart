@@ -15,12 +15,13 @@ class EndRideConfirmDialog {
       actions: [
         AppModalAction(
           label: context.l10n.map_endRideConfirmButton,
-          onPressed: () => Navigator.of(context, rootNavigator: true).pop(true),
+          popResult: true,
+          onPressed: () {},
         ),
         AppModalAction.neutral(
           label: context.l10n.cancel,
-          onPressed: () =>
-              Navigator.of(context, rootNavigator: true).pop(false),
+          popResult: false,
+          onPressed: () {},
         ),
       ],
     );

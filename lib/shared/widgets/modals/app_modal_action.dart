@@ -15,15 +15,23 @@ class AppModalAction {
   final AppModalActionEmphasis emphasis;
   final bool isLoading;
 
+  /// Value that [AppModal.show] pops the bottom sheet with when this action is
+  /// tapped. Leave null when the caller does not await the sheet's result.
+  final Object? popResult;
+
   const AppModalAction({
     required this.label,
     required this.onPressed,
     this.emphasis = AppModalActionEmphasis.primary,
     this.isLoading = false,
+    this.popResult,
   });
 
   /// Convenience neutral/cancel action.
-  const AppModalAction.neutral({required this.label, required this.onPressed})
-    : emphasis = AppModalActionEmphasis.neutral,
-      isLoading = false;
+  const AppModalAction.neutral({
+    required this.label,
+    required this.onPressed,
+    this.popResult,
+  }) : emphasis = AppModalActionEmphasis.neutral,
+       isLoading = false;
 }

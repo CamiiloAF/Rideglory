@@ -32,6 +32,12 @@ abstract class TrackingRepository {
     double? longitude,
   });
 
+  /// Cancels the current user's own SOS alert.
+  void cancelSos({required String eventId, required String userId});
+
   Stream<SosAlertModel> get sosAlerts;
+
+  /// Emits the userId of a rider whose SOS was cleared/cancelled.
+  Stream<String> get sosCleared;
   Stream<void> get eventEnded;
 }

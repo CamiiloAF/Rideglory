@@ -1,6 +1,6 @@
 # Documentación del Feature: Events
 
-> Última actualización: 2026-05-29  
+> Última actualización: 2026-06-01  
 > Alcance: `lib/features/events/`
 
 > Esta documentación cubre únicamente el feature `events/`. El feature de inscripciones, antes incluido aquí, se separó a [event_registration.md](./event_registration.md).
@@ -482,17 +482,21 @@ LiveTrackingCubit
 | client → server | `tracking.join` | unirse a sesión del evento |
 | client → server | `tracking.location.update` | lat/lng/speed/distance/battery |
 | client → server | `tracking.sos` | alerta SOS |
+| client → server | `tracking.sos.cancel` | el rider desactiva su propio SOS |
 | client → server | `tracking.leave` | salida limpia |
 | server → client | `tracking.snapshot` | estado completo de todos los riders |
 | server → client | `tracking.rider.updated` | actualización de un rider |
 | server → client | `tracking.rider.left` | rider salió |
-| server → client | `tracking.sos.alert` | SOS broadcast |
+| server → client | `tracking.sos.alert` | SOS broadcast (también dirigido solo al cliente que se une si hay un SOS activo) |
+| server → client | `tracking.sos.cleared` | un SOS fue cancelado (`{ userId }`) |
 | server → client | `tracking.event.ended` | organizador terminó |
+
+> **SOS y late-joiners:** el gateway mantiene una caché en memoria del SOS activo por evento (`activeSosByEvent`). Al unirse a un evento con SOS activo, el servidor reenvía `tracking.sos.alert` **dirigido solo a ese cliente** (después del snapshot), y lo borra al recibir `tracking.sos.cancel`. La caché se pierde si el proceso del gateway se reinicia (la BD solo guarda `sosTriggeredAt`, sin el rider id).
 
 ### `TrackingWsClient` (`@lazySingleton`)
 
 - **Cache** `_ridersByUserId: Map<String, RiderTrackingModel>` actualizado por cada mensaje, emitido como lista al stream.
-- **Streams broadcast**: `_ridersController`, `_sosController`, `_eventEndedController` — soportan múltiples listeners.
+- **Streams broadcast**: `_ridersController`, `_sosController`, `_sosClearedController`, `_eventEndedController` — soportan múltiples listeners.
 - **Reconexión automática 2s** si la conexión se cae sin desconexión manual.
 - **Snapshot inicial HTTP** via `TrackingService.snapshot()` antes del primer mensaje WS.
 - **URI WS**: `parsedBase.scheme == 'https' ? 'wss' : 'ws'`, path `${baseUrl}/tracking/ws`, query `eventId=…&token=…`.
@@ -528,19 +532,38 @@ GPS updates a la UI = inmediato. WS push = max cada 4s.
 - `RiderTrackingRole.lead` → `user.id == eventOwnerId`.
 - `RiderTrackingRole.rider` → cualquier otro.
 
-El lead puede ver `OrganizerControlBar` con botón "Terminar rodada".
+El lead se distingue por el estilo de su marcador (ver Marcadores). El control "Terminar rodada" **no** vive en el mapa: el organizador termina la rodada desde el detalle del evento (`EventDetailOwnerLiveBar`).
+
+### Marcadores de riders en el mapa (`InitialsMarkerIcon` + `LiveMapWidget`)
+
+Tres variantes (`RiderMarkerVariant`), renderizadas a PNG y registradas como *style image* de Mapbox por nombre estable (`rider_marker_<userId>`), con `scale = devicePixelRatio` para tamaño correcto/nítido:
+
+- **lead** (48 px): relleno acento sólido, iniciales oscuras, glow naranja (gradiente radial contenido, no `MaskFilter`) + badge de corona.
+- **rider** (44 px): relleno `accent-subtle`, borde acento, iniciales acento, glow tenue.
+- **sos** (48 px): relleno/borde/glow rojo (el rider cuyo `userId == sosAlert.userId`).
+
+Mover un marcador solo muta su geometría (no re-registra imagen → sin churn ni duplicados). `_updateAnnotations` está serializado (guard de re-entrada) para evitar marcadores duplicados al moverse rápido.
+
+**Cámara:** viewport estable (no re-snap en cada update). El botón centrar activa *follow* (persigue al usuario, zoom por defecto 16); panear con el dedo (`onScrollListener`) lo desactiva. Tap en un marcador o en una tarjeta de telemetría → centra ese rider y se sincroniza la selección (resalte + scroll en la lista).
 
 ### Flujo SOS
 
 ```
 Rider tap SOS → SosConfirmDialog
-  → LiveTrackingCubit.triggerSos()
-     → TrackingRepository.publishSos() → WS 'tracking.sos'
-     → hasSentSos = true → muestra SosActiveOverlay
+  → LiveTrackingCubit.triggerSos() → TrackingRepository.publishSos() → WS 'tracking.sos'
+  → hasSentSos = true (botón en estado activo)
 
-Otros riders reciben → sosAlertResult = Data(SosAlertModel)
-  → SosBanner con nombre + teléfono
+Otros riders reciben 'tracking.sos.alert' → sosAlertResult = Data(SosAlertModel)
+  → SosBanner compacto (nombre real resuelto en backend + teléfono),
+    marcador rojo en el mapa y tarjeta roja en Rider Telemetry.
+  → "Localizar" abre un AppModal: Centrar en el mapa | Abrir en Google Maps.
+
+Cancelar: el botón SOS sigue tappable estando activo → ConfirmationDialog (danger/rojo)
+  → LiveTrackingCubit.cancelSos() → WS 'tracking.sos.cancel'
+  → backend difunde 'tracking.sos.cleared' → todos limpian el banner/marcador.
 ```
+
+> El nombre del rider en el SOS (banner + push FCM) lo resuelve el backend (`events-ms`): registro del evento → `users-ms` → parte del email → `"Un rider"`. Nunca el UUID.
 
 ### Flujo de finalización por organizador
 

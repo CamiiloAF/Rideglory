@@ -31,6 +31,10 @@ class LiveMapPage extends StatefulWidget {
 
 class _LiveMapPageState extends State<LiveMapPage> {
   final ValueNotifier<LiveMapController?> _mapController = ValueNotifier(null);
+
+  /// Rider currently selected (by tapping the list or a map marker). Shared
+  /// between the map and the telemetry list so they stay in sync.
+  final ValueNotifier<String?> _selectedRiderId = ValueNotifier(null);
   CameraOptions? _initialCameraOptions;
 
   @override
@@ -43,6 +47,7 @@ class _LiveMapPageState extends State<LiveMapPage> {
   @override
   void dispose() {
     _mapController.dispose();
+    _selectedRiderId.dispose();
     super.dispose();
   }
 
@@ -100,28 +105,24 @@ class _LiveMapPageState extends State<LiveMapPage> {
   }
 
   Future<void> _onSosPressed(LiveTrackingCubit cubit) async {
-    final hasSentSos = cubit.state.hasSentSos;
-    if (hasSentSos) return;
+    // Pressing SOS while active asks to confirm before turning it off.
+    if (cubit.state.hasSentSos) {
+      final confirmed = await ConfirmationDialog.show(
+        context: context,
+        title: context.l10n.sos_cancel_confirm_title,
+        content: context.l10n.sos_cancel_confirm_body,
+        confirmLabel: context.l10n.sos_cancel_confirm_action,
+        confirmType: DialogActionType.danger,
+      );
+      if (confirmed == true && mounted) {
+        cubit.cancelSos();
+      }
+      return;
+    }
 
     final confirmed = await SosConfirmDialog.show(context: context);
     if (confirmed == true && mounted) {
       cubit.triggerSos();
-    }
-  }
-
-  Future<void> _onEndRidePressed(
-    BuildContext ctx,
-    LiveTrackingCubit cubit,
-  ) async {
-    final confirmed = await ConfirmationDialog.show(
-      context: ctx,
-      title: ctx.l10n.tracking_end_ride_confirm_title,
-      content: ctx.l10n.tracking_end_ride_confirm_body,
-      confirmLabel: ctx.l10n.tracking_end_ride,
-      confirmType: DialogActionType.danger,
-    );
-    if (confirmed == true && mounted) {
-      await cubit.endRide(widget.event.id ?? '');
     }
   }
 
@@ -170,7 +171,6 @@ class _LiveMapPageState extends State<LiveMapPage> {
     );
 
     final currentUser = context.read<AuthCubit>().state.currentUser;
-    final isOrganizer = currentUser?.id == event.ownerId;
 
     return BlocProvider.value(
       value: trackingCubit,
@@ -187,12 +187,12 @@ class _LiveMapPageState extends State<LiveMapPage> {
           },
           child: LiveMapBody(
             trackingCubit: trackingCubit,
-            isOrganizer: isOrganizer,
             event: event,
+            currentUserId: currentUser?.id,
             mapController: _mapController,
+            selectedRiderId: _selectedRiderId,
             initialCameraOptions: _initialCameraOptions,
             onSosPressed: () => _onSosPressed(trackingCubit),
-            onEndRidePressed: () => _onEndRidePressed(context, trackingCubit),
           ),
         ),
       ),

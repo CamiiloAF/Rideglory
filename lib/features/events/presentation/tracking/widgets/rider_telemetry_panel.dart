@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/features/events/domain/model/rider_tracking_model.dart';
 import 'package:rideglory/features/events/presentation/tracking/cubit/live_tracking_cubit.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/rider_telemetry_riders_content.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
@@ -8,7 +10,17 @@ import 'package:rideglory/design_system/design_system.dart';
 
 /// Collapsible telemetry panel at the bottom of the live map (Pencil page 33).
 class RiderTelemetryPanel extends StatefulWidget {
-  const RiderTelemetryPanel({super.key});
+  const RiderTelemetryPanel({
+    super.key,
+    required this.selectedRiderId,
+    required this.onRiderTap,
+  });
+
+  /// Shared selection with the map; highlights and scrolls to this rider.
+  final ValueListenable<String?> selectedRiderId;
+
+  /// Called when a rider card is tapped, to center the map on that rider.
+  final ValueChanged<RiderTrackingModel> onRiderTap;
 
   static const double _headerHeight = 56.0;
   static const double _dividerHeight = 1.0;
@@ -33,9 +45,10 @@ class _RiderTelemetryPanelState extends State<RiderTelemetryPanel> {
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).padding.bottom;
     final expandedHeight = RiderTelemetryPanel.expandedBaseHeight + bottomInset;
-    final height = _isExpanded
-        ? expandedHeight
-        : RiderTelemetryPanel.collapsedHeight;
+    // Collapsed height must also absorb the safe-area bottom inset; without it
+    // the 56 px header + iOS home-indicator inset (~34 px) exceeds 64 px → overflow.
+    final collapsedHeight = RiderTelemetryPanel.collapsedHeight + bottomInset;
+    final height = _isExpanded ? expandedHeight : collapsedHeight;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
@@ -158,6 +171,11 @@ class _RiderTelemetryPanelState extends State<RiderTelemetryPanel> {
                         ridersResult: state.ridersResult,
                         currentUserLatitude: state.currentUserLatitude,
                         currentUserLongitude: state.currentUserLongitude,
+                        selectedRiderId: widget.selectedRiderId,
+                        sosUserId: state.sosAlertResult.whenOrNull(
+                          data: (alert) => alert?.userId,
+                        ),
+                        onRiderTap: widget.onRiderTap,
                       );
                     },
                   ),

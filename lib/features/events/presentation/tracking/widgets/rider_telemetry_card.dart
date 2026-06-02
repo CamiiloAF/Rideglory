@@ -10,12 +10,24 @@ class RiderTelemetryCard extends StatelessWidget {
     super.key,
     required this.rider,
     this.distanceFromCurrentUserMeters,
+    this.isSelected = false,
+    this.isSos = false,
+    this.onTap,
   });
 
   final RiderTrackingModel rider;
 
   /// Haversine distance from the device GPS to this rider; null if unavailable.
   final double? distanceFromCurrentUserMeters;
+
+  /// Whether this rider is the one currently selected on the map.
+  final bool isSelected;
+
+  /// Whether this rider is broadcasting an SOS (rendered in red).
+  final bool isSos;
+
+  /// Centers the map on this rider when tapped.
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +49,22 @@ class RiderTelemetryCard extends StatelessWidget {
         ? EventStrings.trackingBatteryUnknown
         : '$batteryPercent%';
 
-    return Container(
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
       width: MediaQuery.of(context).size.width * 0.82,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: AppColors.darkTertiary,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.darkBorderPrimary),
+        border: Border.all(
+          color: isSos
+              ? AppColors.error
+              : isSelected
+              ? AppColors.primary
+              : AppColors.darkBorderPrimary,
+          width: (isSos || isSelected) ? 1.5 : 1,
+        ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -185,6 +206,7 @@ class RiderTelemetryCard extends StatelessWidget {
             ],
           ),
         ],
+      ),
       ),
     );
   }

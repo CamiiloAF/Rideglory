@@ -22,7 +22,8 @@ class SosButton extends StatelessWidget {
       label: context.l10n.tracking_sosSemanticsLabel,
       button: true,
       child: GestureDetector(
-        onTap: isActive ? null : onPressed,
+        // Always tappable: when active, tapping asks to confirm cancelling SOS.
+        onTap: onPressed,
         child: Container(
           width: 56,
           height: 56,

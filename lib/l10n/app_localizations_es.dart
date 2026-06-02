@@ -1197,7 +1197,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_fullNameRequired => 'El nombre completo es requerido';
 
   @override
-  String get registration_identificationHint => 'CC/TI/CE';
+  String get registration_identificationHint => 'Documento de identidad';
 
   @override
   String get registration_birthDateHint => 'mm/dd/yyyy';
@@ -2022,6 +2022,27 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get sos_locate_action => 'Localizar';
+
+  @override
+  String sos_locate_sheet_title(String riderName) {
+    return 'Localizar a $riderName';
+  }
+
+  @override
+  String get sos_locate_center_option => 'Centrar en el mapa';
+
+  @override
+  String get sos_locate_external_option => 'Abrir en Google Maps';
+
+  @override
+  String get sos_cancel_confirm_title => '¿Desactivar SOS?';
+
+  @override
+  String get sos_cancel_confirm_body =>
+      'Se cancelará tu alerta de emergencia y los demás riders dejarán de verla.';
+
+  @override
+  String get sos_cancel_confirm_action => 'Desactivar SOS';
 
   @override
   String sos_banner_title(String riderName) {

@@ -22,9 +22,7 @@ class InfoDialog {
       actions: [
         AppModalAction(
           label: resolvedButtonLabel,
-          // Pop the root navigator: showDialog defaults to useRootNavigator,
-          // so the dialog route lives there, not on the caller's navigator.
-          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+          onPressed: () {},
         ),
       ],
     );

@@ -395,7 +395,7 @@
   "registration_emergencyContactName": "Nombre completo contacto",
   "registration_emergencyContactPhone": "Celular contacto",
   "registration_fullNameRequired": "El nombre completo es requerido",
-  "registration_identificationHint": "CC/TI/CE",
+  "registration_identificationHint": "Documento de identidad",
   "registration_birthDateHint": "mm/dd/yyyy",
   "registration_phoneHint": "300 000 0000",
   "registration_residenceCityHint": "Busca tu ciudad",
@@ -698,6 +698,19 @@
   "sos_banner_subtitle_no_phone": "Sin teléfono registrado",
   "sos_call_action": "Llamar",
   "sos_locate_action": "Localizar",
+  "sos_locate_sheet_title": "Localizar a {riderName}",
+  "@sos_locate_sheet_title": {
+    "placeholders": {
+      "riderName": {
+        "type": "String"
+      }
+    }
+  },
+  "sos_locate_center_option": "Centrar en el mapa",
+  "sos_locate_external_option": "Abrir en Google Maps",
+  "sos_cancel_confirm_title": "¿Desactivar SOS?",
+  "sos_cancel_confirm_body": "Se cancelará tu alerta de emergencia y los demás riders dejarán de verla.",
+  "sos_cancel_confirm_action": "Desactivar SOS",
   "sos_banner_title": "{riderName} necesita ayuda",
   "@sos_banner_title": {
     "placeholders": {

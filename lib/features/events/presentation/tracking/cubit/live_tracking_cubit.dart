@@ -71,6 +71,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
   StreamSubscription<Position>? _positionSubscription;
   StreamSubscription<User?>? _authSubscription;
   StreamSubscription<SosAlertModel>? _sosSubscription;
+  StreamSubscription<String>? _sosClearedSubscription;
   StreamSubscription<void>? _eventEndedSubscription;
   final Battery _battery = Battery();
   Timer? _ridersReconnectTimer;
@@ -104,6 +105,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
 
     _subscribeToRiders();
     _subscribeToSosAlerts();
+    _subscribeToSosCleared();
     _subscribeToEventEnded();
 
     await _startSharingMyLocation();
@@ -331,6 +333,8 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     _ridersSubscription = null;
     await _sosSubscription?.cancel();
     _sosSubscription = null;
+    await _sosClearedSubscription?.cancel();
+    _sosClearedSubscription = null;
     await _eventEndedSubscription?.cancel();
     _eventEndedSubscription = null;
     _ridersReconnectTimer?.cancel();
@@ -366,6 +370,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     await _ridersSubscription?.cancel();
     await _positionSubscription?.cancel();
     await _sosSubscription?.cancel();
+    await _sosClearedSubscription?.cancel();
     await _eventEndedSubscription?.cancel();
     final uid = _userId;
     if (uid != null && state.isTracking) {
@@ -388,6 +393,16 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     emit(state.copyWith(hasSentSos: true));
   }
 
+  /// Deactivates the current user's own SOS (toggle off) and notifies peers via
+  /// the gateway so their banners disappear.
+  void cancelSos() {
+    final userId = _userId;
+    if (userId != null) {
+      _trackingRepository.cancelSos(eventId: _eventId, userId: userId);
+    }
+    emit(state.copyWith(hasSentSos: false));
+  }
+
   /// Called by the organizer to end the ride via the tracking repository.
   Future<void> endRide(String eventId) async {
     final result = await _trackingRepository.endRide(eventId);
@@ -404,6 +419,28 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
       emit(
         state.copyWith(
           sosAlertResult: ResultState.data(data: alert),
+        ),
+      );
+    });
+  }
+
+  void _subscribeToSosCleared() {
+    _sosClearedSubscription?.cancel();
+    _sosClearedSubscription = _trackingRepository.sosCleared.listen((userId) {
+      if (isClosed) return;
+      final current = state.sosAlertResult.maybeMap(
+        data: (d) => d.data,
+        orElse: () => null,
+      );
+      final clearsBanner = current != null && current.userId == userId;
+      final clearsOwnSos = userId == _userId && state.hasSentSos;
+      if (!clearsBanner && !clearsOwnSos) return;
+      emit(
+        state.copyWith(
+          sosAlertResult: clearsBanner
+              ? const ResultState.initial()
+              : state.sosAlertResult,
+          hasSentSos: clearsOwnSos ? false : state.hasSentSos,
         ),
       );
     });
