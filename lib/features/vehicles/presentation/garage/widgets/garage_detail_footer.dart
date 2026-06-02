@@ -17,21 +17,33 @@ class GarageDetailFooter extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                const Icon(Icons.touch_app, size: 14, color: AppColors.primary),
-                const SizedBox(width: 8),
-                Text(
-                  context.l10n.garage_tapForDetail,
-                  style: const TextStyle(
-                    color: AppColors.textOnDarkSecondary,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+            Expanded(
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.touch_app,
+                    size: 14,
+                    color: AppColors.primary,
                   ),
-                ),
-              ],
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      context.l10n.garage_tapForDetail,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: AppColors.textOnDarkSecondary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
+            const SizedBox(width: 8),
             Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   context.l10n.garage_seeDetail,
