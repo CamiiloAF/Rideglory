@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Política de Privacidad – Rideglory</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0D0D0F;
+      --surface:   #1A1A1E;
+      --border:    #2A2A30;
+      --primary:   #f98c1f;
+      --text:      #E8E8EC;
+      --muted:     #9090A0;
+      --radius:    8px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      padding: 0 16px 80px;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 16px;
+      text-align: center;
+      margin: 0 -16px 48px;
+    }
+
+    header .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    header .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--primary);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    header .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--primary);
+      color: #0D0D0F;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 40px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin: 24px 0 8px;
+    }
+
+    p { margin-bottom: 14px; }
+
+    ul, ol {
+      padding-left: 20px;
+      margin-bottom: 14px;
+    }
+
+    li { margin-bottom: 6px; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+
+    .card.warning {
+      border-color: var(--primary);
+      background: rgba(249,140,31,0.06);
+    }
+
+    .card.warning strong {
+      color: var(--primary);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 14px;
+    }
+
+    th {
+      background: var(--surface);
+      color: var(--primary);
+      font-weight: 600;
+      padding: 10px 14px;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+
+    td {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+    .highlight { color: var(--primary); font-weight: 600; }
+
+    .muted { color: var(--muted); font-size: 14px; }
+
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    footer {
+      margin-top: 64px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🏍️</div>
+    <span style="font-size:24px;font-weight:800;letter-spacing:-0.5px;">Rideglory</span>
+  </div>
+  <p class="subtitle">Política de Privacidad y Tratamiento de Datos Personales</p>
+</header>
+
+<div class="container">
+
+  <span class="badge">Versión 1.0 — Junio 2025</span>
+
+  <div class="card warning">
+    <strong>Resumen ejecutivo:</strong> Rideglory recopila tu ubicación GPS en tiempo real durante rodadas, datos de perfil (incluyendo información médica de emergencia), datos de tu moto y documentos como el SOAT. Esta información se usa exclusivamente para los servicios de la plataforma y nunca se vende a terceros.
+  </div>
+
+  <!-- 1. Identificación -->
+  <h2>1. Identificación del Responsable del Tratamiento</h2>
+
+  <p>En cumplimiento de la <strong>Ley 1581 de 2012</strong> y el <strong>Decreto 1377 de 2013</strong> de la República de Colombia, así como de las mejores prácticas internacionales en protección de datos personales, se informa lo siguiente:</p>
+
+  <div class="card">
+    <table style="margin:0">
+      <tr><td><strong>Responsable</strong></td><td>Rideglory</td></tr>
+      <tr><td><strong>Aplicación</strong></td><td>Rideglory – Rodadas y Comunidad Motociclista</td></tr>
+      <tr><td><strong>Plataformas</strong></td><td>Android (Google Play Store)</td></tr>
+      <tr><td><strong>Correo de contacto</strong></td><td><a href="mailto:camiiloagudelo92@gmail.com">camiiloagudelo92@gmail.com</a></td></tr>
+      <tr><td><strong>Última actualización</strong></td><td>Junio de 2025</td></tr>
+    </table>
+  </div>
+
+  <!-- 2. Datos recopilados -->
+  <h2>2. Datos Personales que Recopilamos</h2>
+
+  <h3>2.1 Datos de Identidad y Perfil</h3>
+  <ul>
+    <li>Nombre completo</li>
+    <li>Correo electrónico</li>
+    <li>Número de documento de identidad (cédula o pasaporte)</li>
+    <li>Fecha de nacimiento</li>
+    <li>Número de teléfono</li>
+    <li>Ciudad de residencia</li>
+    <li>Foto de perfil</li>
+  </ul>
+
+  <h3>2.2 Datos de Salud y Emergencia <span class="highlight">(datos sensibles)</span></h3>
+  <p>Estos datos son considerados <strong>datos sensibles</strong> conforme al artículo 5 de la Ley 1581 de 2012. Su tratamiento requiere autorización expresa y se usa <u>exclusivamente</u> para atender situaciones de emergencia durante rodadas:</p>
+  <ul>
+    <li>Tipo de sangre (A+, A−, B+, B−, AB+, AB−, O+, O−)</li>
+    <li>Entidad Promotora de Salud (EPS)</li>
+    <li>Seguro médico complementario</li>
+    <li>Nombre y teléfono del contacto de emergencia</li>
+  </ul>
+
+  <h3>2.3 Datos de Ubicación en Tiempo Real</h3>
+  <ul>
+    <li>Coordenadas GPS precisas (latitud y longitud)</li>
+    <li>Velocidad de desplazamiento (km/h)</li>
+    <li>Distancia recorrida durante la rodada</li>
+    <li>Porcentaje de batería del dispositivo (para tracking en segundo plano)</li>
+  </ul>
+  <p class="muted">La ubicación solo se captura cuando el usuario activa activamente el seguimiento en un evento. Al finalizar la rodada, el streaming de ubicación se detiene automáticamente.</p>
+
+  <h3>2.4 Datos del Vehículo</h3>
+  <ul>
+    <li>Nombre/alias, marca, modelo, año de fabricación</li>
+    <li>Placa de matrícula y número VIN</li>
+    <li>Kilometraje, color, cilindrada</li>
+    <li>Fotografías del vehículo</li>
+    <li>Datos del SOAT: número de póliza, aseguradora, fechas de vigencia y documento digitalizado</li>
+  </ul>
+
+  <h3>2.5 Datos de Mantenimiento</h3>
+  <ul>
+    <li>Tipo de servicio, fecha, taller, costo</li>
+    <li>Odómetro al momento del servicio</li>
+    <li>Alertas de próximo mantenimiento programado</li>
+  </ul>
+
+  <h3>2.6 Datos de Eventos y Registro</h3>
+  <ul>
+    <li>Eventos creados (nombre, descripción, ruta, waypoints, precio)</li>
+    <li>Registros de participación en eventos</li>
+    <li>Estado de aprobación y fechas de registro</li>
+  </ul>
+
+  <h3>2.7 Datos Técnicos del Dispositivo</h3>
+  <ul>
+    <li>Token de notificaciones push (FCM)</li>
+    <li>Identificador de dispositivo (solo para sincronización de sesión)</li>
+  </ul>
+
+  <!-- 3. Finalidades -->
+  <h2>3. Finalidades del Tratamiento</h2>
+
+  <table>
+    <thead>
+      <tr><th>Dato</th><th>Finalidad</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Nombre, email, contraseña</td>
+        <td>Crear y gestionar tu cuenta de usuario; autenticación segura</td>
+      </tr>
+      <tr>
+        <td>Datos médicos y contacto emergencia</td>
+        <td>Proveer información crítica en caso de accidente durante una rodada; visible para organizadores del evento en situaciones SOS</td>
+      </tr>
+      <tr>
+        <td>Ubicación GPS en tiempo real</td>
+        <td>Mostrar tu posición en el mapa de la rodada a los demás participantes; detectar alertas SOS; calcular distancia recorrida</td>
+      </tr>
+      <tr>
+        <td>Datos del vehículo y SOAT</td>
+        <td>Gestionar tu garaje virtual; verificar vigencia de documentos; incluir info del vehículo en registros de eventos</td>
+      </tr>
+      <tr>
+        <td>Datos de mantenimiento</td>
+        <td>Llevar el historial de tu moto y generar alertas de mantenimiento preventivo</td>
+      </tr>
+      <tr>
+        <td>Token FCM</td>
+        <td>Enviar notificaciones push (aprobación de registro, inicio de rodada, alertas SOS)</td>
+      </tr>
+      <tr>
+        <td>Datos de telemetría anónima</td>
+        <td>Mejorar la experiencia de la aplicación; no contienen información personalmente identificable</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 4. Base legal -->
+  <h2>4. Base Legal del Tratamiento</h2>
+
+  <ul>
+    <li><strong>Consentimiento libre e informado:</strong> al registrarte en Rideglory, otorgas tu consentimiento expreso conforme al artículo 9 de la Ley 1581 de 2012.</li>
+    <li><strong>Ejecución del contrato:</strong> el tratamiento es necesario para prestarte los servicios de la plataforma (tracking, registro de eventos, garage virtual).</li>
+    <li><strong>Interés legítimo de seguridad:</strong> los datos médicos se tratan bajo consentimiento explícito adicional y se usan exclusivamente en emergencias.</li>
+    <li><strong>Obligación legal:</strong> en caso de requerimiento de autoridades competentes colombianas.</li>
+  </ul>
+
+  <!-- 5. Terceros -->
+  <h2>5. Terceros que Procesan tus Datos</h2>
+
+  <p>Rideglory utiliza los siguientes servicios de terceros como <strong>encargados del tratamiento</strong>:</p>
+
+  <table>
+    <thead>
+      <tr><th>Servicio</th><th>Proveedor</th><th>Datos compartidos</th><th>Propósito</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Firebase Authentication</td>
+        <td>Google LLC</td>
+        <td>Email, contraseña (hash), token OAuth</td>
+        <td>Autenticación de usuarios</td>
+      </tr>
+      <tr>
+        <td>Cloud Firestore</td>
+        <td>Google LLC</td>
+        <td>Perfil de usuario (incluyendo datos sensibles)</td>
+        <td>Base de datos principal de la plataforma</td>
+      </tr>
+      <tr>
+        <td>Firebase Storage</td>
+        <td>Google LLC</td>
+        <td>Fotos de perfil, vehículos, documentos SOAT</td>
+        <td>Almacenamiento de archivos</td>
+      </tr>
+      <tr>
+        <td>Firebase Cloud Messaging</td>
+        <td>Google LLC</td>
+        <td>Token de dispositivo</td>
+        <td>Notificaciones push</td>
+      </tr>
+      <tr>
+        <td>Firebase Analytics</td>
+        <td>Google LLC</td>
+        <td>Datos de uso anónimos</td>
+        <td>Análisis de métricas de la aplicación</td>
+      </tr>
+      <tr>
+        <td>Google Sign-In</td>
+        <td>Google LLC</td>
+        <td>Email, nombre, foto de perfil Google</td>
+        <td>Inicio de sesión con cuenta Google (opcional)</td>
+      </tr>
+      <tr>
+        <td>Mapbox Maps SDK</td>
+        <td>Mapbox Inc.</td>
+        <td>Consultas de geocodificación (lugares buscados)</td>
+        <td>Renderización de mapas y búsqueda de lugares</td>
+      </tr>
+      <tr>
+        <td>Google ML Kit (OCR)</td>
+        <td>Google LLC</td>
+        <td><em>Ninguno</em> – procesamiento 100% on-device</td>
+        <td>Lectura automática del documento SOAT con la cámara</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Todos los proveedores de Google operan bajo la <a href="https://policies.google.com/privacy" target="_blank">Política de Privacidad de Google</a> y cuentan con certificaciones de cumplimiento GDPR. Los datos se almacenan en servidores de Google Cloud (región US-East o la más cercana disponible).</p>
+
+  <!-- 6. Permisos del dispositivo -->
+  <h2>6. Permisos del Dispositivo Solicitados</h2>
+
+  <table>
+    <thead>
+      <tr><th>Permiso</th><th>Cuándo se solicita</th><th>Para qué se usa</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Ubicación precisa</strong><br/>(GPS)</td>
+        <td>Al iniciar seguimiento en un evento</td>
+        <td>Mostrar tu posición en el mapa de la rodada en tiempo real</td>
+      </tr>
+      <tr>
+        <td><strong>Ubicación en segundo plano</strong></td>
+        <td>Al activar el tracking de la rodada</td>
+        <td>Continuar compartiendo tu posición si cambias de app o bloqueas la pantalla durante la rodada</td>
+      </tr>
+      <tr>
+        <td><strong>Cámara</strong></td>
+        <td>Al agregar un vehículo o escanear el SOAT</td>
+        <td>Tomar fotos del vehículo; capturar el SOAT para lectura automática (OCR local)</td>
+      </tr>
+      <tr>
+        <td><strong>Galería / Fotos</strong></td>
+        <td>Al seleccionar fotos del álbum</td>
+        <td>Elegir foto de perfil, portada de evento o foto del vehículo</td>
+      </tr>
+      <tr>
+        <td><strong>Notificaciones</strong></td>
+        <td>Al instalar la app (Android 13+)</td>
+        <td>Recibir alertas de aprobación de registro, inicio de rodada y emergencias SOS</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="muted">Puedes revocar cualquier permiso en cualquier momento desde la configuración de tu dispositivo. La revocación de la ubicación deshabilitará el seguimiento en tiempo real durante las rodadas.</p>
+
+  <!-- 7. Datos sensibles -->
+  <h2>7. Tratamiento Especial de Datos Sensibles</h2>
+
+  <div class="card warning">
+    <p>Los datos de tipo de sangre, EPS, seguro médico y contacto de emergencia son considerados <strong>datos sensibles</strong> conforme a la Ley 1581 de 2012. Al proporcionarlos:</p>
+    <ul style="margin-top:10px">
+      <li>Otorgas tu <strong>consentimiento expreso e informado</strong> para su tratamiento.</li>
+      <li>Son <strong>opcionales</strong>; puedes usar Rideglory sin suministrarlos.</li>
+      <li>Se usan <strong>exclusivamente</strong> para facilitar atención médica en caso de emergencia durante una rodada.</li>
+      <li>Solo son visibles para el <strong>organizador del evento</strong> cuando activas una alerta SOS o en la ficha de registro del evento que estés cursando.</li>
+      <li>Nunca se comparten con terceros para fines comerciales, publicitarios o de perfilamiento.</li>
+    </ul>
+  </div>
+
+  <!-- 8. Seguridad -->
+  <h2>8. Seguridad de los Datos</h2>
+
+  <p>Implementamos las siguientes medidas técnicas y organizacionales para proteger tu información:</p>
+
+  <ul>
+    <li><strong>Transmisión cifrada:</strong> toda la comunicación entre la app y los servidores usa HTTPS/TLS y WebSocket Seguro (WSS).</li>
+    <li><strong>Autenticación con tokens:</strong> tokens JWT de Firebase con expiración automática; nunca almacenamos contraseñas en texto plano.</li>
+    <li><strong>Almacenamiento seguro local:</strong> los datos de sesión se guardan en el área cifrada del dispositivo (Android Keystore / iOS Keychain).</li>
+    <li><strong>Acceso por roles:</strong> los datos del evento y los participantes solo son accesibles para los riders registrados en ese evento.</li>
+    <li><strong>Procesamiento local de documentos:</strong> el OCR del SOAT se realiza 100% en el dispositivo; el documento nunca se envía a servidores de Google para análisis.</li>
+    <li><strong>Minimización:</strong> solo recopilamos los datos estrictamente necesarios para cada funcionalidad.</li>
+  </ul>
+
+  <!-- 9. Retención -->
+  <h2>9. Retención de Datos</h2>
+
+  <table>
+    <thead>
+      <tr><th>Tipo de dato</th><th>Período de retención</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Datos de perfil y cuenta</td>
+        <td>Mientras la cuenta esté activa + 90 días tras solicitud de eliminación</td>
+      </tr>
+      <tr>
+        <td>Datos de vehículos y mantenimiento</td>
+        <td>Mientras la cuenta esté activa</td>
+      </tr>
+      <tr>
+        <td>Datos de ubicación (tracking en vivo)</td>
+        <td>Solo durante la sesión activa; no se almacena el historial de rutas</td>
+      </tr>
+      <tr>
+        <td>Registros de eventos (histórico)</td>
+        <td>3 años desde la fecha del evento (requisito de trazabilidad)</td>
+      </tr>
+      <tr>
+        <td>Logs técnicos y errores</td>
+        <td>30 días</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 10. Derechos -->
+  <h2>10. Tus Derechos como Titular de los Datos</h2>
+
+  <p>Conforme a los artículos 8 y 21 de la Ley 1581 de 2012, tienes derecho a:</p>
+
+  <ul>
+    <li><strong>Conocer</strong> qué datos personales tuyos tenemos almacenados.</li>
+    <li><strong>Actualizar</strong> tus datos cuando estén desactualizados o sean inexactos (puedes hacerlo directamente desde la app).</li>
+    <li><strong>Rectificar</strong> información errónea.</li>
+    <li><strong>Suprimir</strong> tus datos personales cuando no sean necesarios para la finalidad con la que fueron recopilados o cuando revoques el consentimiento (derecho al olvido).</li>
+    <li><strong>Revocar</strong> el consentimiento otorgado en cualquier momento, sin efecto retroactivo.</li>
+    <li><strong>Presentar quejas</strong> ante la <strong>Superintendencia de Industria y Comercio (SIC)</strong> de Colombia si consideras que tus derechos han sido vulnerados.</li>
+  </ul>
+
+  <p>Para ejercer cualquiera de estos derechos, escríbenos a <a href="mailto:camiiloagudelo92@gmail.com">camiiloagudelo92@gmail.com</a> con el asunto <em>"Derechos HABEAS DATA – Rideglory"</em>. Responderemos en un plazo máximo de <strong>10 días hábiles</strong>.</p>
+
+  <!-- 11. Menores -->
+  <h2>11. Menores de Edad</h2>
+
+  <p>Rideglory es una plataforma destinada a personas <strong>mayores de 18 años</strong> que posean licencia de conducción de motocicletas. No recopilamos intencionalmente datos de menores de edad. Si tienes conocimiento de que un menor ha proporcionado datos sin supervisión, contáctanos para eliminarlos de inmediato.</p>
+
+  <!-- 12. Transferencias internacionales -->
+  <h2>12. Transferencias Internacionales de Datos</h2>
+
+  <p>Algunos de los servicios de terceros listados en la sección 5 (principalmente Google LLC y Mapbox Inc.) procesan datos en servidores ubicados fuera de Colombia, principalmente en Estados Unidos. Estas transferencias se realizan bajo mecanismos adecuados de protección (cláusulas contractuales tipo, certificaciones de cumplimiento), en cumplimiento del artículo 26 de la Ley 1581 de 2012.</p>
+
+  <!-- 13. Cambios -->
+  <h2>13. Cambios a Esta Política</h2>
+
+  <p>Podemos actualizar esta Política de Privacidad para reflejar cambios en la app, los servicios utilizados o la normativa aplicable. Cuando realicemos cambios materiales:</p>
+
+  <ul>
+    <li>Actualizaremos la fecha de "Última actualización" en esta página.</li>
+    <li>Te notificaremos a través de la aplicación o por correo electrónico si los cambios afectan el tratamiento de datos sensibles.</li>
+  </ul>
+
+  <p>El uso continuado de Rideglory tras la publicación de los cambios implica tu aceptación de la versión actualizada.</p>
+
+  <!-- 14. Contacto -->
+  <h2>14. Contacto y Reclamaciones</h2>
+
+  <div class="card">
+    <p><strong>Rideglory – Responsable del Tratamiento</strong></p>
+    <p style="margin-top:8px">Correo electrónico: <a href="mailto:camiiloagudelo92@gmail.com">camiiloagudelo92@gmail.com</a></p>
+    <p style="margin-top:8px">Para solicitudes de eliminación de datos, acceso o cualquier consulta relacionada con esta política, incluye en el asunto: <em>"Política de Privacidad – Rideglory"</em>.</p>
+    <p style="margin-top:8px">Autoridad de control: <strong>Superintendencia de Industria y Comercio (SIC)</strong> – <a href="https://www.sic.gov.co" target="_blank">www.sic.gov.co</a></p>
+  </div>
+
+  <footer>
+    <p>Rideglory &copy; 2025 · Política de Privacidad versión 1.0</p>
+    <p style="margin-top:6px">Rige conforme a la Ley 1581 de 2012 y el Decreto 1377 de 2013 (Colombia)</p>
+  </footer>
+
+</div>
+</body>
+</html>
