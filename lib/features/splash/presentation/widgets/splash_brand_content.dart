@@ -11,6 +11,12 @@ class SplashBrandContent extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Image.asset(
+            'assets/icon/splash-logo.png',
+            width: 120,
+            height: 120,
+          ),
+          const SizedBox(height: 24),
           Text(
             context.l10n.appName.toUpperCase(),
             style: const TextStyle(

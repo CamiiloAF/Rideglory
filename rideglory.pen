@@ -31426,7 +31426,7 @@
       "name": "Profile",
       "clip": true,
       "width": 390,
-      "height": 1205,
+      "height": 884,
       "fill": "$bg-primary",
       "layout": "vertical",
       "children": [
@@ -31634,7 +31634,7 @@
                       "type": "text",
                       "id": "XNBzs",
                       "fill": "$text-tertiary",
-                      "content": "@camiloag · Miembro desde 2024",
+                      "content": "@camiilo_af · Miembro desde 2024",
                       "fontFamily": "Space Grotesk",
                       "fontSize": 13,
                       "fontWeight": "normal"
@@ -31781,419 +31781,6 @@
                       "fontFamily": "Space Grotesk",
                       "fontSize": 12,
                       "fontWeight": "500"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "bQXPA",
-              "name": "Mis Eventos Section",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 12,
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "iSWfL",
-                  "name": "secHdr",
-                  "width": "fill_container",
-                  "justifyContent": "space_between",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "WCAPe",
-                      "fill": "$text-primary",
-                      "content": "MIS EVENTOS",
-                      "fontFamily": "Space Grotesk",
-                      "fontSize": 14,
-                      "fontWeight": "700"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "x8fyz",
-                      "name": "seeAll",
-                      "gap": 4,
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "HGZKs",
-                          "fill": "$accent",
-                          "content": "Ver todos",
-                          "fontFamily": "Space Grotesk",
-                          "fontSize": 13,
-                          "fontWeight": "500"
-                        },
-                        {
-                          "type": "icon",
-                          "id": "Genpg",
-                          "width": 14,
-                          "height": 14,
-                          "icon": "chevron-right",
-                          "library": "lucide",
-                          "fill": "$accent"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "r0XwXk",
-                  "name": "cardsRow",
-                  "width": "fill_container",
-                  "gap": 12,
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "p57mP",
-                      "name": "prvCard1",
-                      "clip": true,
-                      "width": "fill_container",
-                      "fill": "$bg-card",
-                      "cornerRadius": 12,
-                      "stroke": "$border",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "layout": "vertical",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "k1gQ9q",
-                          "name": "prvImg1",
-                          "clip": true,
-                          "width": "fill_container",
-                          "height": 80,
-                          "fill": {
-                            "type": "image",
-                            "enabled": true,
-                            "url": "images/generated-1778713241480.png",
-                            "mode": "fill"
-                          },
-                          "layout": "none",
-                          "children": [
-                            {
-                              "id": "iu0qM",
-                              "type": "ref",
-                              "ref": "zKkmE",
-                              "fill": "$accent",
-                              "x": 8,
-                              "y": 8,
-                              "name": "prvBadge1"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "iE3K4",
-                          "name": "prvCnt1",
-                          "width": "fill_container",
-                          "layout": "vertical",
-                          "gap": 4,
-                          "padding": 10,
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "SJGJb",
-                              "name": "prvName1",
-                              "fill": "$text-primary",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Santa Marta Road Run",
-                              "fontFamily": "$font-primary",
-                              "fontSize": 12,
-                              "fontWeight": "700"
-                            },
-                            {
-                              "type": "frame",
-                              "id": "Z3Cms",
-                              "name": "prvDr1",
-                              "gap": 4,
-                              "alignItems": "center",
-                              "children": [
-                                {
-                                  "type": "icon",
-                                  "id": "yYjaD",
-                                  "name": "prvDi1",
-                                  "width": 11,
-                                  "height": 11,
-                                  "icon": "calendar",
-                                  "library": "lucide",
-                                  "fill": "$text-tertiary"
-                                },
-                                {
-                                  "type": "text",
-                                  "id": "OWCZL",
-                                  "name": "prvDt1",
-                                  "fill": "$text-tertiary",
-                                  "content": "24 Oct · 12 inscritos",
-                                  "fontFamily": "$font-primary",
-                                  "fontSize": 10,
-                                  "fontWeight": "normal"
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "LFCB1",
-                      "name": "prvCard2",
-                      "clip": true,
-                      "width": "fill_container",
-                      "fill": "$bg-card",
-                      "cornerRadius": 12,
-                      "stroke": "$border",
-                      "strokeWidth": 1,
-                      "strokeAlignment": "inner",
-                      "layout": "vertical",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "qZ32N",
-                          "name": "prvImg2",
-                          "clip": true,
-                          "width": "fill_container",
-                          "height": 80,
-                          "fill": {
-                            "type": "image",
-                            "enabled": true,
-                            "url": "images/generated-1778713256179.png",
-                            "mode": "fill"
-                          },
-                          "layout": "none",
-                          "children": [
-                            {
-                              "id": "NYqyA",
-                              "type": "ref",
-                              "ref": "zKkmE",
-                              "fill": "#6366F1",
-                              "x": 8,
-                              "y": 8,
-                              "name": "prvBadge2"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "T5UEQ1",
-                          "name": "prvCnt2",
-                          "width": "fill_container",
-                          "layout": "vertical",
-                          "gap": 4,
-                          "padding": 10,
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "N56FVo",
-                              "name": "prvName2",
-                              "fill": "$text-primary",
-                              "textGrowth": "fixed-width",
-                              "width": "fill_container",
-                              "content": "Rodada Andina 2026",
-                              "fontFamily": "$font-primary",
-                              "fontSize": 12,
-                              "fontWeight": "700"
-                            },
-                            {
-                              "type": "frame",
-                              "id": "knuqQ",
-                              "name": "prvDr2",
-                              "gap": 4,
-                              "alignItems": "center",
-                              "children": [
-                                {
-                                  "type": "icon",
-                                  "id": "RJsp7",
-                                  "name": "prvDi2",
-                                  "width": 11,
-                                  "height": 11,
-                                  "icon": "calendar",
-                                  "library": "lucide",
-                                  "fill": "$text-tertiary"
-                                },
-                                {
-                                  "type": "text",
-                                  "id": "eisEY",
-                                  "name": "prvDt2",
-                                  "fill": "$text-tertiary",
-                                  "content": "15 Mar · 5 inscritos",
-                                  "fontFamily": "$font-primary",
-                                  "fontSize": 10,
-                                  "fontWeight": "normal"
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "v8prxp",
-              "name": "My Garage",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 12,
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "e6RuvF",
-                  "name": "garageTitleRow",
-                  "width": "fill_container",
-                  "justifyContent": "space_between",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "LPdtY",
-                      "fill": "$text-primary",
-                      "content": "Mi Garaje",
-                      "fontFamily": "Space Grotesk",
-                      "fontSize": 16,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "lbXkh",
-                      "name": "seeAllBtn",
-                      "gap": 4,
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "b8wwJ",
-                          "fill": "$accent",
-                          "content": "Ver todo",
-                          "fontFamily": "Space Grotesk",
-                          "fontSize": 13,
-                          "fontWeight": "500"
-                        },
-                        {
-                          "type": "icon",
-                          "id": "X7tMoo",
-                          "width": 16,
-                          "height": 16,
-                          "icon": "chevron-right",
-                          "library": "lucide",
-                          "fill": "$accent"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "CbXlK",
-                  "name": "Bike Card",
-                  "width": "fill_container",
-                  "fill": "$bg-card",
-                  "cornerRadius": 12,
-                  "stroke": "$border",
-                  "strokeWidth": 1,
-                  "strokeAlignment": "inner",
-                  "gap": 14,
-                  "padding": 14,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "RYYBe",
-                      "name": "bikeImageFrame",
-                      "width": 56,
-                      "height": 56,
-                      "fill": "$bg-tertiary",
-                      "cornerRadius": 12,
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "qHWzE",
-                          "width": 24,
-                          "height": 24,
-                          "icon": "bike",
-                          "library": "lucide",
-                          "fill": "$accent"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "M9B1pR",
-                      "name": "bikeInfo",
-                      "width": "fill_container",
-                      "layout": "vertical",
-                      "gap": 4,
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "P9MMYU",
-                          "name": "bikeNameRow",
-                          "gap": 8,
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "A9xm4j",
-                              "fill": "$text-primary",
-                              "content": "Yamaha MT-07",
-                              "fontFamily": "Space Grotesk",
-                              "fontSize": 15,
-                              "fontWeight": "600"
-                            },
-                            {
-                              "type": "frame",
-                              "id": "ahmd1",
-                              "name": "mainBadge",
-                              "fill": "$accent-subtle",
-                              "cornerRadius": 8,
-                              "padding": [
-                                2,
-                                8
-                              ],
-                              "children": [
-                                {
-                                  "type": "text",
-                                  "id": "qcfWK",
-                                  "fill": "$accent",
-                                  "content": "Principal",
-                                  "fontFamily": "Space Grotesk",
-                                  "fontSize": 10,
-                                  "fontWeight": "600"
-                                }
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          "type": "text",
-                          "id": "MGUMl",
-                          "fill": "$text-tertiary",
-                          "content": "2023 · 689cc · 12,450 km",
-                          "fontFamily": "Space Grotesk",
-                          "fontSize": 12,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "icon",
-                      "id": "QQikQ",
-                      "width": 18,
-                      "height": 18,
-                      "icon": "chevron-right",
-                      "library": "lucide",
-                      "fill": "$text-tertiary"
                     }
                   ]
                 }
@@ -39766,6 +39353,710 @@
           "fontFamily": "Inter",
           "fontSize": 12,
           "fontWeight": "normal"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "X1ghXQ",
+      "x": 440,
+      "y": 0,
+      "name": "Home Dashboard ",
+      "clip": true,
+      "width": 390,
+      "height": 1039,
+      "fill": "$bg-primary",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "pyhwa",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "padding": [
+            22,
+            20,
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "HDaTp",
+              "fill": "$text-primary",
+              "content": "9:41",
+              "fontFamily": "Inter",
+              "fontSize": 16,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "gf77d",
+              "name": "sbr",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "fxuPf",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "signal",
+                  "library": "lucide",
+                  "fill": "$text-primary"
+                },
+                {
+                  "type": "icon",
+                  "id": "n5fYic",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$text-primary"
+                },
+                {
+                  "type": "icon",
+                  "id": "O1dtuV",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$text-primary"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "O7uxj",
+          "name": "Content",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            8,
+            20,
+            24,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "j0Afq",
+              "name": "Top Section",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "fICkm",
+                  "name": "greetingRow",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "zjJLQ",
+                      "name": "leftTextStack",
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "p8GOWP",
+                          "fill": "$accent",
+                          "content": "HOLA, RIDER",
+                          "fontFamily": "$font-primary",
+                          "fontSize": 11,
+                          "fontWeight": "600",
+                          "letterSpacing": 1.5
+                        },
+                        {
+                          "type": "text",
+                          "id": "UpIXI",
+                          "fill": "$text-primary",
+                          "content": "Alex Rivera",
+                          "fontFamily": "$font-primary",
+                          "fontSize": 22,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "S1p7lO",
+                      "name": "iconCircle",
+                      "width": 44,
+                      "height": 44,
+                      "fill": "$accent-subtle",
+                      "cornerRadius": 22,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "Zzhpz",
+                          "width": 22,
+                          "height": 22,
+                          "icon": "notifications",
+                          "library": "Material Symbols Rounded",
+                          "fill": "$accent"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "zsDzq",
+                  "name": "garageSection",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "h60dw",
+                      "name": "garageHeader",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "A4vFY",
+                          "fill": "$text-primary",
+                          "content": "MI GARAJE",
+                          "fontFamily": "$font-primary",
+                          "fontSize": 12,
+                          "fontWeight": "600",
+                          "letterSpacing": 1.5
+                        },
+                        {
+                          "type": "text",
+                          "id": "a9hch5",
+                          "fill": "$accent",
+                          "content": "VER TODAS",
+                          "fontFamily": "$font-primary",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "soXrq",
+                      "name": "garageCard",
+                      "clip": true,
+                      "width": "fill_container",
+                      "fill": "$bg-card",
+                      "cornerRadius": "$radius-lg",
+                      "layout": "vertical",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "x5cHTa",
+                          "name": "motoImage",
+                          "width": "fill_container",
+                          "height": 180,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "images/generated-1778647084285.png",
+                            "mode": "fill"
+                          }
+                        },
+                        {
+                          "type": "frame",
+                          "id": "G9rPFT",
+                          "name": "cardContent",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 10,
+                          "padding": [
+                            12,
+                            16,
+                            16,
+                            16
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "o6alw",
+                              "fill": "$text-primary",
+                              "content": "KTM 890 Adventure R",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 16,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "u1XWvP",
+                              "name": "badge",
+                              "fill": "$accent-subtle",
+                              "cornerRadius": 100,
+                              "gap": 6,
+                              "padding": [
+                                6,
+                                10
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "XSyYe",
+                                  "width": 12,
+                                  "height": 12,
+                                  "icon": "warning",
+                                  "library": "Material Symbols Rounded",
+                                  "fill": "$accent"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "Z3SzvV",
+                                  "fill": "$accent",
+                                  "content": "PRÓXIMO CAMBIO DE ACEITE EN 500KM",
+                                  "fontFamily": "$font-primary",
+                                  "fontSize": 10,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "kS1u9",
+              "name": "Bottom Section",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "kg8eK",
+                  "name": "Rodadas Header",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "sxzWG",
+                      "fill": "$text-primary",
+                      "content": "PRÓXIMAS RODADAS",
+                      "fontFamily": "$font-primary",
+                      "fontSize": 14,
+                      "fontWeight": "600",
+                      "letterSpacing": 1.2
+                    },
+                    {
+                      "type": "icon",
+                      "id": "wxCHr",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "sliders-horizontal",
+                      "library": "lucide",
+                      "fill": "$accent"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "WWMum",
+                  "name": "Event Cards Row",
+                  "clip": true,
+                  "width": "fill_container",
+                  "height": 340,
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "DL0sV",
+                      "name": "Event Card 1",
+                      "clip": true,
+                      "width": 240,
+                      "height": "fill_container",
+                      "fill": "$bg-card",
+                      "cornerRadius": "$radius-lg",
+                      "layout": "vertical",
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "v04UQx",
+                          "name": "Card Image",
+                          "clip": true,
+                          "width": "fill_container",
+                          "height": 190,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "images/generated-1778647021642.png",
+                            "mode": "fill"
+                          },
+                          "layout": "none",
+                          "children": [
+                            {
+                              "id": "n6ye0",
+                              "type": "ref",
+                              "ref": "zKkmE",
+                              "x": 12,
+                              "y": 12,
+                              "fill": "#6366F1",
+                              "name": "inscritoRef"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "n4QCdR",
+                          "name": "Card Content",
+                          "width": "fill_container",
+                          "height": "fill_container",
+                          "layout": "vertical",
+                          "gap": 6,
+                          "padding": [
+                            12,
+                            16,
+                            16,
+                            16
+                          ],
+                          "justifyContent": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "vIPFT",
+                              "name": "card1Title",
+                              "fill": "$text-primary",
+                              "content": "RUTA DEL SOL",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 22,
+                              "fontWeight": "800",
+                              "fontStyle": "italic"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Q4P1n0",
+                              "name": "card1DateRow",
+                              "width": "fill_container",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "SqC57",
+                                  "width": 14,
+                                  "height": 14,
+                                  "icon": "calendar",
+                                  "library": "lucide",
+                                  "fill": "$text-secondary"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "oXEt4",
+                                  "fill": "$text-secondary",
+                                  "content": "24 Oct, 2023",
+                                  "fontFamily": "$font-primary",
+                                  "fontSize": 12,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "T8VWA7",
+                              "name": "card1DiffRow",
+                              "width": "fill_container",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "j4W5ny",
+                                  "width": 14,
+                                  "height": 14,
+                                  "icon": "mountain",
+                                  "library": "lucide",
+                                  "fill": "$text-tertiary"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "Mafmp",
+                                  "fill": "$text-tertiary",
+                                  "content": "INTERMEDIO",
+                                  "fontFamily": "$font-primary",
+                                  "fontSize": 11,
+                                  "fontWeight": "600",
+                                  "letterSpacing": 0.5
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "hCI1O",
+                              "name": "Ver Detalles Btn",
+                              "width": "fill_container",
+                              "height": 36,
+                              "fill": "#FFFFFF",
+                              "cornerRadius": "$radius-sm",
+                              "gap": 6,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "hsqnU",
+                                  "fill": "$text-inverse",
+                                  "content": "VER DETALLES",
+                                  "fontFamily": "$font-primary",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "icon",
+                                  "id": "gLwYv",
+                                  "width": 14,
+                                  "height": 14,
+                                  "icon": "arrow-right",
+                                  "library": "lucide",
+                                  "fill": "$text-inverse"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "PAIuB",
+                      "name": "Event Card 2",
+                      "clip": true,
+                      "width": 240,
+                      "height": "fill_container",
+                      "fill": "$bg-card",
+                      "cornerRadius": "$radius-lg",
+                      "layout": "vertical",
+                      "justifyContent": "space_between",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "dv6mv",
+                          "name": "Card Image 2",
+                          "clip": true,
+                          "width": "fill_container",
+                          "height": 190,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "images/generated-1778647014013.png",
+                            "mode": "fill"
+                          },
+                          "layout": "none",
+                          "children": [
+                            {
+                              "id": "DQXaK",
+                              "type": "ref",
+                              "ref": "zKkmE",
+                              "x": 12,
+                              "y": 12,
+                              "fill": "$info",
+                              "name": "disponibleRef"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "wjlI7",
+                          "name": "Card Content 2",
+                          "width": "fill_container",
+                          "height": "fill_container",
+                          "layout": "vertical",
+                          "gap": 6,
+                          "padding": [
+                            12,
+                            16,
+                            16,
+                            16
+                          ],
+                          "justifyContent": "end",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "m7eVF",
+                              "fill": "$text-primary",
+                              "content": "PASO DE\nAGUILAS",
+                              "fontFamily": "$font-primary",
+                              "fontSize": 22,
+                              "fontWeight": "800",
+                              "fontStyle": "italic"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "j9JCW",
+                              "name": "card2DateRow",
+                              "width": "fill_container",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "dCdLB",
+                                  "width": 14,
+                                  "height": 14,
+                                  "icon": "calendar",
+                                  "library": "lucide",
+                                  "fill": "$text-secondary"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "BZADa",
+                                  "fill": "$text-secondary",
+                                  "content": "15 Nov, 2023",
+                                  "fontFamily": "$font-primary",
+                                  "fontSize": 12,
+                                  "fontWeight": "500"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "sWj9U",
+                              "name": "card2DiffRow",
+                              "width": "fill_container",
+                              "gap": 6,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "S9O2Ba",
+                                  "width": 14,
+                                  "height": 14,
+                                  "icon": "mountain",
+                                  "library": "lucide",
+                                  "fill": "$text-tertiary"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "hPlU3",
+                                  "fill": "$text-tertiary",
+                                  "content": "AVANZADO",
+                                  "fontFamily": "$font-primary",
+                                  "fontSize": 11,
+                                  "fontWeight": "600",
+                                  "letterSpacing": 0.5
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "jtHXs",
+                              "name": "Ver Detalles Btn 2",
+                              "width": "fill_container",
+                              "height": 36,
+                              "fill": "#FFFFFF",
+                              "cornerRadius": "$radius-sm",
+                              "gap": 6,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "aw3Jj",
+                                  "fill": "$text-inverse",
+                                  "content": "VER DETALLES",
+                                  "fontFamily": "$font-primary",
+                                  "fontSize": 12,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "icon",
+                                  "id": "V8yLX",
+                                  "width": 14,
+                                  "height": 14,
+                                  "icon": "arrow-right",
+                                  "library": "lucide",
+                                  "fill": "$text-inverse"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "tyfw5",
+                  "name": "CTA Catalogo",
+                  "width": "fill_container",
+                  "height": 48,
+                  "fill": "#00000000",
+                  "cornerRadius": "$radius-lg",
+                  "stroke": "$border-light",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "gap": 8,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "V04R1n",
+                      "fill": "$text-primary",
+                      "content": "VER CATÁLOGO COMPLETO DE EVENTOS",
+                      "fontFamily": "$font-primary",
+                      "fontSize": 12,
+                      "fontWeight": "600",
+                      "letterSpacing": 0.3
+                    },
+                    {
+                      "type": "icon",
+                      "id": "zNCeW",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "chevron-down",
+                      "library": "lucide",
+                      "fill": "$accent"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "u7Ollr",
+          "type": "ref",
+          "ref": "VMmN0",
+          "width": "fill_container",
+          "name": "homeTab",
+          "descendants": {
+            "IoLku": {
+              "fill": "$accent"
+            },
+            "lstaG": {
+              "fill": "$text-inverse"
+            },
+            "qFkwP": {
+              "fill": "$text-inverse"
+            }
+          }
         }
       ]
     }

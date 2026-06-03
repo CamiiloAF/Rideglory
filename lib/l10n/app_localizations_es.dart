@@ -2184,6 +2184,33 @@ class AppLocalizationsEs extends AppLocalizations {
   String get tracking_sosSemanticsLabel => 'Enviar alerta de emergencia';
 
   @override
+  String get map_filterAll => 'Todos';
+
+  @override
+  String get map_filterActive => 'Activos';
+
+  @override
+  String get map_filterStopped => 'Detenidos';
+
+  @override
+  String get map_filterSos => 'SOS';
+
+  @override
+  String get map_searchParticipants => 'Buscar por nombre...';
+
+  @override
+  String get map_viewProfile => 'Ver perfil';
+
+  @override
+  String get map_emergencyCall => 'Llamada de emergencia';
+
+  @override
+  String get map_locate => 'Localizar';
+
+  @override
+  String get map_stopped => 'Detenido';
+
+  @override
   String get map_geocodeError => 'No se pudo obtener las coordenadas.';
 
   @override

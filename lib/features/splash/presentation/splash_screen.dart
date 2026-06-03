@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
+import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/splash/presentation/cubit/splash_cubit.dart';
 import 'package:rideglory/features/splash/presentation/widgets/splash_brand_content.dart';
 import 'package:rideglory/features/splash/presentation/widgets/splash_footer.dart';
@@ -66,7 +67,11 @@ class _SplashContentState extends State<_SplashContent>
 
     if (state is SplashAuthenticated) {
       _hasNavigated = true;
-      if (mounted) context.pushReplacementNamed(AppRoutes.home);
+      if (mounted) {
+        // LoadCurrentUserUseCase ya seteó _authService._currentUser; sincronizamos AuthCubit.
+        context.read<AuthCubit>().checkAuthState();
+        context.pushReplacementNamed(AppRoutes.home);
+      }
       return;
     }
   }

@@ -4192,6 +4192,60 @@ abstract class AppLocalizations {
   /// **'Enviar alerta de emergencia'**
   String get tracking_sosSemanticsLabel;
 
+  /// No description provided for @map_filterAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Todos'**
+  String get map_filterAll;
+
+  /// No description provided for @map_filterActive.
+  ///
+  /// In es, this message translates to:
+  /// **'Activos'**
+  String get map_filterActive;
+
+  /// No description provided for @map_filterStopped.
+  ///
+  /// In es, this message translates to:
+  /// **'Detenidos'**
+  String get map_filterStopped;
+
+  /// No description provided for @map_filterSos.
+  ///
+  /// In es, this message translates to:
+  /// **'SOS'**
+  String get map_filterSos;
+
+  /// No description provided for @map_searchParticipants.
+  ///
+  /// In es, this message translates to:
+  /// **'Buscar por nombre...'**
+  String get map_searchParticipants;
+
+  /// No description provided for @map_viewProfile.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver perfil'**
+  String get map_viewProfile;
+
+  /// No description provided for @map_emergencyCall.
+  ///
+  /// In es, this message translates to:
+  /// **'Llamada de emergencia'**
+  String get map_emergencyCall;
+
+  /// No description provided for @map_locate.
+  ///
+  /// In es, this message translates to:
+  /// **'Localizar'**
+  String get map_locate;
+
+  /// No description provided for @map_stopped.
+  ///
+  /// In es, this message translates to:
+  /// **'Detenido'**
+  String get map_stopped;
+
   /// No description provided for @map_geocodeError.
   ///
   /// In es, this message translates to:

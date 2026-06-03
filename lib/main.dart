@@ -75,6 +75,7 @@ class MyApp extends StatelessWidget {
         routerConfig: AppRouter.appRouter,
         onGenerateTitle: (context) => context.l10n.appName,
         theme: AppTheme.lightTheme,
+        debugShowCheckedModeBanner: false,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.dark,
         localizationsDelegates: const [

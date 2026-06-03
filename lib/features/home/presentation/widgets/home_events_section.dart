@@ -47,7 +47,7 @@ class HomeEventsSection extends StatelessWidget {
                 child: HomeEmptyEventsCard(),
               )
             : SizedBox(
-                height: 340,
+                height: 360,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 20),
