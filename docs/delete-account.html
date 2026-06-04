@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eliminar mi cuenta – Rideglory</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0D0D0F;
+      --surface: #1A1A1E;
+      --border:  #2A2A30;
+      --primary: #f98c1f;
+      --text:    #E8E8EC;
+      --muted:   #9090A0;
+      --error:   #e05252;
+      --radius:  8px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      padding: 0 16px 80px;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 16px;
+      text-align: center;
+      margin: 0 -16px 48px;
+    }
+
+    header .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    header .logo-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    header .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 40px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    p { margin-bottom: 14px; }
+
+    ul {
+      padding-left: 20px;
+      margin-bottom: 14px;
+    }
+
+    li { margin-bottom: 8px; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+
+    .card.danger {
+      border-color: var(--error);
+      background: rgba(224,82,82,0.06);
+    }
+
+    .card.danger strong { color: var(--error); }
+
+    .step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .step-number {
+      min-width: 32px;
+      height: 32px;
+      background: var(--primary);
+      color: #0D0D0F;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .step-content { padding-top: 4px; }
+    .step-content strong { display: block; margin-bottom: 4px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 24px;
+      font-size: 14px;
+    }
+
+    th {
+      background: var(--surface);
+      color: var(--primary);
+      font-weight: 600;
+      padding: 10px 14px;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+
+    td {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .email-btn {
+      display: inline-block;
+      background: var(--primary);
+      color: #0D0D0F;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 12px 28px;
+      border-radius: var(--radius);
+      margin-top: 8px;
+      text-decoration: none;
+    }
+
+    .email-btn:hover { opacity: 0.9; text-decoration: none; }
+
+    .muted { color: var(--muted); font-size: 14px; }
+
+    footer {
+      margin-top: 64px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <img src="assets/logo.png" alt="Rideglory" class="logo-icon" />
+    <span style="font-size:24px;font-weight:800;letter-spacing:-0.5px;">Rideglory</span>
+  </div>
+  <p class="subtitle">Solicitud de eliminación de cuenta y datos</p>
+</header>
+
+<div class="container">
+
+  <p>En <strong>Rideglory</strong> respetamos tu derecho a controlar tus datos personales. Si deseas eliminar tu cuenta y la información asociada, puedes hacerlo siguiendo los pasos indicados a continuación.</p>
+
+  <div class="card danger">
+    <strong>Acción irreversible:</strong> la eliminación de tu cuenta es permanente. Una vez procesada, no podrás recuperar tu historial de eventos, vehículos ni mantenimientos.
+  </div>
+
+  <!-- Pasos -->
+  <h2>Cómo solicitar la eliminación</h2>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <div class="step-content">
+      <strong>Opción A — Desde la app (recomendado)</strong>
+      Abre Rideglory → ve a <em>Perfil</em> → <em>Configuración</em> → <em>Eliminar cuenta</em>. Confirma con tu contraseña y tu cuenta se eliminará de inmediato.
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <div class="step-content">
+      <strong>Opción B — Por correo electrónico</strong>
+      Envía un correo a <a href="mailto:camiiloagudelo92@gmail.com">camiiloagudelo92@gmail.com</a> con el asunto <em>"Eliminar cuenta – Rideglory"</em> e incluye:
+      <ul style="margin-top:8px">
+        <li>El correo electrónico asociado a tu cuenta de Rideglory.</li>
+        <li>Confirmación de que deseas eliminar todos tus datos.</li>
+      </ul>
+      Procesaremos tu solicitud en un plazo máximo de <strong>10 días hábiles</strong>.
+    </div>
+  </div>
+
+  <div style="text-align:center;margin:8px 0 32px">
+    <a class="email-btn" href="mailto:camiiloagudelo92@gmail.com?subject=Eliminar%20cuenta%20%E2%80%93%20Rideglory&body=Hola%2C%20solicito%20la%20eliminaci%C3%B3n%20de%20mi%20cuenta%20de%20Rideglory.%0A%0ACorreo%20de%20la%20cuenta%3A%20">
+      Enviar solicitud por correo
+    </a>
+  </div>
+
+  <!-- Qué se elimina -->
+  <h2>Qué datos se eliminan o conservan</h2>
+
+  <table>
+    <thead>
+      <tr><th>Tipo de dato</th><th>Acción</th><th>Plazo</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Perfil de usuario (nombre, email, foto, datos médicos)</td>
+        <td>✅ Eliminado</td>
+        <td>Inmediato al procesar la solicitud</td>
+      </tr>
+      <tr>
+        <td>Vehículos y fotos asociadas</td>
+        <td>✅ Eliminado</td>
+        <td>Inmediato</td>
+      </tr>
+      <tr>
+        <td>Historial de mantenimientos</td>
+        <td>✅ Eliminado</td>
+        <td>Inmediato</td>
+      </tr>
+      <tr>
+        <td>Documentos SOAT almacenados</td>
+        <td>✅ Eliminado</td>
+        <td>Inmediato</td>
+      </tr>
+      <tr>
+        <td>Token de notificaciones (FCM)</td>
+        <td>✅ Eliminado</td>
+        <td>Inmediato</td>
+      </tr>
+      <tr>
+        <td>Registros de participación en eventos (histórico)</td>
+        <td>⚠️ Anonimizado</td>
+        <td>Se conserva hasta 3 años para trazabilidad del evento, pero sin datos identificables</td>
+      </tr>
+      <tr>
+        <td>Logs técnicos del sistema</td>
+        <td>⚠️ Conservado temporalmente</td>
+        <td>Se eliminan automáticamente a los 30 días</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="muted">La anonimización implica que tu nombre, email y cualquier dato identificable se eliminan del registro histórico, conservando únicamente métricas agregadas del evento (número de participantes, distancia recorrida, etc.).</p>
+
+  <!-- Preguntas -->
+  <h2>Preguntas frecuentes</h2>
+
+  <div class="card">
+    <p><strong>¿Puedo cancelar la solicitud antes de que se procese?</strong></p>
+    <p>Si enviaste la solicitud por correo y aún no ha sido procesada, escríbenos nuevamente indicando que deseas cancelarla. Si la eliminaste desde la app, la acción es inmediata e irreversible.</p>
+  </div>
+
+  <div class="card">
+    <p><strong>¿Qué pasa con mis eventos activos como organizador?</strong></p>
+    <p>Si eres organizador de un evento activo, te recomendamos cancelarlo o transferir la organización antes de eliminar tu cuenta, para no afectar a los participantes registrados.</p>
+  </div>
+
+  <div class="card">
+    <p><strong>¿Puedo crear una cuenta nueva con el mismo correo después?</strong></p>
+    <p>Sí. Una vez eliminada tu cuenta, puedes registrarte de nuevo con el mismo correo. Sin embargo, no podrás recuperar datos de la cuenta anterior.</p>
+  </div>
+
+  <div class="card">
+    <p><strong>Contacto para más información</strong></p>
+    <p style="margin-top:8px">Correo: <a href="mailto:camiiloagudelo92@gmail.com">camiiloagudelo92@gmail.com</a></p>
+    <p style="margin-top:4px">También puedes revisar nuestra <a href="privacy-policy.html">Política de Privacidad</a> y <a href="terms-and-conditions.html">Términos y Condiciones</a>.</p>
+  </div>
+
+  <footer>
+    <p>Rideglory &copy; 2025 · Ley 1581 de 2012 (Colombia) – Derecho de supresión</p>
+  </footer>
+
+</div>
+</body>
+</html>
