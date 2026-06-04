@@ -7,7 +7,7 @@ import 'crash_reporter.dart';
 ///
 /// ÚNICO archivo del proyecto autorizado a importar package:firebase_crashlytics.
 /// Invariante G0 — verificable con grep.
-@Injectable(as: CrashReporter, env: [Environment.prod, Environment.dev])
+@Injectable(as: CrashReporter)
 class FirebaseCrashReporter implements CrashReporter {
   FirebaseCrashReporter(this._crashlytics);
 
