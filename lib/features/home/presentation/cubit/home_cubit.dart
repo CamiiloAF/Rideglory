@@ -1,5 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_params.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/home/domain/use_cases/get_home_data_use_case.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
@@ -8,9 +11,11 @@ part 'home_state.dart';
 
 @injectable
 class HomeCubit extends Cubit<HomeState> {
-  HomeCubit(this._getHomeDataUseCase) : super(const HomeInitial());
+  HomeCubit(this._getHomeDataUseCase, this._analytics)
+      : super(const HomeInitial());
 
   final GetHomeDataUseCase _getHomeDataUseCase;
+  final AnalyticsService _analytics;
 
   Future<void> loadHomeData() async {
     emit(const HomeLoading());
@@ -19,12 +24,21 @@ class HomeCubit extends Cubit<HomeState> {
 
     result.fold(
       (error) => emit(HomeError(error.message)),
-      (data) => emit(
-        HomeLoaded(
-          mainVehicle: data.mainVehicle,
-          upcomingEvents: data.upcomingEvents,
-        ),
-      ),
+      (data) {
+        _analytics
+            .logEvent(AnalyticsEvents.homeViewed, {
+              AnalyticsParams.upcomingEventsCount: data.upcomingEvents.length,
+              AnalyticsParams.hasMainVehicle:
+                  data.mainVehicle != null ? 1 : 0,
+            })
+            .ignore();
+        emit(
+          HomeLoaded(
+            mainVehicle: data.mainVehicle,
+            upcomingEvents: data.upcomingEvents,
+          ),
+        );
+      },
     );
   }
 

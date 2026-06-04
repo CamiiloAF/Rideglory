@@ -7,6 +7,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_params.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/core/services/image_storage_service.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/add_vehicle_usecase.dart';
@@ -21,11 +24,13 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
   final AddVehicleUseCase _addVehicleUseCase;
   final UpdateVehicleUseCase _updateVehicleUseCase;
   final ImageStorageService _imageStorageService;
+  final AnalyticsService _analytics;
 
   VehicleFormCubit(
     this._addVehicleUseCase,
     this._updateVehicleUseCase,
     this._imageStorageService,
+    this._analytics,
   ) : super(VehicleFormState());
 
   final formKey = GlobalKey<FormBuilderState>();
@@ -88,9 +93,19 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
 
     result.fold(
       (error) => emit(state.copyWith(vehicleResult: ResultState.error(error: error))),
-      (savedVehicle) => emit(
-        state.copyWith(vehicleResult: ResultState.data(data: savedVehicle)),
-      ),
+      (savedVehicle) {
+        final eventName = state.isEditing
+            ? AnalyticsEvents.vehicleUpdated
+            : AnalyticsEvents.vehicleAdded;
+        _analytics
+            .logEvent(eventName, {
+              AnalyticsParams.hadPhoto: savedVehicle.imageUrl != null ? 1 : 0,
+            })
+            .ignore();
+        emit(
+          state.copyWith(vehicleResult: ResultState.data(data: savedVehicle)),
+        );
+      },
     );
   }
 

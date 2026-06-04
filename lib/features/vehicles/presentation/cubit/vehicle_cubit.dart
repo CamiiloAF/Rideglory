@@ -1,6 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_params.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/get_vehicles_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/set_main_vehicle_usecase.dart';
@@ -15,11 +18,13 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
     this._getMyVehiclesUseCase,
     this._setMainVehicleUseCase,
     this._updateVehicleUseCase,
+    this._analytics,
   ) : super(const ResultState.initial());
 
   final GetMyVehiclesUseCase _getMyVehiclesUseCase;
   final SetMainVehicleUseCase _setMainVehicleUseCase;
   final UpdateVehicleUseCase _updateVehicleUseCase;
+  final AnalyticsService _analytics;
 
   List<VehicleModel> _vehicles = [];
   String? _selectedVehicleId;
@@ -46,6 +51,13 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
     result.fold((error) => emit(ResultState.error(error: error)), (vehicles) {
       _vehicles = List<VehicleModel>.from(vehicles);
       _selectedVehicleId = _selectionIdDefault(_vehicles);
+      // AC diferido de Fase 5: cablear user property has_vehicle.
+      _analytics
+          .setUserProperty(
+            AnalyticsParams.userPropertyHasVehicle,
+            _vehicles.isNotEmpty ? '1' : '0',
+          )
+          .ignore();
       _emitLoadedOrEmpty();
     });
   }
@@ -86,6 +98,7 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
           .map((v) => v.copyWith(isMainVehicle: v.id == updated.id))
           .toList();
       _selectedVehicleId = updated.id;
+      _analytics.logEvent(AnalyticsEvents.vehicleSetMain).ignore();
       _emitLoadedOrEmpty();
     });
   }

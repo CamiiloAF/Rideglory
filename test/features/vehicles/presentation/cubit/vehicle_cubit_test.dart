@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/get_vehicles_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/set_main_vehicle_usecase.dart';
@@ -15,6 +16,8 @@ class MockGetMyVehiclesUseCase extends Mock implements GetMyVehiclesUseCase {}
 class MockSetMainVehicleUseCase extends Mock implements SetMainVehicleUseCase {}
 
 class MockUpdateVehicleUseCase extends Mock implements UpdateVehicleUseCase {}
+
+class MockAnalyticsService extends Mock implements AnalyticsService {}
 
 const _vehicle1 = VehicleModel(
   id: 'v1',
@@ -40,10 +43,16 @@ void main() {
     mockGetVehicles = MockGetMyVehiclesUseCase();
     mockSetMain = MockSetMainVehicleUseCase();
     mockUpdateVehicle = MockUpdateVehicleUseCase();
+    final mockAnalytics = MockAnalyticsService();
+    when(() => mockAnalytics.logEvent(any(), any())).thenAnswer((_) async {});
+    when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
+    when(() => mockAnalytics.setUserProperty(any(), any()))
+        .thenAnswer((_) async {});
     vehicleCubit = VehicleCubit(
       mockGetVehicles,
       mockSetMain,
       mockUpdateVehicle,
+      mockAnalytics,
     );
   });
 

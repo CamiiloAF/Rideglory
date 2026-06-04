@@ -1134,6 +1134,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get profile_maintenances => 'Mantenimientos';
 
   @override
+  String get profile_analyticsOptOutLabel => 'Compartir datos de uso anónimos';
+
+  @override
+  String get profile_analyticsOptOutSaveError =>
+      'No pudimos guardar tu preferencia. Inténtalo de nuevo.';
+
+  @override
   String get registration_registrationPageTitle => 'Inscripción al Evento';
 
   @override

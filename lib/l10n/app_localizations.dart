@@ -2230,6 +2230,18 @@ abstract class AppLocalizations {
   /// **'Mantenimientos'**
   String get profile_maintenances;
 
+  /// No description provided for @profile_analyticsOptOutLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Compartir datos de uso anónimos'**
+  String get profile_analyticsOptOutLabel;
+
+  /// No description provided for @profile_analyticsOptOutSaveError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos guardar tu preferencia. Inténtalo de nuevo.'**
+  String get profile_analyticsOptOutSaveError;
+
   /// No description provided for @registration_registrationPageTitle.
   ///
   /// In es, this message translates to:

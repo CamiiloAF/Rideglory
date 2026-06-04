@@ -1,5 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_params.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_events_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_my_events_use_case.dart';
@@ -55,22 +58,27 @@ class EventFilters {
 }
 
 class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
-  EventsCubit(GetEventsUseCase getEventsUseCase, this._updateEventUseCase)
-    : _fetchFn = (({String? type, String? dateFrom, String? dateTo, String? city}) =>
-          getEventsUseCase(
-            type: type,
-            dateFrom: dateFrom,
-            dateTo: dateTo,
-            city: city,
-          )),
+  EventsCubit(
+    GetEventsUseCase getEventsUseCase,
+    this._updateEventUseCase,
+    this._analytics,
+  ) : _fetchFn = (({String? type, String? dateFrom, String? dateTo, String? city}) =>
+            getEventsUseCase(
+              type: type,
+              dateFrom: dateFrom,
+              dateTo: dateTo,
+              city: city,
+            )),
+      _isMyEvents = false,
       super(const ResultState.initial());
 
   EventsCubit.myEvents(
     GetMyEventsUseCase getMyEventsUseCase,
     this._updateEventUseCase,
-  )
-    : _fetchFn = (({String? type, String? dateFrom, String? dateTo, String? city}) =>
-          getMyEventsUseCase()),
+    this._analytics,
+  ) : _fetchFn = (({String? type, String? dateFrom, String? dateTo, String? city}) =>
+            getMyEventsUseCase()),
+      _isMyEvents = true,
       super(const ResultState.initial());
 
   final Future<dynamic> Function({
@@ -80,6 +88,11 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
     String? city,
   }) _fetchFn;
   final UpdateEventUseCase _updateEventUseCase;
+  final AnalyticsService _analytics;
+
+  /// `true` cuando el cubit fue creado con [EventsCubit.myEvents].
+  /// Alimenta el param `list_scope` del evento de analytics sin acoplarse al use case.
+  final bool _isMyEvents;
 
   List<EventModel> _allEvents = [];
   EventFilters _filters = const EventFilters();
@@ -101,6 +114,23 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
     result.fold((error) => emit(ResultState.error(error: error)), (events) {
       _allEvents = events;
       _applyFiltersAndEmit();
+      // Emitir AQUÍ (post-fetch real), nunca dentro de _applyFiltersAndEmit().
+      // _applyFiltersAndEmit() se llama también en updateSearchQuery/addEvent/
+      // updateEvent/removeEvent — emitir allí dispararía el evento en cada tecla
+      // y cada mutación local (ver Fase 6, Riesgo #4).
+      final filtered = state.maybeWhen(
+        data: (list) => list.length,
+        orElse: () => 0,
+      );
+      _analytics
+          .logEvent(AnalyticsEvents.eventsListViewed, {
+            AnalyticsParams.resultCount: filtered,
+            AnalyticsParams.listScope:
+                _isMyEvents
+                    ? AnalyticsParams.listScopeMine
+                    : AnalyticsParams.listScopeAll,
+          })
+          .ignore();
     });
   }
 

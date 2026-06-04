@@ -6,6 +6,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/core/services/image_storage_service.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/add_vehicle_usecase.dart';
@@ -18,15 +19,21 @@ class MockUpdateVehicleUseCase extends Mock implements UpdateVehicleUseCase {}
 
 class MockImageStorageService extends Mock implements ImageStorageService {}
 
+class MockAnalyticsService extends Mock implements AnalyticsService {}
+
 VehicleFormCubit _buildCubit({
   MockAddVehicleUseCase? addUseCase,
   MockUpdateVehicleUseCase? updateUseCase,
   MockImageStorageService? imageService,
 }) {
+  final mockAnalytics = MockAnalyticsService();
+  when(() => mockAnalytics.logEvent(any(), any())).thenAnswer((_) async {});
+  when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
   return VehicleFormCubit(
     addUseCase ?? MockAddVehicleUseCase(),
     updateUseCase ?? MockUpdateVehicleUseCase(),
     imageService ?? MockImageStorageService(),
+    mockAnalytics,
   );
 }
 

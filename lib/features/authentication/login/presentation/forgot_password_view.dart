@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_params.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/authentication/constants/auth_form_fields.dart';
@@ -18,12 +22,38 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   final _formKey = GlobalKey<FormBuilderState>();
   bool _sent = false;
   String _sentEmail = '';
+  bool _completedSuccessfully = false;
+
+  AnalyticsService get _analytics => getIt<AnalyticsService>();
+
+  @override
+  void initState() {
+    super.initState();
+    _analytics
+        .logEvent(AnalyticsEvents.authFlowStarted, {
+          AnalyticsParams.authMethod: AnalyticsParams.authMethodForgotPassword,
+        })
+        .ignore();
+  }
+
+  @override
+  void dispose() {
+    if (!_completedSuccessfully) {
+      _analytics
+          .logEvent(AnalyticsEvents.authAbandoned, {
+            AnalyticsParams.authMethod: AnalyticsParams.authMethodForgotPassword,
+          })
+          .ignore();
+    }
+    super.dispose();
+  }
 
   void _onAuthStateChanged(BuildContext context, AuthState state) {
     if (state.isPasswordResetEmailSent && !_sent) {
       final email = _formKey.currentState?.fields[AuthFormFields.email]?.value
               as String? ??
           '';
+      _completedSuccessfully = true;
       setState(() {
         _sent = true;
         _sentEmail = email.trim();
@@ -40,6 +70,11 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
 
   void _handleSend(BuildContext context) {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
+      _analytics
+          .logEvent(AnalyticsEvents.authMethodSelected, {
+            AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
+          })
+          .ignore();
       final email =
           (_formKey.currentState!.value[AuthFormFields.email] as String).trim();
       context.read<AuthCubit>().sendPasswordResetEmail(email);

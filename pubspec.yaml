@@ -107,6 +107,10 @@ dependencies:
   pdfx: ^2.9.2
   # Anonymous telemetry for SOAT OCR flow
   firebase_analytics: ^12.0.0
+  # Crash reporting
+  firebase_crashlytics: ^5.2.0
+  # SHA-256 hashing for anonymous user id (acquisition funnel)
+  crypto: ^3.0.3
 
 dev_dependencies:
   flutter_test:

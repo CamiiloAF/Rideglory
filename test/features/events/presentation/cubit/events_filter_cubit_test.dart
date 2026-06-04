@@ -8,14 +8,18 @@ import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_events_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 
 class MockGetEventsUseCase extends Mock implements GetEventsUseCase {}
 
 class MockUpdateEventUseCase extends Mock implements UpdateEventUseCase {}
 
+class MockAnalyticsService extends Mock implements AnalyticsService {}
+
 void main() {
   late MockGetEventsUseCase mockGetEventsUseCase;
   late MockUpdateEventUseCase mockUpdateEventUseCase;
+  late MockAnalyticsService mockAnalytics;
   late EventsCubit eventsCubit;
 
   final mockEvent = EventModel(
@@ -37,7 +41,10 @@ void main() {
   setUp(() {
     mockGetEventsUseCase = MockGetEventsUseCase();
     mockUpdateEventUseCase = MockUpdateEventUseCase();
-    eventsCubit = EventsCubit(mockGetEventsUseCase, mockUpdateEventUseCase);
+    mockAnalytics = MockAnalyticsService();
+    when(() => mockAnalytics.logEvent(any(), any())).thenAnswer((_) async {});
+    when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
+    eventsCubit = EventsCubit(mockGetEventsUseCase, mockUpdateEventUseCase, mockAnalytics);
   });
 
   tearDown(() {

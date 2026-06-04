@@ -1,15 +1,35 @@
 export const meta = {
   name: 'rg-exec',
   description:
-    'Ejecuta una mejora o una fase de plan en Rideglory (Flutter + rideglory-api): Normalize -> Architect -> [Design || Backend] -> Frontend -> QA (con verificacion adversarial) -> Tech Lead, donde un AUDITOR Opus revisa cada seccion de implementacion contra el git diff y los criterios de aceptacion, pide cambios al agente e itera hasta un resultado optimo. Modifica codigo SIN commitear (working tree sucio para revision humana). Aislado bajo docs/exec-runs/<slug>/. No toca workflow/state.json ni el sistema /iter.',
+    'Ejecuta una mejora o una fase de plan en Rideglory (Flutter + rideglory-api) con NIVEL DE ESFUERZO ajustable (lite | normal | full). El AUDITOR corre con Opus; todo lo demas con Sonnet. Modifica codigo SIN commitear (working tree sucio para revision humana). Aislado bajo docs/exec-runs/<slug>/. No toca workflow/state.json ni el sistema /iter. args puede ser una ruta (string) o un objeto {source, mode}.',
   phases: [
     { title: 'Normalize', detail: 'Normalizar la nota/fase a PRD con AC + guardrails' },
-    { title: 'Architect', detail: 'Change map + decisiones (Opus), auditado por Opus' },
-    { title: 'Build', detail: 'Design || Backend, luego Frontend — cada uno auditado por Opus' },
-    { title: 'Verify', detail: 'QA + verificacion adversarial + auditoria de cobertura' },
-    { title: 'Review', detail: 'Tech Lead Opus + cierre (SUMMARY/REVIEW_CHECKLIST)' },
+    { title: 'Architect', detail: 'normal/full: change map + decisiones (Sonnet), auditado por Opus' },
+    { title: 'Build', detail: 'lite: un implementador; normal/full: Design || Backend -> Frontend, auditados' },
+    { title: 'Verify', detail: 'QA + auditoria de cobertura Opus; adversarial solo en full' },
+    { title: 'Review', detail: 'normal/full: Tech Lead; lite: cierre directo (SUMMARY/REVIEW_CHECKLIST)' },
   ],
 }
+
+// ---------------------------------------------------------------------------
+// Nivel de esfuerzo (mode)
+// ---------------------------------------------------------------------------
+const input = typeof args === 'object' && args !== null ? args : { source: args, mode: 'normal' }
+const SOURCE = typeof input.source === 'string' && input.source.trim() ? input.source.trim() : null
+const MODE = ['lite', 'normal', 'full'].includes(input.mode) ? input.mode : 'normal'
+if (!SOURCE) {
+  throw new Error(
+    'rg-exec requiere args = ruta a una nota/fase (string), o {source: "<ruta>", mode: "lite|normal|full"}. Ej: {source: "docs/plans/x/phases/phase-02-...md", mode: "lite"}.',
+  )
+}
+
+const CFG = {
+  lite: { rounds: 1, adversarial: false, fixCap: 0, architect: false, techLead: false },
+  normal: { rounds: 2, adversarial: false, fixCap: 1, architect: true, techLead: true },
+  full: { rounds: 3, adversarial: true, fixCap: 2, architect: true, techLead: true },
+}[MODE]
+
+log(`Nivel de ejecucion: ${MODE.toUpperCase()} (auditor rondas=${CFG.rounds}, adversarial=${CFG.adversarial}, architect=${CFG.architect}, techLead=${CFG.techLead}).`)
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -18,7 +38,7 @@ const HARD_RULES = `
 HARD RULES — no las violes:
 1. NUNCA ejecutes: git add / commit / push / merge / rebase / restore / reset, ni gh pr create / merge / review. El arbol de trabajo queda SUCIO a proposito; el humano commitea.
 2. NUNCA modifiques: workflow/state.json, workflow/artifact_log.json, docs/PRD.md, docs/PLAN.md, docs/ITERATION_HISTORY.md, docs/PRODUCT_STATUS.md, docs/handoffs/** (sistema /iter), .claude/skills/**, .claude/agents/**, .claude/workflows/**, ni la nota fuente original.
-3. Escribe artefactos de analisis bajo docs/exec-runs/<slug>/. Backend/Frontend SI pueden editar codigo de la app (Flutter lib/ y rideglory-api) para implementar; NUNCA commitear.
+3. Escribe artefactos de analisis bajo docs/exec-runs/<slug>/. Backend/Frontend SI pueden editar codigo de la app (Flutter lib/ y rideglory-api); NUNCA commitear.
 4. Lee tu playbook en .claude/agents/<rol>.md; las RUTAS DE SALIDA de este prompt MANDAN sobre el playbook.
 5. Timestamps con Bash \`date -u +%Y-%m-%dT%H:%M:%SZ\`. No inventes fechas.
 `
@@ -47,8 +67,8 @@ const IMPL_SCHEMA = {
   },
 }
 
-// Bucle auditor Opus para implementacion: produce -> auditor opus revisa git diff + AC -> reinyecta -> repite.
-async function audited({ label, phaseName, criteria, auditReads, produce, maxRounds = 3 }) {
+// Bucle auditor Opus: produce -> auditor opus revisa git diff + AC -> reinyecta -> repite (maxRounds segun nivel).
+async function audited({ label, phaseName, criteria, auditReads, produce, maxRounds = CFG.rounds }) {
   let result = await produce(null)
   let verdict = null
   for (let round = 1; round <= maxRounds; round++) {
@@ -60,13 +80,13 @@ ${HARD_RULES}
 QUE LEER:
 - ${WS}/PRD_NORMALIZED.md (criterios de aceptacion §AC y guardrails §regresion).
 - ${auditReads}
-- El cambio real en el codigo: corre \`git diff\` y \`git diff --stat\` y LEE cada hunk de los archivos tocados por este agente.
+- El cambio real: corre \`git diff\` y \`git diff --stat\` y LEE cada hunk de los archivos tocados por este agente. Si dudas de los tests, correlos.
 
 CRITERIOS DE AUDITORIA:
 ${criteria}
 
-Eres exigente. Aprueba SOLO si: cumple los AC, no viola Clean Architecture (domain sin Flutter/IO, data sin BuildContext, presentation sin HTTP/DTO), respeta rideglory-coding-standards (un widget por archivo, sin metodos que retornan widgets, usa AppButton/AppTextField/AppSwitch, texto oscuro sobre primario, strings en app_es.arb), sin secretos/SQL concatenado/URLs hardcodeadas, y trae pruebas que fallarian sin el cambio.
-Si falla, devuelve requestedChanges concretos (archivo + que cambiar). ${round === maxRounds ? 'ULTIMA ronda: aprueba lo defendible y deja findings.' : ''}
+Eres exigente. Aprueba SOLO si: cumple los AC, no viola Clean Architecture (domain sin Flutter/IO, data sin BuildContext, presentation sin HTTP/DTO), respeta rideglory-coding-standards (un widget por archivo, sin metodos que retornan widgets, AppButton/AppTextField/AppSwitch, texto oscuro sobre primario, strings en app_es.arb), sin secretos/SQL concatenado/URLs hardcodeadas/PII, y trae pruebas que fallarian sin el cambio (en verde).
+Si falla, devuelve requestedChanges concretos (archivo + que cambiar). ${maxRounds === 1 ? 'UNICA ronda (nivel lite): si hay algo menor, dejalo en findings y aprueba lo defendible; bloquea solo ante fallos reales.' : round === maxRounds ? 'ULTIMA ronda: aprueba lo defendible y deja findings.' : ''}
 Devuelve (approved, score, findings, requestedChanges).`,
       { label: `${label}:audit#${round}`, phase: phaseName, model: 'opus', schema: AUDIT_SCHEMA },
     )
@@ -83,16 +103,9 @@ const fixBlock = (feedback) =>
     : ''
 
 // ---------------------------------------------------------------------------
-// Phase: Normalize
+// Phase: Normalize (siempre)
 // ---------------------------------------------------------------------------
 phase('Normalize')
-
-const SOURCE = typeof args === 'string' && args.trim() ? args.trim() : null
-if (!SOURCE) {
-  throw new Error(
-    'rg-exec requiere args = ruta a una nota de mejora o a un archivo de fase del plan (p.ej. docs/plans/<slug>/phases/phase-01-...md).',
-  )
-}
 
 const NORM_SCHEMA = {
   type: 'object',
@@ -107,30 +120,103 @@ const NORM_SCHEMA = {
 }
 
 const norm = await agent(
-  `Eres el PRD Normalizer de la corrida rg-exec de Rideglory. Una pasada ligera (no escaneo exhaustivo; el Architect lee el codigo a fondo).
+  `Eres el PRD Normalizer de la corrida rg-exec de Rideglory (nivel ${MODE}). Pasada ligera.
 
-Fuente (solo lectura): ${SOURCE}  — leela COMPLETA. Puede ser una nota de mejora o un archivo de fase de plan (docs/plans/<slug>/phases/...).
+Fuente (solo lectura): ${SOURCE} — leela COMPLETA. Puede ser una nota o un archivo de fase de plan (docs/plans/<slug>/phases/...).
 
 ${HARD_RULES}
 
-CONTEXTO opcional: docs/handoffs/prd-digest.md si existe (constraints del producto); si no, docs/PRD.md (solo lectura).
+CONTEXTO opcional: docs/handoffs/prd-digest.md si existe; si no, docs/PRD.md (solo lectura).
 
 TU TRABAJO:
 1. Deriva un SLUG kebab-case corto.
 2. \`mkdir -p docs/exec-runs/<SLUG>/handoffs docs/exec-runs/<SLUG>/analysis\`.
-3. Escribe docs/exec-runs/<SLUG>/PRD_NORMALIZED.md con: ## 1 Objetivo, ## 2 Por que, ## 3 Alcance (entra/no entra), ## 4 Areas afectadas (best-effort; el Architect las verifica), ## 5 Criterios de aceptacion (numerados, observables, testeables — si la fuente ya los trae, preservalos), ## 6 Guardrails de regresion (flujos/pantallas/endpoints que no deben romperse), ## 7 Constraints heredados.
-Si la fuente es un archivo de fase de plan, sus "Criterios de aceptacion" y "Que se debe hacer" son la base — preservalos.
+3. Escribe docs/exec-runs/<SLUG>/PRD_NORMALIZED.md con: ## 1 Objetivo, ## 2 Por que, ## 3 Alcance, ## 4 Areas afectadas (best-effort), ## 5 Criterios de aceptacion (numerados, observables, testeables; si la fuente los trae, preservalos), ## 6 Guardrails de regresion, ## 7 Constraints heredados.
+Si la fuente es un archivo de fase, sus "Criterios de aceptacion" y "Que se debe hacer" son la base — preservalos.
 Devuelve (slug, goal, acceptanceCriteria, guardrails).`,
-  { label: 'normalize', phase: 'Normalize', schema: NORM_SCHEMA },
+  { label: 'normalize', phase: 'Normalize', model: 'sonnet', schema: NORM_SCHEMA },
 )
 
 const SLUG = norm.slug
 const WS = `docs/exec-runs/${SLUG}`
 log(`Ejecutando "${SLUG}" — workspace ${WS}/ (sin commits).`)
 
-// ---------------------------------------------------------------------------
-// Phase: Architect (Opus, auditado por Opus)
-// ---------------------------------------------------------------------------
+// ===========================================================================
+// NIVEL LITE — un solo implementador + cierre directo (sin architect/tech-lead)
+// ===========================================================================
+if (MODE === 'lite') {
+  phase('Build')
+  const impl = await audited({
+    label: 'implementer',
+    phaseName: 'Build',
+    auditReads: `${WS}/handoffs/implementer.md`,
+    criteria: `- Cumple TODOS los AC de §5 con el cambio mas simple y directo.
+- Pruebas (unit/widget) por cada path nuevo, en verde; dart analyze limpio.
+- Clean Architecture + rideglory-coding-standards intactos; sin PII.`,
+    produce: (feedback) =>
+      agent(
+        `Eres un Flutter/Backend dev implementando una fase de bajo riesgo de Rideglory en UNA pasada (nivel lite). VAS A EDITAR CODIGO. NO commitees.
+
+${HARD_RULES}
+
+CONTEXTO: ${WS}/PRD_NORMALIZED.md (el contrato — §4 areas, §5 AC, §6 guardrails), .claude/agents/frontend.md y .claude/agents/backend.md (criterio), y el codigo real en cada area del §4 (abre cada archivo).
+
+TU TRABAJO:
+1. Implementa lo necesario para cumplir los AC (puede ser frontend Flutter lib/ y/o backend rideglory-api segun la fase). Cambio minimo y directo; es trabajo mecanico/bajo riesgo.
+2. Si tocas DTOs/DI/freezed/retrofit: \`dart run build_runner build --delete-conflicting-outputs\`.
+3. Agrega pruebas por cada path nuevo. Corre \`dart analyze\` y \`flutter test\` (y pruebas backend si aplica). Deja en VERDE.
+4. Escribe ${WS}/handoffs/implementer.md (## Archivos cambiados, ## Pruebas nuevas, ## Resultado final (comando+conteo), ## Verificacion manual, ## AC no cubiertos).
+${fixBlock(feedback)}
+Devuelve {status, filesChanged, testResult, notes}.`,
+        { label: 'implementer', phase: 'Build', model: 'sonnet', schema: IMPL_SCHEMA },
+      ),
+  })
+
+  phase('Review')
+  const liteClose = await agent(
+    `Eres el cierre (Sonnet) de la corrida lite "${SLUG}" de Rideglory. NO hay PR; revisas el working tree y produces los artefactos para el humano.
+
+${HARD_RULES}
+
+CONTEXTO: ${WS}/PRD_NORMALIZED.md, ${WS}/handoffs/implementer.md, \`git diff --stat\` y \`git diff\`.
+
+TU TRABAJO:
+- Verificacion rapida: cada AC §5 cubierto, sin secretos/PII/URLs hardcodeadas, Clean Architecture ok.
+- Escribe ${WS}/SUMMARY.md (## Objetivo, ## Que cambio, ## Archivos (git diff --stat), ## Pruebas, ## Mensaje de commit sugerido) y ${WS}/REVIEW_CHECKLIST.md (pasos manuales antes de commitear).
+verdict='needs_changes' solo si hay un blocker real. Devuelve (verdict, blockers, summary).`,
+    {
+      label: 'lite-close',
+      phase: 'Review',
+      model: 'sonnet',
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['verdict', 'blockers', 'summary'],
+        properties: {
+          verdict: { type: 'string', enum: ['ready', 'needs_changes'] },
+          blockers: { type: 'array', items: { type: 'string' } },
+          summary: { type: 'string' },
+        },
+      },
+    },
+  )
+
+  return {
+    slug: SLUG,
+    workspace: WS,
+    mode: MODE,
+    implStatus: impl.result.status,
+    auditScore: impl.verdict.score,
+    verdict: liteClose.verdict,
+    blockers: liteClose.blockers,
+    artifacts: { summary: `${WS}/SUMMARY.md`, reviewChecklist: `${WS}/REVIEW_CHECKLIST.md` },
+    note: `Nivel lite. Codigo modificado SIN commitear. Revisa con \`git diff\` y ${WS}/REVIEW_CHECKLIST.md.`,
+  }
+}
+
+// ===========================================================================
+// NIVEL NORMAL / FULL — Architect -> Build -> Verify -> Review
+// ===========================================================================
 phase('Architect')
 
 const ARCH_SCHEMA = {
@@ -173,27 +259,27 @@ const archRun = await audited({
   label: 'architect',
   phaseName: 'Architect',
   auditReads: `${WS}/handoffs/architect.md y los slim ${WS}/handoffs/architect-for-*.md`,
-  criteria: `- El change map cubre TODOS los AC y nada fuera de alcance (cada archivo justifica su cambio).
+  criteria: `- El change map cubre TODOS los AC y nada fuera de alcance.
 - Las decisiones (ui/backend/frontend/db/needsDesign) son correctas segun el codigo real.
-- El orden de implementacion respeta dependencias (contrato backend antes de frontend).
-- Identifica contratos rideglory-api, migraciones y env deltas explicitamente.`,
+- El orden respeta dependencias (contrato backend antes de frontend).
+- Contratos rideglory-api, migraciones y env deltas explicitos.`,
   produce: (feedback) =>
     agent(
-      `Eres el Architect (Opus) de rg-exec ${SLUG}. Contrato: ${WS}/PRD_NORMALIZED.md.
+      `Eres el Architect de rg-exec ${SLUG} (nivel ${MODE}). Contrato: ${WS}/PRD_NORMALIZED.md.
 
 ${HARD_RULES}
 
-CONTEXTO: ${WS}/PRD_NORMALIZED.md (completo), .claude/agents/architect.md, .claude/skills/architect-skill.md, docs/architecture/DIAGRAMS.md (solo lectura), y el codigo real en cada area del PRD §4 (abre cada archivo, corrige §4 contra la realidad).
+CONTEXTO: ${WS}/PRD_NORMALIZED.md (completo), .claude/agents/architect.md, .claude/skills/architect-skill.md, docs/architecture/DIAGRAMS.md (solo lectura), y el codigo real en cada area del §4 (abre cada archivo, corrige §4 contra la realidad).
 
 TU TRABAJO:
-1. Decide los 5 flags (uiChanges, backendChanges, frontendChanges, dbChanges, needsDesign) segun el codigo.
-2. Change map: tabla file | action | reason | risk. Es la lista maestra; Backend/Frontend solo tocan archivos que aparezcan aqui.
-3. Orden de implementacion (dependencias entre archivos).
+1. Decide los 5 flags segun el codigo.
+2. Change map: tabla file | action | reason | risk (lista maestra; Build solo toca lo que aparezca aqui).
+3. Orden de implementacion.
 4. Contratos rideglory-api, migraciones (analysis/MIGRATION_PLAN.md si aplica), env deltas (analysis/ENV_DELTA.md si aplica). NO ejecutes migraciones ni toques .env real.
-5. Escribe ${WS}/handoffs/architect.md (## Decisiones, ## Change map, ## Contratos, ## Datos/migraciones, ## Env, ## Riesgos, ## Orden de implementacion, ## Superficie de regresion, ## Fuera de alcance) y slim ${WS}/handoffs/architect-for-backend.md / architect-for-frontend.md (segun flags) / architect-for-qa.md.
+5. Escribe ${WS}/handoffs/architect.md (## Decisiones, ## Change map, ## Contratos, ## Datos/migraciones, ## Env, ## Riesgos, ## Orden, ## Superficie de regresion, ## Fuera de alcance) y slim architect-for-backend.md / architect-for-frontend.md (segun flags) / architect-for-qa.md.
 ${fixBlock(feedback)}
 Devuelve el objeto estructurado.`,
-      { label: 'architect', phase: 'Architect', model: 'opus', schema: ARCH_SCHEMA },
+      { label: 'architect', phase: 'Architect', model: 'sonnet', schema: ARCH_SCHEMA },
     ),
 })
 
@@ -201,22 +287,21 @@ const d = archRun.result.decisions
 const changeMapStr = archRun.result.changeMap.map((c) => `${c.action} ${c.file} (${c.risk}) — ${c.reason}`).join('\n')
 
 // ---------------------------------------------------------------------------
-// Phase: Build — Design || Backend, luego Frontend (cada uno auditado por Opus)
+// Phase: Build — Design || Backend, luego Frontend
 // ---------------------------------------------------------------------------
 phase('Build')
 
 const designNeeded = d.needsDesign || d.uiChanges
 
-const [designRes, backendRes] = await parallel([
+await parallel([
   () =>
     designNeeded
       ? audited({
           label: 'design',
           phaseName: 'Build',
-          auditReads: `${WS}/handoffs/design.md y los mockups en ${WS}/analysis/design/`,
+          auditReads: `${WS}/handoffs/design.md`,
           criteria: `- Cubre todos los estados UX (idle/loading/success/cada error) de cada pantalla tocada.
-- Copy en espanol consistente con el tono existente; reusa componentes shared antes de crear nuevos.
-- Respeta el design system (texto oscuro sobre primario, AppButton/AppTextField/AppSwitch).`,
+- Copy en espanol consistente; reusa componentes shared; design system (texto oscuro sobre primario, AppButton/AppTextField/AppSwitch).`,
           produce: (feedback) =>
             agent(
               `Eres el Design agent de rg-exec ${SLUG}.
@@ -227,11 +312,11 @@ CONTEXTO: ${WS}/PRD_NORMALIZED.md, ${WS}/handoffs/architect.md, .claude/agents/d
 Change map:
 ${changeMapStr}
 
-TU TRABAJO: pantallas tocadas (NEW|EXTEND|UPDATE), estados UX, componentes (reusa primero), copy (labels/placeholders/errores), accesibilidad. Si Pencil MCP esta disponible NO toques el .pen global salvo autorizacion del architect; exporta a ${WS}/analysis/design/. Si no, mockups HTML en ${WS}/analysis/design/html-mockups/.
+TU TRABAJO: pantallas (NEW|EXTEND|UPDATE), estados UX, componentes (reusa primero), copy, accesibilidad. Pencil MCP: no toques el .pen global salvo autorizacion; exporta a ${WS}/analysis/design/. Si no, mockups HTML alli.
 Escribe ${WS}/handoffs/design.md (## Pantallas, ## Flujos UX, ## Componentes, ## Copy, ## Accesibilidad, ## Notas para Frontend).
 ${fixBlock(feedback)}
 Devuelve {status:'pass', filesChanged, testResult:'n/a', notes}.`,
-              { label: 'design', phase: 'Build', schema: IMPL_SCHEMA },
+              { label: 'design', phase: 'Build', model: 'sonnet', schema: IMPL_SCHEMA },
             ),
         }).then((r) => r.result)
       : Promise.resolve(null),
@@ -240,69 +325,67 @@ Devuelve {status:'pass', filesChanged, testResult:'n/a', notes}.`,
       ? audited({
           label: 'backend',
           phaseName: 'Build',
-          auditReads: `${WS}/handoffs/backend.md (archivos cambiados + pruebas)`,
+          auditReads: `${WS}/handoffs/backend.md`,
           criteria: `- Implementa el contrato exacto; valida inputs; SQL parametrizado; sin secretos.
-- Pruebas unitarias+integracion para cada path nuevo y para cada guardrail backend; suite en verde.
-- Solo toca archivos del change map.`,
+- Pruebas unit+integration por cada path nuevo y guardrail backend; suite en verde.
+- Solo archivos del change map.`,
           produce: (feedback) =>
             agent(
               `Eres el Backend agent (rideglory-api) de rg-exec ${SLUG}. VAS A EDITAR CODIGO. NO commitees.
 
 ${HARD_RULES}
 
-CONTEXTO: ${WS}/handoffs/architect-for-backend.md (primero), ${WS}/PRD_NORMALIZED.md (ambiguedad), ${WS}/analysis/MIGRATION_PLAN.md y ENV_DELTA.md si existen, .claude/agents/backend.md, .claude/skills/backend-skill.md. Backend vive en /Users/cami/Developer/Personal/rideglory-api.
+CONTEXTO: ${WS}/handoffs/architect-for-backend.md (primero), ${WS}/PRD_NORMALIZED.md (ambiguedad), MIGRATION_PLAN.md/ENV_DELTA.md si existen, .claude/agents/backend.md, .claude/skills/backend-skill.md. Backend en /Users/cami/Developer/Personal/rideglory-api.
 Change map:
 ${changeMapStr}
 
 TU TRABAJO:
-1. Baseline: corre las pruebas backend. Si estan rojas ANTES, reporta status:'fail' y para.
-2. Aplica cambios en el orden del architect. Migraciones solo local; nunca contra prod. Env vars solo en .env.example si ENV_DELTA lo dice.
-3. Pruebas unit+integration por cada path nuevo; cubre guardrails backend. Suite en verde.
-4. Escribe ${WS}/handoffs/backend.md (## Baseline, ## Archivos cambiados, ## Pruebas nuevas, ## Resultado final, ## Verificacion manual, ## Notas para Frontend/QA).
+1. Baseline: corre pruebas backend. Si rojas ANTES, status:'fail' y para.
+2. Aplica cambios en orden. Migraciones solo local. Env vars solo en .env.example si ENV_DELTA lo dice.
+3. Pruebas unit+integration; cubre guardrails backend. Verde.
+4. Escribe ${WS}/handoffs/backend.md (## Baseline, ## Archivos cambiados, ## Pruebas nuevas, ## Resultado final, ## Verificacion manual, ## Notas Frontend/QA).
 ${fixBlock(feedback)}
 Devuelve {status, filesChanged, testResult, notes}.`,
-              { label: 'backend', phase: 'Build', schema: IMPL_SCHEMA },
+              { label: 'backend', phase: 'Build', model: 'sonnet', schema: IMPL_SCHEMA },
             ),
         }).then((r) => r.result)
       : Promise.resolve(null),
 ])
 
-let frontendRes = null
 if (d.frontendChanges) {
-  const fr = await audited({
+  await audited({
     label: 'frontend',
     phaseName: 'Build',
-    auditReads: `${WS}/handoffs/frontend.md (archivos cambiados + pruebas)`,
-    criteria: `- Todos los estados UI (idle/loading/success/cada error); copy y componentes segun Design.
-- Cubits con ResultState (sin flags booleanos de loading/error); Clean Architecture intacta.
+    auditReads: `${WS}/handoffs/frontend.md`,
+    criteria: `- Todos los estados UI (idle/loading/success/cada error); copy/componentes segun Design.
+- Cubits con ResultState (sin flags booleanos); Clean Architecture intacta.
 - Strings en app_es.arb; widgets shared; un widget por archivo; pruebas widget/integracion que fallarian sin el cambio.
-- Solo archivos del change map; sin URLs hardcodeadas (usa el patron de base URL).`,
+- Solo archivos del change map; sin URLs hardcodeadas.`,
     produce: (feedback) =>
       agent(
         `Eres el Frontend agent (Flutter lib/) de rg-exec ${SLUG}. VAS A EDITAR CODIGO. NO commitees.
 
 ${HARD_RULES}
 
-CONTEXTO: ${WS}/handoffs/architect-for-frontend.md (primero), ${WS}/handoffs/design.md si existe, ${WS}/handoffs/backend.md si existe (contrato), .claude/agents/frontend.md, .claude/skills/frontend-skill.md.
+CONTEXTO: ${WS}/handoffs/architect-for-frontend.md (primero), ${WS}/handoffs/design.md si existe, ${WS}/handoffs/backend.md si existe, .claude/agents/frontend.md, .claude/skills/frontend-skill.md.
 Change map:
 ${changeMapStr}
 
 TU TRABAJO:
-1. Baseline: \`flutter test\`. Registra resultado.
-2. Aplica cambios en el orden del architect. Si tocas DTOs/servicios/DI/freezed, corre \`dart run build_runner build --delete-conflicting-outputs\`.
-3. Estados UI completos; validacion cliente espeja la del server; strings en app_es.arb.
+1. Baseline: \`flutter test\`.
+2. Aplica cambios en orden. Si tocas DTOs/DI/freezed: \`dart run build_runner build --delete-conflicting-outputs\`.
+3. Estados UI completos; validacion cliente espeja server; strings en app_es.arb.
 4. Pruebas widget/integracion por cada path nuevo. \`dart analyze\` y \`flutter test\` en verde.
 5. Escribe ${WS}/handoffs/frontend.md (## Baseline, ## Archivos cambiados, ## Pruebas nuevas, ## Resultado final, ## Verificacion manual, ## Notas para QA).
 ${fixBlock(feedback)}
 Devuelve {status, filesChanged, testResult, notes}.`,
-        { label: 'frontend', phase: 'Build', schema: IMPL_SCHEMA },
+        { label: 'frontend', phase: 'Build', model: 'sonnet', schema: IMPL_SCHEMA },
       ),
   })
-  frontendRes = fr.result
 }
 
 // ---------------------------------------------------------------------------
-// Phase: Verify — QA + fix loop + verificacion adversarial de cobertura
+// Phase: Verify — QA (+ adversarial solo en full) + auditoria de cobertura Opus
 // ---------------------------------------------------------------------------
 phase('Verify')
 
@@ -330,55 +413,58 @@ const QA_SCHEMA = {
 }
 
 const qaPrompt = (note) =>
-  `Eres el QA agent de rg-exec ${SLUG}.
+  `Eres el QA agent de rg-exec ${SLUG} (nivel ${MODE}).
 
 ${HARD_RULES}
 
-CONTEXTO: ${WS}/handoffs/architect-for-qa.md, ${WS}/PRD_NORMALIZED.md (§5 AC, §6 guardrails), ${WS}/handoffs/backend.md y frontend.md si existen, .claude/agents/qa.md, .claude/skills/qa-skill.md, y el diff real (\`git diff --stat\`).
+CONTEXTO: ${WS}/handoffs/architect-for-qa.md, ${WS}/PRD_NORMALIZED.md (§5 AC, §6 guardrails), backend.md/frontend.md si existen, .claude/agents/qa.md, .claude/skills/qa-skill.md, y el diff (\`git diff --stat\`).
 
 TU TRABAJO:
 1. Catalogo: cada AC §5 -> test que lo cubre (existente|nuevo|gap).
-2. Matriz de regresion: cada guardrail §6 -> mecanismo (test existente|nuevo|prueba manual).
-3. Corre la suite (backend \`npm test\`/equivalente y \`flutter test\`/\`dart analyze\`). Marca fallos pre-existentes como pre_existing; las regresiones de esta corrida son BUGs (asignados a backend|frontend con file).
-4. Escribe ${WS}/handoffs/qa.md (## Catalogo, ## Matriz de regresion, ## Ejecucion (comandos+conteos), ## Bugs, ## Pruebas manuales para el humano, ## Sign-off).
+2. Matriz de regresion: cada guardrail §6 -> mecanismo.
+3. Corre la suite (backend + \`flutter test\`/\`dart analyze\`). Fallos pre-existentes = pre_existing; regresiones = BUGs (area+file).
+4. Escribe ${WS}/handoffs/qa.md (## Catalogo, ## Matriz, ## Ejecucion, ## Bugs, ## Pruebas manuales, ## Sign-off).
 ${note ? `\nNOTA: ${note}` : ''}
 Devuelve (signOff, bugs, testSummary).`
 
-let qa = await agent(qaPrompt(null), { label: 'qa', phase: 'Verify', schema: QA_SCHEMA })
+let qa = await agent(qaPrompt(null), { label: 'qa', phase: 'Verify', model: 'sonnet', schema: QA_SCHEMA })
 
 let qaRound = 0
-while (qa.signOff === 'blocked' && qa.bugs.length > 0 && qaRound < 2) {
+while (qa.signOff === 'blocked' && qa.bugs.length > 0 && qaRound < CFG.fixCap) {
   qaRound++
-  log(`[qa] sign-off blocked (ronda ${qaRound}) — ${qa.bugs.length} bugs. Verificando adversarialmente y corrigiendo...`)
+  log(`[qa] blocked (ronda ${qaRound}) — ${qa.bugs.length} bugs. ${CFG.adversarial ? 'Verificando adversarialmente y ' : ''}corrigiendo...`)
 
-  // Verificacion adversarial: un esceptico confirma o refuta cada bug antes de gastar un fix.
-  const verified = await parallel(
-    qa.bugs.map((b) => () =>
-      agent(
-        `Eres un verificador adversarial de rg-exec ${SLUG}. Intenta REFUTAR este bug reportado por QA leyendo el codigo real (\`git diff\` + el archivo):
+  let realBugs = qa.bugs
+  if (CFG.adversarial) {
+    const verified = await parallel(
+      qa.bugs.map((b) => () =>
+        agent(
+          `Eres un verificador adversarial de rg-exec ${SLUG}. Intenta REFUTAR este bug leyendo el codigo real (\`git diff\` + el archivo):
 area=${b.area} file=${b.file}
 "${b.description}"
 ${HARD_RULES}
-Si el bug es real y reproducible, confirmed=true. Si QA se equivoco o ya esta cubierto, confirmed=false. Ante la duda, confirmed=true.
+Si es real y reproducible, confirmed=true. Si QA se equivoco o ya esta cubierto, confirmed=false. Ante la duda, confirmed=true.
 Devuelve {confirmed, reason}.`,
-        {
-          label: `verify:${b.area}`,
-          phase: 'Verify',
-          schema: {
-            type: 'object',
-            additionalProperties: false,
-            required: ['confirmed', 'reason'],
-            properties: { confirmed: { type: 'boolean' }, reason: { type: 'string' } },
+          {
+            label: `verify:${b.area}`,
+            phase: 'Verify',
+            model: 'sonnet',
+            schema: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['confirmed', 'reason'],
+              properties: { confirmed: { type: 'boolean' }, reason: { type: 'string' } },
+            },
           },
-        },
-      ).then((v) => ({ bug: b, confirmed: v.confirmed })),
-    ),
-  )
-  const realBugs = verified.filter(Boolean).filter((v) => v.confirmed).map((v) => v.bug)
-  if (realBugs.length === 0) {
-    log('[qa] todos los bugs fueron refutados por verificacion adversarial. Re-corriendo QA.')
-    qa = await agent(qaPrompt('Los bugs previos fueron refutados; reevalua honestamente.'), { label: 'qa', phase: 'Verify', schema: QA_SCHEMA })
-    continue
+        ).then((v) => ({ bug: b, confirmed: v.confirmed })),
+      ),
+    )
+    realBugs = verified.filter(Boolean).filter((v) => v.confirmed).map((v) => v.bug)
+    if (realBugs.length === 0) {
+      log('[qa] bugs refutados por verificacion adversarial. Re-corriendo QA.')
+      qa = await agent(qaPrompt('Los bugs previos fueron refutados; reevalua honestamente.'), { label: 'qa', phase: 'Verify', model: 'sonnet', schema: QA_SCHEMA })
+      continue
+    }
   }
 
   const areas = [...new Set(realBugs.map((b) => b.area))]
@@ -387,34 +473,34 @@ Devuelve {confirmed, reason}.`,
     await agent(
       `Eres el ${area === 'backend' ? 'Backend (rideglory-api)' : 'Frontend (Flutter lib/)'} agent de rg-exec ${SLUG} en MODO FIX. VAS A EDITAR CODIGO. NO commitees.
 ${HARD_RULES}
-Corrige SOLO estos bugs confirmados (no re-scaffold), re-corre las pruebas, actualiza ${WS}/handoffs/${area}.md:
+Corrige SOLO estos bugs (no re-scaffold), re-corre pruebas, actualiza ${WS}/handoffs/${area}.md:
 ${list}
 Devuelve {status, filesChanged, testResult, notes}.`,
-      { label: `${area}-fix`, phase: 'Verify', schema: IMPL_SCHEMA },
+      { label: `${area}-fix`, phase: 'Verify', model: 'sonnet', schema: IMPL_SCHEMA },
     )
   }
-  qa = await agent(qaPrompt('Re-evaluacion tras correcciones.'), { label: 'qa', phase: 'Verify', schema: QA_SCHEMA })
+  qa = await agent(qaPrompt('Re-evaluacion tras correcciones.'), { label: 'qa', phase: 'Verify', model: 'sonnet', schema: QA_SCHEMA })
 }
 
-// Auditoria Opus de adecuacion de pruebas (cada AC debe tener un test que falle sin el cambio).
+// Auditoria Opus de cobertura (cada AC con un test que falle sin el cambio).
 const qaAudit = await agent(
   `Eres el AUDITOR Opus de cobertura de pruebas de rg-exec ${SLUG}.
 ${HARD_RULES}
-Lee ${WS}/PRD_NORMALIZED.md (§5 AC, §6 guardrails), ${WS}/handoffs/qa.md y el diff de tests (\`git diff\`). Para CADA AC verifica que exista una prueba que fallaria sin el cambio (no aserciones trivialmente verdaderas).
-Si falta cobertura, requestedChanges debe nombrar el AC y el test faltante.
+Lee ${WS}/PRD_NORMALIZED.md (§5 AC, §6), ${WS}/handoffs/qa.md y el diff de tests (\`git diff\`). Para CADA AC verifica que exista una prueba que fallaria sin el cambio (no aserciones triviales).
+Si falta cobertura, requestedChanges nombra el AC y el test faltante.
 Devuelve (approved, score, findings, requestedChanges).`,
   { label: 'qa:audit', phase: 'Verify', model: 'opus', schema: AUDIT_SCHEMA },
 )
 if (!qaAudit.approved && qaAudit.requestedChanges.length > 0) {
-  log(`[audit:opus] QA cobertura insuficiente — pidiendo tests adicionales.`)
+  log(`[audit:opus] cobertura insuficiente — pidiendo tests adicionales.`)
   qa = await agent(
-    qaPrompt(`El auditor Opus exige agregar estas pruebas faltantes (agrega los tests y re-corre):\n${qaAudit.requestedChanges.map((c) => '- ' + c).join('\n')}`),
-    { label: 'qa', phase: 'Verify', schema: QA_SCHEMA },
+    qaPrompt(`El auditor Opus exige agregar estas pruebas (agregalas y re-corre):\n${qaAudit.requestedChanges.map((c) => '- ' + c).join('\n')}`),
+    { label: 'qa', phase: 'Verify', model: 'sonnet', schema: QA_SCHEMA },
   )
 }
 
 // ---------------------------------------------------------------------------
-// Phase: Review — Tech Lead Opus + cierre, con bucle de correccion
+// Phase: Review — Tech Lead + cierre, con bucle de correccion (fixCap)
 // ---------------------------------------------------------------------------
 phase('Review')
 
@@ -438,30 +524,26 @@ const VERDICT_SCHEMA = {
 }
 
 const techLeadPrompt = (note) =>
-  `Eres el Tech Lead (Opus) de rg-exec ${SLUG}. NO hay PR: revisas el working tree via \`git diff\` y produces los artefactos para el humano.
+  `Eres el Tech Lead de rg-exec ${SLUG} (nivel ${MODE}). NO hay PR: revisas el working tree via \`git diff\` y produces los artefactos para el humano.
 
 ${HARD_RULES}
 
-CONTEXTO: ${WS}/PRD_NORMALIZED.md, ${WS}/handoffs/architect.md, design.md/backend.md/frontend.md/qa.md segun existan, .claude/agents/tech_lead.md, .claude/skills/tech_lead-skill.md, y \`git diff\` + \`git diff --stat\` completos (lee cada archivo cambiado).
+CONTEXTO: ${WS}/PRD_NORMALIZED.md, ${WS}/handoffs/architect.md, design.md/backend.md/frontend.md/qa.md segun existan, .claude/agents/tech_lead.md, .claude/skills/tech_lead-skill.md, y \`git diff\` + \`git diff --stat\` (lee cada archivo cambiado).
 
 REVISION:
-- Cada hunk contra el change map del architect; marca archivos fuera del mapa.
-- Seguridad: sin secretos, sin SQL concatenado, sin XSS, sin PII en logs, auth/CORS respetados.
-- Arquitectura: Clean Architecture intacta, env vars (no URLs hardcodeadas), shape de API segun contrato, ERD vs migracion consistentes, rideglory-coding-standards.
-- Adecuacion de tests: cada AC con un test que falla sin el cambio.
-- HARD RULES respetadas (sin commits, sin tocar protegidos).
+- Cada hunk contra el change map; marca archivos fuera del mapa.
+- Seguridad: sin secretos/SQL concatenado/XSS/PII en logs; auth/CORS.
+- Arquitectura: Clean Architecture, env vars (no URLs hardcodeadas), shape API segun contrato, ERD vs migracion, rideglory-coding-standards.
+- Tests: cada AC con un test que falla sin el cambio.
 
-CIERRE (escribe ademas):
-- ${WS}/SUMMARY.md (## Objetivo, ## Que cambio por area, ## Archivos (git diff --stat), ## Pruebas, ## Riesgos/watchlist, ## Mensaje de commit sugerido).
-- ${WS}/REVIEW_CHECKLIST.md (pasos que el humano corre antes de commitear).
-- ${WS}/handoffs/tech_lead.md (## Veredicto, ## Hallazgos (file:line|severidad|fix), ## Seguridad, ## Arquitectura, ## Tests, ## Pruebas manuales).
+CIERRE: escribe ${WS}/SUMMARY.md (## Objetivo, ## Que cambio por area, ## Archivos, ## Pruebas, ## Riesgos/watchlist, ## Mensaje de commit sugerido), ${WS}/REVIEW_CHECKLIST.md (pasos manuales antes de commitear), ${WS}/handoffs/tech_lead.md (## Veredicto, ## Hallazgos, ## Seguridad, ## Arquitectura, ## Tests, ## Pruebas manuales).
 ${note ? `\nNOTA: ${note}` : ''}
-verdict='needs_changes' solo si hay blockers reales (con area+description). Devuelve (verdict, blockers, summary).`
+verdict='needs_changes' solo si hay blockers reales (area+description). Devuelve (verdict, blockers, summary).`
 
-let tl = await agent(techLeadPrompt(null), { label: 'tech-lead', phase: 'Review', model: 'opus', schema: VERDICT_SCHEMA })
+let tl = await agent(techLeadPrompt(null), { label: 'tech-lead', phase: 'Review', model: 'sonnet', schema: VERDICT_SCHEMA })
 
 let tlRound = 0
-while (tl.verdict === 'needs_changes' && tl.blockers.length > 0 && tlRound < 2) {
+while (tl.verdict === 'needs_changes' && tl.blockers.length > 0 && tlRound < CFG.fixCap) {
   tlRound++
   log(`[tech-lead] needs_changes (ronda ${tlRound}) — ${tl.blockers.length} blockers. Corrigiendo...`)
   const areas = [...new Set(tl.blockers.map((b) => b.area))]
@@ -470,18 +552,19 @@ while (tl.verdict === 'needs_changes' && tl.blockers.length > 0 && tlRound < 2) 
     await agent(
       `Eres el ${area === 'backend' ? 'Backend (rideglory-api)' : 'Frontend (Flutter lib/)'} agent de rg-exec ${SLUG} en MODO FIX (Tech Lead). VAS A EDITAR CODIGO. NO commitees.
 ${HARD_RULES}
-Corrige SOLO estos hallazgos del Tech Lead, re-corre pruebas, actualiza ${WS}/handoffs/${area}.md:
+Corrige SOLO estos hallazgos, re-corre pruebas, actualiza ${WS}/handoffs/${area}.md:
 ${list}
 Devuelve {status, filesChanged, testResult, notes}.`,
-      { label: `${area}-fix`, phase: 'Review', schema: IMPL_SCHEMA },
+      { label: `${area}-fix`, phase: 'Review', model: 'sonnet', schema: IMPL_SCHEMA },
     )
   }
-  tl = await agent(techLeadPrompt('Re-revision tras correcciones de blockers.'), { label: 'tech-lead', phase: 'Review', model: 'opus', schema: VERDICT_SCHEMA })
+  tl = await agent(techLeadPrompt('Re-revision tras correcciones.'), { label: 'tech-lead', phase: 'Review', model: 'sonnet', schema: VERDICT_SCHEMA })
 }
 
 return {
   slug: SLUG,
   workspace: WS,
+  mode: MODE,
   decisions: d,
   qaSignOff: qa.signOff,
   techLeadVerdict: tl.verdict,
@@ -491,5 +574,5 @@ return {
     reviewChecklist: `${WS}/REVIEW_CHECKLIST.md`,
     techLead: `${WS}/handoffs/tech_lead.md`,
   },
-  note: `Codigo modificado SIN commitear. Revisa con \`git diff\` y ${WS}/REVIEW_CHECKLIST.md. No se toco workflow/state.json ni el sistema /iter.`,
+  note: `Nivel ${MODE}. Codigo modificado SIN commitear. Revisa con \`git diff\` y ${WS}/REVIEW_CHECKLIST.md.`,
 }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/core/services/analytics/analytics_params.dart';
 import 'package:rideglory/features/event_registration/constants/registration_form_fields.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/presentation/cubit/registration_form_cubit.dart';
@@ -67,6 +68,18 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
     });
   }
 
+  /// Returns the canonical step name for analytics given a 0-based [stepIndex].
+  static String _stepNameFor(int stepIndex) {
+    const names = [
+      AnalyticsParams.stepNamePersonal,
+      AnalyticsParams.stepNameMedical,
+      AnalyticsParams.stepNameEmergency,
+      AnalyticsParams.stepNameVehicle,
+    ];
+    if (stepIndex < 0 || stepIndex >= names.length) return 'unknown';
+    return names[stepIndex];
+  }
+
   @override
   void initState() {
     super.initState();
@@ -79,6 +92,7 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
         initial: () => context.read<VehicleCubit>().fetchMyVehicles(),
         orElse: () {},
       );
+      context.read<RegistrationFormCubit>().onWizardStarted();
     });
   }
 
@@ -109,11 +123,12 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
     FocusScope.of(context).unfocus();
     final stepFields =
         RegistrationWizardSteps.fieldsByStep[_wizard.currentStep];
-    final isStepValid = context
-        .read<RegistrationFormCubit>()
-        .validateStepFields(stepFields);
+    final cubit = context.read<RegistrationFormCubit>();
+    final isStepValid = cubit.validateStepFields(stepFields);
     if (isStepValid) {
       _wizard.next();
+      final nextIndex = _wizard.currentStep;
+      cubit.onStepAdvanced(nextIndex, _stepNameFor(nextIndex));
       _resetScroll();
     }
   }
@@ -121,6 +136,11 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
   void _onBack() {
     FocusScope.of(context).unfocus();
     _wizard.previous();
+    final prevIndex = _wizard.currentStep;
+    context.read<RegistrationFormCubit>().onStepBack(
+      prevIndex,
+      _stepNameFor(prevIndex),
+    );
     _resetScroll();
   }
 

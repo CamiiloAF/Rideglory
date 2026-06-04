@@ -6,6 +6,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_params.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/model/upload_event_image_request.dart';
@@ -21,8 +24,10 @@ part 'event_form_cubit.freezed.dart';
 @freezed
 abstract class EventFormState with _$EventFormState {
   const factory EventFormState({
-    @Default(ResultState<EventModel>.initial()) ResultState<EventModel> saveResult,
-    @Default(ResultState<String>.initial()) ResultState<String> coverGenerationResult,
+    @Default(ResultState<EventModel>.initial())
+    ResultState<EventModel> saveResult,
+    @Default(ResultState<String>.initial())
+    ResultState<String> coverGenerationResult,
     @Default(<String>[]) List<String> waypoints,
     @Default(<AddressLocation?>[]) List<AddressLocation?> waypointLocations,
     @Default(RouteType.simple) RouteType routeType,
@@ -41,6 +46,7 @@ class EventFormCubit extends Cubit<EventFormState> {
     this._uploadEventImageUseCase,
     this._getCurrentUserIdUseCase,
     this._getGenerateCoverUseCase,
+    this._analytics,
   ) : super(const EventFormState());
 
   final formKey = GlobalKey<FormBuilderState>();
@@ -50,6 +56,7 @@ class EventFormCubit extends Cubit<EventFormState> {
   final UploadEventImageUseCase _uploadEventImageUseCase;
   final GetCurrentUserIdUseCase _getCurrentUserIdUseCase;
   final GetGenerateCoverUseCase _getGenerateCoverUseCase;
+  final AnalyticsService _analytics;
 
   EventModel? _editingEvent;
 
@@ -58,6 +65,13 @@ class EventFormCubit extends Cubit<EventFormState> {
 
   void initialize({EventModel? event}) {
     _editingEvent = event;
+
+    _analytics.logEvent(AnalyticsEvents.eventsCreateStarted, {
+      AnalyticsParams.formMode: event != null
+          ? AnalyticsParams.formModeEdit
+          : AnalyticsParams.formModeCreate,
+    }).ignore();
+
     final routeType = _detectRouteType(event);
     final routePoints = event?.routePoints ?? const [];
 
@@ -72,22 +86,26 @@ class EventFormCubit extends Cubit<EventFormState> {
       waypointLocations = routePoints.map<AddressLocation?>((p) => p).toList();
     }
 
-    emit(EventFormState(
-      waypoints: event?.waypoints ?? const [],
-      meetingPointName: event?.meetingPoint,
-      destinationName: event?.destination,
-      routeType: routeType,
-      meetingPointLocation: meetingPointLocation,
-      destinationLocation: destinationLocation,
-      waypointLocations: waypointLocations,
-    ));
+    emit(
+      EventFormState(
+        waypoints: event?.waypoints ?? const [],
+        meetingPointName: event?.meetingPoint,
+        destinationName: event?.destination,
+        routeType: routeType,
+        meetingPointLocation: meetingPointLocation,
+        destinationLocation: destinationLocation,
+        waypointLocations: waypointLocations,
+      ),
+    );
   }
 
   RouteType _detectRouteType(EventModel? event) {
     if (event == null) return RouteType.simple;
     if (event.waypoints.isNotEmpty) return RouteType.custom;
     final geoJson = event.routeGeoJson;
-    if (geoJson != null && geoJson['routeType'] == 'custom') return RouteType.custom;
+    if (geoJson != null && geoJson['routeType'] == 'custom') {
+      return RouteType.custom;
+    }
     return RouteType.simple;
   }
 
@@ -97,20 +115,24 @@ class EventFormCubit extends Cubit<EventFormState> {
     AddressLocation? meetingPointLocation,
     AddressLocation? destinationLocation,
   }) {
-    emit(state.copyWith(
-      meetingPointName: meetingPointName,
-      destinationName: destinationName,
-      meetingPointLocation: meetingPointLocation,
-      destinationLocation: destinationLocation,
-    ));
+    emit(
+      state.copyWith(
+        meetingPointName: meetingPointName,
+        destinationName: destinationName,
+        meetingPointLocation: meetingPointLocation,
+        destinationLocation: destinationLocation,
+      ),
+    );
   }
 
   void addWaypoint(String waypoint) {
     if (state.waypoints.length >= 9) return;
-    emit(state.copyWith(
-      waypoints: [...state.waypoints, waypoint],
-      waypointLocations: [...state.waypointLocations, null],
-    ));
+    emit(
+      state.copyWith(
+        waypoints: [...state.waypoints, waypoint],
+        waypointLocations: [...state.waypointLocations, null],
+      ),
+    );
   }
 
   void setWaypointLocation(int index, AddressLocation? location) {
@@ -122,10 +144,18 @@ class EventFormCubit extends Cubit<EventFormState> {
 
   void removeWaypoint(int index) {
     if (index < 0 || index >= state.waypoints.length) return;
-    final updatedWaypoints = List<String>.from(state.waypoints)..removeAt(index);
-    final updatedLocations = List<AddressLocation?>.from(state.waypointLocations);
+    final updatedWaypoints = List<String>.from(state.waypoints)
+      ..removeAt(index);
+    final updatedLocations = List<AddressLocation?>.from(
+      state.waypointLocations,
+    );
     if (index < updatedLocations.length) updatedLocations.removeAt(index);
-    emit(state.copyWith(waypoints: updatedWaypoints, waypointLocations: updatedLocations));
+    emit(
+      state.copyWith(
+        waypoints: updatedWaypoints,
+        waypointLocations: updatedLocations,
+      ),
+    );
   }
 
   void setRouteType(RouteType type) {
@@ -142,21 +172,38 @@ class EventFormCubit extends Cubit<EventFormState> {
       final mp = state.meetingPointLocation;
       final dest = state.destinationLocation;
       if (mp != null) {
-        points.add({'lat': mp.latitude, 'lng': mp.longitude, 'label': state.meetingPointName ?? ''});
+        points.add({
+          'lat': mp.latitude,
+          'lng': mp.longitude,
+          'label': state.meetingPointName ?? '',
+        });
       }
       if (dest != null) {
-        points.add({'lat': dest.latitude, 'lng': dest.longitude, 'label': state.destinationName ?? ''});
+        points.add({
+          'lat': dest.latitude,
+          'lng': dest.longitude,
+          'label': state.destinationName ?? '',
+        });
       }
     } else {
       for (var i = 0; i < state.waypoints.length; i++) {
-        final loc = i < state.waypointLocations.length ? state.waypointLocations[i] : null;
+        final loc = i < state.waypointLocations.length
+            ? state.waypointLocations[i]
+            : null;
         if (loc != null) {
-          points.add({'lat': loc.latitude, 'lng': loc.longitude, 'label': state.waypoints[i]});
+          points.add({
+            'lat': loc.latitude,
+            'lng': loc.longitude,
+            'label': state.waypoints[i],
+          });
         }
       }
     }
     if (points.isEmpty) return null;
-    return {'routeType': routeType == RouteType.simple ? 'simple' : 'custom', 'points': points};
+    return {
+      'routeType': routeType == RouteType.simple ? 'simple' : 'custom',
+      'points': points,
+    };
   }
 
   Future<void> saveEvent(
@@ -179,10 +226,23 @@ class EventFormCubit extends Cubit<EventFormState> {
           );
 
     result.fold(
-      (error) =>
-          emit(state.copyWith(saveResult: ResultState.error(error: error))),
-      (event) =>
-          emit(state.copyWith(saveResult: ResultState.data(data: event))),
+      (error) {
+        _analytics.logEvent(AnalyticsEvents.eventsPublishFailed, {
+          AnalyticsParams.formMode: isEditing
+              ? AnalyticsParams.formModeEdit
+              : AnalyticsParams.formModeCreate,
+          AnalyticsParams.failureCategory: _categorizeFailure(error),
+        }).ignore();
+        emit(state.copyWith(saveResult: ResultState.error(error: error)));
+      },
+      (event) {
+        _analytics.logEvent(AnalyticsEvents.eventsPublished, {
+          AnalyticsParams.formMode: isEditing
+              ? AnalyticsParams.formModeEdit
+              : AnalyticsParams.formModeCreate,
+        }).ignore();
+        emit(state.copyWith(saveResult: ResultState.data(data: event)));
+      },
     );
   }
 
@@ -191,11 +251,7 @@ class EventFormCubit extends Cubit<EventFormState> {
     required String eventType,
     required String city,
   }) async {
-    emit(
-      state.copyWith(
-        coverGenerationResult: const ResultState.loading(),
-      ),
-    );
+    emit(state.copyWith(coverGenerationResult: const ResultState.loading()));
     final result = await _getGenerateCoverUseCase(
       title: title,
       eventType: eventType,
@@ -203,24 +259,16 @@ class EventFormCubit extends Cubit<EventFormState> {
     );
     result.fold(
       (error) => emit(
-        state.copyWith(
-          coverGenerationResult: ResultState.error(error: error),
-        ),
+        state.copyWith(coverGenerationResult: ResultState.error(error: error)),
       ),
       (imageUrl) => emit(
-        state.copyWith(
-          coverGenerationResult: ResultState.data(data: imageUrl),
-        ),
+        state.copyWith(coverGenerationResult: ResultState.data(data: imageUrl)),
       ),
     );
   }
 
   void resetCoverGeneration() {
-    emit(
-      state.copyWith(
-        coverGenerationResult: const ResultState.initial(),
-      ),
-    );
+    emit(state.copyWith(coverGenerationResult: const ResultState.initial()));
   }
 
   Future<Either<DomainException, EventModel>> _saveExistingEvent(
@@ -303,17 +351,20 @@ class EventFormCubit extends Cubit<EventFormState> {
               <String>[]);
 
     final priceStr = formData[EventFormFields.price] as String?;
-    final parsedPrice =
-        priceStr != null && priceStr.isNotEmpty ? int.tryParse(priceStr) : null;
-    final price = (parsedPrice == null || parsedPrice == 0) ? null : parsedPrice;
+    final parsedPrice = priceStr != null && priceStr.isNotEmpty
+        ? int.tryParse(priceStr)
+        : null;
+    final price = (parsedPrice == null || parsedPrice == 0)
+        ? null
+        : parsedPrice;
 
-    final maxParticipants =
-        formData[EventFormFields.maxParticipants] as int?;
+    final maxParticipants = formData[EventFormFields.maxParticipants] as int?;
 
     final routeType =
         formData[EventFormFields.routeType] as RouteType? ?? state.routeType;
-    final waypointsToSave =
-        routeType == RouteType.custom ? state.waypoints : const <String>[];
+    final waypointsToSave = routeType == RouteType.custom
+        ? state.waypoints
+        : const <String>[];
 
     return EventModel(
       id: _editingEvent?.id,
@@ -344,13 +395,16 @@ class EventFormCubit extends Cubit<EventFormState> {
 
     final name = formData[EventFormFields.name] as String?;
     if (name == null || name.trim().isEmpty) {
-      emit(state.copyWith(
-        saveResult: const ResultState.error(
-          error: DomainException(
-            message: 'El nombre del evento es requerido para guardar el borrador.',
+      emit(
+        state.copyWith(
+          saveResult: const ResultState.error(
+            error: DomainException(
+              message:
+                  'El nombre del evento es requerido para guardar el borrador.',
+            ),
           ),
         ),
-      ));
+      );
       return null;
     }
 
@@ -368,17 +422,21 @@ class EventFormCubit extends Cubit<EventFormState> {
               <String>[]);
 
     final priceStr = formData[EventFormFields.price] as String?;
-    final parsedPrice =
-        priceStr != null && priceStr.isNotEmpty ? int.tryParse(priceStr) : null;
+    final parsedPrice = priceStr != null && priceStr.isNotEmpty
+        ? int.tryParse(priceStr)
+        : null;
     // Price of 0 or empty means free — no price stored.
-    final price = (parsedPrice == null || parsedPrice == 0) ? null : parsedPrice;
+    final price = (parsedPrice == null || parsedPrice == 0)
+        ? null
+        : parsedPrice;
 
     final maxParticipants = formData[EventFormFields.maxParticipants] as int?;
 
     final routeType =
         formData[EventFormFields.routeType] as RouteType? ?? state.routeType;
-    final waypointsToSave =
-        routeType == RouteType.custom ? state.waypoints : const <String>[];
+    final waypointsToSave = routeType == RouteType.custom
+        ? state.waypoints
+        : const <String>[];
 
     return EventModel(
       id: _editingEvent?.id,
@@ -389,13 +447,15 @@ class EventFormCubit extends Cubit<EventFormState> {
       city: (formData[EventFormFields.city] as String?)?.trim() ?? '',
       startDate: dateRange?.start ?? now,
       endDate: dateRange?.end != dateRange?.start ? dateRange?.end : null,
-      difficulty: formData[EventFormFields.difficulty] as EventDifficulty? ??
+      difficulty:
+          formData[EventFormFields.difficulty] as EventDifficulty? ??
           EventDifficulty.one,
       meetingPoint: state.meetingPointName?.trim() ?? '',
       destination: state.destinationName?.trim() ?? '',
       meetingTime: formData[EventFormFields.meetingTime] as DateTime? ?? now,
       eventType:
-          formData[EventFormFields.eventType] as EventType? ?? EventType.tourism,
+          formData[EventFormFields.eventType] as EventType? ??
+          EventType.tourism,
       allowedBrands: allowedBrands,
       price: price,
       maxParticipants: maxParticipants,
@@ -430,8 +490,14 @@ class EventFormCubit extends Cubit<EventFormState> {
     result.fold(
       (error) =>
           emit(state.copyWith(saveResult: ResultState.error(error: error))),
-      (event) =>
-          emit(state.copyWith(saveResult: ResultState.data(data: event))),
+      (event) {
+        _analytics.logEvent(AnalyticsEvents.eventsDraftSaved, {
+          AnalyticsParams.formMode: isEditing
+              ? AnalyticsParams.formModeEdit
+              : AnalyticsParams.formModeCreate,
+        }).ignore();
+        emit(state.copyWith(saveResult: ResultState.data(data: event)));
+      },
     );
   }
 
@@ -445,5 +511,23 @@ class EventFormCubit extends Cubit<EventFormState> {
       emit(state.copyWith(saveResult: ResultState.error(error: error)));
       return null;
     }, (userId) => userId);
+  }
+
+  /// Maps a [DomainException] to a non-PII failure category string.
+  String _categorizeFailure(DomainException error) {
+    final msg = error.message.toLowerCase();
+    if (msg.contains('network') ||
+        msg.contains('timeout') ||
+        msg.contains('connection') ||
+        msg.contains('socket')) {
+      return AnalyticsParams.failureCategoryNetwork;
+    }
+    if (msg.contains('404') || msg.contains('not found')) {
+      return AnalyticsParams.failureCategoryNotFound;
+    }
+    if (msg.contains('valid') || msg.contains('required')) {
+      return AnalyticsParams.failureCategoryValidation;
+    }
+    return AnalyticsParams.failureCategoryUnknown;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:injectable/injectable.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/features/events/domain/repository/tracking_repository.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_rider_profile_use_case.dart';
@@ -18,6 +19,7 @@ class LiveTrackingCubitFactory {
     this._getRiderProfileUseCase,
     this._authService,
     this._trackingRepository,
+    this._analyticsService,
   );
 
   final WatchActiveRidersUseCase _watchActiveRidersUseCase;
@@ -27,6 +29,7 @@ class LiveTrackingCubitFactory {
   final GetRiderProfileUseCase _getRiderProfileUseCase;
   final AuthService _authService;
   final TrackingRepository _trackingRepository;
+  final AnalyticsService _analyticsService;
 
   LiveTrackingCubit create({
     required String eventId,
@@ -42,6 +45,7 @@ class LiveTrackingCubitFactory {
       getRiderProfileUseCase: _getRiderProfileUseCase,
       authService: _authService,
       trackingRepository: _trackingRepository,
+      analyticsService: _analyticsService,
     );
   }
 }

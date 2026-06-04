@@ -37,5 +37,24 @@ class UserStorageService {
     return UserDto.fromJson(json);
   }
 
+  // ── Analytics consent (device-level, no uid prefix) ──────────────────────
+
+  static const _analyticsEnabledKey = 'analytics_enabled';
+
+  /// Returns whether analytics collection is enabled.
+  /// Defaults to [true] (opt-in) when the key is absent.
+  Future<bool> getAnalyticsEnabled() async {
+    final raw = await _storage.read(key: _analyticsEnabledKey);
+    if (raw == null) return true;
+    return raw == 'true';
+  }
+
+  Future<void> setAnalyticsEnabled(bool enabled) {
+    return _storage.write(
+      key: _analyticsEnabledKey,
+      value: enabled.toString(),
+    );
+  }
+
   String _key(String firebaseUid) => '$_keyPrefix$firebaseUid';
 }

@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_params.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/authentication/constants/auth_form_fields.dart';
@@ -21,9 +25,35 @@ class SignupView extends StatefulWidget {
 
 class _SignupViewState extends State<SignupView> {
   final _formKey = GlobalKey<FormBuilderState>();
+  bool _completedSuccessfully = false;
+
+  AnalyticsService get _analytics => getIt<AnalyticsService>();
+
+  @override
+  void initState() {
+    super.initState();
+    _analytics
+        .logEvent(AnalyticsEvents.authFlowStarted, {
+          AnalyticsParams.authMethod: AnalyticsParams.authMethodSignup,
+        })
+        .ignore();
+  }
+
+  @override
+  void dispose() {
+    if (!_completedSuccessfully) {
+      _analytics
+          .logEvent(AnalyticsEvents.authAbandoned, {
+            AnalyticsParams.authMethod: AnalyticsParams.authMethodSignup,
+          })
+          .ignore();
+    }
+    super.dispose();
+  }
 
   void _onAuthStateChanged(BuildContext context, AuthState state) {
     if (state.isAuthenticated) {
+      _completedSuccessfully = true;
       context.pushReplacementNamed(AppRoutes.home);
     } else if (state.hasError) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -37,6 +67,11 @@ class _SignupViewState extends State<SignupView> {
 
   void _handleSignup(BuildContext context) {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
+      _analytics
+          .logEvent(AnalyticsEvents.authMethodSelected, {
+            AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
+          })
+          .ignore();
       final data = _formKey.currentState!.value;
       context.read<AuthCubit>().signUpWithEmail(
         fullName: (data[AuthFormFields.fullName] as String).trim(),

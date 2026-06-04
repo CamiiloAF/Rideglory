@@ -4,6 +4,9 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_params.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/approve_registration_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/get_event_registrations_use_case.dart';
@@ -18,6 +21,7 @@ class AttendeesCubit extends Cubit<ResultState<List<EventRegistrationModel>>> {
     this._rejectUseCase,
     this._setReadyForEditUseCase,
     this._cache,
+    this._analytics,
   ) : super(const ResultState.initial());
 
   final GetEventRegistrationsUseCase _getRegistrationsUseCase;
@@ -25,6 +29,7 @@ class AttendeesCubit extends Cubit<ResultState<List<EventRegistrationModel>>> {
   final RejectRegistrationUseCase _rejectUseCase;
   final SetRegistrationReadyForEditUseCase _setReadyForEditUseCase;
   final AttendeesCache _cache;
+  final AnalyticsService _analytics;
 
   /// Canal lateral para errores transitorios de acciones (aprobar/rechazar/
   /// solicitar edición). Se mantiene aparte del [state] de lista para no
@@ -101,8 +106,10 @@ class AttendeesCubit extends Cubit<ResultState<List<EventRegistrationModel>>> {
     String registrationId,
     RegistrationStatus newStatus,
     Future<Either<DomainException, EventRegistrationModel>> Function(String)
-    action,
-  ) async {
+    action, {
+    required String successEvent,
+    required String actionLabel,
+  }) async {
     final previousStatus = _updateRegistrationStatusLocally(
       registrationId,
       newStatus,
@@ -110,10 +117,18 @@ class AttendeesCubit extends Cubit<ResultState<List<EventRegistrationModel>>> {
     if (previousStatus == null) return;
 
     final result = await action(registrationId);
-    result.fold((error) {
-      _updateRegistrationStatusLocally(registrationId, previousStatus);
-      _actionErrorController.add(error);
-    }, (_) {});
+    result.fold(
+      (error) {
+        _updateRegistrationStatusLocally(registrationId, previousStatus);
+        _actionErrorController.add(error);
+        _analytics.logEvent(AnalyticsEvents.registrationApprovalFailed, {
+          AnalyticsParams.approvalAction: actionLabel,
+        }).ignore();
+      },
+      (_) {
+        _analytics.logEvent(successEvent).ignore();
+      },
+    );
   }
 
   Future<void> approveRegistration(String registrationId) {
@@ -121,6 +136,8 @@ class AttendeesCubit extends Cubit<ResultState<List<EventRegistrationModel>>> {
       registrationId,
       RegistrationStatus.approved,
       _approveUseCase.call,
+      successEvent: AnalyticsEvents.registrationApproved,
+      actionLabel: AnalyticsParams.approvalActionApprove,
     );
   }
 
@@ -129,6 +146,8 @@ class AttendeesCubit extends Cubit<ResultState<List<EventRegistrationModel>>> {
       registrationId,
       RegistrationStatus.rejected,
       _rejectUseCase.call,
+      successEvent: AnalyticsEvents.registrationRejected,
+      actionLabel: AnalyticsParams.approvalActionReject,
     );
   }
 
@@ -137,6 +156,8 @@ class AttendeesCubit extends Cubit<ResultState<List<EventRegistrationModel>>> {
       registrationId,
       RegistrationStatus.readyForEdit,
       _setReadyForEditUseCase.call,
+      successEvent: AnalyticsEvents.registrationReadyForEdit,
+      actionLabel: AnalyticsParams.approvalActionReadyForEdit,
     );
   }
 

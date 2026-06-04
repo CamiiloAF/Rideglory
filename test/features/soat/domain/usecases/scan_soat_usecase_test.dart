@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_params.dart';
 import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/core/services/ocr/ocr_result.dart';
 import 'package:rideglory/core/services/ocr/ocr_service.dart';
@@ -50,38 +52,174 @@ void main() {
     ).thenAnswer((_) async => nonEmptyOcr);
   });
 
-  test('emits validationFailed when dates failed the span rule', () async {
-    // Two dates were found but failed the 360–370 day rule: not prefillable,
-    // and the parser flags it so the use case can report validation_failed
-    // instead of a generic low_confidence miss.
-    when(
-      () => parseSoatText(any()),
-    ).thenReturn(const SoatExtraction(datesFailedValidation: true));
+  // ── Fase 2: verificación de constantes AnalyticsEvents ───────────────────
 
-    await expectLater(
-      () => useCase(file: file, source: SoatScanSource.gallery),
-      throwsA(
-        isA<SoatScanException>().having(
-          (exception) => exception.reason,
-          'reason',
-          SoatScanFailureReason.validationFailed,
-        ),
-      ),
-    );
-
-    verify(
-      () => analytics.logEvent('soat_scan_failed', {
-        'failure_reason': 'validation_failed',
-      }),
-    ).called(1);
-  });
-
-  test(
-    'emits lowConfidence when fields extracted but no date failure',
-    () async {
+  group('evento soat_scan_attempted —', () {
+    test('usa la constante AnalyticsEvents.soatScanAttempted (no literal)',
+        () async {
       when(
         () => parseSoatText(any()),
-      ).thenReturn(const SoatExtraction(insurer: 'SURA'));
+      ).thenReturn(const SoatExtraction.empty());
+
+      await expectLater(
+        () => useCase(file: file, source: SoatScanSource.gallery),
+        throwsA(isA<SoatScanException>()),
+      );
+
+      // Verifica la constante, no el string literal directamente.
+      verify(
+        () => analytics.logEvent(AnalyticsEvents.soatScanAttempted),
+      ).called(1);
+    });
+  });
+
+  group('evento soat_scan_success —', () {
+    setUp(() {
+      when(() => parseSoatText(any())).thenReturn(
+        const SoatExtraction(
+          insurer: 'SURA',
+          insurerConfidence: OcrFieldConfidence.high,
+          policyNumber: '0123456789',
+          policyNumberConfidence: OcrFieldConfidence.high,
+        ),
+      );
+    });
+
+    test('usa la constante AnalyticsEvents.soatScanSuccess (no literal)',
+        () async {
+      await useCase(file: file, source: SoatScanSource.gallery);
+
+      verify(
+        () => analytics.logEvent(AnalyticsEvents.soatScanSuccess, any()),
+      ).called(1);
+    });
+
+    test(
+        'insurer_detected es 1 (int) cuando hay aseguradora — no el nombre',
+        () async {
+      await useCase(file: file, source: SoatScanSource.gallery);
+
+      final captured =
+          verify(
+                () => analytics.logEvent(
+                  AnalyticsEvents.soatScanSuccess,
+                  captureAny(),
+                ),
+              ).captured.single
+              as Map<String, Object>;
+
+      expect(
+        captured[AnalyticsParams.insurerDetected],
+        1,
+        reason: 'insurer_detected debe ser 1 cuando la aseguradora fue detectada',
+      );
+      expect(
+        captured[AnalyticsParams.insurerDetected],
+        isA<int>(),
+        reason: 'insurer_detected debe ser int, no bool ni String',
+      );
+      // Aserción negativa: nunca debe llegar el nombre de la aseguradora.
+      expect(
+        captured.values.whereType<String>().any(
+              (value) =>
+                  value.toUpperCase().contains('SURA') ||
+                  value.toUpperCase().contains('ASEGURADORA'),
+            ),
+        isFalse,
+        reason: 'El nombre de la aseguradora NO debe viajar en el payload',
+      );
+    });
+
+    test('insurer_detected es 0 cuando no hay aseguradora', () async {
+      when(() => parseSoatText(any())).thenReturn(
+        const SoatExtraction(
+          policyNumber: '0123456789',
+          policyNumberConfidence: OcrFieldConfidence.high,
+          // Sin campo insurer
+          insurerConfidence: OcrFieldConfidence.high,
+        ),
+      );
+
+      await useCase(file: file, source: SoatScanSource.gallery);
+
+      final captured =
+          verify(
+                () => analytics.logEvent(
+                  AnalyticsEvents.soatScanSuccess,
+                  captureAny(),
+                ),
+              ).captured.single
+              as Map<String, Object>;
+
+      expect(captured[AnalyticsParams.insurerDetected], 0);
+    });
+
+    test('had_pdf es 1 para fuente PDF', () async {
+      when(
+        () => rasterizer.rasterizeFirstPage(any()),
+      ).thenAnswer((_) async => file);
+      when(() => parseSoatText(any())).thenReturn(
+        const SoatExtraction(
+          insurer: 'SURA',
+          insurerConfidence: OcrFieldConfidence.high,
+          policyNumber: '0123456789',
+          policyNumberConfidence: OcrFieldConfidence.high,
+        ),
+      );
+
+      final result = await useCase(file: file, source: SoatScanSource.pdf);
+
+      expect(result, isA<SoatScanResult>());
+      final captured =
+          verify(
+                () => analytics.logEvent(
+                  AnalyticsEvents.soatScanSuccess,
+                  captureAny(),
+                ),
+              ).captured.single
+              as Map<String, Object>;
+      expect(captured[AnalyticsParams.hadPdf], 1);
+      expect(captured[AnalyticsParams.hadPdf], isA<int>());
+    });
+
+    test('had_pdf es 0 para fuente imagen', () async {
+      await useCase(file: file, source: SoatScanSource.camera);
+
+      final captured =
+          verify(
+                () => analytics.logEvent(
+                  AnalyticsEvents.soatScanSuccess,
+                  captureAny(),
+                ),
+              ).captured.single
+              as Map<String, Object>;
+      expect(captured[AnalyticsParams.hadPdf], 0);
+    });
+
+    test('fields_extracted_count es int', () async {
+      await useCase(file: file, source: SoatScanSource.gallery);
+
+      final captured =
+          verify(
+                () => analytics.logEvent(
+                  AnalyticsEvents.soatScanSuccess,
+                  captureAny(),
+                ),
+              ).captured.single
+              as Map<String, Object>;
+      expect(
+        captured[AnalyticsParams.fieldsExtractedCount],
+        isA<int>(),
+      );
+    });
+  });
+
+  group('evento soat_scan_failed —', () {
+    test('usa constante AnalyticsEvents.soatScanFailed con failureReason key',
+        () async {
+      when(
+        () => parseSoatText(any()),
+      ).thenReturn(const SoatExtraction(datesFailedValidation: true));
 
       await expectLater(
         () => useCase(file: file, source: SoatScanSource.gallery),
@@ -89,32 +227,88 @@ void main() {
           isA<SoatScanException>().having(
             (exception) => exception.reason,
             'reason',
-            SoatScanFailureReason.lowConfidence,
+            SoatScanFailureReason.validationFailed,
           ),
         ),
       );
-    },
-  );
 
-  test('emits noTextDetected when nothing was extracted', () async {
-    when(() => parseSoatText(any())).thenReturn(const SoatExtraction.empty());
+      final captured =
+          verify(
+                () => analytics.logEvent(
+                  AnalyticsEvents.soatScanFailed,
+                  captureAny(),
+                ),
+              ).captured.single
+              as Map<String, Object>;
 
-    await expectLater(
-      () => useCase(file: file, source: SoatScanSource.gallery),
-      throwsA(
-        isA<SoatScanException>().having(
-          (exception) => exception.reason,
-          'reason',
-          SoatScanFailureReason.noTextDetected,
+      // Usa la clave de constante, no literal.
+      expect(captured.containsKey(AnalyticsParams.failureReason), isTrue);
+      expect(captured[AnalyticsParams.failureReason], 'validation_failed');
+    });
+
+    test('emits validationFailed when dates failed the span rule', () async {
+      when(
+        () => parseSoatText(any()),
+      ).thenReturn(const SoatExtraction(datesFailedValidation: true));
+
+      await expectLater(
+        () => useCase(file: file, source: SoatScanSource.gallery),
+        throwsA(
+          isA<SoatScanException>().having(
+            (exception) => exception.reason,
+            'reason',
+            SoatScanFailureReason.validationFailed,
+          ),
         ),
-      ),
+      );
+
+      verify(
+        () => analytics.logEvent(AnalyticsEvents.soatScanFailed, {
+          AnalyticsParams.failureReason: 'validation_failed',
+        }),
+      ).called(1);
+    });
+
+    test(
+      'emits lowConfidence when fields extracted but no date failure',
+      () async {
+        when(
+          () => parseSoatText(any()),
+        ).thenReturn(const SoatExtraction(insurer: 'SURA'));
+
+        await expectLater(
+          () => useCase(file: file, source: SoatScanSource.gallery),
+          throwsA(
+            isA<SoatScanException>().having(
+              (exception) => exception.reason,
+              'reason',
+              SoatScanFailureReason.lowConfidence,
+            ),
+          ),
+        );
+      },
     );
+
+    test('emits noTextDetected when nothing was extracted', () async {
+      when(() => parseSoatText(any())).thenReturn(const SoatExtraction.empty());
+
+      await expectLater(
+        () => useCase(file: file, source: SoatScanSource.gallery),
+        throwsA(
+          isA<SoatScanException>().having(
+            (exception) => exception.reason,
+            'reason',
+            SoatScanFailureReason.noTextDetected,
+          ),
+        ),
+      );
+    });
   });
 
-  test('logs had_pdf as int (1) on success for PDF source', () async {
-    when(
-      () => rasterizer.rasterizeFirstPage(any()),
-    ).thenAnswer((_) async => file);
+  // ── Aserción negativa global: nunca un String de aseguradora en ningún
+  // evento ────────────────────────────────────────────────────────────────────
+  test('ningún logEvent envía el nombre de la aseguradora como valor',
+      () async {
     when(() => parseSoatText(any())).thenReturn(
       const SoatExtraction(
         insurer: 'SURA',
@@ -124,35 +318,24 @@ void main() {
       ),
     );
 
-    final result = await useCase(file: file, source: SoatScanSource.pdf);
+    await useCase(file: file, source: SoatScanSource.gallery);
 
-    expect(result, isA<SoatScanResult>());
-    final captured =
-        verify(
-              () => analytics.logEvent('soat_scan_success', captureAny()),
-            ).captured.single
-            as Map<String, Object>;
-    expect(captured['had_pdf'], 1);
-    expect(captured['had_pdf'], isA<int>());
-  });
+    final allCaptured = verify(
+      () => analytics.logEvent(any(), captureAny()),
+    ).captured;
 
-  test('logs had_pdf as int (0) on success for image source', () async {
-    when(() => parseSoatText(any())).thenReturn(
-      const SoatExtraction(
-        insurer: 'SURA',
-        insurerConfidence: OcrFieldConfidence.high,
-        policyNumber: '0123456789',
-        policyNumberConfidence: OcrFieldConfidence.high,
-      ),
-    );
-
-    await useCase(file: file, source: SoatScanSource.camera);
-
-    final captured =
-        verify(
-              () => analytics.logEvent('soat_scan_success', captureAny()),
-            ).captured.single
-            as Map<String, Object>;
-    expect(captured['had_pdf'], 0);
+    for (final params in allCaptured) {
+      if (params is Map<String, Object>) {
+        for (final value in params.values) {
+          if (value is String) {
+            expect(
+              value.toUpperCase().contains('SURA'),
+              isFalse,
+              reason: 'El nombre de la aseguradora no debe viajar en eventos',
+            );
+          }
+        }
+      }
+    }
   });
 }

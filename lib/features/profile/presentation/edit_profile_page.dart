@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/features/profile/presentation/cubits/edit_profile_cubit.dart';
 import 'package:rideglory/features/profile/presentation/widgets/profile_edit_avatar.dart';
 import 'package:rideglory/features/profile/presentation/widgets/profile_form_section_header.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
@@ -18,9 +20,18 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   final _formKey = GlobalKey<FormBuilderState>();
+  late final EditProfileCubit _editCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _editCubit = GetIt.instance<EditProfileCubit>();
+    _editCubit.notifyEditStarted();
+  }
 
   void _save() {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
+      _editCubit.notifyEditSucceeded();
       context.pop();
     }
   }

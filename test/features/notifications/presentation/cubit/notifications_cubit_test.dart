@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/notifications/domain/model/notification_model.dart';
 import 'package:rideglory/features/notifications/domain/repository/notifications_repository.dart';
 import 'package:rideglory/features/notifications/domain/usecases/get_notifications_usecase.dart';
@@ -20,6 +21,8 @@ class MockMarkNotificationReadUseCase extends Mock
 
 class MockMarkAllNotificationsReadUseCase extends Mock
     implements MarkAllNotificationsReadUseCase {}
+
+class MockAnalyticsService extends Mock implements AnalyticsService {}
 
 NotificationModel _buildNotification({
   required String id,
@@ -48,10 +51,14 @@ void main() {
     mockGetNotifications = MockGetNotificationsUseCase();
     mockMarkRead = MockMarkNotificationReadUseCase();
     mockMarkAllRead = MockMarkAllNotificationsReadUseCase();
+    final mockAnalytics = MockAnalyticsService();
+    when(() => mockAnalytics.logEvent(any(), any())).thenAnswer((_) async {});
+    when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
     cubit = NotificationsCubit(
       mockGetNotifications,
       mockMarkRead,
       mockMarkAllRead,
+      mockAnalytics,
     );
   });
 

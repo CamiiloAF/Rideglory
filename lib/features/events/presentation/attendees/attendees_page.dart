@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/approve_registration_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/get_event_registrations_use_case.dart';
@@ -24,6 +25,7 @@ class AttendeesPage extends StatelessWidget {
         getIt<RejectRegistrationUseCase>(),
         getIt<SetRegistrationReadyForEditUseCase>(),
         getIt<AttendeesCache>(),
+        getIt<AnalyticsService>(),
       )..fetchAttendees(event.id!),
       child: AttendeesView(event: event),
     );

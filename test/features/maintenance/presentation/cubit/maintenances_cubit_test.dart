@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_user_list_aggregate.dart';
 import 'package:rideglory/features/maintenance/domain/use_cases/get_maintenance_list_use_case.dart';
@@ -11,6 +12,8 @@ import 'package:rideglory/features/maintenance/presentation/list/maintenances/ma
 
 class MockGetMaintenanceListUseCase extends Mock
     implements GetMaintenanceListUseCase {}
+
+class MockAnalyticsService extends Mock implements AnalyticsService {}
 
 final _scheduledMaintenance = MaintenanceModel(
   id: 'm1',
@@ -34,7 +37,10 @@ void main() {
 
   setUp(() {
     mockUseCase = MockGetMaintenanceListUseCase();
-    cubit = MaintenancesCubit(mockUseCase);
+    final mockAnalytics = MockAnalyticsService();
+    when(() => mockAnalytics.logEvent(any(), any())).thenAnswer((_) async {});
+    when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
+    cubit = MaintenancesCubit(mockUseCase, mockAnalytics);
   });
 
   tearDown(() {

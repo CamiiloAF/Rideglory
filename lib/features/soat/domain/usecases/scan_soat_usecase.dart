@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:injectable/injectable.dart';
 
+import '../../../../core/services/analytics/analytics_events.dart';
+import '../../../../core/services/analytics/analytics_params.dart';
 import '../../../../core/services/analytics/analytics_service.dart';
 import '../../../../core/services/ocr/ocr_service.dart';
 import '../../data/parser/soat_pdf_rasterizer.dart';
@@ -31,7 +33,7 @@ class ScanSoatUseCase {
     required File file,
     required SoatScanSource source,
   }) async {
-    await _analytics.logEvent('soat_scan_attempted');
+    await _analytics.logEvent(AnalyticsEvents.soatScanAttempted);
 
     File imageFile;
     try {
@@ -66,20 +68,23 @@ class ScanSoatUseCase {
       throw SoatScanException(reason);
     }
 
-    await _analytics.logEvent('soat_scan_success', {
-      'fields_extracted_count': extraction.extractedFieldsCount,
-      'insurer_detected': extraction.insurer ?? 'none',
+    await _analytics.logEvent(AnalyticsEvents.soatScanSuccess, {
+      AnalyticsParams.fieldsExtractedCount: extraction.extractedFieldsCount,
+      // Privacidad: solo se envía si se detectó aseguradora (1) o no (0).
+      // El nombre de la aseguradora es cuasi-PII / alta cardinalidad y NO
+      // se envía. Decisión documentada en docs/features/analytics-taxonomy.md.
+      AnalyticsParams.insurerDetected: extraction.insurer != null ? 1 : 0,
       // Firebase Analytics drops bool params; send 0/1 so it reaches the
       // console.
-      'had_pdf': source == SoatScanSource.pdf ? 1 : 0,
+      AnalyticsParams.hadPdf: source == SoatScanSource.pdf ? 1 : 0,
     });
 
     return SoatScanResult(extraction: extraction);
   }
 
   Future<void> _logFailure(SoatScanFailureReason reason) {
-    return _analytics.logEvent('soat_scan_failed', {
-      'failure_reason': reason.analyticsValue,
+    return _analytics.logEvent(AnalyticsEvents.soatScanFailed, {
+      AnalyticsParams.failureReason: reason.analyticsValue,
     });
   }
 }

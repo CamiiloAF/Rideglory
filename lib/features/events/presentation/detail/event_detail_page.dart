@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_params.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
+import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/approve_registration_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/cancel_event_registration_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/get_event_registrations_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/get_my_registration_for_event_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/reject_registration_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/set_registration_ready_for_edit_use_case.dart';
+import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_event_by_id_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/publish_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
@@ -27,19 +32,47 @@ class EventDetailPage extends StatelessWidget {
       providers: [
         if (!params.isFromEventDetailByIdPage)
           BlocProvider(
-            create: (_) => EventDetailCubit(
-              getIt<GetMyRegistrationForEventUseCase>(),
-              getIt<CancelEventRegistrationUseCase>(),
-              getIt<GetEventByIdUseCase>(),
-              getIt<UpdateEventUseCase>(),
-              getIt<PublishEventUseCase>(),
-              getIt<GetEventRegistrationsUseCase>(),
-              getIt<ApproveRegistrationUseCase>(),
-              getIt<RejectRegistrationUseCase>(),
-              getIt<SetRegistrationReadyForEditUseCase>(),
-            )
-              ..loadMyRegistration(params.event.id!)
-              ..loadAttendees(params.event.id!),
+            create: (context) {
+              // Emitir event_detail_viewed UNA sola vez por apertura desde
+              // lista o borrador. El create: corre una vez al construir el
+              // subárbol — nunca en build() para evitar emisiones por rebuilds.
+              // Cuando isFromEventDetailByIdPage==true este bloque NO corre,
+              // así que no hay doble conteo (ver Fase 6, Riesgo #2).
+              final currentUserId =
+                  context.read<AuthCubit>().state.currentUser?.id;
+              final event = params.event;
+              final isDraft = event.state == EventState.draft;
+              getIt<AnalyticsService>()
+                  .logEvent(AnalyticsEvents.eventDetailViewed, {
+                    AnalyticsParams.eventType: event.eventType.apiValue,
+                    AnalyticsParams.eventState: event.state.name,
+                    AnalyticsParams.isOwner:
+                        (currentUserId != null &&
+                                currentUserId == event.ownerId)
+                            ? 1
+                            : 0,
+                    AnalyticsParams.isReadOnly: isDraft ? 1 : 0,
+                    AnalyticsParams.source:
+                        isDraft
+                            ? AnalyticsParams.sourceDraft
+                            : AnalyticsParams.sourceList,
+                  })
+                  .ignore();
+              return EventDetailCubit(
+                getIt<GetMyRegistrationForEventUseCase>(),
+                getIt<CancelEventRegistrationUseCase>(),
+                getIt<GetEventByIdUseCase>(),
+                getIt<UpdateEventUseCase>(),
+                getIt<PublishEventUseCase>(),
+                getIt<GetEventRegistrationsUseCase>(),
+                getIt<ApproveRegistrationUseCase>(),
+                getIt<RejectRegistrationUseCase>(),
+                getIt<SetRegistrationReadyForEditUseCase>(),
+                getIt<AnalyticsService>(),
+              )
+                ..loadMyRegistration(params.event.id!)
+                ..loadAttendees(params.event.id!);
+            },
           ),
         BlocProvider(create: (_) => getIt<EventDeleteCubit>()),
       ],

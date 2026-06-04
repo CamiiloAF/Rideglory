@@ -374,6 +374,8 @@
   "profile_settings": "Configuración",
   "profile_registrations": "Mis inscripciones",
   "profile_maintenances": "Mantenimientos",
+  "profile_analyticsOptOutLabel": "Compartir datos de uso anónimos",
+  "profile_analyticsOptOutSaveError": "No pudimos guardar tu preferencia. Inténtalo de nuevo.",
   "registration_registrationPageTitle": "Inscripción al Evento",
   "registration_myRegistrations": "Mis inscripciones",
   "registration_editRegistration": "Editar inscripción",

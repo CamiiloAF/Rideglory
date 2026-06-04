@@ -146,18 +146,27 @@ const FINAL_PLAN_SCHEMA = {
       items: {
         type: 'object',
         additionalProperties: false,
-        required: ['id', 'title', 'goal', 'summary', 'dependsOn'],
+        required: ['id', 'title', 'goal', 'summary', 'dependsOn', 'recommendedTier', 'tierRationale'],
         properties: {
           id: { type: 'integer' },
           title: { type: 'string' },
           goal: { type: 'string' },
           summary: { type: 'string' },
           dependsOn: { type: 'array', items: { type: 'integer' } },
+          recommendedTier: { type: 'string', enum: ['lite', 'normal', 'full'] },
+          tierRationale: { type: 'string', description: 'por que ese nivel: riesgo, blast radius, contratos/migraciones, reversibilidad' },
         },
       },
     },
   },
 }
+
+// Rubrica de niveles de ejecucion (la usa la sintesis para recomendar y rg-exec para ejecutar).
+const TIER_RUBRIC = `RUBRICA DE NIVEL DE EJECUCION (rg-exec) por fase:
+- lite  = cambio mecanico / bajo riesgo, una sola area, reversible, SIN contratos rideglory-api, SIN migraciones, SIN seguridad/PII central. Ej: agregar call sites, constantes/taxonomia, copy, config, un observer, UI simple. (1 implementador + 1 ronda de auditor Opus).
+- normal= feature acotada con algo de logica o UI, una area principal, riesgo medio, sin migraciones ni cambios de contrato sensibles. (Architect + Build + QA + 2 rondas de auditor + Tech Lead).
+- full  = complejo o riesgoso: cambios de contrato rideglory-api, migraciones de datos, seguridad/auth/PII central, cross-cutting, alto blast radius o dificil de revertir. (todo + QA adversarial + 3 rondas + fix loops).
+Ante la duda entre dos niveles, recomienda el MENOR que cubra el riesgo y explica por que.`
 
 // ---------------------------------------------------------------------------
 // Phase: Intake
@@ -319,10 +328,12 @@ Ajustes recibidos:
 ${archAdj}
 ${planAdj}
 
+${TIER_RUBRIC}
+
 TU TRABAJO:
 1. Integra los ajustes en una lista de fases FINAL coherente.
-2. Cada fase: id (renumera 1..N en orden de ejecucion), title, goal, summary, dependsOn.
-3. Escribe ${WS}/05-sintesis.md: ## Overview, ## Cambios aplicados, ## Lista final de fases (tabla), ## Supuestos y riesgos.
+2. Cada fase: id (renumera 1..N en orden de ejecucion), title, goal, summary, dependsOn, y ademas recommendedTier (lite|normal|full) + tierRationale segun la RUBRICA de arriba.
+3. Escribe ${WS}/05-sintesis.md: ## Overview, ## Cambios aplicados, ## Lista final de fases (tabla con columna Nivel + por que), ## Supuestos y riesgos.
 ${feedback ? `\nMODO CORRECCION — el Auditor Opus pidio aplicar TODOS estos cambios y reescribir ${WS}/05-sintesis.md:\n${feedback.requestedChanges.map((c) => '- ' + c).join('\n')}` : ''}
 Devuelve (overview, phases).`,
       { label: 'po-synthesis', phase: 'Synthesize', schema: FINAL_PLAN_SCHEMA },
@@ -363,6 +374,7 @@ FASE:
 - objetivo: ${p.goal}
 - resumen: ${p.summary}
 - depende de: ${JSON.stringify(p.dependsOn)}
+- nivel rg-exec recomendado: ${p.recommendedTier} — ${p.tierRationale}
 
 ESCRIBE EXACTAMENTE ${rel} con:
 # Fase ${p.id} — ${p.title}
@@ -376,6 +388,7 @@ ESCRIBE EXACTAMENTE ${rel} con:
 ## Pruebas (unitarias/widget/integracion)
 ## Riesgos y mitigaciones
 ## Dependencias (fases prerequisito y por que)
+## Ejecucion recomendada (nivel rg-exec: ${p.recommendedTier}) — por que ese nivel: ${p.tierRationale}
 
 Abre el codigo si dudas de una ruta. Respeta Clean Architecture + rideglory-coding-standards.
 ${feedback ? `\nMODO CORRECCION — el Auditor Opus pidio aplicar TODOS estos cambios y reescribir ${rel}:\n${feedback.requestedChanges.map((c) => '- ' + c).join('\n')}` : ''}
@@ -383,12 +396,12 @@ Devuelve {file, title}.`,
           { label: `fase-${pad2(p.id)}`, phase: 'Write phases', schema: FILE_SCHEMA },
         ),
     })
-    return { id: p.id, file: fname, title: result.title, approved: verdict.approved, score: verdict.score }
+    return { id: p.id, file: fname, title: result.title, approved: verdict.approved, score: verdict.score, tier: p.recommendedTier }
   }),
 )
 
 const writtenPhases = phaseResults.filter(Boolean).sort((a, b) => a.id - b.id)
-const indexList = writtenPhases.map((f) => `- Fase ${f.id}: [${f.title}](phases/${f.file}) ${f.approved ? '' : '(auditoria con observaciones)'}`).join('\n')
+const indexList = writtenPhases.map((f) => `- Fase ${f.id} [${(f.tier || 'normal').toUpperCase()}]: [${f.title}](phases/${f.file}) ${f.approved ? '' : '(auditoria con observaciones)'}`).join('\n')
 const firstFile = writtenPhases[0] ? writtenPhases[0].file : 'phase-01-...md'
 
 await agent(
@@ -408,8 +421,9 @@ ${indexList}
 ## Supuestos
 ## Riesgos
 ## Como ejecutar una fase
-> Cada fase se implementa con el workflow rg-exec apuntando a su archivo, por ejemplo:
-> Workflow({ name: 'rg-exec', args: '${WS}/phases/${firstFile}' })
+> Cada fase se implementa con rg-exec en el NIVEL recomendado (ver el [LITE/NORMAL/FULL] del titulo y la seccion "Ejecucion recomendada" de cada fase):
+> Workflow({ name: 'rg-exec', args: { source: '${WS}/phases/${firstFile}', mode: '<lite|normal|full>' } })
+> lite = mecanico/bajo riesgo; normal = feature acotada; full = complejo/riesgoso (contratos, migraciones, seguridad).
 
 Toma supuestos/riesgos de 05-sintesis.md. Devuelve {file, title}.`,
   { label: 'plan-index', phase: 'Write phases', schema: FILE_SCHEMA },

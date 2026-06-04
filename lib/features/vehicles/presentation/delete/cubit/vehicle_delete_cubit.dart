@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/delete_vehicle_usecase.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
@@ -10,11 +12,15 @@ part 'vehicle_delete_state.dart';
 
 @injectable
 class VehicleDeleteCubit extends Cubit<VehicleDeleteState> {
-  VehicleDeleteCubit(this._deleteVehicleUseCase, this._vehicleCubit)
-    : super(const VehicleDeleteState.initial());
+  VehicleDeleteCubit(
+    this._deleteVehicleUseCase,
+    this._vehicleCubit,
+    this._analytics,
+  ) : super(const VehicleDeleteState.initial());
 
   final DeleteVehicleUseCase _deleteVehicleUseCase;
   final VehicleCubit _vehicleCubit;
+  final AnalyticsService _analytics;
 
   Future<void> deleteVehicle(
     String vehicleId, {
@@ -28,6 +34,7 @@ class VehicleDeleteCubit extends Cubit<VehicleDeleteState> {
       (error) => emit(VehicleDeleteState.error(message: error.message)),
       (_) {
         _vehicleCubit.deleteVehicleLocally(vehicleId);
+        _analytics.logEvent(AnalyticsEvents.vehicleDeleted).ignore();
         emit(VehicleDeleteState.success(deletedId: vehicleId));
       },
     );
