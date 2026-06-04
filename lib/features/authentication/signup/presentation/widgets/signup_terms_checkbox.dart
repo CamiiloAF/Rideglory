@@ -1,6 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SignupTermsCheckbox extends StatelessWidget {
   const SignupTermsCheckbox({
@@ -12,8 +14,27 @@ class SignupTermsCheckbox extends StatelessWidget {
   final bool accepted;
   final ValueChanged<bool> onChanged;
 
+  static const _termsUrl = 'https://camiiloaf.github.io/Rideglory/terms-and-conditions.html';
+  static const _privacyUrl = 'https://camiiloaf.github.io/Rideglory/privacy-policy.html';
+
+  Future<void> _open(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) await launchUrl(uri, mode: LaunchMode.externalApplication);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final baseStyle = context.textTheme.bodySmall?.copyWith(
+      color: AppColors.textOnDarkSecondary,
+      height: 1.4,
+    );
+    final linkStyle = baseStyle?.copyWith(
+      color: AppColors.primary,
+      fontWeight: FontWeight.w600,
+      decoration: TextDecoration.underline,
+      decorationColor: AppColors.primary,
+    );
+
     return GestureDetector(
       onTap: () => onChanged(!accepted),
       child: Row(
@@ -32,11 +53,30 @@ class SignupTermsCheckbox extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(
-              context.l10n.auth_terms_text,
-              style: context.textTheme.bodySmall?.copyWith(
-                color: AppColors.textOnDarkSecondary,
-                height: 1.4,
+            child: RichText(
+              text: TextSpan(
+                style: baseStyle,
+                children: [
+                  TextSpan(text: context.l10n.auth_termsPrefix),
+                  TextSpan(
+                    text: context.l10n.auth_termsOf,
+                    style: linkStyle,
+                    recognizer: TapGestureRecognizer()..onTap = () => _open(_termsUrl),
+                  ),
+                  TextSpan(text: context.l10n.auth_termsAnd),
+                  TextSpan(
+                    text: context.l10n.auth_termsConditions,
+                    style: linkStyle,
+                    recognizer: TapGestureRecognizer()..onTap = () => _open(_termsUrl),
+                  ),
+                  TextSpan(text: context.l10n.auth_termsAnd2),
+                  TextSpan(
+                    text: context.l10n.auth_termsPrivacy,
+                    style: linkStyle,
+                    recognizer: TapGestureRecognizer()..onTap = () => _open(_privacyUrl),
+                  ),
+                  const TextSpan(text: '.'),
+                ],
               ),
             ),
           ),
