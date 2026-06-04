@@ -207,6 +207,30 @@ abstract final class AnalyticsParams {
   /// Tipo: `String`. Max key 40 chars: 15. ✓
   static const String approvalAction = 'approval_action';
 
+  // ---------------------------------------------------------------------------
+  // Live tracking / SOS — params no-PII (Fase 8)
+  //
+  // PROHIBIDO como valor: coordenadas lat/lng, uid de usuario, nombre, teléfono,
+  // id de evento. Solo enums cerrados y agregados de baja cardinalidad.
+  // ---------------------------------------------------------------------------
+
+  /// Rol del rider en la rodada: `lead` | `rider`.
+  /// Tipo: `String`. Max key 40 chars: 16. ✓
+  static const String trackingRole = 'tracking_role';
+
+  /// Razón de fin de sesión de tracking: `user_left` | `event_ended` |
+  /// `signed_out`.
+  /// Tipo: `String`. Max key 40 chars: 18. ✓
+  static const String trackingEndReason = 'tracking_end_reason';
+
+  /// Número de riders en el primer snapshot de la sesión (agregado de baja
+  /// cardinalidad). Tipo: `int`. Max key 40 chars: 12. ✓
+  static const String riderCount = 'rider_count';
+
+  /// Razón de limpieza del SOS: `user_cancel` | `remote_clear`.
+  /// Tipo: `String`. Max key 40 chars: 16. ✓
+  static const String sosClearReason = 'sos_clear_reason';
+
   // Valores canónicos de form_mode
   /// Formulario en modo creación.
   static const String formModeCreate = 'create';
@@ -268,4 +292,28 @@ abstract final class AnalyticsParams {
 
   /// PlatformException con código inesperado.
   static const String reasonPlatformUnexpected = 'platform_unexpected';
+
+  // Valores canónicos de tracking_role (Fase 8)
+  /// El rider es el organizador/líder de la rodada.
+  static const String trackingRoleLead = 'lead';
+
+  /// El rider es participante de la rodada.
+  static const String trackingRoleRider = 'rider';
+
+  // Valores canónicos de tracking_end_reason (Fase 8)
+  /// El rider salió voluntariamente de la pantalla de tracking.
+  static const String trackingEndReasonUserLeft = 'user_left';
+
+  /// El organizador terminó la rodada (eventEnded).
+  static const String trackingEndReasonEventEnded = 'event_ended';
+
+  /// El rider cerró sesión mientras el tracking estaba activo.
+  static const String trackingEndReasonSignedOut = 'signed_out';
+
+  // Valores canónicos de sos_clear_reason (Fase 8)
+  /// El propio rider canceló su SOS.
+  static const String sosClearReasonUserCancel = 'user_cancel';
+
+  /// El SOS fue cerrado por evento remoto del gateway.
+  static const String sosClearReasonRemoteClear = 'remote_clear';
 }

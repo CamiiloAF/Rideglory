@@ -186,4 +186,55 @@ abstract final class AnalyticsEvents {
   /// El rider canceló su propia inscripción exitosamente.
   /// Max 40 chars: 'registration_cancelled'.length == 22. ✓
   static const String registrationCancelled = 'registration_cancelled';
+
+  // ---------------------------------------------------------------------------
+  // Live tracking — hitos de sesión (Fase 8)
+  //
+  // PROHIBICIÓN: NUNCA emitir un evento por cada ping de ubicación
+  // (_listenPosition / publishLocation) ni por cada mensaje WebSocket
+  // entrante (_onMessage). Solo hitos de ciclo de vida por sesión.
+  // Las coordenadas (latitude/longitude) NUNCA van como param.
+  // ---------------------------------------------------------------------------
+
+  /// El rider confirmó el arranque exitoso de su tracking (callback de éxito
+  /// de StartTrackingUseCase). Se emite una sola vez por sesión.
+  /// Param: [AnalyticsParams.trackingRole].
+  /// Max 40 chars: 'tracking_session_started'.length == 24. ✓
+  static const String trackingSessionStarted = 'tracking_session_started';
+
+  /// El tracking se detuvo de forma efectiva (signOut, close o eventEnded).
+  /// Se emite exactamente una vez por sesión (anti-doble-conteo vía flag).
+  /// Param: [AnalyticsParams.trackingEndReason].
+  /// Max 40 chars: 'tracking_session_ended'.length == 22. ✓
+  static const String trackingSessionEnded = 'tracking_session_ended';
+
+  /// El mapa se pobló por primera vez en la sesión activa (primer snapshot
+  /// de riders recibido). Se emite una sola vez por sesión.
+  /// Param: [AnalyticsParams.riderCount].
+  /// Max 40 chars: 'tracking_snapshot_received'.length == 26. ✓
+  static const String trackingSnapshotReceived = 'tracking_snapshot_received';
+
+  // ---------------------------------------------------------------------------
+  // SOS — hitos (Fase 8)
+  //
+  // PROHIBICIÓN: ningún param de SOS puede incluir coordenadas lat/lng,
+  // uid de usuario, nombre, teléfono ni id de evento como valor.
+  // ---------------------------------------------------------------------------
+
+  /// El rider disparó un SOS propio (llamada a publishSos exitosa).
+  /// Param: [AnalyticsParams.trackingRole].
+  /// Max 40 chars: 'sos_activated'.length == 13. ✓
+  static const String sosActivated = 'sos_activated';
+
+  /// El sistema confirmó/propagó el SOS propio del rider (alerta recibida
+  /// cuyo userId == _userId). Se emite una vez por activación de SOS.
+  /// Sin params requeridos.
+  /// Max 40 chars: 'sos_confirmed'.length == 13. ✓
+  static const String sosConfirmed = 'sos_confirmed';
+
+  /// El SOS propio fue cerrado/cancelado (local o remoto).
+  /// Se emite una vez por activación (anti-doble-conteo vía flag).
+  /// Param: [AnalyticsParams.sosClearReason].
+  /// Max 40 chars: 'sos_cleared'.length == 11. ✓
+  static const String sosCleared = 'sos_cleared';
 }
