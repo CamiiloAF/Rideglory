@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/soat/domain/models/soat_model.dart';
 import 'package:rideglory/features/soat/domain/usecases/delete_soat_usecase.dart';
 import 'package:rideglory/features/soat/domain/usecases/get_soat_usecase.dart';
@@ -15,6 +16,8 @@ class MockGetSoatUseCase extends Mock implements GetSoatUseCase {}
 class MockSaveSoatUseCase extends Mock implements SaveSoatUseCase {}
 
 class MockDeleteSoatUseCase extends Mock implements DeleteSoatUseCase {}
+
+class MockAnalyticsService extends Mock implements AnalyticsService {}
 
 class FakeSoatModel extends Fake implements SoatModel {}
 
@@ -41,10 +44,14 @@ void main() {
     mockGetSoatUseCase = MockGetSoatUseCase();
     mockSaveSoatUseCase = MockSaveSoatUseCase();
     mockDeleteSoatUseCase = MockDeleteSoatUseCase();
+    final mockAnalytics = MockAnalyticsService();
+    when(() => mockAnalytics.logEvent(any(), any())).thenAnswer((_) async {});
+    when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
     soatCubit = SoatCubit(
       mockGetSoatUseCase,
       mockSaveSoatUseCase,
       mockDeleteSoatUseCase,
+      mockAnalytics,
     );
   });
 

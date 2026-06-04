@@ -4,12 +4,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/profile/domain/use_cases/get_my_profile_use_case.dart';
 import 'package:rideglory/features/profile/presentation/cubits/profile_cubit.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
 
 // Mock the GetMyProfileUseCase
 class MockGetMyProfileUseCase extends Mock implements GetMyProfileUseCase {}
+
+class MockAnalyticsService extends Mock implements AnalyticsService {}
 
 void main() {
   group('ProfileCubit', () {
@@ -18,7 +21,10 @@ void main() {
 
     setUp(() {
       mockGetMyProfileUseCase = MockGetMyProfileUseCase();
-      profileCubit = ProfileCubit(mockGetMyProfileUseCase);
+      final mockAnalytics = MockAnalyticsService();
+      when(() => mockAnalytics.logEvent(any(), any())).thenAnswer((_) async {});
+      when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
+      profileCubit = ProfileCubit(mockGetMyProfileUseCase, mockAnalytics);
     });
 
     tearDown(() {

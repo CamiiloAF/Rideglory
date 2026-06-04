@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/maintenance/domain/use_cases/get_maintenance_list_use_case.dart';
 import 'package:rideglory/features/maintenance/presentation/delete/cubit/maintenance_delete_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/list/maintenances/maintenances_cubit.dart';
@@ -25,7 +26,10 @@ class MaintenancesPage extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) {
-            final cubit = MaintenancesCubit(getIt<GetMaintenanceListUseCase>());
+            final cubit = MaintenancesCubit(
+              getIt<GetMaintenanceListUseCase>(),
+              getIt<AnalyticsService>(),
+            );
             if (effectiveVehicleId != null) {
               cubit.setInitialVehicleFilter(effectiveVehicleId);
               try {

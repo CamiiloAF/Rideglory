@@ -1,15 +1,19 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_params.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_list_summary.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/domain/use_cases/get_maintenance_list_use_case.dart';
 import 'package:rideglory/features/maintenance/presentation/widgets/maintenance_filters.dart';
 
 class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
-  MaintenancesCubit(this._getMaintenancesUseCase)
+  MaintenancesCubit(this._getMaintenancesUseCase, this._analytics)
     : super(const ResultState.initial());
 
   final GetMaintenanceListUseCase _getMaintenancesUseCase;
+  final AnalyticsService _analytics;
   List<MaintenanceModel> _allMaintenances = [];
   Map<String, MaintenanceListSummary> _summariesByVehicleId = {};
   MaintenanceFilters _filters = const MaintenanceFilters();
@@ -59,6 +63,11 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
       _summariesByVehicleId = Map<String, MaintenanceListSummary>.from(
         aggregate.summariesByVehicleId,
       );
+      _analytics
+          .logEvent(AnalyticsEvents.maintenanceHistoryViewed, {
+            AnalyticsParams.resultCount: aggregate.items.length,
+          })
+          .ignore();
       _applyClientFiltersAndEmit();
     });
   }

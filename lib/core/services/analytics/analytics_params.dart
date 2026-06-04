@@ -316,4 +316,47 @@ abstract final class AnalyticsParams {
 
   /// El SOS fue cerrado por evento remoto del gateway.
   static const String sosClearReasonRemoteClear = 'remote_clear';
+
+  // ---------------------------------------------------------------------------
+  // Vehículos (Fase 9)
+  // ---------------------------------------------------------------------------
+
+  /// 1 si el vehículo tenía foto al guardar, 0 si no.
+  /// Tipo: `int` (0 ó 1). **Nunca** la URL ni el path. Max 40 chars: 9. ✓
+  static const String hadPhoto = 'had_photo';
+
+  // ---------------------------------------------------------------------------
+  // Mantenimiento (Fase 9)
+  // ---------------------------------------------------------------------------
+
+  /// Tipo de mantenimiento canónico (enum name, p.ej. `oilChange`).
+  /// **Nunca** notas libres ni IDs. Tipo: `String`. Max key 40 chars: 16. ✓
+  static const String maintenanceType = 'maintenance_type';
+
+  /// Modo del mantenimiento: `completed` | `scheduled`.
+  /// Tipo: `String`. Max key 40 chars: 16. ✓
+  static const String maintenanceMode = 'maintenance_mode';
+
+  // Valores canónicos de maintenance_mode
+  /// Mantenimiento completado.
+  static const String maintenanceModeCompleted = 'completed';
+
+  /// Mantenimiento programado.
+  static const String maintenanceModeScheduled = 'scheduled';
+
+  // ---------------------------------------------------------------------------
+  // SOAT (Fase 9)
+  // ---------------------------------------------------------------------------
+
+  /// Estado canónico del SOAT: `valid` | `expiringSoon` | `expired` | `noSoat`.
+  /// Tipo: `String`. Max key 40 chars: 11. ✓
+  static const String soatStatus = 'soat_status';
+
+  // ---------------------------------------------------------------------------
+  // Notificaciones (Fase 9)
+  // ---------------------------------------------------------------------------
+
+  /// Tipo canónico de notificación (enum name, p.ej. `general`).
+  /// **Nunca** el id ni el texto de la notificación. Tipo: `String`. Max key 40 chars: 17. ✓
+  static const String notificationType = 'notification_type';
 }

@@ -237,4 +237,104 @@ abstract final class AnalyticsEvents {
   /// Param: [AnalyticsParams.sosClearReason].
   /// Max 40 chars: 'sos_cleared'.length == 11. ✓
   static const String sosCleared = 'sos_cleared';
+
+  // ---------------------------------------------------------------------------
+  // Vehículos (Fase 9)
+  // ---------------------------------------------------------------------------
+
+  /// El rider agregó un vehículo exitosamente.
+  /// Param: [AnalyticsParams.hadPhoto] (0/1).
+  /// Max 40 chars: 'vehicle_added'.length == 13. ✓
+  static const String vehicleAdded = 'vehicle_added';
+
+  /// El rider editó un vehículo exitosamente.
+  /// Param: [AnalyticsParams.hadPhoto] (0/1).
+  /// Max 40 chars: 'vehicle_updated'.length == 15. ✓
+  static const String vehicleUpdated = 'vehicle_updated';
+
+  /// El rider eliminó un vehículo exitosamente.
+  /// Sin params PII.
+  /// Max 40 chars: 'vehicle_deleted'.length == 15. ✓
+  static const String vehicleDeleted = 'vehicle_deleted';
+
+  /// El rider marcó un vehículo como principal exitosamente.
+  /// Sin params PII.
+  /// Max 40 chars: 'vehicle_set_main'.length == 16. ✓
+  static const String vehicleSetMain = 'vehicle_set_main';
+
+  // ---------------------------------------------------------------------------
+  // Mantenimiento (Fase 9)
+  // ---------------------------------------------------------------------------
+
+  /// El rider guardó un registro de mantenimiento exitosamente.
+  /// Params: [AnalyticsParams.maintenanceType], [AnalyticsParams.maintenanceMode].
+  /// Max 40 chars: 'maintenance_added'.length == 17. ✓
+  static const String maintenanceAdded = 'maintenance_added';
+
+  /// El rider vio el historial de mantenimientos tras una carga real.
+  /// Param: [AnalyticsParams.resultCount].
+  /// Max 40 chars: 'maintenance_history_viewed'.length == 26. ✓
+  static const String maintenanceHistoryViewed = 'maintenance_history_viewed';
+
+  // ---------------------------------------------------------------------------
+  // SOAT (Fase 9)
+  // ---------------------------------------------------------------------------
+
+  /// El rider vio el estado de un SOAT existente (load resolvió a Data).
+  /// Param: [AnalyticsParams.soatStatus].
+  /// Max 40 chars: 'soat_status_viewed'.length == 18. ✓
+  static const String soatStatusViewed = 'soat_status_viewed';
+
+  /// El rider guardó un SOAT manualmente (save confirmado).
+  /// Params: [AnalyticsParams.hadPdf] (0/1), [AnalyticsParams.fieldsExtractedCount].
+  /// Max 40 chars: 'soat_manual_saved'.length == 17. ✓
+  static const String soatManualSaved = 'soat_manual_saved';
+
+  // ---------------------------------------------------------------------------
+  // Perfil (Fase 9)
+  // ---------------------------------------------------------------------------
+
+  /// El rider cargó su propio perfil exitosamente.
+  /// Sin PII en params.
+  /// Max 40 chars: 'profile_viewed'.length == 14. ✓
+  static const String profileViewed = 'profile_viewed';
+
+  /// El rider abrió el flujo de edición de su perfil.
+  /// Sin params.
+  /// Max 40 chars: 'profile_edit_started'.length == 20. ✓
+  static const String profileEditStarted = 'profile_edit_started';
+
+  /// El rider completó la edición de su perfil exitosamente.
+  /// Sin PII en params.
+  /// Max 40 chars: 'profile_edit_succeeded'.length == 22. ✓
+  static const String profileEditSucceeded = 'profile_edit_succeeded';
+
+  // ---------------------------------------------------------------------------
+  // Users / descubrimiento (Fase 9)
+  // ---------------------------------------------------------------------------
+
+  /// El rider vio el perfil de otro rider tras una carga real.
+  /// Sin PII: nunca userId del rider visitado como param.
+  /// Max 40 chars: 'rider_profile_viewed'.length == 20. ✓
+  static const String riderProfileViewed = 'rider_profile_viewed';
+
+  // ---------------------------------------------------------------------------
+  // Notificaciones (Fase 9)
+  // ---------------------------------------------------------------------------
+
+  /// El rider abrió/marcó leída una notificación específica.
+  /// Sin id de notificación ni texto del mensaje como param.
+  /// Param: [AnalyticsParams.notificationType].
+  /// Max 40 chars: 'notification_marked_read'.length == 24. ✓
+  static const String notificationMarkedRead = 'notification_marked_read';
+
+  /// El rider marcó todas las notificaciones como leídas.
+  /// Sin params.
+  /// Max 40 chars: 'notifications_all_read'.length == 22. ✓
+  static const String notificationsAllRead = 'notifications_all_read';
+
+  /// Se registró el token FCM del dispositivo (señal de salud).
+  /// Sin el token como param (PII/alta cardinalidad).
+  /// Max 40 chars: 'fcm_token_registered'.length == 20. ✓
+  static const String fcmTokenRegistered = 'fcm_token_registered';
 }

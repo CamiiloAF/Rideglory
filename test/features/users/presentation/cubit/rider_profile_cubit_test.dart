@@ -4,11 +4,14 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
 import 'package:rideglory/features/users/domain/use_cases/get_user_by_id_use_case.dart';
 import 'package:rideglory/features/users/presentation/cubit/rider_profile_cubit.dart';
 
 class MockGetUserByIdUseCase extends Mock implements GetUserByIdUseCase {}
+
+class MockAnalyticsService extends Mock implements AnalyticsService {}
 
 void main() {
   late MockGetUserByIdUseCase mockGetUserByIdUseCase;
@@ -22,7 +25,10 @@ void main() {
 
   setUp(() {
     mockGetUserByIdUseCase = MockGetUserByIdUseCase();
-    riderProfileCubit = RiderProfileCubit(mockGetUserByIdUseCase);
+    final mockAnalytics = MockAnalyticsService();
+    when(() => mockAnalytics.logEvent(any(), any())).thenAnswer((_) async {});
+    when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
+    riderProfileCubit = RiderProfileCubit(mockGetUserByIdUseCase, mockAnalytics);
   });
 
   tearDown(() {

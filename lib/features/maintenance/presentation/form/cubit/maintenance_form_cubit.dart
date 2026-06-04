@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_params.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/domain/use_cases/add_maintenance_use_case.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
@@ -18,12 +21,14 @@ class MaintenanceFormCubit extends Cubit<ResultState<MaintenanceModel>> {
   MaintenanceFormCubit(
     this._addMaintenanceUseCase,
     this._updateMaintenanceUseCase,
+    this._analytics,
   ) : super(const ResultState.initial());
 
   final formKey = GlobalKey<FormBuilderState>();
 
   final AddMaintenanceUseCase _addMaintenanceUseCase;
   final UpdateMaintenanceUseCase _updateMaintenanceUseCase;
+  final AnalyticsService _analytics;
 
   MaintenanceModel? _editingMaintenance;
   VehicleModel? preselectedVehicle;
@@ -102,7 +107,17 @@ class MaintenanceFormCubit extends Cubit<ResultState<MaintenanceModel>> {
         (error) => emit(ResultState.error(error: error)),
         (savedList) {
           lastSavedRecords = savedList;
-          emit(ResultState.data(data: savedList.first));
+          final saved = savedList.first;
+          _analytics
+              .logEvent(AnalyticsEvents.maintenanceAdded, {
+                AnalyticsParams.maintenanceType: saved.type.name,
+                AnalyticsParams.maintenanceMode: saved.mode ==
+                        MaintenanceMode.completed
+                    ? AnalyticsParams.maintenanceModeCompleted
+                    : AnalyticsParams.maintenanceModeScheduled,
+              })
+              .ignore();
+          emit(ResultState.data(data: saved));
         },
       );
     }

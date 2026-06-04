@@ -1,6 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_params.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/notifications/domain/model/notification_model.dart';
 import 'package:rideglory/features/notifications/domain/usecases/get_notifications_usecase.dart';
 import 'package:rideglory/features/notifications/domain/usecases/mark_all_notifications_read_usecase.dart';
@@ -13,11 +16,13 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     this._getNotificationsUseCase,
     this._markReadUseCase,
     this._markAllReadUseCase,
+    this._analytics,
   ) : super(const NotificationsState());
 
   final GetNotificationsUseCase _getNotificationsUseCase;
   final MarkNotificationReadUseCase _markReadUseCase;
   final MarkAllNotificationsReadUseCase _markAllReadUseCase;
+  final AnalyticsService _analytics;
 
   Future<void> load() async {
     emit(state.copyWith(
@@ -92,6 +97,17 @@ class NotificationsCubit extends Cubit<NotificationsState> {
       unreadCount: unread,
     ));
 
+    // Emit analytics event — no id/text as param (G2).
+    final notification = currentList.firstWhere(
+      (n) => n.id == id,
+      orElse: () => currentList.first,
+    );
+    _analytics
+        .logEvent(AnalyticsEvents.notificationMarkedRead, {
+          AnalyticsParams.notificationType: notification.type.name,
+        })
+        .ignore();
+
     await _markReadUseCase(id);
   }
 
@@ -109,6 +125,8 @@ class NotificationsCubit extends Cubit<NotificationsState> {
       listResult: ResultState.data(data: updated),
       unreadCount: 0,
     ));
+
+    _analytics.logEvent(AnalyticsEvents.notificationsAllRead).ignore();
 
     await _markAllReadUseCase();
   }
