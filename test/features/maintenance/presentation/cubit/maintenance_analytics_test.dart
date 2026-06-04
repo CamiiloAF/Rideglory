@@ -3,6 +3,7 @@
 //   maintenance_added al guardar mantenimiento nuevo (add path).
 //   maintenance_added incluye maintenance_type y maintenance_mode (no PII).
 //   G2: sin kilometraje exacto, notas ni ids como parámetros.
+//   maintenance_updated al guardar mantenimiento existente (update path).
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -41,6 +42,15 @@ void main() {
     mode: MaintenanceMode.completed,
     serviceDate: DateTime(2026, 6, 1),
     odometerAtService: 15000,
+  );
+
+  final existingMaintenance = MaintenanceModel(
+    id: 'maint-42',
+    vehicleId: 'v1',
+    type: MaintenanceType.brakeCheck,
+    mode: MaintenanceMode.completed,
+    serviceDate: DateTime(2026, 6, 1),
+    odometerAtService: 20000,
   );
 
   setUp(() {
@@ -155,14 +165,113 @@ void main() {
             nextKmInterval: any(named: 'nextKmInterval'),
           ),
         ).thenAnswer(
-          (_) async =>
-              const Left(DomainException(message: 'Error de red')),
+          (_) async => const Left(DomainException(message: 'Error de red')),
         );
 
         await cubit.saveMaintenance(completedMaintenance);
 
         verifyNever(
           () => mockAnalytics.logEvent(AnalyticsEvents.maintenanceAdded, any()),
+        );
+      },
+    );
+
+    // TC-maint-a5: maintenance_updated se emite al actualizar mantenimiento existente
+    test(
+      'TC-maint-a5: saveMaintenance (update) exitoso → maintenance_updated emitido',
+      () async {
+        when(() => mockUpdate(any())).thenAnswer(
+          (_) async => Right(existingMaintenance),
+        );
+
+        await cubit.saveMaintenance(existingMaintenance);
+
+        verify(
+          () => mockAnalytics.logEvent(
+            AnalyticsEvents.maintenanceUpdated,
+            any(),
+          ),
+        ).called(1);
+      },
+    );
+
+    // TC-maint-a6: maintenance_updated contiene maintenance_type y maintenance_mode correctos
+    test(
+      'TC-maint-a6: maintenance_updated contiene maintenance_type = brakeCheck '
+      'y maintenance_mode = completed',
+      () async {
+        when(() => mockUpdate(any())).thenAnswer(
+          (_) async => Right(existingMaintenance),
+        );
+
+        await cubit.saveMaintenance(existingMaintenance);
+
+        final captured = verify(
+          () => mockAnalytics.logEvent(
+            AnalyticsEvents.maintenanceUpdated,
+            captureAny(),
+          ),
+        ).captured;
+
+        final params = captured.single as Map<String, Object>;
+        expect(
+          params[AnalyticsParams.maintenanceType],
+          MaintenanceType.brakeCheck.name,
+        );
+        expect(
+          params[AnalyticsParams.maintenanceMode],
+          AnalyticsParams.maintenanceModeCompleted,
+        );
+      },
+    );
+
+    // TC-maint-a7: saveMaintenance (update) con error → maintenance_updated NO emitido
+    test(
+      'TC-maint-a7: saveMaintenance (update) con error → maintenance_updated NO emitido',
+      () async {
+        when(() => mockUpdate(any())).thenAnswer(
+          (_) async =>
+              const Left(DomainException(message: 'Error al actualizar')),
+        );
+
+        await cubit.saveMaintenance(existingMaintenance);
+
+        verifyNever(
+          () =>
+              mockAnalytics.logEvent(AnalyticsEvents.maintenanceUpdated, any()),
+        );
+      },
+    );
+
+    // TC-maint-a8a: update path → maintenance_added NOT emitted
+    test(
+      'TC-maint-a8a: saveMaintenance (update) exitoso → maintenance_added NO emitido',
+      () async {
+        when(() => mockUpdate(any())).thenAnswer(
+          (_) async => Right(existingMaintenance),
+        );
+
+        await cubit.saveMaintenance(existingMaintenance);
+
+        verifyNever(
+          () => mockAnalytics.logEvent(AnalyticsEvents.maintenanceAdded, any()),
+        );
+      },
+    );
+
+    // TC-maint-a8b: add path → maintenance_updated NOT emitted
+    test(
+      'TC-maint-a8b: saveMaintenance (add) exitoso → maintenance_updated NO emitido',
+      () async {
+        when(
+          () => mockAdd(any(), nextKmInterval: any(named: 'nextKmInterval')),
+        ).thenAnswer((_) async => Right([completedMaintenance]));
+
+        await cubit.saveMaintenance(completedMaintenance);
+
+        verifyNever(
+          () =>
+              mockAnalytics.logEvent(AnalyticsEvents.maintenanceUpdated, any()),
         );
       },
     );

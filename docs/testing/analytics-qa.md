@@ -95,8 +95,12 @@ xcrun simctl launch booted <bundle_id> -FIRAnalyticsDebugEnabled
 | `vehicle_set_main` | El rider marcó un vehículo como principal | — | Vehicles | `vehicle_cubit.dart:setMainVehicle` |
 | `maintenance_added` | El rider guardó un registro de mantenimiento | `maintenance_type` → String (enum name), `maintenance_mode` → String → `completed` \| `scheduled` | Maintenance | `maintenance_form_cubit.dart` |
 | `maintenance_history_viewed` | El rider vio el historial de mantenimientos | `result_count` → int | Maintenance | `maintenances_cubit.dart` |
+| `maintenance_updated` | El rider actualizó un mantenimiento existente | `maintenance_type` → String (enum name), `maintenance_mode` → String → `completed` \| `scheduled` | Maintenance | `maintenance_form_cubit.dart` (rama `id != null`) |
+| `maintenance_deleted` | El rider eliminó un mantenimiento | `maintenance_type` → String (enum name) | Maintenance | `maintenance_delete_cubit.dart` |
 | `soat_status_viewed` | El rider vio el estado de un SOAT existente | `soat_status` → String → `valid` \| `expiringSoon` \| `expired` \| `noSoat` | SOAT | `soat_cubit.dart:load` |
-| `soat_manual_saved` | El rider guardó un SOAT manualmente | `had_pdf` → int (0/1) | SOAT | `soat_cubit.dart:save` |
+| `soat_manual_saved` | El rider guardó un SOAT nuevo (manual) | `had_pdf` → int (0/1) | SOAT | `soat_cubit.dart:save` (id vacío) |
+| `soat_updated` | El rider actualizó un SOAT existente | `had_pdf` → int (0/1) | SOAT | `soat_cubit.dart:save` (id no vacío) |
+| `soat_deleted` | El rider eliminó el SOAT de un vehículo | — | SOAT | `soat_cubit.dart:delete` |
 | `profile_viewed` | El rider cargó su propio perfil | — | Profile | `profile_cubit.dart` |
 | `profile_edit_started` | El rider abrió el flujo de edición de perfil | — | Profile | `edit_profile_cubit.dart` |
 | `profile_edit_succeeded` | El rider completó la edición de perfil | — | Profile | `edit_profile_cubit.dart` |
@@ -406,8 +410,8 @@ Los siguientes son **AC nice-to-have diferidos** (documentados como pendientes, 
 | ID | Descripción | Feature | Fase de origen | Prioridad |
 |----|-------------|---------|----------------|-----------|
 | TASK-NTH-01 | Agregar evento `vehicle_archived` si en el futuro se introduce la función de archivar vehículos (distinto de eliminar). | Vehicles | Fase 9 | Baja |
-| TASK-NTH-02 | Agregar evento `maintenance_deleted` cuando se implemente la eliminación de registros de mantenimiento. | Maintenance | Fase 9 | Baja |
-| TASK-NTH-03 | Agregar evento `soat_deleted` cuando se implemente la eliminación de SOAT. | SOAT | Fase 9 | Baja |
+| ~~TASK-NTH-02~~ | ✅ **Implementado** — `maintenance_updated` + `maintenance_deleted` instrumentados (CRUD completo de mantenimiento). | Maintenance | Fase 9 → hecho | — |
+| ~~TASK-NTH-03~~ | ✅ **Implementado** — `soat_updated` + `soat_deleted` instrumentados (CRUD completo de SOAT). | SOAT | Fase 9 → hecho | — |
 | TASK-NTH-04 | Agregar user property `has_soat` (0/1) después de que el rider cargue o actualice su SOAT, para segmentación en GA4. | SOAT | Fase 9 | Media |
 | TASK-NTH-05 | Agregar event `registration_viewed` al abrir el detalle de una inscripción propia, para medir tasa de abandono post-envío. | Event Registration | Fase 7 | Baja |
 | TASK-NTH-06 | Agregar `events_filter_applied` con param `filter_type` (enum) para medir uso de filtros en la lista de eventos. | Events | Fase 6 | Baja |

@@ -276,6 +276,16 @@ abstract final class AnalyticsEvents {
   /// Max 40 chars: 'maintenance_history_viewed'.length == 26. ✓
   static const String maintenanceHistoryViewed = 'maintenance_history_viewed';
 
+  /// El rider actualizó un mantenimiento existente (edición exitosa).
+  /// Params: [AnalyticsParams.maintenanceType], [AnalyticsParams.maintenanceMode].
+  /// Max 40 chars: 'maintenance_updated'.length == 19. ✓
+  static const String maintenanceUpdated = 'maintenance_updated';
+
+  /// El rider eliminó un mantenimiento (borrado exitoso).
+  /// Param: [AnalyticsParams.maintenanceType].
+  /// Max 40 chars: 'maintenance_deleted'.length == 19. ✓
+  static const String maintenanceDeleted = 'maintenance_deleted';
+
   // ---------------------------------------------------------------------------
   // SOAT (Fase 9)
   // ---------------------------------------------------------------------------
@@ -289,6 +299,16 @@ abstract final class AnalyticsEvents {
   /// Params: [AnalyticsParams.hadPdf] (0/1), [AnalyticsParams.fieldsExtractedCount].
   /// Max 40 chars: 'soat_manual_saved'.length == 17. ✓
   static const String soatManualSaved = 'soat_manual_saved';
+
+  /// El rider actualizó un SOAT existente (save sobre un SOAT con id).
+  /// Param: [AnalyticsParams.hadPdf] (0/1).
+  /// Max 40 chars: 'soat_updated'.length == 12. ✓
+  static const String soatUpdated = 'soat_updated';
+
+  /// El rider eliminó el SOAT de un vehículo (borrado exitoso).
+  /// Sin PII en params.
+  /// Max 40 chars: 'soat_deleted'.length == 12. ✓
+  static const String soatDeleted = 'soat_deleted';
 
   // ---------------------------------------------------------------------------
   // Perfil (Fase 9)

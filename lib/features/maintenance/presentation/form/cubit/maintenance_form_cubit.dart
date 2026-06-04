@@ -95,6 +95,15 @@ class MaintenanceFormCubit extends Cubit<ResultState<MaintenanceModel>> {
         (error) => emit(ResultState.error(error: error)),
         (saved) {
           lastSavedRecords = [saved];
+          _analytics
+              .logEvent(AnalyticsEvents.maintenanceUpdated, {
+                AnalyticsParams.maintenanceType: saved.type.name,
+                AnalyticsParams.maintenanceMode: saved.mode ==
+                        MaintenanceMode.completed
+                    ? AnalyticsParams.maintenanceModeCompleted
+                    : AnalyticsParams.maintenanceModeScheduled,
+              })
+              .ignore();
           emit(ResultState.data(data: saved));
         },
       );

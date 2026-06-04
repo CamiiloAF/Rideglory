@@ -52,10 +52,15 @@ class SoatCubit extends Cubit<ResultState<SoatModel>> {
         return false;
       },
       (saved) {
+        // Un id no vacío indica edición de un SOAT existente; vacío = creación.
+        final isUpdate = soat.id.isNotEmpty;
         _analytics
-            .logEvent(AnalyticsEvents.soatManualSaved, {
-              AnalyticsParams.hadPdf: 0,
-            })
+            .logEvent(
+              isUpdate
+                  ? AnalyticsEvents.soatUpdated
+                  : AnalyticsEvents.soatManualSaved,
+              {AnalyticsParams.hadPdf: 0},
+            )
             .ignore();
         emit(ResultState.data(data: saved));
         return true;
@@ -72,6 +77,7 @@ class SoatCubit extends Cubit<ResultState<SoatModel>> {
         return false;
       },
       (_) {
+        _analytics.logEvent(AnalyticsEvents.soatDeleted).ignore();
         emit(const ResultState.empty());
         return true;
       },
