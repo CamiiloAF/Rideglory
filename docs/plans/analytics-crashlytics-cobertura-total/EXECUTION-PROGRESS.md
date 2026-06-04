@@ -2,7 +2,7 @@
 
 > Rama: `feat/analytics-crashlytics`
 > Ancla de reanudación: si el PC se apaga, lee este archivo + `git log` para saber qué está hecho y qué sigue.
-> Última actualización: 2026-06-04 (fases 1–9 commiteadas; fase 10 en curso). Nota: agentes Sonnet a veces se cortan a mitad; verifico (analyze+test) y completo antes de cada commit.
+> Última actualización: 2026-06-04 (fases 1–10 commiteadas; fase 11 en curso, última). Nota: agentes Sonnet a veces se cortan a mitad; verifico (analyze+test) y completo antes de cada commit.
 
 ## Cómo reanudar
 1. `git checkout feat/analytics-crashlytics`
@@ -25,8 +25,8 @@
 | 7 | Embudo eventos — ESCRITURA y aprobación | lite | ✅ commiteada | 6bbce3f | 5 cubits, +19 eventos; 332 tests. |
 | 8 | Tracking en vivo + SOS (solo hitos) | normal | ✅ commiteada | 5720cc2 | 6 hitos aditivos + seam test SOS; 337 tests. |
 | 9 | Garaje, mantenimientos, SOAT, perfil, descubrimiento | lite | ✅ commiteada | 4dc0bd8 | 15 eventos + has_vehicle; 353 tests. |
-| 10 | Auditoría no-PII transversal + doc QA | normal | 🟠 en curso | — | Verificación de privacidad cross-cutting. |
-| 11 | Privacidad: opt-out en perfil + política | normal | ⬜ pendiente | — | UI nueva + setEnabled debe desactivar bien analítica/crashlytics. |
+| 10 | Auditoría no-PII transversal + doc QA | normal | ✅ commiteada | 9cf65c9 | Audit limpio + doc QA + guardián; 618 tests. |
+| 11 | Privacidad: opt-out en perfil + política | normal | 🟠 en curso | — | UI nueva + setEnabled debe desactivar bien analítica/crashlytics. |
 
 Leyenda: ⬜ pendiente · 🟠 en curso · 🟡 hecha sin commitear · ✅ commiteada
 
