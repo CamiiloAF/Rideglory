@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
-import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/soat/presentation/cubit/soat_cubit.dart';
 import 'package:rideglory/features/soat/presentation/scan/soat_entry_flow.dart';
+import 'package:rideglory/features/vehicle_documents/presentation/widgets/empty_state.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
+/// SOAT-specific empty state. Delegates layout to [DocumentEmptyState],
+/// injecting SOAT-specific copy and the SOAT entry flow as CTA.
 class SoatEmptyState extends StatelessWidget {
   const SoatEmptyState({super.key, required this.vehicle});
 
@@ -13,60 +15,19 @@ class SoatEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: AppColors.darkCard,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppColors.darkBorderPrimary),
-              ),
-              child: const Icon(
-                Icons.description_outlined,
-                color: AppColors.textOnDarkTertiary,
-                size: 40,
-              ),
-            ),
-            AppSpacing.gapXxl,
-            Text(
-              context.l10n.soat_status_no_soat,
-              style: const TextStyle(
-                color: AppColors.textOnDarkPrimary,
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            AppSpacing.gapSm,
-            Text(
-              context.l10n.soat_manual_note,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: AppColors.textOnDarkSecondary,
-                fontSize: 14,
-                height: 1.5,
-              ),
-            ),
-            AppSpacing.gapXxl,
-            AppButton(
-              label: context.l10n.soat_renew_btn,
-              onPressed: () => SoatEntryFlow.start(
-                context,
-                vehicle: vehicle,
-                onSaved: () {
-                  if (context.mounted) {
-                    context.read<SoatCubit>().load(vehicle.id ?? '');
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
+    return DocumentEmptyState(
+      icon: Icons.description_outlined,
+      title: context.l10n.soat_status_no_soat,
+      subtitle: context.l10n.soat_manual_note,
+      ctaLabel: context.l10n.soat_renew_btn,
+      onCta: () => SoatEntryFlow.start(
+        context,
+        vehicle: vehicle,
+        onSaved: () {
+          if (context.mounted) {
+            context.read<SoatCubit>().load(vehicle.id ?? '');
+          }
+        },
       ),
     );
   }

@@ -4084,6 +4084,12 @@ abstract class AppLocalizations {
   /// **'Datos del SOAT agregados'**
   String get vehicle_soat_data_added;
 
+  /// No description provided for @vehicle_doc_expires_on.
+  ///
+  /// In es, this message translates to:
+  /// **'Vence {date}'**
+  String vehicle_doc_expires_on(String date);
+
   /// No description provided for @vehicle_soat_section_title.
   ///
   /// In es, this message translates to:

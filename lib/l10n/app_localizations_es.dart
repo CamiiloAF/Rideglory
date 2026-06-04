@@ -2123,6 +2123,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_soat_data_added => 'Datos del SOAT agregados';
 
   @override
+  String vehicle_doc_expires_on(String date) {
+    return 'Vence $date';
+  }
+
+  @override
   String get vehicle_soat_section_title => 'Documentos';
 
   @override

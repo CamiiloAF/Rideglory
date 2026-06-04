@@ -9,8 +9,8 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/core/services/image_storage_service.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/vehicles/constants/vehicle_form_fields.dart';
-import 'package:rideglory/features/vehicles/domain/models/soat_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/features/vehicles/domain/models/vehicle_soat_form_data.dart';
 import 'package:rideglory/features/vehicles/domain/repository/vehicle_repository.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
@@ -203,7 +203,7 @@ class _VehicleFormViewState extends State<VehicleFormView> {
 
     final result = await repository.upsertSoat(
       vehicleId: vehicleId,
-      soat: SoatModel(
+      soat: VehicleSoatFormData(
         vehicleId: vehicleId,
         policyNumber: pendingManualSoat.policyNumber,
         insurer: pendingManualSoat.insurer,

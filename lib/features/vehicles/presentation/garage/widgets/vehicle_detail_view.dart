@@ -8,7 +8,8 @@ import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_detail_specs_card.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_detail_top_row.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_maintenance_history_section.dart';
-import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_soat_card.dart';
+import 'package:rideglory/features/vehicle_documents/domain/vehicle_document_kind.dart';
+import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_document_card.dart';
 
 class VehicleDetailView extends StatelessWidget {
   const VehicleDetailView({
@@ -56,7 +57,10 @@ class VehicleDetailView extends StatelessWidget {
                 ],
                 VehicleDetailSpecsCard(vehicle: vehicle),
                 const SizedBox(height: 16),
-                VehicleSoatCard(vehicle: vehicle),
+                VehicleDocumentCard(
+                  kind: VehicleDocumentKind.soat,
+                  vehicle: vehicle,
+                ),
                 const SizedBox(height: 16),
                 VehicleMaintenanceHistorySection(
                   vehicle: vehicle,

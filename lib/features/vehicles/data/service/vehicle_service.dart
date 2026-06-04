@@ -32,11 +32,11 @@ abstract class VehicleService {
   Future<void> deleteVehicle(@Path('id') String id);
 
   @POST('${ApiRoutes.vehicles}/{vehicleId}/soat')
-  Future<SoatDto> upsertSoat(
+  Future<VehicleSoatFormDataDto> upsertSoat(
     @Path('vehicleId') String vehicleId,
     @Body() Map<String, dynamic> body,
   );
 
   @GET('${ApiRoutes.vehicles}/{vehicleId}/soat')
-  Future<SoatDto> getSoat(@Path('vehicleId') String vehicleId);
+  Future<VehicleSoatFormDataDto> getSoat(@Path('vehicleId') String vehicleId);
 }

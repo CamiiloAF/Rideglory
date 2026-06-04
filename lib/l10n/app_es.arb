@@ -749,6 +749,14 @@
   "vehicle_soat_save_button": "Guardar SOAT",
   "vehicle_soat_saved_successfully": "SOAT registrado exitosamente",
   "vehicle_soat_data_added": "Datos del SOAT agregados",
+  "vehicle_doc_expires_on": "Vence {date}",
+  "@vehicle_doc_expires_on": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "vehicle_soat_section_title": "Documentos",
   "vehicle_soat_confirm_title": "Confirmar SOAT",
   "vehicle_soat_confirm_button": "Confirmar SOAT",

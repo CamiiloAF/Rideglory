@@ -6,9 +6,10 @@ import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/core/http/rest_client_functions.dart';
+import 'package:rideglory/features/vehicles/data/dto/soat_dto.dart';
 import 'package:rideglory/features/vehicles/data/service/vehicle_service.dart';
-import 'package:rideglory/features/vehicles/domain/models/soat_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/features/vehicles/domain/models/vehicle_soat_form_data.dart';
 import 'package:rideglory/features/vehicles/domain/repository/vehicle_repository.dart';
 
 @Injectable(as: VehicleRepository)
@@ -97,30 +98,29 @@ class VehicleRepositoryImpl implements VehicleRepository {
   }
 
   @override
-  Future<Either<DomainException, SoatModel>> upsertSoat({
+  Future<Either<DomainException, VehicleSoatFormData>> upsertSoat({
     required String vehicleId,
-    required SoatModel soat,
+    required VehicleSoatFormData soat,
   }) {
     return executeService(
       function: () async {
-        final dto = await _vehicleService.upsertSoat(vehicleId, {
-          'policyNumber': soat.policyNumber,
-          'startDate': soat.startDate.toIso8601String(),
-          'expiryDate': soat.expiryDate.toIso8601String(),
-          'insurer': soat.insurer,
-          if (soat.documentUrl != null) 'documentUrl': soat.documentUrl,
-        });
-        return dto.toModel();
+        final dto = await _vehicleService.upsertSoat(
+          vehicleId,
+          soat.toJson(),
+        );
+        return dto.toFormData();
       },
     );
   }
 
   @override
-  Future<Either<DomainException, SoatModel>> getSoat(String vehicleId) {
+  Future<Either<DomainException, VehicleSoatFormData>> getSoat(
+    String vehicleId,
+  ) {
     return executeService(
       function: () async {
         final dto = await _vehicleService.getSoat(vehicleId);
-        return dto.toModel();
+        return dto.toFormData();
       },
     );
   }

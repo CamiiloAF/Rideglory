@@ -1,4 +1,3 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/services/analytics/analytics_events.dart';
@@ -8,21 +7,23 @@ import 'package:rideglory/features/soat/domain/models/soat_model.dart';
 import 'package:rideglory/features/soat/domain/usecases/delete_soat_usecase.dart';
 import 'package:rideglory/features/soat/domain/usecases/get_soat_usecase.dart';
 import 'package:rideglory/features/soat/domain/usecases/save_soat_usecase.dart';
+import 'package:rideglory/features/vehicle_documents/presentation/cubit/vehicle_document_cubit.dart';
 
 @injectable
-class SoatCubit extends Cubit<ResultState<SoatModel>> {
+class SoatCubit extends VehicleDocumentCubit<SoatModel> {
   SoatCubit(
     this._getSoatUseCase,
     this._saveSoatUseCase,
     this._deleteSoatUseCase,
     this._analytics,
-  ) : super(const ResultState.initial());
+  );
 
   final GetSoatUseCase _getSoatUseCase;
   final SaveSoatUseCase _saveSoatUseCase;
   final DeleteSoatUseCase _deleteSoatUseCase;
   final AnalyticsService _analytics;
 
+  @override
   Future<void> load(String vehicleId) async {
     emit(const ResultState.loading());
     final result = await _getSoatUseCase(vehicleId);
