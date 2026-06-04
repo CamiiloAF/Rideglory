@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_events_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_my_events_use_case.dart';
@@ -29,10 +30,12 @@ class EventsPage extends StatelessWidget {
                     ? EventsCubit.myEvents(
                         getIt<GetMyEventsUseCase>(),
                         getIt<UpdateEventUseCase>(),
+                        getIt<AnalyticsService>(),
                       )
                     : EventsCubit(
                         getIt<GetEventsUseCase>(),
                         getIt<UpdateEventUseCase>(),
+                        getIt<AnalyticsService>(),
                       )
                   ..fetchEvents(),
           ),

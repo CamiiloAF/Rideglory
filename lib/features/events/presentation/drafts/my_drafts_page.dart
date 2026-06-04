@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_my_events_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
 import 'package:rideglory/features/events/presentation/delete/cubit/event_delete_cubit.dart';
@@ -18,6 +19,7 @@ class MyDraftsPage extends StatelessWidget {
           create: (_) => EventsCubit.myEvents(
             getIt<GetMyEventsUseCase>(),
             getIt<UpdateEventUseCase>(),
+            getIt<AnalyticsService>(),
           )..fetchEvents(),
         ),
         BlocProvider(create: (_) => getIt<EventDeleteCubit>()),

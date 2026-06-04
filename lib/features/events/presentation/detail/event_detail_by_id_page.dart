@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/approve_registration_use_case.dart';
@@ -61,6 +62,7 @@ class _EventDetailByIdPageState extends State<EventDetailByIdPage> {
           getIt<ApproveRegistrationUseCase>(),
           getIt<RejectRegistrationUseCase>(),
           getIt<SetRegistrationReadyForEditUseCase>(),
+          getIt<AnalyticsService>(),
         )..loadEvent(widget.eventId),
         child: BlocConsumer<EventDetailCubit, EventDetailState>(
           listener: _listener,

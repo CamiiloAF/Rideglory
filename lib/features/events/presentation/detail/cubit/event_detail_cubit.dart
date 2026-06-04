@@ -4,6 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_params.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/approve_registration_use_case.dart';
@@ -32,6 +35,7 @@ class EventDetailCubit extends Cubit<EventDetailState> {
     this._approveRegistrationUseCase,
     this._rejectRegistrationUseCase,
     this._setReadyForEditUseCase,
+    this._analytics,
   ) : super(
         const EventDetailState(
           registrationResult: ResultState.initial(),
@@ -49,6 +53,7 @@ class EventDetailCubit extends Cubit<EventDetailState> {
   final ApproveRegistrationUseCase _approveRegistrationUseCase;
   final RejectRegistrationUseCase _rejectRegistrationUseCase;
   final SetRegistrationReadyForEditUseCase _setReadyForEditUseCase;
+  final AnalyticsService _analytics;
 
   EventRegistrationModel? _registration;
   String? _attendeesEventId;
@@ -132,8 +137,22 @@ class EventDetailCubit extends Cubit<EventDetailState> {
     result.fold(
       (error) =>
           emit(state.copyWith(eventResult: ResultState.error(error: error))),
-      (event) =>
-          emit(state.copyWith(eventResult: ResultState.data(data: event))),
+      (event) {
+        // Camino deep-link (EventDetailByIdPage): emitir event_detail_viewed
+        // una sola vez aquí. EventDetailPage (camino lista/borrador) tiene su
+        // propia emisión en el create: del BlocProvider; nunca emite ambos
+        // (ver Fase 6, Riesgo #2).
+        _analytics
+            .logEvent(AnalyticsEvents.eventDetailViewed, {
+              AnalyticsParams.eventType: event.eventType.apiValue,
+              AnalyticsParams.eventState: event.state.name,
+              AnalyticsParams.isOwner: 0, // No se conoce el uid aquí sin AuthCubit
+              AnalyticsParams.isReadOnly: 0,
+              AnalyticsParams.source: AnalyticsParams.sourceDeepLink,
+            })
+            .ignore();
+        emit(state.copyWith(eventResult: ResultState.data(data: event)));
+      },
     );
   }
 

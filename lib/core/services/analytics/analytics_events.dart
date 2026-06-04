@@ -60,4 +60,27 @@ abstract final class AnalyticsEvents {
   /// El escaneo falló (baja confianza, sin texto, validación, etc.).
   /// Max 40 chars: 'soat_scan_failed'.length == 16. ✓
   static const String soatScanFailed = 'soat_scan_failed';
+
+  // ---------------------------------------------------------------------------
+  // Events — lectura (Fase 6)
+  // ---------------------------------------------------------------------------
+
+  /// El rider aterrizó en home con datos cargados exitosamente.
+  /// Params: [AnalyticsParams.upcomingEventsCount], [AnalyticsParams.hasMainVehicle].
+  /// Max 40 chars: 'home_viewed'.length == 11. ✓
+  static const String homeViewed = 'home_viewed';
+
+  /// El rider vio una lista de eventos tras una carga real contra el backend
+  /// (carga inicial o recarga por cambio de filtros). NO se emite por keystroke
+  /// de búsqueda ni por mutaciones locales (addEvent/updateEvent/removeEvent).
+  /// Params: [AnalyticsParams.resultCount], [AnalyticsParams.listScope].
+  /// Max 40 chars: 'events_list_viewed'.length == 18. ✓
+  static const String eventsListViewed = 'events_list_viewed';
+
+  /// El rider abrió el detalle de un evento (una sola vez por apertura).
+  /// Params: [AnalyticsParams.eventType], [AnalyticsParams.eventState],
+  /// [AnalyticsParams.isOwner], [AnalyticsParams.isReadOnly],
+  /// [AnalyticsParams.source]. Sin PII: nunca event_id, nombre ni city.
+  /// Max 40 chars: 'event_detail_viewed'.length == 19. ✓
+  static const String eventDetailViewed = 'event_detail_viewed';
 }

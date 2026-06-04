@@ -127,6 +127,62 @@ abstract final class AnalyticsParams {
   static const String categoryUnexpected = 'unexpected';
 
   // ---------------------------------------------------------------------------
+  // Events — lectura (Fase 6)
+  // ---------------------------------------------------------------------------
+
+  /// Conteo de eventos próximos en home. Tipo: `int`. Max 40 chars: 22. ✓
+  static const String upcomingEventsCount = 'upcoming_events_count';
+
+  /// 1 si el rider tiene vehículo principal configurado, 0 si no.
+  /// Tipo: `int` (0 ó 1). **Nunca** datos del vehículo (PII). Max 40 chars: 16. ✓
+  static const String hasMainVehicle = 'has_main_vehicle';
+
+  /// Conteo de resultados de la lista de eventos tras carga/filtro.
+  /// Tipo: `int`. Max 40 chars: 12. ✓
+  static const String resultCount = 'result_count';
+
+  /// Alcance de la lista de eventos: `'all'` | `'mine'`.
+  /// Tipo: `String`. Max 40 chars: 10. ✓
+  static const String listScope = 'list_scope';
+
+  /// Tipo de evento canónico (valor del enum, p.ej. `'tourism'`).
+  /// **Nunca** el nombre libre del evento. Tipo: `String`. Max 40 chars: 10. ✓
+  static const String eventType = 'event_type';
+
+  /// Estado canónico del evento (p.ej. `'scheduled'`, `'draft'`).
+  /// Tipo: `String`. Max 40 chars: 11. ✓
+  static const String eventState = 'event_state';
+
+  /// 1 si el rider autenticado es owner del evento, 0 si no. Nunca el uid/ownerId.
+  /// Tipo: `int` (0 ó 1). Max 40 chars: 8. ✓
+  static const String isOwner = 'is_owner';
+
+  /// 1 si el evento se abrió en modo solo-lectura (borrador ajeno), 0 si no.
+  /// Tipo: `int` (0 ó 1). Max 40 chars: 11. ✓
+  static const String isReadOnly = 'is_read_only';
+
+  /// Origen de la apertura del detalle: `'list'` | `'draft'` | `'deep_link'`.
+  /// Tipo: `String`. Max 40 chars: 6. ✓
+  static const String source = 'source';
+
+  // Valores canónicos de list_scope
+  /// Listado general (todos los eventos).
+  static const String listScopeAll = 'all';
+
+  /// Listado de mis eventos.
+  static const String listScopeMine = 'mine';
+
+  // Valores canónicos de source (detalle de evento)
+  /// Apertura desde el listado general o "mis eventos".
+  static const String sourceList = 'list';
+
+  /// Apertura desde borradores.
+  static const String sourceDraft = 'draft';
+
+  /// Apertura directa por id (deep-link / push notification).
+  static const String sourceDeepLink = 'deep_link';
+
+  // ---------------------------------------------------------------------------
   // Valores de reason (cadenas cortas para el campo `reason` de CrashReporter)
   // ---------------------------------------------------------------------------
 
