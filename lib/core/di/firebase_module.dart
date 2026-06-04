@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -19,6 +20,8 @@ abstract class FirebaseInjectableModule {
   FirebaseStorage get firebaseStorage => FirebaseStorage.instance;
   @lazySingleton
   FirebaseAnalytics get firebaseAnalytics => FirebaseAnalytics.instance;
+  @lazySingleton
+  FirebaseCrashlytics get firebaseCrashlytics => FirebaseCrashlytics.instance;
   @lazySingleton
   FlutterSecureStorage get flutterSecureStorage => const FlutterSecureStorage();
   @lazySingleton

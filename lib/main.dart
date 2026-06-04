@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
@@ -9,6 +12,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:rideglory/core/config/api_remote_config.dart';
 import 'package:rideglory/core/config/app_env.dart';
+import 'package:rideglory/core/services/crash/crash_handler_setup.dart';
+import 'package:rideglory/core/services/crash/crash_reporter.dart';
 import 'package:rideglory/core/services/fcm_service.dart';
 import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
 import 'package:rideglory/features/notifications/presentation/cubit/notifications_cubit.dart';
@@ -48,9 +53,31 @@ Future<void> main() async {
   );
   MapboxOptions.setAccessToken(mapboxToken!);
 
+  // PASO 1: DI primero — getIt<CrashReporter>() disponible a partir de aquí.
   configureDependencies();
 
-  runApp(const MyApp());
+  // PASO 2: Init defensivo de Crashlytics (post-DI).
+  try {
+    await getIt<CrashReporter>().setEnabled(!kDebugMode);
+  } catch (_) {
+    // Fallo silencioso — un fallo de Crashlytics no debe romper runApp.
+  }
+
+  // PASO 3: Registrar handlers DESPUÉS de configureDependencies() y ANTES de runApp.
+  registerCrashHandlers(
+    isDebug: kDebugMode,
+    reporter: getIt<CrashReporter>(),
+  );
+
+  // PASO 4: runZonedGuarded envuelve runApp; el zone handler reporta errores no-fatales.
+  runZonedGuarded(
+    () => runApp(const MyApp()),
+    (error, stack) {
+      if (!kDebugMode) {
+        getIt<CrashReporter>().recordError(error, stack, fatal: false);
+      }
+    },
+  );
 }
 
 class MyApp extends StatelessWidget {

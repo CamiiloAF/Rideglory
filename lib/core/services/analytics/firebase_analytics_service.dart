@@ -13,4 +13,24 @@ class FirebaseAnalyticsService implements AnalyticsService {
   Future<void> logEvent(String name, [Map<String, Object>? parameters]) {
     return _analytics.logEvent(name: name, parameters: parameters);
   }
+
+  @override
+  Future<void> logScreenView(String screenName) {
+    return _analytics.logScreenView(screenName: screenName);
+  }
+
+  @override
+  Future<void> setUserId(String hashedId) {
+    return _analytics.setUserId(id: hashedId);
+  }
+
+  @override
+  Future<void> setUserProperty(String name, String value) {
+    return _analytics.setUserProperty(name: name, value: value);
+  }
+
+  @override
+  Future<void> setEnabled(bool enabled) {
+    return _analytics.setAnalyticsCollectionEnabled(enabled);
+  }
 }
