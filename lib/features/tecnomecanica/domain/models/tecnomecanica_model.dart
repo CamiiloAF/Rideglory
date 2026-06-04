@@ -5,11 +5,10 @@ class TecnomecanicaModel with VehicleDocumentExpiry implements VehicleDocumentMo
   const TecnomecanicaModel({
     required this.id,
     required this.vehicleId,
-    required this.certificateNumber,
     required this.cdaName,
-    this.cdaCode,
-    this.startDate,
+    required this.startDate,
     required this.expiryDate,
+    this.certificateNumber,
     this.documentUrl,
     this.createdAt,
     this.updatedAt,
@@ -19,26 +18,22 @@ class TecnomecanicaModel with VehicleDocumentExpiry implements VehicleDocumentMo
   final String id;
   @override
   final String vehicleId;
-  final String certificateNumber;
+  final String? certificateNumber;
   final String cdaName;
-  final String? cdaCode;
-  final DateTime? startDate;
   @override
   final DateTime expiryDate;
+  final DateTime startDate;
   final String? documentUrl;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
   VehicleDocumentKind get kind => VehicleDocumentKind.rtm;
 
-  // daysUntilExpiry + documentStatus come from VehicleDocumentExpiry mixin
-
   TecnomecanicaModel copyWith({
     String? id,
     String? vehicleId,
     String? certificateNumber,
     String? cdaName,
-    String? cdaCode,
     DateTime? startDate,
     DateTime? expiryDate,
     String? documentUrl,
@@ -50,7 +45,6 @@ class TecnomecanicaModel with VehicleDocumentExpiry implements VehicleDocumentMo
       vehicleId: vehicleId ?? this.vehicleId,
       certificateNumber: certificateNumber ?? this.certificateNumber,
       cdaName: cdaName ?? this.cdaName,
-      cdaCode: cdaCode ?? this.cdaCode,
       startDate: startDate ?? this.startDate,
       expiryDate: expiryDate ?? this.expiryDate,
       documentUrl: documentUrl ?? this.documentUrl,
@@ -67,7 +61,6 @@ class TecnomecanicaModel with VehicleDocumentExpiry implements VehicleDocumentMo
             vehicleId == other.vehicleId &&
             certificateNumber == other.certificateNumber &&
             cdaName == other.cdaName &&
-            cdaCode == other.cdaCode &&
             startDate == other.startDate &&
             expiryDate == other.expiryDate &&
             documentUrl == other.documentUrl;
@@ -79,7 +72,6 @@ class TecnomecanicaModel with VehicleDocumentExpiry implements VehicleDocumentMo
     vehicleId,
     certificateNumber,
     cdaName,
-    cdaCode,
     startDate,
     expiryDate,
     documentUrl,

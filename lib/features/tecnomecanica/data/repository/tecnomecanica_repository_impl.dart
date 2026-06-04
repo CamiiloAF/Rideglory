@@ -51,7 +51,6 @@ class TecnomecanicaRepositoryImpl implements TecnomecanicaRepository {
         final requestDto = CreateTecnomecanicaRequestDto(
           certificateNumber: tecnomecanica.certificateNumber,
           cdaName: tecnomecanica.cdaName,
-          cdaCode: tecnomecanica.cdaCode,
           startDate: tecnomecanica.startDate,
           expiryDate: tecnomecanica.expiryDate,
           documentUrl: tecnomecanica.documentUrl,

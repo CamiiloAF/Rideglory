@@ -405,9 +405,12 @@ class AppRouter {
         name: AppRoutes.tecnomecanicaManualCapture,
         builder: (context, state) {
           final params = state.extra as TecnomecanicaManualCaptureParams;
-          return TecnomecanicaManualCapturePage(
-            vehicle: params.vehicle,
-            existingRtm: params.existingRtm,
+          return BlocProvider.value(
+            value: params.cubit,
+            child: TecnomecanicaManualCapturePage(
+              vehicle: params.vehicle,
+              existingRtm: params.existingRtm,
+            ),
           );
         },
       ),

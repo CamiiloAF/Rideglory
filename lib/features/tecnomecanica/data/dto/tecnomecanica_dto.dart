@@ -9,11 +9,10 @@ class TecnomecanicaDto extends TecnomecanicaModel {
   const TecnomecanicaDto({
     required super.id,
     required super.vehicleId,
-    required super.certificateNumber,
     required super.cdaName,
-    super.cdaCode,
-    super.startDate,
+    required super.startDate,
     required super.expiryDate,
+    super.certificateNumber,
     super.documentUrl,
     super.createdAt,
     super.updatedAt,
@@ -28,18 +27,16 @@ class TecnomecanicaDto extends TecnomecanicaModel {
 @JsonSerializable(converters: apiJsonDateTimeConverters)
 class CreateTecnomecanicaRequestDto {
   const CreateTecnomecanicaRequestDto({
-    required this.certificateNumber,
     required this.cdaName,
-    this.cdaCode,
-    this.startDate,
+    required this.startDate,
     required this.expiryDate,
+    this.certificateNumber,
     this.documentUrl,
   });
 
-  final String certificateNumber;
+  final String? certificateNumber;
   final String cdaName;
-  final String? cdaCode;
-  final DateTime? startDate;
+  final DateTime startDate;
   final DateTime expiryDate;
   final String? documentUrl;
 

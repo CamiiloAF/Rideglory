@@ -11,6 +11,7 @@ import 'package:rideglory/features/tecnomecanica/presentation/flow/tecnomecanica
 import 'package:rideglory/features/vehicle_documents/domain/vehicle_document_status.dart';
 import 'package:rideglory/features/vehicle_documents/presentation/widgets/detail_row.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/shared/helpers/document_downloader.dart';
 
 class TecnomecanicaDataView extends StatefulWidget {
   const TecnomecanicaDataView({
@@ -28,6 +29,21 @@ class TecnomecanicaDataView extends StatefulWidget {
 
 class _TecnomecanicaDataViewState extends State<TecnomecanicaDataView> {
   bool _deleting = false;
+  bool _openingDocument = false;
+
+  Future<void> _openDocument() async {
+    if (_openingDocument) return;
+    setState(() => _openingDocument = true);
+    try {
+      final url = widget.rtm.documentUrl!;
+      await DocumentDownloader.openRemote(
+        url,
+        DocumentDownloader.fileNameFromUrl(url),
+      );
+    } finally {
+      if (mounted) setState(() => _openingDocument = false);
+    }
+  }
 
   Future<void> _confirmAndDelete() async {
     final confirmed = await ConfirmationDialog.show(
@@ -217,24 +233,19 @@ class _TecnomecanicaDataViewState extends State<TecnomecanicaDataView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                DocumentDetailRow(
-                  label: context.l10n.tecnomecanica_field_certificate_number,
-                  value: widget.rtm.certificateNumber,
-                ),
+                if (widget.rtm.certificateNumber != null)
+                  DocumentDetailRow(
+                    label: context.l10n.tecnomecanica_field_certificate_number,
+                    value: widget.rtm.certificateNumber!,
+                  ),
                 DocumentDetailRow(
                   label: context.l10n.tecnomecanica_field_cda_name,
                   value: widget.rtm.cdaName,
                 ),
-                if (widget.rtm.cdaCode != null)
-                  DocumentDetailRow(
-                    label: context.l10n.tecnomecanica_field_cda_code,
-                    value: widget.rtm.cdaCode!,
-                  ),
-                if (widget.rtm.startDate != null)
-                  DocumentDetailRow(
-                    label: context.l10n.tecnomecanica_field_start_date,
-                    value: dateFormat.format(widget.rtm.startDate!),
-                  ),
+                DocumentDetailRow(
+                  label: context.l10n.tecnomecanica_field_start_date,
+                  value: dateFormat.format(widget.rtm.startDate),
+                ),
                 DocumentDetailRow(
                   label: context.l10n.tecnomecanica_field_expiry_date,
                   value: dateFormat.format(widget.rtm.expiryDate),
@@ -248,17 +259,8 @@ class _TecnomecanicaDataViewState extends State<TecnomecanicaDataView> {
           if (widget.rtm.documentStatus == VehicleDocumentStatus.expired) ...[
             AppButton(
               label: context.l10n.tecnomecanica_renew_btn,
-              onPressed: () => TecnomecanicaEntryFlow.start(
-                context,
-                widget.vehicle,
-                onSaved: () {
-                  if (context.mounted) {
-                    context
-                        .read<TecnomecanicaCubit>()
-                        .load(widget.vehicle.id ?? '');
-                  }
-                },
-              ),
+              onPressed: () =>
+                  TecnomecanicaEntryFlow.start(context, widget.vehicle),
               isFullWidth: true,
             ),
             const SizedBox(height: 16),
@@ -271,12 +273,24 @@ class _TecnomecanicaDataViewState extends State<TecnomecanicaDataView> {
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: AppColors.darkBorderPrimary),
             ),
-            child: SoatActionTile(
-              icon: Icons.delete_outline_rounded,
-              label: context.l10n.tecnomecanica_delete_button,
-              color: AppColors.error,
-              loading: _deleting,
-              onTap: _confirmAndDelete,
+            child: Column(
+              children: [
+                if (widget.rtm.documentUrl != null)
+                  SoatActionTile(
+                    icon: Icons.description_outlined,
+                    label: context.l10n.soat_view_document,
+                    loading: _openingDocument,
+                    onTap: _openDocument,
+                  ),
+                SoatActionTile(
+                  icon: Icons.delete_outline_rounded,
+                  label: context.l10n.tecnomecanica_delete_button,
+                  color: AppColors.error,
+                  loading: _deleting,
+                  showDivider: widget.rtm.documentUrl != null,
+                  onTap: _confirmAndDelete,
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 32),

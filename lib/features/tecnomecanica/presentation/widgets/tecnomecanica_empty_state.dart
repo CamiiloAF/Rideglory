@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/tecnomecanica/presentation/cubit/tecnomecanica_cubit.dart';
-import 'package:rideglory/features/tecnomecanica/presentation/flow/tecnomecanica_entry_flow.dart';
+import 'package:rideglory/features/tecnomecanica/presentation/pages/tecnomecanica_manual_capture_params.dart';
 import 'package:rideglory/features/tecnomecanica/presentation/widgets/tecnomecanica_exemption_notice.dart';
-import 'package:rideglory/features/vehicle_documents/presentation/widgets/empty_state.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/shared/router/app_routes.dart';
 
 /// RTM-specific empty state. Delegates layout to [DocumentEmptyState],
 /// injecting RTM-specific copy and the RTM entry flow as CTA.
@@ -62,15 +63,19 @@ class TecnomecanicaEmptyState extends StatelessWidget {
             AppSpacing.gapXxl,
             AppButton(
               label: context.l10n.tecnomecanica_renew_btn,
-              onPressed: () => TecnomecanicaEntryFlow.start(
-                context,
-                vehicle,
-                onSaved: () {
-                  if (context.mounted) {
-                    context.read<TecnomecanicaCubit>().load(vehicle.id ?? '');
-                  }
-                },
-              ),
+              onPressed: () => context
+                  .push<bool>(
+                    AppRoutes.tecnomecanicaManualCapture,
+                    extra: TecnomecanicaManualCaptureParams(
+                      cubit: context.read<TecnomecanicaCubit>(),
+                      vehicle: vehicle,
+                    ),
+                  )
+                  .then((_) {
+                if (context.mounted) {
+                  context.read<TecnomecanicaCubit>().load(vehicle.id ?? '');
+                }
+              }),
             ),
           ],
         ),

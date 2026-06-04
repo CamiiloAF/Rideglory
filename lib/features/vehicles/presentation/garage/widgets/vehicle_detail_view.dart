@@ -8,6 +8,7 @@ import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_detail_specs_card.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_detail_top_row.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_maintenance_history_section.dart';
+import 'package:rideglory/features/tecnomecanica/presentation/flow/tecnomecanica_entry_flow.dart';
 import 'package:rideglory/features/vehicle_documents/domain/vehicle_document_kind.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_document_card.dart';
 
@@ -60,6 +61,16 @@ class VehicleDetailView extends StatelessWidget {
                 VehicleDocumentCard(
                   kind: VehicleDocumentKind.soat,
                   vehicle: vehicle,
+                ),
+                const SizedBox(height: 16),
+                // TODO(fase-4): reemplazar por VehicleDocumentCard(kind: rtm)
+                OutlinedButton.icon(
+                  onPressed: () => TecnomecanicaEntryFlow.start(context, vehicle),
+                  icon: const Icon(Icons.build_outlined, size: 16),
+                  label: const Text('Tecnomecánica [TEST]'),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 44),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 VehicleMaintenanceHistorySection(

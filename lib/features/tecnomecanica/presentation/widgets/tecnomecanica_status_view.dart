@@ -54,6 +54,7 @@ class TecnomecanicaStatusView extends StatelessWidget {
                     .push<bool>(
                       AppRoutes.tecnomecanicaManualCapture,
                       extra: TecnomecanicaManualCaptureParams(
+                        cubit: context.read<TecnomecanicaCubit>(),
                         vehicle: vehicle,
                         existingRtm: state.data,
                       ),
