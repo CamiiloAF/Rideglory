@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
+import 'package:rideglory/shared/router/analytics_route_observer.dart';
+import 'package:rideglory/shared/router/app_router.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/shared/widgets/home_bottom_navigation_bar.dart';
+import 'package:rideglory/shared/widgets/shell_screen_view_tracker.dart';
 
 const int _addButtonBarIndex = 2;
 
@@ -17,14 +22,23 @@ class MainShell extends StatelessWidget {
     super.key,
     required this.navigationShell,
     this.showNotificationBadge = false,
-  });
+    AnalyticsService? analyticsService,
+    AnalyticsRouteObserver? analyticsObserver,
+  })  : _analyticsService = analyticsService,
+        _analyticsObserver = analyticsObserver;
 
   final StatefulNavigationShell navigationShell;
   final bool showNotificationBadge;
 
+  // Inyectables para testing; en producción se obtienen desde DI / AppRouter.
+  final AnalyticsService? _analyticsService;
+  final AnalyticsRouteObserver? _analyticsObserver;
+
   @override
   Widget build(BuildContext context) {
     final currentBarIndex = _branchIndexToBarIndex(navigationShell.currentIndex);
+    final analytics = _analyticsService ?? getIt<AnalyticsService>();
+    final observer = _analyticsObserver ?? AppRouter.analyticsObserver;
 
     // Reexpone la MISMA instancia de VehicleCubit provista en la raíz
     // (sobre MaterialApp) a las ramas del StatefulShellRoute. No se usa el
@@ -32,20 +46,26 @@ class MainShell extends StatelessWidget {
     // no es singleton, su ciclo de vida lo maneja el BlocProvider raíz.
     return BlocProvider.value(
       value: context.read<VehicleCubit>(),
-      child: Scaffold(
-        body: navigationShell,
-        bottomNavigationBar: HomeBottomNavigationBar(
-          currentIndex: currentBarIndex,
-          showNotificationBadge: showNotificationBadge,
-          onTap: (int index) {
-            if (index == _addButtonBarIndex) {
-              context.pushNamed(AppRoutes.createEvent);
-              return;
-            }
-            final branchIndex = index > _addButtonBarIndex ? index - 1 : index;
-            navigationShell.goBranch(branchIndex);
-          },
-          onAddTap: () => context.pushNamed(AppRoutes.createEvent),
+      child: ShellScreenViewTracker(
+        navigationShell: navigationShell,
+        analytics: analytics,
+        observer: observer,
+        child: Scaffold(
+          body: navigationShell,
+          bottomNavigationBar: HomeBottomNavigationBar(
+            currentIndex: currentBarIndex,
+            showNotificationBadge: showNotificationBadge,
+            onTap: (int index) {
+              if (index == _addButtonBarIndex) {
+                context.pushNamed(AppRoutes.createEvent);
+                return;
+              }
+              final branchIndex =
+                  index > _addButtonBarIndex ? index - 1 : index;
+              navigationShell.goBranch(branchIndex);
+            },
+            onAddTap: () => context.pushNamed(AppRoutes.createEvent),
+          ),
         ),
       ),
     );

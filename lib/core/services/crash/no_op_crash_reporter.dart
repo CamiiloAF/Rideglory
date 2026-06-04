@@ -14,6 +14,7 @@ class NoOpCrashReporter implements CrashReporter {
     StackTrace? stack, {
     String? reason,
     bool fatal = false,
+    List<String> information = const [],
   }) async {}
 
   @override

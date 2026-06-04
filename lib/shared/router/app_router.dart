@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/events/presentation/tracking/cubit/live_tracking_cubit.dart';
 import 'package:rideglory/features/events/presentation/tracking/live_tracking_session_holder.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
@@ -45,6 +46,7 @@ import '../../features/vehicles/presentation/detail/vehicle_detail_page.dart';
 import '../../features/vehicles/presentation/form/vehicle_form_page.dart';
 import '../../features/vehicles/presentation/garage/garage_page.dart';
 import '../widgets/main_shell.dart';
+import 'analytics_route_observer.dart';
 import 'app_routes.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -60,9 +62,15 @@ class AppRouter {
     appRouter.push(routerPath);
   }
 
+  /// Observer que emite `screen_view` automáticamente por cada transición de
+  /// ruta. Expuesto para que [MainShell] lo pase al [ShellScreenViewTracker].
+  static final AnalyticsRouteObserver analyticsObserver =
+      AnalyticsRouteObserver(getIt<AnalyticsService>());
+
   static final GoRouter appRouter = GoRouter(
     navigatorKey: _rootNavigatorKey,
     initialLocation: AppRoutes.splash,
+    observers: <NavigatorObserver>[analyticsObserver],
     redirect: (BuildContext context, GoRouterState state) {
       final isAuthenticated = FirebaseAuth.instance.currentUser != null;
 

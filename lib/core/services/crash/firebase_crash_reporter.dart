@@ -19,8 +19,15 @@ class FirebaseCrashReporter implements CrashReporter {
     StackTrace? stack, {
     String? reason,
     bool fatal = false,
+    List<String> information = const [],
   }) =>
-      _crashlytics.recordError(exception, stack, reason: reason, fatal: fatal);
+      _crashlytics.recordError(
+        exception,
+        stack,
+        reason: reason,
+        fatal: fatal,
+        information: information,
+      );
 
   @override
   Future<void> setEnabled(bool enabled) =>
