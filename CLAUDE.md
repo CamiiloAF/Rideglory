@@ -305,13 +305,10 @@ The `.cursor/rules/` directory defines specialized roles:
 - `agent-architect.mdc`: Architectural reviewer (scalability, dependencies, lints)
 - `agent-devops.mdc`: DevOps/tooling role (CI/CD, YAML configs)
 
-For complex changes, follow the harness pattern in `AGENTS.md`:
-1. Implementer (task agent) codes the feature
-2. Reviewer (clean architecture agent) audits the diff → feedback
-3. Implementer fixes issues → commit
-4. (Repeat until approved)
-
-This ensures architectural consistency without manual review steps.
+For complex changes, use the **Workflow JS pipelines** `rg-plan` (planeación por fases) and `rg-exec`
+(ejecución por fase con nivel lite/normal/full y auditor Opus). Reemplazaron al sistema `/iter` /
+`custom-iter` (eliminado). Cada fase: implementador (Sonnet) → auditor (Opus) itera hasta aprobar.
+Los planes viven en `docs/plans/<slug>/` y las corridas en `docs/exec-runs/<slug>/`.
 
 ## Debugging & Troubleshooting
 

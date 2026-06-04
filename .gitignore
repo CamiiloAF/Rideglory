@@ -62,3 +62,7 @@ images/
 **.freezed.dart
 **.mocks.dart
 pubspec.lock
+# Cleanup 2026-06
+/coverage/
+/android/build/
+.git_tag_*
