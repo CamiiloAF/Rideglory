@@ -353,6 +353,14 @@ abstract final class AnalyticsParams {
   static const String soatStatus = 'soat_status';
 
   // ---------------------------------------------------------------------------
+  // Tecnomecánica (RTM)
+  // ---------------------------------------------------------------------------
+
+  /// Estado canónico de la RTM: `valid` | `expiringSoon` | `expired` | `none`.
+  /// Tipo: `String`. Max key 40 chars: 10. ✓
+  static const String rtmStatus = 'rtm_status';
+
+  // ---------------------------------------------------------------------------
   // Notificaciones (Fase 9)
   // ---------------------------------------------------------------------------
 

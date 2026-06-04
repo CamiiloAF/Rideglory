@@ -9,6 +9,7 @@ import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/soat/domain/models/soat_model.dart';
 import 'package:rideglory/features/soat/presentation/cubit/soat_cubit.dart';
 import 'package:rideglory/features/soat/presentation/scan/soat_entry_flow.dart';
+import 'package:rideglory/features/tecnomecanica/presentation/cubit/tecnomecanica_cubit.dart';
 import 'package:rideglory/features/vehicle_documents/domain/vehicle_document_kind.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
@@ -33,9 +34,12 @@ class VehicleDocumentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return switch (kind) {
       VehicleDocumentKind.soat => BlocProvider(
-        create: (_) =>
-            getIt<SoatCubit>()..load(vehicle.id ?? ''),
+        create: (_) => getIt<SoatCubit>()..load(vehicle.id ?? ''),
         child: _SoatDocumentCardBody(vehicle: vehicle),
+      ),
+      VehicleDocumentKind.rtm => BlocProvider(
+        create: (_) => getIt<TecnomecanicaCubit>()..load(vehicle.id ?? ''),
+        child: _RtmDocumentCardBody(vehicle: vehicle),
       ),
     };
   }
@@ -203,6 +207,86 @@ class _SoatDocumentCardBody extends StatelessWidget {
             },
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _RtmDocumentCardBody extends StatelessWidget {
+  const _RtmDocumentCardBody({required this.vehicle});
+
+  final VehicleModel vehicle;
+
+  Future<void> _onTap(BuildContext context) async {
+    await context.pushNamed(
+      AppRoutes.tecnomecanicaStatus,
+      extra: vehicle,
+    );
+    if (context.mounted) {
+      context.read<TecnomecanicaCubit>().load(vehicle.id ?? '');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.darkCard,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.darkBorderPrimary),
+      ),
+      clipBehavior: Clip.hardEdge,
+      child: InkWell(
+        onTap: () => _onTap(context),
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Row(
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: AppColors.textOnDarkSecondary.withAlpha(30),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(
+                  Icons.assignment_outlined,
+                  size: 18,
+                  color: AppColors.textOnDarkSecondary,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.l10n.tecnomecanica_page_status_title,
+                      style: const TextStyle(
+                        color: AppColors.textOnDarkTertiary,
+                        fontSize: 11,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      context.l10n.tecnomecanica_status_no_rtm,
+                      style: const TextStyle(
+                        color: AppColors.textOnDarkSecondary,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.arrow_forward_ios,
+                size: 14,
+                color: AppColors.textOnDarkTertiary,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

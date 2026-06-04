@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=375">
+<title>RTM Status Page — Rideglory</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d0d0f;
+    font-family: 'Space Grotesk', sans-serif;
+    width: 375px;
+    min-height: 812px;
+    color: #f0f0f0;
+    position: relative;
+  }
+  .status-bar {
+    height: 44px;
+    background: #0d0d0f;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    font-size: 12px;
+    color: #f0f0f0;
+  }
+  .app-bar {
+    height: 56px;
+    background: #0d0d0f;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    border-bottom: 1px solid #1e1e1e;
+    position: relative;
+  }
+  .app-bar .back-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f0f0f0;
+    font-size: 18px;
+  }
+  .app-bar .title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 18px;
+    font-weight: 700;
+    color: #f0f0f0;
+  }
+  .app-bar .action-btn {
+    position: absolute;
+    right: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #f98c1f;
+    padding: 8px;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  /* HERO CARD — VALID */
+  .hero-card {
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid;
+  }
+  .hero-card.valid {
+    background: rgba(52, 199, 89, 0.08);
+    border-color: rgba(52, 199, 89, 0.3);
+  }
+  .hero-card.expiring {
+    background: rgba(255, 159, 10, 0.08);
+    border-color: rgba(255, 159, 10, 0.3);
+  }
+  .hero-card.expired {
+    background: rgba(255, 69, 58, 0.08);
+    border-color: rgba(255, 69, 58, 0.3);
+  }
+  .hero-icon {
+    font-size: 48px;
+  }
+  .hero-title {
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .valid .hero-title { color: #34c759; }
+  .expiring .hero-title { color: #ff9f0a; }
+  .expired .hero-title { color: #ff453a; }
+  .days-chip {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .valid .days-chip { background: rgba(52,199,89,0.12); color: #34c759; }
+  .expiring .days-chip { background: rgba(255,159,10,0.12); color: #ff9f0a; }
+  .expired .days-chip { background: rgba(255,69,58,0.12); color: #ff453a; }
+
+  /* WARNING BANNER */
+  .warning-banner {
+    margin-top: 16px;
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .warning-banner.expiring {
+    background: rgba(255,159,10,0.08);
+    border: 1px solid rgba(255,159,10,0.3);
+    color: #ff9f0a;
+  }
+  .warning-banner.expired {
+    background: rgba(255,69,58,0.08);
+    border: 1px solid rgba(255,69,58,0.3);
+    color: #ff453a;
+  }
+  .warning-banner .warn-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .warning-banner p { font-size: 13px; line-height: 1.4; }
+
+  /* DETAILS CARD */
+  .details-card {
+    margin-top: 24px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    border: 1px solid #2a2a2a;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #2a2a2a;
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-row .label { font-size: 13px; color: #888; }
+  .detail-row .value { font-size: 14px; font-weight: 600; color: #f0f0f0; }
+
+  /* RENEW BUTTON (only expired state) */
+  .btn-primary {
+    margin-top: 20px;
+    background: #f98c1f;
+    color: #0d0d0f;
+    border-radius: 8px;
+    height: 52px;
+    font-size: 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  /* ACTIONS LIST */
+  .actions-list {
+    margin-top: 16px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    border: 1px solid #2a2a2a;
+    overflow: hidden;
+  }
+  .action-tile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border-bottom: 1px solid #2a2a2a;
+    min-height: 56px;
+    cursor: pointer;
+  }
+  .action-tile:last-child { border-bottom: none; }
+  .action-tile .tile-icon { font-size: 20px; }
+  .action-tile .tile-label { font-size: 15px; font-weight: 500; color: #f0f0f0; }
+  .action-tile.danger .tile-label { color: #ff453a; }
+  .action-tile.danger .tile-icon { color: #ff453a; }
+
+  /* EXEMPTION NOTICE */
+  .exemption-notice {
+    margin-top: 16px;
+    background: rgba(249, 140, 31, 0.08);
+    border: 1px solid rgba(249, 140, 31, 0.25);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .exemption-notice .ex-icon { font-size: 16px; color: #f98c1f; flex-shrink: 0; margin-top: 2px; }
+  .exemption-notice p { font-size: 12px; color: #f98c1f; line-height: 1.5; }
+
+  /* STATE LABELS */
+  .state-label {
+    margin-top: 8px;
+    font-size: 11px;
+    color: #555;
+    text-align: center;
+    font-style: italic;
+  }
+
+  /* DIVIDER */
+  .section-divider {
+    height: 1px;
+    background: #2a2a2a;
+    margin: 32px 0;
+  }
+  h2 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #888;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════ -->
+<!-- STATE 1: VIGENTE (Data state)          -->
+<!-- ══════════════════════════════════════ -->
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span>●●●</span>
+</div>
+<div class="app-bar">
+  <div class="back-btn">‹</div>
+  <div class="title">Mi tecnomecánica</div>
+  <div class="action-btn">Editar</div>
+</div>
+<div class="body">
+  <h2>Estado: Vigente</h2>
+  <div class="hero-card valid">
+    <div class="hero-icon" style="color:#34c759">✓</div>
+    <div class="hero-title">Tu RTM está al día</div>
+    <div class="days-chip">245 días restantes</div>
+  </div>
+
+  <div class="details-card">
+    <div class="detail-row">
+      <span class="label">N.° de certificado</span>
+      <span class="value">RTM-2024-00981</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">CDA</span>
+      <span class="value">CDA Motos Norte</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Código CDA</span>
+      <span class="value">CDA-0012</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Fecha inicio</span>
+      <span class="value">10/01/2026</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Fecha vencimiento</span>
+      <span class="value">10/01/2027</span>
+    </div>
+  </div>
+
+  <div class="actions-list">
+    <div class="action-tile danger">
+      <span class="tile-icon">🗑</span>
+      <span class="tile-label">Eliminar RTM</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- STATE 2: POR VENCER                    -->
+<!-- ══════════════════════════════════════ -->
+
+<div class="status-bar" style="margin-top:0">
+  <span>9:41</span>
+  <span>●●●</span>
+</div>
+<div class="app-bar">
+  <div class="back-btn">‹</div>
+  <div class="title">Mi tecnomecánica</div>
+  <div class="action-btn">Editar</div>
+</div>
+<div class="body">
+  <h2>Estado: Por vencer</h2>
+  <div class="hero-card expiring">
+    <div class="hero-icon" style="color:#ff9f0a">⚠</div>
+    <div class="hero-title">Tu RTM vence pronto</div>
+    <div class="days-chip">18 días restantes</div>
+  </div>
+  <div class="warning-banner expiring">
+    <span class="warn-icon">⚠</span>
+    <p>Programa tu revisión técnico-mecánica con anticipación para evitar sanciones.</p>
+  </div>
+  <div class="details-card">
+    <div class="detail-row">
+      <span class="label">N.° de certificado</span>
+      <span class="value">RTM-2024-00981</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">CDA</span>
+      <span class="value">CDA Motos Norte</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Fecha vencimiento</span>
+      <span class="value">22/06/2026</span>
+    </div>
+  </div>
+  <div class="actions-list">
+    <div class="action-tile danger">
+      <span class="tile-icon">🗑</span>
+      <span class="tile-label">Eliminar RTM</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- STATE 3: VENCIDA                       -->
+<!-- ══════════════════════════════════════ -->
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span>●●●</span>
+</div>
+<div class="app-bar">
+  <div class="back-btn">‹</div>
+  <div class="title">Mi tecnomecánica</div>
+  <div class="action-btn">Editar</div>
+</div>
+<div class="body">
+  <h2>Estado: Vencida</h2>
+  <div class="hero-card expired">
+    <div class="hero-icon" style="color:#ff453a">✕</div>
+    <div class="hero-title">Tu RTM está vencida</div>
+    <div class="days-chip">Venció hace 45 días</div>
+  </div>
+  <div class="warning-banner expired">
+    <span class="warn-icon">⚠</span>
+    <p>Circular sin revisión técnico-mecánica vigente es una infracción. Lleva tu moto a revisión lo antes posible.</p>
+  </div>
+  <div class="details-card">
+    <div class="detail-row">
+      <span class="label">N.° de certificado</span>
+      <span class="value">RTM-2023-00560</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">CDA</span>
+      <span class="value">CDA Motos Sur</span>
+    </div>
+    <div class="detail-row">
+      <span class="label">Fecha vencimiento</span>
+      <span class="value">20/04/2026</span>
+    </div>
+  </div>
+  <div class="btn-primary">Registrar nueva RTM</div>
+  <div class="actions-list" style="margin-top:16px">
+    <div class="action-tile danger">
+      <span class="tile-icon">🗑</span>
+      <span class="tile-label">Eliminar RTM</span>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- STATE 4: EMPTY (sin RTM)               -->
+<!-- ══════════════════════════════════════ -->
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span>●●●</span>
+</div>
+<div class="app-bar">
+  <div class="back-btn">‹</div>
+  <div class="title">Mi tecnomecánica</div>
+</div>
+<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:500px; padding: 24px; gap:0">
+  <h2 style="margin-bottom:0; text-align:center; margin-top:0">Estado: Sin RTM</h2>
+  <br>
+  <div style="width:80px;height:80px;background:#1a1a1a;border-radius:20px;border:1px solid #2a2a2a;display:flex;align-items:center;justify-content:center;font-size:40px;color:#555">📋</div>
+  <div style="height:24px"></div>
+  <div style="font-size:18px;font-weight:700;color:#f0f0f0;text-align:center">Sin RTM registrada</div>
+  <div style="height:8px"></div>
+  <div style="font-size:14px;color:#888;text-align:center;line-height:1.5">Registra los datos de tu revisión técnico-mecánica para tener un control de su vencimiento.</div>
+  <div style="height:24px"></div>
+  <!-- Exemption notice (solo si vehículo <2 años) -->
+  <div class="exemption-notice" style="width:100%">
+    <span class="ex-icon">ℹ</span>
+    <p>Los vehículos con menos de 2 años de antigüedad están exentos de la revisión técnico-mecánica. Aun así, puedes registrarla.</p>
+  </div>
+  <div style="height:24px"></div>
+  <div class="btn-primary" style="width:100%">Registrar RTM</div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- STATE 5: LOADING                       -->
+<!-- ══════════════════════════════════════ -->
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span>●●●</span>
+</div>
+<div class="app-bar">
+  <div class="back-btn">‹</div>
+  <div class="title">Mi tecnomecánica</div>
+</div>
+<div style="display:flex;align-items:center;justify-content:center;height:400px">
+  <div style="width:40px;height:40px;border:3px solid #2a2a2a;border-top-color:#f98c1f;border-radius:50%;"></div>
+</div>
+
+</body>
+</html>

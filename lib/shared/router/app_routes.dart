@@ -45,4 +45,9 @@ abstract class AppRoutes {
   // SOAT routes
   static const String soatStatus = '/soat/status';
   static const String soatManualCapture = '/soat/manual-capture';
+
+  // Tecnomecánica (RTM) routes
+  static const String tecnomecanicaStatus = '/tecnomecanica/status';
+  static const String tecnomecanicaManualCapture =
+      '/tecnomecanica/manual-capture';
 }

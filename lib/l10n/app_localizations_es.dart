@@ -2694,4 +2694,118 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get vehicle_soat_upload_subtitle =>
       'Selecciona una opción para actualizar el SOAT de tu vehículo';
+
+  @override
+  String get tecnomecanica_page_status_title => 'Mi tecnomecánica';
+
+  @override
+  String get tecnomecanica_edit_btn => 'Editar';
+
+  @override
+  String get tecnomecanica_valid_title => 'Tu RTM está al día';
+
+  @override
+  String get tecnomecanica_expiring_title => 'Tu RTM vence pronto';
+
+  @override
+  String get tecnomecanica_expired_title => 'Tu RTM está vencida';
+
+  @override
+  String tecnomecanica_valid_days_remaining(int count) {
+    return '$count días restantes';
+  }
+
+  @override
+  String tecnomecanica_expired_days_ago(int count) {
+    return 'Venció hace $count días';
+  }
+
+  @override
+  String get tecnomecanica_expiring_warning =>
+      'Programa tu revisión técnico-mecánica con anticipación para evitar sanciones.';
+
+  @override
+  String get tecnomecanica_expired_warning =>
+      'Circular sin revisión técnico-mecánica vigente es una infracción. Lleva tu moto a revisión lo antes posible.';
+
+  @override
+  String get tecnomecanica_renew_btn => 'Registrar nueva RTM';
+
+  @override
+  String get tecnomecanica_field_certificate_number => 'N.° de certificado';
+
+  @override
+  String get tecnomecanica_field_cda_name => 'CDA';
+
+  @override
+  String get tecnomecanica_field_cda_code => 'Código CDA';
+
+  @override
+  String get tecnomecanica_field_start_date => 'Fecha inicio';
+
+  @override
+  String get tecnomecanica_field_expiry_date => 'Fecha vencimiento';
+
+  @override
+  String get tecnomecanica_field_document_url => 'URL del documento';
+
+  @override
+  String get tecnomecanica_delete_button => 'Eliminar RTM';
+
+  @override
+  String get tecnomecanica_delete_confirm_title => '¿Eliminar RTM?';
+
+  @override
+  String get tecnomecanica_delete_confirm_message =>
+      'Se eliminará la información de la revisión técnico-mecánica de este vehículo. Esta acción no se puede deshacer.';
+
+  @override
+  String get tecnomecanica_deleted_success => 'RTM eliminada';
+
+  @override
+  String get tecnomecanica_status_no_rtm => 'Sin RTM registrada';
+
+  @override
+  String get tecnomecanica_manual_note =>
+      'Registra los datos de tu revisión técnico-mecánica para hacer seguimiento de su vencimiento.';
+
+  @override
+  String get tecnomecanica_form_create_title => 'Registrar RTM';
+
+  @override
+  String get tecnomecanica_edit_title => 'Editar RTM';
+
+  @override
+  String tecnomecanica_form_subtitle(String vehicleName) {
+    return 'Ingresa los datos de la revisión técnico-mecánica de $vehicleName.';
+  }
+
+  @override
+  String get tecnomecanica_save_data_btn => 'Guardar datos';
+
+  @override
+  String get tecnomecanica_saving => 'Guardando...';
+
+  @override
+  String get tecnomecanica_save_error =>
+      'No se pudo guardar la revisión técnico-mecánica. Intenta de nuevo.';
+
+  @override
+  String get tecnomecanica_certificate_number_hint => 'Ej: CDA-123456';
+
+  @override
+  String get tecnomecanica_cda_name_hint => 'Nombre del CDA';
+
+  @override
+  String get tecnomecanica_cda_code_hint => 'Código del CDA (opcional)';
+
+  @override
+  String get tecnomecanica_date_hint => 'dd/mm/aaaa';
+
+  @override
+  String get tecnomecanica_document_url_hint => 'https://...';
+
+  @override
+  String get tecnomecanica_exemption_notice =>
+      'Los vehículos con menos de 2 años no están obligados a tener RTM. Puedes registrarla de todas formas para llevar el control.';
 }

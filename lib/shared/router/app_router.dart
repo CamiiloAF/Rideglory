@@ -27,6 +27,9 @@ import 'package:rideglory/features/notifications/presentation/notifications_page
 import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_page.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_params.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_status_page.dart';
+import 'package:rideglory/features/tecnomecanica/presentation/pages/tecnomecanica_manual_capture_page.dart';
+import 'package:rideglory/features/tecnomecanica/presentation/pages/tecnomecanica_manual_capture_params.dart';
+import 'package:rideglory/features/tecnomecanica/presentation/pages/tecnomecanica_status_page.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
@@ -386,6 +389,25 @@ class AppRouter {
             existingSoat: params.soat,
             initialLocalImagePath: params.initialLocalImagePath,
             extraction: params.extraction,
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.tecnomecanicaStatus,
+        name: AppRoutes.tecnomecanicaStatus,
+        builder: (context, state) {
+          final vehicle = state.extra as VehicleModel;
+          return TecnomecanicaStatusPage(vehicle: vehicle);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.tecnomecanicaManualCapture,
+        name: AppRoutes.tecnomecanicaManualCapture,
+        builder: (context, state) {
+          final params = state.extra as TecnomecanicaManualCaptureParams;
+          return TecnomecanicaManualCapturePage(
+            vehicle: params.vehicle,
+            existingRtm: params.existingRtm,
           );
         },
       ),
