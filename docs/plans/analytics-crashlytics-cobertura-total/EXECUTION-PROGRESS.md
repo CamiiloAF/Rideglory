@@ -2,7 +2,7 @@
 
 > Rama: `feat/analytics-crashlytics`
 > Ancla de reanudación: si el PC se apaga, lee este archivo + `git log` para saber qué está hecho y qué sigue.
-> Última actualización: 2026-06-04 (fases 1–6 commiteadas; fase 7 en curso). Nota: agentes Sonnet a veces se cortan a mitad; verifico (analyze+test) y completo antes de cada commit.
+> Última actualización: 2026-06-04 (fases 1–7 commiteadas; fase 8 en curso). Nota: agentes Sonnet a veces se cortan a mitad; verifico (analyze+test) y completo antes de cada commit.
 
 ## Cómo reanudar
 1. `git checkout feat/analytics-crashlytics`
@@ -22,8 +22,8 @@
 | 4 | Captura de errores de red (no-fatales) | lite | ✅ commiteada | be98a8e | network_error_classifier + handlerExceptionHttp; 52 tests; G5 anti-doble-conteo ok. |
 | 5 | Embudo adquisición: auth + onboarding | lite | ✅ commiteada | fb08e0e | 6 eventos + uid hasheado; 277 tests. |
 | 6 | Embudo eventos — LECTURA (home/descubrir) | lite | ✅ commiteada | e92e5bf | 3 eventos + 20 tests; 297 total. |
-| 7 | Embudo eventos — ESCRITURA y aprobación | lite | 🟠 en curso | — | Instrumentación mecánica. |
-| 8 | Tracking en vivo + SOS (solo hitos) | normal | ⬜ pendiente | — | SOS safety-critical; revisión real. Solo hitos, cero pings WS. |
+| 7 | Embudo eventos — ESCRITURA y aprobación | lite | ✅ commiteada | 6bbce3f | 5 cubits, +19 eventos; 332 tests. |
+| 8 | Tracking en vivo + SOS (solo hitos) | normal | 🟠 en curso | — | SOS safety-critical; revisión real. Solo hitos, cero pings WS. |
 | 9 | Garaje, mantenimientos, SOAT, perfil, descubrimiento | lite | ⬜ pendiente | — | Amplio pero mecánico; se puede partir. |
 | 10 | Auditoría no-PII transversal + doc QA | normal | ⬜ pendiente | — | Verificación de privacidad cross-cutting. |
 | 11 | Privacidad: opt-out en perfil + política | normal | ⬜ pendiente | — | UI nueva + setEnabled debe desactivar bien analítica/crashlytics. |
