@@ -83,4 +83,107 @@ abstract final class AnalyticsEvents {
   /// [AnalyticsParams.source]. Sin PII: nunca event_id, nombre ni city.
   /// Max 40 chars: 'event_detail_viewed'.length == 19. ✓
   static const String eventDetailViewed = 'event_detail_viewed';
+
+  // ---------------------------------------------------------------------------
+  // Events — escritura (Fase 7)
+  // ---------------------------------------------------------------------------
+
+  /// El rider inicia el formulario de creación o edición de evento.
+  /// Param: [AnalyticsParams.formMode] (`create` | `edit`).
+  /// Max 40 chars: 'events_create_started'.length == 21. ✓
+  static const String eventsCreateStarted = 'events_create_started';
+
+  /// El rider guardó el evento como borrador exitosamente.
+  /// Param: [AnalyticsParams.formMode] (`create` | `edit`).
+  /// Max 40 chars: 'events_draft_saved'.length == 18. ✓
+  static const String eventsDraftSaved = 'events_draft_saved';
+
+  /// El rider publicó el evento exitosamente.
+  /// Param: [AnalyticsParams.formMode] (`create` | `edit`).
+  /// Max 40 chars: 'events_published'.length == 16. ✓
+  static const String eventsPublished = 'events_published';
+
+  /// El intento de publicar falló.
+  /// Params: [AnalyticsParams.formMode], [AnalyticsParams.failureCategory].
+  /// Max 40 chars: 'events_publish_failed'.length == 21. ✓
+  static const String eventsPublishFailed = 'events_publish_failed';
+
+  /// El rider inició el borrado de un evento.
+  /// Max 40 chars: 'events_delete_attempted'.length == 23. ✓
+  static const String eventsDeleteAttempted = 'events_delete_attempted';
+
+  /// El evento se borró exitosamente.
+  /// Max 40 chars: 'events_delete_succeeded'.length == 23. ✓
+  static const String eventsDeleteSucceeded = 'events_delete_succeeded';
+
+  /// El borrado del evento falló.
+  /// Param: [AnalyticsParams.failureCategory].
+  /// Max 40 chars: 'events_delete_failed'.length == 20. ✓
+  static const String eventsDeleteFailed = 'events_delete_failed';
+
+  // ---------------------------------------------------------------------------
+  // Event registration — wizard (Fase 7)
+  // ---------------------------------------------------------------------------
+
+  /// El rider abrió el wizard de registro a un evento.
+  /// Max 40 chars: 'registration_started'.length == 20. ✓
+  static const String registrationStarted = 'registration_started';
+
+  /// El rider avanzó al siguiente paso del wizard.
+  /// Params: [AnalyticsParams.stepIndex], [AnalyticsParams.stepName].
+  /// Max 40 chars: 'registration_step_advanced'.length == 26. ✓
+  static const String registrationStepAdvanced = 'registration_step_advanced';
+
+  /// El rider retrocedió al paso anterior del wizard.
+  /// Params: [AnalyticsParams.stepIndex], [AnalyticsParams.stepName].
+  /// Max 40 chars: 'registration_step_back'.length == 22. ✓
+  static const String registrationStepBack = 'registration_step_back';
+
+  /// El rider envió el registro exitosamente.
+  /// Param: [AnalyticsParams.formMode] (`create` | `edit`).
+  /// Max 40 chars: 'registration_submitted'.length == 22. ✓
+  static const String registrationSubmitted = 'registration_submitted';
+
+  /// El envío del registro falló.
+  /// Params: [AnalyticsParams.formMode], [AnalyticsParams.failureCategory].
+  /// Max 40 chars: 'registration_submit_failed'.length == 26. ✓
+  static const String registrationSubmitFailed = 'registration_submit_failed';
+
+  /// El rider cerró el wizard sin enviar (mejor esfuerzo — dispose).
+  /// Max 40 chars: 'registration_abandoned'.length == 22. ✓
+  static const String registrationAbandoned = 'registration_abandoned';
+
+  // ---------------------------------------------------------------------------
+  // Event registration — aprobación (Fase 7)
+  // ---------------------------------------------------------------------------
+
+  /// El organizador aprobó una inscripción.
+  /// Max 40 chars: 'registration_approved'.length == 21. ✓
+  static const String registrationApproved = 'registration_approved';
+
+  /// El organizador rechazó una inscripción.
+  /// Max 40 chars: 'registration_rejected'.length == 21. ✓
+  static const String registrationRejected = 'registration_rejected';
+
+  /// El organizador marcó la inscripción como "listo para editar".
+  /// Max 40 chars: 'registration_ready_for_edit'.length == 27. ✓
+  static const String registrationReadyForEdit = 'registration_ready_for_edit';
+
+  /// Una acción de aprobación/rechazo/readyForEdit falló en el backend.
+  /// Param: [AnalyticsParams.approvalAction].
+  /// Max 40 chars: 'registration_approval_failed'.length == 28. ✓
+  static const String registrationApprovalFailed =
+      'registration_approval_failed';
+
+  // ---------------------------------------------------------------------------
+  // Event registration — mis registros (Fase 7)
+  // ---------------------------------------------------------------------------
+
+  /// El rider vio su listado de inscripciones propias.
+  /// Max 40 chars: 'registration_my_list_viewed'.length == 27. ✓
+  static const String registrationMyListViewed = 'registration_my_list_viewed';
+
+  /// El rider canceló su propia inscripción exitosamente.
+  /// Max 40 chars: 'registration_cancelled'.length == 22. ✓
+  static const String registrationCancelled = 'registration_cancelled';
 }

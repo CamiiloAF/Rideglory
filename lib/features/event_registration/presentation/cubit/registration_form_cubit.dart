@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/exceptions/domain_exception.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_params.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/core/services/auth_service.dart';
 import 'package:rideglory/features/event_registration/constants/registration_form_fields.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
@@ -20,6 +24,7 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
     this._getRiderProfileUseCase,
     this._saveRiderProfileUseCase,
     this._authService,
+    this._analytics,
   ) : super(const ResultState.initial());
 
   final formKey = GlobalKey<FormBuilderState>();
@@ -29,6 +34,7 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
   final GetRiderProfileUseCase _getRiderProfileUseCase;
   final SaveRiderProfileUseCase _saveRiderProfileUseCase;
   final AuthService _authService;
+  final AnalyticsService _analytics;
 
   String? _eventId;
   String? _eventName;
@@ -43,6 +49,31 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
 
   void toggleSaveToProfile([bool? value]) {
     _saveToProfile = value ?? !_saveToProfile;
+  }
+
+  /// Emite [registrationStarted] al abrir el wizard de inscripción.
+  void onWizardStarted() {
+    _analytics.logEvent(AnalyticsEvents.registrationStarted).ignore();
+  }
+
+  /// Emite [registrationStepAdvanced] cuando el rider avanza al siguiente paso.
+  /// [stepIndex] es el índice del paso al que se navega (0-based).
+  /// [stepName] es el nombre canónico del paso destino.
+  void onStepAdvanced(int stepIndex, String stepName) {
+    _analytics.logEvent(AnalyticsEvents.registrationStepAdvanced, {
+      AnalyticsParams.stepIndex: stepIndex,
+      AnalyticsParams.stepName: stepName,
+    }).ignore();
+  }
+
+  /// Emite [registrationStepBack] cuando el rider retrocede al paso anterior.
+  /// [stepIndex] es el índice del paso al que se regresa (0-based).
+  /// [stepName] es el nombre canónico del paso destino.
+  void onStepBack(int stepIndex, String stepName) {
+    _analytics.logEvent(AnalyticsEvents.registrationStepBack, {
+      AnalyticsParams.stepIndex: stepIndex,
+      AnalyticsParams.stepName: stepName,
+    }).ignore();
   }
 
   void initialize({
@@ -209,12 +240,43 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
             saveToProfile: _saveToProfile,
           );
 
-    result.fold((error) => emit(ResultState.error(error: error)), (
-      saved,
-    ) async {
-      await _saveRiderProfileUseCase(_buildRiderProfile(registration));
-      emit(ResultState.data(data: saved));
-    });
+    result.fold(
+      (error) {
+        _analytics.logEvent(AnalyticsEvents.registrationSubmitFailed, {
+          AnalyticsParams.formMode: isEditing
+              ? AnalyticsParams.formModeEdit
+              : AnalyticsParams.formModeCreate,
+          AnalyticsParams.failureCategory: _categorizeFailure(error),
+        }).ignore();
+        emit(ResultState.error(error: error));
+      },
+      (saved) async {
+        _analytics.logEvent(AnalyticsEvents.registrationSubmitted, {
+          AnalyticsParams.formMode: isEditing
+              ? AnalyticsParams.formModeEdit
+              : AnalyticsParams.formModeCreate,
+        }).ignore();
+        await _saveRiderProfileUseCase(_buildRiderProfile(registration));
+        emit(ResultState.data(data: saved));
+      },
+    );
+  }
+
+  String _categorizeFailure(DomainException error) {
+    final msg = error.message.toLowerCase();
+    if (msg.contains('network') ||
+        msg.contains('timeout') ||
+        msg.contains('connection') ||
+        msg.contains('socket')) {
+      return AnalyticsParams.failureCategoryNetwork;
+    }
+    if (msg.contains('404') || msg.contains('not found')) {
+      return AnalyticsParams.failureCategoryNotFound;
+    }
+    if (msg.contains('valid') || msg.contains('required')) {
+      return AnalyticsParams.failureCategoryValidation;
+    }
+    return AnalyticsParams.failureCategoryUnknown;
   }
 
   EventRegistrationModel? _buildRegistration() {

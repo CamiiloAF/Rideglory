@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/registration_with_event.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/cancel_event_registration_use_case.dart';
@@ -15,11 +17,13 @@ class MyRegistrationsCubit
     this._getMyRegistrationsUseCase,
     this._cancelRegistrationUseCase,
     this._getEventByIdUseCase,
+    this._analytics,
   ) : super(const ResultState.initial());
 
   final GetMyRegistrationsUseCase _getMyRegistrationsUseCase;
   final CancelEventRegistrationUseCase _cancelRegistrationUseCase;
   final GetEventByIdUseCase _getEventByIdUseCase;
+  final AnalyticsService _analytics;
 
   List<EventRegistrationModel> _registrations = [];
   Map<String, EventModel> _eventByEventId = {};
@@ -33,29 +37,28 @@ class MyRegistrationsCubit
   Future<void> fetchMyRegistrations() async {
     emit(const ResultState.loading());
     final result = await _getMyRegistrationsUseCase();
-    await result.fold(
-      (error) async => emit(ResultState.error(error: error)),
-      (registrations) async {
-        _registrations = registrations;
-        if (registrations.isEmpty) {
-          emit(const ResultState.empty());
-          return;
-        }
-        final eventIds =
-            registrations.map((r) => r.eventId).toSet().toList();
-        final eventResults = await Future.wait(
-          eventIds.map((id) => _getEventByIdUseCase(id)),
+    await result.fold((error) async => emit(ResultState.error(error: error)), (
+      registrations,
+    ) async {
+      _registrations = registrations;
+      _analytics.logEvent(AnalyticsEvents.registrationMyListViewed).ignore();
+      if (registrations.isEmpty) {
+        emit(const ResultState.empty());
+        return;
+      }
+      final eventIds = registrations.map((r) => r.eventId).toSet().toList();
+      final eventResults = await Future.wait(
+        eventIds.map((id) => _getEventByIdUseCase(id)),
+      );
+      _eventByEventId = {};
+      for (var i = 0; i < eventIds.length; i++) {
+        eventResults[i].fold(
+          (_) => null,
+          (event) => _eventByEventId[eventIds[i]] = event,
         );
-        _eventByEventId = {};
-        for (var i = 0; i < eventIds.length; i++) {
-          eventResults[i].fold(
-            (_) => null,
-            (event) => _eventByEventId[eventIds[i]] = event,
-          );
-        }
-        _emitFiltered();
-      },
-    );
+      }
+      _emitFiltered();
+    });
   }
 
   void updateStatusFilter(Set<RegistrationStatus> statuses) {
@@ -107,6 +110,7 @@ class MyRegistrationsCubit
   Future<bool> cancelRegistration(String registrationId) async {
     final result = await _cancelRegistrationUseCase(registrationId);
     return result.fold((error) => false, (_) {
+      _analytics.logEvent(AnalyticsEvents.registrationCancelled).ignore();
       final updatedRegistration = _registrations
           .firstWhere((r) => r.id == registrationId)
           .copyWith(status: RegistrationStatus.cancelled);
@@ -116,8 +120,9 @@ class MyRegistrationsCubit
   }
 
   void onChangeRegistration(EventRegistrationModel updatedRegistration) {
-    final index =
-        _registrations.indexWhere((r) => r.id == updatedRegistration.id);
+    final index = _registrations.indexWhere(
+      (r) => r.id == updatedRegistration.id,
+    );
     if (index == -1) {
       _registrations.add(updatedRegistration);
     } else {

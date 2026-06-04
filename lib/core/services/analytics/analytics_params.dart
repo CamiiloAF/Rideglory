@@ -183,6 +183,74 @@ abstract final class AnalyticsParams {
   static const String sourceDeepLink = 'deep_link';
 
   // ---------------------------------------------------------------------------
+  // Events — escritura y registro (Fase 7)
+  // ---------------------------------------------------------------------------
+
+  /// Modo del formulario: `create` | `edit`.
+  /// Tipo: `String`. Max key 40 chars: 9. ✓
+  static const String formMode = 'form_mode';
+
+  /// Categoría no-PII del fallo (escritura / submit): `network` | `validation`
+  /// | `not_found` | `unknown`. **Nunca** el mensaje crudo.
+  /// Tipo: `String`. Max key 40 chars: 16. ✓
+  static const String failureCategory = 'failure_category';
+
+  /// Índice del paso activo en el wizard (0-based).
+  /// Tipo: `int`. Max key 40 chars: 10. ✓
+  static const String stepIndex = 'step_index';
+
+  /// Nombre canónico del paso activo (p.ej. `personal`, `medical`).
+  /// **Nunca** datos del rider. Tipo: `String`. Max key 40 chars: 9. ✓
+  static const String stepName = 'step_name';
+
+  /// Acción de aprobación: `approve` | `reject` | `ready_for_edit`.
+  /// Tipo: `String`. Max key 40 chars: 15. ✓
+  static const String approvalAction = 'approval_action';
+
+  // Valores canónicos de form_mode
+  /// Formulario en modo creación.
+  static const String formModeCreate = 'create';
+
+  /// Formulario en modo edición.
+  static const String formModeEdit = 'edit';
+
+  // Valores canónicos de failure_category
+  /// Fallo por error de red / timeout.
+  static const String failureCategoryNetwork = 'network';
+
+  /// Fallo por validación local del formulario.
+  static const String failureCategoryValidation = 'validation';
+
+  /// Fallo porque el recurso no existe (404).
+  static const String failureCategoryNotFound = 'not_found';
+
+  /// Fallo no clasificado.
+  static const String failureCategoryUnknown = 'unknown';
+
+  // Valores canónicos de approval_action
+  /// Acción de aprobar inscripción.
+  static const String approvalActionApprove = 'approve';
+
+  /// Acción de rechazar inscripción.
+  static const String approvalActionReject = 'reject';
+
+  /// Acción de marcar "listo para editar".
+  static const String approvalActionReadyForEdit = 'ready_for_edit';
+
+  // Valores canónicos de step_name (wizard de registro)
+  /// Paso de datos personales.
+  static const String stepNamePersonal = 'personal';
+
+  /// Paso de datos médicos.
+  static const String stepNameMedical = 'medical';
+
+  /// Paso de contacto de emergencia.
+  static const String stepNameEmergency = 'emergency';
+
+  /// Paso de selección de vehículo.
+  static const String stepNameVehicle = 'vehicle';
+
+  // ---------------------------------------------------------------------------
   // Valores de reason (cadenas cortas para el campo `reason` de CrashReporter)
   // ---------------------------------------------------------------------------
 

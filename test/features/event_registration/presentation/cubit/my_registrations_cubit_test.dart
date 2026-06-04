@@ -2,8 +2,11 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:rideglory/core/domain/nothing.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/domain/model/registration_with_event.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/cancel_event_registration_use_case.dart';
@@ -19,6 +22,8 @@ class MockCancelEventRegistrationUseCase extends Mock
     implements CancelEventRegistrationUseCase {}
 
 class MockGetEventByIdUseCase extends Mock implements GetEventByIdUseCase {}
+
+class MockAnalyticsService extends Mock implements AnalyticsService {}
 
 final _mockEvent = EventModel(
   id: 'event-1',
@@ -56,16 +61,21 @@ void main() {
   late MockGetMyRegistrationsUseCase mockGetRegistrations;
   late MockCancelEventRegistrationUseCase mockCancelRegistration;
   late MockGetEventByIdUseCase mockGetEventById;
+  late MockAnalyticsService mockAnalytics;
   late MyRegistrationsCubit cubit;
 
   setUp(() {
     mockGetRegistrations = MockGetMyRegistrationsUseCase();
     mockCancelRegistration = MockCancelEventRegistrationUseCase();
     mockGetEventById = MockGetEventByIdUseCase();
+    mockAnalytics = MockAnalyticsService();
+    when(() => mockAnalytics.logEvent(any(), any())).thenAnswer((_) async {});
+    when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
     cubit = MyRegistrationsCubit(
       mockGetRegistrations,
       mockCancelRegistration,
       mockGetEventById,
+      mockAnalytics,
     );
   });
 
@@ -179,6 +189,116 @@ void main() {
           'Inscripción al evento Ruta Mágica',
         );
       });
+    });
+
+    group('analytics — Fase 7', () {
+      // TC-reg-a1: registration_my_list_viewed fires on successful fetch
+      test(
+        'TC-reg-a1: fetchMyRegistrations success → registration_my_list_viewed fired',
+        () async {
+          when(() => mockGetRegistrations()).thenAnswer(
+            (_) async => Right([_mockRegistration]),
+          );
+          when(() => mockGetEventById('event-1')).thenAnswer(
+            (_) async => Right(_mockEvent),
+          );
+
+          await cubit.fetchMyRegistrations();
+
+          verify(
+            () => mockAnalytics.logEvent(
+              AnalyticsEvents.registrationMyListViewed,
+            ),
+          ).called(1);
+        },
+      );
+
+      // TC-reg-a2: registration_my_list_viewed fires even with empty list
+      test(
+        'TC-reg-a2: fetchMyRegistrations empty → registration_my_list_viewed fired',
+        () async {
+          when(() => mockGetRegistrations()).thenAnswer(
+            (_) async => const Right([]),
+          );
+
+          await cubit.fetchMyRegistrations();
+
+          verify(
+            () => mockAnalytics.logEvent(
+              AnalyticsEvents.registrationMyListViewed,
+            ),
+          ).called(1);
+        },
+      );
+
+      // TC-reg-a3: registration_my_list_viewed NOT fired on error
+      test(
+        'TC-reg-a3: fetchMyRegistrations error → registration_my_list_viewed NOT fired',
+        () async {
+          when(() => mockGetRegistrations()).thenAnswer(
+            (_) async =>
+                const Left(DomainException(message: 'No autorizado')),
+          );
+
+          await cubit.fetchMyRegistrations();
+
+          verifyNever(
+            () => mockAnalytics.logEvent(
+              AnalyticsEvents.registrationMyListViewed,
+            ),
+          );
+        },
+      );
+
+      // TC-reg-a4: registration_cancelled fires on successful cancel
+      test(
+        'TC-reg-a4: cancelRegistration success → registration_cancelled fired',
+        () async {
+          when(() => mockGetRegistrations()).thenAnswer(
+            (_) async => Right([_mockRegistration]),
+          );
+          when(() => mockGetEventById('event-1')).thenAnswer(
+            (_) async => Right(_mockEvent),
+          );
+          when(() => mockCancelRegistration('reg-1')).thenAnswer(
+            (_) async => const Right(Nothing()),
+          );
+
+          await cubit.fetchMyRegistrations();
+          await cubit.cancelRegistration('reg-1');
+
+          verify(
+            () => mockAnalytics.logEvent(
+              AnalyticsEvents.registrationCancelled,
+            ),
+          ).called(1);
+        },
+      );
+
+      // TC-reg-a5: registration_cancelled NOT fired on cancel failure
+      test(
+        'TC-reg-a5: cancelRegistration failure → registration_cancelled NOT fired',
+        () async {
+          when(() => mockGetRegistrations()).thenAnswer(
+            (_) async => Right([_mockRegistration]),
+          );
+          when(() => mockGetEventById('event-1')).thenAnswer(
+            (_) async => Right(_mockEvent),
+          );
+          when(() => mockCancelRegistration('reg-1')).thenAnswer(
+            (_) async => const Left(DomainException(message: 'Error')),
+          );
+
+          await cubit.fetchMyRegistrations();
+          await cubit.cancelRegistration('reg-1');
+
+          verifyNever(
+            () => mockAnalytics.logEvent(
+              AnalyticsEvents.registrationCancelled,
+            ),
+          );
+        },
+      );
     });
   });
 }
