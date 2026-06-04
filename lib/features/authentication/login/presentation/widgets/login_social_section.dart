@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_params.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/authentication/login/presentation/widgets/login_social_button.dart';
 
@@ -16,8 +20,18 @@ class LoginSocialSection extends StatefulWidget {
 class _LoginSocialSectionState extends State<LoginSocialSection> {
   LoginAuthProvider? _loadingProvider;
 
+  AnalyticsService get _analytics => getIt<AnalyticsService>();
+
   void _onPressed(LoginAuthProvider provider, VoidCallback action) {
     setState(() => _loadingProvider = provider);
+    final method = provider == LoginAuthProvider.google
+        ? AnalyticsParams.authMethodGoogle
+        : AnalyticsParams.authMethodApple;
+    _analytics
+        .logEvent(AnalyticsEvents.authMethodSelected, {
+          AnalyticsParams.authMethod: method,
+        })
+        .ignore();
     action();
   }
 

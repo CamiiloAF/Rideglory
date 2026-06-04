@@ -13,6 +13,39 @@
 /// y acciones estables.
 abstract final class AnalyticsEvents {
   // ---------------------------------------------------------------------------
+  // Auth / Acquisition funnel (Fase 5)
+  // ---------------------------------------------------------------------------
+
+  /// El rider entra a una vista de autenticación (login, signup, forgot_password).
+  /// Param: [AnalyticsParams.authMethod].
+  /// Max 40 chars: 'auth_flow_started'.length == 17. ✓
+  static const String authFlowStarted = 'auth_flow_started';
+
+  /// El rider elige un método concreto (email, google, apple) al pulsar el
+  /// botón de submit / social. Param: [AnalyticsParams.authMethod].
+  /// Max 40 chars: 'auth_method_selected'.length == 20. ✓
+  static const String authMethodSelected = 'auth_method_selected';
+
+  /// El cubit confirma sesión exitosa. Param: [AnalyticsParams.authMethod].
+  /// Max 40 chars: 'auth_succeeded'.length == 14. ✓
+  static const String authSucceeded = 'auth_succeeded';
+
+  /// El cubit recibe un error de auth. Params: [AnalyticsParams.authMethod],
+  /// [AnalyticsParams.authErrorCategory]. **Sin PII.**
+  /// Max 40 chars: 'auth_failed'.length == 11. ✓
+  static const String authFailed = 'auth_failed';
+
+  /// El rider sale de una vista de auth sin completar el flujo (dispose/back
+  /// sin [AuthState.authenticated]). Param: [AnalyticsParams.authMethod].
+  /// Max 40 chars: 'auth_abandoned'.length == 14. ✓
+  static const String authAbandoned = 'auth_abandoned';
+
+  /// Primera entrada a home tras autenticarse — cierre del embudo de
+  /// adquisición. Sin params PII. Una vez por sesión de adquisición.
+  /// Max 40 chars: 'auth_first_home_entry'.length == 21. ✓
+  static const String authFirstHomeEntry = 'auth_first_home_entry';
+
+  // ---------------------------------------------------------------------------
   // SOAT
   // ---------------------------------------------------------------------------
 

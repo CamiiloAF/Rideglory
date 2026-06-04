@@ -13,6 +13,65 @@
 /// aseguradora, coordenadas lat/lng, ids dinámicos de evento/registro/rider.
 abstract final class AnalyticsParams {
   // ---------------------------------------------------------------------------
+  // Auth / Acquisition funnel (Fase 5)
+  // ---------------------------------------------------------------------------
+
+  /// Método de autenticación: `email` | `google` | `apple` | `login` |
+  /// `signup` | `forgot_password` (contexto del flujo o acción concreta).
+  /// Tipo: `String`. Max key 40 chars: 11. ✓
+  static const String authMethod = 'auth_method';
+
+  /// Categoría no-PII del error de auth: `invalid_credentials` | `network` |
+  /// `cancelled` | `unknown`. **Nunca** el mensaje crudo.
+  /// Tipo: `String`. Max key 40 chars: 19. ✓
+  static const String authErrorCategory = 'auth_error_category';
+
+  // Valores canónicos de auth_method (flujo de inicio)
+  /// Flujo de login por email.
+  static const String authMethodLogin = 'login';
+
+  /// Flujo de registro por email.
+  static const String authMethodSignup = 'signup';
+
+  /// Flujo de recuperación de contraseña.
+  static const String authMethodForgotPassword = 'forgot_password';
+
+  /// Método concreto: correo + contraseña.
+  static const String authMethodEmail = 'email';
+
+  /// Método concreto: Google OAuth.
+  static const String authMethodGoogle = 'google';
+
+  /// Método concreto: Apple OAuth.
+  static const String authMethodApple = 'apple';
+
+  // Valores canónicos de auth_error_category (sin PII)
+  /// Credenciales inválidas (user-not-found, wrong-password, invalid-credential).
+  static const String authErrorInvalidCredentials = 'invalid_credentials';
+
+  /// Error de red (network-request-failed, timeouts).
+  static const String authErrorNetwork = 'network';
+
+  /// Flujo cancelado por el usuario (sign_in_cancelled, etc.).
+  static const String authErrorCancelled = 'cancelled';
+
+  /// Error no clasificado.
+  static const String authErrorUnknown = 'unknown';
+
+  // ---------------------------------------------------------------------------
+  // User properties (Fase 5)
+  // ---------------------------------------------------------------------------
+
+  /// Nombre de la user property que almacena el método de login más reciente.
+  /// Valor: constante de [authMethod*] (email | google | apple). Sin PII.
+  static const String userPropertyLoginMethod = 'login_method';
+
+  /// Nombre de la user property que indica si el rider tiene al menos un
+  /// vehículo registrado (0 = no, 1 = sí). Se asigna en VehicleCubit tras
+  /// fetchMyVehicles — no requiere llamada extra al backend.
+  static const String userPropertyHasVehicle = 'has_vehicle';
+
+  // ---------------------------------------------------------------------------
   // SOAT
   // ---------------------------------------------------------------------------
 
