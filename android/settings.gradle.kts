@@ -20,7 +20,7 @@ plugins {
     id("dev.flutter.flutter-plugin-loader") version "1.0.0"
     id("com.android.application") version "8.9.1" apply false
     // START: FlutterFire Configuration
-    id("com.google.gms.google-services") version("4.3.15") apply false
+    id("com.google.gms.google-services") version("4.4.2") apply false
     id("com.google.firebase.crashlytics") version "3.0.3" apply false
     // END: FlutterFire Configuration
     // Flutter/AGP require a newer Kotlin Gradle plugin.
