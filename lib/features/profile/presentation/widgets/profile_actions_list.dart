@@ -6,6 +6,7 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/profile/presentation/cubits/profile_cubit.dart';
+import 'package:rideglory/features/profile/presentation/widgets/profile_analytics_optout_tile.dart';
 import 'package:rideglory/features/profile/presentation/widgets/profile_menu_divider.dart';
 import 'package:rideglory/features/profile/presentation/widgets/profile_menu_item.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
@@ -48,6 +49,8 @@ class ProfileActionsList extends StatelessWidget {
             label: context.l10n.profile_maintenances,
             onTap: () => context.pushNamed(AppRoutes.maintenances),
           ),
+          const ProfileMenuDivider(),
+          const ProfileAnalyticsOptOutTile(),
           const ProfileMenuDivider(),
           ProfileMenuItem(
             icon: Icons.logout_outlined,
