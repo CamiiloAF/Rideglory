@@ -5316,6 +5316,24 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Los vehículos con menos de 2 años no están obligados a tener RTM. Puedes registrarla de todas formas para llevar el control.'**
   String get tecnomecanica_exemption_notice;
+
+  /// No description provided for @vehicle_doc_rtm_status_valid.
+  ///
+  /// In es, this message translates to:
+  /// **'Vigente'**
+  String get vehicle_doc_rtm_status_valid;
+
+  /// No description provided for @vehicle_doc_rtm_status_expiring_soon.
+  ///
+  /// In es, this message translates to:
+  /// **'Por vencer'**
+  String get vehicle_doc_rtm_status_expiring_soon;
+
+  /// No description provided for @vehicle_doc_rtm_status_expired.
+  ///
+  /// In es, this message translates to:
+  /// **'Vencida'**
+  String get vehicle_doc_rtm_status_expired;
 }
 
 class _AppLocalizationsDelegate

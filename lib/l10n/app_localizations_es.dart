@@ -2808,4 +2808,13 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get tecnomecanica_exemption_notice =>
       'Los vehículos con menos de 2 años no están obligados a tener RTM. Puedes registrarla de todas formas para llevar el control.';
+
+  @override
+  String get vehicle_doc_rtm_status_valid => 'Vigente';
+
+  @override
+  String get vehicle_doc_rtm_status_expiring_soon => 'Por vencer';
+
+  @override
+  String get vehicle_doc_rtm_status_expired => 'Vencida';
 }

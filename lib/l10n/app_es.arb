@@ -1127,5 +1127,9 @@
   "tecnomecanica_cda_code_hint": "Código del CDA (opcional)",
   "tecnomecanica_date_hint": "dd/mm/aaaa",
   "tecnomecanica_document_url_hint": "https://...",
-  "tecnomecanica_exemption_notice": "Los vehículos con menos de 2 años no están obligados a tener RTM. Puedes registrarla de todas formas para llevar el control."
+  "tecnomecanica_exemption_notice": "Los vehículos con menos de 2 años no están obligados a tener RTM. Puedes registrarla de todas formas para llevar el control.",
+
+  "vehicle_doc_rtm_status_valid": "Vigente",
+  "vehicle_doc_rtm_status_expiring_soon": "Por vencer",
+  "vehicle_doc_rtm_status_expired": "Vencida"
 }

@@ -39,16 +39,16 @@ void main() {
   final existingRtm = TecnomecanicaModel(
     id: 'rtm-1',
     vehicleId: 'vehicle-1',
-    certificateNumber: 'CDA-001',
     cdaName: 'CDA Test',
+    startDate: DateTime.now().subtract(const Duration(days: 30)),
     expiryDate: DateTime.now().add(const Duration(days: 90)),
   );
 
   final newRtm = TecnomecanicaModel(
     id: '',
     vehicleId: 'vehicle-1',
-    certificateNumber: 'CDA-NEW',
     cdaName: 'CDA Nuevo',
+    startDate: DateTime.now().subtract(const Duration(days: 10)),
     expiryDate: DateTime.now().add(const Duration(days: 180)),
   );
 
@@ -86,7 +86,7 @@ void main() {
         predicate<ResultState<TecnomecanicaModel>>(
           (state) =>
               state is Data<TecnomecanicaModel> &&
-              state.data.certificateNumber == 'CDA-001',
+              state.data.cdaName == 'CDA Test',
         ),
       ],
     );

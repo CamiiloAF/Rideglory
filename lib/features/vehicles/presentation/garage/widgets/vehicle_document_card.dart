@@ -9,8 +9,10 @@ import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/soat/domain/models/soat_model.dart';
 import 'package:rideglory/features/soat/presentation/cubit/soat_cubit.dart';
 import 'package:rideglory/features/soat/presentation/scan/soat_entry_flow.dart';
+import 'package:rideglory/features/tecnomecanica/domain/models/tecnomecanica_model.dart';
 import 'package:rideglory/features/tecnomecanica/presentation/cubit/tecnomecanica_cubit.dart';
 import 'package:rideglory/features/vehicle_documents/domain/vehicle_document_kind.dart';
+import 'package:rideglory/features/vehicle_documents/domain/vehicle_document_status.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
@@ -227,6 +229,26 @@ class _RtmDocumentCardBody extends StatelessWidget {
     }
   }
 
+  Color _statusColor(VehicleDocumentStatus? status) {
+    return switch (status) {
+      VehicleDocumentStatus.valid => AppColors.statusGreen,
+      VehicleDocumentStatus.expiringSoon => AppColors.statusWarning,
+      VehicleDocumentStatus.expired => AppColors.statusError,
+      _ => AppColors.textOnDarkSecondary,
+    };
+  }
+
+  String _statusLabel(BuildContext context, VehicleDocumentStatus? status) {
+    return switch (status) {
+      VehicleDocumentStatus.valid => context.l10n.vehicle_doc_rtm_status_valid,
+      VehicleDocumentStatus.expiringSoon =>
+        context.l10n.vehicle_doc_rtm_status_expiring_soon,
+      VehicleDocumentStatus.expired =>
+        context.l10n.vehicle_doc_rtm_status_expired,
+      _ => context.l10n.tecnomecanica_status_no_rtm,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -236,57 +258,127 @@ class _RtmDocumentCardBody extends StatelessWidget {
         border: Border.all(color: AppColors.darkBorderPrimary),
       ),
       clipBehavior: Clip.hardEdge,
-      child: InkWell(
-        onTap: () => _onTap(context),
-        child: Padding(
-          padding: const EdgeInsets.all(14),
-          child: Row(
-            children: [
-              Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: AppColors.textOnDarkSecondary.withAlpha(30),
-                  borderRadius: BorderRadius.circular(8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.build_circle_outlined,
+                  size: 14,
+                  color: AppColors.textOnDarkTertiary,
                 ),
-                child: const Icon(
-                  Icons.assignment_outlined,
-                  size: 18,
-                  color: AppColors.textOnDarkSecondary,
+                const SizedBox(width: 6),
+                Text(
+                  context.l10n.vehicle_doc_techreview_label.toUpperCase(),
+                  style: const TextStyle(
+                    color: AppColors.textOnDarkTertiary,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.5,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.l10n.tecnomecanica_page_status_title,
-                      style: const TextStyle(
-                        color: AppColors.textOnDarkTertiary,
-                        fontSize: 11,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      context.l10n.tecnomecanica_status_no_rtm,
-                      style: const TextStyle(
-                        color: AppColors.textOnDarkSecondary,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(
-                Icons.arrow_forward_ios,
-                size: 14,
-                color: AppColors.textOnDarkTertiary,
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+          const Divider(
+            height: 1,
+            thickness: 1,
+            color: AppColors.darkBorderPrimary,
+          ),
+          BlocBuilder<TecnomecanicaCubit, ResultState<TecnomecanicaModel>>(
+            builder: (context, state) {
+              if (state is Initial || state is Loading) {
+                return const Padding(
+                  padding: EdgeInsets.all(14),
+                  child: SizedBox(
+                    height: 36,
+                    child: Center(
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    ),
+                  ),
+                );
+              }
+
+              final rtm = state is Data<TecnomecanicaModel> ? state.data : null;
+              final rtmStatus = rtm?.documentStatus;
+              final statusColor = _statusColor(rtmStatus);
+
+              return InkWell(
+                onTap: () => _onTap(context),
+                child: Padding(
+                  padding: const EdgeInsets.all(14),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          color: statusColor.withAlpha(30),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.assignment_outlined,
+                          size: 18,
+                          color: statusColor,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              context.l10n.vehicle_doc_techreview_label,
+                              style: const TextStyle(
+                                color: AppColors.textOnDarkTertiary,
+                                fontSize: 11,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              _statusLabel(context, rtmStatus),
+                              style: TextStyle(
+                                color: statusColor,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            if (rtm?.expiryDate != null) ...[
+                              const SizedBox(height: 2),
+                              Text(
+                                context.l10n.vehicle_doc_expires_on(
+                                  DateFormat.yMMMd('es').format(
+                                    rtm!.expiryDate,
+                                  ),
+                                ),
+                                style: const TextStyle(
+                                  color: AppColors.textOnDarkTertiary,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                      const Icon(
+                        Icons.arrow_forward_ios,
+                        size: 14,
+                        color: AppColors.textOnDarkTertiary,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
