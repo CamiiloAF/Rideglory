@@ -4756,7 +4756,7 @@ abstract class AppLocalizations {
   /// No description provided for @soat_expired_days_ago.
   ///
   /// In es, this message translates to:
-  /// **'Venció hace {count} días'**
+  /// **'{count, plural, =1{Venció hace 1 día} other{Venció hace {count} días}}'**
   String soat_expired_days_ago(int count);
 
   /// No description provided for @soat_expiring_warning.
@@ -5152,7 +5152,7 @@ abstract class AppLocalizations {
   /// No description provided for @tecnomecanica_expired_days_ago.
   ///
   /// In es, this message translates to:
-  /// **'Venció hace {count} días'**
+  /// **'{count, plural, =1{Venció hace 1 día} other{Venció hace {count} días}}'**
   String tecnomecanica_expired_days_ago(int count);
 
   /// No description provided for @tecnomecanica_expiring_warning.

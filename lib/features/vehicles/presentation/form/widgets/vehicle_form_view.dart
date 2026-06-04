@@ -17,6 +17,8 @@ import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubi
 import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_delete_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/form/vehicle_form_body.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_params.dart';
+import 'package:rideglory/features/tecnomecanica/domain/models/tecnomecanica_model.dart';
+import 'package:rideglory/features/tecnomecanica/domain/usecases/save_tecnomecanica_usecase.dart';
 import 'package:rideglory/shared/cubits/form_image_cubit.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
@@ -162,6 +164,15 @@ class _VehicleFormViewState extends State<VehicleFormView> {
           return;
         }
 
+        // Caso 3: RTM manual capturada antes de crear el vehículo — guardarla ahora
+        final pendingRtm = state.pendingRtm;
+        if (!state.isEditing &&
+            pendingRtm != null &&
+            savedVehicle.id != null) {
+          _savePendingRtmAndPop(context, savedVehicle, pendingRtm);
+          return;
+        }
+
         context.pop(savedVehicle);
       },
       error: (error) {
@@ -241,6 +252,64 @@ class _VehicleFormViewState extends State<VehicleFormView> {
 
   String _soatErrorMsg(DomainException error) =>
       'Error al guardar SOAT: ${error.message}';
+
+  Future<void> _savePendingRtmAndPop(
+    BuildContext context,
+    VehicleModel savedVehicle,
+    PendingRtm pendingRtm,
+  ) async {
+    final vehicleId = savedVehicle.id!;
+    final router = GoRouter.of(context);
+    final messenger = ScaffoldMessenger.of(context);
+
+    // localImagePath puede venir del campo localImagePath o de documentUrl
+    // (en modo creación, la página retorna la ruta local en documentUrl).
+    final localImagePath =
+        pendingRtm.localImagePath ??
+        (pendingRtm.documentUrl != null &&
+                !pendingRtm.documentUrl!.startsWith('http')
+            ? pendingRtm.documentUrl
+            : null);
+
+    String? documentUrl;
+    if (localImagePath != null) {
+      final ext = localImagePath.split('.').last.toLowerCase();
+      try {
+        documentUrl = await getIt<ImageStorageService>().uploadImage(
+          image: XFile(localImagePath),
+          storagePath:
+              'tecnomecanica/$vehicleId/${DateTime.now().millisecondsSinceEpoch}.$ext',
+        );
+      } catch (_) {
+        // imagen falla pero el vehículo y la RTM se guardan igual
+      }
+    }
+
+    final result = await getIt<SaveTecnomecanicaUseCase>()(
+      vehicleId: vehicleId,
+      tecnomecanica: TecnomecanicaModel(
+        id: '',
+        vehicleId: vehicleId,
+        certificateNumber: pendingRtm.certificateNumber,
+        cdaName: pendingRtm.cdaName,
+        startDate: pendingRtm.startDate,
+        expiryDate: pendingRtm.expiryDate,
+        documentUrl: documentUrl,
+      ),
+    );
+
+    result.fold(
+      (error) => messenger.showSnackBar(
+        SnackBar(
+          content: Text('Error al guardar RTM: ${error.message}'),
+          backgroundColor: AppColors.warning,
+        ),
+      ),
+      (_) {},
+    );
+
+    router.pop(savedVehicle);
+  }
 
   void _deleteListener(BuildContext context, VehicleDeleteState state) {
     state.when(

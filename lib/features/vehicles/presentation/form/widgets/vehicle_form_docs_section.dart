@@ -7,10 +7,15 @@ import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_add_more_doc_slot.dart';
 import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_section_header.dart';
+import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/features/tecnomecanica/domain/models/tecnomecanica_model.dart';
+import 'package:rideglory/features/tecnomecanica/presentation/cubit/tecnomecanica_cubit.dart';
+import 'package:rideglory/features/tecnomecanica/presentation/pages/tecnomecanica_manual_capture_params.dart';
+import 'package:rideglory/shared/router/app_routes.dart';
+import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_rtm_form_slot.dart';
 import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_soat_form_slot.dart';
 import 'package:rideglory/features/soat/presentation/scan/soat_entry_flow.dart';
 import 'package:rideglory/features/vehicles/presentation/widgets/vehicle_document_upload_slot.dart';
-import 'package:rideglory/shared/router/app_routes.dart';
 
 class VehicleFormDocsSection extends StatelessWidget {
   const VehicleFormDocsSection({super.key});
@@ -83,18 +88,20 @@ class VehicleFormDocsSection extends StatelessWidget {
                     : null,
               ),
             const SizedBox(height: 12),
-            VehicleDocumentUploadSlot(
-              title: context.l10n.vehicle_doc_techreview_label,
-              subtitle: context.l10n.vehicle_form_techreview_subtitle,
-              localPath: state.techReviewLocalPath,
-              onUploadTap: () =>
-                  context.read<VehicleFormCubit>().pickTechReviewDocument(),
-              onClear: state.techReviewLocalPath != null
-                  ? () => context
-                        .read<VehicleFormCubit>()
-                        .clearTechReviewDocument()
-                  : null,
-            ),
+            if (isEditing)
+              VehicleRtmFormSlot(vehicle: state.vehicle!)
+            else
+              VehicleDocumentUploadSlot(
+                title: context.l10n.vehicle_doc_techreview_label,
+                subtitle: context.l10n.vehicle_form_techreview_subtitle,
+                localPath: null,
+                hasData: state.pendingRtm != null,
+                dataLabel: context.l10n.vehicle_soat_data_added,
+                onUploadTap: () => _onRtmCreationTap(context),
+                onClear: state.pendingRtm != null
+                    ? () => context.read<VehicleFormCubit>().clearPendingRtm()
+                    : null,
+              ),
             const SizedBox(height: 12),
             const VehicleFormAddMoreDocSlot(),
             const SizedBox(height: 8),
@@ -141,5 +148,24 @@ Future<void> _onSoatTap(BuildContext context, VehicleModel? vehicle) async {
     context.pushNamed(AppRoutes.soatStatus, extra: vehicle);
   } else {
     await SoatEntryFlow.start(context, vehicle: vehicle);
+  }
+}
+
+Future<void> _onRtmCreationTap(BuildContext context) async {
+  final cubit = getIt<TecnomecanicaCubit>();
+  final result = await context.push<TecnomecanicaModel>(
+    AppRoutes.tecnomecanicaManualCapture,
+    extra: TecnomecanicaManualCaptureParams(cubit: cubit),
+  );
+  if (result != null && context.mounted) {
+    context.read<VehicleFormCubit>().storePendingRtm(
+      PendingRtm(
+        certificateNumber: result.certificateNumber,
+        cdaName: result.cdaName,
+        startDate: result.startDate,
+        expiryDate: result.expiryDate,
+        documentUrl: result.documentUrl,
+      ),
+    );
   }
 }

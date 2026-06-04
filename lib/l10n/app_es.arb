@@ -974,7 +974,7 @@
       }
     }
   },
-  "soat_expired_days_ago": "Venció hace {count} días",
+  "soat_expired_days_ago": "{count, plural, =1{Venció hace 1 día} other{Venció hace {count} días}}",
   "@soat_expired_days_ago": {
     "placeholders": {
       "count": {
@@ -1090,7 +1090,7 @@
       "count": { "type": "int" }
     }
   },
-  "tecnomecanica_expired_days_ago": "Venció hace {count} días",
+  "tecnomecanica_expired_days_ago": "{count, plural, =1{Venció hace 1 día} other{Venció hace {count} días}}",
   "@tecnomecanica_expired_days_ago": {
     "placeholders": {
       "count": { "type": "int" }

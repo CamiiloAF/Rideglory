@@ -94,7 +94,22 @@ class _TecnomecanicaManualCapturePageState
       _error = null;
     });
 
-    final vehicleId = widget.vehicle?.id ?? '';
+    // Modo creación (sin vehicle): devolver datos como pendientes sin guardar.
+    if (widget.vehicle?.id == null) {
+      context.pop(
+        TecnomecanicaModel(
+          id: '',
+          vehicleId: '',
+          cdaName: cdaName,
+          startDate: startDate,
+          expiryDate: expiryDate,
+          documentUrl: _localImagePath,
+        ),
+      );
+      return;
+    }
+
+    final vehicleId = widget.vehicle!.id!;
     final cubit = context.read<TecnomecanicaCubit>();
 
     String? documentUrl = widget.existingRtm?.documentUrl;

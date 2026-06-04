@@ -185,9 +185,13 @@ class _SoatDocumentCardBody extends StatelessWidget {
                             if (soat?.expiryDate != null) ...[
                               const SizedBox(height: 2),
                               Text(
-                                context.l10n.vehicle_doc_expires_on(
-                                  DateFormat.yMMMd('es').format(soat!.expiryDate),
-                                ),
+                                soatStatus == SoatStatus.expired
+                                    ? context.l10n.soat_expired_days_ago(
+                                        soat!.daysUntilExpiry.abs(),
+                                      )
+                                    : context.l10n.vehicle_doc_expires_on(
+                                        DateFormat.yMMMd('es').format(soat!.expiryDate),
+                                      ),
                                 style: const TextStyle(
                                   color: AppColors.textOnDarkTertiary,
                                   fontSize: 11,
@@ -353,11 +357,15 @@ class _RtmDocumentCardBody extends StatelessWidget {
                             if (rtm?.expiryDate != null) ...[
                               const SizedBox(height: 2),
                               Text(
-                                context.l10n.vehicle_doc_expires_on(
-                                  DateFormat.yMMMd('es').format(
-                                    rtm!.expiryDate,
-                                  ),
-                                ),
+                                rtmStatus == VehicleDocumentStatus.expired
+                                    ? context.l10n.tecnomecanica_expired_days_ago(
+                                        rtm!.daysUntilExpiry.abs(),
+                                      )
+                                    : context.l10n.vehicle_doc_expires_on(
+                                        DateFormat.yMMMd('es').format(
+                                          rtm!.expiryDate,
+                                        ),
+                                      ),
                                 style: const TextStyle(
                                   color: AppColors.textOnDarkTertiary,
                                   fontSize: 11,

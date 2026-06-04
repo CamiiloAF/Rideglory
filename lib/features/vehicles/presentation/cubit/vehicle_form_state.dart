@@ -21,6 +21,26 @@ class PendingManualSoat {
   final String? localImagePath;
 }
 
+/// Datos de la RTM capturados manualmente durante la creación del vehículo.
+/// Se guardan en el backend justo después de que el vehículo es creado.
+class PendingRtm {
+  const PendingRtm({
+    required this.cdaName,
+    required this.startDate,
+    required this.expiryDate,
+    this.certificateNumber,
+    this.documentUrl,
+    this.localImagePath,
+  });
+
+  final String? certificateNumber;
+  final String cdaName;
+  final DateTime startDate;
+  final DateTime expiryDate;
+  final String? documentUrl;
+  final String? localImagePath;
+}
+
 @freezed
 abstract class VehicleFormState with _$VehicleFormState {
   const VehicleFormState._();
@@ -32,6 +52,7 @@ abstract class VehicleFormState with _$VehicleFormState {
     @Default(null) String? soatLocalPath,
     @Default(null) String? techReviewLocalPath,
     @Default(null) PendingManualSoat? pendingManualSoat,
+    @Default(null) PendingRtm? pendingRtm,
   }) = _VehicleFormState;
 
   bool get isLoading => vehicleResult is Loading;

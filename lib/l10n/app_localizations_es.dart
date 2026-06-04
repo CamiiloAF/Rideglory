@@ -2502,7 +2502,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String soat_expired_days_ago(int count) {
-    return 'Venció hace $count días';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Venció hace $count días',
+      one: 'Venció hace 1 día',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -2717,7 +2723,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String tecnomecanica_expired_days_ago(int count) {
-    return 'Venció hace $count días';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Venció hace $count días',
+      one: 'Venció hace 1 día',
+    );
+    return '$_temp0';
   }
 
   @override
