@@ -2,7 +2,7 @@
 
 > Rama: `feat/analytics-crashlytics`
 > Ancla de reanudación: si el PC se apaga, lee este archivo + `git log` para saber qué está hecho y qué sigue.
-> Última actualización: 2026-06-04 (fase 1 commiteada; 2–4 en curso)
+> Última actualización: 2026-06-04 (fases 1–4 commiteadas; fase 5 a punto de iniciar)
 
 ## Cómo reanudar
 1. `git checkout feat/analytics-crashlytics`
@@ -17,10 +17,10 @@
 | # | Fase | Nivel | Estado | Commit | Notas |
 |---|------|-------|--------|--------|-------|
 | 1 | Fundaciones (AnalyticsService/CrashReporter + init) | full | ✅ commiteada | 56b5801 | QA green, Tech Lead READY. CA-1 (crash simbolizado en release) = verificación manual. |
-| 2 | Taxonomía centralizada + mapa rutas + límites GA4 | lite | 🟡 hecha, sin commitear | — | Archivos: analytics_events/params/screen_names.dart; scan_soat alineado. |
-| 3 | screen_view automático (NavigatorObserver) | lite | 🟠 en curso | — | Observer+tracker creados; wiring se completa ahora (agente Sonnet). Dedupe por tab del shell. |
-| 4 | Captura de errores de red (no-fatales) | lite | 🟠 en curso | — | handlerExceptionHttp como punto único; sin PII, sin doble-conteo. |
-| 5 | Embudo adquisición: auth + onboarding | lite | ⬜ pendiente | — | Call sites de eventos en flujo auth; no toca lógica de auth. |
+| 2 | Taxonomía centralizada + mapa rutas + límites GA4 | lite | ✅ commiteada | be98a8e | analytics_events/params/screen_names.dart; scan_soat alineado. |
+| 3 | screen_view automático (NavigatorObserver) | lite | ✅ commiteada | be98a8e | Observer + ShellScreenViewTracker; dedupe por tab; 13 tests. |
+| 4 | Captura de errores de red (no-fatales) | lite | ✅ commiteada | be98a8e | network_error_classifier + handlerExceptionHttp; 52 tests; G5 anti-doble-conteo ok. |
+| 5 | Embudo adquisición: auth + onboarding | lite | 🟠 en curso | — | Call sites de eventos en flujo auth; no toca lógica de auth. |
 | 6 | Embudo eventos — LECTURA (home/descubrir) | lite | ⬜ pendiente | — | Instrumentación mecánica. |
 | 7 | Embudo eventos — ESCRITURA y aprobación | lite | ⬜ pendiente | — | Instrumentación mecánica. |
 | 8 | Tracking en vivo + SOS (solo hitos) | normal | ⬜ pendiente | — | SOS safety-critical; revisión real. Solo hitos, cero pings WS. |

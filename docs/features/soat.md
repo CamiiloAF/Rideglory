@@ -375,7 +375,7 @@ Lectura **on-device** del SOAT desde foto/galería/PDF. Privacidad total: ni la 
 - **Fechas:** regex multi-formato (`DD/MM/AAAA`, `DD-MM-AAAA`, `DD mmm AAAA`, ISO). Asociación a labels (`vigencia desde`/`hasta`/`vence`). **Validación dura: 360–370 días**; si falla, ambas fechas quedan `low` (con `datesFailedValidation`) y no se prellenan.
 - **Umbral global:** `<2` campos `high` → no se prellena (no se ofrece el banner); el usuario completa a mano.
 
-**Telemetría** (Firebase Analytics, anónima): `soat_scan_attempted`; `soat_scan_success` (`fields_extracted_count`, `insurer_detected`, `had_pdf`); `soat_scan_failed` (`failure_reason`: `no_text_detected` / `low_confidence` / `validation_failed` / `permission_denied` / `unknown_error`).
+**Telemetría** (Firebase Analytics, anónima): `soat_scan_attempted`; `soat_scan_success` (`fields_extracted_count` int, `insurer_detected` **0/1** — 1 si se detectó aseguradora, 0 si no; **nunca** viaja el nombre de la aseguradora, `had_pdf` 0/1); `soat_scan_failed` (`failure_reason`: `no_text_detected` / `low_confidence` / `validation_failed` / `permission_denied` / `unknown_error`). Constantes en `AnalyticsEvents` / `AnalyticsParams` (`lib/core/services/analytics/`).
 
 **Permisos:** `READ_MEDIA_IMAGES` en `AndroidManifest.xml`; `NSPhotoLibraryUsageDescription` en `Info.plist`. (La captura con cámara se retiró; el permiso `CAMERA` puede seguir declarado por otros features.)
 
