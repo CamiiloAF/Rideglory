@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rideglory — Conceptos de logo</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0D0D0F; color: #F1F5F9; font-family: 'Space Grotesk', sans-serif; padding: 48px; }
+    h1 { font-size: 32px; color: #f98c1f; margin-bottom: 4px; }
+    p.sub { color: #94A3B8; margin-bottom: 40px; }
+    h2 { font-size: 20px; margin: 40px 0 16px; border-left: 4px solid #f98c1f; padding-left: 12px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
+    .card { background: #1A1A1F; border: 1px solid #3D2810; border-radius: 16px; padding: 20px; text-align: center; }
+    .card img { width: 200px; height: 200px; }
+    .card .wide { width: 100%; height: auto; }
+    .card .label { margin-top: 14px; font-weight: 700; }
+    .card .desc { color: #94A3B8; font-size: 13px; margin-top: 4px; }
+    .full { grid-column: 1 / -1; }
+    .swatches { display: flex; gap: 12px; margin-top: 12px; }
+    .sw { flex: 1; height: 56px; border-radius: 8px; display: flex; align-items: flex-end; justify-content: center; font-size: 11px; padding-bottom: 4px; }
+  </style>
+</head>
+<body>
+  <h1>Rideglory — Conceptos de logo (beta)</h1>
+  <p class="sub">Paleta de marca · naranja #f98c1f · fondo #0D0D0F · tipografía Space Grotesk</p>
+
+  <h2>Los 4 conceptos</h2>
+  <div class="grid">
+    <div class="card"><img src="01-r-monogram-bold.svg" alt="R monograma">
+      <div class="label">1 · Monograma "R"</div><div class="desc">Geométrico bold · velocidad</div></div>
+    <div class="card"><img src="02-helmet-bold.svg" alt="Casco">
+      <div class="label">2 · Casco motero</div><div class="desc">Geométrico bold · 100% moto</div></div>
+    <div class="card"><img src="03-moto-route-line.svg" alt="Ruta">
+      <div class="label">3 · Moto + ruta</div><div class="desc">Línea · rodada y movimiento</div></div>
+    <div class="card"><img src="04-badge-emblem.svg" alt="Emblema">
+      <div class="label">4 · Emblema / parche</div><div class="desc">Badge · sentido de comunidad</div></div>
+  </div>
+
+  <h2>El monograma "R" en los 3 estilos</h2>
+  <div class="grid">
+    <div class="card"><img src="01-r-monogram-bold.svg" alt="R bold">
+      <div class="label">Geométrico bold</div><div class="desc">Recomendado para icono de app</div></div>
+    <div class="card"><img src="05-r-monogram-line.svg" alt="R line">
+      <div class="label">Línea minimalista</div><div class="desc">Elegante, tipo tech</div></div>
+    <div class="card"><img src="06-r-monogram-badge.svg" alt="R badge">
+      <div class="label">Badge con texto</div><div class="desc">Escudo + wordmark</div></div>
+  </div>
+
+  <h2>Lockup horizontal (para web, store y video)</h2>
+  <div class="grid">
+    <div class="card full"><img class="wide" src="07-lockup-horizontal.svg" alt="Lockup"></div>
+  </div>
+
+  <h2>Paleta</h2>
+  <div class="swatches">
+    <div class="sw" style="background:#fbab56;color:#0D0D0F">#fbab56</div>
+    <div class="sw" style="background:#f98c1f;color:#0D0D0F">#f98c1f</div>
+    <div class="sw" style="background:#e07510;color:#0D0D0F">#e07510</div>
+    <div class="sw" style="background:#1A1A1F;color:#F1F5F9;border:1px solid #3D2810">#1A1A1F</div>
+    <div class="sw" style="background:#0D0D0F;color:#F1F5F9;border:1px solid #3D2810">#0D0D0F</div>
+  </div>
+</body>
+</html>

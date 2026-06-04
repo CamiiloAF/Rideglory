@@ -1,7 +1,12 @@
 # Test Catalog — Rideglory
-Generated: 2026-05-20
+Generated: 2026-05-20 (actualizado: 2026-06-04 — Fase 10: test guardián no-PII de analítica)
 
 ## Unit & Widget Tests (`test/`)
+
+### Analytics (Core) — Fase 10 — Guardián no-PII
+| File | What it covers | Status |
+|------|---------------|--------|
+| `test/core/services/analytics/analytics_taxonomy_no_pii_test.dart` | TC-pii-1..10: verifica que todos los nombres de evento ≤40 chars, snake_case, sin substrings PII prohibidos; claves de param ≤40 chars, snake_case, sin PII; nombres de pantalla canónicos sin ids dinámicos; catálogo sin duplicados; umbral de regresión de tamaño. 265 casos generados. | NEW |
 
 ### Authentication
 | File | What it covers | Status |

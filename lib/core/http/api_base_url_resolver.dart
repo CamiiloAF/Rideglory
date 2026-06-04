@@ -8,13 +8,15 @@ class ApiBaseUrlResolver {
 
   final FirebaseRemoteConfig _remoteConfig;
 
+  // Activated via --dart-define=USE_LOCAL_API=true (see .vscode/launch.json "Local API" config).
+  static const _forceLocal = bool.fromEnvironment('USE_LOCAL_API');
+
   String resolve() {
     final remoteBaseUrl = _remoteConfig
         .getString(ApiRemoteConfig.apiBaseUrlKey)
         .trim();
 
-    final shouldUseLocalApi = remoteBaseUrl.isEmpty;
-    //final shouldUseLocalApi = true;
+    final shouldUseLocalApi = _forceLocal || remoteBaseUrl.isEmpty;
 
     final baseUrl = shouldUseLocalApi ? _localBaseUrl : remoteBaseUrl;
     return _withoutTrailingSlash(baseUrl);

@@ -21,6 +21,12 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
+        },
+        {
+            "name": "Rideglory (local API)",
+            "request": "launch",
+            "type": "dart",
+            "args": ["--dart-define=USE_LOCAL_API=true"]
         }
     ]
 }
