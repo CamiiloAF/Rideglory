@@ -62,6 +62,12 @@ class AuthCubit extends Cubit<AuthState> {
       (authUser) async {
         if (authUser.firebaseUser.uid.isNotEmpty) {
           await _printFirebaseToken(authUser.firebaseUser);
+          _analytics
+              .logEvent(AnalyticsEvents.authFirebaseOk, {
+                AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
+                AnalyticsParams.userLoaded: authUser.user != null ? 1 : 0,
+              })
+              .ignore();
           await _onAuthenticated(
             firebaseUid: authUser.firebaseUser.uid,
             method: AnalyticsParams.authMethodEmail,
@@ -104,6 +110,13 @@ class AuthCubit extends Cubit<AuthState> {
       (firebaseUser) async {
         if (firebaseUser != null) {
           await _printFirebaseToken(firebaseUser);
+          _analytics
+              .logEvent(AnalyticsEvents.authFirebaseOk, {
+                AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
+                AnalyticsParams.userLoaded:
+                    _authService.currentUser != null ? 1 : 0,
+              })
+              .ignore();
           await _onAuthenticated(
             firebaseUid: firebaseUser.uid,
             method: AnalyticsParams.authMethodEmail,
@@ -139,6 +152,12 @@ class AuthCubit extends Cubit<AuthState> {
       (authUser) async {
         if (authUser.firebaseUser.uid.isNotEmpty) {
           await _printFirebaseToken(authUser.firebaseUser);
+          _analytics
+              .logEvent(AnalyticsEvents.authFirebaseOk, {
+                AnalyticsParams.authMethod: AnalyticsParams.authMethodGoogle,
+                AnalyticsParams.userLoaded: authUser.user != null ? 1 : 0,
+              })
+              .ignore();
           await _onAuthenticated(
             firebaseUid: authUser.firebaseUser.uid,
             method: AnalyticsParams.authMethodGoogle,

@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -40,25 +42,26 @@ class SignupSocialButtons extends StatelessWidget {
               onPressed: onEmailModeToggle,
             ),
             AppSpacing.gapMd,
-            SocialLoginButton(
-              type: SocialLoginType.google,
-              isLoading: isLoading,
-              onPressed: () => _onSocialPressed(
-                context,
-                AnalyticsParams.authMethodGoogle,
-                () => context.read<AuthCubit>().signInWithGoogle(),
+            if (Platform.isAndroid)
+              SocialLoginButton(
+                type: SocialLoginType.google,
+                isLoading: isLoading,
+                onPressed: () => _onSocialPressed(
+                  context,
+                  AnalyticsParams.authMethodGoogle,
+                  () => context.read<AuthCubit>().signInWithGoogle(),
+                ),
               ),
-            ),
-            AppSpacing.gapMd,
-            SocialLoginButton(
-              type: SocialLoginType.apple,
-              isLoading: isLoading,
-              onPressed: () => _onSocialPressed(
-                context,
-                AnalyticsParams.authMethodApple,
-                () => context.read<AuthCubit>().signInWithApple(),
+            if (Platform.isIOS)
+              SocialLoginButton(
+                type: SocialLoginType.apple,
+                isLoading: isLoading,
+                onPressed: () => _onSocialPressed(
+                  context,
+                  AnalyticsParams.authMethodApple,
+                  () => context.read<AuthCubit>().signInWithApple(),
+                ),
               ),
-            ),
             AppSpacing.gapXxxl,
 
             // Divider with "Already have account?" text

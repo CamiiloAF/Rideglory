@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/di/injection.dart';
@@ -46,31 +48,32 @@ class _LoginSocialSectionState extends State<LoginSocialSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          LoginSocialButton(
-            label: context.l10n.auth_continue_with_google,
-            icon: Icons.g_mobiledata_rounded,
-            backgroundColor: Colors.white,
-            textColor: Colors.black,
-            isLoading: _loadingProvider == LoginAuthProvider.google,
-            isDisabled: _loadingProvider != null,
-            onPressed: () => _onPressed(
-              LoginAuthProvider.google,
-              () => context.read<AuthCubit>().signInWithGoogle(),
+          if (Platform.isAndroid)
+            LoginSocialButton(
+              label: context.l10n.auth_continue_with_google,
+              icon: Icons.g_mobiledata_rounded,
+              backgroundColor: Colors.white,
+              textColor: Colors.black,
+              isLoading: _loadingProvider == LoginAuthProvider.google,
+              isDisabled: _loadingProvider != null,
+              onPressed: () => _onPressed(
+                LoginAuthProvider.google,
+                () => context.read<AuthCubit>().signInWithGoogle(),
+              ),
             ),
-          ),
-          const SizedBox(height: 12),
-          LoginSocialButton(
-            label: context.l10n.auth_appleLabel,
-            icon: Icons.apple,
-            backgroundColor: Colors.black,
-            textColor: Colors.white,
-            isLoading: _loadingProvider == LoginAuthProvider.apple,
-            isDisabled: _loadingProvider != null,
-            onPressed: () => _onPressed(
-              LoginAuthProvider.apple,
-              () => context.read<AuthCubit>().signInWithApple(),
+          if (Platform.isIOS)
+            LoginSocialButton(
+              label: context.l10n.auth_appleLabel,
+              icon: Icons.apple,
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
+              isLoading: _loadingProvider == LoginAuthProvider.apple,
+              isDisabled: _loadingProvider != null,
+              onPressed: () => _onPressed(
+                LoginAuthProvider.apple,
+                () => context.read<AuthCubit>().signInWithApple(),
+              ),
             ),
-          ),
         ],
       ),
     );

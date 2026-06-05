@@ -45,6 +45,12 @@ abstract final class AnalyticsEvents {
   /// Max 40 chars: 'auth_first_home_entry'.length == 21. ✓
   static const String authFirstHomeEntry = 'auth_first_home_entry';
 
+  /// Firebase Auth respondió OK (token válido). Se emite justo antes de llamar
+  /// al API. Param: [AnalyticsParams.authMethod], [AnalyticsParams.userLoaded].
+  /// Permite distinguir "Firebase falló" de "Firebase ok, API falló".
+  /// Max 40 chars: 'auth_firebase_ok'.length == 16. ✓
+  static const String authFirebaseOk = 'auth_firebase_ok';
+
   // ---------------------------------------------------------------------------
   // SOAT
   // ---------------------------------------------------------------------------

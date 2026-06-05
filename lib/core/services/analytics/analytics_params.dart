@@ -58,6 +58,11 @@ abstract final class AnalyticsParams {
   /// Error no clasificado.
   static const String authErrorUnknown = 'unknown';
 
+  /// 1 si el UserModel quedó disponible tras el sign-in, 0 si falló el load.
+  /// Prohibido usar bool — GA4 descarta silenciosamente valores boolean.
+  /// Max 40 chars: 'user_loaded'.length == 11. ✓
+  static const String userLoaded = 'user_loaded';
+
   // ---------------------------------------------------------------------------
   // User properties (Fase 5)
   // ---------------------------------------------------------------------------
