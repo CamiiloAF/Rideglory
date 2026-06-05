@@ -335,8 +335,8 @@ void main() {
       );
       await tester.pump();
 
-      // l10n key: maintenance_expired_label = "vencido"
-      expect(find.text('vencido'), findsOneWidget);
+      // l10n key: soat_status_expired = "Vencido"
+      expect(find.text('Vencido'), findsOneWidget);
     });
   });
 
