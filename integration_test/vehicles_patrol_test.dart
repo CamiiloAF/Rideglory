@@ -27,7 +27,7 @@ void main() {
     'login → garage: usuario ve la pantalla de vehículos',
     timeout: const Timeout(Duration(minutes: 3)),
     ($) async {
-      await app.main();
+      app.main();
       await $.pumpAndSettle();
 
       // 1. Splash — aceptar permiso de ubicación si aparece antes de que termine

@@ -31,11 +31,7 @@ enum MaintenanceMode {
 
 /// Calculated at runtime from nextOdometer/nextDate vs currentVehicleMileage/today.
 /// Only applies to mode == scheduled. Completed records have no status.
-enum MaintenanceStatus {
-  overdue,
-  next,
-  upToDate,
-}
+enum MaintenanceStatus { overdue, next, upToDate }
 
 // Thresholds for status calculation
 const int kMaintenanceUmbralKm = 500;
@@ -92,16 +88,20 @@ class MaintenanceModel {
     if (maintenance.mode == MaintenanceMode.completed) return null;
 
     final now = DateTime.now();
-    final overdueByKm = maintenance.nextOdometer != null &&
+    final overdueByKm =
+        maintenance.nextOdometer != null &&
         currentVehicleMileage > maintenance.nextOdometer!;
-    final overdueByDate = maintenance.nextDate != null &&
-        now.isAfter(maintenance.nextDate!);
+    final overdueByDate =
+        maintenance.nextDate != null && now.isAfter(maintenance.nextDate!);
 
     if (overdueByKm || overdueByDate) return MaintenanceStatus.overdue;
 
-    final nextByKm = maintenance.nextOdometer != null &&
-        (maintenance.nextOdometer! - currentVehicleMileage) <= kMaintenanceUmbralKm;
-    final nextByDate = maintenance.nextDate != null &&
+    final nextByKm =
+        maintenance.nextOdometer != null &&
+        (maintenance.nextOdometer! - currentVehicleMileage) <=
+            kMaintenanceUmbralKm;
+    final nextByDate =
+        maintenance.nextDate != null &&
         maintenance.nextDate!.difference(now).inDays <= kMaintenanceUmbralDays;
 
     if (nextByKm || nextByDate) return MaintenanceStatus.next;

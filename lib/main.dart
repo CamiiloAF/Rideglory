@@ -30,66 +30,61 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 import 'firebase_options.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+void main() {
+  // runZonedGuarded debe envolver TODA la inicialización + runApp para que
+  // WidgetsFlutterBinding.ensureInitialized() y runApp estén en la misma zona.
+  runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  final firebaseOptions = DefaultFirebaseOptions.currentPlatform;
-  if (firebaseOptions.apiKey.isEmpty ||
-      firebaseOptions.appId.isEmpty ||
-      firebaseOptions.messagingSenderId.isEmpty ||
-      firebaseOptions.projectId.isEmpty) {
-    throw StateError(
-      'Missing Firebase configuration. Pass required values using --dart-define.',
+    final firebaseOptions = DefaultFirebaseOptions.currentPlatform;
+    if (firebaseOptions.apiKey.isEmpty ||
+        firebaseOptions.appId.isEmpty ||
+        firebaseOptions.messagingSenderId.isEmpty ||
+        firebaseOptions.projectId.isEmpty) {
+      throw StateError(
+        'Missing Firebase configuration. Pass required values using --dart-define.',
+      );
+    }
+
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
+    await Firebase.initializeApp(options: firebaseOptions);
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    await ApiRemoteConfig.initialize(FirebaseRemoteConfig.instance);
+    await initializeDateFormatting();
+
+    const mapboxToken = AppEnv.mapboxAccessToken;
+    assert(
+      mapboxToken != null && mapboxToken.isNotEmpty,
+      'MAPBOX_ACCESS_TOKEN must be set in .env',
     );
-  }
+    MapboxOptions.setAccessToken(mapboxToken!);
 
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+    configureDependencies();
 
-  await Firebase.initializeApp(options: firebaseOptions);
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-  await ApiRemoteConfig.initialize(FirebaseRemoteConfig.instance);
-  await initializeDateFormatting();
+    try {
+      await getIt<CrashReporter>().setEnabled(!kDebugMode);
+    } catch (_) {}
+    try {
+      await getIt<AnalyticsService>().setEnabled(!kDebugMode);
+    } catch (_) {}
 
-  const mapboxToken = AppEnv.mapboxAccessToken;
-  assert(
-    mapboxToken != null && mapboxToken.isNotEmpty,
-    'MAPBOX_ACCESS_TOKEN must be set in .env',
-  );
-  MapboxOptions.setAccessToken(mapboxToken!);
+    registerCrashHandlers(
+      isDebug: kDebugMode,
+      reporter: getIt<CrashReporter>(),
+    );
 
-  // PASO 1: DI primero — getIt<CrashReporter>() disponible a partir de aquí.
-  configureDependencies();
-
-  // PASO 2: Init defensivo de Crashlytics y Analytics (post-DI).
-  try {
-    await getIt<CrashReporter>().setEnabled(!kDebugMode);
-  } catch (_) {
-    // Fallo silencioso — un fallo de Crashlytics no debe romper runApp.
-  }
-  try {
-    await getIt<AnalyticsService>().setEnabled(!kDebugMode);
-  } catch (_) {
-    // Fallo silencioso — un fallo de Analytics no debe romper runApp.
-  }
-
-  // PASO 3: Registrar handlers DESPUÉS de configureDependencies() y ANTES de runApp.
-  registerCrashHandlers(
-    isDebug: kDebugMode,
-    reporter: getIt<CrashReporter>(),
-  );
-
-  // PASO 4: runZonedGuarded envuelve runApp; el zone handler reporta errores no-fatales.
-  runZonedGuarded(
-    () => runApp(const MyApp()),
-    (error, stack) {
-      if (!kDebugMode) {
+    runApp(const MyApp());
+  }, (error, stack) {
+    if (!kDebugMode) {
+      try {
         getIt<CrashReporter>().recordError(error, stack, fatal: false);
-      }
-    },
-  );
+      } catch (_) {}
+    }
+  });
 }
 
 class MyApp extends StatelessWidget {
