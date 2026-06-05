@@ -27,7 +27,7 @@ void main() {
     'login → profile: usuario ve su perfil',
     timeout: const Timeout(Duration(minutes: 3)),
     ($) async {
-      await app.main();
+      app.main();
       await $.pumpAndSettle();
 
       // 1. Splash — handle location permission

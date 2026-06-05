@@ -1,6 +1,6 @@
 # Documentación del Feature: Splash
 
-> Última actualización: 2026-05-28  
+> Última actualización: 2026-06-05  
 > Alcance: `lib/features/splash/`
 
 ---
@@ -111,10 +111,13 @@ abstract class SplashState with _$SplashState {
   const factory SplashState.authenticated()   = SplashAuthenticated;
   const factory SplashState.unauthenticated() = SplashUnauthenticated;
   const factory SplashState.error(String message) = SplashError;
+  const factory SplashState.forceUpdate()     = SplashForceUpdate;
 }
 ```
 
 > No usa `ResultState<T>` porque la salida no es un dato sino una decisión de navegación.
+
+`SplashForceUpdate` se emite cuando la versión instalada es menor a `min_required_version` en Firebase Remote Config. El `BlocListener` muestra un `ForceUpdateDialog` no descartable (`barrierDismissible: false`, `PopScope(canPop: false)`) con un botón "Actualizar" que abre la Play Store / App Store.
 
 **`SplashCubit.initialize()`** — único método público (más allá de los heredados):
 
@@ -173,6 +176,7 @@ SplashCubit.initialize()
 
 BlocListener<SplashCubit> en _SplashContent:
   │
+  ├─ SplashForceUpdate     → showDialog(ForceUpdateDialog, barrierDismissible: false)
   ├─ SplashUnauthenticated → context.pushReplacementNamed('/login')
   ├─ SplashAuthenticated   → context.pushReplacementNamed('/home')
   └─ SplashError           → footer muestra error + botón Reintentar

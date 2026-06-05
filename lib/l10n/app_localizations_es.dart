@@ -1526,6 +1526,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get splash_errorPrefix => 'Error: ';
 
   @override
+  String get splash_forceUpdateTitle => 'Actualización requerida';
+
+  @override
+  String get splash_forceUpdateMessage =>
+      'Hay una nueva versión de la app disponible. Debes actualizar para continuar.';
+
+  @override
+  String get splash_forceUpdateButton => 'Actualizar';
+
+  @override
   String get home_greeting => 'Hola, Rider';
 
   @override
