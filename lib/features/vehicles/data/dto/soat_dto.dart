@@ -1,10 +1,16 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:rideglory/features/vehicles/domain/models/soat_model.dart';
+import 'package:rideglory/features/vehicles/domain/models/vehicle_soat_form_data.dart';
 
 part 'soat_dto.g.dart';
 
+// Shape-mismatch exception (not Pattern B):
+// The API returns/accepts dates as ISO-8601 strings (String), while
+// [VehicleSoatFormData] stores them as [DateTime]. This DTO acts as the
+// serialization boundary and converts between the two representations.
+// Pattern B (XDto extends XModel) does not apply here because the field
+// types differ (String ↔ DateTime).
 @JsonSerializable()
-class SoatDto {
+class VehicleSoatFormDataDto {
   final String? id;
   final String vehicleId;
   final String? policyNumber;
@@ -13,7 +19,7 @@ class SoatDto {
   final String insurer;
   final String? documentUrl;
 
-  const SoatDto({
+  const VehicleSoatFormDataDto({
     this.id,
     required this.vehicleId,
     this.policyNumber,
@@ -23,12 +29,12 @@ class SoatDto {
     this.documentUrl,
   });
 
-  factory SoatDto.fromJson(Map<String, dynamic> json) =>
-      _$SoatDtoFromJson(json);
+  factory VehicleSoatFormDataDto.fromJson(Map<String, dynamic> json) =>
+      _$VehicleSoatFormDataDtoFromJson(json);
 
-  Map<String, dynamic> toJson() => _$SoatDtoToJson(this);
+  Map<String, dynamic> toJson() => _$VehicleSoatFormDataDtoToJson(this);
 
-  SoatModel toModel() => SoatModel(
+  VehicleSoatFormData toFormData() => VehicleSoatFormData(
     id: id,
     vehicleId: vehicleId,
     policyNumber: policyNumber,
@@ -37,4 +43,16 @@ class SoatDto {
     insurer: insurer,
     documentUrl: documentUrl,
   );
+}
+
+extension VehicleSoatFormDataExtension on VehicleSoatFormData {
+  Map<String, dynamic> toJson() => VehicleSoatFormDataDto(
+    id: id,
+    vehicleId: vehicleId,
+    policyNumber: policyNumber,
+    startDate: startDate.toIso8601String(),
+    expiryDate: expiryDate.toIso8601String(),
+    insurer: insurer,
+    documentUrl: documentUrl,
+  ).toJson();
 }

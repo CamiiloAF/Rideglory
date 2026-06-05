@@ -273,6 +273,9 @@ App-wide reusable components:
 | **Events** | Create/browse/detail events, real-time tracking | `lib/features/events/` |
 | **Event Registration** | Register for events, attendance approval workflow | `lib/features/event_registration/` |
 | **Maintenance** | Log vehicle maintenance records | `lib/features/maintenance/` |
+| **SOAT** | Vehicle SOAT insurance document (capture, status, reminders) | `lib/features/soat/` |
+| **Tecnomecánica (RTM)** | Vehicle RTM inspection document (CRUD, status, reminders) | `lib/features/tecnomecanica/` |
+| **Vehicle Documents (shared)** | Shared abstraction for legal vehicle documents (SOAT, RTM); provides mixin `VehicleDocumentExpiry`, base cubit `VehicleDocumentCubit<T>`, generic widgets | `lib/features/vehicle_documents/` |
 | **Users** | User profiles, discovery | `lib/features/users/` |
 | **Profile** | Current user profile page | `lib/features/profile/` |
 | **Splash** | App startup screen | `lib/features/splash/` |

@@ -1,6 +1,9 @@
+import 'package:rideglory/features/vehicle_documents/domain/vehicle_document_expiry.dart';
+import 'package:rideglory/features/vehicle_documents/domain/vehicle_document_model.dart';
+
 enum SoatStatus { noSoat, valid, expiringSoon, expired }
 
-class SoatModel {
+class SoatModel with VehicleDocumentExpiry implements VehicleDocumentModel {
   const SoatModel({
     required this.id,
     required this.vehicleId,
@@ -13,28 +16,30 @@ class SoatModel {
     this.updatedAt,
   });
 
+  @override
   final String id;
+  @override
   final String vehicleId;
   final String? policyNumber;
   final DateTime? startDate;
+  @override
   final DateTime expiryDate;
   final String? insurer;
   final String? documentUrl;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-  SoatStatus get status {
-    final daysUntil = daysUntilExpiry;
-    if (daysUntil < 0) return SoatStatus.expired;
-    if (daysUntil <= 30) return SoatStatus.expiringSoon;
-    return SoatStatus.valid;
-  }
+  VehicleDocumentKind get kind => VehicleDocumentKind.soat;
 
-  int get daysUntilExpiry {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final expiry = DateTime(expiryDate.year, expiryDate.month, expiryDate.day);
-    return expiry.difference(today).inDays;
+  /// Maps [documentStatus] (from the [VehicleDocumentExpiry] mixin) to the
+  /// legacy [SoatStatus] enum consumed by existing widgets, router, and analytics.
+  SoatStatus get status {
+    return switch (documentStatus) {
+      VehicleDocumentStatus.expired => SoatStatus.expired,
+      VehicleDocumentStatus.expiringSoon => SoatStatus.expiringSoon,
+      VehicleDocumentStatus.valid => SoatStatus.valid,
+      VehicleDocumentStatus.none => SoatStatus.noSoat,
+    };
   }
 
   SoatModel copyWith({

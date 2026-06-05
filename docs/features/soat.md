@@ -533,3 +533,33 @@ El getter solo retorna `valid` / `expiringSoon` / `expired`. `noSoat` se asigna 
 | Inicio del flujo SOAT desde vehicles | `lib/features/vehicles/presentation/garage/widgets/vehicle_soat_card.dart`, `lib/features/vehicles/presentation/form/widgets/vehicle_soat_form_slot.dart` |
 | Update/clear local del status | `lib/features/vehicles/presentation/cubit/vehicle_cubit.dart` (`updateSoatLocally`, `clearSoatLocally`) |
 | Endpoint | `lib/core/http/api_routes.dart` (`vehicleSoat(id)`) |
+
+---
+
+## 13. Abstracción `vehicle_documents/` (Fase 1 — iteración tecnomecánica)
+
+A partir de la Fase 1 de la iteración de tecnomecánica, la lógica compartida entre documentos legales de vehículo fue extraída a `lib/features/vehicle_documents/`. SOAT fue el primer documento en migrarse a este patrón.
+
+### Qué comparte SOAT con otros documentos
+
+| Elemento | Ruta | Uso |
+|---|---|---|
+| Mixin de expiración | `lib/features/vehicle_documents/domain/vehicle_document_expiry.dart` | `daysUntilExpiry`, `documentStatus` |
+| Contrato del modelo | `lib/features/vehicle_documents/domain/vehicle_document_model.dart` | Interface que `SoatModel` implementa |
+| Estado de documento | `lib/features/vehicle_documents/domain/vehicle_document_status.dart` | `valid`, `expiringSoon`, `expired`, `none` |
+| Kind enum | `lib/features/vehicle_documents/domain/vehicle_document_kind.dart` | `soat`, `rtm` |
+| Cubit base | `lib/features/vehicle_documents/presentation/cubit/vehicle_document_cubit.dart` | `VehicleDocumentCubit<T>` abstracto |
+| Widgets genéricos | `lib/features/vehicle_documents/presentation/widgets/` | `DocumentStatusView`, `DocumentDataView`, `DocumentEmptyState`, `DocumentDetailRow`, `DocumentSectionHeader`, `DocumentValidityCard` |
+
+### Renombrado `VehicleSoatFormData`
+
+El modelo de datos del formulario de vehículo fue renombrado de `SoatData` a `VehicleSoatFormData` para evitar confusión con `SoatModel` del feature SOAT.
+
+### Agregar un tercer documento
+
+Para agregar un nuevo documento legal (ej. seguros adicionales):
+1. Crear `lib/features/<doc>/domain/models/<doc>_model.dart` que implemente `VehicleDocumentModel` y use el mixin `VehicleDocumentExpiry`.
+2. Crear cubit concreto que extienda `VehicleDocumentCubit<DocModel>`.
+3. Reusar los widgets genéricos de `vehicle_documents/presentation/widgets/` pasando el copy como parámetros.
+4. Añadir el `kind` correspondiente al enum `VehicleDocumentKind`.
+5. No duplicar lógica de expiración ni widgets en el feature nuevo.

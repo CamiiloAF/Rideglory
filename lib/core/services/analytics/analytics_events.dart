@@ -311,6 +311,27 @@ abstract final class AnalyticsEvents {
   static const String soatDeleted = 'soat_deleted';
 
   // ---------------------------------------------------------------------------
+  // Tecnomecánica (RTM)
+  // ---------------------------------------------------------------------------
+
+  /// El rider vio el estado de una RTM existente (load resolvió a Data).
+  /// Param: [AnalyticsParams.rtmStatus].
+  /// Max 40 chars: 'tecnomecanica_status_viewed'.length == 27. ✓
+  static const String tecnomecanicaStatusViewed = 'tecnomecanica_status_viewed';
+
+  /// El rider guardó una RTM manualmente (save confirmado, nuevo).
+  /// Max 40 chars: 'tecnomecanica_manual_saved'.length == 26. ✓
+  static const String tecnomecanicaManualSaved = 'tecnomecanica_manual_saved';
+
+  /// El rider actualizó una RTM existente (save sobre RTM con id).
+  /// Max 40 chars: 'tecnomecanica_updated'.length == 21. ✓
+  static const String tecnomecanicaUpdated = 'tecnomecanica_updated';
+
+  /// El rider eliminó la RTM de un vehículo (borrado exitoso).
+  /// Max 40 chars: 'tecnomecanica_deleted'.length == 21. ✓
+  static const String tecnomecanicaDeleted = 'tecnomecanica_deleted';
+
+  // ---------------------------------------------------------------------------
   // Perfil (Fase 9)
   // ---------------------------------------------------------------------------
 

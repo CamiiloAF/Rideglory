@@ -1,0 +1,1 @@
+enum VehicleDocumentKind { soat, rtm }

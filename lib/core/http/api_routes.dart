@@ -49,6 +49,8 @@ abstract final class ApiRoutes {
   static const notificationsReadAll = '/notifications/read-all';
 
   static String vehicleSoat(String vehicleId) => '$vehicles/$vehicleId/soat';
+  static String vehicleTecnomecanica(String vehicleId) =>
+      '$vehicles/$vehicleId/tecnomecanica';
   static String notificationRead(String notificationId) =>
       '$notifications/$notificationId/read';
 }

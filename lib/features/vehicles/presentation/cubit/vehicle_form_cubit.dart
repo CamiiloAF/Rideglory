@@ -64,6 +64,14 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
     emit(state.copyWith(pendingManualSoat: null));
   }
 
+  void storePendingRtm(PendingRtm data) {
+    emit(state.copyWith(pendingRtm: data));
+  }
+
+  void clearPendingRtm() {
+    emit(state.copyWith(pendingRtm: null));
+  }
+
   Future<void> pickTechReviewDocument() async {
     final file = await _imageStorageService.pickImageFromGallery();
     if (file != null) {

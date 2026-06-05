@@ -749,6 +749,15 @@
   "vehicle_soat_save_button": "Guardar SOAT",
   "vehicle_soat_saved_successfully": "SOAT registrado exitosamente",
   "vehicle_soat_data_added": "Datos del SOAT agregados",
+  "vehicle_rtm_data_added": "Datos de la RTM agregados",
+  "vehicle_doc_expires_on": "Vence {date}",
+  "@vehicle_doc_expires_on": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
   "vehicle_soat_section_title": "Documentos",
   "vehicle_soat_confirm_title": "Confirmar SOAT",
   "vehicle_soat_confirm_button": "Confirmar SOAT",
@@ -768,7 +777,7 @@
   },
   "vehicle_soat_status_expires_today": "Vence hoy",
   "vehicle_soat_status_expired_title": "SOAT vencido",
-  "vehicle_soat_status_expired_desc": "Venció hace {days} días",
+  "vehicle_soat_status_expired_desc": "{days, plural, =1{Venció hace 1 día} other{Venció hace {days} días}}",
   "@vehicle_soat_status_expired_desc": {
     "placeholders": {
       "days": {
@@ -966,7 +975,7 @@
       }
     }
   },
-  "soat_expired_days_ago": "Venció hace {count} días",
+  "soat_expired_days_ago": "{count, plural, =1{Venció hace 1 día} other{Venció hace {count} días}}",
   "@soat_expired_days_ago": {
     "placeholders": {
       "count": {
@@ -1069,5 +1078,59 @@
   "vehicle_soat_upload_subtitle": "Selecciona una opción para actualizar el SOAT de tu vehículo",
   "@vehicle_soat_upload_subtitle": {
     "description": "Restored SOAT upload UI key: vehicle_soat_upload_subtitle"
-  }
+  },
+
+  "tecnomecanica_page_status_title": "Mi tecnomecánica",
+  "tecnomecanica_edit_btn": "Editar",
+  "tecnomecanica_valid_title": "Tu RTM está al día",
+  "tecnomecanica_expiring_title": "Tu RTM vence pronto",
+  "tecnomecanica_expired_title": "Tu RTM está vencida",
+  "tecnomecanica_valid_days_remaining": "{count} días restantes",
+  "@tecnomecanica_valid_days_remaining": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "tecnomecanica_expired_days_ago": "{count, plural, =1{Venció hace 1 día} other{Venció hace {count} días}}",
+  "@tecnomecanica_expired_days_ago": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "tecnomecanica_expiring_warning": "Programa tu revisión técnico-mecánica con anticipación para evitar sanciones.",
+  "tecnomecanica_expired_warning": "Circular sin revisión técnico-mecánica vigente es una infracción. Lleva tu moto a revisión lo antes posible.",
+  "tecnomecanica_renew_btn": "Registrar nueva RTM",
+  "tecnomecanica_field_certificate_number": "N.° de certificado",
+  "tecnomecanica_field_cda_name": "CDA",
+  "tecnomecanica_field_cda_code": "Código CDA",
+  "tecnomecanica_field_start_date": "Fecha inicio",
+  "tecnomecanica_field_expiry_date": "Fecha vencimiento",
+  "tecnomecanica_field_document_url": "URL del documento",
+  "tecnomecanica_delete_button": "Eliminar RTM",
+  "tecnomecanica_delete_confirm_title": "¿Eliminar RTM?",
+  "tecnomecanica_delete_confirm_message": "Se eliminará la información de la revisión técnico-mecánica de este vehículo. Esta acción no se puede deshacer.",
+  "tecnomecanica_deleted_success": "RTM eliminada",
+  "tecnomecanica_status_no_rtm": "Sin RTM registrada",
+  "tecnomecanica_manual_note": "Registra los datos de tu revisión técnico-mecánica para hacer seguimiento de su vencimiento.",
+  "tecnomecanica_form_create_title": "Registrar RTM",
+  "tecnomecanica_edit_title": "Editar RTM",
+  "tecnomecanica_form_subtitle": "Ingresa los datos de la revisión técnico-mecánica de {vehicleName}.",
+  "@tecnomecanica_form_subtitle": {
+    "placeholders": {
+      "vehicleName": { "type": "String" }
+    }
+  },
+  "tecnomecanica_save_data_btn": "Guardar datos",
+  "tecnomecanica_saving": "Guardando...",
+  "tecnomecanica_save_error": "No se pudo guardar la revisión técnico-mecánica. Intenta de nuevo.",
+  "tecnomecanica_certificate_number_hint": "Ej: CDA-123456",
+  "tecnomecanica_cda_name_hint": "Nombre del CDA",
+  "tecnomecanica_cda_code_hint": "Código del CDA (opcional)",
+  "tecnomecanica_date_hint": "dd/mm/aaaa",
+  "tecnomecanica_document_url_hint": "https://...",
+  "tecnomecanica_exemption_notice": "Los vehículos con menos de 2 años no están obligados a tener RTM. Puedes registrarla de todas formas para llevar el control.",
+
+  "vehicle_doc_rtm_status_valid": "Vigente",
+  "vehicle_doc_rtm_status_expiring_soon": "Por vencer",
+  "vehicle_doc_rtm_status_expired": "Vencida"
 }

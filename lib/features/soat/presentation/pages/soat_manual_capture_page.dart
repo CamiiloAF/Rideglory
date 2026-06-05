@@ -107,7 +107,8 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
     // el autocompletado. Cuando venimos del escaneo, [extraction] ya viene y no
     // se re-escanea.
     final initialPath = _localImagePath;
-    if (initialPath != null && _extraction == null) {
+    // No re-escanear si ya hay datos pre-llenados (edición de pendiente).
+    if (initialPath != null && _extraction == null && widget.existingSoat == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           _scanDocument(

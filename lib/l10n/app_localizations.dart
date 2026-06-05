@@ -4084,6 +4084,18 @@ abstract class AppLocalizations {
   /// **'Datos del SOAT agregados'**
   String get vehicle_soat_data_added;
 
+  /// No description provided for @vehicle_rtm_data_added.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos de la RTM agregados'**
+  String get vehicle_rtm_data_added;
+
+  /// No description provided for @vehicle_doc_expires_on.
+  ///
+  /// In es, this message translates to:
+  /// **'Vence {date}'**
+  String vehicle_doc_expires_on(String date);
+
   /// No description provided for @vehicle_soat_section_title.
   ///
   /// In es, this message translates to:
@@ -4159,7 +4171,7 @@ abstract class AppLocalizations {
   /// No description provided for @vehicle_soat_status_expired_desc.
   ///
   /// In es, this message translates to:
-  /// **'Venció hace {days} días'**
+  /// **'{days, plural, =1{Venció hace 1 día} other{Venció hace {days} días}}'**
   String vehicle_soat_status_expired_desc(int days);
 
   /// No description provided for @vehicle_soat_status_invalid_dates_title.
@@ -4750,7 +4762,7 @@ abstract class AppLocalizations {
   /// No description provided for @soat_expired_days_ago.
   ///
   /// In es, this message translates to:
-  /// **'Venció hace {count} días'**
+  /// **'{count, plural, =1{Venció hace 1 día} other{Venció hace {count} días}}'**
   String soat_expired_days_ago(int count);
 
   /// No description provided for @soat_expiring_warning.
@@ -5106,6 +5118,228 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Selecciona una opción para actualizar el SOAT de tu vehículo'**
   String get vehicle_soat_upload_subtitle;
+
+  /// No description provided for @tecnomecanica_page_status_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Mi tecnomecánica'**
+  String get tecnomecanica_page_status_title;
+
+  /// No description provided for @tecnomecanica_edit_btn.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar'**
+  String get tecnomecanica_edit_btn;
+
+  /// No description provided for @tecnomecanica_valid_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu RTM está al día'**
+  String get tecnomecanica_valid_title;
+
+  /// No description provided for @tecnomecanica_expiring_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu RTM vence pronto'**
+  String get tecnomecanica_expiring_title;
+
+  /// No description provided for @tecnomecanica_expired_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu RTM está vencida'**
+  String get tecnomecanica_expired_title;
+
+  /// No description provided for @tecnomecanica_valid_days_remaining.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} días restantes'**
+  String tecnomecanica_valid_days_remaining(int count);
+
+  /// No description provided for @tecnomecanica_expired_days_ago.
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =1{Venció hace 1 día} other{Venció hace {count} días}}'**
+  String tecnomecanica_expired_days_ago(int count);
+
+  /// No description provided for @tecnomecanica_expiring_warning.
+  ///
+  /// In es, this message translates to:
+  /// **'Programa tu revisión técnico-mecánica con anticipación para evitar sanciones.'**
+  String get tecnomecanica_expiring_warning;
+
+  /// No description provided for @tecnomecanica_expired_warning.
+  ///
+  /// In es, this message translates to:
+  /// **'Circular sin revisión técnico-mecánica vigente es una infracción. Lleva tu moto a revisión lo antes posible.'**
+  String get tecnomecanica_expired_warning;
+
+  /// No description provided for @tecnomecanica_renew_btn.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar nueva RTM'**
+  String get tecnomecanica_renew_btn;
+
+  /// No description provided for @tecnomecanica_field_certificate_number.
+  ///
+  /// In es, this message translates to:
+  /// **'N.° de certificado'**
+  String get tecnomecanica_field_certificate_number;
+
+  /// No description provided for @tecnomecanica_field_cda_name.
+  ///
+  /// In es, this message translates to:
+  /// **'CDA'**
+  String get tecnomecanica_field_cda_name;
+
+  /// No description provided for @tecnomecanica_field_cda_code.
+  ///
+  /// In es, this message translates to:
+  /// **'Código CDA'**
+  String get tecnomecanica_field_cda_code;
+
+  /// No description provided for @tecnomecanica_field_start_date.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha inicio'**
+  String get tecnomecanica_field_start_date;
+
+  /// No description provided for @tecnomecanica_field_expiry_date.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha vencimiento'**
+  String get tecnomecanica_field_expiry_date;
+
+  /// No description provided for @tecnomecanica_field_document_url.
+  ///
+  /// In es, this message translates to:
+  /// **'URL del documento'**
+  String get tecnomecanica_field_document_url;
+
+  /// No description provided for @tecnomecanica_delete_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar RTM'**
+  String get tecnomecanica_delete_button;
+
+  /// No description provided for @tecnomecanica_delete_confirm_title.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar RTM?'**
+  String get tecnomecanica_delete_confirm_title;
+
+  /// No description provided for @tecnomecanica_delete_confirm_message.
+  ///
+  /// In es, this message translates to:
+  /// **'Se eliminará la información de la revisión técnico-mecánica de este vehículo. Esta acción no se puede deshacer.'**
+  String get tecnomecanica_delete_confirm_message;
+
+  /// No description provided for @tecnomecanica_deleted_success.
+  ///
+  /// In es, this message translates to:
+  /// **'RTM eliminada'**
+  String get tecnomecanica_deleted_success;
+
+  /// No description provided for @tecnomecanica_status_no_rtm.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin RTM registrada'**
+  String get tecnomecanica_status_no_rtm;
+
+  /// No description provided for @tecnomecanica_manual_note.
+  ///
+  /// In es, this message translates to:
+  /// **'Registra los datos de tu revisión técnico-mecánica para hacer seguimiento de su vencimiento.'**
+  String get tecnomecanica_manual_note;
+
+  /// No description provided for @tecnomecanica_form_create_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Registrar RTM'**
+  String get tecnomecanica_form_create_title;
+
+  /// No description provided for @tecnomecanica_edit_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar RTM'**
+  String get tecnomecanica_edit_title;
+
+  /// No description provided for @tecnomecanica_form_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Ingresa los datos de la revisión técnico-mecánica de {vehicleName}.'**
+  String tecnomecanica_form_subtitle(String vehicleName);
+
+  /// No description provided for @tecnomecanica_save_data_btn.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar datos'**
+  String get tecnomecanica_save_data_btn;
+
+  /// No description provided for @tecnomecanica_saving.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardando...'**
+  String get tecnomecanica_saving;
+
+  /// No description provided for @tecnomecanica_save_error.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo guardar la revisión técnico-mecánica. Intenta de nuevo.'**
+  String get tecnomecanica_save_error;
+
+  /// No description provided for @tecnomecanica_certificate_number_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej: CDA-123456'**
+  String get tecnomecanica_certificate_number_hint;
+
+  /// No description provided for @tecnomecanica_cda_name_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre del CDA'**
+  String get tecnomecanica_cda_name_hint;
+
+  /// No description provided for @tecnomecanica_cda_code_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Código del CDA (opcional)'**
+  String get tecnomecanica_cda_code_hint;
+
+  /// No description provided for @tecnomecanica_date_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'dd/mm/aaaa'**
+  String get tecnomecanica_date_hint;
+
+  /// No description provided for @tecnomecanica_document_url_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'https://...'**
+  String get tecnomecanica_document_url_hint;
+
+  /// No description provided for @tecnomecanica_exemption_notice.
+  ///
+  /// In es, this message translates to:
+  /// **'Los vehículos con menos de 2 años no están obligados a tener RTM. Puedes registrarla de todas formas para llevar el control.'**
+  String get tecnomecanica_exemption_notice;
+
+  /// No description provided for @vehicle_doc_rtm_status_valid.
+  ///
+  /// In es, this message translates to:
+  /// **'Vigente'**
+  String get vehicle_doc_rtm_status_valid;
+
+  /// No description provided for @vehicle_doc_rtm_status_expiring_soon.
+  ///
+  /// In es, this message translates to:
+  /// **'Por vencer'**
+  String get vehicle_doc_rtm_status_expiring_soon;
+
+  /// No description provided for @vehicle_doc_rtm_status_expired.
+  ///
+  /// In es, this message translates to:
+  /// **'Vencida'**
+  String get vehicle_doc_rtm_status_expired;
 }
 
 class _AppLocalizationsDelegate

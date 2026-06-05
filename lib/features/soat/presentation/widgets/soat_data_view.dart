@@ -8,7 +8,7 @@ import 'package:rideglory/features/soat/domain/models/soat_model.dart';
 import 'package:rideglory/features/soat/presentation/cubit/soat_cubit.dart';
 import 'package:rideglory/features/soat/presentation/scan/soat_entry_flow.dart';
 import 'package:rideglory/features/soat/presentation/widgets/soat_action_tile.dart';
-import 'package:rideglory/features/soat/presentation/widgets/soat_detail_row.dart';
+import 'package:rideglory/features/vehicle_documents/presentation/widgets/detail_row.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/helpers/document_downloader.dart';
@@ -228,21 +228,21 @@ class _SoatDataViewState extends State<SoatDataView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (widget.soat.policyNumber != null)
-                  SoatDetailRow(
+                  DocumentDetailRow(
                     label: context.l10n.soat_field_policy_number,
                     value: widget.soat.policyNumber!,
                   ),
                 if (widget.soat.insurer != null)
-                  SoatDetailRow(
+                  DocumentDetailRow(
                     label: context.l10n.soat_field_insurer,
                     value: widget.soat.insurer!,
                   ),
                 if (widget.soat.startDate != null)
-                  SoatDetailRow(
+                  DocumentDetailRow(
                     label: context.l10n.soat_field_start_date,
                     value: dateFormat.format(widget.soat.startDate!),
                   ),
-                SoatDetailRow(
+                DocumentDetailRow(
                   label: context.l10n.soat_field_expiry_date,
                   value: dateFormat.format(widget.soat.expiryDate),
                   isLast: true,
