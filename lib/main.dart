@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:rideglory/core/config/api_remote_config.dart';
 import 'package:rideglory/core/config/app_env.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/core/services/crash/crash_handler_setup.dart';
 import 'package:rideglory/core/services/crash/crash_reporter.dart';
 import 'package:rideglory/core/services/fcm_service.dart';
@@ -41,6 +43,11 @@ Future<void> main() async {
     );
   }
 
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   await Firebase.initializeApp(options: firebaseOptions);
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   await ApiRemoteConfig.initialize(FirebaseRemoteConfig.instance);
@@ -56,11 +63,16 @@ Future<void> main() async {
   // PASO 1: DI primero — getIt<CrashReporter>() disponible a partir de aquí.
   configureDependencies();
 
-  // PASO 2: Init defensivo de Crashlytics (post-DI).
+  // PASO 2: Init defensivo de Crashlytics y Analytics (post-DI).
   try {
     await getIt<CrashReporter>().setEnabled(!kDebugMode);
   } catch (_) {
     // Fallo silencioso — un fallo de Crashlytics no debe romper runApp.
+  }
+  try {
+    await getIt<AnalyticsService>().setEnabled(!kDebugMode);
+  } catch (_) {
+    // Fallo silencioso — un fallo de Analytics no debe romper runApp.
   }
 
   // PASO 3: Registrar handlers DESPUÉS de configureDependencies() y ANTES de runApp.

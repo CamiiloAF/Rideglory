@@ -5,6 +5,7 @@ import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/features/splash/presentation/cubit/splash_cubit.dart';
+import 'package:rideglory/features/splash/presentation/widgets/force_update_dialog.dart';
 import 'package:rideglory/features/splash/presentation/widgets/splash_brand_content.dart';
 import 'package:rideglory/features/splash/presentation/widgets/splash_footer.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
@@ -58,6 +59,17 @@ class _SplashContentState extends State<_SplashContent>
     if (_hasNavigated) return;
 
     if (state is SplashLoading || state is SplashInitial) return;
+
+    if (state is SplashForceUpdate) {
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => const ForceUpdateDialog(),
+        );
+      }
+      return;
+    }
 
     if (state is SplashUnauthenticated) {
       _hasNavigated = true;

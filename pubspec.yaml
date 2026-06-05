@@ -111,6 +111,7 @@ dependencies:
   firebase_crashlytics: ^5.2.0
   # SHA-256 hashing for anonymous user id (acquisition funnel)
   crypto: ^3.0.3
+  package_info_plus: ^9.0.1
 
 dev_dependencies:
   flutter_test:

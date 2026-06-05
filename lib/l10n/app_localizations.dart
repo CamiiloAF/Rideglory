@@ -2968,6 +2968,24 @@ abstract class AppLocalizations {
   /// **'Error: '**
   String get splash_errorPrefix;
 
+  /// No description provided for @splash_forceUpdateTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Actualización requerida'**
+  String get splash_forceUpdateTitle;
+
+  /// No description provided for @splash_forceUpdateMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Hay una nueva versión de la app disponible. Debes actualizar para continuar.'**
+  String get splash_forceUpdateMessage;
+
+  /// No description provided for @splash_forceUpdateButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Actualizar'**
+  String get splash_forceUpdateButton;
+
   /// No description provided for @home_greeting.
   ///
   /// In es, this message translates to:
