@@ -223,10 +223,10 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
 
     if (rankA != rankB) return rankA.compareTo(rankB);
 
-    // Within same rank, most recent first
+    // Within same rank, sort by date
     final dateA = a.nextDate ?? a.serviceDate ?? a.createdDate ?? DateTime(0);
     final dateB = b.nextDate ?? b.serviceDate ?? b.createdDate ?? DateTime(0);
-    return dateB.compareTo(dateA);
+    return dateA.compareTo(dateB);
   }
 
   static int _statusRank(MaintenanceMode mode, MaintenanceStatus? status) {

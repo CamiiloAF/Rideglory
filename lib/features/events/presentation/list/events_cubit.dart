@@ -244,8 +244,6 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
       filtered = filtered.where((e) => e.isMultiBrand).toList();
     }
 
-    filtered.sort((a, b) => b.startDate.compareTo(a.startDate));
-
     if (_allEvents.isEmpty) {
       emit(const ResultState.empty());
     } else {
