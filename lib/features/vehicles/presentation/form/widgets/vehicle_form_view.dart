@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/extensions/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rideglory/core/di/injection.dart';
-import 'package:rideglory/core/exceptions/domain_exception.dart';
+
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/core/services/image_storage_service.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -70,8 +71,8 @@ class _VehicleFormViewState extends State<VehicleFormView> {
             VehicleFormFields.brand: state.vehicle!.brand,
             VehicleFormFields.model: state.vehicle!.model,
             VehicleFormFields.year: state.vehicle!.year?.toString(),
-            VehicleFormFields.currentMileage:
-                state.vehicle!.currentMileage.toString(),
+            VehicleFormFields.currentMileage: state.vehicle!.currentMileage
+                .toString(),
             VehicleFormFields.licensePlate: state.vehicle!.licensePlate,
             VehicleFormFields.vin: state.vehicle!.vin,
             VehicleFormFields.purchaseDate: state.vehicle!.purchaseDate,
@@ -129,17 +130,6 @@ class _VehicleFormViewState extends State<VehicleFormView> {
           context.read<VehicleCubit>().addVehicleLocally(savedVehicle);
         }
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              state.isEditing
-                  ? context.l10n.updatedSuccessfully
-                  : context.l10n.savedSuccessfully,
-            ),
-            backgroundColor: AppColors.success,
-          ),
-        );
-
         // Caso 1: SOAT con imagen adjuntada — abrir el formulario unificado de
         // SOAT, reemplazando este form para no dejarlo en el back stack.
         final soatPath = state.soatLocalPath;
@@ -155,24 +145,34 @@ class _VehicleFormViewState extends State<VehicleFormView> {
           return;
         }
 
-        // Caso 2: SOAT manual capturado antes de crear el vehículo — guardarlo ahora
+        // Casos 2 y 3: SOAT manual y/o RTM pendientes — guardar ambos y luego pop.
+        // El snackbar de éxito se muestra al terminar, no antes.
         final pendingManualSoat = state.pendingManualSoat;
-        if (!state.isEditing &&
-            pendingManualSoat != null &&
-            savedVehicle.id != null) {
-          _savePendingManualSoatAndPop(context, savedVehicle, pendingManualSoat);
-          return;
-        }
-
-        // Caso 3: RTM manual capturada antes de crear el vehículo — guardarla ahora
         final pendingRtm = state.pendingRtm;
         if (!state.isEditing &&
-            pendingRtm != null &&
-            savedVehicle.id != null) {
-          _savePendingRtmAndPop(context, savedVehicle, pendingRtm);
+            savedVehicle.id != null &&
+            (pendingManualSoat != null || pendingRtm != null)) {
+          _savePendingDocumentsAndPop(
+            context,
+            savedVehicle,
+            successLabel: context.l10n.savedSuccessfully,
+            pendingManualSoat: pendingManualSoat,
+            pendingRtm: pendingRtm,
+          );
           return;
         }
 
+        // Sin documentos pendientes: navegar de inmediato con snackbar.
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              state.isEditing
+                  ? context.l10n.updatedSuccessfully
+                  : context.l10n.savedSuccessfully,
+            ),
+            backgroundColor: AppColors.success,
+          ),
+        );
         context.pop(savedVehicle);
       },
       error: (error) {
@@ -186,127 +186,117 @@ class _VehicleFormViewState extends State<VehicleFormView> {
     );
   }
 
-  /// Guarda el SOAT manual pendiente en el backend y luego cierra el formulario.
+  /// Guarda el SOAT y/o RTM pendientes en el backend y cierra el formulario.
   /// El vehículo ya fue creado exitosamente en este punto.
-  Future<void> _savePendingManualSoatAndPop(
+  Future<void> _savePendingDocumentsAndPop(
     BuildContext context,
-    VehicleModel savedVehicle,
-    PendingManualSoat pendingManualSoat,
-  ) async {
-    final vehicleId = savedVehicle.id!;
-    final repository = getIt<VehicleRepository>();
-
-    // Subir imagen adjunta si el usuario seleccionó una durante el formulario
-    String? documentUrl;
-    final localImagePath = pendingManualSoat.localImagePath;
-    if (localImagePath != null) {
-      final ext = localImagePath.split('.').last.toLowerCase();
-      try {
-        documentUrl = await getIt<ImageStorageService>().uploadImage(
-          image: XFile(localImagePath),
-          storagePath:
-              'soat/$vehicleId/${DateTime.now().millisecondsSinceEpoch}.$ext',
-        );
-      } catch (_) {
-        // La imagen falló pero el vehículo y el SOAT se guardan igual.
-      }
-    }
-
-    final result = await repository.upsertSoat(
-      vehicleId: vehicleId,
-      soat: VehicleSoatFormData(
-        vehicleId: vehicleId,
-        policyNumber: pendingManualSoat.policyNumber,
-        insurer: pendingManualSoat.insurer,
-        startDate: pendingManualSoat.startDate,
-        expiryDate: pendingManualSoat.expiryDate,
-        documentUrl: documentUrl,
-      ),
-    );
-
-    if (!context.mounted) return;
-
-    result.fold(
-      (error) {
-        // El vehículo se creó correctamente; solo falló el SOAT. Informar y continuar.
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '${context.l10n.savedSuccessfully}. ${_soatErrorMsg(error)}',
-            ),
-            backgroundColor: AppColors.warning,
-          ),
-        );
-      },
-      (soat) {
-        context.read<VehicleCubit>().updateSoatLocally(
-          vehicleId,
-          expiryDate: soat.expiryDate,
-        );
-      },
-    );
-
-    if (!context.mounted) return;
-    context.pop(savedVehicle);
-  }
-
-  String _soatErrorMsg(DomainException error) =>
-      'Error al guardar SOAT: ${error.message}';
-
-  Future<void> _savePendingRtmAndPop(
-    BuildContext context,
-    VehicleModel savedVehicle,
-    PendingRtm pendingRtm,
-  ) async {
+    VehicleModel savedVehicle, {
+    required String successLabel,
+    PendingManualSoat? pendingManualSoat,
+    PendingRtm? pendingRtm,
+  }) async {
     final vehicleId = savedVehicle.id!;
     final router = GoRouter.of(context);
     final messenger = ScaffoldMessenger.of(context);
+    final imageService = getIt<ImageStorageService>();
+    final ts = DateTime.now().millisecondsSinceEpoch;
 
-    // localImagePath puede venir del campo localImagePath o de documentUrl
-    // (en modo creación, la página retorna la ruta local en documentUrl).
-    final localImagePath =
-        pendingRtm.localImagePath ??
-        (pendingRtm.documentUrl != null &&
-                !pendingRtm.documentUrl!.startsWith('http')
-            ? pendingRtm.documentUrl
-            : null);
+    // ── SOAT ────────────────────────────────────────────────────────────────
+    if (pendingManualSoat != null) {
+      String? soatDocUrl;
+      final soatLocalPath = pendingManualSoat.localImagePath;
+      if (soatLocalPath != null) {
+        final ext = soatLocalPath.split('.').last.toLowerCase();
+        try {
+          soatDocUrl = await imageService.uploadImage(
+            image: XFile(soatLocalPath),
+            storagePath: 'soat/$vehicleId/${ts}_soat.$ext',
+          );
+        } catch (_) {}
+      }
 
-    String? documentUrl;
-    if (localImagePath != null) {
-      final ext = localImagePath.split('.').last.toLowerCase();
-      try {
-        documentUrl = await getIt<ImageStorageService>().uploadImage(
-          image: XFile(localImagePath),
-          storagePath:
-              'tecnomecanica/$vehicleId/${DateTime.now().millisecondsSinceEpoch}.$ext',
+      final soatResult = await getIt<VehicleRepository>().upsertSoat(
+        vehicleId: vehicleId,
+        soat: VehicleSoatFormData(
+          vehicleId: vehicleId,
+          policyNumber: pendingManualSoat.policyNumber,
+          insurer: pendingManualSoat.insurer,
+          startDate: pendingManualSoat.startDate,
+          expiryDate: pendingManualSoat.expiryDate,
+          documentUrl: soatDocUrl,
+        ),
+      );
+
+      if (context.mounted) {
+        soatResult.fold(
+          (error) => messenger.showSnackBar(
+            SnackBar(
+              content: Text('Error al guardar SOAT: ${error.message}'),
+              backgroundColor: AppColors.warning,
+            ),
+          ),
+          (soat) => context.read<VehicleCubit>().updateSoatLocally(
+            vehicleId,
+            expiryDate: soat.expiryDate,
+          ),
         );
-      } catch (_) {
-        // imagen falla pero el vehículo y la RTM se guardan igual
       }
     }
 
-    final result = await getIt<SaveTecnomecanicaUseCase>()(
-      vehicleId: vehicleId,
-      tecnomecanica: TecnomecanicaModel(
-        id: '',
-        vehicleId: vehicleId,
-        certificateNumber: pendingRtm.certificateNumber,
-        cdaName: pendingRtm.cdaName,
-        startDate: pendingRtm.startDate,
-        expiryDate: pendingRtm.expiryDate,
-        documentUrl: documentUrl,
-      ),
-    );
+    // ── RTM ─────────────────────────────────────────────────────────────────
+    if (pendingRtm != null) {
+      final rtmLocalPath =
+          pendingRtm.localImagePath ??
+          (pendingRtm.documentUrl != null &&
+                  !pendingRtm.documentUrl!.startsWith('http')
+              ? pendingRtm.documentUrl
+              : null);
 
-    result.fold(
-      (error) => messenger.showSnackBar(
-        SnackBar(
-          content: Text('Error al guardar RTM: ${error.message}'),
-          backgroundColor: AppColors.warning,
+      String? rtmDocUrl;
+      if (rtmLocalPath != null) {
+        final ext = rtmLocalPath.split('.').last.toLowerCase();
+        try {
+          rtmDocUrl = await imageService.uploadImage(
+            image: XFile(rtmLocalPath),
+            storagePath: 'tecnomecanica/$vehicleId/${ts}_rtm.$ext',
+          );
+        } catch (_) {}
+      }
+
+      final rtmResult = await getIt<SaveTecnomecanicaUseCase>()(
+        vehicleId: vehicleId,
+        tecnomecanica: TecnomecanicaModel(
+          id: '',
+          vehicleId: vehicleId,
+          certificateNumber: pendingRtm.certificateNumber,
+          cdaName: pendingRtm.cdaName,
+          startDate: pendingRtm.startDate,
+          expiryDate: pendingRtm.expiryDate,
+          documentUrl: rtmDocUrl,
         ),
-      ),
-      (_) {},
-    );
+      );
+
+      if (context.mounted) {
+        rtmResult.fold(
+          (error) => messenger.showSnackBar(
+            SnackBar(
+              content: Text('Error al guardar RTM: ${error.message}'),
+              backgroundColor: AppColors.warning,
+            ),
+          ),
+          (_) {},
+        );
+      }
+    }
+
+    if (context.mounted) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(successLabel),
+          backgroundColor: AppColors.success,
+        ),
+      );
+    }
 
     router.pop(savedVehicle);
   }
@@ -315,29 +305,24 @@ class _VehicleFormViewState extends State<VehicleFormView> {
     state.when(
       initial: () {},
       loading: () {},
-      success: (_) {
+      success: (deletedId) {
+        context.read<VehicleCubit>().deleteVehicleLocally(deletedId);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(context.l10n.deletedSuccessfully),
             backgroundColor: AppColors.success,
           ),
         );
-        context.pop();
+        context.goAndClearStack(AppRoutes.garage);
       },
       error: (message) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(message),
-            backgroundColor: AppColors.error,
-          ),
+          SnackBar(content: Text(message), backgroundColor: AppColors.error),
         );
       },
       errorLastVehicle: (message) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(message),
-            backgroundColor: AppColors.error,
-          ),
+          SnackBar(content: Text(message), backgroundColor: AppColors.error),
         );
       },
     );

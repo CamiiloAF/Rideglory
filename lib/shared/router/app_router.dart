@@ -410,6 +410,7 @@ class AppRouter {
             child: TecnomecanicaManualCapturePage(
               vehicle: params.vehicle,
               existingRtm: params.existingRtm,
+              initialLocalImagePath: params.initialLocalImagePath,
             ),
           );
         },

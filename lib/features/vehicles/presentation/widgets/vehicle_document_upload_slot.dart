@@ -13,6 +13,7 @@ class VehicleDocumentUploadSlot extends StatelessWidget {
     this.hasData = false,
     this.dataLabel,
     this.onClear,
+    this.onTap,
   });
 
   final String title;
@@ -30,6 +31,9 @@ class VehicleDocumentUploadSlot extends StatelessWidget {
 
   final VoidCallback? onClear;
 
+  /// Llamado al tocar el slot cuando ya tiene datos ([_hasDocument] es true).
+  final VoidCallback? onTap;
+
   bool get _hasDocument => localPath != null || hasData;
 
   String _displaySubtitle() {
@@ -40,7 +44,7 @@ class VehicleDocumentUploadSlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final card = Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
         color: AppColors.darkCard,
@@ -100,5 +104,10 @@ class VehicleDocumentUploadSlot extends StatelessWidget {
         ],
       ),
     );
+
+    if (_hasDocument && onTap != null) {
+      return GestureDetector(onTap: onTap, child: card);
+    }
+    return card;
   }
 }

@@ -59,7 +59,6 @@ class TecnomecanicaEmptyState extends StatelessWidget {
               ),
             ),
             AppSpacing.gapLg,
-            TecnomecanicaExemptionNotice(vehicle: vehicle),
             AppSpacing.gapXxl,
             AppButton(
               label: context.l10n.tecnomecanica_renew_btn,

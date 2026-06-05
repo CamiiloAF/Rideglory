@@ -2123,6 +2123,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_soat_data_added => 'Datos del SOAT agregados';
 
   @override
+  String get vehicle_rtm_data_added => 'Datos de la RTM agregados';
+
+  @override
   String vehicle_doc_expires_on(String date) {
     return 'Vence $date';
   }
@@ -2169,7 +2172,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String vehicle_soat_status_expired_desc(int days) {
-    return 'Venció hace $days días';
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: 'Venció hace $days días',
+      one: 'Venció hace 1 día',
+    );
+    return '$_temp0';
   }
 
   @override

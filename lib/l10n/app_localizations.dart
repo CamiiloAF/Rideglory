@@ -4084,6 +4084,12 @@ abstract class AppLocalizations {
   /// **'Datos del SOAT agregados'**
   String get vehicle_soat_data_added;
 
+  /// No description provided for @vehicle_rtm_data_added.
+  ///
+  /// In es, this message translates to:
+  /// **'Datos de la RTM agregados'**
+  String get vehicle_rtm_data_added;
+
   /// No description provided for @vehicle_doc_expires_on.
   ///
   /// In es, this message translates to:
@@ -4165,7 +4171,7 @@ abstract class AppLocalizations {
   /// No description provided for @vehicle_soat_status_expired_desc.
   ///
   /// In es, this message translates to:
-  /// **'Venció hace {days} días'**
+  /// **'{days, plural, =1{Venció hace 1 día} other{Venció hace {days} días}}'**
   String vehicle_soat_status_expired_desc(int days);
 
   /// No description provided for @vehicle_soat_status_invalid_dates_title.

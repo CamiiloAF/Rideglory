@@ -52,7 +52,10 @@ class _SoatDocumentCardBody extends StatelessWidget {
 
   final VehicleModel vehicle;
 
-  Future<void> _onTap(BuildContext context, ResultState<SoatModel> state) async {
+  Future<void> _onTap(
+    BuildContext context,
+    ResultState<SoatModel> state,
+  ) async {
     if (state is Data<SoatModel>) {
       await context.pushNamed(AppRoutes.soatStatus, extra: vehicle);
     } else {
@@ -76,7 +79,7 @@ class _SoatDocumentCardBody extends StatelessWidget {
     return switch (status) {
       SoatStatus.valid => context.l10n.soat_status_valid,
       SoatStatus.expiringSoon => context.l10n.soat_status_expiring_soon,
-      SoatStatus.expired => context.l10n.maintenance_expired_label,
+      SoatStatus.expired => context.l10n.soat_status_expired,
       _ => context.l10n.vehicle_soat_tap_to_add,
     };
   }
@@ -190,7 +193,9 @@ class _SoatDocumentCardBody extends StatelessWidget {
                                         soat!.daysUntilExpiry.abs(),
                                       )
                                     : context.l10n.vehicle_doc_expires_on(
-                                        DateFormat.yMMMd('es').format(soat!.expiryDate),
+                                        DateFormat.yMMMd(
+                                          'es',
+                                        ).format(soat!.expiryDate),
                                       ),
                                 style: const TextStyle(
                                   color: AppColors.textOnDarkTertiary,
@@ -224,10 +229,7 @@ class _RtmDocumentCardBody extends StatelessWidget {
   final VehicleModel vehicle;
 
   Future<void> _onTap(BuildContext context) async {
-    await context.pushNamed(
-      AppRoutes.tecnomecanicaStatus,
-      extra: vehicle,
-    );
+    await context.pushNamed(AppRoutes.tecnomecanicaStatus, extra: vehicle);
     if (context.mounted) {
       context.read<TecnomecanicaCubit>().load(vehicle.id ?? '');
     }
@@ -358,13 +360,14 @@ class _RtmDocumentCardBody extends StatelessWidget {
                               const SizedBox(height: 2),
                               Text(
                                 rtmStatus == VehicleDocumentStatus.expired
-                                    ? context.l10n.tecnomecanica_expired_days_ago(
-                                        rtm!.daysUntilExpiry.abs(),
-                                      )
+                                    ? context.l10n
+                                          .tecnomecanica_expired_days_ago(
+                                            rtm!.daysUntilExpiry.abs(),
+                                          )
                                     : context.l10n.vehicle_doc_expires_on(
-                                        DateFormat.yMMMd('es').format(
-                                          rtm!.expiryDate,
-                                        ),
+                                        DateFormat.yMMMd(
+                                          'es',
+                                        ).format(rtm!.expiryDate),
                                       ),
                                 style: const TextStyle(
                                   color: AppColors.textOnDarkTertiary,

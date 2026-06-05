@@ -27,10 +27,15 @@ class TecnomecanicaManualCapturePage extends StatefulWidget {
     super.key,
     this.vehicle,
     this.existingRtm,
+    this.initialLocalImagePath,
   });
 
   final VehicleModel? vehicle;
   final TecnomecanicaModel? existingRtm;
+
+  /// Ruta local de un archivo ya seleccionado antes de abrir el formulario.
+  /// Se usa al editar datos pendientes en modo creación de vehículo.
+  final String? initialLocalImagePath;
 
   @override
   State<TecnomecanicaManualCapturePage> createState() =>
@@ -53,6 +58,7 @@ class _TecnomecanicaManualCapturePageState
     super.initState();
     _startDate = widget.existingRtm?.startDate;
     _expiryDate = widget.existingRtm?.expiryDate;
+    _localImagePath = widget.initialLocalImagePath;
   }
 
   Future<void> _pickImage() async {
@@ -192,19 +198,8 @@ class _TecnomecanicaManualCapturePageState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    if (widget.vehicle != null) ...[
-                      Text(
-                        context.l10n.tecnomecanica_form_subtitle(
-                          widget.vehicle!.name,
-                        ),
-                        style: const TextStyle(
-                          color: AppColors.textOnDarkSecondary,
-                          fontSize: 14,
-                          height: 1.5,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      TecnomecanicaExemptionNotice(vehicle: widget.vehicle!),
+                    if (!_isEditMode) ...[
+                      const TecnomecanicaExemptionNotice(),
                       const SizedBox(height: 16),
                     ],
                     SoatDocumentSection(
