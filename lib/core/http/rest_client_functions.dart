@@ -314,18 +314,17 @@ Future<Either<DomainException, Model>> executeService<Model>({
 
 String _getFirebaseAuthErrorMessage(String? code) {
   switch (code) {
+    // Por seguridad (anti-enumeración de cuentas) NO se revela si el correo
+    // existe ni si la contraseña es la que falla: mensaje único y genérico.
     case 'user-not-found':
-      return 'No user found with this email';
     case 'wrong-password':
-      return 'Incorrect password';
+    case 'invalid-credential':
     case 'email-already-in-use':
-      return 'Email already in use';
+      return 'Correo o contraseña incorrectos.';
     case 'weak-password':
       return 'Password is too weak';
     case 'invalid-email':
       return 'Invalid email address';
-    case 'invalid-credential':
-      return 'Invalid credentials';
     case 'user-disabled':
       return 'User account has been disabled';
     case 'too-many-requests':

@@ -38,8 +38,30 @@ class AuthService {
   }) async {
     return executeService<AuthenticatedUser>(
       function: () async {
-        final userCredential = await _firebaseAuth
-            .createUserWithEmailAndPassword(email: email, password: password);
+        late final UserCredential userCredential;
+        var isNewFirebaseUser = true;
+
+        try {
+          userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
+        } on FirebaseAuthException catch (exception) {
+          if (exception.code != 'email-already-in-use') rethrow;
+
+          // La cuenta ya existe en Firebase (p. ej. un registro previo que no
+          // alcanzó a crear el usuario en el backend). Validamos identidad
+          // iniciando sesión con las credenciales dadas y luego reconciliamos
+          // el registro en el backend. Si la contraseña es incorrecta, el
+          // signIn lanza y se mapea a un mensaje genérico (sin filtrar que el
+          // correo ya existe).
+          userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+            email: email,
+            password: password,
+          );
+          isNewFirebaseUser = false;
+        }
+
         final firebaseUser = userCredential.user;
         if (firebaseUser == null) {
           throw const DomainException(
@@ -47,16 +69,21 @@ class AuthService {
           );
         }
 
-        await firebaseUser.updateDisplayName(fullName);
-        await firebaseUser.reload();
+        if (isNewFirebaseUser) {
+          await firebaseUser.updateDisplayName(fullName);
+          await firebaseUser.reload();
+        }
 
+        // El backend es idempotente: crea el usuario si no existe o devuelve el
+        // existente, de modo que un usuario presente en Firebase pero no en el
+        // backend queda reconciliado.
         final user = await _registerApiUser(fullName: fullName, email: email);
         await _cacheUser(firebaseUser.uid, user);
 
         return AuthenticatedUser(
           firebaseUser: _firebaseAuth.currentUser ?? firebaseUser,
           user: user,
-          isNewUser: true,
+          isNewUser: isNewFirebaseUser,
         );
       },
     );
