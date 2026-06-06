@@ -79,7 +79,14 @@ void main() {
 
     runApp(const MyApp());
   }, (error, stack) {
-    if (!kDebugMode) {
+    if (kDebugMode) {
+      // No silenciar errores de arranque en debug: si la config de Firebase
+      // falta (p. ej. se corrió sin --dart-define-from-file=config/<flavor>.json)
+      // la app se quedaba en el splash sin ningún log. Ahora se ve en consola.
+      FlutterError.dumpErrorToConsole(
+        FlutterErrorDetails(exception: error, stack: stack),
+      );
+    } else {
       try {
         getIt<CrashReporter>().recordError(error, stack, fatal: false);
       } catch (_) {}

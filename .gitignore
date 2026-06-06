@@ -48,10 +48,19 @@ app.*.map.json
 # Local secrets and environment files
 .env
 .env.*
+!.env.example
 .vscode/mcp.local.json
 .vscode/mcp.json
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
+
+# Per-flavor Firebase config (contain API keys) — keep only the *.example
+config/dev.json
+config/prod.json
+android/app/src/dev/google-services.json
+android/app/src/prod/google-services.json
+ios/config/dev/GoogleService-Info.plist
+ios/config/prod/GoogleService-Info.plist
 
 # Design exports
 images/

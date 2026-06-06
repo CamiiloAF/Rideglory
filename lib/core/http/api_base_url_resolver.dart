@@ -11,12 +11,19 @@ class ApiBaseUrlResolver {
   // Activated via --dart-define=USE_LOCAL_API=true (see .vscode/launch.json "Local API" config).
   static const _forceLocal = bool.fromEnvironment('USE_LOCAL_API');
 
+  // El flavor llega por --dart-define-from-file=config/<flavor>.json.
+  // En dev se apunta al backend local por defecto (ignorando Remote Config);
+  // para apuntar a otro backend en dev, ajusta LOCAL_API_BASE_URL en `.env`.
+  static const _flavor = String.fromEnvironment('FLAVOR');
+  static const _isDevFlavor = _flavor == 'dev';
+
   String resolve() {
     final remoteBaseUrl = _remoteConfig
         .getString(ApiRemoteConfig.apiBaseUrlKey)
         .trim();
 
-    final shouldUseLocalApi = _forceLocal || remoteBaseUrl.isEmpty;
+    final shouldUseLocalApi =
+        _forceLocal || _isDevFlavor || remoteBaseUrl.isEmpty;
 
     final baseUrl = shouldUseLocalApi ? _localBaseUrl : remoteBaseUrl;
     return _withoutTrailingSlash(baseUrl);

@@ -3,7 +3,6 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
-import 'package:rideglory/core/config/app_env.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -16,10 +15,6 @@ import 'package:rideglory/core/config/app_env.dart';
 /// );
 /// ```
 class DefaultFirebaseOptions {
-  static String _value(String? enviedValue, String dartDefineKey) {
-    return enviedValue ?? String.fromEnvironment(dartDefineKey);
-  }
-
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
       throw UnsupportedError(
@@ -54,37 +49,26 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static FirebaseOptions get android => FirebaseOptions(
-    apiKey: _value(AppEnv.firebaseAndroidApiKey, 'FIREBASE_ANDROID_API_KEY'),
-    appId: _value(AppEnv.firebaseAndroidAppId, 'FIREBASE_ANDROID_APP_ID'),
-    messagingSenderId: _value(
-      AppEnv.firebaseMessagingSenderId,
-      'FIREBASE_MESSAGING_SENDER_ID',
-    ),
-    projectId: _value(AppEnv.firebaseProjectId, 'FIREBASE_PROJECT_ID'),
-    storageBucket: _value(
-      AppEnv.firebaseStorageBucket,
-      'FIREBASE_STORAGE_BUCKET',
-    ),
+  // Los valores se inyectan en tiempo de compilación vía
+  // --dart-define-from-file=config/<flavor>.json. `String.fromEnvironment`
+  // SOLO resuelve el dart-define cuando se usa como expresión const con un
+  // nombre literal, por eso cada campo va inline (no a través de un helper).
+  static FirebaseOptions get android => const FirebaseOptions(
+    apiKey: String.fromEnvironment('FIREBASE_ANDROID_API_KEY'),
+    appId: String.fromEnvironment('FIREBASE_ANDROID_APP_ID'),
+    messagingSenderId: String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID'),
+    projectId: String.fromEnvironment('FIREBASE_PROJECT_ID'),
+    storageBucket: String.fromEnvironment('FIREBASE_STORAGE_BUCKET'),
   );
 
-  static FirebaseOptions get ios => FirebaseOptions(
-    apiKey: _value(AppEnv.firebaseIosApiKey, 'FIREBASE_IOS_API_KEY'),
-    appId: _value(AppEnv.firebaseIosAppId, 'FIREBASE_IOS_APP_ID'),
-    messagingSenderId: _value(
-      AppEnv.firebaseMessagingSenderId,
-      'FIREBASE_MESSAGING_SENDER_ID',
-    ),
-    projectId: _value(AppEnv.firebaseProjectId, 'FIREBASE_PROJECT_ID'),
-    storageBucket: _value(
-      AppEnv.firebaseStorageBucket,
-      'FIREBASE_STORAGE_BUCKET',
-    ),
-    androidClientId: _value(
-      AppEnv.firebaseAndroidClientId,
-      'FIREBASE_ANDROID_CLIENT_ID',
-    ),
-    iosClientId: _value(AppEnv.firebaseIosClientId, 'FIREBASE_IOS_CLIENT_ID'),
-    iosBundleId: _value(AppEnv.firebaseIosBundleId, 'FIREBASE_IOS_BUNDLE_ID'),
+  static FirebaseOptions get ios => const FirebaseOptions(
+    apiKey: String.fromEnvironment('FIREBASE_IOS_API_KEY'),
+    appId: String.fromEnvironment('FIREBASE_IOS_APP_ID'),
+    messagingSenderId: String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID'),
+    projectId: String.fromEnvironment('FIREBASE_PROJECT_ID'),
+    storageBucket: String.fromEnvironment('FIREBASE_STORAGE_BUCKET'),
+    androidClientId: String.fromEnvironment('FIREBASE_ANDROID_CLIENT_ID'),
+    iosClientId: String.fromEnvironment('FIREBASE_IOS_CLIENT_ID'),
+    iosBundleId: String.fromEnvironment('FIREBASE_IOS_BUNDLE_ID'),
   );
 }
