@@ -49,28 +49,28 @@ En VSCode ya están las configs **Rideglory dev** / **Rideglory prod** en `.vsco
 
 ## PENDIENTES MANUALES (consola / Xcode — no automatizables desde CLI)
 
-### 1. iOS — flavors en Xcode (requerido para correr `--flavor` en iOS)
+### 1. iOS — flavors en Xcode ✅ HECHO (2026-06-08)
 
-Hoy iOS tiene un solo scheme `Runner` con configs `Debug/Release/Profile`. Para flavors:
+Verificado: `flutter build ios --flavor dev --dart-define-from-file=config/dev.json --debug --simulator`
+compila `com.camiloagudelo.rideglory.dev` y el Run Script deja el plist de `rideglory-dev`.
 
-1. Abrir `ios/Runner.xcworkspace` en Xcode.
-2. **Duplicar las build configurations**: en el proyecto Runner → Info → Configurations,
-   duplicar `Debug`→`Debug-dev` y `Debug-prod`, igual para `Release` y `Profile`
-   (6 configs en total).
-3. En cada config `*-dev` poner `PRODUCT_BUNDLE_IDENTIFIER = com.camiloagudelo.rideglory.dev`;
-   en `*-prod` dejar `com.camiloagudelo.rideglory`.
-4. Crear dos **schemes** llamados exactamente `dev` y `prod` (Product → Scheme → Manage Schemes
-   → +). Mapear cada scheme a sus configs `*-dev` / `*-prod`. Flutter usa el nombre del scheme
-   como flavor.
-5. Añadir un **Run Script build phase** (antes de "Copy Bundle Resources") que ejecute:
-   ```sh
-   "${PROJECT_DIR}/scripts/set_google_service_plist.sh"
-   ```
-   Ese script (ya creado) copia el plist del flavor según `$CONFIGURATION`.
-6. Verificar: `flutter run --flavor dev --dart-define-from-file=config/dev.json` en simulador iOS.
+Se automatizó con `ios/setup_flavors.rb` (gem `xcodeproj` 1.27, idempotente). Quedó configurado:
 
-> Android ya quedó 100% funcional y verificado (`assembleDevDebug` compila el APK
-> `app-dev-debug.apk`). Lo de arriba es solo iOS.
+1. **6 build configurations**: `Debug/Release/Profile` × `-dev/-prod`, a nivel proyecto y en todos
+   los targets.
+2. **Bundle id por flavor** en el target Runner: `*-dev → com.camiloagudelo.rideglory.dev`,
+   `*-prod → com.camiloagudelo.rideglory`.
+3. **Schemes compartidos** `dev` y `prod` (`ios/Runner.xcodeproj/xcshareddata/xcschemes/`).
+   Flutter usa el nombre del scheme como flavor.
+4. **Run Script phase** "Set Firebase plist (flavor)" ANTES de "Resources", que ejecuta
+   `"${PROJECT_DIR}/scripts/set_google_service_plist.sh"` (copia el plist del flavor según
+   `$CONFIGURATION`).
+5. `pod install` reintegró las 9 configs (xcconfig por flavor en `Pods/Target Support Files/`).
+
+> Para re-generar tras un `flutter clean` agresivo del `.pbxproj` (no debería hacer falta, va
+> versionado): `cd ios && PATH="/opt/homebrew/opt/ruby/bin:$PATH" ruby setup_flavors.rb && pod install`.
+
+> Android y iOS ya quedan 100% funcionales y verificados.
 
 ### 2. Firebase consola — habilitar servicios en `rideglory-dev`
 
