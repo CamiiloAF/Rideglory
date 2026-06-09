@@ -154,13 +154,6 @@ class EventFormContent extends StatelessWidget {
             EventFormBasicInfoSection(
               isEditing: cubit.isEditing,
               descriptionInitialValue: cubit.editingEvent?.description,
-              onAiSuggest: () {
-                InfoDialog.show(
-                  context: context,
-                  title: context.l10n.event_generateWithAI,
-                  content: context.l10n.event_comingSoon,
-                );
-              },
             ),
             // ── Fecha y Hora ───────────────────────────────────────────
             AppSpacing.gapXxl,
@@ -195,7 +188,7 @@ class EventFormContent extends StatelessWidget {
     cubit.generateCover(
       title: formState?[EventFormFields.name] as String? ?? '',
       eventType:
-          (formState?[EventFormFields.eventType] as EventType?)?.name ?? '',
+          (formState?[EventFormFields.eventType] as EventType?)?.apiValue ?? '',
       city: formState?[EventFormFields.city] as String? ?? '',
     );
   }

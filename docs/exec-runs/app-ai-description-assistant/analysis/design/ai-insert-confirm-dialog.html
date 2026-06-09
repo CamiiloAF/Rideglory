@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rideglory — AI Insert Confirmation Dialog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="frame-wrap">
+
+  <!-- ─────────────────────────────────────────────────
+       Dialog: Confirmar reemplazo de descripción existente
+       (AC7: editor tiene contenido)
+       ───────────────────────────────────────────────── -->
+  <div>
+    <p class="phone-label">Dialog — Reemplazar descripción</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:42</span>
+        <div class="status-icons"><span>▲</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="app-bar">
+        <span style="color:var(--text-secondary);font-size:22px;">←</span>
+        <span class="app-bar-title">Crear evento</span>
+        <span style="color:var(--primary);font-size:14px;font-weight:600;">Publicar</span>
+      </div>
+      <!-- Form dimmed -->
+      <div class="form-bg" style="height:180px;">
+        <div class="form-field-stub"></div>
+        <div class="form-rich-stub" style="height:100px;">
+          <span style="font-size:11px;color:var(--text-muted);">Este es el contenido existente del editor que será reemplazado si el usuario confirma la acción...</span>
+          <span class="ia-badge">✦ IA</span>
+        </div>
+      </div>
+
+      <!-- Sheet scrim (sheet behind dialog) -->
+      <div class="sheet-scrim" style="z-index:20;"></div>
+
+      <!-- AI Sheet (peeking) -->
+      <div class="ai-sheet" style="height:320px;z-index:25;filter:blur(2px);">
+        <div class="sheet-handle"></div>
+        <div class="ai-sheet-header">
+          <span style="font-size:18px;">✦</span>
+          <span class="ai-sheet-title">Asistente IA</span>
+          <div class="quota-indicator quota-ok"><span>✓</span><span>9 restantes</span></div>
+        </div>
+        <div class="ai-chat-area" style="padding:8px 16px;gap:8px;">
+          <div class="bubble-row user"><div class="bubble user" style="font-size:12px;">Rodada por el Eje Cafetero...</div></div>
+          <div class="bubble-row model">
+            <div class="bubble-avatar" style="width:22px;height:22px;font-size:10px;">✦</div>
+            <div class="bubble model" style="font-size:12px;"><strong>Ruta Cafetera</strong> — 200 km de paisajes...</div>
+          </div>
+        </div>
+        <div class="ai-insert-area" style="opacity:0.5;">
+          <button class="ai-insert-btn" style="font-size:13px;min-height:40px;">⬇ Insertar en descripción</button>
+        </div>
+      </div>
+
+      <!-- Confirmation Dialog (on top) -->
+      <div class="dialog-overlay" style="z-index:60;">
+        <div class="dialog">
+          <div class="dialog-icon">✦</div>
+          <div class="dialog-title">¿Reemplazar descripción?</div>
+          <div class="dialog-body">
+            Ya tienes contenido en la descripción. ¿Deseas reemplazarlo con la sugerencia de la IA?
+          </div>
+          <div class="dialog-actions">
+            <button class="btn btn-primary btn-full">Reemplazar</button>
+            <button class="btn btn-secondary btn-full">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────
+       Inserción directa — editor vacío (AC8: sin dialog)
+       ───────────────────────────────────────────────── -->
+  <div>
+    <p class="phone-label">Inserción directa (editor vacío)</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:42</span>
+        <div class="status-icons"><span>▲</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="app-bar">
+        <span style="color:var(--text-secondary);font-size:22px;">←</span>
+        <span class="app-bar-title">Crear evento</span>
+        <span style="color:var(--primary);font-size:14px;font-weight:600;">Publicar</span>
+      </div>
+      <!-- Editor ahora tiene el contenido insertado -->
+      <div class="form-bg" style="height:180px;opacity:0.5;">
+        <div class="form-field-stub"></div>
+        <div class="form-rich-stub" style="height:100px;border-color:var(--success);position:relative;">
+          <span style="font-size:12px;color:var(--text-primary);">
+            <strong>Ruta Cafetera</strong> — Únete a una rodada de 200 km por los paisajes del Eje Cafetero...
+          </span>
+          <span class="ia-badge" style="border-color:var(--success);color:var(--success);">✓ Insertado</span>
+        </div>
+      </div>
+      <div class="sheet-scrim" style="z-index:20;"></div>
+      <div class="ai-sheet" style="height:280px;z-index:30;">
+        <div class="sheet-handle"></div>
+        <div class="ai-sheet-header">
+          <span style="font-size:18px;">✦</span>
+          <span class="ai-sheet-title">Asistente IA</span>
+          <div class="quota-indicator quota-ok"><span>✓</span><span>9 restantes</span></div>
+          <div class="ai-sheet-close">✕</div>
+        </div>
+        <!-- Success state post-insert -->
+        <div class="ai-chat-area" style="align-items:center;justify-content:center;gap:8px;">
+          <div style="font-size:32px;text-align:center;">✓</div>
+          <div style="font-size:14px;font-weight:700;color:var(--success);text-align:center;">
+            Descripción insertada
+          </div>
+          <div style="font-size:12px;color:var(--text-secondary);text-align:center;">
+            El contenido fue aplicado al editor. Puedes seguir editando o cerrar el asistente.
+          </div>
+        </div>
+        <div class="ai-input-row">
+          <textarea class="ai-text-input" placeholder="Escribe tu mensaje aquí..." rows="1"></textarea>
+          <button class="ai-send-btn">➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
