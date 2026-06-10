@@ -11,7 +11,7 @@ Feature de generación IA para eventos de Rideglory: un organizador puede conver
 - Fase 2 [FULL]: [Fase 2 — Backend — Portada IA con Storage](phases/phase-02-backend-portada-ia-con-storage.md)
 - Fase 3 [NORMAL]: [Fase 3 — Backend — Sistema de cuotas](phases/phase-03-backend-sistema-de-cuotas.md)
 - Fase 4 [FULL]: [Fase 4 — App — Asistente de descripción](phases/phase-04-app-asistente-de-descripcion.md)
-- Fase 5 [FULL]: [Fase 5 — App — Asistente de portada + retiro completo del flujo legacy](phases/phase-05-app-asistente-de-portada-retiro-completo-del-flu.md)
+- Fase 5 [FULL]: [Fase 5 — App — Asistente de portada + retiro completo del flujo legacy](phases/phase-05-app-asistente-de-portada-retiro-completo-del-flu.md) [CERRADA — portada IA eliminada; retiro legacy completo]
 - Fase 6 [NORMAL]: [Fase 6 — QA, analytics y cierre](phases/phase-06-qa-analytics-y-cierre.md)
 
 ## Supuestos

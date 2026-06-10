@@ -850,30 +850,6 @@ abstract class AppLocalizations {
   /// **'Subir imagen'**
   String get event_uploadImage;
 
-  /// No description provided for @event_generateWithAI.
-  ///
-  /// In es, this message translates to:
-  /// **'Generar'**
-  String get event_generateWithAI;
-
-  /// No description provided for @event_coverGenerateError.
-  ///
-  /// In es, this message translates to:
-  /// **'No pudimos generar la portada. Sube tu propia imagen.'**
-  String get event_coverGenerateError;
-
-  /// No description provided for @event_coverRegenerate.
-  ///
-  /// In es, this message translates to:
-  /// **'Regenerar'**
-  String get event_coverRegenerate;
-
-  /// No description provided for @event_coverGeneratingOverlay.
-  ///
-  /// In es, this message translates to:
-  /// **'Generando con IA...'**
-  String get event_coverGeneratingOverlay;
-
   /// No description provided for @event_route.
   ///
   /// In es, this message translates to:
@@ -5514,6 +5490,30 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'cada día'**
   String get ai_quotaInfoResetValue;
+
+  /// No description provided for @ai_error_quota_exceeded_user.
+  ///
+  /// In es, this message translates to:
+  /// **'Has alcanzado tu límite diario de generaciones con IA.'**
+  String get ai_error_quota_exceeded_user;
+
+  /// No description provided for @ai_error_quota_exceeded_project.
+  ///
+  /// In es, this message translates to:
+  /// **'El servicio de IA está temporalmente no disponible. Intenta más tarde.'**
+  String get ai_error_quota_exceeded_project;
+
+  /// No description provided for @ai_error_safety_blocked.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu mensaje fue bloqueado por filtros de seguridad. Por favor ajusta el contenido e intenta de nuevo.'**
+  String get ai_error_safety_blocked;
+
+  /// No description provided for @ai_error_network.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo conectar con el servicio de IA. Verifica tu conexión e intenta de nuevo.'**
+  String get ai_error_network;
 }
 
 class _AppLocalizationsDelegate

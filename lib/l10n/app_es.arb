@@ -132,10 +132,6 @@
   "event_addEventCover": "Agregar portada del evento",
   "event_addEventCoverHint": "Una imagen impactante atrae a más motociclistas. Formatos: JPG, PNG.",
   "event_uploadImage": "Subir imagen",
-  "event_generateWithAI": "Generar",
-  "event_coverGenerateError": "No pudimos generar la portada. Sube tu propia imagen.",
-  "event_coverRegenerate": "Regenerar",
-  "event_coverGeneratingOverlay": "Generando con IA...",
   "event_route": "RUTA",
   "event_multiBrandLabel": "Marcas permitidas",
   "event_multiBrandAllowAny": "Permitir motos de cualquier fabricante",
@@ -1172,5 +1168,10 @@
     }
   },
   "ai_quotaInfoResetLabel": "Se reinicia",
-  "ai_quotaInfoResetValue": "cada día"
+  "ai_quotaInfoResetValue": "cada día",
+
+  "ai_error_quota_exceeded_user": "Has alcanzado tu límite diario de generaciones con IA.",
+  "ai_error_quota_exceeded_project": "El servicio de IA está temporalmente no disponible. Intenta más tarde.",
+  "ai_error_safety_blocked": "Tu mensaje fue bloqueado por filtros de seguridad. Por favor ajusta el contenido e intenta de nuevo.",
+  "ai_error_network": "No se pudo conectar con el servicio de IA. Verifica tu conexión e intenta de nuevo."
 }

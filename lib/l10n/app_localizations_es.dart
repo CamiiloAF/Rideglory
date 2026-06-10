@@ -409,19 +409,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_uploadImage => 'Subir imagen';
 
   @override
-  String get event_generateWithAI => 'Generar';
-
-  @override
-  String get event_coverGenerateError =>
-      'No pudimos generar la portada. Sube tu propia imagen.';
-
-  @override
-  String get event_coverRegenerate => 'Regenerar';
-
-  @override
-  String get event_coverGeneratingOverlay => 'Generando con IA...';
-
-  @override
   String get event_route => 'RUTA';
 
   @override
@@ -2945,4 +2932,20 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get ai_quotaInfoResetValue => 'cada día';
+
+  @override
+  String get ai_error_quota_exceeded_user =>
+      'Has alcanzado tu límite diario de generaciones con IA.';
+
+  @override
+  String get ai_error_quota_exceeded_project =>
+      'El servicio de IA está temporalmente no disponible. Intenta más tarde.';
+
+  @override
+  String get ai_error_safety_blocked =>
+      'Tu mensaje fue bloqueado por filtros de seguridad. Por favor ajusta el contenido e intenta de nuevo.';
+
+  @override
+  String get ai_error_network =>
+      'No se pudo conectar con el servicio de IA. Verifica tu conexión e intenta de nuevo.';
 }

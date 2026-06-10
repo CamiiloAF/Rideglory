@@ -36,7 +36,6 @@ Responsabilidades:
 - Constructor de rutas (simple y custom con hasta 9 waypoints) con Mapbox.
 - Tracking en vivo via WebSocket (`/tracking/ws`) durante un evento `inProgress`.
 - Gestión de asistentes (aprobación/rechazo desde el organizador).
-- Generación de portadas con IA (`POST /events/generate-cover`).
 - SOS broadcast durante el tracking.
 
 > El feature de inscripciones (`event_registration/`) consume `EventModel` y se documenta aparte. Las pantallas de eventos pueden navegar al form de inscripción, pero la lógica del registro vive en su propio feature.
@@ -288,11 +287,6 @@ lib/features/events/data/
 | `startSession({eventId, rider})` | `POST` | `/events/{id}/tracking/session/start` | `{rider: RiderTrackingDto.toJson()}` |
 | `stopSession({eventId, userId})` | `POST` | `/events/{id}/tracking/session/stop` | `{userId}` |
 | `snapshot(eventId)` | `GET` | `/events/{id}/tracking/snapshot` | — |
-
-**`EventCoverService`**:
-| Método | HTTP | Path |
-|---|---|---|
-| `generateCover(body)` | `POST` | `/events/generate-cover` |
 
 **`EventRepositoryImpl.uploadEventImage()`** sube a Firebase Storage en path:
 - Si tiene `eventId`: `events/{eventId}/cover.jpg`.
@@ -665,7 +659,6 @@ AppRoutes.riderProfile        → '/events/attendees/rider-profile'  extra: Stri
 | `PATCH` | `/events/:id` |
 | `DELETE` | `/events/:id` |
 | `PATCH` | `/events/:id/publish` |
-| `POST` | `/events/generate-cover` (body: `{title, eventType, city}`) |
 
 ### Tracking
 | Método | Endpoint |

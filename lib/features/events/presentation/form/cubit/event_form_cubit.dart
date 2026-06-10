@@ -13,7 +13,6 @@ import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/model/upload_event_image_request.dart';
 import 'package:rideglory/features/events/domain/use_cases/create_event_use_case.dart';
-import 'package:rideglory/features/events/domain/use_cases/get_generate_cover_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/upload_event_image_use_case.dart';
 import 'package:rideglory/features/users/domain/use_cases/get_current_user_id_use_case.dart';
@@ -26,8 +25,6 @@ abstract class EventFormState with _$EventFormState {
   const factory EventFormState({
     @Default(ResultState<EventModel>.initial())
     ResultState<EventModel> saveResult,
-    @Default(ResultState<String>.initial())
-    ResultState<String> coverGenerationResult,
     @Default(<String>[]) List<String> waypoints,
     @Default(<AddressLocation?>[]) List<AddressLocation?> waypointLocations,
     @Default(RouteType.simple) RouteType routeType,
@@ -45,7 +42,6 @@ class EventFormCubit extends Cubit<EventFormState> {
     this._updateEventUseCase,
     this._uploadEventImageUseCase,
     this._getCurrentUserIdUseCase,
-    this._getGenerateCoverUseCase,
     this._analytics,
   ) : super(const EventFormState());
 
@@ -55,7 +51,6 @@ class EventFormCubit extends Cubit<EventFormState> {
   final UpdateEventUseCase _updateEventUseCase;
   final UploadEventImageUseCase _uploadEventImageUseCase;
   final GetCurrentUserIdUseCase _getCurrentUserIdUseCase;
-  final GetGenerateCoverUseCase _getGenerateCoverUseCase;
   final AnalyticsService _analytics;
 
   EventModel? _editingEvent;
@@ -244,31 +239,6 @@ class EventFormCubit extends Cubit<EventFormState> {
         emit(state.copyWith(saveResult: ResultState.data(data: event)));
       },
     );
-  }
-
-  Future<void> generateCover({
-    required String title,
-    required String eventType,
-    required String city,
-  }) async {
-    emit(state.copyWith(coverGenerationResult: const ResultState.loading()));
-    final result = await _getGenerateCoverUseCase(
-      title: title,
-      eventType: eventType,
-      city: city,
-    );
-    result.fold(
-      (error) => emit(
-        state.copyWith(coverGenerationResult: ResultState.error(error: error)),
-      ),
-      (imageUrl) => emit(
-        state.copyWith(coverGenerationResult: ResultState.data(data: imageUrl)),
-      ),
-    );
-  }
-
-  void resetCoverGeneration() {
-    emit(state.copyWith(coverGenerationResult: const ResultState.initial()));
   }
 
   Future<Either<DomainException, EventModel>> _saveExistingEvent(

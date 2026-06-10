@@ -25,8 +25,7 @@ class EventFormView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<EventFormCubit, EventFormState>(
       listenWhen: (previous, current) =>
-          previous.saveResult != current.saveResult ||
-          previous.coverGenerationResult != current.coverGenerationResult,
+          previous.saveResult != current.saveResult,
       listener: (context, state) {
         state.saveResult.whenOrNull(
           data: (event) {
@@ -51,21 +50,6 @@ class EventFormView extends StatelessWidget {
                 backgroundColor: AppColors.error,
               ),
             );
-          },
-        );
-
-        state.coverGenerationResult.whenOrNull(
-          data: (imageUrl) {
-            context.read<FormImageCubit>().setRemoteImageUrl(imageUrl);
-          },
-          error: (error) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(context.l10n.event_coverGenerateError),
-                backgroundColor: AppColors.error,
-              ),
-            );
-            context.read<EventFormCubit>().resetCoverGeneration();
           },
         );
       },
