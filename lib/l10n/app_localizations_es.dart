@@ -409,19 +409,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_uploadImage => 'Subir imagen';
 
   @override
-  String get event_generateWithAI => 'Generar';
-
-  @override
-  String get event_coverGenerateError =>
-      'No pudimos generar la portada. Sube tu propia imagen.';
-
-  @override
-  String get event_coverRegenerate => 'Regenerar';
-
-  @override
-  String get event_coverGeneratingOverlay => 'Generando con IA...';
-
-  @override
   String get event_route => 'RUTA';
 
   @override
@@ -2848,4 +2835,117 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get vehicle_doc_rtm_status_expired => 'Vencida';
+
+  @override
+  String get ai_chatTitle => 'Asistente IA';
+
+  @override
+  String get ai_chatHint => 'Escribe tu mensaje...';
+
+  @override
+  String get ai_sendButton => 'Enviar';
+
+  @override
+  String get ai_insertButton => 'Insertar descripción';
+
+  @override
+  String ai_quotaRemaining(int count) {
+    return '$count generaciones restantes';
+  }
+
+  @override
+  String get ai_quotaExhausted => 'Has agotado tus generaciones de hoy';
+
+  @override
+  String get ai_errorQuotaUser =>
+      'Has alcanzado tu límite diario de generaciones con IA.';
+
+  @override
+  String get ai_errorQuotaProject =>
+      'El servicio de IA está temporalmente no disponible. Intenta más tarde.';
+
+  @override
+  String get ai_errorSafetyBlocked =>
+      'Tu mensaje fue bloqueado por filtros de seguridad. Por favor ajusta el contenido e intenta de nuevo.';
+
+  @override
+  String get ai_errorNetwork =>
+      'No se pudo conectar con el servicio de IA. Verifica tu conexión e intenta de nuevo.';
+
+  @override
+  String get ai_retryButton => 'Reintentar';
+
+  @override
+  String get ai_confirmReplaceTitle => 'Reemplazar descripción';
+
+  @override
+  String get ai_confirmReplaceMessage =>
+      'El editor ya tiene contenido. ¿Deseas reemplazarlo con la descripción generada?';
+
+  @override
+  String get ai_emptyStateTitle =>
+      '¡Hola! Soy tu asistente para crear descripciones';
+
+  @override
+  String get ai_emptyStateSubtitle =>
+      'Describe los puntos clave de tu rodada y te ayudaré a redactar una descripción atractiva';
+
+  @override
+  String get ai_emptyStateExhaustedTitle => 'Sin generaciones disponibles';
+
+  @override
+  String get ai_emptyStateExhaustedSubtitle =>
+      'Has alcanzado tu límite diario. Las generaciones se renuevan cada día a medianoche.';
+
+  @override
+  String get ai_chatDisabledHint => 'Sin generaciones disponibles hoy';
+
+  @override
+  String get ai_messageCopied => 'Mensaje copiado';
+
+  @override
+  String get ai_quotaInfoTitle => 'Generaciones de descripción';
+
+  @override
+  String get ai_quotaInfoDescription =>
+      'Cada vez que el asistente genera una descripción completa consume una generación de tu cuota diaria. Las preguntas de aclaración no cuentan.';
+
+  @override
+  String get ai_quotaInfoAvailableToday => 'Disponibles hoy';
+
+  @override
+  String get ai_quotaInfoExhausted => 'Sin generaciones disponibles';
+
+  @override
+  String ai_quotaInfoCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count generaciones',
+      one: '$count generación',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get ai_quotaInfoResetLabel => 'Se reinicia';
+
+  @override
+  String get ai_quotaInfoResetValue => 'cada día';
+
+  @override
+  String get ai_error_quota_exceeded_user =>
+      'Has alcanzado tu límite diario de generaciones con IA.';
+
+  @override
+  String get ai_error_quota_exceeded_project =>
+      'El servicio de IA está temporalmente no disponible. Intenta más tarde.';
+
+  @override
+  String get ai_error_safety_blocked =>
+      'Tu mensaje fue bloqueado por filtros de seguridad. Por favor ajusta el contenido e intenta de nuevo.';
+
+  @override
+  String get ai_error_network =>
+      'No se pudo conectar con el servicio de IA. Verifica tu conexión e intenta de nuevo.';
 }

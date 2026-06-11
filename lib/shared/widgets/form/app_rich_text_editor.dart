@@ -15,8 +15,13 @@ class AppRichTextEditor extends StatefulWidget {
   final int minLines;
   final ValueChanged<String>? onChanged;
 
-  /// When set, an "IA" toolbar button is shown for AI suggestions. Not implemented yet.
+  /// When set, an "IA" toolbar button is shown that triggers [onAiSuggest].
+  /// The parent is responsible for opening the AI chat sheet.
   final VoidCallback? onAiSuggest;
+
+  /// When provided, the editor uses this controller instead of creating its
+  /// own. The caller is responsible for disposing it.
+  final QuillController? externalController;
 
   const AppRichTextEditor({
     super.key,
@@ -30,6 +35,7 @@ class AppRichTextEditor extends StatefulWidget {
     this.minLines = 5,
     this.onChanged,
     this.onAiSuggest,
+    this.externalController,
   });
 
   @override
@@ -38,12 +44,15 @@ class AppRichTextEditor extends StatefulWidget {
 
 class _AppRichTextEditorState extends State<AppRichTextEditor> {
   late QuillController _controller;
+  late bool _ownsController;
   final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _controller = _initializeController();
+    _ownsController = widget.externalController == null;
+    _controller =
+        widget.externalController ?? _initializeController();
     _controller.addListener(() {
       final jsonContent = _getJsonContent();
       widget.onChanged?.call(jsonContent);
@@ -72,7 +81,7 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    if (_ownsController) _controller.dispose();
     _focusNode.dispose();
     super.dispose();
   }

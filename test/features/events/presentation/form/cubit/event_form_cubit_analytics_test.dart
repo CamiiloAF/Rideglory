@@ -8,7 +8,6 @@ import 'package:rideglory/core/services/analytics/analytics_params.dart';
 import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/use_cases/create_event_use_case.dart';
-import 'package:rideglory/features/events/domain/use_cases/get_generate_cover_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/upload_event_image_use_case.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
@@ -23,9 +22,6 @@ class MockUploadEventImageUseCase extends Mock
 
 class MockGetCurrentUserIdUseCase extends Mock
     implements GetCurrentUserIdUseCase {}
-
-class MockGetGenerateCoverUseCase extends Mock
-    implements GetGenerateCoverUseCase {}
 
 class MockAnalyticsService extends Mock implements AnalyticsService {}
 
@@ -49,7 +45,6 @@ void main() {
   late MockUpdateEventUseCase mockUpdate;
   late MockUploadEventImageUseCase mockUpload;
   late MockGetCurrentUserIdUseCase mockGetUserId;
-  late MockGetGenerateCoverUseCase mockGetCover;
   late MockAnalyticsService mockAnalytics;
   late EventFormCubit cubit;
 
@@ -58,7 +53,6 @@ void main() {
     mockUpdate = MockUpdateEventUseCase();
     mockUpload = MockUploadEventImageUseCase();
     mockGetUserId = MockGetCurrentUserIdUseCase();
-    mockGetCover = MockGetGenerateCoverUseCase();
     mockAnalytics = MockAnalyticsService();
 
     when(() => mockAnalytics.logEvent(any(), any())).thenAnswer((_) async {});
@@ -69,7 +63,6 @@ void main() {
       mockUpdate,
       mockUpload,
       mockGetUserId,
-      mockGetCover,
       mockAnalytics,
     );
   });

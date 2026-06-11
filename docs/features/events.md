@@ -36,7 +36,6 @@ Responsabilidades:
 - Constructor de rutas (simple y custom con hasta 9 waypoints) con Mapbox.
 - Tracking en vivo via WebSocket (`/tracking/ws`) durante un evento `inProgress`.
 - Gestión de asistentes (aprobación/rechazo desde el organizador).
-- Generación de portadas con IA (`POST /events/generate-cover`).
 - SOS broadcast durante el tracking.
 
 > El feature de inscripciones (`event_registration/`) consume `EventModel` y se documenta aparte. Las pantallas de eventos pueden navegar al form de inscripción, pero la lógica del registro vive en su propio feature.
@@ -288,11 +287,6 @@ lib/features/events/data/
 | `startSession({eventId, rider})` | `POST` | `/events/{id}/tracking/session/start` | `{rider: RiderTrackingDto.toJson()}` |
 | `stopSession({eventId, userId})` | `POST` | `/events/{id}/tracking/session/stop` | `{userId}` |
 | `snapshot(eventId)` | `GET` | `/events/{id}/tracking/snapshot` | — |
-
-**`EventCoverService`**:
-| Método | HTTP | Path |
-|---|---|---|
-| `generateCover(body)` | `POST` | `/events/generate-cover` |
 
 **`EventRepositoryImpl.uploadEventImage()`** sube a Firebase Storage en path:
 - Si tiene `eventId`: `events/{eventId}/cover.jpg`.
@@ -665,7 +659,7 @@ AppRoutes.riderProfile        → '/events/attendees/rider-profile'  extra: Stri
 | `PATCH` | `/events/:id` |
 | `DELETE` | `/events/:id` |
 | `PATCH` | `/events/:id/publish` |
-| `POST` | `/events/generate-cover` (body: `{title, eventType, city}`) |
+| ~~`POST`~~ | ~~`/events/generate-cover` — **ELIMINADO (Fase 5)**~~ |
 
 ### Tracking
 | Método | Endpoint |
@@ -679,9 +673,63 @@ AppRoutes.riderProfile        → '/events/attendees/rider-profile'  extra: Stri
 
 Definidos en `lib/core/http/api_routes.dart` (`ApiRoutes.events`, `eventTrackingStart(id)`, etc.).
 
+### Asistentes IA
+
+| Método | Endpoint | Body | Respuesta |
+|---|---|---|---|
+| `POST` | `/ai/description` | `{title, eventType, city, difficulty?, startDate?, history: AiChatTurn[], userMessage}` | `{markdown, remainingGenerations, isDescription}` |
+
+**Restricciones del body:**
+- `history` acepta máximo 10 turnos (`@ArrayMaxSize(10)` en el contrato). Superar este límite devuelve `400`.
+- `history[].role`: `"user"` | `"model"`.
+- `history[].content`: máximo 2000 caracteres por turno.
+
+**Errores conocidos:**
+| HTTP | Código de error | Descripción |
+|---|---|---|
+| `400` | — | `history` supera 10 turnos o validación de campos |
+| `429` | `quota_exceeded_user` | Cuota diaria del usuario agotada |
+| `429` | `quota_exceeded_project` | Cuota del proyecto Gemini agotada |
+| `422` | `safety_blocked` | El mensaje fue bloqueado por filtros de seguridad de Gemini |
+| `503` | `ai_network_error` | El servicio de IA no está disponible |
+
 ---
 
-## 10. Conexiones con otros features
+## 10. Asistentes IA
+
+### Descripción con IA
+
+Flujo: `AiDescriptionChatCubit` → `GenerateEventDescriptionUseCase` → `AiDescriptionRepository` → `POST /ai/description`.
+
+```
+EventFormView
+  └── AiDescriptionChatSheet (BlocProvider<AiDescriptionChatCubit>)
+        ├── AiDescriptionChatCubit  (@injectable, 3 params)
+        │     ├── GenerateEventDescriptionUseCase
+        │     ├── GetDescriptionQuotaUseCase
+        │     └── AnalyticsService          ← Fase 6: analytics
+        ├── AiChatInputRow               (input + enviar)
+        ├── AiChatErrorBanner            (errores tipados con Reintentar)
+        └── AiDescriptionBubble          (respuesta markdown renderizada)
+```
+
+**`MarkdownToDeltaConverter`** (`lib/features/events/presentation/form/utils/markdown_to_delta_converter.dart`): convierte el markdown devuelto por Gemini a formato Quill Delta para el editor `flutter_quill`. Soporta: `## H2`, `**bold**`, `*italic*`, `- bullet`.
+
+**Analytics (Fase 6):**
+| Evento | Cuándo | Params |
+|---|---|---|
+| `ai_description_generated` | Respuesta exitosa | `ai_turn_index` (1-based, longitud de historia final) |
+| `ai_quota_exceeded` | `AiQuotaExceededUser/ProjectException` | `ai_generation_type=description`, `ai_error_code` |
+| `ai_generation_failed` | `AiSafetyBlocked/NetworkError` | `ai_generation_type=description`, `ai_error_code` |
+
+**Comportamientos:**
+- `AiQuotaExceededUserException` → input deshabilitado, NO muestra botón "Reintentar".
+- Errores recuperables (`Project`, `Safety`, `Network`) → muestra botón "Reintentar" (`retryLastMessage`).
+- `initQuota()` se llama al abrir el sheet; `isQuotaInitialized` controla el indicador de cuota.
+
+---
+
+## 11. Conexiones con otros features
 
 | Feature | Conexión |
 |---|---|
@@ -693,7 +741,7 @@ Definidos en `lib/core/http/api_routes.dart` (`ApiRoutes.events`, `eventTracking
 
 ---
 
-## 11. Patrones y trampas conocidas
+## 12. Patrones y trampas conocidas
 
 ### `EventDto extends EventModel`
 Patrón inusual: el DTO hereda del modelo. Permite `EventDto.fromJson` + `EventModelExtension.toJson` sin castear manualmente.
@@ -758,7 +806,7 @@ Si se omite el campo en el modelo (creación nueva sin pasar state), defaultea a
 
 ---
 
-## 12. Archivos clave de referencia rápida
+## 13. Archivos clave de referencia rápida
 
 | Qué buscar | Archivo |
 |---|---|

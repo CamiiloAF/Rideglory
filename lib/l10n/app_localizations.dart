@@ -850,30 +850,6 @@ abstract class AppLocalizations {
   /// **'Subir imagen'**
   String get event_uploadImage;
 
-  /// No description provided for @event_generateWithAI.
-  ///
-  /// In es, this message translates to:
-  /// **'Generar'**
-  String get event_generateWithAI;
-
-  /// No description provided for @event_coverGenerateError.
-  ///
-  /// In es, this message translates to:
-  /// **'No pudimos generar la portada. Sube tu propia imagen.'**
-  String get event_coverGenerateError;
-
-  /// No description provided for @event_coverRegenerate.
-  ///
-  /// In es, this message translates to:
-  /// **'Regenerar'**
-  String get event_coverRegenerate;
-
-  /// No description provided for @event_coverGeneratingOverlay.
-  ///
-  /// In es, this message translates to:
-  /// **'Generando con IA...'**
-  String get event_coverGeneratingOverlay;
-
   /// No description provided for @event_route.
   ///
   /// In es, this message translates to:
@@ -5358,6 +5334,186 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Vencida'**
   String get vehicle_doc_rtm_status_expired;
+
+  /// No description provided for @ai_chatTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Asistente IA'**
+  String get ai_chatTitle;
+
+  /// No description provided for @ai_chatHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe tu mensaje...'**
+  String get ai_chatHint;
+
+  /// No description provided for @ai_sendButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar'**
+  String get ai_sendButton;
+
+  /// No description provided for @ai_insertButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Insertar descripción'**
+  String get ai_insertButton;
+
+  /// No description provided for @ai_quotaRemaining.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} generaciones restantes'**
+  String ai_quotaRemaining(int count);
+
+  /// No description provided for @ai_quotaExhausted.
+  ///
+  /// In es, this message translates to:
+  /// **'Has agotado tus generaciones de hoy'**
+  String get ai_quotaExhausted;
+
+  /// No description provided for @ai_errorQuotaUser.
+  ///
+  /// In es, this message translates to:
+  /// **'Has alcanzado tu límite diario de generaciones con IA.'**
+  String get ai_errorQuotaUser;
+
+  /// No description provided for @ai_errorQuotaProject.
+  ///
+  /// In es, this message translates to:
+  /// **'El servicio de IA está temporalmente no disponible. Intenta más tarde.'**
+  String get ai_errorQuotaProject;
+
+  /// No description provided for @ai_errorSafetyBlocked.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu mensaje fue bloqueado por filtros de seguridad. Por favor ajusta el contenido e intenta de nuevo.'**
+  String get ai_errorSafetyBlocked;
+
+  /// No description provided for @ai_errorNetwork.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo conectar con el servicio de IA. Verifica tu conexión e intenta de nuevo.'**
+  String get ai_errorNetwork;
+
+  /// No description provided for @ai_retryButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get ai_retryButton;
+
+  /// No description provided for @ai_confirmReplaceTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Reemplazar descripción'**
+  String get ai_confirmReplaceTitle;
+
+  /// No description provided for @ai_confirmReplaceMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'El editor ya tiene contenido. ¿Deseas reemplazarlo con la descripción generada?'**
+  String get ai_confirmReplaceMessage;
+
+  /// No description provided for @ai_emptyStateTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¡Hola! Soy tu asistente para crear descripciones'**
+  String get ai_emptyStateTitle;
+
+  /// No description provided for @ai_emptyStateSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Describe los puntos clave de tu rodada y te ayudaré a redactar una descripción atractiva'**
+  String get ai_emptyStateSubtitle;
+
+  /// No description provided for @ai_emptyStateExhaustedTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin generaciones disponibles'**
+  String get ai_emptyStateExhaustedTitle;
+
+  /// No description provided for @ai_emptyStateExhaustedSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Has alcanzado tu límite diario. Las generaciones se renuevan cada día a medianoche.'**
+  String get ai_emptyStateExhaustedSubtitle;
+
+  /// No description provided for @ai_chatDisabledHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin generaciones disponibles hoy'**
+  String get ai_chatDisabledHint;
+
+  /// No description provided for @ai_messageCopied.
+  ///
+  /// In es, this message translates to:
+  /// **'Mensaje copiado'**
+  String get ai_messageCopied;
+
+  /// No description provided for @ai_quotaInfoTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Generaciones de descripción'**
+  String get ai_quotaInfoTitle;
+
+  /// No description provided for @ai_quotaInfoDescription.
+  ///
+  /// In es, this message translates to:
+  /// **'Cada vez que el asistente genera una descripción completa consume una generación de tu cuota diaria. Las preguntas de aclaración no cuentan.'**
+  String get ai_quotaInfoDescription;
+
+  /// No description provided for @ai_quotaInfoAvailableToday.
+  ///
+  /// In es, this message translates to:
+  /// **'Disponibles hoy'**
+  String get ai_quotaInfoAvailableToday;
+
+  /// No description provided for @ai_quotaInfoExhausted.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin generaciones disponibles'**
+  String get ai_quotaInfoExhausted;
+
+  /// No description provided for @ai_quotaInfoCount.
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =1{{count} generación} other{{count} generaciones}}'**
+  String ai_quotaInfoCount(int count);
+
+  /// No description provided for @ai_quotaInfoResetLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Se reinicia'**
+  String get ai_quotaInfoResetLabel;
+
+  /// No description provided for @ai_quotaInfoResetValue.
+  ///
+  /// In es, this message translates to:
+  /// **'cada día'**
+  String get ai_quotaInfoResetValue;
+
+  /// No description provided for @ai_error_quota_exceeded_user.
+  ///
+  /// In es, this message translates to:
+  /// **'Has alcanzado tu límite diario de generaciones con IA.'**
+  String get ai_error_quota_exceeded_user;
+
+  /// No description provided for @ai_error_quota_exceeded_project.
+  ///
+  /// In es, this message translates to:
+  /// **'El servicio de IA está temporalmente no disponible. Intenta más tarde.'**
+  String get ai_error_quota_exceeded_project;
+
+  /// No description provided for @ai_error_safety_blocked.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu mensaje fue bloqueado por filtros de seguridad. Por favor ajusta el contenido e intenta de nuevo.'**
+  String get ai_error_safety_blocked;
+
+  /// No description provided for @ai_error_network.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo conectar con el servicio de IA. Verifica tu conexión e intenta de nuevo.'**
+  String get ai_error_network;
 }
 
 class _AppLocalizationsDelegate

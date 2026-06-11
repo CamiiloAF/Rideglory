@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/features/events/presentation/form/cubit/ai_description_chat_cubit.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/event_form_bottom_bar.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/event_form_content.dart';
@@ -24,11 +25,11 @@ class EventFormView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<EventFormCubit, EventFormState>(
       listenWhen: (previous, current) =>
-          previous.saveResult != current.saveResult ||
-          previous.coverGenerationResult != current.coverGenerationResult,
+          previous.saveResult != current.saveResult,
       listener: (context, state) {
         state.saveResult.whenOrNull(
           data: (event) {
+            context.read<AiDescriptionChatCubit>().reset();
             final isEditing = context.read<EventFormCubit>().isEditing;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -49,21 +50,6 @@ class EventFormView extends StatelessWidget {
                 backgroundColor: AppColors.error,
               ),
             );
-          },
-        );
-
-        state.coverGenerationResult.whenOrNull(
-          data: (imageUrl) {
-            context.read<FormImageCubit>().setRemoteImageUrl(imageUrl);
-          },
-          error: (error) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(context.l10n.event_coverGenerateError),
-                backgroundColor: AppColors.error,
-              ),
-            );
-            context.read<EventFormCubit>().resetCoverGeneration();
           },
         );
       },

@@ -14,7 +14,7 @@ abstract final class AppDio {
       BaseOptions(
         baseUrl: ApiBaseUrlResolver(remoteConfig).resolve(),
         connectTimeout: const Duration(seconds: 20),
-        receiveTimeout: const Duration(seconds: 20),
+        receiveTimeout: const Duration(seconds: 60),
         sendTimeout: const Duration(seconds: 20),
         headers: const {'Content-Type': 'application/json'},
       ),

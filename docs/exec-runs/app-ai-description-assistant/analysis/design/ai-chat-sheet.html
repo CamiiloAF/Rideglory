@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rideglory — AI Chat Sheet — 5 estados</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .section-title {
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<div class="frame-wrap">
+
+  <!-- ─────────────────────────────────────────────────
+       Estado 1: IDLE — sin mensajes, empty state
+       ───────────────────────────────────────────────── -->
+  <div>
+    <p class="phone-label">1 — Idle (sin mensajes)</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons">
+          <span>▲</span><span>WiFi</span><span>🔋</span>
+        </div>
+      </div>
+
+      <!-- Form blurred behind -->
+      <div class="app-bar">
+        <span style="color:var(--text-secondary);font-size:22px;">←</span>
+        <span class="app-bar-title">Crear evento</span>
+        <span style="color:var(--primary);font-size:14px;font-weight:600;">Publicar</span>
+      </div>
+      <div class="form-bg">
+        <div style="font-size:11px;color:var(--text-muted);font-weight:600;margin-bottom:4px;">NOMBRE DEL EVENTO *</div>
+        <div class="form-field-stub"></div>
+        <div style="font-size:11px;color:var(--text-muted);font-weight:600;margin-bottom:4px;">DESCRIPCIÓN Y RECOMENDACIONES *</div>
+        <div class="form-rich-stub">
+          <span class="ia-badge">✦ IA</span>
+        </div>
+      </div>
+
+      <!-- Scrim -->
+      <div class="sheet-scrim"></div>
+
+      <!-- AI Sheet -->
+      <div class="ai-sheet">
+        <div class="sheet-handle"></div>
+        <div class="ai-sheet-header">
+          <span style="font-size:18px;">✦</span>
+          <span class="ai-sheet-title">Asistente IA</span>
+          <div class="quota-indicator quota-ok">
+            <span>✓</span>
+            <span>10 restantes</span>
+          </div>
+          <div class="ai-sheet-close">✕</div>
+        </div>
+
+        <!-- Empty state -->
+        <div class="ai-chat-area" style="justify-content:center;">
+          <div class="ai-empty-state">
+            <div class="ai-empty-icon">✦</div>
+            <div class="ai-empty-title">Crea la descripción de tu evento</div>
+            <div class="ai-empty-hint">
+              Cuéntame sobre tu evento y te ayudo a redactar una descripción atractiva.
+              Por ejemplo: <em style="color:var(--primary)">"Rodada de 200 km por el Eje Cafetero, nivel intermedio, salida desde Medellín"</em>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input row -->
+        <div class="ai-input-row">
+          <textarea class="ai-text-input" placeholder="Escribe tu mensaje aquí..." rows="1"></textarea>
+          <button class="ai-send-btn">➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────
+       Estado 2: LOADING — enviando mensaje, esperando IA
+       ───────────────────────────────────────────────── -->
+  <div>
+    <p class="phone-label">2 — Loading (esperando respuesta)</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:41</span>
+        <div class="status-icons"><span>▲</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="app-bar">
+        <span style="color:var(--text-secondary);font-size:22px;">←</span>
+        <span class="app-bar-title">Crear evento</span>
+        <span style="color:var(--primary);font-size:14px;font-weight:600;">Publicar</span>
+      </div>
+      <div class="form-bg" style="height:200px;">
+        <div class="form-field-stub"></div>
+        <div class="form-rich-stub"><span class="ia-badge">✦ IA</span></div>
+      </div>
+      <div class="sheet-scrim"></div>
+      <div class="ai-sheet">
+        <div class="sheet-handle"></div>
+        <div class="ai-sheet-header">
+          <span style="font-size:18px;">✦</span>
+          <span class="ai-sheet-title">Asistente IA</span>
+          <div class="quota-indicator quota-ok"><span>✓</span><span>9 restantes</span></div>
+          <div class="ai-sheet-close">✕</div>
+        </div>
+
+        <div class="ai-chat-area">
+          <!-- User message -->
+          <div>
+            <div class="bubble-label user">Tú</div>
+            <div class="bubble-row user">
+              <div class="bubble user">
+                Rodada de 200 km por el Eje Cafetero, nivel intermedio,
+                salida desde Medellín el 15 de julio. Enfocada en paisajes y cafe farms.
+              </div>
+            </div>
+          </div>
+
+          <!-- Loading indicator -->
+          <div>
+            <div class="bubble-label">Asistente IA</div>
+            <div class="ai-loading-row">
+              <div class="bubble-avatar">✦</div>
+              <div class="ai-loading-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input disabled while loading -->
+        <div class="ai-input-row">
+          <textarea class="ai-text-input disabled" placeholder="Esperando respuesta..." rows="1" disabled></textarea>
+          <button class="ai-send-btn disabled" disabled>➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────
+       Estado 3: DATA — respuesta recibida + Insert button
+       ───────────────────────────────────────────────── -->
+  <div>
+    <p class="phone-label">3 — Data (respuesta + insertar)</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:42</span>
+        <div class="status-icons"><span>▲</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="app-bar">
+        <span style="color:var(--text-secondary);font-size:22px;">←</span>
+        <span class="app-bar-title">Crear evento</span>
+        <span style="color:var(--primary);font-size:14px;font-weight:600;">Publicar</span>
+      </div>
+      <div class="form-bg" style="height:180px;">
+        <div class="form-field-stub"></div>
+        <div class="form-rich-stub"><span class="ia-badge">✦ IA</span></div>
+      </div>
+      <div class="sheet-scrim"></div>
+      <div class="ai-sheet">
+        <div class="sheet-handle"></div>
+        <div class="ai-sheet-header">
+          <span style="font-size:18px;">✦</span>
+          <span class="ai-sheet-title">Asistente IA</span>
+          <div class="quota-indicator quota-ok"><span>✓</span><span>9 restantes</span></div>
+          <div class="ai-sheet-close">✕</div>
+        </div>
+
+        <div class="ai-chat-area">
+          <!-- User message -->
+          <div>
+            <div class="bubble-label user">Tú</div>
+            <div class="bubble-row user">
+              <div class="bubble user">
+                Rodada de 200 km por el Eje Cafetero, nivel intermedio, salida desde Medellín el 15 de julio.
+              </div>
+            </div>
+          </div>
+
+          <!-- Model response -->
+          <div>
+            <div class="bubble-label">Asistente IA</div>
+            <div class="bubble-row model">
+              <div class="bubble-avatar">✦</div>
+              <div class="bubble model">
+                <strong>Ruta Cafetera — Alma de Colombia</strong><br><br>
+                Únete a una rodada de <em>200 km</em> por los paisajes más icónicos del Eje Cafetero.
+                Saliendo desde Medellín el 15 de julio, cruzaremos café farms centenarias,
+                miradores y carreteras secundarias de baja densidad vehicular.<br><br>
+                • Nivel: Intermedio<br>
+                • Distancia: ~200 km<br>
+                • Punto de salida: Medellín
+              </div>
+            </div>
+          </div>
+
+          <!-- Second user turn -->
+          <div>
+            <div class="bubble-label user">Tú</div>
+            <div class="bubble-row user">
+              <div class="bubble user">Agrégale que hay almuerzo incluido en una hacienda cafeteira</div>
+            </div>
+          </div>
+
+          <!-- Second model response -->
+          <div>
+            <div class="bubble-label">Asistente IA</div>
+            <div class="bubble-row model">
+              <div class="bubble-avatar">✦</div>
+              <div class="bubble model">
+                Claro, aquí la versión actualizada incluyendo el almuerzo en hacienda.
+                ¿Quieres que también mencione el límite de cupos?
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Insert button -->
+        <div class="ai-insert-area">
+          <button class="ai-insert-btn">
+            <span>⬇</span> Insertar en descripción
+          </button>
+        </div>
+
+        <!-- Input row -->
+        <div class="ai-input-row">
+          <textarea class="ai-text-input" placeholder="Escribe tu mensaje aquí..." rows="1"></textarea>
+          <button class="ai-send-btn">➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────
+       Estado 4: ERROR quota_exceeded_user — campo deshabilitado, sin Reintentar
+       ───────────────────────────────────────────────── -->
+  <div>
+    <p class="phone-label">4 — Error: cuota usuario agotada</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:43</span>
+        <div class="status-icons"><span>▲</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="app-bar">
+        <span style="color:var(--text-secondary);font-size:22px;">←</span>
+        <span class="app-bar-title">Crear evento</span>
+        <span style="color:var(--primary);font-size:14px;font-weight:600;">Publicar</span>
+      </div>
+      <div class="form-bg" style="height:200px;">
+        <div class="form-field-stub"></div>
+        <div class="form-rich-stub"><span class="ia-badge">✦ IA</span></div>
+      </div>
+      <div class="sheet-scrim"></div>
+      <div class="ai-sheet">
+        <div class="sheet-handle"></div>
+        <div class="ai-sheet-header">
+          <span style="font-size:18px;">✦</span>
+          <span class="ai-sheet-title">Asistente IA</span>
+          <div class="quota-indicator quota-none">
+            <span>⚠</span>
+            <span>Cuota agotada</span>
+          </div>
+          <div class="ai-sheet-close">✕</div>
+        </div>
+
+        <div class="ai-chat-area">
+          <!-- Previous chat history -->
+          <div>
+            <div class="bubble-label user">Tú</div>
+            <div class="bubble-row user">
+              <div class="bubble user">Dame otra versión más corta</div>
+            </div>
+          </div>
+          <div>
+            <div class="bubble-label">Asistente IA</div>
+            <div class="bubble-row model">
+              <div class="bubble-avatar">✦</div>
+              <div class="bubble model">Aquí tienes una versión resumida...</div>
+            </div>
+          </div>
+
+          <!-- Quota exhausted error banner — no retry button -->
+          <div class="ai-error-banner quota-exhausted">
+            <span class="error-banner-icon">🚫</span>
+            <div class="error-banner-body">
+              <div class="error-banner-text">
+                Alcanzaste el límite diario de generaciones. Intenta mañana.
+              </div>
+              <!-- Sin botón Reintentar -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Insert button still available (last model response) -->
+        <div class="ai-insert-area">
+          <button class="ai-insert-btn">
+            <span>⬇</span> Insertar en descripción
+          </button>
+        </div>
+
+        <!-- Input DISABLED -->
+        <div class="ai-input-row">
+          <textarea class="ai-text-input disabled" placeholder="Límite diario alcanzado" rows="1" disabled></textarea>
+          <button class="ai-send-btn disabled" disabled>➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────────────────
+       Estado 5: ERROR recuperable — con botón Reintentar
+       (ej: quota_exceeded_project / safety_blocked / network_error)
+       ───────────────────────────────────────────────── -->
+  <div>
+    <p class="phone-label">5 — Error recuperable (con Reintentar)</p>
+    <div class="phone">
+      <div class="status-bar">
+        <span class="time">9:44</span>
+        <div class="status-icons"><span>▲</span><span>WiFi</span><span>🔋</span></div>
+      </div>
+      <div class="app-bar">
+        <span style="color:var(--text-secondary);font-size:22px;">←</span>
+        <span class="app-bar-title">Crear evento</span>
+        <span style="color:var(--primary);font-size:14px;font-weight:600;">Publicar</span>
+      </div>
+      <div class="form-bg" style="height:200px;">
+        <div class="form-field-stub"></div>
+        <div class="form-rich-stub"><span class="ia-badge">✦ IA</span></div>
+      </div>
+      <div class="sheet-scrim"></div>
+      <div class="ai-sheet">
+        <div class="sheet-handle"></div>
+        <div class="ai-sheet-header">
+          <span style="font-size:18px;">✦</span>
+          <span class="ai-sheet-title">Asistente IA</span>
+          <div class="quota-indicator quota-warn">
+            <span>⚡</span>
+            <span>3 restantes</span>
+          </div>
+          <div class="ai-sheet-close">✕</div>
+        </div>
+
+        <div class="ai-chat-area">
+          <!-- User message -->
+          <div>
+            <div class="bubble-label user">Tú</div>
+            <div class="bubble-row user">
+              <div class="bubble user">Hazla más emocionante para riders avanzados</div>
+            </div>
+          </div>
+
+          <!-- Recoverable error banner WITH retry -->
+          <div class="ai-error-banner recoverable">
+            <span class="error-banner-icon">⚠</span>
+            <div class="error-banner-body">
+              <div class="error-banner-text">
+                Error de conexión. Verifica tu internet e intenta de nuevo.
+              </div>
+              <button class="error-retry-btn">↺ Reintentar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input habilitado -->
+        <div class="ai-input-row">
+          <textarea class="ai-text-input" placeholder="Escribe tu mensaje aquí..." rows="1">Hazla más emocionante para riders avanzados</textarea>
+          <button class="ai-send-btn">➤</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /frame-wrap -->
+</body>
+</html>

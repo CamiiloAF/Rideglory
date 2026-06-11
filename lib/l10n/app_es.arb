@@ -132,10 +132,6 @@
   "event_addEventCover": "Agregar portada del evento",
   "event_addEventCoverHint": "Una imagen impactante atrae a más motociclistas. Formatos: JPG, PNG.",
   "event_uploadImage": "Subir imagen",
-  "event_generateWithAI": "Generar",
-  "event_coverGenerateError": "No pudimos generar la portada. Sube tu propia imagen.",
-  "event_coverRegenerate": "Regenerar",
-  "event_coverGeneratingOverlay": "Generando con IA...",
   "event_route": "RUTA",
   "event_multiBrandLabel": "Marcas permitidas",
   "event_multiBrandAllowAny": "Permitir motos de cualquier fabricante",
@@ -1135,5 +1131,47 @@
 
   "vehicle_doc_rtm_status_valid": "Vigente",
   "vehicle_doc_rtm_status_expiring_soon": "Por vencer",
-  "vehicle_doc_rtm_status_expired": "Vencida"
+  "vehicle_doc_rtm_status_expired": "Vencida",
+
+  "ai_chatTitle": "Asistente IA",
+  "ai_chatHint": "Escribe tu mensaje...",
+  "ai_sendButton": "Enviar",
+  "ai_insertButton": "Insertar descripción",
+  "ai_quotaRemaining": "{count} generaciones restantes",
+  "@ai_quotaRemaining": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "ai_quotaExhausted": "Has agotado tus generaciones de hoy",
+  "ai_errorQuotaUser": "Has alcanzado tu límite diario de generaciones con IA.",
+  "ai_errorQuotaProject": "El servicio de IA está temporalmente no disponible. Intenta más tarde.",
+  "ai_errorSafetyBlocked": "Tu mensaje fue bloqueado por filtros de seguridad. Por favor ajusta el contenido e intenta de nuevo.",
+  "ai_errorNetwork": "No se pudo conectar con el servicio de IA. Verifica tu conexión e intenta de nuevo.",
+  "ai_retryButton": "Reintentar",
+  "ai_confirmReplaceTitle": "Reemplazar descripción",
+  "ai_confirmReplaceMessage": "El editor ya tiene contenido. ¿Deseas reemplazarlo con la descripción generada?",
+  "ai_emptyStateTitle": "¡Hola! Soy tu asistente para crear descripciones",
+  "ai_emptyStateSubtitle": "Describe los puntos clave de tu rodada y te ayudaré a redactar una descripción atractiva",
+  "ai_emptyStateExhaustedTitle": "Sin generaciones disponibles",
+  "ai_emptyStateExhaustedSubtitle": "Has alcanzado tu límite diario. Las generaciones se renuevan cada día a medianoche.",
+  "ai_chatDisabledHint": "Sin generaciones disponibles hoy",
+  "ai_messageCopied": "Mensaje copiado",
+  "ai_quotaInfoTitle": "Generaciones de descripción",
+  "ai_quotaInfoDescription": "Cada vez que el asistente genera una descripción completa consume una generación de tu cuota diaria. Las preguntas de aclaración no cuentan.",
+  "ai_quotaInfoAvailableToday": "Disponibles hoy",
+  "ai_quotaInfoExhausted": "Sin generaciones disponibles",
+  "ai_quotaInfoCount": "{count, plural, =1{{count} generación} other{{count} generaciones}}",
+  "@ai_quotaInfoCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "ai_quotaInfoResetLabel": "Se reinicia",
+  "ai_quotaInfoResetValue": "cada día",
+
+  "ai_error_quota_exceeded_user": "Has alcanzado tu límite diario de generaciones con IA.",
+  "ai_error_quota_exceeded_project": "El servicio de IA está temporalmente no disponible. Intenta más tarde.",
+  "ai_error_safety_blocked": "Tu mensaje fue bloqueado por filtros de seguridad. Por favor ajusta el contenido e intenta de nuevo.",
+  "ai_error_network": "No se pudo conectar con el servicio de IA. Verifica tu conexión e intenta de nuevo."
 }
