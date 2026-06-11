@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rideglory · Estrategia de Monetización</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#f98c1f;
+    --primary-soft:rgba(249,140,31,.14);
+    --bg:#0D0D0F;
+    --bg-2:#15151a;
+    --bg-3:#1d1d24;
+    --card:#16161c;
+    --border:#26262f;
+    --text:#F3F3F5;
+    --text-dim:#9a9aa6;
+    --text-faint:#67677a;
+    --green:#3ddc84;
+    --blue:#4aa8ff;
+    --purple:#b07cff;
+    --red:#ff6b6b;
+    --yellow:#ffd166;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Space Grotesk',system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--primary);color:var(--bg)}
+  a{color:var(--primary);text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+
+  /* HERO */
+  .hero{
+    position:relative;overflow:hidden;
+    background:
+      radial-gradient(900px 500px at 80% -10%, rgba(249,140,31,.16), transparent 60%),
+      radial-gradient(700px 400px at 5% 10%, rgba(176,124,255,.10), transparent 55%),
+      var(--bg);
+    border-bottom:1px solid var(--border);
+    padding:64px 0 52px;
+  }
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--primary-soft);color:var(--primary);
+    border:1px solid rgba(249,140,31,.3);
+    padding:6px 14px;border-radius:999px;font-size:13px;font-weight:600;
+    letter-spacing:.3px;margin-bottom:22px;
+  }
+  .badge .dot{width:7px;height:7px;border-radius:50%;background:var(--primary);box-shadow:0 0 10px var(--primary)}
+  h1{font-size:clamp(30px,5vw,52px);font-weight:700;letter-spacing:-1px;line-height:1.05}
+  h1 .accent{color:var(--primary)}
+  .lead{font-size:clamp(16px,2.2vw,20px);color:var(--text-dim);max-width:760px;margin-top:18px}
+  .hero-stats{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
+  .hstat{
+    background:var(--card);border:1px solid var(--border);border-radius:14px;
+    padding:16px 20px;min-width:150px;flex:1;
+  }
+  .hstat .n{font-size:26px;font-weight:700;color:var(--primary)}
+  .hstat .l{font-size:13px;color:var(--text-dim);margin-top:2px}
+
+  /* SECTIONS */
+  section{padding:56px 0}
+  .sec-head{margin-bottom:30px}
+  .kicker{color:var(--primary);font-weight:600;font-size:13px;letter-spacing:1.5px;text-transform:uppercase}
+  h2{font-size:clamp(24px,3.4vw,34px);font-weight:700;letter-spacing:-.5px;margin-top:8px}
+  .sec-sub{color:var(--text-dim);max-width:720px;margin-top:10px;font-size:16px}
+
+  /* THESIS / current state */
+  .thesis{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:760px){.thesis{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:26px}
+  .panel h3{font-size:18px;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+  .panel ul{list-style:none}
+  .panel li{padding:8px 0 8px 26px;position:relative;color:var(--text-dim);font-size:15px;border-bottom:1px solid rgba(255,255,255,.03)}
+  .panel li:last-child{border-bottom:0}
+  .panel li::before{content:"";position:absolute;left:4px;top:15px;width:8px;height:8px;border-radius:2px;background:var(--primary)}
+  .panel.warn li::before{background:var(--red)}
+  .panel.good li::before{background:var(--green)}
+
+  /* ASSET highlight */
+  .asset{
+    background:linear-gradient(135deg, rgba(249,140,31,.12), rgba(176,124,255,.08));
+    border:1px solid rgba(249,140,31,.28);border-radius:22px;padding:34px;margin-top:10px;
+  }
+  .asset h3{font-size:22px;margin-bottom:8px}
+  .asset p{color:var(--text-dim);max-width:820px}
+  .funnel{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px;align-items:stretch}
+  .fstep{flex:1;min-width:150px;background:rgba(13,13,15,.55);border:1px solid var(--border);border-radius:14px;padding:16px}
+  .fstep .num{font-size:12px;color:var(--primary);font-weight:700;letter-spacing:1px}
+  .fstep .t{font-weight:600;margin:6px 0 4px;font-size:15px}
+  .fstep .d{font-size:13px;color:var(--text-faint)}
+  .fstep .arrow{color:var(--primary)}
+
+  /* CONTROLS */
+  .controls{
+    position:sticky;top:0;z-index:30;
+    background:rgba(13,13,15,.82);backdrop-filter:blur(14px);
+    border:1px solid var(--border);border-radius:16px;
+    padding:14px;margin-bottom:26px;
+    display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;
+  }
+  .filters{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{
+    background:var(--bg-3);border:1px solid var(--border);color:var(--text-dim);
+    padding:7px 14px;border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;
+    font-family:inherit;transition:.15s;white-space:nowrap;
+  }
+  .chip:hover{border-color:var(--primary);color:var(--text)}
+  .chip.active{background:var(--primary);border-color:var(--primary);color:var(--bg);font-weight:600}
+  .sortwrap{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-dim)}
+  select{
+    background:var(--bg-3);border:1px solid var(--border);color:var(--text);
+    padding:8px 12px;border-radius:10px;font-family:inherit;font-size:13px;cursor:pointer;
+  }
+
+  /* CARD GRID */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px}
+  .card{
+    background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;
+    display:flex;flex-direction:column;transition:.2s;cursor:pointer;position:relative;overflow:hidden;
+  }
+  .card::after{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--catcolor,var(--primary));opacity:.0;transition:.2s}
+  .card:hover{border-color:var(--catcolor,var(--primary));transform:translateY(-3px)}
+  .card:hover::after{opacity:1}
+  .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-ic{font-size:26px;line-height:1}
+  .loc-tag{font-size:11px;font-weight:600;padding:4px 9px;border-radius:999px;white-space:nowrap;letter-spacing:.3px}
+  .loc-app{background:rgba(74,168,255,.14);color:var(--blue)}
+  .loc-off{background:rgba(176,124,255,.14);color:var(--purple)}
+  .loc-hib{background:rgba(61,220,132,.14);color:var(--green)}
+  .card h3{font-size:17px;font-weight:600;letter-spacing:-.2px;margin-bottom:6px}
+  .cat-label{font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--catcolor,var(--primary));margin-bottom:10px}
+  .card .desc{font-size:14px;color:var(--text-dim);flex:1}
+  .model{font-size:13px;color:var(--text-faint);margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+  .model b{color:var(--text);font-weight:600}
+  .metrics{display:flex;gap:16px;margin-top:14px}
+  .metric{flex:1}
+  .metric .ml{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--text-faint)}
+  .bars{display:flex;gap:3px;margin-top:5px}
+  .bars span{height:7px;flex:1;border-radius:2px;background:var(--bg-3)}
+  .bars.impact span.on{background:var(--green)}
+  .bars.effort span.on{background:var(--yellow)}
+  .ttm{font-size:11px;color:var(--text-faint);margin-top:12px;display:flex;align-items:center;gap:6px}
+  .ttm b{color:var(--text-dim)}
+  .card-detail{
+    max-height:0;overflow:hidden;transition:max-height .3s ease;
+    font-size:13.5px;color:var(--text-dim);
+  }
+  .card.open .card-detail{max-height:400px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+  .card-detail .dh{color:var(--primary);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+  .expand-hint{position:absolute;bottom:14px;right:18px;font-size:11px;color:var(--text-faint)}
+
+  /* MATRIX */
+  .matrix-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:26px}
+  .matrix{position:relative;width:100%;aspect-ratio:16/10;min-height:360px;background:
+    linear-gradient(to right, rgba(255,255,255,.025) 1px, transparent 1px) 0 0/25% 100%,
+    linear-gradient(to bottom, rgba(255,255,255,.025) 1px, transparent 1px) 0 0/100% 25%;
+    border-left:1px solid var(--border);border-bottom:1px solid var(--border);border-radius:8px;margin:30px 0 10px}
+  .quad-label{position:absolute;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--text-faint);opacity:.7}
+  .ql-tl{top:10px;left:12px;color:var(--green)}
+  .ql-tr{top:10px;right:12px;color:var(--primary)}
+  .ql-bl{bottom:10px;left:12px}
+  .ql-br{bottom:10px;right:12px;color:var(--red)}
+  .axis-y{position:absolute;left:-30px;top:50%;transform:rotate(-90deg) translateX(50%);transform-origin:left;font-size:12px;color:var(--text-dim);letter-spacing:1px}
+  .axis-x{text-align:center;font-size:12px;color:var(--text-dim);letter-spacing:1px;margin-top:6px}
+  .dot{position:absolute;transform:translate(-50%,50%);width:16px;height:16px;border-radius:50%;
+    background:var(--primary);border:2px solid var(--bg);cursor:pointer;transition:.15s;box-shadow:0 0 0 0 rgba(249,140,31,.4)}
+  .dot:hover{transform:translate(-50%,50%) scale(1.6);z-index:5;box-shadow:0 0 0 6px rgba(249,140,31,.18)}
+  .dot .tip{position:absolute;bottom:140%;left:50%;transform:translateX(-50%);background:var(--bg-3);
+    border:1px solid var(--border);padding:6px 10px;border-radius:8px;font-size:12px;white-space:nowrap;
+    opacity:0;pointer-events:none;transition:.15s;color:var(--text)}
+  .dot:hover .tip{opacity:1}
+
+  /* CALCULATOR */
+  .calc{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  @media(max-width:820px){.calc{grid-template-columns:1fr}}
+  .calc-inputs,.calc-out{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:26px}
+  .field{margin-bottom:20px}
+  .field label{display:flex;justify-content:space-between;font-size:13px;color:var(--text-dim);margin-bottom:8px}
+  .field label b{color:var(--primary);font-weight:600}
+  input[type=range]{-webkit-appearance:none;width:100%;height:6px;border-radius:6px;background:var(--bg-3);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--primary);cursor:pointer;border:3px solid var(--bg);box-shadow:0 0 0 1px var(--primary)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--primary);cursor:pointer;border:3px solid var(--bg)}
+  .field .hint{font-size:11px;color:var(--text-faint);margin-top:5px}
+  .calc-out{display:flex;flex-direction:column}
+  .big-total{text-align:center;padding:14px 0 22px;border-bottom:1px solid var(--border);margin-bottom:18px}
+  .big-total .lab{font-size:13px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px}
+  .big-total .val{font-size:clamp(34px,6vw,46px);font-weight:700;color:var(--primary);letter-spacing:-1px;margin-top:4px}
+  .big-total .yr{font-size:14px;color:var(--text-dim);margin-top:2px}
+  .revline{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+  .revline .left{display:flex;align-items:center;gap:10px;font-size:14px}
+  .revline .ic{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-size:15px;background:var(--bg-3)}
+  .revline .amt{font-weight:600;font-variant-numeric:tabular-nums}
+  .calc-bar{height:6px;border-radius:6px;background:var(--bg-3);margin-top:14px;overflow:hidden;display:flex}
+  .calc-bar span{height:100%}
+  .disclaimer{font-size:11px;color:var(--text-faint);margin-top:16px;line-height:1.5}
+
+  /* ROADMAP */
+  .road{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:820px){.road{grid-template-columns:1fr}}
+  .phase{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;position:relative}
+  .phase .ph-tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.5px;padding:5px 12px;border-radius:999px;margin-bottom:14px}
+  .p1 .ph-tag{background:rgba(61,220,132,.15);color:var(--green)}
+  .p2 .ph-tag{background:rgba(74,168,255,.15);color:var(--blue)}
+  .p3 .ph-tag{background:rgba(176,124,255,.15);color:var(--purple)}
+  .phase h3{font-size:18px;margin-bottom:4px}
+  .phase .when{font-size:12px;color:var(--text-faint);margin-bottom:14px}
+  .phase ul{list-style:none}
+  .phase li{font-size:14px;color:var(--text-dim);padding:7px 0 7px 22px;position:relative}
+  .phase li::before{content:"→";position:absolute;left:0;color:var(--primary)}
+  .phase .goal{margin-top:16px;padding-top:14px;border-top:1px solid var(--border);font-size:13px;color:var(--text-faint)}
+  .phase .goal b{color:var(--text)}
+
+  footer{border-top:1px solid var(--border);padding:34px 0;text-align:center;color:var(--text-faint);font-size:13px}
+  .hidden{display:none!important}
+  .empty{text-align:center;padding:40px;color:var(--text-faint);grid-column:1/-1}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wrap">
+    <span class="badge"><span class="dot"></span>Análisis estratégico · Rideglory · Colombia</span>
+    <h1>Cómo convertir <span class="accent">Rideglory</span> en un negocio rentable</h1>
+    <p class="lead">Hoy la app es una comunidad motera sin un solo peso de ingreso. Pero acumula los activos exactos que valen dinero en el mercado moto colombiano: <b style="color:var(--text)">vencimientos de SOAT, un garaje con datos de cada moto, eventos con cupos y una comunidad geolocalizada</b>. Aquí están 24 formas de monetizarla —dentro y fuera de la app— priorizadas por impacto, esfuerzo y velocidad al dinero.</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="n">24</div><div class="l">vías de monetización mapeadas</div></div>
+      <div class="hstat"><div class="n">7</div><div class="l">modelos de ingreso distintos</div></div>
+      <div class="hstat"><div class="n">~10M</div><div class="l">motos en circulación en Colombia</div></div>
+      <div class="hstat"><div class="n">$0</div><div class="l">ingreso actual de la app</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- TESIS / ESTADO ACTUAL -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Punto de partida</div>
+      <h2>Lo que ya tienes (y por qué importa)</h2>
+      <p class="sec-sub">No partes de cero. Cada feature construido es un canal de monetización latente. La clave es no pensar "le pongo publicidad", sino preguntar: <i>¿por qué cosa ya está pagando hoy un motociclista colombiano, y cómo me meto en ese flujo?</i></p>
+    </div>
+    <div class="thesis">
+      <div class="panel good">
+        <h3>🏍️ Activos que ya monetizan solos</h3>
+        <ul>
+          <li><b>Recordatorios de SOAT y Tecnomecánica</b> — sabes cuándo a cada usuario le vence un documento obligatorio que SÍ O SÍ debe renovar.</li>
+          <li><b>Garaje con datos de cada moto</b> — marca, modelo, año, cilindraje, placa, odómetro. Segmentación publicitaria de lujo.</li>
+          <li><b>Historial de mantenimiento con costos y talleres</b> — sabes qué necesita la moto y cuándo.</li>
+          <li><b>Eventos con cupos e inscripciones</b> — ya existe el campo "precio", solo falta cobrar.</li>
+          <li><b>Tracking GPS en vivo + comunidad</b> — engagement alto y recurrente = inventario para marcas.</li>
+        </ul>
+      </div>
+      <div class="panel warn">
+        <h3>⚠️ Lo que falta para cobrar</h3>
+        <ul>
+          <li>Cero integración de pasarela de pagos (Wompi / Nequi / Mercado Pago).</li>
+          <li>El precio de eventos es solo informativo: el cobro hoy es por fuera y no deja comisión.</li>
+          <li>No hay planes, suscripciones ni concepto de cuenta "Pro".</li>
+          <li>No hay relación comercial con aseguradoras, CDAs ni talleres.</li>
+          <li>No se aprovecha la data agregada (anónima) que ya se está capturando.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACTIVO ESTRELLA: SOAT FUNNEL -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="asset">
+      <div class="kicker">El activo más valioso</div>
+      <h3>💰 El embudo del SOAT: tu mina de oro</h3>
+      <p>En Colombia el SOAT es <b style="color:var(--text)">obligatorio y se renueva cada año</b>. Hay más de 10 millones de motos. Tu app ya sabe la fecha exacta de vencimiento de cada usuario y ya le manda recordatorios push a 30, 7 y 0 días. Eso es, literalmente, un <b style="color:var(--text)">canal de venta de seguros con intención de compra perfecta</b>. Un corredor/agencia paga comisión por cada póliza vendida (típicamente 10–20%). Lo mismo aplica para la Tecnomecánica (agendamiento con CDAs) y los seguros voluntarios (todo riesgo, accidentes).</p>
+      <div class="funnel">
+        <div class="fstep"><div class="num">PASO 1</div><div class="t">Ya capturas el dato</div><div class="d">El usuario registra su SOAT con OCR. Sabes la fecha de vencimiento.</div></div>
+        <div class="fstep"><div class="num">PASO 2 →</div><div class="t">Ya envías el recordatorio</div><div class="d">Push a 30/7/0 días. El usuario YA tiene que renovar.</div></div>
+        <div class="fstep"><div class="num">PASO 3 →</div><div class="t">Botón "Renueva aquí"</div><div class="d">En vez de mandarlo a Google, lo cierras dentro de la app vía un aliado.</div></div>
+        <div class="fstep"><div class="num">PASO 4 →</div><div class="t">Cobras comisión</div><div class="d">El aliado (aseguradora/corredor) te paga por cada venta. Recurrente, anual.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ESTRATEGIAS -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">El catálogo completo</div>
+      <h2>24 vías de monetización</h2>
+      <p class="sec-sub">Filtra por categoría o por dónde ocurre el ingreso. Haz clic en cualquier tarjeta para ver el detalle de cómo conecta con lo que ya tienes construido.</p>
+    </div>
+
+    <div class="controls">
+      <div class="filters" id="catFilters">
+        <button class="chip active" data-cat="all">Todas</button>
+      </div>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+        <div class="filters" id="locFilters">
+          <button class="chip active" data-loc="all">Todo</button>
+          <button class="chip" data-loc="app">En la app</button>
+          <button class="chip" data-loc="hibrido">Híbrido</button>
+          <button class="chip" data-loc="off">Fuera de la app</button>
+        </div>
+        <div class="sortwrap">
+          <span>Ordenar:</span>
+          <select id="sort">
+            <option value="default">Recomendado</option>
+            <option value="impact">Mayor impacto</option>
+            <option value="effort">Menor esfuerzo</option>
+            <option value="speed">Más rápido al dinero</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<!-- MATRIZ -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Dónde apostar primero</div>
+      <h2>Matriz impacto vs. esfuerzo</h2>
+      <p class="sec-sub">Las de arriba a la izquierda son tus <b style="color:var(--green)">quick wins</b>: alto impacto, bajo esfuerzo. Empieza por ahí. Pasa el cursor sobre cada punto.</p>
+    </div>
+    <div class="matrix-box">
+      <div class="matrix" id="matrix">
+        <span class="quad-label ql-tl">★ Quick wins</span>
+        <span class="quad-label ql-tr">Apuestas grandes</span>
+        <span class="quad-label ql-bl">Rellenos / opcionales</span>
+        <span class="quad-label ql-br">Evitar / postergar</span>
+        <span class="axis-y">Impacto en ingresos →</span>
+      </div>
+      <div class="axis-x">Esfuerzo de implementación →</div>
+    </div>
+  </div>
+</section>
+
+<!-- CALCULADORA -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Pon números</div>
+      <h2>Calculadora de ingresos potenciales</h2>
+      <p class="sec-sub">Mueve los controles según tu realidad. Las cifras están en pesos colombianos (COP) con supuestos conservadores del mercado. Es una estimación para dimensionar, no una promesa.</p>
+    </div>
+    <div class="calc">
+      <div class="calc-inputs">
+        <div class="field">
+          <label>Usuarios activos en la app <b id="v-users">5.000</b></label>
+          <input type="range" id="users" min="500" max="100000" step="500" value="5000">
+          <div class="hint">Base de motociclistas que usan la app al mes.</div>
+        </div>
+        <div class="field">
+          <label>% que renueva el SOAT por la app <b id="v-soatpct">25%</b></label>
+          <input type="range" id="soatpct" min="0" max="80" step="1" value="25">
+          <div class="hint">Comisión promedio: $45.000 COP por póliza/año.</div>
+        </div>
+        <div class="field">
+          <label>% de suscriptores "Pro" <b id="v-propct">4%</b></label>
+          <input type="range" id="propct" min="0" max="30" step="1" value="4">
+          <div class="hint">Plan Pro a $9.900 COP/mes.</div>
+        </div>
+        <div class="field">
+          <label>Eventos pagos al mes (toda la red) <b id="v-events">40</b></label>
+          <input type="range" id="events" min="0" max="500" step="5" value="40">
+          <div class="hint">Ticket promedio $35.000 COP · comisión 8%. ~25 inscritos/evento.</div>
+        </div>
+        <div class="field">
+          <label>Leads de servicios al mes (talleres, accesorios) <b id="v-leads">120</b></label>
+          <input type="range" id="leads" min="0" max="2000" step="10" value="120">
+          <div class="hint">Comisión/lead promedio: $8.000 COP.</div>
+        </div>
+        <div class="field">
+          <label>Ingreso por marca/patrocinio al mes <b id="v-spons">$1.500.000</b></label>
+          <input type="range" id="spons" min="0" max="20000000" step="500000" value="1500000">
+          <div class="hint">Banners nativos, eventos patrocinados, activaciones.</div>
+        </div>
+      </div>
+      <div class="calc-out">
+        <div class="big-total">
+          <div class="lab">Ingreso mensual estimado</div>
+          <div class="val" id="total">$0</div>
+          <div class="yr" id="totalyr">≈ $0 / año</div>
+        </div>
+        <div id="breakdown"></div>
+        <div class="calc-bar" id="calcbar"></div>
+        <p class="disclaimer">Supuestos: comisión SOAT $45k/póliza anual prorrateada a mes; Pro $9.900/mes; comisión eventos 8% sobre ticket $35k × 25 inscritos; lead de servicio $8k; patrocinio según slider. Cifras ilustrativas para dimensionar el modelo, no proyecciones financieras.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">Plan de acción</div>
+      <h2>Por dónde empezar: 3 fases</h2>
+      <p class="sec-sub">Una secuencia realista que va del dinero rápido y barato (comisiones, sin construir pasarela) a las apuestas de largo plazo.</p>
+    </div>
+    <div class="road">
+      <div class="phase p1">
+        <span class="ph-tag">FASE 1 · 0–3 meses</span>
+        <h3>Comisiones sin fricción</h3>
+        <div class="when">Esfuerzo bajo · dinero rápido</div>
+        <ul>
+          <li>Cerrar alianza con corredor/aseguradora de SOAT y poner botón "Renovar" en el recordatorio.</li>
+          <li>Botón de agendamiento de Tecnomecánica con CDAs aliados (comisión por referido).</li>
+          <li>Programa de afiliados de accesorios/repuestos (links con comisión).</li>
+          <li>Banner/patrocinio fijo de 1–2 marcas moteras (Bajaj, AKT, Yamaha, lubricantes).</li>
+        </ul>
+        <div class="goal"><b>Meta:</b> primeros ingresos sin construir pasarela ni cobrar al usuario.</div>
+      </div>
+      <div class="phase p2">
+        <span class="ph-tag">FASE 2 · 3–8 meses</span>
+        <h3>Transacciones y suscripción</h3>
+        <div class="when">Esfuerzo medio · ingreso recurrente</div>
+        <ul>
+          <li>Integrar Wompi/Mercado Pago para cobrar inscripciones a eventos + comisión.</li>
+          <li>Lanzar <b>Rideglory Pro</b>: garaje ilimitado, analytics de la moto, IA, eventos privados.</li>
+          <li>Plan "Organizador" para clubes: eventos ilimitados, branding, lista de asistentes pro.</li>
+          <li>Marketplace de talleres con leads y reseñas.</li>
+        </ul>
+        <div class="goal"><b>Meta:</b> ingreso recurrente mensual (MRR) que no dependa de la publicidad.</div>
+      </div>
+      <div class="phase p3">
+        <span class="ph-tag">FASE 3 · 8+ meses</span>
+        <h3>Plataforma y mundo físico</h3>
+        <div class="when">Esfuerzo alto · techo alto</div>
+        <ul>
+          <li>Marketplace de motos usadas y financiamiento (lead-gen a fintech/concesionarios).</li>
+          <li>Reportes de data agregada (anónima) para marcas y aseguradoras (B2B).</li>
+          <li>Eventos físicos propios (Rideglory Fest): boletería, stands, patrocinios.</li>
+          <li>Merch propio y white-label para concesionarios/clubes.</li>
+        </ul>
+        <div class="goal"><b>Meta:</b> diversificar y construir foso competitivo más allá de la app.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Rideglory · Análisis de monetización generado para el mercado motero de Colombia 🏍️<br>
+    Documento interactivo · <span id="genstamp"></span> · Cifras ilustrativas, no constituyen asesoría financiera.
+  </div>
+</footer>
+
+<script>
+/* ===== DATA ===== */
+const CATS = {
+  pagos:    {label:"Pagos & Eventos",        color:"#f98c1f"},
+  premium:  {label:"Suscripción / Premium",  color:"#4aa8ff"},
+  seguros:  {label:"Seguros & Documentos",   color:"#3ddc84"},
+  market:   {label:"Marketplace & Servicios",color:"#ffd166"},
+  marca:    {label:"Marca, B2B & Publicidad",color:"#b07cff"},
+  data:     {label:"Datos & Insights",       color:"#ff6b6b"},
+  fisico:   {label:"Físico & Medios",        color:"#ff9e7d"},
+};
+// impact/effort: 1-5 · speed: 1(lento)-5(rápido) · loc: app|hibrido|off
+const S = [
+  {id:1, t:"Comisión por venta de SOAT", cat:"seguros", loc:"hibrido", ic:"🛡️", impact:5, effort:2, speed:5,
+   model:"Comisión 10–20% por póliza vendida (recurrente anual).",
+   desc:"Tu mayor oportunidad. Ya sabes la fecha de vencimiento y ya envías el recordatorio. Convierte el push en un botón de compra con un corredor aliado.",
+   conecta:"Usa los recordatorios push de SOAT (30/7/0 días) y el dato de vencimiento que ya capturas con OCR. No construyes nada nuevo: insertas un CTA.",
+   mod:"El aliado paga por póliza emitida. 10M de motos renuevan cada año; la intención de compra es del 100%."},
+  {id:2, t:"Comisión de Tecnomecánica (CDAs)", cat:"seguros", loc:"hibrido", ic:"🔧", impact:4, effort:2, speed:5,
+   model:"Comisión por agendamiento/referido con CDAs aliados.",
+   desc:"Mismo motor que el SOAT pero para la RTM bianual. Agenda la cita en un CDA aliado desde el recordatorio de vencimiento.",
+   conecta:"Reusa el módulo de Tecnomecánica y sus recordatorios. El CDA paga por cita agendada o por cliente referido.",
+   mod:"Comisión por cita. Volumen alto en motos +2 años; cero costo de adquisición porque el usuario ya está dentro."},
+  {id:3, t:"Lead-gen de seguros voluntarios", cat:"seguros", loc:"hibrido", ic:"📋", impact:4, effort:3, speed:4,
+   model:"Comisión por lead calificado / póliza (todo riesgo, accidentes).",
+   desc:"Ofrece seguro todo riesgo, contra robo o de accidentes personales según la moto del usuario. Cotización pre-llenada con sus datos.",
+   conecta:"Usa los datos del garaje (marca/modelo/año/cilindraje) para pre-cotizar. Segmentas: una moto de alto cilindraje vale más asegurarla.",
+   mod:"Lead calificado vale mucho en seguros. Conversión alta por la pre-cualificación con datos reales."},
+  {id:4, t:"Cobro de inscripciones a eventos + comisión", cat:"pagos", loc:"app", ic:"🎟️", impact:5, effort:3, speed:3,
+   model:"Comisión 5–10% por transacción (marketplace de rodadas).",
+   desc:"Ya existe el campo 'precio' en los eventos. Integra Wompi/Mercado Pago y cobra la inscripción dentro de la app, quedándote con una comisión.",
+   conecta:"El campo precio y el flujo de inscripción ya están. Solo falta la pasarela y el split de comisión. Cierras el dinero que hoy se mueve por fuera.",
+   mod:"Take rate por transacción. Escala con la cantidad y tamaño de las rodadas pagas."},
+  {id:5, t:"Rideglory Pro (suscripción rider)", cat:"premium", loc:"app", ic:"⭐", impact:4, effort:3, speed:3,
+   model:"Suscripción $9.900–$14.900 COP/mes (MRR).",
+   desc:"Plan premium para el motociclista: garaje ilimitado, estadísticas avanzadas de su moto, descripciones/portadas con IA sin límite, eventos privados, insignias.",
+   conecta:"Empaqueta features que ya tienes (IA, garaje, mantenimiento) en un tier de pago. Ingreso recurrente que no depende de terceros.",
+   mod:"MRR puro. Aun con 3–5% de conversión, una base mediana genera ingreso estable."},
+  {id:6, t:"Plan Organizador / Clubes", cat:"premium", loc:"app", ic:"🏁", impact:4, effort:3, speed:3,
+   model:"Suscripción B2B2C para clubes y organizadores frecuentes.",
+   desc:"Tier para quien organiza muchas rodadas: eventos ilimitados, branding del club, lista de asistentes avanzada, comunicación masiva, página del club.",
+   conecta:"Construido sobre el módulo de eventos e inscripciones. Los clubes ya existen informalmente; les das herramientas que pagarían.",
+   mod:"Suscripción más alta que la de rider. Pocos clientes, ticket alto, churn bajo."},
+  {id:7, t:"Créditos de IA (portadas y descripciones)", cat:"premium", loc:"app", ic:"🤖", impact:3, effort:2, speed:4,
+   model:"Paquetes de créditos / incluido en Pro.",
+   desc:"La generación de portadas e descripciones con IA tiene costo real (Vertex/Gemini). Da unas gratis y cobra paquetes o inclúyelo en Pro.",
+   conecta:"La feature de IA ya está implementada en el formulario de eventos. Solo agregas un medidor de uso y un muro de pago suave.",
+   mod:"Micropagos o parte del bundle Pro. Cubre tu costo de IA y deja margen."},
+  {id:8, t:"Destacar / 'boost' de eventos", cat:"pagos", loc:"app", ic:"🚀", impact:3, effort:2, speed:4,
+   model:"Pago único por destacar un evento en el catálogo.",
+   desc:"El organizador paga para que su rodada aparezca arriba, con badge 'Destacado', o con notificación push a riders cercanos.",
+   conecta:"Usa el catálogo de eventos y la segmentación geográfica que ya manejas. Es un upsell puntual sin suscripción.",
+   mod:"Pago por visibilidad, estilo 'promoción de publicación'. Volumen alto de microtransacciones."},
+  {id:9, t:"Marketplace de talleres y mecánicos", cat:"market", loc:"app", ic:"🛠️", impact:4, effort:4, speed:2,
+   model:"Comisión por servicio agendado + listings destacados.",
+   desc:"Directorio de talleres con reseñas; el usuario agenda su mantenimiento desde la app. El taller paga por lead o por aparecer destacado.",
+   conecta:"El módulo de mantenimiento ya registra taller, costo y próximo servicio. Sabes CUÁNDO la moto necesita servicio y avisas al usuario.",
+   mod:"Comisión por cita + listing premium para talleres. Marketplace local de dos lados."},
+  {id:10, t:"Tienda de repuestos y accesorios (afiliados)", cat:"market", loc:"hibrido", ic:"🛒", impact:3, effort:2, speed:4,
+   model:"Comisión de afiliado / dropshipping.",
+   desc:"Recomienda aceite, llantas, cascos, accesorios específicos para la moto del usuario, con links de afiliado o tienda integrada.",
+   conecta:"Usa los datos del garaje y el historial de mantenimiento: 'tu moto necesita llantas de esta medida'. Recomendación personalizada = alta conversión.",
+   mod:"Comisión por venta. Arranca con afiliados (cero inventario) y luego escala a tienda propia."},
+  {id:11, t:"Marketplace de motos usadas", cat:"market", loc:"app", ic:"🏍️", impact:4, effort:4, speed:2,
+   model:"Listing fee + comisión por venta + destacados.",
+   desc:"Compra/venta de motos entre usuarios. Cobras por publicar, por destacar o una comisión sobre la venta cerrada.",
+   conecta:"El garaje ya tiene la ficha técnica completa de cada moto (un clic para publicarla). Tu comunidad ya está segmentada por interés.",
+   mod:"Modelo tipo TuCarro/Marketplace: fees de listado y promoción. Mercado de usados enorme en Colombia."},
+  {id:12, t:"Lead-gen de financiamiento de motos", cat:"market", loc:"hibrido", ic:"💳", impact:4, effort:3, speed:3,
+   model:"Comisión por crédito desembolsado (lead a fintech/banco).",
+   desc:"Conecta a usuarios que quieren comprar moto con financieras/concesionarios. La comisión por crédito de moto es alta.",
+   conecta:"Cruza el marketplace de usados y el perfil del usuario. Quien busca moto es un lead caliente para crédito.",
+   mod:"Comisión por desembolso (puede ser cientos de miles de pesos por crédito). Pocos pero muy valiosos."},
+  {id:13, t:"Patrocinio de marcas en la app", cat:"marca", loc:"app", ic:"📢", impact:4, effort:2, speed:4,
+   model:"Patrocinio mensual / CPM de inventario nativo.",
+   desc:"Marcas moteras (fabricantes, lubricantes, llantas, indumentaria) patrocinan secciones, eventos o banners nativos segmentados.",
+   conecta:"La data del garaje permite segmentar: mostrar Castrol a quien tiene tal moto, o AKT a quien busca cambiar. Inventario premium.",
+   mod:"Acuerdo mensual fijo o CPM. Mejor que ads genéricos porque vendes audiencia hipersegmentada."},
+  {id:14, t:"Eventos patrocinados / activaciones", cat:"marca", loc:"hibrido", ic:"🎪", impact:4, effort:3, speed:3,
+   model:"Patrocinio por evento + activación de marca.",
+   desc:"Una marca patrocina una rodada (premios, combustible, refrigerios) a cambio de visibilidad y presencia. Tú produces y conectas.",
+   conecta:"Usas el módulo de eventos, el tracking y la comunidad para crear experiencias que las marcas quieren patrocinar.",
+   mod:"Paquete de patrocinio por evento. Combina digital (app) + físico (la rodada real)."},
+  {id:15, t:"POIs patrocinados en rutas", cat:"marca", loc:"app", ic:"📍", impact:3, effort:3, speed:3,
+   model:"Pago de comercios por aparecer en el mapa/ruta.",
+   desc:"Gasolineras, restaurantes, hoteles y paradores sobre las rutas pagan por aparecer destacados como parada recomendada.",
+   conecta:"Usa Mapbox y los waypoints de rutas que ya construyes. Negocios en la ruta quieren tráfico de moteros.",
+   mod:"Listing pagado geolocalizado. Ingreso de comercios locales a lo largo de las rutas populares."},
+  {id:16, t:"Reportes de data agregada (B2B)", cat:"data", loc:"off", ic:"📊", impact:3, effort:4, speed:2,
+   model:"Venta de insights anónimos a marcas/aseguradoras.",
+   desc:"Tendencias agregadas y anónimas: qué motos se mantienen más, rutas populares, comportamiento de renovación, costos de servicio por región.",
+   conecta:"Agregas (siempre anónimo y agregado) la data de garaje, mantenimiento y eventos. Vale oro para quien fabrica, asegura o vende.",
+   mod:"Suscripción a reportes / dashboards B2B. Requiere masa crítica de datos y cuidado legal (privacidad)."},
+  {id:17, t:"Asistencia en vía / grúa (afiliación)", cat:"seguros", loc:"hibrido", ic:"🚨", impact:3, effort:3, speed:3,
+   model:"Reventa de plan de asistencia o comisión por afiliación.",
+   desc:"Plan de asistencia en carretera para moto (grúa, mecánico, ambulancia). Ya tienes el botón SOS y los datos médicos/de emergencia.",
+   conecta:"El SOS, el tracking en vivo y los datos de emergencia del rider hacen este servicio natural y diferenciado en una emergencia real.",
+   mod:"Comisión por afiliación o margen reventiendo un plan de un proveedor de asistencia."},
+  {id:18, t:"Membresías de comunidad / clubes premium", cat:"premium", loc:"app", ic:"👥", impact:3, effort:3, speed:3,
+   model:"Cuota de club / acceso a comunidad cerrada.",
+   desc:"Comunidades o clubes cobran una membresía a sus miembros vía la app (eventos exclusivos, beneficios, descuentos con aliados). Tú tomas un fee.",
+   conecta:"Construido sobre usuarios, eventos e inscripciones. Le das a los clubes la infraestructura de cobro y tú te quedas con un %.",
+   mod:"Fee sobre cuotas de membresía. Tú habilitas, el club opera, ambos ganan."},
+  {id:19, t:"Descuentos con aliados (club de beneficios)", cat:"market", loc:"hibrido", ic:"🎁", impact:3, effort:3, speed:3,
+   model:"Pago de comercios por estar en el programa + parte de Pro.",
+   desc:"Un 'club de beneficios' motero: descuentos en talleres, indumentaria, gasolina, comida. Comercios pagan por estar; refuerza el valor de Pro.",
+   conecta:"Da una razón extra para suscribirse a Pro y crea ingreso B2B de los comercios afiliados. Geolocalizado con lo que ya tienes.",
+   mod:"Doble ingreso: comercios pagan por entrar + sube conversión a Pro."},
+  {id:20, t:"White-label para concesionarios/clubes", cat:"marca", loc:"off", ic:"🏢", impact:4, effort:5, speed:1,
+   model:"Licencia SaaS anual por marca/concesionario.",
+   desc:"Licencia tu plataforma a concesionarios o grandes clubes que quieren su propia app de comunidad y gestión de eventos.",
+   conecta:"Reutilizas todo el producto como motor white-label. Ingreso B2B alto y recurrente, pero exige madurez del producto.",
+   mod:"Licencia SaaS anual de ticket alto. Pocos clientes, mucho compromiso de soporte."},
+  {id:21, t:"Eventos físicos propios (Rideglory Fest)", cat:"fisico", loc:"off", ic:"🎸", impact:4, effort:5, speed:2,
+   model:"Boletería + stands + patrocinios.",
+   desc:"Organiza tu propio evento masivo motero: boletería, stands de marcas, patrocinios, exhibición. La app es el canal de venta y registro.",
+   conecta:"Usas la comunidad, los eventos y las inscripciones de la app como motor de convocatoria y venta de boletas.",
+   mod:"Boletería + venta de espacios + patrocinios. Alto potencial, alta operación logística."},
+  {id:22, t:"Merch propio Rideglory", cat:"fisico", loc:"hibrido", ic:"👕", impact:2, effort:3, speed:3,
+   model:"Venta directa de producto de marca.",
+   desc:"Camisetas, stickers, parches, accesorios con la marca Rideglory. Refuerza comunidad e identidad además de dejar margen.",
+   conecta:"Tu comunidad y los eventos son el canal de venta. Arranca con print-on-demand para no cargar inventario.",
+   mod:"Margen sobre producto. Más branding que negocio principal, pero suma y fideliza."},
+  {id:23, t:"Contenido y medios (marca + sponsorships)", cat:"fisico", loc:"off", ic:"🎥", impact:3, effort:4, speed:2,
+   model:"Patrocinios de contenido, YouTube, alianzas de medios.",
+   desc:"Construye una marca de medios motera (YouTube, redes, podcast) alrededor de Rideglory; monetiza con patrocinios y posiciona la app.",
+   conecta:"Las rodadas y la comunidad generan contenido auténtico. El contenido alimenta descargas de la app y atrae patrocinadores.",
+   mod:"Patrocinios de contenido + adsense + sinergia de adquisición de usuarios para la app."},
+  {id:24, t:"Escuela / cursos de manejo y seguridad", cat:"fisico", loc:"hibrido", ic:"🎓", impact:2, effort:4, speed:2,
+   model:"Venta de cursos (propios o de aliados con comisión).",
+   desc:"Cursos de conducción segura, técnica off-road, primeros auxilios en moto. Propios o de academias aliadas con comisión por inscripción.",
+   conecta:"Encaja con el ángulo de seguridad de la app (SOS, datos médicos, tracking). Vende vía el catálogo de eventos.",
+   mod:"Venta de cupos / comisión por inscripción a academias aliadas."},
+];
+
+/* ===== RENDER CARDS ===== */
+const grid = document.getElementById('grid');
+let activeCat = 'all', activeLoc = 'all', sortMode = 'default';
+const locMeta = {app:{c:'loc-app',t:'En la app'}, off:{c:'loc-off',t:'Fuera de la app'}, hibrido:{c:'loc-hib',t:'Híbrido'}};
+
+function bars(n, cls){
+  let h = `<div class="bars ${cls}">`;
+  for(let i=1;i<=5;i++) h += `<span class="${i<=n?'on':''}"></span>`;
+  return h+'</div>';
+}
+function speedLabel(s){return s>=4?'Rápido':s>=3?'Medio':'Largo plazo';}
+
+function renderCards(){
+  let list = S.filter(x => (activeCat==='all'||x.cat===activeCat) && (activeLoc==='all'||x.loc===activeLoc));
+  if(sortMode==='impact') list.sort((a,b)=>b.impact-a.impact);
+  else if(sortMode==='effort') list.sort((a,b)=>a.effort-b.effort);
+  else if(sortMode==='speed') list.sort((a,b)=>b.speed-a.speed);
+  else list.sort((a,b)=> (b.impact*1.4 - b.effort + b.speed*0.6) - (a.impact*1.4 - a.effort + a.speed*0.6));
+
+  if(!list.length){ grid.innerHTML='<div class="empty">No hay estrategias con esos filtros.</div>'; return; }
+  grid.innerHTML = list.map(x=>{
+    const cat = CATS[x.cat], lm = locMeta[x.loc];
+    return `<div class="card" style="--catcolor:${cat.color}" onclick="this.classList.toggle('open')">
+      <div class="card-top">
+        <div class="card-ic">${x.ic}</div>
+        <span class="loc-tag ${lm.c}">${lm.t}</span>
+      </div>
+      <div class="cat-label">${cat.label}</div>
+      <h3>${x.t}</h3>
+      <div class="desc">${x.desc}</div>
+      <div class="model">💵 <b>Modelo:</b> ${x.model}</div>
+      <div class="metrics">
+        <div class="metric"><div class="ml">Impacto</div>${bars(x.impact,'impact')}</div>
+        <div class="metric"><div class="ml">Esfuerzo</div>${bars(x.effort,'effort')}</div>
+      </div>
+      <div class="ttm">⏱️ Velocidad al dinero: <b>${speedLabel(x.speed)}</b></div>
+      <div class="card-detail">
+        <div class="dh">Cómo conecta con lo que ya tienes</div>
+        <p style="margin-bottom:10px">${x.conecta}</p>
+        <div class="dh">Por qué funciona</div>
+        <p>${x.mod}</p>
+      </div>
+      <span class="expand-hint">+ detalle</span>
+    </div>`;
+  }).join('');
+}
+
+/* category chips */
+const catFilters = document.getElementById('catFilters');
+Object.entries(CATS).forEach(([k,v])=>{
+  const b=document.createElement('button');
+  b.className='chip'; b.dataset.cat=k; b.textContent=v.label;
+  catFilters.appendChild(b);
+});
+catFilters.addEventListener('click',e=>{
+  if(!e.target.dataset.cat) return;
+  activeCat=e.target.dataset.cat;
+  [...catFilters.children].forEach(c=>c.classList.toggle('active',c===e.target));
+  renderCards();
+});
+document.getElementById('locFilters').addEventListener('click',e=>{
+  if(!e.target.dataset.loc) return;
+  activeLoc=e.target.dataset.loc;
+  [...e.currentTarget.children].forEach(c=>c.classList.toggle('active',c===e.target));
+  renderCards();
+});
+document.getElementById('sort').addEventListener('change',e=>{sortMode=e.target.value;renderCards();});
+renderCards();
+
+/* ===== MATRIX ===== */
+const matrix = document.getElementById('matrix');
+S.forEach(x=>{
+  const d=document.createElement('div');
+  d.className='dot';
+  const left = ((x.effort-0.5)/5)*100;        // x: effort
+  const bottom = ((x.impact-0.5)/5)*100;       // y: impact
+  d.style.left = left+'%';
+  d.style.bottom = bottom+'%';
+  d.style.background = CATS[x.cat].color;
+  d.innerHTML = `<span class="tip">${x.ic} ${x.t}</span>`;
+  matrix.appendChild(d);
+});
+
+/* ===== CALCULATOR ===== */
+const fmt = n => '$'+Math.round(n).toLocaleString('es-CO');
+const fmtShort = n => {
+  if(n>=1e9) return '$'+(n/1e9).toFixed(1)+'B';
+  if(n>=1e6) return '$'+(n/1e6).toFixed(1)+'M';
+  if(n>=1e3) return '$'+Math.round(n/1e3)+'k';
+  return '$'+Math.round(n);
+};
+const ids=['users','soatpct','propct','events','leads','spons'];
+const inputs={}; ids.forEach(i=>inputs[i]=document.getElementById(i));
+
+function calc(){
+  const users=+inputs.users.value, soatpct=+inputs.soatpct.value, propct=+inputs.propct.value;
+  const events=+inputs.events.value, leads=+inputs.leads.value, spons=+inputs.spons.value;
+
+  document.getElementById('v-users').textContent = users.toLocaleString('es-CO');
+  document.getElementById('v-soatpct').textContent = soatpct+'%';
+  document.getElementById('v-propct').textContent = propct+'%';
+  document.getElementById('v-events').textContent = events;
+  document.getElementById('v-leads').textContent = leads;
+  document.getElementById('v-spons').textContent = fmt(spons);
+
+  // monthly revenue per stream
+  const soat = (users * (soatpct/100) * 45000) / 12;       // anual prorrateado a mes
+  const pro  = users * (propct/100) * 9900;
+  const evt  = events * 25 * 35000 * 0.08;                  // 25 inscritos * ticket * 8%
+  const lead = leads * 8000;
+  const sp   = spons;
+  const streams=[
+    {n:'Comisión SOAT', v:soat, ic:'🛡️', c:'#3ddc84'},
+    {n:'Suscripción Pro', v:pro, ic:'⭐', c:'#4aa8ff'},
+    {n:'Comisión eventos', v:evt, ic:'🎟️', c:'#f98c1f'},
+    {n:'Leads de servicios', v:lead, ic:'🛠️', c:'#ffd166'},
+    {n:'Patrocinios', v:sp, ic:'📢', c:'#b07cff'},
+  ];
+  const total = streams.reduce((a,b)=>a+b.v,0);
+  document.getElementById('total').textContent = fmtShort(total);
+  document.getElementById('totalyr').textContent = '≈ '+fmtShort(total*12)+' / año';
+
+  document.getElementById('breakdown').innerHTML = streams
+    .sort((a,b)=>b.v-a.v)
+    .map(s=>`<div class="revline">
+      <div class="left"><span class="ic">${s.ic}</span>${s.n}</div>
+      <div class="amt" style="color:${s.c}">${fmt(s.v)}</div>
+    </div>`).join('');
+
+  document.getElementById('calcbar').innerHTML = streams
+    .map(s=>`<span style="width:${total?(s.v/total*100):0}%;background:${s.c}"></span>`).join('');
+}
+ids.forEach(i=>inputs[i].addEventListener('input',calc));
+calc();
+
+document.getElementById('genstamp').textContent = new Date().toLocaleDateString('es-CO',{year:'numeric',month:'long'});
+</script>
+</body>
+</html>
