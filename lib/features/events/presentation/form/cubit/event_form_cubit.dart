@@ -25,6 +25,7 @@ abstract class EventFormState with _$EventFormState {
   const factory EventFormState({
     @Default(ResultState<EventModel>.initial())
     ResultState<EventModel> saveResult,
+    @Default(0) int currentStep,
     @Default(<String>[]) List<String> waypoints,
     @Default(<AddressLocation?>[]) List<AddressLocation?> waypointLocations,
     @Default(RouteType.simple) RouteType routeType,
@@ -341,7 +342,7 @@ class EventFormCubit extends Cubit<EventFormState> {
       ownerId: userId,
       name: formData[EventFormFields.name] as String,
       description: formData[EventFormFields.description] as String,
-      city: formData[EventFormFields.city] as String,
+      city: '',
       startDate: dateRange?.start ?? DateTime.now(),
       endDate: dateRange?.end != dateRange?.start ? dateRange?.end : null,
       difficulty: formData[EventFormFields.difficulty] as EventDifficulty,
@@ -414,7 +415,7 @@ class EventFormCubit extends Cubit<EventFormState> {
       name: name.trim(),
       description:
           (formData[EventFormFields.description] as String?)?.trim() ?? '',
-      city: (formData[EventFormFields.city] as String?)?.trim() ?? '',
+      city: '',
       startDate: dateRange?.start ?? now,
       endDate: dateRange?.end != dateRange?.start ? dateRange?.end : null,
       difficulty:
@@ -482,6 +483,68 @@ class EventFormCubit extends Cubit<EventFormState> {
       return null;
     }, (userId) => userId);
   }
+
+  // ---------------------------------------------------------------------------
+  // Step navigation
+  // ---------------------------------------------------------------------------
+
+  static const List<String> _step1Fields = [
+    EventFormFields.name,
+    EventFormFields.description,
+    EventFormFields.dateRange,
+    EventFormFields.isMultiDay,
+    EventFormFields.meetingTime,
+  ];
+
+  static const List<String> _step2Fields = [
+    EventFormFields.difficulty,
+    EventFormFields.eventType,
+    EventFormFields.price,
+    EventFormFields.isFreeEvent,
+    EventFormFields.maxParticipants,
+    EventFormFields.isMultiBrand,
+    EventFormFields.allowedBrands,
+  ];
+
+  static const List<String> _step3Fields = [
+    EventFormFields.meetingPoint,
+    EventFormFields.destination,
+  ];
+
+  static const Map<int, List<String>> stepFields = {
+    0: _step1Fields,
+    1: _step2Fields,
+    2: _step3Fields,
+  };
+
+  void nextStep() {
+    final next = state.currentStep + 1;
+    if (next <= 3) emit(state.copyWith(currentStep: next));
+  }
+
+  void prevStep() {
+    final prev = state.currentStep - 1;
+    if (prev >= 0) emit(state.copyWith(currentStep: prev));
+  }
+
+  void goToStep(int step) {
+    assert(step >= 0 && step <= 3, 'step must be between 0 and 3');
+    emit(state.copyWith(currentStep: step));
+  }
+
+  bool validateStep(int step) {
+    final fields = stepFields[step];
+    if (fields == null) return true;
+    return fields.every(
+      (name) => formKey.currentState?.fields[name]?.validate() ?? true,
+    );
+  }
+
+  bool isCurrentStepValid() => validateStep(state.currentStep);
+
+  // ---------------------------------------------------------------------------
+  // Private helpers
+  // ---------------------------------------------------------------------------
 
   /// Maps a [DomainException] to a non-PII failure category string.
   String _categorizeFailure(DomainException error) {

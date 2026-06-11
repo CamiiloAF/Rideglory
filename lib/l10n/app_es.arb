@@ -1173,5 +1173,20 @@
   "ai_error_quota_exceeded_user": "Has alcanzado tu límite diario de generaciones con IA.",
   "ai_error_quota_exceeded_project": "El servicio de IA está temporalmente no disponible. Intenta más tarde.",
   "ai_error_safety_blocked": "Tu mensaje fue bloqueado por filtros de seguridad. Por favor ajusta el contenido e intenta de nuevo.",
-  "ai_error_network": "No se pudo conectar con el servicio de IA. Verifica tu conexión e intenta de nuevo."
+  "ai_error_network": "No se pudo conectar con el servicio de IA. Verifica tu conexión e intenta de nuevo.",
+  "event_step_basicInfo": "Básico",
+  "event_step_details": "Detalles",
+  "event_step_route": "Ruta",
+  "event_step_reviewAndPublish": "Revisar",
+  "event_step_continue": "Continuar",
+  "event_step_back": "Atrás",
+  "event_step_of": "de",
+  "event_step_saveDraft": "Guardar borrador",
+  "event_step_progressLabel": "Paso {current} de {total}",
+  "@event_step_progressLabel": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  }
 }

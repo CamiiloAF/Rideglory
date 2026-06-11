@@ -5514,6 +5514,60 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'No se pudo conectar con el servicio de IA. Verifica tu conexión e intenta de nuevo.'**
   String get ai_error_network;
+
+  /// No description provided for @event_step_basicInfo.
+  ///
+  /// In es, this message translates to:
+  /// **'Básico'**
+  String get event_step_basicInfo;
+
+  /// No description provided for @event_step_details.
+  ///
+  /// In es, this message translates to:
+  /// **'Detalles'**
+  String get event_step_details;
+
+  /// No description provided for @event_step_route.
+  ///
+  /// In es, this message translates to:
+  /// **'Ruta'**
+  String get event_step_route;
+
+  /// No description provided for @event_step_reviewAndPublish.
+  ///
+  /// In es, this message translates to:
+  /// **'Revisar'**
+  String get event_step_reviewAndPublish;
+
+  /// No description provided for @event_step_continue.
+  ///
+  /// In es, this message translates to:
+  /// **'Continuar'**
+  String get event_step_continue;
+
+  /// No description provided for @event_step_back.
+  ///
+  /// In es, this message translates to:
+  /// **'Atrás'**
+  String get event_step_back;
+
+  /// No description provided for @event_step_of.
+  ///
+  /// In es, this message translates to:
+  /// **'de'**
+  String get event_step_of;
+
+  /// No description provided for @event_step_saveDraft.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar borrador'**
+  String get event_step_saveDraft;
+
+  /// No description provided for @event_step_progressLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Paso {current} de {total}'**
+  String event_step_progressLabel(int current, int total);
 }
 
 class _AppLocalizationsDelegate

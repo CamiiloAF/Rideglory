@@ -1,6 +1,6 @@
 # Plan: event-form-stepper
 
-> Estado: BORRADOR — revisión humana pendiente. Generado: 2026-06-09T02:36:16Z
+> Estado: APROBADO — auditoría UX completada (2026-06-11). Diseño en Pencil actualizado con blockers B-1 a B-6 resueltos y sugerencias S-2/S-3/S-4/S-5 aplicadas. Fase 2 actualizada para incorporar cambios de diseño.
 
 ---
 
@@ -20,7 +20,7 @@ El formulario de creación de eventos pasa de un scroll único a un wizard de 4 
 
 ## Supuestos
 
-1. El plan `ai-event-generation` sigue activo en paralelo; la cadena `EventCoverRepository → GetGenerateCoverUseCase → EventCoverRepositoryImpl` **no se elimina** en este plan — solo se hace `city` opcional. El retiro completo pertenece a la Fase 5 del plan `ai-event-generation`.
+1. **La generación de portada con IA fue eliminada del flujo de creación.** `CoverPickerSheet` solo tiene "Subir desde galería". La cadena `EventCoverRepository → GetGenerateCoverUseCase → EventCoverRepositoryImpl` ya no es invocada desde el formulario de creación. El retiro técnico completo pertenece a la Fase 5 del plan `ai-event-generation`.
 2. El modo **edición** (`isEditing == true`) conserva el flujo de scroll único sin ningún cambio de comportamiento; el wizard aplica exclusivamente al modo de creación.
 3. `meetingPointName` (campo de `EventFormState`) es la única fuente de verdad para el valor de `city` en los payloads de creación y borrador; ningún campo de formulario registra `city` en el modo wizard.
 4. Las reglas de diseño existentes aplican: texto/iconos/badges sobre acento naranja deben usar `AppColors.darkBgPrimary`, nunca blanco (`Colors.white`).

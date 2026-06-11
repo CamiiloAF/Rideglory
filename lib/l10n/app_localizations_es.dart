@@ -2948,4 +2948,33 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get ai_error_network =>
       'No se pudo conectar con el servicio de IA. Verifica tu conexión e intenta de nuevo.';
+
+  @override
+  String get event_step_basicInfo => 'Básico';
+
+  @override
+  String get event_step_details => 'Detalles';
+
+  @override
+  String get event_step_route => 'Ruta';
+
+  @override
+  String get event_step_reviewAndPublish => 'Revisar';
+
+  @override
+  String get event_step_continue => 'Continuar';
+
+  @override
+  String get event_step_back => 'Atrás';
+
+  @override
+  String get event_step_of => 'de';
+
+  @override
+  String get event_step_saveDraft => 'Guardar borrador';
+
+  @override
+  String event_step_progressLabel(int current, int total) {
+    return 'Paso $current de $total';
+  }
 }

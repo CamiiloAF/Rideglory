@@ -2,7 +2,10 @@ export const meta = {
   name: 'ux-review',
   description:
     'Audita pantallas de Pencil contra heurísticas UX (Nielsen, Laws of UX, WCAG 2.1 AA, HIG/Material, reglas Rideglory). Standalone — no toca codigo. Args: string (nombre del feature) o {feature, frameIds?, featureDoc?}. Reporte en docs/exec-runs/ux-review-<slug>/.',
-  phases: [{ title: 'Review', detail: 'Auditoría UX en Pencil — hallazgos Bloqueante/Sugerencia/Conforme + reporte' }],
+  phases: [
+    { title: 'Preflight', detail: 'Verificar que Pencil Desktop está activo y rideglory.pen abierto' },
+    { title: 'Review', detail: 'Auditoría UX en Pencil — hallazgos Bloqueante/Sugerencia/Conforme + reporte' },
+  ],
 }
 
 // ---------------------------------------------------------------------------
@@ -32,6 +35,45 @@ HARD RULES — no las violes:
 `
 
 log(`UX Review standalone: "${FEATURE}" — workspace ${WS}/`)
+
+// ---------------------------------------------------------------------------
+// Phase: Preflight — verificar Pencil Desktop activo
+// ---------------------------------------------------------------------------
+phase('Preflight')
+
+const PENCIL_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['active', 'file'],
+  properties: {
+    active: { type: 'boolean' },
+    file: { type: 'string' },
+  },
+}
+
+const pencilCheck = await agent(
+  `Verifica que Pencil Desktop está activo y el archivo rideglory.pen está abierto.
+
+INSTRUCCIÓN: llama a get_editor_state(include_schema: false) y devuelve:
+- active: true si respondió con un editor activo que contiene "rideglory.pen", false si falló o retornó vacío.
+- file: la ruta del archivo activo, o "" si no hay nada abierto.
+
+No hagas nada más. Solo verifica y devuelve el objeto.`,
+  { label: 'pencil-preflight', phase: 'Preflight', model: 'sonnet', schema: PENCIL_SCHEMA },
+)
+
+if (!pencilCheck.active) {
+  throw new Error(
+    `Pencil Desktop no está activo o rideglory.pen no está abierto.\n` +
+    `Archivo detectado: "${pencilCheck.file || 'ninguno'}"\n\n` +
+    `Pasos para resolver:\n` +
+    `1. Abre Pencil Desktop\n` +
+    `2. Abre el archivo rideglory.pen (/Users/cami/Developer/Personal/Rideglory/rideglory.pen)\n` +
+    `3. Vuelve a ejecutar el workflow.`,
+  )
+}
+
+log(`[preflight] Pencil activo — archivo: ${pencilCheck.file}`)
 
 // ---------------------------------------------------------------------------
 // Phase: Review
