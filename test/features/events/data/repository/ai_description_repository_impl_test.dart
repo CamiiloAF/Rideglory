@@ -17,7 +17,6 @@ void main() {
   const request = AiDescriptionRequest(
     title: 'Test',
     eventType: 'tourism',
-    city: 'Bogotá',
     history: [],
     userMessage: 'Hola',
   );

@@ -23,7 +23,6 @@ class GenerateEventDescriptionUseCase {
     final trimmedRequest = AiDescriptionRequest(
       title: request.title,
       eventType: request.eventType,
-      city: request.city,
       difficulty: request.difficulty,
       startDate: request.startDate,
       history: trimmedHistory,

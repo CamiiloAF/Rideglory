@@ -14,12 +14,10 @@ class GetEventsUseCase {
     String? type,
     String? dateFrom,
     String? dateTo,
-    String? city,
   }) =>
       _eventRepository.getEvents(
         type: type,
         dateFrom: dateFrom,
         dateTo: dateTo,
-        city: city,
       );
 }

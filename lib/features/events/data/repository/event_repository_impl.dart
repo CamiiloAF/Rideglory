@@ -24,7 +24,6 @@ class EventRepositoryImpl implements EventRepository {
     String? type,
     String? dateFrom,
     String? dateTo,
-    String? city,
   }) {
     return executeService(
       function: () async {
@@ -32,7 +31,6 @@ class EventRepositoryImpl implements EventRepository {
           type: type,
           dateFrom: dateFrom,
           dateTo: dateTo,
-          city: city,
         );
       },
     );

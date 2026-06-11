@@ -19,7 +19,6 @@ final _mockEvent = EventModel(
   ownerId: 'owner-1',
   name: 'Test Event',
   description: 'Desc',
-  city: 'Medellín',
   startDate: DateTime(2026, 5, 20),
   meetingPoint: 'Parque',
   destination: 'Guatapé',

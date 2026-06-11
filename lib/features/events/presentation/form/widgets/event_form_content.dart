@@ -58,7 +58,6 @@ class EventFormContent extends StatelessWidget {
       EventFormFields.routeType: routeType,
       EventFormFields.name: event.name,
       EventFormFields.description: event.description,
-      EventFormFields.city: event.city,
       EventFormFields.isMultiDay:
           event.endDate != null && event.endDate != event.startDate,
       EventFormFields.dateRange: DateTimeRange(

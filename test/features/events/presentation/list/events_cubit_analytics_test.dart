@@ -32,7 +32,6 @@ void main() {
     description: 'Test description',
     eventType: EventType.tourism,
     difficulty: EventDifficulty.two,
-    city: 'Medellín',
     startDate: DateTime(2026, 6, 20),
     meetingPoint: 'Parque Bolívar',
     destination: 'Guatapé',
@@ -60,7 +59,6 @@ void main() {
             type: null,
             dateFrom: null,
             dateTo: null,
-            city: null,
           ),
         ).thenAnswer((_) async => Right([mockEvent, mockEvent]));
 
@@ -127,7 +125,6 @@ void main() {
           description: 'Rodada urbana',
           eventType: EventType.urban,
           difficulty: EventDifficulty.one,
-          city: 'Bogotá',
           startDate: DateTime(2026, 6, 22),
           meetingPoint: 'Plaza Bolívar',
           destination: 'Usaquén',
@@ -141,7 +138,6 @@ void main() {
             type: EventType.tourism.apiValue,
             dateFrom: null,
             dateTo: null,
-            city: null,
           ),
         ).thenAnswer((_) async => Right([mockEvent, otherEvent]));
 
@@ -180,7 +176,6 @@ void main() {
             type: null,
             dateFrom: null,
             dateTo: null,
-            city: null,
           ),
         ).thenAnswer(
           (_) async => const Left(DomainException(message: 'Network error')),
@@ -214,7 +209,6 @@ void main() {
             type: null,
             dateFrom: null,
             dateTo: null,
-            city: null,
           ),
         ).thenAnswer((_) async => Right([mockEvent]));
 
@@ -251,7 +245,6 @@ void main() {
             type: null,
             dateFrom: null,
             dateTo: null,
-            city: null,
           ),
         ).thenAnswer((_) async => Right([mockEvent]));
 

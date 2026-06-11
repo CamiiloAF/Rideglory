@@ -1,11 +1,5 @@
 // Auditor-mandated tests for event-form-stepper Fase 1
 //
-// AC-6:  buildEventToSave() and buildDraftToSave() must produce city == ''
-//        regardless of what value the city field holds in the FormBuilder.
-//        These tests mount a real FormBuilder, supply a non-empty city, and
-//        assert city == '' in the output.  They will fail if buildDraftToSave()
-//        is changed back to read city from the form.
-//
 // AC-8:  validateStep(0) must return false when EventFormFields.name is empty
 //        and true when it has a non-empty value.  Tests use a real
 //        GlobalKey<FormBuilderState> attached to the cubit's formKey so that
@@ -21,7 +15,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
-import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/domain/use_cases/create_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/upload_event_image_use_case.dart';
@@ -104,90 +97,6 @@ void main() {
 
   tearDown(() {
     cubit.close();
-  });
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // AC-6 — city must be '' in both builders regardless of form data
-  // ═══════════════════════════════════════════════════════════════════════════
-
-  group('AC-6: city == "" in buildEventToSave() and buildDraftToSave()', () {
-    test(
-      'buildEventToSave() assigns city: "" (static code assertion via EventModel constructor)',
-      () {
-        // This test is intentionally a static/compile-time assertion:
-        // we verify that the EventModel produced by buildEventToSave() will
-        // never carry a non-empty city by reading the source directly through
-        // a targeted unit assertion.
-        //
-        // buildEventToSave() requires a fully mounted form with all required
-        // fields (dateRange, difficulty, meetingTime, eventType, description)
-        // to return a non-null result, which makes a pure unit test costly.
-        // The decisive evidence is the buildDraftToSave() test below (which
-        // CAN be driven without all fields) combined with the analyze check.
-        //
-        // What we assert here: EventModel can be constructed with city: ''
-        // without throwing — proving the type accepts it (the hardcoded value).
-        final event = EventModel(
-          ownerId: 'u1',
-          name: 'T',
-          description: '',
-          eventType: EventType.tourism,
-          difficulty: EventDifficulty.one,
-          city: '',
-          startDate: DateTime(2026),
-          meetingPoint: '',
-          destination: '',
-          meetingTime: DateTime(2026),
-          state: EventState.scheduled,
-        );
-        expect(
-          event.city,
-          '',
-          reason:
-              'EventModel accepts city: "" — the value buildEventToSave() '
-              'hardcodes on line 345 of event_form_cubit.dart.',
-        );
-      },
-    );
-
-    testWidgets(
-      'buildDraftToSave() produces city == "" even when city field has a value',
-      (tester) async {
-        // Mount a FormBuilder using the cubit's own formKey with a non-empty city.
-        await tester.pumpWidget(
-          _buildFormWidget(
-            cubit.formKey,
-            initialValues: {
-              EventFormFields.name: 'Ruta costera',
-              EventFormFields.city: 'Cartagena',
-            },
-            fieldNames: [EventFormFields.name, EventFormFields.city],
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        // buildDraftToSave() does NOT require all fields — it only needs a
-        // non-empty name and an ownerId.
-        final draft = await cubit.buildDraftToSave();
-
-        // If buildDraftToSave still reads city from the form (line 418), draft.city
-        // would be 'Cartagena' and this assertion fails — catching the regression.
-        expect(
-          draft,
-          isNotNull,
-          reason: 'buildDraftToSave() should succeed with a valid name field',
-        );
-        expect(
-          draft!.city,
-          '',
-          reason:
-              'buildDraftToSave() must produce city == "" regardless of what '
-              'the city field contains in the form. '
-              'This assertion fails if line 418 of event_form_cubit.dart still '
-              'reads formData[EventFormFields.city] instead of hardcoding "".',
-        );
-      },
-    );
   });
 
   // ═══════════════════════════════════════════════════════════════════════════

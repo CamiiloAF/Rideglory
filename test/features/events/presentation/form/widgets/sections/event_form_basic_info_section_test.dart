@@ -3,7 +3,6 @@
 // AC18: _buildEventContext maps form fields correctly:
 //   title == EventFormFields.name value,
 //   eventType == EventType enum .apiValue,
-//   city == EventFormFields.city value,
 //   difficulty == null (not set in the form)
 
 import 'package:bloc_test/bloc_test.dart';
@@ -92,7 +91,6 @@ void _setupMockCubit(MockAiDescriptionChatCubit mockCubit) {
         userMessage: any(named: 'userMessage'),
         title: any(named: 'title'),
         eventType: any(named: 'eventType'),
-        city: any(named: 'city'),
         difficulty: any(named: 'difficulty'),
         startDate: any(named: 'startDate'),
       )).thenAnswer((_) async {});
@@ -154,7 +152,7 @@ void main() {
   // AC18 ──────────────────────────────────────────────────────────────────────
 
   testWidgets(
-    'AC18: _buildEventContext maps title/eventType/city from form fields correctly',
+    'AC18: _buildEventContext maps title/eventType from form fields correctly',
     (tester) async {
       // eventType is set via the hidden FormBuilderField with explicit initialValue.
       // title is patched via FormBuilderState.patchValue after the widget is built.
@@ -228,7 +226,6 @@ void main() {
       // Only these fields exist in AiDescriptionRequest v1 — no 'audience'.
       expect(ctx.title, isA<String>());
       expect(ctx.eventType, isA<String>());
-      expect(ctx.city, isA<String>());
       expect(ctx.history, isEmpty);
       // startDate and difficulty are nullable — null when unset is correct.
     },

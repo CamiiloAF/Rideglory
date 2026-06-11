@@ -342,7 +342,6 @@ class EventFormCubit extends Cubit<EventFormState> {
       ownerId: userId,
       name: formData[EventFormFields.name] as String,
       description: formData[EventFormFields.description] as String,
-      city: '',
       startDate: dateRange?.start ?? DateTime.now(),
       endDate: dateRange?.end != dateRange?.start ? dateRange?.end : null,
       difficulty: formData[EventFormFields.difficulty] as EventDifficulty,
@@ -415,7 +414,6 @@ class EventFormCubit extends Cubit<EventFormState> {
       name: name.trim(),
       description:
           (formData[EventFormFields.description] as String?)?.trim() ?? '',
-      city: '',
       startDate: dateRange?.start ?? now,
       endDate: dateRange?.end != dateRange?.start ? dateRange?.end : null,
       difficulty:

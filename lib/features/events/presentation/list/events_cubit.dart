@@ -11,7 +11,6 @@ import 'package:rideglory/features/events/domain/use_cases/update_event_use_case
 class EventFilters {
   final Set<EventType> types;
   final Set<EventDifficulty> difficulties;
-  final String? city;
   final DateTime? startDate;
   final DateTime? endDate;
   final bool freeOnly;
@@ -20,7 +19,6 @@ class EventFilters {
   const EventFilters({
     this.types = const {},
     this.difficulties = const {},
-    this.city,
     this.startDate,
     this.endDate,
     this.freeOnly = false,
@@ -30,7 +28,6 @@ class EventFilters {
   bool get hasFilters =>
       types.isNotEmpty ||
       difficulties.isNotEmpty ||
-      city != null ||
       startDate != null ||
       endDate != null ||
       freeOnly ||
@@ -39,7 +36,6 @@ class EventFilters {
   EventFilters copyWith({
     Set<EventType>? types,
     Set<EventDifficulty>? difficulties,
-    String? city,
     DateTime? startDate,
     DateTime? endDate,
     bool? freeOnly,
@@ -48,7 +44,6 @@ class EventFilters {
     return EventFilters(
       types: types ?? this.types,
       difficulties: difficulties ?? this.difficulties,
-      city: city ?? this.city,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       freeOnly: freeOnly ?? this.freeOnly,
@@ -62,12 +57,11 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
     GetEventsUseCase getEventsUseCase,
     this._updateEventUseCase,
     this._analytics,
-  ) : _fetchFn = (({String? type, String? dateFrom, String? dateTo, String? city}) =>
+  ) : _fetchFn = (({String? type, String? dateFrom, String? dateTo}) =>
             getEventsUseCase(
               type: type,
               dateFrom: dateFrom,
               dateTo: dateTo,
-              city: city,
             )),
       _isMyEvents = false,
       super(const ResultState.initial());
@@ -76,7 +70,7 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
     GetMyEventsUseCase getMyEventsUseCase,
     this._updateEventUseCase,
     this._analytics,
-  ) : _fetchFn = (({String? type, String? dateFrom, String? dateTo, String? city}) =>
+  ) : _fetchFn = (({String? type, String? dateFrom, String? dateTo}) =>
             getMyEventsUseCase()),
       _isMyEvents = true,
       super(const ResultState.initial());
@@ -85,7 +79,6 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
     String? type,
     String? dateFrom,
     String? dateTo,
-    String? city,
   }) _fetchFn;
   final UpdateEventUseCase _updateEventUseCase;
   final AnalyticsService _analytics;
@@ -108,7 +101,6 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
       type: filters.types.isNotEmpty ? filters.types.first.apiValue : null,
       dateFrom: filters.startDate?.toIso8601String().substring(0, 10),
       dateTo: filters.endDate?.toIso8601String().substring(0, 10),
-      city: filters.city,
     );
 
     result.fold((error) => emit(ResultState.error(error: error)), (events) {
@@ -193,9 +185,7 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
     if (_searchQuery.isNotEmpty) {
       filtered = filtered
           .where(
-            (e) =>
-                e.name.toLowerCase().contains(_searchQuery) ||
-                e.city.toLowerCase().contains(_searchQuery),
+            (e) => e.name.toLowerCase().contains(_searchQuery),
           )
           .toList();
     }
@@ -209,14 +199,6 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
     if (_filters.difficulties.isNotEmpty) {
       filtered = filtered
           .where((e) => _filters.difficulties.contains(e.difficulty))
-          .toList();
-    }
-
-    if (_filters.city != null && _filters.city!.isNotEmpty) {
-      filtered = filtered
-          .where(
-            (e) => e.city.toLowerCase().contains(_filters.city!.toLowerCase()),
-          )
           .toList();
     }
 
