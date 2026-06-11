@@ -1,8 +1,12 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:rideglory/core/services/models/authenticated_user.dart';
 import 'package:rideglory/core/services/user_storage_service.dart';
 import 'package:rideglory/features/users/domain/model/user_model.dart';
@@ -162,11 +166,75 @@ class AuthService {
     );
   }
 
-  Future<Either<DomainException, User?>> signInWithApple() async {
-    return const Left(
-      DomainException(
-        message: 'Apple sign-in no está disponible en esta versión',
-      ),
+  Future<Either<DomainException, AuthenticatedUser>> signInWithApple() async {
+    return executeService<AuthenticatedUser>(
+      function: () async {
+        final rawNonce = generateNonce();
+        final nonce = sha256.convert(utf8.encode(rawNonce)).toString();
+
+        final appleCredential = await SignInWithApple.getAppleIDCredential(
+          scopes: [
+            AppleIDAuthorizationScopes.email,
+            AppleIDAuthorizationScopes.fullName,
+          ],
+          nonce: nonce,
+        );
+
+        final identityToken = appleCredential.identityToken;
+        if (identityToken == null) {
+          throw const DomainException(
+            message: 'Apple no devolvió un token válido. Intenta de nuevo.',
+          );
+        }
+
+        final oauthCredential = OAuthProvider(
+          'apple.com',
+        ).credential(idToken: identityToken, rawNonce: rawNonce);
+
+        final userCredential = await _firebaseAuth.signInWithCredential(
+          oauthCredential,
+        );
+        final firebaseUser = userCredential.user;
+        if (firebaseUser == null) {
+          throw const DomainException(
+            message: 'Falló el inicio de sesión con Apple',
+          );
+        }
+
+        final isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
+        UserModel? user;
+        if (isNewUser) {
+          final givenName = appleCredential.givenName?.trim() ?? '';
+          final familyName = appleCredential.familyName?.trim() ?? '';
+          final fullName = [
+            givenName,
+            familyName,
+          ].where((p) => p.isNotEmpty).join(' ');
+
+          final email = appleCredential.email ?? firebaseUser.email ?? '';
+          if (email.isEmpty) {
+            throw const DomainException(
+              message: 'No pudimos obtener el correo de tu cuenta de Apple.',
+            );
+          }
+
+          final displayName = fullName.isNotEmpty
+              ? fullName
+              : email.split('@').first;
+          await firebaseUser.updateDisplayName(displayName);
+
+          user = await _registerApiUser(fullName: displayName, email: email);
+          await _cacheUser(firebaseUser.uid, user);
+        } else {
+          user = await _loadStoredUser(firebaseUser.uid);
+        }
+
+        return AuthenticatedUser(
+          firebaseUser: firebaseUser,
+          user: user,
+          isNewUser: isNewUser,
+        );
+      },
     );
   }
 

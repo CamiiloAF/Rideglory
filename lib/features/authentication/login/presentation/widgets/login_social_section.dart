@@ -1,7 +1,9 @@
 import 'dart:io' show Platform;
 
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rideglory/core/config/api_remote_config.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/core/services/analytics/analytics_events.dart';
@@ -24,6 +26,11 @@ class _LoginSocialSectionState extends State<LoginSocialSection> {
 
   AnalyticsService get _analytics => getIt<AnalyticsService>();
 
+  bool get _googleSignInIosEnabled =>
+      getIt<FirebaseRemoteConfig>().getBool(
+        ApiRemoteConfig.googleSignInIosEnabledKey,
+      );
+
   void _onPressed(LoginAuthProvider provider, VoidCallback action) {
     setState(() => _loadingProvider = provider);
     final method = provider == LoginAuthProvider.google
@@ -39,6 +46,8 @@ class _LoginSocialSectionState extends State<LoginSocialSection> {
 
   @override
   Widget build(BuildContext context) {
+    final showGoogleOnIos = Platform.isIOS && _googleSignInIosEnabled;
+
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (!state.isLoading) {
@@ -48,7 +57,7 @@ class _LoginSocialSectionState extends State<LoginSocialSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (Platform.isAndroid)
+          if (Platform.isAndroid || showGoogleOnIos)
             LoginSocialButton(
               label: context.l10n.auth_continue_with_google,
               icon: Icons.g_mobiledata_rounded,

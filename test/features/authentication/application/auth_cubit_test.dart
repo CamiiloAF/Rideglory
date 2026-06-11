@@ -364,6 +364,86 @@ void main() {
       );
     });
 
+    group('signInWithApple', () {
+      test(
+        'TC-auth-A1: signInWithApple happy path → setUserId(hash), '
+        'auth_succeeded(apple), setUserProperty(login_method, apple)',
+        () async {
+          final mockFirebaseUser = MockFirebaseUser();
+          when(() => mockFirebaseUser.uid).thenReturn(testUid);
+          when(
+            () => mockFirebaseUser.getIdToken(any()),
+          ).thenAnswer((_) async => 'fake-token');
+
+          final authUser = AuthenticatedUser(
+            firebaseUser: mockFirebaseUser,
+            user: mockUserModel,
+            isNewUser: false,
+          );
+
+          when(() => mockAuthService.signInWithApple()).thenAnswer(
+            (_) async => Right(authUser),
+          );
+
+          await authCubit.signInWithApple();
+
+          expect(authCubit.state.isAuthenticated, isTrue);
+          expect(authCubit.state.currentUser, mockUserModel);
+
+          final captured = verify(
+            () => mockAnalytics.setUserId(captureAny()),
+          ).captured;
+          expect(captured.length, 1);
+          final passedId = captured.first as String;
+          expect(passedId, equals(expectedHash));
+          expect(passedId, hasLength(64));
+          expect(passedId, isNot(equals(testUid)));
+
+          verify(
+            () => mockAnalytics.logEvent(
+              AnalyticsEvents.authSucceeded,
+              {AnalyticsParams.authMethod: AnalyticsParams.authMethodApple},
+            ),
+          ).called(1);
+
+          verify(
+            () => mockAnalytics.setUserProperty(
+              AnalyticsParams.userPropertyLoginMethod,
+              AnalyticsParams.authMethodApple,
+            ),
+          ).called(1);
+        },
+      );
+
+      test(
+        'TC-auth-A2: signInWithApple failure → auth_failed(apple, category), '
+        'never setUserId',
+        () async {
+          when(() => mockAuthService.signInWithApple()).thenAnswer(
+            (_) async => const Left(
+              DomainException(message: 'Apple sign-in was cancelled'),
+            ),
+          );
+
+          await authCubit.signInWithApple();
+
+          expect(authCubit.state.hasError, isTrue);
+
+          verify(
+            () => mockAnalytics.logEvent(
+              AnalyticsEvents.authFailed,
+              {
+                AnalyticsParams.authMethod: AnalyticsParams.authMethodApple,
+                AnalyticsParams.authErrorCategory:
+                    AnalyticsParams.authErrorCancelled,
+              },
+            ),
+          ).called(1);
+          verifyNever(() => mockAnalytics.setUserId(any()));
+        },
+      );
+    });
+
     group('signOut', () {
       blocTest<AuthCubit, AuthState>(
         'TC-auth-6: emits unauthenticated after successful signOut',

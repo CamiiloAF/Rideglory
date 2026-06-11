@@ -186,13 +186,20 @@ class AuthCubit extends Cubit<AuthState> {
             .ignore();
         emit(AuthState.error(failure.message));
       },
-      (firebaseUser) async {
-        if (firebaseUser != null) {
+      (authUser) async {
+        if (authUser.firebaseUser.uid.isNotEmpty) {
+          await _printFirebaseToken(authUser.firebaseUser);
+          _analytics
+              .logEvent(AnalyticsEvents.authFirebaseOk, {
+                AnalyticsParams.authMethod: AnalyticsParams.authMethodApple,
+                AnalyticsParams.userLoaded: authUser.user != null ? 1 : 0,
+              })
+              .ignore();
           await _onAuthenticated(
-            firebaseUid: firebaseUser.uid,
+            firebaseUid: authUser.firebaseUser.uid,
             method: AnalyticsParams.authMethodApple,
           );
-          emit(AuthState.authenticated(_authService.currentUser));
+          emit(AuthState.authenticated(authUser.user));
           _fcmService.initialize().ignore();
         } else {
           emit(const AuthState.error('Apple sign-in failed'));

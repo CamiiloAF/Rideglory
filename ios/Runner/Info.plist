@@ -68,6 +68,24 @@
 				<string>rideglory</string>
 			</array>
 		</dict>
+		<!-- Google Sign-In OAuth redirect (dev) -->
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.357754414277-ptt1jvhidn14jhfk4id33tblm5uouu57</string>
+			</array>
+		</dict>
+		<!-- Google Sign-In OAuth redirect (prod) -->
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.1073521363686-e59ppbu316185di37689f57ikelle2j7</string>
+			</array>
+		</dict>
 	</array>
 	<!--
 		The dev-only ATS exception (plaintext HTTP to the host Mac LAN IP) is
