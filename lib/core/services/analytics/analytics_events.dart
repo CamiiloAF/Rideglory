@@ -366,6 +366,25 @@ abstract final class AnalyticsEvents {
   static const String riderProfileViewed = 'rider_profile_viewed';
 
   // ---------------------------------------------------------------------------
+  // AI — Asistentes IA (Fase 6)
+  // ---------------------------------------------------------------------------
+
+  /// El asistente de descripción generó una respuesta exitosa.
+  /// Param: [AnalyticsParams.aiTurnIndex] (índice 1-based del turno modelo en la historia).
+  /// Max 40 chars: 'ai_description_generated'.length == 24. ✓
+  static const String aiDescriptionGenerated = 'ai_description_generated';
+
+  /// Se agotó la cuota del usuario o del proyecto al intentar generar.
+  /// Params: [AnalyticsParams.aiGenerationType], [AnalyticsParams.aiErrorCode].
+  /// Max 40 chars: 'ai_quota_exceeded'.length == 17. ✓
+  static const String aiQuotaExceeded = 'ai_quota_exceeded';
+
+  /// La generación IA falló por un error recuperable (red, safety filter, etc.).
+  /// Params: [AnalyticsParams.aiGenerationType], [AnalyticsParams.aiErrorCode].
+  /// Max 40 chars: 'ai_generation_failed'.length == 20. ✓
+  static const String aiGenerationFailed = 'ai_generation_failed';
+
+  // ---------------------------------------------------------------------------
   // Notificaciones (Fase 9)
   // ---------------------------------------------------------------------------
 

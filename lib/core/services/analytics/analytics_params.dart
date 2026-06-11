@@ -366,6 +366,29 @@ abstract final class AnalyticsParams {
   static const String rtmStatus = 'rtm_status';
 
   // ---------------------------------------------------------------------------
+  // AI — Asistentes IA (Fase 6)
+  // ---------------------------------------------------------------------------
+
+  /// Índice 1-based del turno del modelo en la historia de la conversación.
+  /// Tipo: `int`. Max key 40 chars: 13. ✓
+  static const String aiTurnIndex = 'ai_turn_index';
+
+  /// Tipo de generación IA: `'description'` | `'cover'`.
+  /// Tipo: `String`. Max key 40 chars: 15. ✓
+  static const String aiGenerationType = 'ai_generation_type';
+
+  /// Código de error de la excepción IA (runtimeType.toString(), enumerado).
+  /// **Sin mensajes crudos PII.** Tipo: `String`. Max key 40 chars: 12. ✓
+  static const String aiErrorCode = 'ai_error_code';
+
+  // Valores canónicos de ai_generation_type
+  /// Generación de descripción de evento.
+  static const String aiGenerationTypeDescription = 'description';
+
+  /// Generación de imagen de portada (placeholder — cubit aún no existe).
+  static const String aiGenerationTypeCover = 'cover';
+
+  // ---------------------------------------------------------------------------
   // Notificaciones (Fase 9)
   // ---------------------------------------------------------------------------
 

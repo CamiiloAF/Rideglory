@@ -2,13 +2,18 @@
 // AC15: initQuota calls GetDescriptionQuotaUseCase; sets remainingQuota on success;
 //       sets isQuotaInitialized=true even on error
 // AC16: after a successful sendMessage, state.remainingQuota == result.remainingGenerations
+// CA7:  analytics events emitted on success / quota / safety / network
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/exceptions/ai_domain_exceptions.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
+import 'package:rideglory/core/services/analytics/analytics_params.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/events/domain/model/ai_chat_turn.dart';
 import 'package:rideglory/features/events/domain/model/ai_description_request.dart';
 import 'package:rideglory/features/events/domain/model/ai_description_result.dart';
@@ -24,6 +29,8 @@ class MockGenerateEventDescriptionUseCase extends Mock
 class MockGetDescriptionQuotaUseCase extends Mock
     implements GetDescriptionQuotaUseCase {}
 
+class MockAnalyticsService extends Mock implements AnalyticsService {}
+
 class FakeDomainException extends Fake implements DomainException {
   @override
   String get message => 'error';
@@ -36,6 +43,7 @@ class FakeAiDescriptionRequest extends Fake implements AiDescriptionRequest {}
 void main() {
   late MockGenerateEventDescriptionUseCase mockGenerateUseCase;
   late MockGetDescriptionQuotaUseCase mockQuotaUseCase;
+  late MockAnalyticsService mockAnalyticsService;
   late AiDescriptionChatCubit cubit;
 
   setUpAll(() {
@@ -45,7 +53,16 @@ void main() {
   setUp(() {
     mockGenerateUseCase = MockGenerateEventDescriptionUseCase();
     mockQuotaUseCase = MockGetDescriptionQuotaUseCase();
-    cubit = AiDescriptionChatCubit(mockGenerateUseCase, mockQuotaUseCase);
+    mockAnalyticsService = MockAnalyticsService();
+    // logEvent returns a Future<void> — stub it to complete normally
+    when(
+      () => mockAnalyticsService.logEvent(any(), any()),
+    ).thenAnswer((_) async {});
+    cubit = AiDescriptionChatCubit(
+      mockGenerateUseCase,
+      mockQuotaUseCase,
+      mockAnalyticsService,
+    );
   });
 
   tearDown(() => cubit.close());
@@ -113,7 +130,11 @@ void main() {
       build: () {
         when(() => mockGenerateUseCase(any()))
             .thenAnswer((_) async => const Right(result));
-        return AiDescriptionChatCubit(mockGenerateUseCase, mockQuotaUseCase);
+        return AiDescriptionChatCubit(
+          mockGenerateUseCase,
+          mockQuotaUseCase,
+          mockAnalyticsService,
+        );
       },
       act: (cubit) => cubit.sendMessage(
         userMessage: 'Genera',
@@ -146,4 +167,143 @@ void main() {
       ],
     );
   });
+
+  // ─── CA7 — Analytics ──────────────────────────────────────────────────────
+
+  group('CA7 — analytics: happy path → aiDescriptionGenerated', () {
+    const result = AiDescriptionResult(
+      markdown: '## Descripción',
+      remainingGenerations: 5,
+      isDescription: true,
+    );
+
+    test(
+      'logEvent(aiDescriptionGenerated) called with aiTurnIndex == newHistory.length',
+      () async {
+        when(() => mockGenerateUseCase(any()))
+            .thenAnswer((_) async => const Right(result));
+
+        await cubit.sendMessage(
+          userMessage: 'Genera',
+          title: 'Test',
+          eventType: 'tourism',
+          city: 'Bogotá',
+        );
+
+        // After sendMessage: history = [userTurn, modelTurn] → length = 2
+        verify(
+          () => mockAnalyticsService.logEvent(
+            AnalyticsEvents.aiDescriptionGenerated,
+            {AnalyticsParams.aiTurnIndex: 2},
+          ),
+        ).called(1);
+      },
+    );
+  });
+
+  group('CA7 — analytics: AiQuotaExceededUserException → aiQuotaExceeded', () {
+    test(
+      'logEvent(aiQuotaExceeded) called with aiGenerationTypeDescription',
+      () async {
+        when(() => mockGenerateUseCase(any())).thenAnswer(
+          (_) async => const Left(
+            AiQuotaExceededUserException(
+              message: 'Límite diario alcanzado.',
+            ),
+          ),
+        );
+
+        await cubit.sendMessage(
+          userMessage: 'Genera',
+          title: 'Test',
+          eventType: 'tourism',
+          city: 'Bogotá',
+        );
+
+        verify(
+          () => mockAnalyticsService.logEvent(
+            AnalyticsEvents.aiQuotaExceeded,
+            {
+              AnalyticsParams.aiGenerationType:
+                  AnalyticsParams.aiGenerationTypeDescription,
+              AnalyticsParams.aiErrorCode:
+                  'AiQuotaExceededUserException',
+            },
+          ),
+        ).called(1);
+      },
+    );
+  });
+
+  group(
+    'CA7 — analytics: AiSafetyBlockedException → aiGenerationFailed',
+    () {
+      test(
+        'logEvent(aiGenerationFailed) called with aiGenerationTypeDescription',
+        () async {
+          when(() => mockGenerateUseCase(any())).thenAnswer(
+            (_) async => const Left(
+              AiSafetyBlockedException(
+                message: 'Bloqueado por filtros de seguridad.',
+              ),
+            ),
+          );
+
+          await cubit.sendMessage(
+            userMessage: 'Genera',
+            title: 'Test',
+            eventType: 'tourism',
+            city: 'Bogotá',
+          );
+
+          verify(
+            () => mockAnalyticsService.logEvent(
+              AnalyticsEvents.aiGenerationFailed,
+              {
+                AnalyticsParams.aiGenerationType:
+                    AnalyticsParams.aiGenerationTypeDescription,
+                AnalyticsParams.aiErrorCode: 'AiSafetyBlockedException',
+              },
+            ),
+          ).called(1);
+        },
+      );
+    },
+  );
+
+  group(
+    'CA7 — analytics: AiNetworkErrorException → aiGenerationFailed',
+    () {
+      test(
+        'logEvent(aiGenerationFailed) called with aiGenerationTypeDescription',
+        () async {
+          when(() => mockGenerateUseCase(any())).thenAnswer(
+            (_) async => const Left(
+              AiNetworkErrorException(
+                message: 'No se pudo conectar con el servicio de IA.',
+              ),
+            ),
+          );
+
+          await cubit.sendMessage(
+            userMessage: 'Genera',
+            title: 'Test',
+            eventType: 'tourism',
+            city: 'Bogotá',
+          );
+
+          verify(
+            () => mockAnalyticsService.logEvent(
+              AnalyticsEvents.aiGenerationFailed,
+              {
+                AnalyticsParams.aiGenerationType:
+                    AnalyticsParams.aiGenerationTypeDescription,
+                AnalyticsParams.aiErrorCode: 'AiNetworkErrorException',
+              },
+            ),
+          ).called(1);
+        },
+      );
+    },
+  );
 }

@@ -110,5 +110,31 @@ void main() {
       final lastOp = opsList.last;
       expect((lastOp['insert'] as String?)?.endsWith('\n'), isTrue);
     });
+
+    // CA8 — additional edge-case coverage
+    test('bold+italic combo produces both bold:true and italic:true ops', () {
+      final opsList = ops('**bold** y *italic*');
+      final boldOp = findOp(
+        opsList,
+        where: (op) => op['attributes']?['bold'] == true,
+      );
+      final italicOp = findOp(
+        opsList,
+        where: (op) => op['attributes']?['italic'] == true,
+      );
+      expect(boldOp, isNotNull, reason: 'Expected a bold op');
+      expect(italicOp, isNotNull, reason: 'Expected an italic op');
+    });
+
+    test('empty input returns normally with at least one op (trailing newline)',
+        () {
+      expect(() => converter.convert(''), returnsNormally);
+      final opsList = ops('');
+      expect(
+        opsList,
+        isNotEmpty,
+        reason: 'Even empty input should produce at least the trailing newline',
+      );
+    });
   });
 }
