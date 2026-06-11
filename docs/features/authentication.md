@@ -39,7 +39,7 @@ El feature **Authentication** gestiona el ingreso a la app:
 
 El feature **no tiene capa `data/`** propia: delega en `AuthService` (`lib/core/services/auth_service.dart`) que es quien habla con Firebase Auth, `UserRepository` (feature `users`) y `UserStorageService`. La estructura es atípica (no sigue `domain/data/presentation`); usa `application/` para el cubit + estado, más `login/`, `signup/` y `presentation/` con widgets.
 
-> Apple sign-in está **stub**: `AuthService.signInWithApple()` retorna `Left(DomainException('Apple sign-in no está disponible en esta versión'))`. El botón existe en UI pero falla inmediatamente.
+> Apple sign-in está **implementado** con el package `sign_in_with_apple` + Firebase OAuth (`apple.com`). Requiere que el capability "Sign In with Apple" esté habilitado en el Apple Developer Portal y en la Firebase Console (Authentication → Sign-in providers → Apple).
 
 ---
 
@@ -157,7 +157,7 @@ sealed class AuthState {
 | `signUpWithEmail({fullName, email, password})` | `Future<void>` | sí |
 | `signInWithEmail({email, password})` | `Future<void>` | sí |
 | `signInWithGoogle()` | `Future<void>` | sí |
-| `signInWithApple()` | `Future<void>` | sí (pero stub falla siempre) |
+| `signInWithApple()` | `Future<void>` | sí |
 | `signOut()` | `Future<void>` | — |
 | `sendPasswordResetEmail(String email)` | `Future<void>` | — |
 
@@ -210,7 +210,7 @@ BlocListener<AuthCubit, AuthState>(
 | Proveedor | Color fondo | Color texto | Icono | Cubit call |
 |---|---|---|---|---|
 | Google | blanco | negro | `Icons.g_mobiledata_rounded` | `signInWithGoogle()` |
-| Apple | negro | blanco | `Icons.apple` | `signInWithApple()` (stub) |
+| Apple | negro | blanco | `Icons.apple` | `signInWithApple()` |
 
 ---
 
@@ -350,11 +350,16 @@ Las tres son **rutas públicas** según el guard `redirect` de `AppRouter` (`lib
 ### `AuthState` es **sealed class manual**, no freezed
 Las otras features usan `@freezed` o `ResultState<T>`. Aquí se prefiere control manual para evitar el `part 'auth_state.freezed.dart'`. Si se agregan estados, mantener el patrón: declarar la fábrica, su implementación interna `_NombreEstado` y el getter `is...` correspondiente.
 
-### Apple sign-in es **stub**
-`AuthService.signInWithApple()` retorna `Left(DomainException('Apple sign-in no está disponible en esta versión'))`. El cubit lo recibe y emite `AuthState.error(message)`. La UI muestra snackbar inmediatamente. Si se implementa de verdad, hay que ajustar también `_printFirebaseToken` (hoy no se llama en este flujo).
+### Apple sign-in — prerequisitos de activación
+El código está completo. Para que funcione en un dispositivo real se necesita:
+1. Apple Developer Portal → App ID (`com.camiloagudelo.rideglory` y `*.dev`) → capability **Sign In with Apple** activado.
+2. Firebase Console → Authentication → Sign-in providers → **Apple** → habilitar.
+3. `ios/Runner/Runner.entitlements` con `com.apple.developer.applesignin` ya está agregado al proyecto.
 
-### Inconsistencia `_printFirebaseToken` solo en 3 de 4 sign-ins
-Se invoca en `signUpWithEmail`, `signInWithEmail`, `signInWithGoogle` pero **no** en `signInWithApple` (línea 117–126 de `auth_cubit.dart`). No afecta producción (solo `kDebugMode`), pero si Apple llega a funcionar, considerar agregarlo.
+Apple solo entrega nombre y email del usuario en el **primer** sign-in; en inicios posteriores el campo viene vacío — el flujo ya lo maneja leyendo desde caché/API.
+
+### `_printFirebaseToken` en todos los sign-ins
+Se invoca en `kDebugMode` en `signUpWithEmail`, `signInWithEmail`, `signInWithGoogle` y `signInWithApple`.
 
 ### `AuthCubit` es `@singleton`
 Vive durante toda la app y se inyecta en el root `MultiBlocProvider` de `main.dart`. Lo consume el guard `redirect` de GoRouter y casi todas las pantallas. **No** crear instancias ad-hoc.

@@ -44239,7 +44239,7 @@
                               "id": "G80af",
                               "name": "Text",
                               "fill": "$text-inverse",
-                              "content": "Carretera",
+                              "content": "On-road",
                               "fontFamily": "Space Grotesk",
                               "fontSize": 14,
                               "fontWeight": "600"
@@ -47496,15 +47496,54 @@
               "gap": 10,
               "children": [
                 {
-                  "type": "text",
-                  "id": "O8i6d",
-                  "name": "Label",
-                  "fill": "$text-tertiary",
-                  "content": "PUNTOS DE RUTA",
-                  "fontFamily": "Space Grotesk",
-                  "fontSize": 11,
-                  "fontWeight": "700",
-                  "letterSpacing": 1
+                  "type": "frame",
+                  "id": "Pt2wb",
+                  "name": "Section Hdr",
+                  "width": "fill_container",
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "T4MFz",
+                      "name": "Label",
+                      "fill": "$text-tertiary",
+                      "content": "PUNTOS DE RUTA",
+                      "fontFamily": "Space Grotesk",
+                      "fontSize": 11,
+                      "fontWeight": "700",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "n9qmJ",
+                      "name": "Edit Btn",
+                      "gap": 4,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "EP2sK",
+                          "name": "EditLbl",
+                          "fill": "$accent",
+                          "content": "Editar ruta",
+                          "fontFamily": "Space Grotesk",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "icon",
+                          "id": "KRETQ",
+                          "name": "Arrow",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "chevron-right",
+                          "library": "lucide",
+                          "fill": "$accent"
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
                   "type": "frame",
@@ -47575,22 +47614,12 @@
                               "id": "s6LR9d",
                               "name": "Value",
                               "fill": "$text-primary",
-                              "content": "Bogotá, Colombia",
+                              "content": "Parque Nacional — Bogotá",
                               "fontFamily": "Space Grotesk",
                               "fontSize": 14,
                               "fontWeight": "500"
                             }
                           ]
-                        },
-                        {
-                          "type": "icon",
-                          "id": "B05hf",
-                          "name": "Chevron",
-                          "width": 18,
-                          "height": 18,
-                          "icon": "chevron-right",
-                          "library": "lucide",
-                          "fill": "$text-tertiary"
                         }
                       ]
                     },
@@ -47662,7 +47691,7 @@
                               "id": "Ssoui",
                               "name": "Type",
                               "fill": "$text-tertiary",
-                              "content": "PUNTO INTERMEDIO",
+                              "content": "WAYPOINT",
                               "fontFamily": "Space Grotesk",
                               "fontSize": 10,
                               "fontWeight": "600",
@@ -47672,34 +47701,11 @@
                               "type": "text",
                               "id": "fX9gW",
                               "name": "Hint",
-                              "fill": "$text-tertiary",
-                              "content": "Toca para agregar",
+                              "fill": "$text-primary",
+                              "content": "Autopista Norte km 42",
                               "fontFamily": "Space Grotesk",
                               "fontSize": 14,
                               "fontWeight": "500"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "Atkng",
-                          "name": "Plus Badge",
-                          "width": 24,
-                          "height": 24,
-                          "fill": "$accent-subtle",
-                          "cornerRadius": 12,
-                          "justifyContent": "center",
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "S8ZIaQ",
-                              "name": "Plus",
-                              "fill": "$accent",
-                              "content": "+",
-                              "fontFamily": "Space Grotesk",
-                              "fontSize": 16,
-                              "fontWeight": "700"
                             }
                           ]
                         }
@@ -47771,23 +47777,13 @@
                               "type": "text",
                               "id": "aagDR",
                               "name": "Placeholder",
-                              "fill": "$text-tertiary",
-                              "content": "Seleccionar lugar...",
+                              "fill": "$text-primary",
+                              "content": "Municipio de Zipaquirá",
                               "fontFamily": "Space Grotesk",
                               "fontSize": 14,
                               "fontWeight": "500"
                             }
                           ]
-                        },
-                        {
-                          "type": "icon",
-                          "id": "Esz1t",
-                          "name": "Chevron",
-                          "width": 18,
-                          "height": 18,
-                          "icon": "chevron-right",
-                          "library": "lucide",
-                          "fill": "$text-tertiary"
                         }
                       ]
                     },
@@ -47949,7 +47945,7 @@
                   "id": "lKQB0",
                   "name": "Label",
                   "fill": "$text-tertiary",
-                  "content": "DISTANCIA",
+                  "content": "DISTANCIA ESTIMADA",
                   "fontFamily": "Space Grotesk",
                   "fontSize": 11,
                   "fontWeight": "700",
@@ -47996,17 +47992,34 @@
                       ]
                     },
                     {
-                      "type": "text",
-                      "id": "L3VFoK",
-                      "name": "Distance Text",
-                      "fill": "$text-tertiary",
-                      "textGrowth": "fixed-width",
+                      "type": "frame",
+                      "id": "CuepH",
+                      "name": "Distance Info",
                       "width": "fill_container",
-                      "content": "Distancia se calculará al completar la ruta",
-                      "fontFamily": "Space Grotesk",
-                      "fontSize": 13,
-                      "fontWeight": "normal",
-                      "fontStyle": "italic"
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "bM1Ik",
+                          "name": "Distance Value",
+                          "fill": "$text-primary",
+                          "content": "~85 km",
+                          "fontFamily": "Space Grotesk",
+                          "fontSize": 22,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "W5dlcv",
+                          "name": "Distance Detail",
+                          "fill": "$text-secondary",
+                          "content": "3 waypoints · aprox. 2h 30min",
+                          "fontFamily": "Space Grotesk",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
                     }
                   ]
                 }
