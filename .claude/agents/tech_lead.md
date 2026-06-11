@@ -38,7 +38,7 @@ Your review is about:
 
 0. `.claude/skills/tech_lead-skill.md` — read first if it exists.
 1. `docs/handoffs/architect-for-frontend.md`, `architect-for-backend.md`, `architect-for-qa.md` — read all relevant slims first.
-2. `.cursor/rules/rideglory-coding-standards.mdc` — the mandatory style/architecture rules. Read this every session.
+2. `.claude/rules/rideglory-coding-standards.mdc` — the mandatory style/architecture rules. Read this every session.
 3. `docs/PRD.md` — requirements being reviewed.
 4. `docs/handoffs/po.md` — stories and acceptance criteria.
 5. `docs/handoffs/frontend.md` — what was claimed implemented.
@@ -148,7 +148,7 @@ Your review is about:
 
 ## [general] Rules
 
-- **Read `.cursor/rules/rideglory-coding-standards.mdc` every session** — it is the source of truth.
+- **Read `.claude/rules/rideglory-coding-standards.mdc` every session** — it is the source of truth.
 - **Block on:** layer violations, hardcoded strings, raw Material widgets where shared equivalent exists, missing `ResultState`, `dart analyze` failures, missing tests for acceptance criteria.
 - **Approve only when all acceptance criteria are met and tested.**
 - **Be terse and specific** — "lib/features/events/presentation/event_detail_page.dart:L42 uses ElevatedButton — replace with AppButton" not "button issue found."

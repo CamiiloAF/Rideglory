@@ -1,11 +1,11 @@
 export const meta = {
   name: 'rg-exec',
   description:
-    'Ejecuta una mejora o una fase de plan en Rideglory (Flutter + rideglory-api) con NIVEL DE ESFUERZO ajustable (lite | normal | full). El AUDITOR corre con Opus; todo lo demas con Sonnet. Modifica codigo SIN commitear (working tree sucio para revision humana). Aislado bajo docs/exec-runs/<slug>/. No toca workflow/state.json ni el sistema /iter. args puede ser una ruta (string) o un objeto {source, mode}.',
+    'Ejecuta una mejora o una fase de plan en Rideglory (Flutter + rideglory-api) con NIVEL DE ESFUERZO ajustable (lite | normal | full). El AUDITOR corre con Opus; todo lo demas con Sonnet. Incluye UX Review gate (Nielsen/Laws of UX/WCAG/HIG) despues de Design y antes de Frontend cuando hay UI. Modifica codigo SIN commitear (working tree sucio para revision humana). Aislado bajo docs/exec-runs/<slug>/. No toca workflow/state.json ni el sistema /iter. args puede ser una ruta (string) o un objeto {source, mode}.',
   phases: [
     { title: 'Normalize', detail: 'Normalizar la nota/fase a PRD con AC + guardrails' },
     { title: 'Architect', detail: 'normal/full: change map + decisiones (Sonnet), auditado por Opus' },
-    { title: 'Build', detail: 'lite: un implementador; normal/full: Design || Backend -> Frontend, auditados' },
+    { title: 'Build', detail: 'lite: un implementador; normal/full: Design || Backend -> UX Review gate (si UI) -> Frontend, auditados' },
     { title: 'Verify', detail: 'QA + auditoria de cobertura Opus; adversarial solo en full' },
     { title: 'Review', detail: 'normal/full: Tech Lead; lite: cierre directo (SUMMARY/REVIEW_CHECKLIST)' },
   ],
@@ -352,6 +352,76 @@ Devuelve {status, filesChanged, testResult, notes}.`,
       : Promise.resolve(null),
 ])
 
+// ---------------------------------------------------------------------------
+// UX Review Gate — despues de Design, antes de Frontend (normal/full si hay UI)
+// ---------------------------------------------------------------------------
+const UX_REVIEW_SCHEMA = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['verdict', 'blockers', 'suggestions'],
+  properties: {
+    verdict: { type: 'string', enum: ['approved', 'approved_with_notes', 'blocked'] },
+    blockers: { type: 'array', items: { type: 'string' } },
+    suggestions: { type: 'array', items: { type: 'string' } },
+  },
+}
+
+const uxReviewPrompt = (note) =>
+  `Eres el UX Reviewer de rg-exec ${SLUG} (nivel ${MODE}).
+
+${HARD_RULES}
+
+CONTEXTO: ${WS}/PRD_NORMALIZED.md (§5 AC), ${WS}/handoffs/design.md (frames diseñados y estados UX), .claude/agents/ux-reviewer.md (tu playbook), .claude/skills/ux-reviewer-skill.md, .claude/skills/design-skill.md.
+
+TU TRABAJO:
+1. Lee ${WS}/handoffs/design.md — identifica los frames afectados (seccion Pantallas/Frames).
+2. Pencil MCP: get_editor_state(include_schema:true) → batch_get de cada frame → get_screenshot (fondos oscuros: snapshot_layout si retorna blanco).
+3. Evalua CADA frame contra los 5 frameworks del playbook: Nielsen 10 heuristicas, Laws of UX (Fitts/Hick/Miller/Jakob/Postel), WCAG 2.1 AA (contraste, touch targets), HIG/Material Design 3, reglas Rideglory-especificas.
+4. Clasifica cada hallazgo: Bloqueante (impide implementacion funcional) / Sugerencia (mejora no bloqueante) / Conforme.
+5. Escribe ${WS}/handoffs/ux-review.md:
+   ## Frames revisados (tabla ID | Nombre | Veredicto)
+   ## Hallazgos (tabla Frame | Heuristica/Ley | Severidad | Descripcion especifica | Fix requerido)
+   ## Bloqueantes — deben resolverse antes de que Frontend empiece
+   ## Sugerencias — backlog de UX (no bloquean)
+   ## Veredicto final
+${note ? `\nNOTA: ${note}` : ''}
+Regla de veredicto: 'blocked' si ≥1 Bloqueante; 'approved_with_notes' si Sugerencias sin Bloqueantes; 'approved' si todo Conforme.
+Devuelve (verdict, blockers[], suggestions[]).`
+
+let uxVerdict = null
+if (designNeeded) {
+  uxVerdict = await agent(uxReviewPrompt(null), {
+    label: 'ux-reviewer',
+    phase: 'Build',
+    model: 'sonnet',
+    schema: UX_REVIEW_SCHEMA,
+  })
+  log(
+    `[ux-review] ${uxVerdict.verdict.toUpperCase()} — ${uxVerdict.blockers.length} bloqueantes, ${uxVerdict.suggestions.length} sugerencias.`,
+  )
+
+  let uxRound = 0
+  while (uxVerdict.verdict === 'blocked' && uxVerdict.blockers.length > 0 && uxRound < CFG.fixCap) {
+    uxRound++
+    log(`[ux-review] blocked (ronda ${uxRound}/${CFG.fixCap}) — corrigiendo diseno en Pencil...`)
+    await agent(
+      `Eres el Design agent de rg-exec ${SLUG} en MODO FIX por UX Review. Edita los frames en Pencil MCP. NO commitees.
+${HARD_RULES}
+El UX Reviewer bloqueo el diseno. Corrige SOLO estos Bloqueantes en los frames de Pencil (usa batch_design) y actualiza la seccion de cambios en ${WS}/handoffs/design.md:
+${uxVerdict.blockers.map((b) => '- ' + b).join('\n')}
+Devuelve {status:'pass', filesChanged, testResult:'n/a', notes}.`,
+      { label: 'design-fix:ux', phase: 'Build', model: 'sonnet', schema: IMPL_SCHEMA },
+    )
+    uxVerdict = await agent(uxReviewPrompt(`Re-evaluacion tras correcciones de diseno (ronda ${uxRound}).`), {
+      label: 'ux-reviewer',
+      phase: 'Build',
+      model: 'sonnet',
+      schema: UX_REVIEW_SCHEMA,
+    })
+    log(`[ux-review] re-evaluacion ${uxRound}: ${uxVerdict.verdict.toUpperCase()}`)
+  }
+}
+
 if (d.frontendChanges) {
   await audited({
     label: 'frontend',
@@ -566,6 +636,9 @@ return {
   workspace: WS,
   mode: MODE,
   decisions: d,
+  uxReview: uxVerdict
+    ? { verdict: uxVerdict.verdict, blockers: uxVerdict.blockers, suggestions: uxVerdict.suggestions }
+    : null,
   qaSignOff: qa.signOff,
   techLeadVerdict: tl.verdict,
   remainingBlockers: tl.blockers,
@@ -573,6 +646,7 @@ return {
     summary: `${WS}/SUMMARY.md`,
     reviewChecklist: `${WS}/REVIEW_CHECKLIST.md`,
     techLead: `${WS}/handoffs/tech_lead.md`,
+    uxReview: uxVerdict ? `${WS}/handoffs/ux-review.md` : null,
   },
   note: `Nivel ${MODE}. Codigo modificado SIN commitear. Revisa con \`git diff\` y ${WS}/REVIEW_CHECKLIST.md.`,
 }

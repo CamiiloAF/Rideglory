@@ -83,7 +83,7 @@ Each feature is organized into three layers:
 - **Constraints:** No Flutter imports, no HTTP calls, no `dart:io`
 
 **Data** (`lib/features/<feature>/data/`)
-- **DTOs:** Data Transfer Objects for API serialization/deserialization (generated with `json_serializable`). **Pattern B is mandatory:** every DTO with a 1:1 domain model MUST extend that model (`XDto extends XModel`) and define a companion `XModelExtension.toJson()` extension. `toModel()`, `fromModel()`, and `.toDto()` are forbidden. Canonical reference: `lib/features/events/data/dto/event_dto.dart`. Exceptions (composite DTOs, request-only DTOs) documented in `.cursor/rules/rideglory-coding-standards.mdc` and `docs/prds/prd-dto-inheritance-standard.md`.
+- **DTOs:** Data Transfer Objects for API serialization/deserialization (generated with `json_serializable`). **Pattern B is mandatory:** every DTO with a 1:1 domain model MUST extend that model (`XDto extends XModel`) and define a companion `XModelExtension.toJson()` extension. `toModel()`, `fromModel()`, and `.toDto()` are forbidden. Canonical reference: `lib/features/events/data/dto/event_dto.dart`. Exceptions (composite DTOs, request-only DTOs) documented in `.claude/rules/rideglory-coding-standards.mdc` and `docs/prds/prd-dto-inheritance-standard.md`.
 - **Repositories:** Concrete implementations of domain interfaces
 - **Services:** Retrofit clients for HTTP calls; WebSocket clients; Firebase integrations
 - **Constraints:** No UI/widgets; `BuildContext` forbidden
@@ -230,7 +230,7 @@ App-wide reusable components:
 - Fallback to `AppColors` constants for colors not in colorScheme (dark backgrounds, borders)
 - **On the primary/accent color (`AppColors.primary`, orange `#f98c1f`) text, icons and elements MUST be dark, never white.** Use `colorScheme.onPrimary` or `AppColors.darkBgPrimary` (`#0D0D0F`) — never hardcode `AppColors.textOnDarkPrimary`/`Colors.white` on an accent fill. Applies to button labels, count badges inside primary buttons, and the knob of an "on" switch. Badges over primary use a dark translucent fill (e.g. `darkBgPrimary.withValues(alpha: 0.15)`), not white. Reference: `AppModalVariant.primaryLabelColor`, active filter chips.
 
-## Code Standards (Summarized from `.cursor/rules/`)
+## Code Standards (Summarized from `.claude/rules/`)
 
 ### Strings (Localization)
 - All user-visible text in `app_es.arb` with `context.l10n.<key>` in widgets
@@ -299,13 +299,10 @@ Shared contracts and services are in **`rideglory-api`** (separate Git repo):
 - Microservices (tracking, event management, user management)
 - When API contracts change, update DTOs in this repo and regenerate code
 
-## Cursor Rules & Sub-Agents
+## Agent Rules
 
-The `.cursor/rules/` directory defines specialized roles:
+The `.claude/rules/` directory define reglas de arquitectura y estándares:
 - `rideglory-coding-standards.mdc`: Mandatory style/architecture rules (all features)
-- `agent-flutter-developer.mdc`: Implementer role (coding, widgets, cubits)
-- `agent-clean-architecture-reviewer.mdc`: Senior reviewer role (layer violations, architecture audits)
-- `agent-architect.mdc`: Architectural reviewer (scalability, dependencies, lints)
 - `agent-devops.mdc`: DevOps/tooling role (CI/CD, YAML configs)
 
 For complex changes, use the **Workflow JS pipelines** `rg-plan` (planeación por fases) and `rg-exec`
