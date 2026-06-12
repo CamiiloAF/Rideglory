@@ -29,10 +29,10 @@ class StepCircle extends StatelessWidget {
   Widget build(BuildContext context) {
     final isFuture = !isCompleted && !isActive;
 
-    final bgColor = isFuture ? const Color(0xFF1A1A1F) : AppColors.primary;
+    final bgColor = isFuture ? AppColors.darkBgSecondary : AppColors.primary;
     const fgColor = AppColors.darkBgPrimary;
     final labelColor =
-        isFuture ? const Color(0xFF6B7280) : Colors.white;
+        isFuture ? AppColors.textOnDarkTertiary : AppColors.textOnDarkPrimary;
     final labelWeight =
         (isActive && !isCompleted) ? FontWeight.w700 : FontWeight.w500;
 
@@ -50,14 +50,14 @@ class StepCircle extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: isFuture
                     ? Border.all(
-                        color: const Color(0xFF2A2A32),
+                        color: AppColors.darkBorderPrimary,
                         width: 1,
                       )
                     : null,
                 boxShadow: !isFuture
                     ? const [
                         BoxShadow(
-                          color: Color(0xFF2D2117),
+                          color: AppColors.primarySubtle,
                           spreadRadius: 3,
                           blurRadius: 0,
                         ),
@@ -74,7 +74,7 @@ class StepCircle extends StatelessWidget {
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
                         color: isFuture
-                            ? const Color(0xFF6B7280)
+                            ? AppColors.textOnDarkTertiary
                             : fgColor,
                       ),
                     ),
@@ -99,7 +99,7 @@ class StepCircle extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isCompleted
                     ? AppColors.primary
-                    : const Color(0xFF2A2A32),
+                    : AppColors.darkBorderPrimary,
                 borderRadius: BorderRadius.circular(1),
               ),
             ),

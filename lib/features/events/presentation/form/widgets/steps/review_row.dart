@@ -28,22 +28,10 @@ class ReviewRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
-          child: _rowContent(),
-        ),
-        if (showDivider)
-          const Divider(height: 1, color: AppColors.darkBorderPrimary),
-      ],
-    );
-  }
+    Widget content;
 
-  Widget _rowContent() {
     if (isTitle) {
-      return Text(
+      content = Text(
         value,
         style: const TextStyle(
           fontFamily: 'Space Grotesk',
@@ -52,10 +40,8 @@ class ReviewRow extends StatelessWidget {
           color: AppColors.textOnDarkPrimary,
         ),
       );
-    }
-
-    if (isSubtitle) {
-      return Text(
+    } else if (isSubtitle) {
+      content = Text(
         value,
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
@@ -65,42 +51,54 @@ class ReviewRow extends StatelessWidget {
           color: AppColors.textOnDarkSecondary,
         ),
       );
+    } else {
+      content = Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              fontFamily: 'Space Grotesk',
+              fontSize: 13,
+              color: AppColors.textOnDarkSecondary,
+            ),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (trailingWidget != null) ...[
+                trailingWidget!,
+                const SizedBox(width: 6),
+              ],
+              Flexible(
+                child: Text(
+                  value,
+                  textAlign: TextAlign.end,
+                  style: const TextStyle(
+                    fontFamily: 'Space Grotesk',
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textOnDarkPrimary,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
     }
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontFamily: 'Space Grotesk',
-            fontSize: 13,
-            color: Color(0xFF9CA3AF),
-          ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+          child: content,
         ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (trailingWidget != null) ...[
-              trailingWidget!,
-              const SizedBox(width: 6),
-            ],
-            Flexible(
-              child: Text(
-                value,
-                textAlign: TextAlign.end,
-                style: const TextStyle(
-                  fontFamily: 'Space Grotesk',
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textOnDarkPrimary,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
+        if (showDivider)
+          const Divider(height: 1, color: AppColors.darkBorderPrimary),
       ],
     );
   }

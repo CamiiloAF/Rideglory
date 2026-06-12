@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
-import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
-import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_basic_info_section.dart';
+import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_date_time_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/steps/cover_empty.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/steps/cover_picker_sheet.dart';
@@ -13,14 +13,25 @@ import 'package:rideglory/features/events/presentation/form/widgets/steps/event_
 import 'package:rideglory/features/events/presentation/form/widgets/steps/step_title.dart';
 import 'package:rideglory/shared/cubits/form_image_cubit.dart';
 
-/// Step 1: Cover + basic info + date/time.
+/// Step 1: Portada + nombre del evento + fecha y hora.
+///
+/// Design spec (Pencil AybHb):
+/// - PORTADA: label + upload card
+/// - INFORMACIÓN BÁSICA: label + campo nombre
+/// - FECHA Y HORA: label + toggle varios días + date card
 class EventFormStep1 extends StatelessWidget {
   const EventFormStep1({super.key});
 
+  static const _sectionLabelStyle = TextStyle(
+    fontFamily: 'Space Grotesk',
+    fontSize: 11,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 1,
+    color: AppColors.textOnDarkTertiary,
+  );
+
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<EventFormCubit>();
-
     return Column(
       children: [
         Expanded(
@@ -34,31 +45,21 @@ class EventFormStep1 extends StatelessWidget {
                   subtitle: context.l10n.event_step1_subtitle,
                 ),
                 const SizedBox(height: 20),
-                // Cover section label
                 Text(
                   context.l10n.event_coverSectionLabel,
-                  style: const TextStyle(
-                    fontFamily: 'Space Grotesk',
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 1,
-                    color: AppColors.textOnDarkTertiary,
-                  ),
+                  style: _sectionLabelStyle,
                 ),
                 const SizedBox(height: 10),
-                // Cover
                 BlocBuilder<FormImageCubit, ResultState<FormImageData>>(
                   builder: (context, imageState) {
                     final imageData =
                         imageState.whenOrNull(data: (data) => data);
                     final hasLocalImage = imageData?.hasLocalImage == true;
-
                     if (hasLocalImage ||
                         imageData?.displayImageUrl?.isNotEmpty == true) {
                       return CoverPreviewWrapper(
-                        imageUrl: hasLocalImage
-                            ? null
-                            : imageData?.displayImageUrl,
+                        imageUrl:
+                            hasLocalImage ? null : imageData?.displayImageUrl,
                         localImagePath:
                             hasLocalImage ? imageData?.displayImageUrl : null,
                         onChangeTap: () => _openCoverPicker(context),
@@ -69,18 +70,36 @@ class EventFormStep1 extends StatelessWidget {
                             : null,
                       );
                     }
-
                     return CoverEmpty(onTap: () => _openCoverPicker(context));
                   },
                 ),
-                // Basic info
                 AppSpacing.gapXxl,
-                EventFormBasicInfoSection(
-                  isEditing: cubit.isEditing,
-                  descriptionInitialValue: cubit.editingEvent?.description,
+                Text(
+                  context.l10n.event_form_basicInfoSectionLabel,
+                  style: _sectionLabelStyle,
                 ),
-                // Date & time
+                const SizedBox(height: 10),
+                AppTextField(
+                  name: EventFormFields.name,
+                  hintText: context.l10n.event_eventNameHint,
+                  isRequired: true,
+                  textInputAction: TextInputAction.done,
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(
+                      errorText: context.l10n.event_nameRequired,
+                    ),
+                    FormBuilderValidators.minLength(
+                      3,
+                      errorText: context.l10n.event_minCharacters,
+                    ),
+                  ]),
+                ),
                 AppSpacing.gapXxl,
+                Text(
+                  context.l10n.event_form_dateTimeSectionLabel,
+                  style: _sectionLabelStyle,
+                ),
+                const SizedBox(height: 10),
                 const EventFormDateTimeSection(),
               ],
             ),

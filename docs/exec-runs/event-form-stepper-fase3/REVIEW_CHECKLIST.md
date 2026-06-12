@@ -1,42 +1,49 @@
 # Review Checklist — event-form-stepper-fase3
 
+**Actualizado:** 2026-06-12T05:10:57Z — Re-review post fix-run. B1/B4/B5 resueltos. B2/B3 requieren corrección adicional (regresión visual).
+
 Pasos manuales antes de commitear. Todos los items marcados como BLOCKER deben resolverse.
 
 ---
 
 ## Blockers — Código (deben resolverse antes del commit)
 
-- [ ] **B1 — `review_row.dart:44`**: Eliminar `Widget _rowContent()`. Opciones:
-  - Inline el `if/else` directamente en `build()` (sin método auxiliar).
-  - O crear `lib/.../steps/review_row_content.dart` como clase `ReviewRowContent extends StatelessWidget` y referenciarla desde `build()`.
-  - Confirmar con `dart analyze lib/` que no quedan warnings.
+- [x] **B1 — `review_row.dart`**: `_rowContent()` eliminado; contenido inlineado como `Widget content` variable local. RESUELTO ✓
 
-- [ ] **B2 — `navigation_row.dart:30`**: Reemplazar `GestureDetector + Container` del botón "Atrás" con:
+- [ ] **B2 — `navigation_row.dart:30`** (**NUEVO** — regresión introducida por fix-run):
+  El `AppButton(variant: AppButtonVariant.secondary, style: filled)` renderiza con `backgroundColor = cs.secondary = AppColors.secondary = Color(0xFFfbab56)` (naranja-ámbar), NO el `Color(0xFF242429)` (darkTertiary) requerido por el spec Pencil.
+  **Fix opción A (mínima):** Revertir a `GestureDetector + Container` con `// Custom:`:
   ```dart
-  AppButton(
-    label: context.l10n.event_step_back,
-    onPressed: isSaving ? null : cubit.prevStep,
-    variant: AppButtonVariant.secondary,
-    style: AppButtonStyle.filled,
-    shape: AppButtonShape.pill,
-    height: 52,
+  // Custom: AppButton.secondary = cs.secondary (#fbab56, naranja) no coincide
+  // con spec Pencil (#242429 darkTertiary); AppButton no tiene variante dark.
+  GestureDetector(
+    onTap: isSaving ? null : cubit.prevStep,
+    child: Container(
+      height: 52,
+      decoration: BoxDecoration(
+        color: AppColors.darkTertiary,
+        borderRadius: BorderRadius.circular(26),
+      ),
+      child: Center(
+        child: Text(
+          context.l10n.event_step_back,
+          style: const TextStyle(
+            fontFamily: 'Space Grotesk',
+            fontSize: 15,
+            color: AppColors.textOnDarkPrimary,
+          ),
+        ),
+      ),
+    ),
   )
   ```
-  Si `AppButtonVariant.secondary` no produce el color `#242429`, agregar `// Custom: AppButton.secondary difiere del tono Pencil EzQtb #242429` junto al GestureDetector.
+  **Fix opción B (preferida):** Agregar `AppButtonVariant.ghost` a `AppButton` con fill `AppColors.darkTertiary` y texto `AppColors.textOnDarkPrimary`, luego usar ese variant.
 
-- [ ] **B3 — `publish_row.dart:39`**: Reemplazar `GestureDetector + Container` del botón "Guardar borrador" con `AppButton(variant: secondary, shape: pill, height: 44)` o con `AppTextButton(label: ..., variant: muted)`. Si no cubre el tono exacto, documentar con `// Custom:`.
+- [ ] **B3 — `publish_row.dart:39`** (**NUEVO** — misma regresión): `AppButton(variant: secondary)` = naranja. Misma solución que B2, con `height: 44` y label `event_step_saveDraft`.
 
-- [ ] **B4 — `route_cta_bar.dart`**: Evaluar si `AppButton` puede cubrir los dos estados (activo con glow / deshabilitado). Si el glow shadow no es soportado, mantener el `GestureDetector` con comentario explícito: `// Custom: AppButton no soporta boxShadow glow requerido por Pencil spec veaGt`.
+- [x] **B4 — `route_cta_bar.dart`**: `// Custom:` comments agregados en ambos estados; colores inline → AppColors. RESUELTO ✓
 
-- [ ] **B5 — `Color(0xFF...)` en build()**: Agregar en `AppColors` las constantes que faltan (o verificar si ya existe un alias):
-  - `0xFF1A1A1F` → `AppColors.darkBgInput` (o verificar nombre existente)
-  - `0xFF1E1E24` → `AppColors.darkBgCard` (o `AppColors.darkCard` si existe)
-  - `0xFF2A2A32` → `AppColors.darkBorderSubtle` (o `AppColors.darkBorderPrimary` si es el mismo)
-  - `0xFF6B7280` → `AppColors.textOnDarkDisabled`
-  - `0xFF9CA3AF` → `AppColors.textOnDarkMuted`
-  - `0xFF2D2117` → `AppColors.primaryGlowShadow` (o verificar `AppColors.primarySubtle`)
-  Luego reemplazar todos los usos en: `step_circle.dart`, `route_cta_bar.dart`, `review_row.dart`, `review_card.dart`, `route_search_bar.dart`, `route_map_area.dart`, `navigation_row.dart`, `publish_row.dart`.
-  Ejecutar `dart analyze lib/` al terminar.
+- [x] **B5 — `Color(0xFF...)` en build()**: Todos los colores inline reemplazados por constantes AppColors existentes en step_circle, route_cta_bar, review_row, review_card, route_search_bar, route_map_area. RESUELTO ✓
 
 ---
 

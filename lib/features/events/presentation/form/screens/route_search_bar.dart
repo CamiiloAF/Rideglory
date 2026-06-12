@@ -84,7 +84,7 @@ class _RouteSearchBarState extends State<RouteSearchBar> {
     return Container(
       height: 48,
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1F),
+        color: AppColors.darkBgSecondary,
         borderRadius: BorderRadius.only(
           topLeft: const Radius.circular(12),
           topRight: const Radius.circular(12),

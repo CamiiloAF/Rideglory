@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:rideglory/features/events/constants/event_form_fields.dart';
-import 'package:rideglory/design_system/design_system.dart';
+import 'package:intl/intl.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/features/events/constants/event_form_fields.dart';
+import 'package:rideglory/features/events/presentation/form/widgets/sections/event_single_day_card.dart';
+import 'package:rideglory/features/events/presentation/form/widgets/steps/event_date_picker_row.dart';
 import 'package:rideglory/shared/widgets/form/app_switch_tile.dart';
 
+/// Sección de fecha y hora del wizard de creación de eventos.
+///
+/// Design spec (Pencil AybHb):
+/// - AppSwitchTile "Varios días"
+/// - Día único: EventSingleDayCard
+/// - Multi-día: range picker + hora card estándar
 class EventFormDateTimeSection extends StatefulWidget {
   const EventFormDateTimeSection({super.key});
 
@@ -21,23 +30,42 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_didLoadInitialValue) {
-      return;
-    }
-
+    if (_didLoadInitialValue) return;
     final formValue = FormBuilder.of(context)?.instantValue;
     _isMultiDay = formValue?[EventFormFields.isMultiDay] == true;
     _didLoadInitialValue = true;
   }
 
+  Future<void> _pickDate(FormFieldState<DateTimeRange> field) async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: field.value?.start ?? now,
+      firstDate: now,
+      lastDate: now.add(const Duration(days: 548)),
+    );
+    if (picked != null && mounted) {
+      field.didChange(DateTimeRange(start: picked, end: picked));
+    }
+  }
+
+  Future<void> _pickTime(FormFieldState<DateTime> field) async {
+    final initial = field.value != null
+        ? TimeOfDay.fromDateTime(field.value!)
+        : const TimeOfDay(hour: 7, minute: 0);
+    final picked = await showTimePicker(context: context, initialTime: initial);
+    if (picked != null && mounted) {
+      final now = DateTime.now();
+      field.didChange(
+        DateTime(now.year, now.month, now.day, picked.hour, picked.minute),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final firstDate = DateTime.now();
-    final lastDate = firstDate.add(Duration(days: 365 + (365 / 2).round()));
-    final isMultiDayFromForm =
-        FormBuilder.of(context)?.instantValue[EventFormFields.isMultiDay] ==
-        true;
-    final isMultiDay = isMultiDayFromForm || _isMultiDay;
+    final now = DateTime.now();
+    final lastDate = now.add(const Duration(days: 548));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,80 +76,63 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
           onChanged: (value) {
             setState(() {
               _isMultiDay = value;
-
-              final formState = FormBuilder.of(context);
-              formState?.fields[EventFormFields.dateRange]?.didChange(null);
+              FormBuilder.of(context)
+                  ?.fields[EventFormFields.dateRange]
+                  ?.didChange(null);
             });
           },
         ),
         AppSpacing.gapLg,
-        if (isMultiDay)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFieldLabel(
-                labelText: context.l10n.event_dateRange,
-                isRequired: true,
-              ),
-              FormBuilderDateRangePicker(
-                name: EventFormFields.dateRange,
-                firstDate: firstDate,
-                lastDate: lastDate,
-                decoration: const InputDecoration(border: OutlineInputBorder()),
-                validator: FormBuilderValidators.compose([
-                  FormBuilderValidators.required(
-                    errorText: context.l10n.event_dateRangeRequired,
-                  ),
-                  (value) {
-                    if (value != null &&
-                        value.start.isAtSameMomentAs(value.end)) {
-                      return context.l10n.event_startDateMustBeBeforeEndDate;
-                    }
-                    return null;
-                  },
-                ]),
-              ),
-            ],
-          )
-        else
-          FormBuilderField<DateTimeRange>(
+        if (_isMultiDay) ...[
+          FormBuilderDateRangePicker(
             name: EventFormFields.dateRange,
-            validator: FormBuilderValidators.required(
-              errorText: context.l10n.event_startDateRequired,
+            firstDate: now,
+            lastDate: lastDate,
+            decoration: InputDecoration(
+              hintText: context.l10n.event_filterDateHint,
             ),
-            builder: (field) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextFieldLabel(
-                    labelText: context.l10n.event_startDate,
-                    isRequired: true,
-                  ),
-                  FormBuilderDateTimePicker(
-                    name: '_singleDate_temp',
-                    inputType: InputType.date,
-                    firstDate: field.value?.start ?? firstDate,
-                    lastDate: lastDate,
-                    initialValue: field.value?.start,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (date) {
-                      if (date != null) {
-                        field.didChange(DateTimeRange(start: date, end: date));
-                      }
-                    },
-                  ),
-                ],
-              );
-            },
+            validator: FormBuilderValidators.compose([
+              FormBuilderValidators.required(
+                errorText: context.l10n.event_dateRangeRequired,
+              ),
+              (value) {
+                if (value != null && value.start.isAtSameMomentAs(value.end)) {
+                  return context.l10n.event_startDateMustBeBeforeEndDate;
+                }
+                return null;
+              },
+            ]),
           ),
-        AppSpacing.gapLg,
-        AppDatePicker(
-          fieldName: EventFormFields.meetingTime,
-          labelText: context.l10n.event_meetingTime,
-          inputType: InputType.time,
-        ),
+          AppSpacing.gapLg,
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors.darkCard,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.darkBorderPrimary),
+            ),
+            child: FormBuilderField<DateTime>(
+              name: EventFormFields.meetingTime,
+              initialValue: DateTime(now.year, now.month, now.day, 7, 0),
+              builder: (field) {
+                final time = field.value;
+                final timeText = time != null
+                    ? DateFormat('hh:mm a').format(time)
+                    : context.l10n.event_form_timePlaceholder;
+                return EventDatePickerRow(
+                  icon: Icons.access_time_rounded,
+                  labelText: context.l10n.event_form_timeLabel,
+                  valueText: timeText,
+                  hasValue: time != null,
+                  onTap: () => _pickTime(field),
+                );
+              },
+            ),
+          ),
+        ] else
+          EventSingleDayCard(
+            onPickDate: _pickDate,
+            onPickTime: _pickTime,
+          ),
       ],
     );
   }

@@ -27,25 +27,12 @@ class NavigationRow extends StatelessWidget {
       children: [
         if (currentStep > 0) ...[
           Expanded(
-            child: GestureDetector(
-              onTap: isSaving ? null : cubit.prevStep,
-              child: Container(
-                height: 52,
-                decoration: BoxDecoration(
-                  color: AppColors.darkTertiary,
-                  borderRadius: BorderRadius.circular(26),
-                ),
-                child: Center(
-                  child: Text(
-                    context.l10n.event_step_back,
-                    style: const TextStyle(
-                      fontFamily: 'Space Grotesk',
-                      fontSize: 15,
-                      color: AppColors.textOnDarkPrimary,
-                    ),
-                  ),
-                ),
-              ),
+            child: AppButton(
+              label: context.l10n.event_step_back,
+              onPressed: isSaving ? null : cubit.prevStep,
+              variant: AppButtonVariant.ghost,
+              shape: AppButtonShape.pill,
+              height: 52,
             ),
           ),
           const SizedBox(width: 12),

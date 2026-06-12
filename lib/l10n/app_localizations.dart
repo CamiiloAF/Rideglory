@@ -826,6 +826,42 @@ abstract class AppLocalizations {
   /// **'PORTADA'**
   String get event_coverSectionLabel;
 
+  /// No description provided for @event_form_basicInfoSectionLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'INFORMACIÓN BÁSICA'**
+  String get event_form_basicInfoSectionLabel;
+
+  /// No description provided for @event_form_dateTimeSectionLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'FECHA Y HORA'**
+  String get event_form_dateTimeSectionLabel;
+
+  /// No description provided for @event_form_dateLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha'**
+  String get event_form_dateLabel;
+
+  /// No description provided for @event_form_timeLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Hora de inicio'**
+  String get event_form_timeLabel;
+
+  /// No description provided for @event_form_datePlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Seleccionar fecha...'**
+  String get event_form_datePlaceholder;
+
+  /// No description provided for @event_form_timePlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Seleccionar hora...'**
+  String get event_form_timePlaceholder;
+
   /// No description provided for @event_addEventCover.
   ///
   /// In es, this message translates to:

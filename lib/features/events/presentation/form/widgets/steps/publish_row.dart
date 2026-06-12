@@ -36,25 +36,12 @@ class PublishRow extends StatelessWidget {
           height: 52,
         ),
         const SizedBox(height: 10),
-        GestureDetector(
-          onTap: isSaving ? null : () => _onSaveDraft(context),
-          child: Container(
-            height: 44,
-            decoration: BoxDecoration(
-              color: AppColors.darkTertiary,
-              borderRadius: BorderRadius.circular(22),
-            ),
-            child: Center(
-              child: Text(
-                context.l10n.event_step_saveDraft,
-                style: const TextStyle(
-                  fontFamily: 'Space Grotesk',
-                  fontSize: 14,
-                  color: Color(0xFF9CA3AF),
-                ),
-              ),
-            ),
-          ),
+        AppButton(
+          label: context.l10n.event_step_saveDraft,
+          onPressed: isSaving ? null : () => _onSaveDraft(context),
+          variant: AppButtonVariant.ghostSubtle,
+          shape: AppButtonShape.pill,
+          height: 44,
         ),
       ],
     );

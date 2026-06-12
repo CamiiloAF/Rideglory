@@ -341,7 +341,8 @@ class EventFormCubit extends Cubit<EventFormState> {
       id: _editingEvent?.id,
       ownerId: userId,
       name: formData[EventFormFields.name] as String,
-      description: formData[EventFormFields.description] as String,
+      description:
+          (formData[EventFormFields.description] as String?)?.trim() ?? '',
       startDate: dateRange?.start ?? DateTime.now(),
       endDate: dateRange?.end != dateRange?.start ? dateRange?.end : null,
       difficulty: formData[EventFormFields.difficulty] as EventDifficulty,
@@ -488,9 +489,7 @@ class EventFormCubit extends Cubit<EventFormState> {
 
   static const List<String> _step1Fields = [
     EventFormFields.name,
-    EventFormFields.description,
     EventFormFields.dateRange,
-    EventFormFields.isMultiDay,
     EventFormFields.meetingTime,
   ];
 

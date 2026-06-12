@@ -28,7 +28,7 @@ class ReviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF1E1E24),
+        color: AppColors.darkCard,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.darkBorderPrimary),
       ),

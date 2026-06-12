@@ -101,7 +101,7 @@ class RouteMapArea extends StatelessWidget {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1E1E24),
+                  color: AppColors.darkCard,
                   borderRadius: BorderRadius.circular(22),
                   border: Border.all(color: AppColors.darkBorderPrimary),
                   boxShadow: const [

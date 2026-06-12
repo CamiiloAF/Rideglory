@@ -27,6 +27,8 @@ class RouteCtaBar extends StatelessWidget {
       ),
       padding: EdgeInsets.fromLTRB(20, 16, 20, 16 + bottomInset),
       child: hasWaypoints
+          // Custom: AppButton no soporta boxShadow glow requerido por Pencil spec veaGt
+          // (orange glow shadow blurRadius 20 sobre el botón CTA activo).
           ? GestureDetector(
               onTap: () => context.pop(),
               child: Container(
@@ -64,12 +66,14 @@ class RouteCtaBar extends StatelessWidget {
                 ),
               ),
             )
+          // Custom: AppButton no soporta Opacity wrapping + estado deshabilitado visual
+          // con opacidad 40% al 0 waypoints (Pencil spec veaGt disabled state).
           : Opacity(
               opacity: 0.4,
               child: Container(
                 height: 52,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF242429),
+                  color: AppColors.darkTertiary,
                   borderRadius: BorderRadius.circular(26),
                 ),
                 child: Center(
@@ -79,7 +83,7 @@ class RouteCtaBar extends StatelessWidget {
                       fontFamily: 'Space Grotesk',
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF9CA3AF),
+                      color: AppColors.textOnDarkSecondary,
                     ),
                   ),
                 ),

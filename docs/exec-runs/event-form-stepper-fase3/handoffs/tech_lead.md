@@ -118,3 +118,104 @@ Los ACs de Fase 3 están completamente cubiertos: 824 tests pasan, `dart analyze
 ## Change log
 
 - 2026-06-12T04:56:29Z: Review inicial — needs_changes, 5 blocker clusters identificados
+- 2026-06-12T05:06:19Z: Frontend fix-run — todos los blockers resueltos: _rowContent() inlineado, 2× GestureDetector→AppButton, // Custom: en route_cta_bar, 11 Color(0xFF...) → AppColors. dart analyze limpio, 824/824 tests pass.
+- 2026-06-12T05:10:57Z: Re-review post fix-run — needs_changes: fix-run introdujo regresión visual en navigation_row y publish_row (AppButton.secondary = naranja, spec pide gris oscuro #242429).
+
+---
+
+## Re-review — 2026-06-12T05:10:57Z
+
+### Veredicto
+
+**needs_changes** — 1 blocker nuevo introducido por el fix-run.
+
+Los 5 blockers originales fueron resueltos correctamente, excepto que el reemplazo de `GestureDetector` por `AppButton(variant: secondary)` en `navigation_row.dart` y `publish_row.dart` introduce una regresión visual: los botones renderizarán color naranja-ámbar en lugar del gris oscuro del spec.
+
+---
+
+### Hallazgos
+
+| Archivo | Severidad | Descripción |
+|---|---|---|
+| `navigation_row.dart:30` | **BLOCKER** | `AppButton(variant: AppButtonVariant.secondary, style: filled)` renderiza con `backgroundColor = cs.secondary = AppColors.secondary = Color(0xFFfbab56)` (naranja-ámbar). El spec Pencil exige `Color(0xFF242429)` (darkTertiary) para el botón "Atrás". Regresión visual. |
+| `publish_row.dart:39` | **BLOCKER** | Mismo problema: `AppButton(variant: secondary)` = naranja, spec = darkTertiary gris oscuro. |
+
+**Blocker original resueltos correctamente:**
+- `review_row.dart` — `_rowContent()` inlineado como `Widget content` local. ✓
+- `route_cta_bar.dart` — `// Custom:` comments en ambos estados; colores inline → AppColors. ✓
+- `step_circle.dart` — 4 instancias de `Color(0xFF...)` → `AppColors.*` (darkBgSecondary, textOnDarkTertiary, darkBorderPrimary, primarySubtle). ✓
+- `Color(0xFF...)` eliminados en review_row (1), route_cta_bar (2), step_circle (4). ✓
+- El step number dentro del círculo naranja usa `fgColor = AppColors.darkBgPrimary` (oscuro, correcto). ✓
+- El step label debajo del círculo usa `AppColors.textOnDarkPrimary` (blanco sobre fondo oscuro, correcto). ✓
+
+---
+
+### Seguridad
+
+Sin cambios en backend, auth, CORS ni datos sensibles. N/A.
+
+---
+
+### Arquitectura
+
+Limpia. Clean Architecture respetada. `dart analyze lib/`: No issues found. 824/824 tests.
+
+---
+
+### Tests
+
+Todos los ACs del PRD §5 pasan. QA sign-off GREEN. Los 2 blockers nuevos no son detectables por tests existentes — son regresiones visuales.
+
+---
+
+### Pruebas manuales antes de commitear
+
+1. Correr `flutter run --flavor dev --dart-define-from-file=config/dev.json`.
+2. Navegar a Crear Evento → Paso 1.
+3. **Verificar que el botón "Atrás" (paso 2+) tiene fondo GRIS OSCURO (#242429), NO naranja.** Con el código actual renderizará naranja.
+4. **Verificar que "Guardar borrador" (paso 4) tiene fondo GRIS OSCURO, NO naranja.**
+5. Si los botones aparecen naranja: aplicar el fix descrito abajo antes de commitear.
+
+---
+
+### Fix requerido
+
+**Opción A (mínima — sin cambiar AppButton):** Revertir los dos AppButton y restaurar `GestureDetector + Container` con `// Custom:` justification:
+
+```dart
+// En navigation_row.dart — botón "Atrás":
+// Custom: AppButton.secondary = cs.secondary (#fbab56, naranja) no coincide
+// con spec Pencil (#242429 darkTertiary); AppButton no tiene variante dark.
+GestureDetector(
+  onTap: isSaving ? null : cubit.prevStep,
+  child: Container(
+    height: 52,
+    decoration: BoxDecoration(
+      color: AppColors.darkTertiary,
+      borderRadius: BorderRadius.circular(26),
+    ),
+    child: Center(
+      child: Text(
+        context.l10n.event_step_back,
+        style: const TextStyle(
+          fontFamily: 'Space Grotesk',
+          fontSize: 15,
+          color: AppColors.textOnDarkPrimary,
+        ),
+      ),
+    ),
+  ),
+)
+```
+
+Igual para `publish_row.dart` con `height: 44` y `event_step_saveDraft`.
+
+**Opción B (mejor — extiende AppButton):** Agregar `AppButtonVariant.ghost` (o `dark`) a `AppButton` que use `AppColors.darkTertiary` como fill con texto `AppColors.textOnDarkPrimary`, y actualizar `navigation_row` y `publish_row` para usarlo.
+
+---
+
+### Archivos correctos sin tocar
+
+- `review_row.dart` ✓
+- `step_circle.dart` ✓
+- `route_cta_bar.dart` ✓

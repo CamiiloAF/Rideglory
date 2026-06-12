@@ -12,7 +12,12 @@ import 'package:rideglory/features/events/presentation/form/widgets/steps/event_
 import 'package:rideglory/features/events/presentation/form/widgets/steps/event_form_step4_review.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/steps/event_step_indicator.dart';
 
-/// Scaffold for creation mode: stepper wizard.
+/// Scaffold para el modo creación: wizard de 4 pasos.
+///
+/// Design spec (Pencil AybHb / EzQtb / XbcHD / FW3Hd):
+/// - AppBar: ← botón círculo (siempre) + "Nuevo Evento" + "Cancelar" solo en step 0
+/// - El EventStepIndicator va en el body (Column), NO en AppBar.bottom
+/// - Separador 1px entre stepper y contenido del paso
 class CreationScaffold extends StatelessWidget {
   const CreationScaffold({
     super.key,
@@ -54,34 +59,46 @@ class CreationScaffold extends StatelessWidget {
       backgroundColor: AppColors.darkBgPrimary,
       appBar: AppFormNavHeader(
         title: context.l10n.event_newEvent,
-        leading: AppFormNavAction.text(
-          label: context.l10n.cancel,
+        leading: AppFormNavAction.icon(
+          icon: Icons.arrow_back,
           onTap: () => context.pop(),
+          pill: true,
         ),
-        bottom: EventStepIndicator(
-          currentStep: state.currentStep,
-          totalSteps: 4,
-        ),
+        trailing: state.currentStep == 0
+            ? AppFormNavAction.text(
+                label: context.l10n.cancel,
+                onTap: () => context.pop(),
+              )
+            : null,
+        showBottomBorder: false,
       ),
-      // FormBuilder wraps IndexedStack so all steps share the same formKey.
-      // AnimatedSwitcher with ValueKey(currentStep) triggers a fade transition
-      // whenever the active step changes — required by AC8.
-      body: FormBuilder(
-        key: cubit.formKey,
-        initialValue: _getInitialValues(),
-        child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          child: IndexedStack(
-            key: ValueKey(state.currentStep),
-            index: state.currentStep,
-            children: const [
-              EventFormStep1(),
-              EventFormStep2(),
-              EventFormStep3(),
-              EventFormStep4Review(),
-            ],
+      body: Column(
+        children: [
+          EventStepIndicator(
+            currentStep: state.currentStep,
+            totalSteps: 4,
           ),
-        ),
+          const Divider(height: 1, color: AppColors.darkBorderPrimary),
+          Expanded(
+            child: FormBuilder(
+              key: cubit.formKey,
+              initialValue: _getInitialValues(),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: IndexedStack(
+                  key: ValueKey(state.currentStep),
+                  index: state.currentStep,
+                  children: const [
+                    EventFormStep1(),
+                    EventFormStep2(),
+                    EventFormStep3(),
+                    EventFormStep4Review(),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

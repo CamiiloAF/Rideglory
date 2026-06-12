@@ -396,6 +396,24 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_coverSectionLabel => 'PORTADA';
 
   @override
+  String get event_form_basicInfoSectionLabel => 'INFORMACIÓN BÁSICA';
+
+  @override
+  String get event_form_dateTimeSectionLabel => 'FECHA Y HORA';
+
+  @override
+  String get event_form_dateLabel => 'Fecha';
+
+  @override
+  String get event_form_timeLabel => 'Hora de inicio';
+
+  @override
+  String get event_form_datePlaceholder => 'Seleccionar fecha...';
+
+  @override
+  String get event_form_timePlaceholder => 'Seleccionar hora...';
+
+  @override
   String get event_addEventCover => 'Agregar portada';
 
   @override
