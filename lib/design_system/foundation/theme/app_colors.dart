@@ -161,5 +161,7 @@ class AppColors {
   static const Color riderCardBg = Color(0xFF161616);
   /// Tracking map dark background
   static const Color trackingMapBg = Color(0xFF0C1018);
+  /// Active (first) suggestion highlight in place autocomplete dropdown
+  static const Color darkActiveSuggestion = Color(0xFF1C1C24);
 }
 

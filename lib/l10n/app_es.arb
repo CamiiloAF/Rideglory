@@ -1184,5 +1184,31 @@
       "current": { "type": "int" },
       "total": { "type": "int" }
     }
-  }
+  },
+  "event_step_review_basicSection": "Información básica",
+  "event_step_review_detailsSection": "Configuración",
+  "event_step_review_routeSection": "Ruta",
+  "event_step_review_editButton": "Editar",
+  "event_step_review_noName": "Sin nombre",
+  "event_step_review_noDescription": "Sin descripción",
+  "event_step_review_noDate": "Sin fecha",
+  "event_step_review_noMeetingPoint": "Sin punto de encuentro",
+  "event_step_review_noDestination": "Sin destino",
+  "event_step_review_noRoute": "Sin ruta configurada",
+  "event_step_review_difficulty": "Dificultad",
+  "event_step_review_type": "Tipo",
+  "event_step_review_brands": "Marcas",
+  "event_step_review_allBrands": "Todas las marcas",
+  "event_step_review_maxParticipants": "Participantes",
+  "event_step_review_noLimit": "Sin límite",
+  "event_step_review_price": "Precio",
+  "event_step_review_free": "Gratuito",
+  "event_step_review_meetingPoint": "Punto de encuentro",
+  "event_step_review_destination": "Destino",
+  "event_step_review_waypoints": "Puntos intermedios",
+  "event_step_review_publishButton": "Publicar evento",
+  "event_cover_picker_title": "Portada del evento",
+  "event_cover_picker_gallery": "Subir desde galería",
+  "event_cover_picker_change": "Cambiar imagen",
+  "event_cover_picker_remove": "Eliminar portada"
 }

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 3 — Ruta</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div>
+  <p class="phone-label">Step 3 — Ruta (mapa vacío + PulsingMapDot)</p>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <span class="icons">●●●</span>
+    </div>
+
+    <div class="nav-header">
+      <div class="nav-header-row">
+        <span class="nav-action cancel">Cancelar</span>
+        <span class="nav-title">Nuevo evento</span>
+        <span style="width:64px"></span>
+      </div>
+      <div class="step-indicator">
+        <div class="step-circle done">✓</div>
+        <div class="step-line done"></div>
+        <div class="step-circle done">✓</div>
+        <div class="step-line done"></div>
+        <div class="step-circle active">3</div>
+        <div class="step-line future"></div>
+        <div class="step-circle future">4</div>
+      </div>
+    </div>
+
+    <div class="phone-body">
+
+      <!-- Mapa con PulsingMapDot (0 waypoints) -->
+      <div class="map-placeholder" style="height:200px">
+        <div class="pulsing-dot-wrap">
+          <div class="pulse-ring"></div>
+          <div class="dot-core"></div>
+        </div>
+        <!-- Recenter 44×44 -->
+        <div class="recenter-btn">⊕</div>
+      </div>
+
+      <!-- Punto de encuentro -->
+      <div class="section-label">PUNTO DE ENCUENTRO</div>
+      <div style="position:relative; margin-bottom:4px">
+        <input class="text-field" placeholder="Buscar punto de encuentro..." value="">
+      </div>
+      <!-- Autocomplete loading → SearchSkeletonList -->
+      <div class="autocomplete-container" style="margin-bottom:12px">
+        <div class="skeleton-row">
+          <div class="skeleton-icon"></div>
+          <div class="skeleton-lines">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+          </div>
+        </div>
+        <div class="skeleton-row">
+          <div class="skeleton-icon"></div>
+          <div class="skeleton-lines">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+          </div>
+        </div>
+        <div class="skeleton-row" style="border-bottom:none">
+          <div class="skeleton-icon"></div>
+          <div class="skeleton-lines">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Destino -->
+      <div class="section-label">DESTINO</div>
+      <div class="text-field placeholder">Buscar destino...</div>
+
+    </div>
+
+    <div class="step-nav-bar">
+      <div class="back-btn">← Atrás</div>
+      <div class="continue-btn">Continuar</div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <p class="phone-label">Step 3 — Ruta con waypoints + autocomplete activo (S-2)</p>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <span class="icons">●●●</span>
+    </div>
+
+    <div class="nav-header">
+      <div class="nav-header-row">
+        <span class="nav-action cancel">Cancelar</span>
+        <span class="nav-title">Nuevo evento</span>
+        <span style="width:64px"></span>
+      </div>
+      <div class="step-indicator">
+        <div class="step-circle done">✓</div>
+        <div class="step-line done"></div>
+        <div class="step-circle done">✓</div>
+        <div class="step-line done"></div>
+        <div class="step-circle active">3</div>
+        <div class="step-line future"></div>
+        <div class="step-circle future">4</div>
+      </div>
+    </div>
+
+    <div class="phone-body">
+
+      <!-- Mapa con puntos (PulsingMapDot oculto) -->
+      <div class="map-placeholder" style="height:180px">
+        <span class="map-label">🗺 Ruta dibujada</span>
+        <div class="recenter-btn">⊕</div>
+      </div>
+
+      <!-- Waypoints con touch target 44×44 en borrar (B-3) -->
+      <div class="section-label">WAYPOINTS</div>
+      <div class="waypoint-item">
+        <div class="waypoint-badge">1</div>
+        <div class="waypoint-name">Parque Simón Bolívar, Bogotá</div>
+        <!-- Touch target 44×44 para borrar -->
+        <div class="delete-target">✕</div>
+      </div>
+      <div class="waypoint-item">
+        <div class="waypoint-badge">2</div>
+        <div class="waypoint-name">Alto de Letras, Caldas</div>
+        <div class="delete-target">✕</div>
+      </div>
+
+      <!-- Autocomplete con ítem activo destacado (S-2) -->
+      <div class="section-label">AÑADIR PUNTO</div>
+      <input class="text-field" value="Manizales">
+      <div class="autocomplete-container">
+        <!-- Ítem activo: borde izquierdo naranja 4px + fondo #1C1C24 -->
+        <div class="autocomplete-item active">
+          <span class="autocomplete-icon">📍</span>
+          Manizales, Caldas, Colombia
+        </div>
+        <div class="autocomplete-item">
+          <span class="autocomplete-icon">📍</span>
+          Manizales Centro Histórico
+        </div>
+        <div class="autocomplete-item">
+          <span class="autocomplete-icon">📍</span>
+          Aeropuerto La Nubia, Manizales
+        </div>
+      </div>
+
+    </div>
+
+    <div class="step-nav-bar">
+      <div class="back-btn">← Atrás</div>
+      <div class="continue-btn">Continuar</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -293,6 +293,7 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
               RouteMapArea(
                 atLimit: atLimit,
                 isPickMode: _isPickMode,
+                hasWaypoints: hasWaypoints,
                 onMapCreated: (map, manager) {
                   _mapboxMap = map;
                   _annotationManager = manager;

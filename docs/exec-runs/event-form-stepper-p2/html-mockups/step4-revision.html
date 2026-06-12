@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 4 — Revisión y publicación</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div>
+  <p class="phone-label">Step 4 — Revisión y publicación</p>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <span class="icons">●●●</span>
+    </div>
+
+    <div class="nav-header">
+      <div class="nav-header-row">
+        <span class="nav-action cancel">Cancelar</span>
+        <span class="nav-title">Nuevo evento</span>
+        <span style="width:64px"></span>
+      </div>
+      <div class="step-indicator">
+        <div class="step-circle done">✓</div>
+        <div class="step-line done"></div>
+        <div class="step-circle done">✓</div>
+        <div class="step-line done"></div>
+        <div class="step-circle done">✓</div>
+        <div class="step-line done"></div>
+        <div class="step-circle active">4</div>
+      </div>
+    </div>
+
+    <div class="phone-body">
+
+      <!-- Card 1: Información básica -->
+      <div class="review-card">
+        <div class="review-card-header">
+          <span class="review-card-title">Información básica</span>
+          <button class="edit-btn">Editar</button>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Nombre</span>
+          <span class="review-value">Rodada de los Andes 2026</span>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Fecha</span>
+          <span class="review-value">15 jul 2026 — 07:00 AM</span>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Portada</span>
+          <span class="review-value" style="color: var(--success)">✓ Imagen cargada</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Configuración -->
+      <div class="review-card">
+        <div class="review-card-header">
+          <span class="review-card-title">Configuración</span>
+          <button class="edit-btn">Editar</button>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Dificultad</span>
+          <!-- Llamas en AppColors.primary (#f98c1f), nunca blanco -->
+          <div class="flames" style="margin-top:2px">
+            <span class="flame on">🔥</span>
+            <span class="flame on">🔥</span>
+            <span class="flame on">🔥</span>
+            <span class="flame off">🔥</span>
+            <span class="flame off">🔥</span>
+          </div>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Tipo</span>
+          <span class="review-value">Turismo</span>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Marcas</span>
+          <span class="review-value">Multimarca</span>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Participantes</span>
+          <span class="review-value">Sin límite</span>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Precio</span>
+          <span class="review-value">Gratuito</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Ruta -->
+      <div class="review-card">
+        <div class="review-card-header">
+          <span class="review-card-title">Ruta</span>
+          <button class="edit-btn">Editar</button>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Punto de encuentro</span>
+          <span class="review-value">Parque Simón Bolívar, Bogotá</span>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Destino</span>
+          <span class="review-value">Alto de Letras, Caldas</span>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Tipo de ruta</span>
+          <span class="review-value">Ruta personalizada</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- EventStepNavBar — Step 4: Publicar + Guardar borrador -->
+    <div class="step-nav-bar" style="flex-direction:column; gap:0">
+      <!-- AppButton accent — texto oscuro #0D0D0F, NUNCA blanco -->
+      <div class="app-btn" style="margin-bottom:10px">
+        <span style="font-size:18px; margin-right:8px">📤</span> Publicar evento
+      </div>
+      <div class="app-text-btn">Guardar borrador</div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <p class="phone-label">Step 4 — Estado cargando (publicando)</p>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <span class="icons">●●●</span>
+    </div>
+    <div class="nav-header">
+      <div class="nav-header-row">
+        <span class="nav-action cancel" style="opacity:0.4">Cancelar</span>
+        <span class="nav-title">Nuevo evento</span>
+        <span style="width:64px"></span>
+      </div>
+      <div class="step-indicator">
+        <div class="step-circle done">✓</div>
+        <div class="step-line done"></div>
+        <div class="step-circle done">✓</div>
+        <div class="step-line done"></div>
+        <div class="step-circle done">✓</div>
+        <div class="step-line done"></div>
+        <div class="step-circle active">4</div>
+      </div>
+    </div>
+    <div class="phone-body">
+      <div class="review-card" style="opacity:0.5">
+        <div class="review-card-header">
+          <span class="review-card-title">Información básica</span>
+        </div>
+        <div class="review-row"><span class="review-label">Nombre</span><span class="review-value">Rodada de los Andes 2026</span></div>
+      </div>
+      <div class="review-card" style="opacity:0.5">
+        <div class="review-card-header"><span class="review-card-title">Configuración</span></div>
+        <div class="review-row"><span class="review-label">Dificultad</span><div class="flames"><span class="flame on">🔥</span><span class="flame on">🔥</span><span class="flame off">🔥</span><span class="flame off">🔥</span><span class="flame off">🔥</span></div></div>
+      </div>
+    </div>
+    <div class="step-nav-bar" style="flex-direction:column; gap:0">
+      <!-- Botón en estado cargando: orange opaco + spinner -->
+      <div class="app-btn" style="margin-bottom:10px; opacity:0.7">
+        <div style="width:20px;height:20px;border:2px solid var(--text-on-primary);border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;margin-right:10px"></div>
+        Publicando...
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+</body>
+</html>

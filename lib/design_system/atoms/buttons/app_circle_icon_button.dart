@@ -40,7 +40,7 @@ class AppCircleIconButton extends StatelessWidget {
   /// [variant] is [AppCircleIconButtonVariant.surface].
   final Color? surfaceColor;
 
-  static const double _size = 36;
+  static const double _size = 40;
   static const double _iconSize = 18;
 
   @override

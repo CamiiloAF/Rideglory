@@ -187,29 +187,6 @@ class InscriptionCard extends StatelessWidget {
                                 ],
                               ),
                             ],
-                            if (event?.city != null) ...[
-                              AppSpacing.gapXxs,
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.location_on_outlined,
-                                    size: 12,
-                                    color: AppColors.textOnDarkSecondary,
-                                  ),
-                                  AppSpacing.hGapXxs,
-                                  Expanded(
-                                    child: Text(
-                                      event!.city,
-                                      style: const TextStyle(
-                                        color: AppColors.textOnDarkSecondary,
-                                        fontSize: 12,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
                           ],
                         ),
                       ),

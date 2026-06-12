@@ -330,12 +330,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_eventName => 'Nombre del evento';
 
   @override
-  String get event_eventCity => 'Ciudad';
-
-  @override
-  String get event_eventCityHint => 'Buscar ciudad y departamento...';
-
-  @override
   String get event_filterDateHint => 'Seleccionar';
 
   @override
@@ -472,9 +466,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_filterByDifficulty => 'Dificultad';
-
-  @override
-  String get event_filterByCity => 'Ciudad';
 
   @override
   String get event_filterByDateRange => 'Rango de fechas';
@@ -625,9 +616,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_descriptionRequired => 'La descripción es requerida';
-
-  @override
-  String get event_cityRequired => 'La ciudad es requerida';
 
   @override
   String get event_dateRangeRequired => 'Las fechas del evento son requeridas';
@@ -2977,4 +2965,82 @@ class AppLocalizationsEs extends AppLocalizations {
   String event_step_progressLabel(int current, int total) {
     return 'Paso $current de $total';
   }
+
+  @override
+  String get event_step_review_basicSection => 'Información básica';
+
+  @override
+  String get event_step_review_detailsSection => 'Configuración';
+
+  @override
+  String get event_step_review_routeSection => 'Ruta';
+
+  @override
+  String get event_step_review_editButton => 'Editar';
+
+  @override
+  String get event_step_review_noName => 'Sin nombre';
+
+  @override
+  String get event_step_review_noDescription => 'Sin descripción';
+
+  @override
+  String get event_step_review_noDate => 'Sin fecha';
+
+  @override
+  String get event_step_review_noMeetingPoint => 'Sin punto de encuentro';
+
+  @override
+  String get event_step_review_noDestination => 'Sin destino';
+
+  @override
+  String get event_step_review_noRoute => 'Sin ruta configurada';
+
+  @override
+  String get event_step_review_difficulty => 'Dificultad';
+
+  @override
+  String get event_step_review_type => 'Tipo';
+
+  @override
+  String get event_step_review_brands => 'Marcas';
+
+  @override
+  String get event_step_review_allBrands => 'Todas las marcas';
+
+  @override
+  String get event_step_review_maxParticipants => 'Participantes';
+
+  @override
+  String get event_step_review_noLimit => 'Sin límite';
+
+  @override
+  String get event_step_review_price => 'Precio';
+
+  @override
+  String get event_step_review_free => 'Gratuito';
+
+  @override
+  String get event_step_review_meetingPoint => 'Punto de encuentro';
+
+  @override
+  String get event_step_review_destination => 'Destino';
+
+  @override
+  String get event_step_review_waypoints => 'Puntos intermedios';
+
+  @override
+  String get event_step_review_publishButton => 'Publicar evento';
+
+  @override
+  String get event_cover_picker_title => 'Portada del evento';
+
+  @override
+  String get event_cover_picker_gallery => 'Subir desde galería';
+
+  @override
+  String get event_cover_picker_change => 'Cambiar imagen';
+
+  @override
+  String get event_cover_picker_remove => 'Eliminar portada';
 }

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Componentes UX — correcciones de accesibilidad</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body style="flex-direction:column">
+
+<h2 style="color:#ccc; font-family:var(--font); margin-bottom:24px">Correcciones UX — B-3, B-4, B-5, S-2, S-5</h2>
+
+<div style="display:flex; flex-wrap:wrap; gap:32px; align-items:flex-start">
+
+  <!-- B-3: Waypoint delete 44×44 -->
+  <div style="background:#1a1a1a; padding:16px; border-radius:12px; width:360px">
+    <p style="color:#f98c1f; font-size:11px; font-weight:700; margin-bottom:12px">B-3 — Botón eliminar waypoint: 44×44 px touch target</p>
+    <p style="color:#888; font-size:11px; margin-bottom:12px">ANTES: GestureDetector + Padding(4) → ~24px efectivo</p>
+    <div class="waypoint-item" style="opacity:0.5">
+      <div class="waypoint-badge">1</div>
+      <div class="waypoint-name">Parque Nacional, Bogotá</div>
+      <!-- Ícono pequeño sin área táctil -->
+      <span style="color:#5A5A70; font-size:16px; padding:4px">✕</span>
+    </div>
+    <p style="color:#888; font-size:11px; margin:12px 0">DESPUÉS: SizedBox(44, 44) + Center(child: Icon)</p>
+    <div class="waypoint-item">
+      <div class="waypoint-badge">1</div>
+      <div class="waypoint-name">Parque Nacional, Bogotá</div>
+      <!-- 44×44 px area visible como referencia -->
+      <div class="delete-target" style="border: 1px dashed rgba(249,140,31,0.3); border-radius:6px" title="44×44px touch target">
+        ✕
+        <span class="touch-badge">44px</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- B-4: Recenter 44×44 -->
+  <div style="background:#1a1a1a; padding:16px; border-radius:12px; width:360px">
+    <p style="color:#f98c1f; font-size:11px; font-weight:700; margin-bottom:12px">B-4 — Botón recentrar mapa: 44×44 px</p>
+    <p style="color:#888; font-size:11px; margin-bottom:12px">ANTES: Container width:36, height:36</p>
+    <div class="map-placeholder" style="height:120px">
+      <div style="position:absolute; top:12px; right:12px; width:36px; height:36px; background:#161618; border:1px solid #2A2A38; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; opacity:0.6; font-size:16px">⊕</div>
+    </div>
+    <p style="color:#888; font-size:11px; margin:12px 0">DESPUÉS: Container width:44, height:44</p>
+    <div class="map-placeholder" style="height:120px">
+      <div style="position:absolute; top:12px; right:12px; width:44px; height:44px; background:#161618; border:1px solid #2A2A38; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:18px; box-shadow: 0 0 0 2px rgba(249,140,31,0.3)">⊕</div>
+    </div>
+  </div>
+
+  <!-- B-5: AppCircleIconButton 40×40 -->
+  <div style="background:#1a1a1a; padding:16px; border-radius:12px; width:360px">
+    <p style="color:#f98c1f; font-size:11px; font-weight:700; margin-bottom:12px">B-5 — AppCircleIconButton: 36 → 40 px (_size constante)</p>
+    <p style="color:#888; font-size:11px; margin-bottom:12px">Afecta todos los back buttons de la app</p>
+    <div style="display:flex; gap:16px; align-items:center">
+      <div>
+        <p style="color:#888; font-size:10px; margin-bottom:6px">ANTES 36×36</p>
+        <div style="width:36px; height:36px; border-radius:50%; background:#1C1C24; border:1px solid #2A2A38; display:flex; align-items:center; justify-content:center; color:#fff; font-size:16px; opacity:0.6">←</div>
+      </div>
+      <div>
+        <p style="color:#888; font-size:10px; margin-bottom:6px">DESPUÉS 40×40</p>
+        <div style="width:40px; height:40px; border-radius:50%; background:#1C1C24; border:1px solid #2A2A38; display:flex; align-items:center; justify-content:center; color:#fff; font-size:18px; box-shadow: 0 0 0 2px rgba(249,140,31,0.3)">←</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- S-2: Autocomplete ítem activo -->
+  <div style="background:#1a1a1a; padding:16px; border-radius:12px; width:360px">
+    <p style="color:#f98c1f; font-size:11px; font-weight:700; margin-bottom:12px">S-2 — Autocomplete ítem activo (i==0): borde naranja 4px + fondo #1C1C24</p>
+    <div style="background:var(--bg-card); border:1px solid var(--border); border-radius:0 0 12px 12px; overflow:hidden">
+      <div class="autocomplete-item active">
+        <span class="autocomplete-icon">📍</span>
+        Medellín, Antioquia — <small style="opacity:0.7">Colombia</small>
+      </div>
+      <div class="autocomplete-item">
+        <span class="autocomplete-icon">📍</span>
+        Medellín — El Poblado
+      </div>
+      <div class="autocomplete-item">
+        <span class="autocomplete-icon">📍</span>
+        Aeropuerto El Dorado, Medellín
+      </div>
+    </div>
+    <p style="color:#888; font-size:10px; margin-top:8px">border-left: 4px solid #f98c1f | background: #1C1C24</p>
+  </div>
+
+  <!-- S-5: SearchSkeletonList -->
+  <div style="background:#1a1a1a; padding:16px; border-radius:12px; width:360px">
+    <p style="color:#f98c1f; font-size:11px; font-weight:700; margin-bottom:12px">S-5 — SearchSkeletonList: 3 filas shimmer cuando isLoading</p>
+    <div class="autocomplete-container">
+      <div class="skeleton-row">
+        <div class="skeleton-icon"></div>
+        <div class="skeleton-lines">
+          <div class="skeleton-line" style="width:70%"></div>
+          <div class="skeleton-line" style="width:45%"></div>
+        </div>
+      </div>
+      <div class="skeleton-row">
+        <div class="skeleton-icon"></div>
+        <div class="skeleton-lines">
+          <div class="skeleton-line" style="width:80%"></div>
+          <div class="skeleton-line" style="width:55%"></div>
+        </div>
+      </div>
+      <div class="skeleton-row" style="border-bottom:none">
+        <div class="skeleton-icon"></div>
+        <div class="skeleton-lines">
+          <div class="skeleton-line" style="width:65%"></div>
+          <div class="skeleton-line" style="width:40%"></div>
+        </div>
+      </div>
+    </div>
+    <p style="color:#888; font-size:10px; margin-top:8px">
+      baseColor: #383838 | highlightColor: #505050<br>
+      Shimmer.fromColors — 3 filas fijas
+    </p>
+  </div>
+
+  <!-- S-3: PulsingMapDot -->
+  <div style="background:#1a1a1a; padding:16px; border-radius:12px; width:360px">
+    <p style="color:#f98c1f; font-size:11px; font-weight:700; margin-bottom:12px">S-3 — PulsingMapDot: ring 44px + dot 14px (solo 0 waypoints)</p>
+    <div class="map-placeholder" style="height:120px">
+      <div class="pulsing-dot-wrap">
+        <div class="pulse-ring"></div>
+        <div class="dot-core"></div>
+      </div>
+    </div>
+    <p style="color:#888; font-size:10px; margin-top:8px">
+      AnimationController + dispose() obligatorio<br>
+      Visible: waypoints.isEmpty | Oculto: waypoints.isNotEmpty
+    </p>
+  </div>
+
+</div>
+
+</body>
+</html>

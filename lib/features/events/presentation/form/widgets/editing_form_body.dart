@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
-import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_basic_info_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_date_time_section.dart';
@@ -13,42 +14,19 @@ import 'package:rideglory/features/events/presentation/form/widgets/sections/eve
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_max_participants_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_multi_brand_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_price_section.dart';
-import 'package:rideglory/design_system/design_system.dart';
-import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/shared/cubits/form_image_cubit.dart';
 import 'package:rideglory/shared/widgets/form/form_image_section.dart';
 
-/// Main scrollable content of the event form.
+/// Scrollable body for edit mode.
 ///
+/// Inlined from the deleted `event_form_content.dart` (AC24).
 /// Section order matches Pencil frame zbCa0:
 /// Cover → Información Básica → Fecha y Hora → Dificultad → Ruta →
 /// Tipo de Evento → Marcas Permitidas → Máximo de Participantes → Precio
-class EventFormContent extends StatelessWidget {
-  const EventFormContent({super.key});
+class EditingFormBody extends StatelessWidget {
+  const EditingFormBody({super.key});
 
   Map<String, dynamic> _getInitialValues(EventFormCubit cubit) {
-    if (!cubit.isEditing) {
-      return {
-        EventFormFields.difficulty: EventDifficulty.one,
-        EventFormFields.eventType: EventType.tourism,
-        EventFormFields.isMultiDay: false,
-        EventFormFields.dateRange: DateTimeRange(
-          start: DateTime.now(),
-          end: DateTime.now(),
-        ),
-        EventFormFields.meetingTime: DateTime(
-          DateTime.now().year,
-          DateTime.now().month,
-          DateTime.now().day,
-          7,
-          0,
-        ),
-        EventFormFields.isMultiBrand: true,
-        EventFormFields.allowedBrands: <String>[],
-        EventFormFields.maxParticipants: null,
-        EventFormFields.isFreeEvent: false,
-      };
-    }
     final event = cubit.editingEvent!;
     final routeType = event.waypoints.isNotEmpty ||
             (event.routeGeoJson?['routeType'] == 'custom')
@@ -142,5 +120,4 @@ class EventFormContent extends StatelessWidget {
       ),
     );
   }
-
 }

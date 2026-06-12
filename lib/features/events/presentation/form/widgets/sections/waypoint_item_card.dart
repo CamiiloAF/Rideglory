@@ -43,12 +43,15 @@ class WaypointItemCard extends StatelessWidget {
           GestureDetector(
             onTap: onDelete,
             behavior: HitTestBehavior.opaque,
-            child: const Padding(
-              padding: EdgeInsets.all(4),
-              child: Icon(
-                Icons.close,
-                size: 16,
-                color: AppColors.textOnDarkTertiary,
+            child: const SizedBox(
+              width: 44,
+              height: 44,
+              child: Center(
+                child: Icon(
+                  Icons.close,
+                  size: 16,
+                  color: AppColors.textOnDarkTertiary,
+                ),
               ),
             ),
           ),

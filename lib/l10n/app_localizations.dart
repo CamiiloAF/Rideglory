@@ -700,18 +700,6 @@ abstract class AppLocalizations {
   /// **'Nombre del evento'**
   String get event_eventName;
 
-  /// No description provided for @event_eventCity.
-  ///
-  /// In es, this message translates to:
-  /// **'Ciudad'**
-  String get event_eventCity;
-
-  /// No description provided for @event_eventCityHint.
-  ///
-  /// In es, this message translates to:
-  /// **'Buscar ciudad y departamento...'**
-  String get event_eventCityHint;
-
   /// No description provided for @event_filterDateHint.
   ///
   /// In es, this message translates to:
@@ -969,12 +957,6 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Dificultad'**
   String get event_filterByDifficulty;
-
-  /// No description provided for @event_filterByCity.
-  ///
-  /// In es, this message translates to:
-  /// **'Ciudad'**
-  String get event_filterByCity;
 
   /// No description provided for @event_filterByDateRange.
   ///
@@ -1269,12 +1251,6 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'La descripción es requerida'**
   String get event_descriptionRequired;
-
-  /// No description provided for @event_cityRequired.
-  ///
-  /// In es, this message translates to:
-  /// **'La ciudad es requerida'**
-  String get event_cityRequired;
 
   /// No description provided for @event_dateRangeRequired.
   ///
@@ -5568,6 +5544,162 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Paso {current} de {total}'**
   String event_step_progressLabel(int current, int total);
+
+  /// No description provided for @event_step_review_basicSection.
+  ///
+  /// In es, this message translates to:
+  /// **'Información básica'**
+  String get event_step_review_basicSection;
+
+  /// No description provided for @event_step_review_detailsSection.
+  ///
+  /// In es, this message translates to:
+  /// **'Configuración'**
+  String get event_step_review_detailsSection;
+
+  /// No description provided for @event_step_review_routeSection.
+  ///
+  /// In es, this message translates to:
+  /// **'Ruta'**
+  String get event_step_review_routeSection;
+
+  /// No description provided for @event_step_review_editButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar'**
+  String get event_step_review_editButton;
+
+  /// No description provided for @event_step_review_noName.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin nombre'**
+  String get event_step_review_noName;
+
+  /// No description provided for @event_step_review_noDescription.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin descripción'**
+  String get event_step_review_noDescription;
+
+  /// No description provided for @event_step_review_noDate.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin fecha'**
+  String get event_step_review_noDate;
+
+  /// No description provided for @event_step_review_noMeetingPoint.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin punto de encuentro'**
+  String get event_step_review_noMeetingPoint;
+
+  /// No description provided for @event_step_review_noDestination.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin destino'**
+  String get event_step_review_noDestination;
+
+  /// No description provided for @event_step_review_noRoute.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin ruta configurada'**
+  String get event_step_review_noRoute;
+
+  /// No description provided for @event_step_review_difficulty.
+  ///
+  /// In es, this message translates to:
+  /// **'Dificultad'**
+  String get event_step_review_difficulty;
+
+  /// No description provided for @event_step_review_type.
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo'**
+  String get event_step_review_type;
+
+  /// No description provided for @event_step_review_brands.
+  ///
+  /// In es, this message translates to:
+  /// **'Marcas'**
+  String get event_step_review_brands;
+
+  /// No description provided for @event_step_review_allBrands.
+  ///
+  /// In es, this message translates to:
+  /// **'Todas las marcas'**
+  String get event_step_review_allBrands;
+
+  /// No description provided for @event_step_review_maxParticipants.
+  ///
+  /// In es, this message translates to:
+  /// **'Participantes'**
+  String get event_step_review_maxParticipants;
+
+  /// No description provided for @event_step_review_noLimit.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin límite'**
+  String get event_step_review_noLimit;
+
+  /// No description provided for @event_step_review_price.
+  ///
+  /// In es, this message translates to:
+  /// **'Precio'**
+  String get event_step_review_price;
+
+  /// No description provided for @event_step_review_free.
+  ///
+  /// In es, this message translates to:
+  /// **'Gratuito'**
+  String get event_step_review_free;
+
+  /// No description provided for @event_step_review_meetingPoint.
+  ///
+  /// In es, this message translates to:
+  /// **'Punto de encuentro'**
+  String get event_step_review_meetingPoint;
+
+  /// No description provided for @event_step_review_destination.
+  ///
+  /// In es, this message translates to:
+  /// **'Destino'**
+  String get event_step_review_destination;
+
+  /// No description provided for @event_step_review_waypoints.
+  ///
+  /// In es, this message translates to:
+  /// **'Puntos intermedios'**
+  String get event_step_review_waypoints;
+
+  /// No description provided for @event_step_review_publishButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Publicar evento'**
+  String get event_step_review_publishButton;
+
+  /// No description provided for @event_cover_picker_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Portada del evento'**
+  String get event_cover_picker_title;
+
+  /// No description provided for @event_cover_picker_gallery.
+  ///
+  /// In es, this message translates to:
+  /// **'Subir desde galería'**
+  String get event_cover_picker_gallery;
+
+  /// No description provided for @event_cover_picker_change.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar imagen'**
+  String get event_cover_picker_change;
+
+  /// No description provided for @event_cover_picker_remove.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar portada'**
+  String get event_cover_picker_remove;
 }
 
 class _AppLocalizationsDelegate
