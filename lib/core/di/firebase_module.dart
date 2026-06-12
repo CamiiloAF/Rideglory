@@ -8,7 +8,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
-import 'package:rideglory/core/http/api_base_url_resolver.dart';
 import 'package:rideglory/core/http/app_dio.dart';
 
 @module
@@ -21,6 +20,8 @@ abstract class FirebaseInjectableModule {
   FirebaseStorage get firebaseStorage => FirebaseStorage.instance;
   @lazySingleton
   FirebaseAnalytics get firebaseAnalytics => FirebaseAnalytics.instance;
+  // FirebaseCrashlytics se mantiene temporalmente hasta que exista evidencia
+  // prod-like (D10). Se retira junto con firebase_crash_reporter.dart.
   @lazySingleton
   FirebaseCrashlytics get firebaseCrashlytics => FirebaseCrashlytics.instance;
   @lazySingleton
@@ -29,14 +30,11 @@ abstract class FirebaseInjectableModule {
   FirebaseRemoteConfig get firebaseRemoteConfig =>
       FirebaseRemoteConfig.instance;
   @lazySingleton
-  Dio dio(
-    FirebaseAuth firebaseAuth,
-    FirebaseRemoteConfig remoteConfig,
-    FirebaseCrashlytics crashlytics,
-  ) {
-    final resolvedUrl = ApiBaseUrlResolver(remoteConfig).resolve();
-    crashlytics.setCustomKey('api_base_url', resolvedUrl);
-    return AppDio.create(firebaseAuth: firebaseAuth, remoteConfig: remoteConfig);
+  Dio dio(FirebaseAuth firebaseAuth, FirebaseRemoteConfig remoteConfig) {
+    return AppDio.create(
+      firebaseAuth: firebaseAuth,
+      remoteConfig: remoteConfig,
+    );
   }
   GoogleSignIn get googleSignIn => GoogleSignIn();
 }

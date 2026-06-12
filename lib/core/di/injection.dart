@@ -11,9 +11,9 @@ GetIt getIt = GetIt.instance;
   preferRelativeImports: true,
   asExtension: true,
 )
-void configureDependencies() {
+void configureDependencies({String environment = 'dev'}) {
   if (!getIt.isRegistered<AttendeesCache>()) {
     getIt.registerSingleton<AttendeesCache>(AttendeesCache());
   }
-  getIt.init();
+  getIt.init(environment: environment);
 }

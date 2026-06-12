@@ -1,5 +1,4 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:injectable/injectable.dart';
 
 import 'crash_reporter.dart';
 
@@ -7,7 +6,10 @@ import 'crash_reporter.dart';
 ///
 /// ÚNICO archivo del proyecto autorizado a importar package:firebase_crashlytics.
 /// Invariante G0 — verificable con grep.
-@Injectable(as: CrashReporter)
+///
+/// NOTA: La anotación @Injectable fue retirada. Este archivo se elimina
+/// tras la validación prod-like (D10/D13). Ver
+/// docs/exec-runs/observability-sentry/phase-03-validacion-prod-like.md.
 class FirebaseCrashReporter implements CrashReporter {
   FirebaseCrashReporter(this._crashlytics);
 
