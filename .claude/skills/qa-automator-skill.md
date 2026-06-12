@@ -22,8 +22,9 @@ Follow patterns in test/features/, use mocktail + bloc_test
 
 ## Step 6 — Produce TEST_STATUS.md at docs/testing/TEST_STATUS.md
 
-## Step 7 — Custom-iter rule
-Create docs/custom-iters/qa-fixes-<YYYYMMDD>/ if:
+## Step 7 — Fixes requeridos
+Add a prioritized "## Fixes requeridos" section to docs/testing/TEST_STATUS.md if:
 - Any flutter test FAILS
 - Any feature has 0 tests
 - dart analyze has ERROR-level findings
+The human decides whether to run each fix via rg-exec (mode lite).

@@ -26,7 +26,7 @@ class FlameSelector extends StatelessWidget {
             child: Icon(
               Icons.local_fire_department,
               size: 28,
-              color: filled ? AppColors.primary : AppColors.darkBorderPrimary,
+              color: filled ? AppColors.primary : AppColors.darkBorderLight,
             ),
           ),
         );

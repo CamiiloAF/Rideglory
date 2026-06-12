@@ -1,7 +1,7 @@
 export const meta = {
   name: 'rg-plan',
   description:
-    'Planeacion aislada por fases para Rideglory (Flutter + rideglory-api): escanea el sistema, PO propone fases, Architect y Plan Reviewer auditan en paralelo, PO consolida, y un agente por fase escribe su archivo detallado bajo el control de un AUDITOR Opus que itera con cada agente hasta un resultado optimo. Entrega un plan completo en docs/plans/<slug>/ con un archivo por fase + indice PLAN.md. NO toca workflow/state.json, docs/PLAN.md ni nada del sistema /iter.',
+    'Planeacion aislada por fases para Rideglory (Flutter + rideglory-api): escanea el sistema, PO propone fases, Architect y Plan Reviewer auditan en paralelo, PO consolida, y un agente por fase escribe su archivo detallado bajo el control de un AUDITOR Opus que itera con cada agente hasta un resultado optimo. Entrega un plan completo en docs/plans/<slug>/ con un archivo por fase + indice PLAN.md. Solo escribe bajo docs/plans/<slug>/; no toca codigo ni docs globales.',
   phases: [
     { title: 'Intake', detail: 'Resolver la fuente y derivar slug + objetivo' },
     { title: 'Scan', detail: 'Inventario brownfield (Flutter lib/ + rideglory-api)' },
@@ -29,7 +29,7 @@ const pad2 = (n) => String(n).padStart(2, '0')
 const HARD_RULES = `
 HARD RULES — no las violes:
 1. NUNCA ejecutes: git add / commit / push / merge / rebase / restore / reset, ni gh pr create / merge / review.
-2. NUNCA modifiques: workflow/state.json, workflow/artifact_log.json, docs/PRD.md, docs/PLAN.md, docs/PLAN_FEEDBACK.md, docs/ITERATION_HISTORY.md, docs/PRODUCT_STATUS.md, docs/handoffs/** (son del sistema /iter), .claude/skills/**, .claude/agents/**, .claude/workflows/**.
+2. NUNCA modifiques: docs/PRD.md, docs/PLAN.md, docs/PLAN_FEEDBACK.md, docs/PRODUCT_STATUS.md, docs/handoffs/** (legado), .claude/**.
 3. Esta es una sesion de PLANEACION: NO modificas codigo de la app. Solo escribes artefactos bajo docs/plans/<slug>/.
 4. Lee tu playbook de rol en .claude/agents/<rol>.md para tono y criterio, pero las RUTAS DE SALIDA de esta corrida MANDAN sobre el playbook.
 5. Para timestamps usa Bash: \`date -u +%Y-%m-%dT%H:%M:%SZ\`. Nunca inventes fechas.
@@ -191,7 +191,7 @@ TU TRABAJO:
 3. Crea el workspace: \`mkdir -p docs/plans/<SLUG>/phases\`.
 4. Escribe docs/plans/<SLUG>/00-intake.md con: ## Fuente, ## Objetivo, ## Alcance percibido, ## Preguntas abiertas.
 Devuelve (slug, goal, scopeSummary).`,
-  { label: 'intake', phase: 'Intake', schema: INTAKE_SCHEMA },
+  { label: 'intake', phase: 'Intake', model: 'sonnet', schema: INTAKE_SCHEMA },
 )
 
 const SLUG = intake.slug
@@ -223,7 +223,7 @@ ESCANEO (resume nombres, NO pegues codigo):
 
 SALIDA: ${WS}/01-scan.md con: ## Inventario Flutter, ## Dependencias, ## Superficie rideglory-api, ## Gap analysis, ## Patrones, ## Implicaciones para el plan.
 Devuelve 3-5 bullets de lo mas relevante.`,
-  { label: 'scan', phase: 'Scan' },
+  { label: 'scan', phase: 'Scan', model: 'sonnet' },
 )
 
 // ---------------------------------------------------------------------------
@@ -244,7 +244,7 @@ TU TRABAJO:
 3. Lista assumptions y risks.
 4. Escribe ${WS}/02-po-proposal.md: ## Fases propuestas (tabla), ## Supuestos, ## Riesgos, ## Criterios de exito globales.
 Devuelve el objeto estructurado.`,
-  { label: 'po-proposal', phase: 'Propose', schema: PROPOSAL_SCHEMA },
+  { label: 'po-proposal', phase: 'Propose', model: 'sonnet', schema: PROPOSAL_SCHEMA },
 )
 
 log(`PO propuso ${proposal.phases.length} fases. Revisando en paralelo...`)
@@ -276,7 +276,7 @@ TU TRABAJO:
 4. Riesgos arquitectonicos + mitigaciones.
 5. Escribe ${WS}/03-architect-review.md: ## Validacion por fase, ## Contratos, ## Riesgos, ## Ajustes.
 Devuelve (verdict, adjustments, concerns).`,
-      { label: 'architect-review', phase: 'Review', schema: REVIEW_SCHEMA },
+      { label: 'architect-review', phase: 'Review', model: 'sonnet', schema: REVIEW_SCHEMA },
     ),
   () =>
     agent(
@@ -296,7 +296,7 @@ TU TRABAJO:
 4. AJUSTES concretos.
 5. Escribe ${WS}/04-plan-review.md: ## UX por fase, ## Gates de calidad, ## Riesgos de scope, ## Ajustes.
 Devuelve (verdict, adjustments, concerns).`,
-      { label: 'plan-review', phase: 'Review', schema: REVIEW_SCHEMA },
+      { label: 'plan-review', phase: 'Review', model: 'sonnet', schema: REVIEW_SCHEMA },
     ),
 ])
 
@@ -336,7 +336,7 @@ TU TRABAJO:
 3. Escribe ${WS}/05-sintesis.md: ## Overview, ## Cambios aplicados, ## Lista final de fases (tabla con columna Nivel + por que), ## Supuestos y riesgos.
 ${feedback ? `\nMODO CORRECCION — el Auditor Opus pidio aplicar TODOS estos cambios y reescribir ${WS}/05-sintesis.md:\n${feedback.requestedChanges.map((c) => '- ' + c).join('\n')}` : ''}
 Devuelve (overview, phases).`,
-      { label: 'po-synthesis', phase: 'Synthesize', schema: FINAL_PLAN_SCHEMA },
+      { label: 'po-synthesis', phase: 'Synthesize', model: 'sonnet', schema: FINAL_PLAN_SCHEMA },
     ),
 })
 finalPlan = synth.result
@@ -393,7 +393,7 @@ ESCRIBE EXACTAMENTE ${rel} con:
 Abre el codigo si dudas de una ruta. Respeta Clean Architecture + rideglory-coding-standards.
 ${feedback ? `\nMODO CORRECCION — el Auditor Opus pidio aplicar TODOS estos cambios y reescribir ${rel}:\n${feedback.requestedChanges.map((c) => '- ' + c).join('\n')}` : ''}
 Devuelve {file, title}.`,
-          { label: `fase-${pad2(p.id)}`, phase: 'Write phases', schema: FILE_SCHEMA },
+          { label: `fase-${pad2(p.id)}`, phase: 'Write phases', model: 'sonnet', schema: FILE_SCHEMA },
         ),
     })
     return { id: p.id, file: fname, title: result.title, approved: verdict.approved, score: verdict.score, tier: p.recommendedTier }
@@ -426,7 +426,7 @@ ${indexList}
 > lite = mecanico/bajo riesgo; normal = feature acotada; full = complejo/riesgoso (contratos, migraciones, seguridad).
 
 Toma supuestos/riesgos de 05-sintesis.md. Devuelve {file, title}.`,
-  { label: 'plan-index', phase: 'Write phases', schema: FILE_SCHEMA },
+  { label: 'plan-index', phase: 'Write phases', model: 'sonnet', schema: FILE_SCHEMA },
 )
 
 return {
@@ -435,5 +435,5 @@ return {
   planIndex: `${WS}/PLAN.md`,
   phaseCount: writtenPhases.length,
   phases: writtenPhases.map((f) => ({ id: f.id, file: `${WS}/phases/${f.file}`, approved: f.approved, score: f.score })),
-  note: `Plan aislado escrito y auditado por Opus. No se toco workflow/state.json ni docs/PLAN.md. Revisa ${WS}/PLAN.md.`,
+  note: `Plan aislado escrito y auditado por Opus bajo ${WS}/. Revisa ${WS}/PLAN.md.`,
 }

@@ -59,7 +59,7 @@ INSTRUCCIÓN: llama a get_editor_state(include_schema: false) y devuelve:
 - file: la ruta del archivo activo, o "" si no hay nada abierto.
 
 No hagas nada más. Solo verifica y devuelve el objeto.`,
-  { label: 'pencil-preflight', phase: 'Preflight', model: 'sonnet', schema: PENCIL_SCHEMA },
+  { label: 'pencil-preflight', phase: 'Preflight', model: 'haiku', schema: PENCIL_SCHEMA },
 )
 
 if (!pencilCheck.active) {

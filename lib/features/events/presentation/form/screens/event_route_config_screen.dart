@@ -276,9 +276,9 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
           ),
           body: Column(
             children: [
-              // Search bar
+              // Search bar — padding [0,16,8,16] per Pencil spec
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                 child: FormBuilder(
                   key: _searchFormKey,
                   child: RouteSearchBar(
@@ -287,7 +287,6 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
 
               // Map with pick mode support
               RouteMapArea(
@@ -305,19 +304,13 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
                 onCenterOnLocation: _centerOnLocation,
               ),
 
-              // Limit banner
+              // Limit banner — full width, no lateral margin (Pencil kY0VR)
               if (atLimit)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-                  child: WaypointLimitBanner(
-                    message: context.l10n.route_builder_limit_banner,
-                  ),
+                WaypointLimitBanner(
+                  message: context.l10n.route_builder_limit_banner,
                 ),
 
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 12),
-                child: Divider(height: 1, color: AppColors.darkBorderPrimary),
-              ),
+              const Divider(height: 1, color: AppColors.darkBorderPrimary),
 
               // Section header
               Padding(
@@ -330,8 +323,8 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
                       style: const TextStyle(
                         fontFamily: 'Space Grotesk',
                         fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 0.8,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 1,
                         color: AppColors.textOnDarkTertiary,
                       ),
                     ),

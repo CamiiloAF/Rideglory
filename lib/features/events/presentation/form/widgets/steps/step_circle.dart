@@ -1,62 +1,107 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
 
-/// A single step circle (with optional connector line) for [EventStepIndicator].
+/// A single step column (circle + label, with optional connector) for [EventStepIndicator].
+///
+/// Design spec (Pencil AybHb / EzQtb / XbcHD / FW3Hd):
+/// - Circle: 30×30, cornerRadius 15
+/// - Active / completed: fill #F98C1F, outer stroke #2D2117 w=3
+/// - Future: fill #1A1A1F, inner stroke #2A2A32 w=1
+/// - Label: 11px, w700 active/completed (#FFFFFF), w500 future (#6B7280)
+/// - Connector: 2px, orange if completed, #2A2A32 if future
 class StepCircle extends StatelessWidget {
   const StepCircle({
     super.key,
     required this.stepNumber,
+    required this.label,
     required this.isCompleted,
     required this.isActive,
     required this.showConnector,
   });
 
   final int stepNumber;
+  final String label;
   final bool isCompleted;
   final bool isActive;
   final bool showConnector;
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final isFuture = !isCompleted && !isActive;
 
-    final bgColor = isFuture
-        ? colorScheme.surfaceContainerHighest
-        : AppColors.primary;
-
-    final fgColor = isFuture
-        ? colorScheme.onSurfaceVariant
-        : AppColors.darkBgPrimary;
+    final bgColor = isFuture ? const Color(0xFF1A1A1F) : AppColors.primary;
+    const fgColor = AppColors.darkBgPrimary;
+    final labelColor =
+        isFuture ? const Color(0xFF6B7280) : Colors.white;
+    final labelWeight =
+        (isActive && !isCompleted) ? FontWeight.w700 : FontWeight.w500;
 
     return Row(
       children: [
-        Container(
-          width: 28,
-          height: 28,
-          decoration: BoxDecoration(
-            color: bgColor,
-            shape: BoxShape.circle,
-          ),
-          alignment: Alignment.center,
-          child: isCompleted
-              ? Icon(Icons.check, size: 14, color: fgColor)
-              : Text(
-                  '$stepNumber',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: fgColor,
-                  ),
-                ),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Circle with optional outer stroke (active/completed)
+            Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: bgColor,
+                shape: BoxShape.circle,
+                border: isFuture
+                    ? Border.all(
+                        color: const Color(0xFF2A2A32),
+                        width: 1,
+                      )
+                    : null,
+                boxShadow: !isFuture
+                    ? const [
+                        BoxShadow(
+                          color: Color(0xFF2D2117),
+                          spreadRadius: 3,
+                          blurRadius: 0,
+                        ),
+                      ]
+                    : null,
+              ),
+              alignment: Alignment.center,
+              child: isCompleted
+                  ? const Icon(Icons.check, size: 16, color: fgColor)
+                  : Text(
+                      '$stepNumber',
+                      style: TextStyle(
+                        fontFamily: 'Space Grotesk',
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: isFuture
+                            ? const Color(0xFF6B7280)
+                            : fgColor,
+                      ),
+                    ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              label,
+              style: TextStyle(
+                fontFamily: 'Space Grotesk',
+                fontSize: 11,
+                fontWeight: labelWeight,
+                color: labelColor,
+              ),
+            ),
+          ],
         ),
         if (showConnector)
           Expanded(
             child: Container(
               height: 2,
-              color: isCompleted
-                  ? AppColors.primary
-                  : colorScheme.surfaceContainerHighest,
+              margin: const EdgeInsets.only(bottom: 17),
+              decoration: BoxDecoration(
+                color: isCompleted
+                    ? AppColors.primary
+                    : const Color(0xFF2A2A32),
+                borderRadius: BorderRadius.circular(1),
+              ),
             ),
           ),
       ],

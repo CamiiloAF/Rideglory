@@ -13,10 +13,10 @@ class CoverEmpty extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 180,
+        height: 150,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: AppColors.darkCard,
+          color: const Color(0xFF1E1E24),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: AppColors.darkBorderPrimary,
@@ -27,9 +27,9 @@ class CoverEmpty extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(
-              Icons.add_photo_alternate_outlined,
+              Icons.camera_alt_outlined,
               color: AppColors.textOnDarkTertiary,
-              size: 36,
+              size: 28,
             ),
             const SizedBox(height: 8),
             Text(
@@ -37,7 +37,7 @@ class CoverEmpty extends StatelessWidget {
               style: const TextStyle(
                 fontFamily: 'Space Grotesk',
                 fontSize: 14,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w500,
                 color: AppColors.textOnDarkSecondary,
               ),
             ),

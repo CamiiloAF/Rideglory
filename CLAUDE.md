@@ -303,7 +303,6 @@ Shared contracts and services are in **`rideglory-api`** (separate Git repo):
 
 The `.claude/rules/` directory define reglas de arquitectura y estándares:
 - `rideglory-coding-standards.mdc`: Mandatory style/architecture rules (all features)
-- `agent-devops.mdc`: DevOps/tooling role (CI/CD, YAML configs)
 
 For complex changes, use the **Workflow JS pipelines** `rg-plan` (planeación por fases) and `rg-exec`
 (ejecución por fase con nivel lite/normal/full y auditor Opus). Reemplazaron al sistema `/iter` /

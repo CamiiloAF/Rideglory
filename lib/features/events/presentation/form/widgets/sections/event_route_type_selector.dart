@@ -26,8 +26,8 @@ class EventRouteTypeSelector extends StatelessWidget {
               context.l10n.route_typeLabel.toUpperCase(),
               style: const TextStyle(
                 fontSize: 11,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.8,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1,
                 color: AppColors.textOnDarkTertiary,
               ),
             ),

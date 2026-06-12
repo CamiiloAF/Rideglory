@@ -820,16 +820,22 @@ abstract class AppLocalizations {
   /// **'Nuevo evento'**
   String get event_newEvent;
 
+  /// No description provided for @event_coverSectionLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'PORTADA'**
+  String get event_coverSectionLabel;
+
   /// No description provided for @event_addEventCover.
   ///
   /// In es, this message translates to:
-  /// **'Agregar portada del evento'**
+  /// **'Agregar portada'**
   String get event_addEventCover;
 
   /// No description provided for @event_addEventCoverHint.
   ///
   /// In es, this message translates to:
-  /// **'Una imagen impactante atrae a más motociclistas. Formatos: JPG, PNG.'**
+  /// **'JPG · PNG · 1200×628'**
   String get event_addEventCoverHint;
 
   /// No description provided for @event_uploadImage.
@@ -4918,7 +4924,7 @@ abstract class AppLocalizations {
   /// No description provided for @route_builder_title.
   ///
   /// In es, this message translates to:
-  /// **'Crear ruta personalizada'**
+  /// **'Crear ruta'**
   String get route_builder_title;
 
   /// No description provided for @route_builder_search_placeholder.
@@ -5515,6 +5521,54 @@ abstract class AppLocalizations {
   /// **'Revisar'**
   String get event_step_reviewAndPublish;
 
+  /// No description provided for @event_step1_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Información básica'**
+  String get event_step1_title;
+
+  /// No description provided for @event_step1_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Portada, nombre y fecha del evento'**
+  String get event_step1_subtitle;
+
+  /// No description provided for @event_step2_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Detalles del evento'**
+  String get event_step2_title;
+
+  /// No description provided for @event_step2_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Dificultad, tipo, marcas y configuración'**
+  String get event_step2_subtitle;
+
+  /// No description provided for @event_step3_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Ruta del evento'**
+  String get event_step3_title;
+
+  /// No description provided for @event_step3_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Define los puntos de salida, intermedios y llegada'**
+  String get event_step3_subtitle;
+
+  /// No description provided for @event_step4_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Revisa tu evento'**
+  String get event_step4_title;
+
+  /// No description provided for @event_step4_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Confirma los datos antes de publicar'**
+  String get event_step4_subtitle;
+
   /// No description provided for @event_step_continue.
   ///
   /// In es, this message translates to:
@@ -5676,6 +5730,78 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Publicar evento'**
   String get event_step_review_publishButton;
+
+  /// No description provided for @event_step_review_dateTimeSection.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha y hora'**
+  String get event_step_review_dateTimeSection;
+
+  /// No description provided for @event_step_review_date.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha'**
+  String get event_step_review_date;
+
+  /// No description provided for @event_step_review_meetingTime.
+  ///
+  /// In es, this message translates to:
+  /// **'Hora inicio'**
+  String get event_step_review_meetingTime;
+
+  /// No description provided for @event_step_review_multiDay.
+  ///
+  /// In es, this message translates to:
+  /// **'Varios días'**
+  String get event_step_review_multiDay;
+
+  /// No description provided for @event_step_review_yes.
+  ///
+  /// In es, this message translates to:
+  /// **'Sí'**
+  String get event_step_review_yes;
+
+  /// No description provided for @event_step_review_no.
+  ///
+  /// In es, this message translates to:
+  /// **'No'**
+  String get event_step_review_no;
+
+  /// No description provided for @event_step_review_coverLoaded.
+  ///
+  /// In es, this message translates to:
+  /// **'Imagen cargada ✓'**
+  String get event_step_review_coverLoaded;
+
+  /// No description provided for @event_step_review_coverNone.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin portada'**
+  String get event_step_review_coverNone;
+
+  /// No description provided for @event_step_review_descAdded.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadida ✓'**
+  String get event_step_review_descAdded;
+
+  /// No description provided for @event_step_review_nameLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre'**
+  String get event_step_review_nameLabel;
+
+  /// No description provided for @event_step_review_descLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Descripción'**
+  String get event_step_review_descLabel;
+
+  /// No description provided for @event_step_review_coverLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Portada'**
+  String get event_step_review_coverLabel;
 
   /// No description provided for @event_cover_picker_title.
   ///

@@ -32,8 +32,8 @@ class CustomRouteBuilderSection extends StatelessWidget {
                   context.l10n.route_builder_section_title,
                   style: const TextStyle(
                     fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.8,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 1,
                     color: AppColors.textOnDarkTertiary,
                   ),
                 ),

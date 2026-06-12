@@ -34,7 +34,7 @@ class RouteMapArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 300,
+      height: 260,
       child: Stack(
         children: [
           // Map
@@ -91,9 +91,9 @@ class RouteMapArea extends StatelessWidget {
               ),
             ),
 
-          // Current location button — top-right, always visible
+          // Current location button — bottom-right, circular (Pencil veaGt: recenterBtn)
           Positioned(
-            top: 12,
+            bottom: 10,
             right: 12,
             child: GestureDetector(
               onTap: onCenterOnLocation,
@@ -101,13 +101,20 @@ class RouteMapArea extends StatelessWidget {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: AppColors.darkBgSecondary,
-                  borderRadius: BorderRadius.circular(8),
+                  color: const Color(0xFF1E1E24),
+                  borderRadius: BorderRadius.circular(22),
                   border: Border.all(color: AppColors.darkBorderPrimary),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x60000000),
+                      blurRadius: 8,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: const Icon(
                   Icons.my_location,
-                  size: 18,
+                  size: 16,
                   color: AppColors.textOnDarkPrimary,
                 ),
               ),

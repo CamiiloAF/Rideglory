@@ -7,24 +7,28 @@ class WaypointsEmptyHint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+    return SizedBox(
+      height: 120,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Icon(
-            Icons.navigation,
+            Icons.route,
             color: AppColors.textOnDarkTertiary,
             size: 28,
           ),
           const SizedBox(height: 8),
-          Text(
-            context.l10n.route_builder_empty_hint,
-            style: const TextStyle(
-              fontFamily: 'Space Grotesk',
-              color: AppColors.textOnDarkTertiary,
-              fontSize: 13,
+          SizedBox(
+            width: 260,
+            child: Text(
+              context.l10n.route_builder_empty_hint,
+              style: const TextStyle(
+                fontFamily: 'Space Grotesk',
+                color: AppColors.textOnDarkTertiary,
+                fontSize: 13,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
         ],
       ),

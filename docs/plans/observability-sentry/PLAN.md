@@ -42,6 +42,15 @@ Antes de abrir cada `rg-exec`, cerrar la decisión que aplica a esa fase (solo q
 - **Fase 2:** sampling (`tracesSampleRate`) y gestión de DSN backend (secret manager / `.env`).
 - **Fase 3:** gestión de DSN por flavor + upload de símbolos en CI.
 
+## Cierre / restauración prod-only (TEMPORAL — decisión del usuario)
+
+Durante TODAS las fases de Sentry, la integración queda **habilitada también en dev** (palanca `SENTRY_DEV_VERIFY=true` en backend; const `kSentryDevVerify` por `--dart-define` en Flutter) con el único fin de **verificar que la integración con Sentry es correcta**. Esto rompe a propósito la regla de oro `dev → consola` mientras dure la verificación.
+
+**Al terminar la última fase de Sentry, antes de armar el PR, se DEBE revertir a la regla original:**
+- Backend: dejar `enabled: NODE_ENV === 'production' && !!dsn` y eliminar la rama `SENTRY_DEV_VERIFY` (y la env del `.env`/joi si se añadió solo para esto).
+- Flutter: restaurar `DSN vacío en dev → no envía`, `beforeSend → null` en debug, `environment` por flavor; eliminar `kSentryDevVerify`.
+- Verificar que en dev NO se envía nada a Sentry (solo consola) y que el diff final no deja rastros de la palanca temporal → **PR limpio**.
+
 ## Como ejecutar una fase
 
 > Cada fase se implementa con rg-exec en el NIVEL recomendado (ver el [LITE/NORMAL/FULL] del titulo y la seccion "Ejecucion recomendada" de cada fase):

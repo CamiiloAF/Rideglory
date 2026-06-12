@@ -6,9 +6,9 @@ These files are generated automatically by the agent team and updated each itera
 
 | Phase | Who generates | What goes in |
 |-------|--------------|--------------|
-| `/solo-plan` | Planning team (PO + Architect + Plan Reviewer) | Domain skills: business rules, personas, acceptance patterns, scope boundaries |
-| Architect phase in `/iter N` | Architect | Technical skills: chosen stack, patterns, commands, conventions |
-| Each subsequent iteration | Respective agent | Accumulated learnings, gotchas, evolved patterns |
+| `rg-plan` (planning workflow) | Planning team (PO + Architect + Plan Reviewer) | Domain skills: business rules, personas, acceptance patterns, scope boundaries |
+| `rg-exec` Architect phase | Architect | Technical skills: chosen stack, patterns, commands, conventions |
+| Maintenance (human or main session, NOT workflow subagents) | Respective owner | Accumulated learnings, gotchas, evolved patterns. Workflow subagents have these files read-only; updates happen outside runs. |
 
 ## Files
 

@@ -4,6 +4,11 @@ import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
 
 /// "Atrás" + "Continuar" row for steps 1–3 of the event creation wizard.
+///
+/// Design spec (Pencil EzQtb):
+/// - "Atrás": fill #242429, text "Atrás" white, cornerRadius 26, h=52
+/// - "Continuar": fill #F98C1F, dark text + chevron-right, cornerRadius 26, h=52
+/// - Gap: 12px
 class NavigationRow extends StatelessWidget {
   const NavigationRow({
     super.key,
@@ -22,11 +27,25 @@ class NavigationRow extends StatelessWidget {
       children: [
         if (currentStep > 0) ...[
           Expanded(
-            child: AppButton(
-              label: context.l10n.event_step_back,
-              onPressed: isSaving ? null : cubit.prevStep,
-              variant: AppButtonVariant.secondary,
-              style: AppButtonStyle.outlined,
+            child: GestureDetector(
+              onTap: isSaving ? null : cubit.prevStep,
+              child: Container(
+                height: 52,
+                decoration: BoxDecoration(
+                  color: AppColors.darkTertiary,
+                  borderRadius: BorderRadius.circular(26),
+                ),
+                child: Center(
+                  child: Text(
+                    context.l10n.event_step_back,
+                    style: const TextStyle(
+                      fontFamily: 'Space Grotesk',
+                      fontSize: 15,
+                      color: AppColors.textOnDarkPrimary,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
           const SizedBox(width: 12),
@@ -34,6 +53,7 @@ class NavigationRow extends StatelessWidget {
         Expanded(
           child: AppButton(
             label: context.l10n.event_step_continue,
+            icon: Icons.chevron_right,
             onPressed: isSaving
                 ? null
                 : () {
@@ -41,6 +61,8 @@ class NavigationRow extends StatelessWidget {
                       cubit.nextStep();
                     }
                   },
+            shape: AppButtonShape.pill,
+            height: 52,
           ),
         ),
       ],

@@ -1,7 +1,7 @@
 export const meta = {
   name: 'rg-exec',
   description:
-    'Ejecuta una mejora o una fase de plan en Rideglory (Flutter + rideglory-api) con NIVEL DE ESFUERZO ajustable (lite | normal | full). El AUDITOR corre con Opus; todo lo demas con Sonnet. Incluye UX Review gate (Nielsen/Laws of UX/WCAG/HIG) despues de Design y antes de Frontend cuando hay UI. Modifica codigo SIN commitear (working tree sucio para revision humana). Aislado bajo docs/exec-runs/<slug>/. No toca workflow/state.json ni el sistema /iter. args puede ser una ruta (string) o un objeto {source, mode}.',
+    'Ejecuta una mejora o una fase de plan en Rideglory (Flutter + rideglory-api) con NIVEL DE ESFUERZO ajustable (lite | normal | full). El AUDITOR corre con Opus; todo lo demas con Sonnet. Incluye UX Review gate (Nielsen/Laws of UX/WCAG/HIG) despues de Design y antes de Frontend cuando hay UI. Modifica codigo SIN commitear (working tree sucio para revision humana). Aislado bajo docs/exec-runs/<slug>/. args puede ser una ruta (string) o un objeto {source, mode}.',
   phases: [
     { title: 'Normalize', detail: 'Normalizar la nota/fase a PRD con AC + guardrails' },
     { title: 'Architect', detail: 'normal/full: change map + decisiones (Sonnet), auditado por Opus' },
@@ -37,7 +37,7 @@ log(`Nivel de ejecucion: ${MODE.toUpperCase()} (auditor rondas=${CFG.rounds}, ad
 const HARD_RULES = `
 HARD RULES — no las violes:
 1. NUNCA ejecutes: git add / commit / push / merge / rebase / restore / reset, ni gh pr create / merge / review. El arbol de trabajo queda SUCIO a proposito; el humano commitea.
-2. NUNCA modifiques: workflow/state.json, workflow/artifact_log.json, docs/PRD.md, docs/PLAN.md, docs/ITERATION_HISTORY.md, docs/PRODUCT_STATUS.md, docs/handoffs/** (sistema /iter), .claude/skills/**, .claude/agents/**, .claude/workflows/**, ni la nota fuente original.
+2. NUNCA modifiques: docs/PRD.md, docs/PLAN.md, docs/PRODUCT_STATUS.md, docs/handoffs/** (legado), .claude/**, ni la nota fuente original.
 3. Escribe artefactos de analisis bajo docs/exec-runs/<slug>/. Backend/Frontend SI pueden editar codigo de la app (Flutter lib/ y rideglory-api); NUNCA commitear.
 4. Lee tu playbook en .claude/agents/<rol>.md; las RUTAS DE SALIDA de este prompt MANDAN sobre el playbook.
 5. Timestamps con Bash \`date -u +%Y-%m-%dT%H:%M:%SZ\`. No inventes fechas.

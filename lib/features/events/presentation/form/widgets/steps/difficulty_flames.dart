@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
-/// Row of 5 flame icons indicating event difficulty level (1–5).
+/// Row of flame icons indicating event difficulty level in the review card.
+///
+/// Design spec (Pencil FW3Hd — Ynzjg difficultyDisplay):
+/// - Size 16px, gap 3px between flames
+/// - Active: AppColors.primary (#F98C1F)
+/// - Inactive: AppColors.darkBorderLight (#3A3A44)
 class DifficultyFlames extends StatelessWidget {
   const DifficultyFlames({super.key, required this.level});
 
@@ -13,12 +18,13 @@ class DifficultyFlames extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: List.generate(5, (index) {
         final isActive = index < level;
-        return Icon(
-          Icons.local_fire_department,
-          size: 14,
-          color: isActive
-              ? AppColors.primary
-              : AppColors.textOnDarkTertiary.withValues(alpha: 0.3),
+        return Padding(
+          padding: EdgeInsets.only(left: index == 0 ? 0 : 3),
+          child: Icon(
+            Icons.local_fire_department,
+            size: 16,
+            color: isActive ? AppColors.primary : AppColors.darkBorderLight,
+          ),
         );
       }),
     );

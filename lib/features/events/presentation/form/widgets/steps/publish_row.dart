@@ -7,6 +7,11 @@ import 'package:rideglory/features/events/presentation/form/cubit/event_form_cub
 import 'package:rideglory/shared/cubits/form_image_cubit.dart';
 
 /// "Publicar evento" + "Guardar borrador" column for step 4 of the event wizard.
+///
+/// Design spec (Pencil FW3Hd):
+/// - "Publicar Evento": #F98C1F pill h=52, icon send (dark), text dark, gap 8
+/// - "Guardar como borrador": #242429 pill h=44, cornerRadius 22, text gray #9CA3AF
+/// - Gap between buttons: 10px
 class PublishRow extends StatelessWidget {
   const PublishRow({
     super.key,
@@ -27,12 +32,29 @@ class PublishRow extends StatelessWidget {
           isLoading: isSaving,
           onPressed: isSaving ? null : () => _onPublish(context),
           icon: Icons.send_rounded,
+          shape: AppButtonShape.pill,
+          height: 52,
         ),
-        const SizedBox(height: 12),
-        AppTextButton(
-          label: context.l10n.event_step_saveDraft,
-          onPressed: isSaving ? null : () => _onSaveDraft(context),
-          variant: AppTextButtonVariant.muted,
+        const SizedBox(height: 10),
+        GestureDetector(
+          onTap: isSaving ? null : () => _onSaveDraft(context),
+          child: Container(
+            height: 44,
+            decoration: BoxDecoration(
+              color: AppColors.darkTertiary,
+              borderRadius: BorderRadius.circular(22),
+            ),
+            child: Center(
+              child: Text(
+                context.l10n.event_step_saveDraft,
+                style: const TextStyle(
+                  fontFamily: 'Space Grotesk',
+                  fontSize: 14,
+                  color: Color(0xFF9CA3AF),
+                ),
+              ),
+            ),
+          ),
         ),
       ],
     );
