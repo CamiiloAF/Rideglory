@@ -29,7 +29,7 @@ Reconstrucción de la observabilidad end-to-end de Rideglory (móvil + backend) 
 - **R3 — Fuga de PII/secretos (Alta):** `redact` de pino + interceptor con allowlist + `beforeSend`/`beforeBreadcrumb`; denylist centralizada con test, revisada antes de prod.
 - **R4 — Ventana sin reporte de crashes (Media):** secuencia estricta integrar+validar Sentry → recién entonces retirar Crashlytics.
 - **R5 — Divergencia ×6 del patrón (Media):** abstraer en `rideglory-common-lib` como criterio de aceptación; rebuild + reinstalar disciplinado.
-- **R6 — Cuota free Sentry (Media):** 4xx como structured logs (cuota de logs 5 GB, no la de 5k errores), `tracesSampleRate` por env, un solo proyecto con tag `service`.
+- **R6 — Cuota free Sentry (Media):** 4xx como structured logs (cuota de logs 5 GB, no la de 5k errores), `tracesSampleRate` por env. **Proyectos (revisado 2026-06-12):** un proyecto Sentry **`rideglory-backend`** independiente del de Flutter (`rideglory-flutter`); los 6 MS se distinguen dentro del proyecto de backend por el tag `service`. La cuota de errores es a nivel de organización (separar proyectos NO la multiplica); el trazado distribuido app↔backend funciona entre proyectos de la misma org.
 - **R7 — Orden de import de `instrument.ts` (Baja):** `import './instrument'` como primera línea de cada `main.ts`; verificar con error de prueba.
 - **R8 — Tracing HTTP↔TCP no automático (Media):** transportar `sentry-trace`/`baggage` en el envelope `_meta` extensible desde Fase 1.
 - **R9 — Símbolos ilegibles en prod (Baja):** upload de dSYM/ProGuard en CI (DevOps).

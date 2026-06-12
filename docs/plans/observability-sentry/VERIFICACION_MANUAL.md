@@ -16,9 +16,10 @@
 - [ ] Los 6 `.env` del backend tienen `SENTRY_DSN`, `SENTRY_DEV_VERIFY=true`,
       `SENTRY_TRACES_SAMPLE_RATE=1.0` (api-gateway en `.env.dev`; el resto en `.env`).
 - [ ] `pnpm install` corrido en los 6 MS (deps `@sentry/node` + common-lib presentes).
-- [ ] Proyecto Sentry abierto en el navegador: **app y backend caen en el mismo
-      proyecto**, distinguidos por el tag `service` (`api-gateway`, `users-ms`, …,
-      y la app Flutter sin ese tag).
+- [ ] **Dos proyectos Sentry** (misma organización): **`rideglory-flutter`** (app)
+      y **`rideglory-backend`** (los 6 MS, distinguidos entre sí por el tag
+      `service`: `api-gateway`, `users-ms`, …). Los errores de la app van al primero
+      y los del backend al segundo; el trazado distribuido los correlaciona igual.
 
 ---
 
