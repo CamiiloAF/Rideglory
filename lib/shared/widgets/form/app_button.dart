@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
 enum AppButtonVariant { primary, secondary, danger, success, ghost, ghostSubtle }
@@ -19,6 +21,8 @@ class AppButton extends StatelessWidget {
   final double? width;
   final double? height;
   final AppButtonShape shape;
+  final String? analyticsTapEvent;
+  final Map<String, Object>? analyticsTapParams;
 
   const AppButton({
     super.key,
@@ -33,6 +37,8 @@ class AppButton extends StatelessWidget {
     this.width,
     this.height = 48,
     this.shape = AppButtonShape.rounded,
+    this.analyticsTapEvent,
+    this.analyticsTapParams,
   });
 
   @override
@@ -58,7 +64,17 @@ class AppButton extends StatelessWidget {
         child: Material(
           color: cs.surface.withValues(alpha: 0),
           child: InkWell(
-            onTap: onPressed == null || isLoading ? null : onPressed,
+            onTap: onPressed == null || isLoading
+                ? null
+                : () {
+                    final tapEvent = analyticsTapEvent;
+                    if (tapEvent != null) {
+                      getIt<AnalyticsService>()
+                          .logEvent(tapEvent, analyticsTapParams)
+                          .ignore();
+                    }
+                    onPressed!();
+                  },
             borderRadius: BorderRadius.circular(
               shape == AppButtonShape.pill ? 25.0 : 8.0,
             ),
@@ -146,7 +162,17 @@ class AppButton extends StatelessWidget {
       child: Material(
         color: cs.surface.withValues(alpha: 0),
         child: InkWell(
-          onTap: onPressed == null || isLoading ? null : onPressed,
+          onTap: onPressed == null || isLoading
+              ? null
+              : () {
+                  final tapEvent = analyticsTapEvent;
+                  if (tapEvent != null) {
+                    getIt<AnalyticsService>()
+                        .logEvent(tapEvent, analyticsTapParams)
+                        .ignore();
+                  }
+                  onPressed!();
+                },
           borderRadius: BorderRadius.circular(radius),
           child: Padding(
             padding:

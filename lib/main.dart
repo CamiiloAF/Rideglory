@@ -14,6 +14,7 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:rideglory/core/config/api_remote_config.dart';
 import 'package:rideglory/core/config/app_env.dart';
+import 'package:rideglory/core/config/sentry_config.dart';
 import 'package:rideglory/core/http/api_base_url_resolver.dart';
 import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/core/services/crash/crash_handler_setup.dart';
@@ -38,9 +39,6 @@ import 'firebase_options.dart';
 // NO usar @EnviedField — envied no procesa --dart-define (D4 rev 2).
 const String _sentryDsn = String.fromEnvironment('SENTRY_DSN', defaultValue: '');
 
-// Flag temporal para verificar que Sentry funciona en modo debug.
-// Debe revertirse antes del PR final (G9/D11).
-const bool kSentryDevVerify = bool.fromEnvironment('SENTRY_DEV_VERIFY');
 
 void main() {
   // runZonedGuarded debe envolver TODA la inicialización + runApp para que

@@ -42,10 +42,30 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
   RiderProfileModel? _riderProfile;
   bool _saveToProfile = false;
   bool _preloadedFromProfile = false;
+  bool _terminalEventEmitted = false;
 
   bool get isEditing => _editingRegistration != null;
   bool get saveToProfile => _saveToProfile;
   bool get isPreloadedFromProfile => _preloadedFromProfile;
+
+  /// Marks the terminal analytics event as already emitted.
+  /// Only for use in tests that need to verify the idempotent [close()] behavior
+  /// but cannot drive a successful [saveRegistration()] without a real
+  /// [FormBuilderState] in a widget tree.
+  @visibleForTesting
+  void markTerminalEventEmittedForTesting() {
+    _terminalEventEmitted = true;
+  }
+
+  /// Unit-test seam: when non-null, [_buildRegistration] returns its result
+  /// instead of reading from the widget-bound [FormBuilderState].
+  ///
+  /// Allows unit tests to exercise the positive path of [saveRegistration]
+  /// (including [AnalyticsEvents.registrationSubmitAttempted] intent and the
+  /// `_terminalEventEmitted = true` assignment on success) without a real
+  /// widget tree. NEVER set from production code.
+  @visibleForTesting
+  EventRegistrationModel? Function()? buildRegistrationOverride;
 
   void toggleSaveToProfile([bool? value]) {
     _saveToProfile = value ?? !_saveToProfile;
@@ -228,6 +248,11 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
 
     if (registration == null) return;
 
+    _analytics.logEvent(AnalyticsEvents.registrationSubmitAttempted, {
+      AnalyticsParams.formMode: isEditing
+          ? AnalyticsParams.formModeEdit
+          : AnalyticsParams.formModeCreate,
+    }).ignore();
     emit(const ResultState.loading());
 
     final result = isEditing
@@ -251,6 +276,7 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
         emit(ResultState.error(error: error));
       },
       (saved) async {
+        _terminalEventEmitted = true;
         _analytics.logEvent(AnalyticsEvents.registrationSubmitted, {
           AnalyticsParams.formMode: isEditing
               ? AnalyticsParams.formModeEdit
@@ -280,6 +306,8 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
   }
 
   EventRegistrationModel? _buildRegistration() {
+    // Unit-test seam: bypasses the widget-bound FormBuilderState.
+    if (buildRegistrationOverride != null) return buildRegistrationOverride!();
     if (!(formKey.currentState?.saveAndValidate() ?? false)) return null;
 
     final formData = formKey.currentState!.value;
@@ -324,6 +352,14 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
       emergencyContactName: reg.emergencyContactName,
       emergencyContactPhone: reg.emergencyContactPhone,
     );
+  }
+
+  @override
+  Future<void> close() {
+    if (!_terminalEventEmitted) {
+      _analytics.logEvent(AnalyticsEvents.registrationAbandoned).ignore();
+    }
+    return super.close();
   }
 }
 

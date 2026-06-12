@@ -78,3 +78,45 @@ abstract class AnalyticsService {
 ## Cumplimiento ScanSoatUseCase
 
 `ScanSoatUseCase` consume `AnalyticsService.logEvent(...)` — la única firma original. Los cambios a `AnalyticsService` son non-breaking: se añadieron 4 métodos con default impl. `ScanSoatUseCase` compila sin modificación y sigue cumpliendo G0 (no importa ningún SDK Firebase directamente).
+
+---
+
+## Catálogo de eventos — Fase 4 (observability-sentry)
+
+### Nuevos eventos añadidos
+
+Todos los nombres cumplen ≤ 40 chars y no contienen PII.
+
+| Evento | Constante | Params | Descripción |
+|--------|-----------|--------|-------------|
+| `events_publish_attempted` | `AnalyticsEvents.eventsPublishAttempted` | `form_mode` | Intención de tap en publicar (antes del trabajo async). |
+| `events_step_advanced` | `AnalyticsEvents.eventsStepAdvanced` | `step_index`, `step_name` | Rider avanzó al siguiente paso del wizard de creación. |
+| `events_step_back` | `AnalyticsEvents.eventsStepBack` | `step_index`, `step_name` | Rider retrocedió al paso anterior del wizard de creación. |
+| `events_create_abandoned` | `AnalyticsEvents.eventsCreateAbandoned` | `form_mode`, `abandoned_at_step` | Rider cerró el wizard sin publicar ni guardar borrador. |
+| `registration_submit_attempted` | `AnalyticsEvents.registrationSubmitAttempted` | `form_mode` | Intención de tap en enviar inscripción (antes del trabajo async). |
+| `home_empty_events_cta` | `AnalyticsEvents.homeEmptyEventsCta` | — | Tap en CTA "Ver eventos" en la tarjeta de home vacía. |
+
+### Nuevo parámetro
+
+| Parámetro | Constante | Tipo | Descripción |
+|-----------|-----------|------|-------------|
+| `abandoned_at_step` | `AnalyticsParams.abandonedAtStep` | `int` | Índice del paso (0-based) en que se abandonó el wizard. |
+
+### Valores canónicos de `step_name` para wizard de creación de evento
+
+| Valor | Constante | Paso (índice) |
+|-------|-----------|---------------|
+| `basics` | `AnalyticsParams.stepNameBasics` | 0 — Nombre, fecha, hora |
+| `config` | `AnalyticsParams.stepNameConfig` | 1 — Tipo, dificultad, precio, aforo |
+| `route`  | `AnalyticsParams.stepNameRoute`  | 2 — Punto de encuentro, destino, waypoints |
+| `review` | `AnalyticsParams.stepNameReview` | 3 — Revisión final antes de publicar |
+
+### Garantías no-PII
+
+- `abandoned_at_step`: valor entero 0-3. No contiene id de evento, nombre, uid, ni ningún dato personal.
+- `step_name`: enum cerrado de 4 valores. Sin texto libre.
+- `form_mode`: enum cerrado (`create` | `edit`).
+
+### Patrón `_terminalEventEmitted` (idempotencia de abandono)
+
+`EventFormCubit` y `RegistrationFormCubit` mantienen un flag booleano `_terminalEventEmitted` que se activa cuando el flujo termina exitosamente (publicar, guardar borrador, enviar registro). El `close()` sobreescrito solo emite el evento de abandono si el flag sigue en `false`, evitando conteos dobles.

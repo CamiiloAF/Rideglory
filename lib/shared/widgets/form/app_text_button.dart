@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
 enum AppTextButtonVariant { primary, muted, danger }
@@ -11,6 +13,8 @@ class AppTextButton extends StatelessWidget {
   final IconData? icon;
   final double iconSize;
   final VisualDensity? visualDensity;
+  final String? analyticsTapEvent;
+  final Map<String, Object>? analyticsTapParams;
 
   const AppTextButton({
     super.key,
@@ -21,7 +25,21 @@ class AppTextButton extends StatelessWidget {
     this.icon,
     this.iconSize = 18,
     this.visualDensity,
+    this.analyticsTapEvent,
+    this.analyticsTapParams,
   });
+
+  VoidCallback? _wrapWithAnalytics(VoidCallback? callback) {
+    if (callback == null || isLoading) return null;
+    final tapEvent = analyticsTapEvent;
+    if (tapEvent == null) return callback;
+    return () {
+      getIt<AnalyticsService>()
+          .logEvent(tapEvent, analyticsTapParams)
+          .ignore();
+      callback();
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +53,7 @@ class AppTextButton extends StatelessWidget {
 
     if (icon != null) {
       return TextButton.icon(
-        onPressed: onPressed == null || isLoading ? null : onPressed,
+        onPressed: _wrapWithAnalytics(onPressed),
         icon: isLoading
             ? SizedBox(
                 width: iconSize,
@@ -55,7 +73,7 @@ class AppTextButton extends StatelessWidget {
     }
 
     return TextButton(
-      onPressed: onPressed == null || isLoading ? null : onPressed,
+      onPressed: _wrapWithAnalytics(onPressed),
       style: TextButton.styleFrom(
         foregroundColor: foregroundColor,
         visualDensity: visualDensity,

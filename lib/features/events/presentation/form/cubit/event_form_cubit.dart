@@ -55,9 +55,13 @@ class EventFormCubit extends Cubit<EventFormState> {
   final AnalyticsService _analytics;
 
   EventModel? _editingEvent;
+  bool _terminalEventEmitted = false;
 
   bool get isEditing => _editingEvent != null;
   EventModel? get editingEvent => _editingEvent;
+
+  static String _stepName(int index) =>
+      const ['basics', 'config', 'route', 'review'][index.clamp(0, 3)];
 
   void initialize({EventModel? event}) {
     _editingEvent = event;
@@ -207,6 +211,11 @@ class EventFormCubit extends Cubit<EventFormState> {
     String? localCoverImagePath,
     String? remoteCoverImageUrl,
   }) async {
+    _analytics.logEvent(AnalyticsEvents.eventsPublishAttempted, {
+      AnalyticsParams.formMode: isEditing
+          ? AnalyticsParams.formModeEdit
+          : AnalyticsParams.formModeCreate,
+    }).ignore();
     emit(state.copyWith(saveResult: const ResultState.loading()));
 
     final result = isEditing
@@ -232,6 +241,7 @@ class EventFormCubit extends Cubit<EventFormState> {
         emit(state.copyWith(saveResult: ResultState.error(error: error)));
       },
       (event) {
+        _terminalEventEmitted = true;
         _analytics.logEvent(AnalyticsEvents.eventsPublished, {
           AnalyticsParams.formMode: isEditing
               ? AnalyticsParams.formModeEdit
@@ -461,6 +471,7 @@ class EventFormCubit extends Cubit<EventFormState> {
       (error) =>
           emit(state.copyWith(saveResult: ResultState.error(error: error))),
       (event) {
+        _terminalEventEmitted = true;
         _analytics.logEvent(AnalyticsEvents.eventsDraftSaved, {
           AnalyticsParams.formMode: isEditing
               ? AnalyticsParams.formModeEdit
@@ -516,12 +527,35 @@ class EventFormCubit extends Cubit<EventFormState> {
 
   void nextStep() {
     final next = state.currentStep + 1;
-    if (next <= 3) emit(state.copyWith(currentStep: next));
+    if (next > 3) return;
+    _analytics.logEvent(AnalyticsEvents.eventsStepAdvanced, {
+      AnalyticsParams.stepIndex: next,
+      AnalyticsParams.stepName: _stepName(next),
+    }).ignore();
+    emit(state.copyWith(currentStep: next));
   }
 
   void prevStep() {
     final prev = state.currentStep - 1;
-    if (prev >= 0) emit(state.copyWith(currentStep: prev));
+    if (prev < 0) return;
+    _analytics.logEvent(AnalyticsEvents.eventsStepBack, {
+      AnalyticsParams.stepIndex: prev,
+      AnalyticsParams.stepName: _stepName(prev),
+    }).ignore();
+    emit(state.copyWith(currentStep: prev));
+  }
+
+  @override
+  Future<void> close() {
+    if (!_terminalEventEmitted) {
+      _analytics.logEvent(AnalyticsEvents.eventsCreateAbandoned, {
+        AnalyticsParams.formMode: isEditing
+            ? AnalyticsParams.formModeEdit
+            : AnalyticsParams.formModeCreate,
+        AnalyticsParams.abandonedAtStep: state.currentStep,
+      }).ignore();
+    }
+    return super.close();
   }
 
   void goToStep(int step) {

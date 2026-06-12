@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rideglory/core/services/analytics/analytics_events.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -55,6 +56,7 @@ class HomeEmptyEventsCard extends StatelessWidget {
           AppButton(
             label: context.l10n.home_emptyEventsCta,
             onPressed: () => context.go(AppRoutes.events),
+            analyticsTapEvent: AnalyticsEvents.homeEmptyEventsCta,
           ),
         ],
       ),
