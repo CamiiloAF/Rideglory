@@ -20949,7 +20949,7 @@
           "id": "GsIRv",
           "name": "header",
           "width": "fill_container",
-          "height": 52,
+          "height": 44,
           "gap": 8,
           "padding": [
             0,
@@ -44253,6 +44253,7 @@
           "type": "frame",
           "id": "QvzFE",
           "name": "scrollContent",
+          "rotation": -0.368261394731946,
           "width": "fill_container",
           "layout": "vertical",
           "gap": 20,

@@ -16,14 +16,12 @@ class StepCircle extends StatelessWidget {
     required this.label,
     required this.isCompleted,
     required this.isActive,
-    required this.showConnector,
   });
 
   final int stepNumber;
   final String label;
   final bool isCompleted;
   final bool isActive;
-  final bool showConnector;
 
   @override
   Widget build(BuildContext context) {
@@ -36,74 +34,51 @@ class StepCircle extends StatelessWidget {
     final labelWeight =
         (isActive && !isCompleted) ? FontWeight.w700 : FontWeight.w500;
 
-    return Row(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Circle with optional outer stroke (active/completed)
-            Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                color: bgColor,
-                shape: BoxShape.circle,
-                border: isFuture
-                    ? Border.all(
-                        color: AppColors.darkBorderPrimary,
-                        width: 1,
-                      )
-                    : null,
-                boxShadow: !isFuture
-                    ? const [
-                        BoxShadow(
-                          color: AppColors.primarySubtle,
-                          spreadRadius: 3,
-                          blurRadius: 0,
-                        ),
-                      ]
-                    : null,
-              ),
-              alignment: Alignment.center,
-              child: isCompleted
-                  ? const Icon(Icons.check, size: 16, color: fgColor)
-                  : Text(
-                      '$stepNumber',
-                      style: TextStyle(
-                        fontFamily: 'Space Grotesk',
-                        fontSize: 13,
-                        fontWeight: FontWeight.w700,
-                        color: isFuture
-                            ? AppColors.textOnDarkTertiary
-                            : fgColor,
-                      ),
+        Container(
+          width: 30,
+          height: 30,
+          decoration: BoxDecoration(
+            color: bgColor,
+            shape: BoxShape.circle,
+            border: isFuture
+                ? Border.all(color: AppColors.darkBorderPrimary, width: 1)
+                : null,
+            boxShadow: !isFuture
+                ? const [
+                    BoxShadow(
+                      color: AppColors.primarySubtle,
+                      spreadRadius: 3,
+                      blurRadius: 0,
                     ),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              label,
-              style: TextStyle(
-                fontFamily: 'Space Grotesk',
-                fontSize: 11,
-                fontWeight: labelWeight,
-                color: labelColor,
-              ),
-            ),
-          ],
-        ),
-        if (showConnector)
-          Expanded(
-            child: Container(
-              height: 2,
-              margin: const EdgeInsets.only(bottom: 17),
-              decoration: BoxDecoration(
-                color: isCompleted
-                    ? AppColors.primary
-                    : AppColors.darkBorderPrimary,
-                borderRadius: BorderRadius.circular(1),
-              ),
-            ),
+                  ]
+                : null,
           ),
+          alignment: Alignment.center,
+          child: isCompleted
+              ? const Icon(Icons.check, size: 16, color: fgColor)
+              : Text(
+                  '$stepNumber',
+                  style: TextStyle(
+                    fontFamily: 'Space Grotesk',
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: isFuture ? AppColors.textOnDarkTertiary : fgColor,
+                  ),
+                ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          label,
+          style: TextStyle(
+            fontFamily: 'Space Grotesk',
+            fontSize: 11,
+            fontWeight: labelWeight,
+            color: labelColor,
+          ),
+        ),
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/design_system/foundation/theme/app_colors.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/steps/step_circle.dart';
 
 /// 4-step progress indicator for the event creation wizard.
@@ -29,24 +30,42 @@ class EventStepIndicator extends StatelessWidget {
       context.l10n.event_step_reviewAndPublish,
     ];
 
+    final items = <Widget>[];
+    for (int i = 0; i < totalSteps; i++) {
+      final isCompleted = i < currentStep;
+      final isActive = i == currentStep;
+      final label = i < labels.length ? labels[i] : '${i + 1}';
+      items.add(
+        StepCircle(
+          stepNumber: i + 1,
+          label: label,
+          isCompleted: isCompleted,
+          isActive: isActive,
+        ),
+      );
+      if (i < totalSteps - 1) {
+        items.add(
+          Expanded(
+            child: Container(
+              height: 2,
+              margin: const EdgeInsets.only(top: 14, bottom: 17),
+              decoration: BoxDecoration(
+                color: isCompleted
+                    ? AppColors.primary
+                    : AppColors.darkBorderPrimary,
+                borderRadius: BorderRadius.circular(1),
+              ),
+            ),
+          ),
+        );
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 12, 24, 20),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: List.generate(totalSteps, (index) {
-          final isCompleted = index < currentStep;
-          final isActive = index == currentStep;
-          final label = index < labels.length ? labels[index] : '${index + 1}';
-          return Expanded(
-            child: StepCircle(
-              stepNumber: index + 1,
-              label: label,
-              isCompleted: isCompleted,
-              isActive: isActive,
-              showConnector: index < totalSteps - 1,
-            ),
-          );
-        }),
+        children: items,
       ),
     );
   }
