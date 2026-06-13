@@ -73,15 +73,24 @@ void main() {
     );
     MapboxOptions.setAccessToken(mapboxToken!);
 
-    const diEnvironment = kReleaseMode ? 'prod' : 'dev';
-    configureDependencies(environment: diEnvironment);
+    // Resuelto antes de Sentry.init para (a) propagar la traza al host real de
+    // dev en la ventana dev-verify y (b) setear el tag api_base_url.
+    final resolvedApiUrl = ApiBaseUrlResolver(
+      FirebaseRemoteConfig.instance,
+    ).resolve();
 
-    // Sentry init — después de Firebase y DI, antes de runApp, para capturar
-    // crashes de arranque. DSN vacío en dev → no envía nada.
+    // Sentry init — antes de DI para que TracingClientAdapter esté activo
+    // cuando AppDio.addSentry() se ejecute dentro de configureDependencies().
+    // Si Sentry se inicializa después de DI, isTracingEnabled() es false en
+    // ese momento y TracingClientAdapter no se agrega; el header sentry-trace
+    // nunca se envía.
     await SentryFlutter.init((options) {
       options.dsn = _sentryDsn;
       options.environment = kReleaseMode ? 'prod' : 'dev';
-      options.tracesSampleRate = kReleaseMode ? 0.2 : 0.0;
+      // En dev-verify subimos el sampling a 1.0 para poder ver trazas
+      // distribuidas; en plain debug queda 0.0 (no traza); en prod 0.2.
+      options.tracesSampleRate =
+          kReleaseMode ? 0.2 : (kSentryDevVerify ? 1.0 : 0.0);
       // tracePropagationTargets restringe el header sentry-trace al host
       // Rideglory y hosts locales de dev. Nunca Mapbox ni Firebase Storage.
       options.tracePropagationTargets.clear();
@@ -90,6 +99,14 @@ void main() {
         '10.0.2.2',
         'localhost',
       ]);
+      // dev-verify: propagar también al host real del backend de dev (p.ej. la
+      // IP LAN del override de .env) para correlacionar la traza app↔backend.
+      if (kSentryDevVerify) {
+        final devHost = Uri.tryParse(resolvedApiUrl)?.host;
+        if (devHost != null && devHost.isNotEmpty) {
+          options.tracePropagationTargets.add(devHost);
+        }
+      }
       options.beforeSend = (event, hint) {
         // En debug, bloquear envío salvo que el flag de verificación esté activo.
         if (kDebugMode && !kSentryDevVerify) return null;
@@ -104,12 +121,13 @@ void main() {
     // AC8: Registrar api_base_url como tag de scope Sentry.
     // Reemplaza crashlytics.setCustomKey('api_base_url', ...) eliminado en D13.
     // Sentry vacío en dev (DSN vacío) → el tag se setea pero nunca se envía.
-    final resolvedApiUrl = ApiBaseUrlResolver(
-      FirebaseRemoteConfig.instance,
-    ).resolve();
     Sentry.configureScope(
       (scope) => scope.setTag('api_base_url', resolvedApiUrl),
     );
+
+    // DI después de Sentry para que TracingClientAdapter se active en AppDio.
+    const diEnvironment = kReleaseMode ? 'prod' : 'dev';
+    configureDependencies(environment: diEnvironment);
 
     try {
       await getIt<CrashReporter>().setEnabled(!kDebugMode);
