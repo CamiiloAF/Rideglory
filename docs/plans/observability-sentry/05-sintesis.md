@@ -26,7 +26,7 @@ Integrados desde el Architect (`03`) y el Plan Reviewer (`04`):
 - Reencuadre: el núcleo de esfuerzo/riesgo es el `traceId` distribuido por TCP, no pino. El shape del envelope lo fija el Architect antes de ejecutar; sub-entregas opcionales si el alcance crece.
 
 **Fase 2 (backend Sentry):**
-- **Un solo proyecto Sentry con tag `service`** (no proyecto-por-servicio), por volumen y cuota free. **Decisión cerrada.**
+- **Proyecto Sentry de backend independiente** (`rideglory-backend`, separado de `rideglory-flutter`), con los 6 MS distinguidos por tag `service` (no un proyecto por MS). **Revisado 2026-06-12** (antes era "un solo proyecto compartido app+backend"): la cuota de errores es a nivel de organización, así que separar no la multiplica, pero separar da triage/alertas/release-health limpios por plataforma; el trazado distribuido sigue funcionando entre proyectos de la misma org.
 - `SENTRY_DSN` opcional en joi + gating por `NODE_ENV==='production'` para no romper dev local.
 - Extender los filtros existentes (`RpcCustomExceptionFilter`, `RpcAllExceptionsFilter`): ≥500 → `captureException` (*error event* con alerta); 4xx → `Sentry.logger.warn` (structured log con `traceId`/`service`, `enableLogs: true`) — contexto sin alerta, usa cuota de logs (5 GB) no la de errores (5k). Los 4xx también siguen en pino. **Decisión del usuario.**
 - Abstraer en `rideglory-common-lib` la tríada serializer/deserializer/cls + bootstrap Sentry (`instrument.ts` + `SentryModule` + joi), registrada ×6, como **criterio de aceptación** (evita divergencia). Recordar rebuild + reinstalar la lib en cada MS.

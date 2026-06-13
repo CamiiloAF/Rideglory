@@ -108,8 +108,10 @@ dependencies:
   pdfx: ^2.9.2
   # Anonymous telemetry for SOAT OCR flow
   firebase_analytics: ^12.0.0
-  # Crash reporting
-  firebase_crashlytics: ^5.2.0
+  # Crash reporting — Crashlytics se retira tras validación prod-like (D10)
+  # Sentry SDK: error reporting + tracing
+  sentry_flutter: ^8.13.2
+  sentry_dio: ^8.13.2
   # SHA-256 hashing for anonymous user id (acquisition funnel)
   crypto: ^3.0.3
   package_info_plus: ^9.0.1

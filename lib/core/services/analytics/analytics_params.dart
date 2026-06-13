@@ -212,6 +212,10 @@ abstract final class AnalyticsParams {
   /// Tipo: `String`. Max key 40 chars: 15. ✓
   static const String approvalAction = 'approval_action';
 
+  /// Índice del paso en que se abandonó el wizard (0-based).
+  /// Tipo: `int`. Max key 40 chars: 17. ✓
+  static const String abandonedAtStep = 'abandoned_at_step';
+
   // ---------------------------------------------------------------------------
   // Live tracking / SOS — params no-PII (Fase 8)
   //
@@ -265,6 +269,19 @@ abstract final class AnalyticsParams {
 
   /// Acción de marcar "listo para editar".
   static const String approvalActionReadyForEdit = 'ready_for_edit';
+
+  // Valores canónicos de step_name (wizard de creación de evento)
+  /// Paso de datos básicos del evento (nombre, fecha, hora).
+  static const String stepNameBasics = 'basics';
+
+  /// Paso de configuración del evento (tipo, dificultad, precio, etc.).
+  static const String stepNameConfig = 'config';
+
+  /// Paso de ruta del evento (punto de encuentro, destino, waypoints).
+  static const String stepNameRoute = 'route';
+
+  /// Paso de revisión final antes de publicar.
+  static const String stepNameReview = 'review';
 
   // Valores canónicos de step_name (wizard de registro)
   /// Paso de datos personales.

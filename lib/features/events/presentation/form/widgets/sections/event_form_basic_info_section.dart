@@ -70,7 +70,6 @@ class _EventFormBasicInfoSectionState
     final title = formValues[EventFormFields.name] as String? ?? '';
     final eventType =
         (formValues[EventFormFields.eventType] as EventType?)?.apiValue ?? '';
-    final city = formValues[EventFormFields.city] as String? ?? '';
     final difficulty =
         (formValues[EventFormFields.difficulty] as EventDifficulty?)?.label;
 
@@ -81,7 +80,6 @@ class _EventFormBasicInfoSectionState
     return AiDescriptionRequest(
       title: title,
       eventType: eventType,
-      city: city,
       difficulty: difficulty,
       startDate: startDate,
       history: const [],
@@ -166,19 +164,6 @@ class _EventFormBasicInfoSectionState
           validator: FormBuilderValidators.required(
             errorText: context.l10n.event_descriptionRequired,
           ),
-        ),
-        AppSpacing.gapLg,
-        AppCityAutocomplete(
-          name: EventFormFields.city,
-          labelText: context.l10n.event_eventCity,
-          hintText: context.l10n.event_eventCityHint,
-          isRequired: true,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return context.l10n.event_cityRequired;
-            }
-            return null;
-          },
         ),
       ],
     );

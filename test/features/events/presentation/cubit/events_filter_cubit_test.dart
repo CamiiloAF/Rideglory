@@ -29,7 +29,6 @@ void main() {
     description: 'Test event description',
     eventType: EventType.tourism,
     difficulty: EventDifficulty.two,
-    city: 'Medellín',
     startDate: DateTime(2026, 5, 20),
     endDate: DateTime(2026, 5, 20),
     meetingPoint: 'Parque Bolívar',
@@ -60,7 +59,6 @@ void main() {
               type: null,
               dateFrom: null,
               dateTo: null,
-              city: null,
             )).thenAnswer((_) async => Right([mockEvent]));
       },
       build: () => eventsCubit,
@@ -80,7 +78,6 @@ void main() {
               type: null,
               dateFrom: null,
               dateTo: null,
-              city: null,
             )).called(1);
       },
     );
@@ -93,7 +90,6 @@ void main() {
               type: any(named: 'type'),
               dateFrom: null,
               dateTo: null,
-              city: null,
             )).thenAnswer((_) async => Right([mockEvent]));
       },
       build: () => eventsCubit,
@@ -110,48 +106,14 @@ void main() {
       ],
     );
 
-    // TC-2-3: updateFilters() with city filter calls fetchEvents with city param
+    // TC-2-3: updateFilters() with date range calls fetchEvents with dateFrom and dateTo
     blocTest<EventsCubit, ResultState<List<EventModel>>>(
-      'TC-2-3: updateFilters() with city filter forwards city to backend',
-      setUp: () {
-        when(() => mockGetEventsUseCase(
-              type: null,
-              dateFrom: null,
-              dateTo: null,
-              city: 'Medellín',
-            )).thenAnswer((_) async => Right([mockEvent]));
-      },
-      build: () => eventsCubit,
-      act: (cubit) {
-        const filters = EventFilters(city: 'Medellín');
-        cubit.updateFilters(filters);
-      },
-      expect: () => [
-        const ResultState<List<EventModel>>.loading(),
-        const ResultState<List<EventModel>>.initial(),
-        predicate<ResultState<List<EventModel>>>(
-          (state) => state is Data<List<EventModel>>,
-        ),
-      ],
-      verify: (cubit) {
-        verify(() => mockGetEventsUseCase(
-              type: null,
-              dateFrom: null,
-              dateTo: null,
-              city: 'Medellín',
-            )).called(1);
-      },
-    );
-
-    // TC-2-4: updateFilters() with date range calls fetchEvents with dateFrom and dateTo
-    blocTest<EventsCubit, ResultState<List<EventModel>>>(
-      'TC-2-4: updateFilters() with date range forwards dates to backend',
+      'TC-2-3: updateFilters() with date range forwards dates to backend',
       setUp: () {
         when(() => mockGetEventsUseCase(
               type: null,
               dateFrom: any(named: 'dateFrom'),
               dateTo: any(named: 'dateTo'),
-              city: null,
             )).thenAnswer((_) async => Right([mockEvent]));
       },
       build: () => eventsCubit,
@@ -171,15 +133,14 @@ void main() {
       ],
     );
 
-    // TC-2-5: updateFilters() with combined filters forwards all params
+    // TC-2-4: updateFilters() with combined filters forwards all params
     blocTest<EventsCubit, ResultState<List<EventModel>>>(
-      'TC-2-5: updateFilters() with combined filters forwards all params',
+      'TC-2-4: updateFilters() with combined filters forwards all params',
       setUp: () {
         when(() => mockGetEventsUseCase(
               type: any(named: 'type'),
               dateFrom: any(named: 'dateFrom'),
               dateTo: any(named: 'dateTo'),
-              city: 'Medellín',
             )).thenAnswer((_) async => Right([mockEvent]));
       },
       build: () => eventsCubit,
@@ -188,7 +149,6 @@ void main() {
           types: {EventType.tourism},
           startDate: DateTime(2026, 5, 20),
           endDate: DateTime(2026, 5, 25),
-          city: 'Medellín',
         );
         cubit.updateFilters(filters);
       },
@@ -201,20 +161,19 @@ void main() {
       ],
     );
 
-    // TC-2-6: clearFilters() resets activeFilter and re-fetches
+    // TC-2-5: clearFilters() resets activeFilter and re-fetches
     blocTest<EventsCubit, ResultState<List<EventModel>>>(
-      'TC-2-6: clearFilters() resets filters and triggers fetch',
+      'TC-2-5: clearFilters() resets filters and triggers fetch',
       setUp: () {
         when(() => mockGetEventsUseCase(
               type: any(named: 'type'),
               dateFrom: any(named: 'dateFrom'),
               dateTo: any(named: 'dateTo'),
-              city: any(named: 'city'),
             )).thenAnswer((_) async => Right([mockEvent]));
       },
       build: () => eventsCubit,
       act: (cubit) async {
-        const filters = EventFilters(city: 'Medellín');
+        const filters = EventFilters(types: {EventType.tourism});
         cubit.updateFilters(filters);
         await Future<void>.delayed(Duration.zero);
         cubit.clearFilters();
@@ -224,15 +183,14 @@ void main() {
       },
     );
 
-    // TC-2-7: fetchEvents() error state emits DomainException
+    // TC-2-6: fetchEvents() error state emits DomainException
     blocTest<EventsCubit, ResultState<List<EventModel>>>(
-      'TC-2-7: fetchEvents() error state emits DomainException',
+      'TC-2-6: fetchEvents() error state emits DomainException',
       setUp: () {
         when(() => mockGetEventsUseCase(
               type: null,
               dateFrom: null,
               dateTo: null,
-              city: null,
             )).thenAnswer((_) async => const Left(
               DomainException(message: 'Network error'),
             ));
@@ -249,21 +207,21 @@ void main() {
       ],
     );
 
-    // TC-2-8: EventFilters.hasFilters returns false when no filters set
-    test('TC-2-8: EventFilters.hasFilters is false with no filters', () {
+    // TC-2-7: EventFilters.hasFilters returns false when no filters set
+    test('TC-2-7: EventFilters.hasFilters is false with no filters', () {
       const filters = EventFilters();
       expect(filters.hasFilters, false);
     });
 
-    // TC-2-9: EventFilters.hasFilters returns true when type filter is set
-    test('TC-2-9: EventFilters.hasFilters is true with type filter', () {
+    // TC-2-8: EventFilters.hasFilters returns true when type filter is set
+    test('TC-2-8: EventFilters.hasFilters is true with type filter', () {
       const filters = EventFilters(types: {EventType.tourism});
       expect(filters.hasFilters, true);
     });
 
-    // TC-2-10: EventFilters.hasFilters returns true when city filter is set
-    test('TC-2-10: EventFilters.hasFilters is true with city filter', () {
-      const filters = EventFilters(city: 'Medellín');
+    // TC-2-9: EventFilters.hasFilters returns true when date filter is set
+    test('TC-2-9: EventFilters.hasFilters is true with date filter', () {
+      final filters = EventFilters(startDate: DateTime(2026, 5, 20));
       expect(filters.hasFilters, true);
     });
   });

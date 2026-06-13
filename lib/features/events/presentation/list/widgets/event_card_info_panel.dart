@@ -92,7 +92,7 @@ class EventCardInfoPanel extends StatelessWidget {
               AppSpacing.hGapXs,
               Expanded(
                 child: Text(
-                  event.city,
+                  event.meetingPoint,
                   style: context.bodySmall?.copyWith(
                     color: context.colorScheme.onSurfaceVariant,
                   ),

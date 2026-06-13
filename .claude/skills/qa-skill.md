@@ -235,7 +235,7 @@ Mock library: `mocktail`. Cubit test library: `bloc_test`. Network image mock: `
 - dart analyze: zero new violations
 - flutter test: 100% green, no regressions
 - All acceptance criteria from po.md explicitly verified
-- BUG tasks filed in workflow/state.json for any failing criteria
+- Bugs documented in the run's handoff (docs/exec-runs/<slug>/handoffs/qa.md, "Bugs filed" table) for any failing criteria
 
 ## Change log
 - 2026-05-13 (plan v3 approval): QA strategy per iteration documented. Physical device requirements and smoke test lists established.

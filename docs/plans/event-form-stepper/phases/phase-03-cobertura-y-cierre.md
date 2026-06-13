@@ -248,6 +248,8 @@ Archivo: `test/features/events/presentation/form/widgets/steps/event_form_step1_
 
 - Tests de `EventFormStep2`, `EventFormStep3`, `EventFormStep4Review` — complejidad media, fuera del
   alcance definido en `05-sintesis.md` sección Plan-7.
+- Tests de los widgets de animación (`PulsingMapDot`, `SearchSkeletonList`) — verificados
+  visualmente en Fase 2; tests formales diferidos a deuda técnica.
 - Tests de integración del wizard completo.
 
 ---

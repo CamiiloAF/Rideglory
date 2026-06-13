@@ -330,12 +330,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_eventName => 'Nombre del evento';
 
   @override
-  String get event_eventCity => 'Ciudad';
-
-  @override
-  String get event_eventCityHint => 'Buscar ciudad y departamento...';
-
-  @override
   String get event_filterDateHint => 'Seleccionar';
 
   @override
@@ -399,11 +393,31 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_newEvent => 'Nuevo evento';
 
   @override
-  String get event_addEventCover => 'Agregar portada del evento';
+  String get event_coverSectionLabel => 'PORTADA';
 
   @override
-  String get event_addEventCoverHint =>
-      'Una imagen impactante atrae a más motociclistas. Formatos: JPG, PNG.';
+  String get event_form_basicInfoSectionLabel => 'INFORMACIÓN BÁSICA';
+
+  @override
+  String get event_form_dateTimeSectionLabel => 'FECHA Y HORA';
+
+  @override
+  String get event_form_dateLabel => 'Fecha';
+
+  @override
+  String get event_form_timeLabel => 'Hora de inicio';
+
+  @override
+  String get event_form_datePlaceholder => 'Seleccionar fecha...';
+
+  @override
+  String get event_form_timePlaceholder => 'Seleccionar hora...';
+
+  @override
+  String get event_addEventCover => 'Agregar portada';
+
+  @override
+  String get event_addEventCoverHint => 'JPG · PNG · 1200×628';
 
   @override
   String get event_uploadImage => 'Subir imagen';
@@ -472,9 +486,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_filterByDifficulty => 'Dificultad';
-
-  @override
-  String get event_filterByCity => 'Ciudad';
 
   @override
   String get event_filterByDateRange => 'Rango de fechas';
@@ -625,9 +636,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_descriptionRequired => 'La descripción es requerida';
-
-  @override
-  String get event_cityRequired => 'La ciudad es requerida';
 
   @override
   String get event_dateRangeRequired => 'Las fechas del evento son requeridas';
@@ -2614,7 +2622,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get route_customLabel => 'Ruta personalizada';
 
   @override
-  String get route_builder_title => 'Crear ruta personalizada';
+  String get route_builder_title => 'Crear ruta';
 
   @override
   String get route_builder_search_placeholder => 'Buscar un lugar...';
@@ -2948,4 +2956,172 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get ai_error_network =>
       'No se pudo conectar con el servicio de IA. Verifica tu conexión e intenta de nuevo.';
+
+  @override
+  String get event_step_basicInfo => 'Básico';
+
+  @override
+  String get event_step_details => 'Detalles';
+
+  @override
+  String get event_step_route => 'Ruta';
+
+  @override
+  String get event_step_reviewAndPublish => 'Revisar';
+
+  @override
+  String get event_step1_title => 'Información básica';
+
+  @override
+  String get event_step1_subtitle => 'Portada, nombre y fecha del evento';
+
+  @override
+  String get event_step2_title => 'Detalles del evento';
+
+  @override
+  String get event_step2_subtitle => 'Dificultad, tipo, marcas y configuración';
+
+  @override
+  String get event_step3_title => 'Ruta del evento';
+
+  @override
+  String get event_step3_subtitle =>
+      'Define los puntos de salida, intermedios y llegada';
+
+  @override
+  String get event_step4_title => 'Revisa tu evento';
+
+  @override
+  String get event_step4_subtitle => 'Confirma los datos antes de publicar';
+
+  @override
+  String get event_step_continue => 'Continuar';
+
+  @override
+  String get event_step_back => 'Atrás';
+
+  @override
+  String get event_step_of => 'de';
+
+  @override
+  String get event_step_saveDraft => 'Guardar borrador';
+
+  @override
+  String event_step_progressLabel(int current, int total) {
+    return 'Paso $current de $total';
+  }
+
+  @override
+  String get event_step_review_basicSection => 'Información básica';
+
+  @override
+  String get event_step_review_detailsSection => 'Configuración';
+
+  @override
+  String get event_step_review_routeSection => 'Ruta';
+
+  @override
+  String get event_step_review_editButton => 'Editar';
+
+  @override
+  String get event_step_review_noName => 'Sin nombre';
+
+  @override
+  String get event_step_review_noDescription => 'Sin descripción';
+
+  @override
+  String get event_step_review_noDate => 'Sin fecha';
+
+  @override
+  String get event_step_review_noMeetingPoint => 'Sin punto de encuentro';
+
+  @override
+  String get event_step_review_noDestination => 'Sin destino';
+
+  @override
+  String get event_step_review_noRoute => 'Sin ruta configurada';
+
+  @override
+  String get event_step_review_difficulty => 'Dificultad';
+
+  @override
+  String get event_step_review_type => 'Tipo';
+
+  @override
+  String get event_step_review_brands => 'Marcas';
+
+  @override
+  String get event_step_review_allBrands => 'Todas las marcas';
+
+  @override
+  String get event_step_review_maxParticipants => 'Participantes';
+
+  @override
+  String get event_step_review_noLimit => 'Sin límite';
+
+  @override
+  String get event_step_review_price => 'Precio';
+
+  @override
+  String get event_step_review_free => 'Gratuito';
+
+  @override
+  String get event_step_review_meetingPoint => 'Punto de encuentro';
+
+  @override
+  String get event_step_review_destination => 'Destino';
+
+  @override
+  String get event_step_review_waypoints => 'Puntos intermedios';
+
+  @override
+  String get event_step_review_publishButton => 'Publicar evento';
+
+  @override
+  String get event_step_review_dateTimeSection => 'Fecha y hora';
+
+  @override
+  String get event_step_review_date => 'Fecha';
+
+  @override
+  String get event_step_review_meetingTime => 'Hora inicio';
+
+  @override
+  String get event_step_review_multiDay => 'Varios días';
+
+  @override
+  String get event_step_review_yes => 'Sí';
+
+  @override
+  String get event_step_review_no => 'No';
+
+  @override
+  String get event_step_review_coverLoaded => 'Imagen cargada ✓';
+
+  @override
+  String get event_step_review_coverNone => 'Sin portada';
+
+  @override
+  String get event_step_review_descAdded => 'Añadida ✓';
+
+  @override
+  String get event_step_review_nameLabel => 'Nombre';
+
+  @override
+  String get event_step_review_descLabel => 'Descripción';
+
+  @override
+  String get event_step_review_coverLabel => 'Portada';
+
+  @override
+  String get event_cover_picker_title => 'Portada del evento';
+
+  @override
+  String get event_cover_picker_gallery => 'Subir desde galería';
+
+  @override
+  String get event_cover_picker_change => 'Cambiar imagen';
+
+  @override
+  String get event_cover_picker_remove => 'Eliminar portada';
 }

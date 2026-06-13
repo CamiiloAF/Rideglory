@@ -112,7 +112,7 @@ void main() {
           userMessage: 'Genera una descripción',
           title: 'Rodada del Pacífico',
           eventType: 'tourism',
-          city: 'Cali',
+
         );
 
         expect(
@@ -140,7 +140,7 @@ void main() {
         userMessage: 'Genera',
         title: 'Test',
         eventType: 'tourism',
-        city: 'Bogotá',
+
       ),
       expect: () => [
         isA<AiDescriptionChatState>().having(
@@ -187,7 +187,7 @@ void main() {
           userMessage: 'Genera',
           title: 'Test',
           eventType: 'tourism',
-          city: 'Bogotá',
+  
         );
 
         // After sendMessage: history = [userTurn, modelTurn] → length = 2
@@ -217,7 +217,7 @@ void main() {
           userMessage: 'Genera',
           title: 'Test',
           eventType: 'tourism',
-          city: 'Bogotá',
+  
         );
 
         verify(
@@ -253,7 +253,7 @@ void main() {
             userMessage: 'Genera',
             title: 'Test',
             eventType: 'tourism',
-            city: 'Bogotá',
+    
           );
 
           verify(
@@ -289,7 +289,7 @@ void main() {
             userMessage: 'Genera',
             title: 'Test',
             eventType: 'tourism',
-            city: 'Bogotá',
+    
           );
 
           verify(

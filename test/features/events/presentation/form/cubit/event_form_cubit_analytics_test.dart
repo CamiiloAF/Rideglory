@@ -32,7 +32,6 @@ final _mockEvent = EventModel(
   description: 'Paseo turístico',
   eventType: EventType.tourism,
   difficulty: EventDifficulty.two,
-  city: 'Medellín',
   startDate: DateTime(2026, 6, 15),
   meetingPoint: 'Parque Berrio',
   destination: 'Santa Fe de Antioquia',
@@ -232,5 +231,135 @@ void main() {
 
       expect(cubit.state.saveResult, isA<Error<EventModel>>());
     });
+
+    // CA1: saveEvent fires events_publish_attempted intent before async work
+    test(
+      'CA1: saveEvent → events_publish_attempted with form_mode fired first',
+      () async {
+        when(() => mockCreate(_mockEvent)).thenAnswer(
+          (_) async => Right(_mockEvent),
+        );
+
+        cubit.initialize();
+        await cubit.saveEvent(_mockEvent);
+
+        verify(
+          () => mockAnalytics.logEvent(
+            AnalyticsEvents.eventsPublishAttempted,
+            {AnalyticsParams.formMode: AnalyticsParams.formModeCreate},
+          ),
+        ).called(1);
+      },
+    );
+
+    // CA2a: nextStep fires events_step_advanced with correct step_index and step_name
+    test(
+      'CA2a: nextStep from step 0 → events_step_advanced step_index=1 step_name=config',
+      () {
+        cubit.initialize();
+        cubit.nextStep();
+
+        verify(
+          () => mockAnalytics.logEvent(
+            AnalyticsEvents.eventsStepAdvanced,
+            {
+              AnalyticsParams.stepIndex: 1,
+              AnalyticsParams.stepName: 'config',
+            },
+          ),
+        ).called(1);
+      },
+    );
+
+    // CA2b: prevStep fires events_step_back with correct step_index and step_name
+    test(
+      'CA2b: prevStep from step 1 → events_step_back step_index=0 step_name=basics',
+      () {
+        cubit.initialize();
+        cubit.nextStep(); // go to step 1
+        cubit.prevStep(); // back to step 0
+
+        verify(
+          () => mockAnalytics.logEvent(
+            AnalyticsEvents.eventsStepBack,
+            {
+              AnalyticsParams.stepIndex: 0,
+              AnalyticsParams.stepName: 'basics',
+            },
+          ),
+        ).called(1);
+      },
+    );
+
+    // CA2c: close() without publish → events_create_abandoned with abandonedAtStep
+    test(
+      'CA2c: close() without publish → events_create_abandoned fired once',
+      () async {
+        cubit.initialize();
+        cubit.nextStep(); // step 1
+        await cubit.close();
+
+        verify(
+          () => mockAnalytics.logEvent(
+            AnalyticsEvents.eventsCreateAbandoned,
+            {
+              AnalyticsParams.formMode: AnalyticsParams.formModeCreate,
+              AnalyticsParams.abandonedAtStep: 1,
+            },
+          ),
+        ).called(1);
+      },
+    );
+
+    // CA2d: close() after successful publish → events_create_abandoned NOT fired (idempotent)
+    test(
+      'CA2d: close() after saveEvent success → events_create_abandoned NOT fired',
+      () async {
+        when(() => mockCreate(_mockEvent)).thenAnswer(
+          (_) async => Right(_mockEvent),
+        );
+
+        cubit.initialize();
+        await cubit.saveEvent(_mockEvent);
+        await cubit.close();
+
+        verifyNever(
+          () => mockAnalytics.logEvent(
+            AnalyticsEvents.eventsCreateAbandoned,
+            any(),
+          ),
+        );
+      },
+    );
+
+    // CA2e: nextStep beyond step 3 does not fire events_step_advanced
+    test(
+      'CA2e: nextStep when already at step 3 → events_step_advanced NOT fired',
+      () {
+        cubit.initialize();
+        cubit.goToStep(3);
+        cubit.nextStep(); // should be a no-op
+
+        verifyNever(
+          () => mockAnalytics.logEvent(
+            AnalyticsEvents.eventsStepAdvanced,
+            any(),
+          ),
+        );
+      },
+    );
+
+    // CA2f: prevStep when at step 0 does not fire events_step_back
+    test(
+      'CA2f: prevStep when already at step 0 → events_step_back NOT fired',
+      () {
+        cubit.initialize();
+        cubit.prevStep(); // should be a no-op
+
+        verifyNever(
+          () => mockAnalytics.logEvent(AnalyticsEvents.eventsStepBack, any()),
+        );
+      },
+    );
   });
 }

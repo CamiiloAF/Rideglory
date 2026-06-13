@@ -10,6 +10,8 @@
 
 El equipo ve crashes y errores **5xx** del backend en **Sentry como *error events* (con alerta)**, correlacionados por `traceId` y por el tag `service`. Los **4xx** se envían a Sentry como **structured logs** (contexto ligado al `traceId`), **no** como *error events*: aparecen para investigar pero **no disparan alerta ni consumen la cuota de errores** (5k/mes); usan la cuota de Sentry Logs (5 GB/mes). La instrumentación está activa **solo en producción** (`NODE_ENV === 'production'`), no rompe el arranque de dev local sin DSN, y nunca filtra PII ni secretos.
 
+> ⚠️ **VENTANA DE VERIFICACIÓN (TEMPORAL — decisión del usuario).** Durante TODAS las fases de Sentry (2 y 3), Sentry queda **habilitado también en dev** para verificar que la integración funciona de verdad. Implementarlo con una palanca explícita y reversible: env `SENTRY_DEV_VERIFY=true` que fuerce `enabled: true` aunque `NODE_ENV !== 'production'` (requiere DSN presente). **Al cerrar la última fase de Sentry se DEBE revertir a la regla original `dev → consola, prod → Sentry`** (quitar `SENTRY_DEV_VERIFY` y dejar `enabled: NODE_ENV === 'production' && !!dsn`) para armar un PR limpio. Ver sección "Cierre / restauración prod-only" en `PLAN.md`.
+
 ## Alcance (entra / no entra)
 
 ### Entra
@@ -39,7 +41,7 @@ El equipo ve crashes y errores **5xx** del backend en **Sentry como *error event
 1. **Config (joi) ×6.** En cada `*/src/config/envs.ts` añadir a la interfaz `EnvVars`, al `envSchema` y al objeto `envs` exportado: `NODE_ENV` (`joi.string().valid('development','production','test').default('development')`) y `SENTRY_DSN` (`joi.string().uri().optional()`, vacío permitido en dev). No romper el arranque sin DSN.
 
 2. **Helper de Sentry en `rideglory-common-lib`.** Crear en `rideglory-common-lib/src/`:
-   - Un helper `initSentry({ dsn, environment, service, tracesSampleRate, release? })` que llame `Sentry.init(...)` con: `enabled: environment === 'production' && !!dsn`, `enableLogs: true` (structured logs para los 4xx), `tracesSampleRate` desde env, `initialScope: { tags: { service } }`, y `beforeSend`/`beforeSendLog`/`beforeBreadcrumb` que apliquen la denylist PII compartida (Fase 1) sobre `request`, `extra`, `contexts`, `breadcrumbs` y los atributos de log (Authorization, ID token, password, email, teléfono, SOAT, placa, VIN). El helper es **no-op efectivo en dev/test** (no envía).
+   - Un helper `initSentry({ dsn, environment, service, tracesSampleRate, release? })` que llame `Sentry.init(...)` con: `enabled: (environment === 'production' || process.env.SENTRY_DEV_VERIFY === 'true') && !!dsn` (la rama `SENTRY_DEV_VERIFY` es la **ventana de verificación temporal**; se elimina en el cierre dejando solo `environment === 'production'`), `enableLogs: true` (structured logs para los 4xx), `tracesSampleRate` desde env, `initialScope: { tags: { service } }`, y `beforeSend`/`beforeSendLog`/`beforeBreadcrumb` que apliquen la denylist PII compartida (Fase 1) sobre `request`, `extra`, `contexts`, `breadcrumbs` y los atributos de log (Authorization, ID token, password, email, teléfono, SOAT, placa, VIN). El helper es **no-op efectivo en dev/test** (no envía).
    - Un wrapper para registrar `SentryModule.forRoot()` (o reexportar el del SDK NestJS) más la integración de captura para los filtros.
    - Exportar todo por el barrel `index.ts` de la lib.
 

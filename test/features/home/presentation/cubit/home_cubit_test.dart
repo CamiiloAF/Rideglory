@@ -28,7 +28,6 @@ void main() {
     description: 'Paseo turístico',
     eventType: EventType.tourism,
     difficulty: EventDifficulty.two,
-    city: 'Medellín',
     startDate: DateTime(2026, 6, 15),
     meetingPoint: 'Parque Berrio',
     destination: 'Santa Fe de Antioquia',

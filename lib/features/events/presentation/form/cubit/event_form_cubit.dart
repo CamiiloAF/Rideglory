@@ -25,6 +25,7 @@ abstract class EventFormState with _$EventFormState {
   const factory EventFormState({
     @Default(ResultState<EventModel>.initial())
     ResultState<EventModel> saveResult,
+    @Default(0) int currentStep,
     @Default(<String>[]) List<String> waypoints,
     @Default(<AddressLocation?>[]) List<AddressLocation?> waypointLocations,
     @Default(RouteType.simple) RouteType routeType,
@@ -54,9 +55,13 @@ class EventFormCubit extends Cubit<EventFormState> {
   final AnalyticsService _analytics;
 
   EventModel? _editingEvent;
+  bool _terminalEventEmitted = false;
 
   bool get isEditing => _editingEvent != null;
   EventModel? get editingEvent => _editingEvent;
+
+  static String _stepName(int index) =>
+      const ['basics', 'config', 'route', 'review'][index.clamp(0, 3)];
 
   void initialize({EventModel? event}) {
     _editingEvent = event;
@@ -206,6 +211,11 @@ class EventFormCubit extends Cubit<EventFormState> {
     String? localCoverImagePath,
     String? remoteCoverImageUrl,
   }) async {
+    _analytics.logEvent(AnalyticsEvents.eventsPublishAttempted, {
+      AnalyticsParams.formMode: isEditing
+          ? AnalyticsParams.formModeEdit
+          : AnalyticsParams.formModeCreate,
+    }).ignore();
     emit(state.copyWith(saveResult: const ResultState.loading()));
 
     final result = isEditing
@@ -231,6 +241,7 @@ class EventFormCubit extends Cubit<EventFormState> {
         emit(state.copyWith(saveResult: ResultState.error(error: error)));
       },
       (event) {
+        _terminalEventEmitted = true;
         _analytics.logEvent(AnalyticsEvents.eventsPublished, {
           AnalyticsParams.formMode: isEditing
               ? AnalyticsParams.formModeEdit
@@ -340,8 +351,8 @@ class EventFormCubit extends Cubit<EventFormState> {
       id: _editingEvent?.id,
       ownerId: userId,
       name: formData[EventFormFields.name] as String,
-      description: formData[EventFormFields.description] as String,
-      city: formData[EventFormFields.city] as String,
+      description:
+          (formData[EventFormFields.description] as String?)?.trim() ?? '',
       startDate: dateRange?.start ?? DateTime.now(),
       endDate: dateRange?.end != dateRange?.start ? dateRange?.end : null,
       difficulty: formData[EventFormFields.difficulty] as EventDifficulty,
@@ -414,7 +425,6 @@ class EventFormCubit extends Cubit<EventFormState> {
       name: name.trim(),
       description:
           (formData[EventFormFields.description] as String?)?.trim() ?? '',
-      city: (formData[EventFormFields.city] as String?)?.trim() ?? '',
       startDate: dateRange?.start ?? now,
       endDate: dateRange?.end != dateRange?.start ? dateRange?.end : null,
       difficulty:
@@ -461,6 +471,7 @@ class EventFormCubit extends Cubit<EventFormState> {
       (error) =>
           emit(state.copyWith(saveResult: ResultState.error(error: error))),
       (event) {
+        _terminalEventEmitted = true;
         _analytics.logEvent(AnalyticsEvents.eventsDraftSaved, {
           AnalyticsParams.formMode: isEditing
               ? AnalyticsParams.formModeEdit
@@ -482,6 +493,89 @@ class EventFormCubit extends Cubit<EventFormState> {
       return null;
     }, (userId) => userId);
   }
+
+  // ---------------------------------------------------------------------------
+  // Step navigation
+  // ---------------------------------------------------------------------------
+
+  static const List<String> _step1Fields = [
+    EventFormFields.name,
+    EventFormFields.dateRange,
+    EventFormFields.meetingTime,
+  ];
+
+  static const List<String> _step2Fields = [
+    EventFormFields.difficulty,
+    EventFormFields.eventType,
+    EventFormFields.price,
+    EventFormFields.isFreeEvent,
+    EventFormFields.maxParticipants,
+    EventFormFields.isMultiBrand,
+    EventFormFields.allowedBrands,
+  ];
+
+  static const List<String> _step3Fields = [
+    EventFormFields.meetingPoint,
+    EventFormFields.destination,
+  ];
+
+  static const Map<int, List<String>> stepFields = {
+    0: _step1Fields,
+    1: _step2Fields,
+    2: _step3Fields,
+  };
+
+  void nextStep() {
+    final next = state.currentStep + 1;
+    if (next > 3) return;
+    _analytics.logEvent(AnalyticsEvents.eventsStepAdvanced, {
+      AnalyticsParams.stepIndex: next,
+      AnalyticsParams.stepName: _stepName(next),
+    }).ignore();
+    emit(state.copyWith(currentStep: next));
+  }
+
+  void prevStep() {
+    final prev = state.currentStep - 1;
+    if (prev < 0) return;
+    _analytics.logEvent(AnalyticsEvents.eventsStepBack, {
+      AnalyticsParams.stepIndex: prev,
+      AnalyticsParams.stepName: _stepName(prev),
+    }).ignore();
+    emit(state.copyWith(currentStep: prev));
+  }
+
+  @override
+  Future<void> close() {
+    if (!_terminalEventEmitted) {
+      _analytics.logEvent(AnalyticsEvents.eventsCreateAbandoned, {
+        AnalyticsParams.formMode: isEditing
+            ? AnalyticsParams.formModeEdit
+            : AnalyticsParams.formModeCreate,
+        AnalyticsParams.abandonedAtStep: state.currentStep,
+      }).ignore();
+    }
+    return super.close();
+  }
+
+  void goToStep(int step) {
+    assert(step >= 0 && step <= 3, 'step must be between 0 and 3');
+    emit(state.copyWith(currentStep: step));
+  }
+
+  bool validateStep(int step) {
+    final fields = stepFields[step];
+    if (fields == null) return true;
+    return fields.every(
+      (name) => formKey.currentState?.fields[name]?.validate() ?? true,
+    );
+  }
+
+  bool isCurrentStepValid() => validateStep(state.currentStep);
+
+  // ---------------------------------------------------------------------------
+  // Private helpers
+  // ---------------------------------------------------------------------------
 
   /// Maps a [DomainException] to a non-PII failure category string.
   String _categorizeFailure(DomainException error) {

@@ -51,7 +51,6 @@ class EventModel {
   final String? ownerName;
   final String name;
   final String description;
-  final String city;
   final DateTime startDate;
   final DateTime? endDate;
   final EventDifficulty difficulty;
@@ -75,7 +74,6 @@ class EventModel {
     this.ownerName,
     required this.name,
     required this.description,
-    required this.city,
     required this.startDate,
     this.endDate,
     required this.difficulty,
@@ -122,7 +120,6 @@ class EventModel {
     String? ownerName,
     String? name,
     String? description,
-    String? city,
     DateTime? startDate,
     DateTime? endDate,
     EventDifficulty? difficulty,
@@ -146,7 +143,6 @@ class EventModel {
       ownerName: ownerName ?? this.ownerName,
       name: name ?? this.name,
       description: description ?? this.description,
-      city: city ?? this.city,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       difficulty: difficulty ?? this.difficulty,

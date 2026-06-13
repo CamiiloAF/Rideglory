@@ -54,7 +54,6 @@ class AiDescriptionChatCubit extends Cubit<AiDescriptionChatState> {
     required String userMessage,
     required String title,
     required String eventType,
-    required String city,
     String? difficulty,
     String? startDate,
   }) async {
@@ -73,7 +72,6 @@ class AiDescriptionChatCubit extends Cubit<AiDescriptionChatState> {
     final request = AiDescriptionRequest(
       title: title,
       eventType: eventType,
-      city: city,
       difficulty: difficulty,
       startDate: startDate,
       history: updatedHistory,
@@ -131,7 +129,6 @@ class AiDescriptionChatCubit extends Cubit<AiDescriptionChatState> {
   Future<void> retryLastMessage({
     required String title,
     required String eventType,
-    required String city,
     String? difficulty,
     String? startDate,
   }) async {
@@ -145,7 +142,6 @@ class AiDescriptionChatCubit extends Cubit<AiDescriptionChatState> {
     final request = AiDescriptionRequest(
       title: title,
       eventType: eventType,
-      city: city,
       difficulty: difficulty,
       startDate: startDate,
       history: state.history,

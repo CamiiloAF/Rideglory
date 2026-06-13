@@ -63,7 +63,6 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
     });
     // Clear to empty (not reset-to-initial) so an existing filter is wiped.
     final form = _formKey.currentState;
-    form?.fields[EventFilterFormFields.city]?.didChange('');
     form?.fields[EventFilterFormFields.startDate]?.didChange(null);
     form?.fields[EventFilterFormFields.endDate]?.didChange(null);
     form?.fields[EventFilterFormFields.freeOnly]?.didChange(false);
@@ -77,7 +76,6 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
       EventFilters(
         types: _selectedTypes,
         difficulties: _selectedDifficulties,
-        city: values[EventFilterFormFields.city] as String?,
         startDate: values[EventFilterFormFields.startDate] as DateTime?,
         endDate: values[EventFilterFormFields.endDate] as DateTime?,
         freeOnly: values[EventFilterFormFields.freeOnly] as bool? ?? false,
@@ -118,7 +116,6 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                 child: FormBuilder(
                   key: _formKey,
                   initialValue: {
-                    EventFilterFormFields.city: _cubit.filters.city ?? '',
                     EventFilterFormFields.freeOnly: _cubit.filters.freeOnly,
                     EventFilterFormFields.multiBrandOnly:
                         _cubit.filters.multiBrandOnly,
@@ -180,23 +177,6 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                                   }),
                                 );
                               }).toList(),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const FilterDivider(),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            FilterSectionLabel(context.l10n.event_filterByCity),
-                            const SizedBox(height: 12),
-                            const AppCityAutocomplete(
-                              name: EventFilterFormFields.city,
-                              // Label vacío: la sección ya muestra "CIUDAD".
-                              labelText: '',
-                              isRequired: false,
                             ),
                           ],
                         ),

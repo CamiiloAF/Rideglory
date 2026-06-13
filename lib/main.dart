@@ -11,11 +11,15 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:rideglory/core/config/api_remote_config.dart';
 import 'package:rideglory/core/config/app_env.dart';
+import 'package:rideglory/core/config/sentry_config.dart';
+import 'package:rideglory/core/http/api_base_url_resolver.dart';
 import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/core/services/crash/crash_handler_setup.dart';
 import 'package:rideglory/core/services/crash/crash_reporter.dart';
+import 'package:rideglory/core/services/crash/sentry_crash_reporter.dart';
 import 'package:rideglory/core/services/fcm_service.dart';
 import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
 import 'package:rideglory/features/notifications/presentation/cubit/notifications_cubit.dart';
@@ -29,6 +33,12 @@ import 'package:rideglory/l10n/app_localizations.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 
 import 'firebase_options.dart';
+
+// DSN leído en tiempo de compilación desde --dart-define-from-file=config/<flavor>.json.
+// Vacío en dev → Sentry no envía nada. DSN real en prod.
+// NO usar @EnviedField — envied no procesa --dart-define (D4 rev 2).
+const String _sentryDsn = String.fromEnvironment('SENTRY_DSN', defaultValue: '');
+
 
 void main() {
   // runZonedGuarded debe envolver TODA la inicialización + runApp para que
@@ -63,7 +73,61 @@ void main() {
     );
     MapboxOptions.setAccessToken(mapboxToken!);
 
-    configureDependencies();
+    // Resuelto antes de Sentry.init para (a) propagar la traza al host real de
+    // dev en la ventana dev-verify y (b) setear el tag api_base_url.
+    final resolvedApiUrl = ApiBaseUrlResolver(
+      FirebaseRemoteConfig.instance,
+    ).resolve();
+
+    // Sentry init — antes de DI para que TracingClientAdapter esté activo
+    // cuando AppDio.addSentry() se ejecute dentro de configureDependencies().
+    // Si Sentry se inicializa después de DI, isTracingEnabled() es false en
+    // ese momento y TracingClientAdapter no se agrega; el header sentry-trace
+    // nunca se envía.
+    await SentryFlutter.init((options) {
+      options.dsn = _sentryDsn;
+      options.environment = kReleaseMode ? 'prod' : 'dev';
+      // En dev-verify subimos el sampling a 1.0 para poder ver trazas
+      // distribuidas; en plain debug queda 0.0 (no traza); en prod 0.2.
+      options.tracesSampleRate =
+          kReleaseMode ? 0.2 : (kSentryDevVerify ? 1.0 : 0.0);
+      // tracePropagationTargets restringe el header sentry-trace al host
+      // Rideglory y hosts locales de dev. Nunca Mapbox ni Firebase Storage.
+      options.tracePropagationTargets.clear();
+      options.tracePropagationTargets.addAll([
+        'api.rideglory.com',
+        '10.0.2.2',
+        'localhost',
+      ]);
+      // dev-verify: propagar también al host real del backend de dev (p.ej. la
+      // IP LAN del override de .env) para correlacionar la traza app↔backend.
+      if (kSentryDevVerify) {
+        final devHost = Uri.tryParse(resolvedApiUrl)?.host;
+        if (devHost != null && devHost.isNotEmpty) {
+          options.tracePropagationTargets.add(devHost);
+        }
+      }
+      options.beforeSend = (event, hint) {
+        // En debug, bloquear envío salvo que el flag de verificación esté activo.
+        if (kDebugMode && !kSentryDevVerify) return null;
+        return scrubPiiFromEvent(event);
+      };
+      options.beforeBreadcrumb = (crumb, hint) {
+        if (crumb == null) return null;
+        return scrubPiiFromBreadcrumb(crumb);
+      };
+    });
+
+    // AC8: Registrar api_base_url como tag de scope Sentry.
+    // Reemplaza crashlytics.setCustomKey('api_base_url', ...) eliminado en D13.
+    // Sentry vacío en dev (DSN vacío) → el tag se setea pero nunca se envía.
+    Sentry.configureScope(
+      (scope) => scope.setTag('api_base_url', resolvedApiUrl),
+    );
+
+    // DI después de Sentry para que TracingClientAdapter se active en AppDio.
+    const diEnvironment = kReleaseMode ? 'prod' : 'dev';
+    configureDependencies(environment: diEnvironment);
 
     try {
       await getIt<CrashReporter>().setEnabled(!kDebugMode);
@@ -72,10 +136,12 @@ void main() {
       await getIt<AnalyticsService>().setEnabled(!kDebugMode);
     } catch (_) {}
 
-    registerCrashHandlers(
-      isDebug: kDebugMode,
-      reporter: getIt<CrashReporter>(),
-    );
+    try {
+      registerCrashHandlers(
+        isDebug: kDebugMode,
+        reporter: getIt<CrashReporter>(),
+      );
+    } catch (_) {}
 
     runApp(const MyApp());
   }, (error, stack) {

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step 1 — Básico</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div>
+  <p class="phone-label">Step 1 — Básico (modo creación)</p>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <span class="icons">●●●</span>
+    </div>
+
+    <!-- AppFormNavHeader -->
+    <div class="nav-header">
+      <div class="nav-header-row">
+        <!-- Cancelar en modo creación -->
+        <span class="nav-action cancel">Cancelar</span>
+        <span class="nav-title">Nuevo evento</span>
+        <span style="width:64px"></span>
+      </div>
+      <!-- EventStepIndicator en slot bottom -->
+      <div class="step-indicator">
+        <div class="step-circle active">1</div>
+        <div class="step-line future"></div>
+        <div class="step-circle future">2</div>
+        <div class="step-line future"></div>
+        <div class="step-circle future">3</div>
+        <div class="step-line future"></div>
+        <div class="step-circle future">4</div>
+      </div>
+    </div>
+
+    <!-- Body: Step 1 -->
+    <div class="phone-body">
+
+      <!-- Cover Picker -->
+      <div class="section-label">PORTADA</div>
+      <div class="cover-preview" style="cursor:pointer">
+        <div class="icon">🖼️</div>
+        <div class="hint">Toca para agregar portada</div>
+      </div>
+
+      <!-- Información Básica -->
+      <div class="section-label">INFORMACIÓN BÁSICA</div>
+      <div class="form-card" style="padding: 0; overflow:hidden">
+        <input class="text-field" style="border:none; border-bottom: 1px solid #2A2A38; border-radius:0; margin-bottom:0"
+          placeholder="Nombre del evento" value="">
+        <div style="padding: 14px; font-size: 13px; color: var(--text-tertiary)">
+          Descripción del evento (editor de texto)...
+        </div>
+      </div>
+
+      <!-- Fecha y Hora -->
+      <div class="section-label">FECHA Y HORA</div>
+      <div class="form-card">
+        <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:8px">
+          <span style="font-size:13px; color:var(--text-secondary)">Fecha de inicio</span>
+          <span style="font-size:13px; color:var(--primary); font-weight:600">11 jun 2026</span>
+        </div>
+        <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom:8px">
+          <span style="font-size:13px; color:var(--text-secondary)">Hora de encuentro</span>
+          <span style="font-size:13px; color:var(--primary); font-weight:600">07:00 AM</span>
+        </div>
+        <div style="display:flex; justify-content: space-between; align-items:center">
+          <span style="font-size:13px; color:var(--text-secondary)">Evento de varios días</span>
+          <!-- AppSwitch off -->
+          <div style="width:44px; height:24px; background:#2E2E3A; border-radius:12px; position:relative">
+            <div style="width:20px;height:20px; border-radius:50%; background:#5A5A70; position:absolute; top:2px; left:2px"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- EventStepNavBar — step 1: sin Atrás, solo Continuar -->
+    <div class="step-nav-bar">
+      <div class="continue-btn">Continuar</div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <p class="phone-label">Step 1 — Cover picker bottom sheet</p>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <span class="icons">●●●</span>
+    </div>
+    <div class="nav-header">
+      <div class="nav-header-row">
+        <span class="nav-action cancel">Cancelar</span>
+        <span class="nav-title">Nuevo evento</span>
+        <span style="width:64px"></span>
+      </div>
+      <div class="step-indicator">
+        <div class="step-circle active">1</div>
+        <div class="step-line future"></div>
+        <div class="step-circle future">2</div>
+        <div class="step-line future"></div>
+        <div class="step-circle future">3</div>
+        <div class="step-line future"></div>
+        <div class="step-circle future">4</div>
+      </div>
+    </div>
+    <div class="phone-body" style="position:relative">
+      <div class="bottom-sheet-overlay">
+        <div class="bottom-sheet">
+          <div class="bottom-sheet-handle"></div>
+          <div class="bottom-sheet-title">Portada del evento</div>
+          <div class="sheet-option">
+            <div class="sheet-option-icon">🖼️</div>
+            <div class="sheet-option-text">
+              <div class="label">Subir desde galería</div>
+              <div class="hint">Selecciona una imagen de tu dispositivo</div>
+            </div>
+          </div>
+          <!-- NO hay botón de IA -->
+        </div>
+      </div>
+    </div>
+    <div class="step-nav-bar">
+      <div class="continue-btn">Continuar</div>
+    </div>
+  </div>
+</div>
+
+<div>
+  <p class="phone-label">Step 1 — Error de validación (nombre vacío)</p>
+  <div class="phone">
+    <div class="status-bar">
+      <span class="time">9:41</span>
+      <span class="icons">●●●</span>
+    </div>
+    <div class="nav-header">
+      <div class="nav-header-row">
+        <span class="nav-action cancel">Cancelar</span>
+        <span class="nav-title">Nuevo evento</span>
+        <span style="width:64px"></span>
+      </div>
+      <div class="step-indicator">
+        <div class="step-circle active">1</div>
+        <div class="step-line future"></div>
+        <div class="step-circle future">2</div>
+        <div class="step-line future"></div>
+        <div class="step-circle future">3</div>
+        <div class="step-line future"></div>
+        <div class="step-circle future">4</div>
+      </div>
+    </div>
+    <div class="phone-body">
+      <div class="section-label">PORTADA</div>
+      <div class="cover-preview" style="cursor:pointer">
+        <div class="icon">🖼️</div>
+        <div class="hint">Toca para agregar portada</div>
+      </div>
+      <div class="section-label">INFORMACIÓN BÁSICA</div>
+      <div class="form-card" style="padding: 0; overflow:hidden; border-color: var(--error)">
+        <input class="text-field" style="border:none; border-bottom: 1px solid var(--error); border-radius:0; margin-bottom:0"
+          placeholder="Nombre del evento" value="">
+        <div style="padding: 14px; font-size: 13px; color: var(--text-tertiary)">
+          Descripción del evento...
+        </div>
+      </div>
+      <div style="color: var(--error); font-size: 12px; margin-top: -8px; margin-bottom: 12px">
+        El nombre es requerido
+      </div>
+    </div>
+    <div class="step-nav-bar">
+      <div class="continue-btn">Continuar</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

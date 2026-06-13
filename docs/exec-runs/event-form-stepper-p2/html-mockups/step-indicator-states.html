@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EventStepIndicator — todos los estados</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body style="flex-direction:column; align-items:flex-start">
+
+<div style="color:#ccc; font-family:var(--font); margin-bottom:24px">
+  <h2 style="margin-bottom:8px">EventStepIndicator — 4 estados</h2>
+  <p style="font-size:13px; color:#888">Reglas WCAG 1.4.1: el estado "completado" se diferencia por el ícono check, no solo por el color.</p>
+</div>
+
+<!-- Estado de cada paso -->
+<div style="display:flex; flex-direction:column; gap:20px">
+
+  <!-- Step 1 activo -->
+  <div style="background:#1a1a1a; padding:16px 20px; border-radius:12px; width:375px">
+    <p style="color:#888; font-size:12px; margin-bottom:10px">Paso 1 activo — pasos 2,3,4 futuros</p>
+    <div class="step-indicator" style="padding:0">
+      <div class="step-circle active">1</div>
+      <div class="step-line future"></div>
+      <div class="step-circle future">2</div>
+      <div class="step-line future"></div>
+      <div class="step-circle future">3</div>
+      <div class="step-line future"></div>
+      <div class="step-circle future">4</div>
+    </div>
+  </div>
+
+  <!-- Step 2 activo -->
+  <div style="background:#1a1a1a; padding:16px 20px; border-radius:12px; width:375px">
+    <p style="color:#888; font-size:12px; margin-bottom:10px">Paso 1 completado ✓ — Paso 2 activo — 3,4 futuros</p>
+    <div class="step-indicator" style="padding:0">
+      <div class="step-circle done">✓</div>
+      <div class="step-line done"></div>
+      <div class="step-circle active">2</div>
+      <div class="step-line future"></div>
+      <div class="step-circle future">3</div>
+      <div class="step-line future"></div>
+      <div class="step-circle future">4</div>
+    </div>
+  </div>
+
+  <!-- Step 3 activo -->
+  <div style="background:#1a1a1a; padding:16px 20px; border-radius:12px; width:375px">
+    <p style="color:#888; font-size:12px; margin-bottom:10px">Pasos 1,2 completados ✓✓ — Paso 3 activo — 4 futuro</p>
+    <div class="step-indicator" style="padding:0">
+      <div class="step-circle done">✓</div>
+      <div class="step-line done"></div>
+      <div class="step-circle done">✓</div>
+      <div class="step-line done"></div>
+      <div class="step-circle active">3</div>
+      <div class="step-line future"></div>
+      <div class="step-circle future">4</div>
+    </div>
+  </div>
+
+  <!-- Step 4 activo -->
+  <div style="background:#1a1a1a; padding:16px 20px; border-radius:12px; width:375px">
+    <p style="color:#888; font-size:12px; margin-bottom:10px">Pasos 1,2,3 completados ✓✓✓ — Paso 4 activo (Revisión)</p>
+    <div class="step-indicator" style="padding:0">
+      <div class="step-circle done">✓</div>
+      <div class="step-line done"></div>
+      <div class="step-circle done">✓</div>
+      <div class="step-line done"></div>
+      <div class="step-circle done">✓</div>
+      <div class="step-line done"></div>
+      <div class="step-circle active">4</div>
+    </div>
+  </div>
+
+  <!-- Anotaciones de tokens -->
+  <div style="background:#111; border:1px solid #333; border-radius:8px; padding:16px; width:375px; font-size:12px; font-family:var(--font); color:#aaa; line-height:1.8">
+    <strong style="color:#f98c1f">Tokens del indicador</strong><br>
+    completado: bg=<code>#f98c1f</code> · fg=<code>#0D0D0F</code> · icono=<code>Icons.check</code><br>
+    activo:     bg=<code>#f98c1f</code> · fg=<code>#0D0D0F</code> · texto=número<br>
+    futuro:     bg=<code>surfaceContainerHighest</code> · fg=<code>onSurfaceVariant</code> · texto=número<br>
+    línea done: bg=<code>#f98c1f</code>, h=2px<br>
+    línea future: bg=<code>surfaceContainerHighest</code>, h=2px<br>
+    círculo: 28×28px, borderRadius=14
+  </div>
+
+</div>
+
+</body>
+</html>

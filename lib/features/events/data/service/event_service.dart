@@ -17,7 +17,6 @@ abstract class EventService {
     @Query('type') String? type,
     @Query('dateFrom') String? dateFrom,
     @Query('dateTo') String? dateTo,
-    @Query('city') String? city,
   });
 
   @GET(ApiRoutes.myEvents)

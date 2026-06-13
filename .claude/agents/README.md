@@ -11,7 +11,7 @@ Each file is `{role}.md` with YAML frontmatter (`name`, `description`, `model`, 
 | `frontend.md`  | Flutter Developer | sonnet        |
 | `qa.md`        | QA                | sonnet        |
 | `tech_lead.md` | Tech Lead         | sonnet        |
-| `devops.md`    | DevOps            | sonnet        |
+| `ux-reviewer.md` | UX Reviewer       | sonnet        |
 
 **Flutter project context:**
 - `frontend` = Flutter Developer (the "athlete") — works in `lib/` following Clean Architecture

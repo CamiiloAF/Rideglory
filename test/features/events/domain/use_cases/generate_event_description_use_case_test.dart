@@ -25,7 +25,6 @@ void main() {
       const AiDescriptionRequest(
         title: '',
         eventType: '',
-        city: '',
         history: [],
         userMessage: '',
       ),
@@ -53,7 +52,6 @@ void main() {
       final request = AiDescriptionRequest(
         title: 'Rodada',
         eventType: 'tourism',
-        city: 'Bogotá',
         history: history,
         userMessage: 'Hola',
       );
@@ -71,7 +69,6 @@ void main() {
       final request = AiDescriptionRequest(
         title: 'Rodada',
         eventType: 'tourism',
-        city: 'Bogotá',
         history: history,
         userMessage: 'Hola',
       );
@@ -88,7 +85,6 @@ void main() {
       const request = AiDescriptionRequest(
         title: 'Test title',
         eventType: 'off_road',
-        city: 'Medellín',
         difficulty: 'Difícil',
         startDate: '2026-07-01',
         history: [],
@@ -101,7 +97,6 @@ void main() {
       ).captured.single as AiDescriptionRequest;
       expect(captured.title, 'Test title');
       expect(captured.eventType, 'off_road');
-      expect(captured.city, 'Medellín');
       expect(captured.difficulty, 'Difícil');
       expect(captured.startDate, '2026-07-01');
       expect(captured.userMessage, 'Generar');

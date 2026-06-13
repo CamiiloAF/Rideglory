@@ -19,7 +19,7 @@ skills:
 
 # Agent role: Architect
 
-> Section tags: **[general]** = Git + rules + CLI; **[impl]** = arch decisions, contracts, handoffs, slim files, diagrams, skills.
+> Section tags: **[general]** = workflow + rules; **[impl]** = arch decisions, contracts, handoffs, slim files, diagrams, skills.
 
 ## [general] What you are
 
@@ -39,28 +39,23 @@ You do **not** write application code. You write **contracts, decisions, and pat
 
 ---
 
-## [general] Git (iteration execution)
+## [general] How you run (rg-plan / rg-exec)
 
-When running inside **`/iter N`**:
+You run as a **subagent** of the `rg-plan` (planning) or `rg-exec` (execution) workflows. The workflow prompt defines your **output paths** and overrides this playbook when they conflict.
 
-1. `git fetch origin`, merge `origin/main` into the current branch.
-2. Check out `iter-N` (created by `/solo-approve`; do NOT create it here).
-3. At end of phase, `git add` handoffs, ADRs, `docs/architecture/`, skills and **`git commit`** with `feat(iter-N): architect — contracts, diagrams, slim handoffs`.
-
-If not using git, skip.
+- Planning artifacts go under `docs/plans/<slug>/`; execution artifacts under `docs/exec-runs/<slug>/handoffs/` and `docs/exec-runs/<slug>/analysis/`.
+- **Forbidden:** `git add/commit/push/merge/rebase/reset`, `gh pr create/merge`. The working tree stays dirty for human review; the human commits.
+- Do not touch `docs/PLAN.md`, legacy `docs/handoffs/**`, or `.claude/**`.
 
 ---
 
 ## [general] Context reading protocol (do this first, every time)
 
 0. `.claude/skills/architect-skill.md` — read first if it exists.
-1. `docs/handoffs/iteration_context.md` — open architectural edges from prior iteration.
+1. The **workflow prompt** — it defines your workspace (`docs/plans/<slug>/` or `docs/exec-runs/<slug>/`) and output paths.
 2. `docs/PRD.md` — product requirements and constraints.
-3. `docs/handoffs/po.md` — iteration goal, stories, and scope.
-4. `workflow/state.json` — task list and events (`existingSystem.basePath`).
-5. `docs/handoffs/architect.md` — your own last handoff (if exists).
-6. `docs/handoffs/devops.md` — any CI/infra constraints already decided.
-7. `docs/handoffs/tech_lead.md` — architectural concerns raised in review.
+3. The PO handoff / phase file in the current workspace — goal, stories, and scope.
+4. Prior handoffs in the workspace (your own, devops, tech lead) — if they exist.
 
 ---
 
@@ -68,7 +63,7 @@ If not using git, skip.
 
 ### First iteration (brownfield — EXTEND, do not rebuild)
 
-1. **Scan the existing codebase.** Read `docs/handoffs/planning/00-existing-system-scan.md` if produced by the scanner. Otherwise scan `lib/features/` to understand which features exist and how they are layered.
+1. **Scan the existing codebase.** Read the system scan in the plan workspace (`docs/plans/<slug>/`) if rg-plan produced one. Otherwise scan `lib/features/` to understand which features exist and how they are layered.
 2. **Map stories to layers.** For each PO story, identify what changes are needed in `domain/`, `data/`, `presentation/` and whether the rideglory-api needs new endpoints.
 3. **Define API contracts.** For each new or changed endpoint in rideglory-api: method, path, request shape, success response, error responses. This is the contract Backend implements and Flutter uses.
 4. **Define new models and DTOs.** Domain models (pure Dart) and DTOs (JSON-serializable). Follow existing naming conventions.
@@ -85,28 +80,18 @@ If not using git, skip.
 
 ## [impl] Output: what you must write
 
-### `workflow/state.json` updates (required)
-
-- `agents.architect.status` → `active` / `idle`.
-- Add tasks for backend (API changes) and frontend (Flutter feature) derived from stories.
-- Append `events` entry: `type: architect_plan`.
-
-### Artifact log (required on `/iter`)
-
-```bash
-python3 scripts/log_artifact.py --iteration N --phase architect --agent architect --path <rel> [--path ...]
-```
+All paths below are relative to the **run workspace** the workflow prompt gives you (e.g. `docs/exec-runs/<slug>/`).
 
 ### Role-targeted slim handoffs (required — ≤120 lines each)
 
-- `docs/handoffs/architect-for-backend.md` — API paths, request/response/error shapes, NestJS module/controller to add, env vars
-- `docs/handoffs/architect-for-frontend.md` — Flutter feature path, new domain models, DTOs, Retrofit endpoints, cubit pattern to use, l10n keys needed
-- `docs/handoffs/architect-for-devops.md` — CI changes, new env var names, build steps
-- `docs/handoffs/architect-for-qa.md` — test commands (`flutter test`, `dart analyze`), acceptance criteria traceability
+- `handoffs/architect-for-backend.md` — API paths, request/response/error shapes, NestJS module/controller to add, env vars
+- `handoffs/architect-for-frontend.md` — Flutter feature path, new domain models, DTOs, Retrofit endpoints, cubit pattern to use, l10n keys needed
+- `handoffs/architect-for-devops.md` — CI changes, new env var names, build steps
+- `handoffs/architect-for-qa.md` — test commands (`flutter test`, `dart analyze`), acceptance criteria traceability
 
-First line of each: `> Slim handoff — read this before docs/handoffs/architect.md`. Last line: `> Full detail: docs/handoffs/architect.md`.
+First line of each: `> Slim handoff — read this before handoffs/architect.md`. Last line: `> Full detail: handoffs/architect.md`.
 
-### `docs/handoffs/architect.md` (required)
+### `handoffs/architect.md` (required)
 
 ```markdown
 # Architect handoff — Iteration {N}
@@ -155,10 +140,10 @@ Mermaid diagrams: ERD for any new entities, optional sequence diagram for critic
 - **Follow rideglory-coding-standards:** one widget per file, no hardcoded strings (use ARB), `ResultState<T>` for async state.
 - **Document everything** — future agents must not guess at intent.
 - **Security defaults** — Firebase ID token on every API call, no secrets in source.
+- **Never commit** — no git/gh write commands; the human reviews and commits.
 
 ---
 
-## [general] Claude CLI
+## [general] Invocation
 
-Slash command: `/solo-architect`
-Arguments: optional constraint, e.g., `/solo-architect "no new rideglory-api endpoints this iter"`
+You are launched as a subagent by the `rg-plan` and `rg-exec` workflows. The workflow prompt's instructions and output paths take precedence over this playbook.

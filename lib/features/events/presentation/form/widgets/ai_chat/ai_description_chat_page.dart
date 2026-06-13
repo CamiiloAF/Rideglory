@@ -152,7 +152,6 @@ class AiDescriptionChatPage extends StatelessWidget {
                     userMessage: message,
                     title: eventContext.title,
                     eventType: eventContext.eventType,
-                    city: eventContext.city,
                     difficulty: eventContext.difficulty,
                     startDate: eventContext.startDate,
                   ),
@@ -171,7 +170,6 @@ class AiDescriptionChatPage extends StatelessWidget {
     context.read<AiDescriptionChatCubit>().retryLastMessage(
           title: eventContext.title,
           eventType: eventContext.eventType,
-          city: eventContext.city,
           difficulty: eventContext.difficulty,
           startDate: eventContext.startDate,
         );

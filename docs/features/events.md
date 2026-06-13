@@ -1,6 +1,6 @@
 # Documentación del Feature: Events
 
-> Última actualización: 2026-06-01  
+> Última actualización: 2026-06-11  
 > Alcance: `lib/features/events/`
 
 > Esta documentación cubre únicamente el feature `events/`. El feature de inscripciones, antes incluido aquí, se separó a [event_registration.md](./event_registration.md).
@@ -53,7 +53,6 @@ EventModel
   ownerId: String                          — userId del organizador (requerido)
   name: String                             (requerido)
   description: String                      — rich-text (JSON Quill Delta serializado como string)
-  city: String                             (requerido)
   startDate: DateTime                      (requerido)
   endDate: DateTime?                       — null = evento de un día
   difficulty: EventDifficulty              (requerido, 1–5)
@@ -204,7 +203,7 @@ lib/features/events/domain/
 
 **`EventRepository`** (signatures):
 ```dart
-getEvents({type?, dateFrom?, dateTo?, city?}) → Either<DomainException, List<EventModel>>
+getEvents({type?, dateFrom?, dateTo?}) → Either<DomainException, List<EventModel>>
 getMyEvents() → Either<…, List<EventModel>>
 getEventById(String id) → Either<…, EventModel>
 createEvent(EventModel) → Either<…, EventModel>
@@ -271,7 +270,7 @@ lib/features/events/data/
 **`EventService` (Retrofit)**:
 | Método | HTTP | Path |
 |---|---|---|
-| `getEvents({type?, dateFrom?, dateTo?, city?})` | `GET` | `/events` |
+| `getEvents({type?, dateFrom?, dateTo?})` | `GET` | `/events` |
 | `getMyEvents()` | `GET` | `/events/my` |
 | `getEventById(id)` | `GET` | `/events/{id}` |
 | `createEvent(body)` | `POST` | `/events` |
@@ -368,14 +367,13 @@ _searchQuery: String
 ```
 types: Set<EventType>
 difficulties: Set<EventDifficulty>
-city: String?
 startDate / endDate: DateTime?
 freeOnly: bool
 multiBrandOnly: bool
 ```
 
 **Filtros**:
-- **Server-side** (en `getEvents` query): `type`, `dateFrom`, `dateTo`, `city`.
+- **Server-side** (en `getEvents` query): `type`, `dateFrom`, `dateTo`.
 - **Client-side** (en `_applyFiltersAndEmit`): `difficulties`, `freeOnly`, `multiBrandOnly`, `searchQuery`.
 
 **Mutaciones locales (sin re-fetch):**
@@ -403,7 +401,7 @@ Métodos clave:
 - `addWaypoint(String)` (max 9), `setWaypointLocation(i, AddressLocation?)`, `removeWaypoint(i)`, `setRouteType(type)`, `clearWaypoints()`.
 - `_buildRouteGeoJson(RouteType)` → `{routeType, points: [{lat, lng, label}]}`.
 - `saveEvent(event, {localCoverImagePath?, remoteCoverImageUrl?})`.
-- `generateCover({title, eventType, city})`, `resetCoverGeneration()`.
+- `generateCover({title, eventType})`, `resetCoverGeneration()`.
 - `buildEventToSave() → EventModel?` — valida y construye.
 - `buildDraftToSave() → EventModel?` — solo requiere `name`.
 - `saveDraft({localCoverImagePath?, remoteCoverImageUrl?})`.
@@ -582,7 +580,7 @@ Lead tap "Terminar rodada" → EndRideConfirmDialog
 `EventFormPage` → provee `EventFormCubit` + `FormImageCubit`. `EventFormView` orquesta secciones:
 
 1. Cover (local o IA via `generateCover`).
-2. Basic info: name + description (Quill) + city.
+2. Basic info: name + description (Quill).
 3. Date/time: rango + toggle multi-day + meetingTime.
 4. Locations: tipo de ruta + meeting + destination (o constructor custom).
 5. Difficulty: 1–5 chiles.
@@ -652,7 +650,7 @@ AppRoutes.riderProfile        → '/events/attendees/rider-profile'  extra: Stri
 ### Eventos
 | Método | Endpoint |
 |---|---|
-| `GET` | `/events` (query: `type`, `dateFrom`, `dateTo`, `city`) |
+| `GET` | `/events` (query: `type`, `dateFrom`, `dateTo`) |
 | `GET` | `/events/my` |
 | `GET` | `/events/:id` |
 | `POST` | `/events` |
@@ -677,7 +675,7 @@ Definidos en `lib/core/http/api_routes.dart` (`ApiRoutes.events`, `eventTracking
 
 | Método | Endpoint | Body | Respuesta |
 |---|---|---|---|
-| `POST` | `/ai/description` | `{title, eventType, city, difficulty?, startDate?, history: AiChatTurn[], userMessage}` | `{markdown, remainingGenerations, isDescription}` |
+| `POST` | `/ai/description` | `{title, eventType, difficulty?, startDate?, history: AiChatTurn[], userMessage}` | `{markdown, remainingGenerations, isDescription}` |
 
 **Restricciones del body:**
 - `history` acepta máximo 10 turnos (`@ArrayMaxSize(10)` en el contrato). Superar este límite devuelve `400`.

@@ -130,8 +130,8 @@ class _BrandChipsInlineState extends State<BrandChipsInline> {
           style: const TextStyle(
             fontFamily: 'Space Grotesk',
             fontSize: 11,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.8,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 1,
             color: AppColors.primary,
           ),
         ),
@@ -195,7 +195,7 @@ class _BrandChipsInlineState extends State<BrandChipsInline> {
                       entry.value,
                       style: const TextStyle(
                         fontFamily: 'Space Grotesk',
-                        color: Colors.white,
+                        color: AppColors.darkBgPrimary,
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
                       ),

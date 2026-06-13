@@ -1,8 +1,15 @@
+import 'package:injectable/injectable.dart';
+
 import 'crash_reporter.dart';
 
-/// Implementación no-op para pruebas. Test double manual (no registrado en DI);
-/// el CrashReporter por defecto es [FirebaseCrashReporter]. Todos los métodos
-/// son async vacíos para que flutter test no contacte Firebase.
+/// Implementación no-op para dev y tests.
+///
+/// Registrada en DI para los environments 'dev' y 'test', de modo que
+/// ningún código de prueba ni de desarrollo llame a Sentry ni a Firebase.
+/// Todos los métodos son async vacíos.
+@Injectable(as: CrashReporter)
+@Environment('dev')
+@Environment('test')
 class NoOpCrashReporter implements CrashReporter {
   @override
   Future<void> recordError(

@@ -9,7 +9,6 @@ abstract class EventRepository {
     String? type,
     String? dateFrom,
     String? dateTo,
-    String? city,
   });
 
   Future<Either<DomainException, List<EventModel>>> getMyEvents();

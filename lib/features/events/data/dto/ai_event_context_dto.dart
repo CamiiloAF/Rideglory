@@ -10,14 +10,12 @@ class AiEventContextDto {
   const AiEventContextDto({
     required this.title,
     required this.eventType,
-    required this.city,
     this.difficulty,
     this.startDate,
   });
 
   final String title;
   final String eventType;
-  final String city;
   final String? difficulty;
   final String? startDate;
 
@@ -25,7 +23,6 @@ class AiEventContextDto {
       AiEventContextDto(
         title: request.title,
         eventType: request.eventType,
-        city: request.city,
         difficulty: request.difficulty,
         startDate: request.startDate,
       );

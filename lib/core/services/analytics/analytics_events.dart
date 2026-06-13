@@ -24,6 +24,12 @@ abstract final class AnalyticsEvents {
   /// El rider elige un método concreto (email, google, apple) al pulsar el
   /// botón de submit / social. Param: [AnalyticsParams.authMethod].
   /// Max 40 chars: 'auth_method_selected'.length == 20. ✓
+  ///
+  /// **Fase 4 (Insights de Producto — decisión explícita):** No se añaden
+  /// eventos de auth nuevos en esta fase. Los call sites existentes en
+  /// `login_view`, `signup_view`, `forgot_password_view`,
+  /// `login_social_section` y `signup_social_buttons` cubren el embudo de
+  /// adquisición sin extender el catálogo. Ver §3 "No entra" del PRD de Fase 4.
   static const String authMethodSelected = 'auth_method_selected';
 
   /// El cubit confirma sesión exitosa. Param: [AnalyticsParams.authMethod].
@@ -99,6 +105,25 @@ abstract final class AnalyticsEvents {
   /// Max 40 chars: 'events_create_started'.length == 21. ✓
   static const String eventsCreateStarted = 'events_create_started';
 
+  /// Intención de tap en publicar evento (antes del trabajo async).
+  /// Max 40 chars: 'events_publish_attempted'.length == 24. ✓
+  static const String eventsPublishAttempted = 'events_publish_attempted';
+
+  /// El rider avanzó al siguiente paso del wizard de creación.
+  /// Params: [AnalyticsParams.stepIndex], [AnalyticsParams.stepName].
+  /// Max 40 chars: 'events_step_advanced'.length == 20. ✓
+  static const String eventsStepAdvanced = 'events_step_advanced';
+
+  /// El rider retrocedió al paso anterior del wizard de creación.
+  /// Params: [AnalyticsParams.stepIndex], [AnalyticsParams.stepName].
+  /// Max 40 chars: 'events_step_back'.length == 16. ✓
+  static const String eventsStepBack = 'events_step_back';
+
+  /// El rider cerró el wizard sin publicar ni guardar borrador.
+  /// Params: [AnalyticsParams.formMode], [AnalyticsParams.abandonedAtStep].
+  /// Max 40 chars: 'events_create_abandoned'.length == 23. ✓
+  static const String eventsCreateAbandoned = 'events_create_abandoned';
+
   /// El rider guardó el evento como borrador exitosamente.
   /// Param: [AnalyticsParams.formMode] (`create` | `edit`).
   /// Max 40 chars: 'events_draft_saved'.length == 18. ✓
@@ -134,6 +159,11 @@ abstract final class AnalyticsEvents {
   /// El rider abrió el wizard de registro a un evento.
   /// Max 40 chars: 'registration_started'.length == 20. ✓
   static const String registrationStarted = 'registration_started';
+
+  /// Intención de tap en enviar inscripción (antes del trabajo async).
+  /// Max 40 chars: 'registration_submit_attempted'.length == 29. ✓
+  static const String registrationSubmitAttempted =
+      'registration_submit_attempted';
 
   /// El rider avanzó al siguiente paso del wizard.
   /// Params: [AnalyticsParams.stepIndex], [AnalyticsParams.stepName].
@@ -403,4 +433,12 @@ abstract final class AnalyticsEvents {
   /// Sin el token como param (PII/alta cardinalidad).
   /// Max 40 chars: 'fcm_token_registered'.length == 20. ✓
   static const String fcmTokenRegistered = 'fcm_token_registered';
+
+  // ---------------------------------------------------------------------------
+  // Home — CTAs de navegación
+  // ---------------------------------------------------------------------------
+
+  /// Tap en CTA "Ver eventos" en la tarjeta de home vacía (navegación pura).
+  /// Max 40 chars: 'home_empty_events_cta'.length == 21. ✓
+  static const String homeEmptyEventsCta = 'home_empty_events_cta';
 }

@@ -9,6 +9,8 @@
 
 Los crashes y los errores de red de la app llegan a Sentry **solo en prod**, enlazados a la traza del backend por `sentry-trace`/`baggage`, **sin doble reporte, sin fuga de PII y sin ninguna ventana sin cobertura de crashes**. La migración mantiene la interface `CrashReporter` como único punto de acoplamiento; el comportamiento visible de errores no cambia (mensajes siguen en español desde `rest_client_functions.dart`, el `traceId` nunca es copy visible).
 
+> ⚠️ **VENTANA DE VERIFICACIÓN (TEMPORAL — decisión del usuario).** Mientras estén abiertas las fases de Sentry, `SentryFlutter.init` queda **habilitado también en dev/debug** para verificar la integración (DSN presente en dev, `beforeSend` NO devuelve `null` en debug). Implementarlo con una palanca explícita y reversible (p.ej. const `kSentryDevVerify` por `--dart-define`). **Al cerrar la última fase de Sentry se DEBE revertir a la regla original** (`DSN vacío en dev → no envía`, `beforeSend → null` en debug, `environment` por flavor) para armar un PR limpio. Ver "Cierre / restauración prod-only" en `PLAN.md`.
+
 ## Alcance (entra / no entra)
 
 **Entra:**

@@ -174,7 +174,7 @@ class EventCard extends StatelessWidget {
                       const SizedBox(width: 6),
                       Expanded(
                         child: Text(
-                          event.city,
+                          event.meetingPoint,
                           style: const TextStyle(
                             color: AppColors.textOnDarkSecondary,
                             fontSize: 13,

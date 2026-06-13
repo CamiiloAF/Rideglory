@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide Error;
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/features/events/presentation/form/widgets/steps/pulsing_map_dot.dart';
 
 // Colombia center — default camera when no waypoints are loaded.
 const _colombiaLng = -73.0;
@@ -17,6 +18,7 @@ class RouteMapArea extends StatelessWidget {
     required this.onTogglePickMode,
     required this.onConfirmPickMode,
     required this.onCenterOnLocation,
+    this.hasWaypoints = false,
   });
 
   final bool atLimit;
@@ -25,11 +27,14 @@ class RouteMapArea extends StatelessWidget {
   final VoidCallback onTogglePickMode;
   final VoidCallback onConfirmPickMode;
   final VoidCallback onCenterOnLocation;
+  /// When [false] (no waypoints yet), a [PulsingMapDot] is shown as a centered
+  /// overlay to hint the user to add a route point (AC19).
+  final bool hasWaypoints;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 300,
+      height: 260,
       child: Stack(
         children: [
           // Map
@@ -57,6 +62,13 @@ class RouteMapArea extends StatelessWidget {
             },
           ),
 
+          // PulsingMapDot: centered overlay when map has 0 waypoints (AC19).
+          // Hidden once the user adds at least one waypoint.
+          if (!hasWaypoints && !isPickMode)
+            const IgnorePointer(
+              child: Center(child: PulsingMapDot()),
+            ),
+
           // Centered pin shown in pick mode — IgnorePointer so map stays pannable
           if (isPickMode)
             IgnorePointer(
@@ -79,23 +91,30 @@ class RouteMapArea extends StatelessWidget {
               ),
             ),
 
-          // Current location button — top-right, always visible
+          // Current location button — bottom-right, circular (Pencil veaGt: recenterBtn)
           Positioned(
-            top: 12,
+            bottom: 10,
             right: 12,
             child: GestureDetector(
               onTap: onCenterOnLocation,
               child: Container(
-                width: 36,
-                height: 36,
+                width: 44,
+                height: 44,
                 decoration: BoxDecoration(
-                  color: AppColors.darkBgSecondary,
-                  borderRadius: BorderRadius.circular(8),
+                  color: AppColors.darkCard,
+                  borderRadius: BorderRadius.circular(22),
                   border: Border.all(color: AppColors.darkBorderPrimary),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x60000000),
+                      blurRadius: 8,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: const Icon(
                   Icons.my_location,
-                  size: 18,
+                  size: 16,
                   color: AppColors.textOnDarkPrimary,
                 ),
               ),

@@ -7,9 +7,11 @@ class WaypointSearchField extends StatelessWidget {
   const WaypointSearchField({
     super.key,
     required this.onPlaceSelected,
+    this.focusNode,
   });
 
   final void Function(String name, AddressLocation? location) onPlaceSelected;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +23,7 @@ class WaypointSearchField extends StatelessWidget {
       clearOnSelect: true,
       resolveCoords: true,
       onPlaceSelected: onPlaceSelected,
+      focusNode: focusNode,
     );
   }
 }

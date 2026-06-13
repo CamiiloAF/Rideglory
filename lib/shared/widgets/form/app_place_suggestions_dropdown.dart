@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/core/services/dto/place_suggestion_dto.dart';
 import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/features/events/presentation/form/widgets/steps/search_skeleton_list.dart';
 
 class AppPlaceSuggestionsDropdown extends StatelessWidget {
   const AppPlaceSuggestionsDropdown({
@@ -21,19 +22,7 @@ class AppPlaceSuggestionsDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isLoading) {
       return _buildContainer(
-        child: const Padding(
-          padding: EdgeInsets.all(16),
-          child: Center(
-            child: SizedBox(
-              width: 18,
-              height: 18,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation(AppColors.primary),
-              ),
-            ),
-          ),
-        ),
+        child: const SearchSkeletonList(),
       );
     }
 
@@ -81,7 +70,17 @@ class AppPlaceSuggestionsDropdown extends StatelessWidget {
           return GestureDetector(
             onTap: () => onSelect(suggestion),
             child: Container(
-              color: i == 0 ? AppColors.darkTertiary : AppColors.darkCard,
+              decoration: i == 0
+                  ? const BoxDecoration(
+                      color: AppColors.darkActiveSuggestion,
+                      border: Border(
+                        left: BorderSide(
+                          color: AppColors.primary,
+                          width: 4,
+                        ),
+                      ),
+                    )
+                  : const BoxDecoration(color: AppColors.darkCard),
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               child: Row(
                 children: [

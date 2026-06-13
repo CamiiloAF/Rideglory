@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
+/// Limit banner shown when 9/9 waypoints are reached.
+///
+/// Design spec (Pencil kY0VR):
+/// - Full-width, no border-radius, no lateral margin
+/// - Fill: #2D2117, stroke: #F98C1F 1px inner, padding [10,16]
+/// - Icon: info (lucide) in orange 16px
+/// - Text: 12px w500, orange, line-height 1.4
 class WaypointLimitBanner extends StatelessWidget {
   const WaypointLimitBanner({super.key, required this.message});
 
@@ -9,10 +16,10 @@ class WaypointLimitBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
         color: AppColors.primarySubtle,
-        borderRadius: BorderRadius.circular(8),
         border: Border.all(color: AppColors.primary),
       ),
       child: Row(
@@ -27,6 +34,8 @@ class WaypointLimitBanner extends StatelessWidget {
                 fontFamily: 'Space Grotesk',
                 color: AppColors.primary,
                 fontSize: 12,
+                fontWeight: FontWeight.w500,
+                height: 1.4,
               ),
             ),
           ),

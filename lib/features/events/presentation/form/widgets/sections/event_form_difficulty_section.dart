@@ -30,8 +30,8 @@ class EventFormDifficultySection extends StatelessWidget {
               style: const TextStyle(
                 fontFamily: 'Space Grotesk',
                 fontSize: 11,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.8,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1,
                 color: AppColors.textOnDarkTertiary,
               ),
             ),
