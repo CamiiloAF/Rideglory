@@ -100,6 +100,30 @@ Descárgala gratis y vive cada rodada con tu comunidad. ¡Nos vemos en la vía!
 
 ---
 
+## Documentación de encriptación (App Store)
+
+### Descripción corta de funcionalidad (requerida por Apple — paso 1 de 3)
+
+> App de comunidad motera para organizar rodadas, seguimiento en tiempo real y gestión del garaje. Usa HTTPS (TLS) para todas las comunicaciones vía iOS ATS y Firebase Auth para autenticación. No implementa ni exporta algoritmos criptográficos propios.
+
+---
+
+## URLs para las stores
+
+Todas las páginas están en `docs/web/` y se publican vía GitHub Pages (configurar Pages → source: `docs/`).
+
+| Campo              | URL                                                                              |
+|--------------------|----------------------------------------------------------------------------------|
+| **URL de marketing** | `https://camiiloaf.github.io/Rideglory/web/`                                   |
+| **URL de soporte**   | `https://camiiloaf.github.io/Rideglory/web/support.html`                       |
+| Política de privacidad | `https://camiiloaf.github.io/Rideglory/web/privacy-policy.html`            |
+| Términos y condiciones | `https://camiiloaf.github.io/Rideglory/web/terms-and-conditions.html`      |
+| Eliminar cuenta    | `https://camiiloaf.github.io/Rideglory/web/delete-account.html`                 |
+
+> Para activar GitHub Pages: Settings → Pages → Source: Deploy from branch → Branch: `main` → Folder: `/docs`.
+
+---
+
 ## Notas
 
 - Verificar límites exactos en la consola al subir (los caracteres con tilde/emoji

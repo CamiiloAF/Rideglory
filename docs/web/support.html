@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soporte – Rideglory</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0D0D0F;
+      --surface:   #1A1A1E;
+      --border:    #2A2A30;
+      --primary:   #f98c1f;
+      --text:      #E8E8EC;
+      --muted:     #9090A0;
+      --radius:    8px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      padding: 0 16px 80px;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 16px;
+      text-align: center;
+      margin: 0 -16px 48px;
+    }
+
+    header .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    header .logo-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    header .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 40px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    p { margin-bottom: 14px; }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin: 16px 0;
+    }
+
+    .card p:last-child { margin-bottom: 0; }
+
+    .card strong { display: block; margin-bottom: 6px; }
+
+    .email-btn {
+      display: inline-block;
+      background: var(--primary);
+      color: #0D0D0F;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 12px 28px;
+      border-radius: var(--radius);
+      margin-top: 8px;
+      text-decoration: none;
+    }
+
+    .email-btn:hover { opacity: 0.9; text-decoration: none; }
+
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .muted { color: var(--muted); font-size: 14px; }
+
+    .links-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    footer {
+      margin-top: 64px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <img src="../assets/logo.png" alt="Rideglory" class="logo-icon" />
+    <span style="font-size:24px;font-weight:800;letter-spacing:-0.5px;">Rideglory</span>
+  </div>
+  <p class="subtitle">Centro de soporte</p>
+</header>
+
+<div class="container">
+
+  <p>¿Tienes alguna pregunta o problema con la app? Estamos aquí para ayudarte. Escríbenos y te respondemos en menos de 48 horas hábiles.</p>
+
+  <h2>Contacto</h2>
+
+  <div class="card">
+    <strong>Correo de soporte</strong>
+    <p><a href="mailto:camiiloagudelo92@gmail.com">camiiloagudelo92@gmail.com</a></p>
+    <p class="muted">Incluye en el asunto una breve descripción del problema (ej. "Problema con el tracking – Rideglory").</p>
+    <a class="email-btn" href="mailto:camiiloagudelo92@gmail.com?subject=Soporte%20%E2%80%93%20Rideglory">Enviar correo</a>
+  </div>
+
+  <h2>Preguntas frecuentes</h2>
+
+  <div class="card">
+    <strong>¿Cómo creo un evento o rodada?</strong>
+    <p>En la pantalla principal toca el botón "+" o ve a la pestaña de Eventos y selecciona "Crear evento". Completa la ruta, punto de encuentro, fecha, cupos y dificultad. Puedes usar IA para generar la descripción.</p>
+  </div>
+
+  <div class="card">
+    <strong>¿El tracking GPS consume mucha batería?</strong>
+    <p>El seguimiento en tiempo real está activo solo mientras participas en una rodada en curso. Al terminar el evento o salir del tracking, el GPS se desactiva automáticamente.</p>
+  </div>
+
+  <div class="card">
+    <strong>¿Quién puede ver mi ubicación durante una rodada?</strong>
+    <p>Solo los participantes registrados y aprobados en ese evento específico. Tu ubicación nunca es pública ni visible fuera del evento.</p>
+  </div>
+
+  <div class="card">
+    <strong>¿Cómo agrego mi moto al garaje?</strong>
+    <p>Ve a la sección "Mi garaje" desde el menú principal y toca "Agregar moto". Puedes ingresar los datos manualmente y adjuntar fotos. También puedes escanear tu SOAT con la cámara para capturar los datos automáticamente.</p>
+  </div>
+
+  <div class="card">
+    <strong>Olvidé mi contraseña, ¿cómo la recupero?</strong>
+    <p>En la pantalla de inicio de sesión toca "¿Olvidaste tu contraseña?" e ingresa tu correo. Recibirás un enlace de recuperación en tu bandeja de entrada.</p>
+  </div>
+
+  <div class="card">
+    <strong>¿Cómo elimino mi cuenta y mis datos?</strong>
+    <p>Puedes solicitar la eliminación de tu cuenta y todos tus datos personales enviando un correo a <a href="mailto:camiiloagudelo92@gmail.com">camiiloagudelo92@gmail.com</a> con el asunto "Eliminar cuenta – Rideglory". También puedes consultar la <a href="delete-account.html">página de eliminación de cuenta</a> para más detalles.</p>
+  </div>
+
+  <div class="card">
+    <strong>La app no carga o está lenta</strong>
+    <p>Verifica tu conexión a internet. Si el problema persiste, cierra la app completamente y vuelve a abrirla. Para problemas más complejos, escríbenos al correo de soporte indicando tu dispositivo y versión de la app.</p>
+  </div>
+
+  <h2>Documentos legales</h2>
+
+  <div class="links-row">
+    <a href="privacy-policy.html">Política de Privacidad</a>
+    <a href="terms-and-conditions.html">Términos y Condiciones</a>
+    <a href="delete-account.html">Eliminar mi cuenta</a>
+    <a href="index.html">Inicio</a>
+  </div>
+
+  <footer>
+    <p>Rideglory &copy; 2025 · <a href="mailto:camiiloagudelo92@gmail.com">camiiloagudelo92@gmail.com</a></p>
+  </footer>
+
+</div>
+</body>
+</html>
