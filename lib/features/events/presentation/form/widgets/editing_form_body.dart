@@ -28,16 +28,10 @@ class EditingFormBody extends StatelessWidget {
 
   Map<String, dynamic> _getInitialValues(EventFormCubit cubit) {
     final event = cubit.editingEvent!;
-    final routeType = event.waypoints.isNotEmpty ||
-            (event.routeGeoJson?['routeType'] == 'custom')
-        ? RouteType.custom
-        : RouteType.simple;
     return {
-      EventFormFields.routeType: routeType,
       EventFormFields.name: event.name,
       EventFormFields.description: event.description,
-      EventFormFields.isMultiDay:
-          event.endDate != null && event.endDate != event.startDate,
+      EventFormFields.isMultiDay: event.isMultiDay,
       EventFormFields.dateRange: DateTimeRange(
         start: event.startDate,
         end: event.endDate ?? event.startDate,
@@ -45,13 +39,9 @@ class EditingFormBody extends StatelessWidget {
       EventFormFields.meetingTime: event.meetingTime,
       EventFormFields.difficulty: event.difficulty,
       EventFormFields.eventType: event.eventType,
-      EventFormFields.meetingPoint: event.meetingPoint,
-      EventFormFields.destination: event.destination,
-      EventFormFields.isMultiBrand: event.allowedBrands.isEmpty,
       EventFormFields.allowedBrands: event.allowedBrands,
       EventFormFields.price: event.price?.toString() ?? '',
       EventFormFields.maxParticipants: event.maxParticipants,
-      EventFormFields.isFreeEvent: event.isFree,
     };
   }
 

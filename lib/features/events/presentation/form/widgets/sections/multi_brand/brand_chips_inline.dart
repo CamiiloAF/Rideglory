@@ -5,12 +5,10 @@ import 'package:rideglory/design_system/design_system.dart';
 class BrandChipsInline extends StatefulWidget {
   const BrandChipsInline({
     super.key,
-    required this.isMultiBrandField,
     required this.brandsField,
     required this.suggestions,
   });
 
-  final FormFieldState<bool> isMultiBrandField;
   final FormFieldState<List<String>> brandsField;
   final List<String> Function(String query) suggestions;
 
@@ -36,11 +34,10 @@ class _BrandChipsInlineState extends State<BrandChipsInline> {
     super.dispose();
   }
 
-  bool get _isMultiBrand => widget.isMultiBrandField.value ?? true;
   List<String> get _selected => widget.brandsField.value ?? [];
+  bool get _isMultiBrand => _selected.isEmpty;
 
   void _selectAll() {
-    widget.isMultiBrandField.didChange(true);
     widget.brandsField.didChange([]);
     setState(() {});
   }
@@ -49,15 +46,9 @@ class _BrandChipsInlineState extends State<BrandChipsInline> {
     final current = List<String>.from(_selected);
     if (current.contains(brand)) {
       current.remove(brand);
-      if (current.isEmpty) {
-        widget.isMultiBrandField.didChange(true);
-        widget.brandsField.didChange([]);
-      } else {
-        widget.brandsField.didChange(current);
-      }
+      widget.brandsField.didChange(current);
     } else {
       current.add(brand);
-      widget.isMultiBrandField.didChange(false);
       widget.brandsField.didChange(current);
     }
     setState(() {});
@@ -67,7 +58,6 @@ class _BrandChipsInlineState extends State<BrandChipsInline> {
     final current = List<String>.from(_selected);
     if (!current.contains(brand)) {
       current.add(brand);
-      widget.isMultiBrandField.didChange(false);
       widget.brandsField.didChange(current);
     }
     _controller.clear();

@@ -112,9 +112,9 @@ void main() {
     });
 
     // TC-stp-8: stepFields cardinality
-    test('TC-stp-8: _step1Fields.length == 5, _step2Fields.length == 7, _step3Fields.length == 2', () {
+    test('TC-stp-8: _step1Fields.length == 5, _step2Fields.length == 1, _step3Fields.length == 2', () {
       expect(EventFormCubit.stepFields[0]!.length, 5);
-      expect(EventFormCubit.stepFields[1]!.length, 7);
+      expect(EventFormCubit.stepFields[1]!.length, 1);
       expect(EventFormCubit.stepFields[2]!.length, 2);
     });
 
@@ -122,7 +122,9 @@ void main() {
     test('TC-stp-9: validateStep returns true when formKey.currentState is null', () {
       expect(cubit.validateStep(0), isTrue);
       expect(cubit.validateStep(1), isTrue);
-      expect(cubit.validateStep(2), isTrue);
+      // step 2 requires waypoints → showRouteError=true, returns false
+      expect(cubit.validateStep(2), isFalse);
+      expect(cubit.state.showRouteError, isTrue);
     });
 
     // TC-stp-10: isCurrentStepValid delegates to validateStep(currentStep)
@@ -136,33 +138,26 @@ void main() {
     test('TC-stp-11: step 0 fields are correct', () {
       expect(EventFormCubit.stepFields[0], containsAll([
         EventFormFields.name,
-        EventFormFields.description,
         EventFormFields.dateRange,
-        EventFormFields.isMultiDay,
         EventFormFields.meetingTime,
-      ]));
-    });
-
-    // TC-stp-12: stepFields for step 1 contains exactly the 7 expected field names
-    test('TC-stp-12: step 1 fields are correct', () {
-      expect(EventFormCubit.stepFields[1], containsAll([
         EventFormFields.difficulty,
         EventFormFields.eventType,
-        EventFormFields.price,
-        EventFormFields.isFreeEvent,
-        EventFormFields.maxParticipants,
-        EventFormFields.isMultiBrand,
-        EventFormFields.allowedBrands,
       ]));
     });
 
-    // TC-stp-13: step navigation preserves other state fields
-    test('TC-stp-13: nextStep preserves waypoints and routeType', () {
+    // TC-stp-12: stepFields for step 1 contains exactly the expected field names
+    test('TC-stp-12: step 1 fields are correct', () {
+      expect(EventFormCubit.stepFields[1], containsAll([
+        EventFormFields.description,
+      ]));
+    });
+
+    // TC-stp-13: step navigation preserves waypoints
+    test('TC-stp-13: nextStep preserves waypoints', () {
       cubit.initialize();
       cubit.addWaypoint('Bogotá');
       cubit.nextStep();
       expect(cubit.state.waypoints, ['Bogotá']);
-      expect(cubit.state.routeType, RouteType.simple);
     });
 
     // TC-stp-14: full round-trip navigation

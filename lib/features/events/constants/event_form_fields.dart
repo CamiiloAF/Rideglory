@@ -6,15 +6,7 @@ abstract class EventFormFields {
   static const String meetingTime = 'meetingTime';
   static const String difficulty = 'difficulty';
   static const String eventType = 'eventType';
-  static const String meetingPoint = 'meetingPoint';
-  static const String destination = 'destination';
-  static const String isMultiBrand = 'isMultiBrand';
   static const String allowedBrands = 'allowedBrands';
   static const String price = 'price';
   static const String maxParticipants = 'maxParticipants';
-  static const String isFreeEvent = 'isFreeEvent';
-  static const String routeType = 'routeType';
-  static const String waypoints = 'waypoints';
 }
-
-enum RouteType { simple, custom }

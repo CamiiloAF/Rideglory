@@ -32,8 +32,6 @@ final _mockEvent = EventModel(
   description: 'Una ruta increíble',
   startDate: DateTime(2026, 6, 1),  
   difficulty: EventDifficulty.two,
-  meetingPoint: 'Plaza Botero',
-  destination: 'Guatapé',
   meetingTime: DateTime(2026, 6, 1, 8),
   eventType: EventType.onRoad,
 );

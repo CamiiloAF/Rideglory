@@ -26,10 +26,9 @@ class EventFormStep4Review extends StatelessWidget {
 
   String _formatBrands(
     BuildContext context, {
-    required bool isMultiBrand,
     required List<String> brands,
   }) {
-    if (isMultiBrand || brands.isEmpty) {
+    if (brands.isEmpty) {
       return context.l10n.event_step_review_allBrands;
     }
     const maxVisible = 2;
@@ -40,11 +39,8 @@ class EventFormStep4Review extends StatelessWidget {
   }
 
   String _resolveMeetingPoint(BuildContext context, EventFormState state) {
-    if (state.routeType == RouteType.custom && state.waypoints.isNotEmpty) {
-      return state.waypoints.first;
-    }
-    return state.meetingPointName?.isNotEmpty == true
-        ? state.meetingPointName!
+    return state.waypoints.isNotEmpty
+        ? state.waypoints.first
         : context.l10n.event_step_review_noMeetingPoint;
   }
 
@@ -69,22 +65,21 @@ class EventFormStep4Review extends StatelessWidget {
             formData[EventFormFields.description] as String? ?? '';
         final dateRange = formData[EventFormFields.dateRange] as DateTimeRange?;
         final meetingTime = formData[EventFormFields.meetingTime] as DateTime?;
-        final isMultiDay =
-            formData[EventFormFields.isMultiDay] as bool? ?? false;
+        final isMultiDay = dateRange != null &&
+            dateRange.end.isAfter(dateRange.start);
         final difficulty =
             formData[EventFormFields.difficulty] as EventDifficulty? ??
             EventDifficulty.one;
         final eventType =
             formData[EventFormFields.eventType] as EventType? ??
             EventType.onRoad;
-        final isMultiBrand =
-            formData[EventFormFields.isMultiBrand] as bool? ?? true;
         final allowedBrands =
             formData[EventFormFields.allowedBrands] as List<dynamic>? ?? [];
         final maxParticipants =
             formData[EventFormFields.maxParticipants] as int?;
         final priceStr = formData[EventFormFields.price] as String?;
-        final isFree = formData[EventFormFields.isFreeEvent] as bool? ?? false;
+        final isFree =
+            priceStr == null || priceStr.isEmpty || priceStr == '0';
 
         final dateText = dateRange != null
             ? DateFormat('EEE, dd MMM yyyy', 'es').format(dateRange.start)
@@ -183,22 +178,20 @@ class EventFormStep4Review extends StatelessWidget {
                           label: context.l10n.event_step_review_meetingPoint,
                           value: _resolveMeetingPoint(context, state),
                         ),
-                        ReviewRow(
-                          label: context.l10n.event_step_review_destination,
-                          value: state.destinationName?.isNotEmpty == true
-                              ? state.destinationName!
-                              : context.l10n.event_step_review_noDestination,
-                        ),
-                        if (state.waypoints.isNotEmpty)
+                        if (state.waypoints.length > 1)
+                          ReviewRow(
+                            label: context.l10n.event_step_review_destination,
+                            value: state.waypoints.last,
+                          ),
+                        if (state.waypoints.length > 2)
                           ReviewRow(
                             label: context.l10n.event_step_review_waypoints,
-                            value: '${state.waypoints.length}',
+                            value: '${state.waypoints.length - 2}',
                           ),
                         ReviewRow(
                           label: context.l10n.event_step_review_brands,
                           value: _formatBrands(
                             context,
-                            isMultiBrand: isMultiBrand,
                             brands: allowedBrands.cast<String>(),
                           ),
                         ),
@@ -210,11 +203,7 @@ class EventFormStep4Review extends StatelessWidget {
                         ),
                         ReviewRow(
                           label: context.l10n.event_step_review_price,
-                          value:
-                              (isFree ||
-                                  priceStr == null ||
-                                  priceStr.isEmpty ||
-                                  priceStr == '0')
+                          value: isFree
                               ? context.l10n.event_step_review_free
                               : _formatPrice(priceStr),
                           showDivider: false,

@@ -60,7 +60,6 @@ class CreationScaffold extends StatelessWidget {
     return {
       EventFormFields.difficulty: EventDifficulty.one,
       EventFormFields.eventType: EventType.onRoad,
-      EventFormFields.isMultiDay: false,
       EventFormFields.dateRange: DateTimeRange(
         start: DateTime.now(),
         end: DateTime.now(),
@@ -72,10 +71,8 @@ class CreationScaffold extends StatelessWidget {
         7,
         0,
       ),
-      EventFormFields.isMultiBrand: true,
       EventFormFields.allowedBrands: <String>[],
       EventFormFields.maxParticipants: null,
-      EventFormFields.isFreeEvent: false,
     };
   }
 

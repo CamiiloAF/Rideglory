@@ -20,8 +20,6 @@ final _mockEvent = EventModel(
   name: 'Test Event',
   description: 'Desc',
   startDate: DateTime(2026, 5, 20),
-  meetingPoint: 'Parque',
-  destination: 'Guatapé',
   meetingTime: DateTime(2026, 5, 20, 8),
   eventType: EventType.onRoad,
   difficulty: EventDifficulty.two,

@@ -33,8 +33,6 @@ void main() {
     eventType: EventType.onRoad,
     difficulty: EventDifficulty.two,
     startDate: DateTime(2026, 6, 20),
-    meetingPoint: 'Parque Bolívar',
-    destination: 'Guatapé',
     meetingTime: DateTime(2026, 6, 20, 8, 0),
     state: EventState.scheduled,
   );
@@ -126,8 +124,6 @@ void main() {
           eventType: EventType.course,
           difficulty: EventDifficulty.one,
           startDate: DateTime(2026, 6, 22),
-          meetingPoint: 'Plaza Bolívar',
-          destination: 'Usaquén',
           meetingTime: DateTime(2026, 6, 22, 9, 0),
           state: EventState.scheduled,
         );

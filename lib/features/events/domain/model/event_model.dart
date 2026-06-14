@@ -54,8 +54,6 @@ class EventModel {
   final DateTime startDate;
   final DateTime? endDate;
   final EventDifficulty difficulty;
-  final String meetingPoint;
-  final String destination;
   final DateTime meetingTime;
   final EventType eventType;
   final List<String> allowedBrands;
@@ -77,8 +75,6 @@ class EventModel {
     required this.startDate,
     this.endDate,
     required this.difficulty,
-    required this.meetingPoint,
-    required this.destination,
     required this.meetingTime,
     required this.eventType,
     this.allowedBrands = const [],
@@ -93,6 +89,14 @@ class EventModel {
   });
 
   bool get isFree => price == null || price == 0;
+
+  /// Derived from the first waypoint in routeGeoJson.
+  String get meetingPoint =>
+      routePoints.isNotEmpty ? (routePoints.first.label ?? '') : '';
+
+  /// Derived from the last waypoint in routeGeoJson (empty if only one point).
+  String get destination =>
+      routePoints.length > 1 ? (routePoints.last.label ?? '') : '';
 
   /// Parses [routeGeoJson] into ordered [AddressLocation] points for map rendering.
   List<AddressLocation> get routePoints {
@@ -123,8 +127,6 @@ class EventModel {
     DateTime? startDate,
     DateTime? endDate,
     EventDifficulty? difficulty,
-    String? meetingPoint,
-    String? destination,
     DateTime? meetingTime,
     EventType? eventType,
     List<String>? allowedBrands,
@@ -146,8 +148,6 @@ class EventModel {
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       difficulty: difficulty ?? this.difficulty,
-      meetingPoint: meetingPoint ?? this.meetingPoint,
-      destination: destination ?? this.destination,
       meetingTime: meetingTime ?? this.meetingTime,
       eventType: eventType ?? this.eventType,
       allowedBrands: allowedBrands ?? this.allowedBrands,

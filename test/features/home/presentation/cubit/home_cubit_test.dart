@@ -29,8 +29,6 @@ void main() {
     eventType: EventType.onRoad,
     difficulty: EventDifficulty.two,
     startDate: DateTime(2026, 6, 15),
-    meetingPoint: 'Parque Berrio',
-    destination: 'Santa Fe de Antioquia',
     meetingTime: DateTime(2026, 6, 15, 7, 0),
     state: EventState.scheduled,
   );

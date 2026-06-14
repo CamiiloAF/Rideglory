@@ -28,11 +28,6 @@ abstract class EventFormState with _$EventFormState {
     @Default(0) int currentStep,
     @Default(<String>[]) List<String> waypoints,
     @Default(<AddressLocation?>[]) List<AddressLocation?> waypointLocations,
-    @Default(RouteType.simple) RouteType routeType,
-    String? meetingPointName,
-    String? destinationName,
-    AddressLocation? meetingPointLocation,
-    AddressLocation? destinationLocation,
     @Default(false) bool showRouteError,
   }) = _EventFormState;
 }
@@ -73,56 +68,14 @@ class EventFormCubit extends Cubit<EventFormState> {
           : AnalyticsParams.formModeCreate,
     }).ignore();
 
-    final routeType = _detectRouteType(event);
     final routePoints = event?.routePoints ?? const [];
-
-    AddressLocation? meetingPointLocation;
-    AddressLocation? destinationLocation;
-    List<AddressLocation?> waypointLocations = const [];
-
-    if (routeType == RouteType.simple) {
-      if (routePoints.isNotEmpty) meetingPointLocation = routePoints[0];
-      if (routePoints.length >= 2) destinationLocation = routePoints[1];
-    } else {
-      waypointLocations = routePoints.map<AddressLocation?>((p) => p).toList();
-    }
+    final waypointLocations =
+        routePoints.map<AddressLocation?>((p) => p).toList();
 
     emit(
       EventFormState(
         waypoints: event?.waypoints ?? const [],
-        meetingPointName: event?.meetingPoint,
-        destinationName: event?.destination,
-        routeType: routeType,
-        meetingPointLocation: meetingPointLocation,
-        destinationLocation: destinationLocation,
         waypointLocations: waypointLocations,
-      ),
-    );
-  }
-
-  RouteType _detectRouteType(EventModel? event) {
-    if (event == null) return RouteType.simple;
-    if (event.waypoints.isNotEmpty) return RouteType.custom;
-    final geoJson = event.routeGeoJson;
-    if (geoJson != null && geoJson['routeType'] == 'custom') {
-      return RouteType.custom;
-    }
-    return RouteType.simple;
-  }
-
-  void setRoute({
-    required String meetingPointName,
-    required String destinationName,
-    AddressLocation? meetingPointLocation,
-    AddressLocation? destinationLocation,
-  }) {
-    emit(
-      state.copyWith(
-        meetingPointName: meetingPointName,
-        destinationName: destinationName,
-        meetingPointLocation: meetingPointLocation,
-        destinationLocation: destinationLocation,
-        showRouteError: false,
       ),
     );
   }
@@ -160,52 +113,26 @@ class EventFormCubit extends Cubit<EventFormState> {
     );
   }
 
-  void setRouteType(RouteType type) {
-    emit(state.copyWith(routeType: type));
-  }
-
   void clearWaypoints() {
     emit(state.copyWith(waypoints: const [], waypointLocations: const []));
   }
 
-  Map<String, dynamic>? _buildRouteGeoJson(RouteType routeType) {
+  Map<String, dynamic>? _buildRouteGeoJson() {
     final points = <Map<String, dynamic>>[];
-    if (routeType == RouteType.simple) {
-      final mp = state.meetingPointLocation;
-      final dest = state.destinationLocation;
-      if (mp != null) {
+    for (var i = 0; i < state.waypoints.length; i++) {
+      final loc = i < state.waypointLocations.length
+          ? state.waypointLocations[i]
+          : null;
+      if (loc != null) {
         points.add({
-          'lat': mp.latitude,
-          'lng': mp.longitude,
-          'label': state.meetingPointName ?? '',
+          'lat': loc.latitude,
+          'lng': loc.longitude,
+          'label': state.waypoints[i],
         });
-      }
-      if (dest != null) {
-        points.add({
-          'lat': dest.latitude,
-          'lng': dest.longitude,
-          'label': state.destinationName ?? '',
-        });
-      }
-    } else {
-      for (var i = 0; i < state.waypoints.length; i++) {
-        final loc = i < state.waypointLocations.length
-            ? state.waypointLocations[i]
-            : null;
-        if (loc != null) {
-          points.add({
-            'lat': loc.latitude,
-            'lng': loc.longitude,
-            'label': state.waypoints[i],
-          });
-        }
       }
     }
     if (points.isEmpty) return null;
-    return {
-      'routeType': routeType == RouteType.simple ? 'simple' : 'custom',
-      'points': points,
-    };
+    return {'routeType': 'custom', 'points': points};
   }
 
   Future<void> saveEvent(
@@ -326,12 +253,8 @@ class EventFormCubit extends Cubit<EventFormState> {
 
     final dateRange = formData[EventFormFields.dateRange] as DateTimeRange?;
 
-    final isMultiBrand =
-        formData[EventFormFields.isMultiBrand] as bool? ?? true;
-    final allowedBrands = isMultiBrand
-        ? <String>[]
-        : (formData[EventFormFields.allowedBrands] as List<String>? ??
-              <String>[]);
+    final allowedBrands =
+        formData[EventFormFields.allowedBrands] as List<String>? ?? <String>[];
 
     final priceStr = formData[EventFormFields.price] as String?;
     final parsedPrice = priceStr != null && priceStr.isNotEmpty
@@ -343,12 +266,6 @@ class EventFormCubit extends Cubit<EventFormState> {
 
     final maxParticipants = formData[EventFormFields.maxParticipants] as int?;
 
-    final routeType =
-        formData[EventFormFields.routeType] as RouteType? ?? state.routeType;
-    final waypointsToSave = routeType == RouteType.custom
-        ? state.waypoints
-        : const <String>[];
-
     return EventModel(
       id: _editingEvent?.id,
       ownerId: userId,
@@ -358,10 +275,6 @@ class EventFormCubit extends Cubit<EventFormState> {
       startDate: dateRange?.start ?? DateTime.now(),
       endDate: dateRange?.end != dateRange?.start ? dateRange?.end : null,
       difficulty: formData[EventFormFields.difficulty] as EventDifficulty,
-      meetingPoint: routeType == RouteType.custom && state.waypoints.isNotEmpty
-          ? state.waypoints.first
-          : state.meetingPointName ?? '',
-      destination: state.destinationName ?? '',
       meetingTime: formData[EventFormFields.meetingTime] as DateTime,
       eventType: formData[EventFormFields.eventType] as EventType,
       allowedBrands: allowedBrands,
@@ -369,8 +282,8 @@ class EventFormCubit extends Cubit<EventFormState> {
       maxParticipants: maxParticipants,
       imageUrl: _editingEvent?.imageUrl,
       state: _editingEvent?.state ?? EventState.scheduled,
-      waypoints: waypointsToSave,
-      routeGeoJson: _buildRouteGeoJson(routeType),
+      waypoints: state.waypoints,
+      routeGeoJson: _buildRouteGeoJson(),
     );
   }
 
@@ -399,29 +312,18 @@ class EventFormCubit extends Cubit<EventFormState> {
     final dateRange = formData[EventFormFields.dateRange] as DateTimeRange?;
     final now = DateTime.now();
 
-    final isMultiBrand =
-        formData[EventFormFields.isMultiBrand] as bool? ?? true;
-    final allowedBrands = isMultiBrand
-        ? <String>[]
-        : (formData[EventFormFields.allowedBrands] as List<String>? ??
-              <String>[]);
+    final allowedBrands =
+        formData[EventFormFields.allowedBrands] as List<String>? ?? <String>[];
 
     final priceStr = formData[EventFormFields.price] as String?;
     final parsedPrice = priceStr != null && priceStr.isNotEmpty
         ? int.tryParse(priceStr)
         : null;
-    // Price of 0 or empty means free — no price stored.
     final price = (parsedPrice == null || parsedPrice == 0)
         ? null
         : parsedPrice;
 
     final maxParticipants = formData[EventFormFields.maxParticipants] as int?;
-
-    final routeType =
-        formData[EventFormFields.routeType] as RouteType? ?? state.routeType;
-    final waypointsToSave = routeType == RouteType.custom
-        ? state.waypoints
-        : const <String>[];
 
     return EventModel(
       id: _editingEvent?.id,
@@ -434,10 +336,6 @@ class EventFormCubit extends Cubit<EventFormState> {
       difficulty:
           formData[EventFormFields.difficulty] as EventDifficulty? ??
           EventDifficulty.one,
-      meetingPoint: routeType == RouteType.custom && state.waypoints.isNotEmpty
-          ? state.waypoints.first.trim()
-          : state.meetingPointName?.trim() ?? '',
-      destination: state.destinationName?.trim() ?? '',
       meetingTime: formData[EventFormFields.meetingTime] as DateTime? ?? now,
       eventType:
           formData[EventFormFields.eventType] as EventType? ??
@@ -447,8 +345,8 @@ class EventFormCubit extends Cubit<EventFormState> {
       maxParticipants: maxParticipants,
       imageUrl: _editingEvent?.imageUrl,
       state: EventState.draft,
-      waypoints: waypointsToSave,
-      routeGeoJson: _buildRouteGeoJson(routeType),
+      waypoints: state.waypoints,
+      routeGeoJson: _buildRouteGeoJson(),
     );
   }
 
@@ -517,10 +415,7 @@ class EventFormCubit extends Cubit<EventFormState> {
   ];
 
   static const List<String> _step3Fields = [
-    EventFormFields.meetingPoint,
-    EventFormFields.destination,
     EventFormFields.price,
-    EventFormFields.isFreeEvent,
     EventFormFields.maxParticipants,
   ];
 
@@ -576,9 +471,7 @@ class EventFormCubit extends Cubit<EventFormState> {
         );
 
     if (step == 2) {
-      final hasRoute = state.meetingPointLocation != null ||
-          state.destinationLocation != null ||
-          state.waypoints.isNotEmpty;
+      final hasRoute = state.waypoints.isNotEmpty;
       if (!hasRoute) {
         emit(state.copyWith(showRouteError: true));
         return false;

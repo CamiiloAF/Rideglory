@@ -229,14 +229,13 @@ void main() {
   });
 
   // ─── TC-step-07 (AC-6g) ──────────────────────────────────────────────────
-  // Auditor Opus — close coverage gap: buildEventToSave() must produce
-  // meetingPoint == '' when state.meetingPointName is null.
-  // Uses a real EventFormCubit with its real formKey mounted in a FormBuilder.
-  group('TC-step-07 (AC-6g): buildEventToSave meetingPoint when meetingPointName is null',
+  // buildEventToSave() must produce meetingPoint == '' when no waypoints exist.
+  // meetingPoint is now a computed getter derived from routePoints.
+  group('TC-step-07 (AC-6g): buildEventToSave meetingPoint when no waypoints',
       () {
     testWidgets(
         'buildEventToSave() returns EventModel with meetingPoint == "" '
-        'when state.meetingPointName is null',
+        'when state has no waypoints',
         (tester) async {
       final mockCreate = MockCreateEventUseCase();
       final mockUpdate = MockUpdateEventUseCase();
@@ -257,25 +256,18 @@ void main() {
         mockGetUserId,
         mockAnalytics,
       );
-      // meetingPointName is null in the initial state (not set).
-      expect(realCubit.state.meetingPointName, isNull);
 
       final now = DateTime.now();
       final initialValues = <String, dynamic>{
         EventFormFields.name: 'Rodada QA',
         EventFormFields.description: 'Descripción de prueba',
-        EventFormFields.isMultiDay: false,
         EventFormFields.dateRange: DateTimeRange(start: now, end: now),
         EventFormFields.meetingTime: DateTime(now.year, now.month, now.day, 7),
         EventFormFields.difficulty: EventDifficulty.one,
         EventFormFields.eventType: EventType.onRoad,
-        EventFormFields.isMultiBrand: true,
         EventFormFields.allowedBrands: <String>[],
-        EventFormFields.isFreeEvent: false,
       };
 
-      // Mount a minimal FormBuilder using the real cubit's formKey so that
-      // formKey.currentState is non-null and saveAndValidate() can succeed.
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme.darkTheme,
@@ -296,8 +288,6 @@ void main() {
                 initialValue: initialValues,
                 child: Column(
                   children: [
-                    // Register each required field as a hidden widget so that
-                    // formKey.currentState.saveAndValidate() finds them all.
                     for (final entry in initialValues.entries)
                       FormBuilderField<dynamic>(
                         name: entry.key,
@@ -318,9 +308,8 @@ void main() {
       expect(result, isNotNull,
           reason: 'buildEventToSave must return a non-null EventModel '
               'when the form is valid');
-      expect(result!.meetingPoint, equals(''),
-          reason: 'meetingPoint must be empty string '
-              'when state.meetingPointName is null (line 348 of event_form_cubit.dart)');
+      // meetingPoint is derived from routePoints (empty when no waypoints)
+      expect(result!.meetingPoint, equals(''));
 
       realCubit.close();
     });

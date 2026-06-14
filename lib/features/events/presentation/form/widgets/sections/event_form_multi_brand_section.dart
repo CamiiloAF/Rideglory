@@ -25,15 +25,12 @@ class EventFormMultiBrandSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        FormBuilderField<bool>(
-          name: EventFormFields.isMultiBrand,
-          builder: (isField) => FormBuilderField<List<String>>(
-            name: EventFormFields.allowedBrands,
-            builder: (brandsField) => BrandChipsInline(
-              isMultiBrandField: isField,
-              brandsField: brandsField,
-              suggestions: ColombiaMotosBrandsData.search,
-            ),
+        FormBuilderField<List<String>>(
+          name: EventFormFields.allowedBrands,
+          initialValue: const [],
+          builder: (brandsField) => BrandChipsInline(
+            brandsField: brandsField,
+            suggestions: ColombiaMotosBrandsData.search,
           ),
         ),
       ],

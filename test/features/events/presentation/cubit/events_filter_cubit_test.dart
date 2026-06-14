@@ -31,8 +31,6 @@ void main() {
     difficulty: EventDifficulty.two,
     startDate: DateTime(2026, 5, 20),
     endDate: DateTime(2026, 5, 20),
-    meetingPoint: 'Parque Bolívar',
-    destination: 'Guatapé',
     meetingTime: DateTime(2026, 5, 20, 8, 0),
     state: EventState.scheduled,
   );
