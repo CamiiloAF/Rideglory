@@ -124,10 +124,50 @@ Todas las páginas están en `docs/web/` y se publican vía GitHub Pages (config
 
 ---
 
-## Notas
+## Notas para el revisor (App Store — campo "Notas", máx. 4 000 caracteres)
+
+```
+La app está en fase beta cerrada dirigida a la comunidad motociclista en Colombia. A continuación se incluye la información necesaria para la revisión.
+
+Cuenta de prueba
+- Email: reviewer@rideglory.com
+- Contraseña: Review2025!
+
+Flujos principales a revisar
+
+1. Registro e inicio de sesión — El usuario puede registrarse con email/contraseña o con Google Sign-In. El inicio de sesión con Apple ID también está disponible.
+
+2. Explorar y unirse a eventos — Desde la pantalla principal se listan eventos de rodada disponibles. El usuario puede ver el detalle, aplicar filtros por tipo y dificultad, y solicitar inscripción. La aprobación queda pendiente hasta que el organizador la confirme.
+
+3. Crear un evento — El organizador completa un formulario de 4 pasos: información básica, ruta (punto de inicio y fin en mapa), configuración (cupos, precio, dificultad) y revisión final. Hay una opción de generar descripción con IA que requiere conexión al backend.
+
+4. Seguimiento GPS (tracking) — Durante un evento activo, el participante puede activar el tracking desde la pantalla de detalle. La ubicación se comparte en tiempo real con los demás participantes. Este flujo requiere permiso de ubicación en primer plano y segundo plano. El botón SOS envía una alerta de emergencia.
+
+5. Garaje — El usuario registra sus motos con datos técnicos y fotos. Puede escanear el SOAT con la cámara (OCR local, sin conexión a servidores externos) y registrar mantenimientos.
+
+Permisos solicitados
+- Ubicación precisa y en segundo plano: necesaria para el tracking en tiempo real durante rodadas. Solo se activa cuando el usuario inicia explícitamente el seguimiento en un evento.
+- Cámara: para fotografiar vehículos y escanear el SOAT (procesamiento on-device con ML Kit).
+- Galería/Fotos: para seleccionar imágenes de perfil, portada de eventos y vehículos.
+- Notificaciones: para alertas de aprobación de registro, inicio de rodada y emergencias SOS.
+
+Backend y conectividad
+La app consume una API REST propia alojada en AWS. Algunas funciones como la generación de descripciones con IA y el tracking en tiempo real requieren conexión activa. Las funciones de garaje y consulta de eventos funcionan con conectividad estándar.
+
+Notas adicionales
+- La app está disponible únicamente en español (Colombia).
+- No se procesan pagos dentro de la app; los eventos con costo se coordinan directamente entre organizador y participantes.
+- La información médica de emergencia (tipo de sangre, EPS) es opcional y solo visible para el organizador en caso de alerta SOS.
+- No hay contenido generado por usuarios de forma pública; los eventos son visibles para todos los usuarios registrados.
+```
+
+---
+
+## Notas generales
 
 - Verificar límites exactos en la consola al subir (los caracteres con tilde/emoji
   pueden contar distinto en algunos campos).
 - Los emojis funcionan en Play; en App Store evítalos en nombre/subtítulo.
 - Para beta cerrada: este copy sirve tal cual para la ficha de Internal/Closed
   Testing y para TestFlight.
+- Reemplazar las credenciales de prueba antes de enviar a revisión.
