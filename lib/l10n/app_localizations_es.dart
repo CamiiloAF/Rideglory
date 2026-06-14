@@ -263,9 +263,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_createEvent => 'Crear Evento';
 
   @override
-  String get event_editEvent => 'Editar evento';
-
-  @override
   String get event_eventDetail => 'Detalle del Evento';
 
   @override
@@ -273,6 +270,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_optionsTitle => 'Opciones del evento';
+
+  @override
+  String get event_editEvent => 'Editar evento';
 
   @override
   String get event_edit => 'Editar';
@@ -3030,6 +3030,22 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_step4_subtitle => 'Confirma los datos antes de publicar';
+
+  @override
+  String get event_step4_editTitle => 'Resumen del evento';
+
+  @override
+  String get event_step4_editSubtitle =>
+      'Toca Editar en cada sección para cambiarla';
+
+  @override
+  String get event_step_done => 'Listo';
+
+  @override
+  String get event_step_close => 'Cerrar';
+
+  @override
+  String get event_changesSaved => 'Cambios guardados';
 
   @override
   String get event_step_continue => 'Continuar';

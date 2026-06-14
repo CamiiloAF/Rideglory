@@ -14,13 +14,7 @@ class AppRichTextEditor extends StatefulWidget {
   final String? initialValue;
   final int minLines;
   final ValueChanged<String>? onChanged;
-
-  /// When set, an "IA" toolbar button is shown that triggers [onAiSuggest].
-  /// The parent is responsible for opening the AI chat sheet.
   final VoidCallback? onAiSuggest;
-
-  /// When provided, the editor uses this controller instead of creating its
-  /// own. The caller is responsible for disposing it.
   final QuillController? externalController;
 
   const AppRichTextEditor({
@@ -68,8 +62,7 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
           document: doc,
           selection: const TextSelection.collapsed(offset: 0),
         );
-      } catch (e) {
-        // Si falla el parsing, crear un documento con el texto plano
+      } catch (_) {
         final doc = Document()..insert(0, widget.initialValue!);
         return QuillController(
           document: doc,
@@ -88,35 +81,20 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
   }
 
   String _getJsonContent() {
-    // Convertir el documento a JSON
     final delta = _controller.document.toDelta();
     return jsonEncode(delta.toJson());
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final cs = context.colorScheme;
-
-    final toolbarToggleStyleButtonOptions =
-        QuillToolbarToggleStyleButtonOptions(
-          iconTheme: QuillIconTheme(
-            iconButtonSelectedData: IconButtonData(
-              color: colorScheme.onPrimary,
-            ),
-            iconButtonUnselectedData: IconButtonData(
-              color: cs.onSurfaceVariant,
-            ),
-          ),
-        );
+    final colorScheme = Theme.of(context).colorScheme;
 
     return FormBuilderField<String>(
       name: widget.name,
       validator: widget.validator,
-
-      builder: (FormFieldState<String> field) {
+      builder: (field) {
         _field = field;
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -128,85 +106,21 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
             ],
             Container(
               decoration: BoxDecoration(
-                color: cs.surfaceContainerHighest,
+                color: AppColors.darkCard,
                 border: Border.all(
                   color: field.hasError
                       ? colorScheme.error
-                      : colorScheme.primary,
+                      : AppColors.darkBorderPrimary,
                   width: field.hasError ? 1.5 : 1,
                 ),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: cs.surfaceContainerHighest,
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(8),
-                      ),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          QuillToolbarHistoryButton(
-                            controller: _controller,
-                            isUndo: true,
-                          ),
-                          QuillToolbarHistoryButton(
-                            controller: _controller,
-                            isUndo: false,
-                          ),
-                          QuillToolbarToggleStyleButton(
-                            attribute: Attribute.bold,
-                            controller: _controller,
-                            options: toolbarToggleStyleButtonOptions,
-                          ),
-                          QuillToolbarToggleStyleButton(
-                            attribute: Attribute.italic,
-                            controller: _controller,
-                            options: toolbarToggleStyleButtonOptions,
-                          ),
-                          QuillToolbarToggleStyleButton(
-                            attribute: Attribute.underline,
-                            controller: _controller,
-                            options: toolbarToggleStyleButtonOptions,
-                          ),
-                          QuillToolbarToggleStyleButton(
-                            attribute: Attribute.strikeThrough,
-                            controller: _controller,
-                            options: toolbarToggleStyleButtonOptions,
-                          ),
-                          QuillToolbarToggleStyleButton(
-                            attribute: Attribute.ul,
-                            controller: _controller,
-                            options: toolbarToggleStyleButtonOptions,
-                          ),
-                          QuillToolbarToggleStyleButton(
-                            attribute: Attribute.ol,
-                            controller: _controller,
-                            options: toolbarToggleStyleButtonOptions,
-                          ),
-                          QuillToolbarToggleStyleButton(
-                            attribute: Attribute.checked,
-                            controller: _controller,
-                            options: toolbarToggleStyleButtonOptions,
-                          ),
-                          AppSpacing.hGapSm,
-                          QuillToolbarClearFormatButton(
-                            controller: _controller,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // Área de texto
                   Stack(
-                    alignment: Alignment.centerRight,
+                    alignment: Alignment.topRight,
                     children: [
                       Container(
                         constraints: BoxConstraints(
@@ -214,68 +128,163 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
                         ),
                         padding: EdgeInsets.fromLTRB(
                           16,
-                          16,
-                          widget.onAiSuggest != null ? 48 : 16,
-                          16,
+                          14,
+                          widget.onAiSuggest != null ? 52 : 16,
+                          14,
                         ),
-                        child: Focus(
-                          onFocusChange: (hasFocus) {
-                            if (!hasFocus) {
-                              field.didChange(_getJsonContent());
-                            }
-                          },
-                          child: QuillEditor(
-                            controller: _controller,
-                            focusNode: _focusNode,
-                            scrollController: ScrollController(),
+                        child: DefaultTextStyle(
+                          style: const TextStyle(
+                            fontFamily: 'Space Grotesk',
+                            color: AppColors.textOnDarkPrimary,
+                            fontSize: 15,
+                            height: 1.6,
                           ),
-                        ),
-                      ),
-                      if (widget.onAiSuggest != null)
-                        Positioned(
-                          top: 8,
-                          right: 8,
-                          child: Material(
-                            color: colorScheme.surface.withValues(alpha: 0),
-                            child: InkWell(
-                              onTap: widget.onAiSuggest,
-                              borderRadius: BorderRadius.circular(4),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 6,
-                                ),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: colorScheme.primary,
-                                    width: 1,
+                          child: Focus(
+                            onFocusChange: (hasFocus) {
+                              if (!hasFocus) {
+                                field.didChange(_getJsonContent());
+                              }
+                            },
+                            child: QuillEditor(
+                              controller: _controller,
+                              focusNode: _focusNode,
+                              scrollController: ScrollController(),
+                              config: QuillEditorConfig(
+                                placeholder: widget.hintText ?? '',
+                                autoFocus: false,
+                                expands: false,
+                                padding: EdgeInsets.zero,
+                                customStyles: const DefaultStyles(
+                                  placeHolder: DefaultTextBlockStyle(
+                                    TextStyle(
+                                      fontFamily: 'Space Grotesk',
+                                      color: AppColors.textOnDarkTertiary,
+                                      fontSize: 15,
+                                      height: 1.6,
+                                    ),
+                                    HorizontalSpacing.zero,
+                                    VerticalSpacing.zero,
+                                    VerticalSpacing.zero,
+                                    null,
                                   ),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.auto_awesome,
-                                      size: 18,
-                                      color: colorScheme.primary,
+                                  paragraph: DefaultTextBlockStyle(
+                                    TextStyle(
+                                      fontFamily: 'Space Grotesk',
+                                      color: AppColors.textOnDarkPrimary,
+                                      fontSize: 15,
+                                      height: 1.6,
                                     ),
-                                    AppSpacing.hGapXxs,
-                                    Text(
-                                      'IA',
-                                      style: TextStyle(
-                                        color: colorScheme.primary,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
+                                    HorizontalSpacing.zero,
+                                    VerticalSpacing.zero,
+                                    VerticalSpacing.zero,
+                                    null,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                         ),
+                      ),
+                      if (widget.onAiSuggest != null)
+                        Positioned(
+                          top: 10,
+                          right: 10,
+                          child: InkWell(
+                            onTap: widget.onAiSuggest,
+                            borderRadius: BorderRadius.circular(6),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 5,
+                              ),
+                              decoration: BoxDecoration(
+                                color: AppColors.primarySubtle,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.auto_awesome,
+                                    size: 14,
+                                    color: AppColors.primary,
+                                  ),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    'IA',
+                                    style: TextStyle(
+                                      fontFamily: 'Space Grotesk',
+                                      color: AppColors.primary,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                     ],
+                  ),
+
+                  // Separador
+                  Container(height: 1, color: AppColors.darkBorderPrimary),
+
+                  // Toolbar en la parte inferior
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          _ToolbarBtn(
+                            attribute: Attribute.bold,
+                            controller: _controller,
+                            icon: Icons.format_bold,
+                          ),
+                          _ToolbarBtn(
+                            attribute: Attribute.italic,
+                            controller: _controller,
+                            icon: Icons.format_italic,
+                          ),
+                          _ToolbarBtn(
+                            attribute: Attribute.underline,
+                            controller: _controller,
+                            icon: Icons.format_underline,
+                          ),
+                          const _ToolbarDivider(),
+                          _ToolbarBtn(
+                            attribute: Attribute.ul,
+                            controller: _controller,
+                            icon: Icons.format_list_bulleted,
+                          ),
+                          _ToolbarBtn(
+                            attribute: Attribute.ol,
+                            controller: _controller,
+                            icon: Icons.format_list_numbered,
+                          ),
+                          const _ToolbarDivider(),
+                          QuillToolbarLinkStyleButton(
+                            controller: _controller,
+                            options: const QuillToolbarLinkStyleButtonOptions(
+                              iconTheme: QuillIconTheme(
+                                iconButtonSelectedData: IconButtonData(
+                                  color: AppColors.textOnDarkPrimary,
+                                ),
+                                iconButtonUnselectedData: IconButtonData(
+                                  color: AppColors.textOnDarkTertiary,
+                                ),
+                              ),
+                              iconSize: 18,
+                              iconButtonFactor: 1.2,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -284,16 +293,63 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
               AppSpacing.gapSm,
               Text(
                 field.errorText ?? widget.helperText!,
-                style: theme.textTheme.bodySmall?.copyWith(
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: field.hasError
-                      ? theme.colorScheme.error
-                      : theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                      ? colorScheme.error
+                      : colorScheme.onSurface.withValues(alpha: 0.6),
                 ),
               ),
             ],
           ],
         );
       },
+    );
+  }
+}
+
+class _ToolbarBtn extends StatelessWidget {
+  const _ToolbarBtn({
+    required this.attribute,
+    required this.controller,
+    required this.icon,
+  });
+
+  final Attribute attribute;
+  final QuillController controller;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return QuillToolbarToggleStyleButton(
+      attribute: attribute,
+      controller: controller,
+      options: QuillToolbarToggleStyleButtonOptions(
+        iconData: icon,
+        iconSize: 18,
+        iconButtonFactor: 1.2,
+        iconTheme: const QuillIconTheme(
+          iconButtonSelectedData: IconButtonData(
+            color: AppColors.textOnDarkPrimary,
+          ),
+          iconButtonUnselectedData: IconButtonData(
+            color: AppColors.textOnDarkTertiary,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ToolbarDivider extends StatelessWidget {
+  const _ToolbarDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 1,
+      height: 18,
+      color: AppColors.darkBorderPrimary,
+      margin: const EdgeInsets.symmetric(horizontal: 6),
     );
   }
 }

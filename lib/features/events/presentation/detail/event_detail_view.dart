@@ -12,6 +12,7 @@ import 'package:rideglory/features/event_registration/domain/model/event_registr
 import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
+import 'package:rideglory/features/events/presentation/form/event_edit_params.dart';
 import 'package:rideglory/features/events/presentation/delete/cubit/event_delete_cubit.dart';
 import 'package:rideglory/features/events/presentation/detail/cubit/event_detail_cubit.dart';
 import 'package:rideglory/features/events/presentation/detail/params.dart';
@@ -166,14 +167,18 @@ class EventDetailViewState extends State<EventDetailView> {
               listener: (context, state) {
                 state.whenOrNull(
                   data: (_) {
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
                       SnackBar(
                         content:
                             Text(context.l10n.event_eventDeletedSuccess),
                         backgroundColor: AppColors.success,
                       ),
                     );
-                    context.pop(true);
+                    // Usar Navigator directamente para garantizar que el pop
+                    // sucede independientemente de PopScope.canPop.
+                    if (context.mounted) {
+                      Navigator.of(context).pop(true);
+                    }
                   },
                 );
               },
@@ -210,16 +215,15 @@ class EventDetailViewState extends State<EventDetailView> {
                   event: currentEvent,
                   isOwner: isOwner,
                   onBack: _pop,
-                  onEdit: () => context
-                      .pushNamed<EventModel?>(
-                        AppRoutes.editEvent,
-                        extra: currentEvent,
-                      )
-                      .then((result) {
-                        if (result != null && mounted) {
-                          setState(() => currentEvent = result);
-                        }
-                      }),
+                  onEdit: () => context.pushNamed(
+                    AppRoutes.editEvent,
+                    extra: EventEditParams(
+                      event: currentEvent,
+                      onSaved: (updated) {
+                        if (mounted) setState(() => currentEvent = updated);
+                      },
+                    ),
+                  ),
                   onAttendees: () => context.pushNamed(
                     AppRoutes.eventAttendees,
                     extra: currentEvent,

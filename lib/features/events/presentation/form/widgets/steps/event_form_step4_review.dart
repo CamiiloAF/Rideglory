@@ -38,10 +38,16 @@ class EventFormStep4Review extends StatelessWidget {
     return '$visible y $extra más';
   }
 
+  String _truncateAddress(String full) {
+    final commaIndex = full.indexOf(',');
+    return commaIndex > 0 ? full.substring(0, commaIndex) : full;
+  }
+
   String _resolveMeetingPoint(BuildContext context, EventFormState state) {
-    return state.waypoints.isNotEmpty
-        ? state.waypoints.first
-        : context.l10n.event_step_review_noMeetingPoint;
+    if (state.waypoints.isEmpty) {
+      return context.l10n.event_step_review_noMeetingPoint;
+    }
+    return _truncateAddress(state.waypoints.first);
   }
 
   String _formatPrice(String? raw) {
@@ -97,8 +103,12 @@ class EventFormStep4Review extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     StepTitle(
-                      title: context.l10n.event_step4_title,
-                      subtitle: context.l10n.event_step4_subtitle,
+                      title: cubit.isEditing
+                          ? context.l10n.event_step4_editTitle
+                          : context.l10n.event_step4_title,
+                      subtitle: cubit.isEditing
+                          ? context.l10n.event_step4_editSubtitle
+                          : context.l10n.event_step4_subtitle,
                     ),
                     const SizedBox(height: 20),
 
@@ -181,7 +191,7 @@ class EventFormStep4Review extends StatelessWidget {
                         if (state.waypoints.length > 1)
                           ReviewRow(
                             label: context.l10n.event_step_review_destination,
-                            value: state.waypoints.last,
+                            value: _truncateAddress(state.waypoints.last),
                           ),
                         if (state.waypoints.length > 2)
                           ReviewRow(

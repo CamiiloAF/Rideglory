@@ -74,6 +74,7 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
   }
 
   void _togglePickMode() {
+    FocusScope.of(context).unfocus();
     setState(() => _isPickMode = !_isPickMode);
   }
 
@@ -259,6 +260,7 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
 
         return Scaffold(
           backgroundColor: AppColors.darkBgPrimary,
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             backgroundColor: AppColors.darkBgPrimary,
             elevation: 0,

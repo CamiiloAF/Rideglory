@@ -10,8 +10,9 @@ import 'package:rideglory/features/events/presentation/form/widgets/event_form_v
 
 class EventFormPage extends StatelessWidget {
   final EventModel? event;
+  final void Function(EventModel)? onSaved;
 
-  const EventFormPage({super.key, this.event});
+  const EventFormPage({super.key, this.event, this.onSaved});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,7 @@ class EventFormPage extends StatelessWidget {
           create: (_) => getIt<AiDescriptionChatCubit>()..initQuota(),
         ),
       ],
-      child: const EventFormView(),
+      child: EventFormView(onSaved: onSaved),
     );
   }
 }

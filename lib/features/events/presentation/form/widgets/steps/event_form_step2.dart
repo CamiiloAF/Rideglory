@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
@@ -13,7 +15,10 @@ import 'package:rideglory/features/events/presentation/form/widgets/steps/step_t
 /// - GENERAR DESCRIPCIÓN: card con IA para generar la descripción
 /// - DESCRIPCIÓN: editor de texto enriquecido con barra de formato
 class EventFormStep2 extends StatefulWidget {
-  const EventFormStep2({super.key});
+  const EventFormStep2({super.key, this.initialDescription});
+
+  /// Contenido inicial del editor en modo edición (Quill Delta JSON string).
+  final String? initialDescription;
 
   @override
   State<EventFormStep2> createState() => _EventFormStep2State();
@@ -33,7 +38,27 @@ class _EventFormStep2State extends State<EventFormStep2> {
   @override
   void initState() {
     super.initState();
-    _quillController = QuillController.basic();
+    _quillController = _initController();
+  }
+
+  QuillController _initController() {
+    final initial = widget.initialDescription;
+    if (initial != null && initial.isNotEmpty) {
+      try {
+        final doc = Document.fromJson(jsonDecode(initial) as List);
+        return QuillController(
+          document: doc,
+          selection: const TextSelection.collapsed(offset: 0),
+        );
+      } catch (_) {
+        final doc = Document()..insert(0, initial);
+        return QuillController(
+          document: doc,
+          selection: const TextSelection.collapsed(offset: 0),
+        );
+      }
+    }
+    return QuillController.basic();
   }
 
   @override

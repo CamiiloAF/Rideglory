@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide Error;
+import 'package:rideglory/core/config/app_map_defaults.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/core/services/place_service.dart';
@@ -31,9 +32,6 @@ class _MapLocationPickerModalState extends State<MapLocationPickerModal> {
   bool _isConfirming = false;
   bool _mapReady = false;
 
-  // Colombia center (Bogotá)
-  static const double _defaultLng = -74.0721;
-  static const double _defaultLat = 4.7110;
 
   Future<void> _confirm() async {
     final mapboxMap = _mapboxMap;
@@ -75,12 +73,7 @@ class _MapLocationPickerModalState extends State<MapLocationPickerModal> {
         children: [
           // Map
           MapWidget(
-            viewport: CameraViewportState(
-              center: Point(
-                coordinates: Position(_defaultLng, _defaultLat),
-              ),
-              zoom: 12,
-            ),
+            viewport: AppMapDefaults.colombiaViewport,
             styleUri: MapboxStyles.DARK,
             onMapCreated: (map) {
               _mapboxMap = map;

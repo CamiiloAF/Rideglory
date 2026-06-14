@@ -574,12 +574,6 @@ abstract class AppLocalizations {
   /// **'Crear Evento'**
   String get event_createEvent;
 
-  /// No description provided for @event_editEvent.
-  ///
-  /// In es, this message translates to:
-  /// **'Editar evento'**
-  String get event_editEvent;
-
   /// No description provided for @event_eventDetail.
   ///
   /// In es, this message translates to:
@@ -597,6 +591,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Opciones del evento'**
   String get event_optionsTitle;
+
+  /// No description provided for @event_editEvent.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar evento'**
+  String get event_editEvent;
 
   /// No description provided for @event_edit.
   ///
@@ -5676,6 +5676,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Confirma los datos antes de publicar'**
   String get event_step4_subtitle;
+
+  /// No description provided for @event_step4_editTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Resumen del evento'**
+  String get event_step4_editTitle;
+
+  /// No description provided for @event_step4_editSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Toca Editar en cada sección para cambiarla'**
+  String get event_step4_editSubtitle;
+
+  /// No description provided for @event_step_done.
+  ///
+  /// In es, this message translates to:
+  /// **'Listo'**
+  String get event_step_done;
+
+  /// No description provided for @event_step_close.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrar'**
+  String get event_step_close;
+
+  /// No description provided for @event_changesSaved.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambios guardados'**
+  String get event_changesSaved;
 
   /// No description provided for @event_step_continue.
   ///

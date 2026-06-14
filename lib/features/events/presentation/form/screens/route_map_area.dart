@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide Error;
+import 'package:rideglory/core/config/app_map_defaults.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
@@ -38,9 +39,10 @@ class RouteMapArea extends StatelessWidget {
       height: isPickMode ? _pickModeHeight : _normalHeight,
       child: Stack(
         children: [
-          // Map — sin viewport: evitar que cada rebuild resetee la cámara.
-          // La posición inicial la maneja _centerOnLocation() en onMapCreated.
+          // Map — viewport estable apuntando a Colombia; _centerOnLocation()
+          // mueve la cámara al GPS del usuario tras la inicialización.
           MapWidget(
+            viewport: AppMapDefaults.colombiaViewport,
             styleUri: MapboxStyles.DARK,
             onMapCreated: (mapboxMap) async {
               await mapboxMap.scaleBar.updateSettings(

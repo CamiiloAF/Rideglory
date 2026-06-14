@@ -7,10 +7,11 @@ class WaypointsEmptyHint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 120,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 56, maxHeight: 120),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(
             Icons.route,

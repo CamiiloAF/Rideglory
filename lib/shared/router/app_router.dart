@@ -19,6 +19,7 @@ import 'package:rideglory/features/event_registration/presentation/registration_
 import 'package:rideglory/features/events/presentation/attendees/attendees_page.dart';
 import 'package:rideglory/features/events/presentation/detail/event_detail_page.dart';
 import 'package:rideglory/features/events/presentation/detail/params.dart';
+import 'package:rideglory/features/events/presentation/form/event_edit_params.dart';
 import 'package:rideglory/features/events/presentation/form/event_form_page.dart';
 import 'package:rideglory/features/events/presentation/list/events_page.dart';
 import 'package:rideglory/features/events/presentation/detail/event_detail_by_id_page.dart';
@@ -286,8 +287,11 @@ class AppRouter {
         path: AppRoutes.editEvent,
         name: AppRoutes.editEvent,
         builder: (context, state) {
-          final event = state.extra as EventModel?;
-          return EventFormPage(event: event);
+          final extra = state.extra;
+          if (extra is EventEditParams) {
+            return EventFormPage(event: extra.event, onSaved: extra.onSaved);
+          }
+          return EventFormPage(event: extra as EventModel?);
         },
       ),
       GoRoute(

@@ -74,6 +74,7 @@ class EventFormCubit extends Cubit<EventFormState> {
 
     emit(
       EventFormState(
+        currentStep: event != null ? 3 : 0,
         waypoints: event?.waypoints ?? const [],
         waypointLocations: waypointLocations,
       ),

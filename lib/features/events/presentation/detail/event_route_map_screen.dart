@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide Error;
+import 'package:rideglory/core/config/app_map_defaults.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/shared/models/address_location.dart';
 
@@ -153,6 +154,7 @@ class _EventRouteMapScreenState extends State<EventRouteMapScreen> {
         ),
       ),
       body: MapWidget(
+        viewport: AppMapDefaults.colombiaViewport,
         styleUri: MapboxStyles.DARK,
         onMapCreated: (mapboxMap) async {
           await mapboxMap.scaleBar

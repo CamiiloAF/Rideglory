@@ -63,28 +63,31 @@ class ReviewRow extends StatelessWidget {
               color: AppColors.textOnDarkSecondary,
             ),
           ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (trailingWidget != null) ...[
-                trailingWidget!,
-                const SizedBox(width: 6),
-              ],
-              Flexible(
-                child: Text(
-                  value,
-                  textAlign: TextAlign.end,
-                  style: const TextStyle(
-                    fontFamily: 'Space Grotesk',
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textOnDarkPrimary,
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (trailingWidget != null) ...[
+                  trailingWidget!,
+                  const SizedBox(width: 6),
+                ],
+                Flexible(
+                  child: Text(
+                    value,
+                    textAlign: TextAlign.end,
+                    style: const TextStyle(
+                      fontFamily: 'Space Grotesk',
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textOnDarkPrimary,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       );
