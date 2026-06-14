@@ -36,14 +36,14 @@ class MockAiDescriptionChatCubit
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 Widget _buildHost({
-  EventType eventType = EventType.tourism,
+  EventType eventType = EventType.onRoad,
   bool isEditing = false,
   GlobalKey<FormBuilderState>? formKey,
   MockAiDescriptionChatCubit? cubit,
 }) {
   Widget child = MaterialApp(
     theme: AppTheme.darkTheme,
-    localizationsDelegates: [
+    localizationsDelegates: const [
       AppLocalizations.delegate,
       FlutterQuillLocalizations.delegate,
       GlobalMaterialLocalizations.delegate,
@@ -158,7 +158,7 @@ void main() {
       // title is patched via FormBuilderState.patchValue after the widget is built.
       final formKey = GlobalKey<FormBuilderState>();
       await tester.pumpWidget(_buildHost(
-        eventType: EventType.tourism,
+        eventType: EventType.onRoad,
         formKey: formKey,
         cubit: mockCubit,
       ));
@@ -193,7 +193,7 @@ void main() {
       // eventType maps from EventType.apiValue — _buildEventContext uses .apiValue
       expect(
         page.eventContext.eventType,
-        EventType.tourism.apiValue,
+        EventType.onRoad.apiValue,
         reason: 'eventType must be the API value (uppercase), not the Dart enum .name',
       );
 
@@ -210,7 +210,7 @@ void main() {
     'AC18: AiDescriptionRequest has no audience field (v1 omission confirmed)',
     (tester) async {
       await tester.pumpWidget(_buildHost(
-        eventType: EventType.tourism,
+        eventType: EventType.onRoad,
         cubit: mockCubit,
       ));
       await tester.pumpAndSettle();

@@ -22,7 +22,6 @@ import 'package:rideglory/features/events/presentation/detail/params.dart';
 import 'package:rideglory/features/events/presentation/form/event_form_page.dart';
 import 'package:rideglory/features/events/presentation/list/events_page.dart';
 import 'package:rideglory/features/events/presentation/detail/event_detail_by_id_page.dart';
-import 'package:rideglory/features/events/presentation/drafts/my_drafts_page.dart';
 import 'package:rideglory/features/events/presentation/tracking/live_map_page.dart';
 import 'package:rideglory/features/events/presentation/tracking/participants/participants_placeholder_page.dart';
 import 'package:rideglory/features/home/presentation/home_page.dart';
@@ -58,6 +57,10 @@ import 'app_routes.dart';
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 class AppRouter {
+  /// Key global para mostrar SnackBars desde fuera del árbol de widgets
+  /// (p.ej. tras un pop donde el contexto local ya no existe).
+  static final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+
   /// Navega a partir de una URI con scheme `rideglory://`.
   /// `rideglory://events/detail-by-id?id=xxx` → push `/events/detail-by-id?id=xxx`
   static void pushDeepLink(String ridegloryUri) {
@@ -274,11 +277,6 @@ class AppRouter {
         },
       ),
 
-      GoRoute(
-        path: AppRoutes.myDrafts,
-        name: AppRoutes.myDrafts,
-        builder: (context, state) => const MyDraftsPage(),
-      ),
       GoRoute(
         path: AppRoutes.createEvent,
         name: AppRoutes.createEvent,

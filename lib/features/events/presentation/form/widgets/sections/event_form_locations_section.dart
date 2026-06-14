@@ -1,62 +1,99 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
-import 'package:rideglory/features/events/constants/event_form_fields.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
-import 'package:rideglory/features/events/presentation/form/widgets/sections/event_route_type_selector.dart';
-import 'package:rideglory/features/events/presentation/form/widgets/sections/locations/custom_route_section.dart';
-import 'package:rideglory/features/events/presentation/form/widgets/sections/locations/simple_route_card.dart';
+import 'package:rideglory/features/events/presentation/form/screens/event_route_config_screen.dart';
+import 'package:rideglory/features/events/presentation/form/widgets/sections/locations/route_points_card.dart';
 
-/// Route section with dual behavior:
-/// - Simple route: inline Route Card with meeting point + destination
-///   autocomplete fields + map preview.
-/// - Custom route: "Crear ruta personalizada" button → [EventRouteConfigScreen].
-///   After configuration, shows map with numbered pins + polyline + waypoints list.
+/// Sección de ruta — diseño Pencil MmZfp.
+///
+/// Muestra los puntos de ruta (SALIDA, WAYPOINTS, LLEGADA) en modo solo lectura.
+/// El botón "Editar ruta >" navega a [EventRouteConfigScreen] para crear/editar.
 class EventFormLocationsSection extends StatelessWidget {
   const EventFormLocationsSection({super.key});
+
+  static const _labelStyle = TextStyle(
+    fontFamily: 'Space Grotesk',
+    fontSize: 11,
+    fontWeight: FontWeight.w700,
+    letterSpacing: 1,
+    color: AppColors.textOnDarkTertiary,
+  );
+
+  void _openRouteConfig(BuildContext context) {
+    final cubit = context.read<EventFormCubit>();
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => BlocProvider.value(
+          value: cubit,
+          child: const EventRouteConfigScreen(),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EventFormCubit, EventFormState>(
       buildWhen: (prev, curr) =>
-          prev.routeType != curr.routeType ||
-          prev.meetingPointName != curr.meetingPointName ||
-          prev.destinationName != curr.destinationName ||
-          prev.meetingPointLocation != curr.meetingPointLocation ||
-          prev.destinationLocation != curr.destinationLocation ||
           prev.waypoints != curr.waypoints ||
-          prev.waypointLocations != curr.waypointLocations,
+          prev.waypointLocations != curr.waypointLocations ||
+          prev.showRouteError != curr.showRouteError,
       builder: (context, state) {
-        final isCustom = state.routeType == RouteType.custom;
+        final hasRoute = state.waypoints.isNotEmpty;
+        final buttonLabel = hasRoute
+            ? context.l10n.route_edit_button
+            : context.l10n.route_create_button;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              context.l10n.event_route,
-              style: const TextStyle(
-                fontFamily: 'Space Grotesk',
-                fontSize: 11,
-                fontWeight: FontWeight.w700,
-                letterSpacing: 1,
-                color: AppColors.textOnDarkTertiary,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(context.l10n.event_route, style: _labelStyle),
+                GestureDetector(
+                  onTap: () => _openRouteConfig(context),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        buttonLabel,
+                        style: const TextStyle(
+                          fontFamily: 'Space Grotesk',
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(
+                        Icons.chevron_right,
+                        size: 14,
+                        color: AppColors.primary,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 10),
-            EventRouteTypeSelector(
-              onChanged: (type) {
-                if (type == null) return;
-                final cubit = context.read<EventFormCubit>();
-                cubit.setRouteType(type);
-                if (type == RouteType.simple) cubit.clearWaypoints();
-              },
+            RoutePointsCard(
+              state: state,
+              onEmptyTap: hasRoute ? null : () => _openRouteConfig(context),
             ),
-            const SizedBox(height: 12),
-            if (isCustom)
-              CustomRouteSection(state: state)
-            else
-              SimpleRouteCard(state: state),
+            if (state.showRouteError) ...[
+              const SizedBox(height: 8),
+              Text(
+                context.l10n.event_route_required_error,
+                style: const TextStyle(
+                  fontFamily: 'Space Grotesk',
+                  fontSize: 12,
+                  color: AppColors.error,
+                ),
+              ),
+            ],
           ],
         );
       },

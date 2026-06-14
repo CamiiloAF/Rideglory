@@ -32,7 +32,6 @@ class NavigationRow extends StatelessWidget {
               onPressed: isSaving ? null : cubit.prevStep,
               variant: AppButtonVariant.ghost,
               shape: AppButtonShape.pill,
-              height: 52,
             ),
           ),
           const SizedBox(width: 12),
@@ -40,7 +39,6 @@ class NavigationRow extends StatelessWidget {
         Expanded(
           child: AppButton(
             label: context.l10n.event_step_continue,
-            icon: Icons.chevron_right,
             onPressed: isSaving
                 ? null
                 : () {
@@ -49,7 +47,6 @@ class NavigationRow extends StatelessWidget {
                     }
                   },
             shape: AppButtonShape.pill,
-            height: 52,
           ),
         ),
       ],

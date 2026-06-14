@@ -33,6 +33,7 @@ abstract class EventFormState with _$EventFormState {
     String? destinationName,
     AddressLocation? meetingPointLocation,
     AddressLocation? destinationLocation,
+    @Default(false) bool showRouteError,
   }) = _EventFormState;
 }
 
@@ -121,6 +122,7 @@ class EventFormCubit extends Cubit<EventFormState> {
         destinationName: destinationName,
         meetingPointLocation: meetingPointLocation,
         destinationLocation: destinationLocation,
+        showRouteError: false,
       ),
     );
   }
@@ -356,7 +358,9 @@ class EventFormCubit extends Cubit<EventFormState> {
       startDate: dateRange?.start ?? DateTime.now(),
       endDate: dateRange?.end != dateRange?.start ? dateRange?.end : null,
       difficulty: formData[EventFormFields.difficulty] as EventDifficulty,
-      meetingPoint: state.meetingPointName ?? '',
+      meetingPoint: routeType == RouteType.custom && state.waypoints.isNotEmpty
+          ? state.waypoints.first
+          : state.meetingPointName ?? '',
       destination: state.destinationName ?? '',
       meetingTime: formData[EventFormFields.meetingTime] as DateTime,
       eventType: formData[EventFormFields.eventType] as EventType,
@@ -430,12 +434,14 @@ class EventFormCubit extends Cubit<EventFormState> {
       difficulty:
           formData[EventFormFields.difficulty] as EventDifficulty? ??
           EventDifficulty.one,
-      meetingPoint: state.meetingPointName?.trim() ?? '',
+      meetingPoint: routeType == RouteType.custom && state.waypoints.isNotEmpty
+          ? state.waypoints.first.trim()
+          : state.meetingPointName?.trim() ?? '',
       destination: state.destinationName?.trim() ?? '',
       meetingTime: formData[EventFormFields.meetingTime] as DateTime? ?? now,
       eventType:
           formData[EventFormFields.eventType] as EventType? ??
-          EventType.tourism,
+          EventType.onRoad,
       allowedBrands: allowedBrands,
       price: price,
       maxParticipants: maxParticipants,
@@ -502,21 +508,20 @@ class EventFormCubit extends Cubit<EventFormState> {
     EventFormFields.name,
     EventFormFields.dateRange,
     EventFormFields.meetingTime,
+    EventFormFields.difficulty,
+    EventFormFields.eventType,
   ];
 
   static const List<String> _step2Fields = [
-    EventFormFields.difficulty,
-    EventFormFields.eventType,
-    EventFormFields.price,
-    EventFormFields.isFreeEvent,
-    EventFormFields.maxParticipants,
-    EventFormFields.isMultiBrand,
-    EventFormFields.allowedBrands,
+    EventFormFields.description,
   ];
 
   static const List<String> _step3Fields = [
     EventFormFields.meetingPoint,
     EventFormFields.destination,
+    EventFormFields.price,
+    EventFormFields.isFreeEvent,
+    EventFormFields.maxParticipants,
   ];
 
   static const Map<int, List<String>> stepFields = {
@@ -565,10 +570,25 @@ class EventFormCubit extends Cubit<EventFormState> {
 
   bool validateStep(int step) {
     final fields = stepFields[step];
-    if (fields == null) return true;
-    return fields.every(
-      (name) => formKey.currentState?.fields[name]?.validate() ?? true,
-    );
+    final formValid = fields == null ||
+        fields.every(
+          (name) => formKey.currentState?.fields[name]?.validate() ?? true,
+        );
+
+    if (step == 2) {
+      final hasRoute = state.meetingPointLocation != null ||
+          state.destinationLocation != null ||
+          state.waypoints.isNotEmpty;
+      if (!hasRoute) {
+        emit(state.copyWith(showRouteError: true));
+        return false;
+      }
+      if (state.showRouteError) {
+        emit(state.copyWith(showRouteError: false));
+      }
+    }
+
+    return formValid;
   }
 
   bool isCurrentStepValid() => validateStep(state.currentStep);

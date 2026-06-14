@@ -18,15 +18,42 @@ import 'package:rideglory/features/events/presentation/form/widgets/ai_chat/ai_q
 import 'package:rideglory/features/events/presentation/form/widgets/ai_chat/ai_quota_indicator.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/ai_chat/ai_quota_info_sheet.dart';
 
-class AiDescriptionChatPage extends StatelessWidget {
+class AiDescriptionChatPage extends StatefulWidget {
   const AiDescriptionChatPage({
     super.key,
     required this.quillController,
     required this.eventContext,
+    this.autoGenerate = false,
   });
 
   final QuillController quillController;
   final AiDescriptionRequest eventContext;
+  final bool autoGenerate;
+
+  @override
+  State<AiDescriptionChatPage> createState() => _AiDescriptionChatPageState();
+}
+
+class _AiDescriptionChatPageState extends State<AiDescriptionChatPage> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.autoGenerate) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        final cubit = context.read<AiDescriptionChatCubit>();
+        if (cubit.state.history.isEmpty) {
+          cubit.sendMessage(
+            userMessage: context.l10n.ai_autoGenerateMessage,
+            title: widget.eventContext.title,
+            eventType: widget.eventContext.eventType,
+            difficulty: widget.eventContext.difficulty,
+            startDate: widget.eventContext.startDate,
+          );
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,10 +177,10 @@ class AiDescriptionChatPage extends StatelessWidget {
                       state.sendResult is Loading,
                   onSend: (message) => cubit.sendMessage(
                     userMessage: message,
-                    title: eventContext.title,
-                    eventType: eventContext.eventType,
-                    difficulty: eventContext.difficulty,
-                    startDate: eventContext.startDate,
+                    title: widget.eventContext.title,
+                    eventType: widget.eventContext.eventType,
+                    difficulty: widget.eventContext.difficulty,
+                    startDate: widget.eventContext.startDate,
                   ),
                 ),
               ),
@@ -168,10 +195,10 @@ class AiDescriptionChatPage extends StatelessWidget {
 
   void _retryLastMessage(BuildContext context) {
     context.read<AiDescriptionChatCubit>().retryLastMessage(
-          title: eventContext.title,
-          eventType: eventContext.eventType,
-          difficulty: eventContext.difficulty,
-          startDate: eventContext.startDate,
+          title: widget.eventContext.title,
+          eventType: widget.eventContext.eventType,
+          difficulty: widget.eventContext.difficulty,
+          startDate: widget.eventContext.startDate,
         );
   }
 
@@ -188,7 +215,7 @@ class AiDescriptionChatPage extends StatelessWidget {
 
   Future<void> _insertMessage(BuildContext context, String markdown) async {
     final navigator = Navigator.of(context);
-    final hasContent = quillController.document.length > 1;
+    final hasContent = widget.quillController.document.length > 1;
 
     if (hasContent) {
       final confirmed = await ConfirmationDialog.show(
@@ -201,11 +228,17 @@ class AiDescriptionChatPage extends StatelessWidget {
 
     const converter = MarkdownToDeltaConverter();
     final delta = converter.convert(markdown);
-    quillController.document = Document.fromDelta(delta);
-    quillController.updateSelection(
+    widget.quillController.document = Document.fromDelta(delta);
+    widget.quillController.updateSelection(
       const TextSelection.collapsed(offset: 0),
       ChangeSource.local,
     );
     navigator.pop();
+    // El QuillEditor en Step 2 vive en IndexedStack (siempre montado) y
+    // solicita foco al recibir el cambio de documento. Unfocus en el
+    // siguiente frame para evitar que el teclado aparezca al volver.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusManager.instance.primaryFocus?.unfocus();
+    });
   }
 }

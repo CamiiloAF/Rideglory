@@ -3,7 +3,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/max_participants/max_participants_card.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/max_participants/max_participants_header.dart';
-import 'package:rideglory/features/events/presentation/form/widgets/sections/max_participants/max_participants_hint.dart';
 
 /// Section for the optional "Máximo de Participantes" field.
 ///
@@ -52,8 +51,6 @@ class EventFormMaxParticipantsSection extends StatelessWidget {
               },
               onManualChange: field.didChange,
             ),
-            const SizedBox(height: 6),
-            const MaxParticipantsHint(),
           ],
         );
       },

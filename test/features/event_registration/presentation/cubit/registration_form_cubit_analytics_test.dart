@@ -308,7 +308,7 @@ void main() {
             .thenAnswer((_) async => Right(fakeReg));
         when(() => mockSaveProfile(any()))
             .thenAnswer(
-              (_) async => Right(const RiderProfileModel(userId: 'u1')),
+              (_) async => const Right(RiderProfileModel(userId: 'u1')),
             );
 
         await cubit.saveRegistration();
@@ -349,7 +349,7 @@ void main() {
             .thenAnswer((_) async => Right(fakeReg));
         when(() => mockSaveProfile(any()))
             .thenAnswer(
-              (_) async => Right(const RiderProfileModel(userId: 'u1')),
+              (_) async => const Right(RiderProfileModel(userId: 'u1')),
             );
 
         await cubit.saveRegistration();

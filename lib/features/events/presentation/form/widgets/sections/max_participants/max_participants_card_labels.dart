@@ -14,8 +14,8 @@ class MaxParticipantsCardLabels extends StatelessWidget {
           context.l10n.event_form_max_participants_label,
           style: const TextStyle(
             fontFamily: 'Space Grotesk',
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
+            fontSize: 15,
+            fontWeight: FontWeight.normal,
             color: AppColors.textOnDarkPrimary,
           ),
         ),
@@ -24,7 +24,7 @@ class MaxParticipantsCardLabels extends StatelessWidget {
           context.l10n.event_form_max_participants_subtitle,
           style: const TextStyle(
             fontFamily: 'Space Grotesk',
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: FontWeight.normal,
             color: AppColors.textOnDarkTertiary,
           ),

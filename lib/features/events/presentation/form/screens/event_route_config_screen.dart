@@ -43,6 +43,7 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
   PointAnnotationManager? _annotationManager;
   bool _routeLayerAdded = false;
   bool _isPickMode = false;
+  bool _locationLoading = true;
 
   // Local coords parallel to cubit.state.waypoints — null when coords unknown.
   final List<AddressLocation?> _waypointLocations = [];
@@ -76,7 +77,7 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
     setState(() => _isPickMode = !_isPickMode);
   }
 
-  Future<void> _centerOnLocation() async {
+  Future<void> _centerOnLocation({bool isInitial = false}) async {
     final mapboxMap = _mapboxMap;
     if (mapboxMap == null) return;
     try {
@@ -86,6 +87,7 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
       }
       if (permission == geo.LocationPermission.denied ||
           permission == geo.LocationPermission.deniedForever) {
+        if (isInitial && mounted) setState(() => _locationLoading = false);
         return;
       }
       final pos = await geo.Geolocator.getCurrentPosition(
@@ -95,14 +97,16 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
       );
       await mapboxMap.flyTo(
         CameraOptions(
-          center: Point(
-            coordinates: Position(pos.longitude, pos.latitude),
-          ),
+          center: Point(coordinates: Position(pos.longitude, pos.latitude)),
           zoom: 14,
         ),
         MapAnimationOptions(duration: 600),
       );
-    } catch (_) {}
+    } catch (_) {
+      // Si falla, permitir al usuario interactuar con el mapa de igual modo.
+    } finally {
+      if (isInitial && mounted) setState(() => _locationLoading = false);
+    }
   }
 
   Future<void> _confirmPickMode() async {
@@ -115,7 +119,8 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
     final lat = pos.lat.toDouble();
     final lng = pos.lng.toDouble();
 
-    String name = 'Punto en el mapa';
+    if (!mounted) return;
+    String name = context.l10n.route_map_point_fallback_name;
     AddressLocation location = AddressLocation(latitude: lat, longitude: lng);
     try {
       final result = await getIt<PlaceService>().geocode('$lng,$lat');
@@ -292,12 +297,19 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
               RouteMapArea(
                 atLimit: atLimit,
                 isPickMode: _isPickMode,
-                hasWaypoints: hasWaypoints,
+                isLocationLoading: _locationLoading,
                 onMapCreated: (map, manager) {
                   _mapboxMap = map;
                   _annotationManager = manager;
                   _routeLayerAdded = false;
                   unawaited(_renderWaypointMode());
+                  // Si ya hay puntos con coordenadas, _renderWaypointMode
+                  // ajusta la cámara para mostrar la ruta — no centrar en GPS.
+                  if (_resolvedCoords.isEmpty) {
+                    unawaited(_centerOnLocation(isInitial: true));
+                  } else {
+                    setState(() => _locationLoading = false);
+                  }
                 },
                 onTogglePickMode: _togglePickMode,
                 onConfirmPickMode: _confirmPickMode,
@@ -312,6 +324,7 @@ class _EventRouteConfigScreenState extends State<EventRouteConfigScreen> {
 
               const Divider(height: 1, color: AppColors.darkBorderPrimary),
 
+              const SizedBox(height: 10),
               // Section header
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),

@@ -1,9 +1,10 @@
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 
 /// Difficulty filter chip matching the Pencil "Eventos — Filtros Sheet" design:
-/// the unified difficulty icon ([Icons.local_fire_department]) + "X{level}" +
+/// the unified difficulty icon ([LucideIcons.flame]) + "X{level}" +
 /// short label. Selected state uses an accent border + subtle accent fill.
 class EventDifficultyFilterChip extends StatelessWidget {
   const EventDifficultyFilterChip({
@@ -35,7 +36,7 @@ class EventDifficultyFilterChip extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(
-              Icons.local_fire_department,
+              LucideIcons.flame,
               color: AppColors.primary,
               size: 14,
             ),

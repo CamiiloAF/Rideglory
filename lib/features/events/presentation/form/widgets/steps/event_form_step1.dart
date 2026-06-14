@@ -6,6 +6,8 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/constants/event_form_fields.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_date_time_section.dart';
+import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_difficulty_section.dart';
+import 'package:rideglory/features/events/presentation/form/widgets/sections/event_form_event_type_section.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/steps/cover_empty.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/steps/cover_picker_sheet.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/steps/cover_preview_wrapper.dart';
@@ -52,21 +54,24 @@ class EventFormStep1 extends StatelessWidget {
                 const SizedBox(height: 10),
                 BlocBuilder<FormImageCubit, ResultState<FormImageData>>(
                   builder: (context, imageState) {
-                    final imageData =
-                        imageState.whenOrNull(data: (data) => data);
+                    final imageData = imageState.whenOrNull(
+                      data: (data) => data,
+                    );
                     final hasLocalImage = imageData?.hasLocalImage == true;
                     if (hasLocalImage ||
                         imageData?.displayImageUrl?.isNotEmpty == true) {
                       return CoverPreviewWrapper(
-                        imageUrl:
-                            hasLocalImage ? null : imageData?.displayImageUrl,
-                        localImagePath:
-                            hasLocalImage ? imageData?.displayImageUrl : null,
+                        imageUrl: hasLocalImage
+                            ? null
+                            : imageData?.displayImageUrl,
+                        localImagePath: hasLocalImage
+                            ? imageData?.displayImageUrl
+                            : null,
                         onChangeTap: () => _openCoverPicker(context),
                         onRemoveTap: hasLocalImage
                             ? () => context
-                                .read<FormImageCubit>()
-                                .clearLocalImage()
+                                  .read<FormImageCubit>()
+                                  .clearLocalImage()
                             : null,
                       );
                     }
@@ -75,7 +80,7 @@ class EventFormStep1 extends StatelessWidget {
                 ),
                 AppSpacing.gapXxl,
                 Text(
-                  context.l10n.event_form_basicInfoSectionLabel,
+                  context.l10n.event_form_eventName,
                   style: _sectionLabelStyle,
                 ),
                 const SizedBox(height: 10),
@@ -101,6 +106,10 @@ class EventFormStep1 extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 const EventFormDateTimeSection(),
+                AppSpacing.gapXxl,
+                const EventFormDifficultySection(),
+                AppSpacing.gapXxl,
+                const EventFormEventTypeSection(),
               ],
             ),
           ),

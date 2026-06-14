@@ -46,15 +46,16 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
   late QuillController _controller;
   late bool _ownsController;
   final FocusNode _focusNode = FocusNode();
+  FormFieldState<String>? _field;
 
   @override
   void initState() {
     super.initState();
     _ownsController = widget.externalController == null;
-    _controller =
-        widget.externalController ?? _initializeController();
+    _controller = widget.externalController ?? _initializeController();
     _controller.addListener(() {
       final jsonContent = _getJsonContent();
+      _field?.didChange(jsonContent);
       widget.onChanged?.call(jsonContent);
     });
   }
@@ -115,6 +116,7 @@ class _AppRichTextEditorState extends State<AppRichTextEditor> {
       validator: widget.validator,
 
       builder: (FormFieldState<String> field) {
+        _field = field;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

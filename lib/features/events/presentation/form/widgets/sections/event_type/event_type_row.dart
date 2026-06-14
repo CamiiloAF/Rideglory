@@ -17,18 +17,18 @@ class EventTypeRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: types
-          .map(
-            (type) => Padding(
-              padding: EdgeInsets.only(right: type != types.last ? 8 : 0),
-              child: EventTypeChip(
-                type: type,
-                isSelected: selected == type,
-                onTap: () => onSelect(type),
-              ),
+      children: [
+        for (int i = 0; i < types.length; i++) ...[
+          if (i > 0) const SizedBox(width: 8),
+          Expanded(
+            child: EventTypeChip(
+              type: types[i],
+              isSelected: selected == types[i],
+              onTap: () => onSelect(types[i]),
             ),
-          )
-          .toList(),
+          ),
+        ],
+      ],
     );
   }
 }

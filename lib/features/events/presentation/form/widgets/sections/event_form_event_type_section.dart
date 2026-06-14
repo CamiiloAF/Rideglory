@@ -19,15 +19,15 @@ class EventFormEventTypeSection extends StatelessWidget {
   const EventFormEventTypeSection({super.key});
 
   static const _row1 = [
-    EventType.tourism,
-    EventType.urban,
+    EventType.onRoad,
     EventType.offRoad,
+    EventType.course,
   ];
 
   static const _row2 = [
+    EventType.trackDay,
+    EventType.leisure,
     EventType.competition,
-    EventType.solidarity,
-    EventType.shortDistance,
   ];
 
   @override
@@ -38,7 +38,7 @@ class EventFormEventTypeSection extends StatelessWidget {
         errorText: context.l10n.event_eventTypeRequired,
       ),
       builder: (field) {
-        final selected = field.value ?? EventType.tourism;
+        final selected = field.value ?? EventType.onRoad;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

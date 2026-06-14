@@ -26,7 +26,7 @@ void main() {
     ownerId: 'owner-1',
     name: 'Ruta del café',
     description: 'Paseo turístico',
-    eventType: EventType.tourism,
+    eventType: EventType.onRoad,
     difficulty: EventDifficulty.two,
     startDate: DateTime(2026, 6, 15),
     meetingPoint: 'Parque Berrio',

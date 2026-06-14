@@ -694,6 +694,12 @@ abstract class AppLocalizations {
   /// **'Todas las marcas'**
   String get event_allBrands;
 
+  /// No description provided for @event_brandsActiveHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Marcas activas — toca para agregar o quitar:'**
+  String get event_brandsActiveHint;
+
   /// No description provided for @event_eventName.
   ///
   /// In es, this message translates to:
@@ -766,10 +772,16 @@ abstract class AppLocalizations {
   /// **'Destino final'**
   String get event_finalDestination;
 
+  /// No description provided for @event_popularBrands.
+  ///
+  /// In es, this message translates to:
+  /// **'Marcas populares'**
+  String get event_popularBrands;
+
   /// No description provided for @event_searchBrandsPlaceholder.
   ///
   /// In es, this message translates to:
-  /// **'Escribe para buscar marcas...'**
+  /// **'Buscar otras marcas...'**
   String get event_searchBrandsPlaceholder;
 
   /// No description provided for @event_allowedBrands.
@@ -826,11 +838,11 @@ abstract class AppLocalizations {
   /// **'PORTADA'**
   String get event_coverSectionLabel;
 
-  /// No description provided for @event_form_basicInfoSectionLabel.
+  /// No description provided for @event_form_eventName.
   ///
   /// In es, this message translates to:
-  /// **'INFORMACIÓN BÁSICA'**
-  String get event_form_basicInfoSectionLabel;
+  /// **'NOMBRE DEL EVENTO'**
+  String get event_form_eventName;
 
   /// No description provided for @event_form_dateTimeSectionLabel.
   ///
@@ -883,8 +895,14 @@ abstract class AppLocalizations {
   /// No description provided for @event_route.
   ///
   /// In es, this message translates to:
-  /// **'RUTA'**
+  /// **'PUNTOS DE RUTA'**
   String get event_route;
+
+  /// No description provided for @event_route_required_error.
+  ///
+  /// In es, this message translates to:
+  /// **'Debes agregar al menos un punto de ruta para continuar.'**
+  String get event_route_required_error;
 
   /// No description provided for @event_multiBrandLabel.
   ///
@@ -3295,7 +3313,7 @@ abstract class AppLocalizations {
   /// No description provided for @event_form_max_participants_label.
   ///
   /// In es, this message translates to:
-  /// **'Cupos disponibles'**
+  /// **'Participantes'**
   String get event_form_max_participants_label;
 
   /// No description provided for @event_form_publish_action.
@@ -3313,13 +3331,13 @@ abstract class AppLocalizations {
   /// No description provided for @event_form_max_participants_section_title.
   ///
   /// In es, this message translates to:
-  /// **'MÁXIMO DE PARTICIPANTES'**
+  /// **'CUPO MÁXIMO'**
   String get event_form_max_participants_section_title;
 
   /// No description provided for @event_form_max_participants_subtitle.
   ///
   /// In es, this message translates to:
-  /// **'Deja vacío para no limitar inscritos'**
+  /// **'Máximo de inscritos'**
   String get event_form_max_participants_subtitle;
 
   /// No description provided for @event_form_max_participants_hint.
@@ -3331,13 +3349,13 @@ abstract class AppLocalizations {
   /// No description provided for @event_form_price_section_title.
   ///
   /// In es, this message translates to:
-  /// **'PRECIO DE INSCRIPCIÓN'**
+  /// **'PRECIO POR PERSONA'**
   String get event_form_price_section_title;
 
   /// No description provided for @event_form_price_free_hint.
   ///
   /// In es, this message translates to:
-  /// **'Si el precio es 0, el evento será gratuito'**
+  /// **'Usa el stepper o toca el valor para editarlo'**
   String get event_form_price_free_hint;
 
   /// No description provided for @vehicle_doc_soat_label.
@@ -5017,6 +5035,60 @@ abstract class AppLocalizations {
   /// **'Añadir este punto'**
   String get route_builder_pick_mode_confirm;
 
+  /// No description provided for @route_map_locating.
+  ///
+  /// In es, this message translates to:
+  /// **'Obteniendo tu ubicación...'**
+  String get route_map_locating;
+
+  /// No description provided for @route_map_point_fallback_name.
+  ///
+  /// In es, this message translates to:
+  /// **'Punto en el mapa'**
+  String get route_map_point_fallback_name;
+
+  /// No description provided for @route_edit_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar ruta'**
+  String get route_edit_button;
+
+  /// No description provided for @route_create_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Crear ruta'**
+  String get route_create_button;
+
+  /// No description provided for @ai_autoGenerateMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Genera una descripción atractiva para este evento con la información disponible'**
+  String get ai_autoGenerateMessage;
+
+  /// No description provided for @route_point_start.
+  ///
+  /// In es, this message translates to:
+  /// **'SALIDA'**
+  String get route_point_start;
+
+  /// No description provided for @route_point_waypoint.
+  ///
+  /// In es, this message translates to:
+  /// **'WAYPOINT'**
+  String get route_point_waypoint;
+
+  /// No description provided for @route_point_end.
+  ///
+  /// In es, this message translates to:
+  /// **'LLEGADA'**
+  String get route_point_end;
+
+  /// No description provided for @route_empty_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Toca el card para crear tu ruta'**
+  String get route_empty_hint;
+
   /// No description provided for @route_placeSearchError.
   ///
   /// In es, this message translates to:
@@ -5542,7 +5614,7 @@ abstract class AppLocalizations {
   /// No description provided for @event_step_details.
   ///
   /// In es, this message translates to:
-  /// **'Detalles'**
+  /// **'Desc'**
   String get event_step_details;
 
   /// No description provided for @event_step_route.
@@ -5566,31 +5638,31 @@ abstract class AppLocalizations {
   /// No description provided for @event_step1_subtitle.
   ///
   /// In es, this message translates to:
-  /// **'Portada, nombre y fecha del evento'**
+  /// **'Portada, nombre, fecha, tipo y dificultad'**
   String get event_step1_subtitle;
 
   /// No description provided for @event_step2_title.
   ///
   /// In es, this message translates to:
-  /// **'Detalles del evento'**
+  /// **'Descripción del evento'**
   String get event_step2_title;
 
   /// No description provided for @event_step2_subtitle.
   ///
   /// In es, this message translates to:
-  /// **'Dificultad, tipo, marcas y configuración'**
+  /// **'Escribe o genera la descripción con IA'**
   String get event_step2_subtitle;
 
   /// No description provided for @event_step3_title.
   ///
   /// In es, this message translates to:
-  /// **'Ruta del evento'**
+  /// **'Ruta y detalles'**
   String get event_step3_title;
 
   /// No description provided for @event_step3_subtitle.
   ///
   /// In es, this message translates to:
-  /// **'Define los puntos de salida, intermedios y llegada'**
+  /// **'Recorrido y configuración del evento'**
   String get event_step3_subtitle;
 
   /// No description provided for @event_step4_title.
@@ -5766,6 +5838,24 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Publicar evento'**
   String get event_step_review_publishButton;
+
+  /// No description provided for @event_wizard_cancel_dialog_title.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Descartar evento?'**
+  String get event_wizard_cancel_dialog_title;
+
+  /// No description provided for @event_wizard_cancel_dialog_body.
+  ///
+  /// In es, this message translates to:
+  /// **'Perderás todo lo que has llenado hasta ahora.'**
+  String get event_wizard_cancel_dialog_body;
+
+  /// No description provided for @event_wizard_cancel_dialog_confirm.
+  ///
+  /// In es, this message translates to:
+  /// **'Descartar'**
+  String get event_wizard_cancel_dialog_confirm;
 
   /// No description provided for @event_step_review_dateTimeSection.
   ///

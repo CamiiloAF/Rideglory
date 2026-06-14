@@ -30,7 +30,7 @@ void main() {
     ownerId: 'owner-1',
     name: 'Test Event',
     description: 'Test description',
-    eventType: EventType.tourism,
+    eventType: EventType.onRoad,
     difficulty: EventDifficulty.two,
     startDate: DateTime(2026, 6, 20),
     meetingPoint: 'Parque Bolívar',
@@ -123,7 +123,7 @@ void main() {
           ownerId: 'owner-1',
           name: 'Urban Event',
           description: 'Rodada urbana',
-          eventType: EventType.urban,
+          eventType: EventType.course,
           difficulty: EventDifficulty.one,
           startDate: DateTime(2026, 6, 22),
           meetingPoint: 'Plaza Bolívar',
@@ -135,7 +135,7 @@ void main() {
         // Backend returns both, but local filter will keep only tourism
         when(
           () => mockGetEventsUseCase(
-            type: EventType.tourism.apiValue,
+            type: EventType.onRoad.apiValue,
             dateFrom: null,
             dateTo: null,
           ),
@@ -148,7 +148,7 @@ void main() {
         );
         addTearDown(cubit.close);
 
-        cubit.updateFilters(const EventFilters(types: {EventType.tourism}));
+        cubit.updateFilters(const EventFilters(types: {EventType.onRoad}));
         // updateFilters calls fetchEvents internally — wait for it
         await Future<void>.delayed(Duration.zero);
 

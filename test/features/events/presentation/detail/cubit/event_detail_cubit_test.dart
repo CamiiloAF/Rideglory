@@ -64,7 +64,7 @@ void main() {
     ownerId: 'owner-1',
     name: 'Ruta del café',
     description: 'Paseo turístico por la región cafetera',
-    eventType: EventType.tourism,
+    eventType: EventType.onRoad,
     difficulty: EventDifficulty.two,
     startDate: DateTime(2026, 6, 15),
     meetingPoint: 'Parque Berrio',
@@ -134,7 +134,7 @@ void main() {
           () => mockAnalytics.logEvent(
             AnalyticsEvents.eventDetailViewed,
             {
-              AnalyticsParams.eventType: EventType.tourism.apiValue,
+              AnalyticsParams.eventType: EventType.onRoad.apiValue,
               AnalyticsParams.eventState: EventState.scheduled.name,
               AnalyticsParams.isOwner: 0,
               AnalyticsParams.isReadOnly: 0,
@@ -150,7 +150,7 @@ void main() {
       'TC-evdetail-a2: loadEvent with urban event → event_detail_viewed '
       'with event_type matching urban apiValue',
       () async {
-        final urbanEvent = mockEvent.copyWith(eventType: EventType.urban);
+        final urbanEvent = mockEvent.copyWith(eventType: EventType.course);
         when(() => mockGetEventByIdUseCase('evt-1')).thenAnswer(
           (_) async => Right(urbanEvent),
         );
@@ -165,7 +165,7 @@ void main() {
         ).captured;
         expect(captured, isNotEmpty);
         final params = captured.first as Map<String, Object>;
-        expect(params[AnalyticsParams.eventType], EventType.urban.apiValue);
+        expect(params[AnalyticsParams.eventType], EventType.course.apiValue);
       },
     );
 

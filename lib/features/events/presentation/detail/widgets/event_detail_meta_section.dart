@@ -1,3 +1,4 @@
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -30,7 +31,7 @@ class EventDetailMetaSection extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.local_fire_department,
+                  const Icon(LucideIcons.flame,
                       color: AppColors.primary, size: 14),
                   const SizedBox(width: 6),
                   Text(

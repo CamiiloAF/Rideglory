@@ -4,6 +4,7 @@ import 'package:injectable/injectable.dart';
 import 'analytics_service.dart';
 
 @Injectable(as: AnalyticsService)
+@Environment('prod')
 class FirebaseAnalyticsService implements AnalyticsService {
   FirebaseAnalyticsService(this._analytics);
 

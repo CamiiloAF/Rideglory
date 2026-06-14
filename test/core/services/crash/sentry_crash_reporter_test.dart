@@ -13,7 +13,7 @@ void main() {
     });
 
     test('returns event unchanged when tags are empty', () {
-      final event = SentryEvent(tags: {});
+      final event = SentryEvent(tags: const {});
       final result = scrubPiiFromEvent(event);
       expect(result.tags, isEmpty);
     });
@@ -31,7 +31,7 @@ void main() {
     });
 
     test('preserves non-PII keys in tags', () {
-      final event = SentryEvent(tags: {
+      final event = SentryEvent(tags: const {
         'http_status': '500',
         'error_category': 'network',
         'endpoint': '/api/events',
@@ -43,7 +43,7 @@ void main() {
     });
 
     test('redacts PII keys while preserving non-PII keys in same event', () {
-      final event = SentryEvent(tags: {
+      final event = SentryEvent(tags: const {
         'email': 'user@example.com',
         'password': 'secret123',
         'http_status': '500',
@@ -65,7 +65,7 @@ void main() {
     });
 
     test('returns breadcrumb unchanged when data is empty', () {
-      final crumb = Breadcrumb(message: 'test', data: {});
+      final crumb = Breadcrumb(message: 'test', data: const {});
       final result = scrubPiiFromBreadcrumb(crumb);
       expect(result.data, isEmpty);
     });
@@ -88,7 +88,7 @@ void main() {
     test('preserves non-PII keys in breadcrumb data', () {
       final crumb = Breadcrumb(
         message: 'HTTP request',
-        data: {
+        data: const {
           'url': '/api/events',
           'method': 'GET',
           'status_code': 200,

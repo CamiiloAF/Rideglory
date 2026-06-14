@@ -82,14 +82,14 @@ EventModel
 ### Enums
 
 **`EventType`**
-| Enum | Label |
-|---|---|
-| `tourism` | Turismo |
-| `urban` | Urbana |
-| `offRoad` | Off-road |
-| `competition` | Competición |
-| `solidarity` | Solidaria |
-| `shortDistance` | Corta distancia |
+| Enum | Label | API value |
+|---|---|---|
+| `onRoad` | On-road | `ON_ROAD` |
+| `offRoad` | Off-road | `OFF_ROAD` |
+| `course` | Curso | `COURSE` |
+| `trackDay` | Track Day | `TRACK_DAY` |
+| `leisure` | Paseo | `LEISURE` |
+| `competition` | Competencia | `COMPETITION` |
 
 **`EventDifficulty`** — 5 niveles con `value: int` (1–5), `label` con chiles y `shortLabel`. `fromValue(int)` hace lookup inverso (default `one` si no coincide).
 
@@ -264,7 +264,7 @@ lib/features/events/data/
 
 **Converters Freezed-style** para enums:
 - `EventDifficultyConverter`: acepta `int` o `String` (`EASY`, `MODERATE`, `MEDIUM`, `HARD`, `VERY_HARD`).
-- `EventTypeConverter`: serializa como UPPER_SNAKE_CASE (`TOURISM`, `OFF_ROAD`, etc.).
+- `EventTypeConverter`: serializa como UPPER_SNAKE_CASE (`ON_ROAD`, `OFF_ROAD`, etc.). Incluye fallback de valores legacy (`TOURISM` → `ON_ROAD`, `URBAN` → `COURSE`, etc.).
 - `EventStateConverter`: maneja camelCase y UPPER_SNAKE_CASE; default `scheduled` si null.
 
 **`EventService` (Retrofit)**:

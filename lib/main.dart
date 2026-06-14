@@ -179,6 +179,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => getIt.get<NotificationsCubit>()),
       ],
       child: MaterialApp.router(
+        scaffoldMessengerKey: AppRouter.scaffoldMessengerKey,
         routerConfig: AppRouter.appRouter,
         onGenerateTitle: (context) => context.l10n.appName,
         theme: AppTheme.lightTheme,

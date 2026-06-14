@@ -1,3 +1,4 @@
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
@@ -15,7 +16,7 @@ class EventDetailDifficultyFlames extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(right: 2),
           child: Icon(
-            Icons.local_fire_department,
+            LucideIcons.flame,
             size: 16,
             color: filled
                 ? context.colorScheme.primary

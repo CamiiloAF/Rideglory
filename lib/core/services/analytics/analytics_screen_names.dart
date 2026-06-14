@@ -48,7 +48,6 @@ abstract final class AnalyticsScreenNames {
 
     // Events
     AppRoutes.myEvents: 'events_mine',
-    AppRoutes.myDrafts: 'events_drafts',
     AppRoutes.createEvent: 'event_create',
     AppRoutes.editEvent: 'event_edit',
     AppRoutes.eventDetail: 'event_detail',

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:rideglory/shared/router/app_router.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -24,7 +26,10 @@ class EventFormView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<EventFormCubit, EventFormState>(
+    // ScaffoldMessenger local para que los SnackBars se anclen al Scaffold
+    // del wizard y no al del MainShell (que tiene HomeBottomNavigationBar).
+    return ScaffoldMessenger(
+      child: BlocConsumer<EventFormCubit, EventFormState>(
       listenWhen: (previous, current) =>
           previous.saveResult != current.saveResult,
       listener: (context, state) {
@@ -32,16 +37,17 @@ class EventFormView extends StatelessWidget {
           data: (event) {
             context.read<AiDescriptionChatCubit>().reset();
             final isEditing = context.read<EventFormCubit>().isEditing;
-            ScaffoldMessenger.of(context).showSnackBar(
+            final msg = isEditing
+                ? context.l10n.event_eventUpdatedSuccess
+                : context.l10n.event_eventCreatedSuccess;
+            // Mostrar SnackBar en el ScaffoldMessenger raíz (persiste tras el pop).
+            AppRouter.scaffoldMessengerKey.currentState?.showSnackBar(
               SnackBar(
-                content: Text(
-                  isEditing
-                      ? context.l10n.event_eventUpdatedSuccess
-                      : context.l10n.event_eventCreatedSuccess,
-                ),
+                content: Text(msg),
                 backgroundColor: AppColors.success,
               ),
             );
+            if (context.canPop()) context.pop();
           },
           error: (error) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -65,6 +71,7 @@ class EventFormView extends StatelessWidget {
 
         return CreationScaffold(state: state, cubit: cubit, isSaving: isSaving);
       },
+      ),
     );
   }
 }

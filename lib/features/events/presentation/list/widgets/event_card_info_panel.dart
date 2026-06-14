@@ -1,3 +1,4 @@
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
@@ -53,7 +54,7 @@ class EventCardInfoPanel extends StatelessWidget {
                   children: List.generate(
                     5,
                     (i) => Icon(
-                      Icons.local_fire_department,
+                      LucideIcons.flame,
                       size: 17,
                       color: i < event.difficulty.value
                           ? context.colorScheme.primary

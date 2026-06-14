@@ -2,50 +2,46 @@ import 'package:flutter/material.dart';
 import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' hide Error;
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
-import 'package:rideglory/features/events/presentation/form/widgets/steps/pulsing_map_dot.dart';
 
-// Colombia center — default camera when no waypoints are loaded.
-const _colombiaLng = -73.0;
-const _colombiaLat = 4.0;
-const _colombiaZoom = 5.0;
+const _normalHeight = 260.0;
+const _pickModeHeight = 420.0;
 
 class RouteMapArea extends StatelessWidget {
   const RouteMapArea({
     super.key,
     required this.atLimit,
     required this.isPickMode,
+    required this.isLocationLoading,
     required this.onMapCreated,
     required this.onTogglePickMode,
     required this.onConfirmPickMode,
     required this.onCenterOnLocation,
-    this.hasWaypoints = false,
   });
 
   final bool atLimit;
   final bool isPickMode;
+
+  /// Verdadero mientras se espera la primera ubicación GPS del usuario.
+  /// Muestra un overlay de carga sobre el mapa y deshabilita interacciones.
+  final bool isLocationLoading;
+
   final void Function(MapboxMap, PointAnnotationManager) onMapCreated;
   final VoidCallback onTogglePickMode;
   final VoidCallback onConfirmPickMode;
   final VoidCallback onCenterOnLocation;
-  /// When [false] (no waypoints yet), a [PulsingMapDot] is shown as a centered
-  /// overlay to hint the user to add a route point (AC19).
-  final bool hasWaypoints;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 260,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      height: isPickMode ? _pickModeHeight : _normalHeight,
       child: Stack(
         children: [
-          // Map
+          // Map — sin viewport: evitar que cada rebuild resetee la cámara.
+          // La posición inicial la maneja _centerOnLocation() en onMapCreated.
           MapWidget(
             styleUri: MapboxStyles.DARK,
-            viewport: CameraViewportState(
-              center: Point(
-                coordinates: Position(_colombiaLng, _colombiaLat),
-              ),
-              zoom: _colombiaZoom,
-            ),
             onMapCreated: (mapboxMap) async {
               await mapboxMap.scaleBar.updateSettings(
                 ScaleBarSettings(enabled: false),
@@ -56,21 +52,48 @@ class RouteMapArea extends StatelessWidget {
               await mapboxMap.attribution.updateSettings(
                 AttributionSettings(iconColor: 0x00000000),
               );
+              // Indicador nativo de ubicación del usuario (pulsing dot naranja).
+              await mapboxMap.location.updateSettings(
+                LocationComponentSettings(
+                  enabled: true,
+                  pulsingEnabled: true,
+                  pulsingColor: AppColors.primary.toARGB32(),
+                ),
+              );
               final manager =
                   await mapboxMap.annotations.createPointAnnotationManager();
               onMapCreated(mapboxMap, manager);
             },
           ),
 
-          // PulsingMapDot: centered overlay when map has 0 waypoints (AC19).
-          // Hidden once the user adds at least one waypoint.
-          if (!hasWaypoints && !isPickMode)
-            const IgnorePointer(
-              child: Center(child: PulsingMapDot()),
+          // Overlay de carga: bloquea interacción hasta que se obtenga la ubicación.
+          if (isLocationLoading)
+            Positioned.fill(
+              child: ColoredBox(
+                color: AppColors.darkBgPrimary.withValues(alpha: 0.7),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(
+                      color: AppColors.primary,
+                      strokeWidth: 2.5,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      context.l10n.route_map_locating,
+                      style: const TextStyle(
+                        fontFamily: 'Space Grotesk',
+                        fontSize: 13,
+                        color: AppColors.textOnDarkSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
 
           // Centered pin shown in pick mode — IgnorePointer so map stays pannable
-          if (isPickMode)
+          if (isPickMode && !isLocationLoading)
             IgnorePointer(
               child: Center(
                 child: Transform.translate(
@@ -91,38 +114,39 @@ class RouteMapArea extends StatelessWidget {
               ),
             ),
 
-          // Current location button — bottom-right, circular (Pencil veaGt: recenterBtn)
-          Positioned(
-            bottom: 10,
-            right: 12,
-            child: GestureDetector(
-              onTap: onCenterOnLocation,
-              child: Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: AppColors.darkCard,
-                  borderRadius: BorderRadius.circular(22),
-                  border: Border.all(color: AppColors.darkBorderPrimary),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x60000000),
-                      blurRadius: 8,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.my_location,
-                  size: 16,
-                  color: AppColors.textOnDarkPrimary,
+          // Current location button — bottom-left, circular
+          if (!isLocationLoading)
+            Positioned(
+              bottom: 10,
+              left: 12,
+              child: GestureDetector(
+                onTap: onCenterOnLocation,
+                child: Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: AppColors.darkCard,
+                    borderRadius: BorderRadius.circular(22),
+                    border: Border.all(color: AppColors.darkBorderPrimary),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x60000000),
+                        blurRadius: 8,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.my_location,
+                    size: 16,
+                    color: AppColors.textOnDarkPrimary,
+                  ),
                 ),
               ),
             ),
-          ),
 
-          // "Seleccionar en mapa" toggle button — bottom-right when not in pick mode
-          if (!atLimit && !isPickMode)
+          // "Seleccionar en mapa" toggle button — bottom-right, oculto durante carga
+          if (!atLimit && !isPickMode && !isLocationLoading)
             Positioned(
               bottom: 12,
               right: 12,
@@ -163,7 +187,7 @@ class RouteMapArea extends StatelessWidget {
             ),
 
           // Pick mode confirm bar at bottom of map
-          if (isPickMode)
+          if (isPickMode && !isLocationLoading)
             Positioned(
               bottom: 0,
               left: 0,

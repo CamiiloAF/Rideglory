@@ -3227,7 +3227,7 @@
                       "fill": {
                         "type": "image",
                         "enabled": true,
-                        "url": "https://images.unsplash.com/photo-1758621517441-446c3d90f969?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODA5MzkxNDd8&ixlib=rb-4.1.0&q=80&w=1080",
+                        "url": "images/ev3.png",
                         "mode": "fill"
                       },
                       "layout": "none",
@@ -3384,7 +3384,7 @@
                       "fill": {
                         "type": "image",
                         "enabled": true,
-                        "url": "https://images.unsplash.com/photo-1734386846577-d4b7f91754cc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODA5MzkxNDh8&ixlib=rb-4.1.0&q=80&w=1080",
+                        "url": "images/ev1.png",
                         "mode": "fill"
                       },
                       "layout": "none",
@@ -3531,7 +3531,7 @@
                       "fill": {
                         "type": "image",
                         "enabled": true,
-                        "url": "https://images.unsplash.com/photo-1759731689070-c515add832f8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODA5MzkxNDh8&ixlib=rb-4.1.0&q=80&w=1080",
+                        "url": "images/ev2.png",
                         "mode": "fill"
                       },
                       "layout": "none",
@@ -5802,7 +5802,7 @@
           "fill": {
             "type": "image",
             "enabled": true,
-            "url": "https://images.unsplash.com/photo-1650300978828-d24267e840ae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODA5MzkwOTZ8&ixlib=rb-4.1.0&q=80&w=1080",
+            "url": "images/hero_event.png",
             "mode": "fill"
           },
           "layout": "none",
@@ -6217,12 +6217,18 @@
                       "type": "frame",
                       "id": "kSRpU",
                       "name": "Map Image",
+                      "metadata": {
+                        "type": "unsplash",
+                        "username": "ritsxn",
+                        "link": "https://unsplash.com/@ritsxn",
+                        "author": "Tom Ritson"
+                      },
                       "width": "fill_container",
                       "height": 130,
                       "fill": {
                         "type": "image",
                         "enabled": true,
-                        "url": "images/generated-1778632612004.png",
+                        "url": "images/map.png",
                         "mode": "fill"
                       }
                     },
@@ -13136,7 +13142,18 @@
                           "id": "qApBG",
                           "x": 0,
                           "y": 0,
-                          "fill": "$bg-tertiary",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "chandanshastri",
+                            "link": "https://unsplash.com/@chandanshastri",
+                            "author": "Chandan Shastri"
+                          },
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "images/mt09.png",
+                            "mode": "fill"
+                          },
                           "width": 350,
                           "height": 200
                         },
@@ -13230,7 +13247,7 @@
                           "x": 16,
                           "y": 156,
                           "fill": "$text-primary",
-                          "content": "El 15",
+                          "content": "Yamaha MT-09",
                           "fontFamily": "$font-primary",
                           "fontSize": 28,
                           "fontWeight": "700"
@@ -13253,7 +13270,7 @@
                           "type": "text",
                           "id": "cga6b",
                           "fill": "$text-secondary",
-                          "content": "2024 · Rx115 · MYM09A",
+                          "content": "2024 · MYM09A",
                           "fontFamily": "$font-primary",
                           "fontSize": 13,
                           "fontWeight": "normal"
@@ -13629,7 +13646,7 @@
                           "type": "text",
                           "id": "cLvQ4",
                           "fill": "$text-primary",
-                          "content": "El 15",
+                          "content": "Yamaha MT-09",
                           "fontFamily": "$font-primary",
                           "fontSize": 15,
                           "fontWeight": "600"
@@ -13638,7 +13655,7 @@
                           "type": "text",
                           "id": "Q27dyh",
                           "fill": "$text-secondary",
-                          "content": "Rx115 · 2024 · MYM09A",
+                          "content": "MYM09A · 2024",
                           "fontFamily": "$font-primary",
                           "fontSize": 13,
                           "fontWeight": "normal"
@@ -39854,12 +39871,18 @@
                           "type": "frame",
                           "id": "x5cHTa",
                           "name": "motoImage",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "karandeepg",
+                            "link": "https://unsplash.com/@karandeepg",
+                            "author": "Karandeep G"
+                          },
                           "width": "fill_container",
                           "height": 180,
                           "fill": {
                             "type": "image",
                             "enabled": true,
-                            "url": "images/generated-1778647084285.png",
+                            "url": "images/mt09.png",
                             "mode": "fill"
                           }
                         },
@@ -39881,7 +39904,7 @@
                               "type": "text",
                               "id": "o6alw",
                               "fill": "$text-primary",
-                              "content": "KTM 890 Adventure R",
+                              "content": "Yamaha MT-09",
                               "fontFamily": "$font-primary",
                               "fontSize": 16,
                               "fontWeight": "700"
@@ -39989,13 +40012,19 @@
                           "type": "frame",
                           "id": "v04UQx",
                           "name": "Card Image",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "santonii",
+                            "link": "https://unsplash.com/@santonii",
+                            "author": "Y S"
+                          },
                           "clip": true,
                           "width": "fill_container",
                           "height": 190,
                           "fill": {
                             "type": "image",
                             "enabled": true,
-                            "url": "images/generated-1778647021642.png",
+                            "url": "images/road1.png",
                             "mode": "fill"
                           },
                           "layout": "none",
@@ -40147,13 +40176,19 @@
                           "type": "frame",
                           "id": "dv6mv",
                           "name": "Card Image 2",
+                          "metadata": {
+                            "type": "unsplash",
+                            "username": "illes_cristi",
+                            "link": "https://unsplash.com/@illes_cristi",
+                            "author": "iuliu illes"
+                          },
                           "clip": true,
                           "width": "fill_container",
                           "height": 190,
                           "fill": {
                             "type": "image",
                             "enabled": true,
-                            "url": "images/generated-1778647014013.png",
+                            "url": "images/road2.png",
                             "mode": "fill"
                           },
                           "layout": "none",
@@ -48951,6 +48986,366 @@
                       "fontFamily": "Space Grotesk",
                       "fontSize": 12,
                       "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "eDW8D",
+              "name": "MARCAS PERMITIDAS",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "q1nnL",
+                  "name": "Label",
+                  "fill": "$text-tertiary",
+                  "content": "MARCAS PERMITIDAS",
+                  "fontFamily": "Space Grotesk",
+                  "fontSize": 11,
+                  "fontWeight": "700",
+                  "letterSpacing": 1
+                },
+                {
+                  "type": "frame",
+                  "id": "RmZJr",
+                  "name": "Marcas Card",
+                  "width": "fill_container",
+                  "fill": "$bg-card",
+                  "cornerRadius": 12,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "strokeAlignment": "inner",
+                  "layout": "vertical",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "DTWWp",
+                      "name": "Todas Row",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "padding": [
+                        12,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "NCP3o",
+                          "name": "Chip Todas",
+                          "fill": "$bg-secondary",
+                          "cornerRadius": 20,
+                          "gap": 6,
+                          "padding": [
+                            6,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "xjCee",
+                              "name": "Icon",
+                              "width": 14,
+                              "height": 14,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$text-tertiary"
+                            },
+                            {
+                              "type": "text",
+                              "id": "NE43g",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "Todas las marcas",
+                              "fontFamily": "Space Grotesk",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "rectangle",
+                      "id": "XTX61",
+                      "name": "Sep",
+                      "fill": "$border",
+                      "width": "fill_container",
+                      "height": 1
+                    },
+                    {
+                      "type": "frame",
+                      "id": "sxRfb",
+                      "name": "Brands Hint",
+                      "width": "fill_container",
+                      "padding": [
+                        10,
+                        16,
+                        4,
+                        16
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "FU0vH",
+                          "name": "Hint",
+                          "fill": "$text-tertiary",
+                          "content": "Marcas activas — toca para agregar o quitar:",
+                          "fontFamily": "Space Grotesk",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "UF6DF",
+                      "name": "Brands Row 1",
+                      "gap": 8,
+                      "padding": [
+                        6,
+                        16,
+                        4,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "pMJZS",
+                          "name": "Chip Honda",
+                          "fill": "$accent-subtle",
+                          "cornerRadius": 20,
+                          "gap": 6,
+                          "padding": [
+                            6,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "UQdov",
+                              "name": "Check",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "G6mML",
+                              "name": "Label",
+                              "fill": "$accent",
+                              "content": "Honda",
+                              "fontFamily": "Space Grotesk",
+                              "fontSize": 12,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Ac3JW",
+                          "name": "Chip Yamaha",
+                          "fill": "$bg-secondary",
+                          "cornerRadius": 20,
+                          "padding": [
+                            6,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "SmZxb",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "Yamaha",
+                              "fontFamily": "Space Grotesk",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "eb6Wn",
+                          "name": "Chip Suzuki",
+                          "fill": "$bg-secondary",
+                          "cornerRadius": 20,
+                          "padding": [
+                            6,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "U1texr",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "Suzuki",
+                              "fontFamily": "Space Grotesk",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "TWJyY",
+                          "name": "Chip Kawasaki",
+                          "fill": "$bg-secondary",
+                          "cornerRadius": 20,
+                          "padding": [
+                            6,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "DfjlY",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "Kawasaki",
+                              "fontFamily": "Space Grotesk",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Dacem",
+                      "name": "Brands Row 2",
+                      "gap": 8,
+                      "padding": [
+                        4,
+                        16,
+                        14,
+                        16
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "zm5gZ",
+                          "name": "Chip KTM",
+                          "fill": "$accent-subtle",
+                          "cornerRadius": 20,
+                          "gap": 6,
+                          "padding": [
+                            6,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "oWgXb",
+                              "name": "Check",
+                              "width": 13,
+                              "height": 13,
+                              "icon": "check",
+                              "library": "lucide",
+                              "fill": "$accent"
+                            },
+                            {
+                              "type": "text",
+                              "id": "lAWNr",
+                              "name": "Label",
+                              "fill": "$accent",
+                              "content": "KTM",
+                              "fontFamily": "Space Grotesk",
+                              "fontSize": 12,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "MZ0F0",
+                          "name": "Chip BMW",
+                          "fill": "$bg-secondary",
+                          "cornerRadius": 20,
+                          "padding": [
+                            6,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "Eviac",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "BMW",
+                              "fontFamily": "Space Grotesk",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Ouuq9",
+                          "name": "Chip Royal Enfield",
+                          "fill": "$bg-secondary",
+                          "cornerRadius": 20,
+                          "padding": [
+                            6,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "X2l1U",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "Royal Enfield",
+                              "fontFamily": "Space Grotesk",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "D0BsMO",
+                          "name": "Chip Ducati",
+                          "fill": "$bg-secondary",
+                          "cornerRadius": 20,
+                          "padding": [
+                            6,
+                            12
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "CZt69",
+                              "name": "Label",
+                              "fill": "$text-secondary",
+                              "content": "Ducati",
+                              "fontFamily": "Space Grotesk",
+                              "fontSize": 12,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
                     }
                   ]
                 }

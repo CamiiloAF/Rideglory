@@ -359,7 +359,15 @@ class _CompactFieldRow extends StatelessWidget {
                 color: AppColors.textOnDarkTertiary,
                 fontSize: 14,
               ),
+              // Sobreescribir TODOS los estados del tema global (filled: true,
+              // OutlineInputBorder) para que el widget padre controle el estilo.
               border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              focusedErrorBorder: InputBorder.none,
+              filled: false,
               contentPadding: const EdgeInsets.symmetric(vertical: 10),
               isDense: true,
             ),
@@ -367,7 +375,7 @@ class _CompactFieldRow extends StatelessWidget {
             onSubmitted: onSubmitted,
           ),
         ),
-        const SizedBox(width: 8),
+        if (isLoading || hasContent || showMapPicker) const SizedBox(width: 8),
         if (isLoading)
           const SizedBox(
             width: 18,

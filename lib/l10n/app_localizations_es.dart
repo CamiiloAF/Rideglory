@@ -327,6 +327,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_allBrands => 'Todas las marcas';
 
   @override
+  String get event_brandsActiveHint =>
+      'Marcas activas — toca para agregar o quitar:';
+
+  @override
   String get event_eventName => 'Nombre del evento';
 
   @override
@@ -364,7 +368,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_finalDestination => 'Destino final';
 
   @override
-  String get event_searchBrandsPlaceholder => 'Escribe para buscar marcas...';
+  String get event_popularBrands => 'Marcas populares';
+
+  @override
+  String get event_searchBrandsPlaceholder => 'Buscar otras marcas...';
 
   @override
   String get event_allowedBrands => 'Marcas permitidas';
@@ -396,7 +403,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_coverSectionLabel => 'PORTADA';
 
   @override
-  String get event_form_basicInfoSectionLabel => 'INFORMACIÓN BÁSICA';
+  String get event_form_eventName => 'NOMBRE DEL EVENTO';
 
   @override
   String get event_form_dateTimeSectionLabel => 'FECHA Y HORA';
@@ -423,7 +430,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_uploadImage => 'Subir imagen';
 
   @override
-  String get event_route => 'RUTA';
+  String get event_route => 'PUNTOS DE RUTA';
+
+  @override
+  String get event_route_required_error =>
+      'Debes agregar al menos un punto de ruta para continuar.';
 
   @override
   String get event_multiBrandLabel => 'Marcas permitidas';
@@ -1703,7 +1714,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get home_emptyEventsCta => 'Ver eventos';
 
   @override
-  String get event_form_max_participants_label => 'Cupos disponibles';
+  String get event_form_max_participants_label => 'Participantes';
 
   @override
   String get event_form_publish_action => 'Publicar';
@@ -1712,23 +1723,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_form_optional_badge => 'Opcional';
 
   @override
-  String get event_form_max_participants_section_title =>
-      'MÁXIMO DE PARTICIPANTES';
+  String get event_form_max_participants_section_title => 'CUPO MÁXIMO';
 
   @override
-  String get event_form_max_participants_subtitle =>
-      'Deja vacío para no limitar inscritos';
+  String get event_form_max_participants_subtitle => 'Máximo de inscritos';
 
   @override
   String get event_form_max_participants_hint =>
       'Una vez lleno el cupo, el evento aparece como \'Completo\' automáticamente.';
 
   @override
-  String get event_form_price_section_title => 'PRECIO DE INSCRIPCIÓN';
+  String get event_form_price_section_title => 'PRECIO POR PERSONA';
 
   @override
   String get event_form_price_free_hint =>
-      'Si el precio es 0, el evento será gratuito';
+      'Usa el stepper o toca el valor para editarlo';
 
   @override
   String get vehicle_doc_soat_label => 'SOAT';
@@ -2656,6 +2665,34 @@ class AppLocalizationsEs extends AppLocalizations {
   String get route_builder_pick_mode_confirm => 'Añadir este punto';
 
   @override
+  String get route_map_locating => 'Obteniendo tu ubicación...';
+
+  @override
+  String get route_map_point_fallback_name => 'Punto en el mapa';
+
+  @override
+  String get route_edit_button => 'Editar ruta';
+
+  @override
+  String get route_create_button => 'Crear ruta';
+
+  @override
+  String get ai_autoGenerateMessage =>
+      'Genera una descripción atractiva para este evento con la información disponible';
+
+  @override
+  String get route_point_start => 'SALIDA';
+
+  @override
+  String get route_point_waypoint => 'WAYPOINT';
+
+  @override
+  String get route_point_end => 'LLEGADA';
+
+  @override
+  String get route_empty_hint => 'Toca el card para crear tu ruta';
+
+  @override
   String get route_placeSearchError => 'No se pudo cargar sugerencias';
 
   @override
@@ -2961,7 +2998,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_step_basicInfo => 'Básico';
 
   @override
-  String get event_step_details => 'Detalles';
+  String get event_step_details => 'Desc';
 
   @override
   String get event_step_route => 'Ruta';
@@ -2973,20 +3010,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_step1_title => 'Información básica';
 
   @override
-  String get event_step1_subtitle => 'Portada, nombre y fecha del evento';
+  String get event_step1_subtitle =>
+      'Portada, nombre, fecha, tipo y dificultad';
 
   @override
-  String get event_step2_title => 'Detalles del evento';
+  String get event_step2_title => 'Descripción del evento';
 
   @override
-  String get event_step2_subtitle => 'Dificultad, tipo, marcas y configuración';
+  String get event_step2_subtitle => 'Escribe o genera la descripción con IA';
 
   @override
-  String get event_step3_title => 'Ruta del evento';
+  String get event_step3_title => 'Ruta y detalles';
 
   @override
-  String get event_step3_subtitle =>
-      'Define los puntos de salida, intermedios y llegada';
+  String get event_step3_subtitle => 'Recorrido y configuración del evento';
 
   @override
   String get event_step4_title => 'Revisa tu evento';
@@ -3076,6 +3113,16 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_step_review_publishButton => 'Publicar evento';
+
+  @override
+  String get event_wizard_cancel_dialog_title => '¿Descartar evento?';
+
+  @override
+  String get event_wizard_cancel_dialog_body =>
+      'Perderás todo lo que has llenado hasta ahora.';
+
+  @override
+  String get event_wizard_cancel_dialog_confirm => 'Descartar';
 
   @override
   String get event_step_review_dateTimeSection => 'Fecha y hora';

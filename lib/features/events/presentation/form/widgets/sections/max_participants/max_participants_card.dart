@@ -25,18 +25,17 @@ class MaxParticipantsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.darkBorderPrimary),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const MaxParticipantsCardLabels(),
-          const SizedBox(width: 12),
-          Expanded(
-            child: MaxParticipantsStepper(
-              count: count,
-              onDecrement: onDecrement,
-              onIncrement: onIncrement,
-              onManualChange: onManualChange,
-            ),
+          const Expanded(child: MaxParticipantsCardLabels()),
+          MaxParticipantsStepper(
+            count: count,
+            onDecrement: onDecrement,
+            onIncrement: onIncrement,
+            onManualChange: onManualChange,
           ),
         ],
       ),

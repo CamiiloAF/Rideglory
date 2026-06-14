@@ -1,3 +1,4 @@
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -47,7 +48,7 @@ class HomeEventCardContent extends StatelessWidget {
           const SizedBox(height: 6),
           Row(
             children: [
-              const Icon(Icons.local_fire_department, size: 14, color: AppColors.textOnDarkTertiary),
+              const Icon(LucideIcons.flame, size: 14, color: AppColors.textOnDarkTertiary),
               const SizedBox(width: 6),
               Text(
                 event.difficulty.shortLabel,

@@ -84,7 +84,7 @@ void main() {
       'TC-2-21: Filtered empty state shows filtered empty message',
       (WidgetTester tester) async {
         when(() => mockEventsCubit.filters).thenReturn(
-          const EventFilters(types: {EventType.tourism}),
+          const EventFilters(types: {EventType.onRoad}),
         );
         when(() => mockEventsCubit.state).thenReturn(
           const ResultState.empty(),
@@ -130,7 +130,7 @@ void main() {
       'TC-2-23: Filtered empty state shows clear filters button',
       (WidgetTester tester) async {
         when(() => mockEventsCubit.filters).thenReturn(
-          const EventFilters(types: {EventType.tourism}),
+          const EventFilters(types: {EventType.onRoad}),
         );
         when(() => mockEventsCubit.state).thenReturn(
           const ResultState.empty(),
@@ -155,7 +155,7 @@ void main() {
       'TC-2-24: Tapping clear filters in empty state calls clearFilters()',
       (WidgetTester tester) async {
         when(() => mockEventsCubit.filters).thenReturn(
-          const EventFilters(types: {EventType.tourism}),
+          const EventFilters(types: {EventType.onRoad}),
         );
         when(() => mockEventsCubit.state).thenReturn(
           const ResultState.empty(),

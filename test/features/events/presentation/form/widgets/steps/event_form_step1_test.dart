@@ -68,7 +68,7 @@ Widget _buildStep1({
 }) {
   return MaterialApp(
     theme: AppTheme.darkTheme,
-    localizationsDelegates: [
+    localizationsDelegates: const [
       AppLocalizations.delegate,
       FlutterQuillLocalizations.delegate,
       GlobalMaterialLocalizations.delegate,
@@ -268,7 +268,7 @@ void main() {
         EventFormFields.dateRange: DateTimeRange(start: now, end: now),
         EventFormFields.meetingTime: DateTime(now.year, now.month, now.day, 7),
         EventFormFields.difficulty: EventDifficulty.one,
-        EventFormFields.eventType: EventType.tourism,
+        EventFormFields.eventType: EventType.onRoad,
         EventFormFields.isMultiBrand: true,
         EventFormFields.allowedBrands: <String>[],
         EventFormFields.isFreeEvent: false,
@@ -279,7 +279,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           theme: AppTheme.darkTheme,
-          localizationsDelegates: [
+          localizationsDelegates: const [
             AppLocalizations.delegate,
             FlutterQuillLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,

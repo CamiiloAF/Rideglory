@@ -32,7 +32,7 @@ void main() {
     repository = AiDescriptionRepositoryImpl(mockService);
   });
 
-  DioException _dioException({
+  DioException dioException({
     required int statusCode,
     required String errorCode,
   }) {
@@ -50,7 +50,7 @@ void main() {
     test('AC9 — 429 quota_exceeded_user → AiQuotaExceededUserException',
         () async {
       when(() => mockService.generateDescription(any())).thenThrow(
-        _dioException(statusCode: 429, errorCode: 'quota_exceeded_user'),
+        dioException(statusCode: 429, errorCode: 'quota_exceeded_user'),
       );
 
       final result = await repository.generateDescription(request);
@@ -65,7 +65,7 @@ void main() {
     test('AC10 — 429 quota_exceeded_project → AiQuotaExceededProjectException',
         () async {
       when(() => mockService.generateDescription(any())).thenThrow(
-        _dioException(
+        dioException(
             statusCode: 429, errorCode: 'quota_exceeded_project'),
       );
 
@@ -80,7 +80,7 @@ void main() {
 
     test('AC11 — 422 safety_blocked → AiSafetyBlockedException', () async {
       when(() => mockService.generateDescription(any())).thenThrow(
-        _dioException(statusCode: 422, errorCode: 'safety_blocked'),
+        dioException(statusCode: 422, errorCode: 'safety_blocked'),
       );
 
       final result = await repository.generateDescription(request);

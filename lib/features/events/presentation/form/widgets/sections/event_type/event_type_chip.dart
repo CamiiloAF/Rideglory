@@ -20,21 +20,24 @@ class EventTypeChip extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary : AppColors.darkCard,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.darkBorderPrimary,
-          ),
+          borderRadius: BorderRadius.circular(17),
+          border: isSelected
+              ? null
+              : Border.all(color: AppColors.darkBorderPrimary),
         ),
-        child: Text(
-          type.label,
-          style: TextStyle(
-            fontFamily: 'Space Grotesk',
-            fontSize: 13,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-            color: isSelected ? Colors.white : AppColors.textOnDarkSecondary,
+        child: Center(
+          child: Text(
+            type.label,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+              color: isSelected
+                  ? AppColors.darkBgPrimary
+                  : AppColors.textOnDarkSecondary,
+            ),
           ),
         ),
       ),

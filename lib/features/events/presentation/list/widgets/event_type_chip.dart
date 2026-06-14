@@ -9,12 +9,12 @@ class EventTypeChip extends StatelessWidget {
 
   Color _getColor(BuildContext context) {
     return switch (eventType) {
-      EventType.tourism => context.appColors.eventTourism,
-      EventType.urban => context.appColors.eventUrban,
+      EventType.onRoad => context.appColors.eventTourism,
       EventType.offRoad => context.appColors.eventOffRoad,
+      EventType.course => context.appColors.eventUrban,
+      EventType.trackDay => context.appColors.eventSolidarity,
+      EventType.leisure => context.appColors.eventShortDistance,
       EventType.competition => context.appColors.eventCompetition,
-      EventType.solidarity => context.appColors.eventSolidarity,
-      EventType.shortDistance => context.appColors.eventShortDistance,
     };
   }
 

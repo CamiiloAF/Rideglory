@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
@@ -14,19 +13,53 @@ import 'package:rideglory/features/events/presentation/form/widgets/steps/review
 import 'package:rideglory/features/events/presentation/form/widgets/steps/step_title.dart';
 import 'package:rideglory/shared/cubits/form_image_cubit.dart';
 
-/// Step 4: Summary review before publishing.
+/// Step 4: Resumen de revisión antes de publicar.
 ///
-/// Shows 4 cards (Básico, Configuración, Ruta, Fecha y hora) per Pencil FW3Hd.
-/// Each card has an icon, title, "Editar" button, and label/value rows.
+/// 3 cards alineadas con los 3 steps de entrada:
+/// - Card 1 "Información básica" → step 1 (nombre, portada, fecha, tipo, dificultad)
+/// - Card 2 "Descripción"        → step 2
+/// - Card 3 "Ruta y detalles"    → step 3 (ruta, marcas, participantes, precio)
 class EventFormStep4Review extends StatelessWidget {
   const EventFormStep4Review({super.key});
+
+  static final _priceFmt = NumberFormat('#,##0', 'es_CO');
+
+  String _formatBrands(
+    BuildContext context, {
+    required bool isMultiBrand,
+    required List<String> brands,
+  }) {
+    if (isMultiBrand || brands.isEmpty) {
+      return context.l10n.event_step_review_allBrands;
+    }
+    const maxVisible = 2;
+    if (brands.length <= maxVisible) return brands.join(', ');
+    final visible = brands.take(maxVisible).join(', ');
+    final extra = brands.length - maxVisible;
+    return '$visible y $extra más';
+  }
+
+  String _resolveMeetingPoint(BuildContext context, EventFormState state) {
+    if (state.routeType == RouteType.custom && state.waypoints.isNotEmpty) {
+      return state.waypoints.first;
+    }
+    return state.meetingPointName?.isNotEmpty == true
+        ? state.meetingPointName!
+        : context.l10n.event_step_review_noMeetingPoint;
+  }
+
+  String _formatPrice(String? raw) {
+    final digits = raw?.replaceAll(RegExp(r'[^\d]'), '') ?? '';
+    final value = int.tryParse(digits) ?? 0;
+    return '\$${_priceFmt.format(value).replaceAll(',', '.')} COP';
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EventFormCubit, EventFormState>(
       builder: (context, state) {
         final cubit = context.read<EventFormCubit>();
-        final formData = FormBuilder.of(context)?.value ?? {};
+        final formData = cubit.formKey.currentState?.instantValue ?? {};
         final imageState = context.watch<FormImageCubit>().state;
         final imageData = imageState.whenOrNull(data: (data) => data);
         final hasCover = imageData?.displayImageUrl?.isNotEmpty == true;
@@ -34,18 +67,16 @@ class EventFormStep4Review extends StatelessWidget {
         final name = formData[EventFormFields.name] as String? ?? '';
         final description =
             formData[EventFormFields.description] as String? ?? '';
-        final dateRange =
-            formData[EventFormFields.dateRange] as DateTimeRange?;
-        final meetingTime =
-            formData[EventFormFields.meetingTime] as DateTime?;
+        final dateRange = formData[EventFormFields.dateRange] as DateTimeRange?;
+        final meetingTime = formData[EventFormFields.meetingTime] as DateTime?;
         final isMultiDay =
             formData[EventFormFields.isMultiDay] as bool? ?? false;
         final difficulty =
             formData[EventFormFields.difficulty] as EventDifficulty? ??
-                EventDifficulty.one;
+            EventDifficulty.one;
         final eventType =
             formData[EventFormFields.eventType] as EventType? ??
-                EventType.tourism;
+            EventType.onRoad;
         final isMultiBrand =
             formData[EventFormFields.isMultiBrand] as bool? ?? true;
         final allowedBrands =
@@ -53,8 +84,7 @@ class EventFormStep4Review extends StatelessWidget {
         final maxParticipants =
             formData[EventFormFields.maxParticipants] as int?;
         final priceStr = formData[EventFormFields.price] as String?;
-        final isFree =
-            formData[EventFormFields.isFreeEvent] as bool? ?? false;
+        final isFree = formData[EventFormFields.isFreeEvent] as bool? ?? false;
 
         final dateText = dateRange != null
             ? DateFormat('EEE, dd MMM yyyy', 'es').format(dateRange.start)
@@ -76,7 +106,8 @@ class EventFormStep4Review extends StatelessWidget {
                       subtitle: context.l10n.event_step4_subtitle,
                     ),
                     const SizedBox(height: 20),
-                    // Card 1: Información básica
+
+                    // Card 1: Información básica — espejo del step 1
                     ReviewCard(
                       title: context.l10n.event_step_review_basicSection,
                       icon: Icons.info_outline,
@@ -89,98 +120,11 @@ class EventFormStep4Review extends StatelessWidget {
                               : context.l10n.event_step_review_noName,
                         ),
                         ReviewRow(
-                          label: context.l10n.event_step_review_descLabel,
-                          value: description.isNotEmpty
-                              ? context.l10n.event_step_review_descAdded
-                              : context.l10n.event_step_review_noDescription,
-                        ),
-                        ReviewRow(
                           label: context.l10n.event_step_review_coverLabel,
                           value: hasCover
                               ? context.l10n.event_step_review_coverLoaded
                               : context.l10n.event_step_review_coverNone,
-                          showDivider: false,
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    // Card 2: Configuración
-                    ReviewCard(
-                      title: context.l10n.event_step_review_detailsSection,
-                      icon: Icons.tune,
-                      onEdit: () => cubit.goToStep(1),
-                      rows: [
-                        ReviewRow(
-                          label: context.l10n.event_step_review_difficulty,
-                          value: difficulty.label,
-                          trailingWidget: DifficultyFlames(
-                            level: difficulty.value,
-                          ),
-                        ),
-                        ReviewRow(
-                          label: context.l10n.event_step_review_type,
-                          value: eventType.label,
-                        ),
-                        ReviewRow(
-                          label: context.l10n.event_step_review_maxParticipants,
-                          value: maxParticipants != null
-                              ? '$maxParticipants'
-                              : context.l10n.event_step_review_noLimit,
-                        ),
-                        ReviewRow(
-                          label: context.l10n.event_step_review_price,
-                          value: (isFree ||
-                                  priceStr == null ||
-                                  priceStr.isEmpty ||
-                                  priceStr == '0')
-                              ? context.l10n.event_step_review_free
-                              : '\$$priceStr COP',
-                          showDivider: false,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    // Card 3: Ruta
-                    ReviewCard(
-                      title: context.l10n.event_step_review_routeSection,
-                      icon: Icons.route,
-                      onEdit: () => cubit.goToStep(2),
-                      rows: [
-                        ReviewRow(
-                          label: context.l10n.event_step_review_meetingPoint,
-                          value: state.meetingPointName?.isNotEmpty == true
-                              ? state.meetingPointName!
-                              : context.l10n.event_step_review_noMeetingPoint,
-                        ),
-                        ReviewRow(
-                          label: context.l10n.event_step_review_destination,
-                          value: state.destinationName?.isNotEmpty == true
-                              ? state.destinationName!
-                              : context.l10n.event_step_review_noDestination,
-                        ),
-                        if (state.waypoints.isNotEmpty)
-                          ReviewRow(
-                            label: context.l10n.event_step_review_waypoints,
-                            value: '${state.waypoints.length}',
-                          ),
-                        ReviewRow(
-                          label: context.l10n.event_step_review_brands,
-                          value: isMultiBrand
-                              ? context.l10n.event_step_review_allBrands
-                              : allowedBrands.isNotEmpty
-                                  ? allowedBrands.join(', ')
-                                  : context.l10n.event_step_review_allBrands,
-                          showDivider: false,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    // Card 4: Fecha y hora
-                    ReviewCard(
-                      title: context.l10n.event_step_review_dateTimeSection,
-                      icon: Icons.calendar_today_outlined,
-                      onEdit: () => cubit.goToStep(0),
-                      rows: [
                         ReviewRow(
                           label: context.l10n.event_step_review_date,
                           value: dateText,
@@ -195,6 +139,84 @@ class EventFormStep4Review extends StatelessWidget {
                           value: isMultiDay
                               ? context.l10n.event_step_review_yes
                               : context.l10n.event_step_review_no,
+                        ),
+                        ReviewRow(
+                          label: context.l10n.event_step_review_type,
+                          value: eventType.label,
+                        ),
+                        ReviewRow(
+                          label: context.l10n.event_step_review_difficulty,
+                          value: difficulty.label,
+                          trailingWidget: DifficultyFlames(
+                            level: difficulty.value,
+                          ),
+                          showDivider: false,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Card 2: Descripción — espejo del step 2
+                    ReviewCard(
+                      title: context.l10n.event_step2_title,
+                      icon: Icons.notes_rounded,
+                      onEdit: () => cubit.goToStep(1),
+                      rows: [
+                        ReviewRow(
+                          label: context.l10n.event_step_review_descLabel,
+                          value: description.isNotEmpty
+                              ? context.l10n.event_step_review_descAdded
+                              : context.l10n.event_step_review_noDescription,
+                          showDivider: false,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Card 3: Ruta y detalles — espejo del step 3
+                    ReviewCard(
+                      title: context.l10n.event_step3_title,
+                      icon: Icons.route,
+                      onEdit: () => cubit.goToStep(2),
+                      rows: [
+                        ReviewRow(
+                          label: context.l10n.event_step_review_meetingPoint,
+                          value: _resolveMeetingPoint(context, state),
+                        ),
+                        ReviewRow(
+                          label: context.l10n.event_step_review_destination,
+                          value: state.destinationName?.isNotEmpty == true
+                              ? state.destinationName!
+                              : context.l10n.event_step_review_noDestination,
+                        ),
+                        if (state.waypoints.isNotEmpty)
+                          ReviewRow(
+                            label: context.l10n.event_step_review_waypoints,
+                            value: '${state.waypoints.length}',
+                          ),
+                        ReviewRow(
+                          label: context.l10n.event_step_review_brands,
+                          value: _formatBrands(
+                            context,
+                            isMultiBrand: isMultiBrand,
+                            brands: allowedBrands.cast<String>(),
+                          ),
+                        ),
+                        ReviewRow(
+                          label: context.l10n.event_step_review_maxParticipants,
+                          value: maxParticipants != null
+                              ? '$maxParticipants'
+                              : context.l10n.event_step_review_noLimit,
+                        ),
+                        ReviewRow(
+                          label: context.l10n.event_step_review_price,
+                          value:
+                              (isFree ||
+                                  priceStr == null ||
+                                  priceStr.isEmpty ||
+                                  priceStr == '0')
+                              ? context.l10n.event_step_review_free
+                              : _formatPrice(priceStr),
                           showDivider: false,
                         ),
                       ],

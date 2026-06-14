@@ -20,6 +20,7 @@ class WaypointSearchField extends StatelessWidget {
       labelText: '',
       hintText: context.l10n.route_builder_search_placeholder,
       placeType: PlaceAutocompleteType.establishment,
+      compact: true,
       clearOnSelect: true,
       resolveCoords: true,
       onPlaceSelected: onPlaceSelected,

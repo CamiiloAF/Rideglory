@@ -15,7 +15,8 @@ import 'package:rideglory/features/events/presentation/form/widgets/steps/event_
 /// Scaffold para el modo creación: wizard de 4 pasos.
 ///
 /// Design spec (Pencil AybHb / EzQtb / XbcHD / FW3Hd):
-/// - AppBar: ← botón círculo (siempre) + "Nuevo Evento" + "Cancelar" solo en step 0
+/// - AppBar: ← botón círculo (siempre) + "Nuevo Evento" + "Cancelar" en todos los steps
+/// - Step 0: cancelar sin confirmación. Steps 1-3: diálogo de confirmación.
 /// - El EventStepIndicator va en el body (Column), NO en AppBar.bottom
 /// - Separador 1px entre stepper y contenido del paso
 class CreationScaffold extends StatelessWidget {
@@ -30,10 +31,35 @@ class CreationScaffold extends StatelessWidget {
   final EventFormCubit cubit;
   final bool isSaving;
 
+  Future<void> _handleCancel(BuildContext context) async {
+    final confirmed = await AppModal.show<bool>(
+      context: context,
+      title: context.l10n.event_wizard_cancel_dialog_title,
+      description: context.l10n.event_wizard_cancel_dialog_body,
+      variant: AppModalVariant.warning,
+      actions: [
+        AppModalAction(
+          label: context.l10n.event_wizard_cancel_dialog_confirm,
+          emphasis: AppModalActionEmphasis.primary,
+          popResult: true,
+          onPressed: () {},
+        ),
+        AppModalAction.neutral(
+          label: context.l10n.cancel,
+          popResult: false,
+          onPressed: () {},
+        ),
+      ],
+    );
+    if ((confirmed ?? false) && context.mounted) {
+      context.pop();
+    }
+  }
+
   Map<String, dynamic> _getInitialValues() {
     return {
       EventFormFields.difficulty: EventDifficulty.one,
-      EventFormFields.eventType: EventType.tourism,
+      EventFormFields.eventType: EventType.onRoad,
       EventFormFields.isMultiDay: false,
       EventFormFields.dateRange: DateTimeRange(
         start: DateTime.now(),
@@ -55,21 +81,31 @@ class CreationScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        if (state.currentStep > 0) {
+          cubit.prevStep();
+        } else {
+          _handleCancel(context);
+        }
+      },
+      child: Scaffold(
       backgroundColor: AppColors.darkBgPrimary,
       appBar: AppFormNavHeader(
         title: context.l10n.event_newEvent,
         leading: AppFormNavAction.icon(
           icon: Icons.arrow_back,
-          onTap: () => context.pop(),
+          onTap: () => state.currentStep > 0
+              ? cubit.prevStep()
+              : _handleCancel(context),
           pill: true,
         ),
-        trailing: state.currentStep == 0
-            ? AppFormNavAction.text(
-                label: context.l10n.cancel,
-                onTap: () => context.pop(),
-              )
-            : null,
+        trailing: AppFormNavAction.text(
+          label: context.l10n.cancel,
+          onTap: () => _handleCancel(context),
+        ),
         showBottomBorder: false,
       ),
       body: Column(
@@ -83,22 +119,19 @@ class CreationScaffold extends StatelessWidget {
             child: FormBuilder(
               key: cubit.formKey,
               initialValue: _getInitialValues(),
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                child: IndexedStack(
-                  key: ValueKey(state.currentStep),
-                  index: state.currentStep,
-                  children: const [
-                    EventFormStep1(),
-                    EventFormStep2(),
-                    EventFormStep3(),
-                    EventFormStep4Review(),
-                  ],
-                ),
+              child: IndexedStack(
+                index: state.currentStep,
+                children: const [
+                  EventFormStep1(),
+                  EventFormStep2(),
+                  EventFormStep3(),
+                  EventFormStep4Review(),
+                ],
               ),
             ),
           ),
         ],
+      ),
       ),
     );
   }

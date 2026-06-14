@@ -14,7 +14,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/ai_chat/ai_insert_button.dart';
 import 'package:rideglory/l10n/app_localizations.dart';
-import 'package:rideglory/shared/widgets/form/app_rich_text_editor.dart';
 
 // ─── Spy ─────────────────────────────────────────────────────────────────────
 
@@ -39,7 +38,7 @@ class _ControllerSpy extends QuillController {
 Widget _wrap(Widget child) {
   return MaterialApp(
     theme: AppTheme.darkTheme,
-    localizationsDelegates: [
+    localizationsDelegates: const [
       AppLocalizations.delegate,
       FlutterQuillLocalizations.delegate,
       GlobalMaterialLocalizations.delegate,
@@ -88,7 +87,7 @@ void main() {
       (tester) async {
         await tester.pumpWidget(
           _wrap(
-            AppRichTextEditor(name: 'desc'),
+            const AppRichTextEditor(name: 'desc'),
           ),
         );
         await tester.pumpAndSettle();
