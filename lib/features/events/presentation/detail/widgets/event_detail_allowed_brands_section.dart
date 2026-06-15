@@ -19,35 +19,39 @@ class EventDetailAllowedBrandsSection extends StatelessWidget {
       children: [
         Text(
           context.l10n.event_allowedBrandsTitle,
-          style: TextStyle(
-            color: context.colorScheme.onSurface,
-            fontSize: 18,
-            fontWeight: FontWeight.w800,
-            letterSpacing: -0.2,
+          style: const TextStyle(
+            color: AppColors.textOnDarkPrimary,
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Space Grotesk',
           ),
         ),
-        AppSpacing.gapMd,
+        const SizedBox(height: 10),
         Wrap(
-          spacing: 10,
-          runSpacing: 10,
+          spacing: 8,
+          runSpacing: 8,
           children: labels
               .map(
                 (label) => Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
+                    horizontal: 14,
+                    vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: context.colorScheme.primary, width: 1.5),
+                    color: AppColors.darkCard,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: AppColors.darkBorderPrimary,
+                      width: 1,
+                    ),
                   ),
                   child: Text(
                     label,
-                    style: TextStyle(
-                      color: context.colorScheme.primary,
+                    style: const TextStyle(
+                      color: AppColors.textOnDarkPrimary,
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
+                      fontFamily: 'Space Grotesk',
                     ),
                   ),
                 ),

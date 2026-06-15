@@ -16,15 +16,17 @@ import 'package:rideglory/features/events/presentation/form/event_edit_params.da
 import 'package:rideglory/features/events/presentation/delete/cubit/event_delete_cubit.dart';
 import 'package:rideglory/features/events/presentation/detail/cubit/event_detail_cubit.dart';
 import 'package:rideglory/features/events/presentation/detail/params.dart';
-import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_about_section.dart';
+import 'package:rideglory/features/events/presentation/detail/widgets/cta/event_detail_cta_bar_content.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_allowed_brands_section.dart';
-import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_cta_bar.dart';
-import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_header_section.dart';
+import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_status_badge.dart';
+import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_description_section.dart';
+import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_diff_pill.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_hero_section.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_meeting_point_section.dart';
-import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_meta_section.dart';
+import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_meta_row.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_owner_lifecycle_bar.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_participants_section.dart';
+import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_participants_summary.dart';
 import 'package:rideglory/features/events/presentation/detail/event_route_map_screen.dart';
 import 'package:rideglory/features/events/presentation/shared/dialogs/cancel_registration_dialog.dart';
 import 'package:rideglory/shared/helpers/map_launcher_helper.dart';
@@ -47,10 +49,27 @@ class EventDetailView extends StatefulWidget {
 class EventDetailViewState extends State<EventDetailView> {
   late EventModel currentEvent;
 
+  // Suprimir el MapWidget de preview mientras hay otra pantalla encima.
+  // Evita dos instancias Mapbox/Metal simultáneas que provocan redraw.
+  bool _mapSuppressed = false;
+
   @override
   void initState() {
     super.initState();
     currentEvent = widget.event;
+  }
+
+  Future<void> _openFullscreenMap() async {
+    setState(() => _mapSuppressed = true);
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (_) => EventRouteMapScreen(
+          points: currentEvent.routePoints,
+          title: currentEvent.name,
+        ),
+      ),
+    );
+    if (mounted) setState(() => _mapSuppressed = false);
   }
 
   // ── Navigation helpers ────────────────────────────────────────────────────
@@ -67,6 +86,7 @@ class EventDetailViewState extends State<EventDetailView> {
     BuildContext context,
     EventRegistrationModel? registration,
   ) async {
+    setState(() => _mapSuppressed = true);
     final result = await context.pushNamed<EventRegistrationModel?>(
       AppRoutes.eventRegistration,
       extra: EventRegistrationParams(
@@ -74,8 +94,12 @@ class EventDetailViewState extends State<EventDetailView> {
         registration: registration,
       ),
     );
-    if (result != null && context.mounted) {
-      context.read<EventDetailCubit>().updateRegistration(result);
+    if (!context.mounted) return;
+    setState(() => _mapSuppressed = false);
+    if (result != null) {
+      final cubit = context.read<EventDetailCubit>();
+      cubit.updateRegistration(result);
+      cubit.loadAttendees(currentEvent.id!);
     }
   }
 
@@ -114,6 +138,7 @@ class EventDetailViewState extends State<EventDetailView> {
     context.read<MyRegistrationsCubit>().onChangeRegistration(
       registration.copyWith(status: RegistrationStatus.cancelled),
     );
+    context.read<EventDetailCubit>().loadAttendees(currentEvent.id!);
   }
 
   Future<void> _confirmStopEvent(BuildContext context) async {
@@ -152,6 +177,10 @@ class EventDetailViewState extends State<EventDetailView> {
     final currentUserId = context.watch<AuthCubit>().state.currentUser?.id;
     final isOwner = currentEvent.ownerId == currentUserId;
 
+    final heroHeight = EventDetailHeroSection.computeHeroHeight(context);
+    const overlapAmount = 90.0;
+    final heroSliverHeight = heroHeight - overlapAmount;
+
     return PopScope(
       canPop: widget.isFromEventDetailByIdPage,
       onPopInvokedWithResult: (didPop, _) {
@@ -169,13 +198,10 @@ class EventDetailViewState extends State<EventDetailView> {
                   data: (_) {
                     ScaffoldMessenger.maybeOf(context)?.showSnackBar(
                       SnackBar(
-                        content:
-                            Text(context.l10n.event_eventDeletedSuccess),
+                        content: Text(context.l10n.event_eventDeletedSuccess),
                         backgroundColor: AppColors.success,
                       ),
                     );
-                    // Usar Navigator directamente para garantizar que el pop
-                    // sucede independientemente de PopScope.canPop.
                     if (context.mounted) {
                       Navigator.of(context).pop(true);
                     }
@@ -185,22 +211,17 @@ class EventDetailViewState extends State<EventDetailView> {
             ),
             BlocListener<EventDetailCubit, EventDetailState>(
               listenWhen: (prev, curr) =>
-                  prev.lastUpdatedEventResult !=
-                  curr.lastUpdatedEventResult,
+                  prev.lastUpdatedEventResult != curr.lastUpdatedEventResult,
               listener: (context, state) {
                 state.lastUpdatedEventResult?.maybeWhen(
                   data: (updated) {
                     setState(() => currentEvent = updated);
-                    context
-                        .read<EventDetailCubit>()
-                        .clearLastUpdatedEvent();
+                    context.read<EventDetailCubit>().clearLastUpdatedEvent();
                   },
                   error: (e) {
                     ScaffoldMessenger.of(context)
                         .showSnackBar(SnackBar(content: Text(e.message)));
-                    context
-                        .read<EventDetailCubit>()
-                        .clearLastUpdatedEvent();
+                    context.read<EventDetailCubit>().clearLastUpdatedEvent();
                   },
                   orElse: () {},
                 );
@@ -209,91 +230,210 @@ class EventDetailViewState extends State<EventDetailView> {
           ],
           child: CustomScrollView(
             slivers: [
-              // ── Hero image + back/share buttons ──────────────────────
+              // ── Único sliver: hero + card en el mismo Stack ───────────────
+              // El card está después del hero en el árbol → pinta encima.
+              // La altura del Stack la determina el Padding (no el Positioned).
               SliverToBoxAdapter(
-                child: EventDetailHeroSection(
-                  event: currentEvent,
-                  isOwner: isOwner,
-                  onBack: _pop,
-                  onEdit: () => context.pushNamed(
-                    AppRoutes.editEvent,
-                    extra: EventEditParams(
-                      event: currentEvent,
-                      onSaved: (updated) {
-                        if (mounted) setState(() => currentEvent = updated);
-                      },
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      child: SizedBox(
+                        height: heroHeight,
+                        child: EventDetailHeroSection(
+                          event: currentEvent,
+                          isOwner: isOwner,
+                          onBack: _pop,
+                          onEdit: () => context.pushNamed(
+                            AppRoutes.editEvent,
+                            extra: EventEditParams(
+                              event: currentEvent,
+                              onSaved: (updated) {
+                                if (mounted) {
+                                  setState(() => currentEvent = updated);
+                                }
+                              },
+                            ),
+                          ),
+                          onAttendees: () => context.pushNamed(
+                            AppRoutes.eventAttendees,
+                            extra: currentEvent,
+                          ),
+                          onDelete: () => confirmDelete(context),
+                        ),
+                      ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(top: heroSliverHeight),
+                      child: Container(
+                  decoration: const BoxDecoration(
+                    color: AppColors.darkBgPrimary,
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(24)),
                   ),
-                  onAttendees: () => context.pushNamed(
-                    AppRoutes.eventAttendees,
-                    extra: currentEvent,
-                  ),
-                  onDelete: () => confirmDelete(context),
-                ),
-              ),
-
-              // ── Content sections ─────────────────────────────────────
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.fromLTRB(20, 0, 20, 32),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Event Header block
-                      EventDetailHeaderSection(event: currentEvent),
-                      const SizedBox(height: 24),
+                      // Handle pill
+                      Center(
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 12),
+                          width: 40,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: AppColors.darkBorderPrimary,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                      ),
 
-                      // Meta (difficulty + type + time)
-                      EventDetailMetaSection(event: currentEvent),
-                      const SizedBox(height: 24),
+                      // Badge de estado (dentro del card, bajo el handle)
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 20,
+                          bottom: 12,
+                        ),
+                        child: EventDetailStatusBadge(event: currentEvent),
+                      ),
 
-                      // About
-                      EventDetailAboutSection(event: currentEvent),
-                      const SizedBox(height: 24),
-
-                      // Meeting point + route map
-                      EventDetailMeetingPointSection(
-                        meetingPoint: currentEvent.meetingPoint,
-                        destination: currentEvent.destination.isNotEmpty
-                            ? currentEvent.destination
-                            : null,
-                        routePoints: currentEvent.routePoints,
-                        onViewMap: currentEvent.routePoints.isNotEmpty
-                            ? () => Navigator.of(context).push( // Custom: EventRouteMapScreen has no go_router named route — anonymous push preserved. Reason: ephemeral sub-screen, no deep-link requirement.
-                                  MaterialPageRoute<void>(
-                                    builder: (_) => EventRouteMapScreen(
-                                      points: currentEvent.routePoints,
-                                      title: currentEvent.name,
+                      // Contenido con padding horizontal
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Title row: nombre + diff pill
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    currentEvent.name,
+                                    style: const TextStyle(
+                                      color: AppColors.textOnDarkPrimary,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w800,
+                                      height: 1.15,
+                                      fontFamily: 'Space Grotesk',
                                     ),
                                   ),
-                                )
-                            : () => unawaited(
-                                  MapLauncherHelper.openSearchByAddress(
-                                    currentEvent.meetingPoint,
-                                  ),
                                 ),
+                                const SizedBox(width: 12),
+                                EventDetailDiffPill(event: currentEvent),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+
+                            // Meta row: fecha · tipo · hora
+                            EventDetailMetaRow(event: currentEvent),
+                            const SizedBox(height: 16),
+
+                            // Descripción expandible (sin título "Sobre la rodada")
+                            EventDetailDescriptionSection(event: currentEvent),
+                            const SizedBox(height: 16),
+
+                            const Divider(
+                              color: AppColors.darkBorderPrimary,
+                              height: 1,
+                            ),
+                            const SizedBox(height: 16),
+
+                            // Punto de encuentro + mapa de ruta
+                            EventDetailMeetingPointSection(
+                              meetingPoint: currentEvent.meetingPoint,
+                              destination: currentEvent.destination.isNotEmpty
+                                  ? currentEvent.destination
+                                  : null,
+                              routePoints: currentEvent.routePoints,
+                              suppressMapPreview: _mapSuppressed,
+                              onViewMap: currentEvent.routePoints.isNotEmpty
+                                  ? _openFullscreenMap
+                                  : () => unawaited(
+                                        MapLauncherHelper.openSearchByAddress(
+                                          currentEvent.meetingPoint,
+                                        ),
+                                      ),
+                            ),
+
+                            // Marcas permitidas
+                            if (currentEvent.allowedBrands.isNotEmpty) ...[
+                              const SizedBox(height: 16),
+                              EventDetailAllowedBrandsSection(
+                                event: currentEvent,
+                              ),
+                            ],
+
+                            const SizedBox(height: 16),
+
+                            // Participantes: owner ve filas con estados; usuario ve resumen
+                            if (isOwner)
+                              EventDetailParticipantsSection(
+                                event: currentEvent,
+                              )
+                            else
+                              EventDetailParticipantsSummary(
+                                event: currentEvent,
+                              ),
+
+                            // CTA de usuario (embebida en el card, no bottomNavigationBar)
+                            if (!isOwner) ...[
+                              const SizedBox(height: 24),
+                              BlocBuilder<EventDetailCubit, EventDetailState>(
+                                builder: (context, state) {
+                                  return state.registrationResult.maybeWhen(
+                                    data: (registration) =>
+                                        EventDetailCtaBarContent(
+                                      event: currentEvent,
+                                      registration: registration,
+                                      onRegister: () =>
+                                          navigateToRegistration(context, null),
+                                      onFollowLive: () =>
+                                          unawaited(_onFollowLivePressed()),
+                                      onRegistrationStatusTap: (reg) {
+                                        if (reg.status ==
+                                                RegistrationStatus.pending ||
+                                            reg.status ==
+                                                RegistrationStatus.approved) {
+                                          confirmCancelRegistration(
+                                            context,
+                                            reg,
+                                          );
+                                        } else if (reg.status ==
+                                            RegistrationStatus.readyForEdit) {
+                                          navigateToRegistration(context, reg);
+                                        }
+                                      },
+                                      onOpenRegistrationDetail: (reg) =>
+                                          context.pushNamed(
+                                        AppRoutes.registrationDetail,
+                                        extra: RegistrationDetailExtra(
+                                          registration: reg,
+                                          eventOwnerId: currentEvent.ownerId,
+                                        ),
+                                      ),
+                                    ),
+                                    orElse: () => const SizedBox.shrink(),
+                                  );
+                                },
+                              ),
+                            ],
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 24),
-
-                      // Allowed brands
-                      if (currentEvent.allowedBrands.isNotEmpty) ...[
-                        EventDetailAllowedBrandsSection(event: currentEvent),
-                        const SizedBox(height: 24),
-                      ],
-
-                      // Participants — owner only
-                      if (isOwner)
-                        EventDetailParticipantsSection(event: currentEvent),
                     ],
                   ),
-                ),
-              ),
-            ],
-          ),
-        ),
+                ),          // Container
+              ),            // Padding(top: heroSliverHeight)
+            ],              // Stack children
+          ),                // Stack
+        ),                  // SliverToBoxAdapter
+      ],                    // slivers
+    ),                      // CustomScrollView
+  ),                        // MultiBlocListener
 
-        // ── Bottom CTA bar ────────────────────────────────────────────────
+        // ── Owner lifecycle bar (sigue como bottomNavigationBar) ───────────
         bottomNavigationBar: isOwner
             ? (currentEvent.state == EventState.scheduled ||
                       currentEvent.state == EventState.inProgress ||
@@ -325,39 +465,8 @@ class EventDetailViewState extends State<EventDetailView> {
                       },
                     )
                   : null)
-            : BlocBuilder<EventDetailCubit, EventDetailState>(
-                builder: (context, state) {
-                  return state.registrationResult.maybeWhen(
-                    data: (registration) => EventDetailCTABar(
-                      event: currentEvent,
-                      registration: registration,
-                      onRegister: () =>
-                          navigateToRegistration(context, null),
-                      onFollowLive: () =>
-                          unawaited(_onFollowLivePressed()),
-                      onRegistrationStatusTap: (reg) {
-                        if (reg.status == RegistrationStatus.pending ||
-                            reg.status == RegistrationStatus.approved) {
-                          confirmCancelRegistration(context, reg);
-                        } else if (reg.status ==
-                            RegistrationStatus.readyForEdit) {
-                          navigateToRegistration(context, reg);
-                        }
-                      },
-                      onOpenRegistrationDetail: (reg) => context.pushNamed(
-                        AppRoutes.registrationDetail,
-                        extra: RegistrationDetailExtra(
-                          registration: reg,
-                          eventOwnerId: currentEvent.ownerId,
-                        ),
-                      ),
-                    ),
-                    orElse: () => const SizedBox.shrink(),
-                  );
-                },
-              ),
+            : null,
       ),
     );
   }
-
 }

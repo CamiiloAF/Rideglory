@@ -53,9 +53,7 @@
   "auth_passwordMinStitch": "Mínimo 8 caracteres",
   "auth_createAccountButton": "Crear cuenta",
   "auth_termsPrefix": "Acepto los ",
-  "auth_termsOf": "Términos",
-  "auth_termsAnd": " y ",
-  "auth_termsConditions": "Condiciones",
+  "auth_termsAndConditions": "Términos y condiciones",
   "auth_termsAnd2": " y la ",
   "auth_termsPrivacy": "Política de Privacidad",
   "auth_termsSuffix": " de MotoConnect.",
@@ -140,6 +138,7 @@
   "event_uploadImage": "Subir imagen",
   "event_route": "PUNTOS DE RUTA",
   "event_route_required_error": "Debes agregar al menos un punto de ruta para continuar.",
+  "event_image_required_error": "La imagen de portada es obligatoria para publicar el evento.",
   "event_multiBrandLabel": "Marcas permitidas",
   "event_multiBrandAllowAny": "Permitir motos de cualquier fabricante",
   "event_selectBrands": "Seleccionar marcas permitidas",
@@ -164,6 +163,8 @@
   "event_filterByMultiBrand": "Solo multimarca",
   "event_filterByStatus": "Estado",
   "event_aboutTheRide": "Sobre la rodada",
+  "event_showMore": "Ver más",
+  "event_showLess": "Ver menos",
   "event_organizedBy": "Organizado por",
   "event_organizerPlaceholder": "el creador",
   "event_totalParticipation": "Total participación",
@@ -176,7 +177,10 @@
   "event_editRegistration": "Editar inscripción",
   "event_cancelRegistration": "Cancelar inscripción",
   "event_viewAttendees": "Ver inscritos",
+  "event_viewAll": "Ver todos",
   "event_meetingPointLabel": "Punto de encuentro",
+  "event_routeLabel": "Ruta",
+  "event_aboutEvent": "Sobre el evento",
   "event_comingSoon": "Próximamente",
   "event_eventLiveNow": "EN VIVO",
   "event_eventHasStartedTitle": "Evento en curso",
@@ -193,6 +197,19 @@
   "event_cancelledDescription": "Cancelaste tu inscripción.",
   "event_participants": "Participantes",
   "event_attendeesCount": "personas inscritas",
+  "event_participantsSummary": "{count} personas inscritas · {slots} cupos disponibles",
+  "@event_participantsSummary": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "slots": { "type": "int" }
+    }
+  },
+  "event_participantsSummaryNoSlots": "{count} personas inscritas",
+  "@event_participantsSummaryNoSlots": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "event_approveRegistration": "Aprobar",
   "event_rejectRegistration": "Rechazar",
   "event_noAttendees": "No hay inscritos aún",
@@ -449,7 +466,7 @@
   "registration_emergencyContactNameRequired": "El nombre del contacto de emergencia es requerido",
   "registration_emergencyContactPhoneRequired": "El celular del contacto de emergencia es requerido",
   "registration_emergencyContactPhoneInvalidLength": "El celular del contacto debe tener 10 dígitos (estándar Colombia)",
-  "registration_vehicleBrandRequired": "La marca del vehículo es requerida",
+  "registration_vehicleBrandRequired": "El vehículo es requerido",
   "registration_minCharacters": "Mínimo 2 caracteres",
   "registration_errorLoadingRegistrations": "Error al cargar las inscripciones",
   "registration_viewDetail": "Ver detalle",

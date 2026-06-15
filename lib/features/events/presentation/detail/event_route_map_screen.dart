@@ -153,21 +153,33 @@ class _EventRouteMapScreenState extends State<EventRouteMapScreen> {
           ),
         ),
       ),
-      body: MapWidget(
-        viewport: AppMapDefaults.colombiaViewport,
-        styleUri: MapboxStyles.DARK,
-        onMapCreated: (mapboxMap) async {
-          await mapboxMap.scaleBar
-              .updateSettings(ScaleBarSettings(enabled: false));
-          await mapboxMap.logo
-              .updateSettings(LogoSettings(marginLeft: -200, marginBottom: -200));
-          await mapboxMap.attribution
-              .updateSettings(AttributionSettings(iconColor: 0x00000000));
-          _annotationManager =
-              await mapboxMap.annotations.createPointAnnotationManager();
-          _mapboxMap = mapboxMap;
-          unawaited(_renderRoute());
+      // PopScope evita el gesto interactivo de iOS (swipe-left).
+      // Mientras el gesto estaba activo, ambas instancias de MapWidget
+      // corrían simultáneamente y el SDK compartido de Mapbox/Metal
+      // provocaba un redraw visible en la preview. Con canPop:false el
+      // swipe dispara onPlatformViewCreated que llamamos manualmente con
+      // Navigator.pop(), que usa la animación estándar (no interactiva).
+      body: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) Navigator.of(context).pop();
         },
+        child: MapWidget(
+          viewport: AppMapDefaults.colombiaViewport,
+          styleUri: MapboxStyles.DARK,
+          onMapCreated: (mapboxMap) async {
+            await mapboxMap.scaleBar
+                .updateSettings(ScaleBarSettings(enabled: false));
+            await mapboxMap.logo.updateSettings(
+                LogoSettings(marginLeft: -200, marginBottom: -200));
+            await mapboxMap.attribution
+                .updateSettings(AttributionSettings(iconColor: 0x00000000));
+            _annotationManager =
+                await mapboxMap.annotations.createPointAnnotationManager();
+            _mapboxMap = mapboxMap;
+            unawaited(_renderRoute());
+          },
+        ),
       ),
     );
   }

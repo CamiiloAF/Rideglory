@@ -17,12 +17,14 @@ class EventDetailMeetingPointSection extends StatelessWidget {
     this.destination,
     this.routePoints = const [],
     this.onViewMap,
+    this.suppressMapPreview = false,
   });
 
   final String meetingPoint;
   final String? destination;
   final List<AddressLocation> routePoints;
   final VoidCallback? onViewMap;
+  final bool suppressMapPreview;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class EventDetailMeetingPointSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          context.l10n.event_meetingPointLabel,
+          context.l10n.event_routeLabel,
           style: const TextStyle(
             color: AppColors.textOnDarkPrimary,
             fontSize: 16,
@@ -54,6 +56,7 @@ class EventDetailMeetingPointSection extends StatelessWidget {
                 RouteMapPreview(
                   waypointCoords: routePoints,
                   inCard: true,
+                  suppressPreview: suppressMapPreview,
                 )
               else
                 Container(

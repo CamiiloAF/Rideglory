@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -104,65 +105,59 @@ class EventDetailParticipantsSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  context.l10n.event_registrationsTab,
+                  '${context.l10n.event_registrationsTab} ($countText)',
                   style: const TextStyle(
                     color: AppColors.textOnDarkPrimary,
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
+                    fontFamily: 'Space Grotesk',
                   ),
                 ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.info.withValues(alpha: 0.19),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        '$countText ${context.l10n.event_participants}',
-                        style: const TextStyle(
-                          color: AppColors.info,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    IconButton(
-                      tooltip: context.l10n.retry,
-                      visualDensity: VisualDensity.compact,
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(
-                        minWidth: 32,
-                        minHeight: 32,
-                      ),
-                      iconSize: 18,
+                state.attendeesResult.maybeWhen(
+                  loading: () => const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
                       color: AppColors.textOnDarkSecondary,
-                      onPressed: state.attendeesResult.maybeWhen(
-                        loading: () => null,
-                        orElse: () =>
-                            () => context
-                                .read<EventDetailCubit>()
-                                .loadAttendees(event.id!),
-                      ),
-                      icon: state.attendeesResult.maybeWhen(
-                        loading: () => const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: AppColors.textOnDarkSecondary,
+                    ),
+                  ),
+                  error: (_) => IconButton(
+                    tooltip: context.l10n.retry,
+                    visualDensity: VisualDensity.compact,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                    iconSize: 18,
+                    color: AppColors.textOnDarkSecondary,
+                    onPressed: () => context
+                        .read<EventDetailCubit>()
+                        .loadAttendees(event.id!),
+                    icon: const Icon(Icons.refresh_rounded),
+                  ),
+                  orElse: () => GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () => _openAttendees(context),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          context.l10n.event_viewAll,
+                          style: const TextStyle(
+                            color: AppColors.primary,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Space Grotesk',
                           ),
                         ),
-                        orElse: () => const Icon(Icons.refresh_rounded),
-                      ),
+                        const SizedBox(width: 4),
+                        const Icon(
+                          LucideIcons.chevronRight,
+                          color: AppColors.primary,
+                          size: 14,
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),

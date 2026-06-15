@@ -71,6 +71,7 @@ class RouteMapPreview extends StatefulWidget {
     this.waypointCoords,
     this.onViewMapTap,
     this.inCard = false,
+    this.suppressPreview = false,
   });
 
   final String? meetingPoint;
@@ -84,6 +85,11 @@ class RouteMapPreview extends StatefulWidget {
 
   final VoidCallback? onViewMapTap;
   final bool inCard;
+
+  /// Cuando true, reemplaza el MapWidget con un contenedor estático del mismo
+  /// tamaño. Evita tener dos instancias de Mapbox/Metal activas al mismo tiempo
+  /// durante transiciones de pantalla.
+  final bool suppressPreview;
 
   @override
   State<RouteMapPreview> createState() => _RouteMapPreviewState();
@@ -104,6 +110,17 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
   static const _routeLayerId = 'rg-route-layer';
   bool _routeLayerAdded = false;
 
+  // Props estables para MapWidget: evitan que Mapbox reaccione a diferencias
+  // de referencia en cada rebuild del padre.
+  // • _stableViewport  → solo se actualiza cuando los waypoints cambian
+  // • _mapKey          → GlobalKey garantiza que Flutter no recree el widget
+  // • _onMapCreated    → tear-off almacenado una vez en initState
+  // • _onMapLoadError  → idem
+  final _mapKey = GlobalKey();
+  late CameraViewportState _stableViewport;
+  late void Function(MapboxMap) _onMapCreated;
+  late void Function(MapLoadingErrorEventData) _onMapLoadError;
+
   AddressLocation? get _origin => _originResult.whenOrNull(data: (d) => d);
   AddressLocation? get _dest => _destResult.whenOrNull(data: (d) => d);
 
@@ -112,7 +129,34 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
   @override
   void initState() {
     super.initState();
+    _stableViewport = _computeInitialViewport();
+    _onMapCreated = _handleMapCreated;
+    _onMapLoadError = _handleMapLoadError;
     _initCoords();
+  }
+
+  CameraViewportState _computeInitialViewport() {
+    if (_isWaypointMode) {
+      final first = widget.waypointCoords?.firstOrNull;
+      if (first != null) {
+        return CameraViewportState(
+          center: Point(coordinates: Position(first.longitude, first.latitude)),
+          zoom: 12,
+        );
+      }
+    }
+    final point = widget.meetingPointCoords ?? widget.destinationCoords;
+    if (point != null) {
+      return CameraViewportState(
+        center: Point(coordinates: Position(point.longitude, point.latitude)),
+        zoom: 12,
+      );
+    }
+    // Colombia como fallback inicial (la cámara se mueve luego vía flyTo)
+    return CameraViewportState(
+      center: Point(coordinates: Position(-74.0721, 4.7110)),
+      zoom: 5,
+    );
   }
 
   void _initCoords() {
@@ -131,6 +175,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
 
     if (_isWaypointMode) {
       if (old.waypointCoords != widget.waypointCoords) {
+        _stableViewport = _computeInitialViewport();
         unawaited(_renderWaypointMode());
       }
       return;
@@ -397,6 +442,27 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
   }
 
 
+  Future<void> _handleMapCreated(MapboxMap mapboxMap) async {
+    _mapboxMap = mapboxMap;
+    await mapboxMap.scaleBar.updateSettings(ScaleBarSettings(enabled: false));
+    await mapboxMap.logo
+        .updateSettings(LogoSettings(marginLeft: -200, marginBottom: -200));
+    await mapboxMap.attribution
+        .updateSettings(AttributionSettings(iconColor: 0x00000000));
+    _annotationManager =
+        await mapboxMap.annotations.createPointAnnotationManager();
+    if (_isWaypointMode) {
+      await _renderWaypointMode();
+    } else {
+      await _fitMapBounds();
+    }
+  }
+
+  void _handleMapLoadError(MapLoadingErrorEventData data) {
+    if (!mounted) return;
+    setState(() => _mapLoadError = true);
+  }
+
   @override
   void dispose() {
     _debounceOrigin?.cancel();
@@ -439,47 +505,16 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
       clipBehavior: Clip.antiAlias,
       child: Stack(
             children: [
-              if (_hasCoordsToShow && !_mapLoadError)
+              if (_hasCoordsToShow && !_mapLoadError && !widget.suppressPreview)
                 MapWidget(
-                  viewport: CameraViewportState(
-                    center: Point(
-                      coordinates: _isWaypointMode
-                          ? Position(
-                              widget.waypointCoords!.first.longitude,
-                              widget.waypointCoords!.first.latitude,
-                            )
-                          : Position(
-                              (_origin ?? _dest!).longitude,
-                              (_origin ?? _dest!).latitude,
-                            ),
-                    ),
-                    zoom: 12,
-                  ),
+                  key: _mapKey,
+                  viewport: _stableViewport,
                   styleUri: MapboxStyles.DARK,
-                  onMapCreated: (mapboxMap) async {
-                    _mapboxMap = mapboxMap;
-                    await mapboxMap.scaleBar.updateSettings(
-                      ScaleBarSettings(enabled: false),
-                    );
-                    await mapboxMap.logo.updateSettings(
-                      LogoSettings(marginLeft: -200, marginBottom: -200),
-                    );
-                    await mapboxMap.attribution.updateSettings(
-                      AttributionSettings(iconColor: 0x00000000),
-                    );
-                    _annotationManager = await mapboxMap.annotations
-                        .createPointAnnotationManager();
-                    if (_isWaypointMode) {
-                      await _renderWaypointMode();
-                    } else {
-                      await _fitMapBounds();
-                    }
-                  },
-                  onMapLoadErrorListener: (MapLoadingErrorEventData data) {
-                    if (!mounted) return;
-                    setState(() => _mapLoadError = true);
-                  },
+                  onMapCreated: _onMapCreated,
+                  onMapLoadErrorListener: _onMapLoadError,
                 )
+              else if (widget.suppressPreview && _hasCoordsToShow)
+                const ColoredBox(color: AppColors.darkBgPrimary)
               else
                 Center(
                   child: Column(

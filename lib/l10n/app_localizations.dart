@@ -382,23 +382,11 @@ abstract class AppLocalizations {
   /// **'Acepto los '**
   String get auth_termsPrefix;
 
-  /// No description provided for @auth_termsOf.
+  /// No description provided for @auth_termsAndConditions.
   ///
   /// In es, this message translates to:
-  /// **'Términos'**
-  String get auth_termsOf;
-
-  /// No description provided for @auth_termsAnd.
-  ///
-  /// In es, this message translates to:
-  /// **' y '**
-  String get auth_termsAnd;
-
-  /// No description provided for @auth_termsConditions.
-  ///
-  /// In es, this message translates to:
-  /// **'Condiciones'**
-  String get auth_termsConditions;
+  /// **'Términos y condiciones'**
+  String get auth_termsAndConditions;
 
   /// No description provided for @auth_termsAnd2.
   ///
@@ -904,6 +892,12 @@ abstract class AppLocalizations {
   /// **'Debes agregar al menos un punto de ruta para continuar.'**
   String get event_route_required_error;
 
+  /// No description provided for @event_image_required_error.
+  ///
+  /// In es, this message translates to:
+  /// **'La imagen de portada es obligatoria para publicar el evento.'**
+  String get event_image_required_error;
+
   /// No description provided for @event_multiBrandLabel.
   ///
   /// In es, this message translates to:
@@ -1048,6 +1042,18 @@ abstract class AppLocalizations {
   /// **'Sobre la rodada'**
   String get event_aboutTheRide;
 
+  /// No description provided for @event_showMore.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver más'**
+  String get event_showMore;
+
+  /// No description provided for @event_showLess.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver menos'**
+  String get event_showLess;
+
   /// No description provided for @event_organizedBy.
   ///
   /// In es, this message translates to:
@@ -1120,11 +1126,29 @@ abstract class AppLocalizations {
   /// **'Ver inscritos'**
   String get event_viewAttendees;
 
+  /// No description provided for @event_viewAll.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver todos'**
+  String get event_viewAll;
+
   /// No description provided for @event_meetingPointLabel.
   ///
   /// In es, this message translates to:
   /// **'Punto de encuentro'**
   String get event_meetingPointLabel;
+
+  /// No description provided for @event_routeLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Ruta'**
+  String get event_routeLabel;
+
+  /// No description provided for @event_aboutEvent.
+  ///
+  /// In es, this message translates to:
+  /// **'Sobre el evento'**
+  String get event_aboutEvent;
 
   /// No description provided for @event_comingSoon.
   ///
@@ -1221,6 +1245,18 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'personas inscritas'**
   String get event_attendeesCount;
+
+  /// No description provided for @event_participantsSummary.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} personas inscritas · {slots} cupos disponibles'**
+  String event_participantsSummary(int count, int slots);
+
+  /// No description provided for @event_participantsSummaryNoSlots.
+  ///
+  /// In es, this message translates to:
+  /// **'{count} personas inscritas'**
+  String event_participantsSummaryNoSlots(int count);
 
   /// No description provided for @event_approveRegistration.
   ///
@@ -2671,7 +2707,7 @@ abstract class AppLocalizations {
   /// No description provided for @registration_vehicleBrandRequired.
   ///
   /// In es, this message translates to:
-  /// **'La marca del vehículo es requerida'**
+  /// **'El vehículo es requerido'**
   String get registration_vehicleBrandRequired;
 
   /// No description provided for @registration_minCharacters.

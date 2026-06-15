@@ -161,13 +161,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get auth_termsPrefix => 'Acepto los ';
 
   @override
-  String get auth_termsOf => 'Términos';
-
-  @override
-  String get auth_termsAnd => ' y ';
-
-  @override
-  String get auth_termsConditions => 'Condiciones';
+  String get auth_termsAndConditions => 'Términos y condiciones';
 
   @override
   String get auth_termsAnd2 => ' y la ';
@@ -437,6 +431,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Debes agregar al menos un punto de ruta para continuar.';
 
   @override
+  String get event_image_required_error =>
+      'La imagen de portada es obligatoria para publicar el evento.';
+
+  @override
   String get event_multiBrandLabel => 'Marcas permitidas';
 
   @override
@@ -514,6 +512,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_aboutTheRide => 'Sobre la rodada';
 
   @override
+  String get event_showMore => 'Ver más';
+
+  @override
+  String get event_showLess => 'Ver menos';
+
+  @override
   String get event_organizedBy => 'Organizado por';
 
   @override
@@ -550,7 +554,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_viewAttendees => 'Ver inscritos';
 
   @override
+  String get event_viewAll => 'Ver todos';
+
+  @override
   String get event_meetingPointLabel => 'Punto de encuentro';
+
+  @override
+  String get event_routeLabel => 'Ruta';
+
+  @override
+  String get event_aboutEvent => 'Sobre el evento';
 
   @override
   String get event_comingSoon => 'Próximamente';
@@ -600,6 +613,16 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_attendeesCount => 'personas inscritas';
+
+  @override
+  String event_participantsSummary(int count, int slots) {
+    return '$count personas inscritas · $slots cupos disponibles';
+  }
+
+  @override
+  String event_participantsSummaryNoSlots(int count) {
+    return '$count personas inscritas';
+  }
 
   @override
   String get event_approveRegistration => 'Aprobar';
@@ -1372,8 +1395,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'El celular del contacto debe tener 10 dígitos (estándar Colombia)';
 
   @override
-  String get registration_vehicleBrandRequired =>
-      'La marca del vehículo es requerida';
+  String get registration_vehicleBrandRequired => 'El vehículo es requerido';
 
   @override
   String get registration_minCharacters => 'Mínimo 2 caracteres';
