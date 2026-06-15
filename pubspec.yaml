@@ -159,6 +159,11 @@ flutter_launcher_icons:
   ios: true
   remove_alpha_ios: true
 
+# path_provider_foundation 2.6.0 introduced objective_c 9.x which has native build hooks
+# that break dart compile on Linux (CI). Pin to last version without that dependency.
+dependency_overrides:
+  path_provider_foundation: 2.4.2
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
