@@ -82,9 +82,20 @@ class NavigationRow extends StatelessWidget {
                   onPressed: isSaving
                       ? null
                       : () {
-                          if (cubit.validateStep(currentStep)) {
-                            cubit.nextStep();
+                          bool imageValid = true;
+                          if (currentStep == 0) {
+                            final imageData = context
+                                .read<FormImageCubit>()
+                                .state
+                                .whenOrNull(data: (d) => d);
+                            final hasImage =
+                                imageData?.hasLocalImage == true ||
+                                imageData?.remoteImageUrl?.isNotEmpty == true;
+                            imageValid =
+                                cubit.validateImageRequired(hasImage);
                           }
+                          final stepValid = cubit.validateStep(currentStep);
+                          if (imageValid && stepValid) cubit.nextStep();
                         },
                   shape: AppButtonShape.pill,
                 ),

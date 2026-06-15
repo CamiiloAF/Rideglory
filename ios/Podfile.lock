@@ -1252,9 +1252,6 @@ PODS:
     - FirebaseAuth (~> 12.12.0)
   - Firebase/CoreOnly (12.12.0):
     - FirebaseCore (~> 12.12.0)
-  - Firebase/Crashlytics (12.12.0):
-    - Firebase/CoreOnly
-    - FirebaseCrashlytics (~> 12.12.0)
   - Firebase/Firestore (12.12.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 12.12.0)
@@ -1277,10 +1274,6 @@ PODS:
     - Flutter
   - firebase_core (4.7.0):
     - Firebase/CoreOnly (= 12.12.0)
-    - Flutter
-  - firebase_crashlytics (5.2.0):
-    - Firebase/Crashlytics (= 12.12.0)
-    - firebase_core
     - Flutter
   - firebase_messaging (16.2.0):
     - Firebase/Messaging (= 12.12.0)
@@ -1333,15 +1326,6 @@ PODS:
     - FirebaseCore (~> 12.12.0)
   - FirebaseCoreInternal (12.12.0):
     - "GoogleUtilities/NSData+zlib (~> 8.1)"
-  - FirebaseCrashlytics (12.12.1):
-    - FirebaseCore (~> 12.12.0)
-    - FirebaseInstallations (~> 12.12.0)
-    - FirebaseRemoteConfigInterop (~> 12.12.0)
-    - FirebaseSessions (~> 12.12.0)
-    - GoogleDataTransport (~> 10.1)
-    - GoogleUtilities/Environment (~> 8.1)
-    - nanopb (~> 3.30910.0)
-    - PromisesObjC (~> 2.4)
   - FirebaseFirestore (12.12.0):
     - FirebaseCore (~> 12.12.0)
     - FirebaseCoreExtension (~> 12.12.0)
@@ -1385,15 +1369,6 @@ PODS:
     - GoogleUtilities/Environment (~> 8.1)
     - "GoogleUtilities/NSData+zlib (~> 8.1)"
   - FirebaseRemoteConfigInterop (12.12.0)
-  - FirebaseSessions (12.12.0):
-    - FirebaseCore (~> 12.12.0)
-    - FirebaseCoreExtension (~> 12.12.0)
-    - FirebaseInstallations (~> 12.12.0)
-    - GoogleDataTransport (~> 10.1)
-    - GoogleUtilities/Environment (~> 8.1)
-    - GoogleUtilities/UserDefaults (~> 8.1)
-    - nanopb (~> 3.30910.0)
-    - PromisesSwift (~> 2.1)
   - FirebaseSharedSwift (12.12.0)
   - FirebaseStorage (12.12.1):
     - FirebaseAppCheckInterop (~> 12.12.0)
@@ -1656,8 +1631,6 @@ PODS:
   - permission_handler_apple (9.3.0):
     - Flutter
   - PromisesObjC (2.4.0)
-  - PromisesSwift (2.4.0):
-    - PromisesObjC (= 2.4.0)
   - quill_native_bridge_ios (0.0.1):
     - Flutter
   - RecaptchaInterop (101.0.0)
@@ -1690,7 +1663,6 @@ DEPENDENCIES:
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
-  - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - firebase_remote_config (from `.symlinks/plugins/firebase_remote_config/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
@@ -1736,14 +1708,12 @@ SPEC REPOS:
     - FirebaseCore
     - FirebaseCoreExtension
     - FirebaseCoreInternal
-    - FirebaseCrashlytics
     - FirebaseFirestore
     - FirebaseFirestoreInternal
     - FirebaseInstallations
     - FirebaseMessaging
     - FirebaseRemoteConfig
     - FirebaseRemoteConfigInterop
-    - FirebaseSessions
     - FirebaseSharedSwift
     - FirebaseStorage
     - GoogleAdsOnDeviceConversion
@@ -1768,7 +1738,6 @@ SPEC REPOS:
     - MLKitVision
     - nanopb
     - PromisesObjC
-    - PromisesSwift
     - RecaptchaInterop
     - SDWebImage
     - Sentry
@@ -1790,8 +1759,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
-  firebase_crashlytics:
-    :path: ".symlinks/plugins/firebase_crashlytics/ios"
   firebase_messaging:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   firebase_remote_config:
@@ -1861,7 +1828,6 @@ SPEC CHECKSUMS:
   firebase_analytics: e5f4faccf1f7040d3788e835b7eb7b57dc84a911
   firebase_auth: a69c9b71f8a2081ebf478b12a8f6508c92bcbdf8
   firebase_core: 9156a152117c843440b0b990c785aa0259bc5447
-  firebase_crashlytics: e24acd48861c5edf6e0f6c134d6a0b28593c76d7
   firebase_messaging: 0d962ab44ff24ed36deb8fa2ee043c4671858269
   firebase_remote_config: 924bae350163e03e7e5a3a40733addb9a8e1e42b
   firebase_storage: 56cf10f4b6937ebec34721f89673ad4b69831c87
@@ -1873,14 +1839,12 @@ SPEC CHECKSUMS:
   FirebaseCore: 86241206e656f5c80c995e370e6c975913b9b284
   FirebaseCoreExtension: ff6fd42eb5287e71d3e160450de6509733d9ead7
   FirebaseCoreInternal: 7c12fc3011d889085e765e317d7b9fd1cef97af9
-  FirebaseCrashlytics: 03f4e20d0c9b7fd6338cb9066f4bfb69d3f42fd0
   FirebaseFirestore: 01e964d312cf17e56925c955b19798848775a7fd
   FirebaseFirestoreInternal: 9d9fd7eadbe0f19310fd7df06470a04baeaf3f36
   FirebaseInstallations: 4e6e162aa4abaaeeeb01dd00179dfc5ad9c2194e
   FirebaseMessaging: 341004946fa7ffc741344b20f1b667514fc93e31
   FirebaseRemoteConfig: 6ab95b4ee5fd4a94d09a704d88f5341db5713250
   FirebaseRemoteConfigInterop: 23996ab7397494722df4fdd1fd398024389d5da8
-  FirebaseSessions: 804bd321f2d2f2ddafe74ef7856062aa19f179c2
   FirebaseSharedSwift: bccaff90721d14bafc14be34f28b77fdd7c91dc9
   FirebaseStorage: b3682c96ae7016420c1f6eb43d45057a0e909c9f
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
@@ -1922,7 +1886,6 @@ SPEC CHECKSUMS:
   pdfx: 77f4dddc48361fbb01486fa2bdee4532cbb97ef3
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
   quill_native_bridge_ios: f47af4b14e7757968486641656c5d23250cee521
   RecaptchaInterop: 11e0b637842dfb48308d242afc3f448062325aba
   SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf

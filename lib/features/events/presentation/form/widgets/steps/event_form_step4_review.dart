@@ -13,6 +13,9 @@ import 'package:rideglory/features/events/presentation/form/widgets/steps/review
 import 'package:rideglory/features/events/presentation/form/widgets/steps/step_title.dart';
 import 'package:rideglory/shared/cubits/form_image_cubit.dart';
 
+bool _isSameCalendarDay(DateTime a, DateTime b) =>
+    a.year == b.year && a.month == b.month && a.day == b.day;
+
 /// Step 4: Resumen de revisión antes de publicar.
 ///
 /// 3 cards alineadas con los 3 steps de entrada:
@@ -72,7 +75,7 @@ class EventFormStep4Review extends StatelessWidget {
         final dateRange = formData[EventFormFields.dateRange] as DateTimeRange?;
         final meetingTime = formData[EventFormFields.meetingTime] as DateTime?;
         final isMultiDay = dateRange != null &&
-            dateRange.end.isAfter(dateRange.start);
+            !_isSameCalendarDay(dateRange.start, dateRange.end);
         final difficulty =
             formData[EventFormFields.difficulty] as EventDifficulty? ??
             EventDifficulty.one;

@@ -6,7 +6,6 @@ import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_fo
 import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_docs_section.dart';
 import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_id_section.dart';
 import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_specs_section.dart';
-import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_scan_banner.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
 class VehicleFormBody extends StatelessWidget {
@@ -35,8 +34,8 @@ class VehicleFormBody extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const VehicleFormCoverSection(),
-            const SizedBox(height: 16),
-            const VehicleScanBanner(),
+            // const SizedBox(height: 16),
+            // const VehicleScanBanner(),
             const SizedBox(height: 24),
             const VehicleFormBasicSection(),
             const SizedBox(height: 24),

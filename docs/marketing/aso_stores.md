@@ -131,7 +131,7 @@ La app está en fase beta cerrada dirigida a la comunidad motociclista en Colomb
 
 Cuenta de prueba
 - Email: reviewer@rideglory.com
-- Contraseña: Review2025!
+- Contraseña: Review2026!
 
 Flujos principales a revisar
 

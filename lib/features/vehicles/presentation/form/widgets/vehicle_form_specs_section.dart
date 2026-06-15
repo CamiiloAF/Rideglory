@@ -29,34 +29,6 @@ class VehicleFormSpecsSection extends StatelessWidget {
               ),
             ),
           ),
-          trailing: GestureDetector(
-            onTap: () {
-              // TODO: implement AI search for specs
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppColors.primarySubtle,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppColors.primary, width: 1),
-              ),
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.auto_awesome, size: 14, color: AppColors.primary),
-                  SizedBox(width: 6),
-                  Text(
-                    'Buscar',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
         ),
         const SizedBox(height: 12),
         Container(

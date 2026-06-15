@@ -96,6 +96,7 @@ void _stubEventFormCubit(
 }) {
   when(() => cubit.state).thenReturn(const EventFormState(currentStep: 0));
   when(() => cubit.validateStep(any())).thenReturn(validateResult);
+  when(() => cubit.validateImageRequired(any())).thenReturn(validateResult);
   when(() => cubit.isEditing).thenReturn(false);
   when(() => cubit.editingEvent).thenReturn(null);
   when(() => cubit.formKey).thenReturn(GlobalKey());

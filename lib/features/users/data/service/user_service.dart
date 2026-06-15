@@ -20,4 +20,10 @@ abstract class UserService {
 
   @GET('/users/{id}')
   Future<UserDto> getUserById(@Path('id') String id);
+
+  @PATCH('/users/{id}')
+  Future<UserDto> updateUser(
+    @Path('id') String id,
+    @Body() Map<String, dynamic> body,
+  );
 }

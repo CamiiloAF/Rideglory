@@ -29,6 +29,7 @@ abstract class EventFormState with _$EventFormState {
     @Default(<String>[]) List<String> waypoints,
     @Default(<AddressLocation?>[]) List<AddressLocation?> waypointLocations,
     @Default(false) bool showRouteError,
+    @Default(false) bool showImageError,
   }) = _EventFormState;
 }
 
@@ -274,7 +275,9 @@ class EventFormCubit extends Cubit<EventFormState> {
       description:
           (formData[EventFormFields.description] as String?)?.trim() ?? '',
       startDate: dateRange?.start ?? DateTime.now(),
-      endDate: dateRange?.end != dateRange?.start ? dateRange?.end : null,
+      endDate: _isDifferentCalendarDay(dateRange?.start, dateRange?.end)
+              ? dateRange?.end
+              : null,
       difficulty: formData[EventFormFields.difficulty] as EventDifficulty,
       meetingTime: formData[EventFormFields.meetingTime] as DateTime,
       eventType: formData[EventFormFields.eventType] as EventType,
@@ -333,7 +336,9 @@ class EventFormCubit extends Cubit<EventFormState> {
       description:
           (formData[EventFormFields.description] as String?)?.trim() ?? '',
       startDate: dateRange?.start ?? now,
-      endDate: dateRange?.end != dateRange?.start ? dateRange?.end : null,
+      endDate: _isDifferentCalendarDay(dateRange?.start, dateRange?.end)
+              ? dateRange?.end
+              : null,
       difficulty:
           formData[EventFormFields.difficulty] as EventDifficulty? ??
           EventDifficulty.one,
@@ -487,6 +492,17 @@ class EventFormCubit extends Cubit<EventFormState> {
 
   bool isCurrentStepValid() => validateStep(state.currentStep);
 
+  bool validateImageRequired(bool hasImage) {
+    if (!hasImage) {
+      emit(state.copyWith(showImageError: true));
+      return false;
+    }
+    if (state.showImageError) {
+      emit(state.copyWith(showImageError: false));
+    }
+    return true;
+  }
+
   // ---------------------------------------------------------------------------
   // Private helpers
   // ---------------------------------------------------------------------------
@@ -508,4 +524,9 @@ class EventFormCubit extends Cubit<EventFormState> {
     }
     return AnalyticsParams.failureCategoryUnknown;
   }
+}
+
+bool _isDifferentCalendarDay(DateTime? a, DateTime? b) {
+  if (a == null || b == null) return false;
+  return a.year != b.year || a.month != b.month || a.day != b.day;
 }

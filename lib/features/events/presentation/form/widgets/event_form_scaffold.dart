@@ -72,20 +72,12 @@ class EventFormScaffold extends StatelessWidget {
         EventFormFields.maxParticipants: event.maxParticipants,
       };
     }
+    final now = DateTime.now();
     return {
       EventFormFields.difficulty: EventDifficulty.one,
       EventFormFields.eventType: EventType.onRoad,
-      EventFormFields.dateRange: DateTimeRange(
-        start: DateTime.now(),
-        end: DateTime.now(),
-      ),
-      EventFormFields.meetingTime: DateTime(
-        DateTime.now().year,
-        DateTime.now().month,
-        DateTime.now().day,
-        7,
-        0,
-      ),
+      EventFormFields.dateRange: DateTimeRange(start: now, end: now),
+      EventFormFields.meetingTime: DateTime(now.year, now.month, now.day, 7, 0),
       EventFormFields.allowedBrands: <String>[],
       EventFormFields.maxParticipants: null,
     };

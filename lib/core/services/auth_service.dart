@@ -139,15 +139,15 @@ class AuthService {
         }
 
         final isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
+        final email = firebaseUser.email;
+        if (email == null || email.isEmpty) {
+          throw const DomainException(
+            message: 'No pudimos obtener el correo de tu cuenta.',
+          );
+        }
+
         UserModel? user;
         if (isNewUser) {
-          final email = firebaseUser.email;
-          if (email == null || email.isEmpty) {
-            throw const DomainException(
-              message: 'No pudimos obtener el correo de tu cuenta.',
-            );
-          }
-
           user = await _registerApiUser(
             fullName: _resolveFullName(firebaseUser),
             email: email,
@@ -155,6 +155,15 @@ class AuthService {
           await _cacheUser(firebaseUser.uid, user);
         } else {
           user = await _loadStoredUser(firebaseUser.uid);
+          // Firebase conoce al usuario pero el backend no lo tiene (registro
+          // previo que falló a mitad). Reconciliamos creando el usuario ahora.
+          if (user == null) {
+            user = await _registerApiUser(
+              fullName: _resolveFullName(firebaseUser),
+              email: email,
+            );
+            await _cacheUser(firebaseUser.uid, user);
+          }
         }
 
         return AuthenticatedUser(
@@ -227,6 +236,22 @@ class AuthService {
           await _cacheUser(firebaseUser.uid, user);
         } else {
           user = await _loadStoredUser(firebaseUser.uid);
+          // Firebase conoce al usuario pero el backend no lo tiene (registro
+          // previo que falló a mitad). Reconciliamos usando los datos que
+          // Firebase conserva del primer inicio de sesión con Apple.
+          if (user == null) {
+            final email = firebaseUser.email ?? '';
+            if (email.isEmpty) {
+              throw const DomainException(
+                message: 'No pudimos obtener el correo de tu cuenta de Apple.',
+              );
+            }
+            user = await _registerApiUser(
+              fullName: _resolveFullName(firebaseUser),
+              email: email,
+            );
+            await _cacheUser(firebaseUser.uid, user);
+          }
         }
 
         return AuthenticatedUser(

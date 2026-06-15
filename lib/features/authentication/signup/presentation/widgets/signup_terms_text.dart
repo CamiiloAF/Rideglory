@@ -21,9 +21,10 @@ class SignupTermsText extends StatelessWidget {
         text: context.l10n.auth_termsPrefix,
         style: baseStyle,
         children: [
-          TextSpan(text: context.l10n.auth_termsOf, style: accentStyle),
-          TextSpan(text: context.l10n.auth_termsAnd, style: baseStyle),
-          TextSpan(text: context.l10n.auth_termsConditions, style: accentStyle),
+          TextSpan(
+            text: context.l10n.auth_termsAndConditions,
+            style: accentStyle,
+          ),
           TextSpan(text: context.l10n.auth_termsAnd2, style: baseStyle),
           TextSpan(text: context.l10n.auth_termsPrivacy, style: accentStyle),
           TextSpan(text: context.l10n.auth_termsSuffix, style: baseStyle),

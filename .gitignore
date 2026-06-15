@@ -75,3 +75,5 @@ pubspec.lock
 /coverage/
 /android/build/
 .git_tag_*
+
+/appstore_shots/

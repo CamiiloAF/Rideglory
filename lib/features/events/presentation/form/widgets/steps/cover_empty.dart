@@ -4,9 +4,10 @@ import 'package:rideglory/design_system/design_system.dart';
 
 /// Empty cover placeholder — tapping opens the cover picker.
 class CoverEmpty extends StatelessWidget {
-  const CoverEmpty({super.key, required this.onTap});
+  const CoverEmpty({super.key, required this.onTap, this.showError = false});
 
   final VoidCallback onTap;
+  final bool showError;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class CoverEmpty extends StatelessWidget {
           color: const Color(0xFF1E1E24),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: AppColors.darkBorderPrimary,
+            color: showError ? AppColors.error : AppColors.darkBorderPrimary,
             style: BorderStyle.solid,
           ),
         ),

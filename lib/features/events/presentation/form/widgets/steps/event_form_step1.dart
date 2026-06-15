@@ -13,6 +13,7 @@ import 'package:rideglory/features/events/presentation/form/widgets/steps/cover_
 import 'package:rideglory/features/events/presentation/form/widgets/steps/cover_preview_wrapper.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/steps/event_step_nav_bar.dart';
 import 'package:rideglory/features/events/presentation/form/widgets/steps/step_title.dart';
+import 'package:rideglory/features/events/presentation/form/cubit/event_form_cubit.dart';
 import 'package:rideglory/shared/cubits/form_image_cubit.dart';
 
 /// Step 1: Portada + nombre del evento + fecha y hora.
@@ -58,24 +59,57 @@ class EventFormStep1 extends StatelessWidget {
                       data: (data) => data,
                     );
                     final hasLocalImage = imageData?.hasLocalImage == true;
-                    if (hasLocalImage ||
-                        imageData?.displayImageUrl?.isNotEmpty == true) {
-                      return CoverPreviewWrapper(
-                        imageUrl: hasLocalImage
-                            ? null
-                            : imageData?.displayImageUrl,
-                        localImagePath: hasLocalImage
-                            ? imageData?.displayImageUrl
-                            : null,
-                        onChangeTap: () => _openCoverPicker(context),
-                        onRemoveTap: hasLocalImage
-                            ? () => context
-                                  .read<FormImageCubit>()
-                                  .clearLocalImage()
-                            : null,
-                      );
-                    }
-                    return CoverEmpty(onTap: () => _openCoverPicker(context));
+                    final hasImage = hasLocalImage ||
+                        imageData?.displayImageUrl?.isNotEmpty == true;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (hasImage)
+                          CoverPreviewWrapper(
+                            imageUrl: hasLocalImage
+                                ? null
+                                : imageData?.displayImageUrl,
+                            localImagePath: hasLocalImage
+                                ? imageData?.displayImageUrl
+                                : null,
+                            onChangeTap: () => _openCoverPicker(context),
+                            onRemoveTap: hasLocalImage
+                                ? () => context
+                                      .read<FormImageCubit>()
+                                      .clearLocalImage()
+                                : null,
+                          )
+                        else
+                          BlocBuilder<EventFormCubit, EventFormState>(
+                            buildWhen: (prev, curr) =>
+                                prev.showImageError != curr.showImageError,
+                            builder: (context, formState) => CoverEmpty(
+                              onTap: () => _openCoverPicker(context),
+                              showError: formState.showImageError,
+                            ),
+                          ),
+                        BlocBuilder<EventFormCubit, EventFormState>(
+                          buildWhen: (prev, curr) =>
+                              prev.showImageError != curr.showImageError,
+                          builder: (context, formState) {
+                            if (!formState.showImageError || hasImage) {
+                              return const SizedBox.shrink();
+                            }
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Text(
+                                context.l10n.event_image_required_error,
+                                style: const TextStyle(
+                                  fontFamily: 'Space Grotesk',
+                                  fontSize: 12,
+                                  color: AppColors.error,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    );
                   },
                 ),
                 AppSpacing.gapXxl,
