@@ -22,6 +22,7 @@ El usuario puede mover un vehículo al archivo desde el garaje y restaurarlo des
 - Widget nuevo `GarageArchivedSection` (sección colapsable "Archivados (N)") en archivo propio.
 - Widget nuevo `GarageArchivedHeader` (header colapsable con contador) en archivo propio.
 - Bifurcación de `GarageOptionsBottomSheet` por `vehicle.isArchived`: activos muestran "Archivar"; archivados muestran "Restaurar". El `ListTile` de "Eliminar" actual (líneas 162-189) se elimina del `build()` de la rama de vehículo activo y queda reemplazado por "Archivar".
+- **Navegación en card archivada (bifurcada):** tap en la card → abre el detalle del vehículo en modo read-only; tap en ⋮ → abre `GarageArchivedOptionsBottomSheet`. Ver sección "Detalle de vehículo archivado" más abajo.
 - Diálogo de confirmación de archivado (tono informativo, CTA en primario con texto oscuro).
 - Actualizar `vehicle_unarchiveVehicle` en `app_es.arb` de "Desarchivar" a "Restaurar".
 - Añadir 8 claves l10n faltantes (listadas abajo).
@@ -32,9 +33,33 @@ El usuario puede mover un vehículo al archivo desde el garaje y restaurarlo des
 - Eliminación permanente (Fase 4).
 - Nuevo endpoint HTTP (usa `PATCH /api/vehicles/:id` existente vía `ArchiveVehicleUseCase`/`UnarchiveVehicleUseCase`).
 - Cambios en el backend (ninguno en esta fase).
-- Diseño Pencil (Fase 2, prerequisito bloqueante).
+- Diseño Pencil (Fase 2, prerequisito bloqueante — ya completada y aprobada).
 - Fix de `HomeLoaded.mainVehicle` stale (Fase 5, independiente).
 - Renombrado de `VehicleRepository.deleteVehicle` → `permanentlyDeleteVehicle` (Fase 4).
+
+---
+
+## Detalle de vehículo archivado — reglas de read-only
+
+> **Aprobado por PO junto con el diseño (Fase 2).** Estas reglas son no negociables para esta fase.
+
+### Navegación
+- **Tap en card archivada** → navega a la página de detalle del vehículo existente (`VehicleDetailPage` o equivalente).
+- **Tap en ⋮** → abre `GarageArchivedOptionsBottomSheet` (Restaurar / Eliminar permanentemente).
+
+### Modo read-only en el detalle
+El detalle de un vehículo archivado es **idéntico visualmente** al de uno activo, con estas diferencias:
+- Badge "Archivado" visible en el header.
+- **Botón "Editar" oculto** — sin acceso a formulario de edición.
+- **Sin botón "Agregar mantenimiento"** — el FAB o botón de acción no se muestra.
+- **Sin acciones en registros existentes** — los items de mantenimiento no tienen swipe-to-delete ni menú de edición.
+- El tab/sección de mantenimiento muestra el historial completo tal como estaba al archivar.
+
+### SOAT y RTM (Tecnomecánica) en vehículo archivado
+- Se muestran los datos guardados (número de póliza, empresa, fechas) **sin ningún indicador de estado** (sin "Vigente", "Vencido", "Por vencer", sin color de alerta, sin badge).
+- No se muestra el días-restantes ni el porcentaje de vigencia.
+- No se calcula ni se consulta la fecha de hoy para determinar estado — el widget simplemente renderiza los campos almacenados en modo estático.
+- **Implementación sugerida:** pasar `isArchived: true` al widget de SOAT/RTM y condicionalmente omitir el cálculo de estado y los elementos visuales de alerta.
 
 ---
 
