@@ -1239,6 +1239,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_birthDateHint => 'mm/dd/yyyy';
 
   @override
+  String get registration_birthDateRequired =>
+      'La fecha de nacimiento es requerida';
+
+  @override
+  String get registration_residenceCitySelectFromList =>
+      'Selecciona una opción válida de la lista';
+
+  @override
   String get registration_phoneHint => '300 000 0000';
 
   @override
@@ -1371,6 +1379,21 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get registration_emailInvalid => 'Correo electrónico inválido';
+
+  @override
+  String get form_phoneRequired => 'El celular es requerido';
+
+  @override
+  String get form_phoneOnlyDigits => 'Solo se permiten dígitos';
+
+  @override
+  String get form_phoneInvalidLength => 'El celular debe tener 10 dígitos';
+
+  @override
+  String get form_emailRequired => 'El correo electrónico es requerido';
+
+  @override
+  String get form_emailInvalid => 'Correo electrónico inválido';
 
   @override
   String get registration_residenceCityRequired =>

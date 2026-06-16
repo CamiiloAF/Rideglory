@@ -27,6 +27,7 @@ class SoatCubit extends VehicleDocumentCubit<SoatModel> {
   Future<void> load(String vehicleId) async {
     emit(const ResultState.loading());
     final result = await _getSoatUseCase(vehicleId);
+    if (isClosed) return;
     result.fold((error) => emit(ResultState.error(error: error)), (soat) {
       if (soat == null) {
         emit(const ResultState.empty());

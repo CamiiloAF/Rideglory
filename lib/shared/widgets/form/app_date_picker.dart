@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:rideglory/shared/widgets/form/text_field_label.dart';
 
 class AppDatePicker extends StatefulWidget {
@@ -11,6 +12,7 @@ class AppDatePicker extends StatefulWidget {
     this.firstDate,
     this.lastDate,
     this.isRequired = false,
+    this.requiredErrorText,
     this.hintText,
     this.prefixIcon,
     this.inputType,
@@ -28,6 +30,7 @@ class AppDatePicker extends StatefulWidget {
   final DateTime? firstDate;
   final DateTime? lastDate;
   final bool isRequired;
+  final String? requiredErrorText;
   final Widget? prefixIcon;
   final InputType? inputType;
   final bool enabled;
@@ -64,6 +67,11 @@ class _AppDatePickerState extends State<AppDatePicker> {
             FocusScope.of(context).unfocus();
             widget.onChanged?.call(value);
           },
+          validator: widget.isRequired
+              ? FormBuilderValidators.required(
+                  errorText: widget.requiredErrorText,
+                )
+              : null,
           decoration: InputDecoration(
             hintText: widget.hintText,
             prefixIcon: widget.prefixIcon,

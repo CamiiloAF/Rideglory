@@ -178,6 +178,7 @@ class EventDetailCubit extends Cubit<EventDetailState> {
     emit(state.copyWith(registrationResult: const ResultState.loading()));
 
     final result = await _cancelRegistrationUseCase(registrationId);
+    if (isClosed) return false;
     return result.fold(
       (error) {
         emit(
@@ -197,6 +198,7 @@ class EventDetailCubit extends Cubit<EventDetailState> {
   }
 
   void updateRegistration(EventRegistrationModel registration) {
+    if (isClosed) return;
     emit(state.copyWith(registrationResult: const ResultState.loading()));
 
     _registration = registration;

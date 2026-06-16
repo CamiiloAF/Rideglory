@@ -12,6 +12,7 @@ import 'package:rideglory/features/maintenance/presentation/form/widgets/mainten
 import 'package:rideglory/features/maintenance/presentation/form/widgets/maintenance_mileage_update_banner.dart';
 import 'package:rideglory/features/maintenance/presentation/form/widgets/maintenance_next_service_card.dart';
 import 'package:rideglory/features/maintenance/presentation/form/widgets/maintenance_status_toggle.dart';
+import 'package:rideglory/core/utils/thousands_input_formatter.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 
 class MaintenanceFormContent extends StatefulWidget {
@@ -74,7 +75,7 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
         MaintenanceFormFields.nextMaintenanceMileage: relativeNextKm?.toString(),
         MaintenanceFormFields.vehicleId:
             maintenance.vehicleId ?? currentVehicleId,
-        MaintenanceFormFields.cost: maintenance.cost?.toString(),
+        MaintenanceFormFields.cost: ThousandsInputFormatter.format(maintenance.cost),
         MaintenanceFormFields.workshop: maintenance.workshop,
       };
     }
@@ -219,10 +220,9 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                       name: MaintenanceFormFields.cost,
                       labelText: context.l10n.maintenance_totalCost,
                       prefixText: '\$',
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      hintText: '0.00',
+                      keyboardType: TextInputType.number,
+                      hintText: '0',
+                      inputFormatters: [ThousandsInputFormatter()],
                       textInputAction: TextInputAction.next,
                     ),
                     const SizedBox(height: 12),

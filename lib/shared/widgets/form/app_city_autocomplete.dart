@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/core/services/place_service.dart';
 import 'package:rideglory/shared/widgets/form/app_autocomplete_field.dart';
 
@@ -52,6 +53,7 @@ class AppCityAutocomplete extends StatelessWidget {
       hintText: hintText ?? _defaultHint,
       isRequired: isRequired,
       validator: effectiveValidator,
+      selectionRequiredError: context.l10n.registration_residenceCitySelectFromList,
       onSelected: onSelected,
       suffixIcon: suffixIcon ?? const Icon(Icons.search),
       focusNode: focusNode,

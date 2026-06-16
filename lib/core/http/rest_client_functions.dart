@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rideglory/core/services/analytics/analytics_params.dart';
 import 'package:rideglory/core/services/crash/crash_reporter.dart';
@@ -177,6 +178,29 @@ Future<ApiResult<T>> handlerExceptionHttpTestable<T>({
       dataException: DomainException(
         message: _getPlatformExceptionErrorMessage(platformException.code),
       ),
+    );
+  } on SignInWithAppleAuthorizationException catch (e) {
+    if (e.code == AuthorizationErrorCode.canceled) {
+      return ApiResult.failure(
+        dataException: const DomainException(message: 'Inicio de sesión cancelado.'),
+      );
+    }
+    if (!isDebug) {
+      final reporter = crashReporter;
+      if (reporter != null) {
+        try {
+          await reporter.recordError(
+            e,
+            StackTrace.current,
+            reason: AnalyticsParams.categoryUnexpected,
+            fatal: false,
+            information: ['${AnalyticsParams.errorCategory}=apple_auth'],
+          );
+        } catch (_) {}
+      }
+    }
+    return ApiResult.failure(
+      dataException: const DomainException(message: 'Error al iniciar sesión con Apple.'),
     );
   } on DomainException catch (domainException) {
     // Fase 4 — NO reportar: anti doble-conteo (ya fue evaluada en la rama

@@ -326,12 +326,14 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
   }
 
   Future<void> _renderWaypointMode() async {
+    if (!mounted) return;
     final mapboxMap = _mapboxMap;
     if (mapboxMap == null) return;
 
     final waypoints = widget.waypointCoords ?? [];
 
     await _updateWaypointAnnotations(waypoints);
+    if (!mounted) return;
     await _updatePolyline(mapboxMap, waypoints);
 
     if (waypoints.isEmpty) return;
@@ -368,20 +370,30 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
   Future<void> _updateWaypointAnnotations(List<AddressLocation> waypoints) async {
     final manager = _annotationManager;
     if (manager == null) return;
+    if (!mounted) return;
 
-    await manager.deleteAll();
-
-    for (var i = 0; i < waypoints.length; i++) {
-      final w = waypoints[i];
-      final color = i == 0 ? AppColors.success : AppColors.primary;
-      final image = await buildNumberedPinImage(i + 1, color);
-      await manager.create(
-        PointAnnotationOptions(
-          geometry: Point(coordinates: Position(w.longitude, w.latitude)),
-          image: image,
-          iconSize: 1.0,
-        ),
-      );
+    // The annotation manager's platform channel may have closed if the MapWidget
+    // was replaced or disposed while this widget is still mounted. Catch any
+    // PlatformException so the caller doesn't crash.
+    try {
+      await manager.deleteAll();
+      for (var i = 0; i < waypoints.length; i++) {
+        if (!mounted) return;
+        final w = waypoints[i];
+        final color = i == 0 ? AppColors.success : AppColors.primary;
+        final image = await buildNumberedPinImage(i + 1, color);
+        if (!mounted) return;
+        await manager.create(
+          PointAnnotationOptions(
+            geometry: Point(coordinates: Position(w.longitude, w.latitude)),
+            image: image,
+            iconSize: 1.0,
+          ),
+        );
+      }
+    } catch (_) {
+      // Channel closed; reset manager so next map creation re-initialises it.
+      _annotationManager = null;
     }
   }
 
@@ -389,18 +401,18 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
     MapboxMap mapboxMap,
     List<AddressLocation> waypoints,
   ) async {
-    // LineString requires at least 2 positions; use empty coords to clear the line.
-    final coordinates = waypoints.length >= 2
-        ? waypoints.map((w) => [w.longitude, w.latitude]).toList()
-        : <List<double>>[];
-
-    final geojson = jsonEncode({
-      'type': 'Feature',
-      'geometry': {
-        'type': 'LineString',
-        'coordinates': coordinates,
-      },
-    });
+    // LineString requires ≥2 positions. With fewer points use an empty
+    // FeatureCollection so the source is cleared without a parse error.
+    final geojson = waypoints.length >= 2
+        ? jsonEncode({
+            'type': 'Feature',
+            'geometry': {
+              'type': 'LineString',
+              'coordinates':
+                  waypoints.map((w) => [w.longitude, w.latitude]).toList(),
+            },
+          })
+        : jsonEncode({'type': 'FeatureCollection', 'features': []});
 
     try {
       if (_routeLayerAdded) {

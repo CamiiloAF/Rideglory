@@ -9,6 +9,7 @@ import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/maintenance/domain/use_cases/add_maintenance_use_case.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/core/utils/thousands_input_formatter.dart';
 import 'package:rideglory/features/maintenance/constants/maintenance_form_fields.dart';
 
 import '../../../domain/use_cases/update_maintenance_use_case.dart';
@@ -168,7 +169,7 @@ class MaintenanceFormCubit extends Cubit<ResultState<MaintenanceModel>> {
         nextOdometer: nextOdometer,
         cost: formData[MaintenanceFormFields.cost] != null &&
                 (formData[MaintenanceFormFields.cost] as String).isNotEmpty
-            ? double.tryParse(formData[MaintenanceFormFields.cost] as String)
+            ? ThousandsInputFormatter.parse(formData[MaintenanceFormFields.cost] as String)
             : null,
       );
     }

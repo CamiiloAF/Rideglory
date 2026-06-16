@@ -2428,6 +2428,18 @@ abstract class AppLocalizations {
   /// **'mm/dd/yyyy'**
   String get registration_birthDateHint;
 
+  /// No description provided for @registration_birthDateRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'La fecha de nacimiento es requerida'**
+  String get registration_birthDateRequired;
+
+  /// No description provided for @registration_residenceCitySelectFromList.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona una opción válida de la lista'**
+  String get registration_residenceCitySelectFromList;
+
   /// No description provided for @registration_phoneHint.
   ///
   /// In es, this message translates to:
@@ -2667,6 +2679,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Correo electrónico inválido'**
   String get registration_emailInvalid;
+
+  /// No description provided for @form_phoneRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'El celular es requerido'**
+  String get form_phoneRequired;
+
+  /// No description provided for @form_phoneOnlyDigits.
+  ///
+  /// In es, this message translates to:
+  /// **'Solo se permiten dígitos'**
+  String get form_phoneOnlyDigits;
+
+  /// No description provided for @form_phoneInvalidLength.
+  ///
+  /// In es, this message translates to:
+  /// **'El celular debe tener 10 dígitos'**
+  String get form_phoneInvalidLength;
+
+  /// No description provided for @form_emailRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'El correo electrónico es requerido'**
+  String get form_emailRequired;
+
+  /// No description provided for @form_emailInvalid.
+  ///
+  /// In es, this message translates to:
+  /// **'Correo electrónico inválido'**
+  String get form_emailInvalid;
 
   /// No description provided for @registration_residenceCityRequired.
   ///

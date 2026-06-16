@@ -13,6 +13,7 @@ class AppAutocompleteField extends StatefulWidget {
     this.isRequired = false,
     this.validator,
     this.hintText,
+    this.selectionRequiredError,
     this.onSelected,
     this.suffixIcon,
     this.focusNode,
@@ -28,6 +29,7 @@ class AppAutocompleteField extends StatefulWidget {
   final bool isRequired;
   final String? Function(String?)? validator;
   final String? hintText;
+  final String? selectionRequiredError;
   final void Function(String)? onSelected;
   final Widget? suffixIcon;
   final FocusNode? focusNode;
@@ -73,8 +75,15 @@ class _AppAutocompleteFieldState extends State<AppAutocompleteField> {
     }
   }
 
+  String? _validate(String? value) {
+    if (value == null && _controller.text.isNotEmpty) {
+      return widget.selectionRequiredError ?? 'Selecciona una opción válida de la lista';
+    }
+    return widget.validator?.call(value);
+  }
+
   void _onChanged(String value, FormFieldState<String> field) {
-    field.didChange(value);
+    field.didChange(null);
     final results = widget.suggestions(value);
     setState(() {
       _filteredSuggestions = results;
@@ -153,16 +162,19 @@ class _AppAutocompleteFieldState extends State<AppAutocompleteField> {
           ),
         FormBuilderField<String>(
           name: widget.name,
-          validator: widget.validator,
+          validator: _validate,
           builder: (field) {
-            // Keep the internal controller in sync with the field value when it
-            // changes externally (e.g. FormBuilder reset, or didChange from a
-            // "clear filters" action). During typing they already match, so no
-            // sync runs mid-edit.
+            // Sync controller ← field only when field has a confirmed value
+            // (selection made or form pre-populated), or when the controller is
+            // already empty. Never wipe typed-but-unconfirmed text (field.value
+            // is null until the user picks from the dropdown).
             final fieldText = field.value ?? '';
-            if (fieldText != _controller.text) {
+            final shouldSync = field.value != null || _controller.text.isEmpty;
+            if (shouldSync && fieldText != _controller.text) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (mounted && (field.value ?? '') != _controller.text) {
+                if (!mounted) return;
+                final stillShould = field.value != null || _controller.text.isEmpty;
+                if (stillShould && (field.value ?? '') != _controller.text) {
                   _controller.text = field.value ?? '';
                 }
               });
