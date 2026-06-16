@@ -25,26 +25,27 @@ const _testPassword = String.fromEnvironment(
 void main() {
   patrolTest(
     'login → profile: usuario ve su perfil',
-    timeout: const Timeout(Duration(minutes: 3)),
+    timeout: const Timeout(Duration(minutes: 5)),
     ($) async {
       app.main();
       await $.pumpAndSettle();
 
-      // 1. Splash — handle location permission
-      if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
-        await $.platformAutomator.mobile.grantPermissionWhenInUse();
-        await $.pumpAndSettle();
+      // Loop combinado: espera el formulario de login mientras maneja el diálogo
+      // de permiso de ubicación que puede aparecer en cualquier momento durante
+      // el splash. Firebase cold start puede tardar 30-60s en emuladores.
+      var _loginFound = false;
+      for (var _i = 0; _i < 18 && !_loginFound; _i++) {
+        await Future.delayed(const Duration(seconds: 5));
+        if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
+          await $.platformAutomator.mobile.grantPermissionWhenInUse();
+          await $.pumpAndSettle();
+        }
+        _loginFound = $(TextField).exists;
       }
-
-      // 2. Wait for login form (FormBuilderTextField renders TextField)
-      await $(TextField).waitUntilVisible(
-        timeout: const Duration(seconds: 15),
-      );
-
-      // 3. Handle location permission if it appears at login
-      if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
-        await $.platformAutomator.mobile.grantPermissionWhenInUse();
-        await $.pumpAndSettle();
+      if (!_loginFound) {
+        await $(TextField).waitUntilVisible(
+          timeout: const Duration(seconds: 15),
+        );
       }
 
       // 4. Enter email
@@ -67,10 +68,10 @@ void main() {
 
       // 8. Wait for bottom nav, then navigate to Profile tab
       await $(Icons.person_outline).waitUntilVisible(
-        timeout: const Duration(seconds: 10),
+        timeout: const Duration(seconds: 30),
       );
       await $(Icons.person_outline).tap();
-      await $.pumpAndSettle(timeout: const Duration(seconds: 15));
+      await $.pumpAndSettle(timeout: const Duration(seconds: 45));
 
       // 9. Handle location permission if it appears
       if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
@@ -80,13 +81,13 @@ void main() {
 
       // 10. Wait for profile to load — the AppBar title "Mi perfil" is always shown
       await $('Mi perfil').waitUntilVisible(
-        timeout: const Duration(seconds: 10),
+        timeout: const Duration(seconds: 30),
       );
       expect($('Mi perfil'), findsOneWidget);
 
       // 11. Wait for ProfileContent to load and verify key sections.
       //     The profile may still be loading — give it extra time.
-      await $.pumpAndSettle(timeout: const Duration(seconds: 10));
+      await $.pumpAndSettle(timeout: const Duration(seconds: 30));
 
       // ProfileContent shows "Editar perfil" button in ProfileHeader once data loaded.
       // If loading fails, PageErrorStateWidget shows profile_loadingError.

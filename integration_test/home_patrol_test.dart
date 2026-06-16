@@ -25,26 +25,27 @@ const _testPassword = String.fromEnvironment(
 void main() {
   patrolTest(
     'login → home: usuario ve el dashboard principal',
-    timeout: const Timeout(Duration(minutes: 3)),
+    timeout: const Timeout(Duration(minutes: 5)),
     ($) async {
       app.main();
       await $.pumpAndSettle();
 
-      // 1. Splash — handle location permission
-      if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
-        await $.platformAutomator.mobile.grantPermissionWhenInUse();
-        await $.pumpAndSettle();
+      // Loop combinado: espera el formulario de login mientras maneja el diálogo
+      // de permiso de ubicación que puede aparecer en cualquier momento durante
+      // el splash. Firebase cold start puede tardar 30-60s en emuladores.
+      var _loginFound = false;
+      for (var _i = 0; _i < 18 && !_loginFound; _i++) {
+        await Future.delayed(const Duration(seconds: 5));
+        if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
+          await $.platformAutomator.mobile.grantPermissionWhenInUse();
+          await $.pumpAndSettle();
+        }
+        _loginFound = $(TextField).exists;
       }
-
-      // 2. Wait for login form (FormBuilderTextField renders TextField)
-      await $(TextField).waitUntilVisible(
-        timeout: const Duration(seconds: 15),
-      );
-
-      // 3. Handle location permission if it appears at login
-      if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
-        await $.platformAutomator.mobile.grantPermissionWhenInUse();
-        await $.pumpAndSettle();
+      if (!_loginFound) {
+        await $(TextField).waitUntilVisible(
+          timeout: const Duration(seconds: 15),
+        );
       }
 
       // 4. Enter email
@@ -71,11 +72,11 @@ void main() {
       //    Use Icons.directions_car_outlined (garage tab — inactive) as the sentinel
       //    that the bottom nav is rendered.
       await $(Icons.directions_car_outlined).waitUntilVisible(
-        timeout: const Duration(seconds: 10),
+        timeout: const Duration(seconds: 30),
       );
 
       // 9. Wait for HomeHeader to load data from API
-      await $.pumpAndSettle(timeout: const Duration(seconds: 15));
+      await $.pumpAndSettle(timeout: const Duration(seconds: 45));
 
       // 10. Handle location permission a final time if it appears after data loads
       if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
@@ -103,7 +104,7 @@ void main() {
 
       // 13. The home page body shows either loading, or garage + events sections.
       //     After settle, we expect at least the greeting or one of the sections.
-      await $.pumpAndSettle(timeout: const Duration(seconds: 10));
+      await $.pumpAndSettle(timeout: const Duration(seconds: 30));
 
       final hasSectionGarage = $('MI GARAJE').exists;
       final hasSectionEvents = $('PRÓXIMAS RODADAS').exists;

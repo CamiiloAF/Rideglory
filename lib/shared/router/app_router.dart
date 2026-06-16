@@ -64,12 +64,27 @@ class AppRouter {
 
   /// Navega a partir de una URI con scheme `rideglory://`.
   /// `rideglory://events/detail-by-id?id=xxx` → push `/events/detail-by-id?id=xxx`
+  ///
+  /// Si el path destino es un tab del shell (home, garage, events, profile) usa
+  /// `go()` para cambiar de tab; de lo contrario usa `push()` para apilar encima.
   static void pushDeepLink(String ridegloryUri) {
     final uri = Uri.tryParse(ridegloryUri);
     if (uri == null || uri.scheme != 'rideglory') return;
     final path = '/${uri.host}${uri.path}';
     final routerPath = uri.hasQuery ? '$path?${uri.query}' : path;
-    appRouter.push(routerPath);
+
+    const shellTabPaths = {
+      AppRoutes.home,
+      AppRoutes.garage,
+      AppRoutes.events,
+      AppRoutes.profile,
+    };
+
+    if (shellTabPaths.contains(path)) {
+      appRouter.go(routerPath);
+    } else {
+      appRouter.push(routerPath);
+    }
   }
 
   /// Observer que emite `screen_view` automáticamente por cada transición de
@@ -191,12 +206,130 @@ class AppRouter {
                 path: AppRoutes.events,
                 name: AppRoutes.events,
                 builder: (context, state) => const EventsPage(),
-              ),
-              GoRoute(
-                path: AppRoutes.myEvents,
-                name: AppRoutes.myEvents,
-                builder: (context, state) =>
-                    const EventsPage(showMyEvents: true),
+                routes: [
+                  GoRoute(
+                    parentNavigatorKey: _rootNavigatorKey,
+                    path: 'mine',
+                    name: AppRoutes.myEvents,
+                    builder: (context, state) =>
+                        const EventsPage(showMyEvents: true),
+                  ),
+                  GoRoute(
+                    parentNavigatorKey: _rootNavigatorKey,
+                    path: 'create',
+                    name: AppRoutes.createEvent,
+                    builder: (context, state) => const EventFormPage(),
+                  ),
+                  GoRoute(
+                    parentNavigatorKey: _rootNavigatorKey,
+                    path: 'edit',
+                    name: AppRoutes.editEvent,
+                    builder: (context, state) {
+                      final extra = state.extra;
+                      if (extra is EventEditParams) {
+                        return EventFormPage(
+                          event: extra.event,
+                          onSaved: extra.onSaved,
+                        );
+                      }
+                      return EventFormPage(event: extra as EventModel?);
+                    },
+                  ),
+                  GoRoute(
+                    parentNavigatorKey: _rootNavigatorKey,
+                    path: 'detail',
+                    name: AppRoutes.eventDetail,
+                    builder: (context, state) {
+                      final event = state.extra as EventModel;
+                      return EventDetailPage(
+                        params: EventDetailPageParams(event: event),
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    parentNavigatorKey: _rootNavigatorKey,
+                    path: 'registration',
+                    name: AppRoutes.eventRegistration,
+                    builder: (context, state) {
+                      final params = state.extra as EventRegistrationParams;
+                      return EventRegistrationPage(params: params);
+                    },
+                  ),
+                  GoRoute(
+                    parentNavigatorKey: _rootNavigatorKey,
+                    path: 'attendees',
+                    name: AppRoutes.eventAttendees,
+                    builder: (context, state) {
+                      final event = state.extra as EventModel;
+                      return AttendeesPage(event: event);
+                    },
+                  ),
+                  GoRoute(
+                    parentNavigatorKey: _rootNavigatorKey,
+                    path: 'live-map',
+                    name: AppRoutes.liveMap,
+                    builder: (context, state) {
+                      final event = state.extra as EventModel;
+                      return LiveMapPage(event: event);
+                    },
+                  ),
+                  GoRoute(
+                    parentNavigatorKey: _rootNavigatorKey,
+                    path: 'participants',
+                    name: AppRoutes.participants,
+                    builder: (context, state) {
+                      final event = state.extra as EventModel;
+                      final cubit =
+                          getIt<LiveTrackingSessionHolder>().obtainForEvent(
+                        eventId: event.id ?? '',
+                        eventOwnerId: event.ownerId,
+                      );
+                      return BlocProvider<LiveTrackingCubit>.value(
+                        value: cubit,
+                        child: ParticipantsPlaceholderPage(event: event),
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    parentNavigatorKey: _rootNavigatorKey,
+                    path: 'my-registrations',
+                    name: AppRoutes.myRegistrations,
+                    builder: (context, state) => const MyRegistrationsPage(),
+                  ),
+                  GoRoute(
+                    parentNavigatorKey: _rootNavigatorKey,
+                    path: 'registration-detail',
+                    name: AppRoutes.registrationDetail,
+                    builder: (context, state) {
+                      final extra = state.extra as RegistrationDetailExtra;
+                      return RegistrationDetailPage(params: extra);
+                    },
+                  ),
+                  GoRoute(
+                    parentNavigatorKey: _rootNavigatorKey,
+                    path: 'detail-by-id',
+                    name: AppRoutes.eventDetailById,
+                    builder: (context, state) {
+                      final eventIdFromQuery =
+                          state.uri.queryParameters['id'];
+                      final eventIdFromExtra = state.extra is String
+                          ? state.extra as String
+                          : null;
+                      final eventId =
+                          eventIdFromQuery ?? eventIdFromExtra ?? '';
+                      return EventDetailByIdPage(eventId: eventId);
+                    },
+                  ),
+                  GoRoute(
+                    parentNavigatorKey: _rootNavigatorKey,
+                    path: 'attendees/rider-profile',
+                    name: AppRoutes.riderProfile,
+                    builder: (context, state) {
+                      final userId = state.extra as String;
+                      return RiderProfilePage(userId: userId);
+                    },
+                  ),
+                ],
               ),
             ],
           ),
@@ -222,6 +355,7 @@ class AppRouter {
         ],
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: AppRoutes.createVehicle,
         name: AppRoutes.createVehicle,
         builder: (context, state) {
@@ -229,6 +363,7 @@ class AppRouter {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: AppRoutes.vehicleDetail,
         name: AppRoutes.vehicleDetail,
         builder: (context, state) {
@@ -237,6 +372,7 @@ class AppRouter {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: AppRoutes.editVehicle,
         name: AppRoutes.editVehicle,
         builder: (context, state) {
@@ -246,6 +382,7 @@ class AppRouter {
       ),
       // Maintenance routes
       GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: AppRoutes.maintenances,
         name: AppRoutes.maintenances,
         builder: (context, state) {
@@ -254,6 +391,7 @@ class AppRouter {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: AppRoutes.createMaintenance,
         name: AppRoutes.createMaintenance,
         builder: (context, state) {
@@ -262,6 +400,7 @@ class AppRouter {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: AppRoutes.editMaintenance,
         name: AppRoutes.editMaintenance,
         builder: (context, state) {
@@ -270,6 +409,7 @@ class AppRouter {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: AppRoutes.maintenanceDetail,
         name: AppRoutes.maintenanceDetail,
         builder: (context, state) {
@@ -279,107 +419,13 @@ class AppRouter {
       ),
 
       GoRoute(
-        path: AppRoutes.createEvent,
-        name: AppRoutes.createEvent,
-        builder: (context, state) => const EventFormPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.editEvent,
-        name: AppRoutes.editEvent,
-        builder: (context, state) {
-          final extra = state.extra;
-          if (extra is EventEditParams) {
-            return EventFormPage(event: extra.event, onSaved: extra.onSaved);
-          }
-          return EventFormPage(event: extra as EventModel?);
-        },
-      ),
-      GoRoute(
-        path: AppRoutes.eventDetail,
-        name: AppRoutes.eventDetail,
-        builder: (context, state) {
-          final event = state.extra as EventModel;
-          return EventDetailPage(params: EventDetailPageParams(event: event));
-        },
-      ),
-      GoRoute(
-        path: AppRoutes.eventRegistration,
-        name: AppRoutes.eventRegistration,
-        builder: (context, state) {
-          final params = state.extra as EventRegistrationParams;
-          return EventRegistrationPage(params: params);
-        },
-      ),
-      GoRoute(
-        path: AppRoutes.eventAttendees,
-        name: AppRoutes.eventAttendees,
-        builder: (context, state) {
-          final event = state.extra as EventModel;
-          return AttendeesPage(event: event);
-        },
-      ),
-      GoRoute(
-        path: AppRoutes.liveMap,
-        name: AppRoutes.liveMap,
-        builder: (context, state) {
-          final event = state.extra as EventModel;
-          return LiveMapPage(event: event);
-        },
-      ),
-      GoRoute(
-        path: AppRoutes.participants,
-        name: AppRoutes.participants,
-        builder: (context, state) {
-          final event = state.extra as EventModel;
-          final cubit = getIt<LiveTrackingSessionHolder>().obtainForEvent(
-            eventId: event.id ?? '',
-            eventOwnerId: event.ownerId,
-          );
-          return BlocProvider<LiveTrackingCubit>.value(
-            value: cubit,
-            child: ParticipantsPlaceholderPage(event: event),
-          );
-        },
-      ),
-      GoRoute(
-        path: AppRoutes.myRegistrations,
-        name: AppRoutes.myRegistrations,
-        builder: (context, state) => const MyRegistrationsPage(),
-      ),
-      GoRoute(
-        path: AppRoutes.registrationDetail,
-        name: AppRoutes.registrationDetail,
-        builder: (context, state) {
-          final extra = state.extra as RegistrationDetailExtra;
-          return RegistrationDetailPage(params: extra);
-        },
-      ),
-      GoRoute(
-        path: AppRoutes.eventDetailById,
-        name: AppRoutes.eventDetailById,
-        builder: (context, state) {
-          final eventIdFromQuery = state.uri.queryParameters['id'];
-          final eventIdFromExtra = state.extra is String
-              ? state.extra as String
-              : null;
-          final eventId = eventIdFromQuery ?? eventIdFromExtra ?? '';
-          return EventDetailByIdPage(eventId: eventId);
-        },
-      ),
-      GoRoute(
-        path: AppRoutes.riderProfile,
-        name: AppRoutes.riderProfile,
-        builder: (context, state) {
-          final userId = state.extra as String;
-          return RiderProfilePage(userId: userId);
-        },
-      ),
-      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: AppRoutes.notifications,
         name: AppRoutes.notifications,
         builder: (context, state) => const NotificationsPage(),
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: AppRoutes.soatStatus,
         name: AppRoutes.soatStatus,
         builder: (context, state) {
@@ -388,6 +434,7 @@ class AppRouter {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: AppRoutes.soatManualCapture,
         name: AppRoutes.soatManualCapture,
         builder: (context, state) {
@@ -401,6 +448,7 @@ class AppRouter {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: AppRoutes.tecnomecanicaStatus,
         name: AppRoutes.tecnomecanicaStatus,
         builder: (context, state) {
@@ -409,6 +457,7 @@ class AppRouter {
         },
       ),
       GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
         path: AppRoutes.tecnomecanicaManualCapture,
         name: AppRoutes.tecnomecanicaManualCapture,
         builder: (context, state) {

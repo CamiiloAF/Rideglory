@@ -55,6 +55,11 @@ post_install do |installer|
         'PERMISSION_PHOTOS=1',
         'PERMISSION_NOTIFICATIONS=1',
       ]
+
+      # objective_c.framework (arrastrado por path_provider_foundation) incluye la
+      # slice x86_64 (simulador). App Store Connect rechaza IPAs con esa arquitectura.
+      # Excluirla aquí la elimina del archive de device sin afectar builds de simulador.
+      config.build_settings['EXCLUDED_ARCHS[sdk=iphoneos*]'] = 'x86_64'
     end
   end
 end

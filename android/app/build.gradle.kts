@@ -119,4 +119,10 @@ flutter {
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
     androidTestUtil("androidx.test:orchestrator:1.5.1")
+    // patrol e integration_test son dev_dependencies con código nativo Android.
+    // Flutter los agrega como androidTestImplementation, por lo que sus clases
+    // no están disponibles al compilar el APK/AAB de release. compileOnly las
+    // provee para compilar GeneratedPluginRegistrant.java sin incluirlas en el artefacto final.
+    compileOnly(project(":integration_test"))
+    compileOnly(project(":patrol"))
 }

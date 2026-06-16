@@ -25,27 +25,27 @@ const _testPassword = String.fromEnvironment(
 void main() {
   patrolTest(
     'login → garage: usuario ve la pantalla de vehículos',
-    timeout: const Timeout(Duration(minutes: 3)),
+    timeout: const Timeout(Duration(minutes: 5)),
     ($) async {
       app.main();
       await $.pumpAndSettle();
 
-      // 1. Splash — aceptar permiso de ubicación si aparece antes de que termine
-      if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
-        await $.platformAutomator.mobile.grantPermissionWhenInUse();
-        await $.pumpAndSettle();
+      // Loop combinado: espera el formulario de login mientras maneja el diálogo
+      // de permiso de ubicación que puede aparecer en cualquier momento durante
+      // el splash. Firebase cold start puede tardar 30-60s en emuladores.
+      var _loginFound = false;
+      for (var _i = 0; _i < 18 && !_loginFound; _i++) {
+        await Future.delayed(const Duration(seconds: 5));
+        if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
+          await $.platformAutomator.mobile.grantPermissionWhenInUse();
+          await $.pumpAndSettle();
+        }
+        _loginFound = $(TextField).exists;
       }
-
-      // 2. Esperar pantalla de login: el primer TextField es el campo de email.
-      //    FormBuilderTextField renderiza TextField (no TextFormField).
-      await $(TextField).waitUntilVisible(
-        timeout: const Duration(seconds: 15),
-      );
-
-      // 3. Permiso de ubicación si aparece justo al cargar el login
-      if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
-        await $.platformAutomator.mobile.grantPermissionWhenInUse();
-        await $.pumpAndSettle();
+      if (!_loginFound) {
+        await $(TextField).waitUntilVisible(
+          timeout: const Duration(seconds: 15),
+        );
       }
 
       // 4. Llenar email (TextField en índice 0 = campo de correo)
@@ -70,10 +70,10 @@ void main() {
 
       // 8. Home visible — esperar bottom nav y navegar a Garaje
       await $(Icons.directions_car_outlined).waitUntilVisible(
-        timeout: const Duration(seconds: 10),
+        timeout: const Duration(seconds: 30),
       );
       await $(Icons.directions_car_outlined).tap();
-      await $.pumpAndSettle(timeout: const Duration(seconds: 10));
+      await $.pumpAndSettle(timeout: const Duration(seconds: 30));
 
       // 9. Verificar que la pantalla de garage cargó
       expect($(GaragePageView), findsOneWidget);
@@ -81,7 +81,7 @@ void main() {
       // 10. Esperar que la API de vehículos responda (puede tardar unos segundos)
       //     Con vehículos → header "Mi Garaje"
       //     Sin vehículos → "No tienes vehículos registrados"
-      await $.pumpAndSettle(timeout: const Duration(seconds: 15));
+      await $.pumpAndSettle(timeout: const Duration(seconds: 45));
 
       final hasVehicles = $('Mi Garaje').exists;
       final isEmpty = $('No tienes vehículos registrados').exists;

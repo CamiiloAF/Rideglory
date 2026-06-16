@@ -83,5 +83,23 @@
    <ArchiveAction
       buildConfiguration = "Release-prod"
       revealArchiveInOrganizer = "YES">
+      <PostActions>
+         <ExecutionAction
+            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
+            <ActionContent
+               title = "Remove x86_64-only frameworks"
+               scriptText = "rm -rf &quot;${ARCHIVE_PATH}/Products/Applications/Runner.app/Frameworks/objective_c.framework&quot;&#10;echo &quot;[post-archive] objective_c.framework removed from ${ARCHIVE_PATH}&quot;">
+               <EnvironmentBuildable>
+                  <BuildableReference
+                     BuildableIdentifier = "primary"
+                     BlueprintIdentifier = "97C146ED1CF9000F007C117D"
+                     BuildableName = "Runner.app"
+                     BlueprintName = "Runner"
+                     ReferencedContainer = "container:Runner.xcodeproj">
+                  </BuildableReference>
+               </EnvironmentBuildable>
+            </ActionContent>
+         </ExecutionAction>
+      </PostActions>
    </ArchiveAction>
 </Scheme>

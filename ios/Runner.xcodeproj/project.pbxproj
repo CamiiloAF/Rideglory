@@ -301,6 +301,7 @@
 				6ECDAE036B278C9005633A11 /* Set Firebase plist (flavor) */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
+				AA00000000000000STRIPARCH /* Strip x86_64 from Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				A5ABFF2CA186151056FCFFF5 /* [CP] Embed Pods Frameworks */,
 				C804489D35FFA72F04D8A804 /* [CP] Copy Pods Resources */,
@@ -391,6 +392,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		AA00000000000000STRIPARCH /* Strip x86_64 from Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Strip x86_64 from Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "APP_PATH=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}\"\nfind \"$APP_PATH\" -name '*.framework' -type d | while read -r FRAMEWORK; do\n  BINARY=\"$FRAMEWORK/$(basename \"$FRAMEWORK\" .framework)\"\n  if [ -f \"$BINARY\" ]; then\n    ARCHS=$(lipo -archs \"$BINARY\" 2>/dev/null)\n    if [ \"$ARCHS\" = \"x86_64\" ]; then\n      rm -rf \"$FRAMEWORK\"\n      echo \"Removed simulator-only framework: $FRAMEWORK\"\n    elif echo \"$ARCHS\" | grep -q x86_64; then\n      lipo -remove x86_64 \"$BINARY\" -o \"$BINARY\"\n      echo \"Stripped x86_64 from: $BINARY\"\n    fi\n  fi\ndone\n";
+		};
 		07DB8EEF8DE1D66DF06B7FF2 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

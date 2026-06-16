@@ -1,0 +1,122 @@
+name: Release — App Store IPA
+
+on:
+  workflow_dispatch:  # deshabilitado hasta configurar secrets de firma iOS
+
+jobs:
+  build-ipa:
+    name: Build & upload IPA
+    runs-on: macos-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.5'
+          channel: stable
+          cache: true
+
+      - name: Create .env file
+        run: |
+          cat > .env << 'EOF'
+          FIREBASE_IOS_API_KEY=${{ secrets.FIREBASE_IOS_API_KEY }}
+          FIREBASE_IOS_APP_ID=${{ secrets.FIREBASE_IOS_APP_ID }}
+          FIREBASE_IOS_CLIENT_ID=${{ secrets.FIREBASE_IOS_CLIENT_ID }}
+          FIREBASE_IOS_BUNDLE_ID=${{ secrets.FIREBASE_IOS_BUNDLE_ID }}
+          FIREBASE_MESSAGING_SENDER_ID=${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET=${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          LOCAL_API_BASE_URL=${{ secrets.LOCAL_API_BASE_URL }}
+          EOF
+
+      - name: Create config/prod.json
+        run: |
+          cat > config/prod.json << EOF
+          {
+            "FLAVOR": "prod",
+            "FIREBASE_ANDROID_API_KEY": "${{ secrets.FIREBASE_ANDROID_API_KEY }}",
+            "FIREBASE_ANDROID_APP_ID": "${{ secrets.FIREBASE_ANDROID_APP_ID }}",
+            "FIREBASE_IOS_API_KEY": "${{ secrets.FIREBASE_IOS_API_KEY }}",
+            "FIREBASE_IOS_APP_ID": "${{ secrets.FIREBASE_IOS_APP_ID }}",
+            "FIREBASE_MESSAGING_SENDER_ID": "${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}",
+            "FIREBASE_PROJECT_ID": "${{ secrets.FIREBASE_PROJECT_ID }}",
+            "FIREBASE_STORAGE_BUCKET": "${{ secrets.FIREBASE_STORAGE_BUCKET }}",
+            "FIREBASE_ANDROID_CLIENT_ID": "${{ secrets.FIREBASE_ANDROID_CLIENT_ID }}",
+            "FIREBASE_IOS_CLIENT_ID": "${{ secrets.FIREBASE_IOS_CLIENT_ID }}",
+            "FIREBASE_IOS_BUNDLE_ID": "${{ secrets.FIREBASE_IOS_BUNDLE_ID }}",
+            "SENTRY_DSN": "${{ secrets.SENTRY_DSN }}"
+          }
+          EOF
+
+      - name: Create Firebase iOS config
+        run: |
+          mkdir -p ios/Runner
+          echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}" | base64 -d > ios/Runner/GoogleService-Info.plist
+
+      - name: Import distribution certificate
+        env:
+          DIST_CERT_P12_BASE64: ${{ secrets.DIST_CERT_P12_BASE64 }}
+          DIST_CERT_PASSWORD: ${{ secrets.DIST_CERT_PASSWORD }}
+        run: |
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+          KEYCHAIN_PASSWORD=$(openssl rand -hex 20)
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+          echo "$DIST_CERT_P12_BASE64" | base64 -d > /tmp/distribution.p12
+          security import /tmp/distribution.p12 -P "$DIST_CERT_PASSWORD" \
+            -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+          security list-keychain -d user -s "$KEYCHAIN_PATH"
+          security set-key-partition-list -S apple-tool:,apple: -s \
+            -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+      - name: Install provisioning profile
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "${{ secrets.PROVISIONING_PROFILE_BASE64 }}" | base64 -d \
+            > ~/Library/MobileDevice/Provisioning\ Profiles/rideglory_appstore.mobileprovision
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Generate code
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Build IPA
+        run: |
+          flutter build ipa --release \
+            --flavor prod \
+            --dart-define-from-file=config/prod.json \
+            --export-options-plist=ios/ExportOptionsProd.plist
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rideglory-${{ github.ref_name }}.ipa
+          path: build/ios/ipa/*.ipa
+          retention-days: 60
+
+      - name: Upload to App Store Connect (TestFlight)
+        env:
+          APPSTORE_API_KEY_ID: ${{ secrets.APPSTORE_API_KEY_ID }}
+          APPSTORE_API_ISSUER_ID: ${{ secrets.APPSTORE_API_ISSUER_ID }}
+          APPSTORE_API_PRIVATE_KEY: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.appstoreconnect/private_keys
+          echo "$APPSTORE_API_PRIVATE_KEY" \
+            > ~/.appstoreconnect/private_keys/AuthKey_${APPSTORE_API_KEY_ID}.p8
+
+          xcrun altool --upload-app \
+            --type ios \
+            --file build/ios/ipa/*.ipa \
+            --apiKey  "$APPSTORE_API_KEY_ID" \
+            --apiIssuer "$APPSTORE_API_ISSUER_ID"
