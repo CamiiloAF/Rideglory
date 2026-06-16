@@ -35,19 +35,19 @@ void main() {
       // splash puede navegar al Home (sesión activa) o al Login (sin sesión).
       // Loop de 24 × 5s = 120s: maneja el diálogo de permiso y detecta cualquiera
       // de los dos destinos.
-      var _onLogin = false;
-      var _onHome = false;
-      for (var _i = 0; _i < 24 && !_onLogin && !_onHome; _i++) {
+      var onLogin = false;
+      var onHome = false;
+      for (var i = 0; i < 24 && !onLogin && !onHome; i++) {
         await Future.delayed(const Duration(seconds: 5));
         if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
           await $.platformAutomator.mobile.grantPermissionWhenInUse();
           await $.pumpAndSettle();
         }
-        _onLogin = $(TextField).exists;
-        _onHome = $('EVENTOS').exists; // bottom nav visible = ya en home
+        onLogin = $(TextField).exists;
+        onHome = $('EVENTOS').exists; // bottom nav visible = ya en home
       }
 
-      if (_onLogin) {
+      if (onLogin) {
         // Flujo login normal
         await $(TextField).at(0).enterText(_testEmail);
         await $.pumpAndSettle();

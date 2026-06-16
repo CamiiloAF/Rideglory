@@ -33,16 +33,16 @@ void main() {
       // Loop combinado: espera el formulario de login mientras maneja el diálogo
       // de permiso de ubicación que puede aparecer en cualquier momento durante
       // el splash. Firebase cold start puede tardar 30-60s en emuladores.
-      var _loginFound = false;
-      for (var _i = 0; _i < 18 && !_loginFound; _i++) {
+      var loginFound = false;
+      for (var i = 0; i < 18 && !loginFound; i++) {
         await Future.delayed(const Duration(seconds: 5));
         if (await $.platformAutomator.mobile.isPermissionDialogVisible()) {
           await $.platformAutomator.mobile.grantPermissionWhenInUse();
           await $.pumpAndSettle();
         }
-        _loginFound = $(TextField).exists;
+        loginFound = $(TextField).exists;
       }
-      if (!_loginFound) {
+      if (!loginFound) {
         await $(TextField).waitUntilVisible(
           timeout: const Duration(seconds: 15),
         );
