@@ -298,6 +298,16 @@ abstract final class AnalyticsEvents {
   /// Max 40 chars: 'vehicle_set_main'.length == 16. ✓
   static const String vehicleSetMain = 'vehicle_set_main';
 
+  /// El rider archivó un vehículo exitosamente.
+  /// Sin params PII.
+  /// Max 40 chars: 'vehicle_archived'.length == 16. ✓
+  static const String vehicleArchived = 'vehicle_archived';
+
+  /// El rider restauró (desarchivó) un vehículo exitosamente.
+  /// Sin params PII.
+  /// Max 40 chars: 'vehicle_unarchived'.length == 18. ✓
+  static const String vehicleUnarchived = 'vehicle_unarchived';
+
   // ---------------------------------------------------------------------------
   // Mantenimiento (Fase 9)
   // ---------------------------------------------------------------------------

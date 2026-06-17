@@ -160,6 +160,57 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
     return SoatStatus.valid;
   }
 
+  void archiveLocally(String id) {
+    final wasMain = _vehicles.any((v) => v.id == id && v.isMainVehicle);
+
+    _vehicles = _vehicles.map((v) {
+      if (v.id != id) return v;
+      return v.copyWith(isArchived: true, isMainVehicle: false);
+    }).toList();
+
+    if (wasMain) {
+      final actives = _vehicles.where((v) => !v.isArchived).toList();
+      _promoteNewMain(actives);
+    }
+
+    _emitLoadedOrEmpty();
+  }
+
+  void unarchiveLocally(String id) {
+    _vehicles = _vehicles.map((v) {
+      if (v.id != id) return v;
+      return v.copyWith(isArchived: false);
+    }).toList();
+    _emitLoadedOrEmpty();
+  }
+
+  /// Promotes the first active (non-archived) vehicle to main. Ordering:
+  /// createdAt desc (nulls last), then id asc as tie-break.
+  void _promoteNewMain(List<VehicleModel> actives) {
+    if (actives.isEmpty) return;
+
+    final sorted = [...actives]..sort((a, b) {
+        final aDate = a.createdAt;
+        final bDate = b.createdAt;
+        if (aDate == null && bDate == null) {
+          return (a.id ?? '').compareTo(b.id ?? '');
+        }
+        if (aDate == null) return 1; // nulls last
+        if (bDate == null) return -1;
+        final cmp = bDate.compareTo(aDate); // desc
+        if (cmp != 0) return cmp;
+        return (a.id ?? '').compareTo(b.id ?? ''); // tie-break asc
+      });
+
+    final newMainId = sorted.first.id;
+    _vehicles = _vehicles.map((v) {
+      if (v.id == newMainId) return v.copyWith(isMainVehicle: true);
+      if (v.isMainVehicle) return v.copyWith(isMainVehicle: false);
+      return v;
+    }).toList();
+    _selectedVehicleId = newMainId;
+  }
+
   void deleteVehicleLocally(String vehicleId) {
     final wasSelection =
         currentVehicle?.id == vehicleId || _selectedVehicleId == vehicleId;

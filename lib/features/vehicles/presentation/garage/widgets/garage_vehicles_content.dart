@@ -12,6 +12,7 @@ import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_m
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_maintenance_widget.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_options_bottom_sheet.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_other_vehicle_item.dart';
+import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_archived_section.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_other_vehicles_section_header.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
@@ -40,11 +41,15 @@ class GarageVehiclesContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<VehicleCubit>().state;
-    final vehicles = state is Data<List<VehicleModel>>
-        ? state.data.where((v) => !v.isArchived).toList(growable: false)
+    final allVehicles = state is Data<List<VehicleModel>>
+        ? state.data
         : const <VehicleModel>[];
+    final activeVehicles =
+        allVehicles.where((v) => !v.isArchived).toList(growable: false);
+    final archivedVehicles =
+        allVehicles.where((v) => v.isArchived).toList(growable: false);
 
-    if (vehicles.isEmpty) {
+    if (activeVehicles.isEmpty) {
       return Scaffold(
         backgroundColor: AppColors.darkBgPrimary,
         body: SafeArea(
@@ -62,11 +67,11 @@ class GarageVehiclesContent extends StatelessWidget {
       );
     }
 
-    final mainVehicle = vehicles.firstWhere(
+    final mainVehicle = activeVehicles.firstWhere(
       (v) => v.isMainVehicle,
-      orElse: () => vehicles.first,
+      orElse: () => activeVehicles.first,
     );
-    final otherVehicles = vehicles
+    final otherVehicles = activeVehicles
         .where((v) => v.id != mainVehicle.id)
         .toList(growable: false);
 
@@ -109,7 +114,9 @@ class GarageVehiclesContent extends StatelessWidget {
                     ),
                     if (otherVehicles.isNotEmpty) ...[
                       const SizedBox(height: 20),
-                      GarageOtherVehiclesSectionHeader(count: otherVehicles.length),
+                      GarageOtherVehiclesSectionHeader(
+                        count: otherVehicles.length,
+                      ),
                       const SizedBox(height: 12),
                       ...otherVehicles.map(
                         (vehicle) => Padding(
@@ -130,6 +137,17 @@ class GarageVehiclesContent extends StatelessWidget {
                         ),
                       ),
                     ],
+                    GarageArchivedSection(
+                      archivedVehicles: archivedVehicles,
+                      onRestoreTap: (vehicle) => GarageOptionsBottomSheet.show(
+                        context,
+                        vehicle,
+                        onGarageListUpdatedLocally: null,
+                        onMaintenanceCreated: onMaintenanceCreated,
+                        onMaintenanceRefreshRequested:
+                            onMaintenanceRefreshRequested,
+                      ),
+                    ),
                   ]),
                 ),
               ),

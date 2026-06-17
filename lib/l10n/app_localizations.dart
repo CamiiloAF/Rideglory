@@ -1957,8 +1957,50 @@ abstract class AppLocalizations {
   /// No description provided for @vehicle_unarchiveVehicle.
   ///
   /// In es, this message translates to:
-  /// **'Desarchivar'**
+  /// **'Restaurar'**
   String get vehicle_unarchiveVehicle;
+
+  /// No description provided for @vehicle_archiveVehicleConfirmTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Archivar vehículo'**
+  String get vehicle_archiveVehicleConfirmTitle;
+
+  /// No description provided for @vehicle_archiveVehicleConfirmContent.
+  ///
+  /// In es, this message translates to:
+  /// **'«{vehicleName}» pasará a la sección de archivados. Podrás restaurarlo cuando quieras.'**
+  String vehicle_archiveVehicleConfirmContent(String vehicleName);
+
+  /// No description provided for @vehicle_vehicleArchived.
+  ///
+  /// In es, this message translates to:
+  /// **'Vehículo archivado'**
+  String get vehicle_vehicleArchived;
+
+  /// No description provided for @vehicle_vehicleRestored.
+  ///
+  /// In es, this message translates to:
+  /// **'Vehículo restaurado'**
+  String get vehicle_vehicleRestored;
+
+  /// No description provided for @vehicle_archivedSection.
+  ///
+  /// In es, this message translates to:
+  /// **'ARCHIVADOS'**
+  String get vehicle_archivedSection;
+
+  /// No description provided for @vehicle_setMainVehicle.
+  ///
+  /// In es, this message translates to:
+  /// **'Marcar como principal'**
+  String get vehicle_setMainVehicle;
+
+  /// No description provided for @vehicle_archiveConfirmButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Archivar'**
+  String get vehicle_archiveConfirmButton;
 
   /// No description provided for @vehicle_deleteVehicleConfirmContent.
   ///

@@ -33,6 +33,22 @@ const _vehicle2 = VehicleModel(
   isMainVehicle: false,
 );
 
+final _vehicle1WithDate = VehicleModel(
+  id: 'v1',
+  name: 'Honda CB500',
+  currentMileage: 12000,
+  isMainVehicle: true,
+  createdAt: DateTime(2024, 1, 1),
+);
+
+final _vehicle2WithDate = VehicleModel(
+  id: 'v2',
+  name: 'Yamaha MT-07',
+  currentMileage: 5000,
+  isMainVehicle: false,
+  createdAt: DateTime(2024, 6, 1),
+);
+
 void main() {
   late MockGetMyVehiclesUseCase mockGetVehicles;
   late MockSetMainVehicleUseCase mockSetMain;
@@ -224,6 +240,110 @@ void main() {
         },
         act: (cubit) => cubit.clearVehicles(),
         expect: () => [const ResultState<List<VehicleModel>>.empty()],
+      );
+    });
+
+    group('archiveLocally', () {
+      test('TC-veh-12: marks vehicle as archived (isArchived=true)', () {
+        vehicleCubit.addVehicleLocally(_vehicle1WithDate);
+        vehicleCubit.addVehicleLocally(_vehicle2WithDate);
+        vehicleCubit.archiveLocally('v2');
+        final state = vehicleCubit.state;
+        expect(state, isA<Data<List<VehicleModel>>>());
+        final data = (state as Data<List<VehicleModel>>).data;
+        final v2 = data.firstWhere((v) => v.id == 'v2');
+        expect(v2.isArchived, isTrue);
+      });
+
+      test(
+        'TC-veh-13: archiveLocally on main vehicle promotes next active',
+        () {
+          vehicleCubit.addVehicleLocally(_vehicle1WithDate);
+          vehicleCubit.addVehicleLocally(_vehicle2WithDate);
+
+          // v1 is main; archive it → v2 should become main
+          vehicleCubit.archiveLocally('v1');
+
+          final state = vehicleCubit.state;
+          expect(state, isA<Data<List<VehicleModel>>>());
+          final data = (state as Data<List<VehicleModel>>).data;
+          final newMain = data.firstWhere((v) => v.isMainVehicle);
+          expect(newMain.id, 'v2');
+        },
+      );
+
+      test('TC-veh-14: archived vehicle has isArchived=true in full list', () {
+        vehicleCubit.addVehicleLocally(_vehicle1WithDate);
+        vehicleCubit.addVehicleLocally(_vehicle2WithDate);
+
+        vehicleCubit.archiveLocally('v2');
+
+        final state = vehicleCubit.state;
+        expect(state, isA<Data<List<VehicleModel>>>());
+        final data = (state as Data<List<VehicleModel>>).data;
+        // v1 is still active and main
+        final v1 = data.firstWhere((v) => v.id == 'v1');
+        expect(v1.isMainVehicle, isTrue);
+        expect(v1.isArchived, isFalse);
+        // v2 is archived
+        final v2 = data.firstWhere((v) => v.id == 'v2');
+        expect(v2.isArchived, isTrue);
+        expect(v2.isMainVehicle, isFalse);
+      });
+    });
+
+    group('unarchiveLocally', () {
+      test(
+        'TC-veh-15: unarchiveLocally restores isArchived=false without changing main',
+        () {
+          vehicleCubit.addVehicleLocally(_vehicle1WithDate);
+          vehicleCubit.addVehicleLocally(_vehicle2WithDate);
+
+          // archive v2, then unarchive
+          vehicleCubit.archiveLocally('v2');
+          vehicleCubit.unarchiveLocally('v2');
+
+          final state = vehicleCubit.state;
+          expect(state, isA<Data<List<VehicleModel>>>());
+          final data = (state as Data<List<VehicleModel>>).data;
+          final v2 = data.firstWhere((v) => v.id == 'v2');
+          expect(v2.isArchived, isFalse);
+          // v1 remains main
+          final v1 = data.firstWhere((v) => v.id == 'v1');
+          expect(v1.isMainVehicle, isTrue);
+        },
+      );
+    });
+
+    group('_promoteNewMain (via archiveLocally)', () {
+      test(
+        'TC-veh-16: with null createdAt dates uses id tie-break asc',
+        () {
+          // Both vehicles have null createdAt → tie-break by id ascending
+          const vehicleA = VehicleModel(
+            id: 'a1',
+            name: 'Alfa',
+            currentMileage: 0,
+            isMainVehicle: true,
+          );
+          const vehicleB = VehicleModel(
+            id: 'b2',
+            name: 'Beta',
+            currentMileage: 0,
+            isMainVehicle: false,
+          );
+          vehicleCubit.addVehicleLocally(vehicleA);
+          vehicleCubit.addVehicleLocally(vehicleB);
+
+          // Archive main (a1) → promotion by id asc → b2 becomes main
+          vehicleCubit.archiveLocally('a1');
+
+          final state = vehicleCubit.state;
+          expect(state, isA<Data<List<VehicleModel>>>());
+          final data = (state as Data<List<VehicleModel>>).data;
+          final newMain = data.firstWhere((v) => v.isMainVehicle);
+          expect(newMain.id, 'b2');
+        },
       );
     });
   });

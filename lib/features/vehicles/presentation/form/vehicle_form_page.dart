@@ -4,7 +4,7 @@ import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/services/image_storage_service.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
-import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_delete_cubit.dart';
+import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_action_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/form/widgets/vehicle_form_view.dart';
 import 'package:rideglory/shared/cubits/form_image_cubit.dart';
 
@@ -27,7 +27,7 @@ class VehicleFormPage extends StatelessWidget {
               getIt.get<VehicleFormCubit>()..initialize(vehicle: vehicle),
         ),
         BlocProvider(
-          create: (context) => getIt<VehicleDeleteCubit>()..reset(),
+          create: (context) => getIt<VehicleActionCubit>()..reset(),
         ),
       ],
       child: const VehicleFormView(),

@@ -332,7 +332,21 @@
   "vehicle_addMaintenance": "Agregar mantenimiento",
   "vehicle_selectVehicle": "Seleccionar vehículo",
   "vehicle_archiveVehicle": "Archivar",
-  "vehicle_unarchiveVehicle": "Desarchivar",
+  "vehicle_unarchiveVehicle": "Restaurar",
+  "vehicle_archiveVehicleConfirmTitle": "Archivar vehículo",
+  "vehicle_archiveVehicleConfirmContent": "«{vehicleName}» pasará a la sección de archivados. Podrás restaurarlo cuando quieras.",
+  "@vehicle_archiveVehicleConfirmContent": {
+    "placeholders": {
+      "vehicleName": {
+        "type": "String"
+      }
+    }
+  },
+  "vehicle_vehicleArchived": "Vehículo archivado",
+  "vehicle_vehicleRestored": "Vehículo restaurado",
+  "vehicle_archivedSection": "ARCHIVADOS",
+  "vehicle_setMainVehicle": "Marcar como principal",
+  "vehicle_archiveConfirmButton": "Archivar",
   "vehicle_deleteVehicleConfirmContent": "¿Estás seguro de que deseas eliminar «{vehicleName}»?\n\nEsta acción eliminará todos los mantenimientos asociados a este vehículo y no se podrá deshacer.",
   "@vehicle_deleteVehicleConfirmContent": {
     "placeholders": {

@@ -15,7 +15,7 @@ import 'package:rideglory/features/vehicles/domain/models/vehicle_soat_form_data
 import 'package:rideglory/features/vehicles/domain/repository/vehicle_repository.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
-import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_delete_cubit.dart';
+import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_action_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/form/vehicle_form_body.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_params.dart';
 import 'package:rideglory/features/tecnomecanica/domain/models/tecnomecanica_model.dart';
@@ -113,7 +113,7 @@ class _VehicleFormViewState extends State<VehicleFormView> {
       confirmType: DialogActionType.danger,
       onConfirm: () {
         final vehicles = context.read<VehicleCubit>().availableVehicles;
-        context.read<VehicleDeleteCubit>().deleteVehicle(
+        context.read<VehicleActionCubit>().deleteVehicle(
           state.vehicle!.id!,
           availableVehicles: vehicles,
         );
@@ -301,7 +301,7 @@ class _VehicleFormViewState extends State<VehicleFormView> {
     router.pop(savedVehicle);
   }
 
-  void _deleteListener(BuildContext context, VehicleDeleteState state) {
+  void _deleteListener(BuildContext context, VehicleActionState state) {
     state.when(
       initial: () {},
       loading: () {},
@@ -315,6 +315,8 @@ class _VehicleFormViewState extends State<VehicleFormView> {
         );
         context.goAndClearStack(AppRoutes.garage);
       },
+      archiveSuccess: (_) {},
+      unarchiveSuccess: (_) {},
       error: (message) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(message), backgroundColor: AppColors.error),
@@ -354,7 +356,7 @@ class _VehicleFormViewState extends State<VehicleFormView> {
               BlocListener<VehicleFormCubit, VehicleFormState>(
                 listener: _formListener,
               ),
-              BlocListener<VehicleDeleteCubit, VehicleDeleteState>(
+              BlocListener<VehicleActionCubit, VehicleActionState>(
                 listener: _deleteListener,
               ),
             ],

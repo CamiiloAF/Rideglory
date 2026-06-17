@@ -997,7 +997,30 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_archiveVehicle => 'Archivar';
 
   @override
-  String get vehicle_unarchiveVehicle => 'Desarchivar';
+  String get vehicle_unarchiveVehicle => 'Restaurar';
+
+  @override
+  String get vehicle_archiveVehicleConfirmTitle => 'Archivar vehículo';
+
+  @override
+  String vehicle_archiveVehicleConfirmContent(String vehicleName) {
+    return '«$vehicleName» pasará a la sección de archivados. Podrás restaurarlo cuando quieras.';
+  }
+
+  @override
+  String get vehicle_vehicleArchived => 'Vehículo archivado';
+
+  @override
+  String get vehicle_vehicleRestored => 'Vehículo restaurado';
+
+  @override
+  String get vehicle_archivedSection => 'ARCHIVADOS';
+
+  @override
+  String get vehicle_setMainVehicle => 'Marcar como principal';
+
+  @override
+  String get vehicle_archiveConfirmButton => 'Archivar';
 
   @override
   String vehicle_deleteVehicleConfirmContent(String vehicleName) {
