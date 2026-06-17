@@ -134,6 +134,7 @@ class GarageVehiclesContent extends StatelessWidget {
                     GarageHeader(onAdd: () => _addVehicle(context)),
                     Expanded(
                       child: GarageEmptyState(
+                        onRefresh: loadVehicles,
                         onVehicleSavedLocally: ([_]) => loadVehicles(),
                       ),
                     ),
