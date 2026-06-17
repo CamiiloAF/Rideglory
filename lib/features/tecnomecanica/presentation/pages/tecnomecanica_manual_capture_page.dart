@@ -47,18 +47,34 @@ class _TecnomecanicaManualCapturePageState
   final _formKey = GlobalKey<FormBuilderState>();
   DateTime? _startDate;
   DateTime? _expiryDate;
+  String _cdaName = '';
   String? _localImagePath;
   bool _saving = false;
+  bool _datesInvalid = false;
   String? _error;
 
   bool get _isEditMode => widget.existingRtm != null;
 
+  bool get _canSubmit =>
+      !_saving &&
+      _cdaName.trim().isNotEmpty &&
+      _startDate != null &&
+      _expiryDate != null &&
+      !_datesInvalid;
+
   @override
   void initState() {
     super.initState();
+    _cdaName = widget.existingRtm?.cdaName ?? '';
     _startDate = widget.existingRtm?.startDate;
     _expiryDate = widget.existingRtm?.expiryDate;
     _localImagePath = widget.initialLocalImagePath;
+  }
+
+  void _validateDates() {
+    _datesInvalid = _startDate != null &&
+        _expiryDate != null &&
+        !_expiryDate!.isAfter(_startDate!);
   }
 
   Future<void> _pickImage() async {
@@ -223,6 +239,8 @@ class _TecnomecanicaManualCapturePageState
                       isRequired: true,
                       textInputAction: TextInputAction.next,
                       enabled: !_saving,
+                      onChanged: (value) =>
+                          setState(() => _cdaName = value ?? ''),
                     ),
                     const SizedBox(height: 12),
                     Row(
@@ -240,8 +258,10 @@ class _TecnomecanicaManualCapturePageState
                             isRequired: true,
                             firstDate: DateTime(2000),
                             lastDate: DateTime(2100),
-                            onChanged: (date) =>
-                                setState(() => _startDate = date),
+                            onChanged: (date) => setState(() {
+                              _startDate = date;
+                              _validateDates();
+                            }),
                           ),
                         ),
                         const SizedBox(width: 12),
@@ -258,13 +278,15 @@ class _TecnomecanicaManualCapturePageState
                             isRequired: true,
                             firstDate: DateTime(2000),
                             lastDate: DateTime(2100),
-                            onChanged: (date) =>
-                                setState(() => _expiryDate = date),
+                            onChanged: (date) => setState(() {
+                              _expiryDate = date;
+                              _validateDates();
+                            }),
                           ),
                         ),
                       ],
                     ),
-                    if (_error != null) ...[
+                    if (_datesInvalid || _error != null) ...[
                       const SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.all(12),
@@ -274,7 +296,9 @@ class _TecnomecanicaManualCapturePageState
                           border: Border.all(color: AppColors.error),
                         ),
                         child: Text(
-                          _error!,
+                          _datesInvalid
+                              ? context.l10n.tecnomecanica_expiry_after_start_error
+                              : _error!,
                           style: const TextStyle(
                             color: AppColors.error,
                             fontSize: 13,
@@ -287,7 +311,7 @@ class _TecnomecanicaManualCapturePageState
                       label: _saving
                           ? context.l10n.tecnomecanica_saving
                           : context.l10n.tecnomecanica_save_data_btn,
-                      onPressed: _saving ? null : _submit,
+                      onPressed: _canSubmit ? _submit : null,
                     ),
                   ],
                 ),

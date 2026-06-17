@@ -67,13 +67,22 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
   final _formKey = GlobalKey<FormBuilderState>();
   DateTime? _startDate;
   DateTime? _expiryDate;
+  String _insurer = '';
   String? _localImagePath;
   bool _saving = false;
   bool _scanning = false;
   bool _autofillApplied = false;
   bool _documentNotRecognized = false;
+  bool _datesInvalid = false;
   String? _error;
   SoatExtraction? _extraction;
+
+  bool get _canSubmit =>
+      !_saving &&
+      _insurer.trim().isNotEmpty &&
+      _startDate != null &&
+      _expiryDate != null &&
+      !_datesInvalid;
 
   bool get _isEditMode => widget.vehicle?.id != null;
 
@@ -94,10 +103,17 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
   bool get _canOfferAutofill =>
       !_autofillApplied && (_extraction?.shouldPrefill ?? false);
 
+  void _validateDates() {
+    _datesInvalid = _startDate != null &&
+        _expiryDate != null &&
+        !_expiryDate!.isAfter(_startDate!);
+  }
+
   @override
   void initState() {
     super.initState();
     _extraction = widget.extraction;
+    _insurer = widget.existingSoat?.insurer ?? '';
     _startDate = widget.existingSoat?.startDate;
     _expiryDate = widget.existingSoat?.expiryDate;
     _localImagePath = widget.initialLocalImagePath;
@@ -402,6 +418,8 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
                     isRequired: true,
                     textInputAction: TextInputAction.done,
                     enabled: !_saving,
+                    onChanged: (value) =>
+                        setState(() => _insurer = value ?? ''),
                   ),
                   const SizedBox(height: 12),
                   Row(
@@ -418,8 +436,10 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
                           isRequired: true,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
-                          onChanged: (date) =>
-                              setState(() => _startDate = date),
+                          onChanged: (date) => setState(() {
+                            _startDate = date;
+                            _validateDates();
+                          }),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -436,8 +456,10 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
                           isRequired: true,
                           firstDate: DateTime(2000),
                           lastDate: DateTime(2100),
-                          onChanged: (date) =>
-                              setState(() => _expiryDate = date),
+                          onChanged: (date) => setState(() {
+                            _expiryDate = date;
+                            _validateDates();
+                          }),
                         ),
                       ),
                     ],
@@ -447,7 +469,7 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
                     startDate: _startDate,
                     expiryDate: _expiryDate,
                   ),
-                  if (_error != null) ...[
+                  if (_datesInvalid || _error != null) ...[
                     const SizedBox(height: 16),
                     Container(
                       padding: const EdgeInsets.all(12),
@@ -457,7 +479,9 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
                         border: Border.all(color: AppColors.error),
                       ),
                       child: Text(
-                        _error!,
+                        _datesInvalid
+                            ? context.l10n.soat_expiry_after_start_error
+                            : _error!,
                         style: const TextStyle(
                           color: AppColors.error,
                           fontSize: 13,
@@ -472,7 +496,7 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
                         : _isEditMode
                         ? context.l10n.soat_save_data_btn
                         : context.l10n.vehicle_soat_confirm_button,
-                    onPressed: _saving ? null : _submit,
+                    onPressed: _canSubmit ? _submit : null,
                   ),
                 ],
               ),
