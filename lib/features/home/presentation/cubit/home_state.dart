@@ -13,9 +13,8 @@ final class HomeLoading extends HomeState {
 }
 
 final class HomeLoaded extends HomeState {
-  const HomeLoaded({this.mainVehicle, required this.upcomingEvents});
+  const HomeLoaded({required this.upcomingEvents});
 
-  final VehicleModel? mainVehicle;
   final List<EventModel> upcomingEvents;
 }
 

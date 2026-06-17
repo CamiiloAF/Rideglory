@@ -8,6 +8,7 @@ import 'package:rideglory/features/home/presentation/widgets/home_events_section
 import 'package:rideglory/features/home/presentation/widgets/home_garage_section.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_header.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_view_all_events_button.dart';
+import 'package:rideglory/shared/widgets/states/page_error_state_widget.dart';
 
 class HomeScaffold extends StatelessWidget {
   const HomeScaffold({super.key});
@@ -50,8 +51,8 @@ class HomeScaffold extends StatelessWidget {
                       ),
                     )
                   else if (state is HomeLoaded) ...[
-                    SliverToBoxAdapter(
-                      child: HomeGarageSection(vehicle: state.mainVehicle),
+                    const SliverToBoxAdapter(
+                      child: HomeGarageSection(),
                     ),
                     SliverToBoxAdapter(
                       child: HomeEventsSection(events: state.upcomingEvents),
@@ -59,13 +60,10 @@ class HomeScaffold extends StatelessWidget {
                     const SliverToBoxAdapter(child: HomeViewAllEventsButton()),
                   ] else if (state is HomeError)
                     SliverFillRemaining(
-                      child: Center(
-                        child: Text(
-                          state.message,
-                          style: TextStyle(
-                            color: context.colorScheme.onSurfaceVariant,
-                          ),
-                        ),
+                      child: PageErrorStateWidget(
+                        title: context.l10n.errorOccurred,
+                        message: state.message,
+                        onRetry: () => context.read<HomeCubit>().loadHomeData(),
                       ),
                     ),
                   const SliverToBoxAdapter(child: AppSpacing.gap100),

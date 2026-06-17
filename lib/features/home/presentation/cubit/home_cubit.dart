@@ -5,7 +5,6 @@ import 'package:rideglory/core/services/analytics/analytics_params.dart';
 import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/home/domain/use_cases/get_home_data_use_case.dart';
-import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
 part 'home_state.dart';
 
@@ -33,10 +32,7 @@ class HomeCubit extends Cubit<HomeState> {
             })
             .ignore();
         emit(
-          HomeLoaded(
-            mainVehicle: data.mainVehicle,
-            upcomingEvents: data.upcomingEvents,
-          ),
+          HomeLoaded(upcomingEvents: data.upcomingEvents),
         );
       },
     );
@@ -49,7 +45,7 @@ class HomeCubit extends Cubit<HomeState> {
         .map((e) => e.id == event.id ? event : e)
         .toList(growable: false);
     emit(
-      HomeLoaded(mainVehicle: current.mainVehicle, upcomingEvents: updated),
+      HomeLoaded(upcomingEvents: updated),
     );
   }
 
@@ -60,7 +56,7 @@ class HomeCubit extends Cubit<HomeState> {
         .where((e) => e.id != eventId)
         .toList(growable: false);
     emit(
-      HomeLoaded(mainVehicle: current.mainVehicle, upcomingEvents: updated),
+      HomeLoaded(upcomingEvents: updated),
     );
   }
 }

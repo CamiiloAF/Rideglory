@@ -166,10 +166,7 @@ void main() {
       expect: () => [
         isA<HomeLoading>(),
         predicate<HomeState>(
-          (state) =>
-              state is HomeLoaded &&
-              state.mainVehicle == mockVehicle &&
-              state.upcomingEvents.length == 1,
+          (state) => state is HomeLoaded && state.upcomingEvents.length == 1,
         ),
       ],
     );
