@@ -356,7 +356,18 @@
     }
   },
   "vehicle_vehicleDeleted": "Vehículo eliminado exitosamente",
+  "vehicle_permanentDeleteTitle": "Eliminar vehículo permanentemente",
+  "vehicle_permanentDeleteMessage": "¿Estás seguro de que deseas eliminar «{vehicleName}» de forma permanente?\n\nEsta acción no se puede deshacer.",
+  "@vehicle_permanentDeleteMessage": {
+    "placeholders": {
+      "vehicleName": {}
+    }
+  },
+  "vehicle_permanentDeleteAction": "Eliminar permanentemente",
+  "vehicle_permanentDeleteSuccess": "Vehículo eliminado permanentemente",
+  "vehicle_permanentDeleteCancel": "Cancelar",
   "vehicle_noVehicles": "No tienes vehículos registrados",
+  "vehicle_noVehiclesDescription": "Agrega tu primera moto para llevar el control de tu garaje, mantenimientos y documentos.",
   "vehicle_noActiveVehicles": "Sin vehículos activos",
   "vehicle_noActiveVehiclesSubtitle": "Todos tus vehículos están archivados. Puedes restaurar uno o agregar uno nuevo.",
   "vehicle_mainVehicle": "Vehículo principal",

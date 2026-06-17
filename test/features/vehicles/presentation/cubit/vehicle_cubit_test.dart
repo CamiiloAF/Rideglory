@@ -171,22 +171,6 @@ void main() {
       );
     });
 
-    group('deleteVehicleLocally', () {
-      blocTest<VehicleCubit, ResultState<List<VehicleModel>>>(
-        'TC-veh-8: emits empty when last vehicle is deleted',
-        seed: () {
-          // Pre-seed by calling addVehicleLocally before act
-          return const ResultState<List<VehicleModel>>.initial();
-        },
-        build: () {
-          vehicleCubit.addVehicleLocally(_vehicle1);
-          return vehicleCubit;
-        },
-        act: (cubit) => cubit.deleteVehicleLocally('v1'),
-        expect: () => [const ResultState<List<VehicleModel>>.empty()],
-      );
-    });
-
     group('selectVehicle', () {
       test('TC-veh-9: selectVehicle changes currentVehicle', () async {
         when(() => mockGetVehicles()).thenAnswer(

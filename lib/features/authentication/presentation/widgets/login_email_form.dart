@@ -26,52 +26,53 @@ class LoginEmailForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return FormBuilder(
       key: formKey,
-      child: Column(
-        children: [
-          AppTextField(
-            name: AuthFormFields.email,
-            labelText: context.l10n.auth_email,
-            hintText: context.l10n.auth_enterEmail,
-            prefixIcon: Icons.email_rounded,
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.next,
-            validator: FormBuilderValidators.compose([
-              FormBuilderValidators.required(
-                errorText: context.l10n.auth_emailRequired,
-              ),
-              FormBuilderValidators.email(errorText: context.l10n.auth_invalidEmail),
-            ]),
-          ),
-          AppSpacing.gapLg,
-          AppPasswordTextField(
-            name: AuthFormFields.password,
-            labelText: context.l10n.auth_password,
-            hintText: context.l10n.auth_enterPassword,
-            textInputAction: TextInputAction.done,
-            onFieldSubmitted: (_) => _handleEmailLogin(context),
-            validator: FormBuilderValidators.compose([
-              FormBuilderValidators.required(
-                errorText: context.l10n.auth_passwordRequired,
-              ),
-              FormBuilderValidators.minLength(
-                6,
-                errorText: context.l10n.auth_passwordMinLength,
-              ),
-            ]),
-          ),
-          AppSpacing.gapXxl,
-
-          // Sign in button
-          BlocBuilder<AuthCubit, AuthState>(
-            builder: (context, state) {
-              return AppButton(
-                onPressed: () => _handleEmailLogin(context),
-                label: context.l10n.auth_signIn,
-                isLoading: state.isLoading,
-              );
-            },
-          ),
-        ],
+      child: AutofillGroup(
+        child: Column(
+          children: [
+            AppTextField(
+              name: AuthFormFields.email,
+              labelText: context.l10n.auth_email,
+              hintText: context.l10n.auth_enterEmail,
+              prefixIcon: Icons.email_rounded,
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.next,
+              autofillHints: const [AutofillHints.email],
+              validator: FormBuilderValidators.compose([
+                FormBuilderValidators.required(
+                  errorText: context.l10n.auth_emailRequired,
+                ),
+                FormBuilderValidators.email(errorText: context.l10n.auth_invalidEmail),
+              ]),
+            ),
+            AppSpacing.gapLg,
+            AppPasswordTextField(
+              name: AuthFormFields.password,
+              labelText: context.l10n.auth_password,
+              hintText: context.l10n.auth_enterPassword,
+              textInputAction: TextInputAction.done,
+              onFieldSubmitted: (_) => _handleEmailLogin(context),
+              validator: FormBuilderValidators.compose([
+                FormBuilderValidators.required(
+                  errorText: context.l10n.auth_passwordRequired,
+                ),
+                FormBuilderValidators.minLength(
+                  6,
+                  errorText: context.l10n.auth_passwordMinLength,
+                ),
+              ]),
+            ),
+            AppSpacing.gapXxl,
+            BlocBuilder<AuthCubit, AuthState>(
+              builder: (context, state) {
+                return AppButton(
+                  onPressed: () => _handleEmailLogin(context),
+                  label: context.l10n.auth_signIn,
+                  isLoading: state.isLoading,
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

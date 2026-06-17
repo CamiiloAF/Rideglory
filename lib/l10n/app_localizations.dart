@@ -2014,11 +2014,47 @@ abstract class AppLocalizations {
   /// **'Vehículo eliminado exitosamente'**
   String get vehicle_vehicleDeleted;
 
+  /// No description provided for @vehicle_permanentDeleteTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar vehículo permanentemente'**
+  String get vehicle_permanentDeleteTitle;
+
+  /// No description provided for @vehicle_permanentDeleteMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Estás seguro de que deseas eliminar «{vehicleName}» de forma permanente?\n\nEsta acción no se puede deshacer.'**
+  String vehicle_permanentDeleteMessage(Object vehicleName);
+
+  /// No description provided for @vehicle_permanentDeleteAction.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar permanentemente'**
+  String get vehicle_permanentDeleteAction;
+
+  /// No description provided for @vehicle_permanentDeleteSuccess.
+  ///
+  /// In es, this message translates to:
+  /// **'Vehículo eliminado permanentemente'**
+  String get vehicle_permanentDeleteSuccess;
+
+  /// No description provided for @vehicle_permanentDeleteCancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get vehicle_permanentDeleteCancel;
+
   /// No description provided for @vehicle_noVehicles.
   ///
   /// In es, this message translates to:
   /// **'No tienes vehículos registrados'**
   String get vehicle_noVehicles;
+
+  /// No description provided for @vehicle_noVehiclesDescription.
+  ///
+  /// In es, this message translates to:
+  /// **'Agrega tu primera moto para llevar el control de tu garaje, mantenimientos y documentos.'**
+  String get vehicle_noVehiclesDescription;
 
   /// No description provided for @vehicle_noActiveVehicles.
   ///

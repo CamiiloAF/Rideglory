@@ -103,6 +103,104 @@ const fixBlock = (feedback) =>
     : ''
 
 // ---------------------------------------------------------------------------
+// Helper: genera QA_CHECKLIST.md al final de cada corrida
+// ---------------------------------------------------------------------------
+async function generateQaChecklist(ws, slug, mode, sources) {
+  return agent(
+    `Eres el QA Checklist writer de rg-exec ${slug}. Tu unico trabajo es escribir UN DOCUMENTO HUMANO de prueba manual que el PO/QA usara para aprobar la fase. Escribe en espanol colombiano, segunda persona singular ("toca", "abre", "verifica").
+
+${HARD_RULES}
+
+CONTEXTO (lee todos los que existan):
+- ${ws}/PRD_NORMALIZED.md — §5 AC y §6 guardrails son la fuente de verdad de que probar.
+- ${ws}/handoffs/qa.md — catalogo de pruebas manuales ya identificadas por QA.
+- ${ws}/handoffs/frontend.md — pantallas y flujos implementados.
+- ${ws}/handoffs/backend.md — endpoints y comportamiento del API.
+- ${ws}/SUMMARY.md — resumen de que cambio.
+- git diff --stat — archivos reales tocados.
+${sources ? sources : ''}
+
+FORMATO OBLIGATORIO (respeta cada heading, tabla y campo exactamente):
+
+# Checklist de QA — <titulo descriptivo de la feature, no el slug>
+
+**Feature:** <nombre legible>
+**Fases cubiertas:** <ej. "Fase 1 (backend) + Fase 3 (Flutter)">
+**Estado:** Pendiente de aprobacion PO
+
+---
+
+## Pre-condiciones
+
+Antes de empezar, asegurate de tener en la cuenta de prueba:
+
+- [ ] <condicion 1 — datos de prueba necesarios>
+- [ ] <condicion N>
+
+---
+
+## 1. <Titulo del flujo principal>
+
+> <Instruccion de contexto: donde estar, que abrir>
+
+| # | Accion | Resultado esperado | ✅/❌ |
+|---|--------|--------------------|-------|
+| 1.1 | <imperativo concreto> | <observable, sin ambiguedad> | |
+
+---
+
+## N. <Flujo N>
+
+...
+
+## <N+1>. Casos de borde
+
+### <N+1>A. <caso>
+
+> <contexto>
+
+| # | Accion | Resultado esperado | ✅/❌ |
+|---|--------|--------------------|-------|
+
+---
+
+## <N+2>. Verificaciones tecnicas (equipo de desarrollo)
+
+> Estas verificaciones requieren acceso a la base de datos o logs del backend.
+
+| # | Verificacion | Resultado esperado | ✅/❌ |
+|---|-------------|--------------------|-------|
+
+---
+
+## Resultado final
+
+| Estado | Criterio |
+|--------|----------|
+| ✅ Aprobado | Todos los casos X–Y marcados como ✅ |
+| ⚠️ Aprobado con observaciones | Maximo 2 casos fallidos de baja severidad, con ticket creado |
+| ❌ Rechazado | Cualquier caso de las secciones criticas marcado como ❌ |
+
+**Revisado por:** ___________________
+**Fecha:** ___________________
+**Resultado:** ___________________
+**Observaciones:** ___________________
+
+REGLAS DE CONTENIDO:
+- Agrupa los casos por FLUJO DE USUARIO (no por AC tecnico). El tester no sabe de clases ni cubits — describe acciones UI reales.
+- Cada caso: numero, accion concreta en imperativo, resultado esperado observable (lo que se ve en pantalla), columna ✅/❌ vacia.
+- Pre-condiciones: datos de prueba especificos que el tester debe tener antes de empezar.
+- Casos de borde: al menos los escenarios no-happy-path relevantes (error de red, lista vacia, usuario sin permisos, etc.).
+- Verificaciones tecnicas: consultas a DB o logs de red que validen el comportamiento del backend (solo para dev).
+- Criterio de rechazo en "Resultado final": menciona las secciones criticas por numero.
+- Escribe el documento en ${ws}/QA_CHECKLIST.md.
+
+Devuelve {status:'pass', filesChanged:['${ws}/QA_CHECKLIST.md'], testResult:'n/a', notes: '<N> casos en <M> secciones'}.`,
+    { label: 'qa-checklist', phase: 'Review', model: 'sonnet', schema: IMPL_SCHEMA },
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Phase: Normalize (siempre)
 // ---------------------------------------------------------------------------
 phase('Normalize')
@@ -201,6 +299,8 @@ verdict='needs_changes' solo si hay un blocker real. Devuelve (verdict, blockers
     },
   )
 
+  await generateQaChecklist(WS, SLUG, MODE, null)
+
   return {
     slug: SLUG,
     workspace: WS,
@@ -209,8 +309,12 @@ verdict='needs_changes' solo si hay un blocker real. Devuelve (verdict, blockers
     auditScore: impl.verdict.score,
     verdict: liteClose.verdict,
     blockers: liteClose.blockers,
-    artifacts: { summary: `${WS}/SUMMARY.md`, reviewChecklist: `${WS}/REVIEW_CHECKLIST.md` },
-    note: `Nivel lite. Codigo modificado SIN commitear. Revisa con \`git diff\` y ${WS}/REVIEW_CHECKLIST.md.`,
+    artifacts: {
+      summary: `${WS}/SUMMARY.md`,
+      reviewChecklist: `${WS}/REVIEW_CHECKLIST.md`,
+      qaChecklist: `${WS}/QA_CHECKLIST.md`,
+    },
+    note: `Nivel lite. Codigo modificado SIN commitear. Revisa con \`git diff\` y ${WS}/REVIEW_CHECKLIST.md. QA: ${WS}/QA_CHECKLIST.md.`,
   }
 }
 
@@ -312,7 +416,9 @@ CONTEXTO: ${WS}/PRD_NORMALIZED.md, ${WS}/handoffs/architect.md, .claude/agents/d
 Change map:
 ${changeMapStr}
 
-TU TRABAJO: pantallas (NEW|EXTEND|UPDATE), estados UX, componentes (reusa primero), copy, accesibilidad. Pencil MCP: no toques el .pen global salvo autorizacion; exporta a ${WS}/analysis/design/. Si no, mockups HTML alli.
+TU TRABAJO: pantallas (NEW|EXTEND|UPDATE), estados UX, componentes (reusa primero), copy, accesibilidad.
+Pencil MCP OBLIGATORIO: usa get_editor_state(include_schema:true) → batch_design sobre rideglory.pen (el unico .pen del proyecto; NO crees un .pen nuevo ni separado). Si Pencil MCP falla o lanza error, DETENTE inmediatamente: escribe ${WS}/handoffs/design.md con una seccion ## BLOQUEADO explicando el error, devuelve status:'fail', y NO crees mockups HTML ni alternativas. NUNCA generes archivos .html como sustituto de diseno.
+Si Pencil MCP funciona: exporta screenshots con export_nodes a ${WS}/analysis/design/ para referencia del Frontend agent.
 Escribe ${WS}/handoffs/design.md (## Pantallas, ## Flujos UX, ## Componentes, ## Copy, ## Accesibilidad, ## Notas para Frontend).
 ${fixBlock(feedback)}
 Devuelve {status:'pass', filesChanged, testResult:'n/a', notes}.`,
@@ -405,8 +511,9 @@ if (designNeeded) {
     uxRound++
     log(`[ux-review] blocked (ronda ${uxRound}/${CFG.fixCap}) — corrigiendo diseno en Pencil...`)
     await agent(
-      `Eres el Design agent de rg-exec ${SLUG} en MODO FIX por UX Review. Edita los frames en Pencil MCP. NO commitees.
+      `Eres el Design agent de rg-exec ${SLUG} en MODO FIX por UX Review. Edita los frames en Pencil MCP sobre rideglory.pen (el unico .pen del proyecto). NO commitees. NUNCA crees mockups HTML.
 ${HARD_RULES}
+Si Pencil MCP falla, DETENTE: escribe el error en ${WS}/handoffs/design.md y devuelve status:'fail'.
 El UX Reviewer bloqueo el diseno. Corrige SOLO estos Bloqueantes en los frames de Pencil (usa batch_design) y actualiza la seccion de cambios en ${WS}/handoffs/design.md:
 ${uxVerdict.blockers.map((b) => '- ' + b).join('\n')}
 Devuelve {status:'pass', filesChanged, testResult:'n/a', notes}.`,
@@ -631,6 +738,8 @@ Devuelve {status, filesChanged, testResult, notes}.`,
   tl = await agent(techLeadPrompt('Re-revision tras correcciones.'), { label: 'tech-lead', phase: 'Review', model: 'sonnet', schema: VERDICT_SCHEMA })
 }
 
+await generateQaChecklist(WS, SLUG, MODE, null)
+
 return {
   slug: SLUG,
   workspace: WS,
@@ -647,6 +756,7 @@ return {
     reviewChecklist: `${WS}/REVIEW_CHECKLIST.md`,
     techLead: `${WS}/handoffs/tech_lead.md`,
     uxReview: uxVerdict ? `${WS}/handoffs/ux-review.md` : null,
+    qaChecklist: `${WS}/QA_CHECKLIST.md`,
   },
-  note: `Nivel ${MODE}. Codigo modificado SIN commitear. Revisa con \`git diff\` y ${WS}/REVIEW_CHECKLIST.md.`,
+  note: `Nivel ${MODE}. Codigo modificado SIN commitear. Revisa con \`git diff\` y ${WS}/REVIEW_CHECKLIST.md. QA: ${WS}/QA_CHECKLIST.md.`,
 }

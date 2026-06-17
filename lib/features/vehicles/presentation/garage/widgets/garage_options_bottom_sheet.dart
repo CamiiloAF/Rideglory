@@ -54,15 +54,6 @@ class GarageOptionsBottomSheet extends StatelessWidget {
           child: BlocListener<VehicleActionCubit, VehicleActionState>(
             listener: (ctx, state) {
               state.whenOrNull(
-                success: (_) {
-                  ScaffoldMessenger.of(parentContext).showSnackBar(
-                    SnackBar(
-                      content: Text(parentContext.l10n.vehicle_vehicleDeleted),
-                      backgroundColor: AppColors.success,
-                    ),
-                  );
-                  onGarageListUpdatedLocally?.call();
-                },
                 archiveSuccess: (_) {
                   vehicleCubit.archiveLocally(vehicle.id!);
                   ctx.pop();
@@ -87,11 +78,24 @@ class GarageOptionsBottomSheet extends StatelessWidget {
                     ),
                   );
                 },
+                permanentDeleteSuccess: (_) {
+                  vehicleCubit.deleteLocally(vehicle.id!);
+                  ctx.pop();
+                  ScaffoldMessenger.of(parentContext).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        parentContext.l10n.vehicle_permanentDeleteSuccess,
+                      ),
+                      backgroundColor: AppColors.success,
+                    ),
+                  );
+                },
                 error: (message) {
-                  ScaffoldMessenger.of(ctx).showSnackBar(
+                  ctx.pop();
+                  ScaffoldMessenger.of(parentContext).showSnackBar(
                     SnackBar(
                       content: Text(message),
-                      backgroundColor: ctx.colorScheme.error,
+                      backgroundColor: parentContext.colorScheme.error,
                     ),
                   );
                 },
@@ -173,15 +177,45 @@ class GarageOptionsBottomSheet extends StatelessWidget {
             label: context.l10n.vehicle_unarchiveVehicle,
             onTap: () => actionCubit.unarchiveVehicle(vehicle),
           ),
+          GarageOptionRow(
+            icon: LucideIcons.trash2,
+            label: context.l10n.vehicle_permanentDeleteAction,
+            iconColor: AppColors.error,
+            onTap: () async {
+              final confirm = await ConfirmationDialog.show(
+                context: parentContext,
+                title: parentContext.l10n.vehicle_permanentDeleteTitle,
+                content: parentContext.l10n.vehicle_permanentDeleteMessage(
+                  vehicle.name,
+                ),
+                cancelLabel: parentContext.l10n.vehicle_permanentDeleteCancel,
+                confirmLabel: parentContext.l10n.vehicle_permanentDeleteAction,
+                confirmType: DialogActionType.danger,
+                isDismissible: true,
+              );
+              if (confirm != true || !parentContext.mounted) return;
+              actionCubit.permanentlyDeleteVehicle(vehicle.id!);
+            },
+          ),
         ] else ...[
           if (!vehicle.isMainVehicle)
             GarageOptionRow(
               icon: LucideIcons.star,
               label: context.l10n.vehicle_setMainVehicle,
-              onTap: () {
+              onTap: () async {
+                if (vehicle.id == null) return;
+                final cubit = context.read<VehicleCubit>();
+                final messenger = ScaffoldMessenger.of(parentContext);
+                final errorColor = parentContext.colorScheme.error;
                 context.pop();
-                if (vehicle.id != null) {
-                  context.read<VehicleCubit>().setMainVehicle(vehicle.id!);
+                final errorMsg = await cubit.setMainVehicle(vehicle.id!);
+                if (errorMsg != null) {
+                  messenger.showSnackBar(
+                    SnackBar(
+                      content: Text(errorMsg),
+                      backgroundColor: errorColor,
+                    ),
+                  );
                 }
               },
             ),

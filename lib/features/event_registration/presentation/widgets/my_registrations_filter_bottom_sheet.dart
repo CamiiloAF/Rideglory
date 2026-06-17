@@ -17,6 +17,7 @@ class MyRegistrationsFilterBottomSheet extends StatefulWidget {
   static Future<void> show({required BuildContext context}) {
     return showModalBottomSheet<void>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: Colors.transparent, // Intentional: bottom sheet uses transparent bg to show rounded custom container
       builder: (_) => MyRegistrationsFilterBottomSheet(cubitContext: context),

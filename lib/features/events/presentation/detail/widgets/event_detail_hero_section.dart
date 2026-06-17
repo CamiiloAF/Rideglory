@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_circle_button.dart';
-import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_fullscreen_image.dart';
+import 'package:rideglory/shared/widgets/fullscreen_image_viewer.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_header_background_image.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_options_bottom_sheet.dart';
 
@@ -42,7 +42,7 @@ class EventDetailHeroSection extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: event.imageUrl != null && event.imageUrl!.isNotEmpty
-                ? () => EventDetailFullscreenImage.show(
+                ? () => FullscreenImageViewer.show(
                     context,
                     imageUrl: event.imageUrl!,
                     heroTag: 'event-image-${event.id}',

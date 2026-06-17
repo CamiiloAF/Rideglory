@@ -17,7 +17,7 @@
   <key>provisioningProfiles</key>
   <dict>
     <key>com.camiloagudelo.rideglory</key>
-    <string>rideglory_appstore</string>
+    <string>Rideglory</string>
   </dict>
 </dict>
 </plist>

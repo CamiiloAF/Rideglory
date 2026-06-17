@@ -50,6 +50,7 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
     final result = await _getMyVehiclesUseCase();
     result.fold((error) => emit(ResultState.error(error: error)), (vehicles) {
       _vehicles = List<VehicleModel>.from(vehicles);
+      _ensureLocalMain();
       _selectedVehicleId = _selectionIdDefault(_vehicles);
       // AC diferido de Fase 5: cablear user property has_vehicle.
       _analytics
@@ -89,18 +90,22 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
     _emitLoadedOrEmpty();
   }
 
-  Future<void> setMainVehicle(String vehicleId) async {
-    if (!_vehicles.any((v) => v.id == vehicleId)) return;
+  Future<String?> setMainVehicle(String vehicleId) async {
+    if (!_vehicles.any((v) => v.id == vehicleId)) return null;
 
     final result = await _setMainVehicleUseCase(vehicleId);
-    result.fold((_) {}, (updated) {
-      _vehicles = _vehicles
-          .map((v) => v.copyWith(isMainVehicle: v.id == updated.id))
-          .toList();
-      _selectedVehicleId = updated.id;
-      _analytics.logEvent(AnalyticsEvents.vehicleSetMain).ignore();
-      _emitLoadedOrEmpty();
-    });
+    return result.fold(
+      (error) => error.message,
+      (updated) {
+        _vehicles = _vehicles
+            .map((v) => v.copyWith(isMainVehicle: v.id == updated.id))
+            .toList();
+        _selectedVehicleId = updated.id;
+        _analytics.logEvent(AnalyticsEvents.vehicleSetMain).ignore();
+        _emitLoadedOrEmpty();
+        return null;
+      },
+    );
   }
 
   void addVehicleLocally(VehicleModel vehicle) {
@@ -184,6 +189,14 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
     _emitLoadedOrEmpty();
   }
 
+  void deleteLocally(String id) {
+    _vehicles = _vehicles.where((v) => v.id != id).toList();
+    if (_selectedVehicleId == id) {
+      _selectedVehicleId = _selectionIdDefault(_vehicles);
+    }
+    _emitLoadedOrEmpty();
+  }
+
   /// Promotes the first active (non-archived) vehicle to main. Ordering:
   /// createdAt desc (nulls last), then id asc as tie-break.
   void _promoteNewMain(List<VehicleModel> actives) {
@@ -211,28 +224,19 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
     _selectedVehicleId = newMainId;
   }
 
-  void deleteVehicleLocally(String vehicleId) {
-    final wasSelection =
-        currentVehicle?.id == vehicleId || _selectedVehicleId == vehicleId;
-
-    _vehicles = _vehicles.where((v) => v.id != vehicleId).toList();
-
-    if (_vehicles.isEmpty) {
-      _selectedVehicleId = null;
-      emit(const ResultState.empty());
-      return;
-    }
-
-    if (wasSelection) {
-      _selectedVehicleId = _selectionIdDefault(_vehicles);
-    }
-    _emitLoadedOrEmpty();
-  }
-
   void clearVehicles() {
     _vehicles = [];
     _selectedVehicleId = null;
     emit(const ResultState.empty());
+  }
+
+  void _ensureLocalMain() {
+    final actives = _vehicles.where((v) => !v.isArchived).toList();
+    if (actives.isEmpty || actives.any((v) => v.isMainVehicle)) return;
+    final firstId = actives.first.id;
+    _vehicles = _vehicles
+        .map((v) => v.copyWith(isMainVehicle: v.id == firstId))
+        .toList();
   }
 
   VehicleModel? _mainVehicle(List<VehicleModel> list) {

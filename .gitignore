@@ -65,6 +65,9 @@ ios/config/prod/GoogleService-Info.plist
 # Design exports
 images/
 
+# Exec-run design screenshots (binaries temporales del workflow rg-exec)
+docs/exec-runs/**/design/
+
 # Generated files
 **.config.dart
 **.g.dart

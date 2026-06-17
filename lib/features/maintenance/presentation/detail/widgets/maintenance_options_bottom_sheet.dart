@@ -11,6 +11,7 @@ class MaintenanceOptionsBottomSheet extends StatelessWidget {
   static Future<MaintenanceAction?> show(BuildContext context) {
     return showModalBottomSheet<MaintenanceAction>(
       context: context,
+      useRootNavigator: true,
       backgroundColor: context.colorScheme.surface,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),

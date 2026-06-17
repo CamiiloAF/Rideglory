@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/domain/result_state.dart';
-import 'package:rideglory/core/extensions/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rideglory/core/di/injection.dart';
 
@@ -15,7 +14,6 @@ import 'package:rideglory/features/vehicles/domain/models/vehicle_soat_form_data
 import 'package:rideglory/features/vehicles/domain/repository/vehicle_repository.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
-import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_action_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/form/vehicle_form_body.dart';
 import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_params.dart';
 import 'package:rideglory/features/tecnomecanica/domain/models/tecnomecanica_model.dart';
@@ -95,29 +93,6 @@ class _VehicleFormViewState extends State<VehicleFormView> {
     cubit.saveVehicle(
       vehicleToSave,
       localImagePath: imageCubit.selectedLocalImagePath,
-    );
-  }
-
-  Future<void> _confirmDelete() async {
-    final state = context.read<VehicleFormCubit>().state;
-    if (state.vehicle?.id == null) return;
-
-    await ConfirmationDialog.show(
-      context: context,
-      title: context.l10n.vehicle_deleteVehicle,
-      content: context.l10n.vehicle_deleteVehicleConfirmContent(
-        state.vehicle!.name,
-      ),
-      cancelLabel: context.l10n.cancel,
-      confirmLabel: context.l10n.delete,
-      confirmType: DialogActionType.danger,
-      onConfirm: () {
-        final vehicles = context.read<VehicleCubit>().availableVehicles;
-        context.read<VehicleActionCubit>().deleteVehicle(
-          state.vehicle!.id!,
-          availableVehicles: vehicles,
-        );
-      },
     );
   }
 
@@ -300,35 +275,6 @@ class _VehicleFormViewState extends State<VehicleFormView> {
     router.pop(savedVehicle);
   }
 
-  void _deleteListener(BuildContext context, VehicleActionState state) {
-    state.when(
-      initial: () {},
-      loading: () {},
-      success: (deletedId) {
-        context.read<VehicleCubit>().deleteVehicleLocally(deletedId);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.deletedSuccessfully),
-            backgroundColor: AppColors.success,
-          ),
-        );
-        context.goAndClearStack(AppRoutes.garage);
-      },
-      archiveSuccess: (_) {},
-      unarchiveSuccess: (_) {},
-      error: (message) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(message), backgroundColor: AppColors.error),
-        );
-      },
-      errorLastVehicle: (message) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(message), backgroundColor: AppColors.error),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<VehicleFormCubit, VehicleFormState>(
@@ -350,20 +296,12 @@ class _VehicleFormViewState extends State<VehicleFormView> {
               isLoading: formState.isLoading,
             ),
           ),
-          body: MultiBlocListener(
-            listeners: [
-              BlocListener<VehicleFormCubit, VehicleFormState>(
-                listener: _formListener,
-              ),
-              BlocListener<VehicleActionCubit, VehicleActionState>(
-                listener: _deleteListener,
-              ),
-            ],
+          body: BlocListener<VehicleFormCubit, VehicleFormState>(
+            listener: _formListener,
             child: VehicleFormBody(
               formKey: context.read<VehicleFormCubit>().formKey,
               initialValue: _initialValues,
               onSave: _saveVehicle,
-              onDelete: _confirmDelete,
             ),
           ),
         );

@@ -30,6 +30,7 @@ class EventOptionsBottomSheet extends StatelessWidget {
   }) {
     return showModalBottomSheet<void>(
       context: context,
+      useRootNavigator: true,
       useSafeArea: true,
       backgroundColor: Colors.transparent,
       barrierColor: AppColors.darkBgPrimary.withValues(alpha: 0.82),

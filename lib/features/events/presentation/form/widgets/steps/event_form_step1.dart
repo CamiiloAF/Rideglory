@@ -156,6 +156,7 @@ class EventFormStep1 extends StatelessWidget {
   void _openCoverPicker(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
+      useRootNavigator: true,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (_) => BlocProvider.value(

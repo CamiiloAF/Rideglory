@@ -14,6 +14,7 @@ class AppPasswordTextField extends StatefulWidget {
   final AutovalidateMode? autovalidateMode;
   final FocusNode? focusNode;
   final TextCapitalization? textCapitalization;
+  final Iterable<String>? autofillHints;
 
   const AppPasswordTextField({
     super.key,
@@ -29,6 +30,7 @@ class AppPasswordTextField extends StatefulWidget {
     this.autovalidateMode,
     this.focusNode,
     this.textCapitalization,
+    this.autofillHints = const [AutofillHints.password],
   });
 
   @override
@@ -66,7 +68,8 @@ class _AppPasswordTextFieldState extends State<AppPasswordTextField> {
       isRequired: widget.isRequired,
       autovalidateMode: widget.autovalidateMode,
       focusNode: widget.focusNode,
-      textCapitalization: widget.textCapitalization,
+      textCapitalization: widget.textCapitalization ?? TextCapitalization.none,
+      autofillHints: widget.autofillHints,
     );
   }
 }

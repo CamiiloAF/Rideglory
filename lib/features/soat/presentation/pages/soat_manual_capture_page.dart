@@ -107,6 +107,7 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
     _datesInvalid = _startDate != null &&
         _expiryDate != null &&
         !_expiryDate!.isAfter(_startDate!);
+    if (_datesInvalid) _error = null;
   }
 
   @override
@@ -173,6 +174,7 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
     if (!mounted) return;
     final choice = await showModalBottomSheet<int>(
       context: context,
+      useRootNavigator: true,
       backgroundColor: AppColors.darkBgSecondary,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -469,7 +471,7 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
                     startDate: _startDate,
                     expiryDate: _expiryDate,
                   ),
-                  if (_datesInvalid || _error != null) ...[
+                  if (_error != null) ...[
                     const SizedBox(height: 16),
                     Container(
                       padding: const EdgeInsets.all(12),
@@ -479,9 +481,7 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
                         border: Border.all(color: AppColors.error),
                       ),
                       child: Text(
-                        _datesInvalid
-                            ? context.l10n.soat_expiry_after_start_error
-                            : _error!,
+                        _error!,
                         style: const TextStyle(
                           color: AppColors.error,
                           fontSize: 13,

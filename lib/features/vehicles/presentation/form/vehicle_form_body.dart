@@ -14,13 +14,11 @@ class VehicleFormBody extends StatelessWidget {
     required this.formKey,
     required this.initialValue,
     required this.onSave,
-    required this.onDelete,
   });
 
   final GlobalKey<FormBuilderState> formKey;
   final Map<String, dynamic> initialValue;
   final VoidCallback onSave;
-  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +49,7 @@ class VehicleFormBody extends StatelessWidget {
             const SizedBox(height: 24),
             const VehicleFormDocsSection(),
             const SizedBox(height: 24),
-            VehicleFormCta(onSave: onSave, onDelete: onDelete),
+            VehicleFormCta(onSave: onSave),
             const SizedBox(height: 24),
           ],
         ),

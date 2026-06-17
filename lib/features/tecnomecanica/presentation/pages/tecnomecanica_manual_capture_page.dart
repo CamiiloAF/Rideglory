@@ -13,6 +13,7 @@ import 'package:rideglory/features/tecnomecanica/domain/models/tecnomecanica_mod
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/features/tecnomecanica/presentation/cubit/tecnomecanica_cubit.dart';
 import 'package:rideglory/features/tecnomecanica/presentation/widgets/tecnomecanica_exemption_notice.dart';
+import 'package:rideglory/features/vehicle_documents/presentation/widgets/validity_card.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
 /// Formulario para **registrar o editar** la RTM de un vehículo.
@@ -75,12 +76,14 @@ class _TecnomecanicaManualCapturePageState
     _datesInvalid = _startDate != null &&
         _expiryDate != null &&
         !_expiryDate!.isAfter(_startDate!);
+    if (_datesInvalid) _error = null;
   }
 
   Future<void> _pickImage() async {
     if (!mounted) return;
     final choice = await showModalBottomSheet<int>(
       context: context,
+      useRootNavigator: true,
       backgroundColor: AppColors.darkBgSecondary,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -286,7 +289,12 @@ class _TecnomecanicaManualCapturePageState
                         ),
                       ],
                     ),
-                    if (_datesInvalid || _error != null) ...[
+                    const SizedBox(height: 12),
+                    DocumentValidityCard(
+                      startDate: _startDate,
+                      expiryDate: _expiryDate,
+                    ),
+                    if (_error != null) ...[
                       const SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.all(12),
@@ -296,9 +304,7 @@ class _TecnomecanicaManualCapturePageState
                           border: Border.all(color: AppColors.error),
                         ),
                         child: Text(
-                          _datesInvalid
-                              ? context.l10n.tecnomecanica_expiry_after_start_error
-                              : _error!,
+                          _error!,
                           style: const TextStyle(
                             color: AppColors.error,
                             fontSize: 13,

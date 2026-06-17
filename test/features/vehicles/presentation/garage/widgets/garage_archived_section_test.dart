@@ -10,7 +10,7 @@ import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/archive_vehicle_usecase.dart';
-import 'package:rideglory/features/vehicles/domain/usecases/delete_vehicle_usecase.dart';
+import 'package:rideglory/features/vehicles/domain/usecases/permanently_delete_vehicle_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/get_vehicles_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/set_main_vehicle_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/unarchive_vehicle_usecase.dart';
@@ -35,7 +35,8 @@ class MockSetMainVehicleUseCase extends Mock implements SetMainVehicleUseCase {}
 
 class MockUpdateVehicleUseCase extends Mock implements UpdateVehicleUseCase {}
 
-class MockDeleteVehicleUseCase extends Mock implements DeleteVehicleUseCase {}
+class MockPermanentlyDeleteVehicleUseCase extends Mock
+    implements PermanentlyDeleteVehicleUseCase {}
 
 class MockArchiveVehicleUseCase extends Mock implements ArchiveVehicleUseCase {}
 
@@ -126,7 +127,7 @@ void main() {
     when(() => mockAnalytics.logEvent(any(), any())).thenAnswer((_) async {});
     getIt.registerFactory<VehicleActionCubit>(
       () => VehicleActionCubit(
-        MockDeleteVehicleUseCase(),
+        MockPermanentlyDeleteVehicleUseCase(),
         MockArchiveVehicleUseCase(),
         MockUnarchiveVehicleUseCase(),
         vehicleCubit,

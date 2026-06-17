@@ -74,10 +74,12 @@ class VehicleRepositoryImpl implements VehicleRepository {
   }
 
   @override
-  Future<Either<DomainException, void>> deleteVehicle(String id) async {
+  Future<Either<DomainException, void>> permanentlyDeleteVehicle(
+    String id,
+  ) async {
     return executeService(
       function: () async {
-        await _vehicleService.deleteVehicle(id);
+        await _vehicleService.permanentlyDeleteVehicle(id);
       },
     );
   }

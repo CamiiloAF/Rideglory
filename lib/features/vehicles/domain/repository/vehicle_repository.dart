@@ -16,7 +16,7 @@ abstract class VehicleRepository {
     VehicleModel vehicle,
   );
 
-  Future<Either<DomainException, void>> deleteVehicle(String id);
+  Future<Either<DomainException, void>> permanentlyDeleteVehicle(String id);
 
   Future<Either<DomainException, String>> uploadVehicleImage({
     required String vehicleId,

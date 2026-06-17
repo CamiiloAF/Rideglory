@@ -32,6 +32,7 @@ class AppTextField extends StatefulWidget {
   final TextCapitalization? textCapitalization;
   final bool readonly;
   final List<TextInputFormatter>? inputFormatters;
+  final Iterable<String>? autofillHints;
 
   const AppTextField({
     super.key,
@@ -61,6 +62,7 @@ class AppTextField extends StatefulWidget {
     this.textCapitalization,
     this.readonly = false,
     this.inputFormatters,
+    this.autofillHints,
   });
 
   @override
@@ -156,6 +158,7 @@ class _AppTextFieldState extends State<AppTextField> {
           textCapitalization:
               widget.textCapitalization ?? TextCapitalization.sentences,
           inputFormatters: widget.inputFormatters,
+          autofillHints: widget.autofillHints,
         ),
       ],
     );

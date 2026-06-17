@@ -5,7 +5,7 @@ import 'package:rideglory/core/services/analytics/analytics_events.dart';
 import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/archive_vehicle_usecase.dart';
-import 'package:rideglory/features/vehicles/domain/usecases/delete_vehicle_usecase.dart';
+import 'package:rideglory/features/vehicles/domain/usecases/permanently_delete_vehicle_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/unarchive_vehicle_usecase.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 
@@ -15,33 +15,31 @@ part 'vehicle_action_state.dart';
 @injectable
 class VehicleActionCubit extends Cubit<VehicleActionState> {
   VehicleActionCubit(
-    this._deleteVehicleUseCase,
+    this._permanentlyDeleteVehicleUseCase,
     this._archiveVehicleUseCase,
     this._unarchiveVehicleUseCase,
     this._vehicleCubit,
     this._analytics,
   ) : super(const VehicleActionState.initial());
 
-  final DeleteVehicleUseCase _deleteVehicleUseCase;
+  final PermanentlyDeleteVehicleUseCase _permanentlyDeleteVehicleUseCase;
   final ArchiveVehicleUseCase _archiveVehicleUseCase;
   final UnarchiveVehicleUseCase _unarchiveVehicleUseCase;
   final VehicleCubit _vehicleCubit;
   final AnalyticsService _analytics;
 
-  Future<void> deleteVehicle(
-    String vehicleId, {
-    required List<VehicleModel> availableVehicles,
-  }) async {
+  Future<void> permanentlyDeleteVehicle(String vehicleId) async {
+    if (state is _Loading) return;
+
     emit(const VehicleActionState.loading());
 
-    final result = await _deleteVehicleUseCase(vehicleId);
+    final result = await _permanentlyDeleteVehicleUseCase(vehicleId);
 
     result.fold(
       (error) => emit(VehicleActionState.error(message: error.message)),
       (_) {
-        _vehicleCubit.deleteVehicleLocally(vehicleId);
         _analytics.logEvent(AnalyticsEvents.vehicleDeleted).ignore();
-        emit(VehicleActionState.success(deletedId: vehicleId));
+        emit(VehicleActionState.permanentDeleteSuccess(deletedId: vehicleId));
       },
     );
   }

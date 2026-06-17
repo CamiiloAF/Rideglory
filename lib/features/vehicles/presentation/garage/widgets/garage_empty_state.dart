@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/design_system/design_system.dart';
+import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
-import 'package:rideglory/core/extensions/l10n_extensions.dart';
+import 'package:rideglory/shared/widgets/empty_state_widget.dart';
 
 class GarageEmptyState extends StatelessWidget {
   const GarageEmptyState({super.key, this.onVehicleSavedLocally});
@@ -13,44 +13,16 @@ class GarageEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.garage_outlined,
-            size: 80,
-            color: context.colorScheme.onSurfaceVariant,
-          ),
-          AppSpacing.gapLg,
-          Text(
-            context.l10n.vehicle_noVehicles,
-            style: context.titleMedium?.copyWith(
-              color: context.colorScheme.onSurfaceVariant,
-            ),
-          ),
-          AppSpacing.gapXxl,
-          AppButton(
-            onPressed: () async {
-              final result =
-                  await context.pushNamed(AppRoutes.createVehicle);
-              if (!context.mounted || result == null) return;
-              onVehicleSavedLocally?.call(
-                result is VehicleModel ? result : null,
-              );
-            },
-            icon: Icons.add,
-            label: context.l10n.vehicle_addVehicle,
-            variant: AppButtonVariant.primary,
-            style: AppButtonStyle.filled,
-            isFullWidth: false,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 24,
-              vertical: 12,
-            ),
-          ),
-        ],
-      ),
+    return EmptyStateWidget(
+      icon: Icons.two_wheeler_rounded,
+      title: context.l10n.vehicle_noVehicles,
+      description: context.l10n.vehicle_noVehiclesDescription,
+      actionButtonText: context.l10n.vehicle_addVehicle,
+      onActionPressed: () async {
+        final result = await context.pushNamed(AppRoutes.createVehicle);
+        if (!context.mounted || result == null) return;
+        onVehicleSavedLocally?.call(result is VehicleModel ? result : null);
+      },
     );
   }
 }

@@ -26,6 +26,7 @@ class EventFiltersBottomSheet extends StatefulWidget {
   static Future<void> show({required BuildContext context}) {
     return showModalBottomSheet<void>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: Colors.transparent,

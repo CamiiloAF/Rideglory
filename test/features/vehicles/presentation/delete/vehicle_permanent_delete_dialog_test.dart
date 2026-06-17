@@ -1,21 +1,21 @@
-import 'package:dartz/dartz.dart' show Right;
+import 'dart:async';
+
+import 'package:bloc_test/bloc_test.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:bloc_test/bloc_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/archive_vehicle_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/permanently_delete_vehicle_usecase.dart';
-import 'package:rideglory/features/vehicles/domain/usecases/get_vehicles_usecase.dart';
-import 'package:rideglory/features/vehicles/domain/usecases/set_main_vehicle_usecase.dart';
 import 'package:rideglory/features/vehicles/domain/usecases/unarchive_vehicle_usecase.dart';
-import 'package:rideglory/features/vehicles/domain/usecases/update_vehicle_usecase.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_action_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_options_bottom_sheet.dart';
@@ -27,40 +27,28 @@ import 'package:rideglory/shared/router/app_routes.dart';
 class MockVehicleCubit extends MockCubit<ResultState<List<VehicleModel>>>
     implements VehicleCubit {}
 
+class MockPermanentlyDeleteVehicleUseCase extends Mock
+    implements PermanentlyDeleteVehicleUseCase {}
+
 class MockArchiveVehicleUseCase extends Mock implements ArchiveVehicleUseCase {}
 
 class MockUnarchiveVehicleUseCase extends Mock
     implements UnarchiveVehicleUseCase {}
 
-class MockPermanentlyDeleteVehicleUseCase extends Mock
-    implements PermanentlyDeleteVehicleUseCase {}
-
-class MockGetMyVehiclesUseCase extends Mock implements GetMyVehiclesUseCase {}
-
-class MockSetMainVehicleUseCase extends Mock implements SetMainVehicleUseCase {}
-
-class MockUpdateVehicleUseCase extends Mock implements UpdateVehicleUseCase {}
-
 class MockAnalyticsService extends Mock implements AnalyticsService {}
-
-// ─── Fallback values ─────────────────────────────────────────────────────────
-
-class _FakeVehicleModel extends Fake implements VehicleModel {}
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 
-const _activeVehicle = VehicleModel(
-  id: 'v-active',
-  name: 'Honda CB500',
-  currentMileage: 10000,
-  isArchived: false,
+const _archivedVehicle = VehicleModel(
+  id: 'v-arch',
+  name: 'Yamaha MT-07',
+  currentMileage: 5000,
+  isArchived: true,
   isMainVehicle: false,
 );
 
 // ─── Test helper ─────────────────────────────────────────────────────────────
 
-/// Wraps [child] in a GoRouter with stub routes so [context.pop()] and
-/// [pushNamed] from GarageOptionsBottomSheet do not throw "no GoRouter".
 Widget _wrapWithRouter({
   required MockVehicleCubit vehicleCubit,
   required Widget Function(BuildContext) homeBuilder,
@@ -105,30 +93,26 @@ Widget _wrapWithRouter({
 }
 
 void main() {
-  setUpAll(() {
-    registerFallbackValue(_FakeVehicleModel());
-  });
-
   late MockVehicleCubit vehicleCubit;
+  late MockPermanentlyDeleteVehicleUseCase deleteUseCase;
   late MockArchiveVehicleUseCase archiveUseCase;
   late MockUnarchiveVehicleUseCase unarchiveUseCase;
-  late MockPermanentlyDeleteVehicleUseCase deleteUseCase;
   late MockAnalyticsService analytics;
 
   setUp(() {
     vehicleCubit = MockVehicleCubit();
+    deleteUseCase = MockPermanentlyDeleteVehicleUseCase();
     archiveUseCase = MockArchiveVehicleUseCase();
     unarchiveUseCase = MockUnarchiveVehicleUseCase();
-    deleteUseCase = MockPermanentlyDeleteVehicleUseCase();
     analytics = MockAnalyticsService();
 
     when(() => vehicleCubit.state).thenReturn(
       const ResultState<List<VehicleModel>>.initial(),
     );
+    when(() => vehicleCubit.fetchMyVehicles()).thenAnswer((_) async {});
     when(() => analytics.logEvent(any())).thenAnswer((_) async {});
     when(() => analytics.logEvent(any(), any())).thenAnswer((_) async {});
 
-    // Register factory in GetIt so bottom sheet can call getIt<VehicleActionCubit>()
     final getIt = GetIt.instance;
     if (getIt.isRegistered<VehicleActionCubit>()) {
       getIt.unregister<VehicleActionCubit>();
@@ -151,30 +135,18 @@ void main() {
     }
   });
 
-  // ── TC-bs-1: confirmar archivado dispara archiveVehicle ───────────────────
+  // ── Test A: diálogo destructivo aparece con danger style ──────────────────
 
   testWidgets(
-    'TC-bs-1: confirming archive dialog calls archiveVehicle on VehicleActionCubit',
+    'TC-perm-A: tapping "Eliminar permanentemente" shows ConfirmationDialog with vehicle name',
     (tester) async {
-      // Stub archive use case to succeed so the cubit emits archiveSuccess
-      when(() => archiveUseCase(_activeVehicle)).thenAnswer(
-        (_) async => const Right(
-          VehicleModel(
-            id: 'v-active',
-            name: 'Honda CB500',
-            currentMileage: 10000,
-            isArchived: true,
-            isMainVehicle: false,
-          ),
-        ),
-      );
-      when(() => vehicleCubit.archiveLocally(any())).thenReturn(null);
-
+      // The delete use case will never be called in this test — just confirm dialog appears
       await tester.pumpWidget(
         _wrapWithRouter(
           vehicleCubit: vehicleCubit,
           homeBuilder: (ctx) => ElevatedButton(
-            onPressed: () => GarageOptionsBottomSheet.show(ctx, _activeVehicle),
+            onPressed: () =>
+                GarageOptionsBottomSheet.show(ctx, _archivedVehicle),
             child: const Text('Open'),
           ),
         ),
@@ -185,39 +157,77 @@ void main() {
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
 
-      // Tap "Archivar" option in the bottom sheet (the one with archive icon)
-      final archiveListTile = find.ancestor(
-        of: find.byIcon(Icons.archive),
-        matching: find.byType(ListTile),
+      // The archived vehicle section should show "Eliminar permanentemente"
+      expect(find.text('Eliminar permanentemente'), findsOneWidget);
+
+      // Tap the permanent delete tile
+      await tester.tap(find.text('Eliminar permanentemente'));
+      await tester.pumpAndSettle();
+
+      // ConfirmationDialog should appear with title and vehicle name in content
+      expect(
+        find.text('Eliminar vehículo permanentemente'),
+        findsOneWidget,
       );
-      expect(archiveListTile, findsOneWidget);
-      await tester.tap(archiveListTile);
-      await tester.pumpAndSettle();
+      expect(
+        find.textContaining(_archivedVehicle.name),
+        findsAtLeastNWidgets(1),
+      );
 
-      // ConfirmationDialog should appear — tap the confirm button (labeled "Archivar")
-      // The modal shows a confirm button labeled vehicle_archiveConfirmButton = "Archivar"
-      // There should now be a modal visible with "Archivar vehículo" title
-      expect(find.text('Archivar vehículo'), findsOneWidget);
-
-      // Tap the confirm button
-      await tester.tap(find.text('Archivar'));
-      await tester.pumpAndSettle();
-
-      // Verify archiveVehicle was called via the use case
-      verify(() => archiveUseCase(_activeVehicle)).called(1);
+      // Verify use case was NOT called yet (dialog is still open)
+      verifyNever(() => deleteUseCase(any()));
     },
   );
 
-  // ── TC-bs-2: cancelar NO dispara archiveVehicle ───────────────────────────
+  // ── Test B: guard anti doble-tap ──────────────────────────────────────────
+
+  test(
+    'TC-perm-B: guard anti doble-tap — use case called exactly once on concurrent calls',
+    () async {
+      // Use a Completer so the first call never completes during the test,
+      // making the cubit stay in loading state for the second call.
+      final completer = Completer<Either<DomainException, void>>();
+      when(
+        () => deleteUseCase(_archivedVehicle.id!),
+      ).thenAnswer((_) => completer.future);
+
+      final cubit = VehicleActionCubit(
+        deleteUseCase,
+        archiveUseCase,
+        unarchiveUseCase,
+        vehicleCubit,
+        analytics,
+      );
+
+      // Fire two concurrent calls without awaiting the first
+      unawaited(cubit.permanentlyDeleteVehicle(_archivedVehicle.id!));
+      unawaited(cubit.permanentlyDeleteVehicle(_archivedVehicle.id!));
+
+      // Allow microtasks to run
+      await Future<void>.delayed(Duration.zero);
+
+      // Complete the deferred future
+      completer.complete(const Right(null));
+      await Future<void>.delayed(Duration.zero);
+
+      // The use case should have been called exactly once
+      verify(() => deleteUseCase(_archivedVehicle.id!)).called(1);
+
+      await cubit.close();
+    },
+  );
+
+  // ── Test C: cancelar NO dispara permanentlyDeleteVehicle ─────────────────
 
   testWidgets(
-    'TC-bs-2: cancelling archive dialog does NOT call archiveVehicle',
+    'TC-perm-C: cancelling the permanent delete dialog does NOT call the use case',
     (tester) async {
       await tester.pumpWidget(
         _wrapWithRouter(
           vehicleCubit: vehicleCubit,
           homeBuilder: (ctx) => ElevatedButton(
-            onPressed: () => GarageOptionsBottomSheet.show(ctx, _activeVehicle),
+            onPressed: () =>
+                GarageOptionsBottomSheet.show(ctx, _archivedVehicle),
             child: const Text('Open'),
           ),
         ),
@@ -228,24 +238,19 @@ void main() {
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
 
-      // Tap "Archivar" option in the bottom sheet
-      final archiveListTile = find.ancestor(
-        of: find.byIcon(Icons.archive),
-        matching: find.byType(ListTile),
-      );
-      expect(archiveListTile, findsOneWidget);
-      await tester.tap(archiveListTile);
+      // Tap the permanent delete tile to open the confirmation dialog
+      await tester.tap(find.text('Eliminar permanentemente'));
       await tester.pumpAndSettle();
 
-      // Confirmation dialog should appear
-      expect(find.text('Archivar vehículo'), findsOneWidget);
+      // Dialog should be visible
+      expect(find.text('Eliminar vehículo permanentemente'), findsOneWidget);
 
       // Tap the cancel button
       await tester.tap(find.text('Cancelar'));
       await tester.pumpAndSettle();
 
-      // Verify archiveVehicle was NOT called
-      verifyNever(() => archiveUseCase(any()));
+      // Use case must NOT have been called
+      verifyNever(() => deleteUseCase(any()));
     },
   );
 }

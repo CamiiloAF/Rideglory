@@ -55,7 +55,8 @@ class CustomRouteBuilderSection extends StatelessWidget {
                   final cubit = context.read<EventFormCubit>();
                   final index = cubit.state.waypoints.length;
                   cubit.addWaypoint(name);
-                  if (location != null) cubit.setWaypointLocation(index, location);
+                  if (location != null)
+                    cubit.setWaypointLocation(index, location);
                 },
               ),
             if (!atLimit) const SizedBox(height: 10),

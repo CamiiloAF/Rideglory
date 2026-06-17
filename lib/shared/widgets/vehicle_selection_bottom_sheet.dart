@@ -25,6 +25,7 @@ class VehicleSelectionBottomSheet extends StatelessWidget {
   }) {
     return showModalBottomSheet<VehicleModel>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => VehicleSelectionBottomSheet(

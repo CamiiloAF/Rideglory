@@ -28,8 +28,8 @@ abstract class VehicleService {
     @Body() Map<String, dynamic> request,
   );
 
-  @DELETE('${ApiRoutes.vehicles}/hard-delete/{id}')
-  Future<void> deleteVehicle(@Path('id') String id);
+  @DELETE('${ApiRoutes.myVehicles}/{id}')
+  Future<void> permanentlyDeleteVehicle(@Path('id') String id);
 
   @POST('${ApiRoutes.vehicles}/{vehicleId}/soat')
   Future<VehicleSoatFormDataDto> upsertSoat(

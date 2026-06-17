@@ -26,6 +26,7 @@ abstract final class SoatEntryFlow {
   }) async {
     final result = await showModalBottomSheet<SoatOptionsResult>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: AppColors.darkBgSecondary,
       shape: const RoundedRectangleBorder(

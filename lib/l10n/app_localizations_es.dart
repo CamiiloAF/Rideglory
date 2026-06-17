@@ -1031,7 +1031,30 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_vehicleDeleted => 'Vehículo eliminado exitosamente';
 
   @override
+  String get vehicle_permanentDeleteTitle =>
+      'Eliminar vehículo permanentemente';
+
+  @override
+  String vehicle_permanentDeleteMessage(Object vehicleName) {
+    return '¿Estás seguro de que deseas eliminar «$vehicleName» de forma permanente?\n\nEsta acción no se puede deshacer.';
+  }
+
+  @override
+  String get vehicle_permanentDeleteAction => 'Eliminar permanentemente';
+
+  @override
+  String get vehicle_permanentDeleteSuccess =>
+      'Vehículo eliminado permanentemente';
+
+  @override
+  String get vehicle_permanentDeleteCancel => 'Cancelar';
+
+  @override
   String get vehicle_noVehicles => 'No tienes vehículos registrados';
+
+  @override
+  String get vehicle_noVehiclesDescription =>
+      'Agrega tu primera moto para llevar el control de tu garaje, mantenimientos y documentos.';
 
   @override
   String get vehicle_noActiveVehicles => 'Sin vehículos activos';
