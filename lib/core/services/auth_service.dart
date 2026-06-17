@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -114,16 +113,13 @@ class AuthService {
   }
 
   Future<Either<DomainException, AuthenticatedUser>> signInWithGoogle() async {
+    final googleUser = await _googleSignIn.signIn();
+    if (googleUser == null) {
+      return const Left(DomainException(message: 'sign_in_cancelled'));
+    }
+
     return executeService<AuthenticatedUser>(
       function: () async {
-        final googleUser = await _googleSignIn.signIn();
-        if (googleUser == null) {
-          throw PlatformException(
-            code: 'sign_in_cancelled',
-            message: 'Google sign-in was cancelled',
-          );
-        }
-
         final googleAuth = await googleUser.authentication;
         final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken,

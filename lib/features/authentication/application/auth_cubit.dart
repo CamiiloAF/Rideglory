@@ -140,6 +140,10 @@ class AuthCubit extends Cubit<AuthState> {
     final result = await _authService.signInWithGoogle();
     await result.fold(
       (failure) async {
+        if (failure.message == 'sign_in_cancelled') {
+          emit(const AuthState.unauthenticated());
+          return;
+        }
         _analytics
             .logEvent(AnalyticsEvents.authFailed, {
               AnalyticsParams.authMethod: AnalyticsParams.authMethodGoogle,
@@ -177,6 +181,10 @@ class AuthCubit extends Cubit<AuthState> {
     final result = await _authService.signInWithApple();
     await result.fold(
       (failure) async {
+        if (failure.message == 'Inicio de sesión cancelado.') {
+          emit(const AuthState.unauthenticated());
+          return;
+        }
         _analytics
             .logEvent(AnalyticsEvents.authFailed, {
               AnalyticsParams.authMethod: AnalyticsParams.authMethodApple,
