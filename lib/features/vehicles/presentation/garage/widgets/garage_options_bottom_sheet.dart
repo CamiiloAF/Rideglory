@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/features/maintenance/domain/model/maintenance_model.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/features/vehicles/presentation/delete/cubit/vehicle_action_cubit.dart';
+import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_option_row.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
@@ -39,9 +41,11 @@ class GarageOptionsBottomSheet extends StatelessWidget {
     final actionCubit = getIt<VehicleActionCubit>()..reset();
     showModalBottomSheet(
       context: parentContext,
+      useRootNavigator: true,
       backgroundColor: AppColors.darkCard,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        side: BorderSide(color: AppColors.darkBorderPrimary, width: 1),
       ),
       builder: (sheetContext) => BlocProvider<VehicleCubit>.value(
         value: vehicleCubit,
@@ -60,6 +64,7 @@ class GarageOptionsBottomSheet extends StatelessWidget {
                   onGarageListUpdatedLocally?.call();
                 },
                 archiveSuccess: (_) {
+                  vehicleCubit.archiveLocally(vehicle.id!);
                   ctx.pop();
                   ScaffoldMessenger.of(parentContext).showSnackBar(
                     SnackBar(
@@ -71,6 +76,7 @@ class GarageOptionsBottomSheet extends StatelessWidget {
                   );
                 },
                 unarchiveSuccess: (_) {
+                  vehicleCubit.unarchiveLocally(vehicle.id!);
                   ctx.pop();
                   ScaffoldMessenger.of(parentContext).showSnackBar(
                     SnackBar(
@@ -107,114 +113,133 @@ class GarageOptionsBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            margin: const EdgeInsets.only(top: 12, bottom: 8),
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: AppColors.darkBorderPrimary,
-              borderRadius: BorderRadius.circular(2),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Handle
+        SizedBox(
+          height: 28,
+          child: Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: const Color(0xFF3A3A44),
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
           ),
-          if (vehicle.isArchived) ...[
-            // ── Vehículo archivado: solo "Restaurar" ──────────────────────────
-            ListTile(
-              leading: const Icon(Icons.unarchive, color: Colors.white),
-              title: Text(
-                context.l10n.vehicle_unarchiveVehicle,
-                style: context.bodyLarge?.copyWith(color: Colors.white),
-              ),
-              onTap: () => actionCubit.unarchiveVehicle(vehicle),
-            ),
-          ] else ...[
-            // ── Vehículo activo: opciones completas ───────────────────────────
-            if (!vehicle.isMainVehicle)
-              ListTile(
-                leading: Icon(
-                  Icons.star,
-                  color: context.colorScheme.primary,
+        ),
+        // Header: nombre del vehículo + botón cerrar
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: SizedBox(
+            height: 56,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  vehicle.name,
+                  style: const TextStyle(
+                    fontFamily: 'SpaceGrotesk',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
                 ),
-                title: Text(
-                  context.l10n.vehicle_setMainVehicle,
-                  style: context.bodyLarge?.copyWith(color: Colors.white),
+                GestureDetector(
+                  onTap: () => context.pop(),
+                  child: Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      color: AppColors.darkTertiary,
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    child: const Icon(
+                      LucideIcons.x,
+                      size: 18,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-                onTap: () {
-                  context.pop();
-                  if (vehicle.id != null) {
-                    context.read<VehicleCubit>().setMainVehicle(vehicle.id!);
-                  }
-                },
-              ),
-            ListTile(
-              leading: const Icon(Icons.edit, color: Colors.white),
-              title: Text(
-                context.l10n.vehicle_editVehicle,
-                style: context.bodyLarge?.copyWith(color: Colors.white),
-              ),
-              onTap: () async {
-                context.pop();
-                final result = await GoRouter.of(
-                  parentContext,
-                ).pushNamed(AppRoutes.editVehicle, extra: vehicle);
-                if (!parentContext.mounted || result == null) return;
-                onGarageListUpdatedLocally?.call(
-                  result is VehicleModel ? result : null,
-                );
-              },
+              ],
             ),
-            ListTile(
-              leading: Icon(Icons.build, color: context.colorScheme.primary),
-              title: Text(
-                context.l10n.vehicle_addMaintenance,
-                style: context.bodyLarge?.copyWith(color: Colors.white),
-              ),
-              onTap: () async {
+          ),
+        ),
+        if (vehicle.isArchived) ...[
+          GarageOptionRow(
+            icon: LucideIcons.archiveRestore,
+            label: context.l10n.vehicle_unarchiveVehicle,
+            onTap: () => actionCubit.unarchiveVehicle(vehicle),
+          ),
+        ] else ...[
+          if (!vehicle.isMainVehicle)
+            GarageOptionRow(
+              icon: LucideIcons.star,
+              label: context.l10n.vehicle_setMainVehicle,
+              onTap: () {
                 context.pop();
-                final result = await parentContext.pushNamed<dynamic>(
-                  AppRoutes.createMaintenance,
-                  extra: vehicle,
-                );
-                if (!parentContext.mounted || result == null) return;
-                if (result is List<MaintenanceModel> && result.isNotEmpty) {
-                  onMaintenanceCreated?.call(result.first);
-                } else if (result is MaintenanceModel) {
-                  onMaintenanceCreated?.call(result);
-                } else if (vehicle.id != null) {
-                  onMaintenanceRefreshRequested?.call(vehicle.id!);
+                if (vehicle.id != null) {
+                  context.read<VehicleCubit>().setMainVehicle(vehicle.id!);
                 }
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.archive, color: Colors.white),
-              title: Text(
-                context.l10n.vehicle_archiveVehicle,
-                style: context.bodyLarge?.copyWith(color: Colors.white),
-              ),
-              onTap: () async {
-                context.pop();
-                final confirm = await ConfirmationDialog.show(
-                  context: parentContext,
-                  title: parentContext.l10n.vehicle_archiveVehicleConfirmTitle,
-                  content: parentContext.l10n.vehicle_archiveVehicleConfirmContent(
-                    vehicle.name,
-                  ),
-                  cancelLabel: parentContext.l10n.cancel,
-                  confirmLabel: parentContext.l10n.vehicle_archiveConfirmButton,
-                  confirmType: DialogActionType.primary,
-                  isDismissible: true,
-                );
-                if (confirm != true || !parentContext.mounted) return;
-                actionCubit.archiveVehicle(vehicle);
-              },
-            ),
-          ],
-          AppSpacing.gapLg,
+          GarageOptionRow(
+            icon: LucideIcons.pencil,
+            label: context.l10n.vehicle_editVehicle,
+            onTap: () async {
+              context.pop();
+              final result = await GoRouter.of(
+                parentContext,
+              ).pushNamed(AppRoutes.editVehicle, extra: vehicle);
+              if (!parentContext.mounted || result == null) return;
+              onGarageListUpdatedLocally?.call(
+                result is VehicleModel ? result : null,
+              );
+            },
+          ),
+          GarageOptionRow(
+            icon: LucideIcons.wrench,
+            label: context.l10n.vehicle_addMaintenance,
+            onTap: () async {
+              context.pop();
+              final result = await parentContext.pushNamed<dynamic>(
+                AppRoutes.createMaintenance,
+                extra: vehicle,
+              );
+              if (!parentContext.mounted || result == null) return;
+              if (result is List<MaintenanceModel> && result.isNotEmpty) {
+                onMaintenanceCreated?.call(result.first);
+              } else if (result is MaintenanceModel) {
+                onMaintenanceCreated?.call(result);
+              } else if (vehicle.id != null) {
+                onMaintenanceRefreshRequested?.call(vehicle.id!);
+              }
+            },
+          ),
+          GarageOptionRow(
+            icon: LucideIcons.archive,
+            label: context.l10n.vehicle_archiveVehicle,
+            onTap: () async {
+              final confirm = await ConfirmationDialog.show(
+                context: parentContext,
+                title: parentContext.l10n.vehicle_archiveVehicleConfirmTitle,
+                content: parentContext.l10n.vehicle_archiveVehicleConfirmContent(
+                  vehicle.name,
+                ),
+                cancelLabel: parentContext.l10n.cancel,
+                confirmLabel: parentContext.l10n.vehicle_archiveConfirmButton,
+                confirmType: DialogActionType.primary,
+                isDismissible: true,
+              );
+              if (confirm != true || !parentContext.mounted) return;
+              actionCubit.archiveVehicle(vehicle);
+            },
+          ),
         ],
-      ),
+        const SizedBox(height: 28),
+      ],
     );
   }
 }

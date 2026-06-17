@@ -80,6 +80,7 @@ class VehicleDetailView extends StatelessWidget {
                   maintenanceRefreshTick: maintenanceRefreshTick,
                   pendingCreatedMaintenance: pendingCreatedMaintenance,
                   onPendingMaintenanceConsumed: onPendingMaintenanceConsumed,
+                  isArchived: isArchived,
                 ),
               ]),
             ),

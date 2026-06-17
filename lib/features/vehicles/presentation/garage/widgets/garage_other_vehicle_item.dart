@@ -109,13 +109,19 @@ class GarageOtherVehicleItem extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                GarageVehicleStatusBadge(vehicle: vehicle),
-                const SizedBox(height: 6),
-                const Icon(
-                  Icons.chevron_right,
-                  size: 16,
-                  color: AppColors.textOnDarkTertiary,
+                IconButton(
+                  icon: const Icon(
+                    Icons.more_vert,
+                    size: 20,
+                    color: AppColors.textOnDarkTertiary,
+                  ),
+                  onPressed: onOptionsTap,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  visualDensity: VisualDensity.compact,
                 ),
+                const SizedBox(height: 2),
+                GarageVehicleStatusBadge(vehicle: vehicle),
               ],
             ),
           ],

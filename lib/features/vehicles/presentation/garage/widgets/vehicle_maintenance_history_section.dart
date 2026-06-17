@@ -18,12 +18,14 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
     required this.maintenanceRefreshTick,
     this.pendingCreatedMaintenance,
     this.onPendingMaintenanceConsumed,
+    this.isArchived = false,
   });
 
   final VehicleModel vehicle;
   final int maintenanceRefreshTick;
   final MaintenanceModel? pendingCreatedMaintenance;
   final void Function(String vehicleId)? onPendingMaintenanceConsumed;
+  final bool isArchived;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +59,7 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
                 nextScheduled: cubit.nextScheduled,
                 vehicleId: vehicle.id,
                 currentMileage: vehicle.currentMileage,
+                isArchived: isArchived,
               );
             },
           );
@@ -74,12 +77,14 @@ class _MaintenanceCards extends StatelessWidget {
     this.nextScheduled,
     this.vehicleId,
     required this.currentMileage,
+    this.isArchived = false,
   });
 
   final MaintenanceModel? lastCompleted;
   final MaintenanceModel? nextScheduled;
   final String? vehicleId;
   final int currentMileage;
+  final bool isArchived;
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +113,7 @@ class _MaintenanceCards extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        _HistoryButton(vehicleId: vehicleId),
+        _HistoryButton(vehicleId: vehicleId, isArchived: isArchived),
       ],
     );
   }
@@ -269,14 +274,20 @@ class _ServiceCard extends StatelessWidget {
 // ─── History CTA button ──────────────────────────────────────────────────────
 
 class _HistoryButton extends StatelessWidget {
-  const _HistoryButton({this.vehicleId});
+  const _HistoryButton({this.vehicleId, this.isArchived = false});
 
   final String? vehicleId;
+  final bool isArchived;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.pushNamed(AppRoutes.maintenances, extra: vehicleId),
+      onTap: () => context.pushNamed(
+        AppRoutes.maintenances,
+        extra: isArchived
+            ? <String, dynamic>{'vehicleId': vehicleId, 'readOnly': true}
+            : vehicleId,
+      ),
       child: Container(
         height: 48,
         decoration: BoxDecoration(

@@ -14,7 +14,7 @@ typedef GarageMaintenanceSummary = ({
   MaintenanceModel? next,
 });
 
-class GarageMaintenanceWidget extends StatelessWidget {
+class GarageMaintenanceWidget extends StatefulWidget {
   const GarageMaintenanceWidget({
     super.key,
     required this.vehicle,
@@ -24,8 +24,31 @@ class GarageMaintenanceWidget extends StatelessWidget {
   final VehicleModel vehicle;
   final VoidCallback onViewHistoryTap;
 
-  Future<GarageMaintenanceSummary> _loadSummary() async {
-    final vehicleId = vehicle.id;
+  @override
+  State<GarageMaintenanceWidget> createState() =>
+      _GarageMaintenanceWidgetState();
+}
+
+class _GarageMaintenanceWidgetState extends State<GarageMaintenanceWidget> {
+  late Future<GarageMaintenanceSummary> _summaryFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _summaryFuture = _loadSummary(widget.vehicle.id);
+  }
+
+  @override
+  void didUpdateWidget(GarageMaintenanceWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.vehicle.id != widget.vehicle.id) {
+      setState(() {
+        _summaryFuture = _loadSummary(widget.vehicle.id);
+      });
+    }
+  }
+
+  Future<GarageMaintenanceSummary> _loadSummary(String? vehicleId) async {
     if (vehicleId == null) return (last: null, next: null);
 
     final useCase = getIt<GetMaintenancesByVehicleIdUseCase>();
@@ -66,7 +89,7 @@ class GarageMaintenanceWidget extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         FutureBuilder<GarageMaintenanceSummary>(
-          future: _loadSummary(),
+          future: _summaryFuture,
           builder: (context, snapshot) {
             final last = snapshot.data?.last;
             final next = snapshot.data?.next;
@@ -74,7 +97,7 @@ class GarageMaintenanceWidget extends StatelessWidget {
                 next != null &&
                 MaintenanceModel.calculateStatus(
                       next,
-                      vehicle.currentMileage,
+                      widget.vehicle.currentMileage,
                     ) ==
                     MaintenanceStatus.overdue;
 
@@ -87,7 +110,7 @@ class GarageMaintenanceWidget extends StatelessWidget {
                       child: GarageMaintenanceCard(
                         isNext: false,
                         maintenance: last,
-                        vehicle: vehicle,
+                        vehicle: widget.vehicle,
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -95,14 +118,14 @@ class GarageMaintenanceWidget extends StatelessWidget {
                       child: GarageMaintenanceCard(
                         isNext: true,
                         maintenance: next,
-                        vehicle: vehicle,
+                        vehicle: widget.vehicle,
                         isOverdue: isOverdue,
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 12),
-                GarageViewHistoryButton(onTap: onViewHistoryTap),
+                GarageViewHistoryButton(onTap: widget.onViewHistoryTap),
               ],
             );
           },

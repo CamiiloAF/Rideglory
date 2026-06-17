@@ -18,10 +18,12 @@ class TecnomecanicaDataView extends StatefulWidget {
     super.key,
     required this.vehicle,
     required this.rtm,
+    this.isArchived = false,
   });
 
   final VehicleModel vehicle;
   final TecnomecanicaModel rtm;
+  final bool isArchived;
 
   @override
   State<TecnomecanicaDataView> createState() => _TecnomecanicaDataViewState();
@@ -174,7 +176,7 @@ class _TecnomecanicaDataViewState extends State<TecnomecanicaDataView> {
               ],
             ),
           ),
-          if (warningText != null) ...[
+          if (warningText != null && !widget.isArchived) ...[
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(14),
@@ -250,8 +252,8 @@ class _TecnomecanicaDataViewState extends State<TecnomecanicaDataView> {
             ),
           ),
           const SizedBox(height: 20),
-          // CTA when expired
-          if (widget.rtm.documentStatus == VehicleDocumentStatus.expired) ...[
+          if (!widget.isArchived &&
+              widget.rtm.documentStatus == VehicleDocumentStatus.expired) ...[
             AppButton(
               label: context.l10n.tecnomecanica_renew_btn,
               onPressed: () =>
@@ -260,34 +262,35 @@ class _TecnomecanicaDataViewState extends State<TecnomecanicaDataView> {
             ),
             const SizedBox(height: 16),
           ],
-          // Actions card
-          Container(
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              color: AppColors.darkCard,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.darkBorderPrimary),
+          if (widget.rtm.documentUrl != null || !widget.isArchived)
+            Container(
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                color: AppColors.darkCard,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.darkBorderPrimary),
+              ),
+              child: Column(
+                children: [
+                  if (widget.rtm.documentUrl != null)
+                    SoatActionTile(
+                      icon: Icons.description_outlined,
+                      label: context.l10n.soat_view_document,
+                      loading: _openingDocument,
+                      onTap: _openDocument,
+                    ),
+                  if (!widget.isArchived)
+                    SoatActionTile(
+                      icon: Icons.delete_outline_rounded,
+                      label: context.l10n.tecnomecanica_delete_button,
+                      color: AppColors.error,
+                      loading: _deleting,
+                      showDivider: widget.rtm.documentUrl != null,
+                      onTap: _confirmAndDelete,
+                    ),
+                ],
+              ),
             ),
-            child: Column(
-              children: [
-                if (widget.rtm.documentUrl != null)
-                  SoatActionTile(
-                    icon: Icons.description_outlined,
-                    label: context.l10n.soat_view_document,
-                    loading: _openingDocument,
-                    onTap: _openDocument,
-                  ),
-                SoatActionTile(
-                  icon: Icons.delete_outline_rounded,
-                  label: context.l10n.tecnomecanica_delete_button,
-                  color: AppColors.error,
-                  loading: _deleting,
-                  showDivider: widget.rtm.documentUrl != null,
-                  onTap: _confirmAndDelete,
-                ),
-              ],
-            ),
-          ),
           const SizedBox(height: 32),
         ],
       ),

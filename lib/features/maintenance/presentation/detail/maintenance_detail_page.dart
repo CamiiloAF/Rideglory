@@ -6,15 +6,20 @@ import 'package:rideglory/features/maintenance/presentation/delete/cubit/mainten
 import 'package:rideglory/features/maintenance/presentation/detail/widgets/maintenance_detail_view.dart';
 
 class MaintenanceDetailPage extends StatelessWidget {
-  const MaintenanceDetailPage({super.key, required this.maintenance});
+  const MaintenanceDetailPage({
+    super.key,
+    required this.maintenance,
+    this.readOnly = false,
+  });
 
   final MaintenanceModel maintenance;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => getIt<MaintenanceDeleteCubit>(),
-      child: MaintenanceDetailView(maintenance: maintenance),
+      child: MaintenanceDetailView(maintenance: maintenance, readOnly: readOnly),
     );
   }
 }

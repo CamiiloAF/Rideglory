@@ -65,13 +65,8 @@ class _VehicleDetailPageState extends State<VehicleDetailPage> {
             final fresh = vehicles
                 .where((vehicle) => vehicle.id == _vehicle.id)
                 .firstOrNull;
-            if (fresh != null &&
-                fresh.currentMileage != _vehicle.currentMileage) {
-              setState(
-                () => _vehicle = _vehicle.copyWith(
-                  currentMileage: fresh.currentMileage,
-                ),
-              );
+            if (fresh != null && fresh != _vehicle) {
+              setState(() => _vehicle = fresh);
             }
           },
         );

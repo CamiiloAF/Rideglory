@@ -10,8 +10,9 @@ import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dar
 
 class MaintenancesPage extends StatelessWidget {
   final String? initialVehicleId;
+  final bool readOnly;
 
-  const MaintenancesPage({super.key, this.initialVehicleId});
+  const MaintenancesPage({super.key, this.initialVehicleId, this.readOnly = false});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,10 @@ class MaintenancesPage extends StatelessWidget {
         BlocProvider(create: (context) => getIt<MaintenanceDeleteCubit>()),
       ],
       // Show vehicle selector only when entered without a specific vehicle (from Profile).
-      child: MaintenancesPageView(showVehicleSelector: initialVehicleId == null),
+      child: MaintenancesPageView(
+        showVehicleSelector: initialVehicleId == null,
+        readOnly: readOnly,
+      ),
     );
   }
 }

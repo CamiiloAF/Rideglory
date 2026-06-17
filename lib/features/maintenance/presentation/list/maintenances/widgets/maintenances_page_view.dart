@@ -21,8 +21,13 @@ import 'package:rideglory/shared/router/app_routes.dart';
 
 class MaintenancesPageView extends StatefulWidget {
   final bool showVehicleSelector;
+  final bool readOnly;
 
-  const MaintenancesPageView({super.key, required this.showVehicleSelector});
+  const MaintenancesPageView({
+    super.key,
+    required this.showVehicleSelector,
+    this.readOnly = false,
+  });
 
   @override
   State<MaintenancesPageView> createState() => _MaintenancesPageViewState();
@@ -39,6 +44,7 @@ class _MaintenancesPageViewState extends State<MaintenancesPageView> {
     // This prevents the sheet from opening with a phantom active filter indicator.
     final result = await showModalBottomSheet<MaintenanceFilters>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => MaintenanceFiltersBottomSheet(
@@ -80,6 +86,14 @@ class _MaintenancesPageViewState extends State<MaintenancesPageView> {
         result['deletedId'] as String,
       );
     }
+  }
+
+  Future<void> _onTapReadOnly(MaintenanceModel maintenance) async {
+    if (maintenance.id == null) return;
+    await context.pushNamed<dynamic>(
+      AppRoutes.maintenanceDetail,
+      extra: <String, dynamic>{'maintenance': maintenance, 'readOnly': true},
+    );
   }
 
   Future<void> _onAddMaintenance() async {
@@ -156,12 +170,14 @@ class _MaintenancesPageViewState extends State<MaintenancesPageView> {
                     hasBorder: true,
                     onTap: _showFiltersBottomSheet,
                   ),
-                  const SizedBox(width: 8),
-                  AppCircleIconButton(
-                    icon: Icons.add,
-                    variant: AppCircleIconButtonVariant.accent,
-                    onTap: _onAddMaintenance,
-                  ),
+                  if (!widget.readOnly) ...[
+                    const SizedBox(width: 8),
+                    AppCircleIconButton(
+                      icon: Icons.add,
+                      variant: AppCircleIconButtonVariant.accent,
+                      onTap: _onAddMaintenance,
+                    ),
+                  ],
                 ],
               ),
             ],
@@ -232,7 +248,7 @@ class _MaintenancesPageViewState extends State<MaintenancesPageView> {
                   data: (maintenances) => MaintenancesDataWidget(
                     maintenances: maintenances,
                     onRefresh: _onRefresh,
-                    onTap: _onTap,
+                    onTap: widget.readOnly ? _onTapReadOnly : _onTap,
                     onFilterPressed: _showFiltersBottomSheet,
                     onAddPressed: _onAddMaintenance,
                   ),

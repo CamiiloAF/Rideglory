@@ -14,10 +14,16 @@ import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dar
 import 'package:rideglory/shared/helpers/document_downloader.dart';
 
 class SoatDataView extends StatefulWidget {
-  const SoatDataView({super.key, required this.vehicle, required this.soat});
+  const SoatDataView({
+    super.key,
+    required this.vehicle,
+    required this.soat,
+    this.isArchived = false,
+  });
 
   final VehicleModel vehicle;
   final SoatModel soat;
+  final bool isArchived;
 
   @override
   State<SoatDataView> createState() => _SoatDataViewState();
@@ -169,7 +175,7 @@ class _SoatDataViewState extends State<SoatDataView> {
               ],
             ),
           ),
-          if (warningText != null) ...[
+          if (warningText != null && !widget.isArchived) ...[
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(14),
@@ -251,8 +257,7 @@ class _SoatDataViewState extends State<SoatDataView> {
             ),
           ),
           const SizedBox(height: 20),
-          // Única acción principal: renovar cuando el SOAT está vencido.
-          if (widget.soat.status == SoatStatus.expired) ...[
+          if (!widget.isArchived && widget.soat.status == SoatStatus.expired) ...[
             AppButton(
               label: context.l10n.soat_renew_btn,
               onPressed: () => SoatEntryFlow.start(
@@ -268,35 +273,35 @@ class _SoatDataViewState extends State<SoatDataView> {
             ),
             const SizedBox(height: 16),
           ],
-          // Acciones secundarias agrupadas en una lista discreta para no
-          // saturar la pantalla de botones de color.
-          Container(
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              color: AppColors.darkCard,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.darkBorderPrimary),
+          if (widget.soat.documentUrl != null || !widget.isArchived)
+            Container(
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                color: AppColors.darkCard,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: AppColors.darkBorderPrimary),
+              ),
+              child: Column(
+                children: [
+                  if (widget.soat.documentUrl != null)
+                    SoatActionTile(
+                      icon: Icons.description_outlined,
+                      label: context.l10n.soat_view_document,
+                      loading: _openingDocument,
+                      onTap: _openDocument,
+                    ),
+                  if (!widget.isArchived)
+                    SoatActionTile(
+                      icon: Icons.delete_outline_rounded,
+                      label: context.l10n.soat_delete_button,
+                      color: AppColors.error,
+                      loading: _deleting,
+                      showDivider: widget.soat.documentUrl != null,
+                      onTap: _confirmAndDelete,
+                    ),
+                ],
+              ),
             ),
-            child: Column(
-              children: [
-                if (widget.soat.documentUrl != null)
-                  SoatActionTile(
-                    icon: Icons.description_outlined,
-                    label: context.l10n.soat_view_document,
-                    loading: _openingDocument,
-                    onTap: _openDocument,
-                  ),
-                SoatActionTile(
-                  icon: Icons.delete_outline_rounded,
-                  label: context.l10n.soat_delete_button,
-                  color: AppColors.error,
-                  loading: _deleting,
-                  showDivider: widget.soat.documentUrl != null,
-                  onTap: _confirmAndDelete,
-                ),
-              ],
-            ),
-          ),
           const SizedBox(height: 32),
         ],
       ),

@@ -17,9 +17,14 @@ import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dar
 import 'package:rideglory/shared/router/app_routes.dart';
 
 class MaintenanceDetailView extends StatefulWidget {
-  const MaintenanceDetailView({super.key, required this.maintenance});
+  const MaintenanceDetailView({
+    super.key,
+    required this.maintenance,
+    this.readOnly = false,
+  });
 
   final MaintenanceModel maintenance;
+  final bool readOnly;
 
   @override
   State<MaintenanceDetailView> createState() => _MaintenanceDetailViewState();
@@ -146,11 +151,12 @@ class _MaintenanceDetailViewState extends State<MaintenanceDetailView> {
                       ),
                     ),
                   ),
-                  AppCircleIconButton(
-                    icon: Icons.more_vert,
-                    surfaceColor: AppColors.darkTertiary,
-                    onTap: _showOptions,
-                  ),
+                  if (!widget.readOnly)
+                    AppCircleIconButton(
+                      icon: Icons.more_vert,
+                      surfaceColor: AppColors.darkTertiary,
+                      onTap: _showOptions,
+                    ),
                 ],
               ),
             ),
@@ -200,7 +206,8 @@ class _MaintenanceDetailViewState extends State<MaintenanceDetailView> {
                       ),
                     ),
                   ),
-                  MaintenanceCtaBar(onEdit: _onEdit, onDelete: _onDelete),
+                  if (!widget.readOnly)
+                    MaintenanceCtaBar(onEdit: _onEdit, onDelete: _onDelete),
                 ],
               );
             },

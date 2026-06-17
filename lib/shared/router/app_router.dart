@@ -385,8 +385,20 @@ class AppRouter {
         path: AppRoutes.maintenances,
         name: AppRoutes.maintenances,
         builder: (context, state) {
-          final initialVehicleId = state.extra as String?;
-          return MaintenancesPage(initialVehicleId: initialVehicleId);
+          final extra = state.extra;
+          final String? initialVehicleId;
+          final bool readOnly;
+          if (extra is Map<String, dynamic>) {
+            initialVehicleId = extra['vehicleId'] as String?;
+            readOnly = (extra['readOnly'] as bool?) ?? false;
+          } else {
+            initialVehicleId = extra as String?;
+            readOnly = false;
+          }
+          return MaintenancesPage(
+            initialVehicleId: initialVehicleId,
+            readOnly: readOnly,
+          );
         },
       ),
       GoRoute(
@@ -412,8 +424,17 @@ class AppRouter {
         path: AppRoutes.maintenanceDetail,
         name: AppRoutes.maintenanceDetail,
         builder: (context, state) {
-          final maintenance = state.extra as MaintenanceModel;
-          return MaintenanceDetailPage(maintenance: maintenance);
+          final extra = state.extra;
+          final MaintenanceModel maintenance;
+          final bool readOnly;
+          if (extra is Map<String, dynamic>) {
+            maintenance = extra['maintenance'] as MaintenanceModel;
+            readOnly = (extra['readOnly'] as bool?) ?? false;
+          } else {
+            maintenance = extra as MaintenanceModel;
+            readOnly = false;
+          }
+          return MaintenanceDetailPage(maintenance: maintenance, readOnly: readOnly);
         },
       ),
 
@@ -428,8 +449,17 @@ class AppRouter {
         path: AppRoutes.soatStatus,
         name: AppRoutes.soatStatus,
         builder: (context, state) {
-          final vehicle = state.extra as VehicleModel;
-          return SoatStatusPage(vehicle: vehicle);
+          final extra = state.extra;
+          final VehicleModel vehicle;
+          final bool isArchived;
+          if (extra is Map<String, dynamic>) {
+            vehicle = extra['vehicle'] as VehicleModel;
+            isArchived = (extra['isArchived'] as bool?) ?? false;
+          } else {
+            vehicle = extra as VehicleModel;
+            isArchived = false;
+          }
+          return SoatStatusPage(vehicle: vehicle, isArchived: isArchived);
         },
       ),
       GoRoute(
@@ -451,8 +481,17 @@ class AppRouter {
         path: AppRoutes.tecnomecanicaStatus,
         name: AppRoutes.tecnomecanicaStatus,
         builder: (context, state) {
-          final vehicle = state.extra as VehicleModel;
-          return TecnomecanicaStatusPage(vehicle: vehicle);
+          final extra = state.extra;
+          final VehicleModel vehicle;
+          final bool isArchived;
+          if (extra is Map<String, dynamic>) {
+            vehicle = extra['vehicle'] as VehicleModel;
+            isArchived = (extra['isArchived'] as bool?) ?? false;
+          } else {
+            vehicle = extra as VehicleModel;
+            isArchived = false;
+          }
+          return TecnomecanicaStatusPage(vehicle: vehicle, isArchived: isArchived);
         },
       ),
       GoRoute(

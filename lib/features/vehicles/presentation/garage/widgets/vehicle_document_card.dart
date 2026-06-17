@@ -147,7 +147,7 @@ class _SoatDocumentCardBody extends StatelessWidget {
               final soat = state is Data<SoatModel> ? state.data : null;
 
               if (isArchived) {
-                return Padding(
+                final content = Padding(
                   padding: const EdgeInsets.all(14),
                   child: Row(
                     children: [
@@ -208,9 +208,28 @@ class _SoatDocumentCardBody extends StatelessWidget {
                           ],
                         ),
                       ),
+                      if (soat != null)
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 14,
+                          color: AppColors.textOnDarkTertiary,
+                        ),
                     ],
                   ),
                 );
+                if (soat != null) {
+                  return InkWell(
+                    onTap: () => context.pushNamed(
+                      AppRoutes.soatStatus,
+                      extra: <String, dynamic>{
+                        'vehicle': vehicle,
+                        'isArchived': true,
+                      },
+                    ),
+                    child: content,
+                  );
+                }
+                return content;
               }
 
               final soatStatus = soat?.status;
@@ -387,7 +406,7 @@ class _RtmDocumentCardBody extends StatelessWidget {
               final rtm = state is Data<TecnomecanicaModel> ? state.data : null;
 
               if (isArchived) {
-                return Padding(
+                final content = Padding(
                   padding: const EdgeInsets.all(14),
                   child: Row(
                     children: [
@@ -447,9 +466,28 @@ class _RtmDocumentCardBody extends StatelessWidget {
                           ],
                         ),
                       ),
+                      if (rtm != null)
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          size: 14,
+                          color: AppColors.textOnDarkTertiary,
+                        ),
                     ],
                   ),
                 );
+                if (rtm != null) {
+                  return InkWell(
+                    onTap: () => context.pushNamed(
+                      AppRoutes.tecnomecanicaStatus,
+                      extra: <String, dynamic>{
+                        'vehicle': vehicle,
+                        'isArchived': true,
+                      },
+                    ),
+                    child: content,
+                  );
+                }
+                return content;
               }
 
               final rtmStatus = rtm?.documentStatus;

@@ -10,8 +10,9 @@ class VehicleDetailArchivedBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.darkBorderPrimary,
+        color: AppColors.darkTertiary,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.primary),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

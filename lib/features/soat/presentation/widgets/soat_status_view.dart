@@ -13,9 +13,14 @@ import 'package:rideglory/features/soat/presentation/pages/soat_manual_capture_p
 import 'package:rideglory/shared/router/app_routes.dart';
 
 class SoatStatusView extends StatelessWidget {
-  const SoatStatusView({super.key, required this.vehicle});
+  const SoatStatusView({
+    super.key,
+    required this.vehicle,
+    this.isArchived = false,
+  });
 
   final VehicleModel vehicle;
+  final bool isArchived;
 
   @override
   Widget build(BuildContext context) {
@@ -43,27 +48,28 @@ class SoatStatusView extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
         actions: [
-          BlocBuilder<SoatCubit, ResultState<SoatModel>>(
-            builder: (context, state) {
-              if (state is! Data<SoatModel>) return const SizedBox.shrink();
-              return AppTextButton(
-                label: context.l10n.soat_edit_btn,
-                onPressed: () => context
-                    .push<bool>(
-                      AppRoutes.soatManualCapture,
-                      extra: SoatManualCaptureParams(
-                        vehicle: vehicle,
-                        soat: state.data,
-                      ),
-                    )
-                    .then((_) {
-                      if (context.mounted) {
-                        context.read<SoatCubit>().load(vehicle.id ?? '');
-                      }
-                    }),
-              );
-            },
-          ),
+          if (!isArchived)
+            BlocBuilder<SoatCubit, ResultState<SoatModel>>(
+              builder: (context, state) {
+                if (state is! Data<SoatModel>) return const SizedBox.shrink();
+                return AppTextButton(
+                  label: context.l10n.soat_edit_btn,
+                  onPressed: () => context
+                      .push<bool>(
+                        AppRoutes.soatManualCapture,
+                        extra: SoatManualCaptureParams(
+                          vehicle: vehicle,
+                          soat: state.data,
+                        ),
+                      )
+                      .then((_) {
+                        if (context.mounted) {
+                          context.read<SoatCubit>().load(vehicle.id ?? '');
+                        }
+                      }),
+                );
+              },
+            ),
         ],
       ),
       body: BlocBuilder<SoatCubit, ResultState<SoatModel>>(
@@ -78,6 +84,7 @@ class SoatStatusView extends StatelessWidget {
             return SoatDataView(
               vehicle: vehicle,
               soat: (state as Data<SoatModel>).data,
+              isArchived: isArchived,
             );
           } else if (state is Error) {
             return Center(

@@ -11,17 +11,27 @@ class GarageArchivedSection extends StatefulWidget {
     super.key,
     required this.archivedVehicles,
     this.onGarageListUpdatedLocally,
+    this.initiallyExpanded = false,
   });
 
   final List<VehicleModel> archivedVehicles;
   final void Function([VehicleModel?])? onGarageListUpdatedLocally;
+  final bool initiallyExpanded;
 
   @override
   State<GarageArchivedSection> createState() => _GarageArchivedSectionState();
 }
 
 class _GarageArchivedSectionState extends State<GarageArchivedSection> {
-  bool _isExpanded = false;
+  late bool _isExpanded = widget.initiallyExpanded;
+
+  @override
+  void didUpdateWidget(GarageArchivedSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.archivedVehicles.isEmpty && widget.archivedVehicles.isNotEmpty) {
+      _isExpanded = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +52,7 @@ class _GarageArchivedSectionState extends State<GarageArchivedSection> {
           const SizedBox(height: 12),
           ...widget.archivedVehicles.map(
             (vehicle) => Padding(
+              key: ValueKey(vehicle.id),
               padding: const EdgeInsets.only(bottom: 12),
               child: GarageOtherVehicleItem(
                 vehicle: vehicle,

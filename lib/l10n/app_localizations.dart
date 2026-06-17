@@ -2020,11 +2020,29 @@ abstract class AppLocalizations {
   /// **'No tienes vehículos registrados'**
   String get vehicle_noVehicles;
 
+  /// No description provided for @vehicle_noActiveVehicles.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin vehículos activos'**
+  String get vehicle_noActiveVehicles;
+
+  /// No description provided for @vehicle_noActiveVehiclesSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Todos tus vehículos están archivados. Puedes restaurar uno o agregar uno nuevo.'**
+  String get vehicle_noActiveVehiclesSubtitle;
+
   /// No description provided for @vehicle_mainVehicle.
   ///
   /// In es, this message translates to:
   /// **'Vehículo principal'**
   String get vehicle_mainVehicle;
+
+  /// No description provided for @vehicle_statusArchived.
+  ///
+  /// In es, this message translates to:
+  /// **'Archivado'**
+  String get vehicle_statusArchived;
 
   /// No description provided for @vehicle_archivedVehicle.
   ///
@@ -4333,7 +4351,7 @@ abstract class AppLocalizations {
   /// No description provided for @vehicle_soat_status_invalid_dates_desc.
   ///
   /// In es, this message translates to:
-  /// **'La fecha de inicio debe ser anterior al vencimiento'**
+  /// **'La fecha de vencimiento debe ser posterior a la fecha de inicio.'**
   String get vehicle_soat_status_invalid_dates_desc;
 
   /// No description provided for @vehicle_soat_status_pending.

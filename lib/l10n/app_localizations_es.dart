@@ -1034,7 +1034,17 @@ class AppLocalizationsEs extends AppLocalizations {
   String get vehicle_noVehicles => 'No tienes vehículos registrados';
 
   @override
+  String get vehicle_noActiveVehicles => 'Sin vehículos activos';
+
+  @override
+  String get vehicle_noActiveVehiclesSubtitle =>
+      'Todos tus vehículos están archivados. Puedes restaurar uno o agregar uno nuevo.';
+
+  @override
   String get vehicle_mainVehicle => 'Vehículo principal';
+
+  @override
+  String get vehicle_statusArchived => 'Archivado';
 
   @override
   String get vehicle_archivedVehicle => 'Vehículo Archivado';
@@ -2268,7 +2278,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get vehicle_soat_status_invalid_dates_desc =>
-      'La fecha de inicio debe ser anterior al vencimiento';
+      'La fecha de vencimiento debe ser posterior a la fecha de inicio.';
 
   @override
   String get vehicle_soat_status_pending => 'Estado del SOAT';

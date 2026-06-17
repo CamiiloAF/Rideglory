@@ -13,9 +13,14 @@ import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 
 class TecnomecanicaStatusView extends StatelessWidget {
-  const TecnomecanicaStatusView({super.key, required this.vehicle});
+  const TecnomecanicaStatusView({
+    super.key,
+    required this.vehicle,
+    this.isArchived = false,
+  });
 
   final VehicleModel vehicle;
+  final bool isArchived;
 
   @override
   Widget build(BuildContext context) {
@@ -43,32 +48,33 @@ class TecnomecanicaStatusView extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
         actions: [
-          BlocBuilder<TecnomecanicaCubit, ResultState<TecnomecanicaModel>>(
-            builder: (context, state) {
-              if (state is! Data<TecnomecanicaModel>) {
-                return const SizedBox.shrink();
-              }
-              return AppTextButton(
-                label: context.l10n.tecnomecanica_edit_btn,
-                onPressed: () => context
-                    .push<bool>(
-                      AppRoutes.tecnomecanicaManualCapture,
-                      extra: TecnomecanicaManualCaptureParams(
-                        cubit: context.read<TecnomecanicaCubit>(),
-                        vehicle: vehicle,
-                        existingRtm: state.data,
-                      ),
-                    )
-                    .then((_) {
-                      if (context.mounted) {
-                        context
-                            .read<TecnomecanicaCubit>()
-                            .load(vehicle.id ?? '');
-                      }
-                    }),
-              );
-            },
-          ),
+          if (!isArchived)
+            BlocBuilder<TecnomecanicaCubit, ResultState<TecnomecanicaModel>>(
+              builder: (context, state) {
+                if (state is! Data<TecnomecanicaModel>) {
+                  return const SizedBox.shrink();
+                }
+                return AppTextButton(
+                  label: context.l10n.tecnomecanica_edit_btn,
+                  onPressed: () => context
+                      .push<bool>(
+                        AppRoutes.tecnomecanicaManualCapture,
+                        extra: TecnomecanicaManualCaptureParams(
+                          cubit: context.read<TecnomecanicaCubit>(),
+                          vehicle: vehicle,
+                          existingRtm: state.data,
+                        ),
+                      )
+                      .then((_) {
+                        if (context.mounted) {
+                          context
+                              .read<TecnomecanicaCubit>()
+                              .load(vehicle.id ?? '');
+                        }
+                      }),
+                );
+              },
+            ),
         ],
       ),
       body: BlocBuilder<TecnomecanicaCubit, ResultState<TecnomecanicaModel>>(
@@ -83,6 +89,7 @@ class TecnomecanicaStatusView extends StatelessWidget {
             return TecnomecanicaDataView(
               vehicle: vehicle,
               rtm: (state as Data<TecnomecanicaModel>).data,
+              isArchived: isArchived,
             );
           } else if (state is Error) {
             return Center(

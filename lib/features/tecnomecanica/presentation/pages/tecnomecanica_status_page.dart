@@ -6,15 +6,20 @@ import 'package:rideglory/features/tecnomecanica/presentation/widgets/tecnomecan
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 
 class TecnomecanicaStatusPage extends StatelessWidget {
-  const TecnomecanicaStatusPage({super.key, required this.vehicle});
+  const TecnomecanicaStatusPage({
+    super.key,
+    required this.vehicle,
+    this.isArchived = false,
+  });
 
   final VehicleModel vehicle;
+  final bool isArchived;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => getIt<TecnomecanicaCubit>()..load(vehicle.id ?? ''),
-      child: TecnomecanicaStatusView(vehicle: vehicle),
+      child: TecnomecanicaStatusView(vehicle: vehicle, isArchived: isArchived),
     );
   }
 }
