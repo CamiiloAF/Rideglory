@@ -12,7 +12,6 @@ class TecnomecanicaDto extends TecnomecanicaModel {
     required super.cdaName,
     required super.startDate,
     required super.expiryDate,
-    super.certificateNumber,
     super.documentUrl,
     super.createdAt,
     super.updatedAt,
@@ -30,11 +29,9 @@ class CreateTecnomecanicaRequestDto {
     required this.cdaName,
     required this.startDate,
     required this.expiryDate,
-    this.certificateNumber,
     this.documentUrl,
   });
 
-  final String? certificateNumber;
   final String cdaName;
   final DateTime startDate;
   final DateTime expiryDate;

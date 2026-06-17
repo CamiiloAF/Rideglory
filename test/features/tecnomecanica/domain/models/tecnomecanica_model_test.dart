@@ -78,7 +78,6 @@ void main() {
         final original = TecnomecanicaModel(
           id: 'rtm-x',
           vehicleId: 'v-x',
-          certificateNumber: 'CDA-100',
           cdaName: 'CDA Original',
           startDate: today().subtract(const Duration(days: 10)),
           expiryDate: today().add(const Duration(days: 60)),
@@ -86,7 +85,6 @@ void main() {
         final updated = original.copyWith(cdaName: 'CDA Updated');
         expect(updated.id, 'rtm-x');
         expect(updated.vehicleId, 'v-x');
-        expect(updated.certificateNumber, 'CDA-100');
         expect(updated.cdaName, 'CDA Updated');
       },
     );

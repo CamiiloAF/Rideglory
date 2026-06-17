@@ -5023,6 +5023,12 @@ abstract class AppLocalizations {
   /// **'Error al subir. Archivo demasiado grande (máx. 10 MB).'**
   String get soat_upload_error;
 
+  /// No description provided for @soat_expiry_after_start_error.
+  ///
+  /// In es, this message translates to:
+  /// **'La fecha de vencimiento debe ser posterior a la fecha de inicio.'**
+  String get soat_expiry_after_start_error;
+
   /// No description provided for @soat_delete_button.
   ///
   /// In es, this message translates to:
@@ -5383,23 +5389,11 @@ abstract class AppLocalizations {
   /// **'Registrar nueva RTM'**
   String get tecnomecanica_renew_btn;
 
-  /// No description provided for @tecnomecanica_field_certificate_number.
-  ///
-  /// In es, this message translates to:
-  /// **'N.° de certificado'**
-  String get tecnomecanica_field_certificate_number;
-
   /// No description provided for @tecnomecanica_field_cda_name.
   ///
   /// In es, this message translates to:
   /// **'CDA'**
   String get tecnomecanica_field_cda_name;
-
-  /// No description provided for @tecnomecanica_field_cda_code.
-  ///
-  /// In es, this message translates to:
-  /// **'Código CDA'**
-  String get tecnomecanica_field_cda_code;
 
   /// No description provided for @tecnomecanica_field_start_date.
   ///
@@ -5491,23 +5485,17 @@ abstract class AppLocalizations {
   /// **'No se pudo guardar la revisión técnico-mecánica. Intenta de nuevo.'**
   String get tecnomecanica_save_error;
 
-  /// No description provided for @tecnomecanica_certificate_number_hint.
+  /// No description provided for @tecnomecanica_expiry_after_start_error.
   ///
   /// In es, this message translates to:
-  /// **'Ej: CDA-123456'**
-  String get tecnomecanica_certificate_number_hint;
+  /// **'La fecha de vencimiento debe ser posterior a la fecha de inicio.'**
+  String get tecnomecanica_expiry_after_start_error;
 
   /// No description provided for @tecnomecanica_cda_name_hint.
   ///
   /// In es, this message translates to:
   /// **'Nombre del CDA'**
   String get tecnomecanica_cda_name_hint;
-
-  /// No description provided for @tecnomecanica_cda_code_hint.
-  ///
-  /// In es, this message translates to:
-  /// **'Código del CDA (opcional)'**
-  String get tecnomecanica_cda_code_hint;
 
   /// No description provided for @tecnomecanica_date_hint.
   ///

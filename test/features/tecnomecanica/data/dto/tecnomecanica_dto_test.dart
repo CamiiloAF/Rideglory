@@ -9,7 +9,6 @@ void main() {
     final json = <String, dynamic>{
       'id': 'rtm-1',
       'vehicleId': 'vehicle-1',
-      'certificateNumber': 'CDA-001',
       'cdaName': 'CDA Test',
       'startDate': '2026-01-01T00:00:00.000',
       'expiryDate': '2026-12-31T00:00:00.000',
@@ -22,7 +21,6 @@ void main() {
       final dto = TecnomecanicaDto.fromJson(json);
       expect(dto.id, 'rtm-1');
       expect(dto.vehicleId, 'vehicle-1');
-      expect(dto.certificateNumber, 'CDA-001');
       expect(dto.cdaName, 'CDA Test');
       expect(dto.startDate.year, startDate.year);
       expect(dto.expiryDate.year, expiryDate.year);
@@ -39,7 +37,6 @@ void main() {
         'expiryDate': '2026-06-30T00:00:00.000',
       };
       final dto = TecnomecanicaDto.fromJson(jsonMinimal);
-      expect(dto.certificateNumber, isNull);
       expect(dto.documentUrl, isNull);
     });
 
@@ -47,7 +44,6 @@ void main() {
       final dto = TecnomecanicaDto.fromJson(json);
       expect(dto, isA<TecnomecanicaDto>());
       expect(dto.runtimeType.toString(), contains('TecnomecanicaDto'));
-      expect(dto.certificateNumber, 'CDA-001');
     });
   });
 
@@ -68,16 +64,14 @@ void main() {
       },
     );
 
-    test('TC-dto-05: toJson includes optional fields when non-null', () {
+    test('TC-dto-05: toJson includes documentUrl when non-null', () {
       final dto = CreateTecnomecanicaRequestDto(
-        certificateNumber: 'CERT-002',
         cdaName: 'CDA Optional',
         startDate: DateTime(2026, 1, 1),
         expiryDate: DateTime(2027, 1, 1),
         documentUrl: 'https://example.com/doc.pdf',
       );
       final json = dto.toJson();
-      expect(json['certificateNumber'], 'CERT-002');
       expect(json['startDate'], isNotNull);
       expect(json['documentUrl'], 'https://example.com/doc.pdf');
     });

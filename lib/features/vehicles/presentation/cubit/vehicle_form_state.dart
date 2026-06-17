@@ -28,12 +28,10 @@ class PendingRtm {
     required this.cdaName,
     required this.startDate,
     required this.expiryDate,
-    this.certificateNumber,
     this.documentUrl,
     this.localImagePath,
   });
 
-  final String? certificateNumber;
   final String cdaName;
   final DateTime startDate;
   final DateTime expiryDate;

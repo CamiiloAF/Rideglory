@@ -14,7 +14,6 @@ import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:rideglory/core/config/api_remote_config.dart';
 import 'package:rideglory/core/config/app_env.dart';
-import 'package:rideglory/core/config/sentry_config.dart';
 import 'package:rideglory/core/http/api_base_url_resolver.dart';
 import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/core/services/crash/crash_handler_setup.dart';
@@ -73,8 +72,6 @@ void main() {
     );
     MapboxOptions.setAccessToken(mapboxToken!);
 
-    // Resuelto antes de Sentry.init para (a) propagar la traza al host real de
-    // dev en la ventana dev-verify y (b) setear el tag api_base_url.
     final resolvedApiUrl = ApiBaseUrlResolver(
       FirebaseRemoteConfig.instance,
     ).resolve();
@@ -87,10 +84,7 @@ void main() {
     await SentryFlutter.init((options) {
       options.dsn = _sentryDsn;
       options.environment = kReleaseMode ? 'prod' : 'dev';
-      // En dev-verify subimos el sampling a 1.0 para poder ver trazas
-      // distribuidas; en plain debug queda 0.0 (no traza); en prod 0.2.
-      options.tracesSampleRate =
-          kReleaseMode ? 0.2 : (kSentryDevVerify ? 1.0 : 0.0);
+      options.tracesSampleRate = kReleaseMode ? 0.2 : 0.0;
       // tracePropagationTargets restringe el header sentry-trace al host
       // Rideglory y hosts locales de dev. Nunca Mapbox ni Firebase Storage.
       options.tracePropagationTargets.clear();
@@ -99,17 +93,8 @@ void main() {
         '10.0.2.2',
         'localhost',
       ]);
-      // dev-verify: propagar también al host real del backend de dev (p.ej. la
-      // IP LAN del override de .env) para correlacionar la traza app↔backend.
-      if (kSentryDevVerify) {
-        final devHost = Uri.tryParse(resolvedApiUrl)?.host;
-        if (devHost != null && devHost.isNotEmpty) {
-          options.tracePropagationTargets.add(devHost);
-        }
-      }
       options.beforeSend = (event, hint) {
-        // En debug, bloquear envío salvo que el flag de verificación esté activo.
-        if (kDebugMode && !kSentryDevVerify) return null;
+        if (kDebugMode) return null;
         return scrubPiiFromEvent(event);
       };
       options.beforeBreadcrumb = (crumb, hint) {

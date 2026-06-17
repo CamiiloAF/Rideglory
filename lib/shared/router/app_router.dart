@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rideglory/core/config/sentry_config.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:rideglory/core/services/analytics/analytics_service.dart';
@@ -97,7 +96,7 @@ class AppRouter {
     initialLocation: AppRoutes.splash,
     observers: <NavigatorObserver>[
       analyticsObserver,
-      if (kReleaseMode || kSentryDevVerify) SentryNavigatorObserver(),
+      if (kReleaseMode) SentryNavigatorObserver(),
     ],
     redirect: (BuildContext context, GoRouterState state) {
       final isAuthenticated = FirebaseAuth.instance.currentUser != null;

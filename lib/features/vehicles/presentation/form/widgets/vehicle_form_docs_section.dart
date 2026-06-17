@@ -221,7 +221,6 @@ Future<void> _onRtmCreationTap(
       cdaName: pendingRtm.cdaName,
       startDate: pendingRtm.startDate,
       expiryDate: pendingRtm.expiryDate,
-      certificateNumber: pendingRtm.certificateNumber,
       documentUrl: isLocalPath ? null : pendingRtm.documentUrl,
     );
   }
@@ -237,7 +236,6 @@ Future<void> _onRtmCreationTap(
   if (result != null && context.mounted) {
     context.read<VehicleFormCubit>().storePendingRtm(
       PendingRtm(
-        certificateNumber: result.certificateNumber,
         cdaName: result.cdaName,
         startDate: result.startDate,
         expiryDate: result.expiryDate,

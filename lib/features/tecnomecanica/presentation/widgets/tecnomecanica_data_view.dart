@@ -233,11 +233,6 @@ class _TecnomecanicaDataViewState extends State<TecnomecanicaDataView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (widget.rtm.certificateNumber != null)
-                  DocumentDetailRow(
-                    label: context.l10n.tecnomecanica_field_certificate_number,
-                    value: widget.rtm.certificateNumber!,
-                  ),
                 DocumentDetailRow(
                   label: context.l10n.tecnomecanica_field_cda_name,
                   value: widget.rtm.cdaName,

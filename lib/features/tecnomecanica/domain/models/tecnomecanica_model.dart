@@ -8,7 +8,6 @@ class TecnomecanicaModel with VehicleDocumentExpiry implements VehicleDocumentMo
     required this.cdaName,
     required this.startDate,
     required this.expiryDate,
-    this.certificateNumber,
     this.documentUrl,
     this.createdAt,
     this.updatedAt,
@@ -18,7 +17,6 @@ class TecnomecanicaModel with VehicleDocumentExpiry implements VehicleDocumentMo
   final String id;
   @override
   final String vehicleId;
-  final String? certificateNumber;
   final String cdaName;
   @override
   final DateTime expiryDate;
@@ -32,7 +30,6 @@ class TecnomecanicaModel with VehicleDocumentExpiry implements VehicleDocumentMo
   TecnomecanicaModel copyWith({
     String? id,
     String? vehicleId,
-    String? certificateNumber,
     String? cdaName,
     DateTime? startDate,
     DateTime? expiryDate,
@@ -43,7 +40,6 @@ class TecnomecanicaModel with VehicleDocumentExpiry implements VehicleDocumentMo
     return TecnomecanicaModel(
       id: id ?? this.id,
       vehicleId: vehicleId ?? this.vehicleId,
-      certificateNumber: certificateNumber ?? this.certificateNumber,
       cdaName: cdaName ?? this.cdaName,
       startDate: startDate ?? this.startDate,
       expiryDate: expiryDate ?? this.expiryDate,
@@ -59,7 +55,6 @@ class TecnomecanicaModel with VehicleDocumentExpiry implements VehicleDocumentMo
         other is TecnomecanicaModel &&
             id == other.id &&
             vehicleId == other.vehicleId &&
-            certificateNumber == other.certificateNumber &&
             cdaName == other.cdaName &&
             startDate == other.startDate &&
             expiryDate == other.expiryDate &&
@@ -70,7 +65,6 @@ class TecnomecanicaModel with VehicleDocumentExpiry implements VehicleDocumentMo
   int get hashCode => Object.hash(
     id,
     vehicleId,
-    certificateNumber,
     cdaName,
     startDate,
     expiryDate,

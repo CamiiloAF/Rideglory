@@ -2661,6 +2661,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Error al subir. Archivo demasiado grande (máx. 10 MB).';
 
   @override
+  String get soat_expiry_after_start_error =>
+      'La fecha de vencimiento debe ser posterior a la fecha de inicio.';
+
+  @override
   String get soat_delete_button => 'Eliminar SOAT';
 
   @override
@@ -2863,13 +2867,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get tecnomecanica_renew_btn => 'Registrar nueva RTM';
 
   @override
-  String get tecnomecanica_field_certificate_number => 'N.° de certificado';
-
-  @override
   String get tecnomecanica_field_cda_name => 'CDA';
-
-  @override
-  String get tecnomecanica_field_cda_code => 'Código CDA';
 
   @override
   String get tecnomecanica_field_start_date => 'Fecha inicio';
@@ -2922,13 +2920,11 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se pudo guardar la revisión técnico-mecánica. Intenta de nuevo.';
 
   @override
-  String get tecnomecanica_certificate_number_hint => 'Ej: CDA-123456';
+  String get tecnomecanica_expiry_after_start_error =>
+      'La fecha de vencimiento debe ser posterior a la fecha de inicio.';
 
   @override
   String get tecnomecanica_cda_name_hint => 'Nombre del CDA';
-
-  @override
-  String get tecnomecanica_cda_code_hint => 'Código del CDA (opcional)';
 
   @override
   String get tecnomecanica_date_hint => 'dd/mm/aaaa';

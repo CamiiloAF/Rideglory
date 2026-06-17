@@ -49,7 +49,6 @@ class TecnomecanicaRepositoryImpl implements TecnomecanicaRepository {
     return executeService(
       function: () async {
         final requestDto = CreateTecnomecanicaRequestDto(
-          certificateNumber: tecnomecanica.certificateNumber,
           cdaName: tecnomecanica.cdaName,
           startDate: tecnomecanica.startDate,
           expiryDate: tecnomecanica.expiryDate,

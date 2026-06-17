@@ -90,6 +90,11 @@ class _TecnomecanicaManualCapturePageState
     final expiryDate = _expiryDate;
     if (startDate == null || expiryDate == null) return;
 
+    if (!expiryDate.isAfter(startDate)) {
+      setState(() => _error = context.l10n.tecnomecanica_expiry_after_start_error);
+      return;
+    }
+
     final values = _formKey.currentState!.value;
     final cdaName = ((values['cdaName'] as String?) ?? '').trim();
 

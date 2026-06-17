@@ -268,7 +268,6 @@ class _VehicleFormViewState extends State<VehicleFormView> {
         tecnomecanica: TecnomecanicaModel(
           id: '',
           vehicleId: vehicleId,
-          certificateNumber: pendingRtm.certificateNumber,
           cdaName: pendingRtm.cdaName,
           startDate: pendingRtm.startDate,
           expiryDate: pendingRtm.expiryDate,
