@@ -196,9 +196,17 @@ class AuthService {
           );
         }
 
-        final oauthCredential = OAuthProvider(
-          'apple.com',
-        ).credential(idToken: identityToken, rawNonce: rawNonce);
+        // En iOS, `signInWithCredential` con solo idToken + rawNonce dispara
+        // un bug del SDK donde el nonce no se propaga a verifyAssertion y
+        // Firebase responde `invalid-credential` / "Invalid OAuth response
+        // from apple.com" aunque el token de Apple sea válido. Incluir el
+        // authorizationCode como accessToken evita esa ruta defectuosa.
+        // Ref: github.com/firebase/flutterfire/issues/17466
+        final oauthCredential = OAuthProvider('apple.com').credential(
+          idToken: identityToken,
+          rawNonce: rawNonce,
+          accessToken: appleCredential.authorizationCode,
+        );
 
         final userCredential = await _firebaseAuth.signInWithCredential(
           oauthCredential,
