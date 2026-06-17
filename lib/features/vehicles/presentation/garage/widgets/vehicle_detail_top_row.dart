@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_detail_archived_badge.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/vehicle_detail_main_badge.dart';
 
 class VehicleDetailTopRow extends StatelessWidget {
-  const VehicleDetailTopRow({super.key, required this.vehicle});
+  const VehicleDetailTopRow({
+    super.key,
+    required this.vehicle,
+    this.isArchived = false,
+  });
 
   final VehicleModel vehicle;
+  final bool isArchived;
 
   String get _subtitle {
     final parts = <String>[];
@@ -20,7 +26,10 @@ class VehicleDetailTopRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        if (vehicle.isMainVehicle) ...[
+        if (isArchived) ...[
+          const VehicleDetailArchivedBadge(),
+          const SizedBox(width: 10),
+        ] else if (vehicle.isMainVehicle) ...[
           const VehicleDetailMainBadge(),
           const SizedBox(width: 10),
         ],

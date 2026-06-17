@@ -27,30 +27,33 @@ class VehicleDocumentCard extends StatelessWidget {
     super.key,
     required this.kind,
     required this.vehicle,
+    this.isArchived = false,
   });
 
   final VehicleDocumentKind kind;
   final VehicleModel vehicle;
+  final bool isArchived;
 
   @override
   Widget build(BuildContext context) {
     return switch (kind) {
       VehicleDocumentKind.soat => BlocProvider(
         create: (_) => getIt<SoatCubit>()..load(vehicle.id ?? ''),
-        child: _SoatDocumentCardBody(vehicle: vehicle),
+        child: _SoatDocumentCardBody(vehicle: vehicle, isArchived: isArchived),
       ),
       VehicleDocumentKind.rtm => BlocProvider(
         create: (_) => getIt<TecnomecanicaCubit>()..load(vehicle.id ?? ''),
-        child: _RtmDocumentCardBody(vehicle: vehicle),
+        child: _RtmDocumentCardBody(vehicle: vehicle, isArchived: isArchived),
       ),
     };
   }
 }
 
 class _SoatDocumentCardBody extends StatelessWidget {
-  const _SoatDocumentCardBody({required this.vehicle});
+  const _SoatDocumentCardBody({required this.vehicle, this.isArchived = false});
 
   final VehicleModel vehicle;
+  final bool isArchived;
 
   Future<void> _onTap(
     BuildContext context,
@@ -142,6 +145,74 @@ class _SoatDocumentCardBody extends StatelessWidget {
               }
 
               final soat = state is Data<SoatModel> ? state.data : null;
+
+              if (isArchived) {
+                return Padding(
+                  padding: const EdgeInsets.all(14),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          color: AppColors.darkBorderPrimary,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(
+                          Icons.assignment_outlined,
+                          size: 18,
+                          color: AppColors.textOnDarkTertiary,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              context.l10n.vehicle_doc_soat_label,
+                              style: const TextStyle(
+                                color: AppColors.textOnDarkTertiary,
+                                fontSize: 11,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            if (soat != null) ...[
+                              if (soat.insurer != null)
+                                Text(
+                                  soat.insurer!,
+                                  style: const TextStyle(
+                                    color: AppColors.textOnDarkPrimary,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              const SizedBox(height: 2),
+                              Text(
+                                context.l10n.vehicle_doc_expires_on(
+                                  DateFormat.yMMMd('es').format(soat.expiryDate),
+                                ),
+                                style: const TextStyle(
+                                  color: AppColors.textOnDarkTertiary,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ] else
+                              Text(
+                                context.l10n.vehicle_soat_tap_to_add,
+                                style: const TextStyle(
+                                  color: AppColors.textOnDarkSecondary,
+                                  fontSize: 13,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
               final soatStatus = soat?.status;
               final statusColor = _statusColor(soatStatus);
 
@@ -224,9 +295,10 @@ class _SoatDocumentCardBody extends StatelessWidget {
 }
 
 class _RtmDocumentCardBody extends StatelessWidget {
-  const _RtmDocumentCardBody({required this.vehicle});
+  const _RtmDocumentCardBody({required this.vehicle, this.isArchived = false});
 
   final VehicleModel vehicle;
+  final bool isArchived;
 
   Future<void> _onTap(BuildContext context) async {
     await context.pushNamed(AppRoutes.tecnomecanicaStatus, extra: vehicle);
@@ -313,6 +385,73 @@ class _RtmDocumentCardBody extends StatelessWidget {
               }
 
               final rtm = state is Data<TecnomecanicaModel> ? state.data : null;
+
+              if (isArchived) {
+                return Padding(
+                  padding: const EdgeInsets.all(14),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          color: AppColors.darkBorderPrimary,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(
+                          Icons.assignment_outlined,
+                          size: 18,
+                          color: AppColors.textOnDarkTertiary,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              context.l10n.vehicle_doc_techreview_label,
+                              style: const TextStyle(
+                                color: AppColors.textOnDarkTertiary,
+                                fontSize: 11,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            if (rtm != null) ...[
+                              Text(
+                                rtm.cdaName,
+                                style: const TextStyle(
+                                  color: AppColors.textOnDarkPrimary,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                context.l10n.vehicle_doc_expires_on(
+                                  DateFormat.yMMMd('es').format(rtm.expiryDate),
+                                ),
+                                style: const TextStyle(
+                                  color: AppColors.textOnDarkTertiary,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            ] else
+                              Text(
+                                context.l10n.tecnomecanica_status_no_rtm,
+                                style: const TextStyle(
+                                  color: AppColors.textOnDarkSecondary,
+                                  fontSize: 13,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
               final rtmStatus = rtm?.documentStatus;
               final statusColor = _statusColor(rtmStatus);
 

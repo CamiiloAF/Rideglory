@@ -22,6 +22,7 @@ class VehicleDetailView extends StatelessWidget {
     required this.onMaintenanceRefreshRequested,
     this.pendingCreatedMaintenance,
     this.onVehicleUpdated,
+    this.isArchived = false,
   });
 
   final VehicleModel vehicle;
@@ -32,6 +33,7 @@ class VehicleDetailView extends StatelessWidget {
   final ValueChanged<MaintenanceModel> onMaintenanceCreated;
   final ValueChanged<String> onMaintenanceRefreshRequested;
   final ValueChanged<VehicleModel>? onVehicleUpdated;
+  final bool isArchived;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,11 @@ class VehicleDetailView extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
-            child: VehicleDetailNav(vehicle: vehicle, onBack: onBack),
+            child: VehicleDetailNav(
+              vehicle: vehicle,
+              onBack: onBack,
+              isArchived: isArchived,
+            ),
           ),
           SliverToBoxAdapter(
             child: VehicleDetailHeroImage(vehicle: vehicle),
@@ -49,7 +55,7 @@ class VehicleDetailView extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
-                VehicleDetailTopRow(vehicle: vehicle),
+                VehicleDetailTopRow(vehicle: vehicle, isArchived: isArchived),
                 const SizedBox(height: 16),
                 if (vehicle.licensePlate != null || vehicle.vin != null) ...[
                   VehicleDetailIdentificationCard(vehicle: vehicle),
@@ -60,11 +66,13 @@ class VehicleDetailView extends StatelessWidget {
                 VehicleDocumentCard(
                   kind: VehicleDocumentKind.soat,
                   vehicle: vehicle,
+                  isArchived: isArchived,
                 ),
                 const SizedBox(height: 16),
                 VehicleDocumentCard(
                   kind: VehicleDocumentKind.rtm,
                   vehicle: vehicle,
+                  isArchived: isArchived,
                 ),
                 const SizedBox(height: 16),
                 VehicleMaintenanceHistorySection(

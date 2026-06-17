@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_archived_header.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_options_bottom_sheet.dart';
 import 'package:rideglory/features/vehicles/presentation/garage/widgets/garage_other_vehicle_item.dart';
+import 'package:rideglory/shared/router/app_routes.dart';
 
 class GarageArchivedSection extends StatefulWidget {
   const GarageArchivedSection({
     super.key,
     required this.archivedVehicles,
-    required this.onRestoreTap,
     this.onGarageListUpdatedLocally,
   });
 
   final List<VehicleModel> archivedVehicles;
-  final ValueChanged<VehicleModel> onRestoreTap;
   final void Function([VehicleModel?])? onGarageListUpdatedLocally;
 
   @override
@@ -45,7 +45,10 @@ class _GarageArchivedSectionState extends State<GarageArchivedSection> {
               padding: const EdgeInsets.only(bottom: 12),
               child: GarageOtherVehicleItem(
                 vehicle: vehicle,
-                onTap: () => widget.onRestoreTap(vehicle),
+                onTap: () => context.pushNamed(
+                  AppRoutes.vehicleDetail,
+                  extra: vehicle,
+                ),
                 onOptionsTap: () => GarageOptionsBottomSheet.show(
                   context,
                   vehicle,

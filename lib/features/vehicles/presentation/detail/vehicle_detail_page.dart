@@ -85,6 +85,7 @@ class _VehicleDetailPageState extends State<VehicleDetailPage> {
         onMaintenanceCreated: _onMaintenanceCreated,
         onMaintenanceRefreshRequested: _onMaintenanceRefreshRequested,
         onVehicleUpdated: (updated) => setState(() => _vehicle = updated),
+        isArchived: _vehicle.isArchived,
       ),
     );
   }

@@ -139,14 +139,6 @@ class GarageVehiclesContent extends StatelessWidget {
                     ],
                     GarageArchivedSection(
                       archivedVehicles: archivedVehicles,
-                      onRestoreTap: (vehicle) => GarageOptionsBottomSheet.show(
-                        context,
-                        vehicle,
-                        onGarageListUpdatedLocally: null,
-                        onMaintenanceCreated: onMaintenanceCreated,
-                        onMaintenanceRefreshRequested:
-                            onMaintenanceRefreshRequested,
-                      ),
                     ),
                   ]),
                 ),

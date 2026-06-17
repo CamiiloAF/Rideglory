@@ -9,10 +9,12 @@ class VehicleDetailNav extends StatelessWidget {
     super.key,
     required this.vehicle,
     required this.onBack,
+    this.isArchived = false,
   });
 
   final VehicleModel vehicle;
   final VoidCallback onBack;
+  final bool isArchived;
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +43,15 @@ class VehicleDetailNav extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              AppCircleIconButton(
-                icon: Icons.edit_outlined,
-                surfaceColor: AppColors.darkBgSecondary,
-                onTap: () =>
-                    context.pushNamed(AppRoutes.editVehicle, extra: vehicle),
-              ),
+              if (!isArchived)
+                AppCircleIconButton(
+                  icon: Icons.edit_outlined,
+                  surfaceColor: AppColors.darkBgSecondary,
+                  onTap: () =>
+                      context.pushNamed(AppRoutes.editVehicle, extra: vehicle),
+                )
+              else
+                const SizedBox(width: 36),
             ],
           ),
         ),
