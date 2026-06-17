@@ -46,12 +46,17 @@ class AppButton extends StatelessWidget {
     final cs = context.colorScheme;
     final appColors = context.appColors;
 
+    final isDisabled = onPressed == null && !isLoading;
+
     // ghost/ghostSubtle use fixed dark fill (#242429) regardless of style.
     if (variant == AppButtonVariant.ghost ||
         variant == AppButtonVariant.ghostSubtle) {
-      final foregroundColor = variant == AppButtonVariant.ghost
+      final baseForeground = variant == AppButtonVariant.ghost
           ? AppColors.textOnDarkPrimary
           : AppColors.textOnDarkSecondary;
+      final foregroundColor = isDisabled
+          ? baseForeground.withValues(alpha: 0.38)
+          : baseForeground;
       final buttonWidget = Container(
         width: isFullWidth ? double.infinity : width,
         height: height,
@@ -59,7 +64,9 @@ class AppButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(
             shape == AppButtonShape.pill ? 25.0 : 8.0,
           ),
-          color: AppColors.darkTertiary,
+          color: isDisabled
+              ? AppColors.darkTertiary.withValues(alpha: 0.5)
+              : AppColors.darkTertiary,
         ),
         child: Material(
           color: cs.surface.withValues(alpha: 0),
@@ -132,18 +139,22 @@ class AppButton extends StatelessWidget {
       _ => cs.primary,
     };
 
-    final backgroundColor = switch (style) {
-      AppButtonStyle.filled => variantColor,
-      // Soft/tonal fill: the variant color at low opacity, no border.
-      AppButtonStyle.tonal => variantColor.withValues(alpha: 0.1),
-      _ => cs.surface.withValues(alpha: 0),
-    };
+    final backgroundColor = isDisabled
+        ? cs.onSurface.withValues(alpha: 0.12)
+        : switch (style) {
+            AppButtonStyle.filled => variantColor,
+            // Soft/tonal fill: the variant color at low opacity, no border.
+            AppButtonStyle.tonal => variantColor.withValues(alpha: 0.1),
+            _ => cs.surface.withValues(alpha: 0),
+          };
 
-    final foregroundColor = style == AppButtonStyle.filled
+    final foregroundColor = isDisabled
+        ? cs.onSurface.withValues(alpha: 0.38)
+        : style == AppButtonStyle.filled
         ? cs.onPrimary
         : variantColor;
 
-    final borderColor = style == AppButtonStyle.outlined
+    final borderColor = (!isDisabled && style == AppButtonStyle.outlined)
         ? variantColor
         : cs.surface.withValues(alpha: 0);
 
