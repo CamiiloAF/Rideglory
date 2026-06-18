@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart' show Right;
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -186,12 +187,12 @@ void main() {
       await tester.pumpAndSettle();
 
       // Tap "Archivar" option in the bottom sheet (the one with archive icon)
-      final archiveListTile = find.ancestor(
-        of: find.byIcon(Icons.archive),
-        matching: find.byType(ListTile),
+      final archiveTile = find.ancestor(
+        of: find.byIcon(LucideIcons.archive),
+        matching: find.byType(GestureDetector),
       );
-      expect(archiveListTile, findsOneWidget);
-      await tester.tap(archiveListTile);
+      expect(archiveTile, findsWidgets);
+      await tester.tap(archiveTile.first);
       await tester.pumpAndSettle();
 
       // ConfirmationDialog should appear — tap the confirm button (labeled "Archivar")
@@ -199,8 +200,8 @@ void main() {
       // There should now be a modal visible with "Archivar vehículo" title
       expect(find.text('Archivar vehículo'), findsOneWidget);
 
-      // Tap the confirm button
-      await tester.tap(find.text('Archivar'));
+      // Tap the confirm button (last because the bottom sheet option also says "Archivar")
+      await tester.tap(find.text('Archivar').last);
       await tester.pumpAndSettle();
 
       // Verify archiveVehicle was called via the use case
@@ -229,12 +230,12 @@ void main() {
       await tester.pumpAndSettle();
 
       // Tap "Archivar" option in the bottom sheet
-      final archiveListTile = find.ancestor(
-        of: find.byIcon(Icons.archive),
-        matching: find.byType(ListTile),
+      final archiveTile = find.ancestor(
+        of: find.byIcon(LucideIcons.archive),
+        matching: find.byType(GestureDetector),
       );
-      expect(archiveListTile, findsOneWidget);
-      await tester.tap(archiveListTile);
+      expect(archiveTile, findsWidgets);
+      await tester.tap(archiveTile.first);
       await tester.pumpAndSettle();
 
       // Confirmation dialog should appear
