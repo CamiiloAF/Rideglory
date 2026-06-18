@@ -73,7 +73,7 @@ docs/exec-runs/**/design/
 **.g.dart
 **.freezed.dart
 **.mocks.dart
-pubspec.lock
+# pubspec.lock se commitea para builds reproducibles en CI
 # Cleanup 2026-06
 /coverage/
 /android/build/
