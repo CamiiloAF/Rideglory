@@ -1,6 +1,6 @@
 # Documentación del Feature: Home
 
-> Última actualización: 2026-05-28  
+> Última actualización: 2026-06-17  
 > Alcance: `lib/features/home/`
 
 ---
@@ -180,8 +180,7 @@ sealed class HomeState { const HomeState(); }
 final class HomeInitial extends HomeState { const HomeInitial(); }
 final class HomeLoading extends HomeState { const HomeLoading(); }
 final class HomeLoaded extends HomeState {
-  const HomeLoaded({this.mainVehicle, required this.upcomingEvents});
-  final VehicleModel? mainVehicle;
+  const HomeLoaded({required this.upcomingEvents});
   final List<EventModel> upcomingEvents;
 }
 final class HomeError extends HomeState {
@@ -189,6 +188,8 @@ final class HomeError extends HomeState {
   final String message;
 }
 ```
+
+> **`mainVehicle` fue eliminado de `HomeLoaded`** (Phase 5). `HomeGarageSection` lee exclusivamente de `VehicleCubit`. `HomeData.mainVehicle` (del API home) sigue usándose internamente en `HomeCubit.loadHomeData()` para Analytics únicamente.
 
 **Métodos públicos:**
 | Método | Efecto |
@@ -238,18 +239,33 @@ Solo crea el `HomeCubit` y llama `loadHomeData()`. Toda la UI vive en `HomeScaff
 
 ### `HomeGarageSection` (`widgets/home_garage_section.dart`)
 
-**Hibridación de fuentes de datos:**
+Lee **exclusivamente** de `VehicleCubit` mediante `BlocBuilder`:
+
 ```dart
-final vehicleState = context.watch<VehicleCubit>().state;
-final mainVehicle = vehicleState is Data<List<VehicleModel>>
-    ? (vehicleState.data.where((v) => v.isMainVehicle).firstOrNull
-       ?? vehicleState.data.firstOrNull)
-    : vehicle;   // ← prop del HomeCubit, fallback
+BlocBuilder<VehicleCubit, ResultState<List<VehicleModel>>>(
+  builder: (context, vehicleState) {
+    return vehicleState.when(
+      initial: () => _GaragePlaceholder(),
+      loading: () => _GaragePlaceholder(),
+      data: (vehicles) {
+        final active = vehicles.where((v) => !v.isArchived).toList();
+        if (active.isEmpty) return const HomeEmptyGarageCard();
+        final mainVehicle =
+            active.where((v) => v.isMainVehicle).firstOrNull ?? active.first;
+        return HomeGarageCard(vehicle: mainVehicle);
+      },
+      empty: () => const HomeEmptyGarageCard(),
+      error: (_) => const HomeEmptyGarageCard(),
+    );
+  },
+)
 ```
 
-Es decir: si `VehicleCubit` ya tiene datos (porque el usuario navegó por garage antes), úsalos (más frescos). Si no, usa el `vehicle` que vino de `HomeData.mainVehicle`.
-
-Renderiza `HomeGarageCard` si hay vehículo, `HomeEmptyGarageCard` si no.
+Puntos clave:
+- **Filtra activos antes de elegir principal**: solo vehículos con `isArchived: false` se consideran. Si todos están archivados, muestra `HomeEmptyGarageCard`.
+- **Sin prop `vehicle`**: elimina la dependencia de `HomeLoaded.mainVehicle`.
+- **`_GaragePlaceholder`**: contenedor de 200 px mientras `VehicleCubit` carga (estados `initial`/`loading`).
+- Reacciona en tiempo real a cambios del cubit: archivar, restaurar o cambiar vehículo principal se reflejan sin re-fetch HTTP de `HomeCubit`.
 
 ### `HomeGarageCard` + `HomeGarageSoatBadge`
 
@@ -283,6 +299,12 @@ Botón outlined al fondo que navega a `/events`.
 ## 6. Flujo de carga
 
 ```
+MainShell montado (usuario autenticado, primer frame del shell)
+  └─ WidgetsBinding.addPostFrameCallback:
+       si VehicleCubit.state is Initial → VehicleCubit.fetchMyVehicles()
+           → API GET /vehicles/my → puebla la lista de vehículos
+           → HomeGarageSection reacciona vía BlocBuilder
+
 HomePage construido (BlocProvider crea HomeCubit y dispara loadHomeData())
   │
   ▼
@@ -295,11 +317,13 @@ HomeCubit.loadHomeData()
   │     └─ dto.toHomeData()  (VehicleDto → VehicleModel, EventDto cast a EventModel)
   │
   ├─ Si error → emit(HomeError(message))
-  └─ Si data  → emit(HomeLoaded(mainVehicle, upcomingEvents))
+  └─ Si data  → emit(HomeLoaded(upcomingEvents))   ← mainVehicle ya no va al estado
 
-HomeScaffold renderiza secciones según estado.
+HomeScaffold renderiza secciones según HomeState.
+HomeGarageSection reacciona a VehicleCubit (independiente de HomeState).
 
 Pull-to-refresh → loadHomeData() de nuevo (emite Loading, borra datos anteriores).
+                  VehicleCubit no se re-fetcha en pull-to-refresh de Home.
 Detail event return → cubit.updateEvent / removeEvent (sin re-fetch).
 ```
 
@@ -345,7 +369,7 @@ Definido en `ApiRoutes.home`.
 
 | Feature | Conexión |
 |---|---|
-| `vehicles` | Reutiliza `VehicleModel` y `VehicleDto`. `HomeGarageSection` consulta `VehicleCubit.state` (global) para tener el dato más fresco; fallback al `HomeData.mainVehicle` |
+| `vehicles` | `HomeGarageSection` lee **exclusivamente** de `VehicleCubit.state`. `MainShell` dispara `fetchMyVehicles()` al montar el shell para que Home tenga datos sin necesidad de navegar al Garaje primero |
 | `events` | Reutiliza `EventModel` y `EventDto`. `HomeEventsSection` empuja a `eventDetail` y reacciona al pop result con `updateEvent` / `removeEvent` |
 | `authentication` | `HomeHeader` lee `AuthCubit.state.currentUser` para mostrar el nombre |
 | `notifications` | Importa `NotificationBellButton` (lee `NotificationsCubit.state.unreadCount` para badge) |
@@ -361,8 +385,13 @@ A diferencia de la mayoría del codebase, home no usa el patrón `ResultState`. 
 ### Carga sin caché
 `HomeRepositoryImpl.getHomeData()` no tiene caché local. Cada `loadHomeData()` produce HTTP. Si el usuario hace pull-to-refresh rápidamente, hay flicker porque `HomeLoading` borra el `HomeLoaded` anterior.
 
-### Doble fuente de verdad para `mainVehicle`
-`HomeData.mainVehicle` (del API home) y `VehicleCubit.state.data` (del API vehicles). `HomeGarageSection` prefiere `VehicleCubit` cuando tiene datos. Si las dos fuentes divergen (p. ej. el usuario cambió main vehicle desde garage y el home no se re-fetcheó), la UI muestra el vehículo del VehicleCubit, pero el resto de la app puede usar el de home si se hace `BlocBuilder<HomeCubit>`. Si se quiere consistencia total, considerar eliminar `mainVehicle` del `HomeData` y delegar 100% al `VehicleCubit`.
+### `VehicleCubit` es la única fuente de verdad para el vehículo en Home
+`HomeGarageSection` reacciona directamente a `VehicleCubit`. `HomeData.mainVehicle` (del API home) se conserva en `HomeCubit` solo para Analytics. Archivar, restaurar o cambiar el vehículo principal se refleja en Home sin re-fetch de `HomeCubit`.
+
+`MainShell` dispara `VehicleCubit.fetchMyVehicles()` en el primer frame post-montaje (guard `is Initial`) para que Home tenga datos desde el arranque, sin depender de que el usuario visite el tab Garaje.
+
+### Vehículos archivados en Home
+`HomeGarageSection` filtra `!isArchived` antes de elegir el principal. Si todos los vehículos están archivados, muestra `HomeEmptyGarageCard`. Nunca cae al fallback `vehicles.first` con un vehículo archivado.
 
 ### `EventDto` se castea directo a `EventModel`
 `HomeDto.toHomeData()` hace `List<EventModel>.from(upcomingEvents)` sin invocar `.toModel()`. Funciona porque `EventDto extends EventModel`. Si en el futuro se separa DTO de modelo, agregar conversión explícita.

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 import 'package:rideglory/shared/router/analytics_route_observer.dart';
@@ -17,7 +18,7 @@ int _branchIndexToBarIndex(int branchIndex) {
   return branchIndex + 1;
 }
 
-class MainShell extends StatelessWidget {
+class MainShell extends StatefulWidget {
   const MainShell({
     super.key,
     required this.navigationShell,
@@ -35,10 +36,31 @@ class MainShell extends StatelessWidget {
   final AnalyticsRouteObserver? _analyticsObserver;
 
   @override
+  State<MainShell> createState() => _MainShellState();
+}
+
+class _MainShellState extends State<MainShell> {
+  @override
+  void initState() {
+    super.initState();
+    // Precarga los vehículos al montar el shell (usuario ya autenticado).
+    // GaragePage también llama fetchMyVehicles al visitarse, pero sin esta
+    // llamada HomeGarageSection mostraría placeholder hasta que el usuario
+    // navegue al tab de Garaje.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final cubit = context.read<VehicleCubit>();
+      if (cubit.state is Initial) cubit.fetchMyVehicles();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final currentBarIndex = _branchIndexToBarIndex(navigationShell.currentIndex);
-    final analytics = _analyticsService ?? getIt<AnalyticsService>();
-    final observer = _analyticsObserver ?? AppRouter.analyticsObserver;
+    final currentBarIndex =
+        _branchIndexToBarIndex(widget.navigationShell.currentIndex);
+    final analytics = widget._analyticsService ?? getIt<AnalyticsService>();
+    final observer =
+        widget._analyticsObserver ?? AppRouter.analyticsObserver;
 
     // Reexpone la MISMA instancia de VehicleCubit provista en la raíz
     // (sobre MaterialApp) a las ramas del StatefulShellRoute. No se usa el
@@ -47,14 +69,14 @@ class MainShell extends StatelessWidget {
     return BlocProvider.value(
       value: context.read<VehicleCubit>(),
       child: ShellScreenViewTracker(
-        navigationShell: navigationShell,
+        navigationShell: widget.navigationShell,
         analytics: analytics,
         observer: observer,
         child: Scaffold(
-          body: navigationShell,
+          body: widget.navigationShell,
           bottomNavigationBar: HomeBottomNavigationBar(
             currentIndex: currentBarIndex,
-            showNotificationBadge: showNotificationBadge,
+            showNotificationBadge: widget.showNotificationBadge,
             onTap: (int index) {
               if (index == _addButtonBarIndex) {
                 context.pushNamed(AppRoutes.createEvent);
@@ -62,7 +84,7 @@ class MainShell extends StatelessWidget {
               }
               final branchIndex =
                   index > _addButtonBarIndex ? index - 1 : index;
-              navigationShell.goBranch(branchIndex);
+              widget.navigationShell.goBranch(branchIndex);
             },
             onAddTap: () => context.pushNamed(AppRoutes.createEvent),
           ),

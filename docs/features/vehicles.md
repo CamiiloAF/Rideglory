@@ -1,6 +1,6 @@
 # Documentación del Feature: Vehicles
 
-> Última actualización: 2026-05-29  
+> Última actualización: 2026-06-17  
 > Alcance: `lib/features/vehicles/`
 
 ---
@@ -262,7 +262,9 @@ int? get currentMileage;                    // currentVehicle?.currentMileage
 | `setMainVehicle(String vehicleId)` | Llama `SetMainVehicleUseCase`. Si éxito, marca `isMainVehicle: true` en el ganador y `false` en los demás, y selecciona el nuevo main |
 | `addVehicleLocally(VehicleModel)` | Append a la lista; si es el primero, lo selecciona |
 | `updateSoatLocally(vehicleId, expiryDate)` | Recalcula `SoatStatus` (umbral 30 días) y actualiza `soatExpiryDate` localmente |
-| `deleteVehicleLocally(String vehicleId)` | Elimina de lista. Si era la selección, restaura default. Si queda vacío, emite `empty` |
+| `archiveLocally(String id)` | Marca `isArchived: true, isMainVehicle: false`. Si era principal, promueve el siguiente activo con `_promoteNewMain()` |
+| `unarchiveLocally(String id)` | Marca `isArchived: false`. Si no queda ningún vehículo activo con `isMainVehicle: true`, promueve el vehículo recién desarchivado a principal |
+| `deleteLocally(String id)` | Elimina de lista. Si era la selección, restaura default. Si queda vacío, emite `empty` |
 | `clearVehicles()` | Vacía todo y emite `empty` (usado en logout) |
 
 **Cálculo de SoatStatus** (`_soatStatusFrom`, líneas 106–111):
@@ -396,13 +398,15 @@ Hay **dos imágenes** distintas:
 
 | Acción | Use case | Efecto |
 |---|---|---|
-| Archivar | `ArchiveVehicleUseCase` | `vehicle.copyWith(isArchived: true)` → `UpdateVehicleUseCase` |
-| Desarchivar | `UnarchiveVehicleUseCase` | `vehicle.copyWith(isArchived: false)` → `UpdateVehicleUseCase` |
-| Eliminar (hard) | `DeleteVehicleUseCase` | `DELETE /vehicles/hard-delete/{id}` |
+| Archivar | `ArchiveVehicleUseCase` | `vehicle.copyWith(isArchived: true)` → `UpdateVehicleUseCase` (PATCH). Si el vehículo era principal, el backend promueve el siguiente activo. `VehicleCubit.archiveLocally()` espeja la lógica localmente. |
+| Desarchivar | `UnarchiveVehicleUseCase` | `vehicle.copyWith(isArchived: false)` → `UpdateVehicleUseCase` (PATCH). Si no queda ningún vehículo activo con `isMainVehicle: true`, el backend promueve el vehículo desarchivado a principal. `VehicleCubit.unarchiveLocally()` espeja la misma lógica. |
+| Eliminar permanentemente | `PermanentlyDeleteVehicleUseCase` | `DELETE /vehicles/my/{id}` → soft-delete en backend (`isDeleted: true`, fila conservada en BD). Si el vehículo era principal, el backend promueve el siguiente activo. `VehicleCubit.deleteLocally(id)` lo elimina de la lista local. |
 
-Hard delete = remoción definitiva. **No hay soft delete a nivel del feature vehicles** (el backend puede archivar `maintenances` relacionados, pero el vehículo se elimina).
+> **Nota:** el endpoint `DELETE /vehicles/hard-delete/{id}` existe en el service pero corresponde a un borrado físico para uso administrativo. El flujo de "Eliminar permanentemente" desde la app usa `DELETE /vehicles/my/{id}` (soft-delete).
 
 **Auto-unarchive al editar**: `VehicleFormCubit.buildVehicleToSave()` desarchiva si el vehículo siendo editado tenía `isArchived: true`. Se complementa con el dialog de advertencia previo en `VehicleFormView`.
+
+**Promoción a principal al desarchivar**: si el usuario desarchiva el único vehículo activo (o el primero cuando no hay ningún principal), el backend (`vehicles.service.ts → update()`) y `VehicleCubit.unarchiveLocally()` lo promueven a `isMainVehicle: true` automáticamente.
 
 ---
 
@@ -474,7 +478,7 @@ Constantes en `lib/core/http/api_routes.dart` (`vehicles = '/vehicles'`, `myVehi
 | `event_registration` | `VehicleSelectorField` lee `VehicleCubit.state`; al inscribirse guarda `vehicleId` y `vehicleSummary` (snapshot placa+marca) |
 | `maintenance` | `MaintenanceRepositoryImpl.getMaintenancesByUserId()` consume `VehicleRepository.getMyVehicles()`; `MaintenanceFormCubit` lee `VehicleCubit.currentMileage` para pre-llenar odómetro y propone update si aumentó |
 | `profile` | Logout llama `VehicleCubit.clearVehicles()` |
-| `home` | `HomeGarageSection` lee `VehicleCubit.state` para destacar el vehículo principal (o el primer no archivado) — además del `HomeData.mainVehicle` que viene del API home |
+| `home` | `HomeGarageSection` lee **exclusivamente** `VehicleCubit.state`. Filtra activos (`!isArchived`) antes de mostrar el principal. `MainShell` dispara `fetchMyVehicles()` al montar para que Home tenga datos de inmediato |
 | `soat` | `VehicleFormView` puede iniciar el flujo SOAT (`SoatManualCapturePage`, ruta `soatManualCapture`) durante la creación; el detalle del vehículo (`vehicle_soat_card.dart`) y el slot del form de edición (`vehicle_soat_form_slot.dart`) muestran el estado SOAT y permiten eliminarlo (`DeleteSoatUseCase` + `VehicleCubit.clearSoatLocally`) |
 
 ---

@@ -186,6 +186,15 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
       if (v.id != id) return v;
       return v.copyWith(isArchived: false);
     }).toList();
+
+    final hasActiveMain = _vehicles.any((v) => !v.isArchived && v.isMainVehicle);
+    if (!hasActiveMain) {
+      _vehicles = _vehicles.map((v) {
+        if (v.id != id) return v;
+        return v.copyWith(isMainVehicle: true);
+      }).toList();
+    }
+
     _emitLoadedOrEmpty();
   }
 

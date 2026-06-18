@@ -297,6 +297,36 @@ void main() {
           expect(v1.isMainVehicle, isTrue);
         },
       );
+
+      test(
+        'TC-veh-17: unarchiveLocally promotes vehicle to main when no active main exists',
+        () {
+          // Arrange: solo vehículo archivado, sin principal activo
+          const archivedVehicle = VehicleModel(
+            id: 'v-arch',
+            name: 'Moto Archivada',
+            currentMileage: 0,
+            isArchived: true,
+            isMainVehicle: false,
+          );
+          vehicleCubit.addVehicleLocally(archivedVehicle);
+
+          // Act: desarchivar cuando no hay ningún principal activo
+          vehicleCubit.unarchiveLocally('v-arch');
+
+          // Assert: el vehículo queda activo Y como principal
+          final state = vehicleCubit.state;
+          expect(state, isA<Data<List<VehicleModel>>>());
+          final data = (state as Data<List<VehicleModel>>).data;
+          final vehicle = data.firstWhere((v) => v.id == 'v-arch');
+          expect(vehicle.isArchived, isFalse);
+          expect(
+            vehicle.isMainVehicle,
+            isTrue,
+            reason: 'Al desarchivar sin ningún principal activo, el vehículo debe ser promovido a principal',
+          );
+        },
+      );
     });
 
     group('_promoteNewMain (via archiveLocally)', () {
