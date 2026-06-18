@@ -87,11 +87,11 @@ jobs:
           echo "${{ secrets.PROVISIONING_PROFILE_BASE64 }}" | base64 -d \
             > ~/Library/MobileDevice/Provisioning\ Profiles/rideglory_appstore.mobileprovision
 
-      - name: Get dependencies
-        run: flutter pub get
-
       - name: Update CocoaPods specs
         run: pod repo update
+
+      - name: Get dependencies
+        run: flutter pub get
 
       - name: Generate code
         run: dart run build_runner build --delete-conflicting-outputs
