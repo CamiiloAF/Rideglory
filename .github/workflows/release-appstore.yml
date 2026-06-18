@@ -1,7 +1,9 @@
 name: Release — App Store IPA
 
 on:
-  workflow_dispatch:  # deshabilitado hasta configurar secrets de firma iOS
+  push:
+    tags:
+      - 'release-[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   build-ipa:
