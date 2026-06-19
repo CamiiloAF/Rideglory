@@ -62,25 +62,11 @@ void main() {
 
     await Firebase.initializeApp(options: firebaseOptions);
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-    await ApiRemoteConfig.initialize(FirebaseRemoteConfig.instance);
-    await initializeDateFormatting();
 
-    const mapboxToken = AppEnv.mapboxAccessToken;
-    assert(
-      mapboxToken != null && mapboxToken.isNotEmpty,
-      'MAPBOX_ACCESS_TOKEN must be set in .env',
-    );
-    MapboxOptions.setAccessToken(mapboxToken!);
-
-    final resolvedApiUrl = ApiBaseUrlResolver(
-      FirebaseRemoteConfig.instance,
-    ).resolve();
-
-    // Sentry init — antes de DI para que TracingClientAdapter esté activo
-    // cuando AppDio.addSentry() se ejecute dentro de configureDependencies().
-    // Si Sentry se inicializa después de DI, isTracingEnabled() es false en
-    // ese momento y TracingClientAdapter no se agrega; el header sentry-trace
-    // nunca se envía.
+    // Sentry init — ANTES de Remote Config para capturar errores de startup
+    // (red caída en primer arranque, Firebase falla, etc.) y antes de DI para
+    // que TracingClientAdapter esté activo cuando AppDio.addSentry() se ejecute
+    // dentro de configureDependencies().
     await SentryFlutter.init((options) {
       options.dsn = _sentryDsn;
       options.environment = kReleaseMode ? 'prod' : 'dev';
@@ -102,6 +88,22 @@ void main() {
         return scrubPiiFromBreadcrumb(crumb);
       };
     });
+
+    // Remote Config tras Sentry para que errores de red queden capturados.
+    // fetchAndActivate() es fault-tolerant: continúa con defaults si falla.
+    await ApiRemoteConfig.initialize(FirebaseRemoteConfig.instance);
+    await initializeDateFormatting();
+
+    const mapboxToken = AppEnv.mapboxAccessToken;
+    assert(
+      mapboxToken != null && mapboxToken.isNotEmpty,
+      'MAPBOX_ACCESS_TOKEN must be set in .env',
+    );
+    MapboxOptions.setAccessToken(mapboxToken!);
+
+    final resolvedApiUrl = ApiBaseUrlResolver(
+      FirebaseRemoteConfig.instance,
+    ).resolve();
 
     // AC8: Registrar api_base_url como tag de scope Sentry.
     // Reemplaza crashlytics.setCustomKey('api_base_url', ...) eliminado en D13.
@@ -138,6 +140,9 @@ void main() {
         FlutterErrorDetails(exception: error, stack: stack),
       );
     } else {
+      // Sentry se inicializa antes que DI, así que captureException funciona
+      // incluso para errores de startup pre-DI (Remote Config, Firebase, etc.).
+      Sentry.captureException(error, stackTrace: stack);
       try {
         getIt<CrashReporter>().recordError(error, stack, fatal: false);
       } catch (_) {}

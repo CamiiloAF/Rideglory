@@ -19,6 +19,11 @@ abstract final class ApiRemoteConfig {
       ),
     );
 
-    await remoteConfig.fetchAndActivate();
+    // fetchAndActivate puede fallar en el primer arranque si no hay red o
+    // Firebase Remote Config no está disponible. En ese caso continuamos con
+    // los defaults: la app arranca normalmente y reintenta en el próximo ciclo.
+    try {
+      await remoteConfig.fetchAndActivate();
+    } catch (_) {}
   }
 }

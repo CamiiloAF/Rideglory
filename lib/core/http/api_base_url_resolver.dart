@@ -17,16 +17,32 @@ class ApiBaseUrlResolver {
   static const _flavor = String.fromEnvironment('FLAVOR');
   static const _isDevFlavor = _flavor == 'dev';
 
+  // URL de producción horneada en el build (config/prod.json → PROD_API_BASE_URL).
+  // Actúa como fallback cuando Remote Config no ha sido descargado aún
+  // (primer arranque sin red). Remote Config sigue teniendo prioridad.
+  static const _prodFallbackUrl = String.fromEnvironment(
+    'PROD_API_BASE_URL',
+    defaultValue: '',
+  );
+
   String resolve() {
+    if (_forceLocal || _isDevFlavor) {
+      return _withoutTrailingSlash(_localBaseUrl);
+    }
+
     final remoteBaseUrl = _remoteConfig
         .getString(ApiRemoteConfig.apiBaseUrlKey)
         .trim();
 
-    final shouldUseLocalApi =
-        _forceLocal || _isDevFlavor || remoteBaseUrl.isEmpty;
+    if (remoteBaseUrl.isNotEmpty) {
+      return _withoutTrailingSlash(remoteBaseUrl);
+    }
 
-    final baseUrl = shouldUseLocalApi ? _localBaseUrl : remoteBaseUrl;
-    return _withoutTrailingSlash(baseUrl);
+    if (_prodFallbackUrl.isNotEmpty) {
+      return _withoutTrailingSlash(_prodFallbackUrl);
+    }
+
+    return _withoutTrailingSlash(_localBaseUrl);
   }
 
   String get _localBaseUrl {

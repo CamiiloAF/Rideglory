@@ -189,8 +189,11 @@ class AppModal extends StatelessWidget {
                 label: action.label,
                 emphasis: action.emphasis,
                 isLoading: action.isLoading,
+                autoClose: action.autoClose,
                 onPressed: () {
-                  Navigator.of(sheetContext).pop(action.popResult as T?);
+                  if (action.autoClose) {
+                    Navigator.of(sheetContext).pop(action.popResult as T?);
+                  }
                   action.onPressed();
                 },
               ),

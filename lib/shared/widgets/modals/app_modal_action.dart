@@ -19,12 +19,18 @@ class AppModalAction {
   /// tapped. Leave null when the caller does not await the sheet's result.
   final Object? popResult;
 
+  /// When false, [AppModal.show] does NOT close the sheet after the action is
+  /// triggered. Use for actions that must keep the sheet open (e.g. force
+  /// update, where the user cannot dismiss or proceed until they update).
+  final bool autoClose;
+
   const AppModalAction({
     required this.label,
     required this.onPressed,
     this.emphasis = AppModalActionEmphasis.primary,
     this.isLoading = false,
     this.popResult,
+    this.autoClose = true,
   });
 
   /// Convenience neutral/cancel action.
@@ -33,5 +39,6 @@ class AppModalAction {
     required this.onPressed,
     this.popResult,
   }) : emphasis = AppModalActionEmphasis.neutral,
-       isLoading = false;
+       isLoading = false,
+       autoClose = true;
 }

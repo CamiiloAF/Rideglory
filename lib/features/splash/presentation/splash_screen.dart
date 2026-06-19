@@ -17,6 +17,9 @@ import 'package:url_launcher/url_launcher.dart';
 const _androidStoreUrl =
     'https://play.google.com/store/apps/details?id=com.camiloagudelo.rideglory';
 
+const _iosStoreUrl =
+    'https://apps.apple.com/app/id6778918834';
+
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
@@ -78,6 +81,7 @@ class _SplashContentState extends State<_SplashContent>
           actions: [
             AppModalAction(
               label: context.l10n.splash_forceUpdateButton,
+              autoClose: false,
               onPressed: _openStore,
             ),
           ],
@@ -106,7 +110,7 @@ class _SplashContentState extends State<_SplashContent>
   Future<void> _openStore() async {
     final url = Uri.parse(
       defaultTargetPlatform == TargetPlatform.iOS
-          ? _androidStoreUrl
+          ? _iosStoreUrl
           : _androidStoreUrl,
     );
     if (await canLaunchUrl(url)) {

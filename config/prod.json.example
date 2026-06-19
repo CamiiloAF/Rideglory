@@ -10,5 +10,6 @@
   "FIREBASE_ANDROID_CLIENT_ID": "",
   "FIREBASE_IOS_CLIENT_ID": "",
   "FIREBASE_IOS_BUNDLE_ID": "",
-  "SENTRY_DSN": "<obtener-de-sentry-dashboard>"
+  "SENTRY_DSN": "<obtener-de-sentry-dashboard>",
+  "PROD_API_BASE_URL": "<url-base-api-produccion>"
 }
