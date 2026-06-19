@@ -118,10 +118,14 @@ jobs:
           path: build/ios/ipa/*.ipa
           retention-days: 60
 
+      - name: Find IPA path
+        id: find_ipa
+        run: echo "IPA_PATH=$(find build/ios/ipa -name '*.ipa' | head -1)" >> $GITHUB_OUTPUT
+
       - name: Upload to TestFlight
         uses: apple-actions/upload-testflight-build@v1
         with:
-          app-path: build/ios/ipa/*.ipa
+          app-path: ${{ steps.find_ipa.outputs.IPA_PATH }}
           issuer-id: ${{ secrets.APPSTORE_API_ISSUER_ID }}
           api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
