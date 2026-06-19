@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
@@ -44,14 +43,7 @@ class _EventDetailByIdPageState extends State<EventDetailByIdPage> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) {
-          context.pop(registrationModel);
-        }
-      },
-      child: BlocProvider(
+    return BlocProvider(
         create: (_) => EventDetailCubit(
           getIt<GetMyRegistrationForEventUseCase>(),
           getIt<CancelEventRegistrationUseCase>(),
@@ -133,7 +125,6 @@ class _EventDetailByIdPageState extends State<EventDetailByIdPage> {
             );
           },
         ),
-      ),
     );
   }
 }

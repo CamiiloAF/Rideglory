@@ -340,6 +340,7 @@ class AppRouter {
                 builder: (context, state) => const ProfilePage(),
                 routes: [
                   GoRoute(
+                    parentNavigatorKey: _rootNavigatorKey,
                     path: 'edit',
                     name: AppRoutes.editProfile,
                     builder: (context, state) {

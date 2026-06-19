@@ -120,7 +120,7 @@ class _MaintenanceDetailViewState extends State<MaintenanceDetailView> {
         );
       },
       child: PopScope(
-        canPop: false,
+        canPop: true,
         onPopInvokedWithResult: (didPop, result) {
           if (didPop) return;
           _popWithResult();

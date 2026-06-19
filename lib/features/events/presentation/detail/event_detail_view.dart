@@ -181,14 +181,7 @@ class EventDetailViewState extends State<EventDetailView> {
     const overlapAmount = 90.0;
     final heroSliverHeight = heroHeight - overlapAmount;
 
-    return PopScope(
-      canPop: widget.isFromEventDetailByIdPage,
-      onPopInvokedWithResult: (didPop, _) {
-        if (!didPop && !widget.isFromEventDetailByIdPage) {
-          context.pop(currentEvent);
-        }
-      },
-      child: Scaffold(
+    return Scaffold(
         backgroundColor: AppColors.darkBgPrimary,
         body: MultiBlocListener(
           listeners: [
@@ -466,7 +459,6 @@ class EventDetailViewState extends State<EventDetailView> {
                     )
                   : null)
             : null,
-      ),
     );
   }
 }

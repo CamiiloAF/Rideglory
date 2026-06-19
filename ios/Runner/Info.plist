@@ -53,9 +53,15 @@
 	<string>Rideglory usa tu ubicación para mostrar tu posición y seguir la rodada en vivo.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Rideglory necesita acceso a la ubicación en segundo plano para compartir tu posición durante la rodada aunque cambies de app o bloquees la pantalla.</string>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.pravera.flutter_foreground_task.refresh</string>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>fetch</string>
 		<string>location</string>
+		<string>remote-notification</string>
 	</array>
 	<!-- Deep links: rideglory://... -->
 	<key>CFBundleURLTypes</key>
