@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
@@ -64,7 +65,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 labelText: context.l10n.profile_fieldPhone,
                 initialValue: widget.user.phone,
                 keyboardType: TextInputType.phone,
+                maxLength: 10,
                 textInputAction: TextInputAction.next,
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.numeric(
+                    errorText: context.l10n.registration_phoneInvalidLength,
+                  ),
+                  FormBuilderValidators.minLength(
+                    10,
+                    errorText: context.l10n.registration_phoneInvalidLength,
+                  ),
+                  FormBuilderValidators.maxLength(
+                    10,
+                    errorText: context.l10n.registration_phoneInvalidLength,
+                  ),
+                ]),
               ),
               AppSpacing.gapMd,
               AppTextField(
@@ -95,7 +110,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 labelText: context.l10n.profile_fieldEmergencyPhone,
                 initialValue: widget.user.emergencyContactPhone,
                 keyboardType: TextInputType.phone,
+                maxLength: 10,
                 textInputAction: TextInputAction.done,
+                validator: FormBuilderValidators.compose([
+                  FormBuilderValidators.numeric(
+                    errorText: context.l10n.registration_phoneInvalidLength,
+                  ),
+                  FormBuilderValidators.minLength(
+                    10,
+                    errorText: context.l10n.registration_phoneInvalidLength,
+                  ),
+                  FormBuilderValidators.maxLength(
+                    10,
+                    errorText: context.l10n.registration_phoneInvalidLength,
+                  ),
+                ]),
               ),
               AppSpacing.gapXxl,
               AppButton(
