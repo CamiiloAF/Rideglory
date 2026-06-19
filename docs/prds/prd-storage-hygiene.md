@@ -1,16 +1,15 @@
-# PRD — Higiene de Firebase Storage: borrar imágenes huérfanas (vehículos y eventos)
+# PRD — Higiene de Firebase Storage: borrar archivos huérfanos (vehículos, eventos, SOAT y RTM)
 
 **Tipo:** Mantenimiento / ahorro de costos (Storage)
 **Prioridad:** Media (no bloqueante, pero el free tier es limitado)
-**Estimado:** 1 iteración corta (~1–2 días)
+**Estimado:** 1–2 iteraciones cortas (~2–3 días)
 **Fecha de creación:** 2026-06-04
-**Relación:** complementa `prd-ai-event-generation.md` (que ya define la limpieza de las imágenes IA en `pending/`). Este PRD cubre el **ciclo de vida normal** de las imágenes de vehículos y eventos.
 
 ---
 
 ## 1. Problema
 
-Cuando se **reemplaza** la foto de un vehículo o de un evento, o cuando se **elimina** la entidad, la imagen anterior **queda huérfana en Firebase Storage** y nunca se borra. Con el tiempo esto:
+Cuando se **reemplaza** la foto de un vehículo, de un evento, o el archivo de un documento legal (SOAT, RTM), o cuando se **elimina** la entidad, el archivo anterior **queda huérfano en Firebase Storage** y nunca se borra. Con el tiempo esto:
 
 - Consume el **free tier de Storage** (Spark ≈ 1 GB almacenado / 10 GB descarga al mes).
 - Deja basura imposible de rastrear (URLs sin dueño).
@@ -21,15 +20,16 @@ Hoy `ImageStorageService` sube imágenes pero no hay una ruta sistemática que l
 
 ## 2. Objetivo
 
-Garantizar que toda imagen en Storage tenga dueño vivo: al **reemplazar** o **eliminar**, borrar el objeto anterior.
+Garantizar que todo archivo en Storage tenga dueño vivo: al **reemplazar** o **eliminar**, borrar el objeto anterior.
 
 **Alcance:**
 - Foto de **vehículo** (`VehicleModel.imageUrl`).
 - Portada de **evento** (`EventModel` cover).
+- Foto/escaneo del **SOAT** (`SoatModel.documentUrl`).
+- Foto/escaneo de la **Técnico Mecánica / RTM** (`TecnomecanicaModel.documentUrl`).
 
 **No-objetivos:**
 - No es un barrido retroactivo de huérfanos ya existentes (se puede hacer como script aparte una vez).
-- No cubre imágenes IA en `pending/` (ya las maneja el PRD de IA).
 
 ---
 
@@ -54,11 +54,19 @@ Debe ser **idempotente y tolerante a fallos**: si el objeto no existe o la URL e
 - **Reemplazo:** en el update del evento, si la portada cambió → borrar la anterior.
 - **Eliminación:** en `EventDeleteCubit`/repo → borrar la portada.
 
+**SOAT** (`soat_repository_impl.dart`)
+- **Reemplazo:** en `saveSoat`, si `documentUrl` cambió (nueva ≠ anterior) → borrar la anterior tras confirmar el guardado. *(SOAT usa UPSERT: no hay método update separado.)*
+- **Eliminación:** en `deleteSoat` → borrar `documentUrl` del documento antes de eliminar el registro.
+
+**Técnico Mecánica / RTM** (`tecnomecanica_repository_impl.dart`)
+- **Reemplazo:** en `saveTecnomecanica`, si `documentUrl` cambió (nueva ≠ anterior) → borrar la anterior tras confirmar el guardado. *(Mismo patrón UPSERT.)*
+- **Eliminación:** en `deleteTecnomecanica` → borrar `documentUrl` del documento antes de eliminar el registro.
+
 > Decisión de capa: el borrado se dispara desde la **capa data (RepositoryImpl/UseCase)**, nunca desde UI. El orden recomendado: primero persistir el cambio/borrado lógico exitoso, luego borrar en Storage (un fallo de Storage no debe abortar la operación de negocio).
 
 ### 3.3 Consideración backend vs. app
 
-Las imágenes hoy se suben desde la **app** (`ImageStorageService`, Firebase Storage SDK), así que el borrado natural también vive en la **app**. Si en el futuro la subida/borrado se centraliza en backend (p. ej. junto al `AiModule`), migrar esta lógica allí. Por ahora: **app**.
+Las imágenes hoy se suben desde la **app** (`ImageStorageService`, Firebase Storage SDK), así que el borrado natural también vive en la **app**. Si en el futuro la subida/borrado se centraliza en el backend, migrar esta lógica allí. Por ahora: **app**.
 
 ---
 
@@ -70,6 +78,10 @@ Las imágenes hoy se suben desde la **app** (`ImageStorageService`, Firebase Sto
 - [ ] Al reemplazar la portada de un evento, la anterior se borra.
 - [ ] Al eliminar un evento, su portada se borra.
 - [ ] Archivar un vehículo NO borra su imagen.
+- [ ] Al reemplazar el archivo de SOAT, el anterior se borra de Storage.
+- [ ] Al eliminar un SOAT, su archivo se borra de Storage.
+- [ ] Al reemplazar el archivo de Técnico Mecánica, el anterior se borra de Storage.
+- [ ] Al eliminar una Técnico Mecánica, su archivo se borra de Storage.
 - [ ] URLs externas o inexistentes no provocan error (log + continuar).
 - [ ] Tests unitarios del parseo URL→ref y de los caminos de borrado (mock de Storage).
 - [ ] `dart analyze` sin warnings; `flutter test` al 100%.
@@ -98,4 +110,6 @@ Las imágenes hoy se suben desde la **app** (`ImageStorageService`, Firebase Sto
 1. **Utilidad** — `deleteByUrl` en `ImageStorageService` + tests del parseo URL→ref.
 2. **Vehículos** — integrar borrado en update (reemplazo) y delete; respetar archivar.
 3. **Eventos** — integrar borrado en update (reemplazo) y delete.
-4. **QA** — tests de caminos, `flutter test`/`dart analyze`, actualizar docs de los features afectados.
+4. **SOAT** — integrar borrado en update (reemplazo) y delete.
+5. **Técnico Mecánica / RTM** — integrar borrado en update (reemplazo) y delete.
+6. **QA** — tests de caminos, `flutter test`/`dart analyze`, actualizar docs de los features afectados.

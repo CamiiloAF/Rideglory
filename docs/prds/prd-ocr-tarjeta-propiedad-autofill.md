@@ -41,6 +41,7 @@ Que el rider tome una foto (o elija de galería) de la tarjeta de propiedad y el
 | `OcrResult` / `OcrBlock` | `lib/core/services/ocr/ocr_result.dart` | Texto + bloques con bounding box |
 | Captura cámara/galería | `image_picker` (ya en uso) | Sin PDF |
 | Patrón parser, use case, telemetría | feature `soat/` | Se clona el patrón, no el código |
+| `DocumentSourceSheet` (refactor de `SoatAddDocumentSheet`) | `lib/shared/widgets/` | Ver 3.2 |
 
 ### 3.2 Piezas nuevas (feature `vehicles/`)
 
@@ -55,10 +56,24 @@ Que el rider tome una foto (o elija de galería) de la tarjeta de propiedad y el
 **Data** (`lib/features/vehicles/data/parser/`)
 - `PropertyCardParser`: Dart puro, reglas + regex sobre etiquetas RUNT. Stateless y testeable con fixtures.
 
+**Shared widget — refactor de bottom sheet** (`lib/shared/widgets/`)
+- `SoatAddDocumentSheet` (actualmente en `lib/features/soat/presentation/widgets/`) es ya compartido entre SOAT y RTM. Moverlo a `lib/shared/widgets/document_source_sheet.dart` como `DocumentSourceSheet` y parametrizarlo:
+  ```dart
+  DocumentSourceSheet({
+    required String instruction,   // texto de instrucción visible al usuario
+    bool showCamera = false,       // muestra opción "Tomar foto"
+    bool showGallery = true,       // muestra opción "Galería"
+    bool showPdf = false,          // muestra opción "Archivo PDF"
+  })
+  ```
+  Retorna un enum `DocumentSourceOption { camera, gallery, pdf }`.
+  SOAT y RTM migran a este componente con `showGallery: true, showPdf: true`.
+
 **Presentation** (`lib/features/vehicles/presentation/form/`)
 - `VehicleScanCubit extends Cubit<ResultState<PropertyCardExtraction>>`: escanear → procesar → entregar.
-- `VehicleScanBanner.onTap` (existente) → abre el bottom sheet de origen (cámara/galería) → corre el scan → al volver, inyecta el resultado al `VehicleFormCubit`.
-- `VehicleFormCubit`: nuevo método `prefillFromScan(PropertyCardExtraction)` (espejo de `storePendingManualSoat`).
+- `VehicleScanBanner` ya existe en `form/widgets/vehicle_scan_banner.dart` pero está **comentado** en `vehicle_form_body.dart` (líneas 35–36: `// const SizedBox(height: 16),` y `// const VehicleScanBanner()`). Restaurar: descomentar ambas líneas y agregar el import `vehicle_scan_banner.dart` en `vehicle_form_body.dart`.
+- `VehicleScanBanner.onTap` → abre `DocumentSourceSheet(showCamera: true, showGallery: true, instruction: '...')` con instrucción de cara frontal → corre el scan → al volver, inyecta el resultado al `VehicleFormCubit`.
+- `VehicleFormCubit`: nuevo método `prefillFromScan(PropertyCardExtraction)` que **reemplaza todos los campos** sin excepción (aplica tanto en creación como en edición; el usuario ve el resultado y puede corregir antes de guardar).
 
 ### 3.3 Mapeo tarjeta de propiedad → `VehicleModel`
 
@@ -77,12 +92,12 @@ Que el rider tome una foto (o elija de galería) de la tarjeta de propiedad y el
 ### 3.4 Flujo de usuario
 
 1. En el formulario, el rider toca el banner **"Escanear tarjeta de propiedad"**.
-2. Bottom sheet: **Tomar foto** / **Elegir de galería**.
+2. `DocumentSourceSheet` con opciones **Tomar foto** / **Elegir de galería** e instrucción: *"Fotografía solo la cara frontal de la tarjeta"*.
 3. Pantalla/overlay intermedio con spinner "Leyendo documento…".
 4. ML Kit corre on-device; `PropertyCardParser` mapea texto → campos.
-5. El usuario vuelve al formulario **prellenado**, con banner sutil "Datos extraídos — revisa antes de guardar". Cada campo autocompletado muestra indicador de origen OCR.
-6. **Política de relleno:** solo se rellenan campos **vacíos**; si un campo ya tiene valor escrito por el usuario, **no se pisa** (se descarta el del OCR para ese campo). Los de baja confianza se marcan "revisar".
-7. Si el OCR falla o extrae <2 campos con confianza alta, **no se prellena nada** y se cae al flujo manual con toast: "No pudimos leer el documento, ingresa los datos manualmente".
+5. El usuario vuelve al formulario con los campos **reemplazados** (aplica en creación y edición). Snackbar: "Datos extraídos — revisa antes de guardar".
+6. **Política de relleno:** escanear **siempre reemplaza todos los campos** extraídos, sin importar si ya tenían valor. El usuario revisa y corrige antes de guardar. Los campos de confianza `low` no se escriben.
+7. Si el OCR falla o extrae <2 campos con confianza alta, **no se reemplaza nada** y se cae al flujo manual con toast: "No pudimos leer el documento, ingresa los datos manualmente".
 
 ### 3.5 El parser — núcleo de valor
 
@@ -107,15 +122,17 @@ El refactor `iter-6 REFACTOR-03b` (`fa082b6`) dejó un **set duplicado del formu
 
 ## 4. Criterios de aceptación
 
-- [ ] `VehicleScanCubit` registrado en DI; `VehicleScanBanner.onTap` funcional.
-- [ ] Flujo escanear → procesar → prellenar funciona con **cámara y galería** (sin PDF).
+- [ ] `SoatAddDocumentSheet` movido a `lib/shared/widgets/document_source_sheet.dart` como `DocumentSourceSheet` parametrizable; SOAT y RTM migrados sin cambio de comportamiento.
+- [ ] `VehicleScanCubit` registrado en DI; `VehicleScanBanner.onTap` funcional (descomentar en `vehicle_form_body.dart`).
+- [ ] Flujo escanear → procesar → rellenar funciona con **cámara y galería** (sin PDF).
 - [ ] `PropertyCardParser` extrae correctamente marca, línea, año, placa, VIN, color, cilindraje desde fixtures reales de tarjetas (moto y carro).
-- [ ] Solo se rellenan campos vacíos; no se pisa lo escrito por el usuario.
-- [ ] Si <2 campos `high confidence`, no se prellena nada + toast informativo.
-- [ ] Campos prellenados muestran indicador visual de origen OCR.
+- [ ] Escanear siempre reemplaza todos los campos extraídos (confianza `high`/`medium`); campos `low` no se escriben.
+- [ ] El banner permanece visible en modo edición; re-escanear reemplaza toda la información.
+- [ ] Si <2 campos `high confidence`, no se reemplaza nada + toast informativo.
+- [ ] Sin indicador visual de origen OCR en los campos.
 - [ ] Tests unitarios del parser con ≥6 fixtures (motos y carros + casos negativos).
 - [ ] **Código muerto del form viejo eliminado** (set `presentation/widgets/vehicle_form*`), `dart analyze` sin warnings nuevos, `flutter test` al 100%.
-- [ ] `app_es.arb`: reutilizar/añadir strings (banner ya existe: `vehicle_form_scan_title/subtitle`; añadir loader, toasts, sheet de origen).
+- [ ] `app_es.arb`: reutilizar/añadir strings (banner ya existe: `vehicle_form_scan_title/subtitle`; añadir loader, toasts, instrucción de cara frontal en el sheet).
 - [ ] Permisos cámara + galería ya presentes (confirmar en `AndroidManifest.xml` / `Info.plist`).
 - [ ] `docs/features/` (vehicles) actualizado con el sub-flujo OCR.
 
@@ -151,7 +168,8 @@ El refactor `iter-6 REFACTOR-03b` (`fa082b6`) dejó un **set duplicado del formu
 ## 8. Brief plan (fases)
 
 1. **Limpieza previa** — borrar el set duplicado del form viejo en `presentation/widgets/`; `dart analyze` limpio. *(Pre-flight, sin riesgo funcional: nadie lo importa.)*
-2. **Domain + parser** — `PropertyCardExtraction`, `ParsePropertyCardTextUseCase`, `PropertyCardParser` + tests con fixtures.
-3. **Use case + scan** — `ScanPropertyCardUseCase` (clonar patrón SOAT sin PDF) + telemetría.
-4. **Presentation** — `VehicleScanCubit`, bottom sheet de origen, wiring `VehicleScanBanner` → cubit → `VehicleFormCubit.prefillFromScan`, indicadores de origen y política de "no pisar".
-5. **QA + docs** — strings es-CO, permisos, `flutter test`/`dart analyze`, doc del feature.
+2. **Shared sheet** — mover `SoatAddDocumentSheet` a `lib/shared/widgets/document_source_sheet.dart` como `DocumentSourceSheet` parametrizable; migrar SOAT y RTM sin cambio de comportamiento.
+3. **Domain + parser** — `PropertyCardExtraction`, `ParsePropertyCardTextUseCase`, `PropertyCardParser` + tests con fixtures.
+4. **Use case + scan** — `ScanPropertyCardUseCase` (clonar patrón SOAT sin PDF) + telemetría.
+5. **Presentation** — `VehicleScanCubit`, restaurar `VehicleScanBanner` en `vehicle_form_body.dart` (descomentar líneas 35–36 + import), wiring con `DocumentSourceSheet(showCamera: true, showGallery: true)` → cubit → `VehicleFormCubit.prefillFromScan` (reemplaza todo).
+6. **QA + docs** — strings es-CO, permisos, `flutter test`/`dart analyze`, doc del feature.

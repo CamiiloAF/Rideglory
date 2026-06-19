@@ -46,19 +46,15 @@ si edad_usuario < edad_minima_evento → bloquear inscripción con mensaje claro
 
 El campo `birthDate` ya existe en `UserModel`. Si el usuario no tiene `birthDate` registrado, se bloquea la inscripción hasta que lo complete en su perfil.
 
-### 3.2 Edad mínima — recomendación
+### 3.2 Edad mínima — decisión
 
-Colombia establece **16 años** como la edad mínima para obtener licencia de conducción de motocicleta (categoría A1). La mayoría de edad legal es **18 años**.
-
-**Recomendación técnica:** el backend expone un campo `minAgeRequirement` por evento (entero, en años). El creador del evento lo configura. El sistema impone:
+La plataforma establece **18 años** como límite mínimo absoluto y **no configurable**. No existe rango ajustable por evento ni por organizador.
 
 | Regla | Valor |
 |---|---|
-| Mínimo absoluto de la plataforma | 16 años (hard cap — no negociable) |
-| Valor por defecto al crear un evento | 18 años |
-| Rango configurable por el organizador | 16–99 años |
+| Mínimo de la plataforma | 18 años (hard cap — no negociable) |
 
-Razón del default en 18: reduce la responsabilidad de la plataforma ante menores sin requerir validación de consentimiento parental. Un organizador que quiera permitir 16–17 años lo hace explícitamente y asume esa responsabilidad.
+Razón: la mayoría de edad legal en Colombia es 18 años. Los menores de 16–17 que tramitan licencia requieren autorización parental autenticada (Ley 769/2002, Art. 19), lo que añade complejidad verificable que la plataforma no está en capacidad de gestionar. Fijar el límite en 18 elimina esta carga y reduce la responsabilidad de la plataforma ante menores de forma simple y definitiva.
 
 ### 3.3 Mensaje de bloqueo (l10n)
 
@@ -71,9 +67,9 @@ Razón del default en 18: reduce la responsabilidad de la plataforma ante menore
 
 ### 3.4 Implementación
 
-- **Backend:** agregar campo `minAgeRequirement: Int` al modelo de evento (default 18). Validar en el endpoint de inscripción (`POST /events/:id/registrations`) comparando `birthDate` del usuario con la fecha actual.
+- **Backend:** la edad mínima (18 años) está hardcodeada en la lógica de validación del endpoint de inscripción (`POST /events/:id/registrations`). No hay campo `minAgeRequirement` en el modelo de evento.
 - **App:** antes de mostrar el formulario de inscripción, verificar localmente y mostrar el mensaje si no cumple. La validación real la hace el backend.
-- **Formulario de creación de evento:** añadir campo de edad mínima (selector numérico, 16–99, default 18).
+- **Formulario de creación de evento:** no se añade ningún campo de edad mínima (el límite es fijo y no configurable).
 
 ---
 
@@ -83,15 +79,19 @@ Razón del default en 18: reduce la responsabilidad de la plataforma ante menore
 
 El `EventRegistrationModel` expone hoy todos los campos sin distinción. Se propone dividirlos en tres capas:
 
-#### Capa A — Siempre visible para el organizador (seguridad médica)
-Datos que el organizador **necesita siempre** para responder ante una emergencia, aunque el rider esté inconsciente:
+#### Capa A — Visible para el organizador solo mientras el evento está en curso (seguridad médica)
+Datos de emergencia que el organizador puede necesitar mientras el evento está activo:
 
-- Tipo de sangre
-- EPS
-- Seguro médico adicional
-- Contacto de emergencia (nombre + teléfono)
+- Tipo de sangre *(opcional — el rider elige si compartirlo)*
+- EPS *(opcional — el rider elige si compartirlo)*
+- Seguro médico adicional *(opcional — el rider elige si compartirlo)*
+- Contacto de emergencia (nombre + teléfono) **[obligatorio — no se puede omitir]**
 
-> Justificación: el organizador que aprueba una inscripción asume corresponsabilidad de la seguridad del rider durante el evento. Sin estos datos, no puede coordinar con servicios de emergencia.
+**Visibilidad:** estos campos solo son accesibles para el organizador **mientras el evento está en curso** (estado activo). Antes de iniciar el evento y después de finalizado, la información médica no es visible.
+
+**Opt-in del rider:** en el formulario de inscripción, el rider puede marcar/desmarcar si desea compartir su información médica (tipo de sangre, EPS, seguro). El contacto de emergencia siempre se envía. Si el rider no comparte la información médica, el organizador solo ve el contacto de emergencia durante el evento.
+
+> Justificación: el contacto de emergencia es el dato mínimo indispensable para actuar ante un accidente. La información médica (EPS, tipo de sangre, seguro) es sensible bajo la Ley 1581 y requiere consentimiento expreso; delegarle al rider esa decisión reduce la exposición de la plataforma y del organizador al tratamiento no autorizado de datos sensibles. La restricción de visibilidad al periodo del evento limita el tiempo de exposición al mínimo necesario.
 
 #### Capa B — Solo visible durante SOS activo del rider
 Datos personales que no son necesarios para la gestión del evento, pero sí durante una emergencia grave:
@@ -113,10 +113,28 @@ El teléfono tiene doble propósito: coordinación logística y emergencia. Se d
 
 Los demás riders (no organizador) **nunca ven el teléfono**, excepto durante el SOS del rider (comportamiento actual del banner de SOS, sin cambio).
 
-### 4.2 UI del opt-in de contacto (rider)
+### 4.2 UI del opt-in en el formulario de inscripción (rider)
 
-En el formulario de inscripción a un evento, se añade una sección:
+En el formulario de inscripción se añaden dos bloques de switches:
 
+**Bloque 1 — Información médica (opt-in)**
+```
+┌────────────────────────────────────────────────────┐
+│ Información médica                                 │
+│                                                    │
+│ Compartir mi información médica con el             │
+│ organizador durante el evento                      │
+│                                ┌─────────────────┐ │
+│                                │  AppSwitchTile  │ │
+│                                └─────────────────┘ │
+│ Tipo de sangre, EPS y seguro. Solo visible         │
+│ mientras el evento esté en curso.                  │
+└────────────────────────────────────────────────────┘
+```
+
+Este valor se persiste en `EventRegistrationModel` como `shareMedicalInfo: bool` (default: false). El contacto de emergencia siempre se envía independientemente de este switch.
+
+**Bloque 2 — Coordinación del evento (opt-in)**
 ```
 ┌────────────────────────────────────────────────────┐
 │ Coordinación del evento                            │
@@ -134,37 +152,69 @@ Este valor se persiste en `EventRegistrationModel` como `allowOrganizerContact: 
 
 ### 4.3 UI del organizador — ficha del inscrito
 
-La `RegistrationDetailPage` se reorganiza en secciones con visibilidad condicional:
+El organizador **siempre ve todos los campos** que el rider completó en su inscripción. La diferencia es que los valores sensibles se **ofuscan en el backend** (ej. `••••••••`) antes de enviarse a la app; la app simplemente renderiza lo que recibe. Las secciones nunca desaparecen; lo que cambia es si el valor llega legible o enmascarado.
+
+**Regla de ofuscación por campo:**
+
+| Campo | Condición para mostrar valor real |
+|---|---|
+| Tipo de sangre | Evento en curso + rider eligió compartir (`shareMedicalInfo = true`) |
+| EPS | Evento en curso + `shareMedicalInfo = true` |
+| Seguro médico adicional | Evento en curso + `shareMedicalInfo = true` |
+| Contacto de emergencia (nombre + teléfono) | Evento en curso (obligatorio — siempre se desofusca si el evento está activo) |
+| Teléfono del rider | `allowOrganizerContact = true` (independiente del estado del evento) |
+| Cédula | SOS activo del rider |
+| Correo electrónico | SOS activo del rider |
+| Ciudad de residencia | SOS activo del rider |
+
+La `RegistrationDetailPage` se reorganiza en secciones con ofuscación condicional:
 
 ```
 ┌─────────────────────────────────────────────────┐
-│ INFORMACIÓN MÉDICA              [siempre visible] │
-│ Tipo de sangre: O+                               │
-│ EPS: Sura                                        │
-│ Seguro adicional: Mapfre                         │
-│ Contacto de emergencia: Ana Torres · 3001234567  │
+│ INFORMACIÓN MÉDICA                               │
+│                                                  │
+│ Tipo de sangre:  O+          ← evento en curso  │
+│ Tipo de sangre:  ••••        ← evento no activo │
+│                                                  │
+│ EPS:             Sura        ← evento en curso  │
+│ EPS:             ••••        ← evento no activo │
+│                                                  │
+│ Seguro adicional: Mapfre     ← evento en curso  │
+│ Seguro adicional: ••••       ← evento no activo │
+│                                                  │
+│ [Si !shareMedicalInfo, los tres campos anteriores│
+│  muestran "No compartido" en lugar de ••••]      │
+│                                                  │
+│ Contacto emergencia:                             │
+│   Ana Torres · 3001234567    ← evento en curso  │
+│   ••••••••••••••••           ← evento no activo │
 └─────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────┐
 │ CONTACTO                                         │
-│ [Si allowOrganizerContact = true]                │
-│ 📞 3009876543    [Llamar] [WhatsApp]             │
 │                                                  │
-│ [Si allowOrganizerContact = false]               │
-│ El participante no ha compartido su contacto     │
+│ Teléfono: 📞 3009876543 [Llamar] [WhatsApp]     │
+│            ← allowOrganizerContact = true        │
+│                                                  │
+│ Teléfono: ••••••••••••                          │
+│            ← allowOrganizerContact = false       │
 └─────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────┐
-│ DATOS PERSONALES        [bloqueado sin SOS]      │
-│ 🔒 Cédula, correo y ciudad solo se muestran     │
-│    cuando el participante activa una alerta SOS  │
+│ DATOS PERSONALES                                 │
 │                                                  │
-│ [Durante SOS activo del rider]                   │
-│ Cédula: 1234567890                               │
-│ Correo: ejemplo@mail.com                         │
-│ Ciudad: Medellín                                 │
+│ Cédula:  1234567890          ← SOS activo        │
+│ Cédula:  ••••••••••          ← sin SOS           │
+│                                                  │
+│ Correo:  ejemplo@mail.com    ← SOS activo        │
+│ Correo:  ••••••••••••        ← sin SOS           │
+│                                                  │
+│ Ciudad:  Medellín            ← SOS activo        │
+│ Ciudad:  ••••••••            ← sin SOS           │
 └─────────────────────────────────────────────────┘
 ```
+
+**Estado del evento para desofuscación médica:** el evento está "en curso" cuando ha sido iniciado por el organizador y aún no ha finalizado, mismo criterio que el tracking en vivo.
 
 ### 4.4 Botones de acción de contacto
 
@@ -200,7 +250,7 @@ La **Ley 769 de 2002, Art. 19** establece edad mínima de 16 años para licencia
 
 La **Ley 1098 de 2006** (Código de Infancia y Adolescencia, Arts. 14 y 18) impone a los padres la obligación de cuidado. Un organizador que permite la participación de un menor sin verificar el consentimiento parental **asume responsabilidad potencial** ante un accidente.
 
-**Conclusión práctica:** La plataforma debe exigir autorización parental verificable para inscritos de 16-17 años. La opción más simple y segura es mantener **18 años como límite mínimo por defecto**.
+**Conclusión práctica:** La plataforma exige **18 años como límite mínimo absoluto**, eliminando la necesidad de gestionar autorización parental para menores de 16–17 años.
 
 ### 5.4 Tratamiento de datos sensibles — Ley 1581 de 2012 (Alta confianza)
 
@@ -228,7 +278,7 @@ Estas se pueden implementar ahora como señales de buena fe:
 
 | Acción | Justificación |
 |---|---|
-| Validación de edad mínima (16 años hard cap) | Reduce exposición ante menores |
+| Validación de edad mínima (18 años hard cap, no configurable) | Reduce exposición ante menores sin gestionar consentimiento parental |
 | Mostrar aviso de riesgo al inscribirse | "Los eventos de motociclismo implican riesgos. Tu participación es voluntaria." |
 | Guardar timestamp de aceptación de T&C | Evidencia de consentimiento informado |
 | Anonimizar datos en analytics | Cumplimiento básico Ley 1581 |
@@ -325,23 +375,23 @@ El rider la guarda como imagen en su galería, la imprime, o la pone como widget
 ## 8. Resumen de cambios técnicos requeridos
 
 ### Backend (`rideglory-api`)
-- [ ] Añadir `minAgeRequirement: Int` al modelo de evento (default: 18)
-- [ ] Validar edad del usuario en `POST /events/:id/registrations`
+- [ ] Validar edad del usuario (≥ 18 años, hardcodeado) en `POST /events/:id/registrations`
+- [ ] Añadir `shareMedicalInfo: Bool` al modelo de inscripción (default: false)
 - [ ] Añadir `allowOrganizerContact: Bool` al modelo de inscripción (default: false)
 - [ ] Añadir `riskAcceptedAt: DateTime?` y `riskAcceptanceVersion: String?` al modelo de inscripción
 - [ ] Añadir `organizerAcceptedResponsibilityAt: DateTime?` al modelo de evento
-- [ ] Endpoint de inscripción recibe y persiste `allowOrganizerContact` y `riskAcceptedAt`/`riskAcceptanceVersion`
+- [ ] Endpoint de inscripción recibe y persiste `shareMedicalInfo`, `allowOrganizerContact` y `riskAcceptedAt`/`riskAcceptanceVersion`
 - [ ] Endpoint de creación de evento recibe y persiste `organizerAcceptedResponsibilityAt`
+- [ ] Endpoint de detalle de inscripción (vista organizador): aplica ofuscación de campos **en el backend** según estado del evento y flags del rider antes de retornar la respuesta; el contacto de emergencia se desofusca solo si el evento está en curso
 
 ### App Flutter
-- [ ] Formulario de creación de evento: campo de edad mínima (16–99)
-- [ ] Formulario de creación de evento: pantalla de aceptación de responsabilidad del organizador (§6.3) antes de publicar
+- [ ] Formulario de creación de evento: pantalla de aceptación de responsabilidad del organizador (§6.3) antes de publicar — **sin campo de edad mínima**
 - [ ] Formulario de inscripción: pantalla de aceptación de riesgos (§6.2) antes del submit — reemplaza el botón actual
-- [ ] Formulario de inscripción: bloque de opt-in de contacto con `AppSwitchTile`
+- [ ] Formulario de inscripción: bloque opt-in de información médica con `AppSwitchTile` (`shareMedicalInfo`)
+- [ ] Formulario de inscripción: bloque opt-in de contacto con `AppSwitchTile` (`allowOrganizerContact`)
 - [ ] Pantalla de autorización de datos sensibles (§5.4) antes de completar perfil médico — separada de T&C
-- [ ] `RegistrationDetailPage`: secciones por capa (Médica / Contacto / Datos personales)
-- [ ] Botones de acción WhatsApp y llamada (usando `url_launcher`)
-- [ ] Bloqueo de Capa B sin SOS activo (lógica en la UI del organizador durante tracking)
+- [ ] `RegistrationDetailPage`: siempre muestra todos los campos; renderiza el valor tal como lo retorna el backend (puede ser el valor real u ofuscado)
+- [ ] Botones de acción WhatsApp y llamada (usando `url_launcher`) — solo activos cuando `allowOrganizerContact = true`
 - [ ] Strings en `app_es.arb`
 
 ### Pendiente (requiere decisión legal antes de implementar)
