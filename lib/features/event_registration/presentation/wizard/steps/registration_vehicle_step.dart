@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
-import 'package:rideglory/features/event_registration/presentation/cubit/registration_form_cubit.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/save_to_profile_checkbox.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/vehicle_selector_empty.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/vehicle_selector_field.dart';
@@ -19,8 +18,6 @@ class RegistrationVehicleStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<RegistrationFormCubit>();
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -49,10 +46,8 @@ class RegistrationVehicleStep extends StatelessWidget {
             );
           },
         ),
-        if (!cubit.isPreloadedFromProfile) ...[
-          AppSpacing.gapLg,
-          const SaveToProfileCheckbox(),
-        ],
+        AppSpacing.gapLg,
+        const SaveToProfileCheckbox(),
       ],
     );
   }

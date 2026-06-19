@@ -282,7 +282,9 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
               ? AnalyticsParams.formModeEdit
               : AnalyticsParams.formModeCreate,
         }).ignore();
-        await _saveRiderProfileUseCase(_buildRiderProfile(registration));
+        if (_saveToProfile) {
+          await _saveRiderProfileUseCase(_buildRiderProfile(registration));
+        }
         emit(ResultState.data(data: saved));
       },
     );

@@ -59,7 +59,9 @@ class RiderProfileRepositoryImpl implements RiderProfileRepository {
           if (profile.medicalInsurance != null)
             'medicalInsurance': profile.medicalInsurance,
           if (profile.bloodType != null)
-            'bloodType': profile.bloodType!.name.toUpperCase(),
+            'bloodType': profile.bloodType!.name
+                .replaceAllMapped(RegExp(r'([A-Z])'), (m) => '_${m[1]}')
+                .toUpperCase(),
           if (profile.emergencyContactName != null)
             'emergencyContactName': profile.emergencyContactName,
           if (profile.emergencyContactPhone != null)
