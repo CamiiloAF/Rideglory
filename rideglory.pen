@@ -1607,8 +1607,8 @@
     {
       "type": "frame",
       "id": "dyWWs",
-      "x": 440,
-      "y": 0,
+      "x": 1075,
+      "y": -1152,
       "name": "Home Dashboard ",
       "clip": true,
       "width": 390,
@@ -1673,628 +1673,6 @@
                   "icon": "battery-full",
                   "library": "lucide",
                   "fill": "$text-primary"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "E2Dwu2",
-          "name": "Content",
-          "width": "fill_container",
-          "height": "fill_container",
-          "layout": "vertical",
-          "gap": 24,
-          "padding": [
-            8,
-            20,
-            24,
-            20
-          ],
-          "children": [
-            {
-              "type": "frame",
-              "id": "Gg5ib",
-              "name": "Top Section",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 24,
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "q7xXzB",
-                  "name": "greetingRow",
-                  "width": "fill_container",
-                  "justifyContent": "space_between",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "n9Y5iL",
-                      "name": "leftTextStack",
-                      "layout": "vertical",
-                      "gap": 3,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "gARLa",
-                          "fill": "$accent",
-                          "content": "HOLA, RIDER",
-                          "fontFamily": "$font-primary",
-                          "fontSize": 11,
-                          "fontWeight": "600",
-                          "letterSpacing": 1.5
-                        },
-                        {
-                          "type": "text",
-                          "id": "HPtgR",
-                          "fill": "$text-primary",
-                          "content": "Alex Rivera",
-                          "fontFamily": "$font-primary",
-                          "fontSize": 22,
-                          "fontWeight": "700"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "VSVhM",
-                      "name": "iconCircle",
-                      "width": 44,
-                      "height": 44,
-                      "fill": "$accent-subtle",
-                      "cornerRadius": 22,
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "JDwe0",
-                          "width": 22,
-                          "height": 22,
-                          "icon": "notifications",
-                          "library": "Material Symbols Rounded",
-                          "fill": "$accent"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "yqU9P",
-                  "name": "garageSection",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 12,
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "d0yeM",
-                      "name": "garageHeader",
-                      "width": "fill_container",
-                      "justifyContent": "space_between",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "N8EtT",
-                          "fill": "$text-primary",
-                          "content": "MI GARAJE",
-                          "fontFamily": "$font-primary",
-                          "fontSize": 12,
-                          "fontWeight": "600",
-                          "letterSpacing": 1.5
-                        },
-                        {
-                          "type": "text",
-                          "id": "zGZgF",
-                          "fill": "$accent",
-                          "content": "VER TODAS",
-                          "fontFamily": "$font-primary",
-                          "fontSize": 12,
-                          "fontWeight": "600"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "qW4Gj",
-                      "name": "garageCard",
-                      "clip": true,
-                      "width": "fill_container",
-                      "fill": "$bg-card",
-                      "cornerRadius": "$radius-lg",
-                      "layout": "vertical",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "NDy9u",
-                          "name": "motoImage",
-                          "width": "fill_container",
-                          "height": 180,
-                          "fill": {
-                            "type": "image",
-                            "enabled": true,
-                            "url": "images/generated-1778647084285.png",
-                            "mode": "fill"
-                          }
-                        },
-                        {
-                          "type": "frame",
-                          "id": "TveID",
-                          "name": "cardContent",
-                          "width": "fill_container",
-                          "layout": "vertical",
-                          "gap": 10,
-                          "padding": [
-                            12,
-                            16,
-                            16,
-                            16
-                          ],
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "NRlqf",
-                              "fill": "$text-primary",
-                              "content": "KTM 890 Adventure R",
-                              "fontFamily": "$font-primary",
-                              "fontSize": 16,
-                              "fontWeight": "700"
-                            },
-                            {
-                              "type": "frame",
-                              "id": "NErML",
-                              "name": "badge",
-                              "fill": "$accent-subtle",
-                              "cornerRadius": 100,
-                              "gap": 6,
-                              "padding": [
-                                6,
-                                10
-                              ],
-                              "alignItems": "center",
-                              "children": [
-                                {
-                                  "type": "icon",
-                                  "id": "T6PVE",
-                                  "width": 12,
-                                  "height": 12,
-                                  "icon": "warning",
-                                  "library": "Material Symbols Rounded",
-                                  "fill": "$accent"
-                                },
-                                {
-                                  "type": "text",
-                                  "id": "KGPxu",
-                                  "fill": "$accent",
-                                  "content": "PRÓXIMO CAMBIO DE ACEITE EN 500KM",
-                                  "fontFamily": "$font-primary",
-                                  "fontSize": 10,
-                                  "fontWeight": "600"
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "Kinbd",
-              "name": "Bottom Section",
-              "width": "fill_container",
-              "layout": "vertical",
-              "gap": 24,
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "Q2kGX",
-                  "name": "Rodadas Header",
-                  "width": "fill_container",
-                  "justifyContent": "space_between",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "TBnL4",
-                      "fill": "$text-primary",
-                      "content": "PRÓXIMAS RODADAS",
-                      "fontFamily": "$font-primary",
-                      "fontSize": 14,
-                      "fontWeight": "600",
-                      "letterSpacing": 1.2
-                    },
-                    {
-                      "type": "icon",
-                      "id": "Wc5Ga",
-                      "width": 20,
-                      "height": 20,
-                      "icon": "sliders-horizontal",
-                      "library": "lucide",
-                      "fill": "$accent"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "E6TQq",
-                  "name": "Event Cards Row",
-                  "clip": true,
-                  "width": "fill_container",
-                  "height": 340,
-                  "gap": 16,
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "XLBMT",
-                      "name": "Event Card 1",
-                      "clip": true,
-                      "width": 240,
-                      "height": "fill_container",
-                      "fill": "$bg-card",
-                      "cornerRadius": "$radius-lg",
-                      "layout": "vertical",
-                      "justifyContent": "space_between",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "wp1sE",
-                          "name": "Card Image",
-                          "metadata": {
-                            "type": "unsplash",
-                            "username": "initinmishra",
-                            "link": "https://unsplash.com/@initinmishra",
-                            "author": "Nitin Mishra"
-                          },
-                          "clip": true,
-                          "width": "fill_container",
-                          "height": 190,
-                          "fill": {
-                            "type": "image",
-                            "enabled": true,
-                            "url": "https://images.unsplash.com/photo-1768410318055-e37e9a919ddf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODA5MzkxMDV8&ixlib=rb-4.1.0&q=80&w=1080",
-                            "mode": "fill"
-                          },
-                          "layout": "none",
-                          "children": [
-                            {
-                              "id": "Kk0dQ",
-                              "type": "ref",
-                              "ref": "zKkmE",
-                              "x": 12,
-                              "y": 12,
-                              "fill": "#6366F1",
-                              "name": "inscritoRef"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "V8rqfb",
-                          "name": "Card Content",
-                          "width": "fill_container",
-                          "height": "fill_container",
-                          "layout": "vertical",
-                          "gap": 6,
-                          "padding": [
-                            12,
-                            16,
-                            16,
-                            16
-                          ],
-                          "justifyContent": "end",
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "qdN8w",
-                              "name": "card1Title",
-                              "fill": "$text-primary",
-                              "content": "RUTA DEL SOL",
-                              "fontFamily": "$font-primary",
-                              "fontSize": 22,
-                              "fontWeight": "800",
-                              "fontStyle": "italic"
-                            },
-                            {
-                              "type": "frame",
-                              "id": "c5AlEF",
-                              "name": "card1DateRow",
-                              "width": "fill_container",
-                              "gap": 6,
-                              "alignItems": "center",
-                              "children": [
-                                {
-                                  "type": "icon",
-                                  "id": "X8usn",
-                                  "width": 14,
-                                  "height": 14,
-                                  "icon": "calendar",
-                                  "library": "lucide",
-                                  "fill": "$text-secondary"
-                                },
-                                {
-                                  "type": "text",
-                                  "id": "fPBRM",
-                                  "fill": "$text-secondary",
-                                  "content": "24 Oct, 2023",
-                                  "fontFamily": "$font-primary",
-                                  "fontSize": 12,
-                                  "fontWeight": "500"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "frame",
-                              "id": "BnMYi",
-                              "name": "card1DiffRow",
-                              "width": "fill_container",
-                              "gap": 6,
-                              "alignItems": "center",
-                              "children": [
-                                {
-                                  "type": "icon",
-                                  "id": "xLYT8",
-                                  "width": 14,
-                                  "height": 14,
-                                  "icon": "mountain",
-                                  "library": "lucide",
-                                  "fill": "$text-tertiary"
-                                },
-                                {
-                                  "type": "text",
-                                  "id": "onzG9",
-                                  "fill": "$text-tertiary",
-                                  "content": "INTERMEDIO",
-                                  "fontFamily": "$font-primary",
-                                  "fontSize": 11,
-                                  "fontWeight": "600",
-                                  "letterSpacing": 0.5
-                                }
-                              ]
-                            },
-                            {
-                              "type": "frame",
-                              "id": "VGDhC",
-                              "name": "Ver Detalles Btn",
-                              "width": "fill_container",
-                              "height": 36,
-                              "fill": "#FFFFFF",
-                              "cornerRadius": "$radius-sm",
-                              "gap": 6,
-                              "justifyContent": "center",
-                              "alignItems": "center",
-                              "children": [
-                                {
-                                  "type": "text",
-                                  "id": "K2BEx",
-                                  "fill": "$text-inverse",
-                                  "content": "VER DETALLES",
-                                  "fontFamily": "$font-primary",
-                                  "fontSize": 12,
-                                  "fontWeight": "600"
-                                },
-                                {
-                                  "type": "icon",
-                                  "id": "qEHnU",
-                                  "width": 14,
-                                  "height": 14,
-                                  "icon": "arrow-right",
-                                  "library": "lucide",
-                                  "fill": "$text-inverse"
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "wBuOu",
-                      "name": "Event Card 2",
-                      "clip": true,
-                      "width": 240,
-                      "height": "fill_container",
-                      "fill": "$bg-card",
-                      "cornerRadius": "$radius-lg",
-                      "layout": "vertical",
-                      "justifyContent": "space_between",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "c9UbQ",
-                          "name": "Card Image 2",
-                          "metadata": {
-                            "type": "unsplash",
-                            "username": "windy_guy",
-                            "link": "https://unsplash.com/@windy_guy",
-                            "author": "Windy Guy"
-                          },
-                          "clip": true,
-                          "width": "fill_container",
-                          "height": 190,
-                          "fill": {
-                            "type": "image",
-                            "enabled": true,
-                            "url": "https://images.unsplash.com/photo-1780440201894-7f8f78fa3d0d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w4NDM0ODN8MHwxfHJhbmRvbXx8fHx8fHx8fDE3ODA5MzkwOTh8&ixlib=rb-4.1.0&q=80&w=1080",
-                            "mode": "fill"
-                          },
-                          "layout": "none",
-                          "children": [
-                            {
-                              "id": "yM4TO",
-                              "type": "ref",
-                              "ref": "zKkmE",
-                              "x": 12,
-                              "y": 12,
-                              "fill": "$info",
-                              "name": "disponibleRef"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "frame",
-                          "id": "m3aFWE",
-                          "name": "Card Content 2",
-                          "width": "fill_container",
-                          "height": "fill_container",
-                          "layout": "vertical",
-                          "gap": 6,
-                          "padding": [
-                            12,
-                            16,
-                            16,
-                            16
-                          ],
-                          "justifyContent": "end",
-                          "children": [
-                            {
-                              "type": "text",
-                              "id": "SYsES",
-                              "fill": "$text-primary",
-                              "content": "PASO DE\nAGUILAS",
-                              "fontFamily": "$font-primary",
-                              "fontSize": 22,
-                              "fontWeight": "800",
-                              "fontStyle": "italic"
-                            },
-                            {
-                              "type": "frame",
-                              "id": "c8gx8",
-                              "name": "card2DateRow",
-                              "width": "fill_container",
-                              "gap": 6,
-                              "alignItems": "center",
-                              "children": [
-                                {
-                                  "type": "icon",
-                                  "id": "LFihS",
-                                  "width": 14,
-                                  "height": 14,
-                                  "icon": "calendar",
-                                  "library": "lucide",
-                                  "fill": "$text-secondary"
-                                },
-                                {
-                                  "type": "text",
-                                  "id": "jydJC",
-                                  "fill": "$text-secondary",
-                                  "content": "15 Nov, 2023",
-                                  "fontFamily": "$font-primary",
-                                  "fontSize": 12,
-                                  "fontWeight": "500"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "frame",
-                              "id": "renI7",
-                              "name": "card2DiffRow",
-                              "width": "fill_container",
-                              "gap": 6,
-                              "alignItems": "center",
-                              "children": [
-                                {
-                                  "type": "icon",
-                                  "id": "uAiqq",
-                                  "width": 14,
-                                  "height": 14,
-                                  "icon": "mountain",
-                                  "library": "lucide",
-                                  "fill": "$text-tertiary"
-                                },
-                                {
-                                  "type": "text",
-                                  "id": "slExf",
-                                  "fill": "$text-tertiary",
-                                  "content": "AVANZADO",
-                                  "fontFamily": "$font-primary",
-                                  "fontSize": 11,
-                                  "fontWeight": "600",
-                                  "letterSpacing": 0.5
-                                }
-                              ]
-                            },
-                            {
-                              "type": "frame",
-                              "id": "d2e0IN",
-                              "name": "Ver Detalles Btn 2",
-                              "width": "fill_container",
-                              "height": 36,
-                              "fill": "#FFFFFF",
-                              "cornerRadius": "$radius-sm",
-                              "gap": 6,
-                              "justifyContent": "center",
-                              "alignItems": "center",
-                              "children": [
-                                {
-                                  "type": "text",
-                                  "id": "bAQYK",
-                                  "fill": "$text-inverse",
-                                  "content": "VER DETALLES",
-                                  "fontFamily": "$font-primary",
-                                  "fontSize": 12,
-                                  "fontWeight": "600"
-                                },
-                                {
-                                  "type": "icon",
-                                  "id": "yskjd",
-                                  "width": 14,
-                                  "height": 14,
-                                  "icon": "arrow-right",
-                                  "library": "lucide",
-                                  "fill": "$text-inverse"
-                                }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "cY77f",
-                  "name": "CTA Catalogo",
-                  "width": "fill_container",
-                  "height": 48,
-                  "fill": "#00000000",
-                  "cornerRadius": "$radius-lg",
-                  "stroke": "$border-light",
-                  "strokeWidth": 1,
-                  "strokeAlignment": "inner",
-                  "gap": 8,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "IvMTp",
-                      "fill": "$text-primary",
-                      "content": "VER CATÁLOGO COMPLETO DE EVENTOS",
-                      "fontFamily": "$font-primary",
-                      "fontSize": 12,
-                      "fontWeight": "600",
-                      "letterSpacing": 0.3
-                    },
-                    {
-                      "type": "icon",
-                      "id": "tt4JM",
-                      "width": 16,
-                      "height": 16,
-                      "icon": "chevron-down",
-                      "library": "lucide",
-                      "fill": "$accent"
-                    }
-                  ]
                 }
               ]
             }
@@ -39666,7 +39044,7 @@
     {
       "type": "frame",
       "id": "X1ghXQ",
-      "x": 440,
+      "x": 450,
       "y": 0,
       "name": "Home Dashboard ",
       "clip": true,
@@ -50014,8 +49392,8 @@
     {
       "type": "frame",
       "id": "x9Eyu",
-      "x": 446,
-      "y": 12,
+      "x": 255,
+      "y": -918,
       "name": "Puntos de Ruta — Variante A",
       "fill": "$bg-primary",
       "layout": "vertical",
@@ -50347,8 +49725,8 @@
     {
       "type": "frame",
       "id": "fPRin",
-      "x": 446,
-      "y": 12,
+      "x": 1909,
+      "y": -918,
       "name": "Showcase Variante B",
       "fill": "$bg-secondary",
       "cornerRadius": 16,
@@ -50721,8 +50099,8 @@
     {
       "type": "frame",
       "id": "UpdiP",
-      "x": 446,
-      "y": 12,
+      "x": -256,
+      "y": -858,
       "name": "Showcase Variante B",
       "fill": "$bg-secondary",
       "cornerRadius": 16,
@@ -75132,6 +74510,1006 @@
               "fontFamily": "$font-primary",
               "fontSize": 14,
               "fontWeight": "600"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "opvS1",
+      "x": -256,
+      "y": 5318,
+      "name": "AppStore iPad13 — Events",
+      "clip": true,
+      "width": 2064,
+      "height": 2752,
+      "fill": {
+        "type": "gradient",
+        "gradientType": "linear",
+        "enabled": true,
+        "rotation": 180,
+        "size": {
+          "height": 1
+        },
+        "colors": [
+          {
+            "color": "#2D2117",
+            "position": 0
+          },
+          {
+            "color": "#0D0D0F",
+            "position": 0.55
+          }
+        ]
+      },
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "QY3IT",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Text",
+          "width": 2064,
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            140,
+            120,
+            0,
+            120
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "R5qvgH",
+              "name": "Label",
+              "fill": "$accent",
+              "content": "COMUNIDAD",
+              "fontFamily": "$font-primary",
+              "fontSize": 40,
+              "fontWeight": "700",
+              "letterSpacing": 4
+            },
+            {
+              "type": "text",
+              "id": "LQUUj",
+              "name": "Headline",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Descubra nuevas rodadas",
+              "lineHeight": 1.08,
+              "fontFamily": "$font-primary",
+              "fontSize": 104,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "k3NqZ",
+          "layoutPosition": "absolute",
+          "x": 124,
+          "y": 520,
+          "name": "Phone Mockup",
+          "clip": true,
+          "width": 1816,
+          "height": 3929,
+          "fill": "$bg-primary",
+          "cornerRadius": [
+            48,
+            48,
+            0,
+            0
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "pDZ2m",
+              "layoutPosition": "absolute",
+              "x": 0,
+              "y": 0,
+              "name": "Screen Image",
+              "width": 1816,
+              "height": 3929,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "images/appstore/events.png",
+                "mode": "fill"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "K0IP2E",
+      "x": 1928,
+      "y": 5318,
+      "name": "AppStore iPad13 — Home",
+      "clip": true,
+      "width": 2064,
+      "height": 2752,
+      "fill": "$bg-primary",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "NCDRj",
+          "name": "Screen Image",
+          "width": 1272,
+          "height": 2752,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "images/appstore/home.png",
+            "mode": "fill"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "W3REB",
+      "x": 4112,
+      "y": 5318,
+      "name": "AppStore iPad13 — Garage",
+      "clip": true,
+      "width": 2064,
+      "height": 2752,
+      "fill": {
+        "type": "gradient",
+        "gradientType": "linear",
+        "enabled": true,
+        "rotation": 180,
+        "size": {
+          "height": 1
+        },
+        "colors": [
+          {
+            "color": "#2D2117",
+            "position": 0
+          },
+          {
+            "color": "#0D0D0F",
+            "position": 0.55
+          }
+        ]
+      },
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "rGeiq",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Text",
+          "width": 2064,
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            140,
+            120,
+            0,
+            120
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "UJMxZ",
+              "name": "Label",
+              "fill": "$accent",
+              "content": "SU MOTO",
+              "fontFamily": "$font-primary",
+              "fontSize": 40,
+              "fontWeight": "700",
+              "letterSpacing": 4
+            },
+            {
+              "type": "text",
+              "id": "Ccc6K",
+              "name": "Headline",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Administre su garaje",
+              "lineHeight": 1.08,
+              "fontFamily": "$font-primary",
+              "fontSize": 104,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "sdXZx",
+          "layoutPosition": "absolute",
+          "x": 124,
+          "y": 520,
+          "name": "Phone Mockup",
+          "clip": true,
+          "width": 1816,
+          "height": 3930,
+          "fill": "$bg-primary",
+          "cornerRadius": [
+            48,
+            48,
+            0,
+            0
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "EPhgp",
+              "layoutPosition": "absolute",
+              "x": 0,
+              "y": 0,
+              "name": "Screen Image",
+              "width": 1816,
+              "height": 3930,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "images/appstore/garage.png",
+                "mode": "fill"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "hgqI1",
+      "x": 6296,
+      "y": 5318,
+      "name": "AppStore iPad13 — Map",
+      "clip": true,
+      "width": 2064,
+      "height": 2752,
+      "fill": {
+        "type": "gradient",
+        "gradientType": "linear",
+        "enabled": true,
+        "rotation": 180,
+        "size": {
+          "height": 1
+        },
+        "colors": [
+          {
+            "color": "#2D2117",
+            "position": 0
+          },
+          {
+            "color": "#0D0D0F",
+            "position": 0.55
+          }
+        ]
+      },
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "HgnoS",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Text",
+          "width": 2064,
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            140,
+            120,
+            0,
+            120
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "k6Kih",
+              "name": "Label",
+              "fill": "$accent",
+              "content": "EN VIVO",
+              "fontFamily": "$font-primary",
+              "fontSize": 40,
+              "fontWeight": "700",
+              "letterSpacing": 4
+            },
+            {
+              "type": "text",
+              "id": "C3dv1o",
+              "name": "Headline",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Siga a su grupo en tiempo real",
+              "lineHeight": 1.08,
+              "fontFamily": "$font-primary",
+              "fontSize": 104,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "hbwFM",
+          "layoutPosition": "absolute",
+          "x": 124,
+          "y": 520,
+          "name": "Phone Mockup",
+          "clip": true,
+          "width": 1816,
+          "height": 3930,
+          "fill": "$bg-primary",
+          "cornerRadius": [
+            48,
+            48,
+            0,
+            0
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "qnI7j",
+              "layoutPosition": "absolute",
+              "x": 0,
+              "y": 0,
+              "name": "Screen Image",
+              "width": 1816,
+              "height": 3930,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "images/appstore/map.png",
+                "mode": "fill"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "G0Fwm",
+      "x": 8480,
+      "y": 5318,
+      "name": "AppStore iPad13 — SOAT",
+      "clip": true,
+      "width": 2064,
+      "height": 2752,
+      "fill": {
+        "type": "gradient",
+        "gradientType": "linear",
+        "enabled": true,
+        "rotation": 180,
+        "size": {
+          "height": 1
+        },
+        "colors": [
+          {
+            "color": "#2D2117",
+            "position": 0
+          },
+          {
+            "color": "#0D0D0F",
+            "position": 0.55
+          }
+        ]
+      },
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "eAMzI",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Text",
+          "width": 2064,
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            140,
+            120,
+            0,
+            120
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "M6jOZL",
+              "name": "Label",
+              "fill": "$accent",
+              "content": "DOCUMENTOS",
+              "fontFamily": "$font-primary",
+              "fontSize": 40,
+              "fontWeight": "700",
+              "letterSpacing": 4
+            },
+            {
+              "type": "text",
+              "id": "dfqbQ",
+              "name": "Headline",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Reciba recordatorios de su SOAT",
+              "lineHeight": 1.08,
+              "fontFamily": "$font-primary",
+              "fontSize": 104,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "AbxoD",
+          "layoutPosition": "absolute",
+          "x": 124,
+          "y": 520,
+          "name": "Phone Mockup",
+          "clip": true,
+          "width": 1816,
+          "height": 2878,
+          "fill": "$bg-primary",
+          "cornerRadius": [
+            48,
+            48,
+            0,
+            0
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "Xn705",
+              "layoutPosition": "absolute",
+              "x": 0,
+              "y": 0,
+              "name": "Screen Image",
+              "width": 1816,
+              "height": 2878,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "images/appstore/soat.png",
+                "mode": "fill"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "RJZMF",
+      "x": 10664,
+      "y": 5318,
+      "name": "AppStore iPad13 — Event Detail",
+      "clip": true,
+      "width": 2064,
+      "height": 2752,
+      "fill": "$bg-primary",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "uEDFZ",
+          "name": "Screen Image",
+          "width": 1272,
+          "height": 2752,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "images/appstore/event_detail.png",
+            "mode": "fill"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "k2XVc",
+      "x": 10664,
+      "y": 8190,
+      "name": "AppStore Android — Home",
+      "clip": true,
+      "width": 1080,
+      "height": 1920,
+      "fill": "$bg-primary",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "jRMlr",
+          "name": "Screen Image",
+          "width": 887,
+          "height": 1920,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "images/appstore/home.png",
+            "mode": "fill"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "K0UwPv",
+      "x": 10664,
+      "y": 10230,
+      "name": "AppStore Android — Event Detail",
+      "clip": true,
+      "width": 1080,
+      "height": 1920,
+      "fill": "$bg-primary",
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "PTDnQ",
+          "name": "Screen Image",
+          "width": 887,
+          "height": 1920,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "images/appstore/event_detail.png",
+            "mode": "fill"
+          }
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "kie7d",
+      "x": 10664,
+      "y": 12270,
+      "name": "AppStore Android — Events",
+      "clip": true,
+      "width": 1080,
+      "height": 1920,
+      "fill": {
+        "type": "gradient",
+        "gradientType": "linear",
+        "enabled": true,
+        "rotation": 180,
+        "size": {
+          "height": 1
+        },
+        "colors": [
+          {
+            "color": "#2D2117",
+            "position": 0
+          },
+          {
+            "color": "#0D0D0F",
+            "position": 0.55
+          }
+        ]
+      },
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "S3RrA",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Text",
+          "width": 1080,
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            72,
+            64,
+            0,
+            64
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "c5uGRV",
+              "name": "Label",
+              "fill": "$accent",
+              "content": "COMUNIDAD",
+              "fontFamily": "$font-primary",
+              "fontSize": 22,
+              "fontWeight": "700",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "DSim7",
+              "name": "Headline",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Descubra nuevas rodadas",
+              "lineHeight": 1.08,
+              "fontFamily": "$font-primary",
+              "fontSize": 54,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "O7aO2",
+          "layoutPosition": "absolute",
+          "x": 65,
+          "y": 272,
+          "name": "Phone Mockup",
+          "clip": true,
+          "width": 950,
+          "height": 2056,
+          "fill": "$bg-primary",
+          "cornerRadius": [
+            25,
+            25,
+            0,
+            0
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "X06fxM",
+              "layoutPosition": "absolute",
+              "x": 0,
+              "y": 0,
+              "name": "Screen Image",
+              "width": 950,
+              "height": 2056,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "images/appstore/events.png",
+                "mode": "fill"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "iGorv",
+      "x": 10664,
+      "y": 14310,
+      "name": "AppStore Android — Garage",
+      "clip": true,
+      "width": 1080,
+      "height": 1920,
+      "fill": {
+        "type": "gradient",
+        "gradientType": "linear",
+        "enabled": true,
+        "rotation": 180,
+        "size": {
+          "height": 1
+        },
+        "colors": [
+          {
+            "color": "#2D2117",
+            "position": 0
+          },
+          {
+            "color": "#0D0D0F",
+            "position": 0.55
+          }
+        ]
+      },
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "F1ngsN",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Text",
+          "width": 1080,
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            72,
+            64,
+            0,
+            64
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "cR0YU",
+              "name": "Label",
+              "fill": "$accent",
+              "content": "SU MOTO",
+              "fontFamily": "$font-primary",
+              "fontSize": 22,
+              "fontWeight": "700",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "b5eHS",
+              "name": "Headline",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Administre su garaje",
+              "lineHeight": 1.08,
+              "fontFamily": "$font-primary",
+              "fontSize": 54,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Kq8Gb",
+          "layoutPosition": "absolute",
+          "x": 65,
+          "y": 272,
+          "name": "Phone Mockup",
+          "clip": true,
+          "width": 950,
+          "height": 2056,
+          "fill": "$bg-primary",
+          "cornerRadius": [
+            25,
+            25,
+            0,
+            0
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "lzyBb",
+              "layoutPosition": "absolute",
+              "x": 0,
+              "y": 0,
+              "name": "Screen Image",
+              "width": 950,
+              "height": 2056,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "images/appstore/garage.png",
+                "mode": "fill"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "X12uf",
+      "x": 10664,
+      "y": 16350,
+      "name": "AppStore Android — Map",
+      "clip": true,
+      "width": 1080,
+      "height": 1920,
+      "fill": {
+        "type": "gradient",
+        "gradientType": "linear",
+        "enabled": true,
+        "rotation": 180,
+        "size": {
+          "height": 1
+        },
+        "colors": [
+          {
+            "color": "#2D2117",
+            "position": 0
+          },
+          {
+            "color": "#0D0D0F",
+            "position": 0.55
+          }
+        ]
+      },
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "opBcm",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Text",
+          "width": 1080,
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            72,
+            64,
+            0,
+            64
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "c1BOHW",
+              "name": "Label",
+              "fill": "$accent",
+              "content": "EN VIVO",
+              "fontFamily": "$font-primary",
+              "fontSize": 22,
+              "fontWeight": "700",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "uHTOB",
+              "name": "Headline",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Siga a su grupo en tiempo real",
+              "lineHeight": 1.08,
+              "fontFamily": "$font-primary",
+              "fontSize": 54,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Diwdz",
+          "layoutPosition": "absolute",
+          "x": 65,
+          "y": 272,
+          "name": "Phone Mockup",
+          "clip": true,
+          "width": 950,
+          "height": 2056,
+          "fill": "$bg-primary",
+          "cornerRadius": [
+            25,
+            25,
+            0,
+            0
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "RjTNY",
+              "layoutPosition": "absolute",
+              "x": 0,
+              "y": 0,
+              "name": "Screen Image",
+              "width": 950,
+              "height": 2056,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "images/appstore/map.png",
+                "mode": "fill"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ZPMXm",
+      "x": 10664,
+      "y": 18390,
+      "name": "AppStore Android — SOAT",
+      "clip": true,
+      "width": 1080,
+      "height": 1920,
+      "fill": {
+        "type": "gradient",
+        "gradientType": "linear",
+        "enabled": true,
+        "rotation": 180,
+        "size": {
+          "height": 1
+        },
+        "colors": [
+          {
+            "color": "#2D2117",
+            "position": 0
+          },
+          {
+            "color": "#0D0D0F",
+            "position": 0.55
+          }
+        ]
+      },
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "gkbaG",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Text",
+          "width": 1080,
+          "layout": "vertical",
+          "gap": 8,
+          "padding": [
+            72,
+            64,
+            0,
+            64
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "zpm2Y",
+              "name": "Label",
+              "fill": "$accent",
+              "content": "DOCUMENTOS",
+              "fontFamily": "$font-primary",
+              "fontSize": 22,
+              "fontWeight": "700",
+              "letterSpacing": 2
+            },
+            {
+              "type": "text",
+              "id": "uG7lF",
+              "name": "Headline",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Reciba recordatorios de su SOAT",
+              "lineHeight": 1.08,
+              "fontFamily": "$font-primary",
+              "fontSize": 54,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "mbTKO",
+          "layoutPosition": "absolute",
+          "x": 65,
+          "y": 272,
+          "name": "Phone Mockup",
+          "clip": true,
+          "width": 950,
+          "height": 1505,
+          "fill": "$bg-primary",
+          "cornerRadius": [
+            25,
+            25,
+            0,
+            0
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "ka5wi",
+              "layoutPosition": "absolute",
+              "x": 0,
+              "y": 0,
+              "name": "Screen Image",
+              "width": 950,
+              "height": 1505,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "images/appstore/soat.png",
+                "mode": "fill"
+              }
             }
           ]
         }
