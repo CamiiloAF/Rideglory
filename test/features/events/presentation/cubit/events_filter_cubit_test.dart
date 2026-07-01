@@ -55,7 +55,7 @@ void main() {
       setUp: () {
         when(() => mockGetEventsUseCase(
               type: null,
-              dateFrom: null,
+              dateFrom: any(named: 'dateFrom'),
               dateTo: null,
             )).thenAnswer((_) async => Right([mockEvent]));
       },
@@ -74,7 +74,7 @@ void main() {
       verify: (cubit) {
         verify(() => mockGetEventsUseCase(
               type: null,
-              dateFrom: null,
+              dateFrom: any(named: 'dateFrom'),
               dateTo: null,
             )).called(1);
       },
@@ -86,7 +86,7 @@ void main() {
       setUp: () {
         when(() => mockGetEventsUseCase(
               type: any(named: 'type'),
-              dateFrom: null,
+              dateFrom: any(named: 'dateFrom'),
               dateTo: null,
             )).thenAnswer((_) async => Right([mockEvent]));
       },
@@ -187,7 +187,7 @@ void main() {
       setUp: () {
         when(() => mockGetEventsUseCase(
               type: null,
-              dateFrom: null,
+              dateFrom: any(named: 'dateFrom'),
               dateTo: null,
             )).thenAnswer((_) async => const Left(
               DomainException(message: 'Network error'),

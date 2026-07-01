@@ -55,7 +55,7 @@ void main() {
         when(
           () => mockGetEventsUseCase(
             type: null,
-            dateFrom: null,
+            dateFrom: any(named: 'dateFrom'),
             dateTo: null,
           ),
         ).thenAnswer((_) async => Right([mockEvent, mockEvent]));
@@ -132,7 +132,7 @@ void main() {
         when(
           () => mockGetEventsUseCase(
             type: EventType.onRoad.apiValue,
-            dateFrom: null,
+            dateFrom: any(named: 'dateFrom'),
             dateTo: null,
           ),
         ).thenAnswer((_) async => Right([mockEvent, otherEvent]));
@@ -170,7 +170,7 @@ void main() {
         when(
           () => mockGetEventsUseCase(
             type: null,
-            dateFrom: null,
+            dateFrom: any(named: 'dateFrom'),
             dateTo: null,
           ),
         ).thenAnswer(
@@ -203,7 +203,7 @@ void main() {
         when(
           () => mockGetEventsUseCase(
             type: null,
-            dateFrom: null,
+            dateFrom: any(named: 'dateFrom'),
             dateTo: null,
           ),
         ).thenAnswer((_) async => Right([mockEvent]));
@@ -239,7 +239,7 @@ void main() {
         when(
           () => mockGetEventsUseCase(
             type: null,
-            dateFrom: null,
+            dateFrom: any(named: 'dateFrom'),
             dateTo: null,
           ),
         ).thenAnswer((_) async => Right([mockEvent]));

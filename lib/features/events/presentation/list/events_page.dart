@@ -7,6 +7,7 @@ import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_events_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_my_events_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
+import 'package:rideglory/features/events/presentation/tracking/live_tracking_session_holder.dart';
 import 'package:rideglory/features/events/presentation/delete/cubit/event_delete_cubit.dart';
 import 'package:rideglory/features/events/presentation/list/events_cubit.dart';
 import 'package:rideglory/features/events/presentation/list/widgets/events_page_view.dart';
@@ -25,19 +26,25 @@ class EventsPage extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (_) =>
+            create: (_) {
+              final finishedStream =
+                  getIt<LiveTrackingSessionHolder>().onEventFinished;
+              return (
                 showMyEvents
                     ? EventsCubit.myEvents(
                         getIt<GetMyEventsUseCase>(),
                         getIt<UpdateEventUseCase>(),
                         getIt<AnalyticsService>(),
+                        eventFinishedStream: finishedStream,
                       )
                     : EventsCubit(
                         getIt<GetEventsUseCase>(),
                         getIt<UpdateEventUseCase>(),
                         getIt<AnalyticsService>(),
+                        eventFinishedStream: finishedStream,
                       )
-                  ..fetchEvents(),
+              )..fetchEvents();
+            },
           ),
           BlocProvider(create: (_) => getIt<EventDeleteCubit>()),
         ],
