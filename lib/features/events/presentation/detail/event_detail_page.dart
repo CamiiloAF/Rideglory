@@ -13,6 +13,7 @@ import 'package:rideglory/features/event_registration/domain/use_cases/get_my_re
 import 'package:rideglory/features/event_registration/domain/use_cases/reject_registration_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/set_registration_ready_for_edit_use_case.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
+import 'package:rideglory/features/events/domain/repository/tracking_repository.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_event_by_id_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/publish_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
@@ -69,6 +70,7 @@ class EventDetailPage extends StatelessWidget {
                 getIt<RejectRegistrationUseCase>(),
                 getIt<SetRegistrationReadyForEditUseCase>(),
                 getIt<AnalyticsService>(),
+                getIt<TrackingRepository>(),
               )
                 ..loadMyRegistration(params.event.id!)
                 ..loadAttendees(params.event.id!);

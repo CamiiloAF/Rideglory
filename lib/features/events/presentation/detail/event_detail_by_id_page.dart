@@ -12,6 +12,7 @@ import 'package:rideglory/features/event_registration/domain/use_cases/get_event
 import 'package:rideglory/features/event_registration/domain/use_cases/get_my_registration_for_event_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/reject_registration_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/set_registration_ready_for_edit_use_case.dart';
+import 'package:rideglory/features/events/domain/repository/tracking_repository.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_event_by_id_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/publish_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
@@ -55,6 +56,7 @@ class _EventDetailByIdPageState extends State<EventDetailByIdPage> {
           getIt<RejectRegistrationUseCase>(),
           getIt<SetRegistrationReadyForEditUseCase>(),
           getIt<AnalyticsService>(),
+          getIt<TrackingRepository>(),
         )..loadEvent(widget.eventId),
         child: BlocConsumer<EventDetailCubit, EventDetailState>(
           listener: _listener,

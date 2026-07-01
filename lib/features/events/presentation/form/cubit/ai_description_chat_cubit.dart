@@ -39,6 +39,7 @@ class AiDescriptionChatCubit extends Cubit<AiDescriptionChatState> {
 
   Future<void> initQuota() async {
     final result = await _getDescriptionQuotaUseCase();
+    if (isClosed) return;
     result.fold(
       (_) => emit(state.copyWith(isQuotaInitialized: true)),
       (remaining) => emit(
@@ -79,6 +80,7 @@ class AiDescriptionChatCubit extends Cubit<AiDescriptionChatState> {
     );
 
     final result = await _generateDescriptionUseCase(request);
+    if (isClosed) return;
 
     result.fold(
       (exception) {
@@ -149,6 +151,7 @@ class AiDescriptionChatCubit extends Cubit<AiDescriptionChatState> {
     );
 
     final result = await _generateDescriptionUseCase(request);
+    if (isClosed) return;
 
     result.fold(
       (exception) {

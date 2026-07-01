@@ -72,7 +72,7 @@ Widget _wrap({
     routes: [
       GoRoute(
         path: '/',
-        builder: (_, __) => Scaffold(
+        builder: (_, _) => Scaffold(
           body: MultiBlocProvider(
             providers: [
               BlocProvider<VehicleCubit>.value(value: vehicleCubit),
@@ -85,7 +85,7 @@ Widget _wrap({
       GoRoute(
         name: AppRoutes.vehicleDetail,
         path: AppRoutes.vehicleDetail,
-        builder: (_, __) => const Scaffold(body: SizedBox()),
+        builder: (_, _) => const Scaffold(body: SizedBox()),
       ),
     ],
   );

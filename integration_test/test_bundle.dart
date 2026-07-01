@@ -9,7 +9,7 @@ import 'package:patrol/src/platform/contracts/contracts.dart';
 import 'package:test_api/src/backend/invoker.dart';
 
 // START: GENERATED TEST IMPORTS
-import 'vehicles_patrol_test.dart' as vehicles_patrol_test;
+import 'appstore_screenshots_test.dart' as appstore_screenshots_test;
 // END: GENERATED TEST IMPORTS
 
 Future<void> main() async {
@@ -72,7 +72,7 @@ Future<void> main() async {
   });
 
 // START: GENERATED TEST GROUPS
-  group('vehicles_patrol_test', vehicles_patrol_test.main);
+  group('appstore_screenshots_test', appstore_screenshots_test.main);
 // END: GENERATED TEST GROUPS
 
   final dartTestGroup = await testExplorationCompleter.future;

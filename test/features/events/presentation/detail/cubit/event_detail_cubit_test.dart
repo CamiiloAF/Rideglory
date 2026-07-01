@@ -15,6 +15,7 @@ import 'package:rideglory/features/event_registration/domain/use_cases/reject_re
 import 'package:rideglory/features/event_registration/domain/use_cases/set_registration_ready_for_edit_use_case.dart';
 import 'package:rideglory/features/events/data/cache/attendees_cache.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
+import 'package:rideglory/features/events/domain/repository/tracking_repository.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_event_by_id_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/publish_event_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/update_event_use_case.dart';
@@ -46,6 +47,8 @@ class MockSetRegistrationReadyForEditUseCase extends Mock
 
 class MockAnalyticsService extends Mock implements AnalyticsService {}
 
+class MockTrackingRepository extends Mock implements TrackingRepository {}
+
 void main() {
   late MockGetEventByIdUseCase mockGetEventByIdUseCase;
   late MockGetMyRegistrationForEventUseCase mockGetMyRegistrationUseCase;
@@ -57,6 +60,7 @@ void main() {
   late MockRejectRegistrationUseCase mockRejectRegistrationUseCase;
   late MockSetRegistrationReadyForEditUseCase mockSetReadyForEditUseCase;
   late MockAnalyticsService mockAnalytics;
+  late MockTrackingRepository mockTrackingRepository;
   late EventDetailCubit cubit;
 
   final mockEvent = EventModel(
@@ -83,6 +87,7 @@ void main() {
       mockRejectRegistrationUseCase,
       mockSetReadyForEditUseCase,
       mockAnalytics,
+      mockTrackingRepository,
     );
   }
 
@@ -107,6 +112,7 @@ void main() {
     mockRejectRegistrationUseCase = MockRejectRegistrationUseCase();
     mockSetReadyForEditUseCase = MockSetRegistrationReadyForEditUseCase();
     mockAnalytics = MockAnalyticsService();
+    mockTrackingRepository = MockTrackingRepository();
     when(() => mockAnalytics.logEvent(any(), any())).thenAnswer((_) async {});
     when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
     cubit = buildCubit();

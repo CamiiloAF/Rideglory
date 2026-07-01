@@ -15,6 +15,7 @@ import 'package:rideglory/features/event_registration/domain/use_cases/get_event
 import 'package:rideglory/features/event_registration/domain/use_cases/get_my_registration_for_event_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/reject_registration_use_case.dart';
 import 'package:rideglory/features/event_registration/domain/use_cases/set_registration_ready_for_edit_use_case.dart';
+import 'package:rideglory/features/events/domain/repository/tracking_repository.dart';
 import 'package:rideglory/features/events/domain/use_cases/get_event_by_id_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/publish_event_use_case.dart';
 import 'package:rideglory/features/events/data/cache/attendees_cache.dart';
@@ -36,6 +37,7 @@ class EventDetailCubit extends Cubit<EventDetailState> {
     this._rejectRegistrationUseCase,
     this._setReadyForEditUseCase,
     this._analytics,
+    this._trackingRepository,
   ) : super(
         const EventDetailState(
           registrationResult: ResultState.initial(),
@@ -54,6 +56,7 @@ class EventDetailCubit extends Cubit<EventDetailState> {
   final RejectRegistrationUseCase _rejectRegistrationUseCase;
   final SetRegistrationReadyForEditUseCase _setReadyForEditUseCase;
   final AnalyticsService _analytics;
+  final TrackingRepository _trackingRepository;
 
   EventRegistrationModel? _registration;
   String? _attendeesEventId;
@@ -274,8 +277,9 @@ class EventDetailCubit extends Cubit<EventDetailState> {
 
     emit(state.copyWith(lastUpdatedEventResult: const ResultState.loading()));
 
-    final updated = event.copyWith(state: EventState.finished);
-    final result = await _updateEventUseCase(updated);
+    // endRide: actualiza estado en backend a FINISHED y emite WS tracking.event.ended
+    // a todos los riders conectados, en una sola llamada.
+    final result = await _trackingRepository.endRide(id);
     await result.fold<Future<void>>(
       (error) async {
         emit(
@@ -284,15 +288,16 @@ class EventDetailCubit extends Cubit<EventDetailState> {
           ),
         );
       },
-      (saved) async {
+      (_) async {
+        final finished = event.copyWith(state: EventState.finished);
         await getIt<LiveTrackingSessionHolder>().stopSessionForEvent(id);
         if (isClosed) {
           return;
         }
         emit(
           state.copyWith(
-            lastUpdatedEventResult: ResultState.data(data: saved),
-            eventResult: ResultState.data(data: saved),
+            lastUpdatedEventResult: ResultState.data(data: finished),
+            eventResult: ResultState.data(data: finished),
           ),
         );
       },

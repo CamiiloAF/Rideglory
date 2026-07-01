@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:rideglory/core/di/injection.dart';
+import 'package:rideglory/features/events/presentation/tracking/live_tracking_session_holder.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/domain/result_state.dart';
@@ -53,10 +55,31 @@ class EventDetailViewState extends State<EventDetailView> {
   // Evita dos instancias Mapbox/Metal simultáneas que provocan redraw.
   bool _mapSuppressed = false;
 
+  StreamSubscription<String>? _eventFinishedSub;
+
   @override
   void initState() {
     super.initState();
     currentEvent = widget.event;
+    final eventId = currentEvent.id;
+    if (eventId != null) {
+      _eventFinishedSub = getIt<LiveTrackingSessionHolder>()
+          .onEventFinished
+          .where((id) => id == eventId)
+          .listen((_) {
+        if (mounted) {
+          setState(() {
+            currentEvent = currentEvent.copyWith(state: EventState.finished);
+          });
+        }
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _eventFinishedSub?.cancel();
+    super.dispose();
   }
 
   Future<void> _openFullscreenMap() async {
