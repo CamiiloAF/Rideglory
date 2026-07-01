@@ -13,5 +13,5 @@ abstract class HomeService {
   factory HomeService(Dio dio) = _HomeService;
 
   @GET(ApiRoutes.home)
-  Future<HomeDto> getHome();
+  Future<HomeDto> getHome({@Query('dateFrom') String? dateFrom});
 }

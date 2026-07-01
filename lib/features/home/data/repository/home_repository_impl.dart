@@ -15,9 +15,10 @@ class HomeRepositoryImpl implements HomeRepository {
 
   @override
   Future<Either<DomainException, HomeData>> getHomeData() {
+    final today = DateTime.now().toIso8601String().substring(0, 10);
     return executeService(
       function: () async {
-        final HomeDto dto = await _homeService.getHome();
+        final HomeDto dto = await _homeService.getHome(dateFrom: today);
         return dto.toHomeData();
       },
     );

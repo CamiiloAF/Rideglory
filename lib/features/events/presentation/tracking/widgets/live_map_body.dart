@@ -55,6 +55,7 @@ class LiveMapBody extends StatelessWidget {
           child: initialCamera != null
               ? BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
                   buildWhen: (prev, next) =>
+                      prev.isFinished != next.isFinished ||
                       prev.ridersResult != next.ridersResult ||
                       prev.currentUserLatitude != next.currentUserLatitude ||
                       prev.currentUserLongitude != next.currentUserLongitude ||
@@ -170,21 +171,27 @@ class LiveMapBody extends StatelessWidget {
         Positioned(
           right: 12,
           top: kToolbarHeight + MediaQuery.of(context).padding.top + 76,
-          child: ValueListenableBuilder<LiveMapController?>(
-            valueListenable: mapController,
-            builder: (context, controller, _) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  MapZoomControls(controller: controller),
-                  AppSpacing.gapMd,
-                  MyLocationButton(
-                    isEnabled: controller != null,
-                    onTap: controller == null
-                        ? null
-                        : () => controller.centerOnMyLocation(),
-                  ),
-                ],
+          child: BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
+            buildWhen: (prev, next) => prev.isFinished != next.isFinished,
+            builder: (context, state) {
+              if (state.isFinished) return const SizedBox.shrink();
+              return ValueListenableBuilder<LiveMapController?>(
+                valueListenable: mapController,
+                builder: (context, controller, _) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      MapZoomControls(controller: controller),
+                      AppSpacing.gapMd,
+                      MyLocationButton(
+                        isEnabled: controller != null,
+                        onTap: controller == null
+                            ? null
+                            : () => controller.centerOnMyLocation(),
+                      ),
+                    ],
+                  );
+                },
               );
             },
           ),
@@ -200,11 +207,13 @@ class LiveMapBody extends StatelessWidget {
                   RiderTelemetryPanel.expandedBaseHeight +
                   MediaQuery.of(context).padding.bottom +
                   12,
-              child: SosButton(
-                label: context.l10n.map_sos,
-                isActive: state.hasSentSos,
-                onPressed: onSosPressed,
-              ),
+              child: !state.isFinished
+                  ? SosButton(
+                      label: context.l10n.map_sos,
+                      isActive: state.hasSentSos,
+                      onPressed: onSosPressed,
+                    )
+                  : const Offstage(),
             );
           },
         ),
@@ -214,9 +223,15 @@ class LiveMapBody extends StatelessWidget {
           left: 0,
           right: 0,
           bottom: 0,
-          child: RiderTelemetryPanel(
-            selectedRiderId: selectedRiderId,
-            onRiderTap: _selectRider,
+          child: BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
+            buildWhen: (prev, next) => prev.isFinished != next.isFinished,
+            builder: (context, state) {
+              if (state.isFinished) return const SizedBox.shrink();
+              return RiderTelemetryPanel(
+                selectedRiderId: selectedRiderId,
+                onRiderTap: _selectRider,
+              );
+            },
           ),
         ),
       ],

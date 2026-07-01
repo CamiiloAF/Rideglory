@@ -247,11 +247,15 @@ class _LiveMapWidgetState extends State<LiveMapWidget> {
       return r.role.name;
     }
 
-    return riders.map((r) => '${r.userId}:${r.fullName}:${variant(r)}').join('|');
+    return riders
+        .map((r) => '${r.userId}:${r.fullName}:${variant(r)}')
+        .join('|');
   }
 
   String _riderPositionSignature(List<RiderTrackingModel> riders) {
-    return riders.map((r) => '${r.userId}:${r.latitude}:${r.longitude}').join('|');
+    return riders
+        .map((r) => '${r.userId}:${r.latitude}:${r.longitude}')
+        .join('|');
   }
 
   Future<void> _loadMarkerIcons() async {

@@ -545,14 +545,41 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
 
   void _subscribeToEventEnded() {
     _eventEndedSubscription?.cancel();
-    _eventEndedSubscription = _trackingRepository.eventEnded.listen((_) {
+    _eventEndedSubscription = _trackingRepository.eventEnded.listen((_) async {
       if (isClosed) return;
-      // Hito: fin de sesión por el organizador (una vez por sesión).
       if (state.isTracking) {
         _logSessionEnded(AnalyticsParams.trackingEndReasonEventEnded);
       }
-      emit(state.copyWith(isFinished: true));
+      // Capturar antes de que el emit cambie el estado.
+      final wasTracking = state.isTracking;
+      final uid = _userId;
+      // Emitir de inmediato para que el overlay aparezca sin esperar cleanup.
+      if (!isClosed) {
+        emit(state.copyWith(isTracking: false, isFinished: true));
+      }
+      // Cleanup GPS y WS en background.
+      await _positionSubscription?.cancel();
+      _positionSubscription = null;
+      if (wasTracking && uid != null) {
+        await _stopTrackingUseCase(eventId: _eventId, userId: uid);
+      }
     });
+  }
+
+  /// Deja el cubit con sesión de rider activa para tests de eventEnded.
+  /// Fija [userId] como rider activo, emite isTracking=true, y activa el listener.
+  @visibleForTesting
+  void debugPrimeForEventEndedTest(String userId) {
+    _userId = userId;
+    emit(state.copyWith(isTracking: true));
+    _subscribeToEventEnded();
+  }
+
+  /// Activa solo el listener de eventEnded sin sesión activa (estado inicial).
+  /// Usado para Caso C: rider que recibe el broadcast sin estar en tracking.
+  @visibleForTesting
+  void debugSubscribeEventEndedForTest() {
+    _subscribeToEventEnded();
   }
 
   void _scheduleRidersResubscribe() {

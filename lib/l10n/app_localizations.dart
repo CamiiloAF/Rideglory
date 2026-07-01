@@ -4195,7 +4195,7 @@ abstract class AppLocalizations {
   /// No description provided for @tracking_back_to_home.
   ///
   /// In es, this message translates to:
-  /// **'Volver al inicio'**
+  /// **'Salir'**
   String get tracking_back_to_home;
 
   /// No description provided for @tracking_organizer_badge.

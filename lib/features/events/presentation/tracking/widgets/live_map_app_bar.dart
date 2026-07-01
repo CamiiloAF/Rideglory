@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/events/domain/model/event_model.dart';
+import 'package:rideglory/features/events/presentation/tracking/cubit/live_tracking_cubit.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/live_badge_title.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/map_overlay_button.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
@@ -32,13 +34,20 @@ class LiveMapOverlayAppBar extends StatelessWidget
       centerTitle: true,
       title: LiveBadgeTitle(eventName: event.name),
       actions: [
-        MapOverlayButton(
-          onTap: () => context.pushNamed(AppRoutes.participants, extra: event),
-          child: const Icon(
-            Icons.group_rounded,
-            color: AppColors.textOnDarkPrimary,
-            size: 22,
-          ),
+        BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
+          buildWhen: (prev, next) => prev.isFinished != next.isFinished,
+          builder: (context, state) {
+            if (state.isFinished) return const SizedBox.shrink();
+            return MapOverlayButton(
+              onTap: () =>
+                  context.pushNamed(AppRoutes.participants, extra: event),
+              child: const Icon(
+                Icons.group_rounded,
+                color: AppColors.textOnDarkPrimary,
+                size: 22,
+              ),
+            );
+          },
         ),
         const SizedBox(width: 8),
       ],

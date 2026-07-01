@@ -70,11 +70,11 @@ class _LiveMapPageState extends State<LiveMapPage> {
 
   Future<void> _loadInitialCamera() async {
     // Show the map immediately with the fallback so it never blocks on GPS.
-    // Armenia, Colombia (lng-first for Mapbox).
+    // Center of Colombia (lng-first for Mapbox), zoom out to show the country.
     setState(() {
       _initialCameraOptions = CameraOptions(
-        center: Point(coordinates: Position(-75.6961, 4.8133)),
-        zoom: 12.0,
+        center: Point(coordinates: Position(-74.2973, 4.5709)),
+        zoom: 5.0,
       );
     });
 

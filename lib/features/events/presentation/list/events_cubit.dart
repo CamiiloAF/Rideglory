@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/services/analytics/analytics_events.dart';
@@ -56,24 +58,30 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
   EventsCubit(
     GetEventsUseCase getEventsUseCase,
     this._updateEventUseCase,
-    this._analytics,
-  ) : _fetchFn = (({String? type, String? dateFrom, String? dateTo}) =>
+    this._analytics, {
+    Stream<String>? eventFinishedStream,
+  }) : _fetchFn = (({String? type, String? dateFrom, String? dateTo}) =>
             getEventsUseCase(
               type: type,
               dateFrom: dateFrom,
               dateTo: dateTo,
             )),
-      _isMyEvents = false,
-      super(const ResultState.initial());
+       _isMyEvents = false,
+       super(const ResultState.initial()) {
+    _subscribeToEventFinished(eventFinishedStream);
+  }
 
   EventsCubit.myEvents(
     GetMyEventsUseCase getMyEventsUseCase,
     this._updateEventUseCase,
-    this._analytics,
-  ) : _fetchFn = (({String? type, String? dateFrom, String? dateTo}) =>
+    this._analytics, {
+    Stream<String>? eventFinishedStream,
+  }) : _fetchFn = (({String? type, String? dateFrom, String? dateTo}) =>
             getMyEventsUseCase()),
-      _isMyEvents = true,
-      super(const ResultState.initial());
+       _isMyEvents = true,
+       super(const ResultState.initial()) {
+    _subscribeToEventFinished(eventFinishedStream);
+  }
 
   final Future<dynamic> Function({
     String? type,
@@ -87,9 +95,33 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
   /// Alimenta el param `list_scope` del evento de analytics sin acoplarse al use case.
   final bool _isMyEvents;
 
+  StreamSubscription<String>? _eventFinishedSub;
+
   List<EventModel> _allEvents = [];
   EventFilters _filters = const EventFilters();
   String _searchQuery = '';
+
+  void _subscribeToEventFinished(Stream<String>? stream) {
+    if (stream == null) return;
+    _eventFinishedSub = stream.listen(_onEventFinished);
+  }
+
+  void _onEventFinished(String eventId) {
+    final index = _allEvents.indexWhere((e) => e.id == eventId);
+    if (index == -1) return;
+    final updated = _allEvents[index].copyWith(state: EventState.finished);
+    _allEvents = [
+      for (var i = 0; i < _allEvents.length; i++)
+        if (i == index) updated else _allEvents[i],
+    ];
+    _applyFiltersAndEmit();
+  }
+
+  @override
+  Future<void> close() {
+    _eventFinishedSub?.cancel();
+    return super.close();
+  }
 
   EventFilters get filters => _filters;
   String get searchQuery => _searchQuery;
@@ -99,7 +131,9 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
     final filters = _filters;
     final result = await _fetchFn(
       type: filters.types.isNotEmpty ? filters.types.first.apiValue : null,
-      dateFrom: filters.startDate?.toIso8601String().substring(0, 10),
+      dateFrom: _isMyEvents
+          ? filters.startDate?.toIso8601String().substring(0, 10)
+          : (filters.startDate ?? DateTime.now()).toIso8601String().substring(0, 10),
       dateTo: filters.endDate?.toIso8601String().substring(0, 10),
     );
 
@@ -151,6 +185,13 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
   void updateEvent(EventModel event) {
     final index = _allEvents.indexWhere((e) => e.id == event.id);
     if (index == -1) return;
+    // Never downgrade from a terminal state: the stream-based update from
+    // LiveTrackingSessionHolder may have already set the event to finished,
+    // and EventDetailPage returns the stale inProgress model on pop.
+    if (_allEvents[index].state == EventState.finished &&
+        event.state != EventState.finished) {
+      return;
+    }
     _allEvents[index] = event;
 
     _applyFiltersAndEmit();

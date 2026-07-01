@@ -22,6 +22,13 @@ class LiveTrackingSessionHolder {
 
   LiveTrackingCubit? _cubit;
   String? _eventId;
+  StreamSubscription<LiveTrackingState>? _isFinishedSub;
+
+  final _eventFinishedController = StreamController<String>.broadcast();
+
+  /// Emite el [eventId] cuando el evento finaliza, ya sea porque el organizador
+  /// lo detuvo o porque el rider recibió el broadcast WS [tracking.event.ended].
+  Stream<String> get onEventFinished => _eventFinishedController.stream;
 
   /// Returns the active cubit for [eventId], creating and starting it if needed.
   LiveTrackingCubit obtainForEvent({
@@ -37,6 +44,16 @@ class LiveTrackingSessionHolder {
     _cubit = cubit;
     _eventId = eventId;
 
+    // Observar isFinished para notificar a EventsCubit (rider path).
+    _isFinishedSub?.cancel();
+    _isFinishedSub = cubit.stream
+        .where((s) => s.isFinished)
+        .listen((_) {
+          if (!_eventFinishedController.isClosed) {
+            _eventFinishedController.add(eventId);
+          }
+        });
+
     unawaited(() async {
       await previous?.close();
       if (identical(_cubit, cubit)) {
@@ -50,6 +67,10 @@ class LiveTrackingSessionHolder {
   /// Ends tracking for this event (e.g. organizer stopped the ride).
   Future<void> stopSessionForEvent(String eventId) async {
     if (_eventId == eventId) {
+      // Notificar antes de limpiar (organizer path).
+      if (!_eventFinishedController.isClosed) {
+        _eventFinishedController.add(eventId);
+      }
       await _clearSession();
     }
   }
@@ -58,6 +79,8 @@ class LiveTrackingSessionHolder {
     final cubit = _cubit;
     _cubit = null;
     _eventId = null;
+    await _isFinishedSub?.cancel();
+    _isFinishedSub = null;
     await cubit?.close();
   }
 }

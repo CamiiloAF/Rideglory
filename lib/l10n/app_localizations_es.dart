@@ -2190,7 +2190,7 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get tracking_back_to_home => 'Volver al inicio';
+  String get tracking_back_to_home => 'Salir';
 
   @override
   String get tracking_organizer_badge => 'Organizador';
