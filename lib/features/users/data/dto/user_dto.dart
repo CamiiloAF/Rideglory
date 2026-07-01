@@ -23,6 +23,7 @@ class UserDto extends UserModel {
     super.isDeleted,
     super.createdAt,
     super.updatedAt,
+    super.medicalConsentAcceptedAt,
   });
 
   factory UserDto.fromJson(Map<String, dynamic> json) =>
@@ -48,5 +49,6 @@ extension UserModelExtension on UserModel {
     isDeleted: isDeleted,
     createdAt: createdAt,
     updatedAt: updatedAt,
+    medicalConsentAcceptedAt: medicalConsentAcceptedAt,
   ).toJson();
 }

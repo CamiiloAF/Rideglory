@@ -18,8 +18,37 @@ class _VehicleSummaryConverter
   Map<String, dynamic>? toJson(VehicleSummaryModel? model) => model?.toJson();
 }
 
+class _BloodTypeConverter implements JsonConverter<BloodType?, String?> {
+  const _BloodTypeConverter();
+
+  @override
+  BloodType? fromJson(String? json) {
+    if (json == null) return null;
+    for (final value in BloodType.values) {
+      // Match the exact @JsonValue string, never a derived/uppercased name.
+      if (_jsonValueOf(value) == json) return value;
+    }
+    return null;
+  }
+
+  @override
+  String? toJson(BloodType? value) => value == null ? null : _jsonValueOf(value);
+
+  static String _jsonValueOf(BloodType value) => switch (value) {
+    BloodType.aPositive => 'A_POSITIVE',
+    BloodType.aNegative => 'A_NEGATIVE',
+    BloodType.bPositive => 'B_POSITIVE',
+    BloodType.bNegative => 'B_NEGATIVE',
+    BloodType.abPositive => 'AB_POSITIVE',
+    BloodType.abNegative => 'AB_NEGATIVE',
+    BloodType.oPositive => 'O_POSITIVE',
+    BloodType.oNegative => 'O_NEGATIVE',
+  };
+}
+
 @JsonSerializable(converters: apiJsonDateTimeConverters)
 @_VehicleSummaryConverter()
+@_BloodTypeConverter()
 class EventRegistrationDto extends EventRegistrationModel {
   const EventRegistrationDto({
     super.id,
@@ -42,6 +71,10 @@ class EventRegistrationDto extends EventRegistrationModel {
     super.vehicleSummary,
     super.createdAt,
     super.updatedAt,
+    super.shareMedicalInfo,
+    super.allowOrganizerContact,
+    super.riskAcceptedAt,
+    super.riskAcceptanceVersion,
   });
 
   factory EventRegistrationDto.fromJson(Map<String, dynamic> json) =>
@@ -84,5 +117,9 @@ extension EventRegistrationModelExtension on EventRegistrationModel {
           ),
     createdAt: createdAt,
     updatedAt: updatedAt,
+    shareMedicalInfo: shareMedicalInfo,
+    allowOrganizerContact: allowOrganizerContact,
+    riskAcceptedAt: riskAcceptedAt,
+    riskAcceptanceVersion: riskAcceptanceVersion,
   ).toJson();
 }

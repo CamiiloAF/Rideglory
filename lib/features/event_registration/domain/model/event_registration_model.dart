@@ -57,7 +57,7 @@ class EventRegistrationModel {
   // Medical info
   final String eps;
   final String? medicalInsurance;
-  final BloodType bloodType;
+  final BloodType? bloodType;
 
   // Emergency contact
   final String emergencyContactName;
@@ -69,6 +69,12 @@ class EventRegistrationModel {
 
   final DateTime? createdAt;
   final DateTime? updatedAt;
+
+  // Legal / privacy
+  final bool shareMedicalInfo;
+  final bool allowOrganizerContact;
+  final DateTime? riskAcceptedAt;
+  final String? riskAcceptanceVersion;
 
   const EventRegistrationModel({
     this.id,
@@ -91,6 +97,10 @@ class EventRegistrationModel {
     this.vehicleSummary,
     this.createdAt,
     this.updatedAt,
+    this.shareMedicalInfo = false,
+    this.allowOrganizerContact = false,
+    this.riskAcceptedAt,
+    this.riskAcceptanceVersion,
   });
 
   String get registrationTitle => 'Inscripción al evento $eventName';
@@ -116,6 +126,10 @@ class EventRegistrationModel {
     VehicleSummaryModel? vehicleSummary,
     DateTime? createdAt,
     DateTime? updatedAt,
+    bool? shareMedicalInfo,
+    bool? allowOrganizerContact,
+    DateTime? riskAcceptedAt,
+    String? riskAcceptanceVersion,
   }) {
     return EventRegistrationModel(
       id: id ?? this.id,
@@ -139,6 +153,12 @@ class EventRegistrationModel {
       vehicleSummary: vehicleSummary ?? this.vehicleSummary,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      shareMedicalInfo: shareMedicalInfo ?? this.shareMedicalInfo,
+      allowOrganizerContact:
+          allowOrganizerContact ?? this.allowOrganizerContact,
+      riskAcceptedAt: riskAcceptedAt ?? this.riskAcceptedAt,
+      riskAcceptanceVersion:
+          riskAcceptanceVersion ?? this.riskAcceptanceVersion,
     );
   }
 
