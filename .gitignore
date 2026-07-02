@@ -80,3 +80,5 @@ docs/exec-runs/**/design/
 .git_tag_*
 
 /appstore_shots/
+# Patrol genera este bundle en cada corrida (no debe commitearse)
+integration_test/test_bundle.dart
