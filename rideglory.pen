@@ -1,5 +1,5 @@
 {
-  "version": "2.13",
+  "version": "2.14",
   "children": [
     {
       "type": "frame",
@@ -75637,5 +75637,6 @@
       "type": "color",
       "value": "#EAB308"
     }
-  }
+  },
+  "fileToken": "8cc066d4-36b0-4bf1-ae3c-319ea1dab5d0"
 }
