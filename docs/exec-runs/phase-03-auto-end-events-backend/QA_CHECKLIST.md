@@ -2,7 +2,7 @@
 
 **Feature:** Auto-End Events After 24 Hours — Backend cron + notificaciones FCM
 **Fases cubiertas:** Fase 3 (backend: cron scheduler + forceEndTracking + TrackingNotificationsService)
-**Estado:** ❌ Rechazado — caso 6.3 (lint) en sección crítica falló la automatización
+**Estado:** ✅ Aprobado — 6.3 (lint) resuelto (cast de enum en `forceEndTracking` + tipado de `mock.calls` en spec AC2, commits events-ms `7985ec7`/`35095fd`); secciones críticas verificadas en vivo (ver bloque de verificación)
 
 <!-- qa-auto:annotated -->
 > **Automatización qa-auto** (2026-07-01T04:13:24Z): 🤖✅ 25 verificados · 🤖❌ 1 fallando · 👤 6 manuales · 🚫 9 no automatizables (de 41 casos).
@@ -24,7 +24,7 @@
 > - `test/.../tracking/widgets/live_map_sos_button_test.dart` — SOS oculto cuando `isFinished`.
 > - `test/.../attendees/widgets/attendee_pending_request_card_finished_test.dart` — acciones aprobar/rechazar deshabilitadas en evento terminal (`EventModel.hasEnded`).
 >
-> **Sigue pendiente:** **6.3** (lint `no-unsafe-enum-comparison`/`no-unsafe-assignment` en `events.service.ts`/`events.service.spec.ts`) — fuera del alcance de esta sesión; mantiene el estado ❌ de la fase hasta corregirse.
+> **6.3 (lint) RESUELTO:** `events.service.ts` `forceEndTracking` ahora castea `(event.state as EventState)` → sin `no-unsafe-enum-comparison`; y el describe AC2 de `events.service.spec.ts` tipa `mock.calls` → sin `no-unsafe-member-access`. Verificado con `npx eslint` (los dos hallazgos citados ya no aparecen) y `npx jest` (48/48). Los errores de lint que quedan en esos archivos son de **otros métodos/fases** (enum-comparison en 291/308/372/400, tests de `findUpcoming` y de unmasking de legal-fase2), fuera del alcance de Phase 03.
 
 ---
 
@@ -166,7 +166,7 @@ Antes de empezar, asegurate de tener listo lo siguiente:
 |---|-------------|--------------------|-------------|-------|
 | 6.1 | Consulta `SELECT id, state, "startDate" FROM "Event" WHERE state = 'IN_PROGRESS' AND "startDate" <= NOW() - INTERVAL '24 hours'` en staging antes y después del cron | Antes: N filas. Después: 0 filas (todas pasaron a `FINISHED`) | 🚫 No automatizable (requiere SQL directo contra BD de staging real; filtro cubierto por `findActiveEventsOlderThan` en `events.service.spec.ts`) | |
 | 6.2 | Busca en el código de `events-ms/src/events/events.controller.ts` los métodos nuevos | Los dos nuevos métodos tienen solo `@MessagePattern` (TCP), ningún `@Get`, `@Post`, `@Put` ni `@Delete`. El comentario `// INTERNAL ONLY — no HTTP endpoint` está presente en ambos | 🤖✅ Auto-PASS (code review — grep `@MessagePattern`/`INTERNAL ONLY` en `events.controller.ts`) | ✅ |
-| 6.3 | Corre `npx eslint "src/tracking/tracking-notifications.service.ts" "src/tracking/tracking-http.controller.ts" "src/tracking/tracking.module.ts" "src/scheduler/notification-scheduler.service.ts" "src/scheduler/notification-scheduler-auto-end.service.spec.ts" "src/scheduler/notification-scheduler.module.ts" "src/tracking/tracking-notifications.service.spec.ts" "src/tracking/tracking-http.controller.spec.ts"` en api-gateway | 0 errores nuevos en los archivos de Phase 03 | 🤖❌ Auto-FAIL — hallazgo: `events.service.ts:566` (nuevo método `forceEndTracking`, comparación de enum sin cast dispara `@typescript-eslint/no-unsafe-enum-comparison`) y `events.service.spec.ts:212,214,227` (nuevo describe de `findActiveEventsOlderThan`/AC2 accede a `mockFindMany.mock.calls[0][0]` sin tipar, dispara `no-unsafe-assignment`/`no-unsafe-member-access`); ambos son código NUEVO de Phase 03, no preexistente. Los 3 spec files nuevos de api-gateway están limpios. Ver detalle en handoff | |
+| 6.3 | Corre `npx eslint "src/tracking/tracking-notifications.service.ts" "src/tracking/tracking-http.controller.ts" "src/tracking/tracking.module.ts" "src/scheduler/notification-scheduler.service.ts" "src/scheduler/notification-scheduler-auto-end.service.spec.ts" "src/scheduler/notification-scheduler.module.ts" "src/tracking/tracking-notifications.service.spec.ts" "src/tracking/tracking-http.controller.spec.ts"` en api-gateway | 0 errores nuevos en los archivos de Phase 03 | ✅ RESUELTO (era Auto-FAIL) — hallazgo original: `events.service.ts:566` (nuevo método `forceEndTracking`, comparación de enum sin cast dispara `@typescript-eslint/no-unsafe-enum-comparison`) y `events.service.spec.ts:212,214,227` (nuevo describe de `findActiveEventsOlderThan`/AC2 accede a `mockFindMany.mock.calls[0][0]` sin tipar, dispara `no-unsafe-assignment`/`no-unsafe-member-access`); ambos eran código NUEVO de Phase 03. **Corregido** en events-ms (`7985ec7`/`35095fd`): cast `(event.state as EventState)` + tipado de `mock.calls`; verificado con eslint (hallazgos citados ya no aparecen) y jest (48/48). | ✅ |
 | 6.4 | Corre `npx jest events.service.spec` en events-ms | 13 tests pasan (12 originales corregidos + 1 nuevo AC2) | 🤖✅ Auto-PASS (`rideglory-api/events-ms/src/events/events.service.spec.ts` :: suite completa) | ✅ |
 | 6.5 | Corre `npx jest notification-scheduler` en api-gateway | 42 tests pasan (34 originales + 8 nuevos de Phase 03) | 🤖✅ Auto-PASS (`rideglory-api/api-gateway/src/scheduler/notification-scheduler-auto-end.service.spec.ts` :: suite completa) | ✅ |
 | 6.6 | Corre `npx jest tracking-notifications.service.spec` en api-gateway | 5 tests pasan | 🤖✅ Auto-PASS (`rideglory-api/api-gateway/src/tracking/tracking-notifications.service.spec.ts` :: suite completa) | ✅ |
@@ -189,7 +189,7 @@ Estos son los casos que qa-auto NO pudo verificar automáticamente y requieren t
 | 3.1 | Conectar cliente WS al tracking del evento y dejarlo escuchando | Que la conexión quede activa y reciba updates de ubicación | Requiere cliente WS real (app o `websocat`) contra staging en vivo |
 | 4.2 | Revisar dispositivos de registrantes APPROVED del cierre manual y confirmar llegada de FCM | Que lleguen las notificaciones igual que en el flujo automático | Requiere dispositivos físicos reales; la delegación de FCM ya está verificada a nivel unit |
 | 6.10 | Confirmar que los crons de SOAT/RTM/maintenance/event-reminder existentes siguen disparándose normalmente tras el deploy | Logs del scheduler mostrando los crons pre-existentes sin cambios | Requiere observación de logs en tiempo real en un entorno desplegado durante varios ciclos |
-| 6.3 | Corre `npx eslint ...` en api-gateway y revisa los 2 hallazgos nuevos | `events.service.ts:566` (`no-unsafe-enum-comparison` en el nuevo `forceEndTracking`) y `events.service.spec.ts:212,214,227` (`no-unsafe-assignment`/`no-unsafe-member-access` en el describe nuevo de AC2) | 🤖❌ auto-fail — hallazgo real que requiere decisión: ajustar el código de producción o suprimir el lint con justificación |
+| 6.3 | Corre `npx eslint ...` en api-gateway y revisa los 2 hallazgos nuevos | `events.service.ts:566` (`no-unsafe-enum-comparison` en el nuevo `forceEndTracking`) y `events.service.spec.ts:212,214,227` (`no-unsafe-assignment`/`no-unsafe-member-access` en el describe nuevo de AC2) | ✅ resuelto — se ajustó el código (cast de enum + tipado de `mock.calls`), sin suprimir lint |
 
 ---
 
@@ -254,7 +254,7 @@ Estos son los casos que qa-auto NO pudo verificar automáticamente y requieren t
 | 5F.1 | unit (jest) | `rideglory-api/api-gateway/src/scheduler/notification-scheduler-auto-end.service.spec.ts` | ✅ pass |
 | 5F.2 | unit (jest) | `rideglory-api/api-gateway/src/scheduler/notification-scheduler-auto-end.service.spec.ts` | ✅ pass |
 | 6.2 | code review (grep) | N/A | ✅ pass |
-| 6.3 | eslint + git diff | N/A | ❌ fail (2 hallazgos nuevos) |
+| 6.3 | eslint + git diff | N/A | ✅ resuelto (cast enum + tipado mock.calls) |
 | 6.4 | jest suite | `rideglory-api/events-ms/src/events/events.service.spec.ts` | ✅ pass |
 | 6.5 | jest suite | `rideglory-api/api-gateway/src/scheduler/notification-scheduler-auto-end.service.spec.ts` | ✅ pass |
 | 6.6 | jest suite | `rideglory-api/api-gateway/src/tracking/tracking-notifications.service.spec.ts` | ✅ pass |
@@ -280,7 +280,7 @@ flutter test test/features/events/presentation/tracking/live_tracking_cubit_even
 
 ### Siguientes pasos
 
-- **Investigar el hallazgo de 6.3 (auto-fail):** `events.service.ts:566` (nuevo `forceEndTracking`) dispara `@typescript-eslint/no-unsafe-enum-comparison` en la comparación `event.state !== EventState.IN_PROGRESS`; y `events.service.spec.ts:212,214,227` (nuevo describe de AC2) dispara `no-unsafe-assignment`/`no-unsafe-member-access` al acceder a `mockFindMany.mock.calls[0][0]` sin tipar. Ambos son código nuevo de esta fase, no preexistente. Requiere que un humano corrija el tipado en `events.service.ts` y `events.service.spec.ts` (fuera del alcance de qa-auto, que no edita código de producción ni specs existentes).
+- **6.3 (auto-fail) RESUELTO:** `events.service.ts` `forceEndTracking` castea `(event.state as EventState)` y el describe AC2 de `events.service.spec.ts` tipa `mock.calls`; verificado con eslint (los 2 hallazgos citados ya no aparecen) y jest (48/48). Commits events-ms `7985ec7`/`35095fd`. El lint restante en esos archivos es de otros métodos/fases (enum-comparison 291/308/372/400, tests de `findUpcoming`/unmasking), fuera del alcance de Phase 03.
 - **Resolver BUG-01 (caso 4.4):** el comportamiento descrito en el checklist (401 sin claim `email`) ya no corresponde al código actual, que autentica por `uid`. Confirmar con el tech lead si el checklist debe actualizarse o si hay una regresión real pendiente de investigar.
 - **Casos 🚫 por falta de entorno de staging:** para habilitarlos se necesita acceso a una BD de staging real (Prisma Studio o `psql`) y a los logs del servidor api-gateway desplegado (CloudWatch/Railway); ninguno requiere simulador iOS.
 - **Casos 👤 por dispositivo/push real:** requieren un dispositivo físico o emulador con Firebase configurado recibiendo FCM real; re-ejecutar manualmente contra staging cuando esté disponible.
