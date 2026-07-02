@@ -1245,6 +1245,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_medicalInfo => 'Información Médica';
 
   @override
+  String get registration_maskedValue => '••••';
+
+  @override
   String get registration_emergencyContactRequired => 'Contacto de emergencia';
 
   @override

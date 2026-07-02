@@ -2422,6 +2422,12 @@ abstract class AppLocalizations {
   /// **'Información Médica'**
   String get registration_medicalInfo;
 
+  /// Marcador para un valor de inscripción completamente oculto (no compartido)
+  ///
+  /// In es, this message translates to:
+  /// **'••••'**
+  String get registration_maskedValue;
+
   /// No description provided for @registration_emergencyContactRequired.
   ///
   /// In es, this message translates to:

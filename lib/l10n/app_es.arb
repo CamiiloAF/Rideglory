@@ -429,6 +429,10 @@
   "registration_editRegistration": "Editar inscripción",
   "registration_personalData": "Datos Personales",
   "registration_medicalInfo": "Información Médica",
+  "registration_maskedValue": "••••",
+  "@registration_maskedValue": {
+    "description": "Marcador para un valor de inscripción completamente oculto (no compartido)"
+  },
   "registration_emergencyContactRequired": "Contacto de emergencia",
   "registration_vehicleData": "Datos del Vehículo",
   "registration_emergencyContact": "Contacto de emergencia",
