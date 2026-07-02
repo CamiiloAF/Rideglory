@@ -62,6 +62,7 @@ Tests:       11 passed, 11 total
 npx jest   (full events-ms suite)
 Test Suites: 5 passed, 5 total
 Tests:       42 passed, 42 total
+# Actualizado 2026-07-01 (post-integración de otras fases): 6 suites / 48 tests / 0 failures
 ```
 
 No regressions in any pre-existing spec (`registrations.service.spec.ts` — the medical-consent persistence tests still pass unchanged since their `birthDate` fixture, 1990-01-01, is well above 18).
