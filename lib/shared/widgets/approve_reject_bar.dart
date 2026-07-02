@@ -12,6 +12,7 @@ class ApproveRejectBar extends StatelessWidget {
     required this.onApprove,
     this.showReject = true,
     this.showApprove = true,
+    this.enabled = true,
     this.height = 44,
   });
 
@@ -21,6 +22,7 @@ class ApproveRejectBar extends StatelessWidget {
   final VoidCallback onApprove;
   final bool showReject;
   final bool showApprove;
+  final bool enabled;
   final double height;
 
   @override
@@ -32,6 +34,7 @@ class ApproveRejectBar extends StatelessWidget {
             child: RegistrationRejectButton(
               label: rejectLabel,
               onPressed: onReject,
+              enabled: enabled,
               height: height,
             ),
           ),
@@ -41,6 +44,7 @@ class ApproveRejectBar extends StatelessWidget {
             child: RegistrationApproveButton(
               label: approveLabel,
               onPressed: onApprove,
+              enabled: enabled,
               height: height,
             ),
           ),

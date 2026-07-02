@@ -80,7 +80,11 @@ class RegistrationPersonalStep extends StatelessWidget {
           labelText: context.l10n.registration_birthDate,
           isRequired: true,
           requiredErrorText: context.l10n.registration_birthDateRequired,
-          lastDate: DateTime.now(),
+          lastDate: DateTime(
+            DateTime.now().year - 18,
+            DateTime.now().month,
+            DateTime.now().day,
+          ),
           hintText: context.l10n.registration_birthDateHint,
           focusNode: focusChain.nodeFor(RegistrationFormFields.birthDate),
         ),

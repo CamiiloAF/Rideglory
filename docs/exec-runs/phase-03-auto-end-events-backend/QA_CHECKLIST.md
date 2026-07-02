@@ -8,6 +8,24 @@
 > **Automatización qa-auto** (2026-07-01T04:13:24Z): 🤖✅ 25 verificados · 🤖❌ 1 fallando · 👤 6 manuales · 🚫 9 no automatizables (de 41 casos).
 > Entorno: device=ios-simulator, baseline=na. Auditor Opus: solid.
 
+<!-- live-verify:2026-07-01 -->
+> **Verificación manual en vivo (2026-07-01)** — dispositivo Android físico + stack local (gateway `:3000`, MS 3001-3004, DBs Docker).
+>
+> **Casos verificados en vivo (además de sus unit tests):**
+> - **1.2 / 1.3** ✅ — `autoEndStalledEvents()` disparado en el **proceso vivo** del gateway (vía inspector `--inspect=9231`, `queryObjects` sobre `NotificationSchedulerService`). Log `AUTO_END: found 1 stalled event(s)` → `closed event …`; el evento pasó `IN_PROGRESS → FINISHED` en la BD. Idempotencia (**5B**) confirmada: 2ª corrida encontró 0.
+> - **3.2 / 3.3** ✅ — el rider conectado por WS recibió `tracking.event.ended`, salió de la pantalla de tracking y el WS cerró sin reconexión.
+> - **4.1–4.3** ✅ — cierre manual como organizador (QA1) devolvió **200 → FINISHED** con broadcast WS + FCM.
+>
+> **Bugs encontrados y corregidos en esta sesión:**
+> - **BUG-manual-end (resuelve BUG-01/4.4):** `tracking-http.controller.ts` mandaba `authUserId = request.user.uid` (Firebase uid) a `trackingStart`/`trackingEnd`, pero `events.service` compara contra `event.ownerId` (id de BD). Daba **403 al owner real**. Fix: helper `resolveDbUserId` (email→dbUser.id), aplicado también a `session/start|stop`. Spec `tracking-http.controller.spec.ts` reescrito (6/6 verde). El caso **4.4** ahora es coherente: sin `email` en el token → 401.
+> - **BUG-SOS (hallado probando sección 3):** el botón SOS seguía visible tras finalizar la rodada — el `buildWhen` del `BlocBuilder` solo escuchaba `hasSentSos`, no `isFinished`. Fix: extraído a `LiveMapSosButton` con `buildWhen` que incluye `isFinished`. Test de widget nuevo `live_map_sos_button_test.dart`.
+>
+> **Tests de widget agregados esta sesión:**
+> - `test/.../tracking/widgets/live_map_sos_button_test.dart` — SOS oculto cuando `isFinished`.
+> - `test/.../attendees/widgets/attendee_pending_request_card_finished_test.dart` — acciones aprobar/rechazar deshabilitadas en evento terminal (`EventModel.hasEnded`).
+>
+> **Sigue pendiente:** **6.3** (lint `no-unsafe-enum-comparison`/`no-unsafe-assignment` en `events.service.ts`/`events.service.spec.ts`) — fuera del alcance de esta sesión; mantiene el estado ❌ de la fase hasta corregirse.
+
 ---
 
 ## Pre-condiciones
@@ -31,11 +49,11 @@ Antes de empezar, asegurate de tener listo lo siguiente:
 
 | # | Accion | Resultado esperado | Estado auto | ✅/❌ |
 |---|--------|--------------------|-------------|-------|
-| 1.1 | Toma el `id` del evento `IN_PROGRESS` y actualiza su `startDate` en la BD a `NOW() - INTERVAL '25 hours'` | La columna `startDate` refleja la fecha de hace 25 horas; el estado sigue siendo `IN_PROGRESS` | 🚫 No automatizable (requiere BD de staging real) | |
+| 1.1 | Toma el `id` del evento `IN_PROGRESS` y actualiza su `startDate` en la BD a `NOW() - INTERVAL '25 hours'` | La columna `startDate` refleja la fecha de hace 25 horas; el estado sigue siendo `IN_PROGRESS` | ✅ Manual PASS | |
 | 1.2 | Espera al próximo tick del cron (cada hora en punto, zona America/Bogota) **o** invoca `autoEndStalledEvents()` directamente desde un test e2e o consola de Node | En los logs aparece la línea `AUTO_END: processing N stalled events` con N ≥ 1 | 🤖✅ Auto-PASS (`rideglory-api/api-gateway/src/scheduler/notification-scheduler-auto-end.service.spec.ts` :: happy path > calls forceEndTracking, broadcastEventEnded, and sendEventEndedNotifications for each stalled event) | ✅ |
-| 1.3 | Consulta el estado del evento en la BD (`SELECT state FROM "Event" WHERE id = '<eventId>'`) | El campo `state` es `FINISHED` | 🚫 No automatizable (requiere BD de staging; transición cubierta a nivel unit en `events.service.spec.ts`) | |
-| 1.4 | Abre el detalle del evento en la app (pantalla de detalle de la rodada) | La pantalla muestra el evento como finalizado (sin controles activos de tracking) | 👤 Manual (requiere evento real en staging y observación visual; UI ya cubierta por `live_tracking_cubit_event_ended_test.dart`) | |
-| 1.5 | Verifica en los logs del api-gateway que aparece `AUTO_END: completed — processed N events` al final del run | El log existe y N coincide con la cantidad de eventos manipulados | 🚫 No automatizable (requiere logs de servidor de staging real) | |
+| 1.3 | Consulta el estado del evento en la BD (`SELECT state FROM "Event" WHERE id = '<eventId>'`) | El campo `state` es `FINISHED` | ✅ Manual Pass | ✅ |
+| 1.4 | Abre el detalle del evento en la app (pantalla de detalle de la rodada) | La pantalla muestra el evento como finalizado (sin controles activos de tracking) | 👤✅ Manual (requiere evento real en staging y observación visual; UI ya cubierta por `live_tracking_cubit_event_ended_test.dart`) | ✅ |
+| 1.5 | Verifica en los logs del api-gateway que aparece `AUTO_END: completed — processed N events` al final del run | El log existe y N coincide con la cantidad de eventos manipulados | ✅ | |
 
 ---
 
@@ -45,8 +63,8 @@ Antes de empezar, asegurate de tener listo lo siguiente:
 
 | # | Accion | Resultado esperado | Estado auto | ✅/❌ |
 |---|--------|--------------------|-------------|-------|
-| 2.1 | Revisa el dispositivo del primer usuario con `status = APPROVED` y `fcmToken` configurado | Llega una notificación push antes de 60 segundos del cierre automático | 👤 Manual (requiere dispositivo/emulador real recibiendo push FCM) | |
-| 2.2 | Abre la notificación push en el dispositivo | La app navega al detalle del evento (deeplink `rideglory://events/detail-by-id?id=<eventId>` activo) | 👤 Manual (requiere interacción táctil real con notificación push) | |
+| 2.1 | Revisa el dispositivo del primer usuario con `status = APPROVED` y `fcmToken` configurado | Llega una notificación push antes de 60 segundos del cierre automático | 👤✅ Manual (requiere dispositivo/emulador real recibiendo push FCM) | ✅ |
+| 2.2 | Abre la notificación push en el dispositivo | La app navega al detalle del evento (deeplink `rideglory://events/detail-by-id?id=<eventId>` activo) | 👤✅ Manual (requiere interacción táctil real con notificación push) | ✅ |
 | 2.3 | Verifica el payload de la notificación en Firebase Console o en los logs del backend | El campo `type` es `TRACKING_ENDED` y `eventId` coincide con el id del evento cerrado | 🤖✅ Auto-PASS (`rideglory-api/api-gateway/src/tracking/tracking-notifications.service.spec.ts` :: sends FCM with type=TRACKING_ENDED and correct deeplink to APPROVED registrant with fcmToken / embeds the correct eventId in the deeplink route) | ✅ |
 | 2.4 | Revisa el dispositivo del usuario con `status = PENDING` (no aprobado) | No llega ninguna notificación push relacionada con el cierre de esta rodada | 🤖✅ Auto-PASS (`rideglory-api/api-gateway/src/tracking/tracking-notifications.service.spec.ts` :: sends FCM only to registrants with fcmToken when the list is mixed) | ✅ |
 | 2.5 | Verifica en los logs que el backend intenta enviar FCM **solo** a registrantes con `status = APPROVED` | Los logs muestran los fcmTokens de los usuarios APPROVED únicamente; ningún PENDING aparece | 🤖✅ Auto-PASS (`rideglory-api/api-gateway/src/tracking/tracking-notifications.service.spec.ts` :: sends FCM only to registrants with fcmToken when the list is mixed) | ✅ |

@@ -1276,6 +1276,12 @@ abstract class AppLocalizations {
   /// **'No hay inscritos aún'**
   String get event_noAttendees;
 
+  /// No description provided for @event_registrationActionsDisabledEnded.
+  ///
+  /// In es, this message translates to:
+  /// **'El evento finalizó. Ya no puedes cambiar el estado de las inscripciones.'**
+  String get event_registrationActionsDisabledEnded;
+
   /// No description provided for @event_newRequestsSection.
   ///
   /// In es, this message translates to:

@@ -213,6 +213,7 @@
   "event_approveRegistration": "Aprobar",
   "event_rejectRegistration": "Rechazar",
   "event_noAttendees": "No hay inscritos aún",
+  "event_registrationActionsDisabledEnded": "El evento finalizó. Ya no puedes cambiar el estado de las inscripciones.",
   "event_newRequestsSection": "NUEVAS SOLICITUDES",
   "event_pendingBadgeSuffix": "PENDIENTES",
   "event_processedSection": "YA PROCESADOS",

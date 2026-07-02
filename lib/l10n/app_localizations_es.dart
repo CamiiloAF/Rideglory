@@ -634,6 +634,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_noAttendees => 'No hay inscritos aún';
 
   @override
+  String get event_registrationActionsDisabledEnded =>
+      'El evento finalizó. Ya no puedes cambiar el estado de las inscripciones.';
+
+  @override
   String get event_newRequestsSection => 'NUEVAS SOLICITUDES';
 
   @override

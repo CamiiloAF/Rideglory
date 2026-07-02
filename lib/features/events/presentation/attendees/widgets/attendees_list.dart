@@ -41,6 +41,9 @@ class AttendeesList extends StatelessWidget {
         .toList();
     final pending = visible.where(_isPending).toList();
     final processed = visible.where(_isProcessed).toList();
+    // Un evento terminal (finalizado/cancelado) no permite cambiar el estado
+    // de las inscripciones.
+    final canManage = !event.hasEnded;
 
     return RefreshIndicator(
       onRefresh: () => context.read<AttendeesCubit>().fetchAttendees(
@@ -64,12 +67,13 @@ class AttendeesList extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 12),
                 child: AttendeePendingRequestCard(
                   registration: registration,
+                  canManage: canManage,
                   onTap: () => context.pushNamed(
                     AppRoutes.registrationDetail,
                     extra: RegistrationDetailExtra(
                       registration: registration,
                       eventOwnerId: event.ownerId,
-                      onApprove: registration.id != null
+                      onApprove: registration.id != null && canManage
                           ? (detailContext) =>
                                 AttendeeActionConfirmation.showApprove(
                                   detailContext,
@@ -84,7 +88,7 @@ class AttendeesList extends StatelessWidget {
                                   },
                                 )
                           : null,
-                      onReject: registration.id != null
+                      onReject: registration.id != null && canManage
                           ? (detailContext) =>
                                 AttendeeActionConfirmation.showReject(
                                   detailContext,
@@ -99,7 +103,7 @@ class AttendeesList extends StatelessWidget {
                                   },
                                 )
                           : null,
-                      onRequestEdit: registration.id != null
+                      onRequestEdit: registration.id != null && canManage
                           ? (detailContext) =>
                                 AttendeeActionConfirmation.showRequestEdit(
                                   detailContext,

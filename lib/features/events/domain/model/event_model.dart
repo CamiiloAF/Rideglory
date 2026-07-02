@@ -162,6 +162,11 @@ class EventModel {
     );
   }
 
+  /// El evento llegó a un estado terminal (finalizado o cancelado): ya no se
+  /// puede gestionar el estado de las inscripciones.
+  bool get hasEnded =>
+      state == EventState.finished || state == EventState.cancelled;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) || other is EventModel && id == other.id;

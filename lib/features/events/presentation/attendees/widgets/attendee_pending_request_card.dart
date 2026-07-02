@@ -11,11 +11,13 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 class AttendeePendingRequestCard extends StatelessWidget {
   final EventRegistrationModel registration;
   final VoidCallback? onTap;
+  final bool canManage;
 
   const AttendeePendingRequestCard({
     super.key,
     required this.registration,
     this.onTap,
+    this.canManage = true,
   });
 
   @override
@@ -103,11 +105,23 @@ class AttendeePendingRequestCard extends StatelessWidget {
             // el organizador SOLO puede rechazar (no aprobar). En PENDING se
             // muestran ambas acciones.
             const Divider(height: 1, color: AppColors.darkBorderPrimary),
+            if (!canManage)
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Text(
+                  context.l10n.event_registrationActionsDisabledEnded,
+                  style: const TextStyle(
+                    color: AppColors.textOnDarkTertiary,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.all(12),
               child: ApproveRejectBar(
                 rejectLabel: context.l10n.event_rejectRegistration,
                 approveLabel: context.l10n.event_approveRegistration,
+                enabled: canManage,
                 showApprove:
                     registration.status != RegistrationStatus.readyForEdit,
                 onReject: () => AttendeeActionConfirmation.showReject(

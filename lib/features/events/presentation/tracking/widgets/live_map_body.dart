@@ -12,8 +12,8 @@ import 'package:rideglory/features/events/presentation/tracking/widgets/map_zoom
 import 'package:rideglory/features/events/presentation/tracking/widgets/my_location_button.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/ride_finished_overlay.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/rider_telemetry_panel.dart';
+import 'package:rideglory/features/events/presentation/tracking/widgets/live_map_sos_button.dart';
 import 'package:rideglory/features/events/presentation/tracking/widgets/sos_banner.dart';
-import 'package:rideglory/features/events/presentation/tracking/widgets/sos_button.dart';
 
 /// The main body Stack for the live map page, containing the map, controls,
 /// SOS elements, telemetry panel, and the ride-finished overlay.
@@ -197,26 +197,8 @@ class LiveMapBody extends StatelessWidget {
           ),
         ),
 
-        // // SOS button (bottom-right, above telemetry panel)
-        BlocBuilder<LiveTrackingCubit, LiveTrackingState>(
-          buildWhen: (prev, next) => prev.hasSentSos != next.hasSentSos,
-          builder: (context, state) {
-            return Positioned(
-              right: 16,
-              bottom:
-                  RiderTelemetryPanel.expandedBaseHeight +
-                  MediaQuery.of(context).padding.bottom +
-                  12,
-              child: !state.isFinished
-                  ? SosButton(
-                      label: context.l10n.map_sos,
-                      isActive: state.hasSentSos,
-                      onPressed: onSosPressed,
-                    )
-                  : const Offstage(),
-            );
-          },
-        ),
+        // SOS button (bottom-right, above telemetry panel)
+        LiveMapSosButton(onPressed: onSosPressed),
 
         // Telemetry panel (bottom)
         Positioned(

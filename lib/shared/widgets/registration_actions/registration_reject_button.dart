@@ -8,37 +8,42 @@ class RegistrationRejectButton extends StatelessWidget {
     super.key,
     required this.label,
     required this.onPressed,
+    this.enabled = true,
     this.height = 48,
   });
 
   final String label;
   final VoidCallback onPressed;
+  final bool enabled;
   final double height;
 
   @override
   Widget build(BuildContext context) {
+    final contentColor = enabled
+        ? AppColors.error
+        : AppColors.textOnDarkTertiary;
     return SizedBox(
       height: height,
       child: Material(
         color: AppColors.darkTertiary,
         borderRadius: BorderRadius.circular(8),
         child: InkWell(
-          onTap: onPressed,
+          onTap: enabled ? onPressed : null,
           borderRadius: BorderRadius.circular(8),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: AppColors.error),
+              border: Border.all(color: contentColor),
             ),
             child: Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.cancel_outlined,
                     size: 20,
-                    color: AppColors.error,
+                    color: contentColor,
                   ),
                   AppSpacing.hGapSm,
                   Flexible(
@@ -46,8 +51,8 @@ class RegistrationRejectButton extends StatelessWidget {
                       label,
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: AppColors.error,
+                      style: TextStyle(
+                        color: contentColor,
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.3,
