@@ -145,6 +145,10 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
           existingRegistration.emergencyContactPhone,
       if (existingRegistration.vehicleId != null)
         RegistrationFormFields.vehicleId: existingRegistration.vehicleId,
+      RegistrationFormFields.shareMedicalInfo:
+          existingRegistration.shareMedicalInfo,
+      RegistrationFormFields.allowOrganizerContact:
+          existingRegistration.allowOrganizerContact,
     });
   }
 
@@ -330,7 +334,7 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
       eps: formData[RegistrationFormFields.eps] as String,
       medicalInsurance:
           formData[RegistrationFormFields.medicalInsurance] as String?,
-      bloodType: formData[RegistrationFormFields.bloodType] as BloodType,
+      bloodType: formData[RegistrationFormFields.bloodType] as BloodType?,
       emergencyContactName:
           formData[RegistrationFormFields.emergencyContactName] as String,
       emergencyContactPhone:

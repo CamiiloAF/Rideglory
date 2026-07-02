@@ -65,6 +65,8 @@ class EventModel {
   final EventState state;
   final List<String> waypoints;
   final Map<String, dynamic>? routeGeoJson;
+  final DateTime? organizerAcceptedResponsibilityAt;
+  final DateTime? sosTriggeredAt;
 
   const EventModel({
     this.id,
@@ -86,6 +88,8 @@ class EventModel {
     this.state = EventState.scheduled,
     this.waypoints = const [],
     this.routeGeoJson,
+    this.organizerAcceptedResponsibilityAt,
+    this.sosTriggeredAt,
   });
 
   bool get isFree => price == null || price == 0;
@@ -138,6 +142,8 @@ class EventModel {
     EventState? state,
     List<String>? waypoints,
     Map<String, dynamic>? routeGeoJson,
+    DateTime? organizerAcceptedResponsibilityAt,
+    DateTime? sosTriggeredAt,
   }) {
     return EventModel(
       id: id ?? this.id,

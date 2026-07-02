@@ -17,6 +17,7 @@ class UserModel {
     this.isDeleted = false,
     this.createdAt,
     this.updatedAt,
+    this.medicalConsentAcceptedAt,
   });
 
   final String id;
@@ -34,4 +35,45 @@ class UserModel {
   final bool isDeleted;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final DateTime? medicalConsentAcceptedAt;
+
+  UserModel copyWith({
+    String? id,
+    String? fullName,
+    String? email,
+    String? identificationNumber,
+    DateTime? birthDate,
+    String? phone,
+    String? residenceCity,
+    String? eps,
+    String? medicalInsurance,
+    BloodType? bloodType,
+    String? emergencyContactName,
+    String? emergencyContactPhone,
+    bool? isDeleted,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? medicalConsentAcceptedAt,
+  }) {
+    return UserModel(
+      id: id ?? this.id,
+      fullName: fullName ?? this.fullName,
+      email: email ?? this.email,
+      identificationNumber: identificationNumber ?? this.identificationNumber,
+      birthDate: birthDate ?? this.birthDate,
+      phone: phone ?? this.phone,
+      residenceCity: residenceCity ?? this.residenceCity,
+      eps: eps ?? this.eps,
+      medicalInsurance: medicalInsurance ?? this.medicalInsurance,
+      bloodType: bloodType ?? this.bloodType,
+      emergencyContactName: emergencyContactName ?? this.emergencyContactName,
+      emergencyContactPhone:
+          emergencyContactPhone ?? this.emergencyContactPhone,
+      isDeleted: isDeleted ?? this.isDeleted,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      medicalConsentAcceptedAt:
+          medicalConsentAcceptedAt ?? this.medicalConsentAcceptedAt,
+    );
+  }
 }

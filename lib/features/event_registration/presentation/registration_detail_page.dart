@@ -125,7 +125,7 @@ class RegistrationDetailPage extends StatelessWidget {
                           ),
                         RegistrationDetailDataRow(
                           label: context.l10n.registration_rowBloodType,
-                          value: registration.bloodType.label,
+                          value: registration.bloodType?.label ?? '',
                           showDivider: true,
                         ),
                       ],

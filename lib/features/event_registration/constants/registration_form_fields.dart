@@ -12,6 +12,8 @@ abstract class RegistrationFormFields {
   static const String emergencyContactPhone = 'emergencyContactPhone';
   static const String vehicleId = 'vehicleId';
   static const String saveToProfile = 'saveToProfile';
+  static const String shareMedicalInfo = 'shareMedicalInfo';
+  static const String allowOrganizerContact = 'allowOrganizerContact';
 }
 
 /// Field names grouped by wizard step, in display order. Used to validate only
