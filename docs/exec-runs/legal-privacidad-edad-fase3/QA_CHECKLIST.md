@@ -35,7 +35,7 @@ Antes de empezar, asegurate de tener en la cuenta de prueba:
 |---|--------|--------------------|-------------|-------|
 | 1.1 | Abre el detalle de una inscripción cuyo perfil de rider SÍ tiene tipo de sangre diligenciado. | La pantalla carga sin errores y la fila "Tipo de sangre" muestra el valor correcto (ej. "A+"). | 🤖✅ Auto-PASS (`test/features/event_registration/presentation/registration_detail_page_test.dart` :: 1.1: registration with bloodType=A+ renders "A+" in the blood type row) | ✅ |
 | 1.2 | Abre el detalle de una inscripción cuyo perfil de rider NO tiene tipo de sangre diligenciado (o fue creada antes de que existiera ese campo). | La pantalla carga sin crashear; la fila de tipo de sangre se ve vacía o no muestra el texto literal "null". | 🤖✅ Auto-PASS (`test/features/event_registration/presentation/registration_detail_page_test.dart` :: 1.2: registration with bloodType=null renders blank value, no "null" text, no crash) | ✅ |
-| 1.3 | Desde el detalle de inscripción, navega hacia atrás y vuelve a entrar 2-3 veces seguidas. | No hay crashes, congelamientos ni pantallas en blanco en ninguna de las repeticiones. | 👤 Manual (requiere navegación real multi-pantalla con go_router y gestos de back repetidos en dispositivo/emulador; no hay infraestructura Patrol para el flujo de inscripción y el widget es stateless, riesgo bajo ya cubierto por 1.1/1.2) | |
+| 1.3 | Desde el detalle de inscripción, navega hacia atrás y vuelve a entrar 2-3 veces seguidas. | No hay crashes, congelamientos ni pantallas en blanco en ninguna de las repeticiones. | ✅👤 Manual (requiere navegación real multi-pantalla con go_router y gestos de back repetidos en dispositivo/emulador; no hay infraestructura Patrol para el flujo de inscripción y el widget es stateless, riesgo bajo ya cubierto por 1.1/1.2) | ✅ |
 
 ---
 
@@ -45,7 +45,7 @@ Antes de empezar, asegurate de tener en la cuenta de prueba:
 
 | # | Accion | Resultado esperado | Estado auto | ✅/❌ |
 |---|--------|--------------------|-------------|-------|
-| 2.1 | Completa el wizard de inscripción a un evento de principio a fin (selección de vehículo, datos del rider, confirmación). | El wizard se completa sin errores y la inscripción queda confirmada, igual que antes del cambio. | 👤 Manual (flujo end-to-end multi-pantalla contra backend real; no existe Patrol test de este flujo en integration_test/ y armar uno determinista requeriría mockear todo el backend de inscripción, fuera de alcance de esta fase) | |
+| 2.1 | Completa el wizard de inscripción a un evento de principio a fin (selección de vehículo, datos del rider, confirmación). | El wizard se completa sin errores y la inscripción queda confirmada, igual que antes del cambio. | ✅👤 Manual (flujo end-to-end multi-pantalla contra backend real; no existe Patrol test de este flujo en integration_test/ y armar uno determinista requeriría mockear todo el backend de inscripción, fuera de alcance de esta fase) | ✅ |
 | 2.2 | Edita una inscripción existente que ya tenía tipo de sangre diligenciado y guarda sin cambiar ese campo. | Al reabrir el detalle, el tipo de sangre sigue mostrándose correctamente (no se pierde el dato). | 🤖✅ Auto-PASS (`test/features/event_registration/presentation/cubit/registration_form_cubit_preload_test.dart` :: 2.2: editing an existing registration without touching bloodType keeps the original value in the built registration) | ✅ |
 | 2.3 | En el formulario de inscripción, revisa que no aparezcan controles nuevos relacionados con "compartir información médica" o "permitir contacto del organizador". | No aparece ningún switch o campo nuevo — estos se agregan en fases futuras (4/5/6), esta fase es solo de datos. | 🤖✅ Auto-PASS (`test/features/event_registration/constants/registration_form_fields_test.dart` :: fieldsByStep does not include shareMedicalInfo / allowOrganizerContact) | ✅ |
 
@@ -57,8 +57,8 @@ Antes de empezar, asegurate de tener en la cuenta de prueba:
 
 | # | Accion | Resultado esperado | Estado auto | ✅/❌ |
 |---|--------|--------------------|-------------|-------|
-| 3.1 | Abre el detalle de un evento cualquiera. | La pantalla carga con toda la información habitual (nombre, fecha, ruta, participantes) sin errores ni datos faltantes. | 🚫 No automatizable (regresión general de una pantalla no tocada por esta fase; ya existe cobertura amplia en `test/features/events/**` y esta fase no cambió comportamiento visible, se recomienda correr la suite existente en vez de un caso nuevo) | |
-| 3.2 | Si el evento tiene tracking en vivo activo, entra a la vista de tracking. | El mapa y la información del recorrido cargan normalmente, sin crashes relacionados con el evento. | 👤 Manual (requiere mapa real Mapbox, tracking WebSocket en vivo y datos de un evento con GPS activo; no mockeable de forma razonable y esta fase no tocó el módulo de tracking) | |
+| 3.1 | Abre el detalle de un evento cualquiera. | La pantalla carga con toda la información habitual (nombre, fecha, ruta, participantes) sin errores ni datos faltantes. | ✅🚫 No automatizable (regresión general de una pantalla no tocada por esta fase; ya existe cobertura amplia en `test/features/events/**` y esta fase no cambió comportamiento visible, se recomienda correr la suite existente en vez de un caso nuevo) | ✅ |
+| 3.2 | Si el evento tiene tracking en vivo activo, entra a la vista de tracking. | El mapa y la información del recorrido cargan normalmente, sin crashes relacionados con el evento. | ✅👤 Manual (requiere mapa real Mapbox, tracking WebSocket en vivo y datos de un evento con GPS activo; no mockeable de forma razonable y esta fase no tocó el módulo de tracking) | ✅ |
 
 ---
 
