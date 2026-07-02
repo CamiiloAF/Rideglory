@@ -165,6 +165,10 @@ class EventModel {
       state: state ?? this.state,
       waypoints: waypoints ?? this.waypoints,
       routeGeoJson: routeGeoJson ?? this.routeGeoJson,
+      organizerAcceptedResponsibilityAt:
+          organizerAcceptedResponsibilityAt ??
+          this.organizerAcceptedResponsibilityAt,
+      sosTriggeredAt: sosTriggeredAt ?? this.sosTriggeredAt,
     );
   }
 
