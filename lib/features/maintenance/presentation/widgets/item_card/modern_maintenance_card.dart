@@ -22,31 +22,32 @@ class ModernMaintenanceCard extends StatelessWidget {
   });
 
   Color get _typeColor => switch (maintenance.type) {
-        MaintenanceType.oilChange => AppColors.primary,
-        MaintenanceType.brakeCheck => AppColors.statusWarning,
-        MaintenanceType.tireChange => AppColors.info,
-        MaintenanceType.preventive => AppColors.statusGreen,
-        MaintenanceType.airFilter => AppColors.eventShortDistance,
-        MaintenanceType.chainSprocket => AppColors.textOnDarkTertiary,
-        MaintenanceType.electrical => AppColors.warningLight,
-        MaintenanceType.other => AppColors.darkTertiary,
-      };
+    MaintenanceType.oilChange => AppColors.primary,
+    MaintenanceType.brakeCheck => AppColors.statusWarning,
+    MaintenanceType.tireChange => AppColors.info,
+    MaintenanceType.preventive => AppColors.statusGreen,
+    MaintenanceType.airFilter => AppColors.eventShortDistance,
+    MaintenanceType.chainSprocket => AppColors.textOnDarkTertiary,
+    MaintenanceType.electrical => AppColors.warningLight,
+    MaintenanceType.other => AppColors.darkTertiary,
+  };
 
   IconData get _typeIcon => switch (maintenance.type) {
-        MaintenanceType.oilChange => Icons.opacity,
-        MaintenanceType.brakeCheck => Icons.album_outlined,
-        MaintenanceType.tireChange => Icons.radio_button_unchecked,
-        MaintenanceType.preventive => Icons.assignment_turned_in_outlined,
-        MaintenanceType.airFilter => Icons.air,
-        MaintenanceType.chainSprocket => Icons.link,
-        MaintenanceType.electrical => Icons.bolt,
-        MaintenanceType.other => Icons.more_horiz,
-      };
+    MaintenanceType.oilChange => Icons.opacity,
+    MaintenanceType.brakeCheck => Icons.album_outlined,
+    MaintenanceType.tireChange => Icons.radio_button_unchecked,
+    MaintenanceType.preventive => Icons.assignment_turned_in_outlined,
+    MaintenanceType.airFilter => Icons.air,
+    MaintenanceType.chainSprocket => Icons.link,
+    MaintenanceType.electrical => Icons.bolt,
+    MaintenanceType.other => Icons.more_horiz,
+  };
 
   double? _getProgressPercent(int? currentMileage) {
     final nextMileage = maintenance.nextOdometer;
     final atService = maintenance.odometerAtService;
-    if (nextMileage == null || currentMileage == null || atService == null) return null;
+    if (nextMileage == null || currentMileage == null || atService == null)
+      return null;
     final range = nextMileage - atService;
     if (range <= 0) return 1.0;
     final traveled = currentMileage - atService;

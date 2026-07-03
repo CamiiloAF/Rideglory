@@ -17,8 +17,7 @@ class TelemetryMetric extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final resolvedValueColor =
-        valueColor ?? AppColors.textOnDarkPrimary;
+    final resolvedValueColor = valueColor ?? AppColors.textOnDarkPrimary;
 
     return Expanded(
       child: Container(
@@ -46,11 +45,7 @@ class TelemetryMetric extends StatelessWidget {
             const Spacer(),
             Row(
               children: [
-                Icon(
-                  icon,
-                  size: 14,
-                  color: resolvedValueColor,
-                ),
+                Icon(icon, size: 14, color: resolvedValueColor),
                 AppSpacing.hGapXxs,
                 Expanded(
                   child: Text(

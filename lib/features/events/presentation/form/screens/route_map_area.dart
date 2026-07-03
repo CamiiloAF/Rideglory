@@ -62,8 +62,8 @@ class RouteMapArea extends StatelessWidget {
                   pulsingColor: AppColors.primary.toARGB32(),
                 ),
               );
-              final manager =
-                  await mapboxMap.annotations.createPointAnnotationManager();
+              final manager = await mapboxMap.annotations
+                  .createPointAnnotationManager();
               onMapCreated(mapboxMap, manager);
             },
           ),

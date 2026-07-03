@@ -14,4 +14,3 @@ extension RidegloryL10nExtension on BuildContext {
 
   AppLocalizations? get l10nOrNull => AppLocalizations.of(this);
 }
-

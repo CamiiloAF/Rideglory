@@ -53,10 +53,7 @@ class CoverPreviewWrapper extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
               ],
-              CoverOverlayButton(
-                icon: Icons.edit_outlined,
-                onTap: onChangeTap,
-              ),
+              CoverOverlayButton(icon: Icons.edit_outlined, onTap: onChangeTap),
             ],
           ),
         ),

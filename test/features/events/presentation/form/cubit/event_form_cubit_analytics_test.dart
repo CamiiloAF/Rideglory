@@ -76,10 +76,9 @@ void main() {
         cubit.initialize();
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsCreateStarted,
-            {AnalyticsParams.formMode: AnalyticsParams.formModeCreate},
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.eventsCreateStarted, {
+            AnalyticsParams.formMode: AnalyticsParams.formModeCreate,
+          }),
         ).called(1);
       },
     );
@@ -91,10 +90,9 @@ void main() {
         cubit.initialize(event: _mockEvent);
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsCreateStarted,
-            {AnalyticsParams.formMode: AnalyticsParams.formModeEdit},
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.eventsCreateStarted, {
+            AnalyticsParams.formMode: AnalyticsParams.formModeEdit,
+          }),
         ).called(1);
       },
     );
@@ -103,18 +101,17 @@ void main() {
     test(
       'TC-efm-a3: saveEvent success in create mode → events_published with mode=create',
       () async {
-        when(() => mockCreate(_mockEvent)).thenAnswer(
-          (_) async => Right(_mockEvent),
-        );
+        when(
+          () => mockCreate(_mockEvent),
+        ).thenAnswer((_) async => Right(_mockEvent));
 
         cubit.initialize(); // sets isEditing = false
         await cubit.saveEvent(_mockEvent);
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsPublished,
-            {AnalyticsParams.formMode: AnalyticsParams.formModeCreate},
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.eventsPublished, {
+            AnalyticsParams.formMode: AnalyticsParams.formModeCreate,
+          }),
         ).called(1);
         verifyNever(
           () => mockAnalytics.logEvent(
@@ -129,18 +126,17 @@ void main() {
     test(
       'TC-efm-a4: saveEvent success in edit mode → events_published with mode=edit',
       () async {
-        when(() => mockUpdate(_mockEvent)).thenAnswer(
-          (_) async => Right(_mockEvent),
-        );
+        when(
+          () => mockUpdate(_mockEvent),
+        ).thenAnswer((_) async => Right(_mockEvent));
 
         cubit.initialize(event: _mockEvent); // sets isEditing = true
         await cubit.saveEvent(_mockEvent);
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsPublished,
-            {AnalyticsParams.formMode: AnalyticsParams.formModeEdit},
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.eventsPublished, {
+            AnalyticsParams.formMode: AnalyticsParams.formModeEdit,
+          }),
         ).called(1);
       },
     );
@@ -150,28 +146,21 @@ void main() {
       'TC-efm-a5: saveEvent failure → events_publish_failed with failure_category',
       () async {
         when(() => mockCreate(_mockEvent)).thenAnswer(
-          (_) async =>
-              const Left(DomainException(message: 'network timeout')),
+          (_) async => const Left(DomainException(message: 'network timeout')),
         );
 
         cubit.initialize();
         await cubit.saveEvent(_mockEvent);
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsPublishFailed,
-            {
-              AnalyticsParams.formMode: AnalyticsParams.formModeCreate,
-              AnalyticsParams.failureCategory:
-                  AnalyticsParams.failureCategoryNetwork,
-            },
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.eventsPublishFailed, {
+            AnalyticsParams.formMode: AnalyticsParams.formModeCreate,
+            AnalyticsParams.failureCategory:
+                AnalyticsParams.failureCategoryNetwork,
+          }),
         ).called(1);
         verifyNever(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsPublished,
-            any(),
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.eventsPublished, any()),
         );
       },
     );
@@ -189,28 +178,28 @@ void main() {
         await cubit.saveEvent(_mockEvent);
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsPublishFailed,
-            {
-              AnalyticsParams.formMode: AnalyticsParams.formModeCreate,
-              AnalyticsParams.failureCategory:
-                  AnalyticsParams.failureCategoryUnknown,
-            },
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.eventsPublishFailed, {
+            AnalyticsParams.formMode: AnalyticsParams.formModeCreate,
+            AnalyticsParams.failureCategory:
+                AnalyticsParams.failureCategoryUnknown,
+          }),
         ).called(1);
       },
     );
 
     // TC-efm-a7: state transitions — initial state is EventFormState
-    test('TC-efm-a7: initial state is EventFormState with initial saveResult', () {
-      expect(cubit.state.saveResult, const ResultState<EventModel>.initial());
-    });
+    test(
+      'TC-efm-a7: initial state is EventFormState with initial saveResult',
+      () {
+        expect(cubit.state.saveResult, const ResultState<EventModel>.initial());
+      },
+    );
 
     // TC-efm-a8: saveEvent success emits data state
     test('TC-efm-a8: saveEvent success → state.saveResult is Data', () async {
-      when(() => mockCreate(_mockEvent)).thenAnswer(
-        (_) async => Right(_mockEvent),
-      );
+      when(
+        () => mockCreate(_mockEvent),
+      ).thenAnswer((_) async => Right(_mockEvent));
 
       cubit.initialize();
       await cubit.saveEvent(_mockEvent);
@@ -220,9 +209,9 @@ void main() {
 
     // TC-efm-a9: saveEvent failure → state.saveResult is Error
     test('TC-efm-a9: saveEvent failure → state.saveResult is Error', () async {
-      when(() => mockCreate(_mockEvent)).thenAnswer(
-        (_) async => const Left(DomainException(message: 'Error')),
-      );
+      when(
+        () => mockCreate(_mockEvent),
+      ).thenAnswer((_) async => const Left(DomainException(message: 'Error')));
 
       cubit.initialize();
       await cubit.saveEvent(_mockEvent);
@@ -234,18 +223,17 @@ void main() {
     test(
       'CA1: saveEvent → events_publish_attempted with form_mode fired first',
       () async {
-        when(() => mockCreate(_mockEvent)).thenAnswer(
-          (_) async => Right(_mockEvent),
-        );
+        when(
+          () => mockCreate(_mockEvent),
+        ).thenAnswer((_) async => Right(_mockEvent));
 
         cubit.initialize();
         await cubit.saveEvent(_mockEvent);
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsPublishAttempted,
-            {AnalyticsParams.formMode: AnalyticsParams.formModeCreate},
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.eventsPublishAttempted, {
+            AnalyticsParams.formMode: AnalyticsParams.formModeCreate,
+          }),
         ).called(1);
       },
     );
@@ -258,13 +246,10 @@ void main() {
         cubit.nextStep();
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsStepAdvanced,
-            {
-              AnalyticsParams.stepIndex: 1,
-              AnalyticsParams.stepName: 'config',
-            },
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.eventsStepAdvanced, {
+            AnalyticsParams.stepIndex: 1,
+            AnalyticsParams.stepName: 'config',
+          }),
         ).called(1);
       },
     );
@@ -278,13 +263,10 @@ void main() {
         cubit.prevStep(); // back to step 0
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsStepBack,
-            {
-              AnalyticsParams.stepIndex: 0,
-              AnalyticsParams.stepName: 'basics',
-            },
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.eventsStepBack, {
+            AnalyticsParams.stepIndex: 0,
+            AnalyticsParams.stepName: 'basics',
+          }),
         ).called(1);
       },
     );
@@ -298,13 +280,10 @@ void main() {
         await cubit.close();
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsCreateAbandoned,
-            {
-              AnalyticsParams.formMode: AnalyticsParams.formModeCreate,
-              AnalyticsParams.abandonedAtStep: 1,
-            },
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.eventsCreateAbandoned, {
+            AnalyticsParams.formMode: AnalyticsParams.formModeCreate,
+            AnalyticsParams.abandonedAtStep: 1,
+          }),
         ).called(1);
       },
     );
@@ -313,9 +292,9 @@ void main() {
     test(
       'CA2d: close() after saveEvent success → events_create_abandoned NOT fired',
       () async {
-        when(() => mockCreate(_mockEvent)).thenAnswer(
-          (_) async => Right(_mockEvent),
-        );
+        when(
+          () => mockCreate(_mockEvent),
+        ).thenAnswer((_) async => Right(_mockEvent));
 
         cubit.initialize();
         await cubit.saveEvent(_mockEvent);
@@ -339,10 +318,8 @@ void main() {
         cubit.nextStep(); // should be a no-op
 
         verifyNever(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsStepAdvanced,
-            any(),
-          ),
+          () =>
+              mockAnalytics.logEvent(AnalyticsEvents.eventsStepAdvanced, any()),
         );
       },
     );

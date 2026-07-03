@@ -41,7 +41,9 @@ class LoginEmailForm extends StatelessWidget {
                 FormBuilderValidators.required(
                   errorText: context.l10n.auth_emailRequired,
                 ),
-                FormBuilderValidators.email(errorText: context.l10n.auth_invalidEmail),
+                FormBuilderValidators.email(
+                  errorText: context.l10n.auth_invalidEmail,
+                ),
               ]),
             ),
             AppSpacing.gapLg,

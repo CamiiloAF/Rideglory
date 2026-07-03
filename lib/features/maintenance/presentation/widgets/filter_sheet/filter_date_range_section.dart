@@ -18,10 +18,22 @@ class FilterDateRangeSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final options = [
-      (MaintenanceDateRange.thisMonth, context.l10n.maintenance_filter_date_this_month),
-      (MaintenanceDateRange.last3Months, context.l10n.maintenance_filter_date_last_3_months),
-      (MaintenanceDateRange.lastYear, context.l10n.maintenance_filter_date_last_year),
-      (MaintenanceDateRange.custom, context.l10n.maintenance_filter_date_custom),
+      (
+        MaintenanceDateRange.thisMonth,
+        context.l10n.maintenance_filter_date_this_month,
+      ),
+      (
+        MaintenanceDateRange.last3Months,
+        context.l10n.maintenance_filter_date_last_3_months,
+      ),
+      (
+        MaintenanceDateRange.lastYear,
+        context.l10n.maintenance_filter_date_last_year,
+      ),
+      (
+        MaintenanceDateRange.custom,
+        context.l10n.maintenance_filter_date_custom,
+      ),
     ];
 
     return Padding(

@@ -49,17 +49,17 @@ void main() {
   const ownerId = 'owner-1';
 
   LiveTrackingCubit buildCubit() => LiveTrackingCubit(
-        eventId: 'evt-1',
-        eventOwnerId: ownerId,
-        watchActiveRidersUseCase: MockWatchActiveRidersUseCase(),
-        startTrackingUseCase: MockStartTrackingUseCase(),
-        updateLocationUseCase: MockUpdateLocationUseCase(),
-        stopTrackingUseCase: stopTrackingUseCase,
-        getRiderProfileUseCase: MockGetRiderProfileUseCase(),
-        authService: MockAuthService(),
-        trackingRepository: repo,
-        analyticsService: analytics,
-      );
+    eventId: 'evt-1',
+    eventOwnerId: ownerId,
+    watchActiveRidersUseCase: MockWatchActiveRidersUseCase(),
+    startTrackingUseCase: MockStartTrackingUseCase(),
+    updateLocationUseCase: MockUpdateLocationUseCase(),
+    stopTrackingUseCase: stopTrackingUseCase,
+    getRiderProfileUseCase: MockGetRiderProfileUseCase(),
+    authService: MockAuthService(),
+    trackingRepository: repo,
+    analyticsService: analytics,
+  );
 
   setUp(() {
     repo = MockTrackingRepository();
@@ -92,8 +92,7 @@ void main() {
   });
 
   group('LiveTrackingCubit — eventEnded cleanup', () {
-    test(
-        'Caso A — path principal: stopUseCase llamado 1 vez, '
+    test('Caso A — path principal: stopUseCase llamado 1 vez, '
         'logEvent trackingSessionEnded 1 vez, '
         'estado isTracking=false, isFinished=true', () async {
       cubit.debugPrimeForEventEndedTest(userId);
@@ -115,8 +114,7 @@ void main() {
       expect(cubit.state.isFinished, isTrue);
     });
 
-    test(
-        'Caso B — doble disparo: stopUseCase llamado 1 vez (no 2), '
+    test('Caso B — doble disparo: stopUseCase llamado 1 vez (no 2), '
         'logEvent trackingSessionEnded 1 vez (no 2)', () async {
       cubit.debugPrimeForEventEndedTest(userId);
 
@@ -142,52 +140,52 @@ void main() {
     });
 
     test(
-        'Caso C — sin sesión activa: verifyNever stopUseCase, '
-        'verifyNever logEvent trackingSessionEnded, estado isFinished=true',
-        () async {
-      cubit.debugSubscribeEventEndedForTest();
-      expect(cubit.state.isTracking, isFalse);
+      'Caso C — sin sesión activa: verifyNever stopUseCase, '
+      'verifyNever logEvent trackingSessionEnded, estado isFinished=true',
+      () async {
+        cubit.debugSubscribeEventEndedForTest();
+        expect(cubit.state.isTracking, isFalse);
 
-      eventEndedController.add(null);
-      await Future<void>.delayed(Duration.zero);
+        eventEndedController.add(null);
+        await Future<void>.delayed(Duration.zero);
 
-      verifyNever(
-        () => stopTrackingUseCase(
-          eventId: any(named: 'eventId'),
-          userId: any(named: 'userId'),
-        ),
-      );
-      verifyNever(
-        () => analytics.logEvent(AnalyticsEvents.trackingSessionEnded, any()),
-      );
-      expect(cubit.state.isFinished, isTrue);
-    });
+        verifyNever(
+          () => stopTrackingUseCase(
+            eventId: any(named: 'eventId'),
+            userId: any(named: 'userId'),
+          ),
+        );
+        verifyNever(
+          () => analytics.logEvent(AnalyticsEvents.trackingSessionEnded, any()),
+        );
+        expect(cubit.state.isFinished, isTrue);
+      },
+    );
 
     test(
-        'Caso D — use case retorna Left: cubit no lanza, '
-        'estado isTracking=false, isFinished=true, stopUseCase llamado 1 vez',
-        () async {
-      when(
-        () => stopTrackingUseCase(
-          eventId: any(named: 'eventId'),
-          userId: any(named: 'userId'),
-        ),
-      ).thenAnswer(
-        (_) async => const Left(DomainException(message: 'err')),
-      );
+      'Caso D — use case retorna Left: cubit no lanza, '
+      'estado isTracking=false, isFinished=true, stopUseCase llamado 1 vez',
+      () async {
+        when(
+          () => stopTrackingUseCase(
+            eventId: any(named: 'eventId'),
+            userId: any(named: 'userId'),
+          ),
+        ).thenAnswer((_) async => const Left(DomainException(message: 'err')));
 
-      cubit.debugPrimeForEventEndedTest(userId);
-      eventEndedController.add(null);
-      await Future<void>.delayed(Duration.zero);
+        cubit.debugPrimeForEventEndedTest(userId);
+        eventEndedController.add(null);
+        await Future<void>.delayed(Duration.zero);
 
-      verify(
-        () => stopTrackingUseCase(
-          eventId: any(named: 'eventId'),
-          userId: any(named: 'userId'),
-        ),
-      ).called(1);
-      expect(cubit.state.isTracking, isFalse);
-      expect(cubit.state.isFinished, isTrue);
-    });
+        verify(
+          () => stopTrackingUseCase(
+            eventId: any(named: 'eventId'),
+            userId: any(named: 'userId'),
+          ),
+        ).called(1);
+        expect(cubit.state.isTracking, isFalse);
+        expect(cubit.state.isFinished, isTrue);
+      },
+    );
   });
 }

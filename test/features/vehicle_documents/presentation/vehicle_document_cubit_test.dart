@@ -92,8 +92,7 @@ void main() {
       mockSave = MockSaveSoatUseCase();
       mockDelete = MockDeleteSoatUseCase();
       mockAnalytics = MockAnalyticsService();
-      when(() => mockAnalytics.logEvent(any(), any()))
-          .thenAnswer((_) async {});
+      when(() => mockAnalytics.logEvent(any(), any())).thenAnswer((_) async {});
       when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
       cubit = SoatCubit(mockGet, mockSave, mockDelete, mockAnalytics);
     });
@@ -103,8 +102,7 @@ void main() {
     blocTest<SoatCubit, ResultState<SoatModel>>(
       'base-soat-01: load() → loading → data when document exists',
       setUp: () {
-        when(() => mockGet(vehicleId))
-            .thenAnswer((_) async => Right(mockSoat));
+        when(() => mockGet(vehicleId)).thenAnswer((_) async => Right(mockSoat));
       },
       build: () => cubit,
       act: (c) => c.load(vehicleId),
@@ -119,8 +117,9 @@ void main() {
     blocTest<SoatCubit, ResultState<SoatModel>>(
       'base-soat-02: load() → loading → empty when 404 (Right(null))',
       setUp: () {
-        when(() => mockGet(vehicleId))
-            .thenAnswer((_) async => const Right(null));
+        when(
+          () => mockGet(vehicleId),
+        ).thenAnswer((_) async => const Right(null));
       },
       build: () => cubit,
       act: (c) => c.load(vehicleId),
@@ -133,17 +132,16 @@ void main() {
     blocTest<SoatCubit, ResultState<SoatModel>>(
       'base-soat-03: load() → loading → error on failure',
       setUp: () {
-        when(() => mockGet(vehicleId))
-            .thenAnswer((_) async => const Left(networkError));
+        when(
+          () => mockGet(vehicleId),
+        ).thenAnswer((_) async => const Left(networkError));
       },
       build: () => cubit,
       act: (c) => c.load(vehicleId),
       expect: () => [
         const ResultState<SoatModel>.loading(),
         predicate<ResultState<SoatModel>>(
-          (s) =>
-              s is Error<SoatModel> &&
-              s.error.message == 'Network error',
+          (s) => s is Error<SoatModel> && s.error.message == 'Network error',
         ),
       ],
     );
@@ -163,8 +161,7 @@ void main() {
       mockSave = MockSaveTecnomecanicaUseCase();
       mockDelete = MockDeleteTecnomecanicaUseCase();
       mockAnalytics = MockAnalyticsService();
-      when(() => mockAnalytics.logEvent(any(), any()))
-          .thenAnswer((_) async {});
+      when(() => mockAnalytics.logEvent(any(), any())).thenAnswer((_) async {});
       when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
       cubit = TecnomecanicaCubit(mockGet, mockSave, mockDelete, mockAnalytics);
     });
@@ -174,8 +171,7 @@ void main() {
     blocTest<TecnomecanicaCubit, ResultState<TecnomecanicaModel>>(
       'base-rtm-01: load() → loading → data when document exists',
       setUp: () {
-        when(() => mockGet(vehicleId))
-            .thenAnswer((_) async => Right(mockRtm));
+        when(() => mockGet(vehicleId)).thenAnswer((_) async => Right(mockRtm));
       },
       build: () => cubit,
       act: (c) => c.load(vehicleId),
@@ -190,8 +186,9 @@ void main() {
     blocTest<TecnomecanicaCubit, ResultState<TecnomecanicaModel>>(
       'base-rtm-02: load() → loading → empty when 404 (Right(null))',
       setUp: () {
-        when(() => mockGet(vehicleId))
-            .thenAnswer((_) async => const Right(null));
+        when(
+          () => mockGet(vehicleId),
+        ).thenAnswer((_) async => const Right(null));
       },
       build: () => cubit,
       act: (c) => c.load(vehicleId),
@@ -204,8 +201,9 @@ void main() {
     blocTest<TecnomecanicaCubit, ResultState<TecnomecanicaModel>>(
       'base-rtm-03: load() → loading → error on failure',
       setUp: () {
-        when(() => mockGet(vehicleId))
-            .thenAnswer((_) async => const Left(networkError));
+        when(
+          () => mockGet(vehicleId),
+        ).thenAnswer((_) async => const Left(networkError));
       },
       build: () => cubit,
       act: (c) => c.load(vehicleId),

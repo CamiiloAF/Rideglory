@@ -46,13 +46,11 @@ class LiveTrackingSessionHolder {
 
     // Observar isFinished para notificar a EventsCubit (rider path).
     _isFinishedSub?.cancel();
-    _isFinishedSub = cubit.stream
-        .where((s) => s.isFinished)
-        .listen((_) {
-          if (!_eventFinishedController.isClosed) {
-            _eventFinishedController.add(eventId);
-          }
-        });
+    _isFinishedSub = cubit.stream.where((s) => s.isFinished).listen((_) {
+      if (!_eventFinishedController.isClosed) {
+        _eventFinishedController.add(eventId);
+      }
+    });
 
     unawaited(() async {
       await previous?.close();

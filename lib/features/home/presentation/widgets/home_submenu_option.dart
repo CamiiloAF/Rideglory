@@ -40,7 +40,10 @@ class HomeSubMenuOption extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            Icon(Icons.chevron_right, color: context.colorScheme.onSurfaceVariant),
+            Icon(
+              Icons.chevron_right,
+              color: context.colorScheme.onSurfaceVariant,
+            ),
           ],
         ),
       ),

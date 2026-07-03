@@ -43,8 +43,8 @@ class ShellScreenViewTracker extends StatefulWidget {
     required this.observer,
     required this.child,
     required int currentIndex,
-  })  : _navigationShell = null,
-        currentIndexOverride = currentIndex;
+  }) : _navigationShell = null,
+       currentIndexOverride = currentIndex;
 
   final StatefulNavigationShell? _navigationShell;
   final AnalyticsService analytics;

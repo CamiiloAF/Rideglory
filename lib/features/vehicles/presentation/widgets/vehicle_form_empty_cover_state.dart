@@ -10,7 +10,11 @@ class VehicleFormEmptyCoverState extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Icon(Icons.camera_alt_outlined, size: 32, color: AppColors.textOnDarkTertiary),
+        const Icon(
+          Icons.camera_alt_outlined,
+          size: 32,
+          color: AppColors.textOnDarkTertiary,
+        ),
         const SizedBox(height: 8),
         Text(
           context.l10n.vehicle_form_cover_title,

@@ -28,7 +28,9 @@ class EventDetailAddressText extends StatelessWidget {
             if (i > 0) const SizedBox(height: 4),
             EventDetailRoutePointText(
               color: i == 0 ? AppColors.success : AppColors.primary,
-              label: routePoints[i].label ?? (i == 0 ? meetingPoint : destination ?? ''),
+              label:
+                  routePoints[i].label ??
+                  (i == 0 ? meetingPoint : destination ?? ''),
             ),
           ],
         ],

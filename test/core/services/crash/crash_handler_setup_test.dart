@@ -42,25 +42,24 @@ void main() {
 
         final result = await _runDefensiveInit(reporter);
 
-        expect(result, isTrue,
-            reason:
-                'El flujo debe continuar aunque Crashlytics falle al init');
+        expect(
+          result,
+          isTrue,
+          reason: 'El flujo debe continuar aunque Crashlytics falle al init',
+        );
         // setEnabled fue invocado (intento real) pero la excepción fue absorbida
         verify(() => reporter.setEnabled(any())).called(1);
       },
     );
 
-    test(
-      'setEnabled exitoso — flujo continúa normalmente',
-      () async {
-        when(() => reporter.setEnabled(any())).thenAnswer((_) async {});
+    test('setEnabled exitoso — flujo continúa normalmente', () async {
+      when(() => reporter.setEnabled(any())).thenAnswer((_) async {});
 
-        final result = await _runDefensiveInit(reporter);
+      final result = await _runDefensiveInit(reporter);
 
-        expect(result, isTrue);
-        verify(() => reporter.setEnabled(any())).called(1);
-      },
-    );
+      expect(result, isTrue);
+      verify(() => reporter.setEnabled(any())).called(1);
+    });
   });
 
   // ---------------------------------------------------------------------------
@@ -91,11 +90,16 @@ void main() {
         registerCrashHandlers(isDebug: true, reporter: reporter);
 
         // Los handlers no deben haber cambiado
-        expect(FlutterError.onError, same(flutterHandlerBefore),
-            reason: 'FlutterError.onError no debe modificarse en debug');
-        expect(PlatformDispatcher.instance.onError, same(platformHandlerBefore),
-            reason:
-                'PlatformDispatcher.onError no debe modificarse en debug');
+        expect(
+          FlutterError.onError,
+          same(flutterHandlerBefore),
+          reason: 'FlutterError.onError no debe modificarse en debug',
+        );
+        expect(
+          PlatformDispatcher.instance.onError,
+          same(platformHandlerBefore),
+          reason: 'PlatformDispatcher.onError no debe modificarse en debug',
+        );
 
         // recordError nunca fue invocado
         verifyNever(
@@ -123,12 +127,14 @@ void main() {
 
         registerCrashHandlers(isDebug: false, reporter: reporter);
 
-        expect(FlutterError.onError, isNotNull,
-            reason: 'handler debe haber sido registrado');
+        expect(
+          FlutterError.onError,
+          isNotNull,
+          reason: 'handler debe haber sido registrado',
+        );
 
         // Disparar el handler manualmente
-        final details =
-            FlutterErrorDetails(exception: Exception('prod error'));
+        final details = FlutterErrorDetails(exception: Exception('prod error'));
         FlutterError.onError!(details);
 
         verify(
@@ -156,8 +162,11 @@ void main() {
 
         registerCrashHandlers(isDebug: false, reporter: reporter);
 
-        expect(PlatformDispatcher.instance.onError, isNotNull,
-            reason: 'handler debe haber sido registrado');
+        expect(
+          PlatformDispatcher.instance.onError,
+          isNotNull,
+          reason: 'handler debe haber sido registrado',
+        );
 
         // Disparar el handler manualmente
         final handled = PlatformDispatcher.instance.onError!(

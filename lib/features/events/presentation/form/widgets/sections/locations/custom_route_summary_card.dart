@@ -25,8 +25,7 @@ class CustomRouteSummaryCard extends StatelessWidget {
             return WaypointPreviewRow(
               index: entry.key,
               name: entry.value,
-              isLast: entry.key == state.waypoints.length - 1 ||
-                  entry.key == 2,
+              isLast: entry.key == state.waypoints.length - 1 || entry.key == 2,
             );
           }),
           if (state.waypoints.length > 3)

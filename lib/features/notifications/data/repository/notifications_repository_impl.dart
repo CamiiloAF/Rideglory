@@ -31,12 +31,8 @@ class NotificationsRepositoryImpl implements NotificationsRepository {
   }
 
   @override
-  Future<Either<DomainException, void>> markRead(
-    String notificationId,
-  ) async {
-    return executeService(
-      function: () => _service.markRead(notificationId),
-    );
+  Future<Either<DomainException, void>> markRead(String notificationId) async {
+    return executeService(function: () => _service.markRead(notificationId));
   }
 
   @override
@@ -45,9 +41,7 @@ class NotificationsRepositoryImpl implements NotificationsRepository {
   }
 
   @override
-  Future<Either<DomainException, void>> registerFcmToken(
-    String token,
-  ) async {
+  Future<Either<DomainException, void>> registerFcmToken(String token) async {
     return executeService(
       function: () => _service.registerFcmToken({'fcmToken': token}),
     );

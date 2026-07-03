@@ -32,10 +32,7 @@ class NumberBadge extends StatelessWidget {
     return Container(
       width: 28,
       height: 28,
-      decoration: BoxDecoration(
-        color: _bgColor,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: _bgColor, shape: BoxShape.circle),
       child: Center(
         child: Text(
           '$number',

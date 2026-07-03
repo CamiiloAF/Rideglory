@@ -26,14 +26,8 @@ class VehicleFormSectionHeader extends StatelessWidget {
             letterSpacing: 1.2,
           ),
         ),
-        if (badge != null) ...[
-          const SizedBox(width: 8),
-          badge!,
-        ],
-        if (trailing != null) ...[
-          const Spacer(),
-          trailing!,
-        ],
+        if (badge != null) ...[const SizedBox(width: 8), badge!],
+        if (trailing != null) ...[const Spacer(), trailing!],
       ],
     );
   }

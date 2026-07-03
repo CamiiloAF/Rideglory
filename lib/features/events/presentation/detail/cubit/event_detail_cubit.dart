@@ -104,7 +104,8 @@ class EventDetailCubit extends Cubit<EventDetailState> {
     final index = current.indexWhere((r) => r.id == registrationId);
     if (index < 0) return;
     final updated = current[index].copyWith(status: status);
-    final newList = List<EventRegistrationModel>.from(current)..[index] = updated;
+    final newList = List<EventRegistrationModel>.from(current)
+      ..[index] = updated;
     // `EventRegistrationModel.==` solo compara por id, así que el deep equality
     // de la lista da true aunque el status haya cambiado. Forzamos un cambio
     // visible para Bloc emitiendo un estado intermedio antes del nuevo data.
@@ -145,15 +146,13 @@ class EventDetailCubit extends Cubit<EventDetailState> {
         // una sola vez aquí. EventDetailPage (camino lista/borrador) tiene su
         // propia emisión en el create: del BlocProvider; nunca emite ambos
         // (ver Fase 6, Riesgo #2).
-        _analytics
-            .logEvent(AnalyticsEvents.eventDetailViewed, {
-              AnalyticsParams.eventType: event.eventType.apiValue,
-              AnalyticsParams.eventState: event.state.name,
-              AnalyticsParams.isOwner: 0, // No se conoce el uid aquí sin AuthCubit
-              AnalyticsParams.isReadOnly: 0,
-              AnalyticsParams.source: AnalyticsParams.sourceDeepLink,
-            })
-            .ignore();
+        _analytics.logEvent(AnalyticsEvents.eventDetailViewed, {
+          AnalyticsParams.eventType: event.eventType.apiValue,
+          AnalyticsParams.eventState: event.state.name,
+          AnalyticsParams.isOwner: 0, // No se conoce el uid aquí sin AuthCubit
+          AnalyticsParams.isReadOnly: 0,
+          AnalyticsParams.source: AnalyticsParams.sourceDeepLink,
+        }).ignore();
         emit(state.copyWith(eventResult: ResultState.data(data: event)));
       },
     );
@@ -253,9 +252,7 @@ class EventDetailCubit extends Cubit<EventDetailState> {
     final result = await _publishEventUseCase(id);
     result.fold(
       (error) => emit(
-        state.copyWith(
-          lastUpdatedEventResult: ResultState.error(error: error),
-        ),
+        state.copyWith(lastUpdatedEventResult: ResultState.error(error: error)),
       ),
       (saved) => emit(
         state.copyWith(

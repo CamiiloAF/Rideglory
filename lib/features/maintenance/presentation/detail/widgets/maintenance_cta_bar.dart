@@ -24,9 +24,7 @@ class MaintenanceCtaBar extends StatelessWidget {
       ),
       decoration: const BoxDecoration(
         color: AppColors.darkBgPrimary,
-        border: Border(
-          top: BorderSide(color: AppColors.darkBorderPrimary),
-        ),
+        border: Border(top: BorderSide(color: AppColors.darkBorderPrimary)),
       ),
       child: Row(
         children: [

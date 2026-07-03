@@ -41,10 +41,7 @@ class EventFormDifficultySection extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 field.errorText!,
-                style: const TextStyle(
-                  color: AppColors.error,
-                  fontSize: 12,
-                ),
+                style: const TextStyle(color: AppColors.error, fontSize: 12),
               ),
             ],
           ],

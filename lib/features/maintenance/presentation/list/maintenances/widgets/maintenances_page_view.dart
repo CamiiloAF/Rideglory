@@ -120,10 +120,9 @@ class _MaintenancesPageViewState extends State<MaintenancesPageView> {
     final vehicleIds = context.read<MaintenancesCubit>().filters.vehicleIds;
     if (vehicleIds.isEmpty) return null;
     try {
-      return context
-          .read<VehicleCubit>()
-          .availableVehicles
-          .firstWhere((vehicle) => vehicle.id == vehicleIds.first);
+      return context.read<VehicleCubit>().availableVehicles.firstWhere(
+        (vehicle) => vehicle.id == vehicleIds.first,
+      );
     } catch (_) {
       return null;
     }
@@ -217,7 +216,10 @@ class _MaintenancesPageViewState extends State<MaintenancesPageView> {
         child: Column(
           children: [
             if (widget.showVehicleSelector)
-              BlocBuilder<MaintenancesCubit, ResultState<List<MaintenanceModel>>>(
+              BlocBuilder<
+                MaintenancesCubit,
+                ResultState<List<MaintenanceModel>>
+              >(
                 builder: (context, _) {
                   final selectedVehicle = _resolveSelectedVehicle(context);
                   final availableVehicles = context
@@ -234,27 +236,33 @@ class _MaintenancesPageViewState extends State<MaintenancesPageView> {
                 },
               ),
             Expanded(
-              child: BlocBuilder<MaintenancesCubit, ResultState<List<MaintenanceModel>>>(
-                builder: (context, state) => state.maybeWhen(
-                  loading: () => MaintenancesLoadingWidget(onRefresh: _onRefresh),
-                  error: (error) => MaintenancesErrorWidget(
-                    error: error.message,
-                    onRefresh: _onRefresh,
+              child:
+                  BlocBuilder<
+                    MaintenancesCubit,
+                    ResultState<List<MaintenanceModel>>
+                  >(
+                    builder: (context, state) => state.maybeWhen(
+                      loading: () =>
+                          MaintenancesLoadingWidget(onRefresh: _onRefresh),
+                      error: (error) => MaintenancesErrorWidget(
+                        error: error.message,
+                        onRefresh: _onRefresh,
+                      ),
+                      empty: () => MaintenancesEmptyWidget(
+                        onRefresh: _onRefresh,
+                        onActionPressed: _onAddMaintenance,
+                      ),
+                      data: (maintenances) => MaintenancesDataWidget(
+                        maintenances: maintenances,
+                        onRefresh: _onRefresh,
+                        onTap: widget.readOnly ? _onTapReadOnly : _onTap,
+                        onFilterPressed: _showFiltersBottomSheet,
+                        onAddPressed: _onAddMaintenance,
+                      ),
+                      orElse: () =>
+                          MaintenancesLoadingWidget(onRefresh: _onRefresh),
+                    ),
                   ),
-                  empty: () => MaintenancesEmptyWidget(
-                    onRefresh: _onRefresh,
-                    onActionPressed: _onAddMaintenance,
-                  ),
-                  data: (maintenances) => MaintenancesDataWidget(
-                    maintenances: maintenances,
-                    onRefresh: _onRefresh,
-                    onTap: widget.readOnly ? _onTapReadOnly : _onTap,
-                    onFilterPressed: _showFiltersBottomSheet,
-                    onAddPressed: _onAddMaintenance,
-                  ),
-                  orElse: () => MaintenancesLoadingWidget(onRefresh: _onRefresh),
-                ),
-              ),
             ),
           ],
         ),

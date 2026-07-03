@@ -14,7 +14,8 @@ String apiEncodeRequiredDateTime(DateTime value) =>
     value.toUtc().toIso8601String();
 
 /// RFC 3339 instants with UTC zone (`Z`) for strict REST parsers (e.g. Prisma).
-class NullableApiDateTimeConverter implements JsonConverter<DateTime?, String?> {
+class NullableApiDateTimeConverter
+    implements JsonConverter<DateTime?, String?> {
   const NullableApiDateTimeConverter();
 
   @override

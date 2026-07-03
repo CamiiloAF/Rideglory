@@ -24,11 +24,20 @@ class VehicleDetailSpecsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final rows = <_SpecRowData>[
       if (vehicle.brand != null)
-        _SpecRowData(label: context.l10n.vehicle_specBrand, value: vehicle.brand!),
+        _SpecRowData(
+          label: context.l10n.vehicle_specBrand,
+          value: vehicle.brand!,
+        ),
       if (vehicle.model != null)
-        _SpecRowData(label: context.l10n.vehicle_specModel, value: vehicle.model!),
+        _SpecRowData(
+          label: context.l10n.vehicle_specModel,
+          value: vehicle.model!,
+        ),
       if (vehicle.year != null)
-        _SpecRowData(label: context.l10n.vehicle_specYear, value: '${vehicle.year}'),
+        _SpecRowData(
+          label: context.l10n.vehicle_specYear,
+          value: '${vehicle.year}',
+        ),
       _SpecRowData(
         label: context.l10n.vehicle_currentMileageLabel,
         value: '${_formatKm(vehicle.currentMileage)} km',
@@ -52,13 +61,19 @@ class VehicleDetailSpecsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          VehicleDetailCardHeader(icon: Icons.settings_outlined, label: context.l10n.vehicle_specs),
+          VehicleDetailCardHeader(
+            icon: Icons.settings_outlined,
+            label: context.l10n.vehicle_specs,
+          ),
           ...rows.asMap().entries.map((entry) {
             final isLast = entry.key == rows.length - 1;
             return Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 10,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

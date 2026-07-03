@@ -37,7 +37,8 @@ class AppCityAutocomplete extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final placeService = getIt<PlaceService>();
-    final effectiveValidator = validator ??
+    final effectiveValidator =
+        validator ??
         (isRequired
             ? (value) {
                 if (value == null || value.trim().isEmpty) {
@@ -53,7 +54,8 @@ class AppCityAutocomplete extends StatelessWidget {
       hintText: hintText ?? _defaultHint,
       isRequired: isRequired,
       validator: effectiveValidator,
-      selectionRequiredError: context.l10n.registration_residenceCitySelectFromList,
+      selectionRequiredError:
+          context.l10n.registration_residenceCitySelectFromList,
       onSelected: onSelected,
       suffixIcon: suffixIcon ?? const Icon(Icons.search),
       focusNode: focusNode,
@@ -62,7 +64,10 @@ class AppCityAutocomplete extends StatelessWidget {
       suggestions: (_) => const <String>[],
       remoteSuggestions: (query) async {
         if (query.trim().length < 2) return const <String>[];
-        final suggestions = await placeService.autocomplete(query.trim(), 'cities');
+        final suggestions = await placeService.autocomplete(
+          query.trim(),
+          'cities',
+        );
         return suggestions.map((s) => s.name).toList();
       },
       suggestionsPrefixIcon: Icons.location_city_outlined,

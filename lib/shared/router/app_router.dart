@@ -278,11 +278,11 @@ class AppRouter {
                     name: AppRoutes.participants,
                     builder: (context, state) {
                       final event = state.extra as EventModel;
-                      final cubit =
-                          getIt<LiveTrackingSessionHolder>().obtainForEvent(
-                        eventId: event.id ?? '',
-                        eventOwnerId: event.ownerId,
-                      );
+                      final cubit = getIt<LiveTrackingSessionHolder>()
+                          .obtainForEvent(
+                            eventId: event.id ?? '',
+                            eventOwnerId: event.ownerId,
+                          );
                       return BlocProvider<LiveTrackingCubit>.value(
                         value: cubit,
                         child: ParticipantsPlaceholderPage(event: event),
@@ -309,8 +309,7 @@ class AppRouter {
                     path: 'detail-by-id',
                     name: AppRoutes.eventDetailById,
                     builder: (context, state) {
-                      final eventIdFromQuery =
-                          state.uri.queryParameters['id'];
+                      final eventIdFromQuery = state.uri.queryParameters['id'];
                       final eventIdFromExtra = state.extra is String
                           ? state.extra as String
                           : null;
@@ -435,7 +434,10 @@ class AppRouter {
             maintenance = extra as MaintenanceModel;
             readOnly = false;
           }
-          return MaintenanceDetailPage(maintenance: maintenance, readOnly: readOnly);
+          return MaintenanceDetailPage(
+            maintenance: maintenance,
+            readOnly: readOnly,
+          );
         },
       ),
 
@@ -492,7 +494,10 @@ class AppRouter {
             vehicle = extra as VehicleModel;
             isArchived = false;
           }
-          return TecnomecanicaStatusPage(vehicle: vehicle, isArchived: isArchived);
+          return TecnomecanicaStatusPage(
+            vehicle: vehicle,
+            isArchived: isArchived,
+          );
         },
       ),
       GoRoute(

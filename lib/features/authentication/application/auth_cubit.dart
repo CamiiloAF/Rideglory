@@ -23,7 +23,7 @@ class AuthCubit extends Cubit<AuthState> {
   final AnalyticsService _analytics;
 
   AuthCubit(this._authService, this._fcmService, this._analytics)
-      : super(const AuthState.initial());
+    : super(const AuthState.initial());
 
   void checkAuthState() {
     final user = _authService.currentUser;
@@ -50,24 +50,19 @@ class AuthCubit extends Cubit<AuthState> {
 
     await result.fold(
       (failure) async {
-        _analytics
-            .logEvent(AnalyticsEvents.authFailed, {
-              AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
-              AnalyticsParams.authErrorCategory:
-                  _categorizeError(failure.message),
-            })
-            .ignore();
+        _analytics.logEvent(AnalyticsEvents.authFailed, {
+          AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
+          AnalyticsParams.authErrorCategory: _categorizeError(failure.message),
+        }).ignore();
         emit(AuthState.error(failure.message));
       },
       (authUser) async {
         if (authUser.firebaseUser.uid.isNotEmpty) {
           await _printFirebaseToken(authUser.firebaseUser);
-          _analytics
-              .logEvent(AnalyticsEvents.authFirebaseOk, {
-                AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
-                AnalyticsParams.userLoaded: authUser.user != null ? 1 : 0,
-              })
-              .ignore();
+          _analytics.logEvent(AnalyticsEvents.authFirebaseOk, {
+            AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
+            AnalyticsParams.userLoaded: authUser.user != null ? 1 : 0,
+          }).ignore();
           await _onAuthenticated(
             firebaseUid: authUser.firebaseUser.uid,
             method: AnalyticsParams.authMethodEmail,
@@ -98,25 +93,21 @@ class AuthCubit extends Cubit<AuthState> {
 
     await result.fold(
       (failure) async {
-        _analytics
-            .logEvent(AnalyticsEvents.authFailed, {
-              AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
-              AnalyticsParams.authErrorCategory:
-                  _categorizeError(failure.message),
-            })
-            .ignore();
+        _analytics.logEvent(AnalyticsEvents.authFailed, {
+          AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
+          AnalyticsParams.authErrorCategory: _categorizeError(failure.message),
+        }).ignore();
         emit(AuthState.error(failure.message));
       },
       (firebaseUser) async {
         if (firebaseUser != null) {
           await _printFirebaseToken(firebaseUser);
-          _analytics
-              .logEvent(AnalyticsEvents.authFirebaseOk, {
-                AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
-                AnalyticsParams.userLoaded:
-                    _authService.currentUser != null ? 1 : 0,
-              })
-              .ignore();
+          _analytics.logEvent(AnalyticsEvents.authFirebaseOk, {
+            AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
+            AnalyticsParams.userLoaded: _authService.currentUser != null
+                ? 1
+                : 0,
+          }).ignore();
           await _onAuthenticated(
             firebaseUid: firebaseUser.uid,
             method: AnalyticsParams.authMethodEmail,
@@ -144,24 +135,19 @@ class AuthCubit extends Cubit<AuthState> {
           emit(const AuthState.unauthenticated());
           return;
         }
-        _analytics
-            .logEvent(AnalyticsEvents.authFailed, {
-              AnalyticsParams.authMethod: AnalyticsParams.authMethodGoogle,
-              AnalyticsParams.authErrorCategory:
-                  _categorizeError(failure.message),
-            })
-            .ignore();
+        _analytics.logEvent(AnalyticsEvents.authFailed, {
+          AnalyticsParams.authMethod: AnalyticsParams.authMethodGoogle,
+          AnalyticsParams.authErrorCategory: _categorizeError(failure.message),
+        }).ignore();
         emit(AuthState.error(failure.message));
       },
       (authUser) async {
         if (authUser.firebaseUser.uid.isNotEmpty) {
           await _printFirebaseToken(authUser.firebaseUser);
-          _analytics
-              .logEvent(AnalyticsEvents.authFirebaseOk, {
-                AnalyticsParams.authMethod: AnalyticsParams.authMethodGoogle,
-                AnalyticsParams.userLoaded: authUser.user != null ? 1 : 0,
-              })
-              .ignore();
+          _analytics.logEvent(AnalyticsEvents.authFirebaseOk, {
+            AnalyticsParams.authMethod: AnalyticsParams.authMethodGoogle,
+            AnalyticsParams.userLoaded: authUser.user != null ? 1 : 0,
+          }).ignore();
           await _onAuthenticated(
             firebaseUid: authUser.firebaseUser.uid,
             method: AnalyticsParams.authMethodGoogle,
@@ -185,24 +171,19 @@ class AuthCubit extends Cubit<AuthState> {
           emit(const AuthState.unauthenticated());
           return;
         }
-        _analytics
-            .logEvent(AnalyticsEvents.authFailed, {
-              AnalyticsParams.authMethod: AnalyticsParams.authMethodApple,
-              AnalyticsParams.authErrorCategory:
-                  _categorizeError(failure.message),
-            })
-            .ignore();
+        _analytics.logEvent(AnalyticsEvents.authFailed, {
+          AnalyticsParams.authMethod: AnalyticsParams.authMethodApple,
+          AnalyticsParams.authErrorCategory: _categorizeError(failure.message),
+        }).ignore();
         emit(AuthState.error(failure.message));
       },
       (authUser) async {
         if (authUser.firebaseUser.uid.isNotEmpty) {
           await _printFirebaseToken(authUser.firebaseUser);
-          _analytics
-              .logEvent(AnalyticsEvents.authFirebaseOk, {
-                AnalyticsParams.authMethod: AnalyticsParams.authMethodApple,
-                AnalyticsParams.userLoaded: authUser.user != null ? 1 : 0,
-              })
-              .ignore();
+          _analytics.logEvent(AnalyticsEvents.authFirebaseOk, {
+            AnalyticsParams.authMethod: AnalyticsParams.authMethodApple,
+            AnalyticsParams.userLoaded: authUser.user != null ? 1 : 0,
+          }).ignore();
           await _onAuthenticated(
             firebaseUid: authUser.firebaseUser.uid,
             method: AnalyticsParams.authMethodApple,
@@ -229,10 +210,9 @@ class AuthCubit extends Cubit<AuthState> {
       AnalyticsParams.userPropertyLoginMethod,
       method,
     );
-    await _analytics.logEvent(
-      AnalyticsEvents.authSucceeded,
-      {AnalyticsParams.authMethod: method},
-    );
+    await _analytics.logEvent(AnalyticsEvents.authSucceeded, {
+      AnalyticsParams.authMethod: method,
+    });
     await _analytics.logEvent(AnalyticsEvents.authFirstHomeEntry);
   }
 
@@ -298,23 +278,16 @@ class AuthCubit extends Cubit<AuthState> {
     final result = await _authService.sendPasswordResetEmail(email);
     result.fold(
       (failure) {
-        _analytics
-            .logEvent(AnalyticsEvents.authFailed, {
-              AnalyticsParams.authMethod:
-                  AnalyticsParams.authMethodForgotPassword,
-              AnalyticsParams.authErrorCategory:
-                  _categorizeError(failure.message),
-            })
-            .ignore();
+        _analytics.logEvent(AnalyticsEvents.authFailed, {
+          AnalyticsParams.authMethod: AnalyticsParams.authMethodForgotPassword,
+          AnalyticsParams.authErrorCategory: _categorizeError(failure.message),
+        }).ignore();
         emit(AuthState.error(failure.message));
       },
       (_) {
-        _analytics
-            .logEvent(AnalyticsEvents.authSucceeded, {
-              AnalyticsParams.authMethod:
-                  AnalyticsParams.authMethodForgotPassword,
-            })
-            .ignore();
+        _analytics.logEvent(AnalyticsEvents.authSucceeded, {
+          AnalyticsParams.authMethod: AnalyticsParams.authMethodForgotPassword,
+        }).ignore();
         emit(const AuthState.passwordResetEmailSent());
       },
     );

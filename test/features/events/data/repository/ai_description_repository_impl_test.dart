@@ -22,9 +22,7 @@ void main() {
   );
 
   setUpAll(() {
-    registerFallbackValue(
-      AiDescriptionRequestDto.fromDomain(request),
-    );
+    registerFallbackValue(AiDescriptionRequestDto.fromDomain(request));
   });
 
   setUp(() {
@@ -47,41 +45,44 @@ void main() {
   }
 
   group('generateDescription error mapping', () {
-    test('AC9 — 429 quota_exceeded_user → AiQuotaExceededUserException',
-        () async {
-      when(() => mockService.generateDescription(any())).thenThrow(
-        dioException(statusCode: 429, errorCode: 'quota_exceeded_user'),
-      );
+    test(
+      'AC9 — 429 quota_exceeded_user → AiQuotaExceededUserException',
+      () async {
+        when(() => mockService.generateDescription(any())).thenThrow(
+          dioException(statusCode: 429, errorCode: 'quota_exceeded_user'),
+        );
 
-      final result = await repository.generateDescription(request);
+        final result = await repository.generateDescription(request);
 
-      expect(result.isLeft(), isTrue);
-      result.fold(
-        (error) => expect(error, isA<AiQuotaExceededUserException>()),
-        (_) => fail('Expected Left'),
-      );
-    });
+        expect(result.isLeft(), isTrue);
+        result.fold(
+          (error) => expect(error, isA<AiQuotaExceededUserException>()),
+          (_) => fail('Expected Left'),
+        );
+      },
+    );
 
-    test('AC10 — 429 quota_exceeded_project → AiQuotaExceededProjectException',
-        () async {
-      when(() => mockService.generateDescription(any())).thenThrow(
-        dioException(
-            statusCode: 429, errorCode: 'quota_exceeded_project'),
-      );
+    test(
+      'AC10 — 429 quota_exceeded_project → AiQuotaExceededProjectException',
+      () async {
+        when(() => mockService.generateDescription(any())).thenThrow(
+          dioException(statusCode: 429, errorCode: 'quota_exceeded_project'),
+        );
 
-      final result = await repository.generateDescription(request);
+        final result = await repository.generateDescription(request);
 
-      expect(result.isLeft(), isTrue);
-      result.fold(
-        (error) => expect(error, isA<AiQuotaExceededProjectException>()),
-        (_) => fail('Expected Left'),
-      );
-    });
+        expect(result.isLeft(), isTrue);
+        result.fold(
+          (error) => expect(error, isA<AiQuotaExceededProjectException>()),
+          (_) => fail('Expected Left'),
+        );
+      },
+    );
 
     test('AC11 — 422 safety_blocked → AiSafetyBlockedException', () async {
-      when(() => mockService.generateDescription(any())).thenThrow(
-        dioException(statusCode: 422, errorCode: 'safety_blocked'),
-      );
+      when(
+        () => mockService.generateDescription(any()),
+      ).thenThrow(dioException(statusCode: 422, errorCode: 'safety_blocked'));
 
       final result = await repository.generateDescription(request);
 
@@ -121,13 +122,10 @@ void main() {
       final result = await repository.generateDescription(request);
 
       expect(result.isRight(), isTrue);
-      result.fold(
-        (_) => fail('Expected Right'),
-        (value) {
-          expect(value.markdown, '## Test');
-          expect(value.remainingGenerations, 7);
-        },
-      );
+      result.fold((_) => fail('Expected Right'), (value) {
+        expect(value.markdown, '## Test');
+        expect(value.remainingGenerations, 7);
+      });
     });
   });
 }

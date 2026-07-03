@@ -299,34 +299,28 @@ void main() {
     );
 
     // TC-soat-a5: delete exitoso → soat_deleted emitido
-    test(
-      'TC-soat-a5: delete exitoso → soat_deleted emitido',
-      () async {
-        when(
-          () => mockDeleteSoatUseCase(vehicleId),
-        ).thenAnswer((_) async => const Right(unit));
+    test('TC-soat-a5: delete exitoso → soat_deleted emitido', () async {
+      when(
+        () => mockDeleteSoatUseCase(vehicleId),
+      ).thenAnswer((_) async => const Right(unit));
 
-        await soatCubit.delete(vehicleId);
+      await soatCubit.delete(vehicleId);
 
-        verify(
-          () => mockAnalytics.logEvent(AnalyticsEvents.soatDeleted),
-        ).called(1);
-      },
-    );
+      verify(
+        () => mockAnalytics.logEvent(AnalyticsEvents.soatDeleted),
+      ).called(1);
+    });
 
     // TC-soat-a6: delete con error → soat_deleted NO emitido
-    test(
-      'TC-soat-a6: delete con error → soat_deleted NO emitido',
-      () async {
-        when(() => mockDeleteSoatUseCase(vehicleId)).thenAnswer(
-          (_) async => const Left(DomainException(message: 'Borrado fallido')),
-        );
+    test('TC-soat-a6: delete con error → soat_deleted NO emitido', () async {
+      when(() => mockDeleteSoatUseCase(vehicleId)).thenAnswer(
+        (_) async => const Left(DomainException(message: 'Borrado fallido')),
+      );
 
-        await soatCubit.delete(vehicleId);
+      await soatCubit.delete(vehicleId);
 
-        verifyNever(() => mockAnalytics.logEvent(AnalyticsEvents.soatDeleted));
-      },
-    );
+      verifyNever(() => mockAnalytics.logEvent(AnalyticsEvents.soatDeleted));
+    });
 
     // TC-soat-a7: save con error → ni soat_updated ni soat_manual_saved emitidos
     test(
@@ -338,8 +332,7 @@ void main() {
             soat: any(named: 'soat'),
           ),
         ).thenAnswer(
-          (_) async =>
-              const Left(DomainException(message: 'Guardado fallido')),
+          (_) async => const Left(DomainException(message: 'Guardado fallido')),
         );
 
         await soatCubit.save(vehicleId: vehicleId, soat: mockSoat);
@@ -367,10 +360,8 @@ void main() {
         await soatCubit.save(vehicleId: vehicleId, soat: mockSoat);
 
         final captured = verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.soatUpdated,
-            captureAny(),
-          ),
+          () =>
+              mockAnalytics.logEvent(AnalyticsEvents.soatUpdated, captureAny()),
         ).captured;
 
         final params = captured.single as Map<String, Object>;

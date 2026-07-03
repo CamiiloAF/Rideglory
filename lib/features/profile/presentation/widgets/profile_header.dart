@@ -36,8 +36,7 @@ class ProfileHeader extends StatelessWidget {
               color: AppColors.textOnDarkSecondary,
             ),
           ),
-        if (user.residenceCity != null &&
-            user.residenceCity!.isNotEmpty) ...[
+        if (user.residenceCity != null && user.residenceCity!.isNotEmpty) ...[
           const SizedBox(height: 4),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

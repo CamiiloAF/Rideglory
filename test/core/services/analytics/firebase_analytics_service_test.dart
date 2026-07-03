@@ -19,31 +19,25 @@ void main() {
       'TC-analytics-1: logScreenView delega al SDK con screenName correcto',
       () async {
         when(
-          () => mockAnalytics.logScreenView(screenName: any(named: 'screenName')),
+          () =>
+              mockAnalytics.logScreenView(screenName: any(named: 'screenName')),
         ).thenAnswer((_) async {});
 
         await service.logScreenView('home');
 
-        verify(
-          () => mockAnalytics.logScreenView(screenName: 'home'),
-        ).called(1);
+        verify(() => mockAnalytics.logScreenView(screenName: 'home')).called(1);
       },
     );
 
-    test(
-      'TC-analytics-2: setUserId delega al SDK con id correcto',
-      () async {
-        when(
-          () => mockAnalytics.setUserId(id: any(named: 'id')),
-        ).thenAnswer((_) async {});
+    test('TC-analytics-2: setUserId delega al SDK con id correcto', () async {
+      when(
+        () => mockAnalytics.setUserId(id: any(named: 'id')),
+      ).thenAnswer((_) async {});
 
-        await service.setUserId('hashed-user-id');
+      await service.setUserId('hashed-user-id');
 
-        verify(
-          () => mockAnalytics.setUserId(id: 'hashed-user-id'),
-        ).called(1);
-      },
-    );
+      verify(() => mockAnalytics.setUserId(id: 'hashed-user-id')).called(1);
+    });
 
     test(
       'TC-analytics-3: setUserProperty delega al SDK con name y value correctos',
@@ -78,19 +72,14 @@ void main() {
       },
     );
 
-    test(
-      'TC-analytics-5: setEnabled(true) delega al SDK con true',
-      () async {
-        when(
-          () => mockAnalytics.setAnalyticsCollectionEnabled(any()),
-        ).thenAnswer((_) async {});
+    test('TC-analytics-5: setEnabled(true) delega al SDK con true', () async {
+      when(
+        () => mockAnalytics.setAnalyticsCollectionEnabled(any()),
+      ).thenAnswer((_) async {});
 
-        await service.setEnabled(true);
+      await service.setEnabled(true);
 
-        verify(
-          () => mockAnalytics.setAnalyticsCollectionEnabled(true),
-        ).called(1);
-      },
-    );
+      verify(() => mockAnalytics.setAnalyticsCollectionEnabled(true)).called(1);
+    });
   });
 }

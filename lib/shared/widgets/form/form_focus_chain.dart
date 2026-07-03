@@ -3,7 +3,8 @@ import 'package:flutter/widgets.dart';
 //TODO USAR ESTO EN LOS DEMÁS FORMULARIOS
 /// Ordered focus traversal for form fields keyed by logical names (e.g. form field IDs).
 class FormFocusChain {
-  FormFocusChain(this.fields) : assert(fields.isNotEmpty, 'fields must not be empty');
+  FormFocusChain(this.fields)
+    : assert(fields.isNotEmpty, 'fields must not be empty');
 
   final List<String> fields;
   final Map<String, FocusNode> _nodes = <String, FocusNode>{};

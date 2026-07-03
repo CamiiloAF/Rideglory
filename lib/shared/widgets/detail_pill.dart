@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/foundation/extensions/theme_extensions.dart';
 import 'package:rideglory/core/extensions/theme_extensions.dart';
 
-enum DetailPillVariant {
-  overlay,
-  primary,
-}
+enum DetailPillVariant { overlay, primary }
 
 class DetailPill extends StatelessWidget {
   const DetailPill({
@@ -31,10 +28,7 @@ class DetailPill extends StatelessWidget {
         : cs.primary.withValues(alpha: 0.25);
 
     final border = isOverlay
-        ? Border.all(
-            color: cs.onSurface.withValues(alpha: 0.2),
-            width: 1,
-          )
+        ? Border.all(color: cs.onSurface.withValues(alpha: 0.2), width: 1)
         : null;
 
     final labelColor = isOverlay

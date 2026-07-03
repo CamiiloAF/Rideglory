@@ -25,8 +25,7 @@ class VehicleFormCoverSection extends StatelessWidget {
             GestureDetector(
               onTap: hasImage
                   ? null
-                  : () =>
-                      context.read<FormImageCubit>().pickImageFromGallery(),
+                  : () => context.read<FormImageCubit>().pickImageFromGallery(),
               child: Container(
                 height: 160,
                 decoration: BoxDecoration(

@@ -41,8 +41,10 @@ class EventDetailHeaderSection extends StatelessWidget {
           Row(
             children: [
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 5,
+                ),
                 decoration: BoxDecoration(
                   color: _badgeColor(),
                   borderRadius: BorderRadius.circular(20),
@@ -59,8 +61,10 @@ class EventDetailHeaderSection extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.darkCard,
                   borderRadius: BorderRadius.circular(20),
@@ -100,8 +104,11 @@ class EventDetailHeaderSection extends StatelessWidget {
                   color: AppColors.darkTertiary,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.person_outline,
-                    color: AppColors.textOnDarkSecondary, size: 16),
+                child: const Icon(
+                  Icons.person_outline,
+                  color: AppColors.textOnDarkSecondary,
+                  size: 16,
+                ),
               ),
               const SizedBox(width: 8),
               Expanded(
@@ -123,8 +130,18 @@ class EventDetailHeaderSection extends StatelessWidget {
 
   static String _formatDate(DateTime date) {
     const monthNames = [
-      'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
-      'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic',
+      'Ene',
+      'Feb',
+      'Mar',
+      'Abr',
+      'May',
+      'Jun',
+      'Jul',
+      'Ago',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dic',
     ];
     return '${date.day} ${monthNames[date.month - 1]} ${date.year}';
   }

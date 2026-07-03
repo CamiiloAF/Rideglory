@@ -46,8 +46,7 @@ class ParticipantsRiderList extends StatelessWidget {
   List<RiderTrackingModel> _filtered() {
     return riders.where((rider) {
       final query = searchQuery.toLowerCase().trim();
-      if (query.isNotEmpty &&
-          !rider.fullName.toLowerCase().contains(query)) {
+      if (query.isNotEmpty && !rider.fullName.toLowerCase().contains(query)) {
         return false;
       }
       final effectivelyActive = _isEffectivelyActive(rider);

@@ -3,11 +3,7 @@ import 'package:rideglory/design_system/design_system.dart';
 
 /// Card rendered inside [DocumentValidityCard] when the document is valid.
 class ValidityCardValid extends StatelessWidget {
-  const ValidityCardValid({
-    super.key,
-    required this.title,
-    required this.desc,
-  });
+  const ValidityCardValid({super.key, required this.title, required this.desc});
 
   final String title;
   final String desc;
@@ -24,11 +20,7 @@ class ValidityCardValid extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.verified_user_outlined,
-            size: 20,
-            color: validColor,
-          ),
+          const Icon(Icons.verified_user_outlined, size: 20, color: validColor),
           const SizedBox(width: 10),
           Expanded(
             child: Column(

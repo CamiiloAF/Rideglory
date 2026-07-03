@@ -29,7 +29,8 @@ class _PriceInputCardState extends State<PriceInputCard> {
   static final _fmt = NumberFormat('#,##0', 'es_CO');
 
   // Formato para mostrar (con $ y puntos de miles).
-  String _formatDisplay(int value) => '\$${_fmt.format(value).replaceAll(',', '.')}';
+  String _formatDisplay(int value) =>
+      '\$${_fmt.format(value).replaceAll(',', '.')}';
 
   // Formato para edición inline (solo puntos de miles, sin $).
   String _formatEdit(int value) =>
@@ -43,8 +44,9 @@ class _PriceInputCardState extends State<PriceInputCard> {
 
   void _startEdit(int currentValue) {
     _textController.text = _formatEdit(currentValue);
-    _textController.selection =
-        TextSelection.collapsed(offset: _textController.text.length);
+    _textController.selection = TextSelection.collapsed(
+      offset: _textController.text.length,
+    );
     setState(() => _isEditing = true);
   }
 
@@ -166,7 +168,11 @@ class _PriceStepper extends StatelessWidget {
         _CircleBtn(
           onTap: onDecrement,
           fill: const Color(0xFF242429),
-          child: const Icon(Icons.remove, size: 16, color: AppColors.textOnDarkPrimary),
+          child: const Icon(
+            Icons.remove,
+            size: 16,
+            color: AppColors.textOnDarkPrimary,
+          ),
         ),
         const SizedBox(width: 12),
         SizedBox(
@@ -217,7 +223,11 @@ class _PriceStepper extends StatelessWidget {
         _CircleBtn(
           onTap: onIncrement,
           fill: AppColors.primary,
-          child: const Icon(Icons.add, size: 16, color: AppColors.darkBgPrimary),
+          child: const Icon(
+            Icons.add,
+            size: 16,
+            color: AppColors.darkBgPrimary,
+          ),
         ),
       ],
     );
@@ -246,7 +256,11 @@ class _ThousandDotsFormatter extends TextInputFormatter {
 }
 
 class _CircleBtn extends StatelessWidget {
-  const _CircleBtn({required this.onTap, required this.fill, required this.child});
+  const _CircleBtn({
+    required this.onTap,
+    required this.fill,
+    required this.child,
+  });
 
   final VoidCallback onTap;
   final Color fill;

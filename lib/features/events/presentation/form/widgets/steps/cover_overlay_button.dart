@@ -3,7 +3,11 @@ import 'package:rideglory/design_system/design_system.dart';
 
 /// Circular icon button overlaid on the cover image (edit / delete).
 class CoverOverlayButton extends StatelessWidget {
-  const CoverOverlayButton({super.key, required this.icon, required this.onTap});
+  const CoverOverlayButton({
+    super.key,
+    required this.icon,
+    required this.onTap,
+  });
 
   final IconData icon;
   final VoidCallback onTap;

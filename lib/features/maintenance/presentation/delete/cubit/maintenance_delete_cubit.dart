@@ -21,7 +21,9 @@ class MaintenanceDeleteCubit extends Cubit<MaintenanceDeleteState> {
   Future<void> deleteMaintenance(MaintenanceModel maintenance) async {
     final maintenanceId = maintenance.id;
     if (maintenanceId == null) {
-      emit(const MaintenanceDeleteState.error(message: 'Missing maintenance id'));
+      emit(
+        const MaintenanceDeleteState.error(message: 'Missing maintenance id'),
+      );
       return;
     }
 
@@ -32,11 +34,9 @@ class MaintenanceDeleteCubit extends Cubit<MaintenanceDeleteState> {
     result.fold(
       (error) => emit(MaintenanceDeleteState.error(message: error.message)),
       (_) {
-        _analytics
-            .logEvent(AnalyticsEvents.maintenanceDeleted, {
-              AnalyticsParams.maintenanceType: maintenance.type.name,
-            })
-            .ignore();
+        _analytics.logEvent(AnalyticsEvents.maintenanceDeleted, {
+          AnalyticsParams.maintenanceType: maintenance.type.name,
+        }).ignore();
         emit(MaintenanceDeleteState.success(deletedId: maintenanceId));
       },
     );

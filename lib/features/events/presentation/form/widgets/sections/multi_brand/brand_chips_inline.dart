@@ -18,9 +18,18 @@ class BrandChipsInline extends StatefulWidget {
 
 class _BrandChipsInlineState extends State<BrandChipsInline> {
   static const _popular = [
-    'Honda', 'Yamaha', 'Suzuki', 'Kawasaki',
-    'AKT', 'Bajaj', 'KTM', 'Royal Enfield',
-    'BMW Motorrad', 'Ducati', 'TVS', 'Hero',
+    'Honda',
+    'Yamaha',
+    'Suzuki',
+    'Kawasaki',
+    'AKT',
+    'Bajaj',
+    'KTM',
+    'Royal Enfield',
+    'BMW Motorrad',
+    'Ducati',
+    'TVS',
+    'Hero',
   ];
 
   final _controller = TextEditingController();
@@ -69,7 +78,10 @@ class _BrandChipsInlineState extends State<BrandChipsInline> {
   void _onSearchChanged(String value) {
     final results = value.isEmpty
         ? <String>[]
-        : widget.suggestions(value).where((b) => !_selected.contains(b)).toList();
+        : widget
+              .suggestions(value)
+              .where((b) => !_selected.contains(b))
+              .toList();
 
     _overlay?.remove();
     _overlay = null;
@@ -201,7 +213,10 @@ class _BrandChipsInlineState extends State<BrandChipsInline> {
             children: [
               // Fila "Todas las marcas"
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 child: GestureDetector(
                   onTap: isMultiBrand ? null : _selectAll,
                   child: _BrandChip(
@@ -230,20 +245,21 @@ class _BrandChipsInlineState extends State<BrandChipsInline> {
                 child: Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: [
-                    ..._popular,
-                    ...selected.where((b) => !_popular.contains(b)),
-                  ]
-                      .map(
-                        (brand) => GestureDetector(
-                          onTap: () => _toggle(brand),
-                          child: _BrandChip(
-                            label: brand,
-                            selected: selected.contains(brand),
-                          ),
-                        ),
-                      )
-                      .toList(),
+                  children:
+                      [
+                            ..._popular,
+                            ...selected.where((b) => !_popular.contains(b)),
+                          ]
+                          .map(
+                            (brand) => GestureDetector(
+                              onTap: () => _toggle(brand),
+                              child: _BrandChip(
+                                label: brand,
+                                selected: selected.contains(brand),
+                              ),
+                            ),
+                          )
+                          .toList(),
                 ),
               ),
             ],
@@ -281,7 +297,9 @@ class _BrandChip extends StatelessWidget {
             Icon(
               Icons.check_rounded,
               size: 13,
-              color: selected ? AppColors.primary : AppColors.textOnDarkTertiary,
+              color: selected
+                  ? AppColors.primary
+                  : AppColors.textOnDarkTertiary,
             ),
             const SizedBox(width: 6),
           ],
@@ -291,7 +309,9 @@ class _BrandChip extends StatelessWidget {
               fontFamily: 'Space Grotesk',
               fontSize: 12,
               fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
-              color: selected ? AppColors.primary : AppColors.textOnDarkSecondary,
+              color: selected
+                  ? AppColors.primary
+                  : AppColors.textOnDarkSecondary,
             ),
           ),
         ],

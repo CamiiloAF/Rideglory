@@ -25,8 +25,8 @@ class MainShell extends StatefulWidget {
     this.showNotificationBadge = false,
     AnalyticsService? analyticsService,
     AnalyticsRouteObserver? analyticsObserver,
-  })  : _analyticsService = analyticsService,
-        _analyticsObserver = analyticsObserver;
+  }) : _analyticsService = analyticsService,
+       _analyticsObserver = analyticsObserver;
 
   final StatefulNavigationShell navigationShell;
   final bool showNotificationBadge;
@@ -56,11 +56,11 @@ class _MainShellState extends State<MainShell> {
 
   @override
   Widget build(BuildContext context) {
-    final currentBarIndex =
-        _branchIndexToBarIndex(widget.navigationShell.currentIndex);
+    final currentBarIndex = _branchIndexToBarIndex(
+      widget.navigationShell.currentIndex,
+    );
     final analytics = widget._analyticsService ?? getIt<AnalyticsService>();
-    final observer =
-        widget._analyticsObserver ?? AppRouter.analyticsObserver;
+    final observer = widget._analyticsObserver ?? AppRouter.analyticsObserver;
 
     // Reexpone la MISMA instancia de VehicleCubit provista en la raíz
     // (sobre MaterialApp) a las ramas del StatefulShellRoute. No se usa el
@@ -82,8 +82,9 @@ class _MainShellState extends State<MainShell> {
                 context.pushNamed(AppRoutes.createEvent);
                 return;
               }
-              final branchIndex =
-                  index > _addButtonBarIndex ? index - 1 : index;
+              final branchIndex = index > _addButtonBarIndex
+                  ? index - 1
+                  : index;
               widget.navigationShell.goBranch(branchIndex);
             },
             onAddTap: () => context.pushNamed(AppRoutes.createEvent),

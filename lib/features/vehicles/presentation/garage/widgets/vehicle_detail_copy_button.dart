@@ -19,7 +19,11 @@ class VehicleDetailCopyButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         alignment: Alignment.center,
-        child: const Icon(Icons.content_copy, size: 14, color: AppColors.textOnDarkSecondary),
+        child: const Icon(
+          Icons.content_copy,
+          size: 14,
+          color: AppColors.textOnDarkSecondary,
+        ),
       ),
     );
   }

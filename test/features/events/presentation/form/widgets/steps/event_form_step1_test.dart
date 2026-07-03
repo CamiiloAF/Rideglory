@@ -41,8 +41,7 @@ class MockEventFormCubit extends MockCubit<EventFormState>
 class MockFormImageCubit extends MockCubit<ResultState<FormImageData>>
     implements FormImageCubit {}
 
-class MockAiDescriptionChatCubit
-    extends MockCubit<AiDescriptionChatState>
+class MockAiDescriptionChatCubit extends MockCubit<AiDescriptionChatState>
     implements AiDescriptionChatCubit {}
 
 class MockPlaceService extends Mock implements PlaceService {}
@@ -103,8 +102,9 @@ void _stubEventFormCubit(
 }
 
 void _stubFormImageCubit(MockFormImageCubit cubit) {
-  when(() => cubit.state)
-      .thenReturn(const ResultState<FormImageData>.initial());
+  when(
+    () => cubit.state,
+  ).thenReturn(const ResultState<FormImageData>.initial());
 }
 
 void _stubAiCubit(MockAiDescriptionChatCubit cubit) {
@@ -131,8 +131,9 @@ void main() {
 
   setUp(() {
     mockPlace = MockPlaceService();
-    when(() => mockPlace.autocomplete(any(), any()))
-        .thenAnswer((_) async => []);
+    when(
+      () => mockPlace.autocomplete(any(), any()),
+    ).thenAnswer((_) async => []);
 
     if (!gI.isRegistered<PlaceService>()) {
       gI.registerSingleton<PlaceService>(mockPlace);
@@ -159,160 +160,177 @@ void main() {
   group('EventFormStep1 smoke tests (AC #7)', () {
     // TC-wdg-01 ──────────────────────────────────────────────────────────────
     testWidgets(
-        'TC-wdg-01: EventFormStep1 renders without overflow/exceptions with empty name',
-        (tester) async {
-      final eventFormCubit = MockEventFormCubit();
-      final formImageCubit = MockFormImageCubit();
-      _stubEventFormCubit(eventFormCubit, validateResult: false);
-      _stubFormImageCubit(formImageCubit);
+      'TC-wdg-01: EventFormStep1 renders without overflow/exceptions with empty name',
+      (tester) async {
+        final eventFormCubit = MockEventFormCubit();
+        final formImageCubit = MockFormImageCubit();
+        _stubEventFormCubit(eventFormCubit, validateResult: false);
+        _stubFormImageCubit(formImageCubit);
 
-      await tester.pumpWidget(
-        _buildStep1(
-          eventFormCubit: eventFormCubit,
-          formImageCubit: formImageCubit,
-          aiCubit: mockAiCubit,
-        ),
-      );
-      await tester.pump();
+        await tester.pumpWidget(
+          _buildStep1(
+            eventFormCubit: eventFormCubit,
+            formImageCubit: formImageCubit,
+            aiCubit: mockAiCubit,
+          ),
+        );
+        await tester.pump();
 
-      expect(find.byType(EventFormStep1), findsOneWidget);
-      expect(tester.takeException(), isNull);
-    });
+        expect(find.byType(EventFormStep1), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      },
+    );
 
     // TC-wdg-02 ──────────────────────────────────────────────────────────────
     testWidgets(
-        'TC-wdg-02: Continuar button is disabled when validateStep returns false (empty name)',
-        (tester) async {
-      final eventFormCubit = MockEventFormCubit();
-      final formImageCubit = MockFormImageCubit();
-      _stubEventFormCubit(eventFormCubit, validateResult: false);
-      _stubFormImageCubit(formImageCubit);
+      'TC-wdg-02: Continuar button is disabled when validateStep returns false (empty name)',
+      (tester) async {
+        final eventFormCubit = MockEventFormCubit();
+        final formImageCubit = MockFormImageCubit();
+        _stubEventFormCubit(eventFormCubit, validateResult: false);
+        _stubFormImageCubit(formImageCubit);
 
-      await tester.pumpWidget(
-        _buildStep1(
-          eventFormCubit: eventFormCubit,
-          formImageCubit: formImageCubit,
-          aiCubit: mockAiCubit,
-        ),
-      );
-      await tester.pump();
+        await tester.pumpWidget(
+          _buildStep1(
+            eventFormCubit: eventFormCubit,
+            formImageCubit: formImageCubit,
+            aiCubit: mockAiCubit,
+          ),
+        );
+        await tester.pump();
 
-      await tester.tap(find.textContaining('Continuar'));
-      await tester.pump();
+        await tester.tap(find.textContaining('Continuar'));
+        await tester.pump();
 
-      verifyNever(() => eventFormCubit.nextStep());
-    });
+        verifyNever(() => eventFormCubit.nextStep());
+      },
+    );
 
     // TC-wdg-03 ──────────────────────────────────────────────────────────────
     testWidgets(
-        'TC-wdg-03: Continuar button is enabled when validateStep returns true (name filled)',
-        (tester) async {
-      final eventFormCubit = MockEventFormCubit();
-      final formImageCubit = MockFormImageCubit();
-      _stubEventFormCubit(eventFormCubit, validateResult: true);
-      _stubFormImageCubit(formImageCubit);
-      when(() => eventFormCubit.nextStep()).thenReturn(null);
+      'TC-wdg-03: Continuar button is enabled when validateStep returns true (name filled)',
+      (tester) async {
+        final eventFormCubit = MockEventFormCubit();
+        final formImageCubit = MockFormImageCubit();
+        _stubEventFormCubit(eventFormCubit, validateResult: true);
+        _stubFormImageCubit(formImageCubit);
+        when(() => eventFormCubit.nextStep()).thenReturn(null);
 
-      await tester.pumpWidget(
-        _buildStep1(
-          eventFormCubit: eventFormCubit,
-          formImageCubit: formImageCubit,
-          aiCubit: mockAiCubit,
-        ),
-      );
-      await tester.pump();
+        await tester.pumpWidget(
+          _buildStep1(
+            eventFormCubit: eventFormCubit,
+            formImageCubit: formImageCubit,
+            aiCubit: mockAiCubit,
+          ),
+        );
+        await tester.pump();
 
-      await tester.tap(find.textContaining('Continuar'));
-      await tester.pump();
+        await tester.tap(find.textContaining('Continuar'));
+        await tester.pump();
 
-      verify(() => eventFormCubit.nextStep()).called(1);
-    });
+        verify(() => eventFormCubit.nextStep()).called(1);
+      },
+    );
   });
 
   // ─── TC-step-07 (AC-6g) ──────────────────────────────────────────────────
   // buildEventToSave() must produce meetingPoint == '' when no waypoints exist.
   // meetingPoint is now a computed getter derived from routePoints.
-  group('TC-step-07 (AC-6g): buildEventToSave meetingPoint when no waypoints',
-      () {
-    testWidgets(
+  group(
+    'TC-step-07 (AC-6g): buildEventToSave meetingPoint when no waypoints',
+    () {
+      testWidgets(
         'buildEventToSave() returns EventModel with meetingPoint == "" '
         'when state has no waypoints',
         (tester) async {
-      final mockCreate = MockCreateEventUseCase();
-      final mockUpdate = MockUpdateEventUseCase();
-      final mockUpload = MockUploadEventImageUseCase();
-      final mockGetUserId = MockGetCurrentUserIdUseCase();
-      final mockAnalytics = MockAnalyticsService();
+          final mockCreate = MockCreateEventUseCase();
+          final mockUpdate = MockUpdateEventUseCase();
+          final mockUpload = MockUploadEventImageUseCase();
+          final mockGetUserId = MockGetCurrentUserIdUseCase();
+          final mockAnalytics = MockAnalyticsService();
 
-      when(() => mockAnalytics.logEvent(any(), any()))
-          .thenAnswer((_) async {});
-      when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
-      when(() => mockGetUserId())
-          .thenAnswer((_) async => const Right('user-test-123'));
+          when(
+            () => mockAnalytics.logEvent(any(), any()),
+          ).thenAnswer((_) async {});
+          when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
+          when(
+            () => mockGetUserId(),
+          ).thenAnswer((_) async => const Right('user-test-123'));
 
-      final realCubit = EventFormCubit(
-        mockCreate,
-        mockUpdate,
-        mockUpload,
-        mockGetUserId,
-        mockAnalytics,
-      );
+          final realCubit = EventFormCubit(
+            mockCreate,
+            mockUpdate,
+            mockUpload,
+            mockGetUserId,
+            mockAnalytics,
+          );
 
-      final now = DateTime.now();
-      final initialValues = <String, dynamic>{
-        EventFormFields.name: 'Rodada QA',
-        EventFormFields.description: 'Descripción de prueba',
-        EventFormFields.dateRange: DateTimeRange(start: now, end: now),
-        EventFormFields.meetingTime: DateTime(now.year, now.month, now.day, 7),
-        EventFormFields.difficulty: EventDifficulty.one,
-        EventFormFields.eventType: EventType.onRoad,
-        EventFormFields.allowedBrands: <String>[],
-      };
+          final now = DateTime.now();
+          final initialValues = <String, dynamic>{
+            EventFormFields.name: 'Rodada QA',
+            EventFormFields.description: 'Descripción de prueba',
+            EventFormFields.dateRange: DateTimeRange(start: now, end: now),
+            EventFormFields.meetingTime: DateTime(
+              now.year,
+              now.month,
+              now.day,
+              7,
+            ),
+            EventFormFields.difficulty: EventDifficulty.one,
+            EventFormFields.eventType: EventType.onRoad,
+            EventFormFields.allowedBrands: <String>[],
+          };
 
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: AppTheme.darkTheme,
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            FlutterQuillLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          supportedLocales: AppLocalizations.supportedLocales,
-          locale: const Locale('es'),
-          home: Scaffold(
-            body: BlocProvider<EventFormCubit>.value(
-              value: realCubit,
-              child: FormBuilder(
-                key: realCubit.formKey,
-                initialValue: initialValues,
-                child: Column(
-                  children: [
-                    for (final entry in initialValues.entries)
-                      FormBuilderField<dynamic>(
-                        name: entry.key,
-                        initialValue: entry.value,
-                        builder: (_) => const SizedBox.shrink(),
-                      ),
-                  ],
+          await tester.pumpWidget(
+            MaterialApp(
+              theme: AppTheme.darkTheme,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                FlutterQuillLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+              ],
+              supportedLocales: AppLocalizations.supportedLocales,
+              locale: const Locale('es'),
+              home: Scaffold(
+                body: BlocProvider<EventFormCubit>.value(
+                  value: realCubit,
+                  child: FormBuilder(
+                    key: realCubit.formKey,
+                    initialValue: initialValues,
+                    child: Column(
+                      children: [
+                        for (final entry in initialValues.entries)
+                          FormBuilderField<dynamic>(
+                            name: entry.key,
+                            initialValue: entry.value,
+                            builder: (_) => const SizedBox.shrink(),
+                          ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
+          );
+          await tester.pump();
+
+          final result = await realCubit.buildEventToSave();
+
+          expect(
+            result,
+            isNotNull,
+            reason:
+                'buildEventToSave must return a non-null EventModel '
+                'when the form is valid',
+          );
+          // meetingPoint is derived from routePoints (empty when no waypoints)
+          expect(result!.meetingPoint, equals(''));
+
+          realCubit.close();
+        },
       );
-      await tester.pump();
-
-      final result = await realCubit.buildEventToSave();
-
-      expect(result, isNotNull,
-          reason: 'buildEventToSave must return a non-null EventModel '
-              'when the form is valid');
-      // meetingPoint is derived from routePoints (empty when no waypoints)
-      expect(result!.meetingPoint, equals(''));
-
-      realCubit.close();
-    });
-  });
+    },
+  );
 }

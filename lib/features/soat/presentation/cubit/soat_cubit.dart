@@ -32,11 +32,9 @@ class SoatCubit extends VehicleDocumentCubit<SoatModel> {
       if (soat == null) {
         emit(const ResultState.empty());
       } else {
-        _analytics
-            .logEvent(AnalyticsEvents.soatStatusViewed, {
-              AnalyticsParams.soatStatus: soat.status.name,
-            })
-            .ignore();
+        _analytics.logEvent(AnalyticsEvents.soatStatusViewed, {
+          AnalyticsParams.soatStatus: soat.status.name,
+        }).ignore();
         emit(ResultState.data(data: soat));
       }
     });
@@ -56,14 +54,12 @@ class SoatCubit extends VehicleDocumentCubit<SoatModel> {
       (saved) {
         // Un id no vacío indica edición de un SOAT existente; vacío = creación.
         final isUpdate = soat.id.isNotEmpty;
-        _analytics
-            .logEvent(
-              isUpdate
-                  ? AnalyticsEvents.soatUpdated
-                  : AnalyticsEvents.soatManualSaved,
-              {AnalyticsParams.hadPdf: 0},
-            )
-            .ignore();
+        _analytics.logEvent(
+          isUpdate
+              ? AnalyticsEvents.soatUpdated
+              : AnalyticsEvents.soatManualSaved,
+          {AnalyticsParams.hadPdf: 0},
+        ).ignore();
         emit(ResultState.data(data: saved));
         return true;
       },

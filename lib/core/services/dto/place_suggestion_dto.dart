@@ -18,14 +18,9 @@ class PlaceSuggestionDto {
   final double? latitude;
   final double? longitude;
 
-  AddressLocation? get location =>
-      latitude != null && longitude != null
-          ? AddressLocation(
-              latitude: latitude!,
-              longitude: longitude!,
-              label: name,
-            )
-          : null;
+  AddressLocation? get location => latitude != null && longitude != null
+      ? AddressLocation(latitude: latitude!, longitude: longitude!, label: name)
+      : null;
 
   factory PlaceSuggestionDto.fromJson(Map<String, dynamic> json) =>
       _$PlaceSuggestionDtoFromJson(json);

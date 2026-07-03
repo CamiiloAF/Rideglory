@@ -92,10 +92,8 @@ Widget _wrapWithRouter({
     ],
     supportedLocales: const [Locale('es')],
     routerConfig: router,
-    builder: (context, child) => BlocProvider<VehicleCubit>.value(
-      value: vehicleCubit,
-      child: child!,
-    ),
+    builder: (context, child) =>
+        BlocProvider<VehicleCubit>.value(value: vehicleCubit, child: child!),
   );
 }
 
@@ -114,15 +112,16 @@ void _setUp() {
   unarchiveUseCase = MockUnarchiveVehicleUseCase();
   analytics = MockAnalyticsService();
 
-  when(() => vehicleCubit.state).thenReturn(
-    const ResultState<List<VehicleModel>>.initial(),
-  );
+  when(
+    () => vehicleCubit.state,
+  ).thenReturn(const ResultState<List<VehicleModel>>.initial());
   when(() => vehicleCubit.deleteLocally(any())).thenReturn(null);
   when(() => analytics.logEvent(any())).thenAnswer((_) async {});
   when(() => analytics.logEvent(any(), any())).thenAnswer((_) async {});
 
   final gi = GetIt.instance;
-  if (gi.isRegistered<VehicleActionCubit>()) gi.unregister<VehicleActionCubit>();
+  if (gi.isRegistered<VehicleActionCubit>())
+    gi.unregister<VehicleActionCubit>();
   gi.registerFactory<VehicleActionCubit>(
     () => VehicleActionCubit(
       deleteUseCase,
@@ -136,7 +135,8 @@ void _setUp() {
 
 void _tearDown() {
   final gi = GetIt.instance;
-  if (gi.isRegistered<VehicleActionCubit>()) gi.unregister<VehicleActionCubit>();
+  if (gi.isRegistered<VehicleActionCubit>())
+    gi.unregister<VehicleActionCubit>();
 }
 
 /// Abre el bottom sheet del vehículo archivado, toca "Eliminar permanentemente"
@@ -166,8 +166,9 @@ void main() {
   testWidgets(
     'TC-3-2: confirming delete calls VehicleCubit.deleteLocally with correct id',
     (tester) async {
-      when(() => deleteUseCase(_archivedVehicle.id!))
-          .thenAnswer((_) async => const Right(null));
+      when(
+        () => deleteUseCase(_archivedVehicle.id!),
+      ).thenAnswer((_) async => const Right(null));
 
       await tester.pumpWidget(
         _wrapWithRouter(
@@ -189,65 +190,63 @@ void main() {
 
   // ── TC-3-4: snackbar verde de éxito aparece tras confirmar ────────────────
 
-  testWidgets(
-    'TC-3-4: confirming delete shows success snackbar (green)',
-    (tester) async {
-      when(() => deleteUseCase(_archivedVehicle.id!))
-          .thenAnswer((_) async => const Right(null));
+  testWidgets('TC-3-4: confirming delete shows success snackbar (green)', (
+    tester,
+  ) async {
+    when(
+      () => deleteUseCase(_archivedVehicle.id!),
+    ).thenAnswer((_) async => const Right(null));
 
-      await tester.pumpWidget(
-        _wrapWithRouter(
-          vehicleCubit: vehicleCubit,
-          homeBuilder: (ctx) => ElevatedButton(
-            onPressed: () =>
-                GarageOptionsBottomSheet.show(ctx, _archivedVehicle),
-            child: const Text('Open'),
-          ),
+    await tester.pumpWidget(
+      _wrapWithRouter(
+        vehicleCubit: vehicleCubit,
+        homeBuilder: (ctx) => ElevatedButton(
+          onPressed: () => GarageOptionsBottomSheet.show(ctx, _archivedVehicle),
+          child: const Text('Open'),
         ),
-      );
-      await tester.pumpAndSettle();
+      ),
+    );
+    await tester.pumpAndSettle();
 
-      await _openAndConfirmDelete(tester);
-      await tester.pump(); // deja que el snackbar aparezca
+    await _openAndConfirmDelete(tester);
+    await tester.pump(); // deja que el snackbar aparezca
 
-      expect(find.byType(SnackBar), findsOneWidget);
-      expect(
-        find.text('Vehículo eliminado permanentemente'),
-        findsOneWidget,
-        reason: 'El snackbar de éxito debe mostrar el mensaje correcto',
-      );
-    },
-  );
+    expect(find.byType(SnackBar), findsOneWidget);
+    expect(
+      find.text('Vehículo eliminado permanentemente'),
+      findsOneWidget,
+      reason: 'El snackbar de éxito debe mostrar el mensaje correcto',
+    );
+  });
 
   // ── TC-3-1: el diálogo se cierra tras confirmar ───────────────────────────
 
-  testWidgets(
-    'TC-3-1: confirmation dialog closes after confirming delete',
-    (tester) async {
-      when(() => deleteUseCase(_archivedVehicle.id!))
-          .thenAnswer((_) async => const Right(null));
+  testWidgets('TC-3-1: confirmation dialog closes after confirming delete', (
+    tester,
+  ) async {
+    when(
+      () => deleteUseCase(_archivedVehicle.id!),
+    ).thenAnswer((_) async => const Right(null));
 
-      await tester.pumpWidget(
-        _wrapWithRouter(
-          vehicleCubit: vehicleCubit,
-          homeBuilder: (ctx) => ElevatedButton(
-            onPressed: () =>
-                GarageOptionsBottomSheet.show(ctx, _archivedVehicle),
-            child: const Text('Open'),
-          ),
+    await tester.pumpWidget(
+      _wrapWithRouter(
+        vehicleCubit: vehicleCubit,
+        homeBuilder: (ctx) => ElevatedButton(
+          onPressed: () => GarageOptionsBottomSheet.show(ctx, _archivedVehicle),
+          child: const Text('Open'),
         ),
-      );
-      await tester.pumpAndSettle();
+      ),
+    );
+    await tester.pumpAndSettle();
 
-      await _openAndConfirmDelete(tester);
+    await _openAndConfirmDelete(tester);
 
-      expect(
-        find.text('Eliminar vehículo permanentemente'),
-        findsNothing,
-        reason: 'El diálogo de confirmación debe cerrarse tras confirmar',
-      );
-    },
-  );
+    expect(
+      find.text('Eliminar vehículo permanentemente'),
+      findsNothing,
+      reason: 'El diálogo de confirmación debe cerrarse tras confirmar',
+    );
+  });
 
   // ── TC-7B: error de red → snackbar rojo, deleteLocally NO llamado ─────────
 
@@ -296,9 +295,7 @@ void main() {
     'TC-7B-2: use case Left → cubit emits error state, not permanentDeleteSuccess',
     () async {
       when(() => deleteUseCase(_archivedVehicle.id!)).thenAnswer(
-        (_) async => const Left(
-          DomainException(message: 'Sin conexión'),
-        ),
+        (_) async => const Left(DomainException(message: 'Sin conexión')),
       );
 
       final cubit = VehicleActionCubit(
@@ -312,15 +309,16 @@ void main() {
       await cubit.permanentlyDeleteVehicle(_archivedVehicle.id!);
 
       final state = cubit.state;
-      expect(
-        state,
-        isA<VehicleActionState>(),
-      );
+      expect(state, isA<VehicleActionState>());
       // Debe ser un estado de error, no de éxito
       expect(
-        state.maybeMap(permanentDeleteSuccess: (_) => true, orElse: () => false),
+        state.maybeMap(
+          permanentDeleteSuccess: (_) => true,
+          orElse: () => false,
+        ),
         isFalse,
-        reason: 'Con Left del use case el cubit NO debe emitir permanentDeleteSuccess',
+        reason:
+            'Con Left del use case el cubit NO debe emitir permanentDeleteSuccess',
       );
       expect(
         state.maybeMap(error: (_) => true, orElse: () => false),

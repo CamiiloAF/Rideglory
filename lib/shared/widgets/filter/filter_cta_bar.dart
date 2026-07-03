@@ -81,7 +81,9 @@ class FilterCtaBar extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.darkBgPrimary.withValues(alpha: 0.15),
+                          color: AppColors.darkBgPrimary.withValues(
+                            alpha: 0.15,
+                          ),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(

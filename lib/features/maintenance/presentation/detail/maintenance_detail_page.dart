@@ -19,7 +19,10 @@ class MaintenanceDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => getIt<MaintenanceDeleteCubit>(),
-      child: MaintenanceDetailView(maintenance: maintenance, readOnly: readOnly),
+      child: MaintenanceDetailView(
+        maintenance: maintenance,
+        readOnly: readOnly,
+      ),
     );
   }
 }

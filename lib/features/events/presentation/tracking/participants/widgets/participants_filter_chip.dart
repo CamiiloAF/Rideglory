@@ -57,8 +57,7 @@ class ParticipantsFilterChip extends StatelessWidget {
                       ? AppColors.darkBgPrimary
                       : AppColors.textOnDarkSecondary,
                   fontSize: 13,
-                  fontWeight:
-                      isSelected ? FontWeight.w600 : FontWeight.normal,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                 ),
               ),
             ],

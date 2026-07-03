@@ -62,8 +62,7 @@ Widget _wrapWithRouter({
           GoRoute(
             path: 'vehicles/edit',
             name: AppRoutes.editVehicle,
-            builder: (ctx, state) =>
-                const Scaffold(body: Text('edit-vehicle')),
+            builder: (ctx, state) => const Scaffold(body: Text('edit-vehicle')),
           ),
           GoRoute(
             path: 'maintenances/create',
@@ -85,10 +84,8 @@ Widget _wrapWithRouter({
     ],
     supportedLocales: const [Locale('es')],
     routerConfig: router,
-    builder: (context, child) => BlocProvider<VehicleCubit>.value(
-      value: vehicleCubit,
-      child: child!,
-    ),
+    builder: (context, child) =>
+        BlocProvider<VehicleCubit>.value(value: vehicleCubit, child: child!),
   );
 }
 
@@ -106,9 +103,9 @@ void main() {
     unarchiveUseCase = MockUnarchiveVehicleUseCase();
     analytics = MockAnalyticsService();
 
-    when(() => vehicleCubit.state).thenReturn(
-      const ResultState<List<VehicleModel>>.initial(),
-    );
+    when(
+      () => vehicleCubit.state,
+    ).thenReturn(const ResultState<List<VehicleModel>>.initial());
     when(() => vehicleCubit.fetchMyVehicles()).thenAnswer((_) async {});
     when(() => analytics.logEvent(any())).thenAnswer((_) async {});
     when(() => analytics.logEvent(any(), any())).thenAnswer((_) async {});
@@ -165,10 +162,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // ConfirmationDialog should appear with title and vehicle name in content
-      expect(
-        find.text('Eliminar vehículo permanentemente'),
-        findsOneWidget,
-      );
+      expect(find.text('Eliminar vehículo permanentemente'), findsOneWidget);
       expect(
         find.textContaining(_archivedVehicle.name),
         findsAtLeastNWidgets(1),

@@ -38,7 +38,6 @@ class RiderTelemetryPanel extends StatefulWidget {
 }
 
 class _RiderTelemetryPanelState extends State<RiderTelemetryPanel> {
-
   bool _isExpanded = true;
 
   @override
@@ -129,7 +128,9 @@ class _RiderTelemetryPanelState extends State<RiderTelemetryPanel> {
                                 color: AppColors.primarySubtle,
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
-                                  color: AppColors.primary.withValues(alpha: 0.4),
+                                  color: AppColors.primary.withValues(
+                                    alpha: 0.4,
+                                  ),
                                 ),
                               ),
                               child: Text(

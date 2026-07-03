@@ -86,7 +86,7 @@ abstract final class AnalyticsScreenNames {
   /// Índice → path raíz del branch. Usado por [ShellScreenViewTracker]
   /// para traducir `navigationShell.currentIndex` a nombre canónico.
   static const List<String> branchRootPaths = [
-    AppRoutes.home,   // branch 0
+    AppRoutes.home, // branch 0
     AppRoutes.garage, // branch 1
     AppRoutes.events, // branch 2
     AppRoutes.profile, // branch 3

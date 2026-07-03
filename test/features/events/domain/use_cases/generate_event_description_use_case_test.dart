@@ -34,17 +34,18 @@ void main() {
   setUp(() {
     mockRepository = MockAiDescriptionRepository();
     useCase = GenerateEventDescriptionUseCase(mockRepository);
-    when(() => mockRepository.generateDescription(any()))
-        .thenAnswer((_) async => const Right(result));
+    when(
+      () => mockRepository.generateDescription(any()),
+    ).thenAnswer((_) async => const Right(result));
   });
 
   List<AiChatTurn> buildHistory(int count) => List.generate(
-        count,
-        (index) => AiChatTurn(
-          role: index.isEven ? AiChatRole.user : AiChatRole.model,
-          content: 'mensaje $index',
-        ),
-      );
+    count,
+    (index) => AiChatTurn(
+      role: index.isEven ? AiChatRole.user : AiChatRole.model,
+      content: 'mensaje $index',
+    ),
+  );
 
   group('history trim', () {
     test('passes history unchanged when ≤10 turns', () async {
@@ -57,9 +58,11 @@ void main() {
       );
       await useCase(request);
 
-      final captured = verify(
-        () => mockRepository.generateDescription(captureAny()),
-      ).captured.single as AiDescriptionRequest;
+      final captured =
+          verify(
+                () => mockRepository.generateDescription(captureAny()),
+              ).captured.single
+              as AiDescriptionRequest;
       expect(captured.history.length, 10);
       expect(captured.history, history);
     });
@@ -74,9 +77,11 @@ void main() {
       );
       await useCase(request);
 
-      final captured = verify(
-        () => mockRepository.generateDescription(captureAny()),
-      ).captured.single as AiDescriptionRequest;
+      final captured =
+          verify(
+                () => mockRepository.generateDescription(captureAny()),
+              ).captured.single
+              as AiDescriptionRequest;
       expect(captured.history.length, 10);
       expect(captured.history, history.sublist(5));
     });
@@ -92,9 +97,11 @@ void main() {
       );
       await useCase(request);
 
-      final captured = verify(
-        () => mockRepository.generateDescription(captureAny()),
-      ).captured.single as AiDescriptionRequest;
+      final captured =
+          verify(
+                () => mockRepository.generateDescription(captureAny()),
+              ).captured.single
+              as AiDescriptionRequest;
       expect(captured.title, 'Test title');
       expect(captured.eventType, 'off_road');
       expect(captured.difficulty, 'Difícil');

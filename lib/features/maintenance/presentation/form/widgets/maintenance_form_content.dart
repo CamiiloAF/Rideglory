@@ -54,16 +54,20 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
     final maintenance = cubit.editingMaintenance;
 
     if (maintenance != null) {
-      final vehicleKm = context.read<VehicleCubit>().currentMileage
-          ?? cubit.currentVehicleMileage
-          ?? cubit.preselectedVehicle?.currentMileage
-          ?? 0;
+      final vehicleKm =
+          context.read<VehicleCubit>().currentMileage ??
+          cubit.currentVehicleMileage ??
+          cubit.preselectedVehicle?.currentMileage ??
+          0;
       // For display, compute relative km interval from absolute nextOdometer
       final base = maintenance.mode == MaintenanceMode.scheduled
           ? vehicleKm
           : (maintenance.odometerAtService ?? vehicleKm);
       final relativeNextKm = maintenance.nextOdometer != null
-          ? (maintenance.nextOdometer! - base).clamp(0, double.maxFinite.toInt())
+          ? (maintenance.nextOdometer! - base).clamp(
+              0,
+              double.maxFinite.toInt(),
+            )
           : null;
       return {
         MaintenanceFormFields.type: maintenance.type,
@@ -72,10 +76,13 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
         MaintenanceFormFields.nextMaintenanceDate: maintenance.nextDate,
         MaintenanceFormFields.currentMileage:
             (maintenance.odometerAtService ?? vehicleKm).toString(),
-        MaintenanceFormFields.nextMaintenanceMileage: relativeNextKm?.toString(),
+        MaintenanceFormFields.nextMaintenanceMileage: relativeNextKm
+            ?.toString(),
         MaintenanceFormFields.vehicleId:
             maintenance.vehicleId ?? currentVehicleId,
-        MaintenanceFormFields.cost: ThousandsInputFormatter.format(maintenance.cost),
+        MaintenanceFormFields.cost: ThousandsInputFormatter.format(
+          maintenance.cost,
+        ),
         MaintenanceFormFields.workshop: maintenance.workshop,
       };
     }
@@ -90,7 +97,8 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
   void _saveMaintenance() {
     final cubit = context.read<MaintenanceFormCubit>();
     final vehicleCubit = context.read<VehicleCubit>();
-    final vehicleKm = vehicleCubit.currentMileage ?? cubit.currentVehicleMileage ?? 0;
+    final vehicleKm =
+        vehicleCubit.currentMileage ?? cubit.currentVehicleMileage ?? 0;
 
     cubit.updateMode(
       _isCompleted ? MaintenanceMode.completed : MaintenanceMode.scheduled,
@@ -105,7 +113,9 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
 
     final nextKmInterval = cubit.buildNextKmInterval();
 
-    if (!_isCompleted && maintenanceToSave.nextDate == null && maintenanceToSave.nextOdometer == null) {
+    if (!_isCompleted &&
+        maintenanceToSave.nextDate == null &&
+        maintenanceToSave.nextOdometer == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(context.l10n.maintenance_scheduled_requires_date_or_km),
@@ -131,9 +141,10 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
   Widget build(BuildContext context) {
     final cubit = context.read<MaintenanceFormCubit>();
     final now = DateTime.now();
-    final vehicleCurrentMileage = context.read<VehicleCubit>().currentMileage
-        ?? cubit.currentVehicleMileage
-        ?? cubit.preselectedVehicle?.currentMileage;
+    final vehicleCurrentMileage =
+        context.read<VehicleCubit>().currentMileage ??
+        cubit.currentVehicleMileage ??
+        cubit.preselectedVehicle?.currentMileage;
     final showMileageBanner =
         _isCompleted &&
         _maintenanceOdometer != null &&
@@ -277,10 +288,14 @@ class _MaintenanceFormContentState extends State<MaintenanceFormContent> {
                     initialNextMileage: () {
                       final editing = cubit.editingMaintenance;
                       if (editing?.nextOdometer == null) return null;
-                      final base = editing!.odometerAtService
-                          ?? vehicleCurrentMileage
-                          ?? 0;
-                      return (editing.nextOdometer! - base).clamp(0, double.maxFinite.toInt());
+                      final base =
+                          editing!.odometerAtService ??
+                          vehicleCurrentMileage ??
+                          0;
+                      return (editing.nextOdometer! - base).clamp(
+                        0,
+                        double.maxFinite.toInt(),
+                      );
                     }(),
                     initialNextDate: cubit.editingMaintenance?.nextDate,
                   ),

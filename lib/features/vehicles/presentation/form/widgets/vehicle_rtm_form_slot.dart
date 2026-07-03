@@ -38,9 +38,7 @@ class _VehicleRtmFormSlotState extends State<VehicleRtmFormSlot> {
   }
 
   Future<void> _loadRtm() async {
-    final result = await getIt<GetTecnomecanicaUseCase>()(
-      widget.vehicle.id!,
-    );
+    final result = await getIt<GetTecnomecanicaUseCase>()(widget.vehicle.id!);
     if (mounted) {
       setState(() {
         _rtm = result.fold((_) => null, (rtm) => rtm);
@@ -85,8 +83,7 @@ class _VehicleRtmFormSlotState extends State<VehicleRtmFormSlot> {
 
   String _statusLabel(BuildContext context) {
     return switch (_rtm?.documentStatus) {
-      VehicleDocumentStatus.valid =>
-        context.l10n.vehicle_doc_rtm_status_valid,
+      VehicleDocumentStatus.valid => context.l10n.vehicle_doc_rtm_status_valid,
       VehicleDocumentStatus.expiringSoon =>
         context.l10n.vehicle_doc_rtm_status_expiring_soon,
       VehicleDocumentStatus.expired =>
@@ -146,11 +143,7 @@ class _VehicleRtmFormSlotState extends State<VehicleRtmFormSlot> {
                 color: statusColor.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(
-                Icons.build_outlined,
-                size: 20,
-                color: statusColor,
-              ),
+              child: Icon(Icons.build_outlined, size: 20, color: statusColor),
             ),
             const SizedBox(width: 12),
             Expanded(

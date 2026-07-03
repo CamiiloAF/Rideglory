@@ -52,8 +52,8 @@ class AppEventBadge extends StatelessWidget {
   Color _backgroundColor() {
     if (color != null) return color!;
     return switch (variant ?? EventBadgeVariant.available) {
-      EventBadgeVariant.available || EventBadgeVariant.scheduled =>
-        AppColors.info,
+      EventBadgeVariant.available ||
+      EventBadgeVariant.scheduled => AppColors.info,
       EventBadgeVariant.inProgress => AppColors.success,
       EventBadgeVariant.full => AppColors.error,
       EventBadgeVariant.comingSoon => AppColors.warning,

@@ -16,10 +16,7 @@ import 'package:rideglory/features/events/presentation/form/widgets/ai_chat/ai_d
 /// Muestra chips con el contexto del evento llenado hasta ahora y un botón
 /// para abrir [AiDescriptionChatPage].
 class EventFormAiGenerateSection extends StatelessWidget {
-  const EventFormAiGenerateSection({
-    super.key,
-    required this.quillController,
-  });
+  const EventFormAiGenerateSection({super.key, required this.quillController});
 
   final QuillController quillController;
 
@@ -175,8 +172,18 @@ class _ContextChipsRow extends StatelessWidget {
   String _formatDate(DateTime date) {
     const weekdays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
     const months = [
-      'ene', 'feb', 'mar', 'abr', 'may', 'jun',
-      'jul', 'ago', 'sep', 'oct', 'nov', 'dic',
+      'ene',
+      'feb',
+      'mar',
+      'abr',
+      'may',
+      'jun',
+      'jul',
+      'ago',
+      'sep',
+      'oct',
+      'nov',
+      'dic',
     ];
     final wd = weekdays[date.weekday - 1];
     final mo = months[date.month - 1];
@@ -200,10 +207,10 @@ class _ContextChipsRow extends StatelessWidget {
         (formValues[EventFormFields.difficulty] as EventDifficulty?)?.label;
     final name = formValues[EventFormFields.name] as String?;
     final dateRange = formValues[EventFormFields.dateRange] as DateTimeRange?;
-    final dateLabel =
-        dateRange != null ? _formatDate(dateRange.start) : null;
+    final dateLabel = dateRange != null ? _formatDate(dateRange.start) : null;
 
-    final hasAny = (eventType?.isNotEmpty ?? false) ||
+    final hasAny =
+        (eventType?.isNotEmpty ?? false) ||
         (difficulty?.isNotEmpty ?? false) ||
         (name?.isNotEmpty ?? false) ||
         dateLabel != null;
@@ -230,10 +237,7 @@ class _ContextChipsRow extends StatelessWidget {
                 (difficulty?.isNotEmpty ?? false))
               const SizedBox(width: 8),
             if (difficulty != null && difficulty.isNotEmpty)
-              _ContextChip(
-                icon: LucideIcons.flame,
-                label: difficulty,
-              ),
+              _ContextChip(icon: LucideIcons.flame, label: difficulty),
           ],
         ),
         if ((dateLabel != null) || (name?.isNotEmpty ?? false))
@@ -241,7 +245,10 @@ class _ContextChipsRow extends StatelessWidget {
         Row(
           children: [
             if (dateLabel != null)
-              _ContextChip(icon: Icons.calendar_today_outlined, label: dateLabel),
+              _ContextChip(
+                icon: Icons.calendar_today_outlined,
+                label: dateLabel,
+              ),
             if (dateLabel != null && (name?.isNotEmpty ?? false))
               const SizedBox(width: 8),
             if (name != null && name.isNotEmpty)

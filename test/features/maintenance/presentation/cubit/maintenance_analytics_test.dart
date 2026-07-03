@@ -70,19 +70,13 @@ void main() {
       'TC-maint-a1: saveMaintenance (add) exitoso → maintenance_added emitido',
       () async {
         when(
-          () => mockAdd(
-            any(),
-            nextKmInterval: any(named: 'nextKmInterval'),
-          ),
+          () => mockAdd(any(), nextKmInterval: any(named: 'nextKmInterval')),
         ).thenAnswer((_) async => Right([completedMaintenance]));
 
         await cubit.saveMaintenance(completedMaintenance);
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.maintenanceAdded,
-            any(),
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.maintenanceAdded, any()),
         ).called(1);
       },
     );
@@ -92,10 +86,7 @@ void main() {
       'TC-maint-a2: maintenance_added contiene maintenance_type = oilChange',
       () async {
         when(
-          () => mockAdd(
-            any(),
-            nextKmInterval: any(named: 'nextKmInterval'),
-          ),
+          () => mockAdd(any(), nextKmInterval: any(named: 'nextKmInterval')),
         ).thenAnswer((_) async => Right([completedMaintenance]));
 
         await cubit.saveMaintenance(completedMaintenance);
@@ -116,54 +107,45 @@ void main() {
     );
 
     // TC-maint-a3: G2 — params no contienen notas ni kilometraje
-    test(
-      'TC-maint-a3: G2 — params de maintenance_added no contienen notas '
-      'ni kilometraje exacto',
-      () async {
-        final maintenanceWithNotes = MaintenanceModel(
-          vehicleId: 'v1',
-          type: MaintenanceType.brakeCheck,
-          mode: MaintenanceMode.completed,
-          notes: 'Notas privadas del taller',
-          odometerAtService: 99999,
-          serviceDate: DateTime(2026, 6, 1),
-        );
+    test('TC-maint-a3: G2 — params de maintenance_added no contienen notas '
+        'ni kilometraje exacto', () async {
+      final maintenanceWithNotes = MaintenanceModel(
+        vehicleId: 'v1',
+        type: MaintenanceType.brakeCheck,
+        mode: MaintenanceMode.completed,
+        notes: 'Notas privadas del taller',
+        odometerAtService: 99999,
+        serviceDate: DateTime(2026, 6, 1),
+      );
 
-        when(
-          () => mockAdd(
-            any(),
-            nextKmInterval: any(named: 'nextKmInterval'),
-          ),
-        ).thenAnswer((_) async => Right([maintenanceWithNotes]));
+      when(
+        () => mockAdd(any(), nextKmInterval: any(named: 'nextKmInterval')),
+      ).thenAnswer((_) async => Right([maintenanceWithNotes]));
 
-        await cubit.saveMaintenance(maintenanceWithNotes);
+      await cubit.saveMaintenance(maintenanceWithNotes);
 
-        final captured = verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.maintenanceAdded,
-            captureAny(),
-          ),
-        ).captured;
+      final captured = verify(
+        () => mockAnalytics.logEvent(
+          AnalyticsEvents.maintenanceAdded,
+          captureAny(),
+        ),
+      ).captured;
 
-        final params = captured.single as Map<String, Object>;
+      final params = captured.single as Map<String, Object>;
 
-        // Notes and exact odometer must NOT appear as param values
-        expect(params.values, isNot(contains('Notas privadas del taller')));
-        expect(params.values, isNot(contains(99999)));
-        expect(params.keys, isNot(contains('notes')));
-        expect(params.keys, isNot(contains('odometer')));
-      },
-    );
+      // Notes and exact odometer must NOT appear as param values
+      expect(params.values, isNot(contains('Notas privadas del taller')));
+      expect(params.values, isNot(contains(99999)));
+      expect(params.keys, isNot(contains('notes')));
+      expect(params.keys, isNot(contains('odometer')));
+    });
 
     // TC-maint-a4: saveMaintenance con error (add) → maintenance_added NO emitido
     test(
       'TC-maint-a4: saveMaintenance (add) con error → maintenance_added NO emitido',
       () async {
         when(
-          () => mockAdd(
-            any(),
-            nextKmInterval: any(named: 'nextKmInterval'),
-          ),
+          () => mockAdd(any(), nextKmInterval: any(named: 'nextKmInterval')),
         ).thenAnswer(
           (_) async => const Left(DomainException(message: 'Error de red')),
         );
@@ -180,17 +162,15 @@ void main() {
     test(
       'TC-maint-a5: saveMaintenance (update) exitoso → maintenance_updated emitido',
       () async {
-        when(() => mockUpdate(any())).thenAnswer(
-          (_) async => Right(existingMaintenance),
-        );
+        when(
+          () => mockUpdate(any()),
+        ).thenAnswer((_) async => Right(existingMaintenance));
 
         await cubit.saveMaintenance(existingMaintenance);
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.maintenanceUpdated,
-            any(),
-          ),
+          () =>
+              mockAnalytics.logEvent(AnalyticsEvents.maintenanceUpdated, any()),
         ).called(1);
       },
     );
@@ -200,9 +180,9 @@ void main() {
       'TC-maint-a6: maintenance_updated contiene maintenance_type = brakeCheck '
       'y maintenance_mode = completed',
       () async {
-        when(() => mockUpdate(any())).thenAnswer(
-          (_) async => Right(existingMaintenance),
-        );
+        when(
+          () => mockUpdate(any()),
+        ).thenAnswer((_) async => Right(existingMaintenance));
 
         await cubit.saveMaintenance(existingMaintenance);
 
@@ -247,9 +227,9 @@ void main() {
     test(
       'TC-maint-a8a: saveMaintenance (update) exitoso → maintenance_added NO emitido',
       () async {
-        when(() => mockUpdate(any())).thenAnswer(
-          (_) async => Right(existingMaintenance),
-        );
+        when(
+          () => mockUpdate(any()),
+        ).thenAnswer((_) async => Right(existingMaintenance));
 
         await cubit.saveMaintenance(existingMaintenance);
 

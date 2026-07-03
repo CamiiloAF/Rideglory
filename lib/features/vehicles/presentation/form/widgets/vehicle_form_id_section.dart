@@ -14,9 +14,7 @@ class VehicleFormIdSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        VehicleFormSectionHeader(
-          title: context.l10n.vehicle_form_id_section,
-        ),
+        VehicleFormSectionHeader(title: context.l10n.vehicle_form_id_section),
         const SizedBox(height: 14),
         const VehicleFormPlacaField(),
         const SizedBox(height: 14),

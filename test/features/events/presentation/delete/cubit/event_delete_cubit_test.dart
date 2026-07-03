@@ -37,9 +37,9 @@ void main() {
     test(
       'TC-del-a1: deleteEvent → events_delete_attempted fires immediately',
       () async {
-        when(() => mockDeleteEventUseCase('evt-1')).thenAnswer(
-          (_) async => const Right(Nothing()),
-        );
+        when(
+          () => mockDeleteEventUseCase('evt-1'),
+        ).thenAnswer((_) async => const Right(Nothing()));
 
         await cubit.deleteEvent('evt-1');
 
@@ -53,9 +53,9 @@ void main() {
     test(
       'TC-del-a2: deleteEvent success → events_delete_succeeded fired',
       () async {
-        when(() => mockDeleteEventUseCase('evt-1')).thenAnswer(
-          (_) async => const Right(Nothing()),
-        );
+        when(
+          () => mockDeleteEventUseCase('evt-1'),
+        ).thenAnswer((_) async => const Right(Nothing()));
 
         await cubit.deleteEvent('evt-1');
 
@@ -63,10 +63,8 @@ void main() {
           () => mockAnalytics.logEvent(AnalyticsEvents.eventsDeleteSucceeded),
         ).called(1);
         verifyNever(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsDeleteFailed,
-            any(),
-          ),
+          () =>
+              mockAnalytics.logEvent(AnalyticsEvents.eventsDeleteFailed, any()),
         );
       },
     );
@@ -76,22 +74,19 @@ void main() {
       'TC-del-a3: deleteEvent failure → events_delete_failed fired with failure_category',
       () async {
         when(() => mockDeleteEventUseCase('evt-1')).thenAnswer(
-          (_) async =>
-              const Left(DomainException(message: 'network timeout')),
+          (_) async => const Left(DomainException(message: 'network timeout')),
         );
 
         await cubit.deleteEvent('evt-1');
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsDeleteFailed,
-            {AnalyticsParams.failureCategory: AnalyticsParams.failureCategoryNetwork},
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.eventsDeleteFailed, {
+            AnalyticsParams.failureCategory:
+                AnalyticsParams.failureCategoryNetwork,
+          }),
         ).called(1);
         verifyNever(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsDeleteSucceeded,
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.eventsDeleteSucceeded),
         );
       },
     );
@@ -108,10 +103,10 @@ void main() {
         await cubit.deleteEvent('evt-1');
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsDeleteFailed,
-            {AnalyticsParams.failureCategory: AnalyticsParams.failureCategoryUnknown},
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.eventsDeleteFailed, {
+            AnalyticsParams.failureCategory:
+                AnalyticsParams.failureCategoryUnknown,
+          }),
         ).called(1);
       },
     );
@@ -127,9 +122,9 @@ void main() {
     blocTest<EventDeleteCubit, ResultState<String>>(
       'TC-del-2: deleteEvent success emits loading then data',
       setUp: () {
-        when(() => mockDeleteEventUseCase('evt-1')).thenAnswer(
-          (_) async => const Right(Nothing()),
-        );
+        when(
+          () => mockDeleteEventUseCase('evt-1'),
+        ).thenAnswer((_) async => const Right(Nothing()));
       },
       build: () => cubit,
       act: (c) => c.deleteEvent('evt-1'),

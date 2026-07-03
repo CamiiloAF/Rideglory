@@ -35,8 +35,9 @@ class _EventDetailDescriptionSectionState
         const SizedBox(height: 8),
         AnimatedCrossFade(
           duration: const Duration(milliseconds: 200),
-          crossFadeState:
-              _expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          crossFadeState: _expanded
+              ? CrossFadeState.showSecond
+              : CrossFadeState.showFirst,
           firstChild: SizedBox(
             height: 67,
             child: ClipRect(

@@ -28,5 +28,6 @@ abstract class FirebaseInjectableModule {
       remoteConfig: remoteConfig,
     );
   }
+
   GoogleSignIn get googleSignIn => GoogleSignIn();
 }

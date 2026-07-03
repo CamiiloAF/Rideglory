@@ -22,10 +22,8 @@ class FullscreenImageViewer extends StatefulWidget {
       PageRouteBuilder<void>(
         opaque: false,
         barrierColor: Colors.black,
-        pageBuilder: (context, _, _) => FullscreenImageViewer(
-          imageUrl: imageUrl,
-          heroTag: heroTag,
-        ),
+        pageBuilder: (context, _, _) =>
+            FullscreenImageViewer(imageUrl: imageUrl, heroTag: heroTag),
         transitionsBuilder: (_, animation, _, child) =>
             FadeTransition(opacity: animation, child: child),
         transitionDuration: const Duration(milliseconds: 250),
@@ -51,14 +49,15 @@ class _FullscreenImageViewerState extends State<FullscreenImageViewer>
   void initState() {
     super.initState();
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 220),
-    )..addListener(() {
-        if (_animation != null) {
-          _transformController.value = _animation!.value;
-        }
-      });
+    _animationController =
+        AnimationController(
+          vsync: this,
+          duration: const Duration(milliseconds: 220),
+        )..addListener(() {
+          if (_animation != null) {
+            _transformController.value = _animation!.value;
+          }
+        });
   }
 
   @override
@@ -84,13 +83,13 @@ class _FullscreenImageViewerState extends State<FullscreenImageViewer>
   }
 
   void _animateTo(Matrix4 target) {
-    _animation = Matrix4Tween(
-      begin: _transformController.value,
-      end: target,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOutCubic,
-    ));
+    _animation = Matrix4Tween(begin: _transformController.value, end: target)
+        .animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
     _animationController
       ..reset()
       ..forward();

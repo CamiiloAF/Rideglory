@@ -111,19 +111,12 @@ class _AppAutocompleteChipsFieldState extends State<AppAutocompleteChipsField> {
                     ),
                     child: Row(
                       children: [
-                        Icon(
-                          Icons.two_wheeler,
-                          size: 16,
-                          color: cs.primary,
-                        ),
+                        Icon(Icons.two_wheeler, size: 16, color: cs.primary),
                         AppSpacing.hGapSm,
                         Expanded(
                           child: Text(
                             _filteredSuggestions[i],
-                            style: TextStyle(
-                              color: cs.onSurface,
-                              fontSize: 14,
-                            ),
+                            style: TextStyle(color: cs.onSurface, fontSize: 14),
                           ),
                         ),
                       ],
@@ -221,11 +214,7 @@ class _AppAutocompleteChipsFieldState extends State<AppAutocompleteChipsField> {
                         AppSpacing.hGapXs,
                         GestureDetector(
                           onTap: () => _removeChip(entry.key, field),
-                          child: Icon(
-                            Icons.close,
-                            size: 14,
-                            color: cs.primary,
-                          ),
+                          child: Icon(Icons.close, size: 14, color: cs.primary),
                         ),
                       ],
                     ),

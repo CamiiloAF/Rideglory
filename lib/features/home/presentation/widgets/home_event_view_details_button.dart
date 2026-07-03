@@ -25,7 +25,11 @@ class HomeEventViewDetailsButton extends StatelessWidget {
             ),
           ),
           AppSpacing.hGapXxs,
-          const Icon(Icons.arrow_forward, size: 12, color: AppColors.darkBgPrimary),
+          const Icon(
+            Icons.arrow_forward,
+            size: 12,
+            color: AppColors.darkBgPrimary,
+          ),
         ],
       ),
     );

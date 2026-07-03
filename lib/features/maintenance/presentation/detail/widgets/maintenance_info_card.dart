@@ -13,7 +13,10 @@ class MaintenanceInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final numberFormat = NumberFormat('#,###');
-    final currencyFormat = NumberFormat.currency(symbol: '\$', decimalDigits: 0);
+    final currencyFormat = NumberFormat.currency(
+      symbol: '\$',
+      decimalDigits: 0,
+    );
 
     final rows = <_InfoRow>[
       if (maintenance.serviceDate != null)
@@ -84,12 +87,7 @@ class MaintenanceInfoCard extends StatelessWidget {
                     endIndent: 0,
                   ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    16,
-                    10,
-                    16,
-                    isLast ? 12 : 10,
-                  ),
+                  padding: EdgeInsets.fromLTRB(16, 10, 16, isLast ? 12 : 10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

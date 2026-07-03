@@ -21,7 +21,10 @@ class EventsPage extends StatelessWidget {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, dynamic result) {
-        if (!didPop) context.goNamed(AppRoutes.home); // Intentional: shell-tab navigation resets stack to prevent back-stack accumulation in StatefulShellRoute
+        if (!didPop)
+          context.goNamed(
+            AppRoutes.home,
+          ); // Intentional: shell-tab navigation resets stack to prevent back-stack accumulation in StatefulShellRoute
       },
       child: MultiBlocProvider(
         providers: [
@@ -29,8 +32,7 @@ class EventsPage extends StatelessWidget {
             create: (_) {
               final finishedStream =
                   getIt<LiveTrackingSessionHolder>().onEventFinished;
-              return (
-                showMyEvents
+              return (showMyEvents
                     ? EventsCubit.myEvents(
                         getIt<GetMyEventsUseCase>(),
                         getIt<UpdateEventUseCase>(),
@@ -42,8 +44,8 @@ class EventsPage extends StatelessWidget {
                         getIt<UpdateEventUseCase>(),
                         getIt<AnalyticsService>(),
                         eventFinishedStream: finishedStream,
-                      )
-              )..fetchEvents();
+                      ))
+                ..fetchEvents();
             },
           ),
           BlocProvider(create: (_) => getIt<EventDeleteCubit>()),

@@ -19,7 +19,8 @@ class InitialsAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final resolvedBackground = backgroundColor ?? context.colorScheme.primary;
-    final baseStyle = context.textTheme.titleMedium?.copyWith(
+    final baseStyle =
+        context.textTheme.titleMedium?.copyWith(
           color: Colors.white,
           fontWeight: FontWeight.bold,
         ) ??
@@ -28,10 +29,8 @@ class InitialsAvatar extends StatelessWidget {
           fontWeight: FontWeight.bold,
           fontSize: 16,
         );
-    final resolvedTextStyle = textStyle ??
-        baseStyle.copyWith(
-          fontSize: radius * 0.6,
-        );
+    final resolvedTextStyle =
+        textStyle ?? baseStyle.copyWith(fontSize: radius * 0.6);
 
     return CircleAvatar(
       radius: radius,

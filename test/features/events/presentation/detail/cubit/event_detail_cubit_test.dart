@@ -128,60 +128,56 @@ void main() {
       'TC-evdetail-a1: loadEvent success → event_detail_viewed with '
       'event_type, event_state, is_owner=0, is_read_only=0, source=deep_link',
       () async {
-        when(() => mockGetEventByIdUseCase('evt-1')).thenAnswer(
-          (_) async => Right(mockEvent),
-        );
+        when(
+          () => mockGetEventByIdUseCase('evt-1'),
+        ).thenAnswer((_) async => Right(mockEvent));
 
         await cubit.loadEvent('evt-1');
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventDetailViewed,
-            {
-              AnalyticsParams.eventType: EventType.onRoad.apiValue,
-              AnalyticsParams.eventState: EventState.scheduled.name,
-              AnalyticsParams.isOwner: 0,
-              AnalyticsParams.isReadOnly: 0,
-              AnalyticsParams.source: AnalyticsParams.sourceDeepLink,
-            },
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.eventDetailViewed, {
+            AnalyticsParams.eventType: EventType.onRoad.apiValue,
+            AnalyticsParams.eventState: EventState.scheduled.name,
+            AnalyticsParams.isOwner: 0,
+            AnalyticsParams.isReadOnly: 0,
+            AnalyticsParams.source: AnalyticsParams.sourceDeepLink,
+          }),
         ).called(1);
       },
     );
 
     // TC-evdetail-a2: event_type param reflects the actual event type
-    test(
-      'TC-evdetail-a2: loadEvent with urban event → event_detail_viewed '
-      'with event_type matching urban apiValue',
-      () async {
-        final urbanEvent = mockEvent.copyWith(eventType: EventType.course);
-        when(() => mockGetEventByIdUseCase('evt-1')).thenAnswer(
-          (_) async => Right(urbanEvent),
-        );
+    test('TC-evdetail-a2: loadEvent with urban event → event_detail_viewed '
+        'with event_type matching urban apiValue', () async {
+      final urbanEvent = mockEvent.copyWith(eventType: EventType.course);
+      when(
+        () => mockGetEventByIdUseCase('evt-1'),
+      ).thenAnswer((_) async => Right(urbanEvent));
 
-        await cubit.loadEvent('evt-1');
+      await cubit.loadEvent('evt-1');
 
-        final captured = verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventDetailViewed,
-            captureAny(),
-          ),
-        ).captured;
-        expect(captured, isNotEmpty);
-        final params = captured.first as Map<String, Object>;
-        expect(params[AnalyticsParams.eventType], EventType.course.apiValue);
-      },
-    );
+      final captured = verify(
+        () => mockAnalytics.logEvent(
+          AnalyticsEvents.eventDetailViewed,
+          captureAny(),
+        ),
+      ).captured;
+      expect(captured, isNotEmpty);
+      final params = captured.first as Map<String, Object>;
+      expect(params[AnalyticsParams.eventType], EventType.course.apiValue);
+    });
 
     // TC-evdetail-a3: event_state param reflects the actual event state
     test(
       'TC-evdetail-a3: loadEvent with inProgress event → event_detail_viewed '
       'with event_state=inProgress',
       () async {
-        final inProgressEvent = mockEvent.copyWith(state: EventState.inProgress);
-        when(() => mockGetEventByIdUseCase('evt-1')).thenAnswer(
-          (_) async => Right(inProgressEvent),
+        final inProgressEvent = mockEvent.copyWith(
+          state: EventState.inProgress,
         );
+        when(
+          () => mockGetEventByIdUseCase('evt-1'),
+        ).thenAnswer((_) async => Right(inProgressEvent));
 
         await cubit.loadEvent('evt-1');
 
@@ -209,10 +205,8 @@ void main() {
         await cubit.loadEvent('evt-1');
 
         verifyNever(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventDetailViewed,
-            any(),
-          ),
+          () =>
+              mockAnalytics.logEvent(AnalyticsEvents.eventDetailViewed, any()),
         );
       },
     );
@@ -222,18 +216,16 @@ void main() {
       'TC-evdetail-a5: calling loadEvent twice → event_detail_viewed emitted '
       'exactly twice (once per call)',
       () async {
-        when(() => mockGetEventByIdUseCase(any())).thenAnswer(
-          (_) async => Right(mockEvent),
-        );
+        when(
+          () => mockGetEventByIdUseCase(any()),
+        ).thenAnswer((_) async => Right(mockEvent));
 
         await cubit.loadEvent('evt-1');
         await cubit.loadEvent('evt-1');
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventDetailViewed,
-            any(),
-          ),
+          () =>
+              mockAnalytics.logEvent(AnalyticsEvents.eventDetailViewed, any()),
         ).called(2);
       },
     );
@@ -244,9 +236,9 @@ void main() {
     test(
       'TC-evdetail-1: loadEvent success emits eventResult with loaded event',
       () async {
-        when(() => mockGetEventByIdUseCase('evt-1')).thenAnswer(
-          (_) async => Right(mockEvent),
-        );
+        when(
+          () => mockGetEventByIdUseCase('evt-1'),
+        ).thenAnswer((_) async => Right(mockEvent));
 
         await cubit.loadEvent('evt-1');
 

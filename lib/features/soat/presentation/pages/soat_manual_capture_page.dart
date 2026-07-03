@@ -104,7 +104,8 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
       !_autofillApplied && (_extraction?.shouldPrefill ?? false);
 
   void _validateDates() {
-    _datesInvalid = _startDate != null &&
+    _datesInvalid =
+        _startDate != null &&
         _expiryDate != null &&
         !_expiryDate!.isAfter(_startDate!);
     if (_datesInvalid) _error = null;
@@ -125,7 +126,9 @@ class _SoatManualCapturePageState extends State<SoatManualCapturePage> {
     // se re-escanea.
     final initialPath = _localImagePath;
     // No re-escanear si ya hay datos pre-llenados (edición de pendiente).
-    if (initialPath != null && _extraction == null && widget.existingSoat == null) {
+    if (initialPath != null &&
+        _extraction == null &&
+        widget.existingSoat == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           _scanDocument(

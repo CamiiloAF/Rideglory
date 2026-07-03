@@ -53,25 +53,27 @@ class EventDetailCtaBarContent extends StatelessWidget {
 
     final Widget bar = switch (registration!.status) {
       RegistrationStatus.pending => EventDetailPendingBar(
-          registration: registration!,
-          onCancel: onRegistrationStatusTap != null
-              ? () => onRegistrationStatusTap!(registration!)
-              : null,
-        ),
+        registration: registration!,
+        onCancel: onRegistrationStatusTap != null
+            ? () => onRegistrationStatusTap!(registration!)
+            : null,
+      ),
       RegistrationStatus.approved => EventDetailApprovedBar(
-          registration: registration!,
-          onCancel: onRegistrationStatusTap != null
-              ? () => onRegistrationStatusTap!(registration!)
-              : null,
-        ),
+        registration: registration!,
+        onCancel: onRegistrationStatusTap != null
+            ? () => onRegistrationStatusTap!(registration!)
+            : null,
+      ),
       RegistrationStatus.rejected => const EventDetailRejectedBar(),
-      RegistrationStatus.cancelled =>
-        EventDetailDefaultBar(event: event, onRegister: onRegister),
+      RegistrationStatus.cancelled => EventDetailDefaultBar(
+        event: event,
+        onRegister: onRegister,
+      ),
       RegistrationStatus.readyForEdit => EventDetailReadyForEditBar(
-          onEdit: onRegistrationStatusTap != null
-              ? () => onRegistrationStatusTap!(registration!)
-              : null,
-        ),
+        onEdit: onRegistrationStatusTap != null
+            ? () => onRegistrationStatusTap!(registration!)
+            : null,
+      ),
     };
     // Si el usuario canceló su inscripción mostramos el bar de "inscribirme",
     // que no debe abrir el detalle al tocarlo (no hay inscripción activa).

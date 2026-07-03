@@ -19,10 +19,10 @@ import 'package:rideglory/l10n/app_localizations.dart';
 
 class _ControllerSpy extends QuillController {
   _ControllerSpy()
-      : super(
-          document: Document(),
-          selection: const TextSelection.collapsed(offset: 0),
-        );
+    : super(
+        document: Document(),
+        selection: const TextSelection.collapsed(offset: 0),
+      );
 
   int disposeCallCount = 0;
 
@@ -47,11 +47,7 @@ Widget _wrap(Widget child) {
     ],
     supportedLocales: const [Locale('es')],
     home: Scaffold(
-      body: SingleChildScrollView(
-        child: FormBuilder(
-          child: child,
-        ),
-      ),
+      body: SingleChildScrollView(child: FormBuilder(child: child)),
     ),
   );
 }
@@ -69,10 +65,7 @@ Widget _editorWithInsertButton({
         externalController: controller,
         onChanged: onChanged,
       ),
-      AiInsertButton(
-        markdown: markdown,
-        quillController: controller,
-      ),
+      AiInsertButton(markdown: markdown, quillController: controller),
     ],
   );
 }
@@ -85,11 +78,7 @@ void main() {
     testWidgets(
       'AC5: externalController=null compiles and renders without error (backward compat)',
       (tester) async {
-        await tester.pumpWidget(
-          _wrap(
-            const AppRichTextEditor(name: 'desc'),
-          ),
-        );
+        await tester.pumpWidget(_wrap(const AppRichTextEditor(name: 'desc')));
         await tester.pumpAndSettle();
 
         // Widget renders without throwing
@@ -105,12 +94,7 @@ void main() {
         addTearDown(spy.dispose);
 
         await tester.pumpWidget(
-          _wrap(
-            AppRichTextEditor(
-              name: 'desc',
-              externalController: spy,
-            ),
-          ),
+          _wrap(AppRichTextEditor(name: 'desc', externalController: spy)),
         );
         await tester.pumpAndSettle();
 
@@ -137,9 +121,7 @@ void main() {
         addTearDown(controller.dispose);
 
         await tester.pumpWidget(
-          _wrap(
-            _editorWithInsertButton(controller: controller),
-          ),
+          _wrap(_editorWithInsertButton(controller: controller)),
         );
         await tester.pumpAndSettle();
 
@@ -259,7 +241,8 @@ void main() {
         expect(
           controller.document.toPlainText(),
           contains('Nuevo título'),
-          reason: 'Confirm must replace the document content with the new delta',
+          reason:
+              'Confirm must replace the document content with the new delta',
         );
       },
     );
@@ -272,9 +255,7 @@ void main() {
         addTearDown(controller.dispose);
 
         await tester.pumpWidget(
-          _wrap(
-            _editorWithInsertButton(controller: controller),
-          ),
+          _wrap(_editorWithInsertButton(controller: controller)),
         );
         await tester.pumpAndSettle();
 

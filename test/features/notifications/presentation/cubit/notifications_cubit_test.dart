@@ -27,15 +27,14 @@ class MockAnalyticsService extends Mock implements AnalyticsService {}
 NotificationModel _buildNotification({
   required String id,
   bool isRead = false,
-}) =>
-    NotificationModel(
-      id: id,
-      type: NotificationType.general,
-      title: 'Test $id',
-      body: 'Body $id',
-      createdAt: DateTime(2026, 5, 1),
-      isRead: isRead,
-    );
+}) => NotificationModel(
+  id: id,
+  type: NotificationType.general,
+  title: 'Test $id',
+  body: 'Body $id',
+  createdAt: DateTime(2026, 5, 1),
+  isRead: isRead,
+);
 
 void main() {
   late MockGetNotificationsUseCase mockGetNotifications;
@@ -67,7 +66,10 @@ void main() {
   group('NotificationsCubit — initial state', () {
     // TC-2-32: initial state has listResult = initial, unreadCount = 0
     test('TC-2-32: initial state is correct', () {
-      expect(cubit.state.listResult, const ResultState<List<NotificationModel>>.initial());
+      expect(
+        cubit.state.listResult,
+        const ResultState<List<NotificationModel>>.initial(),
+      );
       expect(cubit.state.unreadCount, 0);
       expect(cubit.state.nextCursor, isNull);
       expect(cubit.state.isLoadingMore, false);
@@ -80,24 +82,26 @@ void main() {
       'TC-2-33: load() emits data with unreadCount = 2 for 2 unread items',
       setUp: () {
         when(() => mockGetNotifications()).thenAnswer(
-          (_) async => Right(NotificationsPage(
-            data: [notification1, notification2, notification3],
-            nextCursor: null,
-          )),
+          (_) async => Right(
+            NotificationsPage(
+              data: [notification1, notification2, notification3],
+              nextCursor: null,
+            ),
+          ),
         );
       },
       build: () => cubit,
       act: (c) => c.load(),
       expect: () => [
         predicate<NotificationsState>(
-          (state) =>
-              state.listResult is Loading<List<NotificationModel>>,
+          (state) => state.listResult is Loading<List<NotificationModel>>,
           'loading state',
         ),
         predicate<NotificationsState>(
           (state) =>
               state.listResult is Data<List<NotificationModel>> &&
-              (state.listResult as Data<List<NotificationModel>>).data.length == 3 &&
+              (state.listResult as Data<List<NotificationModel>>).data.length ==
+                  3 &&
               state.unreadCount == 2 &&
               state.nextCursor == null,
           'data state with unreadCount=2',
@@ -109,9 +113,9 @@ void main() {
     blocTest<NotificationsCubit, NotificationsState>(
       'TC-2-34: load() emits empty state when no notifications returned',
       setUp: () {
-        when(() => mockGetNotifications()).thenAnswer(
-          (_) async => const Right(NotificationsPage(data: [])),
-        );
+        when(
+          () => mockGetNotifications(),
+        ).thenAnswer((_) async => const Right(NotificationsPage(data: [])));
       },
       build: () => cubit,
       act: (c) => c.load(),
@@ -132,8 +136,7 @@ void main() {
       'TC-2-35: load() emits error when use case fails',
       setUp: () {
         when(() => mockGetNotifications()).thenAnswer(
-          (_) async =>
-              const Left(DomainException(message: 'Sin conexión')),
+          (_) async => const Left(DomainException(message: 'Sin conexión')),
         );
       },
       build: () => cubit,
@@ -146,8 +149,8 @@ void main() {
           (state) =>
               state.listResult is Error<List<NotificationModel>> &&
               (state.listResult as Error<List<NotificationModel>>)
-                  .error
-                  .message ==
+                      .error
+                      .message ==
                   'Sin conexión',
         ),
       ],
@@ -158,10 +161,9 @@ void main() {
       'TC-2-36: load() stores nextCursor for pagination',
       setUp: () {
         when(() => mockGetNotifications()).thenAnswer(
-          (_) async => Right(NotificationsPage(
-            data: [notification1],
-            nextCursor: 'cursor-abc',
-          )),
+          (_) async => Right(
+            NotificationsPage(data: [notification1], nextCursor: 'cursor-abc'),
+          ),
         );
       },
       build: () => cubit,
@@ -181,17 +183,16 @@ void main() {
       'TC-2-37: loadMore() appends new items to existing list',
       setUp: () {
         when(() => mockGetNotifications()).thenAnswer(
-          (_) async => Right(NotificationsPage(
-            data: [notification1, notification2],
-            nextCursor: 'cursor-page2',
-          )),
+          (_) async => Right(
+            NotificationsPage(
+              data: [notification1, notification2],
+              nextCursor: 'cursor-page2',
+            ),
+          ),
         );
-        when(() => mockGetNotifications(cursor: 'cursor-page2'))
-            .thenAnswer(
-          (_) async => Right(NotificationsPage(
-            data: [notification3],
-            nextCursor: null,
-          )),
+        when(() => mockGetNotifications(cursor: 'cursor-page2')).thenAnswer(
+          (_) async =>
+              Right(NotificationsPage(data: [notification3], nextCursor: null)),
         );
       },
       build: () => cubit,
@@ -213,10 +214,8 @@ void main() {
       'TC-2-38: loadMore() is no-op when no nextCursor',
       setUp: () {
         when(() => mockGetNotifications()).thenAnswer(
-          (_) async => Right(NotificationsPage(
-            data: [notification1],
-            nextCursor: null,
-          )),
+          (_) async =>
+              Right(NotificationsPage(data: [notification1], nextCursor: null)),
         );
       },
       build: () => cubit,
@@ -237,13 +236,15 @@ void main() {
       'TC-2-39: markRead() optimistically updates list and unreadCount',
       setUp: () {
         when(() => mockGetNotifications()).thenAnswer(
-          (_) async => Right(NotificationsPage(
-            data: [notification1, notification2, notification3],
-          )),
+          (_) async => Right(
+            NotificationsPage(
+              data: [notification1, notification2, notification3],
+            ),
+          ),
         );
-        when(() => mockMarkRead('n1')).thenAnswer(
-          (_) async => const Right(null),
-        );
+        when(
+          () => mockMarkRead('n1'),
+        ).thenAnswer((_) async => const Right(null));
       },
       build: () => cubit,
       act: (c) async {
@@ -266,13 +267,15 @@ void main() {
       'TC-2-40: markAllRead() sets all notifications as read',
       setUp: () {
         when(() => mockGetNotifications()).thenAnswer(
-          (_) async => Right(NotificationsPage(
-            data: [notification1, notification2, notification3],
-          )),
+          (_) async => Right(
+            NotificationsPage(
+              data: [notification1, notification2, notification3],
+            ),
+          ),
         );
-        when(() => mockMarkAllRead()).thenAnswer(
-          (_) async => const Right(null),
-        );
+        when(
+          () => mockMarkAllRead(),
+        ).thenAnswer((_) async => const Right(null));
       },
       build: () => cubit,
       act: (c) async {

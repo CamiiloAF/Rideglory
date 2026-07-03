@@ -27,10 +27,7 @@ class EventFormStep4Review extends StatelessWidget {
 
   static final _priceFmt = NumberFormat('#,##0', 'es_CO');
 
-  String _formatBrands(
-    BuildContext context, {
-    required List<String> brands,
-  }) {
+  String _formatBrands(BuildContext context, {required List<String> brands}) {
     if (brands.isEmpty) {
       return context.l10n.event_step_review_allBrands;
     }
@@ -74,7 +71,8 @@ class EventFormStep4Review extends StatelessWidget {
             formData[EventFormFields.description] as String? ?? '';
         final dateRange = formData[EventFormFields.dateRange] as DateTimeRange?;
         final meetingTime = formData[EventFormFields.meetingTime] as DateTime?;
-        final isMultiDay = dateRange != null &&
+        final isMultiDay =
+            dateRange != null &&
             !_isSameCalendarDay(dateRange.start, dateRange.end);
         final difficulty =
             formData[EventFormFields.difficulty] as EventDifficulty? ??
@@ -87,8 +85,7 @@ class EventFormStep4Review extends StatelessWidget {
         final maxParticipants =
             formData[EventFormFields.maxParticipants] as int?;
         final priceStr = formData[EventFormFields.price] as String?;
-        final isFree =
-            priceStr == null || priceStr.isEmpty || priceStr == '0';
+        final isFree = priceStr == null || priceStr.isEmpty || priceStr == '0';
 
         final dateText = dateRange != null
             ? DateFormat('EEE, dd MMM yyyy', 'es').format(dateRange.start)

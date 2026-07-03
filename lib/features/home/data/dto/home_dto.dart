@@ -8,10 +8,7 @@ part 'home_dto.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class HomeDto {
-  const HomeDto({
-    this.mainVehicle,
-    required this.upcomingEvents,
-  });
+  const HomeDto({this.mainVehicle, required this.upcomingEvents});
 
   final VehicleDto? mainVehicle;
   final List<EventDto> upcomingEvents;
@@ -22,7 +19,7 @@ class HomeDto {
   Map<String, dynamic> toJson() => _$HomeDtoToJson(this);
 
   HomeData toHomeData() => HomeData(
-        mainVehicle: mainVehicle,
-        upcomingEvents: List<EventModel>.from(upcomingEvents),
-      );
+    mainVehicle: mainVehicle,
+    upcomingEvents: List<EventModel>.from(upcomingEvents),
+  );
 }

@@ -50,7 +50,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
             children: [
               ProfileEditAvatar(user: widget.user),
               AppSpacing.gapXxl,
-              ProfileFormSectionHeader(label: context.l10n.profile_sectionPersonal),
+              ProfileFormSectionHeader(
+                label: context.l10n.profile_sectionPersonal,
+              ),
               AppSpacing.gapMd,
               AppTextField(
                 name: 'fullName',
@@ -96,7 +98,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 textInputAction: TextInputAction.next,
               ),
               AppSpacing.gapXxl,
-              ProfileFormSectionHeader(label: context.l10n.profile_sectionEmergency),
+              ProfileFormSectionHeader(
+                label: context.l10n.profile_sectionEmergency,
+              ),
               AppSpacing.gapMd,
               AppTextField(
                 name: 'emergencyContactName',
@@ -127,10 +131,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ]),
               ),
               AppSpacing.gapXxl,
-              AppButton(
-                label: context.l10n.profile_editSave,
-                onPressed: _save,
-              ),
+              AppButton(label: context.l10n.profile_editSave, onPressed: _save),
             ],
           ),
         ),

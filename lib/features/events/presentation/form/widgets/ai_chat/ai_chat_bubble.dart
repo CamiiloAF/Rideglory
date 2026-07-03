@@ -26,7 +26,12 @@ class AiChatBubble extends StatelessWidget {
           maxWidth: MediaQuery.of(context).size.width * 0.78,
         ),
         margin: const EdgeInsets.symmetric(vertical: 4),
-        padding: EdgeInsets.fromLTRB(14, 10, showActions ? 4 : 14, showActions ? 4 : 10),
+        padding: EdgeInsets.fromLTRB(
+          14,
+          10,
+          showActions ? 4 : 14,
+          showActions ? 4 : 10,
+        ),
         decoration: BoxDecoration(
           color: isUser
               ? colorScheme.primary
@@ -49,10 +54,10 @@ class AiChatBubble extends StatelessWidget {
                 child: Text(
                   turn.content,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: isUser
-                            ? colorScheme.onPrimary
-                            : colorScheme.onSurface,
-                      ),
+                    color: isUser
+                        ? colorScheme.onPrimary
+                        : colorScheme.onSurface,
+                  ),
                 ),
               ),
             ),
@@ -70,10 +75,11 @@ class AiChatBubble extends StatelessWidget {
                         iconSize: 15,
                         icon: Icon(
                           Icons.content_copy_outlined,
-                          color: (isUser
-                                  ? colorScheme.onPrimary
-                                  : colorScheme.onSurface)
-                              .withValues(alpha: 0.55),
+                          color:
+                              (isUser
+                                      ? colorScheme.onPrimary
+                                      : colorScheme.onSurface)
+                                  .withValues(alpha: 0.55),
                         ),
                         tooltip: 'Copiar',
                         onPressed: onCopy,

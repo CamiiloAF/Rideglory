@@ -5,10 +5,7 @@ import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_form_cubit.dart';
 
 class VehicleFormCta extends StatelessWidget {
-  const VehicleFormCta({
-    super.key,
-    required this.onSave,
-  });
+  const VehicleFormCta({super.key, required this.onSave});
 
   final VoidCallback onSave;
 

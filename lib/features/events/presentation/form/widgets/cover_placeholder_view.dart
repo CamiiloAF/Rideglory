@@ -22,10 +22,7 @@ class CoverPlaceholderView extends StatelessWidget {
           Text(
             context.l10n.event_addEventCoverHint,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: colorScheme.onSurfaceVariant,
-              fontSize: 12,
-            ),
+            style: TextStyle(color: colorScheme.onSurfaceVariant, fontSize: 12),
           ),
         ],
       ),

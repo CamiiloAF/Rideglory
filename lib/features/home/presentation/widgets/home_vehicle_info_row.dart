@@ -8,10 +8,7 @@ import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
 enum _AlertLevel { none, upcoming, overdue }
 
 class _MaintenanceAlert {
-  const _MaintenanceAlert({
-    required this.level,
-    required this.label,
-  });
+  const _MaintenanceAlert({required this.level, required this.label});
   final _AlertLevel level;
   final String label;
 }
@@ -23,7 +20,8 @@ class HomeVehicleInfoRow extends StatelessWidget {
 
   Future<_MaintenanceAlert> _loadMaintenanceAlert() async {
     final vehicleId = vehicle.id;
-    if (vehicleId == null) return const _MaintenanceAlert(level: _AlertLevel.none, label: '');
+    if (vehicleId == null)
+      return const _MaintenanceAlert(level: _AlertLevel.none, label: '');
 
     final useCase = getIt<GetMaintenancesByVehicleIdUseCase>();
     final result = await useCase.execute(vehicleId);
@@ -75,7 +73,8 @@ class HomeVehicleInfoRow extends StatelessWidget {
           }
         }
 
-        return upcomingAlert ?? const _MaintenanceAlert(level: _AlertLevel.none, label: '');
+        return upcomingAlert ??
+            const _MaintenanceAlert(level: _AlertLevel.none, label: '');
       },
     );
   }
@@ -116,7 +115,10 @@ class HomeVehicleInfoRow extends StatelessWidget {
                   : Icons.schedule_outlined;
 
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
                 decoration: BoxDecoration(
                   color: bgColor,
                   borderRadius: BorderRadius.circular(20),

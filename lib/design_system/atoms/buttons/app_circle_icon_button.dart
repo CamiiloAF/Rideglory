@@ -28,8 +28,8 @@ class AppCircleIconButton extends StatelessWidget {
     required this.onTap,
     this.hasBorder = false,
     this.surfaceColor,
-  })  : icon = Icons.arrow_back,
-        variant = AppCircleIconButtonVariant.surface;
+  }) : icon = Icons.arrow_back,
+       variant = AppCircleIconButtonVariant.surface;
 
   final IconData icon;
   final VoidCallback onTap;
@@ -48,17 +48,17 @@ class AppCircleIconButton extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final (background, foreground) = switch (variant) {
       AppCircleIconButtonVariant.surface => (
-          surfaceColor ?? AppColors.darkCard,
-          AppColors.textOnDarkPrimary,
-        ),
+        surfaceColor ?? AppColors.darkCard,
+        AppColors.textOnDarkPrimary,
+      ),
       AppCircleIconButtonVariant.accent => (
-          AppColors.primary,
-          colorScheme.onPrimary,
-        ),
+        AppColors.primary,
+        colorScheme.onPrimary,
+      ),
       AppCircleIconButtonVariant.translucent => (
-          AppColors.darkBgPrimary.withValues(alpha: 0.6),
-          AppColors.textOnDarkPrimary,
-        ),
+        AppColors.darkBgPrimary.withValues(alpha: 0.6),
+        AppColors.textOnDarkPrimary,
+      ),
     };
 
     return GestureDetector(

@@ -22,8 +22,7 @@ class EventDetailMetaSection extends StatelessWidget {
           children: [
             // Difficulty pill
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: AppColors.darkCard,
                 borderRadius: BorderRadius.circular(20),
@@ -31,8 +30,11 @@ class EventDetailMetaSection extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(LucideIcons.flame,
-                      color: AppColors.primary, size: 14),
+                  const Icon(
+                    LucideIcons.flame,
+                    color: AppColors.primary,
+                    size: 14,
+                  ),
                   const SizedBox(width: 6),
                   Text(
                     'X${difficulty.value}',
@@ -58,8 +60,7 @@ class EventDetailMetaSection extends StatelessWidget {
 
             // Type pill
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: AppColors.darkCard,
                 borderRadius: BorderRadius.circular(20),
@@ -67,8 +68,11 @@ class EventDetailMetaSection extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.explore_outlined,
-                      color: AppColors.primary, size: 14),
+                  const Icon(
+                    Icons.explore_outlined,
+                    color: AppColors.primary,
+                    size: 14,
+                  ),
                   const SizedBox(width: 6),
                   Text(
                     event.eventType.label.toUpperCase(),
@@ -88,7 +92,11 @@ class EventDetailMetaSection extends StatelessWidget {
         // Meeting time row
         Row(
           children: [
-            const Icon(Icons.timer_outlined, color: AppColors.primary, size: 16),
+            const Icon(
+              Icons.timer_outlined,
+              color: AppColors.primary,
+              size: 16,
+            ),
             const SizedBox(width: 8),
             Text(
               event.meetingTime.formattedTime,

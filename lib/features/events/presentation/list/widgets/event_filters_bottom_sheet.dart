@@ -54,8 +54,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
     _selectedDifficulties = Set.from(_cubit.filters.difficulties);
   }
 
-  int get _activeCount =>
-      _selectedTypes.length + _selectedDifficulties.length;
+  int get _activeCount => _selectedTypes.length + _selectedDifficulties.length;
 
   void _clearAll() {
     setState(() {
@@ -107,10 +106,7 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const FilterHandleBar(),
-            FilterPanelHeader(
-              hasActiveFilters: true,
-              onClearAll: _clearAll,
-            ),
+            FilterPanelHeader(hasActiveFilters: true, onClearAll: _clearAll),
             const FilterDivider(),
             Flexible(
               child: SingleChildScrollView(
@@ -137,7 +133,9 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                               spacing: 8,
                               runSpacing: 8,
                               children: EventType.values.map((type) {
-                                final isSelected = _selectedTypes.contains(type);
+                                final isSelected = _selectedTypes.contains(
+                                  type,
+                                );
                                 return FilterTypeChip(
                                   label: type.label,
                                   isSelected: isSelected,
@@ -166,8 +164,8 @@ class _EventFiltersBottomSheetState extends State<EventFiltersBottomSheet> {
                               spacing: 8,
                               runSpacing: 8,
                               children: EventDifficulty.values.map((diff) {
-                                final isSelected =
-                                    _selectedDifficulties.contains(diff);
+                                final isSelected = _selectedDifficulties
+                                    .contains(diff);
                                 return EventDifficultyFilterChip(
                                   difficulty: diff,
                                   isSelected: isSelected,

@@ -75,12 +75,10 @@ void main() {
     when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
     when(() => mockCache.read(any())).thenReturn(null);
     when(() => mockCache.write(any(), any())).thenReturn(null);
+    when(() => mockCache.updateStatus(any(), any(), any())).thenReturn(null);
     when(
-      () => mockCache.updateStatus(any(), any(), any()),
-    ).thenReturn(null);
-    when(() => mockGetRegistrations('event-1')).thenAnswer(
-      (_) async => Right([_mockRegistration]),
-    );
+      () => mockGetRegistrations('event-1'),
+    ).thenAnswer((_) async => Right([_mockRegistration]));
 
     cubit = AttendeesCubit(
       mockGetRegistrations,
@@ -157,9 +155,7 @@ void main() {
       () async {
         when(() => mockReadyForEdit.call('reg-1')).thenAnswer(
           (_) async => Right(
-            _mockRegistration.copyWith(
-              status: RegistrationStatus.readyForEdit,
-            ),
+            _mockRegistration.copyWith(status: RegistrationStatus.readyForEdit),
           ),
         );
 
@@ -167,9 +163,8 @@ void main() {
         await cubit.setReadyForEdit('reg-1');
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.registrationReadyForEdit,
-          ),
+          () =>
+              mockAnalytics.logEvent(AnalyticsEvents.registrationReadyForEdit),
         ).called(1);
         verifyNever(
           () => mockAnalytics.logEvent(
@@ -186,78 +181,68 @@ void main() {
       'with action=approve',
       () async {
         when(() => mockApprove.call('reg-1')).thenAnswer(
-          (_) async =>
-              const Left(DomainException(message: 'Server error')),
+          (_) async => const Left(DomainException(message: 'Server error')),
         );
 
         await loadAttendees();
         await cubit.approveRegistration('reg-1');
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.registrationApprovalFailed,
-            {AnalyticsParams.approvalAction: AnalyticsParams.approvalActionApprove},
-          ),
+          () => mockAnalytics
+              .logEvent(AnalyticsEvents.registrationApprovalFailed, {
+                AnalyticsParams.approvalAction:
+                    AnalyticsParams.approvalActionApprove,
+              }),
         ).called(1);
         verifyNever(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.registrationApproved,
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.registrationApproved),
         );
       },
     );
 
     // TC-att-a5: registration_approval_failed fires on reject failure with action=reject
-    test(
-      'TC-att-a5: rejectRegistration failure → registration_approval_failed '
-      'with action=reject',
-      () async {
-        when(() => mockReject.call('reg-1')).thenAnswer(
-          (_) async =>
-              const Left(DomainException(message: 'Forbidden')),
-        );
+    test('TC-att-a5: rejectRegistration failure → registration_approval_failed '
+        'with action=reject', () async {
+      when(() => mockReject.call('reg-1')).thenAnswer(
+        (_) async => const Left(DomainException(message: 'Forbidden')),
+      );
 
-        await loadAttendees();
-        await cubit.rejectRegistration('reg-1');
+      await loadAttendees();
+      await cubit.rejectRegistration('reg-1');
 
-        verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.registrationApprovalFailed,
-            {AnalyticsParams.approvalAction: AnalyticsParams.approvalActionReject},
-          ),
-        ).called(1);
-        verifyNever(
-          () => mockAnalytics.logEvent(AnalyticsEvents.registrationRejected),
-        );
-      },
-    );
+      verify(
+        () =>
+            mockAnalytics.logEvent(AnalyticsEvents.registrationApprovalFailed, {
+              AnalyticsParams.approvalAction:
+                  AnalyticsParams.approvalActionReject,
+            }),
+      ).called(1);
+      verifyNever(
+        () => mockAnalytics.logEvent(AnalyticsEvents.registrationRejected),
+      );
+    });
 
     // TC-att-a6: registration_approval_failed fires on readyForEdit failure
-    test(
-      'TC-att-a6: setReadyForEdit failure → registration_approval_failed '
-      'with action=ready_for_edit',
-      () async {
-        when(() => mockReadyForEdit.call('reg-1')).thenAnswer(
-          (_) async =>
-              const Left(DomainException(message: 'Network error')),
-        );
+    test('TC-att-a6: setReadyForEdit failure → registration_approval_failed '
+        'with action=ready_for_edit', () async {
+      when(() => mockReadyForEdit.call('reg-1')).thenAnswer(
+        (_) async => const Left(DomainException(message: 'Network error')),
+      );
 
-        await loadAttendees();
-        await cubit.setReadyForEdit('reg-1');
+      await loadAttendees();
+      await cubit.setReadyForEdit('reg-1');
 
-        verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.registrationApprovalFailed,
-            {AnalyticsParams.approvalAction: AnalyticsParams.approvalActionReadyForEdit},
-          ),
-        ).called(1);
-        verifyNever(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.registrationReadyForEdit,
-          ),
-        );
-      },
-    );
+      verify(
+        () =>
+            mockAnalytics.logEvent(AnalyticsEvents.registrationApprovalFailed, {
+              AnalyticsParams.approvalAction:
+                  AnalyticsParams.approvalActionReadyForEdit,
+            }),
+      ).called(1);
+      verifyNever(
+        () => mockAnalytics.logEvent(AnalyticsEvents.registrationReadyForEdit),
+      );
+    });
 
     // TC-att-a7: no PII — approved event carries no registration id or rider data
     test(

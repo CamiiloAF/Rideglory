@@ -1,7 +1,9 @@
 import 'package:rideglory/features/vehicle_documents/domain/vehicle_document_expiry.dart';
 import 'package:rideglory/features/vehicle_documents/domain/vehicle_document_model.dart';
 
-class TecnomecanicaModel with VehicleDocumentExpiry implements VehicleDocumentModel {
+class TecnomecanicaModel
+    with VehicleDocumentExpiry
+    implements VehicleDocumentModel {
   const TecnomecanicaModel({
     required this.id,
     required this.vehicleId,
@@ -62,12 +64,6 @@ class TecnomecanicaModel with VehicleDocumentExpiry implements VehicleDocumentMo
   }
 
   @override
-  int get hashCode => Object.hash(
-    id,
-    vehicleId,
-    cdaName,
-    startDate,
-    expiryDate,
-    documentUrl,
-  );
+  int get hashCode =>
+      Object.hash(id, vehicleId, cdaName, startDate, expiryDate, documentUrl);
 }

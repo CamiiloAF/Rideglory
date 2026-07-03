@@ -26,65 +26,70 @@ class MyRegistrationsView extends StatelessWidget {
           ),
         ),
         backgroundColor: AppColors.darkBgPrimary,
-        surfaceTintColor: Colors.transparent, // Intentional: remove Material3 surface tint
+        surfaceTintColor:
+            Colors.transparent, // Intentional: remove Material3 surface tint
         centerTitle: true,
         elevation: 0,
       ),
       body: SafeArea(
-        child: BlocBuilder<MyRegistrationsCubit,
-            ResultState<List<RegistrationWithEvent>>>(
-          builder: (context, state) {
-            final cubit = context.read<MyRegistrationsCubit>();
-            return state.when(
-              initial: () => const AppLoadingIndicator(
-                variant: AppLoadingIndicatorVariant.page,
-              ),
-              loading: () => const AppLoadingIndicator(
-                variant: AppLoadingIndicatorVariant.page,
-              ),
-              data: (items) => MyRegistrationsDataView(items: items),
-              empty: () => EmptyStateWidget(
-                icon: Icons.event_busy_outlined,
-                title: context.l10n.registration_noRegistrations,
-                description: context.l10n.registration_noRegistrationsDescription,
-                actionButtonText: context.l10n.registration_goToEvents,
-                showButtonIcon: false,
-                onActionPressed: () => context.pushNamed(AppRoutes.events),
-                onRefresh: () => cubit.fetchMyRegistrations(),
-              ),
-              error: (error) => Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.error_outline,
-                        color: AppColors.error,
-                        size: 48,
-                      ),
-                      AppSpacing.gapLg,
-                      Text(
-                        context.l10n.registration_errorLoadingRegistrations,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: AppColors.textOnDarkSecondary,
-                          fontSize: 14,
-                        ),
-                      ),
-                      AppSpacing.gapLg,
-                      AppButton(
-                        label: context.l10n.retry,
-                        onPressed: () => cubit.fetchMyRegistrations(),
-                        isFullWidth: false,
-                      ),
-                    ],
+        child:
+            BlocBuilder<
+              MyRegistrationsCubit,
+              ResultState<List<RegistrationWithEvent>>
+            >(
+              builder: (context, state) {
+                final cubit = context.read<MyRegistrationsCubit>();
+                return state.when(
+                  initial: () => const AppLoadingIndicator(
+                    variant: AppLoadingIndicatorVariant.page,
                   ),
-                ),
-              ),
-            );
-          },
-        ),
+                  loading: () => const AppLoadingIndicator(
+                    variant: AppLoadingIndicatorVariant.page,
+                  ),
+                  data: (items) => MyRegistrationsDataView(items: items),
+                  empty: () => EmptyStateWidget(
+                    icon: Icons.event_busy_outlined,
+                    title: context.l10n.registration_noRegistrations,
+                    description:
+                        context.l10n.registration_noRegistrationsDescription,
+                    actionButtonText: context.l10n.registration_goToEvents,
+                    showButtonIcon: false,
+                    onActionPressed: () => context.pushNamed(AppRoutes.events),
+                    onRefresh: () => cubit.fetchMyRegistrations(),
+                  ),
+                  error: (error) => Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.error_outline,
+                            color: AppColors.error,
+                            size: 48,
+                          ),
+                          AppSpacing.gapLg,
+                          Text(
+                            context.l10n.registration_errorLoadingRegistrations,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: AppColors.textOnDarkSecondary,
+                              fontSize: 14,
+                            ),
+                          ),
+                          AppSpacing.gapLg,
+                          AppButton(
+                            label: context.l10n.retry,
+                            onPressed: () => cubit.fetchMyRegistrations(),
+                            isFullWidth: false,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
       ),
     );
   }

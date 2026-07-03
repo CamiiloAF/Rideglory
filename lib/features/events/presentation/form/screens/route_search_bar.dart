@@ -88,10 +88,8 @@ class _RouteSearchBarState extends State<RouteSearchBar> {
         borderRadius: BorderRadius.only(
           topLeft: const Radius.circular(12),
           topRight: const Radius.circular(12),
-          bottomLeft:
-              _isFocused ? Radius.zero : const Radius.circular(12),
-          bottomRight:
-              _isFocused ? Radius.zero : const Radius.circular(12),
+          bottomLeft: _isFocused ? Radius.zero : const Radius.circular(12),
+          bottomRight: _isFocused ? Radius.zero : const Radius.circular(12),
         ),
         border: Border.all(
           color: _isFocused ? AppColors.primary : AppColors.darkBorderPrimary,

@@ -81,7 +81,11 @@ class _NoActiveVehiclesNotice extends StatelessWidget {
                 color: AppColors.primary,
                 borderRadius: BorderRadius.circular(18),
               ),
-              child: const Icon(Icons.add, color: AppColors.darkBgPrimary, size: 20),
+              child: const Icon(
+                Icons.add,
+                color: AppColors.darkBgPrimary,
+                size: 20,
+              ),
             ),
           ),
         ],
@@ -118,10 +122,12 @@ class GarageVehiclesContent extends StatelessWidget {
     final allVehicles = state is Data<List<VehicleModel>>
         ? state.data
         : const <VehicleModel>[];
-    final activeVehicles =
-        allVehicles.where((v) => !v.isArchived).toList(growable: false);
-    final archivedVehicles =
-        allVehicles.where((v) => v.isArchived).toList(growable: false);
+    final activeVehicles = allVehicles
+        .where((v) => !v.isArchived)
+        .toList(growable: false);
+    final archivedVehicles = allVehicles
+        .where((v) => v.isArchived)
+        .toList(growable: false);
 
     if (activeVehicles.isEmpty) {
       return Scaffold(

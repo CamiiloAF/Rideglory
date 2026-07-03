@@ -79,7 +79,8 @@ class InscriptionCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Material(
-        color: Colors.transparent, // Intentional: Material requires transparent color to show InkWell splash correctly
+        color: Colors
+            .transparent, // Intentional: Material requires transparent color to show InkWell splash correctly
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(12),
@@ -194,10 +195,7 @@ class InscriptionCard extends StatelessWidget {
                   ),
                 ),
                 // Divider
-                const Divider(
-                  height: 1,
-                  color: AppColors.darkBorderPrimary,
-                ),
+                const Divider(height: 1, color: AppColors.darkBorderPrimary),
                 // Action buttons row
                 Padding(
                   padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),

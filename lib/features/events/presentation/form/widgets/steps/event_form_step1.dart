@@ -59,7 +59,8 @@ class EventFormStep1 extends StatelessWidget {
                       data: (data) => data,
                     );
                     final hasLocalImage = imageData?.hasLocalImage == true;
-                    final hasImage = hasLocalImage ||
+                    final hasImage =
+                        hasLocalImage ||
                         imageData?.displayImageUrl?.isNotEmpty == true;
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

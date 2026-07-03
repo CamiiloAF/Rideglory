@@ -20,11 +20,7 @@ class EventCardMyEventBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.verified,
-            size: 13,
-            color: context.colorScheme.onPrimary,
-          ),
+          Icon(Icons.verified, size: 13, color: context.colorScheme.onPrimary),
           AppSpacing.hGapXxs,
           Text(
             context.l10n.event_eventCardMyEvent.toUpperCase(),

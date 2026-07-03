@@ -32,7 +32,8 @@ class MaintenanceStatusToggle extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isCompleted
                       ? AppColors.statusGreen
-                      : Colors.transparent, // Intentional: toggle background resets to transparent when inactive
+                      : Colors
+                            .transparent, // Intentional: toggle background resets to transparent when inactive
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Center(
@@ -58,7 +59,8 @@ class MaintenanceStatusToggle extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: !isCompleted
                       ? AppColors.primary
-                      : Colors.transparent, // Intentional: toggle background resets to transparent when inactive
+                      : Colors
+                            .transparent, // Intentional: toggle background resets to transparent when inactive
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Center(

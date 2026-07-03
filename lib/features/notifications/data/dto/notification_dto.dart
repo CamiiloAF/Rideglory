@@ -76,7 +76,8 @@ class NotificationDto {
       'SOAT_30D' => 'El SOAT de tu moto vence en 30 días',
       'SOAT_7D' => 'El SOAT de tu moto vence en 7 días',
       'SOAT_DAY_OF' => 'El SOAT de tu moto vence hoy',
-      'MAINTENANCE_DATE_REMINDER' => 'Tu mantenimiento está programado en 30 días',
+      'MAINTENANCE_DATE_REMINDER' =>
+        'Tu mantenimiento está programado en 30 días',
       'EVENT_REMINDER' => 'Tu rodada comienza en 24 horas',
       'SOS_ALERT' => 'Un rider ha enviado una alerta SOS',
       'TRACKING_ENDED' => 'La rodada ha finalizado',
@@ -87,10 +88,7 @@ class NotificationDto {
 
 @JsonSerializable(converters: apiJsonDateTimeConverters)
 class NotificationPageDto {
-  const NotificationPageDto({
-    required this.data,
-    this.nextCursor,
-  });
+  const NotificationPageDto({required this.data, this.nextCursor});
 
   final List<NotificationDto> data;
   final String? nextCursor;

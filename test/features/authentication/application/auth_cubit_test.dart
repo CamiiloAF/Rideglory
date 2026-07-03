@@ -92,10 +92,8 @@ void main() {
           );
         },
         build: () => authCubit,
-        act: (cubit) => cubit.signInWithEmail(
-          email: 'bad@example.com',
-          password: 'wrong',
-        ),
+        act: (cubit) =>
+            cubit.signInWithEmail(email: 'bad@example.com', password: 'wrong'),
         expect: () => [
           predicate<AuthState>((s) => s.isLoading),
           predicate<AuthState>(
@@ -104,42 +102,32 @@ void main() {
         ],
       );
 
-      test(
-        'TC-auth-4b: signInWithEmail failure emits auth_failed with '
-        'categorized error — no raw message, no PII',
-        () async {
-          when(
-            () => mockAuthService.signInWithEmail(
-              email: any(named: 'email'),
-              password: any(named: 'password'),
-            ),
-          ).thenAnswer(
-            (_) async => const Left(
-              DomainException(message: 'Invalid credentials'),
-            ),
-          );
+      test('TC-auth-4b: signInWithEmail failure emits auth_failed with '
+          'categorized error — no raw message, no PII', () async {
+        when(
+          () => mockAuthService.signInWithEmail(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ),
+        ).thenAnswer(
+          (_) async =>
+              const Left(DomainException(message: 'Invalid credentials')),
+        );
 
-          await authCubit.signInWithEmail(
-            email: 'x@x.com',
-            password: 'wrong',
-          );
+        await authCubit.signInWithEmail(email: 'x@x.com', password: 'wrong');
 
-          // auth_failed must be logged with auth_method=email and a category
-          verify(
-            () => mockAnalytics.logEvent(
-              AnalyticsEvents.authFailed,
-              {
-                AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
-                AnalyticsParams.authErrorCategory:
-                    AnalyticsParams.authErrorInvalidCredentials,
-              },
-            ),
-          ).called(1);
+        // auth_failed must be logged with auth_method=email and a category
+        verify(
+          () => mockAnalytics.logEvent(AnalyticsEvents.authFailed, {
+            AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
+            AnalyticsParams.authErrorCategory:
+                AnalyticsParams.authErrorInvalidCredentials,
+          }),
+        ).called(1);
 
-          // uid must NEVER be passed to setUserId on failure
-          verifyNever(() => mockAnalytics.setUserId(any()));
-        },
-      );
+        // uid must NEVER be passed to setUserId on failure
+        verifyNever(() => mockAnalytics.setUserId(any()));
+      });
 
       test(
         'TC-auth-4c: signInWithEmail failure with network message → category=network',
@@ -160,68 +148,61 @@ void main() {
           await authCubit.signInWithEmail(email: 'x@x.com', password: 'p');
 
           verify(
-            () => mockAnalytics.logEvent(
-              AnalyticsEvents.authFailed,
-              {
-                AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
-                AnalyticsParams.authErrorCategory:
-                    AnalyticsParams.authErrorNetwork,
-              },
-            ),
+            () => mockAnalytics.logEvent(AnalyticsEvents.authFailed, {
+              AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
+              AnalyticsParams.authErrorCategory:
+                  AnalyticsParams.authErrorNetwork,
+            }),
           ).called(1);
         },
       );
 
-      test(
-        'TC-auth-4d: signInWithEmail success → setUserId(SHA-256), '
-        'auth_succeeded(email), setUserProperty(login_method, email), '
-        'auth_first_home_entry — uid in clear never passed',
-        () async {
-          final mockFirebaseUser = MockFirebaseUser();
-          when(() => mockFirebaseUser.uid).thenReturn(testUid);
-          when(
-            () => mockFirebaseUser.getIdToken(any()),
-          ).thenAnswer((_) async => 'fake-token');
+      test('TC-auth-4d: signInWithEmail success → setUserId(SHA-256), '
+          'auth_succeeded(email), setUserProperty(login_method, email), '
+          'auth_first_home_entry — uid in clear never passed', () async {
+        final mockFirebaseUser = MockFirebaseUser();
+        when(() => mockFirebaseUser.uid).thenReturn(testUid);
+        when(
+          () => mockFirebaseUser.getIdToken(any()),
+        ).thenAnswer((_) async => 'fake-token');
 
-          when(
-            () => mockAuthService.signInWithEmail(
-              email: any(named: 'email'),
-              password: any(named: 'password'),
-            ),
-          ).thenAnswer((_) async => Right(mockFirebaseUser));
-          when(() => mockAuthService.currentUser).thenReturn(mockUserModel);
+        when(
+          () => mockAuthService.signInWithEmail(
+            email: any(named: 'email'),
+            password: any(named: 'password'),
+          ),
+        ).thenAnswer((_) async => Right(mockFirebaseUser));
+        when(() => mockAuthService.currentUser).thenReturn(mockUserModel);
 
-          await authCubit.signInWithEmail(email: 'u@u.com', password: 'pass');
+        await authCubit.signInWithEmail(email: 'u@u.com', password: 'pass');
 
-          // setUserId must receive the SHA-256 hash (64 hex chars), never the uid
-          final captured = verify(
-            () => mockAnalytics.setUserId(captureAny()),
-          ).captured;
-          expect(captured.length, 1);
-          final passedId = captured.first as String;
-          expect(passedId, equals(expectedHash));
-          expect(passedId, hasLength(64));
-          expect(passedId, isNot(equals(testUid)));
+        // setUserId must receive the SHA-256 hash (64 hex chars), never the uid
+        final captured = verify(
+          () => mockAnalytics.setUserId(captureAny()),
+        ).captured;
+        expect(captured.length, 1);
+        final passedId = captured.first as String;
+        expect(passedId, equals(expectedHash));
+        expect(passedId, hasLength(64));
+        expect(passedId, isNot(equals(testUid)));
 
-          verify(
-            () => mockAnalytics.logEvent(
-              AnalyticsEvents.authSucceeded,
-              {AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail},
-            ),
-          ).called(1);
+        verify(
+          () => mockAnalytics.logEvent(AnalyticsEvents.authSucceeded, {
+            AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
+          }),
+        ).called(1);
 
-          verify(
-            () => mockAnalytics.setUserProperty(
-              AnalyticsParams.userPropertyLoginMethod,
-              AnalyticsParams.authMethodEmail,
-            ),
-          ).called(1);
+        verify(
+          () => mockAnalytics.setUserProperty(
+            AnalyticsParams.userPropertyLoginMethod,
+            AnalyticsParams.authMethodEmail,
+          ),
+        ).called(1);
 
-          verify(
-            () => mockAnalytics.logEvent(AnalyticsEvents.authFirstHomeEntry),
-          ).called(1);
-        },
-      );
+        verify(
+          () => mockAnalytics.logEvent(AnalyticsEvents.authFirstHomeEntry),
+        ).called(1);
+      });
     });
 
     group('signUpWithEmail', () {
@@ -292,10 +273,9 @@ void main() {
           expect(passedId, isNot(equals(testUid)));
 
           verify(
-            () => mockAnalytics.logEvent(
-              AnalyticsEvents.authSucceeded,
-              {AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail},
-            ),
+            () => mockAnalytics.logEvent(AnalyticsEvents.authSucceeded, {
+              AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
+            }),
           ).called(1);
         },
       );
@@ -323,14 +303,11 @@ void main() {
           );
 
           verify(
-            () => mockAnalytics.logEvent(
-              AnalyticsEvents.authFailed,
-              {
-                AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
-                AnalyticsParams.authErrorCategory:
-                    AnalyticsParams.authErrorCancelled,
-              },
-            ),
+            () => mockAnalytics.logEvent(AnalyticsEvents.authFailed, {
+              AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
+              AnalyticsParams.authErrorCategory:
+                  AnalyticsParams.authErrorCancelled,
+            }),
           ).called(1);
           verifyNever(() => mockAnalytics.setUserId(any()));
         },
@@ -350,14 +327,11 @@ void main() {
           await authCubit.signInWithGoogle();
 
           verify(
-            () => mockAnalytics.logEvent(
-              AnalyticsEvents.authFailed,
-              {
-                AnalyticsParams.authMethod: AnalyticsParams.authMethodGoogle,
-                AnalyticsParams.authErrorCategory:
-                    AnalyticsParams.authErrorCancelled,
-              },
-            ),
+            () => mockAnalytics.logEvent(AnalyticsEvents.authFailed, {
+              AnalyticsParams.authMethod: AnalyticsParams.authMethodGoogle,
+              AnalyticsParams.authErrorCategory:
+                  AnalyticsParams.authErrorCancelled,
+            }),
           ).called(1);
           verifyNever(() => mockAnalytics.setUserId(any()));
         },
@@ -381,9 +355,9 @@ void main() {
             isNewUser: false,
           );
 
-          when(() => mockAuthService.signInWithApple()).thenAnswer(
-            (_) async => Right(authUser),
-          );
+          when(
+            () => mockAuthService.signInWithApple(),
+          ).thenAnswer((_) async => Right(authUser));
 
           await authCubit.signInWithApple();
 
@@ -400,10 +374,9 @@ void main() {
           expect(passedId, isNot(equals(testUid)));
 
           verify(
-            () => mockAnalytics.logEvent(
-              AnalyticsEvents.authSucceeded,
-              {AnalyticsParams.authMethod: AnalyticsParams.authMethodApple},
-            ),
+            () => mockAnalytics.logEvent(AnalyticsEvents.authSucceeded, {
+              AnalyticsParams.authMethod: AnalyticsParams.authMethodApple,
+            }),
           ).called(1);
 
           verify(
@@ -430,14 +403,11 @@ void main() {
           expect(authCubit.state.hasError, isTrue);
 
           verify(
-            () => mockAnalytics.logEvent(
-              AnalyticsEvents.authFailed,
-              {
-                AnalyticsParams.authMethod: AnalyticsParams.authMethodApple,
-                AnalyticsParams.authErrorCategory:
-                    AnalyticsParams.authErrorCancelled,
-              },
-            ),
+            () => mockAnalytics.logEvent(AnalyticsEvents.authFailed, {
+              AnalyticsParams.authMethod: AnalyticsParams.authMethodApple,
+              AnalyticsParams.authErrorCategory:
+                  AnalyticsParams.authErrorCancelled,
+            }),
           ).called(1);
           verifyNever(() => mockAnalytics.setUserId(any()));
         },
@@ -448,9 +418,9 @@ void main() {
       blocTest<AuthCubit, AuthState>(
         'TC-auth-6: emits unauthenticated after successful signOut',
         setUp: () {
-          when(() => mockAuthService.signOut()).thenAnswer(
-            (_) async => const Right(unit),
-          );
+          when(
+            () => mockAuthService.signOut(),
+          ).thenAnswer((_) async => const Right(unit));
         },
         build: () => authCubit,
         act: (cubit) => cubit.signOut(),
@@ -479,9 +449,7 @@ void main() {
       blocTest<AuthCubit, AuthState>(
         'TC-auth-8: emits loading then error when reset email fails',
         setUp: () {
-          when(
-            () => mockAuthService.sendPasswordResetEmail(any()),
-          ).thenAnswer(
+          when(() => mockAuthService.sendPasswordResetEmail(any())).thenAnswer(
             (_) async =>
                 const Left(DomainException(message: 'Email no encontrado')),
           );
@@ -506,13 +474,10 @@ void main() {
           await authCubit.sendPasswordResetEmail('user@example.com');
 
           verify(
-            () => mockAnalytics.logEvent(
-              AnalyticsEvents.authSucceeded,
-              {
-                AnalyticsParams.authMethod:
-                    AnalyticsParams.authMethodForgotPassword,
-              },
-            ),
+            () => mockAnalytics.logEvent(AnalyticsEvents.authSucceeded, {
+              AnalyticsParams.authMethod:
+                  AnalyticsParams.authMethodForgotPassword,
+            }),
           ).called(1);
           // No setUserId for password reset
           verifyNever(() => mockAnalytics.setUserId(any()));
@@ -522,9 +487,7 @@ void main() {
       test(
         'TC-auth-8b: sendPasswordResetEmail failure → auth_failed(forgot_password, category)',
         () async {
-          when(
-            () => mockAuthService.sendPasswordResetEmail(any()),
-          ).thenAnswer(
+          when(() => mockAuthService.sendPasswordResetEmail(any())).thenAnswer(
             (_) async => const Left(
               DomainException(
                 message: 'Network error. Please check your connection',
@@ -535,15 +498,12 @@ void main() {
           await authCubit.sendPasswordResetEmail('user@example.com');
 
           verify(
-            () => mockAnalytics.logEvent(
-              AnalyticsEvents.authFailed,
-              {
-                AnalyticsParams.authMethod:
-                    AnalyticsParams.authMethodForgotPassword,
-                AnalyticsParams.authErrorCategory:
-                    AnalyticsParams.authErrorNetwork,
-              },
-            ),
+            () => mockAnalytics.logEvent(AnalyticsEvents.authFailed, {
+              AnalyticsParams.authMethod:
+                  AnalyticsParams.authMethodForgotPassword,
+              AnalyticsParams.authErrorCategory:
+                  AnalyticsParams.authErrorNetwork,
+            }),
           ).called(1);
         },
       );
@@ -566,10 +526,7 @@ void main() {
         ).thenAnswer(
           (_) async => const Left(DomainException(message: 'error test')),
         );
-        await authCubit.signInWithEmail(
-          email: 'x@x.com',
-          password: 'pass',
-        );
+        await authCubit.signInWithEmail(email: 'x@x.com', password: 'pass');
         expect(authCubit.state.hasError, isTrue);
         expect(authCubit.state.errorMessage, 'error test');
       });

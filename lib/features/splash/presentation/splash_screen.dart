@@ -17,8 +17,7 @@ import 'package:url_launcher/url_launcher.dart';
 const _androidStoreUrl =
     'https://play.google.com/store/apps/details?id=com.camiloagudelo.rideglory';
 
-const _iosStoreUrl =
-    'https://apps.apple.com/app/id6778918834';
+const _iosStoreUrl = 'https://apps.apple.com/app/id6778918834';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});

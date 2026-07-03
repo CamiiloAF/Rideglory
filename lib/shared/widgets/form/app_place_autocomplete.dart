@@ -5,7 +5,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/services/dto/place_suggestion_dto.dart';
 import 'package:rideglory/core/services/place_service.dart';
-export 'package:rideglory/core/services/dto/place_suggestion_dto.dart' show PlaceSuggestionDto;
+export 'package:rideglory/core/services/dto/place_suggestion_dto.dart'
+    show PlaceSuggestionDto;
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/shared/models/address_location.dart';
 import 'package:rideglory/shared/widgets/form/app_place_suggestions_dropdown.dart';
@@ -83,8 +84,7 @@ class AppPlaceAutocompleteField extends StatefulWidget {
       _AppPlaceAutocompleteFieldState();
 }
 
-class _AppPlaceAutocompleteFieldState
-    extends State<AppPlaceAutocompleteField> {
+class _AppPlaceAutocompleteFieldState extends State<AppPlaceAutocompleteField> {
   final TextEditingController _controller = TextEditingController();
   final LayerLink _layerLink = LayerLink();
   final OverlayPortalController _overlayController = OverlayPortalController();
@@ -164,7 +164,9 @@ class _AppPlaceAutocompleteFieldState
     _closeSuggestions();
 
     final placeId = suggestion.placeId;
-    if (widget.resolveCoords && placeId != null && suggestion.location == null) {
+    if (widget.resolveCoords &&
+        placeId != null &&
+        suggestion.location == null) {
       unawaited(_resolveAndFire(suggestion.name, placeId));
     } else {
       final location = suggestion.location;
@@ -536,9 +538,7 @@ class _FullFieldLayout extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(right: 14),
                     child: Icon(
-                      showMapPicker
-                          ? Icons.map_outlined
-                          : Icons.place_outlined,
+                      showMapPicker ? Icons.map_outlined : Icons.place_outlined,
                       color: showMapPicker
                           ? AppColors.primary
                           : AppColors.textOnDarkTertiary,

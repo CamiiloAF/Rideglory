@@ -41,7 +41,11 @@ void main() {
     mockAnalytics = MockAnalyticsService();
     when(() => mockAnalytics.logEvent(any(), any())).thenAnswer((_) async {});
     when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
-    eventsCubit = EventsCubit(mockGetEventsUseCase, mockUpdateEventUseCase, mockAnalytics);
+    eventsCubit = EventsCubit(
+      mockGetEventsUseCase,
+      mockUpdateEventUseCase,
+      mockAnalytics,
+    );
   });
 
   tearDown(() {
@@ -53,11 +57,13 @@ void main() {
     blocTest<EventsCubit, ResultState<List<EventModel>>>(
       'TC-2-1: fetchEvents() with no filters returns all events',
       setUp: () {
-        when(() => mockGetEventsUseCase(
-              type: null,
-              dateFrom: any(named: 'dateFrom'),
-              dateTo: null,
-            )).thenAnswer((_) async => Right([mockEvent]));
+        when(
+          () => mockGetEventsUseCase(
+            type: null,
+            dateFrom: any(named: 'dateFrom'),
+            dateTo: null,
+          ),
+        ).thenAnswer((_) async => Right([mockEvent]));
       },
       build: () => eventsCubit,
       act: (cubit) => cubit.fetchEvents(),
@@ -72,11 +78,13 @@ void main() {
         ),
       ],
       verify: (cubit) {
-        verify(() => mockGetEventsUseCase(
-              type: null,
-              dateFrom: any(named: 'dateFrom'),
-              dateTo: null,
-            )).called(1);
+        verify(
+          () => mockGetEventsUseCase(
+            type: null,
+            dateFrom: any(named: 'dateFrom'),
+            dateTo: null,
+          ),
+        ).called(1);
       },
     );
 
@@ -84,11 +92,13 @@ void main() {
     blocTest<EventsCubit, ResultState<List<EventModel>>>(
       'TC-2-2: updateFilters() with type filter forwards type to backend',
       setUp: () {
-        when(() => mockGetEventsUseCase(
-              type: any(named: 'type'),
-              dateFrom: any(named: 'dateFrom'),
-              dateTo: null,
-            )).thenAnswer((_) async => Right([mockEvent]));
+        when(
+          () => mockGetEventsUseCase(
+            type: any(named: 'type'),
+            dateFrom: any(named: 'dateFrom'),
+            dateTo: null,
+          ),
+        ).thenAnswer((_) async => Right([mockEvent]));
       },
       build: () => eventsCubit,
       act: (cubit) {
@@ -108,11 +118,13 @@ void main() {
     blocTest<EventsCubit, ResultState<List<EventModel>>>(
       'TC-2-3: updateFilters() with date range forwards dates to backend',
       setUp: () {
-        when(() => mockGetEventsUseCase(
-              type: null,
-              dateFrom: any(named: 'dateFrom'),
-              dateTo: any(named: 'dateTo'),
-            )).thenAnswer((_) async => Right([mockEvent]));
+        when(
+          () => mockGetEventsUseCase(
+            type: null,
+            dateFrom: any(named: 'dateFrom'),
+            dateTo: any(named: 'dateTo'),
+          ),
+        ).thenAnswer((_) async => Right([mockEvent]));
       },
       build: () => eventsCubit,
       act: (cubit) {
@@ -135,11 +147,13 @@ void main() {
     blocTest<EventsCubit, ResultState<List<EventModel>>>(
       'TC-2-4: updateFilters() with combined filters forwards all params',
       setUp: () {
-        when(() => mockGetEventsUseCase(
-              type: any(named: 'type'),
-              dateFrom: any(named: 'dateFrom'),
-              dateTo: any(named: 'dateTo'),
-            )).thenAnswer((_) async => Right([mockEvent]));
+        when(
+          () => mockGetEventsUseCase(
+            type: any(named: 'type'),
+            dateFrom: any(named: 'dateFrom'),
+            dateTo: any(named: 'dateTo'),
+          ),
+        ).thenAnswer((_) async => Right([mockEvent]));
       },
       build: () => eventsCubit,
       act: (cubit) {
@@ -163,11 +177,13 @@ void main() {
     blocTest<EventsCubit, ResultState<List<EventModel>>>(
       'TC-2-5: clearFilters() resets filters and triggers fetch',
       setUp: () {
-        when(() => mockGetEventsUseCase(
-              type: any(named: 'type'),
-              dateFrom: any(named: 'dateFrom'),
-              dateTo: any(named: 'dateTo'),
-            )).thenAnswer((_) async => Right([mockEvent]));
+        when(
+          () => mockGetEventsUseCase(
+            type: any(named: 'type'),
+            dateFrom: any(named: 'dateFrom'),
+            dateTo: any(named: 'dateTo'),
+          ),
+        ).thenAnswer((_) async => Right([mockEvent]));
       },
       build: () => eventsCubit,
       act: (cubit) async {
@@ -185,13 +201,15 @@ void main() {
     blocTest<EventsCubit, ResultState<List<EventModel>>>(
       'TC-2-6: fetchEvents() error state emits DomainException',
       setUp: () {
-        when(() => mockGetEventsUseCase(
-              type: null,
-              dateFrom: any(named: 'dateFrom'),
-              dateTo: null,
-            )).thenAnswer((_) async => const Left(
-              DomainException(message: 'Network error'),
-            ));
+        when(
+          () => mockGetEventsUseCase(
+            type: null,
+            dateFrom: any(named: 'dateFrom'),
+            dateTo: null,
+          ),
+        ).thenAnswer(
+          (_) async => const Left(DomainException(message: 'Network error')),
+        );
       },
       build: () => eventsCubit,
       act: (cubit) => cubit.fetchEvents(),

@@ -21,14 +21,8 @@ class VehicleFormImagePreview extends StatelessWidget {
       fit: StackFit.expand,
       children: [
         isLocal
-            ? Image.file(
-                File(imageData.localImagePath!),
-                fit: BoxFit.cover,
-              )
-            : Image.network(
-                imageData.remoteImageUrl!,
-                fit: BoxFit.cover,
-              ),
+            ? Image.file(File(imageData.localImagePath!), fit: BoxFit.cover)
+            : Image.network(imageData.remoteImageUrl!, fit: BoxFit.cover),
         Positioned(
           top: 8,
           right: 8,

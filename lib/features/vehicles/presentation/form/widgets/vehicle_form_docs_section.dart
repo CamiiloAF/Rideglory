@@ -73,11 +73,13 @@ class VehicleFormDocsSection extends StatelessWidget {
                 title: context.l10n.vehicle_doc_soat_label,
                 subtitle: context.l10n.vehicle_form_soat_subtitle,
                 localPath: null,
-                hasData: state.soatLocalPath != null ||
+                hasData:
+                    state.soatLocalPath != null ||
                     state.pendingManualSoat != null,
                 dataLabel: context.l10n.vehicle_soat_data_added,
                 onUploadTap: () => _onSoatTap(context, state.vehicle),
-                onTap: (state.soatLocalPath != null ||
+                onTap:
+                    (state.soatLocalPath != null ||
                         state.pendingManualSoat != null)
                     ? () => _onSoatEditCreationTap(
                         context,
@@ -212,7 +214,8 @@ Future<void> _onRtmCreationTap(
   String? initialLocalImagePath;
   if (pendingRtm != null) {
     // documentUrl en modo creación almacena la ruta local, no una URL remota.
-    final isLocalPath = pendingRtm.documentUrl != null &&
+    final isLocalPath =
+        pendingRtm.documentUrl != null &&
         !pendingRtm.documentUrl!.startsWith('http');
     initialLocalImagePath = isLocalPath ? pendingRtm.documentUrl : null;
     prefill = TecnomecanicaModel(

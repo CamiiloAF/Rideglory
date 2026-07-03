@@ -49,9 +49,9 @@ class LoginSocialButton extends StatelessWidget {
                 const SizedBox(width: 12),
                 Text(
                   label,
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: textColor,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelLarge?.copyWith(color: textColor),
                 ),
               ],
             ),

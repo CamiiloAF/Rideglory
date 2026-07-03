@@ -8,14 +8,14 @@ import '../../../../core/exceptions/domain_exception.dart';
 
 abstract class MaintenanceRepository {
   Future<Either<DomainException, MaintenanceUserListAggregate>>
-      getMaintenancesByUserId({
+  getMaintenancesByUserId({
     List<MaintenanceType>? types,
     DateTime? startDate,
     DateTime? endDate,
   });
 
   Future<Either<DomainException, MaintenanceVehicleListResult>>
-      getMaintenancesByVehicleId(
+  getMaintenancesByVehicleId(
     String vehicleId, {
     List<MaintenanceType>? types,
     DateTime? startDate,

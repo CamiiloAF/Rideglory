@@ -176,7 +176,10 @@ String sanitizeEndpoint(String? urlString) {
   final segments = rawPath.split('/').map((segment) {
     if (segment.isEmpty) return segment;
     // UUID v4 pattern
-    if (RegExp(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', caseSensitive: false).hasMatch(segment)) {
+    if (RegExp(
+      r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+      caseSensitive: false,
+    ).hasMatch(segment)) {
       return ':id';
     }
     // Número puro

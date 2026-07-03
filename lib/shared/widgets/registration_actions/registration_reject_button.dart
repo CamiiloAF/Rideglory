@@ -40,11 +40,7 @@ class RegistrationRejectButton extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.cancel_outlined,
-                    size: 20,
-                    color: contentColor,
-                  ),
+                  Icon(Icons.cancel_outlined, size: 20, color: contentColor),
                   AppSpacing.hGapSm,
                   Flexible(
                     child: Text(

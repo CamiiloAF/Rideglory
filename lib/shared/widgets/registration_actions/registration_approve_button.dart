@@ -38,11 +38,7 @@ class RegistrationApproveButton extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.check_rounded,
-                    size: 20,
-                    color: contentColor,
-                  ),
+                  Icon(Icons.check_rounded, size: 20, color: contentColor),
                   AppSpacing.hGapSm,
                   Flexible(
                     child: Text(

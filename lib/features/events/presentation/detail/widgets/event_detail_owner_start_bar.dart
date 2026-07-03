@@ -46,8 +46,7 @@ class EventDetailOwnerStartBar extends StatelessWidget {
         GestureDetector(
           onTap: isLoading ? null : onStart,
           child: Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 22, vertical: 13),
+            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 13),
             decoration: BoxDecoration(
               color: AppColors.successSubtle,
               borderRadius: BorderRadius.circular(25),
@@ -64,8 +63,11 @@ class EventDetailOwnerStartBar extends StatelessWidget {
                 : Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.play_arrow_rounded,
-                          color: AppColors.success, size: 16),
+                      const Icon(
+                        Icons.play_arrow_rounded,
+                        color: AppColors.success,
+                        size: 16,
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         context.l10n.event_startEvent,

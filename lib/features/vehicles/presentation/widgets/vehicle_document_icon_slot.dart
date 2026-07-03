@@ -24,7 +24,8 @@ class VehicleDocumentIconSlot extends StatelessWidget {
           child: Image.file(
             File(localPath!),
             fit: BoxFit.cover,
-            errorBuilder: (ctx, e, s) => const VehicleDocumentDefaultIconSlot(hasDocument: true),
+            errorBuilder: (ctx, e, s) =>
+                const VehicleDocumentDefaultIconSlot(hasDocument: true),
           ),
         ),
       );

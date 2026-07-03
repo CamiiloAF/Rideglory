@@ -49,8 +49,7 @@ GetIt _buildCrashReporterGetIt({required String environment}) {
 
 void main() {
   group('CrashReporter DI gating (AC2)', () {
-    test(
-        'environment=test: CrashReporter resuelve como NoOpCrashReporter '
+    test('environment=test: CrashReporter resuelve como NoOpCrashReporter '
         '(nunca SentryCrashReporter)', () {
       final gi = _buildCrashReporterGetIt(environment: 'test');
       final reporter = gi<CrashReporter>();
@@ -58,8 +57,7 @@ void main() {
       expect(reporter, isNot(isA<SentryCrashReporter>()));
     });
 
-    test(
-        'environment=dev: CrashReporter resuelve como NoOpCrashReporter '
+    test('environment=dev: CrashReporter resuelve como NoOpCrashReporter '
         '(nunca SentryCrashReporter)', () {
       final gi = _buildCrashReporterGetIt(environment: 'dev');
       final reporter = gi<CrashReporter>();
@@ -67,13 +65,15 @@ void main() {
       expect(reporter, isNot(isA<SentryCrashReporter>()));
     });
 
-    test('environment=prod: CrashReporter resuelve como SentryCrashReporter',
-        () {
-      final gi = _buildCrashReporterGetIt(environment: 'prod');
-      final reporter = gi<CrashReporter>();
-      expect(reporter, isA<SentryCrashReporter>());
-      expect(reporter, isNot(isA<NoOpCrashReporter>()));
-    });
+    test(
+      'environment=prod: CrashReporter resuelve como SentryCrashReporter',
+      () {
+        final gi = _buildCrashReporterGetIt(environment: 'prod');
+        final reporter = gi<CrashReporter>();
+        expect(reporter, isA<SentryCrashReporter>());
+        expect(reporter, isNot(isA<NoOpCrashReporter>()));
+      },
+    );
   });
 
   group('AnalyticsConsentCubit DI regression (D12)', () {
@@ -83,7 +83,9 @@ void main() {
     setUp(() {
       mockStorage = _MockUserStorageService();
       mockAnalytics = _MockAnalyticsService();
-      when(() => mockStorage.getAnalyticsEnabled()).thenAnswer((_) async => true);
+      when(
+        () => mockStorage.getAnalyticsEnabled(),
+      ).thenAnswer((_) async => true);
       when(() => mockAnalytics.setEnabled(any())).thenAnswer((_) async {});
     });
 
@@ -91,8 +93,7 @@ void main() {
     /// Sin el fix de la anotación @Injectable(as: CrashReporter) en
     /// NoOpCrashReporter, el grafo de DI no podría resolver CrashReporter
     /// en test, y la pantalla de Perfil fallaría en debug/test.
-    test(
-        'se puede construir con NoOpCrashReporter como CrashReporter '
+    test('se puede construir con NoOpCrashReporter como CrashReporter '
         '(sin Firebase ni Sentry)', () {
       final reporter = NoOpCrashReporter();
       final cubit = AnalyticsConsentCubit(mockStorage, mockAnalytics, reporter);
@@ -101,15 +102,16 @@ void main() {
     });
 
     test(
-        'NoOpCrashReporter satisface el contrato CrashReporter que consume el cubit',
-        () async {
-      final reporter = NoOpCrashReporter();
-      await expectLater(reporter.setEnabled(true), completes);
-      await expectLater(reporter.setEnabled(false), completes);
-      await expectLater(
-        reporter.recordError(Exception('test'), StackTrace.empty),
-        completes,
-      );
-    });
+      'NoOpCrashReporter satisface el contrato CrashReporter que consume el cubit',
+      () async {
+        final reporter = NoOpCrashReporter();
+        await expectLater(reporter.setEnabled(true), completes);
+        await expectLater(reporter.setEnabled(false), completes);
+        await expectLater(
+          reporter.recordError(Exception('test'), StackTrace.empty),
+          completes,
+        );
+      },
+    );
   });
 }

@@ -52,19 +52,25 @@ class MaintenancesDataWidget extends StatelessWidget {
         final currentMileage = _vehicleMileage(context);
         final overdue = maintenances
             .where(
-              (m) => maintenanceStatusOf(m, currentMileage) == MaintenanceItemStatus.overdue,
+              (m) =>
+                  maintenanceStatusOf(m, currentMileage) ==
+                  MaintenanceItemStatus.overdue,
             )
             .toList();
         final upcoming = maintenances
             .where(
-              (m) => maintenanceStatusOf(m, currentMileage) == MaintenanceItemStatus.upcoming,
+              (m) =>
+                  maintenanceStatusOf(m, currentMileage) ==
+                  MaintenanceItemStatus.upcoming,
             )
             .toList();
         final current = maintenances
             .where(
               (m) =>
-                  maintenanceStatusOf(m, currentMileage) == MaintenanceItemStatus.current ||
-                  maintenanceStatusOf(m, currentMileage) == MaintenanceItemStatus.completed,
+                  maintenanceStatusOf(m, currentMileage) ==
+                      MaintenanceItemStatus.current ||
+                  maintenanceStatusOf(m, currentMileage) ==
+                      MaintenanceItemStatus.completed,
             )
             .toList();
 
@@ -80,7 +86,9 @@ class MaintenancesDataWidget extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            MaintenanceSummaryWidget(maintenances: maintenances),
+                            MaintenanceSummaryWidget(
+                              maintenances: maintenances,
+                            ),
                             const SizedBox(height: 8),
                             MaintenanceSectionGroup(
                               label: context.l10n.maintenance_overdue_section,

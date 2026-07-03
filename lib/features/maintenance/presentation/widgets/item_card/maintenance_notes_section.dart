@@ -20,7 +20,11 @@ class MaintenanceNotesSection extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.notes_rounded, size: 16, color: AppColors.darkTextSecondary),
+            const Icon(
+              Icons.notes_rounded,
+              size: 16,
+              color: AppColors.darkTextSecondary,
+            ),
             AppSpacing.hGapSm,
             Expanded(
               child: Text(

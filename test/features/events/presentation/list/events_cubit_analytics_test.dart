@@ -48,120 +48,105 @@ void main() {
 
   group('EventsCubit — analytics events_list_viewed (Fase 6)', () {
     // TC-evlist-a1: events_list_viewed fires with list_scope=all on success
-    test(
-      'TC-evlist-a1: fetchEvents() success → events_list_viewed with '
-      'result_count and list_scope=all',
-      () async {
-        when(
-          () => mockGetEventsUseCase(
-            type: null,
-            dateFrom: any(named: 'dateFrom'),
-            dateTo: null,
-          ),
-        ).thenAnswer((_) async => Right([mockEvent, mockEvent]));
+    test('TC-evlist-a1: fetchEvents() success → events_list_viewed with '
+        'result_count and list_scope=all', () async {
+      when(
+        () => mockGetEventsUseCase(
+          type: null,
+          dateFrom: any(named: 'dateFrom'),
+          dateTo: null,
+        ),
+      ).thenAnswer((_) async => Right([mockEvent, mockEvent]));
 
-        final cubit = EventsCubit(
-          mockGetEventsUseCase,
-          mockUpdateEventUseCase,
-          mockAnalytics,
-        );
-        addTearDown(cubit.close);
+      final cubit = EventsCubit(
+        mockGetEventsUseCase,
+        mockUpdateEventUseCase,
+        mockAnalytics,
+      );
+      addTearDown(cubit.close);
 
-        await cubit.fetchEvents();
+      await cubit.fetchEvents();
 
-        verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsListViewed,
-            {
-              AnalyticsParams.resultCount: 2,
-              AnalyticsParams.listScope: AnalyticsParams.listScopeAll,
-            },
-          ),
-        ).called(1);
-      },
-    );
+      verify(
+        () => mockAnalytics.logEvent(AnalyticsEvents.eventsListViewed, {
+          AnalyticsParams.resultCount: 2,
+          AnalyticsParams.listScope: AnalyticsParams.listScopeAll,
+        }),
+      ).called(1);
+    });
 
     // TC-evlist-a2: events_list_viewed fires with list_scope=mine for myEvents cubit
-    test(
-      'TC-evlist-a2: EventsCubit.myEvents fetchEvents() success → '
-      'events_list_viewed with list_scope=mine',
-      () async {
-        when(() => mockGetMyEventsUseCase()).thenAnswer(
-          (_) async => Right([mockEvent]),
-        );
+    test('TC-evlist-a2: EventsCubit.myEvents fetchEvents() success → '
+        'events_list_viewed with list_scope=mine', () async {
+      when(
+        () => mockGetMyEventsUseCase(),
+      ).thenAnswer((_) async => Right([mockEvent]));
 
-        final cubit = EventsCubit.myEvents(
-          mockGetMyEventsUseCase,
-          mockUpdateEventUseCase,
-          mockAnalytics,
-        );
-        addTearDown(cubit.close);
+      final cubit = EventsCubit.myEvents(
+        mockGetMyEventsUseCase,
+        mockUpdateEventUseCase,
+        mockAnalytics,
+      );
+      addTearDown(cubit.close);
 
-        await cubit.fetchEvents();
+      await cubit.fetchEvents();
 
-        verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsListViewed,
-            {
-              AnalyticsParams.resultCount: 1,
-              AnalyticsParams.listScope: AnalyticsParams.listScopeMine,
-            },
-          ),
-        ).called(1);
-      },
-    );
+      verify(
+        () => mockAnalytics.logEvent(AnalyticsEvents.eventsListViewed, {
+          AnalyticsParams.resultCount: 1,
+          AnalyticsParams.listScope: AnalyticsParams.listScopeMine,
+        }),
+      ).called(1);
+    });
 
     // TC-evlist-a3: result_count reflects filtered count, not total backend count
-    test(
-      'TC-evlist-a3: fetchEvents() with type filter → events_list_viewed '
-      'result_count equals filtered list length',
-      () async {
-        final otherEvent = EventModel(
-          id: 'evt-2',
-          ownerId: 'owner-1',
-          name: 'Urban Event',
-          description: 'Rodada urbana',
-          eventType: EventType.course,
-          difficulty: EventDifficulty.one,
-          startDate: DateTime(2026, 6, 22),
-          meetingTime: DateTime(2026, 6, 22, 9, 0),
-          state: EventState.scheduled,
-        );
+    test('TC-evlist-a3: fetchEvents() with type filter → events_list_viewed '
+        'result_count equals filtered list length', () async {
+      final otherEvent = EventModel(
+        id: 'evt-2',
+        ownerId: 'owner-1',
+        name: 'Urban Event',
+        description: 'Rodada urbana',
+        eventType: EventType.course,
+        difficulty: EventDifficulty.one,
+        startDate: DateTime(2026, 6, 22),
+        meetingTime: DateTime(2026, 6, 22, 9, 0),
+        state: EventState.scheduled,
+      );
 
-        // Backend returns both, but local filter will keep only tourism
-        when(
-          () => mockGetEventsUseCase(
-            type: EventType.onRoad.apiValue,
-            dateFrom: any(named: 'dateFrom'),
-            dateTo: null,
-          ),
-        ).thenAnswer((_) async => Right([mockEvent, otherEvent]));
+      // Backend returns both, but local filter will keep only tourism
+      when(
+        () => mockGetEventsUseCase(
+          type: EventType.onRoad.apiValue,
+          dateFrom: any(named: 'dateFrom'),
+          dateTo: null,
+        ),
+      ).thenAnswer((_) async => Right([mockEvent, otherEvent]));
 
-        final cubit = EventsCubit(
-          mockGetEventsUseCase,
-          mockUpdateEventUseCase,
-          mockAnalytics,
-        );
-        addTearDown(cubit.close);
+      final cubit = EventsCubit(
+        mockGetEventsUseCase,
+        mockUpdateEventUseCase,
+        mockAnalytics,
+      );
+      addTearDown(cubit.close);
 
-        cubit.updateFilters(const EventFilters(types: {EventType.onRoad}));
-        // updateFilters calls fetchEvents internally — wait for it
-        await Future<void>.delayed(Duration.zero);
+      cubit.updateFilters(const EventFilters(types: {EventType.onRoad}));
+      // updateFilters calls fetchEvents internally — wait for it
+      await Future<void>.delayed(Duration.zero);
 
-        // After local filter, only 1 tourism event should remain
-        final captured = verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsListViewed,
-            captureAny(),
-          ),
-        ).captured;
-        expect(captured, isNotEmpty);
-        final params = captured.last as Map<String, Object>;
-        expect(params[AnalyticsParams.listScope], AnalyticsParams.listScopeAll);
-        // result_count is the filtered count (1 tourism out of 2 events)
-        expect(params[AnalyticsParams.resultCount], 1);
-      },
-    );
+      // After local filter, only 1 tourism event should remain
+      final captured = verify(
+        () => mockAnalytics.logEvent(
+          AnalyticsEvents.eventsListViewed,
+          captureAny(),
+        ),
+      ).captured;
+      expect(captured, isNotEmpty);
+      final params = captured.last as Map<String, Object>;
+      expect(params[AnalyticsParams.listScope], AnalyticsParams.listScopeAll);
+      // result_count is the filtered count (1 tourism out of 2 events)
+      expect(params[AnalyticsParams.resultCount], 1);
+    });
 
     // TC-evlist-a4: events_list_viewed NOT emitted on error
     test(
@@ -187,84 +172,69 @@ void main() {
         await cubit.fetchEvents();
 
         verifyNever(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsListViewed,
-            any(),
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.eventsListViewed, any()),
         );
       },
     );
 
     // TC-evlist-a5: events_list_viewed NOT emitted on local mutations (updateSearchQuery)
-    test(
-      'TC-evlist-a5: updateSearchQuery() does NOT emit events_list_viewed '
-      '(only real fetch triggers it)',
-      () async {
-        when(
-          () => mockGetEventsUseCase(
-            type: null,
-            dateFrom: any(named: 'dateFrom'),
-            dateTo: null,
-          ),
-        ).thenAnswer((_) async => Right([mockEvent]));
+    test('TC-evlist-a5: updateSearchQuery() does NOT emit events_list_viewed '
+        '(only real fetch triggers it)', () async {
+      when(
+        () => mockGetEventsUseCase(
+          type: null,
+          dateFrom: any(named: 'dateFrom'),
+          dateTo: null,
+        ),
+      ).thenAnswer((_) async => Right([mockEvent]));
 
-        final cubit = EventsCubit(
-          mockGetEventsUseCase,
-          mockUpdateEventUseCase,
-          mockAnalytics,
-        );
-        addTearDown(cubit.close);
+      final cubit = EventsCubit(
+        mockGetEventsUseCase,
+        mockUpdateEventUseCase,
+        mockAnalytics,
+      );
+      addTearDown(cubit.close);
 
-        // First real fetch
-        await cubit.fetchEvents();
-        clearInteractions(mockAnalytics);
+      // First real fetch
+      await cubit.fetchEvents();
+      clearInteractions(mockAnalytics);
 
-        // Local search mutation — must NOT fire the analytics event
-        cubit.updateSearchQuery('test');
+      // Local search mutation — must NOT fire the analytics event
+      cubit.updateSearchQuery('test');
 
-        verifyNever(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsListViewed,
-            any(),
-          ),
-        );
-      },
-    );
+      verifyNever(
+        () => mockAnalytics.logEvent(AnalyticsEvents.eventsListViewed, any()),
+      );
+    });
 
     // TC-evlist-a6: events_list_viewed NOT emitted on local addEvent/updateEvent/removeEvent
-    test(
-      'TC-evlist-a6: local mutations (addEvent, updateEvent, removeEvent) '
-      'do NOT emit events_list_viewed',
-      () async {
-        when(
-          () => mockGetEventsUseCase(
-            type: null,
-            dateFrom: any(named: 'dateFrom'),
-            dateTo: null,
-          ),
-        ).thenAnswer((_) async => Right([mockEvent]));
+    test('TC-evlist-a6: local mutations (addEvent, updateEvent, removeEvent) '
+        'do NOT emit events_list_viewed', () async {
+      when(
+        () => mockGetEventsUseCase(
+          type: null,
+          dateFrom: any(named: 'dateFrom'),
+          dateTo: null,
+        ),
+      ).thenAnswer((_) async => Right([mockEvent]));
 
-        final cubit = EventsCubit(
-          mockGetEventsUseCase,
-          mockUpdateEventUseCase,
-          mockAnalytics,
-        );
-        addTearDown(cubit.close);
+      final cubit = EventsCubit(
+        mockGetEventsUseCase,
+        mockUpdateEventUseCase,
+        mockAnalytics,
+      );
+      addTearDown(cubit.close);
 
-        await cubit.fetchEvents();
-        clearInteractions(mockAnalytics);
+      await cubit.fetchEvents();
+      clearInteractions(mockAnalytics);
 
-        cubit.addEvent(mockEvent.copyWith(id: 'evt-new'));
-        cubit.updateEvent(mockEvent.copyWith(name: 'Updated'));
-        cubit.removeEvent('evt-1');
+      cubit.addEvent(mockEvent.copyWith(id: 'evt-new'));
+      cubit.updateEvent(mockEvent.copyWith(name: 'Updated'));
+      cubit.removeEvent('evt-1');
 
-        verifyNever(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.eventsListViewed,
-            any(),
-          ),
-        );
-      },
-    );
+      verifyNever(
+        () => mockAnalytics.logEvent(AnalyticsEvents.eventsListViewed, any()),
+      );
+    });
   });
 }

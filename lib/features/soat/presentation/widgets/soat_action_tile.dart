@@ -38,10 +38,7 @@ class SoatActionTile extends StatelessWidget {
           child: InkWell(
             onTap: loading ? null : onTap,
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 14,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               child: Row(
                 children: [
                   Icon(icon, size: 20, color: tint),

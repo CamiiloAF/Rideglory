@@ -15,8 +15,9 @@ class CreateEventFab extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        final result =
-            await context.pushNamed<EventModel?>(AppRoutes.createEvent);
+        final result = await context.pushNamed<EventModel?>(
+          AppRoutes.createEvent,
+        );
         if (result != null && context.mounted) {
           context.read<EventsCubit>().addEvent(result);
         }
@@ -30,9 +31,7 @@ class CreateEventFab extends StatelessWidget {
         ),
         child: const Row(
           mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.add, color: AppColors.darkBgPrimary, size: 18),
-          ],
+          children: [Icon(Icons.add, color: AppColors.darkBgPrimary, size: 18)],
         ),
       ),
     );

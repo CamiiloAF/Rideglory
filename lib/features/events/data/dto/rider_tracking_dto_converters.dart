@@ -1,11 +1,13 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:rideglory/features/events/domain/model/rider_tracking_model.dart';
 
-class RiderTrackingRoleConverter extends JsonConverter<RiderTrackingRole, String?> {
+class RiderTrackingRoleConverter
+    extends JsonConverter<RiderTrackingRole, String?> {
   const RiderTrackingRoleConverter();
 
   @override
-  RiderTrackingRole fromJson(String? json) => RiderTrackingRole.fromStorage(json);
+  RiderTrackingRole fromJson(String? json) =>
+      RiderTrackingRole.fromStorage(json);
 
   @override
   String toJson(RiderTrackingRole object) => object.name;

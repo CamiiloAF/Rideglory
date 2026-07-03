@@ -18,11 +18,7 @@ import 'package:rideglory/features/events/presentation/form/widgets/sections/eve
 class EventFormEventTypeSection extends StatelessWidget {
   const EventFormEventTypeSection({super.key});
 
-  static const _row1 = [
-    EventType.onRoad,
-    EventType.offRoad,
-    EventType.course,
-  ];
+  static const _row1 = [EventType.onRoad, EventType.offRoad, EventType.course];
 
   static const _row2 = [
     EventType.trackDay,

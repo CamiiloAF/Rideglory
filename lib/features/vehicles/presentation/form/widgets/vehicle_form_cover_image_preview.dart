@@ -35,7 +35,11 @@ class VehicleFormCoverImagePreview extends StatelessWidget {
                 color: AppColors.darkBgPrimary.withValues(alpha: 0.5),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.close, size: 16, color: AppColors.textOnDarkPrimary),
+              child: const Icon(
+                Icons.close,
+                size: 16,
+                color: AppColors.textOnDarkPrimary,
+              ),
             ),
           ),
         ),

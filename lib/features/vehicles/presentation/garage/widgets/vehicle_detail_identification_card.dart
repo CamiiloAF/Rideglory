@@ -48,8 +48,7 @@ class VehicleDetailIdentificationCard extends StatelessWidget {
               ),
             ),
           ],
-          if (plate != null && vin != null)
-            const VehicleDetailRowDivider(),
+          if (plate != null && vin != null) const VehicleDetailRowDivider(),
           if (vin != null)
             VehicleDetailIdentificationRow(
               iconBg: AppColors.darkTertiary,

@@ -67,7 +67,9 @@ void main() {
     when(() => cubit.stream).thenAnswer((_) => const Stream.empty());
   });
 
-  testWidgets('enables approve/reject when the event is active', (tester) async {
+  testWidgets('enables approve/reject when the event is active', (
+    tester,
+  ) async {
     await tester.pumpWidget(_host(cubit, canManage: true));
     await tester.pump();
 

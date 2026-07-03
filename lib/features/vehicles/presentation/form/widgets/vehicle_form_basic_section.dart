@@ -16,9 +16,7 @@ class VehicleFormBasicSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        VehicleFormSectionHeader(
-          title: context.l10n.vehicle_form_info_section,
-        ),
+        VehicleFormSectionHeader(title: context.l10n.vehicle_form_info_section),
         const SizedBox(height: 14),
         AppTextField(
           name: VehicleFormFields.name,

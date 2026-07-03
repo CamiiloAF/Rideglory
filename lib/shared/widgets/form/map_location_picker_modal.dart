@@ -32,7 +32,6 @@ class _MapLocationPickerModalState extends State<MapLocationPickerModal> {
   bool _isConfirming = false;
   bool _mapReady = false;
 
-
   Future<void> _confirm() async {
     final mapboxMap = _mapboxMap;
     if (mapboxMap == null || _isConfirming) return;
@@ -110,16 +109,17 @@ class _MapLocationPickerModalState extends State<MapLocationPickerModal> {
           ),
 
           // Centered crosshair pin
-          const Center(
-            child: _CrosshairPin(),
-          ),
+          const Center(child: _CrosshairPin()),
 
           // Hint label below pin
           Center(
             child: Padding(
               padding: const EdgeInsets.only(top: 60),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.darkBgPrimary.withValues(alpha: 0.75),
                   borderRadius: BorderRadius.circular(8),

@@ -36,8 +36,7 @@ class EventFilterChip extends StatelessWidget {
                 ? AppColors.darkBgPrimary
                 : AppColors.textOnDarkSecondary,
             fontSize: 13,
-            fontWeight:
-                isSelected ? FontWeight.w600 : FontWeight.w500,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
             height: 1.0,
           ),
         ),

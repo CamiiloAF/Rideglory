@@ -112,44 +112,57 @@ void main() {
     });
 
     // TC-stp-8: stepFields cardinality
-    test('TC-stp-8: _step1Fields.length == 5, _step2Fields.length == 1, _step3Fields.length == 2', () {
-      expect(EventFormCubit.stepFields[0]!.length, 5);
-      expect(EventFormCubit.stepFields[1]!.length, 1);
-      expect(EventFormCubit.stepFields[2]!.length, 2);
-    });
+    test(
+      'TC-stp-8: _step1Fields.length == 5, _step2Fields.length == 1, _step3Fields.length == 2',
+      () {
+        expect(EventFormCubit.stepFields[0]!.length, 5);
+        expect(EventFormCubit.stepFields[1]!.length, 1);
+        expect(EventFormCubit.stepFields[2]!.length, 2);
+      },
+    );
 
     // TC-stp-9: validateStep returns true when no form is attached (formKey.currentState == null)
-    test('TC-stp-9: validateStep returns true when formKey.currentState is null', () {
-      expect(cubit.validateStep(0), isTrue);
-      expect(cubit.validateStep(1), isTrue);
-      // step 2 requires waypoints → showRouteError=true, returns false
-      expect(cubit.validateStep(2), isFalse);
-      expect(cubit.state.showRouteError, isTrue);
-    });
+    test(
+      'TC-stp-9: validateStep returns true when formKey.currentState is null',
+      () {
+        expect(cubit.validateStep(0), isTrue);
+        expect(cubit.validateStep(1), isTrue);
+        // step 2 requires waypoints → showRouteError=true, returns false
+        expect(cubit.validateStep(2), isFalse);
+        expect(cubit.state.showRouteError, isTrue);
+      },
+    );
 
     // TC-stp-10: isCurrentStepValid delegates to validateStep(currentStep)
-    test('TC-stp-10: isCurrentStepValid() delegates to validateStep(currentStep)', () {
-      cubit.goToStep(1);
-      // formKey not attached, so validate returns true
-      expect(cubit.isCurrentStepValid(), isTrue);
-    });
+    test(
+      'TC-stp-10: isCurrentStepValid() delegates to validateStep(currentStep)',
+      () {
+        cubit.goToStep(1);
+        // formKey not attached, so validate returns true
+        expect(cubit.isCurrentStepValid(), isTrue);
+      },
+    );
 
     // TC-stp-11: stepFields for step 0 contains exactly the 5 expected field names
     test('TC-stp-11: step 0 fields are correct', () {
-      expect(EventFormCubit.stepFields[0], containsAll([
-        EventFormFields.name,
-        EventFormFields.dateRange,
-        EventFormFields.meetingTime,
-        EventFormFields.difficulty,
-        EventFormFields.eventType,
-      ]));
+      expect(
+        EventFormCubit.stepFields[0],
+        containsAll([
+          EventFormFields.name,
+          EventFormFields.dateRange,
+          EventFormFields.meetingTime,
+          EventFormFields.difficulty,
+          EventFormFields.eventType,
+        ]),
+      );
     });
 
     // TC-stp-12: stepFields for step 1 contains exactly the expected field names
     test('TC-stp-12: step 1 fields are correct', () {
-      expect(EventFormCubit.stepFields[1], containsAll([
-        EventFormFields.description,
-      ]));
+      expect(
+        EventFormCubit.stepFields[1],
+        containsAll([EventFormFields.description]),
+      );
     });
 
     // TC-stp-13: step navigation preserves waypoints
@@ -162,12 +175,18 @@ void main() {
 
     // TC-stp-14: full round-trip navigation
     test('TC-stp-14: full round-trip 0→1→2→3→2→1→0', () {
-      cubit.nextStep(); expect(cubit.state.currentStep, 1);
-      cubit.nextStep(); expect(cubit.state.currentStep, 2);
-      cubit.nextStep(); expect(cubit.state.currentStep, 3);
-      cubit.prevStep(); expect(cubit.state.currentStep, 2);
-      cubit.prevStep(); expect(cubit.state.currentStep, 1);
-      cubit.prevStep(); expect(cubit.state.currentStep, 0);
+      cubit.nextStep();
+      expect(cubit.state.currentStep, 1);
+      cubit.nextStep();
+      expect(cubit.state.currentStep, 2);
+      cubit.nextStep();
+      expect(cubit.state.currentStep, 3);
+      cubit.prevStep();
+      expect(cubit.state.currentStep, 2);
+      cubit.prevStep();
+      expect(cubit.state.currentStep, 1);
+      cubit.prevStep();
+      expect(cubit.state.currentStep, 0);
     });
   });
 }

@@ -27,9 +27,13 @@ class MaintenanceTypeCard extends StatelessWidget {
   });
 
   static const _successColor = AppColors.statusGreen;
-  static const _successSubtle = Color(0x1A22C55E); // Intentional: alpha variant of statusGreen, no token for subtle exists
+  static const _successSubtle = Color(
+    0x1A22C55E,
+  ); // Intentional: alpha variant of statusGreen, no token for subtle exists
   static const _warningColor = AppColors.statusWarning;
-  static const _warningSubtle = Color(0x1AEAB308); // Intentional: alpha variant of statusWarning, no token for subtle exists
+  static const _warningSubtle = Color(
+    0x1AEAB308,
+  ); // Intentional: alpha variant of statusWarning, no token for subtle exists
 
   bool get _isDone => maintenance.mode == MaintenanceMode.completed;
 

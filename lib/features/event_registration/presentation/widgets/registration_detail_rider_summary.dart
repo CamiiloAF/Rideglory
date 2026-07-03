@@ -40,55 +40,55 @@ class RegistrationDetailRiderSummary extends StatelessWidget {
           ),
         ),
         child: Row(
-        children: [
-          InitialsAvatar(
-            fullName: registration.fullName,
-            radius: 20,
-            backgroundColor: AppColors.darkTertiary,
-            textStyle: const TextStyle(
-              color: AppColors.textOnDarkPrimary,
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
+          children: [
+            InitialsAvatar(
+              fullName: registration.fullName,
+              radius: 20,
+              backgroundColor: AppColors.darkTertiary,
+              textStyle: const TextStyle(
+                color: AppColors.textOnDarkPrimary,
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
             ),
-          ),
-          AppSpacing.hGapMd,
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  registration.fullName,
-                  style: const TextStyle(
-                    color: AppColors.textOnDarkPrimary,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                if (meta.isNotEmpty) ...[
-                  AppSpacing.gapXxs,
+            AppSpacing.hGapMd,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
                   Text(
-                    meta,
+                    registration.fullName,
                     style: const TextStyle(
-                      color: AppColors.textOnDarkTertiary,
-                      fontSize: 12,
+                      color: AppColors.textOnDarkPrimary,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
+                  if (meta.isNotEmpty) ...[
+                    AppSpacing.gapXxs,
+                    Text(
+                      meta,
+                      style: const TextStyle(
+                        color: AppColors.textOnDarkTertiary,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
-          AppSpacing.hGapMd,
-          RegistrationStatusPill(status: registration.status),
-          if (onTap != null) ...[
-            AppSpacing.hGapSm,
-            const Icon(
-              Icons.chevron_right,
-              size: 18,
-              color: AppColors.textOnDarkTertiary,
-            ),
+            AppSpacing.hGapMd,
+            RegistrationStatusPill(status: registration.status),
+            if (onTap != null) ...[
+              AppSpacing.hGapSm,
+              const Icon(
+                Icons.chevron_right,
+                size: 18,
+                color: AppColors.textOnDarkTertiary,
+              ),
+            ],
           ],
-        ],
         ),
       ),
     );

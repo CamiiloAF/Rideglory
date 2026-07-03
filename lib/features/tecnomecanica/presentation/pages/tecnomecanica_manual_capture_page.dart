@@ -73,7 +73,8 @@ class _TecnomecanicaManualCapturePageState
   }
 
   void _validateDates() {
-    _datesInvalid = _startDate != null &&
+    _datesInvalid =
+        _startDate != null &&
         _expiryDate != null &&
         !_expiryDate!.isAfter(_startDate!);
     if (_datesInvalid) _error = null;
@@ -110,7 +111,9 @@ class _TecnomecanicaManualCapturePageState
     if (startDate == null || expiryDate == null) return;
 
     if (!expiryDate.isAfter(startDate)) {
-      setState(() => _error = context.l10n.tecnomecanica_expiry_after_start_error);
+      setState(
+        () => _error = context.l10n.tecnomecanica_expiry_after_start_error,
+      );
       return;
     }
 
@@ -170,10 +173,7 @@ class _TecnomecanicaManualCapturePageState
       documentUrl: documentUrl,
     );
 
-    final success = await cubit.save(
-      vehicleId: vehicleId,
-      tecnomecanica: rtm,
-    );
+    final success = await cubit.save(vehicleId: vehicleId, tecnomecanica: rtm);
 
     if (!mounted) return;
 
@@ -190,140 +190,136 @@ class _TecnomecanicaManualCapturePageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            backgroundColor: AppColors.darkBgPrimary,
-            appBar: AppBar(
-              backgroundColor: AppColors.darkBgPrimary,
-              surfaceTintColor: Colors.transparent,
-              elevation: 0,
-              centerTitle: true,
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: AppColors.textOnDarkPrimary,
-                  size: 20,
-                ),
-                onPressed: () => context.pop(),
+      backgroundColor: AppColors.darkBgPrimary,
+      appBar: AppBar(
+        backgroundColor: AppColors.darkBgPrimary,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: AppColors.textOnDarkPrimary,
+            size: 20,
+          ),
+          onPressed: () => context.pop(),
+        ),
+        title: Text(
+          _isEditMode
+              ? context.l10n.tecnomecanica_edit_title
+              : context.l10n.tecnomecanica_form_create_title,
+          style: const TextStyle(
+            color: AppColors.textOnDarkPrimary,
+            fontSize: 17,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+      body: FormBuilder(
+        key: _formKey,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (!_isEditMode) ...[
+                const TecnomecanicaExemptionNotice(),
+                const SizedBox(height: 16),
+              ],
+              SoatDocumentSection(
+                localImagePath: _localImagePath,
+                remoteDocumentUrl: widget.existingRtm?.documentUrl,
+                onPickImage: _pickImage,
+                onRemoveLocalImage: () =>
+                    setState(() => _localImagePath = null),
               ),
-              title: Text(
-                _isEditMode
-                    ? context.l10n.tecnomecanica_edit_title
-                    : context.l10n.tecnomecanica_form_create_title,
-                style: const TextStyle(
-                  color: AppColors.textOnDarkPrimary,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
-                ),
+              const SizedBox(height: 16),
+              AppTextField(
+                name: 'cdaName',
+                labelText: context.l10n.tecnomecanica_field_cda_name,
+                hintText: context.l10n.tecnomecanica_cda_name_hint,
+                initialValue: widget.existingRtm?.cdaName,
+                isRequired: true,
+                textInputAction: TextInputAction.next,
+                enabled: !_saving,
+                onChanged: (value) => setState(() => _cdaName = value ?? ''),
               ),
-            ),
-            body: FormBuilder(
-              key: _formKey,
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(20, 12, 20, 32),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (!_isEditMode) ...[
-                      const TecnomecanicaExemptionNotice(),
-                      const SizedBox(height: 16),
-                    ],
-                    SoatDocumentSection(
-                      localImagePath: _localImagePath,
-                      remoteDocumentUrl: widget.existingRtm?.documentUrl,
-                      onPickImage: _pickImage,
-                      onRemoveLocalImage: () =>
-                          setState(() => _localImagePath = null),
-                    ),
-                    const SizedBox(height: 16),
-                    AppTextField(
-                      name: 'cdaName',
-                      labelText: context.l10n.tecnomecanica_field_cda_name,
-                      hintText: context.l10n.tecnomecanica_cda_name_hint,
-                      initialValue: widget.existingRtm?.cdaName,
-                      isRequired: true,
-                      textInputAction: TextInputAction.next,
-                      enabled: !_saving,
-                      onChanged: (value) =>
-                          setState(() => _cdaName = value ?? ''),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: AppDatePicker(
-                            key: ValueKey(
-                              'startDate_${_startDate?.toIso8601String()}',
-                            ),
-                            fieldName: 'startDate',
-                            labelText:
-                                context.l10n.tecnomecanica_field_start_date,
-                            hintText: context.l10n.tecnomecanica_date_hint,
-                            initialValue: _startDate,
-                            isRequired: true,
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2100),
-                            onChanged: (date) => setState(() {
-                              _startDate = date;
-                              _validateDates();
-                            }),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: AppDatePicker(
-                            key: ValueKey(
-                              'expiryDate_${_expiryDate?.toIso8601String()}',
-                            ),
-                            fieldName: 'expiryDate',
-                            labelText:
-                                context.l10n.tecnomecanica_field_expiry_date,
-                            hintText: context.l10n.tecnomecanica_date_hint,
-                            initialValue: _expiryDate,
-                            isRequired: true,
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2100),
-                            onChanged: (date) => setState(() {
-                              _expiryDate = date;
-                              _validateDates();
-                            }),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    DocumentValidityCard(
-                      startDate: _startDate,
-                      expiryDate: _expiryDate,
-                    ),
-                    if (_error != null) ...[
-                      const SizedBox(height: 16),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: AppColors.errorSubtle,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: AppColors.error),
-                        ),
-                        child: Text(
-                          _error!,
-                          style: const TextStyle(
-                            color: AppColors.error,
-                            fontSize: 13,
-                          ),
-                        ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: AppDatePicker(
+                      key: ValueKey(
+                        'startDate_${_startDate?.toIso8601String()}',
                       ),
-                    ],
-                    const SizedBox(height: 32),
-                    AppButton(
-                      label: _saving
-                          ? context.l10n.tecnomecanica_saving
-                          : context.l10n.tecnomecanica_save_data_btn,
-                      onPressed: _canSubmit ? _submit : null,
+                      fieldName: 'startDate',
+                      labelText: context.l10n.tecnomecanica_field_start_date,
+                      hintText: context.l10n.tecnomecanica_date_hint,
+                      initialValue: _startDate,
+                      isRequired: true,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      onChanged: (date) => setState(() {
+                        _startDate = date;
+                        _validateDates();
+                      }),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: AppDatePicker(
+                      key: ValueKey(
+                        'expiryDate_${_expiryDate?.toIso8601String()}',
+                      ),
+                      fieldName: 'expiryDate',
+                      labelText: context.l10n.tecnomecanica_field_expiry_date,
+                      hintText: context.l10n.tecnomecanica_date_hint,
+                      initialValue: _expiryDate,
+                      isRequired: true,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      onChanged: (date) => setState(() {
+                        _expiryDate = date;
+                        _validateDates();
+                      }),
+                    ),
+                  ),
+                ],
               ),
-            ),
+              const SizedBox(height: 12),
+              DocumentValidityCard(
+                startDate: _startDate,
+                expiryDate: _expiryDate,
+              ),
+              if (_error != null) ...[
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: AppColors.errorSubtle,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: AppColors.error),
+                  ),
+                  child: Text(
+                    _error!,
+                    style: const TextStyle(
+                      color: AppColors.error,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 32),
+              AppButton(
+                label: _saving
+                    ? context.l10n.tecnomecanica_saving
+                    : context.l10n.tecnomecanica_save_data_btn,
+                onPressed: _canSubmit ? _submit : null,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
-

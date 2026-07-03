@@ -61,9 +61,9 @@ class _SoatDataViewState extends State<SoatDataView> {
       context.pop();
     } else {
       setState(() => _deleting = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.errorOccurred)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.l10n.errorOccurred)));
     }
   }
 
@@ -257,7 +257,8 @@ class _SoatDataViewState extends State<SoatDataView> {
             ),
           ),
           const SizedBox(height: 20),
-          if (!widget.isArchived && widget.soat.status == SoatStatus.expired) ...[
+          if (!widget.isArchived &&
+              widget.soat.status == SoatStatus.expired) ...[
             AppButton(
               label: context.l10n.soat_renew_btn,
               onPressed: () => SoatEntryFlow.start(

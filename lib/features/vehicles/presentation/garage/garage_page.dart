@@ -17,13 +17,17 @@ class GaragePage extends StatelessWidget {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, _) {
-        if (!didPop) context.goNamed(AppRoutes.home); // Intentional: shell-tab navigation resets stack to prevent back-stack accumulation in StatefulShellRoute
+        if (!didPop)
+          context.goNamed(
+            AppRoutes.home,
+          ); // Intentional: shell-tab navigation resets stack to prevent back-stack accumulation in StatefulShellRoute
       },
       child: Builder(
         builder: (context) {
           final extra = GoRouterState.of(context).extra;
-          final openWithVehicleId =
-              extra is String && extra.isNotEmpty ? extra : null;
+          final openWithVehicleId = extra is String && extra.isNotEmpty
+              ? extra
+              : null;
           return GaragePageView(
             loadVehicles: () => _loadMyVehicles(context),
             openWithVehicleId: openWithVehicleId,

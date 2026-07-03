@@ -29,13 +29,15 @@ class _PulsingMapDotState extends State<PulsingMapDot>
       duration: const Duration(milliseconds: 1400),
     )..repeat();
 
-    _scaleAnim = Tween<double>(begin: 0.5, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    _scaleAnim = Tween<double>(
+      begin: 0.5,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
-    _opacityAnim = Tween<double>(begin: 0.7, end: 0.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
+    _opacityAnim = Tween<double>(
+      begin: 0.7,
+      end: 0.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
   }
 
   @override
@@ -65,10 +67,7 @@ class _PulsingMapDotState extends State<PulsingMapDot>
                     height: 44,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppColors.primary,
-                        width: 2,
-                      ),
+                      border: Border.all(color: AppColors.primary, width: 2),
                     ),
                   ),
                 ),

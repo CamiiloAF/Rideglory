@@ -90,26 +90,19 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
     emit(state.copyWith(vehicleResult: const ResultState.loading()));
 
     final result = state.isEditing
-        ? await _saveExistingVehicle(
-            vehicle,
-            localImagePath: localImagePath,
-          )
-        : await _createNewVehicle(
-            vehicle,
-            localImagePath: localImagePath,
-          );
+        ? await _saveExistingVehicle(vehicle, localImagePath: localImagePath)
+        : await _createNewVehicle(vehicle, localImagePath: localImagePath);
 
     result.fold(
-      (error) => emit(state.copyWith(vehicleResult: ResultState.error(error: error))),
+      (error) =>
+          emit(state.copyWith(vehicleResult: ResultState.error(error: error))),
       (savedVehicle) {
         final eventName = state.isEditing
             ? AnalyticsEvents.vehicleUpdated
             : AnalyticsEvents.vehicleAdded;
-        _analytics
-            .logEvent(eventName, {
-              AnalyticsParams.hadPhoto: savedVehicle.imageUrl != null ? 1 : 0,
-            })
-            .ignore();
+        _analytics.logEvent(eventName, {
+          AnalyticsParams.hadPhoto: savedVehicle.imageUrl != null ? 1 : 0,
+        }).ignore();
         emit(
           state.copyWith(vehicleResult: ResultState.data(data: savedVehicle)),
         );
@@ -147,7 +140,9 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
   }) async {
     try {
       // Keep existing remote image while editing when no new local image is selected.
-      var imageUrl = state.isEditing ? state.vehicle?.imageUrl : vehicle.imageUrl;
+      var imageUrl = state.isEditing
+          ? state.vehicle?.imageUrl
+          : vehicle.imageUrl;
 
       if (localImagePath != null) {
         final imageName =

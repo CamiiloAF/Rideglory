@@ -33,12 +33,11 @@ class HomeGarageSection extends StatelessWidget {
                 initial: () => _GaragePlaceholder(),
                 loading: () => _GaragePlaceholder(),
                 data: (vehicles) {
-                  final active =
-                      vehicles.where((v) => !v.isArchived).toList();
+                  final active = vehicles.where((v) => !v.isArchived).toList();
                   if (active.isEmpty) return const HomeEmptyGarageCard();
                   final mainVehicle =
                       active.where((v) => v.isMainVehicle).firstOrNull ??
-                          active.first;
+                      active.first;
                   return HomeGarageCard(vehicle: mainVehicle);
                 },
                 empty: () => const HomeEmptyGarageCard(),

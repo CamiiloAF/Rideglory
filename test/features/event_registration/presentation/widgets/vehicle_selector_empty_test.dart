@@ -20,34 +20,28 @@ Widget _wrap({required VoidCallback onCreate}) {
       GlobalCupertinoLocalizations.delegate,
     ],
     supportedLocales: const [Locale('es')],
-    home: Scaffold(
-      body: VehicleSelectorEmpty(onCreate: onCreate),
-    ),
+    home: Scaffold(body: VehicleSelectorEmpty(onCreate: onCreate)),
   );
 }
 
 void main() {
   group('VehicleSelectorEmpty', () {
-    testWidgets(
-      'TC-vempty-1: shows empty state title text',
-      (tester) async {
-        await tester.pumpWidget(_wrap(onCreate: () {}));
-        await tester.pumpAndSettle();
-        expect(
-          find.text('No tienes vehículos disponibles para esta inscripción.'),
-          findsOneWidget,
-        );
-      },
-    );
+    testWidgets('TC-vempty-1: shows empty state title text', (tester) async {
+      await tester.pumpWidget(_wrap(onCreate: () {}));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('No tienes vehículos disponibles para esta inscripción.'),
+        findsOneWidget,
+      );
+    });
 
-    testWidgets(
-      'TC-vempty-2: shows "Crear vehículo" CTA button',
-      (tester) async {
-        await tester.pumpWidget(_wrap(onCreate: () {}));
-        await tester.pumpAndSettle();
-        expect(find.text('Crear vehículo'), findsOneWidget);
-      },
-    );
+    testWidgets('TC-vempty-2: shows "Crear vehículo" CTA button', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_wrap(onCreate: () {}));
+      await tester.pumpAndSettle();
+      expect(find.text('Crear vehículo'), findsOneWidget);
+    });
 
     testWidgets(
       'TC-vempty-3: onCreate callback fires when CTA button is tapped',

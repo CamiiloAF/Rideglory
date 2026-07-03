@@ -184,10 +184,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   }
 
   @override
-  AppColorsExtension lerp(
-    covariant AppColorsExtension? other,
-    double t,
-  ) {
+  AppColorsExtension lerp(covariant AppColorsExtension? other, double t) {
     if (other == null) return this;
 
     Color lerpColor(Color a, Color b) => Color.lerp(a, b, t)!;
@@ -206,7 +203,10 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       eventOffRoad: lerpColor(eventOffRoad, other.eventOffRoad),
       eventCompetition: lerpColor(eventCompetition, other.eventCompetition),
       eventSolidarity: lerpColor(eventSolidarity, other.eventSolidarity),
-      eventShortDistance: lerpColor(eventShortDistance, other.eventShortDistance),
+      eventShortDistance: lerpColor(
+        eventShortDistance,
+        other.eventShortDistance,
+      ),
       eventFree: lerpColor(eventFree, other.eventFree),
       eventPaid: lerpColor(eventPaid, other.eventPaid),
       motorcycle: lerpColor(motorcycle, other.motorcycle),

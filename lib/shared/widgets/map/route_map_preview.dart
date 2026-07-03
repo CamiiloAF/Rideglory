@@ -283,10 +283,7 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
     final origin = _origin;
     final dest = _dest;
 
-    final simplePoints = [
-      if (origin != null) origin,
-      if (dest != null) dest,
-    ];
+    final simplePoints = [if (origin != null) origin, if (dest != null) dest];
 
     await _updateWaypointAnnotations(simplePoints);
     await _updatePolyline(mapboxMap, simplePoints);
@@ -367,7 +364,9 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
     await mapboxMap.flyTo(camera, MapAnimationOptions(duration: 500));
   }
 
-  Future<void> _updateWaypointAnnotations(List<AddressLocation> waypoints) async {
+  Future<void> _updateWaypointAnnotations(
+    List<AddressLocation> waypoints,
+  ) async {
     final manager = _annotationManager;
     if (manager == null) return;
     if (!mounted) return;
@@ -408,8 +407,9 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
             'type': 'Feature',
             'geometry': {
               'type': 'LineString',
-              'coordinates':
-                  waypoints.map((w) => [w.longitude, w.latitude]).toList(),
+              'coordinates': waypoints
+                  .map((w) => [w.longitude, w.latitude])
+                  .toList(),
             },
           })
         : jsonEncode({'type': 'FeatureCollection', 'features': []});
@@ -422,8 +422,9 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
           geojson,
         );
       } else {
-        final sourceExists =
-            await mapboxMap.style.styleSourceExists(_routeSourceId);
+        final sourceExists = await mapboxMap.style.styleSourceExists(
+          _routeSourceId,
+        );
         if (!sourceExists) {
           await mapboxMap.style.addSource(
             GeoJsonSource(id: _routeSourceId, data: geojson),
@@ -436,8 +437,9 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
           );
         }
 
-        final layerExists =
-            await mapboxMap.style.styleLayerExists(_routeLayerId);
+        final layerExists = await mapboxMap.style.styleLayerExists(
+          _routeLayerId,
+        );
         if (!layerExists) {
           await mapboxMap.style.addLayer(
             LineLayer(
@@ -453,16 +455,17 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
     } catch (_) {}
   }
 
-
   Future<void> _handleMapCreated(MapboxMap mapboxMap) async {
     _mapboxMap = mapboxMap;
     await mapboxMap.scaleBar.updateSettings(ScaleBarSettings(enabled: false));
-    await mapboxMap.logo
-        .updateSettings(LogoSettings(marginLeft: -200, marginBottom: -200));
-    await mapboxMap.attribution
-        .updateSettings(AttributionSettings(iconColor: 0x00000000));
-    _annotationManager =
-        await mapboxMap.annotations.createPointAnnotationManager();
+    await mapboxMap.logo.updateSettings(
+      LogoSettings(marginLeft: -200, marginBottom: -200),
+    );
+    await mapboxMap.attribution.updateSettings(
+      AttributionSettings(iconColor: 0x00000000),
+    );
+    _annotationManager = await mapboxMap.annotations
+        .createPointAnnotationManager();
     if (_isWaypointMode) {
       await _renderWaypointMode();
     } else {
@@ -516,154 +519,145 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
       ),
       clipBehavior: Clip.antiAlias,
       child: Stack(
-            children: [
-              if (_hasCoordsToShow && !_mapLoadError && !widget.suppressPreview)
-                MapWidget(
-                  key: _mapKey,
-                  viewport: _stableViewport,
-                  styleUri: MapboxStyles.DARK,
-                  onMapCreated: _onMapCreated,
-                  onMapLoadErrorListener: _onMapLoadError,
-                )
-              else if (widget.suppressPreview && _hasCoordsToShow)
-                const ColoredBox(color: AppColors.darkBgPrimary)
-              else
-                Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.map_outlined,
-                        size: 48,
-                        color: cs.onSurfaceVariant,
-                      ),
-                      AppSpacing.gapSm,
-                      Text(
-                        'Vista previa del mapa',
-                        style: TextStyle(
-                          color: cs.onSurfaceVariant,
-                          fontSize: 13,
-                        ),
-                      ),
-                      Text(
-                        'Ingresa las dirección para ver la ruta',
-                        style: TextStyle(
-                          color: cs.onSurfaceVariant,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ],
+        children: [
+          if (_hasCoordsToShow && !_mapLoadError && !widget.suppressPreview)
+            MapWidget(
+              key: _mapKey,
+              viewport: _stableViewport,
+              styleUri: MapboxStyles.DARK,
+              onMapCreated: _onMapCreated,
+              onMapLoadErrorListener: _onMapLoadError,
+            )
+          else if (widget.suppressPreview && _hasCoordsToShow)
+            const ColoredBox(color: AppColors.darkBgPrimary)
+          else
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.map_outlined,
+                    size: 48,
+                    color: cs.onSurfaceVariant,
+                  ),
+                  AppSpacing.gapSm,
+                  Text(
+                    'Vista previa del mapa',
+                    style: TextStyle(color: cs.onSurfaceVariant, fontSize: 13),
+                  ),
+                  Text(
+                    'Ingresa las dirección para ver la ruta',
+                    style: TextStyle(color: cs.onSurfaceVariant, fontSize: 11),
+                  ),
+                ],
+              ),
+            ),
+
+          if (_hasError)
+            Positioned(
+              top: 8,
+              left: 8,
+              right: 48,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.errorSubtle,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Text(
+                  context.l10n.map_geocodeError,
+                  style: const TextStyle(
+                    color: AppColors.error,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
+              ),
+            ),
 
-              if (_hasError)
-                Positioned(
-                  top: 8,
-                  left: 8,
-                  right: 48,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.errorSubtle,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      context.l10n.map_geocodeError,
-                      style: const TextStyle(
-                        color: AppColors.error,
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
+          if (widget.onViewMapTap != null)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Center(
+                child: Material(
+                  color: cs.surface.withValues(alpha: 0),
+                  child: InkWell(
+                    onTap: widget.onViewMapTap,
+                    borderRadius: BorderRadius.circular(24),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 12,
                       ),
-                    ),
-                  ),
-                ),
-
-              if (widget.onViewMapTap != null)
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: Center(
-                    child: Material(
-                      color: cs.surface.withValues(alpha: 0),
-                      child: InkWell(
-                        onTap: widget.onViewMapTap,
+                      decoration: BoxDecoration(
+                        color: cs.primary,
                         borderRadius: BorderRadius.circular(24),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 12,
+                        boxShadow: [
+                          BoxShadow(
+                            color: cs.onSurface.withValues(alpha: 0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
                           ),
-                          decoration: BoxDecoration(
-                            color: cs.primary,
-                            borderRadius: BorderRadius.circular(24),
-                            boxShadow: [
-                              BoxShadow(
-                                color: cs.onSurface.withValues(alpha: 0.3),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.map_outlined,
+                            size: 20,
+                            color: cs.onPrimary,
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.map_outlined,
-                                size: 20,
-                                color: cs.onPrimary,
-                              ),
-                              AppSpacing.hGapSm,
-                              Text(
-                                'Ver en mapa',
-                                style: TextStyle(
-                                  color: cs.onPrimary,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
+                          AppSpacing.hGapSm,
+                          Text(
+                            'Ver en mapa',
+                            style: TextStyle(
+                              color: cs.onPrimary,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                   ),
                 ),
+              ),
+            ),
 
-              if (_isLoading)
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: cs.surface.withValues(alpha: 0.85),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const SizedBox(
-                      width: 16,
-                      height: 16,
-                      child: AppLoadingIndicator(
-                        variant: AppLoadingIndicatorVariant.inline,
-                      ),
-                    ),
+          if (_isLoading)
+            Positioned(
+              top: 8,
+              right: 8,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: cs.surface.withValues(alpha: 0.85),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: AppLoadingIndicator(
+                    variant: AppLoadingIndicatorVariant.inline,
                   ),
                 ),
-            ],
-          ),
-        );
+              ),
+            ),
+        ],
+      ),
+    );
 
     if (widget.inCard) return mapContainer;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        AppSpacing.gapMd,
-        mapContainer,
-      ],
+      children: [AppSpacing.gapMd, mapContainer],
     );
   }
 }

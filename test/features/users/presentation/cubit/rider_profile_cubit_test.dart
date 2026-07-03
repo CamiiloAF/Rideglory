@@ -28,7 +28,10 @@ void main() {
     final mockAnalytics = MockAnalyticsService();
     when(() => mockAnalytics.logEvent(any(), any())).thenAnswer((_) async {});
     when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
-    riderProfileCubit = RiderProfileCubit(mockGetUserByIdUseCase, mockAnalytics);
+    riderProfileCubit = RiderProfileCubit(
+      mockGetUserByIdUseCase,
+      mockAnalytics,
+    );
   });
 
   tearDown(() {
@@ -43,9 +46,9 @@ void main() {
     blocTest<RiderProfileCubit, ResultState<UserModel>>(
       'TC-2-12: fetchRiderProfile() emits loading then data on success',
       setUp: () {
-        when(() => mockGetUserByIdUseCase('user-123')).thenAnswer(
-          (_) async => const Right(mockUser),
-        );
+        when(
+          () => mockGetUserByIdUseCase('user-123'),
+        ).thenAnswer((_) async => const Right(mockUser));
       },
       build: () => riderProfileCubit,
       act: (cubit) => cubit.fetchRiderProfile('user-123'),
@@ -80,9 +83,9 @@ void main() {
     blocTest<RiderProfileCubit, ResultState<UserModel>>(
       'TC-2-14: fetchRiderProfile() calls GetUserByIdUseCase with correct userId',
       setUp: () {
-        when(() => mockGetUserByIdUseCase('user-456')).thenAnswer(
-          (_) async => const Right(mockUser),
-        );
+        when(
+          () => mockGetUserByIdUseCase('user-456'),
+        ).thenAnswer((_) async => const Right(mockUser));
       },
       build: () => riderProfileCubit,
       act: (cubit) => cubit.fetchRiderProfile('user-456'),
@@ -95,8 +98,7 @@ void main() {
       'TC-2-15: fetchRiderProfile() with network error emits error state',
       setUp: () {
         when(() => mockGetUserByIdUseCase('user-123')).thenAnswer(
-          (_) async =>
-              const Left(DomainException(message: 'Network error')),
+          (_) async => const Left(DomainException(message: 'Network error')),
         );
       },
       build: () => riderProfileCubit,
@@ -114,9 +116,9 @@ void main() {
     blocTest<RiderProfileCubit, ResultState<UserModel>>(
       'TC-2-16: fetchRiderProfile() returns user with all required fields',
       setUp: () {
-        when(() => mockGetUserByIdUseCase('user-123')).thenAnswer(
-          (_) async => const Right(mockUser),
-        );
+        when(
+          () => mockGetUserByIdUseCase('user-123'),
+        ).thenAnswer((_) async => const Right(mockUser));
       },
       build: () => riderProfileCubit,
       act: (cubit) => cubit.fetchRiderProfile('user-123'),

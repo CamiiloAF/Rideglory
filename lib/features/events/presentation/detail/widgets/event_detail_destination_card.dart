@@ -26,7 +26,11 @@ class EventDetailDestinationCard extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: context.colorScheme.outlineVariant),
             ),
-            child: Icon(Icons.place, color: context.colorScheme.primary, size: 26),
+            child: Icon(
+              Icons.place,
+              color: context.colorScheme.primary,
+              size: 26,
+            ),
           ),
           AppSpacing.hGapMd,
           Expanded(

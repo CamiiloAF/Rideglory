@@ -5,11 +5,7 @@ import 'package:rideglory/features/home/presentation/widgets/home_event_card_con
 import 'package:rideglory/features/home/presentation/widgets/home_event_card_image.dart';
 
 class HomeEventCard extends StatelessWidget {
-  const HomeEventCard({
-    super.key,
-    required this.event,
-    required this.onTap,
-  });
+  const HomeEventCard({super.key, required this.event, required this.onTap});
 
   final EventModel event;
   final VoidCallback onTap;

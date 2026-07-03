@@ -35,7 +35,9 @@ class VehicleListItem extends StatelessWidget {
               color: isSelected ? null : AppColors.darkCard,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: isSelected ? Colors.transparent : context.colorScheme.outlineVariant,
+                color: isSelected
+                    ? Colors.transparent
+                    : context.colorScheme.outlineVariant,
                 width: 1.5,
               ),
             ),

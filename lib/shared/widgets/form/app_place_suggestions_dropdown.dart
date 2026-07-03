@@ -21,9 +21,7 @@ class AppPlaceSuggestionsDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return _buildContainer(
-        child: const SearchSkeletonList(),
-      );
+      return _buildContainer(child: const SearchSkeletonList());
     }
 
     if (hasError) {
@@ -32,10 +30,7 @@ class AppPlaceSuggestionsDropdown extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Text(
             context.l10n.route_placeSearchError,
-            style: const TextStyle(
-              color: AppColors.error,
-              fontSize: 13,
-            ),
+            style: const TextStyle(color: AppColors.error, fontSize: 13),
           ),
         ),
       );
@@ -61,10 +56,8 @@ class AppPlaceSuggestionsDropdown extends StatelessWidget {
         padding: EdgeInsets.zero,
         shrinkWrap: true,
         itemCount: suggestions.length,
-        separatorBuilder: (_, _) => const Divider(
-          height: 1,
-          color: AppColors.darkBorderPrimary,
-        ),
+        separatorBuilder: (_, _) =>
+            const Divider(height: 1, color: AppColors.darkBorderPrimary),
         itemBuilder: (_, i) {
           final suggestion = suggestions[i];
           return GestureDetector(
@@ -74,10 +67,7 @@ class AppPlaceSuggestionsDropdown extends StatelessWidget {
                   ? const BoxDecoration(
                       color: AppColors.darkActiveSuggestion,
                       border: Border(
-                        left: BorderSide(
-                          color: AppColors.primary,
-                          width: 4,
-                        ),
+                        left: BorderSide(color: AppColors.primary, width: 4),
                       ),
                     )
                   : const BoxDecoration(color: AppColors.darkCard),
@@ -100,8 +90,9 @@ class AppPlaceSuggestionsDropdown extends StatelessWidget {
                             ? AppColors.textOnDarkPrimary
                             : AppColors.textOnDarkSecondary,
                         fontSize: 13,
-                        fontWeight:
-                            i == 0 ? FontWeight.w600 : FontWeight.normal,
+                        fontWeight: i == 0
+                            ? FontWeight.w600
+                            : FontWeight.normal,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,

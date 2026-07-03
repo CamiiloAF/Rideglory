@@ -24,9 +24,9 @@ class AiQuotaExhaustedBanner extends StatelessWidget {
             child: Text(
               context.l10n.ai_emptyStateExhaustedSubtitle,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: colorScheme.onErrorContainer,
-                    height: 1.4,
-                  ),
+                color: colorScheme.onErrorContainer,
+                height: 1.4,
+              ),
             ),
           ),
         ],

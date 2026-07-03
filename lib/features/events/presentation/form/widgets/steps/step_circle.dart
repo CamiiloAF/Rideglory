@@ -29,10 +29,12 @@ class StepCircle extends StatelessWidget {
 
     final bgColor = isFuture ? AppColors.darkBgSecondary : AppColors.primary;
     const fgColor = AppColors.darkBgPrimary;
-    final labelColor =
-        isFuture ? AppColors.textOnDarkTertiary : AppColors.textOnDarkPrimary;
-    final labelWeight =
-        (isActive && !isCompleted) ? FontWeight.w700 : FontWeight.w500;
+    final labelColor = isFuture
+        ? AppColors.textOnDarkTertiary
+        : AppColors.textOnDarkPrimary;
+    final labelWeight = (isActive && !isCompleted)
+        ? FontWeight.w700
+        : FontWeight.w500;
 
     return Column(
       mainAxisSize: MainAxisSize.min,

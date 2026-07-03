@@ -4,10 +4,7 @@ import 'package:rideglory/features/events/presentation/tracking/widgets/live_map
 import 'package:rideglory/features/events/presentation/tracking/widgets/zoom_button.dart';
 
 class MapZoomControls extends StatelessWidget {
-  const MapZoomControls({
-    super.key,
-    required this.controller,
-  });
+  const MapZoomControls({super.key, required this.controller});
 
   final LiveMapController? controller;
 

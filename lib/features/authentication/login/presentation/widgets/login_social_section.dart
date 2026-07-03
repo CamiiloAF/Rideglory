@@ -26,21 +26,18 @@ class _LoginSocialSectionState extends State<LoginSocialSection> {
 
   AnalyticsService get _analytics => getIt<AnalyticsService>();
 
-  bool get _googleSignInIosEnabled =>
-      getIt<FirebaseRemoteConfig>().getBool(
-        ApiRemoteConfig.googleSignInIosEnabledKey,
-      );
+  bool get _googleSignInIosEnabled => getIt<FirebaseRemoteConfig>().getBool(
+    ApiRemoteConfig.googleSignInIosEnabledKey,
+  );
 
   void _onPressed(LoginAuthProvider provider, VoidCallback action) {
     setState(() => _loadingProvider = provider);
     final method = provider == LoginAuthProvider.google
         ? AnalyticsParams.authMethodGoogle
         : AnalyticsParams.authMethodApple;
-    _analytics
-        .logEvent(AnalyticsEvents.authMethodSelected, {
-          AnalyticsParams.authMethod: method,
-        })
-        .ignore();
+    _analytics.logEvent(AnalyticsEvents.authMethodSelected, {
+      AnalyticsParams.authMethod: method,
+    }).ignore();
     action();
   }
 

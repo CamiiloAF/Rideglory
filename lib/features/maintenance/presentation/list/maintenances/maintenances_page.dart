@@ -12,7 +12,11 @@ class MaintenancesPage extends StatelessWidget {
   final String? initialVehicleId;
   final bool readOnly;
 
-  const MaintenancesPage({super.key, this.initialVehicleId, this.readOnly = false});
+  const MaintenancesPage({
+    super.key,
+    this.initialVehicleId,
+    this.readOnly = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +38,14 @@ class MaintenancesPage extends StatelessWidget {
             if (effectiveVehicleId != null) {
               cubit.setInitialVehicleFilter(effectiveVehicleId);
               try {
-                final vehicle = vehicleCubit.availableVehicles
-                    .firstWhere((vehicle) => vehicle.id == effectiveVehicleId);
+                final vehicle = vehicleCubit.availableVehicles.firstWhere(
+                  (vehicle) => vehicle.id == effectiveVehicleId,
+                );
                 cubit.setCurrentVehicleMileage(vehicle.currentMileage);
               } catch (_) {
-                cubit.setCurrentVehicleMileage(vehicleCubit.currentMileage ?? 0);
+                cubit.setCurrentVehicleMileage(
+                  vehicleCubit.currentMileage ?? 0,
+                );
               }
             } else {
               cubit.setCurrentVehicleMileage(vehicleCubit.currentMileage ?? 0);

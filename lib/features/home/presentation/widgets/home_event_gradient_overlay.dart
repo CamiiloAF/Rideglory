@@ -12,7 +12,8 @@ class HomeEventGradientOverlay extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            Colors.transparent, // Intentional: gradient stop — transparent start
+            Colors
+                .transparent, // Intentional: gradient stop — transparent start
             AppColors.darkBgPrimary.withValues(alpha: 0.87),
           ],
           stops: const [0.3, 1.0],

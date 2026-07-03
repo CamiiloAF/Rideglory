@@ -27,10 +27,11 @@ class RiderTrackingDto extends RiderTrackingModel {
 
   Map<String, dynamic> toJson() => _$RiderTrackingDtoToJson(this);
 
-  static Map<String, dynamic> _normalizeTrackingJson(Map<String, dynamic> json) {
+  static Map<String, dynamic> _normalizeTrackingJson(
+    Map<String, dynamic> json,
+  ) {
     final m = Map<String, dynamic>.from(json);
-    m['fullName'] ??=
-        '${m['firstName'] ?? ''} ${m['lastName'] ?? ''}'.trim();
+    m['fullName'] ??= '${m['firstName'] ?? ''} ${m['lastName'] ?? ''}'.trim();
     if ((m['fullName'] as String).isEmpty) {
       m['fullName'] = '';
     }

@@ -19,5 +19,6 @@ class AiDescriptionResult {
   }
 
   @override
-  int get hashCode => Object.hash(markdown, remainingGenerations, isDescription);
+  int get hashCode =>
+      Object.hash(markdown, remainingGenerations, isDescription);
 }

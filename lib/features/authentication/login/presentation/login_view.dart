@@ -36,21 +36,17 @@ class _LoginViewState extends State<LoginView> {
   @override
   void initState() {
     super.initState();
-    _analytics
-        .logEvent(AnalyticsEvents.authFlowStarted, {
-          AnalyticsParams.authMethod: AnalyticsParams.authMethodLogin,
-        })
-        .ignore();
+    _analytics.logEvent(AnalyticsEvents.authFlowStarted, {
+      AnalyticsParams.authMethod: AnalyticsParams.authMethodLogin,
+    }).ignore();
   }
 
   @override
   void dispose() {
     if (!_completedSuccessfully) {
-      _analytics
-          .logEvent(AnalyticsEvents.authAbandoned, {
-            AnalyticsParams.authMethod: AnalyticsParams.authMethodLogin,
-          })
-          .ignore();
+      _analytics.logEvent(AnalyticsEvents.authAbandoned, {
+        AnalyticsParams.authMethod: AnalyticsParams.authMethodLogin,
+      }).ignore();
     }
     super.dispose();
   }
@@ -75,11 +71,9 @@ class _LoginViewState extends State<LoginView> {
   void _handleLogin(BuildContext context) {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
       setState(() => _emailLoading = true);
-      _analytics
-          .logEvent(AnalyticsEvents.authMethodSelected, {
-            AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
-          })
-          .ignore();
+      _analytics.logEvent(AnalyticsEvents.authMethodSelected, {
+        AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
+      }).ignore();
       final data = _formKey.currentState!.value;
       context.read<AuthCubit>().signInWithEmail(
         email: (data[AuthFormFields.email] as String).trim(),

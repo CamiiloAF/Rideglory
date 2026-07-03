@@ -12,10 +12,8 @@ class AiChatTurnDto {
   final String role;
   final String content;
 
-  factory AiChatTurnDto.fromDomain(AiChatTurn turn) => AiChatTurnDto(
-        role: turn.role.name,
-        content: turn.content,
-      );
+  factory AiChatTurnDto.fromDomain(AiChatTurn turn) =>
+      AiChatTurnDto(role: turn.role.name, content: turn.content);
 
   factory AiChatTurnDto.fromJson(Map<String, dynamic> json) =>
       _$AiChatTurnDtoFromJson(json);

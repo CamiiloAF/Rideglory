@@ -45,10 +45,8 @@ class RiderListItem extends StatelessWidget {
     final hasPhone = phone != null && phone!.isNotEmpty;
 
     return GestureDetector(
-      onTap: () => context.pushNamed(
-        AppRoutes.riderProfile,
-        extra: rider.userId,
-      ),
+      onTap: () =>
+          context.pushNamed(AppRoutes.riderProfile, extra: rider.userId),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         padding: const EdgeInsets.all(16),
@@ -122,7 +120,10 @@ class RiderListItem extends StatelessWidget {
             AppSpacing.gapMd,
             // ── Row 3: Actions ──
             isSos
-                ? _SosActionsRow(onLocate: onLocate, phone: hasPhone ? phone : null)
+                ? _SosActionsRow(
+                    onLocate: onLocate,
+                    phone: hasPhone ? phone : null,
+                  )
                 : _NormalActionsRow(
                     phone: hasPhone ? phone : null,
                     userId: rider.userId,
@@ -260,18 +261,12 @@ class _StatusRow extends StatelessWidget {
           Container(
             width: 7,
             height: 7,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: dotColor,
-            ),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: dotColor),
           ),
           AppSpacing.hGapXxs,
           Text(
             context.l10n.map_stopped,
-            style: TextStyle(
-              color: textColor,
-              fontSize: 12,
-            ),
+            style: TextStyle(color: textColor, fontSize: 12),
           ),
         ],
       );
@@ -280,11 +275,7 @@ class _StatusRow extends StatelessWidget {
     // Active rider
     return Row(
       children: [
-        const Icon(
-          Icons.route_rounded,
-          size: 14,
-          color: AppColors.success,
-        ),
+        const Icon(Icons.route_rounded, size: 14, color: AppColors.success),
         AppSpacing.hGapXxs,
         Text(
           '${rider.speedKmh.round()} km/h',
@@ -328,10 +319,7 @@ class _NormalActionsRow extends StatelessWidget {
         ),
         const Spacer(),
         GestureDetector(
-          onTap: () => context.pushNamed(
-            AppRoutes.riderProfile,
-            extra: userId,
-          ),
+          onTap: () => context.pushNamed(AppRoutes.riderProfile, extra: userId),
           child: Text(
             '${context.l10n.map_viewProfile} →',
             style: const TextStyle(

@@ -9,7 +9,11 @@ class VehicleDetailImagePlaceholder extends StatelessWidget {
     return Container(
       color: AppColors.darkBgSecondary,
       child: const Center(
-        child: Icon(Icons.two_wheeler, size: 64, color: AppColors.darkBorderLight),
+        child: Icon(
+          Icons.two_wheeler,
+          size: 64,
+          color: AppColors.darkBorderLight,
+        ),
       ),
     );
   }

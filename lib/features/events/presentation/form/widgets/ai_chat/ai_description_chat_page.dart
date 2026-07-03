@@ -67,9 +67,9 @@ class _AiDescriptionChatPageState extends State<AiDescriptionChatPage> {
         leading: BackButton(color: colorScheme.onSurface),
         title: Text(
           context.l10n.ai_chatTitle,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
         ),
         actions: [
           BlocBuilder<AiDescriptionChatCubit, AiDescriptionChatState>(
@@ -86,10 +86,10 @@ class _AiDescriptionChatPageState extends State<AiDescriptionChatPage> {
                   isExhausted: cubit.isQuotaExhausted,
                   onTap: quota != null
                       ? () => AiQuotaInfoSheet.show(
-                            context: context,
-                            remainingQuota: quota,
-                            isExhausted: cubit.isQuotaExhausted,
-                          )
+                          context: context,
+                          remainingQuota: quota,
+                          isExhausted: cubit.isQuotaExhausted,
+                        )
                       : null,
                 ),
               );
@@ -115,7 +115,8 @@ class _AiDescriptionChatPageState extends State<AiDescriptionChatPage> {
                   reverse: true,
                   physics: const ClampingScrollPhysics(),
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                  itemCount: state.history.length +
+                  itemCount:
+                      state.history.length +
                       (isLoading ? 1 : 0) +
                       (hasError ? 1 : 0),
                   itemBuilder: (context, index) {
@@ -140,8 +141,7 @@ class _AiDescriptionChatPageState extends State<AiDescriptionChatPage> {
                       virtualIndex--;
                     }
 
-                    final bubbleIndex =
-                        state.history.length - 1 - virtualIndex;
+                    final bubbleIndex = state.history.length - 1 - virtualIndex;
                     if (bubbleIndex >= 0 &&
                         bubbleIndex < state.history.length) {
                       final turn = state.history[bubbleIndex];
@@ -173,17 +173,17 @@ class _AiDescriptionChatPageState extends State<AiDescriptionChatPage> {
                   SafeArea(
                     top: false,
                     child: AiChatInputRow(
-                  disabled: cubit.isQuotaExhausted ||
-                      state.sendResult is Loading,
-                  onSend: (message) => cubit.sendMessage(
-                    userMessage: message,
-                    title: widget.eventContext.title,
-                    eventType: widget.eventContext.eventType,
-                    difficulty: widget.eventContext.difficulty,
-                    startDate: widget.eventContext.startDate,
+                      disabled:
+                          cubit.isQuotaExhausted || state.sendResult is Loading,
+                      onSend: (message) => cubit.sendMessage(
+                        userMessage: message,
+                        title: widget.eventContext.title,
+                        eventType: widget.eventContext.eventType,
+                        difficulty: widget.eventContext.difficulty,
+                        startDate: widget.eventContext.startDate,
+                      ),
+                    ),
                   ),
-                ),
-              ),
                 ],
               );
             },
@@ -195,11 +195,11 @@ class _AiDescriptionChatPageState extends State<AiDescriptionChatPage> {
 
   void _retryLastMessage(BuildContext context) {
     context.read<AiDescriptionChatCubit>().retryLastMessage(
-          title: widget.eventContext.title,
-          eventType: widget.eventContext.eventType,
-          difficulty: widget.eventContext.difficulty,
-          startDate: widget.eventContext.startDate,
-        );
+      title: widget.eventContext.title,
+      eventType: widget.eventContext.eventType,
+      difficulty: widget.eventContext.difficulty,
+      startDate: widget.eventContext.startDate,
+    );
   }
 
   void _copyMessage(BuildContext context, String content) {

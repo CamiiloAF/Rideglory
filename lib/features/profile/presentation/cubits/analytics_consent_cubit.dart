@@ -9,7 +9,7 @@ import 'package:rideglory/core/services/user_storage_service.dart';
 @injectable
 class AnalyticsConsentCubit extends Cubit<ResultState<bool>> {
   AnalyticsConsentCubit(this._storage, this._analytics, this._crash)
-      : super(const ResultState.initial());
+    : super(const ResultState.initial());
 
   final UserStorageService _storage;
   final AnalyticsService _analytics;

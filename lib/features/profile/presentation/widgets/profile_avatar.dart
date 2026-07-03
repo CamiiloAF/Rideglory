@@ -18,7 +18,9 @@ class ProfileAvatar extends StatelessWidget {
           end: Alignment.bottomRight,
           colors: [
             AppColors.primary,
-            AppColors.primary.withValues(alpha: 0.4), // Intentional: gradient stop — alpha variant of primary
+            AppColors.primary.withValues(
+              alpha: 0.4,
+            ), // Intentional: gradient stop — alpha variant of primary
           ],
         ),
       ),

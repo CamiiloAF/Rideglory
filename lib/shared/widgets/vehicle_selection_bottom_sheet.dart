@@ -184,9 +184,10 @@ class _VehicleSheetItem extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    [vehicle.licensePlate, vehicle.year?.toString()]
-                        .where((e) => e != null && e.isNotEmpty)
-                        .join(' · '),
+                    [
+                      vehicle.licensePlate,
+                      vehicle.year?.toString(),
+                    ].where((e) => e != null && e.isNotEmpty).join(' · '),
                     style: const TextStyle(
                       fontSize: 12,
                       color: AppColors.textOnDarkSecondary,

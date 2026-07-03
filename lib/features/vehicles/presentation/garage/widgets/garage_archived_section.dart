@@ -28,7 +28,8 @@ class _GarageArchivedSectionState extends State<GarageArchivedSection> {
   @override
   void didUpdateWidget(GarageArchivedSection oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.archivedVehicles.isEmpty && widget.archivedVehicles.isNotEmpty) {
+    if (oldWidget.archivedVehicles.isEmpty &&
+        widget.archivedVehicles.isNotEmpty) {
       _isExpanded = true;
     }
   }
@@ -56,10 +57,8 @@ class _GarageArchivedSectionState extends State<GarageArchivedSection> {
               padding: const EdgeInsets.only(bottom: 12),
               child: GarageOtherVehicleItem(
                 vehicle: vehicle,
-                onTap: () => context.pushNamed(
-                  AppRoutes.vehicleDetail,
-                  extra: vehicle,
-                ),
+                onTap: () =>
+                    context.pushNamed(AppRoutes.vehicleDetail, extra: vehicle),
                 onOptionsTap: () => GarageOptionsBottomSheet.show(
                   context,
                   vehicle,

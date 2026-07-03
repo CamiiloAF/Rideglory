@@ -93,8 +93,9 @@ class _AppTextFieldState extends State<AppTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final iconColor =
-        _isFocused ? AppColors.primary : AppColors.textOnDarkSecondary;
+    final iconColor = _isFocused
+        ? AppColors.primary
+        : AppColors.textOnDarkSecondary;
 
     // Prefix mirrors the Pencil field: a 52px icon block separated from the
     // input text by a 1px vertical divider, shared across every app input.
@@ -107,11 +108,7 @@ class _AppTextFieldState extends State<AppTextField> {
                 width: 52,
                 child: Icon(widget.prefixIcon, color: iconColor, size: 20),
               ),
-              Container(
-                width: 1,
-                height: 20,
-                color: AppColors.darkBorderLight,
-              ),
+              Container(width: 1, height: 20, color: AppColors.darkBorderLight),
             ],
           );
 

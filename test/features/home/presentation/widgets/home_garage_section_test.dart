@@ -56,10 +56,7 @@ const _archivedVehicle = VehicleModel(
 
 // ─── Test helper ──────────────────────────────────────────────────────────────
 
-Widget _wrap({
-  required VehicleCubit vehicleCubit,
-  HomeCubit? homeCubit,
-}) {
+Widget _wrap({required VehicleCubit vehicleCubit, HomeCubit? homeCubit}) {
   final router = GoRouter(
     routes: [
       GoRoute(
@@ -115,39 +112,33 @@ void main() {
 
   // ── TC-garage-section-1: Initial state renders placeholder ────────────────
 
-  testWidgets(
-    'TC-garage-section-1: VehicleCubit.initial → placeholder 200px, '
-    'no HomeGarageCard, no HomeEmptyGarageCard',
-    (tester) async {
-      when(() => vehicleCubit.state).thenReturn(
-        const ResultState<List<VehicleModel>>.initial(),
-      );
+  testWidgets('TC-garage-section-1: VehicleCubit.initial → placeholder 200px, '
+      'no HomeGarageCard, no HomeEmptyGarageCard', (tester) async {
+    when(
+      () => vehicleCubit.state,
+    ).thenReturn(const ResultState<List<VehicleModel>>.initial());
 
-      await tester.pumpWidget(_wrap(vehicleCubit: vehicleCubit));
-      await tester.pump();
+    await tester.pumpWidget(_wrap(vehicleCubit: vehicleCubit));
+    await tester.pump();
 
-      expect(find.byType(HomeGarageCard), findsNothing);
-      expect(find.byType(HomeEmptyGarageCard), findsNothing);
-    },
-  );
+    expect(find.byType(HomeGarageCard), findsNothing);
+    expect(find.byType(HomeEmptyGarageCard), findsNothing);
+  });
 
   // ── TC-garage-section-2: Loading state renders placeholder ────────────────
 
-  testWidgets(
-    'TC-garage-section-2: VehicleCubit.loading → placeholder, '
-    'no HomeGarageCard, no HomeEmptyGarageCard',
-    (tester) async {
-      when(() => vehicleCubit.state).thenReturn(
-        const ResultState<List<VehicleModel>>.loading(),
-      );
+  testWidgets('TC-garage-section-2: VehicleCubit.loading → placeholder, '
+      'no HomeGarageCard, no HomeEmptyGarageCard', (tester) async {
+    when(
+      () => vehicleCubit.state,
+    ).thenReturn(const ResultState<List<VehicleModel>>.loading());
 
-      await tester.pumpWidget(_wrap(vehicleCubit: vehicleCubit));
-      await tester.pump();
+    await tester.pumpWidget(_wrap(vehicleCubit: vehicleCubit));
+    await tester.pump();
 
-      expect(find.byType(HomeGarageCard), findsNothing);
-      expect(find.byType(HomeEmptyGarageCard), findsNothing);
-    },
-  );
+    expect(find.byType(HomeGarageCard), findsNothing);
+    expect(find.byType(HomeEmptyGarageCard), findsNothing);
+  });
 
   // ── TC-garage-section-3: Data with main vehicle renders HomeGarageCard ─────
 
@@ -178,9 +169,7 @@ void main() {
     'HomeGarageCard with first vehicle',
     (tester) async {
       when(() => vehicleCubit.state).thenReturn(
-        const ResultState<List<VehicleModel>>.data(
-          data: [_otherVehicle],
-        ),
+        const ResultState<List<VehicleModel>>.data(data: [_otherVehicle]),
       );
 
       await tester.pumpWidget(_wrap(vehicleCubit: vehicleCubit));
@@ -197,9 +186,9 @@ void main() {
   testWidgets(
     'TC-garage-section-5: VehicleCubit.data([]) → HomeEmptyGarageCard',
     (tester) async {
-      when(() => vehicleCubit.state).thenReturn(
-        const ResultState<List<VehicleModel>>.data(data: []),
-      );
+      when(
+        () => vehicleCubit.state,
+      ).thenReturn(const ResultState<List<VehicleModel>>.data(data: []));
 
       await tester.pumpWidget(
         _wrap(vehicleCubit: vehicleCubit, homeCubit: homeCubit),
@@ -214,9 +203,9 @@ void main() {
   testWidgets(
     'TC-garage-section-5b: VehicleCubit.empty → HomeEmptyGarageCard',
     (tester) async {
-      when(() => vehicleCubit.state).thenReturn(
-        const ResultState<List<VehicleModel>>.empty(),
-      );
+      when(
+        () => vehicleCubit.state,
+      ).thenReturn(const ResultState<List<VehicleModel>>.empty());
 
       await tester.pumpWidget(
         _wrap(vehicleCubit: vehicleCubit, homeCubit: homeCubit),
@@ -256,8 +245,9 @@ void main() {
 
       // Initially shows _otherVehicle
       expect(find.byType(HomeGarageCard), findsOneWidget);
-      final cardBefore =
-          tester.widget<HomeGarageCard>(find.byType(HomeGarageCard));
+      final cardBefore = tester.widget<HomeGarageCard>(
+        find.byType(HomeGarageCard),
+      );
       expect(cardBefore.vehicle.id, equals(_otherVehicle.id));
 
       // Emit new state with _mainVehicle as main
@@ -277,8 +267,9 @@ void main() {
 
       // Now should show _mainVehicle
       expect(find.byType(HomeGarageCard), findsOneWidget);
-      final cardAfter =
-          tester.widget<HomeGarageCard>(find.byType(HomeGarageCard));
+      final cardAfter = tester.widget<HomeGarageCard>(
+        find.byType(HomeGarageCard),
+      );
       expect(cardAfter.vehicle.id, equals(_mainVehicle.id));
 
       // HomeCubit.loadHomeData must NOT have been called
@@ -293,9 +284,7 @@ void main() {
     'nunca HomeGarageCard',
     (tester) async {
       when(() => vehicleCubit.state).thenReturn(
-        const ResultState<List<VehicleModel>>.data(
-          data: [_archivedVehicle],
-        ),
+        const ResultState<List<VehicleModel>>.data(data: [_archivedVehicle]),
       );
 
       await tester.pumpWidget(
@@ -306,7 +295,8 @@ void main() {
       expect(
         find.byType(HomeEmptyGarageCard),
         findsOneWidget,
-        reason: 'Con todos los vehículos archivados debe mostrarse el estado vacío',
+        reason:
+            'Con todos los vehículos archivados debe mostrarse el estado vacío',
       );
       expect(find.byType(HomeGarageCard), findsNothing);
     },

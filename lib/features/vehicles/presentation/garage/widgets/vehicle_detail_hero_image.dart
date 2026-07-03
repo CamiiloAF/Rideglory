@@ -18,10 +18,10 @@ class VehicleDetailHeroImage extends StatelessWidget {
     return GestureDetector(
       onTap: imageUrl != null
           ? () => FullscreenImageViewer.show(
-                context,
-                imageUrl: imageUrl,
-                heroTag: heroTag,
-              )
+              context,
+              imageUrl: imageUrl,
+              heroTag: heroTag,
+            )
           : null,
       child: SizedBox(
         height: 180,

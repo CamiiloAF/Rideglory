@@ -72,8 +72,9 @@ class VehicleFormDocumentsSection extends StatelessWidget {
               onUploadTap: () =>
                   context.read<VehicleFormCubit>().pickTechReviewDocument(),
               onClear: state.techReviewLocalPath != null
-                  ? () =>
-                        context.read<VehicleFormCubit>().clearTechReviewDocument()
+                  ? () => context
+                        .read<VehicleFormCubit>()
+                        .clearTechReviewDocument()
                   : null,
             ),
             const SizedBox(height: 12),

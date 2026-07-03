@@ -32,8 +32,7 @@ import 'package:rideglory/shared/router/app_routes.dart';
 class MockSoatCubit extends MockCubit<ResultState<SoatModel>>
     implements SoatCubit {}
 
-class MockTecnomecanicaCubit
-    extends MockCubit<ResultState<TecnomecanicaModel>>
+class MockTecnomecanicaCubit extends MockCubit<ResultState<TecnomecanicaModel>>
     implements TecnomecanicaCubit {}
 
 class MockSoatUploadCubit extends MockCubit<SoatUploadState>
@@ -135,7 +134,8 @@ void main() {
 
     final gi = GetIt.instance;
     if (gi.isRegistered<SoatCubit>()) gi.unregister<SoatCubit>();
-    if (gi.isRegistered<TecnomecanicaCubit>()) gi.unregister<TecnomecanicaCubit>();
+    if (gi.isRegistered<TecnomecanicaCubit>())
+      gi.unregister<TecnomecanicaCubit>();
     if (gi.isRegistered<SoatUploadCubit>()) gi.unregister<SoatUploadCubit>();
     gi.registerFactory<SoatCubit>(() => soatCubit);
     gi.registerFactory<TecnomecanicaCubit>(() => rtmCubit);
@@ -145,7 +145,8 @@ void main() {
   tearDown(() {
     final gi = GetIt.instance;
     if (gi.isRegistered<SoatCubit>()) gi.unregister<SoatCubit>();
-    if (gi.isRegistered<TecnomecanicaCubit>()) gi.unregister<TecnomecanicaCubit>();
+    if (gi.isRegistered<TecnomecanicaCubit>())
+      gi.unregister<TecnomecanicaCubit>();
     if (gi.isRegistered<SoatUploadCubit>()) gi.unregister<SoatUploadCubit>();
   });
 
@@ -154,8 +155,7 @@ void main() {
   testWidgets(
     'TC-arch-doc-1: SOAT card with data + isArchived=true navigates to soatStatus',
     (tester) async {
-      when(() => soatCubit.state)
-          .thenReturn(ResultState.data(data: _soatData));
+      when(() => soatCubit.state).thenReturn(ResultState.data(data: _soatData));
       when(() => rtmCubit.state).thenReturn(const ResultState.initial());
 
       final spy = _RouteNameSpy();
@@ -255,7 +255,8 @@ void main() {
       expect(
         spy.pushed,
         contains(AppRoutes.tecnomecanicaStatus),
-        reason: 'RTM con datos en modo archivado debe navegar a tecnomecanicaStatus',
+        reason:
+            'RTM con datos en modo archivado debe navegar a tecnomecanicaStatus',
       );
     },
   );

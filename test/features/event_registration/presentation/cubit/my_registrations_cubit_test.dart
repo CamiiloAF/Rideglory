@@ -30,7 +30,7 @@ final _mockEvent = EventModel(
   ownerId: 'owner-1',
   name: 'Ruta Mágica',
   description: 'Una ruta increíble',
-  startDate: DateTime(2026, 6, 1),  
+  startDate: DateTime(2026, 6, 1),
   difficulty: EventDifficulty.two,
   meetingTime: DateTime(2026, 6, 1, 8),
   eventType: EventType.onRoad,
@@ -92,12 +92,12 @@ void main() {
       blocTest<MyRegistrationsCubit, ResultState<List<RegistrationWithEvent>>>(
         'TC-reg-2: emits loading then data when registrations exist',
         setUp: () {
-          when(() => mockGetRegistrations()).thenAnswer(
-            (_) async => Right([_mockRegistration]),
-          );
-          when(() => mockGetEventById('event-1')).thenAnswer(
-            (_) async => Right(_mockEvent),
-          );
+          when(
+            () => mockGetRegistrations(),
+          ).thenAnswer((_) async => Right([_mockRegistration]));
+          when(
+            () => mockGetEventById('event-1'),
+          ).thenAnswer((_) async => Right(_mockEvent));
         },
         build: () => cubit,
         act: (c) => c.fetchMyRegistrations(),
@@ -116,8 +116,7 @@ void main() {
         'TC-reg-3: emits loading then error when use case fails',
         setUp: () {
           when(() => mockGetRegistrations()).thenAnswer(
-            (_) async =>
-                const Left(DomainException(message: 'No autorizado')),
+            (_) async => const Left(DomainException(message: 'No autorizado')),
           );
         },
         build: () => cubit,
@@ -135,9 +134,9 @@ void main() {
       blocTest<MyRegistrationsCubit, ResultState<List<RegistrationWithEvent>>>(
         'TC-reg-4: emits loading then empty when no registrations',
         setUp: () {
-          when(() => mockGetRegistrations()).thenAnswer(
-            (_) async => const Right([]),
-          );
+          when(
+            () => mockGetRegistrations(),
+          ).thenAnswer((_) async => const Right([]));
         },
         build: () => cubit,
         act: (c) => c.fetchMyRegistrations(),
@@ -150,12 +149,12 @@ void main() {
 
     group('updateStatusFilter', () {
       test('TC-reg-5: hasFilters returns true when filter is set', () async {
-        when(() => mockGetRegistrations()).thenAnswer(
-          (_) async => Right([_mockRegistration]),
-        );
-        when(() => mockGetEventById('event-1')).thenAnswer(
-          (_) async => Right(_mockEvent),
-        );
+        when(
+          () => mockGetRegistrations(),
+        ).thenAnswer((_) async => Right([_mockRegistration]));
+        when(
+          () => mockGetEventById('event-1'),
+        ).thenAnswer((_) async => Right(_mockEvent));
         await cubit.fetchMyRegistrations();
 
         cubit.updateStatusFilter({RegistrationStatus.pending});
@@ -164,12 +163,12 @@ void main() {
       });
 
       test('TC-reg-6: clearFilters resets filters', () async {
-        when(() => mockGetRegistrations()).thenAnswer(
-          (_) async => Right([_mockRegistration]),
-        );
-        when(() => mockGetEventById('event-1')).thenAnswer(
-          (_) async => Right(_mockEvent),
-        );
+        when(
+          () => mockGetRegistrations(),
+        ).thenAnswer((_) async => Right([_mockRegistration]));
+        when(
+          () => mockGetEventById('event-1'),
+        ).thenAnswer((_) async => Right(_mockEvent));
         await cubit.fetchMyRegistrations();
 
         cubit.updateStatusFilter({RegistrationStatus.approved});
@@ -193,12 +192,12 @@ void main() {
       test(
         'TC-reg-a1: fetchMyRegistrations success → registration_my_list_viewed fired',
         () async {
-          when(() => mockGetRegistrations()).thenAnswer(
-            (_) async => Right([_mockRegistration]),
-          );
-          when(() => mockGetEventById('event-1')).thenAnswer(
-            (_) async => Right(_mockEvent),
-          );
+          when(
+            () => mockGetRegistrations(),
+          ).thenAnswer((_) async => Right([_mockRegistration]));
+          when(
+            () => mockGetEventById('event-1'),
+          ).thenAnswer((_) async => Right(_mockEvent));
 
           await cubit.fetchMyRegistrations();
 
@@ -214,9 +213,9 @@ void main() {
       test(
         'TC-reg-a2: fetchMyRegistrations empty → registration_my_list_viewed fired',
         () async {
-          when(() => mockGetRegistrations()).thenAnswer(
-            (_) async => const Right([]),
-          );
+          when(
+            () => mockGetRegistrations(),
+          ).thenAnswer((_) async => const Right([]));
 
           await cubit.fetchMyRegistrations();
 
@@ -233,8 +232,7 @@ void main() {
         'TC-reg-a3: fetchMyRegistrations error → registration_my_list_viewed NOT fired',
         () async {
           when(() => mockGetRegistrations()).thenAnswer(
-            (_) async =>
-                const Left(DomainException(message: 'No autorizado')),
+            (_) async => const Left(DomainException(message: 'No autorizado')),
           );
 
           await cubit.fetchMyRegistrations();
@@ -251,23 +249,21 @@ void main() {
       test(
         'TC-reg-a4: cancelRegistration success → registration_cancelled fired',
         () async {
-          when(() => mockGetRegistrations()).thenAnswer(
-            (_) async => Right([_mockRegistration]),
-          );
-          when(() => mockGetEventById('event-1')).thenAnswer(
-            (_) async => Right(_mockEvent),
-          );
-          when(() => mockCancelRegistration('reg-1')).thenAnswer(
-            (_) async => const Right(Nothing()),
-          );
+          when(
+            () => mockGetRegistrations(),
+          ).thenAnswer((_) async => Right([_mockRegistration]));
+          when(
+            () => mockGetEventById('event-1'),
+          ).thenAnswer((_) async => Right(_mockEvent));
+          when(
+            () => mockCancelRegistration('reg-1'),
+          ).thenAnswer((_) async => const Right(Nothing()));
 
           await cubit.fetchMyRegistrations();
           await cubit.cancelRegistration('reg-1');
 
           verify(
-            () => mockAnalytics.logEvent(
-              AnalyticsEvents.registrationCancelled,
-            ),
+            () => mockAnalytics.logEvent(AnalyticsEvents.registrationCancelled),
           ).called(1);
         },
       );
@@ -276,12 +272,12 @@ void main() {
       test(
         'TC-reg-a5: cancelRegistration failure → registration_cancelled NOT fired',
         () async {
-          when(() => mockGetRegistrations()).thenAnswer(
-            (_) async => Right([_mockRegistration]),
-          );
-          when(() => mockGetEventById('event-1')).thenAnswer(
-            (_) async => Right(_mockEvent),
-          );
+          when(
+            () => mockGetRegistrations(),
+          ).thenAnswer((_) async => Right([_mockRegistration]));
+          when(
+            () => mockGetEventById('event-1'),
+          ).thenAnswer((_) async => Right(_mockEvent));
           when(() => mockCancelRegistration('reg-1')).thenAnswer(
             (_) async => const Left(DomainException(message: 'Error')),
           );
@@ -290,9 +286,7 @@ void main() {
           await cubit.cancelRegistration('reg-1');
 
           verifyNever(
-            () => mockAnalytics.logEvent(
-              AnalyticsEvents.registrationCancelled,
-            ),
+            () => mockAnalytics.logEvent(AnalyticsEvents.registrationCancelled),
           );
         },
       );

@@ -63,10 +63,7 @@ class EventStepIndicator extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 12, 24, 20),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: items,
-      ),
+      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: items),
     );
   }
 }

@@ -53,8 +53,9 @@ void main() {
     mockAnalytics = MockAnalyticsService();
     when(() => mockAnalytics.logEvent(any(), any())).thenAnswer((_) async {});
     when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
-    when(() => mockAnalytics.setUserProperty(any(), any()))
-        .thenAnswer((_) async {});
+    when(
+      () => mockAnalytics.setUserProperty(any(), any()),
+    ).thenAnswer((_) async {});
     cubit = VehicleCubit(
       mockGetVehicles,
       mockSetMain,
@@ -70,8 +71,9 @@ void main() {
     test(
       'TC-veh-a1: fetchMyVehicles con vehículos → setUserProperty has_vehicle=1',
       () async {
-        when(() => mockGetVehicles())
-            .thenAnswer((_) async => const Right([_vehicle1, _vehicle2]));
+        when(
+          () => mockGetVehicles(),
+        ).thenAnswer((_) async => const Right([_vehicle1, _vehicle2]));
 
         await cubit.fetchMyVehicles();
 
@@ -88,8 +90,7 @@ void main() {
     test(
       'TC-veh-a2: fetchMyVehicles con lista vacía → setUserProperty has_vehicle=0',
       () async {
-        when(() => mockGetVehicles())
-            .thenAnswer((_) async => const Right([]));
+        when(() => mockGetVehicles()).thenAnswer((_) async => const Right([]));
 
         await cubit.fetchMyVehicles();
 
@@ -106,8 +107,9 @@ void main() {
     test(
       'TC-veh-a3: setMainVehicle exitoso → vehicle_set_main emitido',
       () async {
-        when(() => mockGetVehicles())
-            .thenAnswer((_) async => const Right([_vehicle1, _vehicle2]));
+        when(
+          () => mockGetVehicles(),
+        ).thenAnswer((_) async => const Right([_vehicle1, _vehicle2]));
         when(() => mockSetMain('v2')).thenAnswer(
           (_) async => const Right(
             VehicleModel(
@@ -132,8 +134,9 @@ void main() {
     test(
       'TC-veh-a4: G2 — valor de has_vehicle es solo 0 o 1, sin PII',
       () async {
-        when(() => mockGetVehicles())
-            .thenAnswer((_) async => const Right([_vehicle1]));
+        when(
+          () => mockGetVehicles(),
+        ).thenAnswer((_) async => const Right([_vehicle1]));
 
         await cubit.fetchMyVehicles();
 
@@ -153,15 +156,12 @@ void main() {
       'TC-veh-a5: fetchMyVehicles con error → setUserProperty NO emitido',
       () async {
         when(() => mockGetVehicles()).thenAnswer(
-          (_) async =>
-              const Left(DomainException(message: 'Error de red')),
+          (_) async => const Left(DomainException(message: 'Error de red')),
         );
 
         await cubit.fetchMyVehicles();
 
-        verifyNever(
-          () => mockAnalytics.setUserProperty(any(), any()),
-        );
+        verifyNever(() => mockAnalytics.setUserProperty(any(), any()));
       },
     );
   });

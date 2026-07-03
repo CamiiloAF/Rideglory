@@ -139,8 +139,7 @@ void main() {
         ).thenAnswer((_) async => Right(existingRtm));
       },
       build: () => cubit,
-      act: (c) =>
-          c.save(vehicleId: vehicleId, tecnomecanica: existingRtm),
+      act: (c) => c.save(vehicleId: vehicleId, tecnomecanica: existingRtm),
       expect: () => [
         const ResultState<TecnomecanicaModel>.loading(),
         predicate<ResultState<TecnomecanicaModel>>(
@@ -159,8 +158,7 @@ void main() {
             tecnomecanica: any(named: 'tecnomecanica'),
           ),
         ).thenAnswer(
-          (_) async =>
-              const Left(DomainException(message: 'Guardado fallido')),
+          (_) async => const Left(DomainException(message: 'Guardado fallido')),
         );
       },
       build: () => cubit,
@@ -196,8 +194,7 @@ void main() {
       'TC-cubit-07: delete() emits error on failure',
       setUp: () {
         when(() => mockDeleteUseCase(vehicleId)).thenAnswer(
-          (_) async =>
-              const Left(DomainException(message: 'Borrado fallido')),
+          (_) async => const Left(DomainException(message: 'Borrado fallido')),
         );
       },
       build: () => cubit,
@@ -245,7 +242,8 @@ void main() {
         await cubit.save(vehicleId: vehicleId, tecnomecanica: newRtm);
 
         verify(
-          () => mockAnalytics.logEvent(AnalyticsEvents.tecnomecanicaManualSaved),
+          () =>
+              mockAnalytics.logEvent(AnalyticsEvents.tecnomecanicaManualSaved),
         ).called(1);
       },
     );
@@ -292,20 +290,17 @@ void main() {
             tecnomecanica: any(named: 'tecnomecanica'),
           ),
         ).thenAnswer(
-          (_) async =>
-              const Left(DomainException(message: 'Guardado fallido')),
+          (_) async => const Left(DomainException(message: 'Guardado fallido')),
         );
 
         await cubit.save(vehicleId: vehicleId, tecnomecanica: existingRtm);
 
         verifyNever(
-          () =>
-              mockAnalytics.logEvent(AnalyticsEvents.tecnomecanicaUpdated),
+          () => mockAnalytics.logEvent(AnalyticsEvents.tecnomecanicaUpdated),
         );
         verifyNever(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.tecnomecanicaManualSaved,
-          ),
+          () =>
+              mockAnalytics.logEvent(AnalyticsEvents.tecnomecanicaManualSaved),
         );
       },
     );
@@ -314,8 +309,7 @@ void main() {
       'TC-cubit-a6: delete con error → tecnomecanica_deleted NO emitido',
       () async {
         when(() => mockDeleteUseCase(vehicleId)).thenAnswer(
-          (_) async =>
-              const Left(DomainException(message: 'Borrado fallido')),
+          (_) async => const Left(DomainException(message: 'Borrado fallido')),
         );
 
         await cubit.delete(vehicleId);

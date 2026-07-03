@@ -36,8 +36,7 @@ import 'package:rideglory/shared/router/app_routes.dart';
 class MockSoatCubit extends MockCubit<ResultState<SoatModel>>
     implements SoatCubit {}
 
-class MockTecnomecanicaCubit
-    extends MockCubit<ResultState<TecnomecanicaModel>>
+class MockTecnomecanicaCubit extends MockCubit<ResultState<TecnomecanicaModel>>
     implements TecnomecanicaCubit {}
 
 class MockSoatUploadCubit extends MockCubit<SoatUploadState>
@@ -58,7 +57,11 @@ class _RouteNameSpy extends NavigatorObserver {
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 
-const _vehicle = VehicleModel(id: 'v-tap-1', name: 'Tap Moto', currentMileage: 0);
+const _vehicle = VehicleModel(
+  id: 'v-tap-1',
+  name: 'Tap Moto',
+  currentMileage: 0,
+);
 
 final soatValid = SoatModel(
   id: 's-tap',
@@ -92,9 +95,7 @@ Widget _wrapWithRouter(
     routes: [
       GoRoute(
         path: '/',
-        builder: (_, s) => Scaffold(
-          body: SingleChildScrollView(child: card),
-        ),
+        builder: (_, s) => Scaffold(body: SingleChildScrollView(child: card)),
         routes: [
           GoRoute(
             path: 'soat/status',
@@ -147,7 +148,8 @@ void main() {
 
     final gi = GetIt.instance;
     if (gi.isRegistered<SoatCubit>()) gi.unregister<SoatCubit>();
-    if (gi.isRegistered<TecnomecanicaCubit>()) gi.unregister<TecnomecanicaCubit>();
+    if (gi.isRegistered<TecnomecanicaCubit>())
+      gi.unregister<TecnomecanicaCubit>();
     if (gi.isRegistered<SoatUploadCubit>()) gi.unregister<SoatUploadCubit>();
     gi.registerFactory<SoatCubit>(() => soatCubit);
     gi.registerFactory<TecnomecanicaCubit>(() => rtmCubit);
@@ -157,7 +159,8 @@ void main() {
   tearDown(() {
     final gi = GetIt.instance;
     if (gi.isRegistered<SoatCubit>()) gi.unregister<SoatCubit>();
-    if (gi.isRegistered<TecnomecanicaCubit>()) gi.unregister<TecnomecanicaCubit>();
+    if (gi.isRegistered<TecnomecanicaCubit>())
+      gi.unregister<TecnomecanicaCubit>();
     if (gi.isRegistered<SoatUploadCubit>()) gi.unregister<SoatUploadCubit>();
   });
 
@@ -166,8 +169,7 @@ void main() {
   testWidgets(
     'C6a — SOAT card with data: tap navigates to AppRoutes.soatStatus',
     (tester) async {
-      when(() => soatCubit.state)
-          .thenReturn(ResultState.data(data: soatValid));
+      when(() => soatCubit.state).thenReturn(ResultState.data(data: soatValid));
       when(() => rtmCubit.state).thenReturn(const ResultState.initial());
 
       final spy = _RouteNameSpy();
@@ -203,50 +205,48 @@ void main() {
 
   // ── C6b: SOAT empty taps → SoatEntryFlow.start (bottom sheet) ────────────
 
-  testWidgets(
-    'C6b — SOAT card empty: tap invokes SoatEntryFlow.start '
-    '(bottom sheet opens, NOT a pushNamed to soatStatus)',
-    (tester) async {
-      when(() => soatCubit.state).thenReturn(const ResultState.empty());
-      when(() => rtmCubit.state).thenReturn(const ResultState.initial());
+  testWidgets('C6b — SOAT card empty: tap invokes SoatEntryFlow.start '
+      '(bottom sheet opens, NOT a pushNamed to soatStatus)', (tester) async {
+    when(() => soatCubit.state).thenReturn(const ResultState.empty());
+    when(() => rtmCubit.state).thenReturn(const ResultState.initial());
 
-      final spy = _RouteNameSpy();
+    final spy = _RouteNameSpy();
 
-      await tester.pumpWidget(
-        _wrapWithRouter(
-          const VehicleDocumentCard(
-            kind: VehicleDocumentKind.soat,
-            vehicle: _vehicle,
-          ),
-          soatCubit: soatCubit,
-          rtmCubit: rtmCubit,
-          spy: spy,
+    await tester.pumpWidget(
+      _wrapWithRouter(
+        const VehicleDocumentCard(
+          kind: VehicleDocumentKind.soat,
+          vehicle: _vehicle,
         ),
-      );
-      await tester.pumpAndSettle();
+        soatCubit: soatCubit,
+        rtmCubit: rtmCubit,
+        spy: spy,
+      ),
+    );
+    await tester.pumpAndSettle();
 
-      await tester.tap(find.byType(InkWell).first);
-      await tester.pump(); // let the bottom sheet animate one frame
+    await tester.tap(find.byType(InkWell).first);
+    await tester.pump(); // let the bottom sheet animate one frame
 
-      // SoatEntryFlow.start opens a ModalBottomSheet — verify the sheet is
-      // present rather than a named route push to soatStatus.
-      // This distinction matters: a wrong branch would push soatStatus even
-      // when there is no SOAT yet.
-      expect(
-        spy.pushed,
-        isNot(contains(AppRoutes.soatStatus)),
-        reason: 'SOAT-empty tap must NOT push soatStatus directly; '
-            'it must open SoatEntryFlow (bottom sheet first)',
-      );
-      // The bottom sheet route is an anonymous route (no name) — its presence
-      // on the overlay confirms SoatEntryFlow.start was invoked.
-      expect(
-        find.byType(BottomSheet),
-        findsOneWidget,
-        reason: 'SoatEntryFlow.start must open a ModalBottomSheet',
-      );
-    },
-  );
+    // SoatEntryFlow.start opens a ModalBottomSheet — verify the sheet is
+    // present rather than a named route push to soatStatus.
+    // This distinction matters: a wrong branch would push soatStatus even
+    // when there is no SOAT yet.
+    expect(
+      spy.pushed,
+      isNot(contains(AppRoutes.soatStatus)),
+      reason:
+          'SOAT-empty tap must NOT push soatStatus directly; '
+          'it must open SoatEntryFlow (bottom sheet first)',
+    );
+    // The bottom sheet route is an anonymous route (no name) — its presence
+    // on the overlay confirms SoatEntryFlow.start was invoked.
+    expect(
+      find.byType(BottomSheet),
+      findsOneWidget,
+      reason: 'SoatEntryFlow.start must open a ModalBottomSheet',
+    );
+  });
 
   // ── C6c: RTM taps → tecnomecanicaStatus route ─────────────────────────────
 
@@ -254,8 +254,7 @@ void main() {
     'C6c — RTM card with data: tap navigates to AppRoutes.tecnomecanicaStatus',
     (tester) async {
       when(() => soatCubit.state).thenReturn(const ResultState.initial());
-      when(() => rtmCubit.state)
-          .thenReturn(ResultState.data(data: _rtmValid));
+      when(() => rtmCubit.state).thenReturn(ResultState.data(data: _rtmValid));
 
       final spy = _RouteNameSpy();
 

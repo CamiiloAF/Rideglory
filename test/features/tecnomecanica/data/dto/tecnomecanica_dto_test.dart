@@ -40,11 +40,14 @@ void main() {
       expect(dto.documentUrl, isNull);
     });
 
-    test('TC-dto-03: TecnomecanicaDto is a TecnomecanicaModel (Pattern B inheritance)', () {
-      final dto = TecnomecanicaDto.fromJson(json);
-      expect(dto, isA<TecnomecanicaDto>());
-      expect(dto.runtimeType.toString(), contains('TecnomecanicaDto'));
-    });
+    test(
+      'TC-dto-03: TecnomecanicaDto is a TecnomecanicaModel (Pattern B inheritance)',
+      () {
+        final dto = TecnomecanicaDto.fromJson(json);
+        expect(dto, isA<TecnomecanicaDto>());
+        expect(dto.runtimeType.toString(), contains('TecnomecanicaDto'));
+      },
+    );
   });
 
   group('CreateTecnomecanicaRequestDto — toJson', () {
@@ -76,15 +79,18 @@ void main() {
       expect(json['documentUrl'], 'https://example.com/doc.pdf');
     });
 
-    test('TC-dto-06: toJson does not include id or vehicleId (write DTO only)', () {
-      final dto = CreateTecnomecanicaRequestDto(
-        cdaName: 'CDA Test',
-        startDate: DateTime(2026, 1, 1),
-        expiryDate: DateTime(2026, 6, 30),
-      );
-      final json = dto.toJson();
-      expect(json.containsKey('id'), isFalse);
-      expect(json.containsKey('vehicleId'), isFalse);
-    });
+    test(
+      'TC-dto-06: toJson does not include id or vehicleId (write DTO only)',
+      () {
+        final dto = CreateTecnomecanicaRequestDto(
+          cdaName: 'CDA Test',
+          startDate: DateTime(2026, 1, 1),
+          expiryDate: DateTime(2026, 6, 30),
+        );
+        final json = dto.toJson();
+        expect(json.containsKey('id'), isFalse);
+        expect(json.containsKey('vehicleId'), isFalse);
+      },
+    );
   });
 }

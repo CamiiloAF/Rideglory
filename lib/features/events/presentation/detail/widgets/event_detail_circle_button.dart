@@ -19,7 +19,9 @@ class EventDetailCircleButton extends StatelessWidget {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: AppColors.darkBgPrimary.withValues(alpha: 0.6), // #0D0D0F with 60% opacity
+          color: AppColors.darkBgPrimary.withValues(
+            alpha: 0.6,
+          ), // #0D0D0F with 60% opacity
           borderRadius: BorderRadius.circular(20),
         ),
         child: Icon(icon, color: AppColors.textOnDarkPrimary, size: 20),

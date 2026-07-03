@@ -22,7 +22,8 @@ class HomeEventCardImage extends StatelessWidget {
                   imageUrl: event.imageUrl!,
                   fit: BoxFit.cover,
                   placeholder: (_, _) => const HomeEventCardImagePlaceholder(),
-                  errorWidget: (_, _, _) => const HomeEventCardImagePlaceholder(),
+                  errorWidget: (_, _, _) =>
+                      const HomeEventCardImagePlaceholder(),
                 )
               : const HomeEventCardImagePlaceholder(),
           Positioned(

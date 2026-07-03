@@ -53,4 +53,3 @@ extension ThemeExtension on BuildContext {
   TextStyle? get labelMedium => textTheme.labelMedium;
   TextStyle? get labelSmall => textTheme.labelSmall;
 }
-

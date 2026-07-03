@@ -25,8 +25,7 @@ class EventDetailOwnerLiveBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: AppColors.errorSubtle,
                 borderRadius: BorderRadius.circular(20),
@@ -72,14 +71,19 @@ class EventDetailOwnerLiveBar extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 22),
             decoration: BoxDecoration(
-              color: Colors.transparent, // Intentional: outlined button with no fill
+              color: Colors
+                  .transparent, // Intentional: outlined button with no fill
               borderRadius: BorderRadius.circular(25),
               border: Border.all(color: AppColors.primary, width: 1.5),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.map_outlined, color: AppColors.primary, size: 16),
+                const Icon(
+                  Icons.map_outlined,
+                  color: AppColors.primary,
+                  size: 16,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   context.l10n.event_viewMap,
@@ -113,16 +117,18 @@ class EventDetailOwnerLiveBar extends StatelessWidget {
                       height: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor:
-                            AlwaysStoppedAnimation(AppColors.error),
+                        valueColor: AlwaysStoppedAnimation(AppColors.error),
                       ),
                     ),
                   )
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.stop_rounded,
-                          color: AppColors.error, size: 16),
+                      const Icon(
+                        Icons.stop_rounded,
+                        color: AppColors.error,
+                        size: 16,
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         context.l10n.event_stopEvent,

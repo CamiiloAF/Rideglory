@@ -24,8 +24,7 @@ import 'package:rideglory/l10n/app_localizations.dart';
 // VehicleDocumentCubit always starts in initial(). The fake exposes
 // a [push] method so tests can drive it to any state without real use cases.
 
-class _FakeVehicleDocumentCubit
-    extends VehicleDocumentCubit<SoatModel> {
+class _FakeVehicleDocumentCubit extends VehicleDocumentCubit<SoatModel> {
   @override
   Future<void> load(String vehicleId) async {}
 
@@ -35,18 +34,18 @@ class _FakeVehicleDocumentCubit
 // ---------- Wrapper helper ----------
 
 Widget _wrap(Widget child) => MaterialApp(
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.dark,
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [Locale('es')],
-      home: Scaffold(body: child),
-    );
+  theme: AppTheme.lightTheme,
+  darkTheme: AppTheme.darkTheme,
+  themeMode: ThemeMode.dark,
+  localizationsDelegates: const [
+    AppLocalizations.delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+  ],
+  supportedLocales: const [Locale('es')],
+  home: Scaffold(body: child),
+);
 
 void main() {
   // ----------------------------------------------------------------
@@ -85,16 +84,16 @@ void main() {
   group('DocumentDetailRow', () {
     testWidgets('renders label and value', (tester) async {
       await tester.pumpWidget(
-        _wrap(
-          const DocumentDetailRow(label: 'Aseguradora', value: 'Sura'),
-        ),
+        _wrap(const DocumentDetailRow(label: 'Aseguradora', value: 'Sura')),
       );
 
       expect(find.text('Aseguradora'), findsOneWidget);
       expect(find.text('Sura'), findsOneWidget);
     });
 
-    testWidgets('isLast: false applies non-zero bottom padding', (tester) async {
+    testWidgets('isLast: false applies non-zero bottom padding', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         _wrap(
           const DocumentDetailRow(
@@ -109,10 +108,7 @@ void main() {
       final paddingFinder = find.byType(Padding);
       // The first Padding is the root of DocumentDetailRow
       final padding = tester.widget<Padding>(paddingFinder.first);
-      expect(
-        (padding.padding as EdgeInsets).bottom,
-        12.0,
-      );
+      expect((padding.padding as EdgeInsets).bottom, 12.0);
     });
 
     testWidgets('isLast: true applies zero bottom padding', (tester) async {
@@ -128,10 +124,7 @@ void main() {
 
       final paddingFinder = find.byType(Padding);
       final padding = tester.widget<Padding>(paddingFinder.first);
-      expect(
-        (padding.padding as EdgeInsets).bottom,
-        0.0,
-      );
+      expect((padding.padding as EdgeInsets).bottom, 0.0);
     });
   });
 
@@ -274,38 +267,36 @@ void main() {
   // ----------------------------------------------------------------
 
   group('DocumentValidityCard', () {
-    testWidgets('without dates → renders pending state (shield icon)',
-        (tester) async {
+    testWidgets('without dates → renders pending state (shield icon)', (
+      tester,
+    ) async {
       await tester.pumpWidget(
-        _wrap(
-          const DocumentValidityCard(startDate: null, expiryDate: null),
-        ),
+        _wrap(const DocumentValidityCard(startDate: null, expiryDate: null)),
       );
 
       // ValidityCardPending renders shield_outlined
       expect(find.byIcon(Icons.shield_outlined), findsOneWidget);
     });
 
-    testWidgets('startDate == expiryDate → renders invalid dates (error_outline icon)',
-        (tester) async {
-      final date = DateTime(2025, 1, 1);
-      await tester.pumpWidget(
-        _wrap(
-          DocumentValidityCard(startDate: date, expiryDate: date),
-        ),
-      );
+    testWidgets(
+      'startDate == expiryDate → renders invalid dates (error_outline icon)',
+      (tester) async {
+        final date = DateTime(2025, 1, 1);
+        await tester.pumpWidget(
+          _wrap(DocumentValidityCard(startDate: date, expiryDate: date)),
+        );
 
-      expect(find.byIcon(Icons.error_outline), findsOneWidget);
-    });
+        expect(find.byIcon(Icons.error_outline), findsOneWidget);
+      },
+    );
 
-    testWidgets('expiryDate in the past → renders expired state',
-        (tester) async {
+    testWidgets('expiryDate in the past → renders expired state', (
+      tester,
+    ) async {
       final start = DateTime(2023, 1, 1);
       final expiry = DateTime(2023, 6, 1);
       await tester.pumpWidget(
-        _wrap(
-          DocumentValidityCard(startDate: start, expiryDate: expiry),
-        ),
+        _wrap(DocumentValidityCard(startDate: start, expiryDate: expiry)),
       );
 
       // ValidityCardExpired uses shield_outlined icon and "vencido" text
@@ -313,18 +304,18 @@ void main() {
       expect(find.textContaining('vencid'), findsOneWidget);
     });
 
-    testWidgets('expiryDate in the future → renders valid state (verified_user icon)',
-        (tester) async {
-      final start = DateTime.now().subtract(const Duration(days: 30));
-      final expiry = DateTime.now().add(const Duration(days: 90));
-      await tester.pumpWidget(
-        _wrap(
-          DocumentValidityCard(startDate: start, expiryDate: expiry),
-        ),
-      );
+    testWidgets(
+      'expiryDate in the future → renders valid state (verified_user icon)',
+      (tester) async {
+        final start = DateTime.now().subtract(const Duration(days: 30));
+        final expiry = DateTime.now().add(const Duration(days: 90));
+        await tester.pumpWidget(
+          _wrap(DocumentValidityCard(startDate: start, expiryDate: expiry)),
+        );
 
-      expect(find.byIcon(Icons.verified_user_outlined), findsOneWidget);
-    });
+        expect(find.byIcon(Icons.verified_user_outlined), findsOneWidget);
+      },
+    );
   });
 
   // ----------------------------------------------------------------
@@ -332,32 +323,32 @@ void main() {
   // ----------------------------------------------------------------
 
   group('DocumentStatusView', () {
-    Widget buildStatusView(_FakeVehicleDocumentCubit cubit) =>
-        MaterialApp(
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: ThemeMode.dark,
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [Locale('es')],
-          home: BlocProvider<_FakeVehicleDocumentCubit>.value(
-            value: cubit,
-            child: DocumentStatusView<_FakeVehicleDocumentCubit, SoatModel>(
-              title: 'SOAT',
-              vehicle: null,
-              buildEmpty: (ctx) => const Text('empty-widget'),
-              buildData: (ctx, data) => Text('data-${data.id}'),
-              onRetry: () {},
-            ),
-          ),
-        );
+    Widget buildStatusView(_FakeVehicleDocumentCubit cubit) => MaterialApp(
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.dark,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('es')],
+      home: BlocProvider<_FakeVehicleDocumentCubit>.value(
+        value: cubit,
+        child: DocumentStatusView<_FakeVehicleDocumentCubit, SoatModel>(
+          title: 'SOAT',
+          vehicle: null,
+          buildEmpty: (ctx) => const Text('empty-widget'),
+          buildData: (ctx, data) => Text('data-${data.id}'),
+          onRetry: () {},
+        ),
+      ),
+    );
 
-    testWidgets('loading state renders CircularProgressIndicator',
-        (tester) async {
+    testWidgets('loading state renders CircularProgressIndicator', (
+      tester,
+    ) async {
       final cubit = _FakeVehicleDocumentCubit();
       cubit.push(const ResultState.loading());
       await tester.pumpWidget(buildStatusView(cubit));

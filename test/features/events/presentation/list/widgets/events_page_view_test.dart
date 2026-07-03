@@ -63,107 +63,119 @@ void main() {
     mockRegistrationsCubit = MockMyRegistrationsCubit();
     when(() => mockEventsCubit.filters).thenReturn(const EventFilters());
     when(() => mockEventsCubit.stream).thenAnswer((_) => const Stream.empty());
-    when(() => mockEventDeleteCubit.stream).thenAnswer((_) => const Stream.empty());
-    when(() => mockEventDeleteCubit.state).thenReturn(
-      const ResultState<String>.initial(),
-    );
+    when(
+      () => mockEventDeleteCubit.stream,
+    ).thenAnswer((_) => const Stream.empty());
+    when(
+      () => mockEventDeleteCubit.state,
+    ).thenReturn(const ResultState<String>.initial());
     when(() => mockAuthCubit.stream).thenAnswer((_) => const Stream.empty());
-    when(() => mockAuthCubit.state).thenReturn(
-      const AuthState.unauthenticated(),
-    );
-    when(() => mockRegistrationsCubit.stream)
-        .thenAnswer((_) => const Stream.empty());
-    when(() => mockRegistrationsCubit.state).thenReturn(
-      const ResultState.initial(),
-    );
+    when(
+      () => mockAuthCubit.state,
+    ).thenReturn(const AuthState.unauthenticated());
+    when(
+      () => mockRegistrationsCubit.stream,
+    ).thenAnswer((_) => const Stream.empty());
+    when(
+      () => mockRegistrationsCubit.state,
+    ).thenReturn(const ResultState.initial());
   });
 
   group('EventsPageView — Empty State Tests (US-2-1, US-2-2)', () {
     // TC-2-21: Filtered empty state shows "No hay eventos con estos filtros"
-    testWidgets(
-      'TC-2-21: Filtered empty state shows filtered empty message',
-      (WidgetTester tester) async {
-        when(() => mockEventsCubit.filters).thenReturn(
-          const EventFilters(types: {EventType.onRoad}),
-        );
-        when(() => mockEventsCubit.state).thenReturn(
-          const ResultState.empty(),
-        );
+    testWidgets('TC-2-21: Filtered empty state shows filtered empty message', (
+      WidgetTester tester,
+    ) async {
+      when(
+        () => mockEventsCubit.filters,
+      ).thenReturn(const EventFilters(types: {EventType.onRoad}));
+      when(() => mockEventsCubit.state).thenReturn(const ResultState.empty());
 
-        await tester.pumpWidget(
-          _buildTestWidget(mockEventsCubit, mockEventDeleteCubit, mockAuthCubit, mockRegistrationsCubit),
-        );
-        await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        _buildTestWidget(
+          mockEventsCubit,
+          mockEventDeleteCubit,
+          mockAuthCubit,
+          mockRegistrationsCubit,
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        expect(
-          find.text('No hay eventos con estos filtros'),
-          findsWidgets,
-          reason: 'Empty state should show filtered message when filters active',
-        );
-      },
-    );
+      expect(
+        find.text('No hay eventos con estos filtros'),
+        findsWidgets,
+        reason: 'Empty state should show filtered message when filters active',
+      );
+    });
 
     // TC-2-22: All-events empty state shows original message
-    testWidgets(
-      'TC-2-22: All-events empty state shows original message',
-      (WidgetTester tester) async {
-        when(() => mockEventsCubit.filters).thenReturn(const EventFilters());
-        when(() => mockEventsCubit.state).thenReturn(
-          const ResultState.empty(),
-        );
+    testWidgets('TC-2-22: All-events empty state shows original message', (
+      WidgetTester tester,
+    ) async {
+      when(() => mockEventsCubit.filters).thenReturn(const EventFilters());
+      when(() => mockEventsCubit.state).thenReturn(const ResultState.empty());
 
-        await tester.pumpWidget(
-          _buildTestWidget(mockEventsCubit, mockEventDeleteCubit, mockAuthCubit, mockRegistrationsCubit),
-        );
-        await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        _buildTestWidget(
+          mockEventsCubit,
+          mockEventDeleteCubit,
+          mockAuthCubit,
+          mockRegistrationsCubit,
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        expect(
-          find.text('No hay eventos con estos filtros'),
-          findsNothing,
-          reason: 'Empty state should not show filtered message when no filters',
-        );
-      },
-    );
+      expect(
+        find.text('No hay eventos con estos filtros'),
+        findsNothing,
+        reason: 'Empty state should not show filtered message when no filters',
+      );
+    });
 
     // TC-2-23: Filtered empty state shows clear filters button
-    testWidgets(
-      'TC-2-23: Filtered empty state shows clear filters button',
-      (WidgetTester tester) async {
-        when(() => mockEventsCubit.filters).thenReturn(
-          const EventFilters(types: {EventType.onRoad}),
-        );
-        when(() => mockEventsCubit.state).thenReturn(
-          const ResultState.empty(),
-        );
-        when(() => mockEventsCubit.clearFilters()).thenReturn(null);
+    testWidgets('TC-2-23: Filtered empty state shows clear filters button', (
+      WidgetTester tester,
+    ) async {
+      when(
+        () => mockEventsCubit.filters,
+      ).thenReturn(const EventFilters(types: {EventType.onRoad}));
+      when(() => mockEventsCubit.state).thenReturn(const ResultState.empty());
+      when(() => mockEventsCubit.clearFilters()).thenReturn(null);
 
-        await tester.pumpWidget(
-          _buildTestWidget(mockEventsCubit, mockEventDeleteCubit, mockAuthCubit, mockRegistrationsCubit),
-        );
-        await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        _buildTestWidget(
+          mockEventsCubit,
+          mockEventDeleteCubit,
+          mockAuthCubit,
+          mockRegistrationsCubit,
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        expect(
-          find.text('Limpiar filtros'),
-          findsWidgets,
-          reason: 'Filtered empty state should show clear filters button',
-        );
-      },
-    );
+      expect(
+        find.text('Limpiar filtros'),
+        findsWidgets,
+        reason: 'Filtered empty state should show clear filters button',
+      );
+    });
 
     // TC-2-24: Tapping clear filters in empty state calls clearFilters()
     testWidgets(
       'TC-2-24: Tapping clear filters in empty state calls clearFilters()',
       (WidgetTester tester) async {
-        when(() => mockEventsCubit.filters).thenReturn(
-          const EventFilters(types: {EventType.onRoad}),
-        );
-        when(() => mockEventsCubit.state).thenReturn(
-          const ResultState.empty(),
-        );
+        when(
+          () => mockEventsCubit.filters,
+        ).thenReturn(const EventFilters(types: {EventType.onRoad}));
+        when(() => mockEventsCubit.state).thenReturn(const ResultState.empty());
         when(() => mockEventsCubit.clearFilters()).thenReturn(null);
 
         await tester.pumpWidget(
-          _buildTestWidget(mockEventsCubit, mockEventDeleteCubit, mockAuthCubit, mockRegistrationsCubit),
+          _buildTestWidget(
+            mockEventsCubit,
+            mockEventDeleteCubit,
+            mockAuthCubit,
+            mockRegistrationsCubit,
+          ),
         );
         await tester.pumpAndSettle();
 
@@ -175,24 +187,26 @@ void main() {
     );
 
     // TC-2-25: Non-empty state does not show empty state message
-    testWidgets(
-      'TC-2-25: Data state shows events (not empty state)',
-      (WidgetTester tester) async {
-        when(() => mockEventsCubit.state).thenReturn(
-          const ResultState.loading(),
-        );
+    testWidgets('TC-2-25: Data state shows events (not empty state)', (
+      WidgetTester tester,
+    ) async {
+      when(() => mockEventsCubit.state).thenReturn(const ResultState.loading());
 
-        await tester.pumpWidget(
-          _buildTestWidget(mockEventsCubit, mockEventDeleteCubit, mockAuthCubit, mockRegistrationsCubit),
-        );
-        await tester.pump();
+      await tester.pumpWidget(
+        _buildTestWidget(
+          mockEventsCubit,
+          mockEventDeleteCubit,
+          mockAuthCubit,
+          mockRegistrationsCubit,
+        ),
+      );
+      await tester.pump();
 
-        expect(
-          find.text('No hay eventos con estos filtros'),
-          findsNothing,
-          reason: 'Should not show empty state when not in empty state',
-        );
-      },
-    );
+      expect(
+        find.text('No hay eventos con estos filtros'),
+        findsNothing,
+        reason: 'Should not show empty state when not in empty state',
+      );
+    });
   });
 }

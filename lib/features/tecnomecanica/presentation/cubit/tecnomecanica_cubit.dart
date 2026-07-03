@@ -27,21 +27,16 @@ class TecnomecanicaCubit extends VehicleDocumentCubit<TecnomecanicaModel> {
   Future<void> load(String vehicleId) async {
     emit(const ResultState.loading());
     final result = await _getTecnomecanicaUseCase(vehicleId);
-    result.fold(
-      (error) => emit(ResultState.error(error: error)),
-      (rtm) {
-        if (rtm == null) {
-          emit(const ResultState.empty());
-        } else {
-          _analytics
-              .logEvent(AnalyticsEvents.tecnomecanicaStatusViewed, {
-                AnalyticsParams.rtmStatus: rtm.documentStatus.name,
-              })
-              .ignore();
-          emit(ResultState.data(data: rtm));
-        }
-      },
-    );
+    result.fold((error) => emit(ResultState.error(error: error)), (rtm) {
+      if (rtm == null) {
+        emit(const ResultState.empty());
+      } else {
+        _analytics.logEvent(AnalyticsEvents.tecnomecanicaStatusViewed, {
+          AnalyticsParams.rtmStatus: rtm.documentStatus.name,
+        }).ignore();
+        emit(ResultState.data(data: rtm));
+      }
+    });
   }
 
   Future<bool> save({

@@ -51,9 +51,7 @@ class HomeScaffold extends StatelessWidget {
                       ),
                     )
                   else if (state is HomeLoaded) ...[
-                    const SliverToBoxAdapter(
-                      child: HomeGarageSection(),
-                    ),
+                    const SliverToBoxAdapter(child: HomeGarageSection()),
                     SliverToBoxAdapter(
                       child: HomeEventsSection(events: state.upcomingEvents),
                     ),

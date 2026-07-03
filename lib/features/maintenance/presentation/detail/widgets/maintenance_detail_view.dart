@@ -52,7 +52,9 @@ class _MaintenanceDetailViewState extends State<MaintenanceDetailView> {
         AppRoutes.editMaintenance,
         extra: _maintenance,
       );
-      final result = raw is List<MaintenanceModel> ? raw.first : raw as MaintenanceModel?;
+      final result = raw is List<MaintenanceModel>
+          ? raw.first
+          : raw as MaintenanceModel?;
       if (result != null && mounted) {
         setState(() {
           _maintenance = result;
@@ -69,7 +71,9 @@ class _MaintenanceDetailViewState extends State<MaintenanceDetailView> {
       AppRoutes.editMaintenance,
       extra: _maintenance,
     );
-    final result = raw is List<MaintenanceModel> ? raw.first : raw as MaintenanceModel?;
+    final result = raw is List<MaintenanceModel>
+        ? raw.first
+        : raw as MaintenanceModel?;
     if (result != null && mounted) {
       setState(() {
         _maintenance = result;
@@ -166,14 +170,17 @@ class _MaintenanceDetailViewState extends State<MaintenanceDetailView> {
               VehicleModel? vehicle;
               if (_maintenance.vehicleId != null) {
                 try {
-                  vehicle = context.read<VehicleCubit>().availableVehicles
+                  vehicle = context
+                      .read<VehicleCubit>()
+                      .availableVehicles
                       .firstWhere((v) => v.id == _maintenance.vehicleId);
                 } catch (_) {}
               }
 
               final hasNotes =
                   _maintenance.notes != null && _maintenance.notes!.isNotEmpty;
-              final hasNextService = _maintenance.nextDate != null ||
+              final hasNextService =
+                  _maintenance.nextDate != null ||
                   _maintenance.nextOdometer != null;
 
               return Column(
@@ -188,7 +195,8 @@ class _MaintenanceDetailViewState extends State<MaintenanceDetailView> {
                             maintenance: _maintenance,
                             vehicle: vehicle,
                           ),
-                          if (_maintenance.mode == MaintenanceMode.completed) ...[
+                          if (_maintenance.mode ==
+                              MaintenanceMode.completed) ...[
                             const SizedBox(height: 16),
                             MaintenanceInfoCard(maintenance: _maintenance),
                           ],

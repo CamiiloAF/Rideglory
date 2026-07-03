@@ -53,12 +53,16 @@ class GarageMaintenanceCard extends StatelessWidget {
 
   Color get _cardBg {
     if (!isNext) return AppColors.darkCard;
-    return isOverdue ? AppColors.statusError.withValues(alpha: 0.1) : AppColors.statusWarning.withValues(alpha: 0.06);
+    return isOverdue
+        ? AppColors.statusError.withValues(alpha: 0.1)
+        : AppColors.statusWarning.withValues(alpha: 0.06);
   }
 
   Color get _cardBorder {
     if (!isNext) return AppColors.darkBorderPrimary;
-    return isOverdue ? AppColors.statusError.withValues(alpha: 0.25) : AppColors.statusWarning.withValues(alpha: 0.19);
+    return isOverdue
+        ? AppColors.statusError.withValues(alpha: 0.25)
+        : AppColors.statusWarning.withValues(alpha: 0.19);
   }
 
   Color get _iconColor {
@@ -68,7 +72,9 @@ class GarageMaintenanceCard extends StatelessWidget {
 
   Color get _iconBg {
     if (!isNext) return AppColors.primarySubtle;
-    return isOverdue ? AppColors.statusError.withValues(alpha: 0.13) : AppColors.statusWarning.withValues(alpha: 0.13);
+    return isOverdue
+        ? AppColors.statusError.withValues(alpha: 0.13)
+        : AppColors.statusWarning.withValues(alpha: 0.13);
   }
 
   Color get _badgeColor {

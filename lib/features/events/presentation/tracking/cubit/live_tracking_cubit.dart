@@ -228,13 +228,11 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
 
         // Hito: arranque exitoso de tracking (una vez por sesión).
         // NO incluir coordenadas ni uid como parámetro.
-        _analyticsService
-            .logEvent(AnalyticsEvents.trackingSessionStarted, {
-              AnalyticsParams.trackingRole: role == RiderTrackingRole.lead
-                  ? AnalyticsParams.trackingRoleLead
-                  : AnalyticsParams.trackingRoleRider,
-            })
-            .ignore();
+        _analyticsService.logEvent(AnalyticsEvents.trackingSessionStarted, {
+          AnalyticsParams.trackingRole: role == RiderTrackingRole.lead
+              ? AnalyticsParams.trackingRoleLead
+              : AnalyticsParams.trackingRoleRider,
+        }).ignore();
 
         _accumulatedDistanceMeters = 0;
         _lastLatitude = position.latitude;
@@ -259,11 +257,9 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
   void _logSessionEnded(String endReason) {
     if (_sessionEndLogged) return;
     _sessionEndLogged = true;
-    _analyticsService
-        .logEvent(AnalyticsEvents.trackingSessionEnded, {
-          AnalyticsParams.trackingEndReason: endReason,
-        })
-        .ignore();
+    _analyticsService.logEvent(AnalyticsEvents.trackingSessionEnded, {
+      AnalyticsParams.trackingEndReason: endReason,
+    }).ignore();
   }
 
   void _listenPosition(LocationPermission geolocatorPermission) {
@@ -456,13 +452,11 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     // Hito SOS: el usuario activó un SOS propio. NUNCA lat/lng ni uid.
     _sosClearedLogged = false;
     _sosConfirmedLogged = false;
-    _analyticsService
-        .logEvent(AnalyticsEvents.sosActivated, {
-          AnalyticsParams.trackingRole: userId == _eventOwnerId
-              ? AnalyticsParams.trackingRoleLead
-              : AnalyticsParams.trackingRoleRider,
-        })
-        .ignore();
+    _analyticsService.logEvent(AnalyticsEvents.sosActivated, {
+      AnalyticsParams.trackingRole: userId == _eventOwnerId
+          ? AnalyticsParams.trackingRoleLead
+          : AnalyticsParams.trackingRoleRider,
+    }).ignore();
   }
 
   /// Deactivates the current user's own SOS (toggle off) and notifies peers via
@@ -474,12 +468,10 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
       // Hito SOS: cancelación propia (una vez por activación).
       if (!_sosClearedLogged) {
         _sosClearedLogged = true;
-        _analyticsService
-            .logEvent(AnalyticsEvents.sosCleared, {
-              AnalyticsParams.sosClearReason:
-                  AnalyticsParams.sosClearReasonUserCancel,
-            })
-            .ignore();
+        _analyticsService.logEvent(AnalyticsEvents.sosCleared, {
+          AnalyticsParams.sosClearReason:
+              AnalyticsParams.sosClearReasonUserCancel,
+        }).ignore();
       }
     }
     emit(state.copyWith(hasSentSos: false));
@@ -488,10 +480,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
   /// Called by the organizer to end the ride via the tracking repository.
   Future<void> endRide(String eventId) async {
     final result = await _trackingRepository.endRide(eventId);
-    result.fold(
-      (error) => developer.log('End ride failed: $error'),
-      (_) {},
-    );
+    result.fold((error) => developer.log('End ride failed: $error'), (_) {});
   }
 
   void _subscribeToSosAlerts() {
@@ -503,11 +492,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
         _sosConfirmedLogged = true;
         _analyticsService.logEvent(AnalyticsEvents.sosConfirmed).ignore();
       }
-      emit(
-        state.copyWith(
-          sosAlertResult: ResultState.data(data: alert),
-        ),
-      );
+      emit(state.copyWith(sosAlertResult: ResultState.data(data: alert)));
     });
   }
 
@@ -525,12 +510,10 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
       // Hito SOS: mi SOS fue limpiado remotamente (una vez por activación).
       if (clearsOwnSos && !_sosClearedLogged) {
         _sosClearedLogged = true;
-        _analyticsService
-            .logEvent(AnalyticsEvents.sosCleared, {
-              AnalyticsParams.sosClearReason:
-                  AnalyticsParams.sosClearReasonRemoteClear,
-            })
-            .ignore();
+        _analyticsService.logEvent(AnalyticsEvents.sosCleared, {
+          AnalyticsParams.sosClearReason:
+              AnalyticsParams.sosClearReasonRemoteClear,
+        }).ignore();
       }
       emit(
         state.copyWith(
@@ -602,11 +585,9 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
         // Una sola vez por sesión; param agregado (conteo), nunca ids/coords.
         if (!_snapshotLogged && riders.isNotEmpty) {
           _snapshotLogged = true;
-          _analyticsService
-              .logEvent(AnalyticsEvents.trackingSnapshotReceived, {
-                AnalyticsParams.riderCount: riders.length,
-              })
-              .ignore();
+          _analyticsService.logEvent(AnalyticsEvents.trackingSnapshotReceived, {
+            AnalyticsParams.riderCount: riders.length,
+          }).ignore();
         }
         emit(state.copyWith(ridersResult: ResultState.data(data: riders)));
       },

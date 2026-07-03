@@ -16,9 +16,9 @@ import 'package:rideglory/shared/widgets/form/app_button.dart';
 class _MockAnalyticsService extends Mock implements AnalyticsService {}
 
 Widget _wrap(Widget child) => MaterialApp(
-      theme: AppTheme.darkTheme,
-      home: Scaffold(body: child),
-    );
+  theme: AppTheme.darkTheme,
+  home: Scaffold(body: child),
+);
 
 void main() {
   late _MockAnalyticsService mockAnalytics;
@@ -76,12 +76,7 @@ void main() {
       var tapped = false;
 
       await tester.pumpWidget(
-        _wrap(
-          AppButton(
-            label: 'Tap me',
-            onPressed: () => tapped = true,
-          ),
-        ),
+        _wrap(AppButton(label: 'Tap me', onPressed: () => tapped = true)),
       );
 
       await tester.tap(find.byType(AppButton));

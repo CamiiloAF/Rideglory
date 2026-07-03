@@ -55,22 +55,24 @@ void main() {
   // ── Fase 2: verificación de constantes AnalyticsEvents ───────────────────
 
   group('evento soat_scan_attempted —', () {
-    test('usa la constante AnalyticsEvents.soatScanAttempted (no literal)',
-        () async {
-      when(
-        () => parseSoatText(any()),
-      ).thenReturn(const SoatExtraction.empty());
+    test(
+      'usa la constante AnalyticsEvents.soatScanAttempted (no literal)',
+      () async {
+        when(
+          () => parseSoatText(any()),
+        ).thenReturn(const SoatExtraction.empty());
 
-      await expectLater(
-        () => useCase(file: file, source: SoatScanSource.gallery),
-        throwsA(isA<SoatScanException>()),
-      );
+        await expectLater(
+          () => useCase(file: file, source: SoatScanSource.gallery),
+          throwsA(isA<SoatScanException>()),
+        );
 
-      // Verifica la constante, no el string literal directamente.
-      verify(
-        () => analytics.logEvent(AnalyticsEvents.soatScanAttempted),
-      ).called(1);
-    });
+        // Verifica la constante, no el string literal directamente.
+        verify(
+          () => analytics.logEvent(AnalyticsEvents.soatScanAttempted),
+        ).called(1);
+      },
+    );
   });
 
   group('evento soat_scan_success —', () {
@@ -85,50 +87,54 @@ void main() {
       );
     });
 
-    test('usa la constante AnalyticsEvents.soatScanSuccess (no literal)',
-        () async {
-      await useCase(file: file, source: SoatScanSource.gallery);
+    test(
+      'usa la constante AnalyticsEvents.soatScanSuccess (no literal)',
+      () async {
+        await useCase(file: file, source: SoatScanSource.gallery);
 
-      verify(
-        () => analytics.logEvent(AnalyticsEvents.soatScanSuccess, any()),
-      ).called(1);
-    });
+        verify(
+          () => analytics.logEvent(AnalyticsEvents.soatScanSuccess, any()),
+        ).called(1);
+      },
+    );
 
     test(
-        'insurer_detected es 1 (int) cuando hay aseguradora — no el nombre',
-        () async {
-      await useCase(file: file, source: SoatScanSource.gallery);
+      'insurer_detected es 1 (int) cuando hay aseguradora — no el nombre',
+      () async {
+        await useCase(file: file, source: SoatScanSource.gallery);
 
-      final captured =
-          verify(
-                () => analytics.logEvent(
-                  AnalyticsEvents.soatScanSuccess,
-                  captureAny(),
-                ),
-              ).captured.single
-              as Map<String, Object>;
+        final captured =
+            verify(
+                  () => analytics.logEvent(
+                    AnalyticsEvents.soatScanSuccess,
+                    captureAny(),
+                  ),
+                ).captured.single
+                as Map<String, Object>;
 
-      expect(
-        captured[AnalyticsParams.insurerDetected],
-        1,
-        reason: 'insurer_detected debe ser 1 cuando la aseguradora fue detectada',
-      );
-      expect(
-        captured[AnalyticsParams.insurerDetected],
-        isA<int>(),
-        reason: 'insurer_detected debe ser int, no bool ni String',
-      );
-      // Aserción negativa: nunca debe llegar el nombre de la aseguradora.
-      expect(
-        captured.values.whereType<String>().any(
-              (value) =>
-                  value.toUpperCase().contains('SURA') ||
-                  value.toUpperCase().contains('ASEGURADORA'),
-            ),
-        isFalse,
-        reason: 'El nombre de la aseguradora NO debe viajar en el payload',
-      );
-    });
+        expect(
+          captured[AnalyticsParams.insurerDetected],
+          1,
+          reason:
+              'insurer_detected debe ser 1 cuando la aseguradora fue detectada',
+        );
+        expect(
+          captured[AnalyticsParams.insurerDetected],
+          isA<int>(),
+          reason: 'insurer_detected debe ser int, no bool ni String',
+        );
+        // Aserción negativa: nunca debe llegar el nombre de la aseguradora.
+        expect(
+          captured.values.whereType<String>().any(
+            (value) =>
+                value.toUpperCase().contains('SURA') ||
+                value.toUpperCase().contains('ASEGURADORA'),
+          ),
+          isFalse,
+          reason: 'El nombre de la aseguradora NO debe viajar en el payload',
+        );
+      },
+    );
 
     test('insurer_detected es 0 cuando no hay aseguradora', () async {
       when(() => parseSoatText(any())).thenReturn(
@@ -207,44 +213,43 @@ void main() {
                 ),
               ).captured.single
               as Map<String, Object>;
-      expect(
-        captured[AnalyticsParams.fieldsExtractedCount],
-        isA<int>(),
-      );
+      expect(captured[AnalyticsParams.fieldsExtractedCount], isA<int>());
     });
   });
 
   group('evento soat_scan_failed —', () {
-    test('usa constante AnalyticsEvents.soatScanFailed con failureReason key',
-        () async {
-      when(
-        () => parseSoatText(any()),
-      ).thenReturn(const SoatExtraction(datesFailedValidation: true));
+    test(
+      'usa constante AnalyticsEvents.soatScanFailed con failureReason key',
+      () async {
+        when(
+          () => parseSoatText(any()),
+        ).thenReturn(const SoatExtraction(datesFailedValidation: true));
 
-      await expectLater(
-        () => useCase(file: file, source: SoatScanSource.gallery),
-        throwsA(
-          isA<SoatScanException>().having(
-            (exception) => exception.reason,
-            'reason',
-            SoatScanFailureReason.validationFailed,
+        await expectLater(
+          () => useCase(file: file, source: SoatScanSource.gallery),
+          throwsA(
+            isA<SoatScanException>().having(
+              (exception) => exception.reason,
+              'reason',
+              SoatScanFailureReason.validationFailed,
+            ),
           ),
-        ),
-      );
+        );
 
-      final captured =
-          verify(
-                () => analytics.logEvent(
-                  AnalyticsEvents.soatScanFailed,
-                  captureAny(),
-                ),
-              ).captured.single
-              as Map<String, Object>;
+        final captured =
+            verify(
+                  () => analytics.logEvent(
+                    AnalyticsEvents.soatScanFailed,
+                    captureAny(),
+                  ),
+                ).captured.single
+                as Map<String, Object>;
 
-      // Usa la clave de constante, no literal.
-      expect(captured.containsKey(AnalyticsParams.failureReason), isTrue);
-      expect(captured[AnalyticsParams.failureReason], 'validation_failed');
-    });
+        // Usa la clave de constante, no literal.
+        expect(captured.containsKey(AnalyticsParams.failureReason), isTrue);
+        expect(captured[AnalyticsParams.failureReason], 'validation_failed');
+      },
+    );
 
     test('emits validationFailed when dates failed the span rule', () async {
       when(
@@ -307,35 +312,37 @@ void main() {
 
   // ── Aserción negativa global: nunca un String de aseguradora en ningún
   // evento ────────────────────────────────────────────────────────────────────
-  test('ningún logEvent envía el nombre de la aseguradora como valor',
-      () async {
-    when(() => parseSoatText(any())).thenReturn(
-      const SoatExtraction(
-        insurer: 'SURA',
-        insurerConfidence: OcrFieldConfidence.high,
-        policyNumber: '0123456789',
-        policyNumberConfidence: OcrFieldConfidence.high,
-      ),
-    );
+  test(
+    'ningún logEvent envía el nombre de la aseguradora como valor',
+    () async {
+      when(() => parseSoatText(any())).thenReturn(
+        const SoatExtraction(
+          insurer: 'SURA',
+          insurerConfidence: OcrFieldConfidence.high,
+          policyNumber: '0123456789',
+          policyNumberConfidence: OcrFieldConfidence.high,
+        ),
+      );
 
-    await useCase(file: file, source: SoatScanSource.gallery);
+      await useCase(file: file, source: SoatScanSource.gallery);
 
-    final allCaptured = verify(
-      () => analytics.logEvent(any(), captureAny()),
-    ).captured;
+      final allCaptured = verify(
+        () => analytics.logEvent(any(), captureAny()),
+      ).captured;
 
-    for (final params in allCaptured) {
-      if (params is Map<String, Object>) {
-        for (final value in params.values) {
-          if (value is String) {
-            expect(
-              value.toUpperCase().contains('SURA'),
-              isFalse,
-              reason: 'El nombre de la aseguradora no debe viajar en eventos',
-            );
+      for (final params in allCaptured) {
+        if (params is Map<String, Object>) {
+          for (final value in params.values) {
+            if (value is String) {
+              expect(
+                value.toUpperCase().contains('SURA'),
+                isFalse,
+                reason: 'El nombre de la aseguradora no debe viajar en eventos',
+              );
+            }
           }
         }
       }
-    }
-  });
+    },
+  );
 }

@@ -69,15 +69,23 @@ class MaintenanceGroupedListItem extends StatelessWidget {
   };
 
   Color get _cardBorder => switch (status) {
-    MaintenanceItemStatus.overdue => AppColors.statusError.withValues(alpha: 0.19),
-    MaintenanceItemStatus.upcoming => AppColors.statusWarning.withValues(alpha: 0.19),
+    MaintenanceItemStatus.overdue => AppColors.statusError.withValues(
+      alpha: 0.19,
+    ),
+    MaintenanceItemStatus.upcoming => AppColors.statusWarning.withValues(
+      alpha: 0.19,
+    ),
     MaintenanceItemStatus.current => AppColors.darkBorderPrimary,
     MaintenanceItemStatus.completed => AppColors.darkBorderPrimary,
   };
 
   Color get _iconBackground => switch (status) {
-    MaintenanceItemStatus.overdue => AppColors.statusError.withValues(alpha: 0.13),
-    MaintenanceItemStatus.upcoming => AppColors.statusWarning.withValues(alpha: 0.13),
+    MaintenanceItemStatus.overdue => AppColors.statusError.withValues(
+      alpha: 0.13,
+    ),
+    MaintenanceItemStatus.upcoming => AppColors.statusWarning.withValues(
+      alpha: 0.13,
+    ),
     MaintenanceItemStatus.current => MaintenanceTypeStyle.color(
       maintenance.type,
     ).withValues(alpha: 0.12),

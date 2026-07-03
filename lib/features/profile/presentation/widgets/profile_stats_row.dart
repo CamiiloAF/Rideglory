@@ -28,7 +28,10 @@ class ProfileStatsRow extends StatelessWidget {
         const ProfileStatDivider(),
         ProfileStatCell(value: kmCount.toString(), label: kmLabel),
         const ProfileStatDivider(),
-        ProfileStatCell(value: followersCount.toString(), label: followersLabel),
+        ProfileStatCell(
+          value: followersCount.toString(),
+          label: followersLabel,
+        ),
       ],
     );
   }

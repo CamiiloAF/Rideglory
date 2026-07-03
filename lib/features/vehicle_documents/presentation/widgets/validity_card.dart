@@ -23,7 +23,9 @@ class DocumentValidityCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (startDate == null || expiryDate == null) {
-      return ValidityCardPending(label: context.l10n.vehicle_soat_status_pending);
+      return ValidityCardPending(
+        label: context.l10n.vehicle_soat_status_pending,
+      );
     }
 
     if (!startDate!.isBefore(expiryDate!)) {
@@ -46,7 +48,9 @@ class DocumentValidityCard extends StatelessWidget {
     if (daysRemaining < 0) {
       return ValidityCardExpired(
         title: context.l10n.vehicle_soat_status_expired_title,
-        desc: context.l10n.vehicle_soat_status_expired_desc(daysRemaining.abs()),
+        desc: context.l10n.vehicle_soat_status_expired_desc(
+          daysRemaining.abs(),
+        ),
       );
     }
 

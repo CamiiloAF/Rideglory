@@ -59,9 +59,7 @@ class GarageOptionsBottomSheet extends StatelessWidget {
                   ctx.pop();
                   ScaffoldMessenger.of(parentContext).showSnackBar(
                     SnackBar(
-                      content: Text(
-                        parentContext.l10n.vehicle_vehicleArchived,
-                      ),
+                      content: Text(parentContext.l10n.vehicle_vehicleArchived),
                       backgroundColor: AppColors.success,
                     ),
                   );
@@ -71,9 +69,7 @@ class GarageOptionsBottomSheet extends StatelessWidget {
                   ctx.pop();
                   ScaffoldMessenger.of(parentContext).showSnackBar(
                     SnackBar(
-                      content: Text(
-                        parentContext.l10n.vehicle_vehicleRestored,
-                      ),
+                      content: Text(parentContext.l10n.vehicle_vehicleRestored),
                       backgroundColor: AppColors.success,
                     ),
                   );
@@ -259,9 +255,8 @@ class GarageOptionsBottomSheet extends StatelessWidget {
               final confirm = await ConfirmationDialog.show(
                 context: parentContext,
                 title: parentContext.l10n.vehicle_archiveVehicleConfirmTitle,
-                content: parentContext.l10n.vehicle_archiveVehicleConfirmContent(
-                  vehicle.name,
-                ),
+                content: parentContext.l10n
+                    .vehicle_archiveVehicleConfirmContent(vehicle.name),
                 cancelLabel: parentContext.l10n.cancel,
                 confirmLabel: parentContext.l10n.vehicle_archiveConfirmButton,
                 confirmType: DialogActionType.primary,

@@ -32,12 +32,13 @@ class MaintenancesSummaryHeader extends StatelessWidget {
 
   DateTime? _nextFromList() {
     final now = DateTime.now();
-    final candidates = maintenances
-        .map((m) => m.nextDate)
-        .whereType<DateTime>()
-        .where((d) => d.isAfter(now))
-        .toList()
-      ..sort();
+    final candidates =
+        maintenances
+            .map((m) => m.nextDate)
+            .whereType<DateTime>()
+            .where((d) => d.isAfter(now))
+            .toList()
+          ..sort();
     return candidates.isEmpty ? null : candidates.first;
   }
 

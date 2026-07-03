@@ -33,8 +33,7 @@ class FirebaseAuthInterceptor extends Interceptor {
   ) async {
     if (err.response?.statusCode == 401) {
       try {
-        final freshToken =
-            await _firebaseAuth.currentUser?.getIdToken(true);
+        final freshToken = await _firebaseAuth.currentUser?.getIdToken(true);
         if (freshToken != null && freshToken.isNotEmpty) {
           final options = err.requestOptions;
           options.headers['Authorization'] = 'Bearer $freshToken';

@@ -44,17 +44,17 @@ void main() {
   const ownerId = 'owner-1';
 
   LiveTrackingCubit buildCubit() => LiveTrackingCubit(
-        eventId: 'evt-1',
-        eventOwnerId: ownerId,
-        watchActiveRidersUseCase: MockWatchActiveRidersUseCase(),
-        startTrackingUseCase: MockStartTrackingUseCase(),
-        updateLocationUseCase: MockUpdateLocationUseCase(),
-        stopTrackingUseCase: MockStopTrackingUseCase(),
-        getRiderProfileUseCase: MockGetRiderProfileUseCase(),
-        authService: MockAuthService(),
-        trackingRepository: repo,
-        analyticsService: analytics,
-      );
+    eventId: 'evt-1',
+    eventOwnerId: ownerId,
+    watchActiveRidersUseCase: MockWatchActiveRidersUseCase(),
+    startTrackingUseCase: MockStartTrackingUseCase(),
+    updateLocationUseCase: MockUpdateLocationUseCase(),
+    stopTrackingUseCase: MockStopTrackingUseCase(),
+    getRiderProfileUseCase: MockGetRiderProfileUseCase(),
+    authService: MockAuthService(),
+    trackingRepository: repo,
+    analyticsService: analytics,
+  );
 
   setUp(() {
     repo = MockTrackingRepository();
@@ -124,18 +124,20 @@ void main() {
       verifyNever(() => analytics.logEvent(AnalyticsEvents.sosConfirmed));
     });
 
-    test('clear remoto de mi SOS emite sos_cleared (remote_clear) 1 vez',
-        () async {
-      cubit.triggerSos(); // hasSentSos = true
-      sosClearedController.add(userId);
-      await Future<void>.delayed(Duration.zero);
+    test(
+      'clear remoto de mi SOS emite sos_cleared (remote_clear) 1 vez',
+      () async {
+        cubit.triggerSos(); // hasSentSos = true
+        sosClearedController.add(userId);
+        await Future<void>.delayed(Duration.zero);
 
-      verify(
-        () => analytics.logEvent(AnalyticsEvents.sosCleared, {
-          AnalyticsParams.sosClearReason:
-              AnalyticsParams.sosClearReasonRemoteClear,
-        }),
-      ).called(1);
-    });
+        verify(
+          () => analytics.logEvent(AnalyticsEvents.sosCleared, {
+            AnalyticsParams.sosClearReason:
+                AnalyticsParams.sosClearReasonRemoteClear,
+          }),
+        ).called(1);
+      },
+    );
   });
 }

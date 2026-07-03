@@ -70,7 +70,9 @@ class EventDetailApprovedBar extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.errorSubtle,
                 borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppColors.statusError.withValues(alpha: 0.35)),
+                border: Border.all(
+                  color: AppColors.statusError.withValues(alpha: 0.35),
+                ),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,

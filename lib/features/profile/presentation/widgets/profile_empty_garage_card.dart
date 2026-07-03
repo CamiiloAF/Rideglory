@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
 class ProfileEmptyGarageCard extends StatelessWidget {
-  const ProfileEmptyGarageCard({super.key, required this.label, required this.onTap});
+  const ProfileEmptyGarageCard({
+    super.key,
+    required this.label,
+    required this.onTap,
+  });
 
   final String label;
   final VoidCallback onTap;
@@ -43,11 +47,7 @@ class ProfileEmptyGarageCard extends StatelessWidget {
                 ),
               ),
             ),
-            const Icon(
-              Icons.add,
-              color: AppColors.primary,
-              size: 20,
-            ),
+            const Icon(Icons.add, color: AppColors.primary, size: 20),
           ],
         ),
       ),

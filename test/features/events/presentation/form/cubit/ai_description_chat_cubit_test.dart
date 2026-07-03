@@ -84,8 +84,9 @@ void main() {
     test(
       'sets isQuotaInitialized=true but leaves remainingQuota null on use case error',
       () async {
-        when(() => mockQuotaUseCase())
-            .thenAnswer((_) async => Left(FakeDomainException()));
+        when(
+          () => mockQuotaUseCase(),
+        ).thenAnswer((_) async => Left(FakeDomainException()));
 
         await cubit.initQuota();
 
@@ -105,14 +106,14 @@ void main() {
     test(
       'after successful sendMessage, state.remainingQuota == result.remainingGenerations',
       () async {
-        when(() => mockGenerateUseCase(any()))
-            .thenAnswer((_) async => const Right(result));
+        when(
+          () => mockGenerateUseCase(any()),
+        ).thenAnswer((_) async => const Right(result));
 
         await cubit.sendMessage(
           userMessage: 'Genera una descripción',
           title: 'Rodada del Pacífico',
           eventType: 'tourism',
-
         );
 
         expect(
@@ -128,8 +129,9 @@ void main() {
     blocTest<AiDescriptionChatCubit, AiDescriptionChatState>(
       'emits history with user + model turns on success',
       build: () {
-        when(() => mockGenerateUseCase(any()))
-            .thenAnswer((_) async => const Right(result));
+        when(
+          () => mockGenerateUseCase(any()),
+        ).thenAnswer((_) async => const Right(result));
         return AiDescriptionChatCubit(
           mockGenerateUseCase,
           mockQuotaUseCase,
@@ -140,7 +142,6 @@ void main() {
         userMessage: 'Genera',
         title: 'Test',
         eventType: 'tourism',
-
       ),
       expect: () => [
         isA<AiDescriptionChatState>().having(
@@ -154,11 +155,7 @@ void main() {
               'remainingQuota',
               result.remainingGenerations,
             )
-            .having(
-              (s) => s.history.length,
-              'history length',
-              2,
-            )
+            .having((s) => s.history.length, 'history length', 2)
             .having(
               (s) => s.history.last.role,
               'last turn role',
@@ -180,14 +177,14 @@ void main() {
     test(
       'logEvent(aiDescriptionGenerated) called with aiTurnIndex == newHistory.length',
       () async {
-        when(() => mockGenerateUseCase(any()))
-            .thenAnswer((_) async => const Right(result));
+        when(
+          () => mockGenerateUseCase(any()),
+        ).thenAnswer((_) async => const Right(result));
 
         await cubit.sendMessage(
           userMessage: 'Genera',
           title: 'Test',
           eventType: 'tourism',
-  
         );
 
         // After sendMessage: history = [userTurn, modelTurn] → length = 2
@@ -207,8 +204,35 @@ void main() {
       () async {
         when(() => mockGenerateUseCase(any())).thenAnswer(
           (_) async => const Left(
-            AiQuotaExceededUserException(
-              message: 'Límite diario alcanzado.',
+            AiQuotaExceededUserException(message: 'Límite diario alcanzado.'),
+          ),
+        );
+
+        await cubit.sendMessage(
+          userMessage: 'Genera',
+          title: 'Test',
+          eventType: 'tourism',
+        );
+
+        verify(
+          () => mockAnalyticsService.logEvent(AnalyticsEvents.aiQuotaExceeded, {
+            AnalyticsParams.aiGenerationType:
+                AnalyticsParams.aiGenerationTypeDescription,
+            AnalyticsParams.aiErrorCode: 'AiQuotaExceededUserException',
+          }),
+        ).called(1);
+      },
+    );
+  });
+
+  group('CA7 — analytics: AiSafetyBlockedException → aiGenerationFailed', () {
+    test(
+      'logEvent(aiGenerationFailed) called with aiGenerationTypeDescription',
+      () async {
+        when(() => mockGenerateUseCase(any())).thenAnswer(
+          (_) async => const Left(
+            AiSafetyBlockedException(
+              message: 'Bloqueado por filtros de seguridad.',
             ),
           ),
         );
@@ -217,93 +241,47 @@ void main() {
           userMessage: 'Genera',
           title: 'Test',
           eventType: 'tourism',
-  
         );
 
         verify(
-          () => mockAnalyticsService.logEvent(
-            AnalyticsEvents.aiQuotaExceeded,
-            {
-              AnalyticsParams.aiGenerationType:
-                  AnalyticsParams.aiGenerationTypeDescription,
-              AnalyticsParams.aiErrorCode:
-                  'AiQuotaExceededUserException',
-            },
-          ),
+          () => mockAnalyticsService
+              .logEvent(AnalyticsEvents.aiGenerationFailed, {
+                AnalyticsParams.aiGenerationType:
+                    AnalyticsParams.aiGenerationTypeDescription,
+                AnalyticsParams.aiErrorCode: 'AiSafetyBlockedException',
+              }),
         ).called(1);
       },
     );
   });
 
-  group(
-    'CA7 — analytics: AiSafetyBlockedException → aiGenerationFailed',
-    () {
-      test(
-        'logEvent(aiGenerationFailed) called with aiGenerationTypeDescription',
-        () async {
-          when(() => mockGenerateUseCase(any())).thenAnswer(
-            (_) async => const Left(
-              AiSafetyBlockedException(
-                message: 'Bloqueado por filtros de seguridad.',
-              ),
+  group('CA7 — analytics: AiNetworkErrorException → aiGenerationFailed', () {
+    test(
+      'logEvent(aiGenerationFailed) called with aiGenerationTypeDescription',
+      () async {
+        when(() => mockGenerateUseCase(any())).thenAnswer(
+          (_) async => const Left(
+            AiNetworkErrorException(
+              message: 'No se pudo conectar con el servicio de IA.',
             ),
-          );
+          ),
+        );
 
-          await cubit.sendMessage(
-            userMessage: 'Genera',
-            title: 'Test',
-            eventType: 'tourism',
-    
-          );
+        await cubit.sendMessage(
+          userMessage: 'Genera',
+          title: 'Test',
+          eventType: 'tourism',
+        );
 
-          verify(
-            () => mockAnalyticsService.logEvent(
-              AnalyticsEvents.aiGenerationFailed,
-              {
-                AnalyticsParams.aiGenerationType:
-                    AnalyticsParams.aiGenerationTypeDescription,
-                AnalyticsParams.aiErrorCode: 'AiSafetyBlockedException',
-              },
-            ),
-          ).called(1);
-        },
-      );
-    },
-  );
-
-  group(
-    'CA7 — analytics: AiNetworkErrorException → aiGenerationFailed',
-    () {
-      test(
-        'logEvent(aiGenerationFailed) called with aiGenerationTypeDescription',
-        () async {
-          when(() => mockGenerateUseCase(any())).thenAnswer(
-            (_) async => const Left(
-              AiNetworkErrorException(
-                message: 'No se pudo conectar con el servicio de IA.',
-              ),
-            ),
-          );
-
-          await cubit.sendMessage(
-            userMessage: 'Genera',
-            title: 'Test',
-            eventType: 'tourism',
-    
-          );
-
-          verify(
-            () => mockAnalyticsService.logEvent(
-              AnalyticsEvents.aiGenerationFailed,
-              {
+        verify(
+          () => mockAnalyticsService
+              .logEvent(AnalyticsEvents.aiGenerationFailed, {
                 AnalyticsParams.aiGenerationType:
                     AnalyticsParams.aiGenerationTypeDescription,
                 AnalyticsParams.aiErrorCode: 'AiNetworkErrorException',
-              },
-            ),
-          ).called(1);
-        },
-      );
-    },
-  );
+              }),
+        ).called(1);
+      },
+    );
+  });
 }

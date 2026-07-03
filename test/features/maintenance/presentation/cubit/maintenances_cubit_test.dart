@@ -49,10 +49,7 @@ void main() {
 
   group('MaintenancesCubit', () {
     test('TC-maint-1: initial state is ResultState.initial', () {
-      expect(
-        cubit.state,
-        const ResultState<List<MaintenanceModel>>.initial(),
-      );
+      expect(cubit.state, const ResultState<List<MaintenanceModel>>.initial());
     });
 
     group('fetchMaintenances', () {
@@ -80,8 +77,7 @@ void main() {
           const ResultState<List<MaintenanceModel>>.loading(),
           predicate<ResultState<List<MaintenanceModel>>>(
             (state) =>
-                state is Data<List<MaintenanceModel>> &&
-                state.data.length == 2,
+                state is Data<List<MaintenanceModel>> && state.data.length == 2,
           ),
         ],
       );
@@ -123,10 +119,7 @@ void main() {
             ),
           ).thenAnswer(
             (_) async => const Right(
-              MaintenanceUserListAggregate(
-                items: [],
-                summariesByVehicleId: {},
-              ),
+              MaintenanceUserListAggregate(items: [], summariesByVehicleId: {}),
             ),
           );
         },
@@ -140,60 +133,64 @@ void main() {
     });
 
     group('addMaintenanceLocally', () {
-      test('TC-maint-5: adds maintenance to local list and emits data', () async {
-        when(
-          () => mockUseCase.execute(
-            types: any(named: 'types'),
-            startDate: any(named: 'startDate'),
-            endDate: any(named: 'endDate'),
-          ),
-        ).thenAnswer(
-          (_) async => Right(
-            MaintenanceUserListAggregate(
-              items: [_completedMaintenance],
-              summariesByVehicleId: {},
+      test(
+        'TC-maint-5: adds maintenance to local list and emits data',
+        () async {
+          when(
+            () => mockUseCase.execute(
+              types: any(named: 'types'),
+              startDate: any(named: 'startDate'),
+              endDate: any(named: 'endDate'),
             ),
-          ),
-        );
-        await cubit.fetchMaintenances();
+          ).thenAnswer(
+            (_) async => Right(
+              MaintenanceUserListAggregate(
+                items: [_completedMaintenance],
+                summariesByVehicleId: {},
+              ),
+            ),
+          );
+          await cubit.fetchMaintenances();
 
-        cubit.addMaintenanceLocally(_scheduledMaintenance);
+          cubit.addMaintenanceLocally(_scheduledMaintenance);
 
-        final state = cubit.state;
-        expect(state, isA<Data<List<MaintenanceModel>>>());
-        final data = (state as Data<List<MaintenanceModel>>).data;
-        expect(data.any((m) => m.id == 'm1'), isTrue);
-        expect(data.any((m) => m.id == 'm2'), isTrue);
-      });
+          final state = cubit.state;
+          expect(state, isA<Data<List<MaintenanceModel>>>());
+          final data = (state as Data<List<MaintenanceModel>>).data;
+          expect(data.any((m) => m.id == 'm1'), isTrue);
+          expect(data.any((m) => m.id == 'm2'), isTrue);
+        },
+      );
     });
 
     group('deleteMaintenanceLocally', () {
       test(
-          'TC-maint-6: removes maintenance from local list and emits data',
-          () async {
-        when(
-          () => mockUseCase.execute(
-            types: any(named: 'types'),
-            startDate: any(named: 'startDate'),
-            endDate: any(named: 'endDate'),
-          ),
-        ).thenAnswer(
-          (_) async => Right(
-            MaintenanceUserListAggregate(
-              items: [_scheduledMaintenance, _completedMaintenance],
-              summariesByVehicleId: {},
+        'TC-maint-6: removes maintenance from local list and emits data',
+        () async {
+          when(
+            () => mockUseCase.execute(
+              types: any(named: 'types'),
+              startDate: any(named: 'startDate'),
+              endDate: any(named: 'endDate'),
             ),
-          ),
-        );
-        await cubit.fetchMaintenances();
-        cubit.deleteMaintenanceLocally('m1');
+          ).thenAnswer(
+            (_) async => Right(
+              MaintenanceUserListAggregate(
+                items: [_scheduledMaintenance, _completedMaintenance],
+                summariesByVehicleId: {},
+              ),
+            ),
+          );
+          await cubit.fetchMaintenances();
+          cubit.deleteMaintenanceLocally('m1');
 
-        final state = cubit.state;
-        expect(state, isA<Data<List<MaintenanceModel>>>());
-        final data = (state as Data<List<MaintenanceModel>>).data;
-        expect(data.any((m) => m.id == 'm1'), isFalse);
-        expect(data.length, 1);
-      });
+          final state = cubit.state;
+          expect(state, isA<Data<List<MaintenanceModel>>>());
+          final data = (state as Data<List<MaintenanceModel>>).data;
+          expect(data.any((m) => m.id == 'm1'), isFalse);
+          expect(data.length, 1);
+        },
+      );
     });
 
     group('updateSearchQuery', () {
@@ -224,26 +221,30 @@ void main() {
     });
 
     group('MaintenanceModel.calculateStatus', () {
-      test('TC-maint-8: returns overdue when odometer exceeds nextOdometer', () {
-        final maintenance = MaintenanceModel(
-          type: MaintenanceType.oilChange,
-          mode: MaintenanceMode.scheduled,
-          nextOdometer: 10000,
-        );
-        final status = MaintenanceModel.calculateStatus(maintenance, 12000);
-        expect(status, MaintenanceStatus.overdue);
-      });
+      test(
+        'TC-maint-8: returns overdue when odometer exceeds nextOdometer',
+        () {
+          final maintenance = MaintenanceModel(
+            type: MaintenanceType.oilChange,
+            mode: MaintenanceMode.scheduled,
+            nextOdometer: 10000,
+          );
+          final status = MaintenanceModel.calculateStatus(maintenance, 12000);
+          expect(status, MaintenanceStatus.overdue);
+        },
+      );
 
       test(
-          'TC-maint-9: returns null for completed maintenance (no status applies)',
-          () {
-        final maintenance = MaintenanceModel(
-          type: MaintenanceType.brakeCheck,
-          mode: MaintenanceMode.completed,
-        );
-        final status = MaintenanceModel.calculateStatus(maintenance, 5000);
-        expect(status, isNull);
-      });
+        'TC-maint-9: returns null for completed maintenance (no status applies)',
+        () {
+          final maintenance = MaintenanceModel(
+            type: MaintenanceType.brakeCheck,
+            mode: MaintenanceMode.completed,
+          );
+          final status = MaintenanceModel.calculateStatus(maintenance, 5000);
+          expect(status, isNull);
+        },
+      );
     });
   });
 }

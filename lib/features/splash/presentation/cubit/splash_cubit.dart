@@ -13,7 +13,7 @@ part 'splash_cubit.freezed.dart';
 @injectable
 class SplashCubit extends Cubit<SplashState> {
   SplashCubit(this._loadCurrentUserUseCase, this._remoteConfig)
-      : super(const SplashInitial());
+    : super(const SplashInitial());
 
   final LoadCurrentUserUseCase _loadCurrentUserUseCase;
   final FirebaseRemoteConfig _remoteConfig;

@@ -16,8 +16,11 @@ class EventInscribedBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.check_circle_outline,
-              color: AppColors.success, size: 12),
+          const Icon(
+            Icons.check_circle_outline,
+            color: AppColors.success,
+            size: 12,
+          ),
           const SizedBox(width: 4),
           Text(
             context.l10n.event_registrationsTab,

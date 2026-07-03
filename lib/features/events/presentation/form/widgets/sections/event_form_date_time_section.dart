@@ -57,11 +57,10 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
     );
     if (picked != null && mounted) {
       final currentEnd = field.value?.end;
-      final end =
-          currentEnd != null && currentEnd.isAfter(picked) ? currentEnd : null;
-      field.didChange(
-        DateTimeRange(start: picked, end: end ?? picked),
-      );
+      final end = currentEnd != null && currentEnd.isAfter(picked)
+          ? currentEnd
+          : null;
+      field.didChange(DateTimeRange(start: picked, end: end ?? picked));
     }
   }
 
@@ -105,9 +104,9 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
           onChanged: (value) {
             setState(() {
               _isMultiDay = value;
-              FormBuilder.of(context)
-                  ?.fields[EventFormFields.dateRange]
-                  ?.didChange(null);
+              FormBuilder.of(
+                context,
+              )?.fields[EventFormFields.dateRange]?.didChange(null);
             });
           },
         ),
@@ -119,10 +118,7 @@ class _EventFormDateTimeSectionState extends State<EventFormDateTimeSection> {
             onPickTime: _pickTime,
           )
         else
-          EventSingleDayCard(
-            onPickDate: _pickDate,
-            onPickTime: _pickTime,
-          ),
+          EventSingleDayCard(onPickDate: _pickDate, onPickTime: _pickTime),
       ],
     );
   }

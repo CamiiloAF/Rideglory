@@ -3,10 +3,7 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
 class EventDetailOrganizerRow extends StatelessWidget {
-  const EventDetailOrganizerRow({
-    super.key,
-    required this.organizerName,
-  });
+  const EventDetailOrganizerRow({super.key, required this.organizerName});
 
   final String organizerName;
 
@@ -41,9 +38,7 @@ class EventDetailOrganizerRow extends StatelessWidget {
               ),
               children: [
                 TextSpan(text: '${context.l10n.event_organizedBy} '),
-                TextSpan(
-                  text: organizerName,
-                ),
+                TextSpan(text: organizerName),
               ],
             ),
           ),

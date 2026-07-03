@@ -54,46 +54,41 @@ void main() {
     test(
       'TC-maint-del-a1: deleteMaintenance exitoso → maintenance_deleted emitido',
       () async {
-        when(() => mockDelete(any())).thenAnswer(
-          (_) async => const Right(Nothing()),
-        );
+        when(
+          () => mockDelete(any()),
+        ).thenAnswer((_) async => const Right(Nothing()));
 
         await cubit.deleteMaintenance(maintenanceToDelete);
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.maintenanceDeleted,
-            any(),
-          ),
+          () =>
+              mockAnalytics.logEvent(AnalyticsEvents.maintenanceDeleted, any()),
         ).called(1);
       },
     );
 
     // TC-maint-del-a2: maintenance_deleted contiene maintenanceType correcto
-    test(
-      'TC-maint-del-a2: maintenance_deleted contiene '
-      'maintenance_type = oilChange',
-      () async {
-        when(() => mockDelete(any())).thenAnswer(
-          (_) async => const Right(Nothing()),
-        );
+    test('TC-maint-del-a2: maintenance_deleted contiene '
+        'maintenance_type = oilChange', () async {
+      when(
+        () => mockDelete(any()),
+      ).thenAnswer((_) async => const Right(Nothing()));
 
-        await cubit.deleteMaintenance(maintenanceToDelete);
+      await cubit.deleteMaintenance(maintenanceToDelete);
 
-        final captured = verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.maintenanceDeleted,
-            captureAny(),
-          ),
-        ).captured;
+      final captured = verify(
+        () => mockAnalytics.logEvent(
+          AnalyticsEvents.maintenanceDeleted,
+          captureAny(),
+        ),
+      ).captured;
 
-        final params = captured.single as Map<String, Object>;
-        expect(
-          params[AnalyticsParams.maintenanceType],
-          MaintenanceType.oilChange.name,
-        );
-      },
-    );
+      final params = captured.single as Map<String, Object>;
+      expect(
+        params[AnalyticsParams.maintenanceType],
+        MaintenanceType.oilChange.name,
+      );
+    });
 
     // TC-maint-del-a3: maintenance_deleted NO se emite si el use case falla
     test(
@@ -107,10 +102,8 @@ void main() {
         await cubit.deleteMaintenance(maintenanceToDelete);
 
         verifyNever(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.maintenanceDeleted,
-            any(),
-          ),
+          () =>
+              mockAnalytics.logEvent(AnalyticsEvents.maintenanceDeleted, any()),
         );
       },
     );
@@ -129,10 +122,8 @@ void main() {
         await cubit.deleteMaintenance(maintenanceWithoutId);
 
         verifyNever(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.maintenanceDeleted,
-            any(),
-          ),
+          () =>
+              mockAnalytics.logEvent(AnalyticsEvents.maintenanceDeleted, any()),
         );
         verifyNever(() => mockDelete(any()));
       },

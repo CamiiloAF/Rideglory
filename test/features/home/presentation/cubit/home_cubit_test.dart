@@ -67,82 +67,63 @@ void main() {
         await homeCubit.loadHomeData();
 
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.homeViewed,
-            {
-              AnalyticsParams.upcomingEventsCount: 1,
-              AnalyticsParams.hasMainVehicle: 1,
-            },
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.homeViewed, {
+            AnalyticsParams.upcomingEventsCount: 1,
+            AnalyticsParams.hasMainVehicle: 1,
+          }),
         ).called(1);
       },
     );
 
     // TC-home-a2: home_viewed fires with hasMainVehicle=0 when no main vehicle
-    test(
-      'TC-home-a2: loadHomeData success with no main vehicle → '
-      'home_viewed with hasMainVehicle=0',
-      () async {
-        when(() => mockGetHomeDataUseCase()).thenAnswer(
-          (_) async => Right(
-            HomeData(mainVehicle: null, upcomingEvents: [mockEvent, mockEvent]),
-          ),
-        );
+    test('TC-home-a2: loadHomeData success with no main vehicle → '
+        'home_viewed with hasMainVehicle=0', () async {
+      when(() => mockGetHomeDataUseCase()).thenAnswer(
+        (_) async => Right(
+          HomeData(mainVehicle: null, upcomingEvents: [mockEvent, mockEvent]),
+        ),
+      );
 
-        await homeCubit.loadHomeData();
+      await homeCubit.loadHomeData();
 
-        verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.homeViewed,
-            {
-              AnalyticsParams.upcomingEventsCount: 2,
-              AnalyticsParams.hasMainVehicle: 0,
-            },
-          ),
-        ).called(1);
-      },
-    );
+      verify(
+        () => mockAnalytics.logEvent(AnalyticsEvents.homeViewed, {
+          AnalyticsParams.upcomingEventsCount: 2,
+          AnalyticsParams.hasMainVehicle: 0,
+        }),
+      ).called(1);
+    });
 
     // TC-home-a3: home_viewed fires with upcomingEventsCount=0 when list empty
-    test(
-      'TC-home-a3: loadHomeData success with empty event list → '
-      'home_viewed with upcomingEventsCount=0',
-      () async {
-        when(() => mockGetHomeDataUseCase()).thenAnswer(
-          (_) async => const Right(
-            HomeData(mainVehicle: mockVehicle, upcomingEvents: []),
-          ),
-        );
+    test('TC-home-a3: loadHomeData success with empty event list → '
+        'home_viewed with upcomingEventsCount=0', () async {
+      when(() => mockGetHomeDataUseCase()).thenAnswer(
+        (_) async =>
+            const Right(HomeData(mainVehicle: mockVehicle, upcomingEvents: [])),
+      );
 
-        await homeCubit.loadHomeData();
+      await homeCubit.loadHomeData();
 
-        verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.homeViewed,
-            {
-              AnalyticsParams.upcomingEventsCount: 0,
-              AnalyticsParams.hasMainVehicle: 1,
-            },
-          ),
-        ).called(1);
-      },
-    );
+      verify(
+        () => mockAnalytics.logEvent(AnalyticsEvents.homeViewed, {
+          AnalyticsParams.upcomingEventsCount: 0,
+          AnalyticsParams.hasMainVehicle: 1,
+        }),
+      ).called(1);
+    });
 
     // TC-home-a4: home_viewed must NOT fire on error
-    test(
-      'TC-home-a4: loadHomeData error → home_viewed NOT emitted',
-      () async {
-        when(() => mockGetHomeDataUseCase()).thenAnswer(
-          (_) async => const Left(DomainException(message: 'Server error')),
-        );
+    test('TC-home-a4: loadHomeData error → home_viewed NOT emitted', () async {
+      when(() => mockGetHomeDataUseCase()).thenAnswer(
+        (_) async => const Left(DomainException(message: 'Server error')),
+      );
 
-        await homeCubit.loadHomeData();
+      await homeCubit.loadHomeData();
 
-        verifyNever(
-          () => mockAnalytics.logEvent(AnalyticsEvents.homeViewed, any()),
-        );
-      },
-    );
+      verifyNever(
+        () => mockAnalytics.logEvent(AnalyticsEvents.homeViewed, any()),
+      );
+    });
   });
 
   group('HomeCubit — state transitions', () {

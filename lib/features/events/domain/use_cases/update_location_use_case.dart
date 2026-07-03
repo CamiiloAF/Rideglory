@@ -11,6 +11,7 @@ class UpdateLocationUseCase {
 
   final TrackingRepository _trackingRepository;
 
-  Future<Either<DomainException, Nothing>> call(UpdateLocationRequest request) =>
-      _trackingRepository.updateLocation(request);
+  Future<Either<DomainException, Nothing>> call(
+    UpdateLocationRequest request,
+  ) => _trackingRepository.updateLocation(request);
 }

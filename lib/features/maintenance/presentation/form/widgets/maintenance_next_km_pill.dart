@@ -30,12 +30,7 @@ class MaintenanceNextKmPill extends StatelessWidget {
           child: Align(
             widthFactor: 1,
             alignment: Alignment.centerRight,
-            child: Text(
-              'km',
-              style: TextStyle(
-                fontSize: 11,
-              ),
-            ),
+            child: Text('km', style: TextStyle(fontSize: 11)),
           ),
         ),
       ),

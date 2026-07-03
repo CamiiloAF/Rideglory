@@ -8,13 +8,7 @@ import 'package:rideglory/shared/router/app_routes.dart';
 /// Navega a [TecnomecanicaStatusPage], que crea el cubit y gestiona
 /// todos los estados (vacío → registrar, con datos → editar/borrar).
 abstract final class TecnomecanicaEntryFlow {
-  static Future<void> start(
-    BuildContext context,
-    VehicleModel vehicle,
-  ) async {
-    await context.push(
-      AppRoutes.tecnomecanicaStatus,
-      extra: vehicle,
-    );
+  static Future<void> start(BuildContext context, VehicleModel vehicle) async {
+    await context.push(AppRoutes.tecnomecanicaStatus, extra: vehicle);
   }
 }

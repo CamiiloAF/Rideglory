@@ -42,11 +42,11 @@ class AiQuotaIndicator extends StatelessWidget {
             Text(
               '$remainingQuota',
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: isExhausted
-                        ? colorScheme.onErrorContainer
-                        : colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
-                  ),
+                color: isExhausted
+                    ? colorScheme.onErrorContainer
+                    : colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),

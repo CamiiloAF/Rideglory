@@ -14,7 +14,6 @@ class VehicleActionState with _$VehicleActionState {
     required String deletedId,
   }) = _PermanentDeleteSuccess;
   const factory VehicleActionState.error({required String message}) = _Error;
-  const factory VehicleActionState.errorLastVehicle({
-    required String message,
-  }) = _ErrorLastVehicle;
+  const factory VehicleActionState.errorLastVehicle({required String message}) =
+      _ErrorLastVehicle;
 }

@@ -50,10 +50,7 @@ class UserStorageService {
   }
 
   Future<void> setAnalyticsEnabled(bool enabled) {
-    return _storage.write(
-      key: _analyticsEnabledKey,
-      value: enabled.toString(),
-    );
+    return _storage.write(key: _analyticsEnabledKey, value: enabled.toString());
   }
 
   String _key(String firebaseUid) => '$_keyPrefix$firebaseUid';

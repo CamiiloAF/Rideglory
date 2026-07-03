@@ -18,6 +18,9 @@ class AddMaintenanceUseCase {
     MaintenanceModel maintenance, {
     int? nextKmInterval,
   }) async {
-    return await maintenanceRepository.addMaintenance(maintenance, nextKmInterval);
+    return await maintenanceRepository.addMaintenance(
+      maintenance,
+      nextKmInterval,
+    );
   }
 }

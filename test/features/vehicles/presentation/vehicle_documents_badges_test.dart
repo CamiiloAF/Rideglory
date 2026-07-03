@@ -21,8 +21,7 @@ import 'package:rideglory/l10n/app_localizations.dart';
 class MockSoatCubit extends MockCubit<ResultState<SoatModel>>
     implements SoatCubit {}
 
-class MockTecnomecanicaCubit
-    extends MockCubit<ResultState<TecnomecanicaModel>>
+class MockTecnomecanicaCubit extends MockCubit<ResultState<TecnomecanicaModel>>
     implements TecnomecanicaCubit {}
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
@@ -90,9 +89,7 @@ Widget _wrap({
       GlobalWidgetsLocalizations.delegate,
     ],
     supportedLocales: const [Locale('es')],
-    home: Scaffold(
-      body: SingleChildScrollView(child: child),
-    ),
+    home: Scaffold(body: SingleChildScrollView(child: child)),
   );
 }
 
@@ -383,9 +380,7 @@ void main() {
 
     testWidgets('data valid → muestra "Vigente"', (tester) async {
       when(() => soatCubit.state).thenReturn(const ResultState.initial());
-      when(
-        () => rtmCubit.state,
-      ).thenReturn(ResultState.data(data: _rtmValid));
+      when(() => rtmCubit.state).thenReturn(ResultState.data(data: _rtmValid));
 
       await tester.pumpWidget(
         _wrap(
@@ -500,9 +495,7 @@ void main() {
       tester,
     ) async {
       when(() => soatCubit.state).thenReturn(const ResultState.initial());
-      when(
-        () => rtmCubit.state,
-      ).thenReturn(ResultState.data(data: _rtmValid));
+      when(() => rtmCubit.state).thenReturn(ResultState.data(data: _rtmValid));
 
       await tester.pumpWidget(
         _wrap(
@@ -541,4 +534,3 @@ void main() {
     });
   });
 }
-

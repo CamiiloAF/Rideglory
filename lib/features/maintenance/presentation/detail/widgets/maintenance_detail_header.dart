@@ -16,19 +16,22 @@ class MaintenanceDetailHeader extends StatelessWidget {
   final VehicleModel? vehicle;
 
   static IconData _iconForType(MaintenanceType type) => switch (type) {
-        MaintenanceType.oilChange => Icons.opacity,
-        MaintenanceType.brakeCheck => Icons.album_outlined,
-        MaintenanceType.tireChange => Icons.radio_button_unchecked,
-        MaintenanceType.preventive => Icons.assignment_turned_in_outlined,
-        MaintenanceType.airFilter => Icons.air,
-        MaintenanceType.chainSprocket => Icons.link,
-        MaintenanceType.electrical => Icons.bolt,
-        MaintenanceType.other => Icons.more_horiz,
-      };
+    MaintenanceType.oilChange => Icons.opacity,
+    MaintenanceType.brakeCheck => Icons.album_outlined,
+    MaintenanceType.tireChange => Icons.radio_button_unchecked,
+    MaintenanceType.preventive => Icons.assignment_turned_in_outlined,
+    MaintenanceType.airFilter => Icons.air,
+    MaintenanceType.chainSprocket => Icons.link,
+    MaintenanceType.electrical => Icons.bolt,
+    MaintenanceType.other => Icons.more_horiz,
+  };
 
   String _vehicleDisplayName() {
     if (vehicle == null) return '';
-    final parts = [vehicle!.brand, vehicle!.model].where((e) => e != null && e.isNotEmpty);
+    final parts = [
+      vehicle!.brand,
+      vehicle!.model,
+    ].where((e) => e != null && e.isNotEmpty);
     return parts.isNotEmpty ? parts.join(' ') : vehicle!.name;
   }
 
@@ -67,7 +70,10 @@ class MaintenanceDetailHeader extends StatelessWidget {
               Text(
                 maintenance.mode == MaintenanceMode.completed
                     ? context.l10n.maintenance_performedOn(
-                        (maintenance.serviceDate ?? maintenance.createdDate ?? DateTime.now()).formattedDate,
+                        (maintenance.serviceDate ??
+                                maintenance.createdDate ??
+                                DateTime.now())
+                            .formattedDate,
                       )
                     : context.l10n.maintenance_modeScheduled,
                 style: theme.textTheme.bodyLarge?.copyWith(
@@ -90,7 +96,10 @@ class MaintenanceDetailHeader extends StatelessWidget {
                   ),
                   if (_vehicleDisplayName().isNotEmpty)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.darkCard,
                         borderRadius: BorderRadius.circular(20),

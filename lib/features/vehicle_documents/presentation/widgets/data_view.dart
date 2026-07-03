@@ -55,21 +55,12 @@ class DocumentDataView<T extends VehicleDocumentModel> extends StatelessWidget {
           ),
           if (heroWarning != null) ...[
             const SizedBox(height: 16),
-            DataViewWarningBanner(
-              warning: heroWarning!,
-              color: heroColor,
-            ),
+            DataViewWarningBanner(warning: heroWarning!, color: heroColor),
           ],
           const SizedBox(height: 24),
           DataViewDetailsCard(rows: detailRows),
-          if (heroFooter != null) ...[
-            const SizedBox(height: 20),
-            heroFooter!,
-          ],
-          if (actions != null) ...[
-            const SizedBox(height: 16),
-            actions!,
-          ],
+          if (heroFooter != null) ...[const SizedBox(height: 20), heroFooter!],
+          if (actions != null) ...[const SizedBox(height: 16), actions!],
           const SizedBox(height: 32),
         ],
       ),

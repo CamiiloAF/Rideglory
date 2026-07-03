@@ -30,7 +30,10 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
     return await vehiclesResult.fold((error) async => Left(error), (
       vehicles,
     ) async {
-      final ids = vehicles.map((vehicle) => vehicle.id).whereType<String>().toList();
+      final ids = vehicles
+          .map((vehicle) => vehicle.id)
+          .whereType<String>()
+          .toList();
       final batches = await Future.wait(
         ids.map(
           (vehicleId) => getMaintenancesByVehicleId(
@@ -145,7 +148,9 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
   ) {
     return {
       'type': _typeToApi(maintenance.type),
-      'mode': maintenance.mode == MaintenanceMode.completed ? 'COMPLETED' : 'SCHEDULED',
+      'mode': maintenance.mode == MaintenanceMode.completed
+          ? 'COMPLETED'
+          : 'SCHEDULED',
       if (maintenance.serviceDate != null)
         'serviceDate': maintenance.serviceDate!.toUtc().toIso8601String(),
       if (maintenance.odometerAtService != null)
@@ -153,7 +158,8 @@ class MaintenanceRepositoryImpl implements MaintenanceRepository {
       if (maintenance.workshop != null) 'workshop': maintenance.workshop,
       if (maintenance.notes != null) 'notes': maintenance.notes,
       'nextKmInterval': ?nextKmInterval,
-      if (maintenance.nextOdometer != null) 'nextOdometer': maintenance.nextOdometer,
+      if (maintenance.nextOdometer != null)
+        'nextOdometer': maintenance.nextOdometer,
       if (maintenance.nextDate != null)
         'nextDate': maintenance.nextDate!.toUtc().toIso8601String(),
       if (maintenance.cost != null) 'cost': maintenance.cost,

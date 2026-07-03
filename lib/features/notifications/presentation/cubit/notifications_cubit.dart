@@ -25,30 +25,32 @@ class NotificationsCubit extends Cubit<NotificationsState> {
   final AnalyticsService _analytics;
 
   Future<void> load() async {
-    emit(state.copyWith(
-      listResult: const ResultState.loading(),
-      nextCursor: null,
-    ));
+    emit(
+      state.copyWith(listResult: const ResultState.loading(), nextCursor: null),
+    );
     final result = await _getNotificationsUseCase();
     result.fold(
-      (error) => emit(state.copyWith(
-        listResult: ResultState.error(error: error),
-      )),
+      (error) =>
+          emit(state.copyWith(listResult: ResultState.error(error: error))),
       (page) {
         final notifications = page.data;
         final unread = notifications.where((n) => !n.isRead).length;
         if (notifications.isEmpty) {
-          emit(state.copyWith(
-            listResult: const ResultState.empty(),
-            nextCursor: null,
-            unreadCount: 0,
-          ));
+          emit(
+            state.copyWith(
+              listResult: const ResultState.empty(),
+              nextCursor: null,
+              unreadCount: 0,
+            ),
+          );
         } else {
-          emit(state.copyWith(
-            listResult: ResultState.data(data: notifications),
-            nextCursor: page.nextCursor,
-            unreadCount: unread,
-          ));
+          emit(
+            state.copyWith(
+              listResult: ResultState.data(data: notifications),
+              nextCursor: page.nextCursor,
+              unreadCount: unread,
+            ),
+          );
         }
       },
     );
@@ -63,19 +65,18 @@ class NotificationsCubit extends Cubit<NotificationsState> {
 
     emit(state.copyWith(isLoadingMore: true));
     final result = await _getNotificationsUseCase(cursor: state.nextCursor);
-    result.fold(
-      (_) => emit(state.copyWith(isLoadingMore: false)),
-      (page) {
-        final combined = [...currentList, ...page.data];
-        final unread = combined.where((n) => !n.isRead).length;
-        emit(state.copyWith(
+    result.fold((_) => emit(state.copyWith(isLoadingMore: false)), (page) {
+      final combined = [...currentList, ...page.data];
+      final unread = combined.where((n) => !n.isRead).length;
+      emit(
+        state.copyWith(
           listResult: ResultState.data(data: combined),
           nextCursor: page.nextCursor,
           unreadCount: unread,
           isLoadingMore: false,
-        ));
-      },
-    );
+        ),
+      );
+    });
   }
 
   Future<void> markRead(String id) async {
@@ -87,26 +88,28 @@ class NotificationsCubit extends Cubit<NotificationsState> {
 
     // Optimistic update
     final updated = currentList
-        .map((notification) => notification.id == id
-            ? notification.copyWith(isRead: true)
-            : notification)
+        .map(
+          (notification) => notification.id == id
+              ? notification.copyWith(isRead: true)
+              : notification,
+        )
         .toList();
     final unread = updated.where((n) => !n.isRead).length;
-    emit(state.copyWith(
-      listResult: ResultState.data(data: updated),
-      unreadCount: unread,
-    ));
+    emit(
+      state.copyWith(
+        listResult: ResultState.data(data: updated),
+        unreadCount: unread,
+      ),
+    );
 
     // Emit analytics event — no id/text as param (G2).
     final notification = currentList.firstWhere(
       (n) => n.id == id,
       orElse: () => currentList.first,
     );
-    _analytics
-        .logEvent(AnalyticsEvents.notificationMarkedRead, {
-          AnalyticsParams.notificationType: notification.type.name,
-        })
-        .ignore();
+    _analytics.logEvent(AnalyticsEvents.notificationMarkedRead, {
+      AnalyticsParams.notificationType: notification.type.name,
+    }).ignore();
 
     await _markReadUseCase(id);
   }
@@ -121,10 +124,12 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     final updated = currentList
         .map((notification) => notification.copyWith(isRead: true))
         .toList();
-    emit(state.copyWith(
-      listResult: ResultState.data(data: updated),
-      unreadCount: 0,
-    ));
+    emit(
+      state.copyWith(
+        listResult: ResultState.data(data: updated),
+        unreadCount: 0,
+      ),
+    );
 
     _analytics.logEvent(AnalyticsEvents.notificationsAllRead).ignore();
 

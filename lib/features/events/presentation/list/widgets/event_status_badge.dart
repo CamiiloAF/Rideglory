@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 class EventStatusBadge extends StatelessWidget {
-  const EventStatusBadge({
-    super.key,
-    required this.label,
-    required this.color,
-  });
+  const EventStatusBadge({super.key, required this.label, required this.color});
 
   final String label;
   final Color color;

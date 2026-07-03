@@ -110,12 +110,12 @@ void main() {
     vehicleCubit = MockVehicleCubit();
     actionCubit = MockVehicleActionCubit();
 
-    when(() => vehicleCubit.state).thenReturn(
-      const ResultState<List<VehicleModel>>.initial(),
-    );
-    when(() => actionCubit.state).thenReturn(
-      const VehicleActionState.initial(),
-    );
+    when(
+      () => vehicleCubit.state,
+    ).thenReturn(const ResultState<List<VehicleModel>>.initial());
+    when(
+      () => actionCubit.state,
+    ).thenReturn(const VehicleActionState.initial());
 
     // Register real VehicleActionCubit factory in GetIt for bottom sheet tests
     final getIt = GetIt.instance;
@@ -152,9 +152,7 @@ void main() {
         _wrap(
           vehicleCubit: vehicleCubit,
           actionCubit: actionCubit,
-          child: const GarageArchivedSection(
-            archivedVehicles: [],
-                      ),
+          child: const GarageArchivedSection(archivedVehicles: []),
         ),
       );
       await tester.pump();
@@ -166,24 +164,23 @@ void main() {
 
   // ── Test 2 ─────────────────────────────────────────────────────────────────
 
-  testWidgets(
-    'TC-arch-2: with archived vehicles header shows correct count',
-    (tester) async {
-      await tester.pumpWidget(
-        _wrap(
-          vehicleCubit: vehicleCubit,
-          actionCubit: actionCubit,
-          child: const GarageArchivedSection(
-            archivedVehicles: [_archivedVehicle, _archivedVehicle2],
-                      ),
+  testWidgets('TC-arch-2: with archived vehicles header shows correct count', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _wrap(
+        vehicleCubit: vehicleCubit,
+        actionCubit: actionCubit,
+        child: const GarageArchivedSection(
+          archivedVehicles: [_archivedVehicle, _archivedVehicle2],
         ),
-      );
-      await tester.pump();
+      ),
+    );
+    await tester.pump();
 
-      expect(find.text('ARCHIVADOS'), findsOneWidget);
-      expect(find.text('2'), findsOneWidget);
-    },
-  );
+    expect(find.text('ARCHIVADOS'), findsOneWidget);
+    expect(find.text('2'), findsOneWidget);
+  });
 
   // ── Test 3 ─────────────────────────────────────────────────────────────────
 
@@ -196,7 +193,7 @@ void main() {
           actionCubit: actionCubit,
           child: const GarageArchivedSection(
             archivedVehicles: [_archivedVehicle],
-                      ),
+          ),
         ),
       );
       await tester.pump();
@@ -252,7 +249,7 @@ void main() {
           actionCubit: actionCubit,
           child: const GarageArchivedSection(
             archivedVehicles: [_archivedVehicle],
-                      ),
+          ),
         ),
       );
       await tester.pump();

@@ -71,9 +71,9 @@ class _TecnomecanicaDataViewState extends State<TecnomecanicaDataView> {
       context.pop();
     } else {
       setState(() => _deleting = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.errorOccurred)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.l10n.errorOccurred)));
     }
   }
 
@@ -92,8 +92,7 @@ class _TecnomecanicaDataViewState extends State<TecnomecanicaDataView> {
       VehicleDocumentStatus.expiringSoon =>
         context.l10n.tecnomecanica_expiring_title,
       VehicleDocumentStatus.expired => context.l10n.tecnomecanica_expired_title,
-      VehicleDocumentStatus.none =>
-        context.l10n.tecnomecanica_status_no_rtm,
+      VehicleDocumentStatus.none => context.l10n.tecnomecanica_status_no_rtm,
     };
   }
 
@@ -181,17 +180,19 @@ class _TecnomecanicaDataViewState extends State<TecnomecanicaDataView> {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: (widget.rtm.documentStatus == VehicleDocumentStatus.expired
-                        ? AppColors.error
-                        : AppColors.warning)
-                    .withValues(alpha: 0.08),
+                color:
+                    (widget.rtm.documentStatus == VehicleDocumentStatus.expired
+                            ? AppColors.error
+                            : AppColors.warning)
+                        .withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: (widget.rtm.documentStatus ==
-                              VehicleDocumentStatus.expired
-                          ? AppColors.error
-                          : AppColors.warning)
-                      .withValues(alpha: 0.3),
+                  color:
+                      (widget.rtm.documentStatus ==
+                                  VehicleDocumentStatus.expired
+                              ? AppColors.error
+                              : AppColors.warning)
+                          .withValues(alpha: 0.3),
                 ),
               ),
               child: Row(
@@ -200,7 +201,8 @@ class _TecnomecanicaDataViewState extends State<TecnomecanicaDataView> {
                   Icon(
                     Icons.warning_amber_rounded,
                     size: 18,
-                    color: widget.rtm.documentStatus ==
+                    color:
+                        widget.rtm.documentStatus ==
                             VehicleDocumentStatus.expired
                         ? AppColors.error
                         : AppColors.warning,
@@ -210,7 +212,8 @@ class _TecnomecanicaDataViewState extends State<TecnomecanicaDataView> {
                     child: Text(
                       warningText,
                       style: TextStyle(
-                        color: widget.rtm.documentStatus ==
+                        color:
+                            widget.rtm.documentStatus ==
                                 VehicleDocumentStatus.expired
                             ? AppColors.error
                             : AppColors.warning,

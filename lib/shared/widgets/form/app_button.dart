@@ -3,7 +3,14 @@ import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
-enum AppButtonVariant { primary, secondary, danger, success, ghost, ghostSubtle }
+enum AppButtonVariant {
+  primary,
+  secondary,
+  danger,
+  success,
+  ghost,
+  ghostSubtle,
+}
 
 enum AppButtonStyle { filled, outlined, tonal, text }
 

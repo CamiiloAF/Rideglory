@@ -77,9 +77,7 @@ bool _isSnakeCase(String identifier) =>
 /// Devuelve la lista de substrings prohibidos encontrados en [identifier].
 List<String> _findProhibited(String identifier) {
   final lower = identifier.toLowerCase();
-  return _prohibitedSubstrings
-      .where((sub) => lower.contains(sub))
-      .toList();
+  return _prohibitedSubstrings.where((sub) => lower.contains(sub)).toList();
 }
 
 // ---------------------------------------------------------------------------
@@ -266,8 +264,7 @@ void main() {
         expect(
           _isSnakeCase(key),
           isTrue,
-          reason:
-              '"$key" no cumple snake_case.',
+          reason: '"$key" no cumple snake_case.',
         );
       });
     }

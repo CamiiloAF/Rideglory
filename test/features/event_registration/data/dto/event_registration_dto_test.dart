@@ -45,12 +45,15 @@ void main() {
   });
 
   group('EventRegistrationDto — bloodType sentinel tolerance (AC#2)', () {
-    test('TC-dto-01: __NOT_SHARED__ sentinel decodes to null, no exception', () {
-      final dto = EventRegistrationDto.fromJson(
-        _minimalJson(bloodType: '__NOT_SHARED__'),
-      );
-      expect(dto.bloodType, isNull);
-    });
+    test(
+      'TC-dto-01: __NOT_SHARED__ sentinel decodes to null, no exception',
+      () {
+        final dto = EventRegistrationDto.fromJson(
+          _minimalJson(bloodType: '__NOT_SHARED__'),
+        );
+        expect(dto.bloodType, isNull);
+      },
+    );
 
     test('TC-dto-02: bullet mask sentinel decodes to null, no exception', () {
       final dto = EventRegistrationDto.fromJson(
@@ -72,38 +75,41 @@ void main() {
     });
   });
 
-  group('EventRegistrationModelExtension.toJson — propagates legal fields (AC#3)', () {
-    test('TC-dto-05: toJson includes the 4 new fields with exact values', () {
-      final model = EventRegistrationModel(
-        eventId: 'event-1',
-        eventName: 'Rodada Test',
-        userId: 'user-1',
-        fullName: 'Rider Test',
-        identificationNumber: '123456',
-        birthDate: DateTime(2000, 1, 1),
-        phone: '3001234567',
-        email: 'rider@test.com',
-        residenceCity: 'Bogotá',
-        eps: 'Sura',
-        bloodType: BloodType.oNegative,
-        emergencyContactName: 'Contact Test',
-        emergencyContactPhone: '3007654321',
-        shareMedicalInfo: true,
-        allowOrganizerContact: false,
-        riskAcceptedAt: DateTime(2026, 6, 19),
-        riskAcceptanceVersion: 'v0.1-2026-06',
-      );
+  group(
+    'EventRegistrationModelExtension.toJson — propagates legal fields (AC#3)',
+    () {
+      test('TC-dto-05: toJson includes the 4 new fields with exact values', () {
+        final model = EventRegistrationModel(
+          eventId: 'event-1',
+          eventName: 'Rodada Test',
+          userId: 'user-1',
+          fullName: 'Rider Test',
+          identificationNumber: '123456',
+          birthDate: DateTime(2000, 1, 1),
+          phone: '3001234567',
+          email: 'rider@test.com',
+          residenceCity: 'Bogotá',
+          eps: 'Sura',
+          bloodType: BloodType.oNegative,
+          emergencyContactName: 'Contact Test',
+          emergencyContactPhone: '3007654321',
+          shareMedicalInfo: true,
+          allowOrganizerContact: false,
+          riskAcceptedAt: DateTime(2026, 6, 19),
+          riskAcceptanceVersion: 'v0.1-2026-06',
+        );
 
-      final json = model.toJson();
+        final json = model.toJson();
 
-      expect(json['shareMedicalInfo'], true);
-      expect(json['allowOrganizerContact'], false);
-      expect(json['riskAcceptedAt'], isNotNull);
-      expect(
-        DateTime.parse(json['riskAcceptedAt'] as String).toUtc(),
-        DateTime(2026, 6, 19).toUtc(),
-      );
-      expect(json['riskAcceptanceVersion'], 'v0.1-2026-06');
-    });
-  });
+        expect(json['shareMedicalInfo'], true);
+        expect(json['allowOrganizerContact'], false);
+        expect(json['riskAcceptedAt'], isNotNull);
+        expect(
+          DateTime.parse(json['riskAcceptedAt'] as String).toUtc(),
+          DateTime(2026, 6, 19).toUtc(),
+        );
+        expect(json['riskAcceptanceVersion'], 'v0.1-2026-06');
+      });
+    },
+  );
 }

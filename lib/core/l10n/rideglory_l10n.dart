@@ -20,4 +20,3 @@ class RidegloryL10n {
     _l10n = lookupAppLocalizations(_locale);
   }
 }
-

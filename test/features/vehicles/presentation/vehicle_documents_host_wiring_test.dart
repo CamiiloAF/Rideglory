@@ -37,8 +37,7 @@ import 'package:rideglory/l10n/app_localizations.dart';
 class MockSoatCubit extends MockCubit<ResultState<SoatModel>>
     implements SoatCubit {}
 
-class MockTecnomecanicaCubit
-    extends MockCubit<ResultState<TecnomecanicaModel>>
+class MockTecnomecanicaCubit extends MockCubit<ResultState<TecnomecanicaModel>>
     implements TecnomecanicaCubit {}
 
 class MockVehicleCubit extends MockCubit<ResultState<List<VehicleModel>>>
@@ -50,7 +49,11 @@ class MockVehicleMaintenancesCubit
 
 // ─── Fixture ────────────────────────────────────────────────────────────────
 
-const _vehicle = VehicleModel(id: 'v-host-1', name: 'Host Moto', currentMileage: 0);
+const _vehicle = VehicleModel(
+  id: 'v-host-1',
+  name: 'Host Moto',
+  currentMileage: 0,
+);
 
 // ─── Test ────────────────────────────────────────────────────────────────────
 
@@ -68,20 +71,22 @@ void main() {
 
     when(() => soatCubit.state).thenReturn(const ResultState.empty());
     when(() => rtmCubit.state).thenReturn(const ResultState.empty());
-    when(() => vehicleCubit.state)
-        .thenReturn(const ResultState.data(data: [_vehicle]));
-    when(() => maintenancesCubit.state)
-        .thenReturn(const ResultState.initial());
+    when(
+      () => vehicleCubit.state,
+    ).thenReturn(const ResultState.data(data: [_vehicle]));
+    when(() => maintenancesCubit.state).thenReturn(const ResultState.initial());
 
     when(() => soatCubit.load(any())).thenAnswer((_) async {});
     when(() => rtmCubit.load(any())).thenAnswer((_) async {});
-    when(() => maintenancesCubit.fetchMaintenances(any()))
-        .thenAnswer((_) async {});
+    when(
+      () => maintenancesCubit.fetchMaintenances(any()),
+    ).thenAnswer((_) async {});
     when(() => maintenancesCubit.lastCompleted).thenReturn(null);
 
     final gi = GetIt.instance;
     if (gi.isRegistered<SoatCubit>()) gi.unregister<SoatCubit>();
-    if (gi.isRegistered<TecnomecanicaCubit>()) gi.unregister<TecnomecanicaCubit>();
+    if (gi.isRegistered<TecnomecanicaCubit>())
+      gi.unregister<TecnomecanicaCubit>();
     if (gi.isRegistered<VehicleMaintenancesCubit>()) {
       gi.unregister<VehicleMaintenancesCubit>();
     }
@@ -93,64 +98,74 @@ void main() {
   tearDown(() {
     final gi = GetIt.instance;
     if (gi.isRegistered<SoatCubit>()) gi.unregister<SoatCubit>();
-    if (gi.isRegistered<TecnomecanicaCubit>()) gi.unregister<TecnomecanicaCubit>();
+    if (gi.isRegistered<TecnomecanicaCubit>())
+      gi.unregister<TecnomecanicaCubit>();
     if (gi.isRegistered<VehicleMaintenancesCubit>()) {
       gi.unregister<VehicleMaintenancesCubit>();
     }
   });
 
-  testWidgets(
-    'C3 — VehicleDetailView renders exactly 2 VehicleDocumentCard: '
-    'SOAT first, RTM second, SizedBox(h:16) between them',
-    (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          supportedLocales: const [Locale('es')],
-          home: BlocProvider<VehicleCubit>.value(
-            value: vehicleCubit,
-            child: VehicleDetailView(
-              vehicle: _vehicle,
-              onBack: () {},
-              maintenanceRefreshTick: 0,
-              onPendingMaintenanceConsumed: (_) {},
-              onMaintenanceCreated: (_) {},
-              onMaintenanceRefreshRequested: (_) {},
-            ),
+  testWidgets('C3 — VehicleDetailView renders exactly 2 VehicleDocumentCard: '
+      'SOAT first, RTM second, SizedBox(h:16) between them', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: const [Locale('es')],
+        home: BlocProvider<VehicleCubit>.value(
+          value: vehicleCubit,
+          child: VehicleDetailView(
+            vehicle: _vehicle,
+            onBack: () {},
+            maintenanceRefreshTick: 0,
+            onPendingMaintenanceConsumed: (_) {},
+            onMaintenanceCreated: (_) {},
+            onMaintenanceRefreshRequested: (_) {},
           ),
         ),
-      );
-      await tester.pump();
+      ),
+    );
+    await tester.pump();
 
-      // 1. Exactly two VehicleDocumentCard widgets.
-      final cardFinder = find.byType(VehicleDocumentCard);
-      expect(cardFinder, findsNWidgets(2));
+    // 1. Exactly two VehicleDocumentCard widgets.
+    final cardFinder = find.byType(VehicleDocumentCard);
+    expect(cardFinder, findsNWidgets(2));
 
-      // 2. Order: SOAT before RTM.
-      final cards = tester.widgetList<VehicleDocumentCard>(cardFinder).toList();
-      expect(cards[0].kind, VehicleDocumentKind.soat,
-          reason: 'First card must be SOAT');
-      expect(cards[1].kind, VehicleDocumentKind.rtm,
-          reason: 'Second card must be RTM');
+    // 2. Order: SOAT before RTM.
+    final cards = tester.widgetList<VehicleDocumentCard>(cardFinder).toList();
+    expect(
+      cards[0].kind,
+      VehicleDocumentKind.soat,
+      reason: 'First card must be SOAT',
+    );
+    expect(
+      cards[1].kind,
+      VehicleDocumentKind.rtm,
+      reason: 'Second card must be RTM',
+    );
 
-      // 3. SizedBox(height: 16) exists between the two cards.
-      final allSizedBoxes = tester
-          .widgetList<SizedBox>(find.byType(SizedBox))
-          .where((sb) => sb.height == 16.0)
-          .toList();
-      expect(allSizedBoxes, isNotEmpty,
-          reason: 'SizedBox(height: 16) must appear between SOAT and RTM cards');
+    // 3. SizedBox(height: 16) exists between the two cards.
+    final allSizedBoxes = tester
+        .widgetList<SizedBox>(find.byType(SizedBox))
+        .where((sb) => sb.height == 16.0)
+        .toList();
+    expect(
+      allSizedBoxes,
+      isNotEmpty,
+      reason: 'SizedBox(height: 16) must appear between SOAT and RTM cards',
+    );
 
-      // 4. Positional ordering: SOAT renderBox top < RTM renderBox top.
-      final soatBox = tester.getRect(cardFinder.at(0));
-      final rtmBox = tester.getRect(cardFinder.at(1));
-      expect(soatBox.top, lessThan(rtmBox.top),
-          reason: 'SOAT card must appear above RTM card in the layout');
-    },
-  );
+    // 4. Positional ordering: SOAT renderBox top < RTM renderBox top.
+    final soatBox = tester.getRect(cardFinder.at(0));
+    final rtmBox = tester.getRect(cardFinder.at(1));
+    expect(
+      soatBox.top,
+      lessThan(rtmBox.top),
+      reason: 'SOAT card must appear above RTM card in the layout',
+    );
+  });
 }

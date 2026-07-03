@@ -78,8 +78,8 @@ class _RiderTelemetryRidersContentState
       if (!mounted || !_scrollController.hasClients) return;
       final viewportWidth = _scrollController.position.viewportDimension;
       final cardWidth = MediaQuery.of(context).size.width * _cardWidthFactor;
-      final target = index * (cardWidth + _gap) -
-          (viewportWidth - cardWidth) / 2;
+      final target =
+          index * (cardWidth + _gap) - (viewportWidth - cardWidth) / 2;
       final clamped = target.clamp(
         _scrollController.position.minScrollExtent,
         _scrollController.position.maxScrollExtent,
@@ -117,8 +117,8 @@ class _RiderTelemetryRidersContentState
             return RiderTelemetryCard(
               rider: rider,
               isSelected: rider.userId == selectedId,
-              isSos: widget.sosUserId != null &&
-                  rider.userId == widget.sosUserId,
+              isSos:
+                  widget.sosUserId != null && rider.userId == widget.sosUserId,
               onTap: () => widget.onRiderTap(rider),
               distanceFromCurrentUserMeters: _distanceFromCurrentUserMeters(
                 rider: rider,

@@ -11,8 +11,11 @@ import 'package:rideglory/features/vehicle_documents/presentation/widgets/status
 /// Consumers provide the loading, empty, data, and error child widgets.
 /// The scaffold itself handles the [AppBar] with optional [actions] for the
 /// data state.
-class DocumentStatusView<C extends VehicleDocumentCubit<T>,
-    T extends VehicleDocumentModel> extends StatelessWidget {
+class DocumentStatusView<
+  C extends VehicleDocumentCubit<T>,
+  T extends VehicleDocumentModel
+>
+    extends StatelessWidget {
   const DocumentStatusView({
     super.key,
     required this.title,
@@ -49,9 +52,7 @@ class DocumentStatusView<C extends VehicleDocumentCubit<T>,
         elevation: 0,
         leading: const BackButton(
           color: AppColors.textOnDarkPrimary,
-          style: ButtonStyle(
-            iconSize: WidgetStatePropertyAll(20),
-          ),
+          style: ButtonStyle(iconSize: WidgetStatePropertyAll(20)),
         ),
         actions: buildDataActions != null
             ? [

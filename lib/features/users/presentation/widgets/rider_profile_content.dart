@@ -43,8 +43,7 @@ class RiderProfileContent extends StatelessWidget {
             ),
           ),
         ],
-        if (user.residenceCity != null &&
-            user.residenceCity!.isNotEmpty) ...[
+        if (user.residenceCity != null && user.residenceCity!.isNotEmpty) ...[
           AppSpacing.gapXs,
           Center(
             child: Row(
@@ -74,10 +73,7 @@ class RiderProfileContent extends StatelessWidget {
           followingLabel: context.l10n.rider_statsFollowing,
         ),
         AppSpacing.gapXxl,
-        AppButton(
-          label: context.l10n.rider_follow,
-          onPressed: () {},
-        ),
+        AppButton(label: context.l10n.rider_follow, onPressed: () {}),
       ],
     );
   }

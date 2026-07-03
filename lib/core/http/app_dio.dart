@@ -39,9 +39,7 @@ abstract final class AppDio {
     // capture datos ya procesados.
     // tracePropagationTargets se configura globalmente en SentryFlutter.init
     // (main.dart) para restringir el header sentry-trace al host Rideglory.
-    dio.addSentry(
-      captureFailedRequests: true,
-    );
+    dio.addSentry(captureFailedRequests: true);
 
     return dio;
   }

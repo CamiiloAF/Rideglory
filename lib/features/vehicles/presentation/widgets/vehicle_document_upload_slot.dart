@@ -53,7 +53,10 @@ class VehicleDocumentUploadSlot extends StatelessWidget {
       ),
       child: Row(
         children: [
-          VehicleDocumentIconSlot(hasDocument: _hasDocument, localPath: localPath),
+          VehicleDocumentIconSlot(
+            hasDocument: _hasDocument,
+            localPath: localPath,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

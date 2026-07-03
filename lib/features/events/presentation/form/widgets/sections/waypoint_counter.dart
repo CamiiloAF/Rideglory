@@ -29,7 +29,9 @@ class WaypointCounter extends StatelessWidget {
             context.l10n.route_builder_counter(count),
             style: TextStyle(
               fontFamily: 'Space Grotesk',
-              color: isActive ? AppColors.primary : AppColors.textOnDarkTertiary,
+              color: isActive
+                  ? AppColors.primary
+                  : AppColors.textOnDarkTertiary,
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),

@@ -118,9 +118,7 @@ Future<ApiResult<T>> handlerExceptionHttpTestable<T>({
       if (classification.shouldReport) {
         final reporter = crashReporter;
         if (reporter != null) {
-          final info = _buildInformation(
-            category: classification.category!,
-          );
+          final info = _buildInformation(category: classification.category!);
           try {
             await reporter.recordError(
               firebaseException,
@@ -154,9 +152,7 @@ Future<ApiResult<T>> handlerExceptionHttpTestable<T>({
       if (classification.shouldReport) {
         final reporter = crashReporter;
         if (reporter != null) {
-          final info = _buildInformation(
-            category: classification.category!,
-          );
+          final info = _buildInformation(category: classification.category!);
           try {
             await reporter.recordError(
               platformException,
@@ -182,7 +178,9 @@ Future<ApiResult<T>> handlerExceptionHttpTestable<T>({
   } on SignInWithAppleAuthorizationException catch (e) {
     if (e.code == AuthorizationErrorCode.canceled) {
       return ApiResult.failure(
-        dataException: const DomainException(message: 'Inicio de sesión cancelado.'),
+        dataException: const DomainException(
+          message: 'Inicio de sesión cancelado.',
+        ),
       );
     }
     if (!isDebug) {
@@ -200,7 +198,9 @@ Future<ApiResult<T>> handlerExceptionHttpTestable<T>({
       }
     }
     return ApiResult.failure(
-      dataException: const DomainException(message: 'Error al iniciar sesión con Apple.'),
+      dataException: const DomainException(
+        message: 'Error al iniciar sesión con Apple.',
+      ),
     );
   } on DomainException catch (domainException) {
     // Fase 4 — NO reportar: anti doble-conteo (ya fue evaluada en la rama
@@ -247,12 +247,11 @@ Future<ApiResult<T>> handlerExceptionHttpTestable<T>({
 /// Delega a [handlerExceptionHttpTestable] con los valores de producción.
 Future<ApiResult<T>> handlerExceptionHttp<T>({
   required Future<T> Function() function,
-}) =>
-    handlerExceptionHttpTestable(
-      function: function,
-      crashReporter: _crashReporter(),
-      isDebug: kDebugMode,
-    );
+}) => handlerExceptionHttpTestable(
+  function: function,
+  crashReporter: _crashReporter(),
+  isDebug: kDebugMode,
+);
 
 String _getDioErrorMessage(DioException exception) {
   final responseMessage = _extractResponseMessage(exception.response?.data);

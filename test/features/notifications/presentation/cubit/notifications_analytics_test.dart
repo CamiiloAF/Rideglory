@@ -31,15 +31,14 @@ class MockAnalyticsService extends Mock implements AnalyticsService {}
 NotificationModel _buildNotification({
   required String id,
   bool isRead = false,
-}) =>
-    NotificationModel(
-      id: id,
-      type: NotificationType.general,
-      title: 'Notificación $id',
-      body: 'Cuerpo $id',
-      createdAt: DateTime(2026, 6, 1),
-      isRead: isRead,
-    );
+}) => NotificationModel(
+  id: id,
+  type: NotificationType.general,
+  title: 'Notificación $id',
+  body: 'Cuerpo $id',
+  createdAt: DateTime(2026, 6, 1),
+  isRead: isRead,
+);
 
 void main() {
   late MockGetNotificationsUseCase mockGetNotifications;
@@ -70,106 +69,87 @@ void main() {
 
   group('NotificationsCubit — analytics Fase 9', () {
     // TC-notif-a1: notification_marked_read se emite al markRead
-    test(
-      'TC-notif-a1: markRead → notification_marked_read emitido',
-      () async {
-        when(() => mockGetNotifications()).thenAnswer(
-          (_) async => Right(
-            NotificationsPage(data: [notification1, notification2]),
-          ),
-        );
-        when(() => mockMarkRead('n1'))
-            .thenAnswer((_) async => const Right(null));
+    test('TC-notif-a1: markRead → notification_marked_read emitido', () async {
+      when(() => mockGetNotifications()).thenAnswer(
+        (_) async =>
+            Right(NotificationsPage(data: [notification1, notification2])),
+      );
+      when(() => mockMarkRead('n1')).thenAnswer((_) async => const Right(null));
 
-        await cubit.load();
-        await cubit.markRead('n1');
+      await cubit.load();
+      await cubit.markRead('n1');
 
-        verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.notificationMarkedRead,
-            any(),
-          ),
-        ).called(1);
-      },
-    );
+      verify(
+        () => mockAnalytics.logEvent(
+          AnalyticsEvents.notificationMarkedRead,
+          any(),
+        ),
+      ).called(1);
+    });
 
     // TC-notif-a2: AC 3 — load() NO emite notification_marked_read
     // (recibida vs abierta: renderizar el listado no es "abrir")
-    test(
-      'TC-notif-a2: load() → notification_marked_read NO emitido '
-      '(distinción recibida vs abierta)',
-      () async {
-        when(() => mockGetNotifications()).thenAnswer(
-          (_) async => Right(
-            NotificationsPage(data: [notification1, notification2]),
-          ),
-        );
+    test('TC-notif-a2: load() → notification_marked_read NO emitido '
+        '(distinción recibida vs abierta)', () async {
+      when(() => mockGetNotifications()).thenAnswer(
+        (_) async =>
+            Right(NotificationsPage(data: [notification1, notification2])),
+      );
 
-        await cubit.load();
+      await cubit.load();
 
-        verifyNever(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.notificationMarkedRead,
-            any(),
-          ),
-        );
-        verifyNever(
-          () => mockAnalytics.logEvent(AnalyticsEvents.notificationMarkedRead),
-        );
-      },
-    );
+      verifyNever(
+        () => mockAnalytics.logEvent(
+          AnalyticsEvents.notificationMarkedRead,
+          any(),
+        ),
+      );
+      verifyNever(
+        () => mockAnalytics.logEvent(AnalyticsEvents.notificationMarkedRead),
+      );
+    });
 
     // TC-notif-a3: notifications_all_read se emite al markAllRead
-    test(
-      'TC-notif-a3: markAllRead → notifications_all_read emitido',
-      () async {
-        when(() => mockGetNotifications()).thenAnswer(
-          (_) async => Right(
-            NotificationsPage(data: [notification1, notification2]),
-          ),
-        );
-        when(() => mockMarkAllRead())
-            .thenAnswer((_) async => const Right(null));
+    test('TC-notif-a3: markAllRead → notifications_all_read emitido', () async {
+      when(() => mockGetNotifications()).thenAnswer(
+        (_) async =>
+            Right(NotificationsPage(data: [notification1, notification2])),
+      );
+      when(() => mockMarkAllRead()).thenAnswer((_) async => const Right(null));
 
-        await cubit.load();
-        await cubit.markAllRead();
+      await cubit.load();
+      await cubit.markAllRead();
 
-        verify(
-          () => mockAnalytics.logEvent(AnalyticsEvents.notificationsAllRead),
-        ).called(1);
-      },
-    );
+      verify(
+        () => mockAnalytics.logEvent(AnalyticsEvents.notificationsAllRead),
+      ).called(1);
+    });
 
     // TC-notif-a4: G2 — notification_marked_read no contiene id ni texto
-    test(
-      'TC-notif-a4: G2 — params de notification_marked_read no contienen id '
-      'ni texto de notificación',
-      () async {
-        when(() => mockGetNotifications()).thenAnswer(
-          (_) async => Right(
-            NotificationsPage(data: [notification1, notification2]),
-          ),
-        );
-        when(() => mockMarkRead('n1'))
-            .thenAnswer((_) async => const Right(null));
+    test('TC-notif-a4: G2 — params de notification_marked_read no contienen id '
+        'ni texto de notificación', () async {
+      when(() => mockGetNotifications()).thenAnswer(
+        (_) async =>
+            Right(NotificationsPage(data: [notification1, notification2])),
+      );
+      when(() => mockMarkRead('n1')).thenAnswer((_) async => const Right(null));
 
-        await cubit.load();
-        await cubit.markRead('n1');
+      await cubit.load();
+      await cubit.markRead('n1');
 
-        final captured = verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.notificationMarkedRead,
-            captureAny(),
-          ),
-        ).captured;
+      final captured = verify(
+        () => mockAnalytics.logEvent(
+          AnalyticsEvents.notificationMarkedRead,
+          captureAny(),
+        ),
+      ).captured;
 
-        final params = captured.single as Map<String, Object>;
+      final params = captured.single as Map<String, Object>;
 
-        // id y texto del cuerpo nunca como valor
-        expect(params.values, isNot(contains('n1')));
-        expect(params.values, isNot(contains('Notificación n1')));
-        expect(params.values, isNot(contains('Cuerpo n1')));
-      },
-    );
+      // id y texto del cuerpo nunca como valor
+      expect(params.values, isNot(contains('n1')));
+      expect(params.values, isNot(contains('Notificación n1')));
+      expect(params.values, isNot(contains('Cuerpo n1')));
+    });
   });
 }

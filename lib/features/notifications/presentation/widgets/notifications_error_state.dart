@@ -20,11 +20,7 @@ class NotificationsErrorState extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              color: AppColors.error,
-              size: 48,
-            ),
+            const Icon(Icons.error_outline, color: AppColors.error, size: 48),
             AppSpacing.gapLg,
             Text(
               context.l10n.notification_loadError,

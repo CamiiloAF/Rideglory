@@ -77,7 +77,8 @@ class _AppAutocompleteFieldState extends State<AppAutocompleteField> {
 
   String? _validate(String? value) {
     if (value == null && _controller.text.isNotEmpty) {
-      return widget.selectionRequiredError ?? 'Selecciona una opción válida de la lista';
+      return widget.selectionRequiredError ??
+          'Selecciona una opción válida de la lista';
     }
     return widget.validator?.call(value);
   }
@@ -173,7 +174,8 @@ class _AppAutocompleteFieldState extends State<AppAutocompleteField> {
             if (shouldSync && fieldText != _controller.text) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (!mounted) return;
-                final stillShould = field.value != null || _controller.text.isEmpty;
+                final stillShould =
+                    field.value != null || _controller.text.isEmpty;
                 if (stillShould && (field.value ?? '') != _controller.text) {
                   _controller.text = field.value ?? '';
                 }

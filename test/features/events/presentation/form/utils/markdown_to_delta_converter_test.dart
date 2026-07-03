@@ -24,8 +24,9 @@ void main() {
       test('plain text line is inserted as-is', () {
         final opsList = ops('Hola mundo');
         // Delta may merge adjacent inserts so check for contains
-        final allInserts =
-            opsList.map((op) => op['insert'] as String? ?? '').join();
+        final allInserts = opsList
+            .map((op) => op['insert'] as String? ?? '')
+            .join();
         expect(allInserts.contains('Hola mundo'), isTrue);
       });
 
@@ -84,24 +85,20 @@ void main() {
       });
 
       test('unclosed bold marker treated as plain text', () {
-        expect(
-          () => converter.convert('texto **sin cerrar'),
-          returnsNormally,
-        );
+        expect(() => converter.convert('texto **sin cerrar'), returnsNormally);
         final opsList = ops('texto **sin cerrar');
         expect(opsList, isNotEmpty);
         expect(opsList.any((op) => op['attributes']?['bold'] == true), isFalse);
       });
 
       test('unclosed italic marker treated as plain text', () {
-        expect(
-          () => converter.convert('texto *sin cerrar'),
-          returnsNormally,
-        );
+        expect(() => converter.convert('texto *sin cerrar'), returnsNormally);
         final opsList = ops('texto *sin cerrar');
         expect(opsList, isNotEmpty);
         expect(
-            opsList.any((op) => op['attributes']?['italic'] == true), isFalse);
+          opsList.any((op) => op['attributes']?['italic'] == true),
+          isFalse,
+        );
       });
     });
 
@@ -126,15 +123,18 @@ void main() {
       expect(italicOp, isNotNull, reason: 'Expected an italic op');
     });
 
-    test('empty input returns normally with at least one op (trailing newline)',
-        () {
-      expect(() => converter.convert(''), returnsNormally);
-      final opsList = ops('');
-      expect(
-        opsList,
-        isNotEmpty,
-        reason: 'Even empty input should produce at least the trailing newline',
-      );
-    });
+    test(
+      'empty input returns normally with at least one op (trailing newline)',
+      () {
+        expect(() => converter.convert(''), returnsNormally);
+        final opsList = ops('');
+        expect(
+          opsList,
+          isNotEmpty,
+          reason:
+              'Even empty input should produce at least the trailing newline',
+        );
+      },
+    );
   });
 }

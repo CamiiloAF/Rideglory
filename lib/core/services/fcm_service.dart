@@ -45,7 +45,8 @@ class FcmService {
     // ── Android notification channel ────────────────────────────────────────
     await _localNotifications
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin
+        >()
         ?.createNotificationChannel(_androidChannel);
 
     // ── Local notifications init (foreground Android tap) ───────────────────

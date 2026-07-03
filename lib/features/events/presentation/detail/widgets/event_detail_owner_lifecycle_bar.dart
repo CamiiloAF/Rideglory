@@ -42,18 +42,18 @@ class EventDetailOwnerLifecycleBar extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(20, 16, 20, max(16.0, bottomPadding)),
       child: switch (event.state) {
         EventState.draft => EventDetailOwnerDraftBar(
-            isLoading: isLoading,
-            onPublish: onPublish ?? () {},
-          ),
+          isLoading: isLoading,
+          onPublish: onPublish ?? () {},
+        ),
         EventState.scheduled => EventDetailOwnerStartBar(
-            isLoading: isLoading,
-            onStart: onStart,
-          ),
+          isLoading: isLoading,
+          onStart: onStart,
+        ),
         EventState.inProgress => EventDetailOwnerLiveBar(
-            isLoading: isLoading,
-            onStop: onStop,
-            onOpenMap: onOpenMap,
-          ),
+          isLoading: isLoading,
+          onStop: onStop,
+          onOpenMap: onOpenMap,
+        ),
         EventState.finished => const SizedBox.shrink(),
         EventState.cancelled => const SizedBox.shrink(),
       },

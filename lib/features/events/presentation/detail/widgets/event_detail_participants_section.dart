@@ -126,7 +126,10 @@ class EventDetailParticipantsSection extends StatelessWidget {
                     tooltip: context.l10n.retry,
                     visualDensity: VisualDensity.compact,
                     padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                    constraints: const BoxConstraints(
+                      minWidth: 32,
+                      minHeight: 32,
+                    ),
                     iconSize: 18,
                     color: AppColors.textOnDarkSecondary,
                     onPressed: () => context

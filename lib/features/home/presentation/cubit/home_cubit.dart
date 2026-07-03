@@ -11,7 +11,7 @@ part 'home_state.dart';
 @injectable
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit(this._getHomeDataUseCase, this._analytics)
-      : super(const HomeInitial());
+    : super(const HomeInitial());
 
   final GetHomeDataUseCase _getHomeDataUseCase;
   final AnalyticsService _analytics;
@@ -21,21 +21,13 @@ class HomeCubit extends Cubit<HomeState> {
 
     final result = await _getHomeDataUseCase();
 
-    result.fold(
-      (error) => emit(HomeError(error.message)),
-      (data) {
-        _analytics
-            .logEvent(AnalyticsEvents.homeViewed, {
-              AnalyticsParams.upcomingEventsCount: data.upcomingEvents.length,
-              AnalyticsParams.hasMainVehicle:
-                  data.mainVehicle != null ? 1 : 0,
-            })
-            .ignore();
-        emit(
-          HomeLoaded(upcomingEvents: data.upcomingEvents),
-        );
-      },
-    );
+    result.fold((error) => emit(HomeError(error.message)), (data) {
+      _analytics.logEvent(AnalyticsEvents.homeViewed, {
+        AnalyticsParams.upcomingEventsCount: data.upcomingEvents.length,
+        AnalyticsParams.hasMainVehicle: data.mainVehicle != null ? 1 : 0,
+      }).ignore();
+      emit(HomeLoaded(upcomingEvents: data.upcomingEvents));
+    });
   }
 
   void updateEvent(EventModel event) {
@@ -44,9 +36,7 @@ class HomeCubit extends Cubit<HomeState> {
     final updated = current.upcomingEvents
         .map((e) => e.id == event.id ? event : e)
         .toList(growable: false);
-    emit(
-      HomeLoaded(upcomingEvents: updated),
-    );
+    emit(HomeLoaded(upcomingEvents: updated));
   }
 
   void removeEvent(String eventId) {
@@ -55,8 +45,6 @@ class HomeCubit extends Cubit<HomeState> {
     final updated = current.upcomingEvents
         .where((e) => e.id != eventId)
         .toList(growable: false);
-    emit(
-      HomeLoaded(upcomingEvents: updated),
-    );
+    emit(HomeLoaded(upcomingEvents: updated));
   }
 }

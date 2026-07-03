@@ -34,9 +34,7 @@ class AppTextButton extends StatelessWidget {
     final tapEvent = analyticsTapEvent;
     if (tapEvent == null) return callback;
     return () {
-      getIt<AnalyticsService>()
-          .logEvent(tapEvent, analyticsTapParams)
-          .ignore();
+      getIt<AnalyticsService>().logEvent(tapEvent, analyticsTapParams).ignore();
       callback();
     };
   }

@@ -36,8 +36,7 @@ import 'package:rideglory/l10n/app_localizations.dart';
 class MockSoatCubit extends MockCubit<ResultState<SoatModel>>
     implements SoatCubit {}
 
-class MockTecnomecanicaCubit
-    extends MockCubit<ResultState<TecnomecanicaModel>>
+class MockTecnomecanicaCubit extends MockCubit<ResultState<TecnomecanicaModel>>
     implements TecnomecanicaCubit {}
 
 class MockVehicleCubit extends MockCubit<ResultState<List<VehicleModel>>>
@@ -84,17 +83,19 @@ void main() {
 
     when(() => soatCubit.load(any())).thenAnswer((_) async {});
     when(() => rtmCubit.load(any())).thenAnswer((_) async {});
-    when(() => maintenancesCubit.fetchMaintenances(any()))
-        .thenAnswer((_) async {});
+    when(
+      () => maintenancesCubit.fetchMaintenances(any()),
+    ).thenAnswer((_) async {});
 
     // Initial VehicleCubit state: one vehicle at 1000 km
-    when(() => vehicleCubit.state).thenReturn(
-      const ResultState.data(data: [_vehicleInitial]),
-    );
+    when(
+      () => vehicleCubit.state,
+    ).thenReturn(const ResultState.data(data: [_vehicleInitial]));
 
     final gi = GetIt.instance;
     if (gi.isRegistered<SoatCubit>()) gi.unregister<SoatCubit>();
-    if (gi.isRegistered<TecnomecanicaCubit>()) gi.unregister<TecnomecanicaCubit>();
+    if (gi.isRegistered<TecnomecanicaCubit>())
+      gi.unregister<TecnomecanicaCubit>();
     if (gi.isRegistered<VehicleMaintenancesCubit>()) {
       gi.unregister<VehicleMaintenancesCubit>();
     }
@@ -106,7 +107,8 @@ void main() {
   tearDown(() {
     final gi = GetIt.instance;
     if (gi.isRegistered<SoatCubit>()) gi.unregister<SoatCubit>();
-    if (gi.isRegistered<TecnomecanicaCubit>()) gi.unregister<TecnomecanicaCubit>();
+    if (gi.isRegistered<TecnomecanicaCubit>())
+      gi.unregister<TecnomecanicaCubit>();
     if (gi.isRegistered<VehicleMaintenancesCubit>()) {
       gi.unregister<VehicleMaintenancesCubit>();
     }
@@ -123,10 +125,12 @@ void main() {
         vehicleCubit,
         Stream.fromIterable([
           const ResultState<List<VehicleModel>>.data(
-              data: [_vehicleUpdatedMileage]),
+            data: [_vehicleUpdatedMileage],
+          ),
         ]),
-        initialState:
-            const ResultState<List<VehicleModel>>.data(data: [_vehicleInitial]),
+        initialState: const ResultState<List<VehicleModel>>.data(
+          data: [_vehicleInitial],
+        ),
       );
 
       await tester.pumpWidget(
@@ -159,57 +163,58 @@ void main() {
       // and called setState, updating _vehicle.currentMileage from 1000 → 2500.
       // We verify this by inspecting the VehicleDetailView widget prop directly —
       // a reliable assertion that doesn't depend on sliver visibility.
-      final view =
-          tester.widget<VehicleDetailView>(find.byType(VehicleDetailView));
-      expect(view.vehicle.currentMileage, 2500,
-          reason:
-              'BlocListener<VehicleCubit> must propagate the new mileage (2500) '
-              'to VehicleDetailView via setState');
+      final view = tester.widget<VehicleDetailView>(
+        find.byType(VehicleDetailView),
+      );
+      expect(
+        view.vehicle.currentMileage,
+        2500,
+        reason:
+            'BlocListener<VehicleCubit> must propagate the new mileage (2500) '
+            'to VehicleDetailView via setState',
+      );
     },
   );
 
   // ── C7b: maintenance callbacks are invocable and wired correctly ──────────
 
-  testWidgets(
-    'C7b — onMaintenanceCreated, onPendingMaintenanceConsumed, '
-    'onMaintenanceRefreshRequested and onVehicleUpdated are wired without regression',
-    (tester) async {
-      // Track invocations via flag variables captured in the widget tree.
-      // VehicleDetailPage wires these callbacks internally in _VehicleDetailPageState;
-      // we verify the page builds correctly and the BlocListener coexists with the
-      // new BlocProviders by pumping and asserting no exceptions.
-      await tester.pumpWidget(
-        MaterialApp(
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-          supportedLocales: const [Locale('es')],
-          home: BlocProvider<VehicleCubit>.value(
-            value: vehicleCubit,
-            child: const VehicleDetailPage(vehicle: _vehicleInitial),
-          ),
+  testWidgets('C7b — onMaintenanceCreated, onPendingMaintenanceConsumed, '
+      'onMaintenanceRefreshRequested and onVehicleUpdated are wired without regression', (
+    tester,
+  ) async {
+    // Track invocations via flag variables captured in the widget tree.
+    // VehicleDetailPage wires these callbacks internally in _VehicleDetailPageState;
+    // we verify the page builds correctly and the BlocListener coexists with the
+    // new BlocProviders by pumping and asserting no exceptions.
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: const [Locale('es')],
+        home: BlocProvider<VehicleCubit>.value(
+          value: vehicleCubit,
+          child: const VehicleDetailPage(vehicle: _vehicleInitial),
         ),
-      );
-      await tester.pump();
+      ),
+    );
+    await tester.pump();
 
-      // The page must render without exceptions — confirming that the new
-      // BlocProviders (SoatCubit, TecnomecanicaCubit) are nested correctly
-      // inside the BlocListener<VehicleCubit> child and do not interfere with
-      // any of the four callbacks.
-      expect(tester.takeException(), isNull);
+    // The page must render without exceptions — confirming that the new
+    // BlocProviders (SoatCubit, TecnomecanicaCubit) are nested correctly
+    // inside the BlocListener<VehicleCubit> child and do not interfere with
+    // any of the four callbacks.
+    expect(tester.takeException(), isNull);
 
-      // Emit a VehicleCubit state change (simulating post-maintenance refresh).
-      vehicleCubit.emit(
-        const ResultState.data(data: [_vehicleUpdatedMileage]),
-      );
-      await tester.pump();
-      await tester.pump();
+    // Emit a VehicleCubit state change (simulating post-maintenance refresh).
+    vehicleCubit.emit(const ResultState.data(data: [_vehicleUpdatedMileage]));
+    await tester.pump();
+    await tester.pump();
 
-      // No exception must be thrown when the listener processes the new state.
-      expect(tester.takeException(), isNull);
-    },
-  );
+    // No exception must be thrown when the listener processes the new state.
+    expect(tester.takeException(), isNull);
+  });
 }

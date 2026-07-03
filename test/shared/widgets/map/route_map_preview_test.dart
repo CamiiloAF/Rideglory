@@ -15,10 +15,7 @@ import 'package:rideglory/shared/widgets/map/route_map_preview.dart';
 
 class MockPlaceService extends Mock implements PlaceService {}
 
-Widget _buildWidget({
-  String? meetingPoint,
-  String? destination,
-}) {
+Widget _buildWidget({String? meetingPoint, String? destination}) {
   return MaterialApp(
     theme: AppTheme.lightTheme,
     darkTheme: AppTheme.darkTheme,
@@ -61,8 +58,9 @@ void main() {
       (WidgetTester tester) async {
         // Arrange: geocode never completes — loading state stays active
         final completer = Completer<GeocodeResultDto>();
-        when(() => mockPlaceService.geocode(any()))
-            .thenAnswer((_) => completer.future);
+        when(
+          () => mockPlaceService.geocode(any()),
+        ).thenAnswer((_) => completer.future);
 
         // Act: pump once (enough to build widget + trigger initState async call)
         await tester.pumpWidget(
@@ -123,14 +121,13 @@ void main() {
           longitude: -75.5812,
           formattedAddress: 'Medellín, Colombia',
         );
-        when(() => mockPlaceService.geocode(any()))
-            .thenAnswer((_) async => geocodeResult);
+        when(
+          () => mockPlaceService.geocode(any()),
+        ).thenAnswer((_) async => geocodeResult);
 
         // Act: pump once (widget builds in loading state before async resolves)
         await tester.pumpWidget(
-          _buildWidget(
-            meetingPoint: 'Parque Berrío, Medellín',
-          ),
+          _buildWidget(meetingPoint: 'Parque Berrío, Medellín'),
         );
         // One pump to trigger initState future
         await tester.pump();
@@ -138,10 +135,7 @@ void main() {
         // Assert: widget renders without exception (data flow is correct)
         expect(find.byType(RouteMapPreview), findsOneWidget);
         // Error banner must NOT appear
-        expect(
-          find.text('No se pudo obtener las coordenadas.'),
-          findsNothing,
-        );
+        expect(find.text('No se pudo obtener las coordenadas.'), findsNothing);
       },
     );
 
@@ -151,10 +145,7 @@ void main() {
         // Arrange: no geocode calls expected (both fields are null/empty)
         // Act
         await tester.pumpWidget(
-          _buildWidget(
-            meetingPoint: null,
-            destination: null,
-          ),
+          _buildWidget(meetingPoint: null, destination: null),
         );
         await tester.pump();
 
@@ -162,10 +153,7 @@ void main() {
         expect(find.byType(RouteMapPreview), findsOneWidget);
         expect(find.text('Vista previa del mapa'), findsOneWidget);
         expect(find.byType(AppLoadingIndicator), findsNothing);
-        expect(
-          find.text('No se pudo obtener las coordenadas.'),
-          findsNothing,
-        );
+        expect(find.text('No se pudo obtener las coordenadas.'), findsNothing);
 
         // geocode should never be called when both fields are null
         verifyNever(() => mockPlaceService.geocode(any()));

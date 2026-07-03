@@ -44,17 +44,15 @@ class MaintenanceCardBody extends StatelessWidget {
     final urgencyColor = isUrgent
         ? AppColors.maintenanceUrgent
         : (daysUntilNext != null && daysUntilNext! < 30
-            ? AppColors.maintenanceWarning
-            : AppColors.maintenanceOk);
+              ? AppColors.maintenanceWarning
+              : AppColors.maintenanceOk);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
         color: AppColors.darkCard,
         borderRadius: BorderRadius.circular(12),
-        border: Border(
-          left: BorderSide(color: urgencyColor, width: 3),
-        ),
+        border: Border(left: BorderSide(color: urgencyColor, width: 3)),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
@@ -75,7 +73,11 @@ class MaintenanceCardBody extends StatelessWidget {
                       color: AppColors.darkTertiary,
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(typeIcon, color: context.colorScheme.primary, size: 20),
+                    child: Icon(
+                      typeIcon,
+                      color: context.colorScheme.primary,
+                      size: 20,
+                    ),
                   ),
                   AppSpacing.hGapLg,
 
@@ -109,7 +111,10 @@ class MaintenanceCardBody extends StatelessWidget {
                         ),
                         AppSpacing.gapXxs,
                         Text(
-                          (maintenance.serviceDate ?? maintenance.createdDate ?? DateTime.now()).formattedDate,
+                          (maintenance.serviceDate ??
+                                  maintenance.createdDate ??
+                                  DateTime.now())
+                              .formattedDate,
                           style: context.bodyMedium?.copyWith(
                             color: AppColors.darkTextSecondary,
                           ),

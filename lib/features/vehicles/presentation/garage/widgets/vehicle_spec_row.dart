@@ -53,7 +53,11 @@ class VehicleSpecRow extends StatelessWidget {
           ),
         ),
         if (!isLast)
-          const Divider(height: 1, thickness: 1, color: AppColors.darkBorderPrimary),
+          const Divider(
+            height: 1,
+            thickness: 1,
+            color: AppColors.darkBorderPrimary,
+          ),
       ],
     );
   }

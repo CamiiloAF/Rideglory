@@ -162,7 +162,10 @@ class TrackingWsClient {
     );
     developer.log('Tracking WS sending join for event $eventId');
     channel.sink.add(
-      jsonEncode({'type': 'tracking.join', 'data': {'eventId': eventId}}),
+      jsonEncode({
+        'type': 'tracking.join',
+        'data': {'eventId': eventId},
+      }),
     );
   }
 

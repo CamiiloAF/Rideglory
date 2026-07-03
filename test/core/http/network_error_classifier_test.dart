@@ -6,19 +6,13 @@ import 'package:rideglory/core/http/network_error_classifier.dart';
 import 'package:rideglory/core/services/analytics/analytics_params.dart';
 
 /// Helper que crea un [DioException] con el tipo y código de estado dados.
-DioException _dioException(
-  DioExceptionType type, {
-  int? statusCode,
-}) {
+DioException _dioException(DioExceptionType type, {int? statusCode}) {
   final requestOptions = RequestOptions(path: '/test');
   return DioException(
     type: type,
     requestOptions: requestOptions,
     response: statusCode != null
-        ? Response<void>(
-            requestOptions: requestOptions,
-            statusCode: statusCode,
-          )
+        ? Response<void>(requestOptions: requestOptions, statusCode: statusCode)
         : null,
   );
 }
@@ -29,14 +23,16 @@ FirebaseAuthException _firebaseException(String code) =>
 
 void main() {
   group('classifyDioException', () {
-    test('connectionTimeout → shouldReport=true, category=network, reason=network_timeout',
-        () {
-      final ex = _dioException(DioExceptionType.connectionTimeout);
-      final result = classifyDioException(ex);
-      expect(result.shouldReport, isTrue);
-      expect(result.category, equals(AnalyticsParams.categoryNetwork));
-      expect(result.reason, equals(AnalyticsParams.reasonNetworkTimeout));
-    });
+    test(
+      'connectionTimeout → shouldReport=true, category=network, reason=network_timeout',
+      () {
+        final ex = _dioException(DioExceptionType.connectionTimeout);
+        final result = classifyDioException(ex);
+        expect(result.shouldReport, isTrue);
+        expect(result.category, equals(AnalyticsParams.categoryNetwork));
+        expect(result.reason, equals(AnalyticsParams.reasonNetworkTimeout));
+      },
+    );
 
     test('sendTimeout → shouldReport=true, reason=network_timeout', () {
       final ex = _dioException(DioExceptionType.sendTimeout);
@@ -66,13 +62,16 @@ void main() {
       expect(result.reason, equals(AnalyticsParams.reasonNetworkConnection));
     });
 
-    test('badResponse 500 → shouldReport=true, reason=network_5xx, httpStatus=500', () {
-      final ex = _dioException(DioExceptionType.badResponse, statusCode: 500);
-      final result = classifyDioException(ex);
-      expect(result.shouldReport, isTrue);
-      expect(result.reason, equals(AnalyticsParams.reasonNetwork5xx));
-      expect(result.httpStatus, equals(500));
-    });
+    test(
+      'badResponse 500 → shouldReport=true, reason=network_5xx, httpStatus=500',
+      () {
+        final ex = _dioException(DioExceptionType.badResponse, statusCode: 500);
+        final result = classifyDioException(ex);
+        expect(result.shouldReport, isTrue);
+        expect(result.reason, equals(AnalyticsParams.reasonNetwork5xx));
+        expect(result.httpStatus, equals(500));
+      },
+    );
 
     test('badResponse 503 → shouldReport=true, reason=network_5xx', () {
       final ex = _dioException(DioExceptionType.badResponse, statusCode: 503);
@@ -149,7 +148,11 @@ void main() {
   });
 
   group('classifyPlatformException', () {
-    const expectedCodes = ['sign_in_cancelled', 'sign_in_failed', 'network_error'];
+    const expectedCodes = [
+      'sign_in_cancelled',
+      'sign_in_failed',
+      'network_error',
+    ];
 
     for (final code in expectedCodes) {
       test('$code → shouldReport=false (código esperado de sign-in)', () {
@@ -158,13 +161,19 @@ void main() {
       });
     }
 
-    test('código inesperado → shouldReport=true, category=platform_unexpected', () {
-      final ex = PlatformException(code: 'unknown_xyz_unexpected');
-      final result = classifyPlatformException(ex);
-      expect(result.shouldReport, isTrue);
-      expect(result.category, equals(AnalyticsParams.categoryPlatformUnexpected));
-      expect(result.reason, equals(AnalyticsParams.reasonPlatformUnexpected));
-    });
+    test(
+      'código inesperado → shouldReport=true, category=platform_unexpected',
+      () {
+        final ex = PlatformException(code: 'unknown_xyz_unexpected');
+        final result = classifyPlatformException(ex);
+        expect(result.shouldReport, isTrue);
+        expect(
+          result.category,
+          equals(AnalyticsParams.categoryPlatformUnexpected),
+        );
+        expect(result.reason, equals(AnalyticsParams.reasonPlatformUnexpected));
+      },
+    );
   });
 
   group('sanitizeEndpoint', () {
@@ -183,7 +192,9 @@ void main() {
     });
 
     test('enmascara segmentos numéricos', () {
-      final result = sanitizeEndpoint('https://api.example.com/users/42/profile');
+      final result = sanitizeEndpoint(
+        'https://api.example.com/users/42/profile',
+      );
       expect(result, contains(':id'));
       expect(result, isNot(contains('/42')));
     });

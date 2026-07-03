@@ -119,12 +119,18 @@ class AppModal extends StatelessWidget {
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        for (var index = 0; index < actions.length; index++) ...[
+                        for (
+                          var index = 0;
+                          index < actions.length;
+                          index++
+                        ) ...[
                           if (index > 0) _innerGap,
                           AppModalActionButton(
                             action: actions[index],
                             primaryFill: _primaryFill(actions[index]),
-                            primaryLabelColor: _primaryLabelColor(actions[index]),
+                            primaryLabelColor: _primaryLabelColor(
+                              actions[index],
+                            ),
                           ),
                         ],
                       ],

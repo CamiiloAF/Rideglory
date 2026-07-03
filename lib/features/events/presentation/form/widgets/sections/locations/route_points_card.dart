@@ -40,8 +40,9 @@ class RoutePointsCard extends StatelessWidget {
     }
 
     final hasEnd = waypoints.length >= 2;
-    final intermediates =
-        waypoints.length > 2 ? waypoints.sublist(1, waypoints.length - 1) : <String>[];
+    final intermediates = waypoints.length > 2
+        ? waypoints.sublist(1, waypoints.length - 1)
+        : <String>[];
 
     return Container(
       decoration: BoxDecoration(
@@ -83,11 +84,7 @@ class RoutePointsCard extends StatelessWidget {
               typeLabel: context.l10n.route_point_end,
               name: waypoints.last,
               iconBg: const Color(0xFF2D1A1A),
-              icon: const Icon(
-                Icons.flag,
-                color: Color(0xFFEF4444),
-                size: 16,
-              ),
+              icon: const Icon(Icons.flag, color: Color(0xFFEF4444), size: 16),
             ),
           ],
           RouteMapPreview(

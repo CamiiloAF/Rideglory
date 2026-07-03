@@ -27,7 +27,8 @@ abstract class AppEnv {
   static const String? firebaseStorageBucket = _AppEnv.firebaseStorageBucket;
 
   @EnviedField(optional: true)
-  static const String? firebaseAndroidClientId = _AppEnv.firebaseAndroidClientId;
+  static const String? firebaseAndroidClientId =
+      _AppEnv.firebaseAndroidClientId;
 
   @EnviedField(optional: true)
   static const String? firebaseIosClientId = _AppEnv.firebaseIosClientId;

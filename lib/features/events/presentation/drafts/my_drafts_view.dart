@@ -43,8 +43,11 @@ class MyDraftsView extends StatelessWidget {
                 );
               }
 
-              final currentUserId =
-                  context.watch<AuthCubit>().state.currentUser?.id;
+              final currentUserId = context
+                  .watch<AuthCubit>()
+                  .state
+                  .currentUser
+                  ?.id;
 
               return ListView.separated(
                 padding: const EdgeInsets.all(20),

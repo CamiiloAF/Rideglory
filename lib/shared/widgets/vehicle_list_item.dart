@@ -37,8 +37,9 @@ class VehicleListItem extends StatelessWidget {
               color: isSelected ? null : cs.surface,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color:
-                    isSelected ? cs.surface.withValues(alpha: 0) : cs.outlineVariant,
+                color: isSelected
+                    ? cs.surface.withValues(alpha: 0)
+                    : cs.outlineVariant,
                 width: 1.5,
               ),
               boxShadow: isSelected
@@ -84,9 +85,7 @@ class VehicleListItem extends StatelessWidget {
                           vehicle.name,
                           style: context.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: isSelected
-                                ? cs.onPrimary
-                                : cs.onSurface,
+                            color: isSelected ? cs.onPrimary : cs.onSurface,
                           ),
                         ),
                         if (vehicle.brand != null || vehicle.model != null) ...[

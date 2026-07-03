@@ -20,7 +20,9 @@ class MyLocationButton extends StatelessWidget {
         color: AppColors.darkCard.withValues(alpha: 0.92),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isEnabled ? AppColors.primary.withValues(alpha: 0.6) : AppColors.darkBorderPrimary,
+          color: isEnabled
+              ? AppColors.primary.withValues(alpha: 0.6)
+              : AppColors.darkBorderPrimary,
           width: 1.5,
         ),
         boxShadow: [

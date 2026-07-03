@@ -36,7 +36,9 @@ void main() {
     });
 
     test('strips time component when computing days', () {
-      final expiryWithTime = today().add(const Duration(days: 10, hours: 23, minutes: 59));
+      final expiryWithTime = today().add(
+        const Duration(days: 10, hours: 23, minutes: 59),
+      );
       final doc = _TestDoc(expiryWithTime);
       expect(doc.daysUntilExpiry, 10);
     });
@@ -113,7 +115,10 @@ void main() {
       });
 
       test('[$kind] expired when expiry was yesterday', () {
-        final doc = _TestDoc(today().subtract(const Duration(days: 1)), kind: kind);
+        final doc = _TestDoc(
+          today().subtract(const Duration(days: 1)),
+          kind: kind,
+        );
         expect(doc.documentStatus, VehicleDocumentStatus.expired);
       });
 

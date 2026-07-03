@@ -9,7 +9,6 @@ class TecnomecanicaExemptionNotice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(

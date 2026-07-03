@@ -45,88 +45,88 @@ class _EventDetailByIdPageState extends State<EventDetailByIdPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (_) => EventDetailCubit(
-          getIt<GetMyRegistrationForEventUseCase>(),
-          getIt<CancelEventRegistrationUseCase>(),
-          getIt<GetEventByIdUseCase>(),
-          getIt<UpdateEventUseCase>(),
-          getIt<PublishEventUseCase>(),
-          getIt<GetEventRegistrationsUseCase>(),
-          getIt<ApproveRegistrationUseCase>(),
-          getIt<RejectRegistrationUseCase>(),
-          getIt<SetRegistrationReadyForEditUseCase>(),
-          getIt<AnalyticsService>(),
-          getIt<TrackingRepository>(),
-        )..loadEvent(widget.eventId),
-        child: BlocConsumer<EventDetailCubit, EventDetailState>(
-          listener: _listener,
-          listenWhen: (previous, current) =>
-              previous.eventResult != current.eventResult,
-          builder: (context, state) {
-            return state.eventResult.when(
-              initial: () => Scaffold(
-                appBar: AppAppBar(title: context.l10n.event_eventDetail),
-                body: const SizedBox.shrink(),
-              ),
-              loading: () => Scaffold(
-                appBar: AppAppBar(title: context.l10n.event_eventDetail),
-                body: const Center(
-                  child: AppLoadingIndicator(
-                    variant: AppLoadingIndicatorVariant.inline,
-                  ),
+      create: (_) => EventDetailCubit(
+        getIt<GetMyRegistrationForEventUseCase>(),
+        getIt<CancelEventRegistrationUseCase>(),
+        getIt<GetEventByIdUseCase>(),
+        getIt<UpdateEventUseCase>(),
+        getIt<PublishEventUseCase>(),
+        getIt<GetEventRegistrationsUseCase>(),
+        getIt<ApproveRegistrationUseCase>(),
+        getIt<RejectRegistrationUseCase>(),
+        getIt<SetRegistrationReadyForEditUseCase>(),
+        getIt<AnalyticsService>(),
+        getIt<TrackingRepository>(),
+      )..loadEvent(widget.eventId),
+      child: BlocConsumer<EventDetailCubit, EventDetailState>(
+        listener: _listener,
+        listenWhen: (previous, current) =>
+            previous.eventResult != current.eventResult,
+        builder: (context, state) {
+          return state.eventResult.when(
+            initial: () => Scaffold(
+              appBar: AppAppBar(title: context.l10n.event_eventDetail),
+              body: const SizedBox.shrink(),
+            ),
+            loading: () => Scaffold(
+              appBar: AppAppBar(title: context.l10n.event_eventDetail),
+              body: const Center(
+                child: AppLoadingIndicator(
+                  variant: AppLoadingIndicatorVariant.inline,
                 ),
               ),
-              data: (event) => EventDetailPage(
-                params: EventDetailPageParams(
-                  isFromEventDetailByIdPage: true,
-                  event: event,
-                  onRegistrationChanged: (registration) {
-                    registrationModel = registration;
-                  },
+            ),
+            data: (event) => EventDetailPage(
+              params: EventDetailPageParams(
+                isFromEventDetailByIdPage: true,
+                event: event,
+                onRegistrationChanged: (registration) {
+                  registrationModel = registration;
+                },
+              ),
+            ),
+            empty: () => Scaffold(
+              appBar: AppAppBar(title: context.l10n.event_eventDetail),
+              body: Center(
+                child: Text(
+                  context.l10n.registration_errorLoadingEvent,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ),
-              empty: () => Scaffold(
-                appBar: AppAppBar(title: context.l10n.event_eventDetail),
-                body: Center(
-                  child: Text(
-                    context.l10n.registration_errorLoadingEvent,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
+            ),
+            error: (error) => Scaffold(
+              appBar: AppAppBar(title: context.l10n.event_eventDetail),
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 48,
+                      color: context.colorScheme.onSurfaceVariant,
+                    ),
+                    AppSpacing.gapMd,
+                    Text(
+                      context.l10n.registration_errorLoadingEvent,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    AppSpacing.gapLg,
+                    AppButton(
+                      label: context.l10n.retry,
+                      onPressed: () => context
+                          .read<EventDetailCubit>()
+                          .loadEvent(widget.eventId),
+                      variant: AppButtonVariant.primary,
+                      style: AppButtonStyle.filled,
+                      isFullWidth: false,
+                    ),
+                  ],
                 ),
               ),
-              error: (error) => Scaffold(
-                appBar: AppAppBar(title: context.l10n.event_eventDetail),
-                body: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        size: 48,
-                        color: context.colorScheme.onSurfaceVariant,
-                      ),
-                      AppSpacing.gapMd,
-                      Text(
-                        context.l10n.registration_errorLoadingEvent,
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                      AppSpacing.gapLg,
-                      AppButton(
-                        label: context.l10n.retry,
-                        onPressed: () => context
-                            .read<EventDetailCubit>()
-                            .loadEvent(widget.eventId),
-                        variant: AppButtonVariant.primary,
-                        style: AppButtonStyle.filled,
-                        isFullWidth: false,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

@@ -31,27 +31,21 @@ Widget _wrap(Widget child) {
 
 void main() {
   group('AC13 — AiQuotaExceededUserException state', () {
-    testWidgets(
-      'AiChatInputRow is disabled when quota exhausted',
-      (tester) async {
-        await tester.pumpWidget(
-          _wrap(
-            AiChatInputRow(
-              disabled: true,
-              onSend: (_) {},
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
+    testWidgets('AiChatInputRow is disabled when quota exhausted', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _wrap(AiChatInputRow(disabled: true, onSend: (_) {})),
+      );
+      await tester.pumpAndSettle();
 
-        final textField = tester.widget<TextField>(find.byType(TextField));
-        expect(
-          textField.enabled,
-          isFalse,
-          reason: 'TextField must be disabled when quota is exhausted',
-        );
-      },
-    );
+      final textField = tester.widget<TextField>(find.byType(TextField));
+      expect(
+        textField.enabled,
+        isFalse,
+        reason: 'TextField must be disabled when quota is exhausted',
+      );
+    });
 
     testWidgets(
       'AiChatErrorBanner for quota_exceeded_user: NO "Reintentar" button',
@@ -109,12 +103,17 @@ void main() {
         expect(
           find.text('Reintentar'),
           findsOneWidget,
-          reason: 'Reintentar must be visible for recoverable quota_project error',
+          reason:
+              'Reintentar must be visible for recoverable quota_project error',
         );
 
         await tester.tap(find.text('Reintentar'));
         await tester.pumpAndSettle();
-        expect(retryCalled, isTrue, reason: 'Reintentar tap must invoke onRetry');
+        expect(
+          retryCalled,
+          isTrue,
+          reason: 'Reintentar tap must invoke onRetry',
+        );
       },
     );
 
@@ -125,8 +124,7 @@ void main() {
           _wrap(
             AiChatErrorBanner(
               error: const AiSafetyBlockedException(
-                message:
-                    'Tu mensaje fue bloqueado por filtros de seguridad.',
+                message: 'Tu mensaje fue bloqueado por filtros de seguridad.',
               ),
               onRetry: () {},
             ),
@@ -142,37 +140,37 @@ void main() {
         expect(
           find.text('Reintentar'),
           findsOneWidget,
-          reason: 'Reintentar must be visible for recoverable safety_blocked error',
+          reason:
+              'Reintentar must be visible for recoverable safety_blocked error',
         );
       },
     );
 
-    testWidgets(
-      'AiNetworkErrorException → ai_errorNetwork + Reintentar',
-      (tester) async {
-        await tester.pumpWidget(
-          _wrap(
-            AiChatErrorBanner(
-              error: const AiNetworkErrorException(
-                message: 'No se pudo conectar con el servicio de IA.',
-              ),
-              onRetry: () {},
+    testWidgets('AiNetworkErrorException → ai_errorNetwork + Reintentar', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _wrap(
+          AiChatErrorBanner(
+            error: const AiNetworkErrorException(
+              message: 'No se pudo conectar con el servicio de IA.',
             ),
+            onRetry: () {},
           ),
-        );
-        await tester.pumpAndSettle();
+        ),
+      );
+      await tester.pumpAndSettle();
 
-        expect(
-          find.textContaining('No se pudo conectar'),
-          findsOneWidget,
-          reason: 'ai_errorNetwork message must be shown',
-        );
-        expect(
-          find.text('Reintentar'),
-          findsOneWidget,
-          reason: 'Reintentar must be visible for recoverable network error',
-        );
-      },
-    );
+      expect(
+        find.textContaining('No se pudo conectar'),
+        findsOneWidget,
+        reason: 'ai_errorNetwork message must be shown',
+      );
+      expect(
+        find.text('Reintentar'),
+        findsOneWidget,
+        reason: 'Reintentar must be visible for recoverable network error',
+      );
+    });
   });
 }

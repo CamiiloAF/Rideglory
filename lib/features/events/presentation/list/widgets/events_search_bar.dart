@@ -43,8 +43,10 @@ class EventsSearchBar extends StatelessWidget {
           errorBorder: InputBorder.none,
           focusedErrorBorder: InputBorder.none,
           disabledBorder: InputBorder.none,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 14,
+            vertical: 13,
+          ),
           isDense: true,
         ),
       ),

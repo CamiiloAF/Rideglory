@@ -9,11 +9,7 @@ import 'package:rideglory/features/authentication/constants/auth_form_fields.dar
 import 'package:rideglory/features/authentication/signup/presentation/widgets/signup_terms_checkbox.dart';
 
 class SignupForm extends StatefulWidget {
-  const SignupForm({
-    super.key,
-    required this.formKey,
-    required this.onSignup,
-  });
+  const SignupForm({super.key, required this.formKey, required this.onSignup});
 
   final GlobalKey<FormBuilderState> formKey;
   final VoidCallback onSignup;
@@ -133,8 +129,11 @@ class _SignupFormState extends State<SignupForm> {
                 errorText: context.l10n.auth_confirmPasswordRequired,
               ),
               (value) {
-                final password = widget.formKey.currentState
-                    ?.fields[AuthFormFields.password]?.value;
+                final password = widget
+                    .formKey
+                    .currentState
+                    ?.fields[AuthFormFields.password]
+                    ?.value;
                 if (value != password) {
                   return context.l10n.auth_passwordsDoNotMatch;
                 }

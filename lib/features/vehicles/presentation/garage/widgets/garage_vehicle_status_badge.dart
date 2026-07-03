@@ -56,14 +56,16 @@ class _GarageVehicleStatusBadgeState extends State<GarageVehicleStatusBadge> {
       vehicleId,
       () {
         final useCase = getIt<GetMaintenancesByVehicleIdUseCase>();
-        return useCase.execute(vehicleId).then(
-          (result) => result.fold(
-            (_) => 0,
-            (page) => page.items
-                .where((m) => m.mode == MaintenanceMode.scheduled)
-                .length,
-          ),
-        );
+        return useCase
+            .execute(vehicleId)
+            .then(
+              (result) => result.fold(
+                (_) => 0,
+                (page) => page.items
+                    .where((m) => m.mode == MaintenanceMode.scheduled)
+                    .length,
+              ),
+            );
       },
     );
   }
@@ -86,7 +88,9 @@ class _GarageVehicleStatusBadgeState extends State<GarageVehicleStatusBadge> {
         final isUpToDate = count == 0;
         return _badge(
           context,
-          dotColor: isUpToDate ? AppColors.statusGreen : AppColors.statusWarning,
+          dotColor: isUpToDate
+              ? AppColors.statusGreen
+              : AppColors.statusWarning,
           bgColor: isUpToDate
               ? AppColors.statusGreen.withValues(alpha: 0.13)
               : AppColors.statusWarning.withValues(alpha: 0.13),
@@ -116,10 +120,7 @@ class _GarageVehicleStatusBadgeState extends State<GarageVehicleStatusBadge> {
           Container(
             width: 6,
             height: 6,
-            decoration: BoxDecoration(
-              color: dotColor,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: dotColor, shape: BoxShape.circle),
           ),
           const SizedBox(width: 4),
           Text(

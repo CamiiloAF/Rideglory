@@ -19,12 +19,14 @@ class SignupSocialButtons extends StatelessWidget {
 
   AnalyticsService get _analytics => getIt<AnalyticsService>();
 
-  void _onSocialPressed(BuildContext context, String method, VoidCallback action) {
-    _analytics
-        .logEvent(AnalyticsEvents.authMethodSelected, {
-          AnalyticsParams.authMethod: method,
-        })
-        .ignore();
+  void _onSocialPressed(
+    BuildContext context,
+    String method,
+    VoidCallback action,
+  ) {
+    _analytics.logEvent(AnalyticsEvents.authMethodSelected, {
+      AnalyticsParams.authMethod: method,
+    }).ignore();
     action();
   }
 
@@ -67,7 +69,12 @@ class SignupSocialButtons extends StatelessWidget {
             // Divider with "Already have account?" text
             Row(
               children: [
-                Expanded(child: Container(height: 1, color: AppColors.darkBorderPrimary)),
+                Expanded(
+                  child: Container(
+                    height: 1,
+                    color: AppColors.darkBorderPrimary,
+                  ),
+                ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
@@ -79,7 +86,12 @@ class SignupSocialButtons extends StatelessWidget {
                     ),
                   ),
                 ),
-                Expanded(child: Container(height: 1, color: AppColors.darkBorderPrimary)),
+                Expanded(
+                  child: Container(
+                    height: 1,
+                    color: AppColors.darkBorderPrimary,
+                  ),
+                ),
               ],
             ),
             AppSpacing.gapXxl,

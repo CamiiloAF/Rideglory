@@ -50,8 +50,10 @@ class VehicleMaintenanceHistorySection extends StatelessWidget {
             });
           }
 
-          return BlocBuilder<VehicleMaintenancesCubit,
-              ResultState<List<MaintenanceModel>>>(
+          return BlocBuilder<
+            VehicleMaintenancesCubit,
+            ResultState<List<MaintenanceModel>>
+          >(
             builder: (context, _) {
               final cubit = context.read<VehicleMaintenancesCubit>();
               return _MaintenanceCards(
@@ -193,16 +195,19 @@ class _ServiceCard extends StatelessWidget {
     final iconColor = _isLast
         ? AppColors.info
         : overdue
-            ? AppColors.error
-            : AppColors.primary;
+        ? AppColors.error
+        : AppColors.primary;
     final badgeText = _isLast
         ? context.l10n.maintenance_done
         : overdue
-            ? context.l10n.maintenance_statusOverdue
-            : context.l10n.maintenance_legend_warning;
-    final bgColor = overdue ? AppColors.statusError.withValues(alpha: 0.1) : AppColors.darkCard;
-    final borderColor =
-        overdue ? AppColors.statusError.withValues(alpha: 0.25) : AppColors.darkBorderPrimary;
+        ? context.l10n.maintenance_statusOverdue
+        : context.l10n.maintenance_legend_warning;
+    final bgColor = overdue
+        ? AppColors.statusError.withValues(alpha: 0.1)
+        : AppColors.darkCard;
+    final borderColor = overdue
+        ? AppColors.statusError.withValues(alpha: 0.25)
+        : AppColors.darkBorderPrimary;
     final primary = _primaryValue();
     final secondary = _secondaryValue();
 
@@ -225,8 +230,7 @@ class _ServiceCard extends StatelessWidget {
                 color: iconColor,
               ),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
                   color: iconColor.withValues(alpha: 0.13),
                   borderRadius: BorderRadius.circular(20),
@@ -246,9 +250,7 @@ class _ServiceCard extends StatelessWidget {
           Text(
             primary,
             style: TextStyle(
-              color: overdue
-                  ? AppColors.error
-                  : AppColors.textOnDarkPrimary,
+              color: overdue ? AppColors.error : AppColors.textOnDarkPrimary,
               fontSize: 15,
               fontWeight: FontWeight.w700,
             ),

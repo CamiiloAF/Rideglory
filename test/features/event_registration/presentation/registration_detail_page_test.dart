@@ -66,43 +66,54 @@ void main() {
     // simplest render path for the medical info card.
     when(() => mockAuthCubit.state).thenReturn(
       const AuthState.authenticated(
-        UserModel(id: 'user-1', fullName: 'Rider Test', email: 'rider@test.com'),
+        UserModel(
+          id: 'user-1',
+          fullName: 'Rider Test',
+          email: 'rider@test.com',
+        ),
       ),
     );
   });
 
-  group('RegistrationDetailPage — bloodType row (legal-privacidad-edad fase 3)', () {
-    // Case 1.1: bloodType present renders its label without crashing.
-    testWidgets(
-      '1.1: registration with bloodType=A+ renders "A+" in the blood type row',
-      (tester) async {
-        final registration = _buildRegistration(
-          bloodType: BloodType.aPositive,
-        );
+  group(
+    'RegistrationDetailPage — bloodType row (legal-privacidad-edad fase 3)',
+    () {
+      // Case 1.1: bloodType present renders its label without crashing.
+      testWidgets(
+        '1.1: registration with bloodType=A+ renders "A+" in the blood type row',
+        (tester) async {
+          final registration = _buildRegistration(
+            bloodType: BloodType.aPositive,
+          );
 
-        await tester.pumpWidget(_buildTestWidget(mockAuthCubit, registration));
-        await tester.pumpAndSettle();
+          await tester.pumpWidget(
+            _buildTestWidget(mockAuthCubit, registration),
+          );
+          await tester.pumpAndSettle();
 
-        expect(find.text('Tipo de sangre'), findsOneWidget);
-        expect(find.text('A+'), findsOneWidget);
-        expect(tester.takeException(), isNull);
-      },
-    );
+          expect(find.text('Tipo de sangre'), findsOneWidget);
+          expect(find.text('A+'), findsOneWidget);
+          expect(tester.takeException(), isNull);
+        },
+      );
 
-    // Case 1.2: bloodType absent (null) does not crash and never shows the
-    // literal string 'null'.
-    testWidgets(
-      '1.2: registration with bloodType=null renders blank value, no "null" text, no crash',
-      (tester) async {
-        final registration = _buildRegistration(bloodType: null);
+      // Case 1.2: bloodType absent (null) does not crash and never shows the
+      // literal string 'null'.
+      testWidgets(
+        '1.2: registration with bloodType=null renders blank value, no "null" text, no crash',
+        (tester) async {
+          final registration = _buildRegistration(bloodType: null);
 
-        await tester.pumpWidget(_buildTestWidget(mockAuthCubit, registration));
-        await tester.pumpAndSettle();
+          await tester.pumpWidget(
+            _buildTestWidget(mockAuthCubit, registration),
+          );
+          await tester.pumpAndSettle();
 
-        expect(tester.takeException(), isNull);
-        expect(find.text('Tipo de sangre'), findsOneWidget);
-        expect(find.text('null'), findsNothing);
-      },
-    );
-  });
+          expect(tester.takeException(), isNull);
+          expect(find.text('Tipo de sangre'), findsOneWidget);
+          expect(find.text('null'), findsNothing);
+        },
+      );
+    },
+  );
 }

@@ -33,7 +33,9 @@ class FilterTypeChip extends StatelessWidget {
           style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: isSelected ? AppColors.darkBgPrimary : AppColors.textOnDarkSecondary,
+            color: isSelected
+                ? AppColors.darkBgPrimary
+                : AppColors.textOnDarkSecondary,
           ),
         ),
       ),

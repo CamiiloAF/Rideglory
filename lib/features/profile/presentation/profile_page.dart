@@ -30,7 +30,10 @@ class _ProfilePageState extends State<ProfilePage> {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, _) {
-        if (!didPop) context.goNamed(AppRoutes.home); // Intentional: shell-tab navigation resets stack to prevent back-stack accumulation in StatefulShellRoute
+        if (!didPop)
+          context.goNamed(
+            AppRoutes.home,
+          ); // Intentional: shell-tab navigation resets stack to prevent back-stack accumulation in StatefulShellRoute
       },
       child: Scaffold(
         backgroundColor: AppColors.darkBgPrimary,

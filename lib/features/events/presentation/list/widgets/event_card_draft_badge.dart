@@ -17,7 +17,11 @@ class EventCardDraftBadge extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.edit_note_rounded, size: 13, color: AppColors.primary),
+          const Icon(
+            Icons.edit_note_rounded,
+            size: 13,
+            color: AppColors.primary,
+          ),
           AppSpacing.hGapXxs,
           Text(
             context.l10n.event_draftBadge.toUpperCase(),

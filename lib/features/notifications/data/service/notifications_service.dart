@@ -19,15 +19,11 @@ abstract class NotificationsService {
   });
 
   @PATCH('/notifications/{notificationId}/read')
-  Future<void> markRead(
-    @Path('notificationId') String notificationId,
-  );
+  Future<void> markRead(@Path('notificationId') String notificationId);
 
   @PATCH(ApiRoutes.notificationsReadAll)
   Future<void> markAllRead();
 
   @POST(ApiRoutes.notificationsFcmToken)
-  Future<void> registerFcmToken(
-    @Body() Map<String, dynamic> body,
-  );
+  Future<void> registerFcmToken(@Body() Map<String, dynamic> body);
 }

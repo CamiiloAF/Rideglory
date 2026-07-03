@@ -17,4 +17,3 @@ export 'layout/app_app_bar.dart';
 export 'feedback/app_loading_indicator.dart';
 
 export 'badges/app_event_badge.dart';
-

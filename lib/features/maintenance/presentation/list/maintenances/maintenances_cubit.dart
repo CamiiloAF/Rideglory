@@ -49,8 +49,9 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
     final (startDate, endDate) = _filters.dateWindow;
     // Si el filtro tiene exactamente 1 vehículo, consultamos solo ese endpoint
     // en vez de iterar todos los vehículos del usuario.
-    final scopedVehicleId =
-        _filters.vehicleIds.length == 1 ? _filters.vehicleIds.first : null;
+    final scopedVehicleId = _filters.vehicleIds.length == 1
+        ? _filters.vehicleIds.first
+        : null;
     final result = await _getMaintenancesUseCase.execute(
       vehicleId: scopedVehicleId,
       types: _filters.types.isEmpty ? null : _filters.types,
@@ -63,11 +64,9 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
       _summariesByVehicleId = Map<String, MaintenanceListSummary>.from(
         aggregate.summariesByVehicleId,
       );
-      _analytics
-          .logEvent(AnalyticsEvents.maintenanceHistoryViewed, {
-            AnalyticsParams.resultCount: aggregate.items.length,
-          })
-          .ignore();
+      _analytics.logEvent(AnalyticsEvents.maintenanceHistoryViewed, {
+        AnalyticsParams.resultCount: aggregate.items.length,
+      }).ignore();
       _applyClientFiltersAndEmit();
     });
   }
@@ -168,7 +167,9 @@ class MaintenancesCubit extends Cubit<ResultState<List<MaintenanceModel>>> {
     }
 
     if (_filters.types.isNotEmpty) {
-      filtered = filtered.where((m) => _filters.types.contains(m.type)).toList();
+      filtered = filtered
+          .where((m) => _filters.types.contains(m.type))
+          .toList();
     }
 
     // Status filter alineado con las secciones del listado:

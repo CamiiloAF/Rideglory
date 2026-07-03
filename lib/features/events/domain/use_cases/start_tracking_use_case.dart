@@ -14,9 +14,8 @@ class StartTrackingUseCase {
   Future<Either<DomainException, Nothing>> call({
     required String eventId,
     required RiderTrackingModel initialData,
-  }) =>
-      _trackingRepository.startTracking(
-        eventId: eventId,
-        initialData: initialData,
-      );
+  }) => _trackingRepository.startTracking(
+    eventId: eventId,
+    initialData: initialData,
+  );
 }

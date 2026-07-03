@@ -19,7 +19,9 @@ class MaintenanceDetailRow extends StatelessWidget {
       children: [
         Text(
           label,
-          style: context.bodyMedium?.copyWith(color: AppColors.darkTextSecondary),
+          style: context.bodyMedium?.copyWith(
+            color: AppColors.darkTextSecondary,
+          ),
         ),
         Text(
           value,

@@ -33,30 +33,25 @@ Widget _host(MockLiveTrackingCubit cubit) {
     home: Scaffold(
       body: BlocProvider<LiveTrackingCubit>.value(
         value: cubit,
-        child: Stack(
-          children: [LiveMapSosButton(onPressed: () {})],
-        ),
+        child: Stack(children: [LiveMapSosButton(onPressed: () {})]),
       ),
     ),
   );
 }
 
 void main() {
-  testWidgets(
-    'shows the SOS button while the ride is active',
-    (tester) async {
-      final cubit = MockLiveTrackingCubit();
-      whenListen(
-        cubit,
-        const Stream<LiveTrackingState>.empty(),
-        initialState: _activeState,
-      );
+  testWidgets('shows the SOS button while the ride is active', (tester) async {
+    final cubit = MockLiveTrackingCubit();
+    whenListen(
+      cubit,
+      const Stream<LiveTrackingState>.empty(),
+      initialState: _activeState,
+    );
 
-      await tester.pumpWidget(_host(cubit));
+    await tester.pumpWidget(_host(cubit));
 
-      expect(find.byType(SosButton), findsOneWidget);
-    },
-  );
+    expect(find.byType(SosButton), findsOneWidget);
+  });
 
   testWidgets(
     'hides the SOS button when the ride finishes (isFinished flips true)',

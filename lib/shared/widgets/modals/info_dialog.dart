@@ -19,12 +19,7 @@ class InfoDialog {
       description: content,
       variant: type.variant,
       barrierDismissible: true,
-      actions: [
-        AppModalAction(
-          label: resolvedButtonLabel,
-          onPressed: () {},
-        ),
-      ],
+      actions: [AppModalAction(label: resolvedButtonLabel, onPressed: () {})],
     );
   }
 }

@@ -13,6 +13,5 @@ class StopTrackingUseCase {
   Future<Either<DomainException, Nothing>> call({
     required String eventId,
     required String userId,
-  }) =>
-      _trackingRepository.stopTracking(eventId: eventId, userId: userId);
+  }) => _trackingRepository.stopTracking(eventId: eventId, userId: userId);
 }

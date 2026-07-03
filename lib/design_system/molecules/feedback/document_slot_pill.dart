@@ -66,10 +66,12 @@ class DocumentSlotPill extends StatelessWidget {
           isOptional: isOptional,
         ),
         const SizedBox(height: 10),
-        ...slots.map((slot) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: _DocumentSlotCard(slot: slot),
-            )),
+        ...slots.map(
+          (slot) => Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: _DocumentSlotCard(slot: slot),
+          ),
+        ),
         const SizedBox(height: 2),
         const _DocumentInfoRow(),
       ],
@@ -201,7 +203,11 @@ class _DocumentSlotCard extends StatelessWidget {
               color: _iconBg(),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(Icons.description_outlined, size: 20, color: _iconColor()),
+            child: Icon(
+              Icons.description_outlined,
+              size: 20,
+              color: _iconColor(),
+            ),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -260,7 +266,11 @@ class _DocumentSlotCard extends StatelessWidget {
                       color: AppColors.darkTertiary,
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: const Icon(Icons.close, size: 14, color: AppColors.textOnDarkSecondary),
+                    child: const Icon(
+                      Icons.close,
+                      size: 14,
+                      color: AppColors.textOnDarkSecondary,
+                    ),
                   ),
                 ),
               ],

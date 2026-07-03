@@ -43,8 +43,7 @@ class EventsPageView extends StatelessWidget {
                   error: (error) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content:
-                            Text(context.l10n.errorMessage(error.message)),
+                        content: Text(context.l10n.errorMessage(error.message)),
                         backgroundColor: AppColors.error,
                       ),
                     );
@@ -133,11 +132,9 @@ class EventsPageView extends StatelessWidget {
   }
 
   Future<void> _navigateToCreate(BuildContext context) async {
-    final result =
-        await context.pushNamed<EventModel?>(AppRoutes.createEvent);
+    final result = await context.pushNamed<EventModel?>(AppRoutes.createEvent);
     if (result != null && context.mounted) {
       context.read<EventsCubit>().addEvent(result);
     }
   }
 }
-

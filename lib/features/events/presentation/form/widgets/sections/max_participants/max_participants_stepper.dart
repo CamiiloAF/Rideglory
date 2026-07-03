@@ -79,7 +79,11 @@ class _MaxParticipantsStepperState extends State<MaxParticipantsStepper> {
             widget.onDecrement();
           },
           fill: const Color(0xFF242429),
-          child: const Icon(Icons.remove, size: 16, color: AppColors.textOnDarkPrimary),
+          child: const Icon(
+            Icons.remove,
+            size: 16,
+            color: AppColors.textOnDarkPrimary,
+          ),
         ),
         const SizedBox(width: 14),
         SizedBox(
@@ -133,7 +137,11 @@ class _MaxParticipantsStepperState extends State<MaxParticipantsStepper> {
             widget.onIncrement();
           },
           fill: AppColors.primary,
-          child: const Icon(Icons.add, size: 16, color: AppColors.darkBgPrimary),
+          child: const Icon(
+            Icons.add,
+            size: 16,
+            color: AppColors.darkBgPrimary,
+          ),
         ),
       ],
     );

@@ -37,8 +37,7 @@ Widget _buildHost(MockEventsCubit mockCubit) {
         builder: (context) => Scaffold(
           body: Center(
             child: ElevatedButton(
-              onPressed: () =>
-                  EventFiltersBottomSheet.show(context: context),
+              onPressed: () => EventFiltersBottomSheet.show(context: context),
               child: const Text('open'),
             ),
           ),
@@ -72,9 +71,9 @@ void main() {
 
     _currentCubit = MockEventsCubit();
     when(() => _currentCubit.filters).thenReturn(const EventFilters());
-    when(() => _currentCubit.state).thenReturn(
-      const ResultState<List<EventModel>>.data(data: []),
-    );
+    when(
+      () => _currentCubit.state,
+    ).thenReturn(const ResultState<List<EventModel>>.data(data: []));
     when(() => _currentCubit.stream).thenAnswer((_) => const Stream.empty());
     when(() => _currentCubit.updateFilters(any())).thenReturn(null);
   });
@@ -86,16 +85,15 @@ void main() {
   });
 
   group('EventFiltersBottomSheet — Filter Tests (US-2-1, US-2-2)', () {
-    testWidgets(
-      'TC-2-18: header "Limpiar todo" is always visible',
-      (WidgetTester tester) async {
-        when(() => _currentCubit.filters).thenReturn(const EventFilters());
+    testWidgets('TC-2-18: header "Limpiar todo" is always visible', (
+      WidgetTester tester,
+    ) async {
+      when(() => _currentCubit.filters).thenReturn(const EventFilters());
 
-        await _openSheet(tester);
+      await _openSheet(tester);
 
-        expect(find.text('Limpiar todo'), findsOneWidget);
-      },
-    );
+      expect(find.text('Limpiar todo'), findsOneWidget);
+    });
 
     testWidgets(
       'TC-2-19: tapping "Cancelar" closes the sheet without applying filters',

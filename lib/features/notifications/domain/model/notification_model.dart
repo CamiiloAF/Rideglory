@@ -32,11 +32,7 @@ class NotificationModel {
   /// Ejemplo: `rideglory://events/detail-by-id?id=xxx`
   final String? route;
 
-  NotificationModel copyWith({
-    bool? isRead,
-    String? title,
-    String? body,
-  }) {
+  NotificationModel copyWith({bool? isRead, String? title, String? body}) {
     return NotificationModel(
       id: id,
       type: type,

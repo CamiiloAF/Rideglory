@@ -93,13 +93,15 @@ abstract class InitialsMarkerIcon {
       center,
       glowRadius,
       Paint()
-        ..shader = ui.Gradient.radial(center, glowRadius, [
-          glow.withValues(alpha: soft ? 0.35 : 0.50),
-          glow.withValues(alpha: 0.0),
-        ], [
-          radius / glowRadius,
-          1.0,
-        ]),
+        ..shader = ui.Gradient.radial(
+          center,
+          glowRadius,
+          [
+            glow.withValues(alpha: soft ? 0.35 : 0.50),
+            glow.withValues(alpha: 0.0),
+          ],
+          [radius / glowRadius, 1.0],
+        ),
     );
 
     canvas.drawCircle(center, radius, Paint()..color = fill);
@@ -129,12 +131,17 @@ abstract class InitialsMarkerIcon {
     )..layout();
     textPainter.paint(
       canvas,
-      Offset(center.dx - textPainter.width / 2, center.dy - textPainter.height / 2),
+      Offset(
+        center.dx - textPainter.width / 2,
+        center.dy - textPainter.height / 2,
+      ),
     );
 
     if (variant == RiderMarkerVariant.lead) {
-      final Offset badgeCenter =
-          Offset(center.dx + radius * 0.74, center.dy - radius * 0.74);
+      final Offset badgeCenter = Offset(
+        center.dx + radius * 0.74,
+        center.dy - radius * 0.74,
+      );
       const double badgeRadius = 11;
       canvas.drawCircle(badgeCenter, badgeRadius, Paint()..color = _bgPrimary);
       canvas.drawCircle(
@@ -158,7 +165,12 @@ abstract class InitialsMarkerIcon {
     );
   }
 
-  static void _drawCrown(Canvas canvas, Offset center, double size, Color color) {
+  static void _drawCrown(
+    Canvas canvas,
+    Offset center,
+    double size,
+    Color color,
+  ) {
     final double w = size;
     final double h = size * 0.82;
     final double left = center.dx - w / 2;

@@ -43,10 +43,7 @@ class AiDescriptionChatCubit extends Cubit<AiDescriptionChatState> {
     result.fold(
       (_) => emit(state.copyWith(isQuotaInitialized: true)),
       (remaining) => emit(
-        state.copyWith(
-          remainingQuota: remaining,
-          isQuotaInitialized: true,
-        ),
+        state.copyWith(remainingQuota: remaining, isQuotaInitialized: true),
       ),
     );
   }
@@ -86,23 +83,17 @@ class AiDescriptionChatCubit extends Cubit<AiDescriptionChatState> {
       (exception) {
         if (exception is AiQuotaExceededUserException ||
             exception is AiQuotaExceededProjectException) {
-          _analyticsService.logEvent(
-            AnalyticsEvents.aiQuotaExceeded,
-            {
-              AnalyticsParams.aiGenerationType:
-                  AnalyticsParams.aiGenerationTypeDescription,
-              AnalyticsParams.aiErrorCode: exception.runtimeType.toString(),
-            },
-          );
+          _analyticsService.logEvent(AnalyticsEvents.aiQuotaExceeded, {
+            AnalyticsParams.aiGenerationType:
+                AnalyticsParams.aiGenerationTypeDescription,
+            AnalyticsParams.aiErrorCode: exception.runtimeType.toString(),
+          });
         } else {
-          _analyticsService.logEvent(
-            AnalyticsEvents.aiGenerationFailed,
-            {
-              AnalyticsParams.aiGenerationType:
-                  AnalyticsParams.aiGenerationTypeDescription,
-              AnalyticsParams.aiErrorCode: exception.runtimeType.toString(),
-            },
-          );
+          _analyticsService.logEvent(AnalyticsEvents.aiGenerationFailed, {
+            AnalyticsParams.aiGenerationType:
+                AnalyticsParams.aiGenerationTypeDescription,
+            AnalyticsParams.aiErrorCode: exception.runtimeType.toString(),
+          });
         }
         emit(state.copyWith(sendResult: ResultState.error(error: exception)));
       },
@@ -113,10 +104,9 @@ class AiDescriptionChatCubit extends Cubit<AiDescriptionChatState> {
           isDescription: descriptionResult.isDescription,
         );
         final newHistory = [...updatedHistory, modelTurn];
-        _analyticsService.logEvent(
-          AnalyticsEvents.aiDescriptionGenerated,
-          {AnalyticsParams.aiTurnIndex: newHistory.length},
-        );
+        _analyticsService.logEvent(AnalyticsEvents.aiDescriptionGenerated, {
+          AnalyticsParams.aiTurnIndex: newHistory.length,
+        });
         emit(
           state.copyWith(
             history: newHistory,
@@ -157,23 +147,17 @@ class AiDescriptionChatCubit extends Cubit<AiDescriptionChatState> {
       (exception) {
         if (exception is AiQuotaExceededUserException ||
             exception is AiQuotaExceededProjectException) {
-          _analyticsService.logEvent(
-            AnalyticsEvents.aiQuotaExceeded,
-            {
-              AnalyticsParams.aiGenerationType:
-                  AnalyticsParams.aiGenerationTypeDescription,
-              AnalyticsParams.aiErrorCode: exception.runtimeType.toString(),
-            },
-          );
+          _analyticsService.logEvent(AnalyticsEvents.aiQuotaExceeded, {
+            AnalyticsParams.aiGenerationType:
+                AnalyticsParams.aiGenerationTypeDescription,
+            AnalyticsParams.aiErrorCode: exception.runtimeType.toString(),
+          });
         } else {
-          _analyticsService.logEvent(
-            AnalyticsEvents.aiGenerationFailed,
-            {
-              AnalyticsParams.aiGenerationType:
-                  AnalyticsParams.aiGenerationTypeDescription,
-              AnalyticsParams.aiErrorCode: exception.runtimeType.toString(),
-            },
-          );
+          _analyticsService.logEvent(AnalyticsEvents.aiGenerationFailed, {
+            AnalyticsParams.aiGenerationType:
+                AnalyticsParams.aiGenerationTypeDescription,
+            AnalyticsParams.aiErrorCode: exception.runtimeType.toString(),
+          });
         }
         emit(state.copyWith(sendResult: ResultState.error(error: exception)));
       },
@@ -184,10 +168,9 @@ class AiDescriptionChatCubit extends Cubit<AiDescriptionChatState> {
           isDescription: descriptionResult.isDescription,
         );
         final newHistory = [...state.history, modelTurn];
-        _analyticsService.logEvent(
-          AnalyticsEvents.aiDescriptionGenerated,
-          {AnalyticsParams.aiTurnIndex: newHistory.length},
-        );
+        _analyticsService.logEvent(AnalyticsEvents.aiDescriptionGenerated, {
+          AnalyticsParams.aiTurnIndex: newHistory.length,
+        });
         emit(
           state.copyWith(
             history: newHistory,
@@ -210,8 +193,6 @@ class AiDescriptionChatCubit extends Cubit<AiDescriptionChatState> {
 
   /// Returns the last AI markdown response if available.
   String? get lastMarkdown {
-    return state.sendResult.whenOrNull(
-      data: (result) => result.markdown,
-    );
+    return state.sendResult.whenOrNull(data: (result) => result.markdown);
   }
 }

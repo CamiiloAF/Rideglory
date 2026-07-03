@@ -27,7 +27,11 @@ class VehicleFormScanBanner extends StatelessWidget {
                 color: AppColors.primary,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.document_scanner_outlined, size: 22, color: Colors.white),
+              child: const Icon(
+                Icons.document_scanner_outlined,
+                size: 22,
+                color: Colors.white,
+              ),
             ),
             const SizedBox(width: 12),
             Expanded(

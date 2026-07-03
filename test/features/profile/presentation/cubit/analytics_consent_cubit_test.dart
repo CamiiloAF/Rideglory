@@ -31,15 +31,18 @@ void main() {
   tearDown(() => cubit.close());
 
   group('AnalyticsConsentCubit', () {
-    test('load() aplica la preferencia guardada a Analytics Y Crashlytics', () async {
-      when(() => storage.getAnalyticsEnabled()).thenAnswer((_) async => true);
+    test(
+      'load() aplica la preferencia guardada a Analytics Y Crashlytics',
+      () async {
+        when(() => storage.getAnalyticsEnabled()).thenAnswer((_) async => true);
 
-      await cubit.load();
+        await cubit.load();
 
-      verify(() => analytics.setEnabled(true)).called(1);
-      verify(() => crash.setEnabled(true)).called(1);
-      expect(cubit.state, const ResultState<bool>.data(data: true));
-    });
+        verify(() => analytics.setEnabled(true)).called(1);
+        verify(() => crash.setEnabled(true)).called(1);
+        expect(cubit.state, const ResultState<bool>.data(data: true));
+      },
+    );
 
     test('load() con opt-out guardado (false) desactiva ambos', () async {
       when(() => storage.getAnalyticsEnabled()).thenAnswer((_) async => false);
@@ -68,18 +71,21 @@ void main() {
       expect(cubit.state, const ResultState<bool>.data(data: true));
     });
 
-    test('si la persistencia falla, revierte el switch y no cambia la colección',
-        () async {
-      when(() => storage.setAnalyticsEnabled(any()))
-          .thenThrow(Exception('disk full'));
+    test(
+      'si la persistencia falla, revierte el switch y no cambia la colección',
+      () async {
+        when(
+          () => storage.setAnalyticsEnabled(any()),
+        ).thenThrow(Exception('disk full'));
 
-      await cubit.toggle(false);
+        await cubit.toggle(false);
 
-      // Revierte al valor previo (true) tras el intento fallido de desactivar.
-      expect(cubit.state, const ResultState<bool>.data(data: true));
-      // No se tocó la colección porque la persistencia falló antes.
-      verifyNever(() => analytics.setEnabled(any()));
-      verifyNever(() => crash.setEnabled(any()));
-    });
+        // Revierte al valor previo (true) tras el intento fallido de desactivar.
+        expect(cubit.state, const ResultState<bool>.data(data: true));
+        // No se tocó la colección porque la persistencia falló antes.
+        verifyNever(() => analytics.setEnabled(any()));
+        verifyNever(() => crash.setEnabled(any()));
+      },
+    );
   });
 }

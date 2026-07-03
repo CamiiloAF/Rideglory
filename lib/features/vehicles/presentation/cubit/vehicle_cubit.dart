@@ -94,18 +94,15 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
     if (!_vehicles.any((v) => v.id == vehicleId)) return null;
 
     final result = await _setMainVehicleUseCase(vehicleId);
-    return result.fold(
-      (error) => error.message,
-      (updated) {
-        _vehicles = _vehicles
-            .map((v) => v.copyWith(isMainVehicle: v.id == updated.id))
-            .toList();
-        _selectedVehicleId = updated.id;
-        _analytics.logEvent(AnalyticsEvents.vehicleSetMain).ignore();
-        _emitLoadedOrEmpty();
-        return null;
-      },
-    );
+    return result.fold((error) => error.message, (updated) {
+      _vehicles = _vehicles
+          .map((v) => v.copyWith(isMainVehicle: v.id == updated.id))
+          .toList();
+      _selectedVehicleId = updated.id;
+      _analytics.logEvent(AnalyticsEvents.vehicleSetMain).ignore();
+      _emitLoadedOrEmpty();
+      return null;
+    });
   }
 
   void addVehicleLocally(VehicleModel vehicle) {
@@ -187,7 +184,9 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
       return v.copyWith(isArchived: false);
     }).toList();
 
-    final hasActiveMain = _vehicles.any((v) => !v.isArchived && v.isMainVehicle);
+    final hasActiveMain = _vehicles.any(
+      (v) => !v.isArchived && v.isMainVehicle,
+    );
     if (!hasActiveMain) {
       _vehicles = _vehicles.map((v) {
         if (v.id != id) return v;
@@ -211,7 +210,8 @@ class VehicleCubit extends Cubit<ResultState<List<VehicleModel>>> {
   void _promoteNewMain(List<VehicleModel> actives) {
     if (actives.isEmpty) return;
 
-    final sorted = [...actives]..sort((a, b) {
+    final sorted = [...actives]
+      ..sort((a, b) {
         final aDate = a.createdAt;
         final bDate = b.createdAt;
         if (aDate == null && bDate == null) {

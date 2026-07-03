@@ -43,26 +43,22 @@ void main() {
 
   group('ProfileCubit — analytics Fase 9', () {
     // TC-prof-a1: profile_viewed se emite tras fetchProfile exitoso
-    test(
-      'TC-prof-a1: fetchProfile exitoso → profile_viewed emitido',
-      () async {
-        when(() => mockGetProfile()).thenAnswer((_) async => Right(mockUser));
+    test('TC-prof-a1: fetchProfile exitoso → profile_viewed emitido', () async {
+      when(() => mockGetProfile()).thenAnswer((_) async => Right(mockUser));
 
-        await cubit.fetchProfile();
+      await cubit.fetchProfile();
 
-        verify(
-          () => mockAnalytics.logEvent(AnalyticsEvents.profileViewed),
-        ).called(1);
-      },
-    );
+      verify(
+        () => mockAnalytics.logEvent(AnalyticsEvents.profileViewed),
+      ).called(1);
+    });
 
     // TC-prof-a2: profile_viewed NO se emite con error
     test(
       'TC-prof-a2: fetchProfile con error → profile_viewed NO emitido',
       () async {
         when(() => mockGetProfile()).thenAnswer(
-          (_) async =>
-              const Left(DomainException(message: 'Error de red')),
+          (_) async => const Left(DomainException(message: 'Error de red')),
         );
 
         await cubit.fetchProfile();
@@ -74,23 +70,20 @@ void main() {
     );
 
     // TC-prof-a3: G2 — profile_viewed se emite sin params (sin email/nombre)
-    test(
-      'TC-prof-a3: G2 — profile_viewed se emite sin params PII',
-      () async {
-        when(() => mockGetProfile()).thenAnswer((_) async => Right(mockUser));
+    test('TC-prof-a3: G2 — profile_viewed se emite sin params PII', () async {
+      when(() => mockGetProfile()).thenAnswer((_) async => Right(mockUser));
 
-        await cubit.fetchProfile();
+      await cubit.fetchProfile();
 
-        // Verify called with no params (single-arg overload, no Map passed)
-        verify(
-          () => mockAnalytics.logEvent(AnalyticsEvents.profileViewed),
-        ).called(1);
+      // Verify called with no params (single-arg overload, no Map passed)
+      verify(
+        () => mockAnalytics.logEvent(AnalyticsEvents.profileViewed),
+      ).called(1);
 
-        // Two-arg overload with params must NOT have been called with profile_viewed
-        verifyNever(
-          () => mockAnalytics.logEvent(AnalyticsEvents.profileViewed, any()),
-        );
-      },
-    );
+      // Two-arg overload with params must NOT have been called with profile_viewed
+      verifyNever(
+        () => mockAnalytics.logEvent(AnalyticsEvents.profileViewed, any()),
+      );
+    });
   });
 }

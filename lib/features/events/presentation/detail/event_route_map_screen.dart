@@ -13,11 +13,7 @@ const _routeLayerId = 'detail-route-layer';
 
 /// Full-screen read-only map showing event route pins and polyline.
 class EventRouteMapScreen extends StatefulWidget {
-  const EventRouteMapScreen({
-    super.key,
-    required this.points,
-    this.title,
-  });
+  const EventRouteMapScreen({super.key, required this.points, this.title});
 
   final List<AddressLocation> points;
   final String? title;
@@ -60,7 +56,10 @@ class _EventRouteMapScreenState extends State<EventRouteMapScreen> {
       await mapboxMap.flyTo(
         CameraOptions(
           center: Point(
-            coordinates: Position(points.first.longitude, points.first.latitude),
+            coordinates: Position(
+              points.first.longitude,
+              points.first.latitude,
+            ),
           ),
           zoom: 13,
         ),
@@ -104,17 +103,21 @@ class _EventRouteMapScreenState extends State<EventRouteMapScreen> {
         );
         return;
       }
-      final sourceExists =
-          await mapboxMap.style.styleSourceExists(_routeSourceId);
+      final sourceExists = await mapboxMap.style.styleSourceExists(
+        _routeSourceId,
+      );
       if (!sourceExists) {
-        await mapboxMap.style
-            .addSource(GeoJsonSource(id: _routeSourceId, data: geojson));
+        await mapboxMap.style.addSource(
+          GeoJsonSource(id: _routeSourceId, data: geojson),
+        );
       } else {
-        await mapboxMap.style
-            .setStyleSourceProperty(_routeSourceId, 'data', geojson);
+        await mapboxMap.style.setStyleSourceProperty(
+          _routeSourceId,
+          'data',
+          geojson,
+        );
       }
-      final layerExists =
-          await mapboxMap.style.styleLayerExists(_routeLayerId);
+      final layerExists = await mapboxMap.style.styleLayerExists(_routeLayerId);
       if (!layerExists) {
         await mapboxMap.style.addLayer(
           LineLayer(
@@ -168,14 +171,17 @@ class _EventRouteMapScreenState extends State<EventRouteMapScreen> {
           viewport: AppMapDefaults.colombiaViewport,
           styleUri: MapboxStyles.DARK,
           onMapCreated: (mapboxMap) async {
-            await mapboxMap.scaleBar
-                .updateSettings(ScaleBarSettings(enabled: false));
+            await mapboxMap.scaleBar.updateSettings(
+              ScaleBarSettings(enabled: false),
+            );
             await mapboxMap.logo.updateSettings(
-                LogoSettings(marginLeft: -200, marginBottom: -200));
-            await mapboxMap.attribution
-                .updateSettings(AttributionSettings(iconColor: 0x00000000));
-            _annotationManager =
-                await mapboxMap.annotations.createPointAnnotationManager();
+              LogoSettings(marginLeft: -200, marginBottom: -200),
+            );
+            await mapboxMap.attribution.updateSettings(
+              AttributionSettings(iconColor: 0x00000000),
+            );
+            _annotationManager = await mapboxMap.annotations
+                .createPointAnnotationManager();
             _mapboxMap = mapboxMap;
             unawaited(_renderRoute());
           },

@@ -33,10 +33,7 @@ class GarageMainVehicleCard extends StatelessWidget {
               vehicle: vehicle,
               onOptionsTap: onOptionsTap,
             ),
-            GarageVehicleContentSection(
-              vehicle: vehicle,
-              onDetailTap: onTap,
-            ),
+            GarageVehicleContentSection(vehicle: vehicle, onDetailTap: onTap),
           ],
         ),
       ),

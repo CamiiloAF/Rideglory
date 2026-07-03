@@ -18,9 +18,7 @@ class VehicleDocumentDefaultIconSlot extends StatelessWidget {
       child: Icon(
         Icons.description_outlined,
         size: 20,
-        color: hasDocument
-            ? AppColors.primary
-            : AppColors.textOnDarkSecondary,
+        color: hasDocument ? AppColors.primary : AppColors.textOnDarkSecondary,
       ),
     );
   }

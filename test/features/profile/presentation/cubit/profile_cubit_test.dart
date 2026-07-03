@@ -47,8 +47,9 @@ void main() {
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         );
-        when(() => mockGetMyProfileUseCase.call())
-            .thenAnswer((_) async => Right(mockUser));
+        when(
+          () => mockGetMyProfileUseCase.call(),
+        ).thenAnswer((_) async => Right(mockUser));
         return profileCubit;
       },
       act: (cubit) => cubit.fetchProfile(),
@@ -65,15 +66,19 @@ void main() {
       'emits [loading, error] when fetchProfile fails',
       build: () {
         const exception = DomainException(message: 'Network error');
-        when(() => mockGetMyProfileUseCase.call())
-            .thenAnswer((_) async => const Left(exception));
+        when(
+          () => mockGetMyProfileUseCase.call(),
+        ).thenAnswer((_) async => const Left(exception));
         return profileCubit;
       },
       act: (cubit) => cubit.fetchProfile(),
       expect: () => [
         isA<Loading<UserModel>>(),
-        isA<Error<UserModel>>()
-            .having((state) => state.error.message, 'message', 'Network error'),
+        isA<Error<UserModel>>().having(
+          (state) => state.error.message,
+          'message',
+          'Network error',
+        ),
       ],
     );
 
@@ -88,8 +93,9 @@ void main() {
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         );
-        when(() => mockGetMyProfileUseCase.call())
-            .thenAnswer((_) async => Right(mockUser));
+        when(
+          () => mockGetMyProfileUseCase.call(),
+        ).thenAnswer((_) async => Right(mockUser));
         return profileCubit;
       },
       act: (cubit) async {

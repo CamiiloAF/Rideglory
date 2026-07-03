@@ -26,7 +26,9 @@ class MaintenanceAlertCard extends StatelessWidget {
         color: context.colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isOn ? context.colorScheme.primary : context.colorScheme.outlineVariant,
+          color: isOn
+              ? context.colorScheme.primary
+              : context.colorScheme.outlineVariant,
           width: isOn ? 1.5 : 1,
         ),
       ),

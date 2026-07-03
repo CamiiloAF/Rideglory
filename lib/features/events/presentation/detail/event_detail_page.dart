@@ -39,39 +39,41 @@ class EventDetailPage extends StatelessWidget {
               // subárbol — nunca en build() para evitar emisiones por rebuilds.
               // Cuando isFromEventDetailByIdPage==true este bloque NO corre,
               // así que no hay doble conteo (ver Fase 6, Riesgo #2).
-              final currentUserId =
-                  context.read<AuthCubit>().state.currentUser?.id;
+              final currentUserId = context
+                  .read<AuthCubit>()
+                  .state
+                  .currentUser
+                  ?.id;
               final event = params.event;
               final isDraft = event.state == EventState.draft;
-              getIt<AnalyticsService>()
-                  .logEvent(AnalyticsEvents.eventDetailViewed, {
-                    AnalyticsParams.eventType: event.eventType.apiValue,
-                    AnalyticsParams.eventState: event.state.name,
-                    AnalyticsParams.isOwner:
-                        (currentUserId != null &&
-                                currentUserId == event.ownerId)
-                            ? 1
-                            : 0,
-                    AnalyticsParams.isReadOnly: isDraft ? 1 : 0,
-                    AnalyticsParams.source:
-                        isDraft
-                            ? AnalyticsParams.sourceDraft
-                            : AnalyticsParams.sourceList,
-                  })
-                  .ignore();
+              getIt<AnalyticsService>().logEvent(
+                AnalyticsEvents.eventDetailViewed,
+                {
+                  AnalyticsParams.eventType: event.eventType.apiValue,
+                  AnalyticsParams.eventState: event.state.name,
+                  AnalyticsParams.isOwner:
+                      (currentUserId != null && currentUserId == event.ownerId)
+                      ? 1
+                      : 0,
+                  AnalyticsParams.isReadOnly: isDraft ? 1 : 0,
+                  AnalyticsParams.source: isDraft
+                      ? AnalyticsParams.sourceDraft
+                      : AnalyticsParams.sourceList,
+                },
+              ).ignore();
               return EventDetailCubit(
-                getIt<GetMyRegistrationForEventUseCase>(),
-                getIt<CancelEventRegistrationUseCase>(),
-                getIt<GetEventByIdUseCase>(),
-                getIt<UpdateEventUseCase>(),
-                getIt<PublishEventUseCase>(),
-                getIt<GetEventRegistrationsUseCase>(),
-                getIt<ApproveRegistrationUseCase>(),
-                getIt<RejectRegistrationUseCase>(),
-                getIt<SetRegistrationReadyForEditUseCase>(),
-                getIt<AnalyticsService>(),
-                getIt<TrackingRepository>(),
-              )
+                  getIt<GetMyRegistrationForEventUseCase>(),
+                  getIt<CancelEventRegistrationUseCase>(),
+                  getIt<GetEventByIdUseCase>(),
+                  getIt<UpdateEventUseCase>(),
+                  getIt<PublishEventUseCase>(),
+                  getIt<GetEventRegistrationsUseCase>(),
+                  getIt<ApproveRegistrationUseCase>(),
+                  getIt<RejectRegistrationUseCase>(),
+                  getIt<SetRegistrationReadyForEditUseCase>(),
+                  getIt<AnalyticsService>(),
+                  getIt<TrackingRepository>(),
+                )
                 ..loadMyRegistration(params.event.id!)
                 ..loadAttendees(params.event.id!);
             },
@@ -84,7 +86,8 @@ class EventDetailPage extends StatelessWidget {
             initial: () {},
             loading: () {},
             data: (registration) {
-              if (params.onRegistrationChanged != null && registration != null) {
+              if (params.onRegistrationChanged != null &&
+                  registration != null) {
                 params.onRegistrationChanged!(registration);
               }
             },

@@ -33,8 +33,9 @@ class NavigationRow extends StatelessWidget {
     final imageData = imageState.whenOrNull(data: (data) => data);
     await cubit.saveEvent(
       event,
-      localCoverImagePath:
-          imageData?.hasLocalImage == true ? imageData?.localImagePath : null,
+      localCoverImagePath: imageData?.hasLocalImage == true
+          ? imageData?.localImagePath
+          : null,
       remoteCoverImageUrl: imageData?.hasLocalImage != true
           ? imageData?.remoteImageUrl
           : null,
@@ -91,8 +92,7 @@ class NavigationRow extends StatelessWidget {
                             final hasImage =
                                 imageData?.hasLocalImage == true ||
                                 imageData?.remoteImageUrl?.isNotEmpty == true;
-                            imageValid =
-                                cubit.validateImageRequired(hasImage);
+                            imageValid = cubit.validateImageRequired(hasImage);
                           }
                           final stepValid = cubit.validateStep(currentStep);
                           if (imageValid && stepValid) cubit.nextStep();

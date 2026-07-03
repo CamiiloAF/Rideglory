@@ -11,7 +11,9 @@ class ThousandsInputFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    final digits = newValue.text.replaceAll('.', '').replaceAll(RegExp(r'[^\d]'), '');
+    final digits = newValue.text
+        .replaceAll('.', '')
+        .replaceAll(RegExp(r'[^\d]'), '');
     if (digits.isEmpty) {
       return newValue.copyWith(text: '');
     }

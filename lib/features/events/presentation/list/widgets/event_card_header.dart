@@ -31,11 +31,7 @@ class EventCardHeader extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        if (isOwner)
-          EventCardPopupMenu(
-            onEdit: onEdit,
-            onDelete: onDelete,
-          ),
+        if (isOwner) EventCardPopupMenu(onEdit: onEdit, onDelete: onDelete),
       ],
     );
   }

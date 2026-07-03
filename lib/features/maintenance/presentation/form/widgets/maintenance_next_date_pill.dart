@@ -62,7 +62,9 @@ class _MaintenanceNextDatePillState extends State<MaintenanceNextDatePill> {
                   color: AppColors.darkBgSecondary,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: hasDate ? AppColors.primary : AppColors.darkBorderPrimary,
+                    color: hasDate
+                        ? AppColors.primary
+                        : AppColors.darkBorderPrimary,
                   ),
                 ),
                 child: Row(
@@ -71,7 +73,9 @@ class _MaintenanceNextDatePillState extends State<MaintenanceNextDatePill> {
                     Icon(
                       Icons.calendar_today_outlined,
                       size: 12,
-                      color: hasDate ? AppColors.primary : AppColors.darkTextSecondary,
+                      color: hasDate
+                          ? AppColors.primary
+                          : AppColors.darkTextSecondary,
                     ),
                     const SizedBox(width: 6),
                     Text(
@@ -79,7 +83,9 @@ class _MaintenanceNextDatePillState extends State<MaintenanceNextDatePill> {
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: hasDate ? AppColors.darkTextPrimary : AppColors.darkTextSecondary,
+                        color: hasDate
+                            ? AppColors.darkTextPrimary
+                            : AppColors.darkTextSecondary,
                       ),
                     ),
                   ],

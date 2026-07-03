@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../foundation/extensions/theme_extensions.dart';
 
-enum AppLoadingIndicatorVariant {
-  inline,
-  page,
-  sliver,
-}
+enum AppLoadingIndicatorVariant { inline, page, sliver }
 
 class AppLoadingIndicator extends StatelessWidget {
   const AppLoadingIndicator({
@@ -62,4 +58,3 @@ class AppLoadingIndicator extends StatelessWidget {
     }
   }
 }
-

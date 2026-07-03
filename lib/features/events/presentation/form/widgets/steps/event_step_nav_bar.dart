@@ -27,9 +27,7 @@ class EventStepNavBar extends StatelessWidget {
         return Container(
           decoration: const BoxDecoration(
             color: AppColors.darkBgPrimary,
-            border: Border(
-              top: BorderSide(color: AppColors.darkBorderPrimary),
-            ),
+            border: Border(top: BorderSide(color: AppColors.darkBorderPrimary)),
           ),
           padding: EdgeInsets.fromLTRB(20, 10, 20, max(16.0, bottomPadding)),
           child: state.currentStep < 3

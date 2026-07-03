@@ -62,8 +62,9 @@ void main() {
     final mockAnalytics = MockAnalyticsService();
     when(() => mockAnalytics.logEvent(any(), any())).thenAnswer((_) async {});
     when(() => mockAnalytics.logEvent(any())).thenAnswer((_) async {});
-    when(() => mockAnalytics.setUserProperty(any(), any()))
-        .thenAnswer((_) async {});
+    when(
+      () => mockAnalytics.setUserProperty(any(), any()),
+    ).thenAnswer((_) async {});
     vehicleCubit = VehicleCubit(
       mockGetVehicles,
       mockSetMain,
@@ -78,16 +79,19 @@ void main() {
 
   group('VehicleCubit', () {
     test('TC-veh-1: initial state is ResultState.initial', () {
-      expect(vehicleCubit.state, const ResultState<List<VehicleModel>>.initial());
+      expect(
+        vehicleCubit.state,
+        const ResultState<List<VehicleModel>>.initial(),
+      );
     });
 
     group('fetchMyVehicles', () {
       blocTest<VehicleCubit, ResultState<List<VehicleModel>>>(
         'TC-veh-2: emits loading then data when use case returns vehicles',
         setUp: () {
-          when(() => mockGetVehicles()).thenAnswer(
-            (_) async => const Right([_vehicle1, _vehicle2]),
-          );
+          when(
+            () => mockGetVehicles(),
+          ).thenAnswer((_) async => const Right([_vehicle1, _vehicle2]));
         },
         build: () => vehicleCubit,
         act: (cubit) => cubit.fetchMyVehicles(),
@@ -98,8 +102,7 @@ void main() {
             'data state with 2 vehicles',
             predicate<ResultState<List<VehicleModel>>>(
               (state) =>
-                  state is Data<List<VehicleModel>> &&
-                  state.data.length == 2,
+                  state is Data<List<VehicleModel>> && state.data.length == 2,
             ),
           ),
         ],
@@ -109,9 +112,7 @@ void main() {
         'TC-veh-3: emits loading then error when use case fails',
         setUp: () {
           when(() => mockGetVehicles()).thenAnswer(
-            (_) async => const Left(
-              DomainException(message: 'Error de red'),
-            ),
+            (_) async => const Left(DomainException(message: 'Error de red')),
           );
         },
         build: () => vehicleCubit,
@@ -129,9 +130,9 @@ void main() {
       blocTest<VehicleCubit, ResultState<List<VehicleModel>>>(
         'TC-veh-4: emits loading then empty when use case returns empty list',
         setUp: () {
-          when(() => mockGetVehicles()).thenAnswer(
-            (_) async => const Right([]),
-          );
+          when(
+            () => mockGetVehicles(),
+          ).thenAnswer((_) async => const Right([]));
         },
         build: () => vehicleCubit,
         act: (cubit) => cubit.fetchMyVehicles(),
@@ -147,13 +148,16 @@ void main() {
         expect(vehicleCubit.currentVehicle, isNull);
       });
 
-      test('TC-veh-6: currentVehicle returns main vehicle after fetch', () async {
-        when(() => mockGetVehicles()).thenAnswer(
-          (_) async => const Right([_vehicle1, _vehicle2]),
-        );
-        await vehicleCubit.fetchMyVehicles();
-        expect(vehicleCubit.currentVehicle?.id, 'v1');
-      });
+      test(
+        'TC-veh-6: currentVehicle returns main vehicle after fetch',
+        () async {
+          when(
+            () => mockGetVehicles(),
+          ).thenAnswer((_) async => const Right([_vehicle1, _vehicle2]));
+          await vehicleCubit.fetchMyVehicles();
+          expect(vehicleCubit.currentVehicle?.id, 'v1');
+        },
+      );
     });
 
     group('addVehicleLocally', () {
@@ -173,9 +177,9 @@ void main() {
 
     group('selectVehicle', () {
       test('TC-veh-9: selectVehicle changes currentVehicle', () async {
-        when(() => mockGetVehicles()).thenAnswer(
-          (_) async => const Right([_vehicle1, _vehicle2]),
-        );
+        when(
+          () => mockGetVehicles(),
+        ).thenAnswer((_) async => const Right([_vehicle1, _vehicle2]));
         await vehicleCubit.fetchMyVehicles();
         vehicleCubit.selectVehicle(_vehicle2);
         expect(vehicleCubit.currentVehicle?.id, 'v2');
@@ -186,9 +190,9 @@ void main() {
       blocTest<VehicleCubit, ResultState<List<VehicleModel>>>(
         'TC-veh-10: emits data with updated main vehicle on success',
         setUp: () {
-          when(() => mockGetVehicles()).thenAnswer(
-            (_) async => const Right([_vehicle1, _vehicle2]),
-          );
+          when(
+            () => mockGetVehicles(),
+          ).thenAnswer((_) async => const Right([_vehicle1, _vehicle2]));
           when(() => mockSetMain('v2')).thenAnswer(
             (_) async => const Right(
               VehicleModel(
@@ -323,42 +327,40 @@ void main() {
           expect(
             vehicle.isMainVehicle,
             isTrue,
-            reason: 'Al desarchivar sin ningún principal activo, el vehículo debe ser promovido a principal',
+            reason:
+                'Al desarchivar sin ningún principal activo, el vehículo debe ser promovido a principal',
           );
         },
       );
     });
 
     group('_promoteNewMain (via archiveLocally)', () {
-      test(
-        'TC-veh-16: with null createdAt dates uses id tie-break asc',
-        () {
-          // Both vehicles have null createdAt → tie-break by id ascending
-          const vehicleA = VehicleModel(
-            id: 'a1',
-            name: 'Alfa',
-            currentMileage: 0,
-            isMainVehicle: true,
-          );
-          const vehicleB = VehicleModel(
-            id: 'b2',
-            name: 'Beta',
-            currentMileage: 0,
-            isMainVehicle: false,
-          );
-          vehicleCubit.addVehicleLocally(vehicleA);
-          vehicleCubit.addVehicleLocally(vehicleB);
+      test('TC-veh-16: with null createdAt dates uses id tie-break asc', () {
+        // Both vehicles have null createdAt → tie-break by id ascending
+        const vehicleA = VehicleModel(
+          id: 'a1',
+          name: 'Alfa',
+          currentMileage: 0,
+          isMainVehicle: true,
+        );
+        const vehicleB = VehicleModel(
+          id: 'b2',
+          name: 'Beta',
+          currentMileage: 0,
+          isMainVehicle: false,
+        );
+        vehicleCubit.addVehicleLocally(vehicleA);
+        vehicleCubit.addVehicleLocally(vehicleB);
 
-          // Archive main (a1) → promotion by id asc → b2 becomes main
-          vehicleCubit.archiveLocally('a1');
+        // Archive main (a1) → promotion by id asc → b2 becomes main
+        vehicleCubit.archiveLocally('a1');
 
-          final state = vehicleCubit.state;
-          expect(state, isA<Data<List<VehicleModel>>>());
-          final data = (state as Data<List<VehicleModel>>).data;
-          final newMain = data.firstWhere((v) => v.isMainVehicle);
-          expect(newMain.id, 'b2');
-        },
-      );
+        final state = vehicleCubit.state;
+        expect(state, isA<Data<List<VehicleModel>>>());
+        final data = (state as Data<List<VehicleModel>>).data;
+        final newMain = data.firstWhere((v) => v.isMainVehicle);
+        expect(newMain.id, 'b2');
+      });
     });
   });
 }

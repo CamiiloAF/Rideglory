@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
 class MapOverlayButton extends StatelessWidget {
-  const MapOverlayButton({
-    super.key,
-    required this.onTap,
-    required this.child,
-  });
+  const MapOverlayButton({super.key, required this.onTap, required this.child});
 
   final VoidCallback onTap;
   final Widget child;

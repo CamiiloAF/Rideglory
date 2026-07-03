@@ -58,11 +58,7 @@ class VehicleScanBanner extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            const Icon(
-              Icons.chevron_right,
-              size: 20,
-              color: AppColors.primary,
-            ),
+            const Icon(Icons.chevron_right, size: 20, color: AppColors.primary),
           ],
         ),
       ),

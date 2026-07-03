@@ -10,7 +10,9 @@ class MaintenancesLoadingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ContainerPullToRefresh(
       onRefresh: onRefresh,
-      child: const AppLoadingIndicator(variant: AppLoadingIndicatorVariant.page),
+      child: const AppLoadingIndicator(
+        variant: AppLoadingIndicatorVariant.page,
+      ),
     );
   }
 }

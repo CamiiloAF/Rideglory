@@ -14,10 +14,9 @@ class GetEventsUseCase {
     String? type,
     String? dateFrom,
     String? dateTo,
-  }) =>
-      _eventRepository.getEvents(
-        type: type,
-        dateFrom: dateFrom,
-        dateTo: dateTo,
-      );
+  }) => _eventRepository.getEvents(
+    type: type,
+    dateFrom: dateFrom,
+    dateTo: dateTo,
+  );
 }

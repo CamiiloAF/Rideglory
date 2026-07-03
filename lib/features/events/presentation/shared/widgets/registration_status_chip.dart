@@ -10,14 +10,13 @@ class RegistrationStatusChip extends StatelessWidget {
   static Color _backgroundColor(
     BuildContext context,
     RegistrationStatus status,
-  ) =>
-      switch (status) {
-        RegistrationStatus.pending => context.appColors.warning,
-        RegistrationStatus.approved => context.appColors.success,
-        RegistrationStatus.rejected => context.colorScheme.error,
-        RegistrationStatus.cancelled => context.colorScheme.onSurfaceVariant,
-        RegistrationStatus.readyForEdit => context.appColors.info,
-      };
+  ) => switch (status) {
+    RegistrationStatus.pending => context.appColors.warning,
+    RegistrationStatus.approved => context.appColors.success,
+    RegistrationStatus.rejected => context.colorScheme.error,
+    RegistrationStatus.cancelled => context.colorScheme.onSurfaceVariant,
+    RegistrationStatus.readyForEdit => context.appColors.info,
+  };
 
   @override
   Widget build(BuildContext context) {

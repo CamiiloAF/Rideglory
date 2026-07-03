@@ -15,10 +15,7 @@ class EventDetailPageParams {
 }
 
 class EventRegistrationParams {
-  const EventRegistrationParams({
-    required this.event,
-    this.registration,
-  });
+  const EventRegistrationParams({required this.event, this.registration});
 
   final EventModel event;
   final EventRegistrationModel? registration;

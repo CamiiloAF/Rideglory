@@ -41,7 +41,9 @@ class _NextMaintenanceMileageFieldState
       },
       validator: _shouldValidate
           ? FormBuilderValidators.compose([
-              FormBuilderValidators.numeric(errorText: context.l10n.mustBeNumber),
+              FormBuilderValidators.numeric(
+                errorText: context.l10n.mustBeNumber,
+              ),
               (value) {
                 if (value == null || value.isEmpty) return null;
                 final mileage = int.tryParse(value);

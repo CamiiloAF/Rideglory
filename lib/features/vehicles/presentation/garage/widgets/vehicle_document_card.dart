@@ -190,7 +190,9 @@ class _SoatDocumentCardBody extends StatelessWidget {
                               const SizedBox(height: 2),
                               Text(
                                 context.l10n.vehicle_doc_expires_on(
-                                  DateFormat.yMMMd('es').format(soat.expiryDate),
+                                  DateFormat.yMMMd(
+                                    'es',
+                                  ).format(soat.expiryDate),
                                 ),
                                 style: const TextStyle(
                                   color: AppColors.textOnDarkTertiary,

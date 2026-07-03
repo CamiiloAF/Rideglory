@@ -48,8 +48,10 @@ void main() {
     test(
       'TC-df-1: fetchEvents() without filters passes dateFrom = today local',
       () async {
-        final expectedDateFrom =
-            DateTime.now().toIso8601String().substring(0, 10);
+        final expectedDateFrom = DateTime.now().toIso8601String().substring(
+          0,
+          10,
+        );
 
         String? capturedDateFrom;
         when(
@@ -59,8 +61,7 @@ void main() {
             dateTo: any(named: 'dateTo'),
           ),
         ).thenAnswer((invocation) async {
-          capturedDateFrom =
-              invocation.namedArguments[#dateFrom] as String?;
+          capturedDateFrom = invocation.namedArguments[#dateFrom] as String?;
           return Right([mockEvent]);
         });
 
@@ -91,8 +92,7 @@ void main() {
             dateTo: any(named: 'dateTo'),
           ),
         ).thenAnswer((invocation) async {
-          capturedDateFrom =
-              invocation.namedArguments[#dateFrom] as String?;
+          capturedDateFrom = invocation.namedArguments[#dateFrom] as String?;
           return Right([mockEvent]);
         });
 
@@ -103,9 +103,7 @@ void main() {
         );
         addTearDown(cubit.close);
 
-        cubit.updateFilters(
-          EventFilters(startDate: DateTime(2026, 7, 15)),
-        );
+        cubit.updateFilters(EventFilters(startDate: DateTime(2026, 7, 15)));
         await Future<void>.delayed(Duration.zero);
 
         expect(capturedDateFrom, manualDate);
@@ -116,8 +114,10 @@ void main() {
     test(
       'TC-df-3: clearFilters() then fetchEvents() passes dateFrom = today local',
       () async {
-        final expectedDateFrom =
-            DateTime.now().toIso8601String().substring(0, 10);
+        final expectedDateFrom = DateTime.now().toIso8601String().substring(
+          0,
+          10,
+        );
 
         final capturedDates = <String?>[];
         when(
@@ -127,9 +127,7 @@ void main() {
             dateTo: any(named: 'dateTo'),
           ),
         ).thenAnswer((invocation) async {
-          capturedDates.add(
-            invocation.namedArguments[#dateFrom] as String?,
-          );
+          capturedDates.add(invocation.namedArguments[#dateFrom] as String?);
           return Right([mockEvent]);
         });
 
@@ -158,9 +156,9 @@ void main() {
       'TC-df-4: EventsCubit.myEvents fetchEvents() passes dateFrom = null',
       () async {
         String? capturedDateFrom = 'NOT_CALLED';
-        when(() => mockGetMyEventsUseCase()).thenAnswer(
-          (_) async => Right([mockEvent]),
-        );
+        when(
+          () => mockGetMyEventsUseCase(),
+        ).thenAnswer((_) async => Right([mockEvent]));
 
         final cubit = EventsCubit.myEvents(
           mockGetMyEventsUseCase,
@@ -179,8 +177,7 @@ void main() {
             dateTo: any(named: 'dateTo'),
           ),
         ).thenAnswer((invocation) async {
-          capturedDateFrom =
-              invocation.namedArguments[#dateFrom] as String?;
+          capturedDateFrom = invocation.namedArguments[#dateFrom] as String?;
           return Right([mockEvent]);
         });
 

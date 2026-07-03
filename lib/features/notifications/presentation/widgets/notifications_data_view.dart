@@ -78,9 +78,9 @@ class NotificationsDataView extends StatelessWidget {
                   return NotificationItem(
                     notification: notification,
                     onTap: () {
-                      context
-                          .read<NotificationsCubit>()
-                          .markRead(notification.id);
+                      context.read<NotificationsCubit>().markRead(
+                        notification.id,
+                      );
                       if (notification.route != null) {
                         AppRouter.pushDeepLink(notification.route!);
                       }

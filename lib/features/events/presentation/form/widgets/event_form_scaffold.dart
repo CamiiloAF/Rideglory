@@ -141,10 +141,7 @@ class EventFormScaffold extends StatelessWidget {
         body: Column(
           children: [
             if (!isEditing) ...[
-              EventStepIndicator(
-                currentStep: state.currentStep,
-                totalSteps: 4,
-              ),
+              EventStepIndicator(currentStep: state.currentStep, totalSteps: 4),
               const Divider(height: 1, color: AppColors.darkBorderPrimary),
             ],
             Expanded(

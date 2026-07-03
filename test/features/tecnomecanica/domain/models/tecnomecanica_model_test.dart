@@ -50,20 +50,24 @@ void main() {
       },
     );
 
-    test(
-      'TC-rtm-05: documentStatus is expired when expiry was yesterday',
-      () {
-        final rtm = rtmWithExpiry(today().subtract(const Duration(days: 1)));
-        expect(rtm.documentStatus, VehicleDocumentStatus.expired);
-        expect(rtm.daysUntilExpiry, -1);
-      },
-    );
+    test('TC-rtm-05: documentStatus is expired when expiry was yesterday', () {
+      final rtm = rtmWithExpiry(today().subtract(const Duration(days: 1)));
+      expect(rtm.documentStatus, VehicleDocumentStatus.expired);
+      expect(rtm.daysUntilExpiry, -1);
+    });
 
     test(
       'TC-rtm-06: daysUntilExpiry is day-aligned regardless of time-of-day',
       () {
         final expiry = today().add(const Duration(days: 31));
-        final expiryWithTime = DateTime(expiry.year, expiry.month, expiry.day, 12, 0, 0);
+        final expiryWithTime = DateTime(
+          expiry.year,
+          expiry.month,
+          expiry.day,
+          12,
+          0,
+          0,
+        );
         final rtm = rtmWithExpiry(expiryWithTime);
         expect(rtm.daysUntilExpiry, 31);
         expect(rtm.documentStatus, VehicleDocumentStatus.valid);

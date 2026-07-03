@@ -9,7 +9,7 @@ import 'package:rideglory/features/users/domain/model/user_model.dart';
 @injectable
 class ProfileCubit extends Cubit<ResultState<UserModel>> {
   ProfileCubit(this._getMyProfile, this._analytics)
-      : super(const ResultState.initial());
+    : super(const ResultState.initial());
 
   final GetMyProfileUseCase _getMyProfile;
   final AnalyticsService _analytics;
@@ -17,13 +17,10 @@ class ProfileCubit extends Cubit<ResultState<UserModel>> {
   Future<void> fetchProfile() async {
     emit(const ResultState.loading());
     final result = await _getMyProfile();
-    result.fold(
-      (error) => emit(ResultState.error(error: error)),
-      (user) {
-        _analytics.logEvent(AnalyticsEvents.profileViewed).ignore();
-        emit(ResultState.data(data: user));
-      },
-    );
+    result.fold((error) => emit(ResultState.error(error: error)), (user) {
+      _analytics.logEvent(AnalyticsEvents.profileViewed).ignore();
+      emit(ResultState.data(data: user));
+    });
   }
 
   void reset() => emit(const ResultState.initial());

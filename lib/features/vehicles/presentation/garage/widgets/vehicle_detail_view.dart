@@ -48,9 +48,7 @@ class VehicleDetailView extends StatelessWidget {
               isArchived: isArchived,
             ),
           ),
-          SliverToBoxAdapter(
-            child: VehicleDetailHeroImage(vehicle: vehicle),
-          ),
+          SliverToBoxAdapter(child: VehicleDetailHeroImage(vehicle: vehicle)),
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
             sliver: SliverList(

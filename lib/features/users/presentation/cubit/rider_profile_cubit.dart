@@ -9,7 +9,7 @@ import 'package:rideglory/features/users/domain/use_cases/get_user_by_id_use_cas
 @injectable
 class RiderProfileCubit extends Cubit<ResultState<UserModel>> {
   RiderProfileCubit(this._getUserByIdUseCase, this._analytics)
-      : super(const ResultState.initial());
+    : super(const ResultState.initial());
 
   final GetUserByIdUseCase _getUserByIdUseCase;
   final AnalyticsService _analytics;
@@ -17,13 +17,10 @@ class RiderProfileCubit extends Cubit<ResultState<UserModel>> {
   Future<void> fetchRiderProfile(String userId) async {
     emit(const ResultState.loading());
     final result = await _getUserByIdUseCase(userId);
-    result.fold(
-      (error) => emit(ResultState.error(error: error)),
-      (user) {
-        // Never log userId as param value — G2 compliance.
-        _analytics.logEvent(AnalyticsEvents.riderProfileViewed).ignore();
-        emit(ResultState.data(data: user));
-      },
-    );
+    result.fold((error) => emit(ResultState.error(error: error)), (user) {
+      // Never log userId as param value — G2 compliance.
+      _analytics.logEvent(AnalyticsEvents.riderProfileViewed).ignore();
+      emit(ResultState.data(data: user));
+    });
   }
 }

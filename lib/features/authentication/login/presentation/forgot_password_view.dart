@@ -29,28 +29,25 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   @override
   void initState() {
     super.initState();
-    _analytics
-        .logEvent(AnalyticsEvents.authFlowStarted, {
-          AnalyticsParams.authMethod: AnalyticsParams.authMethodForgotPassword,
-        })
-        .ignore();
+    _analytics.logEvent(AnalyticsEvents.authFlowStarted, {
+      AnalyticsParams.authMethod: AnalyticsParams.authMethodForgotPassword,
+    }).ignore();
   }
 
   @override
   void dispose() {
     if (!_completedSuccessfully) {
-      _analytics
-          .logEvent(AnalyticsEvents.authAbandoned, {
-            AnalyticsParams.authMethod: AnalyticsParams.authMethodForgotPassword,
-          })
-          .ignore();
+      _analytics.logEvent(AnalyticsEvents.authAbandoned, {
+        AnalyticsParams.authMethod: AnalyticsParams.authMethodForgotPassword,
+      }).ignore();
     }
     super.dispose();
   }
 
   void _onAuthStateChanged(BuildContext context, AuthState state) {
     if (state.isPasswordResetEmailSent && !_sent) {
-      final email = _formKey.currentState?.fields[AuthFormFields.email]?.value
+      final email =
+          _formKey.currentState?.fields[AuthFormFields.email]?.value
               as String? ??
           '';
       _completedSuccessfully = true;
@@ -70,11 +67,9 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
 
   void _handleSend(BuildContext context) {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
-      _analytics
-          .logEvent(AnalyticsEvents.authMethodSelected, {
-            AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
-          })
-          .ignore();
+      _analytics.logEvent(AnalyticsEvents.authMethodSelected, {
+        AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
+      }).ignore();
       final email =
           (_formKey.currentState!.value[AuthFormFields.email] as String).trim();
       context.read<AuthCubit>().sendPasswordResetEmail(email);

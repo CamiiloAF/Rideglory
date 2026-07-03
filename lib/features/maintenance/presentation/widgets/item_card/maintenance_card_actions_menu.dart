@@ -30,9 +30,16 @@ class MaintenanceCardActionsMenu extends StatelessWidget {
             value: 'delete',
             child: Row(
               children: [
-                const Icon(Icons.delete_outline, size: 20, color: AppColors.error),
+                const Icon(
+                  Icons.delete_outline,
+                  size: 20,
+                  color: AppColors.error,
+                ),
                 AppSpacing.hGapMd,
-                Text(context.l10n.delete, style: const TextStyle(color: AppColors.error)),
+                Text(
+                  context.l10n.delete,
+                  style: const TextStyle(color: AppColors.error),
+                ),
               ],
             ),
           ),

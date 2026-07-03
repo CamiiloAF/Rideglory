@@ -33,10 +33,7 @@ class ProfileMenuItem extends StatelessWidget {
             Expanded(
               child: Text(
                 label,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: labelColor,
-                ),
+                style: TextStyle(fontSize: 14, color: labelColor),
               ),
             ),
             if (showChevron)

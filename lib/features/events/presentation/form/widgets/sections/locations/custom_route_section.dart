@@ -34,7 +34,8 @@ class CustomRouteSection extends StatelessWidget {
 
   void _openRouteConfig(BuildContext context) {
     final cubit = context.read<EventFormCubit>();
-    Navigator.of(context).push( // Custom: EventRouteConfigScreen has no go_router named route — anonymous push preserved. Reason: ephemeral sub-screen, no deep-link requirement.
+    Navigator.of(context).push(
+      // Custom: EventRouteConfigScreen has no go_router named route — anonymous push preserved. Reason: ephemeral sub-screen, no deep-link requirement.
       MaterialPageRoute<void>(
         builder: (_) => BlocProvider.value(
           value: cubit,

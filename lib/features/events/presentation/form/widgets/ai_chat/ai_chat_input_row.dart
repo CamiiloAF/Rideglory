@@ -89,7 +89,9 @@ class _AiChatInputRowState extends State<AiChatInputRow> {
                 ),
                 filled: true,
                 fillColor: widget.disabled
-                    ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.45)
+                    ? colorScheme.surfaceContainerHighest.withValues(
+                        alpha: 0.45,
+                      )
                     : colorScheme.surfaceContainerHighest,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,

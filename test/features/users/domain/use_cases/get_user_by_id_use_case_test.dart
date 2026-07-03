@@ -25,9 +25,9 @@ void main() {
 
   group('GetUserByIdUseCase — Unit Tests (US-2-3)', () {
     test('TC-2-34: calls repository with correct userId', () async {
-      when(() => mockUserRepository.getUserById('user-123')).thenAnswer(
-        (_) async => const Right(mockUser),
-      );
+      when(
+        () => mockUserRepository.getUserById('user-123'),
+      ).thenAnswer((_) async => const Right(mockUser));
 
       await getUserByIdUseCase('user-123');
 
@@ -35,9 +35,9 @@ void main() {
     });
 
     test('TC-2-35: returns user on success', () async {
-      when(() => mockUserRepository.getUserById('user-123')).thenAnswer(
-        (_) async => const Right(mockUser),
-      );
+      when(
+        () => mockUserRepository.getUserById('user-123'),
+      ).thenAnswer((_) async => const Right(mockUser));
 
       final result = await getUserByIdUseCase('user-123');
 
@@ -46,8 +46,9 @@ void main() {
 
     test('TC-2-36: returns error on failure', () async {
       const exception = DomainException(message: 'User not found');
-      when(() => mockUserRepository.getUserById('user-not-found'))
-          .thenAnswer((_) async => const Left(exception));
+      when(
+        () => mockUserRepository.getUserById('user-not-found'),
+      ).thenAnswer((_) async => const Left(exception));
 
       final result = await getUserByIdUseCase('user-not-found');
 
@@ -55,26 +56,23 @@ void main() {
     });
 
     test('TC-2-37: returns correct user data', () async {
-      when(() => mockUserRepository.getUserById('user-123')).thenAnswer(
-        (_) async => const Right(mockUser),
-      );
+      when(
+        () => mockUserRepository.getUserById('user-123'),
+      ).thenAnswer((_) async => const Right(mockUser));
 
       final result = await getUserByIdUseCase('user-123');
 
-      result.fold(
-        (_) => fail('Should return user, not error'),
-        (user) {
-          expect(user.id, 'user-123');
-          expect(user.fullName, 'Juan Pérez');
-          expect(user.email, 'juan@example.com');
-        },
-      );
+      result.fold((_) => fail('Should return user, not error'), (user) {
+        expect(user.id, 'user-123');
+        expect(user.fullName, 'Juan Pérez');
+        expect(user.email, 'juan@example.com');
+      });
     });
 
     test('TC-2-38: is idempotent (multiple calls)', () async {
-      when(() => mockUserRepository.getUserById('user-123')).thenAnswer(
-        (_) async => const Right(mockUser),
-      );
+      when(
+        () => mockUserRepository.getUserById('user-123'),
+      ).thenAnswer((_) async => const Right(mockUser));
 
       final result1 = await getUserByIdUseCase('user-123');
       final result2 = await getUserByIdUseCase('user-123');

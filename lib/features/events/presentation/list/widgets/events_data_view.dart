@@ -67,7 +67,8 @@ class EventsDataView extends StatelessWidget {
                     itemBuilder: (_, i) {
                       final event = events[i];
                       final isOwner = event.ownerId == currentUserId;
-                      final isRegistered = event.id != null &&
+                      final isRegistered =
+                          event.id != null &&
                           registeredEventIds.contains(event.id);
                       return EventCard(
                         key: event.id != null
@@ -78,7 +79,7 @@ class EventsDataView extends StatelessWidget {
                         isRegistered: isRegistered,
                         onStartEvent: isOwner
                             ? () =>
-                                context.read<EventsCubit>().startEvent(event)
+                                  context.read<EventsCubit>().startEvent(event)
                             : null,
                         onTap: () => _navigateToDetail(context, event),
                       );
@@ -91,12 +92,14 @@ class EventsDataView extends StatelessWidget {
   }
 
   Set<String> _buildRegisteredIds(
-      ResultState<List<RegistrationWithEvent>> state) {
+    ResultState<List<RegistrationWithEvent>> state,
+  ) {
     final ids = <String>{};
     if (state is Data<List<RegistrationWithEvent>>) {
       for (final item in state.data) {
         final status = item.registration.status;
-        final isActive = status == RegistrationStatus.pending ||
+        final isActive =
+            status == RegistrationStatus.pending ||
             status == RegistrationStatus.approved ||
             status == RegistrationStatus.readyForEdit;
         if (isActive && item.registration.eventId.isNotEmpty) {
@@ -107,8 +110,7 @@ class EventsDataView extends StatelessWidget {
     return ids;
   }
 
-  Future<void> _navigateToDetail(
-      BuildContext context, EventModel event) async {
+  Future<void> _navigateToDetail(BuildContext context, EventModel event) async {
     final result = await context.pushNamed<dynamic>(
       AppRoutes.eventDetail,
       extra: event,

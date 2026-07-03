@@ -55,8 +55,7 @@ class WaypointPreviewRow extends StatelessWidget {
             ],
           ),
         ),
-        if (!isLast)
-          Container(height: 1, color: AppColors.darkBorderPrimary),
+        if (!isLast) Container(height: 1, color: AppColors.darkBorderPrimary),
       ],
     );
   }

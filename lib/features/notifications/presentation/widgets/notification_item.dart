@@ -20,8 +20,7 @@ class NotificationItem extends StatelessWidget {
       NotificationType.newRegistration => AppColors.primarySubtle,
       NotificationType.soat30d ||
       NotificationType.soat7d ||
-      NotificationType.soatDayOf =>
-        AppColors.warningSubtle,
+      NotificationType.soatDayOf => AppColors.warningSubtle,
       NotificationType.general => AppColors.darkTertiary,
     };
   }
@@ -33,8 +32,7 @@ class NotificationItem extends StatelessWidget {
       NotificationType.newRegistration => AppColors.primary,
       NotificationType.soat30d ||
       NotificationType.soat7d ||
-      NotificationType.soatDayOf =>
-        AppColors.warning,
+      NotificationType.soatDayOf => AppColors.warning,
       NotificationType.general => AppColors.textOnDarkSecondary,
     };
   }
@@ -47,8 +45,7 @@ class NotificationItem extends StatelessWidget {
       NotificationType.newRegistration => Icons.person_add_alt_1_outlined,
       NotificationType.soat30d ||
       NotificationType.soat7d ||
-      NotificationType.soatDayOf =>
-        Icons.description_outlined,
+      NotificationType.soatDayOf => Icons.description_outlined,
       NotificationType.general => Icons.notifications_outlined,
     };
   }
@@ -75,89 +72,89 @@ class NotificationItem extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: AppColors.darkCard,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: AppColors.primary.withValues(alpha: 0.25),
-              ),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.darkCard,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: AppColors.primary.withValues(alpha: 0.25),
             ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: _iconBgColor(notification.type),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    _icon(notification.type),
-                    color: _iconColor(notification.type),
-                    size: 22,
-                  ),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: _iconBgColor(notification.type),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                AppSpacing.hGapMd,
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              notification.title,
-                              style: TextStyle(
-                                color: AppColors.textOnDarkPrimary,
-                                fontSize: 14,
-                                fontWeight: isUnread
-                                    ? FontWeight.w600
-                                    : FontWeight.w500,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                child: Icon(
+                  _icon(notification.type),
+                  color: _iconColor(notification.type),
+                  size: 22,
+                ),
+              ),
+              AppSpacing.hGapMd,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            notification.title,
+                            style: TextStyle(
+                              color: AppColors.textOnDarkPrimary,
+                              fontSize: 14,
+                              fontWeight: isUnread
+                                  ? FontWeight.w600
+                                  : FontWeight.w500,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        AppSpacing.hGapSm,
+                        if (isUnread)
+                          Container(
+                            width: 8,
+                            height: 8,
+                            margin: const EdgeInsets.only(top: 4),
+                            decoration: const BoxDecoration(
+                              color: AppColors.primary,
+                              shape: BoxShape.circle,
                             ),
                           ),
-                          AppSpacing.hGapSm,
-                          if (isUnread)
-                            Container(
-                              width: 8,
-                              height: 8,
-                              margin: const EdgeInsets.only(top: 4),
-                              decoration: const BoxDecoration(
-                                color: AppColors.primary,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                        ],
+                      ],
+                    ),
+                    AppSpacing.gapXxs,
+                    Text(
+                      notification.body,
+                      style: const TextStyle(
+                        color: AppColors.textOnDarkSecondary,
+                        fontSize: 13,
+                        height: 1.4,
                       ),
-                      AppSpacing.gapXxs,
-                      Text(
-                        notification.body,
-                        style: const TextStyle(
-                          color: AppColors.textOnDarkSecondary,
-                          fontSize: 13,
-                          height: 1.4,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    AppSpacing.gapXxs,
+                    Text(
+                      _timeAgo(notification.createdAt),
+                      style: const TextStyle(
+                        color: AppColors.textOnDarkTertiary,
+                        fontSize: 12,
                       ),
-                      AppSpacing.gapXxs,
-                      Text(
-                        _timeAgo(notification.createdAt),
-                        style: const TextStyle(
-                          color: AppColors.textOnDarkTertiary,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
+          ),
         ),
       ),
     );

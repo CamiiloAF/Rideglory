@@ -71,10 +71,10 @@ class TecnomecanicaEmptyState extends StatelessWidget {
                     ),
                   )
                   .then((_) {
-                if (context.mounted) {
-                  context.read<TecnomecanicaCubit>().load(vehicle.id ?? '');
-                }
-              }),
+                    if (context.mounted) {
+                      context.read<TecnomecanicaCubit>().load(vehicle.id ?? '');
+                    }
+                  }),
             ),
           ],
         ),

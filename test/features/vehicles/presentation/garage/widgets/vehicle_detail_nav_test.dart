@@ -57,59 +57,44 @@ Widget _pump(VehicleDetailNav nav) {
 
 void main() {
   // TC-nav-1: vehículo archivado → botón editar ausente
-  testWidgets(
-    'TC-nav-1: isArchived=true — edit button is NOT rendered',
-    (tester) async {
-      await tester.pumpWidget(
-        _pump(
-          VehicleDetailNav(
-            vehicle: _vehicle,
-            isArchived: true,
-            onBack: () {},
-          ),
-        ),
-      );
-      await tester.pump();
+  testWidgets('TC-nav-1: isArchived=true — edit button is NOT rendered', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _pump(
+        VehicleDetailNav(vehicle: _vehicle, isArchived: true, onBack: () {}),
+      ),
+    );
+    await tester.pump();
 
-      expect(find.byIcon(Icons.edit_outlined), findsNothing);
-    },
-  );
+    expect(find.byIcon(Icons.edit_outlined), findsNothing);
+  });
 
   // TC-nav-2: vehículo activo → botón editar presente
-  testWidgets(
-    'TC-nav-2: isArchived=false — edit button IS rendered',
-    (tester) async {
-      await tester.pumpWidget(
-        _pump(
-          VehicleDetailNav(
-            vehicle: _vehicle,
-            isArchived: false,
-            onBack: () {},
-          ),
-        ),
-      );
-      await tester.pump();
+  testWidgets('TC-nav-2: isArchived=false — edit button IS rendered', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _pump(
+        VehicleDetailNav(vehicle: _vehicle, isArchived: false, onBack: () {}),
+      ),
+    );
+    await tester.pump();
 
-      expect(find.byIcon(Icons.edit_outlined), findsOneWidget);
-    },
-  );
+    expect(find.byIcon(Icons.edit_outlined), findsOneWidget);
+  });
 
   // TC-nav-3: vehículo archivado → nombre del vehículo siempre visible
-  testWidgets(
-    'TC-nav-3: isArchived=true — vehicle name is still displayed',
-    (tester) async {
-      await tester.pumpWidget(
-        _pump(
-          VehicleDetailNav(
-            vehicle: _vehicle,
-            isArchived: true,
-            onBack: () {},
-          ),
-        ),
-      );
-      await tester.pump();
+  testWidgets('TC-nav-3: isArchived=true — vehicle name is still displayed', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _pump(
+        VehicleDetailNav(vehicle: _vehicle, isArchived: true, onBack: () {}),
+      ),
+    );
+    await tester.pump();
 
-      expect(find.text('BMW R1250GS'), findsOneWidget);
-    },
-  );
+    expect(find.text('BMW R1250GS'), findsOneWidget);
+  });
 }

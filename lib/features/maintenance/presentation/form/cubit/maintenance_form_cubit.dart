@@ -92,44 +92,36 @@ class MaintenanceFormCubit extends Cubit<ResultState<MaintenanceModel>> {
 
     if (maintenance.id != null) {
       final result = await _updateMaintenanceUseCase(maintenance);
-      result.fold(
-        (error) => emit(ResultState.error(error: error)),
-        (saved) {
-          lastSavedRecords = [saved];
-          _analytics
-              .logEvent(AnalyticsEvents.maintenanceUpdated, {
-                AnalyticsParams.maintenanceType: saved.type.name,
-                AnalyticsParams.maintenanceMode: saved.mode ==
-                        MaintenanceMode.completed
-                    ? AnalyticsParams.maintenanceModeCompleted
-                    : AnalyticsParams.maintenanceModeScheduled,
-              })
-              .ignore();
-          emit(ResultState.data(data: saved));
-        },
-      );
+      result.fold((error) => emit(ResultState.error(error: error)), (saved) {
+        lastSavedRecords = [saved];
+        _analytics.logEvent(AnalyticsEvents.maintenanceUpdated, {
+          AnalyticsParams.maintenanceType: saved.type.name,
+          AnalyticsParams.maintenanceMode:
+              saved.mode == MaintenanceMode.completed
+              ? AnalyticsParams.maintenanceModeCompleted
+              : AnalyticsParams.maintenanceModeScheduled,
+        }).ignore();
+        emit(ResultState.data(data: saved));
+      });
     } else {
       final result = await _addMaintenanceUseCase(
         maintenance,
         nextKmInterval: nextKmInterval,
       );
-      result.fold(
-        (error) => emit(ResultState.error(error: error)),
-        (savedList) {
-          lastSavedRecords = savedList;
-          final saved = savedList.first;
-          _analytics
-              .logEvent(AnalyticsEvents.maintenanceAdded, {
-                AnalyticsParams.maintenanceType: saved.type.name,
-                AnalyticsParams.maintenanceMode: saved.mode ==
-                        MaintenanceMode.completed
-                    ? AnalyticsParams.maintenanceModeCompleted
-                    : AnalyticsParams.maintenanceModeScheduled,
-              })
-              .ignore();
-          emit(ResultState.data(data: saved));
-        },
-      );
+      result.fold((error) => emit(ResultState.error(error: error)), (
+        savedList,
+      ) {
+        lastSavedRecords = savedList;
+        final saved = savedList.first;
+        _analytics.logEvent(AnalyticsEvents.maintenanceAdded, {
+          AnalyticsParams.maintenanceType: saved.type.name,
+          AnalyticsParams.maintenanceMode:
+              saved.mode == MaintenanceMode.completed
+              ? AnalyticsParams.maintenanceModeCompleted
+              : AnalyticsParams.maintenanceModeScheduled,
+        }).ignore();
+        emit(ResultState.data(data: saved));
+      });
     }
   }
 
@@ -143,15 +135,20 @@ class MaintenanceFormCubit extends Cubit<ResultState<MaintenanceModel>> {
 
       final odometerAtService =
           formData[MaintenanceFormFields.currentMileage] != null &&
-              (formData[MaintenanceFormFields.currentMileage] as String).isNotEmpty
-          ? int.tryParse(formData[MaintenanceFormFields.currentMileage] as String)
+              (formData[MaintenanceFormFields.currentMileage] as String)
+                  .isNotEmpty
+          ? int.tryParse(
+              formData[MaintenanceFormFields.currentMileage] as String,
+            )
           : _currentVehicleMileage;
 
       final relativeNextKm = buildNextKmInterval();
       final baseKm = _mode == MaintenanceMode.completed
           ? (odometerAtService ?? _currentVehicleMileage ?? 0)
           : (_currentVehicleMileage ?? 0);
-      final nextOdometer = relativeNextKm != null ? baseKm + relativeNextKm : null;
+      final nextOdometer = relativeNextKm != null
+          ? baseKm + relativeNextKm
+          : null;
 
       return MaintenanceModel(
         id: _editingMaintenance?.id,
@@ -160,16 +157,23 @@ class MaintenanceFormCubit extends Cubit<ResultState<MaintenanceModel>> {
         type: type,
         mode: _mode,
         serviceDate: _mode == MaintenanceMode.completed
-            ? formData[MaintenanceFormFields.date] as DateTime? ?? DateTime.now()
+            ? formData[MaintenanceFormFields.date] as DateTime? ??
+                  DateTime.now()
             : null,
-        odometerAtService: _mode == MaintenanceMode.completed ? odometerAtService : null,
+        odometerAtService: _mode == MaintenanceMode.completed
+            ? odometerAtService
+            : null,
         workshop: formData[MaintenanceFormFields.workshop] as String?,
         notes: formData[MaintenanceFormFields.notes] as String?,
-        nextDate: formData[MaintenanceFormFields.nextMaintenanceDate] as DateTime?,
+        nextDate:
+            formData[MaintenanceFormFields.nextMaintenanceDate] as DateTime?,
         nextOdometer: nextOdometer,
-        cost: formData[MaintenanceFormFields.cost] != null &&
+        cost:
+            formData[MaintenanceFormFields.cost] != null &&
                 (formData[MaintenanceFormFields.cost] as String).isNotEmpty
-            ? ThousandsInputFormatter.parse(formData[MaintenanceFormFields.cost] as String)
+            ? ThousandsInputFormatter.parse(
+                formData[MaintenanceFormFields.cost] as String,
+              )
             : null,
       );
     }

@@ -6,7 +6,9 @@ import 'package:rideglory/features/vehicles/domain/models/vehicle_soat_form_data
 abstract class VehicleRepository {
   Future<Either<DomainException, List<VehicleModel>>> getMyVehicles();
 
-  Future<Either<DomainException, VehicleModel>> setMainVehicle(String vehicleId);
+  Future<Either<DomainException, VehicleModel>> setMainVehicle(
+    String vehicleId,
+  );
 
   Future<Either<DomainException, VehicleModel>> addVehicle(
     VehicleModel vehicle,
@@ -28,5 +30,7 @@ abstract class VehicleRepository {
     required VehicleSoatFormData soat,
   });
 
-  Future<Either<DomainException, VehicleSoatFormData>> getSoat(String vehicleId);
+  Future<Either<DomainException, VehicleSoatFormData>> getSoat(
+    String vehicleId,
+  );
 }

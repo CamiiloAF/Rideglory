@@ -6,14 +6,18 @@ abstract class LiveTrackingState with _$LiveTrackingState {
     required ResultState<List<RiderTrackingModel>> ridersResult,
     @Default(false) bool isTracking,
     @Default(0.0) double totalDistanceMeters,
+
     /// Device GPS used to compute distance to each rider (when tracking).
     double? currentUserLatitude,
     double? currentUserLongitude,
+
     /// Incoming SOS alert from another rider (null = no active SOS).
     @Default(ResultState<SosAlertModel?>.initial())
     ResultState<SosAlertModel?> sosAlertResult,
+
     /// Whether this user has sent an SOS alert.
     @Default(false) bool hasSentSos,
+
     /// True when the organizer has ended the ride — triggers auto-pop.
     @Default(false) bool isFinished,
   }) = _LiveTrackingState;

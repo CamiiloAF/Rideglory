@@ -106,10 +106,7 @@ class VehicleRepositoryImpl implements VehicleRepository {
   }) {
     return executeService(
       function: () async {
-        final dto = await _vehicleService.upsertSoat(
-          vehicleId,
-          soat.toJson(),
-        );
+        final dto = await _vehicleService.upsertSoat(vehicleId, soat.toJson());
         return dto.toFormData();
       },
     );

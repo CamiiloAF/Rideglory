@@ -38,7 +38,10 @@ class SoatDocumentSection extends StatelessWidget {
       );
     }
     if (remoteDocumentUrl != null) {
-      return _RemoteDocumentCard(url: remoteDocumentUrl!, onReplace: onPickImage);
+      return _RemoteDocumentCard(
+        url: remoteDocumentUrl!,
+        onReplace: onPickImage,
+      );
     }
     return _EmptyDocumentSlot(onTap: onPickImage);
   }
@@ -99,9 +102,7 @@ class _DocumentFooter extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(
-              isPdf
-                  ? Icons.picture_as_pdf_outlined
-                  : Icons.image_outlined,
+              isPdf ? Icons.picture_as_pdf_outlined : Icons.image_outlined,
               size: 20,
               color: AppColors.primary,
             ),

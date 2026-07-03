@@ -54,7 +54,8 @@ class GarageVehicleImageSection extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.transparent, // Intentional: gradient stop — transparent start
+                    Colors
+                        .transparent, // Intentional: gradient stop — transparent start
                     AppColors.darkBgPrimary.withValues(alpha: 0.7),
                   ],
                 ),
@@ -107,7 +108,9 @@ class GarageVehicleImageSection extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    GarageMainBadge(label: context.l10n.garage_mainVehicleBadge),
+                    GarageMainBadge(
+                      label: context.l10n.garage_mainVehicleBadge,
+                    ),
                   ],
                 ),
                 if (subtitle.isNotEmpty) ...[

@@ -68,7 +68,9 @@ class VehicleSelectorChip extends StatelessWidget {
                 Icon(
                   Icons.directions_car_outlined,
                   size: 16,
-                  color: hasSelection ? Colors.white : context.colorScheme.primary,
+                  color: hasSelection
+                      ? Colors.white
+                      : context.colorScheme.primary,
                 ),
                 AppSpacing.hGapXs,
                 Text(

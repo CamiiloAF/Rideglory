@@ -33,7 +33,11 @@ class HomeEventCardContent extends StatelessWidget {
           const SizedBox(height: 6),
           Row(
             children: [
-              const Icon(Icons.calendar_today, size: 14, color: AppColors.textOnDarkSecondary),
+              const Icon(
+                Icons.calendar_today,
+                size: 14,
+                color: AppColors.textOnDarkSecondary,
+              ),
               const SizedBox(width: 6),
               Text(
                 event.startDate.formattedDate,
@@ -48,7 +52,11 @@ class HomeEventCardContent extends StatelessWidget {
           const SizedBox(height: 6),
           Row(
             children: [
-              const Icon(LucideIcons.flame, size: 14, color: AppColors.textOnDarkTertiary),
+              const Icon(
+                LucideIcons.flame,
+                size: 14,
+                color: AppColors.textOnDarkTertiary,
+              ),
               const SizedBox(width: 6),
               Text(
                 event.difficulty.shortLabel,

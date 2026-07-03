@@ -7,9 +7,7 @@ class VehicleSelectorLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Padding(
       padding: EdgeInsets.symmetric(vertical: 24),
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
+      child: Center(child: CircularProgressIndicator()),
     );
   }
 }

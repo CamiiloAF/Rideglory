@@ -16,12 +16,11 @@ class MockCrashReporter extends Mock implements CrashReporter {}
 Future<ApiResult<T>> _exec<T>({
   required Future<T> Function() function,
   required MockCrashReporter reporter,
-}) =>
-    handlerExceptionHttpTestable(
-      function: function,
-      crashReporter: reporter,
-      isDebug: false,
-    );
+}) => handlerExceptionHttpTestable(
+  function: function,
+  crashReporter: reporter,
+  isDebug: false,
+);
 
 /// Crea un [DioException] con tipo y status code opcionales.
 DioException _dioEx(DioExceptionType type, {int? statusCode}) {
@@ -64,9 +63,40 @@ void main() {
     ];
 
     for (final type in reportingTypes) {
-      test('$type → recordError(fatal:false) called(1), category=network', () async {
+      test(
+        '$type → recordError(fatal:false) called(1), category=network',
+        () async {
+          await _exec<String>(
+            function: () => Future.error(_dioEx(type)),
+            reporter: reporter,
+          );
+
+          final captured = verify(
+            () => reporter.recordError(
+              any(),
+              any(),
+              reason: any(named: 'reason'),
+              fatal: false,
+              information: captureAny(named: 'information'),
+            ),
+          )..called(1);
+
+          final info = captured.captured.first as List<String>;
+          expect(
+            info.any((s) => s.contains(AnalyticsParams.categoryNetwork)),
+            isTrue,
+          );
+        },
+      );
+    }
+
+    test(
+      'badResponse 500 → recordError called(1) con http_status=500',
+      () async {
         await _exec<String>(
-          function: () => Future.error(_dioEx(type)),
+          function: () => Future.error(
+            _dioEx(DioExceptionType.badResponse, statusCode: 500),
+          ),
           reporter: reporter,
         );
 
@@ -81,32 +111,9 @@ void main() {
         )..called(1);
 
         final info = captured.captured.first as List<String>;
-        expect(
-          info.any((s) => s.contains(AnalyticsParams.categoryNetwork)),
-          isTrue,
-        );
-      });
-    }
-
-    test('badResponse 500 → recordError called(1) con http_status=500', () async {
-      await _exec<String>(
-        function: () => Future.error(_dioEx(DioExceptionType.badResponse, statusCode: 500)),
-        reporter: reporter,
-      );
-
-      final captured = verify(
-        () => reporter.recordError(
-          any(),
-          any(),
-          reason: any(named: 'reason'),
-          fatal: false,
-          information: captureAny(named: 'information'),
-        ),
-      )..called(1);
-
-      final info = captured.captured.first as List<String>;
-      expect(info.any((s) => s.contains('http_status=500')), isTrue);
-    });
+        expect(info.any((s) => s.contains('http_status=500')), isTrue);
+      },
+    );
   });
 
   // ─── DioException — NO reporta ────────────────────────────────────────────
@@ -184,36 +191,43 @@ void main() {
       });
     }
 
-    test('network-request-failed → recordError(fatal:false), category=network', () async {
-      await _exec<String>(
-        function: () => Future.error(
-          FirebaseAuthException(code: 'network-request-failed'),
-        ),
-        reporter: reporter,
-      );
+    test(
+      'network-request-failed → recordError(fatal:false), category=network',
+      () async {
+        await _exec<String>(
+          function: () => Future.error(
+            FirebaseAuthException(code: 'network-request-failed'),
+          ),
+          reporter: reporter,
+        );
 
-      final captured = verify(
-        () => reporter.recordError(
-          any(),
-          any(),
-          reason: any(named: 'reason'),
-          fatal: false,
-          information: captureAny(named: 'information'),
-        ),
-      )..called(1);
+        final captured = verify(
+          () => reporter.recordError(
+            any(),
+            any(),
+            reason: any(named: 'reason'),
+            fatal: false,
+            information: captureAny(named: 'information'),
+          ),
+        )..called(1);
 
-      final info = captured.captured.first as List<String>;
-      expect(
-        info.any((s) => s.contains(AnalyticsParams.categoryNetwork)),
-        isTrue,
-      );
-    });
+        final info = captured.captured.first as List<String>;
+        expect(
+          info.any((s) => s.contains(AnalyticsParams.categoryNetwork)),
+          isTrue,
+        );
+      },
+    );
   });
 
   // ─── PlatformException ────────────────────────────────────────────────────
 
   group('PlatformException', () {
-    const expectedCodes = ['sign_in_cancelled', 'sign_in_failed', 'network_error'];
+    const expectedCodes = [
+      'sign_in_cancelled',
+      'sign_in_failed',
+      'network_error',
+    ];
 
     for (final code in expectedCodes) {
       test('$code → verifyNever (código conocido)', () async {
@@ -234,28 +248,33 @@ void main() {
       });
     }
 
-    test('código inesperado → recordError(fatal:false), category=platform_unexpected', () async {
-      await _exec<String>(
-        function: () => Future.error(PlatformException(code: 'unknown_xyz')),
-        reporter: reporter,
-      );
+    test(
+      'código inesperado → recordError(fatal:false), category=platform_unexpected',
+      () async {
+        await _exec<String>(
+          function: () => Future.error(PlatformException(code: 'unknown_xyz')),
+          reporter: reporter,
+        );
 
-      final captured = verify(
-        () => reporter.recordError(
-          any(),
-          any(),
-          reason: any(named: 'reason'),
-          fatal: false,
-          information: captureAny(named: 'information'),
-        ),
-      )..called(1);
+        final captured = verify(
+          () => reporter.recordError(
+            any(),
+            any(),
+            reason: any(named: 'reason'),
+            fatal: false,
+            information: captureAny(named: 'information'),
+          ),
+        )..called(1);
 
-      final info = captured.captured.first as List<String>;
-      expect(
-        info.any((s) => s.contains(AnalyticsParams.categoryPlatformUnexpected)),
-        isTrue,
-      );
-    });
+        final info = captured.captured.first as List<String>;
+        expect(
+          info.any(
+            (s) => s.contains(AnalyticsParams.categoryPlatformUnexpected),
+          ),
+          isTrue,
+        );
+      },
+    );
   });
 
   // ─── DomainException — anti doble-conteo ─────────────────────────────────
@@ -314,7 +333,8 @@ void main() {
     'DioException 500 — endpoint sanitizado no contiene query string ni ids dinámicos',
     () async {
       final opts = RequestOptions(
-        path: 'https://api.test.com/events/550e8400-e29b-41d4-a716-446655440000?token=secret',
+        path:
+            'https://api.test.com/events/550e8400-e29b-41d4-a716-446655440000?token=secret',
       );
       final ex = DioException(
         type: DioExceptionType.badResponse,
@@ -322,10 +342,7 @@ void main() {
         response: Response<void>(requestOptions: opts, statusCode: 500),
       );
 
-      await _exec<String>(
-        function: () => Future.error(ex),
-        reporter: reporter,
-      );
+      await _exec<String>(function: () => Future.error(ex), reporter: reporter);
 
       final captured = verify(
         () => reporter.recordError(
@@ -358,46 +375,35 @@ void main() {
 
   // ─── Gating: isDebug=true nunca reporta ──────────────────────────────────
 
-  test(
-    'Gating — isDebug=true: ningun DioException reporta no-fatal',
-    () async {
-      await handlerExceptionHttpTestable<String>(
-        function: () => Future.error(_dioEx(DioExceptionType.connectionTimeout)),
-        crashReporter: reporter,
-        isDebug: true, // simula kDebugMode
-      );
+  test('Gating — isDebug=true: ningun DioException reporta no-fatal', () async {
+    await handlerExceptionHttpTestable<String>(
+      function: () => Future.error(_dioEx(DioExceptionType.connectionTimeout)),
+      crashReporter: reporter,
+      isDebug: true, // simula kDebugMode
+    );
 
-      verifyNever(
-        () => reporter.recordError(
-          any(),
-          any(),
-          reason: any(named: 'reason'),
-          fatal: any(named: 'fatal'),
-          information: any(named: 'information'),
-        ),
-      );
-    },
-  );
+    verifyNever(
+      () => reporter.recordError(
+        any(),
+        any(),
+        reason: any(named: 'reason'),
+        fatal: any(named: 'fatal'),
+        information: any(named: 'information'),
+      ),
+    );
+  });
 
   // ─── executeService no fue modificado ────────────────────────────────────
 
-  test(
-    'executeService sigue funcionando (retorna Right en éxito)',
-    () async {
-      final result = await executeService<String>(
-        function: () async => 'ok',
-      );
-      expect(result.isRight(), isTrue);
-    },
-  );
+  test('executeService sigue funcionando (retorna Right en éxito)', () async {
+    final result = await executeService<String>(function: () async => 'ok');
+    expect(result.isRight(), isTrue);
+  });
 
-  test(
-    'executeService sigue funcionando (retorna Left en fallo)',
-    () async {
-      final result = await executeService<String>(
-        function: () => Future.error(const DomainException(message: 'fail')),
-      );
-      expect(result.isLeft(), isTrue);
-    },
-  );
+  test('executeService sigue funcionando (retorna Left en fallo)', () async {
+    final result = await executeService<String>(
+      function: () => Future.error(const DomainException(message: 'fail')),
+    );
+    expect(result.isLeft(), isTrue);
+  });
 }

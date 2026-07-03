@@ -70,8 +70,9 @@ class _MaintenanceFiltersBottomSheetState
                 children: [
                   FilterTypeSection(
                     selectedTypes: _filters.types,
-                    onChanged: (types) =>
-                        setState(() => _filters = _filters.copyWith(types: types)),
+                    onChanged: (types) => setState(
+                      () => _filters = _filters.copyWith(types: types),
+                    ),
                   ),
                   const FilterDivider(),
                   FilterStatusSection(

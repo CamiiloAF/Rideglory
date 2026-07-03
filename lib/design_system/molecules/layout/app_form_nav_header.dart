@@ -90,11 +90,11 @@ class AppFormNavHeader extends StatelessWidget implements PreferredSizeWidget {
   // status bar inset internally, so the AppBar content fits without overflow.
   @override
   Size get preferredSize => Size.fromHeight(
-        height +
-            (bottom != null ? _bottomSlotHeight : 0) +
-            (showBottomBorder ? 1 : 0) +
-            _maxStatusBarHeight,
-      );
+    height +
+        (bottom != null ? _bottomSlotHeight : 0) +
+        (showBottomBorder ? 1 : 0) +
+        _maxStatusBarHeight,
+  );
 
   static const double _bottomSlotHeight = 24;
   static const double _maxStatusBarHeight = 48;
@@ -106,8 +106,10 @@ class AppFormNavHeader extends StatelessWidget implements PreferredSizeWidget {
           ? const BoxDecoration(
               color: AppColors.darkBgPrimary,
               border: Border(
-                bottom:
-                    BorderSide(color: AppColors.darkBorderPrimary, width: 1),
+                bottom: BorderSide(
+                  color: AppColors.darkBorderPrimary,
+                  width: 1,
+                ),
               ),
             )
           : const BoxDecoration(color: AppColors.darkBgPrimary),
@@ -160,16 +162,15 @@ class AppFormNavHeader extends StatelessWidget implements PreferredSizeWidget {
       final color = action.isLoading
           ? AppColors.primary.withValues(alpha: 0.5)
           : (action.emphasized
-              ? AppColors.primary
-              : AppColors.textOnDarkSecondary);
+                ? AppColors.primary
+                : AppColors.textOnDarkSecondary);
       return GestureDetector(
         onTap: action.isLoading ? null : action.onTap,
         child: Text(
           action.label,
           style: TextStyle(
             fontSize: 16,
-            fontWeight:
-                action.emphasized ? FontWeight.w700 : FontWeight.normal,
+            fontWeight: action.emphasized ? FontWeight.w700 : FontWeight.normal,
             color: color,
           ),
         ),

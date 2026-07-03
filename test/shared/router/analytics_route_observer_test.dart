@@ -29,7 +29,9 @@ void main() {
   test(
     'T1 — didPush con settings.name mapeado emite nombre canónico exactamente 1 vez',
     () async {
-      final route = _fakeRoute(AnalyticsScreenNames.branchRootPaths[2]); // /events
+      final route = _fakeRoute(
+        AnalyticsScreenNames.branchRootPaths[2],
+      ); // /events
 
       observer.didPush(route, null);
 
@@ -54,11 +56,11 @@ void main() {
       // Para event_detail_by_id y event_detail se emite el mismo nombre canónico;
       // el dedupe absorbe el segundo. Emitimos con rutas alternas para 5 llamadas.
       final routesDistinct = [
-        _fakeRoute('/events/detail-by-id'),  // event_detail
-        _fakeRoute('/events/registration'),   // event_registration
-        _fakeRoute('/vehicles/detail'),        // vehicle_detail
-        _fakeRoute('/maintenances/detail'),    // maintenance_detail
-        _fakeRoute('/notifications'),          // notifications
+        _fakeRoute('/events/detail-by-id'), // event_detail
+        _fakeRoute('/events/registration'), // event_registration
+        _fakeRoute('/vehicles/detail'), // vehicle_detail
+        _fakeRoute('/maintenances/detail'), // maintenance_detail
+        _fakeRoute('/notifications'), // notifications
       ];
 
       for (final route in routesDistinct) {
@@ -89,9 +91,7 @@ void main() {
 
       verify(() => analytics.logScreenView('home')).called(1);
       verify(() => analytics.logScreenView('events')).called(1);
-      verifyNever(() => analytics.logScreenView(any(
-        that: equals('home'),
-      )));
+      verifyNever(() => analytics.logScreenView(any(that: equals('home'))));
     },
   );
 
@@ -102,7 +102,10 @@ void main() {
       final branchInitRoute = _fakeRoute('/home');
 
       // Simula el didPush que notifyRootObserver reenvía al observer raíz.
-      observer.didPush(branchInitRoute, null); // emite home → _lastEmittedName = home
+      observer.didPush(
+        branchInitRoute,
+        null,
+      ); // emite home → _lastEmittedName = home
 
       // El ShellScreenViewTracker llama notifyEmitted cuando activa el branch.
       // Si ya emitió 'home' con el mismo nombre, el tracker lo notifica (verdad de tabs).
@@ -152,14 +155,11 @@ void main() {
   );
 
   // T7c — path no mapeado → 0 emisiones
-  test(
-    'T7c — didPush con path no mapeado no emite screen_view',
-    () async {
-      final route = _fakeRoute('/unknown/path/not/mapped');
-      observer.didPush(route, null);
-      verifyNever(() => analytics.logScreenView(any()));
-    },
-  );
+  test('T7c — didPush con path no mapeado no emite screen_view', () async {
+    final route = _fakeRoute('/unknown/path/not/mapped');
+    observer.didPush(route, null);
+    verifyNever(() => analytics.logScreenView(any()));
+  });
 
   // T8 — Gating: con no-op, ningún envío real
   test(

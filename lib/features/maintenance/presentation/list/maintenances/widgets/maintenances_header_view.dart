@@ -46,7 +46,10 @@ class MaintenancesHeaderView extends StatelessWidget {
                 hintStyle: context.bodyMedium?.copyWith(
                   color: context.colorScheme.onSurfaceVariant,
                 ),
-                prefixIcon: Icon(Icons.search, color: context.colorScheme.primary),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: context.colorScheme.primary,
+                ),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,

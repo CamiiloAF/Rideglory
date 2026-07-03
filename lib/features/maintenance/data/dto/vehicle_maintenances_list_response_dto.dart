@@ -21,10 +21,10 @@ class MaintenanceListSummaryDto {
   final DateTime? nextServiceDate;
 
   MaintenanceListSummary toModel() => MaintenanceListSummary(
-        lastServiceDate: lastServiceDate,
-        lastServiceMileage: lastServiceMileage,
-        nextServiceDate: nextServiceDate,
-      );
+    lastServiceDate: lastServiceDate,
+    lastServiceMileage: lastServiceMileage,
+    nextServiceDate: nextServiceDate,
+  );
 }
 
 @JsonSerializable(converters: apiJsonDateTimeConverters)
@@ -36,8 +36,7 @@ class VehicleMaintenancesListResponseDto {
 
   factory VehicleMaintenancesListResponseDto.fromJson(
     Map<String, dynamic> json,
-  ) =>
-      _$VehicleMaintenancesListResponseDtoFromJson(json);
+  ) => _$VehicleMaintenancesListResponseDtoFromJson(json);
 
   final List<MaintenanceDto> items;
   final MaintenanceListSummaryDto summary;

@@ -37,9 +37,7 @@ class ImageStorageService {
   }) async {
     final file = File(image.path);
     if (!file.existsSync()) {
-      throw DomainException(
-        message: RidegloryL10n.current.imageUploadFailed,
-      );
+      throw DomainException(message: RidegloryL10n.current.imageUploadFailed);
     }
     final ref = _storage.ref().child(storagePath);
     try {

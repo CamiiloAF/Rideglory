@@ -21,14 +21,11 @@ class AppSearchBar extends StatelessWidget {
     final cs = context.colorScheme;
     final appColors = context.appColors;
 
-    final fillColor =
-        darkMode ? cs.surfaceContainerHighest : cs.surface;
-    final borderColor =
-        darkMode ? cs.primary : cs.outlineVariant;
+    final fillColor = darkMode ? cs.surfaceContainerHighest : cs.surface;
+    final borderColor = darkMode ? cs.primary : cs.outlineVariant;
     final hintColor = cs.onSurfaceVariant;
     final textColor = cs.onSurface;
-    final iconColor =
-        darkMode ? appColors.inputIcon : cs.onSurfaceVariant;
+    final iconColor = darkMode ? appColors.inputIcon : cs.onSurfaceVariant;
 
     return Padding(
       padding: padding ?? const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -50,10 +47,7 @@ class AppSearchBar extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(
-              color: cs.primary,
-              width: 2,
-            ),
+            borderSide: BorderSide(color: cs.primary, width: 2),
           ),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,

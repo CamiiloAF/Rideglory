@@ -61,11 +61,7 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
     this._analytics, {
     Stream<String>? eventFinishedStream,
   }) : _fetchFn = (({String? type, String? dateFrom, String? dateTo}) =>
-            getEventsUseCase(
-              type: type,
-              dateFrom: dateFrom,
-              dateTo: dateTo,
-            )),
+           getEventsUseCase(type: type, dateFrom: dateFrom, dateTo: dateTo)),
        _isMyEvents = false,
        super(const ResultState.initial()) {
     _subscribeToEventFinished(eventFinishedStream);
@@ -77,7 +73,7 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
     this._analytics, {
     Stream<String>? eventFinishedStream,
   }) : _fetchFn = (({String? type, String? dateFrom, String? dateTo}) =>
-            getMyEventsUseCase()),
+           getMyEventsUseCase()),
        _isMyEvents = true,
        super(const ResultState.initial()) {
     _subscribeToEventFinished(eventFinishedStream);
@@ -87,7 +83,8 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
     String? type,
     String? dateFrom,
     String? dateTo,
-  }) _fetchFn;
+  })
+  _fetchFn;
   final UpdateEventUseCase _updateEventUseCase;
   final AnalyticsService _analytics;
 
@@ -133,7 +130,10 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
       type: filters.types.isNotEmpty ? filters.types.first.apiValue : null,
       dateFrom: _isMyEvents
           ? filters.startDate?.toIso8601String().substring(0, 10)
-          : (filters.startDate ?? DateTime.now()).toIso8601String().substring(0, 10),
+          : (filters.startDate ?? DateTime.now()).toIso8601String().substring(
+              0,
+              10,
+            ),
       dateTo: filters.endDate?.toIso8601String().substring(0, 10),
     );
 
@@ -148,15 +148,12 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
         data: (list) => list.length,
         orElse: () => 0,
       );
-      _analytics
-          .logEvent(AnalyticsEvents.eventsListViewed, {
-            AnalyticsParams.resultCount: filtered,
-            AnalyticsParams.listScope:
-                _isMyEvents
-                    ? AnalyticsParams.listScopeMine
-                    : AnalyticsParams.listScopeAll,
-          })
-          .ignore();
+      _analytics.logEvent(AnalyticsEvents.eventsListViewed, {
+        AnalyticsParams.resultCount: filtered,
+        AnalyticsParams.listScope: _isMyEvents
+            ? AnalyticsParams.listScopeMine
+            : AnalyticsParams.listScopeAll,
+      }).ignore();
     });
   }
 
@@ -225,9 +222,7 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
 
     if (_searchQuery.isNotEmpty) {
       filtered = filtered
-          .where(
-            (e) => e.name.toLowerCase().contains(_searchQuery),
-          )
+          .where((e) => e.name.toLowerCase().contains(_searchQuery))
           .toList();
     }
 

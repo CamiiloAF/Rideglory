@@ -11,12 +11,12 @@ class ProfileEditAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final initials = user.fullName != null && user.fullName!.isNotEmpty
         ? user.fullName!
-            .trim()
-            .split(RegExp(r'\s+'))
-            .where((part) => part.isNotEmpty)
-            .take(2)
-            .map((part) => part[0].toUpperCase())
-            .join()
+              .trim()
+              .split(RegExp(r'\s+'))
+              .where((part) => part.isNotEmpty)
+              .take(2)
+              .map((part) => part[0].toUpperCase())
+              .join()
         : '?';
 
     return Center(
@@ -32,7 +32,9 @@ class ProfileEditAvatar extends StatelessWidget {
                 end: Alignment.bottomRight,
                 colors: [
                   AppColors.primary,
-                  AppColors.primary.withValues(alpha: 0.4), // Intentional: gradient stop — alpha variant of primary
+                  AppColors.primary.withValues(
+                    alpha: 0.4,
+                  ), // Intentional: gradient stop — alpha variant of primary
                 ],
               ),
             ),

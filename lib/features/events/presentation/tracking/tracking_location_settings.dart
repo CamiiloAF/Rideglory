@@ -33,8 +33,7 @@ abstract class TrackingLocationSettings {
     }
     if (defaultTargetPlatform == TargetPlatform.iOS ||
         defaultTargetPlatform == TargetPlatform.macOS) {
-      final allowBackground =
-          geolocatorPermission == LocationPermission.always;
+      final allowBackground = geolocatorPermission == LocationPermission.always;
       return AppleSettings(
         accuracy: LocationAccuracy.high,
         distanceFilter: _distanceFilterMeters,
@@ -52,18 +51,12 @@ abstract class TrackingLocationSettings {
 
   static LocationSettings currentFix() {
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return AndroidSettings(
-        accuracy: LocationAccuracy.high,
-      );
+      return AndroidSettings(accuracy: LocationAccuracy.high);
     }
     if (defaultTargetPlatform == TargetPlatform.iOS ||
         defaultTargetPlatform == TargetPlatform.macOS) {
-      return AppleSettings(
-        accuracy: LocationAccuracy.high,
-      );
+      return AppleSettings(accuracy: LocationAccuracy.high);
     }
-    return const LocationSettings(
-      accuracy: LocationAccuracy.high,
-    );
+    return const LocationSettings(accuracy: LocationAccuracy.high);
   }
 }

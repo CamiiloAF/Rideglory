@@ -9,11 +9,7 @@ import 'package:rideglory/design_system/design_system.dart';
 /// - Gap: 4px between title and subtitle
 /// - Bottom padding in parent: 8px (managed by stepTitle frame)
 class StepTitle extends StatelessWidget {
-  const StepTitle({
-    super.key,
-    required this.title,
-    required this.subtitle,
-  });
+  const StepTitle({super.key, required this.title, required this.subtitle});
 
   final String title;
   final String subtitle;

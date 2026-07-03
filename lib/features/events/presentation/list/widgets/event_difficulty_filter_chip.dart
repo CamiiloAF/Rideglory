@@ -25,8 +25,9 @@ class EventDifficultyFilterChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
         decoration: BoxDecoration(
-          color:
-              isSelected ? AppColors.primarySubtle : AppColors.darkBgSecondary,
+          color: isSelected
+              ? AppColors.primarySubtle
+              : AppColors.darkBgSecondary,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected ? AppColors.primary : AppColors.darkBorderPrimary,
@@ -35,11 +36,7 @@ class EventDifficultyFilterChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
-              LucideIcons.flame,
-              color: AppColors.primary,
-              size: 14,
-            ),
+            const Icon(LucideIcons.flame, color: AppColors.primary, size: 14),
             const SizedBox(width: 6),
             Text(
               'X${difficulty.value}',

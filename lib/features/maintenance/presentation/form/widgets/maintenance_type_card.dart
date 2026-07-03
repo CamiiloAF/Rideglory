@@ -54,8 +54,7 @@ class MaintenanceTypeCard extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 11,
-                  fontWeight:
-                      isSelected ? FontWeight.w600 : FontWeight.w500,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                   color: Colors.white,
                 ),
               ),

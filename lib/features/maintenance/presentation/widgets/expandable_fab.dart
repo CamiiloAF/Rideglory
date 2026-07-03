@@ -129,7 +129,9 @@ class _ExpandableFabState extends State<ExpandableFab>
                           icon: Icons.notifications_active,
                           label: context.l10n.maintenance_reminders,
                           onPressed: () {
-                            _handleOptionPressed(context.l10n.maintenance_reminders);
+                            _handleOptionPressed(
+                              context.l10n.maintenance_reminders,
+                            );
                           },
                         ),
                       ),

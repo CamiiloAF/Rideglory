@@ -5,11 +5,7 @@ import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 
 class AiChatErrorBanner extends StatelessWidget {
-  const AiChatErrorBanner({
-    super.key,
-    required this.error,
-    this.onRetry,
-  });
+  const AiChatErrorBanner({super.key, required this.error, this.onRetry});
 
   final DomainException error;
 
@@ -33,8 +29,11 @@ class AiChatErrorBanner extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.warning_amber_rounded,
-              color: colorScheme.onErrorContainer, size: 18),
+          Icon(
+            Icons.warning_amber_rounded,
+            color: colorScheme.onErrorContainer,
+            size: 18,
+          ),
           AppSpacing.hGapSm,
           Expanded(
             child: Column(
@@ -43,8 +42,8 @@ class AiChatErrorBanner extends StatelessWidget {
                 Text(
                   message,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onErrorContainer,
-                      ),
+                    color: colorScheme.onErrorContainer,
+                  ),
                 ),
                 if (!isQuotaUser && onRetry != null) ...[
                   AppSpacing.gapXs,
@@ -53,10 +52,10 @@ class AiChatErrorBanner extends StatelessWidget {
                     child: Text(
                       context.l10n.ai_retryButton,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: colorScheme.onErrorContainer,
-                            fontWeight: FontWeight.w600,
-                            decoration: TextDecoration.underline,
-                          ),
+                        color: colorScheme.onErrorContainer,
+                        fontWeight: FontWeight.w600,
+                        decoration: TextDecoration.underline,
+                      ),
                     ),
                   ),
                 ],

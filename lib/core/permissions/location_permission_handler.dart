@@ -4,12 +4,7 @@ import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum LocationPermissionResult {
-  granted,
-  denied,
-  permanentlyDenied,
-  restricted,
-}
+enum LocationPermissionResult { granted, denied, permanentlyDenied, restricted }
 
 /// Outcome after requesting permissions needed for live map tracking.
 enum LiveTrackingLocationPermissionOutcome {
@@ -55,7 +50,7 @@ abstract class LocationPermissionHandler {
   /// Requests foreground location, then "always" / background (required for
   /// updates when the app is backgrounded on Android 10+ and iOS).
   static Future<LiveTrackingLocationPermissionOutcome>
-      requestForLiveTracking() async {
+  requestForLiveTracking() async {
     var foreground = await _permission.status;
     if (!foreground.isGranted) {
       foreground = await _permission.request();
@@ -93,4 +88,3 @@ abstract class LocationPermissionHandler {
     return LocationPermissionResult.denied;
   }
 }
-

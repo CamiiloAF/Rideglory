@@ -8,4 +8,3 @@ abstract class AppRadius {
   static const double xl = 20;
   static const double full = 999;
 }
-

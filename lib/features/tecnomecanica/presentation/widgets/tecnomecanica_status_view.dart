@@ -67,9 +67,9 @@ class TecnomecanicaStatusView extends StatelessWidget {
                       )
                       .then((_) {
                         if (context.mounted) {
-                          context
-                              .read<TecnomecanicaCubit>()
-                              .load(vehicle.id ?? '');
+                          context.read<TecnomecanicaCubit>().load(
+                            vehicle.id ?? '',
+                          );
                         }
                       }),
                 );
@@ -115,9 +115,9 @@ class TecnomecanicaStatusView extends StatelessWidget {
                     AppSpacing.gapLg,
                     AppButton(
                       label: context.l10n.retry,
-                      onPressed: () => context
-                          .read<TecnomecanicaCubit>()
-                          .load(vehicle.id ?? ''),
+                      onPressed: () => context.read<TecnomecanicaCubit>().load(
+                        vehicle.id ?? '',
+                      ),
                       isFullWidth: false,
                     ),
                   ],

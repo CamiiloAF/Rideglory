@@ -1,6 +1,7 @@
 import 'package:rideglory/features/soat/domain/models/soat_model.dart';
 
-export 'package:rideglory/features/soat/domain/models/soat_model.dart' show SoatStatus;
+export 'package:rideglory/features/soat/domain/models/soat_model.dart'
+    show SoatStatus;
 
 class VehicleModel {
   final String? id;
@@ -91,7 +92,9 @@ class VehicleModel {
       soatExpiryDate: soatExpiryDate ?? this.soatExpiryDate,
       color: color == _unset ? this.color : color as String?,
       engine: engine == _unset ? this.engine : engine as String?,
-      horsepower: horsepower == _unset ? this.horsepower : horsepower as String?,
+      horsepower: horsepower == _unset
+          ? this.horsepower
+          : horsepower as String?,
       torque: torque == _unset ? this.torque : torque as String?,
       weight: weight == _unset ? this.weight : weight as String?,
     );

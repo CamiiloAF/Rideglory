@@ -19,8 +19,10 @@ class SignupTermsCheckbox extends StatefulWidget {
 }
 
 class _SignupTermsCheckboxState extends State<SignupTermsCheckbox> {
-  static const _termsUrl = 'https://camiiloaf.github.io/Rideglory/web/terms-and-conditions.html';
-  static const _privacyUrl = 'https://camiiloaf.github.io/Rideglory/web/privacy-policy.html';
+  static const _termsUrl =
+      'https://camiiloaf.github.io/Rideglory/web/terms-and-conditions.html';
+  static const _privacyUrl =
+      'https://camiiloaf.github.io/Rideglory/web/privacy-policy.html';
 
   late final TapGestureRecognizer _termsRecognizer;
   late final TapGestureRecognizer _privacyRecognizer;
@@ -29,7 +31,8 @@ class _SignupTermsCheckboxState extends State<SignupTermsCheckbox> {
   void initState() {
     super.initState();
     _termsRecognizer = TapGestureRecognizer()..onTap = () => _open(_termsUrl);
-    _privacyRecognizer = TapGestureRecognizer()..onTap = () => _open(_privacyUrl);
+    _privacyRecognizer = TapGestureRecognizer()
+      ..onTap = () => _open(_privacyUrl);
   }
 
   @override
@@ -69,8 +72,13 @@ class _SignupTermsCheckboxState extends State<SignupTermsCheckbox> {
               value: widget.accepted,
               onChanged: (value) => widget.onChanged(value ?? false),
               activeColor: AppColors.primary,
-              side: const BorderSide(color: AppColors.darkBorderPrimary, width: 1.5),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+              side: const BorderSide(
+                color: AppColors.darkBorderPrimary,
+                width: 1.5,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
             ),
           ),
         ),

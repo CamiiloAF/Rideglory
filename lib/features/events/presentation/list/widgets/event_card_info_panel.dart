@@ -105,10 +105,7 @@ class EventCardInfoPanel extends StatelessWidget {
           ),
           AppSpacing.gapMd,
           if (showJoinButton)
-            AppButton(
-              label: context.l10n.event_joinEvent,
-              onPressed: onTap,
-            )
+            AppButton(label: context.l10n.event_joinEvent, onPressed: onTap)
           else if (isOwner && event.state == EventState.scheduled)
             AppButton(
               label: context.l10n.event_startEvent,

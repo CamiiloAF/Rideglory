@@ -32,21 +32,17 @@ class _SignupViewState extends State<SignupView> {
   @override
   void initState() {
     super.initState();
-    _analytics
-        .logEvent(AnalyticsEvents.authFlowStarted, {
-          AnalyticsParams.authMethod: AnalyticsParams.authMethodSignup,
-        })
-        .ignore();
+    _analytics.logEvent(AnalyticsEvents.authFlowStarted, {
+      AnalyticsParams.authMethod: AnalyticsParams.authMethodSignup,
+    }).ignore();
   }
 
   @override
   void dispose() {
     if (!_completedSuccessfully) {
-      _analytics
-          .logEvent(AnalyticsEvents.authAbandoned, {
-            AnalyticsParams.authMethod: AnalyticsParams.authMethodSignup,
-          })
-          .ignore();
+      _analytics.logEvent(AnalyticsEvents.authAbandoned, {
+        AnalyticsParams.authMethod: AnalyticsParams.authMethodSignup,
+      }).ignore();
     }
     super.dispose();
   }
@@ -67,11 +63,9 @@ class _SignupViewState extends State<SignupView> {
 
   void _handleSignup(BuildContext context) {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
-      _analytics
-          .logEvent(AnalyticsEvents.authMethodSelected, {
-            AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
-          })
-          .ignore();
+      _analytics.logEvent(AnalyticsEvents.authMethodSelected, {
+        AnalyticsParams.authMethod: AnalyticsParams.authMethodEmail,
+      }).ignore();
       final data = _formKey.currentState!.value;
       context.read<AuthCubit>().signUpWithEmail(
         fullName: (data[AuthFormFields.fullName] as String).trim(),

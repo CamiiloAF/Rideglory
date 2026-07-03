@@ -29,7 +29,11 @@ class MaintenanceNextServiceCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.alarm_outlined, color: AppColors.primary, size: 16),
+              const Icon(
+                Icons.alarm_outlined,
+                color: AppColors.primary,
+                size: 16,
+              ),
               const SizedBox(width: 8),
               Text(
                 context.l10n.maintenance_next_review,
@@ -53,8 +57,7 @@ class MaintenanceNextServiceCard extends StatelessWidget {
               if (hasMileage)
                 MaintenanceNextServiceRow(
                   label: context.l10n.maintenance_next_odometer_label,
-                  value:
-                      '${numberFormat.format(maintenance.nextOdometer)} km',
+                  value: '${numberFormat.format(maintenance.nextOdometer)} km',
                 ),
             ],
           ),
