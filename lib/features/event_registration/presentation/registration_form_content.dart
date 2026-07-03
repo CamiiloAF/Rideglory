@@ -4,9 +4,13 @@ import 'package:go_router/go_router.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
 import 'package:rideglory/core/services/analytics/analytics_params.dart';
+import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/event_registration/constants/registration_form_fields.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/presentation/cubit/registration_form_cubit.dart';
+import 'package:rideglory/features/event_registration/presentation/my_registrations_cubit.dart';
+import 'package:rideglory/features/event_registration/presentation/widgets/medical_consent_sheet.dart';
+import 'package:rideglory/features/event_registration/presentation/widgets/registration_waiver_sheet.dart';
 import 'package:rideglory/features/event_registration/presentation/wizard/registration_step_indicator.dart';
 import 'package:rideglory/features/event_registration/presentation/wizard/registration_wizard_controller.dart';
 import 'package:rideglory/features/event_registration/presentation/wizard/registration_wizard_navigation_bar.dart';
@@ -57,6 +61,10 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
       );
 
   final ScrollController _scrollController = ScrollController();
+
+  /// Blocks double-tap on "Siguiente" while the medical-consent gate sheet is
+  /// open (the `await` for the modal result is in flight).
+  bool _isCheckingConsent = false;
 
   /// Returns the scroll view to the top so each step starts from the header
   /// instead of inheriting the previous step's scroll offset.
@@ -119,18 +127,32 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
         ?.didChange(savedVehicle.id);
   }
 
-  void _onNext() {
+  Future<void> _onNext() async {
+    if (_isCheckingConsent) return;
     FocusScope.of(context).unfocus();
     final stepFields =
         RegistrationWizardSteps.fieldsByStep[_wizard.currentStep];
     final cubit = context.read<RegistrationFormCubit>();
     final isStepValid = cubit.validateStepFields(stepFields);
-    if (isStepValid) {
-      _wizard.next();
-      final nextIndex = _wizard.currentStep;
-      cubit.onStepAdvanced(nextIndex, _stepNameFor(nextIndex));
-      _resetScroll();
+    if (!isStepValid) return;
+
+    // La autorización Ley 1581 se pide al salir del paso Médico (índice 1),
+    // donde el rider ingresó sus datos médicos — no en el paso Personal. El
+    // consentimiento es por inscripción: si ya se autorizó para esta
+    // inscripción (o venía de una existente en edición) no se vuelve a pedir.
+    if (_wizard.currentStep == 1 && cubit.medicalConsentAcceptedAt == null) {
+      setState(() => _isCheckingConsent = true);
+      final acceptedAt = await showMedicalConsentSheet(context: context);
+      if (!mounted) return;
+      setState(() => _isCheckingConsent = false);
+      if (acceptedAt == null) return;
+      cubit.acceptMedicalConsent(acceptedAt);
     }
+
+    _wizard.next();
+    final nextIndex = _wizard.currentStep;
+    cubit.onStepAdvanced(nextIndex, _stepNameFor(nextIndex));
+    _resetScroll();
   }
 
   void _onBack() {
@@ -144,8 +166,45 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
     _resetScroll();
   }
 
-  void _submitRegistration() {
+  /// Final wizard action: validates the selected vehicle's brand, then opens
+  /// the risk-waiver sheet. Acceptance + submission happen inside the sheet,
+  /// which resolves to the saved registration on success. On success this
+  /// notifies [MyRegistrationsCubit], surfaces the confirmation and closes
+  /// the page returning the saved model.
+  Future<void> _onFinishPressed() async {
     FocusScope.of(context).unfocus();
+    final cubit = context.read<RegistrationFormCubit>();
+    // Valida los campos del último paso (p. ej. que haya un vehículo
+    // seleccionado) antes de abrir el waiver sheet.
+    final stepFields =
+        RegistrationWizardSteps.fieldsByStep[_wizard.currentStep];
+    if (!cubit.validateStepFields(stepFields)) return;
+    if (!_isSelectedVehicleBrandAllowed()) return;
+
+    final saved = await showRegistrationWaiverSheet(
+      context: context,
+      event: widget.event,
+    );
+    if (!mounted || saved == null) return;
+
+    context.read<MyRegistrationsCubit>().onChangeRegistration(saved);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          cubit.isEditing
+              ? context.l10n.registration_registrationUpdatedSuccess
+              : context.l10n.registration_registrationSentSuccess,
+        ),
+        backgroundColor: AppColors.success,
+      ),
+    );
+    context.pop(saved);
+  }
+
+  /// Returns false (after warning the rider) when the selected vehicle's brand
+  /// is not in the event's allow-list. A missing/unknown vehicle is treated as
+  /// allowed here; the server remains the source of truth.
+  bool _isSelectedVehicleBrandAllowed() {
     final cubit = context.read<RegistrationFormCubit>();
     final selectedVehicleId =
         cubit
@@ -160,37 +219,33 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
         .where((brand) => brand.isNotEmpty && brand != '*')
         .toList();
 
-    if (selectedVehicleId != null && availableBrands.isNotEmpty) {
-      VehicleModel? vehicle;
-      for (final currentVehicle
-          in context.read<VehicleCubit>().availableVehicles) {
-        if (currentVehicle.id == selectedVehicleId) {
-          vehicle = currentVehicle;
-          break;
-        }
-      }
-      if (vehicle == null) {
-        cubit.saveRegistration();
-        return;
-      }
-      final selectedBrand = (vehicle.brand ?? '').trim().toLowerCase();
-      final isAllowed = availableBrands
-          .map((brand) => brand.toLowerCase())
-          .contains(selectedBrand);
-      if (!isAllowed) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '${context.l10n.registration_vehicleBrandNotAllowed}: ${availableBrands.join(', ')}',
-            ),
-            duration: const Duration(seconds: 6),
-          ),
-        );
-        return;
+    if (selectedVehicleId == null || availableBrands.isEmpty) return true;
+
+    VehicleModel? vehicle;
+    for (final currentVehicle
+        in context.read<VehicleCubit>().availableVehicles) {
+      if (currentVehicle.id == selectedVehicleId) {
+        vehicle = currentVehicle;
+        break;
       }
     }
+    if (vehicle == null) return true;
 
-    cubit.saveRegistration();
+    final selectedBrand = (vehicle.brand ?? '').trim().toLowerCase();
+    final isAllowed = availableBrands
+        .map((brand) => brand.toLowerCase())
+        .contains(selectedBrand);
+    if (!isAllowed) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '${context.l10n.registration_vehicleBrandNotAllowed}: ${availableBrands.join(', ')}',
+          ),
+          duration: const Duration(seconds: 6),
+        ),
+      );
+    }
+    return isAllowed;
   }
 
   @override
@@ -236,10 +291,10 @@ class _RegistrationFormContentState extends State<RegistrationFormContent> {
                   isFirstStep: _wizard.isFirstStep,
                   isLastStep: _wizard.isLastStep,
                   isEditing: cubit.isEditing,
-                  isLoading: state is Loading,
+                  isLoading: state is Loading || _isCheckingConsent,
                   onBack: _onBack,
                   onNext: _onNext,
-                  onSubmit: _submitRegistration,
+                  onSubmit: _onFinishPressed,
                 );
               },
             ),

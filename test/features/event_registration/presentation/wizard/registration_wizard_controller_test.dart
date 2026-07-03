@@ -72,5 +72,19 @@ void main() {
       controller.goTo(-1);
       expect(controller.currentStep, 2);
     });
+
+    test(
+      '4-step wizard: the vehicle step (index 3) is the last step, where the '
+      'nav bar shows the finish action that opens the waiver sheet',
+      () {
+        final controller = RegistrationWizardController(stepCount: 4);
+        addTearDown(controller.dispose);
+
+        controller.goTo(3);
+
+        expect(controller.currentStep, 3);
+        expect(controller.isLastStep, isTrue);
+      },
+    );
   });
 }

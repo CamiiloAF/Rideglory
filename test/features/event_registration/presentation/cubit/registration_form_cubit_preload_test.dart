@@ -31,23 +31,28 @@ class MockAuthService extends Mock implements AuthService {}
 
 class MockAnalyticsService extends Mock implements AnalyticsService {}
 
-EventRegistrationModel _existingRegistration(BloodType bloodType) =>
-    EventRegistrationModel(
-      id: 'reg-1',
-      eventId: 'event-1',
-      eventName: 'Rodada Test',
-      userId: 'user-1',
-      fullName: 'Rider Test',
-      identificationNumber: '123456',
-      birthDate: DateTime(2000, 1, 1),
-      phone: '3001234567',
-      email: 'rider@test.com',
-      residenceCity: 'Bogotá',
-      eps: 'Sura',
-      bloodType: bloodType,
-      emergencyContactName: 'Contact Test',
-      emergencyContactPhone: '3007654321',
-    );
+EventRegistrationModel _existingRegistration(
+  BloodType bloodType, {
+  bool shareMedicalInfo = false,
+  bool allowOrganizerContact = false,
+}) => EventRegistrationModel(
+  id: 'reg-1',
+  eventId: 'event-1',
+  eventName: 'Rodada Test',
+  userId: 'user-1',
+  fullName: 'Rider Test',
+  identificationNumber: '123456',
+  birthDate: DateTime(2000, 1, 1),
+  phone: '3001234567',
+  email: 'rider@test.com',
+  residenceCity: 'Bogotá',
+  eps: 'Sura',
+  bloodType: bloodType,
+  shareMedicalInfo: shareMedicalInfo,
+  allowOrganizerContact: allowOrganizerContact,
+  emergencyContactName: 'Contact Test',
+  emergencyContactPhone: '3007654321',
+);
 
 /// Minimal FormBuilder standing in for the real wizard, wired with the exact
 /// [RegistrationFormFields] names required by
@@ -77,9 +82,7 @@ class _MinimalRegistrationForm extends StatelessWidget {
               ),
               FormBuilderTextField(name: RegistrationFormFields.phone),
               FormBuilderTextField(name: RegistrationFormFields.email),
-              FormBuilderTextField(
-                name: RegistrationFormFields.residenceCity,
-              ),
+              FormBuilderTextField(name: RegistrationFormFields.residenceCity),
               FormBuilderTextField(name: RegistrationFormFields.eps),
               FormBuilderTextField(
                 name: RegistrationFormFields.medicalInsurance,
@@ -97,6 +100,16 @@ class _MinimalRegistrationForm extends StatelessWidget {
                 name: RegistrationFormFields.emergencyContactPhone,
               ),
               FormBuilderTextField(name: RegistrationFormFields.vehicleId),
+              FormBuilderField<bool>(
+                name: RegistrationFormFields.shareMedicalInfo,
+                initialValue: false,
+                builder: (field) => const SizedBox.shrink(),
+              ),
+              FormBuilderField<bool>(
+                name: RegistrationFormFields.allowOrganizerContact,
+                initialValue: false,
+                builder: (field) => const SizedBox.shrink(),
+              ),
             ],
           ),
         ),
@@ -149,44 +162,172 @@ void main() {
     cubit.close();
   });
 
-  group('RegistrationFormCubit — bloodType preserved on edit without touching it (2.2)', () {
-    testWidgets(
-      '2.2: editing an existing registration without touching bloodType keeps '
-      'the original value in the built registration',
-      (tester) async {
-        final existing = _existingRegistration(BloodType.bNegative);
-        when(
-          () => mockUpdate(any(), saveToProfile: any(named: 'saveToProfile')),
-        ).thenAnswer((invocation) async {
-          final passed =
-              invocation.positionalArguments.first as EventRegistrationModel;
-          return Right(passed);
-        });
+  group(
+    'RegistrationFormCubit — bloodType preserved on edit without touching it (2.2)',
+    () {
+      testWidgets(
+        '2.2: editing an existing registration without touching bloodType keeps '
+        'the original value in the built registration',
+        (tester) async {
+          final existing = _existingRegistration(BloodType.bNegative);
+          when(
+            () => mockUpdate(any(), saveToProfile: any(named: 'saveToProfile')),
+          ).thenAnswer((invocation) async {
+            final passed =
+                invocation.positionalArguments.first as EventRegistrationModel;
+            return Right(passed);
+          });
 
-        await tester.pumpWidget(_MinimalRegistrationForm(cubit: cubit));
-        await tester.pumpAndSettle();
+          await tester.pumpWidget(_MinimalRegistrationForm(cubit: cubit));
+          await tester.pumpAndSettle();
 
-        cubit.initialize(
-          eventId: existing.eventId,
-          eventName: existing.eventName,
-          existingRegistration: existing,
-        );
+          cubit.initialize(
+            eventId: existing.eventId,
+            eventName: existing.eventName,
+            existingRegistration: existing,
+          );
 
-        // _preloadFromExistingRegistration runs after a 100ms delay; pump
-        // past it so formKey.currentState.patchValue actually applies.
-        await tester.pump(const Duration(milliseconds: 150));
+          // _preloadFromExistingRegistration runs after a 100ms delay; pump
+          // past it so formKey.currentState.patchValue actually applies.
+          await tester.pump(const Duration(milliseconds: 150));
 
-        // The rider never interacts with the blood type field — we go
-        // straight to saving, exercising the real (non-seam) _buildRegistration
-        // path that reads formKey.currentState.value.
-        await cubit.saveRegistration();
-        await tester.pump();
+          // The rider never interacts with the blood type field — we go
+          // straight to saving, exercising the real (non-seam) _buildRegistration
+          // path that reads formKey.currentState.value.
+          await cubit.saveRegistration();
+          await tester.pump();
 
-        final state = cubit.state;
-        expect(state, isA<Data<EventRegistrationModel>>());
-        final saved = (state as Data<EventRegistrationModel>).data;
-        expect(saved.bloodType, BloodType.bNegative);
-      },
-    );
+          final state = cubit.state;
+          expect(state, isA<Data<EventRegistrationModel>>());
+          final saved = (state as Data<EventRegistrationModel>).data;
+          expect(saved.bloodType, BloodType.bNegative);
+        },
+      );
+    },
+  );
+
+  group('RegistrationFormCubit — waiver privacy switches preload on edit '
+      '(AC#3, guards cubit lines 166-169)', () {
+    testWidgets('editing an existing registration patches shareMedicalInfo and '
+        'allowOrganizerContact from the existing registration values', (
+      tester,
+    ) async {
+      final existing = _existingRegistration(
+        BloodType.oPositive,
+        shareMedicalInfo: true,
+        allowOrganizerContact: true,
+      );
+
+      await tester.pumpWidget(_MinimalRegistrationForm(cubit: cubit));
+      await tester.pumpAndSettle();
+
+      cubit.initialize(
+        eventId: existing.eventId,
+        eventName: existing.eventName,
+        existingRegistration: existing,
+      );
+
+      // _preloadFromExistingRegistration runs after a 100ms delay; pump
+      // past it so formKey.currentState.patchValue actually applies.
+      await tester.pump(const Duration(milliseconds: 150));
+
+      final fields = cubit.formKey.currentState!.fields;
+      expect(fields[RegistrationFormFields.shareMedicalInfo]!.value, isTrue);
+      expect(
+        fields[RegistrationFormFields.allowOrganizerContact]!.value,
+        isTrue,
+      );
+    });
+  });
+
+  group('RegistrationFormCubit — legal payload built from the real form '
+      '(AC#9/#10, no buildRegistrationOverride seam)', () {
+    testWidgets('saveRegistration() without buildRegistrationOverride builds a '
+        'registration whose riskAcceptanceVersion, riskAcceptedAt, '
+        'shareMedicalInfo and allowOrganizerContact reflect the real form '
+        'values (exercises the production _buildRegistration() path, not a '
+        'test seam)', (tester) async {
+      when(
+        () => mockAdd(any(), saveToProfile: any(named: 'saveToProfile')),
+      ).thenAnswer((invocation) async {
+        final passed =
+            invocation.positionalArguments.first as EventRegistrationModel;
+        return Right(passed);
+      });
+
+      await tester.pumpWidget(_MinimalRegistrationForm(cubit: cubit));
+      await tester.pumpAndSettle();
+
+      cubit.initialize(eventId: 'event-1', eventName: 'Rodada Test');
+      await tester.pump(const Duration(milliseconds: 60));
+
+      cubit.formKey.currentState?.patchValue({
+        RegistrationFormFields.fullName: 'Rider Test',
+        RegistrationFormFields.identificationNumber: '123456',
+        RegistrationFormFields.birthDate: DateTime(2000, 1, 1),
+        RegistrationFormFields.phone: '3001234567',
+        RegistrationFormFields.email: 'rider@test.com',
+        RegistrationFormFields.residenceCity: 'Bogotá',
+        RegistrationFormFields.eps: 'Sura',
+        RegistrationFormFields.bloodType: BloodType.oPositive,
+        RegistrationFormFields.emergencyContactName: 'Contact Test',
+        RegistrationFormFields.emergencyContactPhone: '3007654321',
+        RegistrationFormFields.shareMedicalInfo: true,
+        RegistrationFormFields.allowOrganizerContact: true,
+      });
+      await tester.pump();
+
+      await cubit.saveRegistration();
+      await tester.pump();
+
+      final state = cubit.state;
+      expect(state, isA<Data<EventRegistrationModel>>());
+      final saved = (state as Data<EventRegistrationModel>).data;
+      expect(saved.riskAcceptanceVersion, 'v0.1-2026-06');
+      expect(saved.riskAcceptedAt, isNotNull);
+      expect(saved.shareMedicalInfo, isTrue);
+      expect(saved.allowOrganizerContact, isTrue);
+    });
+
+    testWidgets('saveRegistration() without buildRegistrationOverride reflects '
+        'shareMedicalInfo=false/allowOrganizerContact=false when the rider '
+        'leaves the privacy switches at their default', (tester) async {
+      when(
+        () => mockAdd(any(), saveToProfile: any(named: 'saveToProfile')),
+      ).thenAnswer((invocation) async {
+        final passed =
+            invocation.positionalArguments.first as EventRegistrationModel;
+        return Right(passed);
+      });
+
+      await tester.pumpWidget(_MinimalRegistrationForm(cubit: cubit));
+      await tester.pumpAndSettle();
+
+      cubit.initialize(eventId: 'event-1', eventName: 'Rodada Test');
+      await tester.pump(const Duration(milliseconds: 60));
+
+      cubit.formKey.currentState?.patchValue({
+        RegistrationFormFields.fullName: 'Rider Test',
+        RegistrationFormFields.identificationNumber: '123456',
+        RegistrationFormFields.birthDate: DateTime(2000, 1, 1),
+        RegistrationFormFields.phone: '3001234567',
+        RegistrationFormFields.email: 'rider@test.com',
+        RegistrationFormFields.residenceCity: 'Bogotá',
+        RegistrationFormFields.eps: 'Sura',
+        RegistrationFormFields.bloodType: BloodType.oPositive,
+        RegistrationFormFields.emergencyContactName: 'Contact Test',
+        RegistrationFormFields.emergencyContactPhone: '3007654321',
+      });
+      await tester.pump();
+
+      await cubit.saveRegistration();
+      await tester.pump();
+
+      final state = cubit.state;
+      expect(state, isA<Data<EventRegistrationModel>>());
+      final saved = (state as Data<EventRegistrationModel>).data;
+      expect(saved.shareMedicalInfo, isFalse);
+      expect(saved.allowOrganizerContact, isFalse);
+    });
   });
 }

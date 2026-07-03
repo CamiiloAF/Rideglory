@@ -5,6 +5,8 @@ import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/features/event_registration/constants/registration_form_fields.dart';
 import 'package:rideglory/features/event_registration/presentation/wizard/registration_blood_type_selector.dart';
 import 'package:rideglory/features/event_registration/presentation/wizard/registration_step_header.dart';
+import 'package:rideglory/features/profile/presentation/widgets/profile_form_section_header.dart';
+import 'package:rideglory/shared/widgets/form/app_switch_tile.dart';
 import 'package:rideglory/shared/widgets/form/form_focus_chain.dart';
 
 class RegistrationMedicalStep extends StatelessWidget {
@@ -53,6 +55,23 @@ class RegistrationMedicalStep extends StatelessWidget {
         ),
         AppSpacing.gapLg,
         const RegistrationBloodTypeSelector(),
+        AppSpacing.gapLg,
+        ProfileFormSectionHeader(
+          label: context.l10n.registration_privacySectionTitle,
+        ),
+        AppSpacing.gapSm,
+        AppSwitchTile(
+          name: RegistrationFormFields.shareMedicalInfo,
+          title: context.l10n.registration_shareMedicalInfoTitle,
+          subtitle: context.l10n.registration_shareMedicalInfoSubtitle,
+          initialValue: false,
+        ),
+        AppSwitchTile(
+          name: RegistrationFormFields.allowOrganizerContact,
+          title: context.l10n.registration_allowContactTitle,
+          subtitle: context.l10n.registration_allowContactSubtitle,
+          initialValue: false,
+        ),
       ],
     );
   }

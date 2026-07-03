@@ -293,7 +293,8 @@ abstract final class AnalyticsParams {
   /// Paso de contacto de emergencia.
   static const String stepNameEmergency = 'emergency';
 
-  /// Paso de selección de vehículo.
+  /// Paso de selección de vehículo (último paso del wizard). El waiver dejó de
+  /// ser un paso: ahora es un bottom sheet abierto al finalizar este paso.
   static const String stepNameVehicle = 'vehicle';
 
   // ---------------------------------------------------------------------------

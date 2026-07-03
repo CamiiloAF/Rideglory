@@ -104,6 +104,11 @@ void main() {
       mockAuth,
       mockAnalytics,
     );
+    // Age guard (added alongside the waiver step) runs before the widget-bound
+    // form is read. Set an adult birthDate via the unit-test seam so the
+    // pre-existing analytics coverage below keeps exercising `saveRegistration`
+    // past the guard, exactly as it did before the guard existed.
+    cubit.birthDateOverrideForTesting = DateTime(1990);
   });
 
   tearDown(() {
@@ -112,72 +117,58 @@ void main() {
 
   group('RegistrationFormCubit — analytics (Fase 7)', () {
     // TC-rfm-a1: onWizardStarted fires registration_started
-    test(
-      'TC-rfm-a1: onWizardStarted → registration_started fired',
-      () {
-        cubit.onWizardStarted();
+    test('TC-rfm-a1: onWizardStarted → registration_started fired', () {
+      cubit.onWizardStarted();
 
-        verify(
-          () => mockAnalytics.logEvent(AnalyticsEvents.registrationStarted),
-        ).called(1);
-      },
-    );
+      verify(
+        () => mockAnalytics.logEvent(AnalyticsEvents.registrationStarted),
+      ).called(1);
+    });
 
     // TC-rfm-a2: onStepAdvanced fires registration_step_advanced with correct params
-    test(
-      'TC-rfm-a2: onStepAdvanced(1, medical) → registration_step_advanced '
-      'with step_index=1 and step_name=medical',
-      () {
-        cubit.onStepAdvanced(1, AnalyticsParams.stepNameMedical);
+    test('TC-rfm-a2: onStepAdvanced(1, medical) → registration_step_advanced '
+        'with step_index=1 and step_name=medical', () {
+      cubit.onStepAdvanced(1, AnalyticsParams.stepNameMedical);
 
-        verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.registrationStepAdvanced,
-            {
-              AnalyticsParams.stepIndex: 1,
-              AnalyticsParams.stepName: AnalyticsParams.stepNameMedical,
-            },
-          ),
-        ).called(1);
-      },
-    );
+      verify(
+        () => mockAnalytics.logEvent(AnalyticsEvents.registrationStepAdvanced, {
+          AnalyticsParams.stepIndex: 1,
+          AnalyticsParams.stepName: AnalyticsParams.stepNameMedical,
+        }),
+      ).called(1);
+    });
 
     // TC-rfm-a3: onStepBack fires registration_step_back with correct params
-    test(
-      'TC-rfm-a3: onStepBack(0, personal) → registration_step_back '
-      'with step_index=0 and step_name=personal',
-      () {
-        cubit.onStepBack(0, AnalyticsParams.stepNamePersonal);
+    test('TC-rfm-a3: onStepBack(0, personal) → registration_step_back '
+        'with step_index=0 and step_name=personal', () {
+      cubit.onStepBack(0, AnalyticsParams.stepNamePersonal);
 
-        verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.registrationStepBack,
-            {
-              AnalyticsParams.stepIndex: 0,
-              AnalyticsParams.stepName: AnalyticsParams.stepNamePersonal,
-            },
-          ),
-        ).called(1);
-      },
-    );
+      verify(
+        () => mockAnalytics.logEvent(AnalyticsEvents.registrationStepBack, {
+          AnalyticsParams.stepIndex: 0,
+          AnalyticsParams.stepName: AnalyticsParams.stepNamePersonal,
+        }),
+      ).called(1);
+    });
 
     // TC-rfm-a4: onStepAdvanced with vehicle step (index 3)
-    test(
-      'TC-rfm-a4: onStepAdvanced(3, vehicle) → step_name=vehicle',
-      () {
-        cubit.onStepAdvanced(3, AnalyticsParams.stepNameVehicle);
+    test('TC-rfm-a4: onStepAdvanced(3, vehicle) → step_name=vehicle', () {
+      cubit.onStepAdvanced(3, AnalyticsParams.stepNameVehicle);
 
-        verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.registrationStepAdvanced,
-            {
-              AnalyticsParams.stepIndex: 3,
-              AnalyticsParams.stepName: AnalyticsParams.stepNameVehicle,
-            },
-          ),
-        ).called(1);
-      },
-    );
+      verify(
+        () => mockAnalytics.logEvent(AnalyticsEvents.registrationStepAdvanced, {
+          AnalyticsParams.stepIndex: 3,
+          AnalyticsParams.stepName: AnalyticsParams.stepNameVehicle,
+        }),
+      ).called(1);
+    });
+
+    // Nota: el waiver dejó de ser un paso del wizard (ahora es un bottom sheet
+    // abierto al finalizar el paso Vehículo). Ya no existe un
+    // registration_step_advanced con step_index=4/step_name='waiver'. El último
+    // avance de paso es a Vehículo (índice 3, cubierto por TC-rfm-a4) y la
+    // aceptación en el sheet dispara registration_submit_attempted +
+    // registration_submitted (cubierto por CA1b_positive).
 
     // TC-rfm-a5: saveRegistration with null form (no form state) → no analytics fired
     test(
@@ -203,10 +194,7 @@ void main() {
 
     // TC-rfm-a6: initial state is ResultState.initial
     test('TC-rfm-a6: initial state is ResultState.initial', () {
-      expect(
-        cubit.state,
-        const ResultState<EventRegistrationModel>.initial(),
-      );
+      expect(cubit.state, const ResultState<EventRegistrationModel>.initial());
     });
 
     // TC-rfm-a7: multiple step advances each fire their own event
@@ -304,12 +292,12 @@ void main() {
       () async {
         final fakeReg = _buildFakeRegistration();
         cubit.buildRegistrationOverride = () => fakeReg;
-        when(() => mockAdd(any(), saveToProfile: any(named: 'saveToProfile')))
-            .thenAnswer((_) async => Right(fakeReg));
-        when(() => mockSaveProfile(any()))
-            .thenAnswer(
-              (_) async => const Right(RiderProfileModel(userId: 'u1')),
-            );
+        when(
+          () => mockAdd(any(), saveToProfile: any(named: 'saveToProfile')),
+        ).thenAnswer((_) async => Right(fakeReg));
+        when(
+          () => mockSaveProfile(any()),
+        ).thenAnswer((_) async => const Right(RiderProfileModel(userId: 'u1')));
 
         await cubit.saveRegistration();
 
@@ -320,10 +308,9 @@ void main() {
           ),
         ).called(1);
         verify(
-          () => mockAnalytics.logEvent(
-            AnalyticsEvents.registrationSubmitted,
-            {AnalyticsParams.formMode: AnalyticsParams.formModeCreate},
-          ),
+          () => mockAnalytics.logEvent(AnalyticsEvents.registrationSubmitted, {
+            AnalyticsParams.formMode: AnalyticsParams.formModeCreate,
+          }),
         ).called(1);
       },
     );
@@ -345,18 +332,19 @@ void main() {
       () async {
         final fakeReg = _buildFakeRegistration();
         cubit.buildRegistrationOverride = () => fakeReg;
-        when(() => mockAdd(any(), saveToProfile: any(named: 'saveToProfile')))
-            .thenAnswer((_) async => Right(fakeReg));
-        when(() => mockSaveProfile(any()))
-            .thenAnswer(
-              (_) async => const Right(RiderProfileModel(userId: 'u1')),
-            );
+        when(
+          () => mockAdd(any(), saveToProfile: any(named: 'saveToProfile')),
+        ).thenAnswer((_) async => Right(fakeReg));
+        when(
+          () => mockSaveProfile(any()),
+        ).thenAnswer((_) async => const Right(RiderProfileModel(userId: 'u1')));
 
         await cubit.saveRegistration();
         // Pump the event queue so the async fold callback (await _saveRiderProfileUseCase
         // + emit(ResultState.data)) completes before we close the cubit.
         await Future<void>.delayed(Duration.zero);
-        await cubit.close(); // _terminalEventEmitted = true → must NOT emit abandoned
+        await cubit
+            .close(); // _terminalEventEmitted = true → must NOT emit abandoned
 
         verifyNever(
           () => mockAnalytics.logEvent(AnalyticsEvents.registrationAbandoned),

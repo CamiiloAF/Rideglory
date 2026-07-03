@@ -59,7 +59,7 @@ class AppSwitchTile extends StatelessWidget {
                         Text(
                           subtitle!,
                           style: const TextStyle(
-                            color: AppColors.textOnDarkTertiary,
+                            color: AppColors.textOnDarkSecondary,
                             fontSize: 12,
                           ),
                         ),

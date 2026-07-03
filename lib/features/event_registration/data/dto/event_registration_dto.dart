@@ -32,7 +32,8 @@ class _BloodTypeConverter implements JsonConverter<BloodType?, String?> {
   }
 
   @override
-  String? toJson(BloodType? value) => value == null ? null : _jsonValueOf(value);
+  String? toJson(BloodType? value) =>
+      value == null ? null : _jsonValueOf(value);
 
   static String _jsonValueOf(BloodType value) => switch (value) {
     BloodType.aPositive => 'A_POSITIVE',
@@ -75,6 +76,8 @@ class EventRegistrationDto extends EventRegistrationModel {
     super.allowOrganizerContact,
     super.riskAcceptedAt,
     super.riskAcceptanceVersion,
+    super.medicalConsentAcceptedAt,
+    super.medicalConsentVersion,
   });
 
   factory EventRegistrationDto.fromJson(Map<String, dynamic> json) =>
@@ -121,5 +124,7 @@ extension EventRegistrationModelExtension on EventRegistrationModel {
     allowOrganizerContact: allowOrganizerContact,
     riskAcceptedAt: riskAcceptedAt,
     riskAcceptanceVersion: riskAcceptanceVersion,
+    medicalConsentAcceptedAt: medicalConsentAcceptedAt,
+    medicalConsentVersion: medicalConsentVersion,
   ).toJson();
 }

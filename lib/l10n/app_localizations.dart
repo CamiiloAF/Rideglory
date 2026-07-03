@@ -2716,6 +2716,120 @@ abstract class AppLocalizations {
   /// **'Moto con la que participarás en el evento'**
   String get registration_stepVehicleSubtitle;
 
+  /// No description provided for @registration_privacySectionTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Privacidad'**
+  String get registration_privacySectionTitle;
+
+  /// No description provided for @registration_shareMedicalInfoTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Compartir información médica'**
+  String get registration_shareMedicalInfoTitle;
+
+  /// No description provided for @registration_shareMedicalInfoSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'El organizador podrá ver tu EPS, RH y contacto de emergencia durante el evento.'**
+  String get registration_shareMedicalInfoSubtitle;
+
+  /// No description provided for @registration_allowContactTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Permitir contacto del organizador'**
+  String get registration_allowContactTitle;
+
+  /// No description provided for @registration_allowContactSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'El organizador podrá contactarte por temas relacionados con el evento.'**
+  String get registration_allowContactSubtitle;
+
+  /// No description provided for @registration_waiverTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Aceptación de riesgo'**
+  String get registration_waiverTitle;
+
+  /// No description provided for @registration_waiverSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Lee y acepta los términos antes de confirmar tu inscripción'**
+  String get registration_waiverSubtitle;
+
+  /// No description provided for @registration_waiverBodyV0.
+  ///
+  /// In es, this message translates to:
+  /// **'Reconozco que participar en actividades de motociclismo implica riesgos inherentes, incluyendo lesiones personales o daños materiales. Asumo voluntariamente estos riesgos y libero al organizador de responsabilidad por cualquier accidente o incidente ocurrido durante el evento, salvo negligencia comprobada del organizador. Declaro contar con la documentación legal vigente de mi vehículo (SOAT, tecnomecánica) y los elementos de protección personal requeridos.'**
+  String get registration_waiverBodyV0;
+
+  /// No description provided for @registration_waiverCtaButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Entiendo, inscribirme'**
+  String get registration_waiverCtaButton;
+
+  /// No description provided for @registration_waiverCancelButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get registration_waiverCancelButton;
+
+  /// No description provided for @registration_law1581_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Autorización de datos médicos'**
+  String get registration_law1581_title;
+
+  /// No description provided for @registration_law1581_body.
+  ///
+  /// In es, this message translates to:
+  /// **'De acuerdo con la Ley 1581 de 2012, autorizo el tratamiento de mis datos médicos (EPS, seguro médico, tipo de sangre) para fines relacionados con mi seguridad durante el evento. Puedo consultar, actualizar o revocar esta autorización en cualquier momento.'**
+  String get registration_law1581_body;
+
+  /// No description provided for @registration_law1581_authorizeButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Autorizar'**
+  String get registration_law1581_authorizeButton;
+
+  /// No description provided for @registration_law1581_declineButton.
+  ///
+  /// In es, this message translates to:
+  /// **'No autorizar'**
+  String get registration_law1581_declineButton;
+
+  /// No description provided for @registration_law1581DeclinedMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Debes autorizar el tratamiento de datos médicos para continuar con la inscripción.'**
+  String get registration_law1581DeclinedMessage;
+
+  /// No description provided for @registration_underageTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'No cumples la edad mínima'**
+  String get registration_underageTitle;
+
+  /// No description provided for @registration_underageMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Debes tener al menos 18 años para inscribirte en una rodada.'**
+  String get registration_underageMessage;
+
+  /// No description provided for @registration_missingBirthDateMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Debes ingresar tu fecha de nacimiento para continuar.'**
+  String get registration_missingBirthDateMessage;
+
+  /// No description provided for @registration_goToProfile.
+  ///
+  /// In es, this message translates to:
+  /// **'Ir a mi perfil'**
+  String get registration_goToProfile;
+
   /// No description provided for @registration_bloodTypeSelectHint.
   ///
   /// In es, this message translates to:
@@ -6042,6 +6156,42 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Publicar evento'**
   String get event_step_review_publishButton;
+
+  /// No description provided for @event_formIncompleteMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Completa los campos obligatorios antes de publicar el evento.'**
+  String get event_formIncompleteMessage;
+
+  /// No description provided for @event_organizerResponsibility_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Responsabilidad del organizador'**
+  String get event_organizerResponsibility_title;
+
+  /// No description provided for @event_organizerResponsibility_body.
+  ///
+  /// In es, this message translates to:
+  /// **'Como organizador, declaro que la información del evento es veraz y asumo la responsabilidad de coordinar la rodada de forma segura. Reconozco que cada participante acepta sus propios riesgos y que debo contar con la documentación legal vigente de mi vehículo (SOAT, tecnomecánica).'**
+  String get event_organizerResponsibility_body;
+
+  /// No description provided for @event_organizerResponsibility_acceptButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Acepto y publico el evento'**
+  String get event_organizerResponsibility_acceptButton;
+
+  /// No description provided for @event_organizerResponsibility_reviewButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Revisar evento'**
+  String get event_organizerResponsibility_reviewButton;
+
+  /// No description provided for @event_organizerResponsibility_errorGeneric.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos publicar el evento. Por favor intenta de nuevo.'**
+  String get event_organizerResponsibility_errorGeneric;
 
   /// No description provided for @event_wizard_cancel_dialog_title.
   ///

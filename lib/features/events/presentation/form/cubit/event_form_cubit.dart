@@ -30,6 +30,7 @@ abstract class EventFormState with _$EventFormState {
     @Default(<AddressLocation?>[]) List<AddressLocation?> waypointLocations,
     @Default(false) bool showRouteError,
     @Default(false) bool showImageError,
+    DateTime? organizerResponsibilityAcceptedAt,
   }) = _EventFormState;
 }
 
@@ -70,8 +71,9 @@ class EventFormCubit extends Cubit<EventFormState> {
     }).ignore();
 
     final routePoints = event?.routePoints ?? const [];
-    final waypointLocations =
-        routePoints.map<AddressLocation?>((p) => p).toList();
+    final waypointLocations = routePoints
+        .map<AddressLocation?>((p) => p)
+        .toList();
 
     emit(
       EventFormState(
@@ -80,6 +82,13 @@ class EventFormCubit extends Cubit<EventFormState> {
         waypointLocations: waypointLocations,
       ),
     );
+  }
+
+  /// Records the organizer's legal-responsibility acceptance timestamp in
+  /// state. Does not save/publish the event — the caller still owns that via
+  /// [saveEvent].
+  void setOrganizerResponsibility(DateTime acceptedAt) {
+    emit(state.copyWith(organizerResponsibilityAcceptedAt: acceptedAt));
   }
 
   void addWaypoint(String waypoint) {
@@ -276,8 +285,8 @@ class EventFormCubit extends Cubit<EventFormState> {
           (formData[EventFormFields.description] as String?)?.trim() ?? '',
       startDate: dateRange?.start ?? DateTime.now(),
       endDate: _isDifferentCalendarDay(dateRange?.start, dateRange?.end)
-              ? dateRange?.end
-              : null,
+          ? dateRange?.end
+          : null,
       difficulty: formData[EventFormFields.difficulty] as EventDifficulty,
       meetingTime: formData[EventFormFields.meetingTime] as DateTime,
       eventType: formData[EventFormFields.eventType] as EventType,
@@ -337,15 +346,14 @@ class EventFormCubit extends Cubit<EventFormState> {
           (formData[EventFormFields.description] as String?)?.trim() ?? '',
       startDate: dateRange?.start ?? now,
       endDate: _isDifferentCalendarDay(dateRange?.start, dateRange?.end)
-              ? dateRange?.end
-              : null,
+          ? dateRange?.end
+          : null,
       difficulty:
           formData[EventFormFields.difficulty] as EventDifficulty? ??
           EventDifficulty.one,
       meetingTime: formData[EventFormFields.meetingTime] as DateTime? ?? now,
       eventType:
-          formData[EventFormFields.eventType] as EventType? ??
-          EventType.onRoad,
+          formData[EventFormFields.eventType] as EventType? ?? EventType.onRoad,
       allowedBrands: allowedBrands,
       price: price,
       maxParticipants: maxParticipants,
@@ -416,9 +424,7 @@ class EventFormCubit extends Cubit<EventFormState> {
     EventFormFields.eventType,
   ];
 
-  static const List<String> _step2Fields = [
-    EventFormFields.description,
-  ];
+  static const List<String> _step2Fields = [EventFormFields.description];
 
   static const List<String> _step3Fields = [
     EventFormFields.price,
@@ -471,7 +477,8 @@ class EventFormCubit extends Cubit<EventFormState> {
 
   bool validateStep(int step) {
     final fields = stepFields[step];
-    final formValid = fields == null ||
+    final formValid =
+        fields == null ||
         fields.every(
           (name) => formKey.currentState?.fields[name]?.validate() ?? true,
         );

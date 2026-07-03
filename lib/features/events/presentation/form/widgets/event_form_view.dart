@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:rideglory/shared/router/app_router.dart';
 import 'package:rideglory/core/domain/result_state.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
@@ -50,14 +49,16 @@ class EventFormView extends StatelessWidget {
                 );
                 cubit.goToStep(3);
               } else {
-                // Publicación: SnackBar global + cerrar el wizard.
+                // Publicación: SnackBar global. El cierre del wizard lo hace
+                // PublishRow tras cerrarse el sheet de responsabilidad, para que
+                // el EventModel guardado llegue a la lista (pop-result) y esta se
+                // actualice.
                 AppRouter.scaffoldMessengerKey.currentState?.showSnackBar(
                   SnackBar(
                     content: Text(context.l10n.event_eventCreatedSuccess),
                     backgroundColor: AppColors.success,
                   ),
                 );
-                if (context.canPop()) context.pop(event);
               }
             },
             error: (error) {

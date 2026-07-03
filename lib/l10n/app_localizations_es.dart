@@ -1401,6 +1401,73 @@ class AppLocalizationsEs extends AppLocalizations {
       'Moto con la que participarás en el evento';
 
   @override
+  String get registration_privacySectionTitle => 'Privacidad';
+
+  @override
+  String get registration_shareMedicalInfoTitle =>
+      'Compartir información médica';
+
+  @override
+  String get registration_shareMedicalInfoSubtitle =>
+      'El organizador podrá ver tu EPS, RH y contacto de emergencia durante el evento.';
+
+  @override
+  String get registration_allowContactTitle =>
+      'Permitir contacto del organizador';
+
+  @override
+  String get registration_allowContactSubtitle =>
+      'El organizador podrá contactarte por temas relacionados con el evento.';
+
+  @override
+  String get registration_waiverTitle => 'Aceptación de riesgo';
+
+  @override
+  String get registration_waiverSubtitle =>
+      'Lee y acepta los términos antes de confirmar tu inscripción';
+
+  @override
+  String get registration_waiverBodyV0 =>
+      'Reconozco que participar en actividades de motociclismo implica riesgos inherentes, incluyendo lesiones personales o daños materiales. Asumo voluntariamente estos riesgos y libero al organizador de responsabilidad por cualquier accidente o incidente ocurrido durante el evento, salvo negligencia comprobada del organizador. Declaro contar con la documentación legal vigente de mi vehículo (SOAT, tecnomecánica) y los elementos de protección personal requeridos.';
+
+  @override
+  String get registration_waiverCtaButton => 'Entiendo, inscribirme';
+
+  @override
+  String get registration_waiverCancelButton => 'Cancelar';
+
+  @override
+  String get registration_law1581_title => 'Autorización de datos médicos';
+
+  @override
+  String get registration_law1581_body =>
+      'De acuerdo con la Ley 1581 de 2012, autorizo el tratamiento de mis datos médicos (EPS, seguro médico, tipo de sangre) para fines relacionados con mi seguridad durante el evento. Puedo consultar, actualizar o revocar esta autorización en cualquier momento.';
+
+  @override
+  String get registration_law1581_authorizeButton => 'Autorizar';
+
+  @override
+  String get registration_law1581_declineButton => 'No autorizar';
+
+  @override
+  String get registration_law1581DeclinedMessage =>
+      'Debes autorizar el tratamiento de datos médicos para continuar con la inscripción.';
+
+  @override
+  String get registration_underageTitle => 'No cumples la edad mínima';
+
+  @override
+  String get registration_underageMessage =>
+      'Debes tener al menos 18 años para inscribirte en una rodada.';
+
+  @override
+  String get registration_missingBirthDateMessage =>
+      'Debes ingresar tu fecha de nacimiento para continuar.';
+
+  @override
+  String get registration_goToProfile => 'Ir a mi perfil';
+
+  @override
   String get registration_bloodTypeSelectHint => 'Selecciona tu grupo';
 
   @override
@@ -3233,6 +3300,29 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_step_review_publishButton => 'Publicar evento';
+
+  @override
+  String get event_formIncompleteMessage =>
+      'Completa los campos obligatorios antes de publicar el evento.';
+
+  @override
+  String get event_organizerResponsibility_title =>
+      'Responsabilidad del organizador';
+
+  @override
+  String get event_organizerResponsibility_body =>
+      'Como organizador, declaro que la información del evento es veraz y asumo la responsabilidad de coordinar la rodada de forma segura. Reconozco que cada participante acepta sus propios riesgos y que debo contar con la documentación legal vigente de mi vehículo (SOAT, tecnomecánica).';
+
+  @override
+  String get event_organizerResponsibility_acceptButton =>
+      'Acepto y publico el evento';
+
+  @override
+  String get event_organizerResponsibility_reviewButton => 'Revisar evento';
+
+  @override
+  String get event_organizerResponsibility_errorGeneric =>
+      'No pudimos publicar el evento. Por favor intenta de nuevo.';
 
   @override
   String get event_wizard_cancel_dialog_title => '¿Descartar evento?';

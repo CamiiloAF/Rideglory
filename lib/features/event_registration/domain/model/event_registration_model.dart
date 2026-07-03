@@ -75,6 +75,8 @@ class EventRegistrationModel {
   final bool allowOrganizerContact;
   final DateTime? riskAcceptedAt;
   final String? riskAcceptanceVersion;
+  final DateTime? medicalConsentAcceptedAt;
+  final String? medicalConsentVersion;
 
   const EventRegistrationModel({
     this.id,
@@ -101,6 +103,8 @@ class EventRegistrationModel {
     this.allowOrganizerContact = false,
     this.riskAcceptedAt,
     this.riskAcceptanceVersion,
+    this.medicalConsentAcceptedAt,
+    this.medicalConsentVersion,
   });
 
   String get registrationTitle => 'Inscripción al evento $eventName';
@@ -130,6 +134,8 @@ class EventRegistrationModel {
     bool? allowOrganizerContact,
     DateTime? riskAcceptedAt,
     String? riskAcceptanceVersion,
+    DateTime? medicalConsentAcceptedAt,
+    String? medicalConsentVersion,
   }) {
     return EventRegistrationModel(
       id: id ?? this.id,
@@ -159,6 +165,10 @@ class EventRegistrationModel {
       riskAcceptedAt: riskAcceptedAt ?? this.riskAcceptedAt,
       riskAcceptanceVersion:
           riskAcceptanceVersion ?? this.riskAcceptanceVersion,
+      medicalConsentAcceptedAt:
+          medicalConsentAcceptedAt ?? this.medicalConsentAcceptedAt,
+      medicalConsentVersion:
+          medicalConsentVersion ?? this.medicalConsentVersion,
     );
   }
 

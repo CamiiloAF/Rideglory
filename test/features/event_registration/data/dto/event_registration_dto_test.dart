@@ -41,6 +41,8 @@ void main() {
       expect(model.allowOrganizerContact, isFalse);
       expect(model.riskAcceptedAt, isNull);
       expect(model.riskAcceptanceVersion, isNull);
+      expect(model.medicalConsentAcceptedAt, isNull);
+      expect(model.medicalConsentVersion, isNull);
     });
   });
 
@@ -78,7 +80,8 @@ void main() {
   group(
     'EventRegistrationModelExtension.toJson — propagates legal fields (AC#3)',
     () {
-      test('TC-dto-05: toJson includes the 4 new fields with exact values', () {
+      test('TC-dto-05: toJson includes the legal fields (incl. medical '
+          'consent) with exact values', () {
         final model = EventRegistrationModel(
           eventId: 'event-1',
           eventName: 'Rodada Test',
@@ -97,6 +100,8 @@ void main() {
           allowOrganizerContact: false,
           riskAcceptedAt: DateTime(2026, 6, 19),
           riskAcceptanceVersion: 'v0.1-2026-06',
+          medicalConsentAcceptedAt: DateTime(2026, 6, 20),
+          medicalConsentVersion: 'v0.1-2026-06',
         );
 
         final json = model.toJson();
@@ -109,6 +114,12 @@ void main() {
           DateTime(2026, 6, 19).toUtc(),
         );
         expect(json['riskAcceptanceVersion'], 'v0.1-2026-06');
+        expect(json['medicalConsentAcceptedAt'], isNotNull);
+        expect(
+          DateTime.parse(json['medicalConsentAcceptedAt'] as String).toUtc(),
+          DateTime(2026, 6, 20).toUtc(),
+        );
+        expect(json['medicalConsentVersion'], 'v0.1-2026-06');
       });
     },
   );

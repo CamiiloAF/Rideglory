@@ -16,6 +16,14 @@ import 'package:rideglory/features/events/domain/model/rider_profile_model.dart'
 import 'package:rideglory/features/events/domain/use_cases/get_rider_profile_use_case.dart';
 import 'package:rideglory/features/events/domain/use_cases/save_rider_profile_use_case.dart';
 
+/// Versioned consent text for Ley 1581 de 2012 (medical-data authorization).
+/// Bump this whenever the legal copy changes so acceptances stay auditable,
+/// same scheme as [_riskAcceptanceVersion]. Stored per registration.
+const medicalConsentVersion = 'v0.1-2026-06';
+
+/// Versioned risk-waiver text accepted at submission time.
+const _riskAcceptanceVersion = 'v0.1-2026-06';
+
 @injectable
 class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
   RegistrationFormCubit(
@@ -44,9 +52,43 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
   bool _preloadedFromProfile = false;
   bool _terminalEventEmitted = false;
 
+  /// Timestamp of the Ley 1581 medical-data authorization for THIS registration
+  /// (per event, not per user). `null` until the rider authorizes in the gate
+  /// sheet shown when leaving the Medical step; preloaded from an existing
+  /// registration in edit mode.
+  DateTime? _medicalConsentAcceptedAt;
+
   bool get isEditing => _editingRegistration != null;
   bool get saveToProfile => _saveToProfile;
   bool get isPreloadedFromProfile => _preloadedFromProfile;
+
+  /// Whether the rider has already authorized the Ley 1581 medical-data consent
+  /// for this registration. Drives the gate in [RegistrationFormContent].
+  DateTime? get medicalConsentAcceptedAt => _medicalConsentAcceptedAt;
+
+  /// Records the Ley 1581 authorization for this registration so it travels in
+  /// the submitted payload. Called by the gate sheet when the rider authorizes.
+  void acceptMedicalConsent(DateTime acceptedAt) {
+    _medicalConsentAcceptedAt = acceptedAt;
+  }
+
+  /// Mensaje exacto emitido cuando el rider intenta enviar el registro sin
+  /// haber diligenciado `birthDate`. Expuesto (no solo para tests) para que
+  /// la UI (paso waiver) compare por igualdad exacta en vez de acoplarse a
+  /// un substring del mensaje.
+  static const String missingBirthDateErrorMessage =
+      'Debes ingresar tu fecha de nacimiento para continuar.';
+
+  /// Mensaje exacto emitido cuando la edad calculada del rider es menor a 18.
+  /// Expuesto para que la UI discrimine este caso por igualdad exacta.
+  static const String underageErrorMessage =
+      'Debes tener al menos 18 años para inscribirte en una rodada.';
+
+  /// Unit-test seam: cuando no es `null`, [saveRegistration] usa este valor
+  /// en lugar de leer `birthDate` del [FormBuilderState]. NUNCA se asigna
+  /// desde código de producción.
+  @visibleForTesting
+  DateTime? birthDateOverrideForTesting;
 
   /// Marks the terminal analytics event as already emitted.
   /// Only for use in tests that need to verify the idempotent [close()] behavior
@@ -104,6 +146,7 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
     _eventId = eventId;
     _eventName = eventName;
     _editingRegistration = existingRegistration;
+    _medicalConsentAcceptedAt = existingRegistration?.medicalConsentAcceptedAt;
 
     if (existingRegistration != null) {
       Future.delayed(const Duration(milliseconds: 100), () {
@@ -248,6 +291,29 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
   }
 
   Future<void> saveRegistration() async {
+    final birthDate =
+        birthDateOverrideForTesting ??
+        formKey.currentState?.fields[RegistrationFormFields.birthDate]?.value
+            as DateTime?;
+
+    if (birthDate == null) {
+      emit(
+        const ResultState.error(
+          error: DomainException(message: missingBirthDateErrorMessage),
+        ),
+      );
+      return;
+    }
+
+    if (_calculateAge(birthDate) < 18) {
+      emit(
+        const ResultState.error(
+          error: DomainException(message: underageErrorMessage),
+        ),
+      );
+      return;
+    }
+
     final registration = _buildRegistration();
 
     if (registration == null) return;
@@ -292,6 +358,20 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
         emit(ResultState.data(data: saved));
       },
     );
+  }
+
+  /// Calcula la edad en años cumplidos de [birthDate] respecto a hoy,
+  /// espejando el algoritmo del backend (`registrations.service.ts`).
+  int _calculateAge(DateTime birthDate) {
+    final now = DateTime.now();
+    var age = now.year - birthDate.year;
+    final hasHadBirthdayThisYear =
+        now.month > birthDate.month ||
+        (now.month == birthDate.month && now.day >= birthDate.day);
+    if (!hasHadBirthdayThisYear) {
+      age -= 1;
+    }
+    return age;
   }
 
   String _categorizeFailure(DomainException error) {
@@ -340,6 +420,17 @@ class RegistrationFormCubit extends Cubit<ResultState<EventRegistrationModel>> {
       emergencyContactPhone:
           formData[RegistrationFormFields.emergencyContactPhone] as String,
       vehicleId: formData[RegistrationFormFields.vehicleId] as String?,
+      shareMedicalInfo:
+          formData[RegistrationFormFields.shareMedicalInfo] as bool? ?? false,
+      allowOrganizerContact:
+          formData[RegistrationFormFields.allowOrganizerContact] as bool? ??
+          false,
+      riskAcceptedAt: DateTime.now(),
+      riskAcceptanceVersion: _riskAcceptanceVersion,
+      medicalConsentAcceptedAt: _medicalConsentAcceptedAt,
+      medicalConsentVersion: _medicalConsentAcceptedAt != null
+          ? medicalConsentVersion
+          : null,
     );
   }
 
