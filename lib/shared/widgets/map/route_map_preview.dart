@@ -271,6 +271,21 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
     }
   }
 
+  /// Ejecuta una operación de cámara del mapa tolerando el cierre del canal de
+  /// plataforma. Si el `MapWidget` se dispuso mientras la animación (`flyTo`)
+  /// seguía en vuelo —p. ej. al navegar del detalle del evento al wizard de
+  /// inscripción— Mapbox lanza una `PlatformException`. Como estas llamadas van
+  /// `unawaited`, sin capturar escalaría a un error async global (que en tests
+  /// e2e tumba la corrida completa). La tragamos igual que en
+  /// [_updateWaypointAnnotations].
+  Future<void> _guardMapCamera(Future<void> Function() operation) async {
+    try {
+      await operation();
+    } catch (_) {
+      // Canal del mapa cerrado (widget dispuesto); es un preview, ignorable.
+    }
+  }
+
   Future<void> _fitMapBounds() async {
     final mapboxMap = _mapboxMap;
     if (mapboxMap == null) return;
@@ -288,38 +303,40 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
     await _updateWaypointAnnotations(simplePoints);
     await _updatePolyline(mapboxMap, simplePoints);
 
-    if (origin != null && dest != null) {
-      final coordinates = [
-        Point(coordinates: Position(origin.longitude, origin.latitude)),
-        Point(coordinates: Position(dest.longitude, dest.latitude)),
-      ];
-      final camera = await mapboxMap.cameraForCoordinatesPadding(
-        coordinates,
-        CameraOptions(),
-        MbxEdgeInsets(top: 60, left: 60, bottom: 60, right: 60),
-        null,
-        null,
-      );
-      await mapboxMap.flyTo(camera, MapAnimationOptions(duration: 500));
-    } else if (origin != null) {
-      await mapboxMap.flyTo(
-        CameraOptions(
-          center: Point(
-            coordinates: Position(origin.longitude, origin.latitude),
+    await _guardMapCamera(() async {
+      if (origin != null && dest != null) {
+        final coordinates = [
+          Point(coordinates: Position(origin.longitude, origin.latitude)),
+          Point(coordinates: Position(dest.longitude, dest.latitude)),
+        ];
+        final camera = await mapboxMap.cameraForCoordinatesPadding(
+          coordinates,
+          CameraOptions(),
+          MbxEdgeInsets(top: 60, left: 60, bottom: 60, right: 60),
+          null,
+          null,
+        );
+        await mapboxMap.flyTo(camera, MapAnimationOptions(duration: 500));
+      } else if (origin != null) {
+        await mapboxMap.flyTo(
+          CameraOptions(
+            center: Point(
+              coordinates: Position(origin.longitude, origin.latitude),
+            ),
+            zoom: 13,
           ),
-          zoom: 13,
-        ),
-        MapAnimationOptions(duration: 400),
-      );
-    } else if (dest != null) {
-      await mapboxMap.flyTo(
-        CameraOptions(
-          center: Point(coordinates: Position(dest.longitude, dest.latitude)),
-          zoom: 13,
-        ),
-        MapAnimationOptions(duration: 400),
-      );
-    }
+          MapAnimationOptions(duration: 400),
+        );
+      } else if (dest != null) {
+        await mapboxMap.flyTo(
+          CameraOptions(
+            center: Point(coordinates: Position(dest.longitude, dest.latitude)),
+            zoom: 13,
+          ),
+          MapAnimationOptions(duration: 400),
+        );
+      }
+    });
   }
 
   Future<void> _renderWaypointMode() async {
@@ -335,33 +352,35 @@ class _RouteMapPreviewState extends State<RouteMapPreview> {
 
     if (waypoints.isEmpty) return;
 
-    if (waypoints.length == 1) {
-      await mapboxMap.flyTo(
-        CameraOptions(
-          center: Point(
-            coordinates: Position(
-              waypoints.first.longitude,
-              waypoints.first.latitude,
+    await _guardMapCamera(() async {
+      if (waypoints.length == 1) {
+        await mapboxMap.flyTo(
+          CameraOptions(
+            center: Point(
+              coordinates: Position(
+                waypoints.first.longitude,
+                waypoints.first.latitude,
+              ),
             ),
+            zoom: 13,
           ),
-          zoom: 13,
-        ),
-        MapAnimationOptions(duration: 400),
-      );
-      return;
-    }
+          MapAnimationOptions(duration: 400),
+        );
+        return;
+      }
 
-    final points = waypoints
-        .map((w) => Point(coordinates: Position(w.longitude, w.latitude)))
-        .toList();
-    final camera = await mapboxMap.cameraForCoordinatesPadding(
-      points,
-      CameraOptions(),
-      MbxEdgeInsets(top: 60, left: 60, bottom: 60, right: 60),
-      null,
-      null,
-    );
-    await mapboxMap.flyTo(camera, MapAnimationOptions(duration: 500));
+      final points = waypoints
+          .map((w) => Point(coordinates: Position(w.longitude, w.latitude)))
+          .toList();
+      final camera = await mapboxMap.cameraForCoordinatesPadding(
+        points,
+        CameraOptions(),
+        MbxEdgeInsets(top: 60, left: 60, bottom: 60, right: 60),
+        null,
+        null,
+      );
+      await mapboxMap.flyTo(camera, MapAnimationOptions(duration: 500));
+    });
   }
 
   Future<void> _updateWaypointAnnotations(
