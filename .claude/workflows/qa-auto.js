@@ -5,6 +5,7 @@ export const meta = {
   phases: [
     { title: 'Classify', detail: 'Parsear el checklist y clasificar cada caso por estrategia de test' },
     { title: 'Preflight', detail: 'Detectar emulador/simulador y baseline verde de flutter test/dart analyze' },
+    { title: 'E2E Regression', detail: 'Corre el Patrol e2e de inscripción si hay device (regresión permanente)' },
     { title: 'Generate', detail: 'qa-automator genera y corre unit/widget/Patrol para los casos automatizables' },
     { title: 'Verify', detail: 'Auditor Opus: rechaza tests vacíos/tautológicos que no prueban el resultado esperado' },
     { title: 'Report', detail: 'Anotar el mismo QA_CHECKLIST.md con el tri-estado + lista de pruebas manuales' },
@@ -206,6 +207,52 @@ if (needsE2e && !caps.deviceAvailable) {
 }
 if (caps.baselineFlutterTests === 'red') {
   log(`[preflight] ⚠️ La suite ya venía ROJA antes de generar tests. Los fallos preexistentes NO cuentan contra esta fase; se anotarán aparte.`)
+}
+
+// ---------------------------------------------------------------------------
+// Phase: E2E Regression — corre SIEMPRE el Patrol e2e de inscripción cuando hay
+// device, independiente de si el checklist de esta fase tiene casos e2e. Así el
+// flujo crítico de inscripción (Personal→Médico→consentimiento→Emergencia→
+// Vehículo→waiver) se ejercita en cada corrida de qa-auto (y por ende de rg-exec,
+// que llama a qa-auto al cierre).
+// ---------------------------------------------------------------------------
+const E2E_REGRESSION_TEST = 'integration_test/registration_patrol_test.dart'
+let e2eRegression = {
+  result: 'skip',
+  note: 'sin device booteado: no se corrió el Patrol e2e de inscripción',
+  command: '',
+}
+if (caps.deviceAvailable) {
+  phase('E2E Regression')
+  const E2E_REGRESSION_SCHEMA = {
+    type: 'object',
+    additionalProperties: false,
+    required: ['result', 'note'],
+    properties: {
+      result: { type: 'string', enum: ['pass', 'fail', 'skip'] },
+      note: { type: 'string' },
+      command: { type: 'string' },
+    },
+  }
+  e2eRegression = await agent(
+    `Eres qa-automator corriendo la REGRESIÓN e2e permanente de INSCRIPCIÓN para "${SLUG}". NO escribes tests, NO tocas lib/. Solo corres UN Patrol e2e ya existente y reportas el resultado real.
+
+${HARD_RULES}
+
+Haz \`cd ${REPO_ROOT}\`. El test es \`${E2E_REGRESSION_TEST}\` (device ${caps.deviceKind}).
+1. Si el archivo NO existe todavía → result='skip', note='no existe ${E2E_REGRESSION_TEST}'. NO lo generes (otra fase lo escribe).
+2. Si existe, córrelo con Patrol. Pasa credenciales de test SOLO si están en el entorno (revísalas con \`printenv TEST_EMAIL\` / \`printenv TEST_PASSWORD\`):
+   \`patrol test -t ${E2E_REGRESSION_TEST} --device-id <el device booteado real (adb devices / simctl)>\` + (si hay creds) \`--dart-define=TEST_EMAIL=$TEST_EMAIL --dart-define=TEST_PASSWORD=$TEST_PASSWORD\`.
+3. Interpreta el resultado:
+   - result='pass' si el test pasó.
+   - result='fail' si falló por una aserción o flujo roto (posible REGRESIÓN real del flujo de inscripción → el humano debe revisar; explica en note qué paso falló).
+   - result='skip' si no se pudo correr por falta de credenciales de test o de datos seed (evento abierto / vehículo). En note di exactamente qué faltó.
+Reporta result, note (conciso) y command (el comando exacto que corriste, o el sugerido si hiciste skip).`,
+    { label: 'e2e-inscripcion', phase: 'E2E Regression', model: 'sonnet', schema: E2E_REGRESSION_SCHEMA, agentType: 'qa-automator' },
+  )
+  log(`[e2e-regression] ${e2eRegression.result}${e2eRegression.note ? ` — ${e2eRegression.note}` : ''}`)
+} else {
+  log(`[e2e-regression] sin device booteado → se omite el Patrol e2e de inscripción`)
 }
 
 // ---------------------------------------------------------------------------
@@ -459,6 +506,7 @@ Metadatos:
 - Auditor Opus: ${verify.verdict} (${verify.vacuousCases.length} tests rechazados por vacíos).
 - Conteos: 🤖✅ ${counts.autoPass} · 🤖❌ ${counts.autoFail} · 🚫 ${counts.noAuto} · 👤 ${counts.manual} (de ${annotated.length} casos).
 - Archivos de test escritos: ${JSON.stringify(gen.filesWritten)}
+- Regresión e2e inscripción (Patrol, corre siempre que hay device): ${e2eRegression.result}${e2eRegression.note ? ` — ${e2eRegression.note}` : ''}${e2eRegression.command ? ` [cmd: ${e2eRegression.command}]` : ''}
 - Secciones críticas (fallo = rechazo): ${JSON.stringify(classification.criticalSections)}
 
 EDICIONES A APLICAR SOBRE ${CHECKLIST} (todas en el mismo archivo):
@@ -483,6 +531,7 @@ EDICIONES A APLICAR SOBRE ${CHECKLIST} (todas en el mismo archivo):
    - Tabla: por cada caso automatizado, id · estrategia · test file · resultado.
    - Tests rechazados por el auditor Opus (con razón), si los hubo.
    - "### Cómo correr los tests generados": comandos exactos (flutter test <archivos>, patrol test ... si hubo e2e).
+   - "### Regresión e2e de inscripción (Patrol)": estado \`${e2eRegression.result}\`${e2eRegression.note ? ` (${e2eRegression.note})` : ''} y el comando \`${e2eRegression.command || ('patrol test -t ' + E2E_REGRESSION_TEST)}\`. Este e2e corre en CADA corrida de qa-auto cuando hay device (regresión permanente del flujo de inscripción), independiente de los casos del checklist.
    - "### Siguientes pasos": si hay 🤖❌ auto-fail, posibles bugs reales a investigar; si hay 🚫 por device, cómo habilitar.
 
 NO crees QA_CHECKLIST_ANNOTATED.md ni QA_AUTO_REPORT.md ni ningún archivo nuevo: todo va dentro de ${CHECKLIST}.
@@ -512,6 +561,7 @@ return {
   auditor: verify.verdict,
   vacuousRejected: verify.vacuousCases.length,
   device: caps.deviceKind,
+  e2eRegression,
   testFilesWritten: gen.filesWritten,
   criticalFailures: criticalFails.map((c) => c.id),
   artifacts: {
