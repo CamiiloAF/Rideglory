@@ -307,7 +307,14 @@ The `.claude/rules/` directory define reglas de arquitectura y estándares:
 For complex changes, use the **Workflow JS pipelines** `rg-plan` (planeación por fases) and `rg-exec`
 (ejecución por fase con nivel lite/normal/full y auditor Opus). Reemplazaron al sistema `/iter` /
 `custom-iter` (eliminado). Cada fase: implementador (Sonnet) → auditor (Opus) itera hasta aprobar.
-Los planes viven en `docs/plans/<slug>/` y las corridas en `docs/exec-runs/<slug>/`.
+
+**Nomenclatura de carpetas de fase (obligatoria):** `<feature>-phase-XX` (kebab-case, número de
+2 dígitos). Los planes viven en `docs/plans/<feature>/` con un archivo por fase
+`phases/phase-XX-<titulo>.md`; las corridas de ejecución en `docs/exec-runs/<feature>-phase-XX/`.
+Así todas las fases de una misma feature quedan juntas y son fáciles de encontrar. `rg-exec` deriva
+este slug de forma determinística desde la ruta de la fase de plan (no lo inventa el agente).
+Carpetas anteriores a esta convención (prefijos sueltos como `legal-consentimientos-fase5`,
+`waiver-inscripcion-registro`) se dejan como están; la convención aplica de aquí en adelante.
 
 ## Debugging & Troubleshooting
 

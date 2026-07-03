@@ -217,40 +217,75 @@ if (caps.baselineFlutterTests === 'red') {
 // que llama a qa-auto al cierre).
 // ---------------------------------------------------------------------------
 const E2E_REGRESSION_TEST = 'integration_test/registration_patrol_test.dart'
+// Verificación de BD post-e2e: la UI mostrando "pendiente de revisión" no prueba
+// que el backend PERSISTIÓ el consentimiento. Tras el Patrol consultamos la BD del
+// events-ms y confirmamos que la inscripción trae medicalConsentVersion +
+// riskAcceptanceVersion no nulos; luego limpiamos el dato de prueba.
+const BACKEND_EVENTS_MS = '/Users/cami/Developer/Personal/rideglory-api/events-ms'
+const E2E_TARGET_EVENT = 'Mi Evento' // owner qa2; lo inscribe qa1
+const E2E_RIDER_EMAIL = 'qa1@gmail.com'
 let e2eRegression = {
   result: 'skip',
   note: 'sin device booteado: no se corrió el Patrol e2e de inscripción',
   command: '',
+  dbVerification: { result: 'skip', note: 'e2e no corrido' },
 }
 if (caps.deviceAvailable) {
   phase('E2E Regression')
   const E2E_REGRESSION_SCHEMA = {
     type: 'object',
     additionalProperties: false,
-    required: ['result', 'note'],
+    required: ['result', 'note', 'dbVerification'],
     properties: {
       result: { type: 'string', enum: ['pass', 'fail', 'skip'] },
       note: { type: 'string' },
       command: { type: 'string' },
+      // Prueba de persistencia real en BD (no solo la UI).
+      dbVerification: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['result', 'note'],
+        properties: {
+          result: { type: 'string', enum: ['pass', 'fail', 'skip'] },
+          note: { type: 'string' }, // qué valores se vieron en la BD
+        },
+      },
     },
   }
   e2eRegression = await agent(
-    `Eres qa-automator corriendo la REGRESIÓN e2e permanente de INSCRIPCIÓN para "${SLUG}". NO escribes tests, NO tocas lib/. Solo corres UN Patrol e2e ya existente y reportas el resultado real.
+    `Eres qa-automator corriendo la REGRESIÓN e2e permanente de INSCRIPCIÓN para "${SLUG}", CON verificación de base de datos. NO escribes tests, NO tocas lib/ ni src/. Corres UN Patrol e2e ya existente, verificas en la BD que la inscripción realmente persistió, y limpias el dato de prueba.
 
 ${HARD_RULES}
+EXCEPCIÓN de datos para ESTA fase: SÍ puedes LEER la BD del backend y BORRAR únicamente inscripciones de prueba del rider ${E2E_RIDER_EMAIL} (jamás de otros usuarios, jamás del owner). Es lectura + limpieza de datos de test vía psql, no es tocar código.
 
-Haz \`cd ${REPO_ROOT}\`. El test es \`${E2E_REGRESSION_TEST}\` (device ${caps.deviceKind}).
-1. Si el archivo NO existe todavía → result='skip', note='no existe ${E2E_REGRESSION_TEST}'. NO lo generes (otra fase lo escribe).
-2. Si existe, córrelo con Patrol. Pasa credenciales de test SOLO si están en el entorno (revísalas con \`printenv TEST_EMAIL\` / \`printenv TEST_PASSWORD\`):
-   \`patrol test -t ${E2E_REGRESSION_TEST} --device-id <el device booteado real (adb devices / simctl)>\` + (si hay creds) \`--dart-define=TEST_EMAIL=$TEST_EMAIL --dart-define=TEST_PASSWORD=$TEST_PASSWORD\`.
-3. Interpreta el resultado:
-   - result='pass' si el test pasó.
-   - result='fail' si falló por una aserción o flujo roto (posible REGRESIÓN real del flujo de inscripción → el humano debe revisar; explica en note qué paso falló).
-   - result='skip' si no se pudo correr por falta de credenciales de test o de datos seed (evento abierto / vehículo). En note di exactamente qué faltó.
-Reporta result, note (conciso) y command (el comando exacto que corriste, o el sugerido si hiciste skip).`,
+Haz \`cd ${REPO_ROOT}\`. Test: \`${E2E_REGRESSION_TEST}\` (device ${caps.deviceKind}).
+
+Conexión a la BD del events-ms (deriva y quita el sufijo \`?schema=...\` que psql no acepta):
+  DBURL=$(grep -E '^DATABASE_URL=' ${BACKEND_EVENTS_MS}/.env | head -1 | cut -d= -f2- | tr -d "\\"'" | sed 's/?.*$//')
+Evento objetivo: "${E2E_TARGET_EVENT}" (owner qa2). Rider que se inscribe: ${E2E_RIDER_EMAIL}.
+DELETE de limpieza (se usa en el paso 2 y en el 6):
+  psql "$DBURL" -c "DELETE FROM \\"EventRegistration\\" er USING \\"Event\\" e WHERE er.\\"eventId\\"=e.id AND e.name='${E2E_TARGET_EVENT}' AND er.email='${E2E_RIDER_EMAIL}' AND er.status='PENDING';"
+
+PASOS (en orden):
+1. Si \`${E2E_REGRESSION_TEST}\` NO existe → result='skip', note='no existe ${E2E_REGRESSION_TEST}', dbVerification.result='skip'. NO lo generes (otra fase lo escribe).
+2. PRE-LIMPIEZA: corre el DELETE de arriba para que ${E2E_RIDER_EMAIL} quede SIN inscripción en "${E2E_TARGET_EVENT}" (así el detalle muestra "Inscribirme" y el flujo puede inscribir en fresco). Si no hay psql o la BD no es alcanzable, sigue pero deja dbVerification.result='skip' con la razón.
+3. Corre el Patrol (credenciales SOLO si están en el entorno — \`printenv TEST_EMAIL\` / \`printenv TEST_PASSWORD\`). OJO: patrol usa \`-d\`, no \`--device-id\`:
+   \`patrol test -t ${E2E_REGRESSION_TEST} -d <device real de adb devices / simctl> --flavor dev --dart-define-from-file=config/dev.json\` + (si hay creds) \`--dart-define=TEST_EMAIL=$TEST_EMAIL --dart-define=TEST_PASSWORD=$TEST_PASSWORD\`.
+4. Interpreta el Patrol:
+   - result='pass' si pasó.
+   - result='fail' si falló por aserción/flujo roto (posible REGRESIÓN real → el humano revisa; di qué paso falló).
+   - result='skip' si no se pudo correr por falta de credenciales o datos seed (vehículo, etc.).
+5. VERIFICACIÓN DE BD (solo si result='pass'): confirma que la inscripción persistió el consentimiento:
+   psql "$DBURL" -c "SELECT \\"medicalConsentVersion\\", \\"riskAcceptanceVersion\\" FROM \\"EventRegistration\\" er JOIN \\"Event\\" e ON er.\\"eventId\\"=e.id WHERE e.name='${E2E_TARGET_EVENT}' AND er.email='${E2E_RIDER_EMAIL}' AND er.status='PENDING';"
+   - dbVerification.result='pass' si AMBAS columnas salen NO nulas (anota los valores en note, ej. medicalConsentVersion=v0.1-2026-06).
+   - dbVerification.result='fail' si están nulas o no hay fila: la UI dijo éxito pero el backend NO persistió → BUG REAL, explícalo.
+   - dbVerification.result='skip' si no pudiste consultar la BD.
+6. LIMPIEZA FINAL: vuelve a correr el DELETE del paso 2 para dejar la BD idempotente (borra SOLO la PENDING de ${E2E_RIDER_EMAIL}; NUNCA la del owner qa2 ni otros correos).
+
+Reporta result, note (conciso), command (el patrol exacto que corriste) y dbVerification {result, note}.`,
     { label: 'e2e-inscripcion', phase: 'E2E Regression', model: 'sonnet', schema: E2E_REGRESSION_SCHEMA, agentType: 'qa-automator' },
   )
-  log(`[e2e-regression] ${e2eRegression.result}${e2eRegression.note ? ` — ${e2eRegression.note}` : ''}`)
+  log(`[e2e-regression] ${e2eRegression.result}${e2eRegression.note ? ` — ${e2eRegression.note}` : ''} | db:${e2eRegression.dbVerification?.result ?? 'skip'}`)
 } else {
   log(`[e2e-regression] sin device booteado → se omite el Patrol e2e de inscripción`)
 }
@@ -507,6 +542,7 @@ Metadatos:
 - Conteos: 🤖✅ ${counts.autoPass} · 🤖❌ ${counts.autoFail} · 🚫 ${counts.noAuto} · 👤 ${counts.manual} (de ${annotated.length} casos).
 - Archivos de test escritos: ${JSON.stringify(gen.filesWritten)}
 - Regresión e2e inscripción (Patrol, corre siempre que hay device): ${e2eRegression.result}${e2eRegression.note ? ` — ${e2eRegression.note}` : ''}${e2eRegression.command ? ` [cmd: ${e2eRegression.command}]` : ''}
+- Verificación de BD post-e2e (persistencia real del consentimiento): ${e2eRegression.dbVerification?.result ?? 'skip'}${e2eRegression.dbVerification?.note ? ` — ${e2eRegression.dbVerification.note}` : ''}
 - Secciones críticas (fallo = rechazo): ${JSON.stringify(classification.criticalSections)}
 
 EDICIONES A APLICAR SOBRE ${CHECKLIST} (todas en el mismo archivo):
@@ -531,7 +567,7 @@ EDICIONES A APLICAR SOBRE ${CHECKLIST} (todas en el mismo archivo):
    - Tabla: por cada caso automatizado, id · estrategia · test file · resultado.
    - Tests rechazados por el auditor Opus (con razón), si los hubo.
    - "### Cómo correr los tests generados": comandos exactos (flutter test <archivos>, patrol test ... si hubo e2e).
-   - "### Regresión e2e de inscripción (Patrol)": estado \`${e2eRegression.result}\`${e2eRegression.note ? ` (${e2eRegression.note})` : ''} y el comando \`${e2eRegression.command || ('patrol test -t ' + E2E_REGRESSION_TEST)}\`. Este e2e corre en CADA corrida de qa-auto cuando hay device (regresión permanente del flujo de inscripción), independiente de los casos del checklist.
+   - "### Regresión e2e de inscripción (Patrol)": estado \`${e2eRegression.result}\`${e2eRegression.note ? ` (${e2eRegression.note})` : ''} y el comando \`${e2eRegression.command || ('patrol test -t ' + E2E_REGRESSION_TEST)}\`. Incluye la **verificación de BD** post-e2e: \`${e2eRegression.dbVerification?.result ?? 'skip'}\`${e2eRegression.dbVerification?.note ? ` (${e2eRegression.dbVerification.note})` : ''} — confirma que la inscripción persistió medicalConsentVersion + riskAcceptanceVersion, no solo que la UI mostró "pendiente". Este e2e + verificación de BD corre en CADA corrida de qa-auto cuando hay device (regresión permanente del flujo de inscripción), independiente de los casos del checklist.
    - "### Siguientes pasos": si hay 🤖❌ auto-fail, posibles bugs reales a investigar; si hay 🚫 por device, cómo habilitar.
 
 NO crees QA_CHECKLIST_ANNOTATED.md ni QA_AUTO_REPORT.md ni ningún archivo nuevo: todo va dentro de ${CHECKLIST}.

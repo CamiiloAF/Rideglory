@@ -243,6 +243,20 @@ const NORM_SCHEMA = {
   },
 }
 
+// NOMENCLATURA ESTÁNDAR de carpetas de fase: `<feature>-phase-XX` (kebab, 2
+// dígitos). Cuando la fuente es un archivo de fase de plan
+// (docs/plans/<feature>/phases/phase-NN-*.md) derivamos el slug de forma
+// DETERMINÍSTICA para que TODAS las fases de una misma feature queden juntas y
+// sean fáciles de encontrar en docs/exec-runs/ (antes cada fase inventaba su
+// propio prefijo y se desperdigaban). Si la fuente no es una fase de plan
+// (una nota suelta), el agente deriva un slug kebab descriptivo.
+function derivePhaseSlug(source) {
+  const m = String(source).match(/docs\/plans\/([^/]+)\/phases\/phase-0*(\d+)/i)
+  if (!m) return null
+  return `${m[1]}-phase-${String(m[2]).padStart(2, '0')}`
+}
+const MANDATED_SLUG = derivePhaseSlug(SOURCE)
+
 const norm = await agent(
   `Eres el PRD Normalizer de la corrida rg-exec de Rideglory (nivel ${MODE}). Pasada ligera.
 
@@ -253,16 +267,23 @@ ${HARD_RULES}
 CONTEXTO opcional: docs/handoffs/prd-digest.md si existe; si no, docs/PRD.md (solo lectura).
 
 TU TRABAJO:
-1. Deriva un SLUG kebab-case corto.
-2. \`mkdir -p docs/exec-runs/<SLUG>/handoffs docs/exec-runs/<SLUG>/analysis\`.
+1. SLUG de la corrida: ${MANDATED_SLUG
+      ? `usa EXACTAMENTE \`${MANDATED_SLUG}\` (nomenclatura estándar <feature>-phase-XX). NO inventes otro; devuélvelo tal cual en el campo slug.`
+      : 'la fuente NO es un archivo de fase de plan; deriva un SLUG kebab-case corto y descriptivo del feature.'}
+2. \`mkdir -p docs/exec-runs/<SLUG>/handoffs docs/exec-runs/<SLUG>/analysis\` (con el SLUG del paso 1).
 3. Escribe docs/exec-runs/<SLUG>/PRD_NORMALIZED.md con: ## 1 Objetivo, ## 2 Por que, ## 3 Alcance, ## 4 Areas afectadas (best-effort), ## 5 Criterios de aceptacion (numerados, observables, testeables; si la fuente los trae, preservalos), ## 6 Guardrails de regresion, ## 7 Constraints heredados.
 Si la fuente es un archivo de fase, sus "Criterios de aceptacion" y "Que se debe hacer" son la base — preservalos.
 Devuelve (slug, goal, acceptanceCriteria, guardrails).`,
   { label: 'normalize', phase: 'Normalize', model: 'sonnet', schema: NORM_SCHEMA },
 )
 
-const SLUG = norm.slug
+// El slug mandado gana siempre sobre lo que devuelva el agente (defensa por si
+// se desvía de la nomenclatura estándar).
+const SLUG = MANDATED_SLUG || norm.slug
 const WS = `docs/exec-runs/${SLUG}`
+if (MANDATED_SLUG && norm.slug !== MANDATED_SLUG) {
+  log(`[normalize] ⚠️ el agente propuso "${norm.slug}"; se fuerza la nomenclatura estándar "${SLUG}". Si escribió PRD_NORMALIZED.md en otra carpeta, muévelo a ${WS}/.`)
+}
 log(`Ejecutando "${SLUG}" — workspace ${WS}/ (sin commits).`)
 
 // ===========================================================================
