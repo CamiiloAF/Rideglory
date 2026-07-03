@@ -66,6 +66,7 @@ class EventRegistrationDto extends EventRegistrationModel {
     required super.eps,
     super.medicalInsurance,
     required super.bloodType,
+    @JsonKey(includeFromJson: false, includeToJson: false) super.bloodTypeRaw,
     required super.emergencyContactName,
     required super.emergencyContactPhone,
     super.vehicleId,
@@ -80,8 +81,46 @@ class EventRegistrationDto extends EventRegistrationModel {
     super.medicalConsentVersion,
   });
 
-  factory EventRegistrationDto.fromJson(Map<String, dynamic> json) =>
-      _$EventRegistrationDtoFromJson(json);
+  factory EventRegistrationDto.fromJson(Map<String, dynamic> json) {
+    final generated = _$EventRegistrationDtoFromJson(json);
+    final rawBloodType = json['bloodType'] as String?;
+    final bloodTypeRaw =
+        generated.bloodType == null &&
+            rawBloodType != null &&
+            rawBloodType.isNotEmpty
+        ? rawBloodType
+        : null;
+    if (bloodTypeRaw == null) return generated;
+    return EventRegistrationDto(
+      id: generated.id,
+      eventId: generated.eventId,
+      eventName: generated.eventName,
+      userId: generated.userId,
+      status: generated.status,
+      fullName: generated.fullName,
+      identificationNumber: generated.identificationNumber,
+      birthDate: generated.birthDate,
+      phone: generated.phone,
+      email: generated.email,
+      residenceCity: generated.residenceCity,
+      eps: generated.eps,
+      medicalInsurance: generated.medicalInsurance,
+      bloodType: generated.bloodType,
+      bloodTypeRaw: bloodTypeRaw,
+      emergencyContactName: generated.emergencyContactName,
+      emergencyContactPhone: generated.emergencyContactPhone,
+      vehicleId: generated.vehicleId,
+      vehicleSummary: generated.vehicleSummary,
+      createdAt: generated.createdAt,
+      updatedAt: generated.updatedAt,
+      shareMedicalInfo: generated.shareMedicalInfo,
+      allowOrganizerContact: generated.allowOrganizerContact,
+      riskAcceptedAt: generated.riskAcceptedAt,
+      riskAcceptanceVersion: generated.riskAcceptanceVersion,
+      medicalConsentAcceptedAt: generated.medicalConsentAcceptedAt,
+      medicalConsentVersion: generated.medicalConsentVersion,
+    );
+  }
 
   Map<String, dynamic> toJson() {
     final json = _$EventRegistrationDtoToJson(this);
@@ -106,6 +145,7 @@ extension EventRegistrationModelExtension on EventRegistrationModel {
     eps: eps,
     medicalInsurance: medicalInsurance,
     bloodType: bloodType,
+    bloodTypeRaw: bloodTypeRaw,
     emergencyContactName: emergencyContactName,
     emergencyContactPhone: emergencyContactPhone,
     vehicleId: vehicleId,

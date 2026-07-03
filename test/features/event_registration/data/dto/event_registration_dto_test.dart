@@ -77,6 +77,44 @@ void main() {
     });
   });
 
+  group('EventRegistrationDto — bloodTypeRaw fallback (AC10)', () {
+    test(
+      'TC-dto-06: unmapped sentinel string is preserved raw in bloodTypeRaw',
+      () {
+        final dto = EventRegistrationDto.fromJson(
+          _minimalJson(bloodType: '••••'),
+        );
+        expect(dto.bloodType, isNull);
+        expect(dto.bloodTypeRaw, '••••');
+      },
+    );
+
+    test(
+      'TC-dto-07: valid @JsonValue string maps to enum and bloodTypeRaw stays null',
+      () {
+        final dto = EventRegistrationDto.fromJson(
+          _minimalJson(bloodType: 'A_POSITIVE'),
+        );
+        expect(dto.bloodType, BloodType.aPositive);
+        expect(dto.bloodTypeRaw, isNull);
+      },
+    );
+
+    test('TC-dto-08: absent bloodType key leaves bloodTypeRaw null', () {
+      final dto = EventRegistrationDto.fromJson(_minimalJson());
+      expect(dto.bloodType, isNull);
+      expect(dto.bloodTypeRaw, isNull);
+    });
+
+    test('TC-dto-09: toJson never serializes bloodTypeRaw', () {
+      final dto = EventRegistrationDto.fromJson(
+        _minimalJson(bloodType: '__NOT_SHARED__'),
+      );
+      expect(dto.bloodTypeRaw, '__NOT_SHARED__');
+      expect(dto.toJson().containsKey('bloodTypeRaw'), isFalse);
+    });
+  });
+
   group(
     'EventRegistrationModelExtension.toJson — propagates legal fields (AC#3)',
     () {

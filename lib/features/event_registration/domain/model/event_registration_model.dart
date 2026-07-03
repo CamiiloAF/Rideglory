@@ -58,6 +58,10 @@ class EventRegistrationModel {
   final String eps;
   final String? medicalInsurance;
   final BloodType? bloodType;
+  // Raw string from the backend when it could not be mapped to a known
+  // [BloodType] (e.g. a privacy sentinel like "••••"). Read-only, never
+  // serialized back in write payloads.
+  final String? bloodTypeRaw;
 
   // Emergency contact
   final String emergencyContactName;
@@ -93,6 +97,7 @@ class EventRegistrationModel {
     required this.eps,
     this.medicalInsurance,
     required this.bloodType,
+    this.bloodTypeRaw,
     required this.emergencyContactName,
     required this.emergencyContactPhone,
     this.vehicleId,
@@ -124,6 +129,7 @@ class EventRegistrationModel {
     String? eps,
     String? medicalInsurance,
     BloodType? bloodType,
+    String? bloodTypeRaw,
     String? emergencyContactName,
     String? emergencyContactPhone,
     String? vehicleId,
@@ -152,6 +158,7 @@ class EventRegistrationModel {
       eps: eps ?? this.eps,
       medicalInsurance: medicalInsurance ?? this.medicalInsurance,
       bloodType: bloodType ?? this.bloodType,
+      bloodTypeRaw: bloodTypeRaw ?? this.bloodTypeRaw,
       emergencyContactName: emergencyContactName ?? this.emergencyContactName,
       emergencyContactPhone:
           emergencyContactPhone ?? this.emergencyContactPhone,
