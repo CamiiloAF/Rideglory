@@ -2,11 +2,13 @@
 
 **Feature:** Consentimientos legales (responsabilidad del organizador al publicar eventos + autorización de datos médicos Ley 1581 en la inscripción)
 **Fases cubiertas:** Fase 5 (`legal-consentimientos-fase5`) — Bloque A (organizador) + Bloque B (Ley 1581). La Fase 6 quedó fusionada aquí.
-**Estado:** Aprobado — sin auto-fails; cobertura automatizada de los flujos críticos verde, casos de BD/proxy/visual para revisión humana.
+**Estado:** Aprobado — sin auto-fails; cobertura automatizada de los flujos críticos verde (widget tests + **e2e Patrol** del flujo feliz de inscripción, con persistencia en BD verificada), casos de proxy/visual para revisión humana.
 
 <!-- qa-auto:annotated -->
 > **Automatización qa-auto** (2026-07-03T12:02:36Z, corrida manual por watchdog de subagente en `flutter test`): 🤖✅ 16 verificados · 🤖❌ 0 fallando · 👤 5 manuales · 🚫 7 no automatizables en este entorno (de 28 casos).
 > Entorno: tests corridos por archivo vía Bash (evitando el watchdog que estancó al subagente). `dart analyze` = 15 infos preexistentes, 0 errores. Auditor anti-vacío aplicado (los casos de "spinner/reintento a éxito/refresco de lista" que un test existente no aserta de verdad quedan 🚫, no verde).
+
+> **Cobertura e2e Patrol añadida** (2026-07-03, corrida `bov05sz90` VERDE 1/1): `integration_test/registration_patrol_test.dart` ejercita el **flujo feliz completo de inscripción end-to-end** en emulador contra backend real: Home → detalle de "Mi Evento" → wizard (Personal → Médico → **sheet Ley 1581 "Autorizar"** → Emergencia → Vehículo) → **waiver de riesgos** → barra "pendiente de revisión". Verificado en BD que la inscripción persiste `medicalConsentVersion=v0.1-2026-06` y `riskAcceptanceVersion=v0.1-2026-06` (esto **cierra el caso 10.2**, antes 🚫). Corre en cada `qa-auto`/`rg-exec` con device disponible. Datos de prueba: qa1 (rider) inscribe, qa2 (owner) del evento.
 
 > **Cambios de diseño respecto a la primera corrida** (importantes para leer este checklist):
 > - Ambas declaraciones legales se muestran en **bottom sheets**, no en pantallas/rutas nuevas.
@@ -84,10 +86,12 @@ Antes de empezar, asegurate de tener en la cuenta de prueba:
 ## 6. Inscripción a evento — autorización de datos médicos Ley 1581 (feliz)
 
 > Con la Cuenta B: entra al evento, comienza la inscripción y completa los pasos Personal y Médico.
+>
+> **Cobertura e2e:** además de los widget tests por caso, el **flujo feliz completo de esta sección** (incluidos el sheet Ley 1581 y el waiver de riesgos, hasta la barra "pendiente de revisión") está cubierto end-to-end por `integration_test/registration_patrol_test.dart` (corrida `bov05sz90` verde).
 
 | # | Acción | Resultado esperado | Estado auto | ✅/❌ |
 |---|--------|--------------------|--------------|-------|
-| 6.1 | Completa el paso "Información Médica" y toca "Siguiente" | En vez de avanzar a "Contacto de Emergencia", se abre un **bottom sheet** de autorización Ley 1581 | 🤖✅ `registration_form_content_test.dart` (abre el consent sheet al salir del paso Médico sin consentimiento aún) | ✅ |
+| 6.1 | Completa el paso "Información Médica" y toca "Siguiente" | En vez de avanzar a "Contacto de Emergencia", se abre un **bottom sheet** de autorización Ley 1581 | 🤖✅ `registration_form_content_test.dart` (widget) + e2e `registration_patrol_test.dart` (abre el consent sheet al salir del paso Médico sin consentimiento aún) | ✅ |
 | 6.2 | Lee el contenido del bottom sheet | Texto legible con dos opciones claras: autorizar / no autorizar | 👤 Manual — legibilidad/UX subjetiva | |
 | 6.3 | Toca "Autorizar" | El sheet se cierra y el wizard avanza a "Contacto de Emergencia" | 🤖✅ `registration_form_content_test.dart` (autorizar registra el consentimiento y avanza a Emergencia) | ✅ |
 | 6.4 | (Contexto técnico) tras autorizar | El consentimiento queda registrado (timestamp + versión) en la inscripción, listo para viajar en el envío | 🤖✅ `event_registration_dto_test.dart` TC-dto-05 (`toJson` incluye `medicalConsentAcceptedAt`/`medicalConsentVersion`) | ✅ |
@@ -129,7 +133,7 @@ Antes de empezar, asegurate de tener en la cuenta de prueba:
 | # | Verificación | Resultado esperado | Estado auto | ✅/❌ |
 |---|-------------|--------------------|--------------|-------|
 | 10.1 | Tras publicar un evento (sección 1), consulta el registro en BD | `organizerAcceptedResponsibilityAt` tiene timestamp válido | 🚫 No automatizable — requiere BD real; cubierto parcialmente por el sheet test (el `EventModel` guardado trae `organizerAcceptedResponsibilityAt` no nulo) | |
-| 10.2 | Tras inscribirse con consentimiento (sección 6), consulta el registro de la inscripción en BD | `medicalConsentAcceptedAt` + `medicalConsentVersion` persistidos en el registro (no en el usuario) | 🚫 No automatizable — requiere BD real; a nivel código cubierto por TC-dto-05 (viajan en el body) y por el backend (columnas + service mapean los campos) | |
+| 10.2 | Tras inscribirse con consentimiento (sección 6), consulta el registro de la inscripción en BD | `medicalConsentAcceptedAt` + `medicalConsentVersion` persistidos en el registro (no en el usuario) | 🤖✅ e2e Patrol `registration_patrol_test.dart` (corrida `bov05sz90`) + verificación directa en BD: la inscripción de qa1 quedó con `medicalConsentVersion=v0.1-2026-06` y `riskAcceptanceVersion=v0.1-2026-06` | ✅ |
 | 10.3 | Revisa los logs de red durante el envío de la inscripción | El body del `POST /events/:id/registrations` incluye `medicalConsentAcceptedAt` y `medicalConsentVersion` | 🤖✅ `event_registration_dto_test.dart` TC-dto-05 (prueba a nivel código que ambos campos van en `toJson`); la captura HTTP real queda 🚫 (proxy) | ✅ |
 | 10.4 | Corre `dart analyze` | Sin issues nuevos respecto a la línea base | 🤖✅ 15 infos preexistentes, 0 errores, nada nuevo en archivos tocados | ✅ |
 | 10.5 | Corre `flutter test` completo | 100% de los tests pasan | 🤖✅ Suite completa verde (ver corrida) + 40 tests dirigidos de estos flujos en verde | ✅ |
@@ -156,9 +160,9 @@ Antes de empezar, asegurate de tener en la cuenta de prueba:
 | 1.4 | Lista refresca con el evento nuevo | Patrol e2e: crear evento real y verificar la lista al volver |
 | 3.3 | Reintento exitoso tras error de red | Extender el test de error para resolver el 2º intento con éxito y asertar pop/mensaje |
 | 5.1 | Edición guarda directo sin sheet | Extender el test de modo edición para tocar guardar y asertar `saveEvent` |
-| 8.2 | Nueva inscripción re-pide consentimiento | e2e con dos inscripciones a eventos distintos |
+| 8.2 | Nueva inscripción re-pide consentimiento | e2e con dos inscripciones a eventos distintos (el e2e actual cubre una sola) |
 | 9A.1 | Doble-tap en Siguiente (Médico) | Test de doble-tap sobre el gate simplificado |
-| 10.1 / 10.2 | Timestamps en BD | Backend real/staging + consulta del registro tras e2e |
+| 10.1 | Timestamp de responsabilidad del organizador en BD | Backend real/staging + consulta del registro tras e2e (el e2e actual no publica evento) |
 
 ---
 
@@ -170,17 +174,24 @@ Antes de empezar, asegurate de tener en la cuenta de prueba:
 | 1.3 / 3.1 / 3.2 / 4.1 / 4.2 | `test/features/events/presentation/form/widgets/event_organizer_responsibility_sheet_test.dart` | ✅ |
 | 6.1 / 6.3 / 7.1 / 7.2 / 7.3 / 8.1 / 8.3 | `test/features/event_registration/presentation/registration_form_content_test.dart` | ✅ |
 | 6.4 / 10.3 | `test/features/event_registration/data/dto/event_registration_dto_test.dart` (TC-dto-05, ampliado con `medicalConsentAcceptedAt`/`Version`) | ✅ |
+| 6.1 / 6.3 / 10.2 (e2e) | `integration_test/registration_patrol_test.dart` (flujo feliz completo de inscripción + persistencia en BD, corrida `bov05sz90`) | ✅ |
 | 10.4 | `dart analyze` | ✅ 0 errores |
 | 10.5 | `flutter test` (suite completa) | ✅ |
 
 ### Cómo correr los tests
 
 ```bash
+# Widget/unit tests
 flutter test \
   test/features/events/presentation/form/widgets/steps/publish_row_test.dart \
   test/features/events/presentation/form/widgets/event_organizer_responsibility_sheet_test.dart \
   test/features/event_registration/presentation/registration_form_content_test.dart \
   test/features/event_registration/data/dto/event_registration_dto_test.dart
+
+# e2e Patrol (requiere emulador + backend; qa1 rider, qa2 owner de "Mi Evento")
+patrol test -t integration_test/registration_patrol_test.dart \
+  -d emulator-5554 --flavor dev --dart-define-from-file=config/dev.json \
+  --dart-define=TEST_EMAIL=qa1@gmail.com --dart-define=TEST_PASSWORD=<clave>
 ```
 
 ---
