@@ -223,7 +223,12 @@ const E2E_REGRESSION_TEST = 'integration_test/registration_patrol_test.dart'
 // riskAcceptanceVersion no nulos; luego limpiamos el dato de prueba.
 const BACKEND_EVENTS_MS = '/Users/cami/Developer/Personal/rideglory-api/events-ms'
 const E2E_TARGET_EVENT = 'Mi Evento' // owner qa2; lo inscribe qa1
+// Usuarios de prueba FIJOS (DEV). qa1 = rider que se inscribe, qa2 = owner del
+// evento. Password común para ambos. Se bakean para que la e2e NO haga skip
+// cuando TEST_EMAIL/TEST_PASSWORD no están en el entorno del subagente (que fue
+// justo lo que pasó en la corrida rg-exec). El entorno puede sobreescribirlos.
 const E2E_RIDER_EMAIL = 'qa1@gmail.com'
+const E2E_TEST_PASSWORD = 'Test123.'
 let e2eRegression = {
   result: 'skip',
   note: 'sin device booteado: no se corrió el Patrol e2e de inscripción',
@@ -269,8 +274,8 @@ DELETE de limpieza (se usa en el paso 2 y en el 6):
 PASOS (en orden):
 1. Si \`${E2E_REGRESSION_TEST}\` NO existe → result='skip', note='no existe ${E2E_REGRESSION_TEST}', dbVerification.result='skip'. NO lo generes (otra fase lo escribe).
 2. PRE-LIMPIEZA: corre el DELETE de arriba para que ${E2E_RIDER_EMAIL} quede SIN inscripción en "${E2E_TARGET_EVENT}" (así el detalle muestra "Inscribirme" y el flujo puede inscribir en fresco). Si no hay psql o la BD no es alcanzable, sigue pero deja dbVerification.result='skip' con la razón.
-3. Corre el Patrol (credenciales SOLO si están en el entorno — \`printenv TEST_EMAIL\` / \`printenv TEST_PASSWORD\`). OJO: patrol usa \`-d\`, no \`--device-id\`:
-   \`patrol test -t ${E2E_REGRESSION_TEST} -d <device real de adb devices / simctl> --flavor dev --dart-define-from-file=config/dev.json\` + (si hay creds) \`--dart-define=TEST_EMAIL=$TEST_EMAIL --dart-define=TEST_PASSWORD=$TEST_PASSWORD\`.
+3. Corre el Patrol con las credenciales de prueba FIJAS (usuario rider ${E2E_RIDER_EMAIL}, password ${E2E_TEST_PASSWORD}). Si el entorno define TEST_EMAIL/TEST_PASSWORD (\`printenv\`), esos ganan. OJO: patrol usa \`-d\`, no \`--device-id\`:
+   \`patrol test -t ${E2E_REGRESSION_TEST} -d <device real de adb devices / simctl> --flavor dev --dart-define-from-file=config/dev.json --dart-define=TEST_EMAIL=${E2E_RIDER_EMAIL} --dart-define=TEST_PASSWORD=${E2E_TEST_PASSWORD}\` (o con \$TEST_EMAIL/\$TEST_PASSWORD si el entorno los trae).
 4. Interpreta el Patrol:
    - result='pass' si pasó.
    - result='fail' si falló por aserción/flujo roto (posible REGRESIÓN real → el humano revisa; di qué paso falló).
