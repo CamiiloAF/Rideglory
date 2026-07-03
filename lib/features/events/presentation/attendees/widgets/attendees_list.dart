@@ -73,6 +73,9 @@ class AttendeesList extends StatelessWidget {
                     extra: RegistrationDetailExtra(
                       registration: registration,
                       eventOwnerId: event.ownerId,
+                      isOrganizerView: true,
+                      eventState: event.state,
+                      eventSosTriggeredAt: event.sosTriggeredAt,
                       onApprove: registration.id != null && canManage
                           ? (detailContext) =>
                                 AttendeeActionConfirmation.showApprove(
@@ -147,6 +150,9 @@ class AttendeesList extends StatelessWidget {
                     extra: RegistrationDetailExtra(
                       registration: registration,
                       eventOwnerId: event.ownerId,
+                      isOrganizerView: true,
+                      eventState: event.state,
+                      eventSosTriggeredAt: event.sosTriggeredAt,
                     ),
                   ),
                   onOptionsPressed: () {},

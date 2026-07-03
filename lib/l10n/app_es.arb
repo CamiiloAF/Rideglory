@@ -433,6 +433,8 @@
   "@registration_maskedValue": {
     "description": "Marcador para un valor de inscripción completamente oculto (no compartido)"
   },
+  "registration_callButton": "Llamar",
+  "registration_whatsappButton": "WhatsApp",
   "registration_emergencyContactRequired": "Contacto de emergencia",
   "registration_vehicleData": "Datos del Vehículo",
   "registration_emergencyContact": "Contacto de emergencia",

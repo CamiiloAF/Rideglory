@@ -2428,6 +2428,18 @@ abstract class AppLocalizations {
   /// **'••••'**
   String get registration_maskedValue;
 
+  /// No description provided for @registration_callButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Llamar'**
+  String get registration_callButton;
+
+  /// No description provided for @registration_whatsappButton.
+  ///
+  /// In es, this message translates to:
+  /// **'WhatsApp'**
+  String get registration_whatsappButton;
+
   /// No description provided for @registration_emergencyContactRequired.
   ///
   /// In es, this message translates to:

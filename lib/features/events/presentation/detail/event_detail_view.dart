@@ -450,6 +450,13 @@ class EventDetailViewState extends State<EventDetailView> {
                                                           eventOwnerId:
                                                               currentEvent
                                                                   .ownerId,
+                                                          isOrganizerView: true,
+                                                          eventState:
+                                                              currentEvent
+                                                                  .state,
+                                                          eventSosTriggeredAt:
+                                                              currentEvent
+                                                                  .sosTriggeredAt,
                                                         ),
                                                   ),
                                             ),

@@ -40,6 +40,9 @@ class EventDetailParticipantsSection extends StatelessWidget {
       extra: RegistrationDetailExtra(
         registration: registration,
         eventOwnerId: event.ownerId,
+        isOrganizerView: true,
+        eventState: event.state,
+        eventSosTriggeredAt: event.sosTriggeredAt,
         onApprove: registrationId == null
             ? null
             : (detailContext) => AttendeeActionConfirmation.showApprove(

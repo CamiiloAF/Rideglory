@@ -1248,6 +1248,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_maskedValue => '••••';
 
   @override
+  String get registration_callButton => 'Llamar';
+
+  @override
+  String get registration_whatsappButton => 'WhatsApp';
+
+  @override
   String get registration_emergencyContactRequired => 'Contacto de emergencia';
 
   @override
