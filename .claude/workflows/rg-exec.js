@@ -1,13 +1,13 @@
 export const meta = {
   name: 'rg-exec',
   description:
-    'Ejecuta una mejora o una fase de plan en Rideglory (Flutter + rideglory-api) con NIVEL DE ESFUERZO ajustable (lite | normal | full). El AUDITOR corre con Opus; todo lo demas con Sonnet. Incluye UX Review gate (Nielsen/Laws of UX/WCAG/HIG) despues de Design y antes de Frontend cuando hay UI. Modifica codigo SIN commitear (working tree sucio para revision humana). Aislado bajo docs/exec-runs/<slug>/. args puede ser una ruta (string) o un objeto {source, mode}.',
+    'Ejecuta una mejora o una fase de plan en Rideglory (Flutter + rideglory-api) con NIVEL DE ESFUERZO ajustable (lite | normal | full). El AUDITOR corre con Opus; todo lo demas con Sonnet. Incluye UX Review gate (Nielsen/Laws of UX/WCAG/HIG) despues de Design y antes de Frontend cuando hay UI. Al cerrar genera el QA_CHECKLIST.md y lo AUTOMATIZA con qa-auto integrado (clasifica cada caso, genera+corre los tests automatizables auditados por Opus y anota el checklist con tri-estado 🤖/👤/🚫). Modifica codigo SIN commitear (working tree sucio para revision humana). Aislado bajo docs/exec-runs/<slug>/. args puede ser una ruta (string) o un objeto {source, mode}.',
   phases: [
     { title: 'Normalize', detail: 'Normalizar la nota/fase a PRD con AC + guardrails' },
     { title: 'Architect', detail: 'normal/full: change map + decisiones (Sonnet), auditado por Opus' },
     { title: 'Build', detail: 'lite: un implementador; normal/full: Design || Backend -> UX Review gate (si UI) -> Frontend, auditados' },
     { title: 'Verify', detail: 'QA + auditoria de cobertura Opus; adversarial solo en full' },
-    { title: 'Review', detail: 'normal/full: Tech Lead; lite: cierre directo (SUMMARY/REVIEW_CHECKLIST)' },
+    { title: 'Review', detail: 'normal/full: Tech Lead; lite: cierre directo (SUMMARY/REVIEW_CHECKLIST). Al final genera el QA_CHECKLIST.md y lo automatiza con qa-auto (sub-workflow, tri-estado)' },
   ],
 }
 
@@ -201,6 +201,32 @@ Devuelve {status:'pass', filesChanged:['${ws}/QA_CHECKLIST.md'], testResult:'n/a
 }
 
 // ---------------------------------------------------------------------------
+// Helper: genera el QA_CHECKLIST.md y luego lo AUTOMATIZA con qa-auto integrado.
+// qa-auto clasifica cada caso, genera+corre los tests automatizables (auditados
+// por Opus) y anota el mismo QA_CHECKLIST.md con tri-estado (🤖/👤/🚫). Se corre
+// como sub-workflow (un nivel de anidamiento). Si falla, la corrida NO se cae:
+// el checklist manual queda igual y se registra el motivo.
+// ---------------------------------------------------------------------------
+async function generateAndAutomateQa(ws, slug, mode, sources) {
+  await generateQaChecklist(ws, slug, mode, sources)
+  try {
+    log('[qa-auto] Automatizando el QA_CHECKLIST.md (clasifica, genera y corre tests, tri-estado)...')
+    const qa = await workflow('qa-auto', slug)
+    if (qa && qa.counts) {
+      log(
+        `[qa-auto] ${qa.counts.autoPass ?? 0}🤖✅ / ${qa.counts.autoFail ?? 0}🤖❌ · ${qa.counts.manual ?? 0}👤 · ${qa.counts.noAuto ?? 0}🚫 (auditor: ${qa.auditor ?? 'n/a'}).`,
+      )
+    } else {
+      log('[qa-auto] terminó sin conteos; revisa el QA_CHECKLIST.md anotado.')
+    }
+    return qa
+  } catch (e) {
+    log(`[qa-auto] no se pudo automatizar el checklist (${e && e.message ? e.message : e}); queda solo el documento manual.`)
+    return null
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Phase: Normalize (siempre)
 // ---------------------------------------------------------------------------
 phase('Normalize')
@@ -299,7 +325,7 @@ verdict='needs_changes' solo si hay un blocker real. Devuelve (verdict, blockers
     },
   )
 
-  await generateQaChecklist(WS, SLUG, MODE, null)
+  const qaAuto = await generateAndAutomateQa(WS, SLUG, MODE, null)
 
   return {
     slug: SLUG,
@@ -309,12 +335,13 @@ verdict='needs_changes' solo si hay un blocker real. Devuelve (verdict, blockers
     auditScore: impl.verdict.score,
     verdict: liteClose.verdict,
     blockers: liteClose.blockers,
+    qaAutomation: qaAuto ? { counts: qaAuto.counts, auditor: qaAuto.auditor, status: qaAuto.status } : null,
     artifacts: {
       summary: `${WS}/SUMMARY.md`,
       reviewChecklist: `${WS}/REVIEW_CHECKLIST.md`,
       qaChecklist: `${WS}/QA_CHECKLIST.md`,
     },
-    note: `Nivel lite. Codigo modificado SIN commitear. Revisa con \`git diff\` y ${WS}/REVIEW_CHECKLIST.md. QA: ${WS}/QA_CHECKLIST.md.`,
+    note: `Nivel lite. Codigo modificado SIN commitear. Revisa con \`git diff\` y ${WS}/REVIEW_CHECKLIST.md. QA (automatizado): ${WS}/QA_CHECKLIST.md.`,
   }
 }
 
@@ -738,7 +765,7 @@ Devuelve {status, filesChanged, testResult, notes}.`,
   tl = await agent(techLeadPrompt('Re-revision tras correcciones.'), { label: 'tech-lead', phase: 'Review', model: 'sonnet', schema: VERDICT_SCHEMA })
 }
 
-await generateQaChecklist(WS, SLUG, MODE, null)
+const qaAuto = await generateAndAutomateQa(WS, SLUG, MODE, null)
 
 return {
   slug: SLUG,
@@ -749,6 +776,7 @@ return {
     ? { verdict: uxVerdict.verdict, blockers: uxVerdict.blockers, suggestions: uxVerdict.suggestions }
     : null,
   qaSignOff: qa.signOff,
+  qaAutomation: qaAuto ? { counts: qaAuto.counts, auditor: qaAuto.auditor, status: qaAuto.status } : null,
   techLeadVerdict: tl.verdict,
   remainingBlockers: tl.blockers,
   artifacts: {
@@ -758,5 +786,5 @@ return {
     uxReview: uxVerdict ? `${WS}/handoffs/ux-review.md` : null,
     qaChecklist: `${WS}/QA_CHECKLIST.md`,
   },
-  note: `Nivel ${MODE}. Codigo modificado SIN commitear. Revisa con \`git diff\` y ${WS}/REVIEW_CHECKLIST.md. QA: ${WS}/QA_CHECKLIST.md.`,
+  note: `Nivel ${MODE}. Codigo modificado SIN commitear. Revisa con \`git diff\` y ${WS}/REVIEW_CHECKLIST.md. QA (automatizado con qa-auto): ${WS}/QA_CHECKLIST.md.`,
 }
