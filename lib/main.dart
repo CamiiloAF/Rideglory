@@ -27,6 +27,7 @@ import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dar
 import 'package:rideglory/core/di/injection.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
 import 'package:rideglory/shared/router/app_router.dart';
+import 'package:rideglory/shared/widgets/vehicle_session_sync.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/l10n/app_localizations.dart';
 import 'package:rideglory/core/extensions/l10n_extensions.dart';
@@ -173,22 +174,24 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => getIt.get<ProfileCubit>()),
         BlocProvider(create: (context) => getIt.get<NotificationsCubit>()),
       ],
-      child: MaterialApp.router(
-        scaffoldMessengerKey: AppRouter.scaffoldMessengerKey,
-        routerConfig: AppRouter.appRouter,
-        onGenerateTitle: (context) => context.l10n.appName,
-        theme: AppTheme.lightTheme,
-        debugShowCheckedModeBanner: false,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.dark,
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-          AppLocalizations.delegate,
-          FlutterQuillLocalizations.delegate,
-        ],
-        supportedLocales: const [Locale('es')],
+      child: VehicleSessionSync(
+        child: MaterialApp.router(
+          scaffoldMessengerKey: AppRouter.scaffoldMessengerKey,
+          routerConfig: AppRouter.appRouter,
+          onGenerateTitle: (context) => context.l10n.appName,
+          theme: AppTheme.lightTheme,
+          debugShowCheckedModeBanner: false,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: ThemeMode.dark,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            AppLocalizations.delegate,
+            FlutterQuillLocalizations.delegate,
+          ],
+          supportedLocales: const [Locale('es')],
+        ),
       ),
     );
   }

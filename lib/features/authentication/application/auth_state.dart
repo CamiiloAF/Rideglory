@@ -25,6 +25,9 @@ sealed class AuthState {
   /// Check if authenticated
   bool get isAuthenticated => this is _Authenticated;
 
+  /// Check if unauthenticated
+  bool get isUnauthenticated => this is _Unauthenticated;
+
   /// Check if loading
   bool get isLoading => this is _Loading;
 
