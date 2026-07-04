@@ -1,0 +1,306 @@
+name: Release — Play Store AAB & App Store IPA
+
+on:
+  push:
+    tags:
+      - 'release-[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  bump-version:
+    name: Bump version in pubspec.yaml
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      build: ${{ steps.version.outputs.build }}
+      full: ${{ steps.version.outputs.full }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Bump version in pubspec.yaml
+        id: version
+        run: |
+          TAG="${GITHUB_REF_NAME}"          # e.g. release-1.2.3
+          VERSION="${TAG#release-}"        # strip prefix → 1.2.3
+
+          CURRENT=$(grep '^version:' pubspec.yaml | head -1 | awk '{print $2}')
+          CURRENT_BUILD=$(echo "$CURRENT" | cut -d'+' -f2)
+          NEW_BUILD=$((CURRENT_BUILD + 1))
+          NEW_VERSION="${VERSION}+${NEW_BUILD}"
+
+          sed -i "s/^version: .*/version: ${NEW_VERSION}/" pubspec.yaml
+
+          echo "version=${VERSION}"        >> "$GITHUB_OUTPUT"
+          echo "build=${NEW_BUILD}"        >> "$GITHUB_OUTPUT"
+          echo "full=${NEW_VERSION}"       >> "$GITHUB_OUTPUT"
+
+      - name: Commit updated pubspec.yaml
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add pubspec.yaml
+          git commit -m "chore: bump version to ${{ steps.version.outputs.full }} [skip ci]"
+          git push origin HEAD:main
+
+  build-aab:
+    name: Build & upload AAB
+    needs: bump-version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
+      GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+      RELEASE_KEYSTORE_BASE64: ${{ secrets.RELEASE_KEYSTORE_BASE64 }}
+      RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+      RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+      RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+      SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+
+    steps:
+      # bump-version ya empujó el commit de bump a main; este checkout lo
+      # trae garantizado (needs: bump-version ordena la ejecución).
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.5'
+          channel: stable
+          cache: true
+
+      - name: Create .env file
+        run: |
+          cat > .env << 'EOF'
+          FIREBASE_ANDROID_API_KEY=${{ secrets.FIREBASE_ANDROID_API_KEY }}
+          FIREBASE_ANDROID_APP_ID=${{ secrets.FIREBASE_ANDROID_APP_ID }}
+          FIREBASE_MESSAGING_SENDER_ID=${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET=${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          FIREBASE_ANDROID_CLIENT_ID=${{ secrets.FIREBASE_ANDROID_CLIENT_ID }}
+          LOCAL_API_BASE_URL=${{ secrets.LOCAL_API_BASE_URL }}
+          MAPBOX_ACCESS_TOKEN=${{ secrets.MAPBOX_ACCESS_TOKEN }}
+          EOF
+
+      - name: Create Firebase Android config
+        if: env.GOOGLE_SERVICES_JSON != ''
+        run: |
+          mkdir -p android/app
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 -d > android/app/google-services.json
+
+      - name: Create config/prod.json
+        run: |
+          cat > config/prod.json << EOF
+          {
+            "FLAVOR": "prod",
+            "FIREBASE_ANDROID_API_KEY": "${{ secrets.FIREBASE_ANDROID_API_KEY }}",
+            "FIREBASE_ANDROID_APP_ID": "${{ secrets.FIREBASE_ANDROID_APP_ID }}",
+            "FIREBASE_IOS_API_KEY": "${{ secrets.FIREBASE_IOS_API_KEY }}",
+            "FIREBASE_IOS_APP_ID": "${{ secrets.FIREBASE_IOS_APP_ID }}",
+            "FIREBASE_MESSAGING_SENDER_ID": "${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}",
+            "FIREBASE_PROJECT_ID": "${{ secrets.FIREBASE_PROJECT_ID }}",
+            "FIREBASE_STORAGE_BUCKET": "${{ secrets.FIREBASE_STORAGE_BUCKET }}",
+            "FIREBASE_ANDROID_CLIENT_ID": "${{ secrets.FIREBASE_ANDROID_CLIENT_ID }}",
+            "FIREBASE_IOS_CLIENT_ID": "${{ secrets.FIREBASE_IOS_CLIENT_ID }}",
+            "FIREBASE_IOS_BUNDLE_ID": "${{ secrets.FIREBASE_IOS_BUNDLE_ID }}",
+            "SENTRY_DSN": "${{ secrets.SENTRY_DSN }}"
+          }
+          EOF
+
+      - name: Decode release keystore
+        if: env.RELEASE_KEYSTORE_BASE64 != ''
+        run: |
+          mkdir -p android/keystore
+          echo "$RELEASE_KEYSTORE_BASE64" | base64 -d > android/keystore/upload-keystore.jks
+
+      - name: Create key.properties
+        if: env.RELEASE_KEYSTORE_BASE64 != ''
+        run: |
+          cat > android/key.properties << EOF
+          storePassword=$RELEASE_KEYSTORE_PASSWORD
+          keyPassword=$RELEASE_KEY_PASSWORD
+          keyAlias=$RELEASE_KEY_ALIAS
+          storeFile=keystore/upload-keystore.jks
+          EOF
+
+      - name: Warn if release keystore is missing
+        if: env.RELEASE_KEYSTORE_BASE64 == ''
+        run: |
+          echo "::warning::RELEASE_KEYSTORE_BASE64 no está configurado — el AAB se firmará con el keystore de debug. No sirve para Play Store."
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Generate code
+        run: |
+          rm -rf .dart_tool/build/entrypoint
+          dart run build_runner build --delete-conflicting-outputs
+
+      - name: Build AAB
+        run: flutter build appbundle --release --flavor prod --dart-define-from-file=config/prod.json
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rideglory-${{ needs.bump-version.outputs.full }}.aab
+          path: build/app/outputs/bundle/prodRelease/app-prod-release.aab
+          retention-days: 60
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "release-${{ needs.bump-version.outputs.version }} (build ${{ needs.bump-version.outputs.build }})"
+          files: build/app/outputs/bundle/prodRelease/app-prod-release.aab
+          generate_release_notes: true
+
+      - name: Upload to Play Store (Internal Test)
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_KEY }}
+          packageName: com.camiloagudelo.rideglory
+          releaseFiles: build/app/outputs/bundle/prodRelease/app-prod-release.aab
+          track: internal
+          status: completed
+
+  build-ipa:
+    name: Build & upload IPA
+    needs: bump-version
+    runs-on: macos-26
+    permissions:
+      contents: write
+
+    steps:
+      # bump-version ya empujó el commit de bump a main; este checkout lo
+      # trae garantizado (needs: bump-version ordena la ejecución). Antes
+      # este job checkeaba `main` de forma independiente y en paralelo al
+      # de Android, sin bumpear versión propia: si su checkout ocurría
+      # antes del push de Android, compilaba con el build number ya usado
+      # en el release anterior y TestFlight lo rechazaba (409 duplicate
+      # cfBundleVersion).
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.5'
+          channel: stable
+          cache: true
+
+      - name: Create .env file
+        run: |
+          cat > .env << 'EOF'
+          FIREBASE_IOS_API_KEY=${{ secrets.FIREBASE_IOS_API_KEY }}
+          FIREBASE_IOS_APP_ID=${{ secrets.FIREBASE_IOS_APP_ID }}
+          FIREBASE_IOS_CLIENT_ID=${{ secrets.FIREBASE_IOS_CLIENT_ID }}
+          FIREBASE_IOS_BUNDLE_ID=${{ secrets.FIREBASE_IOS_BUNDLE_ID }}
+          FIREBASE_MESSAGING_SENDER_ID=${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
+          FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_STORAGE_BUCKET=${{ secrets.FIREBASE_STORAGE_BUCKET }}
+          LOCAL_API_BASE_URL=${{ secrets.LOCAL_API_BASE_URL }}
+          MAPBOX_ACCESS_TOKEN=${{ secrets.MAPBOX_ACCESS_TOKEN }}
+          EOF
+
+      - name: Create config/prod.json
+        run: |
+          cat > config/prod.json << EOF
+          {
+            "FLAVOR": "prod",
+            "FIREBASE_ANDROID_API_KEY": "${{ secrets.FIREBASE_ANDROID_API_KEY }}",
+            "FIREBASE_ANDROID_APP_ID": "${{ secrets.FIREBASE_ANDROID_APP_ID }}",
+            "FIREBASE_IOS_API_KEY": "${{ secrets.FIREBASE_IOS_API_KEY }}",
+            "FIREBASE_IOS_APP_ID": "${{ secrets.FIREBASE_IOS_APP_ID }}",
+            "FIREBASE_MESSAGING_SENDER_ID": "${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}",
+            "FIREBASE_PROJECT_ID": "${{ secrets.FIREBASE_PROJECT_ID }}",
+            "FIREBASE_STORAGE_BUCKET": "${{ secrets.FIREBASE_STORAGE_BUCKET }}",
+            "FIREBASE_ANDROID_CLIENT_ID": "${{ secrets.FIREBASE_ANDROID_CLIENT_ID }}",
+            "FIREBASE_IOS_CLIENT_ID": "${{ secrets.FIREBASE_IOS_CLIENT_ID }}",
+            "FIREBASE_IOS_BUNDLE_ID": "${{ secrets.FIREBASE_IOS_BUNDLE_ID }}",
+            "SENTRY_DSN": "${{ secrets.SENTRY_DSN }}"
+          }
+          EOF
+
+      - name: Create Firebase iOS config
+        run: |
+          mkdir -p ios/Runner ios/config/prod
+          echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}" | base64 -d > ios/Runner/GoogleService-Info.plist
+          echo "${{ secrets.GOOGLE_SERVICE_INFO_PLIST }}" | base64 -d > ios/config/prod/GoogleService-Info.plist
+
+      - name: Import distribution certificate
+        env:
+          DIST_CERT_P12_BASE64: ${{ secrets.DIST_CERT_P12_BASE64 }}
+          DIST_CERT_PASSWORD: ${{ secrets.DIST_CERT_PASSWORD }}
+        run: |
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+          KEYCHAIN_PASSWORD=$(openssl rand -hex 20)
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+          echo "$DIST_CERT_P12_BASE64" | base64 -d > /tmp/distribution.p12
+          security import /tmp/distribution.p12 -P "$DIST_CERT_PASSWORD" \
+            -A -t cert -f pkcs12 -k "$KEYCHAIN_PATH"
+          security list-keychain -d user -s "$KEYCHAIN_PATH"
+          security set-key-partition-list -S apple-tool:,apple: -s \
+            -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+      - name: Install provisioning profile
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "${{ secrets.PROVISIONING_PROFILE_BASE64 }}" | base64 -d \
+            > ~/Library/MobileDevice/Provisioning\ Profiles/rideglory_appstore.mobileprovision
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Install CocoaPods dependencies
+        run: cd ios && pod install --repo-update
+
+      - name: Generate code
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Force manual signing in Xcode project
+        run: |
+          PBXPROJ=ios/Runner.xcodeproj/project.pbxproj
+          sed -i '' 's/CODE_SIGN_STYLE = Automatic/CODE_SIGN_STYLE = Manual/g' "$PBXPROJ"
+          sed -i '' 's/PROVISIONING_PROFILE_SPECIFIER = "";/PROVISIONING_PROFILE_SPECIFIER = "Rideglory";/g' "$PBXPROJ"
+          sed -i '' 's/CODE_SIGN_IDENTITY = "Apple Development"/CODE_SIGN_IDENTITY = "Apple Distribution"/g' "$PBXPROJ"
+
+      - name: Build IPA
+        run: |
+          flutter build ipa --release \
+            --flavor prod \
+            --dart-define-from-file=config/prod.json \
+            --export-options-plist=ios/ExportOptionsProd.plist
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rideglory-${{ needs.bump-version.outputs.full }}.ipa
+          path: build/ios/ipa/*.ipa
+          retention-days: 60
+
+      - name: Find IPA path
+        id: find_ipa
+        run: echo "IPA_PATH=$(find build/ios/ipa -name '*.ipa' | head -1)" >> $GITHUB_OUTPUT
+
+      - name: Upload to TestFlight
+        uses: apple-actions/upload-testflight-build@v1
+        with:
+          app-path: ${{ steps.find_ipa.outputs.IPA_PATH }}
+          issuer-id: ${{ secrets.APPSTORE_API_ISSUER_ID }}
+          api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
