@@ -85,7 +85,7 @@ void main() {
       expect(find.text('Juan Pérez'), findsWidgets);
     });
 
-    testWidgets('TC-2-28: Data state shows rider email', (
+    testWidgets('TC-2-28: Data state does not show rider email (privacy)', (
       WidgetTester tester,
     ) async {
       when(
@@ -95,7 +95,7 @@ void main() {
       await tester.pumpWidget(_buildTestPage('user-123'));
       await tester.pumpAndSettle();
 
-      expect(find.text('juan@example.com'), findsWidgets);
+      expect(find.text('juan@example.com'), findsNothing);
     });
 
     testWidgets('TC-2-29: Error state renders without crash', (
