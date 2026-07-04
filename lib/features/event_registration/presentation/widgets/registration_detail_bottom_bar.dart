@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
-import 'package:rideglory/features/event_registration/presentation/widgets/registration_contact_actions.dart';
 import 'package:rideglory/design_system/design_system.dart';
 import 'package:rideglory/shared/widgets/registration_actions/registration_approve_button.dart';
 import 'package:rideglory/shared/widgets/registration_actions/registration_reject_button.dart';
@@ -47,13 +46,11 @@ class RegistrationDetailBottomBar extends StatelessWidget {
       showCancel: showCancel,
     );
 
-    // El contacto se evalúa de forma independiente del early-return de acciones:
-    // una inscripción aprobada con allowOrganizerContact == true muestra los
-    // botones de contacto aunque no haya acciones de aprobar/rechazar.
-    final showContact =
-        params.isOrganizerView && registration.allowOrganizerContact;
-
-    if (actions.isEmpty && !showContact) return const SizedBox.shrink();
+    // El contacto del organizador ya no vive aquí: se ofrece de forma no
+    // invasiva desde el encabezado de la tarjeta "Datos Personales"
+    // (RegistrationContactTrigger → bottom sheet). La barra solo agrupa acciones
+    // de gestión (aprobar/rechazar/editar/cancelar).
+    if (actions.isEmpty) return const SizedBox.shrink();
 
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
@@ -68,11 +65,7 @@ class RegistrationDetailBottomBar extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ...actions,
-            if (actions.isNotEmpty && showContact) AppSpacing.gapMd,
-            if (showContact) RegistrationContactActions(extra: params),
-          ],
+          children: actions,
         ),
       ),
     );

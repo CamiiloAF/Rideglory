@@ -3,7 +3,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
-import 'package:rideglory/features/event_registration/presentation/widgets/registration_contact_actions.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_detail_bottom_bar.dart';
 import 'package:rideglory/design_system/foundation/theme/app_theme.dart';
 import 'package:rideglory/l10n/app_localizations.dart';
@@ -47,23 +46,23 @@ Widget _host(RegistrationDetailExtra params) => MaterialApp(
 );
 
 void main() {
-  testWidgets(
-    'aprobada + allowOrganizerContact + organizador → muestra contacto',
-    (tester) async {
-      await tester.pumpWidget(
-        _host(
-          RegistrationDetailExtra(
-            registration: _registration(),
-            isOrganizerView: true,
-          ),
+  testWidgets('aprobada + allowOrganizerContact + organizador → barra vacía '
+      '(el contacto ya no vive en la barra sino en el encabezado)', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _host(
+        RegistrationDetailExtra(
+          registration: _registration(),
+          isOrganizerView: true,
         ),
-      );
-      expect(find.byType(RegistrationContactActions), findsOneWidget);
-      expect(find.text('Llamar'), findsOneWidget);
-      expect(find.text('WhatsApp'), findsOneWidget);
-      expect(find.byType(RegistrationApproveButton), findsNothing);
-    },
-  );
+      ),
+    );
+    expect(find.text('Llamar'), findsNothing);
+    expect(find.text('WhatsApp'), findsNothing);
+    expect(find.byType(AppButton), findsNothing);
+    expect(find.byType(RegistrationApproveButton), findsNothing);
+  });
 
   testWidgets(
     'aprobada sin allowOrganizerContact ni acciones → barra vacía (shrink)',
@@ -76,34 +75,31 @@ void main() {
           ),
         ),
       );
-      expect(find.byType(RegistrationContactActions), findsNothing);
       expect(find.byType(RegistrationApproveButton), findsNothing);
       expect(find.byType(AppButton), findsNothing);
     },
   );
 
-  testWidgets(
-    'pending + organizador con callbacks → aprobar/rechazar, sin contacto',
-    (tester) async {
-      await tester.pumpWidget(
-        _host(
-          RegistrationDetailExtra(
-            registration: _registration(
-              status: RegistrationStatus.pending,
-              allowOrganizerContact: false,
-            ),
-            isOrganizerView: true,
-            onApprove: (_) {},
-            onReject: (_) {},
+  testWidgets('pending + organizador con callbacks → aprobar/rechazar', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _host(
+        RegistrationDetailExtra(
+          registration: _registration(
+            status: RegistrationStatus.pending,
+            allowOrganizerContact: false,
           ),
+          isOrganizerView: true,
+          onApprove: (_) {},
+          onReject: (_) {},
         ),
-      );
-      expect(find.byType(RegistrationApproveButton), findsOneWidget);
-      expect(find.byType(RegistrationContactActions), findsNothing);
-    },
-  );
+      ),
+    );
+    expect(find.byType(RegistrationApproveButton), findsOneWidget);
+  });
 
-  testWidgets('vista piloto → editar + cancelar, sin contacto', (tester) async {
+  testWidgets('vista piloto → editar + cancelar', (tester) async {
     await tester.pumpWidget(
       _host(
         RegistrationDetailExtra(
@@ -113,7 +109,6 @@ void main() {
         ),
       ),
     );
-    expect(find.byType(RegistrationContactActions), findsNothing);
     expect(find.byType(AppButton), findsNWidgets(2));
   });
 }

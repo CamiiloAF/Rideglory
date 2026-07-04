@@ -1254,6 +1254,26 @@ class AppLocalizationsEs extends AppLocalizations {
   String get registration_whatsappButton => 'WhatsApp';
 
   @override
+  String get registration_couldNotOpenPhone =>
+      'No se pudo abrir la app de teléfono.';
+
+  @override
+  String get registration_couldNotOpenWhatsApp =>
+      'No se pudo abrir WhatsApp. Verifica que esté instalado.';
+
+  @override
+  String registration_contactSheetTitle(String name) {
+    return 'Contactar a $name';
+  }
+
+  @override
+  String get registration_callOptionSubtitle => 'Abre la app de teléfono';
+
+  @override
+  String get registration_whatsappOptionSubtitle =>
+      'Abre una conversación en WhatsApp';
+
+  @override
   String get registration_emergencyContactRequired => 'Contacto de emergencia';
 
   @override

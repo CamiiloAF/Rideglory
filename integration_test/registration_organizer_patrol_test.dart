@@ -4,9 +4,10 @@
 //   Home (sesión de qa2, owner de "Mi Evento") → tab Eventos → "Mi Evento"
 //   → sección "Inscritos" (solo visible al organizador) → tap en la primera
 //   fila de inscrito → detalle de inscripción con `isOrganizerView: true`
-//   → botones de contacto (Llamar / WhatsApp) si `allowOrganizerContact` está
-//   activo → volver → la vista del piloto (my_registrations) no se ve afectada
-//   por este flujo (no navega por RegistrationContactActions).
+//   → si `allowOrganizerContact` está activo, el encabezado de la tarjeta
+//   "Datos Personales" muestra el disparador de contacto
+//   (RegistrationContactTrigger); al tocarlo abre un bottom sheet con las
+//   opciones Llamar / WhatsApp → volver.
 //
 // PRECONDICIONES DE DATOS (documentadas igual que registration_patrol_test.dart;
 // si no se cumplen, el test falla en el gate correspondiente, no cuelga):
@@ -28,6 +29,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:patrol/patrol.dart';
+import 'package:rideglory/features/event_registration/presentation/widgets/registration_contact_trigger.dart';
 import 'package:rideglory/features/events/presentation/detail/widgets/event_detail_participant_row.dart';
 
 import 'support/patrol_bootstrap.dart';
@@ -106,15 +108,16 @@ Future<void> _runOrganizerRegistrationFlow(PatrolIntegrationTester $) async {
   await _settle($, 3);
 
   // 5. Detalle de inscripción en modo organizador: si el piloto autorizó el
-  // contacto directo (`allowOrganizerContact`), los botones "Llamar" /
-  // "WhatsApp" son visibles (RegistrationContactActions). Si no lo autorizó,
-  // la ausencia es el comportamiento correcto (no un fallo): se documenta
-  // como resultado válido en vez de forzar la aserción.
+  // contacto directo (`allowOrganizerContact`), el encabezado de "Datos
+  // Personales" muestra el disparador de contacto (RegistrationContactTrigger).
+  // Si no lo autorizó, la ausencia es el comportamiento correcto (no un fallo):
+  // se documenta como resultado válido en vez de forzar la aserción.
   await _settle($, 2);
-  final hasContactButtons =
-      $(_callButton).visible && $(_whatsappButton).visible;
-  if (hasContactButtons) {
-    expect($(_callButton).visible, isTrue);
-    expect($(_whatsappButton).visible, isTrue);
-  }
+  if (!$(RegistrationContactTrigger).visible) return;
+
+  // Tocar el disparador abre el bottom sheet con Llamar / WhatsApp.
+  await $(RegistrationContactTrigger).tap();
+  await _settle($, 2);
+  expect($(_callButton).visible, isTrue);
+  expect($(_whatsappButton).visible, isTrue);
 }

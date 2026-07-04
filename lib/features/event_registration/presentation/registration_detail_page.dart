@@ -4,6 +4,7 @@ import 'package:rideglory/core/extensions/date_extensions.dart';
 import 'package:rideglory/shared/router/app_routes.dart';
 import 'package:rideglory/features/event_registration/domain/model/event_registration_model.dart';
 import 'package:rideglory/features/event_registration/presentation/registration_detail_extra.dart';
+import 'package:rideglory/features/event_registration/presentation/widgets/registration_contact_trigger.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_detail_bottom_bar.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_detail_data_card.dart';
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_detail_data_row.dart';
@@ -66,6 +67,10 @@ class RegistrationDetailPage extends StatelessWidget {
                     iconColor: AppColors.primary,
                     iconBackgroundColor: AppColors.primarySubtle,
                     title: context.l10n.registration_personalData,
+                    trailing: RegistrationContactTrigger(
+                      registration: registration,
+                      isOrganizerView: params.isOrganizerView,
+                    ),
                     child: Column(
                       children: [
                         RegistrationDetailDataRow(

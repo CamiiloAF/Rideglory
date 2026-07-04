@@ -12,6 +12,7 @@ class RegistrationDetailDataCard extends StatelessWidget {
     required this.iconBackgroundColor,
     required this.title,
     required this.child,
+    this.trailing,
   });
 
   final IconData icon;
@@ -19,6 +20,10 @@ class RegistrationDetailDataCard extends StatelessWidget {
   final Color iconBackgroundColor;
   final String title;
   final Widget child;
+
+  /// Acción opcional alineada a la derecha del encabezado (p. ej. el disparador
+  /// de contacto del organizador en la tarjeta "Datos Personales").
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +50,18 @@ class RegistrationDetailDataCard extends StatelessWidget {
                 child: Icon(icon, color: iconColor, size: 16),
               ),
               AppSpacing.hGapSm,
-              Text(
-                title,
-                style: const TextStyle(
-                  color: AppColors.textOnDarkPrimary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
+              Expanded(
+                child: Text(
+                  title,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: AppColors.textOnDarkPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
+              if (trailing != null) trailing!,
             ],
           ),
           AppSpacing.gapMd,

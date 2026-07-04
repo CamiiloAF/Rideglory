@@ -435,6 +435,17 @@
   },
   "registration_callButton": "Llamar",
   "registration_whatsappButton": "WhatsApp",
+  "registration_couldNotOpenPhone": "No se pudo abrir la app de teléfono.",
+  "registration_couldNotOpenWhatsApp": "No se pudo abrir WhatsApp. Verifica que esté instalado.",
+  "registration_contactSheetTitle": "Contactar a {name}",
+  "@registration_contactSheetTitle": {
+    "description": "Título del bottom sheet de contacto del organizador",
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "registration_callOptionSubtitle": "Abre la app de teléfono",
+  "registration_whatsappOptionSubtitle": "Abre una conversación en WhatsApp",
   "registration_emergencyContactRequired": "Contacto de emergencia",
   "registration_vehicleData": "Datos del Vehículo",
   "registration_emergencyContact": "Contacto de emergencia",

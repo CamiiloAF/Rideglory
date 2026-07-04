@@ -2440,6 +2440,36 @@ abstract class AppLocalizations {
   /// **'WhatsApp'**
   String get registration_whatsappButton;
 
+  /// No description provided for @registration_couldNotOpenPhone.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo abrir la app de teléfono.'**
+  String get registration_couldNotOpenPhone;
+
+  /// No description provided for @registration_couldNotOpenWhatsApp.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo abrir WhatsApp. Verifica que esté instalado.'**
+  String get registration_couldNotOpenWhatsApp;
+
+  /// Título del bottom sheet de contacto del organizador
+  ///
+  /// In es, this message translates to:
+  /// **'Contactar a {name}'**
+  String registration_contactSheetTitle(String name);
+
+  /// No description provided for @registration_callOptionSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Abre la app de teléfono'**
+  String get registration_callOptionSubtitle;
+
+  /// No description provided for @registration_whatsappOptionSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Abre una conversación en WhatsApp'**
+  String get registration_whatsappOptionSubtitle;
+
   /// No description provided for @registration_emergencyContactRequired.
   ///
   /// In es, this message translates to:

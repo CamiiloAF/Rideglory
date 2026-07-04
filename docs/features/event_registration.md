@@ -36,7 +36,7 @@ El feature **Event Registration** gestiona la inscripción de un rider a un even
 2. **Aprobación/rechazo** por parte del organizador (`AttendeesCubit` en feature `events/`).
 3. **Cancelación** por parte del rider.
 4. **Vista "Mis inscripciones"** con filtros por estado + búsqueda.
-5. **Detalle de la inscripción** mostrando todos los datos + botón de contacto al rider (para el organizador).
+5. **Detalle de la inscripción** mostrando todos los datos. Cuando el rider autorizó el contacto directo (`allowOrganizerContact`), el organizador ve un disparador de contacto en el encabezado de la tarjeta "Datos Personales" (`RegistrationContactTrigger`) que abre un bottom sheet (`RegistrationContactSheet`) con las opciones Llamar / WhatsApp. Ya no vive en la barra inferior.
 6. **Persistencia opcional** de los datos como `RiderProfileModel` para pre-llenar futuras inscripciones.
 
 `MyRegistrationsCubit` es `@injectable` y se inyecta globalmente en `main.dart` (root `MultiBlocProvider`) para que el badge/UI de "mis inscripciones" funcione desde cualquier pantalla.
@@ -237,8 +237,11 @@ lib/features/event_registration/presentation/
     ├── registration_form_scaffold.dart
     ├── registration_detail_rider_summary.dart      (banda owner — Pencil y1Ci1)
     ├── registration_detail_status_banner.dart       (banner piloto — Pencil f0lXw)
-    ├── registration_detail_data_card.dart           (tarjeta no colapsable con icono)
+    ├── registration_detail_data_card.dart           (tarjeta no colapsable con icono + trailing opcional)
     ├── registration_detail_data_row.dart            (fila etiqueta/valor)
+    ├── registration_contact_trigger.dart            (disparador de contacto en header — solo organizador)
+    ├── registration_contact_sheet.dart              (bottom sheet Llamar / WhatsApp)
+    ├── registration_contact_option_tile.dart        (fila de opción del sheet)
     ├── registration_status_pill.dart                (píldora de estado compartida)
     ├── registration_detail_bottom_bar.dart
     └── my_registrations_filter_bottom_sheet.dart
