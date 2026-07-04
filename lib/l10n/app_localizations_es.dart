@@ -1789,6 +1789,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get rider_follow => 'Seguir';
 
   @override
+  String get rider_followComingSoonTitle => 'Muy pronto';
+
+  @override
+  String get rider_followComingSoonMessage =>
+      'Estamos trabajando en la función de seguir riders. ¡Pronto podrás hacerlo!';
+
+  @override
   String get rider_statsEvents => 'Rodadas';
 
   @override

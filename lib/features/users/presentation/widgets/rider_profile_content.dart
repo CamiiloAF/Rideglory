@@ -31,18 +31,6 @@ class RiderProfileContent extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        if (user.email != null && user.email!.isNotEmpty) ...[
-          AppSpacing.gapXs,
-          Center(
-            child: Text(
-              user.email!,
-              style: const TextStyle(
-                fontSize: 13,
-                color: AppColors.textOnDarkSecondary,
-              ),
-            ),
-          ),
-        ],
         if (user.residenceCity != null && user.residenceCity!.isNotEmpty) ...[
           AppSpacing.gapXs,
           Center(
@@ -73,7 +61,14 @@ class RiderProfileContent extends StatelessWidget {
           followingLabel: context.l10n.rider_statsFollowing,
         ),
         AppSpacing.gapXxl,
-        AppButton(label: context.l10n.rider_follow, onPressed: () {}),
+        AppButton(
+          label: context.l10n.rider_follow,
+          onPressed: () => InfoDialog.show(
+            context: context,
+            title: context.l10n.rider_followComingSoonTitle,
+            content: context.l10n.rider_followComingSoonMessage,
+          ),
+        ),
       ],
     );
   }

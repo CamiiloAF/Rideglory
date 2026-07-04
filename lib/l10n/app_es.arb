@@ -632,6 +632,8 @@
   "event_noResultsFiltered": "No hay eventos con estos filtros",
   "rider_profileTitle": "Perfil del motorista",
   "rider_follow": "Seguir",
+  "rider_followComingSoonTitle": "Muy pronto",
+  "rider_followComingSoonMessage": "Estamos trabajando en la función de seguir riders. ¡Pronto podrás hacerlo!",
   "rider_statsEvents": "Rodadas",
   "rider_statsFollowers": "Seguidores",
   "rider_statsFollowing": "Siguiendo",

@@ -3412,6 +3412,18 @@ abstract class AppLocalizations {
   /// **'Seguir'**
   String get rider_follow;
 
+  /// No description provided for @rider_followComingSoonTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Muy pronto'**
+  String get rider_followComingSoonTitle;
+
+  /// No description provided for @rider_followComingSoonMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'Estamos trabajando en la función de seguir riders. ¡Pronto podrás hacerlo!'**
+  String get rider_followComingSoonMessage;
+
   /// No description provided for @rider_statsEvents.
   ///
   /// In es, this message translates to:
