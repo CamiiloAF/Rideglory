@@ -78,9 +78,9 @@ Antes de empezar, asegurate de tener en la cuenta de prueba:
 | # | Accion | Resultado esperado | Estado auto | ✅/❌ |
 |---|--------|--------------------|-------------|-------|
 | 5.1 | Abre el detalle de ese rider aprobado | En la parte inferior de la pantalla aparecen dos botones en una sola fila: **"Llamar"** y **"WhatsApp"** | 🤖✅ Auto-PASS (`test/features/event_registration/presentation/widgets/registration_contact_actions_test.dart`; `test/features/event_registration/presentation/widgets/registration_detail_bottom_bar_test.dart`) | ✅ |
-| 5.2 | Observa el estilo visual de los botones | Los botones se ven con borde (contorno), no rellenos de un color sólido llamativo | 👤 Manual (verificación estética/visual subjetiva; requiere ojo humano aunque el enum de variante se pueda afirmar por test) | |
-| 5.3 | Toca el botón **"Llamar"** | Se abre la app de teléfono/marcador del dispositivo con el número del rider precargado | 👤 Manual (requiere dispositivo/emulador real con app de teléfono instalada; la invocación se puede unit-testear pero no la apertura del intent real del SO) | |
-| 5.4 | Vuelve a la app y toca el botón **"WhatsApp"** | Se abre WhatsApp con una conversación o pantalla de chat dirigida al número del rider | 👤 Manual (requiere WhatsApp instalado en dispositivo real; la construcción de la URL wa.me sí se prueba por unit test, pero abrir la app externa es manual) | |
+| 5.2 | Observa el estilo visual de los botones | Los botones se ven con borde (contorno), no rellenos de un color sólido llamativo | 👤✅ Manual (verificación estética/visual subjetiva; requiere ojo humano aunque el enum de variante se pueda afirmar por test) | ✅ |
+| 5.3 | Toca el botón **"Llamar"** | Se abre la app de teléfono/marcador del dispositivo con el número del rider precargado | 👤✅ Manual (requiere dispositivo/emulador real con app de teléfono instalada; la invocación se puede unit-testear pero no la apertura del intent real del SO) | ✅ |
+| 5.4 | Vuelve a la app y toca el botón **"WhatsApp"** | Se abre WhatsApp con una conversación o pantalla de chat dirigida al número del rider | 👤✅ Manual (requiere WhatsApp instalado en dispositivo real; la construcción de la URL wa.me sí se prueba por unit test, pero abrir la app externa es manual) | ✅ |
 
 ---
 
