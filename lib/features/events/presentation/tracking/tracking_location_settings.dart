@@ -40,7 +40,7 @@ abstract class TrackingLocationSettings {
         activityType: ActivityType.fitness,
         pauseLocationUpdatesAutomatically: false,
         allowBackgroundLocationUpdates: allowBackground,
-        showBackgroundLocationIndicator: false,
+        showBackgroundLocationIndicator: true,
       );
     }
     return const LocationSettings(

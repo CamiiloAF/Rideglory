@@ -210,7 +210,9 @@ BlocListener<AuthCubit, AuthState>(
 | Proveedor | Color fondo | Color texto | Icono | Cubit call |
 |---|---|---|---|---|
 | Google | blanco | negro | `Icons.g_mobiledata_rounded` | `signInWithGoogle()` |
-| Apple | negro | blanco | `Icons.apple` | `signInWithApple()` |
+| Apple | blanco | negro | `Icons.apple` | `signInWithApple()` |
+
+> El botón de Apple usa la variante blanca de las HIG (App Review rechazó la negra por camuflarse con el fondo oscuro de la app — Guideline 4, jul 2026).
 
 ---
 

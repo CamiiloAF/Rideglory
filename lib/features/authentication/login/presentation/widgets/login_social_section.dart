@@ -71,8 +71,8 @@ class _LoginSocialSectionState extends State<LoginSocialSection> {
             LoginSocialButton(
               label: context.l10n.auth_appleLabel,
               icon: Icons.apple,
-              backgroundColor: Colors.black,
-              textColor: Colors.white,
+              backgroundColor: Colors.white,
+              textColor: Colors.black,
               isLoading: _loadingProvider == LoginAuthProvider.apple,
               isDisabled: _loadingProvider != null,
               onPressed: () => _onPressed(
