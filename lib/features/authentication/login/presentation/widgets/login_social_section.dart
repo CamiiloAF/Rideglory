@@ -10,6 +10,7 @@ import 'package:rideglory/core/services/analytics/analytics_events.dart';
 import 'package:rideglory/core/services/analytics/analytics_params.dart';
 import 'package:rideglory/core/services/analytics/analytics_service.dart';
 import 'package:rideglory/features/authentication/application/auth_cubit.dart';
+import 'package:rideglory/features/authentication/login/presentation/widgets/google_logo_icon.dart';
 import 'package:rideglory/features/authentication/login/presentation/widgets/login_social_button.dart';
 
 enum LoginAuthProvider { google, apple }
@@ -72,9 +73,12 @@ class _LoginSocialSectionState extends State<LoginSocialSection> {
           if (isAndroid || showGoogleOnIos)
             LoginSocialButton(
               label: context.l10n.auth_continue_with_google,
-              icon: Icons.g_mobiledata_rounded,
+              // Branding oficial "Sign in with Google" (tema claro): fondo
+              // blanco, "G" multicolor, texto #1F1F1F y borde #747775.
+              customIcon: const GoogleLogoIcon(),
               backgroundColor: Colors.white,
-              textColor: Colors.black,
+              textColor: const Color(0xFF1F1F1F),
+              borderColor: const Color(0xFF747775),
               isLoading: _loadingProvider == LoginAuthProvider.google,
               isDisabled: _loadingProvider != null,
               onPressed: () => _onPressed(
@@ -82,6 +86,8 @@ class _LoginSocialSectionState extends State<LoginSocialSection> {
                 () => context.read<AuthCubit>().signInWithGoogle(),
               ),
             ),
+          if ((isAndroid || showGoogleOnIos) && isIOS)
+            const SizedBox(height: 12),
           if (isIOS)
             LoginSocialButton(
               label: context.l10n.auth_appleLabel,

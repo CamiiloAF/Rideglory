@@ -212,10 +212,12 @@ BlocListener<AuthCubit, AuthState>(
 
 | Proveedor | Color fondo | Color texto | Icono | Cubit call |
 |---|---|---|---|---|
-| Google | blanco | negro | `Icons.g_mobiledata_rounded` | `signInWithGoogle()` |
+| Google | blanco (borde `#747775`) | `#1F1F1F` | `GoogleLogoIcon` ("G" multicolor oficial, `CustomPainter`) | `signInWithGoogle()` |
 | Apple | blanco | negro | `Icons.apple` | `signInWithApple()` |
 
-> El botón de Apple usa la variante blanca de las HIG (App Review rechazó la negra por camuflarse con el fondo oscuro de la app — Guideline 4, jul 2026).
+Entre ambos botones hay un `SizedBox(height: 12)` cuando los dos son visibles (iOS con Google habilitado por Remote Config).
+
+> El botón de Apple usa la variante blanca de las HIG (App Review rechazó la negra por camuflarse con el fondo oscuro de la app — Guideline 4, jul 2026). El de Google sigue el branding oficial "Sign in with Google" (tema claro) para diferenciarse del de Apple.
 
 ---
 
