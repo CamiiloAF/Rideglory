@@ -99,7 +99,6 @@ const _eventNames = [
   AnalyticsEvents.eventsListViewed,
   AnalyticsEvents.eventDetailViewed,
   AnalyticsEvents.eventsCreateStarted,
-  AnalyticsEvents.eventsDraftSaved,
   AnalyticsEvents.eventsPublished,
   AnalyticsEvents.eventsPublishFailed,
   AnalyticsEvents.eventsDeleteAttempted,

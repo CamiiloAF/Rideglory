@@ -124,11 +124,6 @@ abstract final class AnalyticsEvents {
   /// Max 40 chars: 'events_create_abandoned'.length == 23. ✓
   static const String eventsCreateAbandoned = 'events_create_abandoned';
 
-  /// El rider guardó el evento como borrador exitosamente.
-  /// Param: [AnalyticsParams.formMode] (`create` | `edit`).
-  /// Max 40 chars: 'events_draft_saved'.length == 18. ✓
-  static const String eventsDraftSaved = 'events_draft_saved';
-
   /// El rider publicó el evento exitosamente.
   /// Param: [AnalyticsParams.formMode] (`create` | `edit`).
   /// Max 40 chars: 'events_published'.length == 16. ✓

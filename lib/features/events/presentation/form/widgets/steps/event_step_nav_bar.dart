@@ -12,7 +12,7 @@ import 'package:rideglory/features/events/presentation/form/widgets/steps/publis
 /// Bottom navigation bar for the multi-step event creation wizard.
 ///
 /// - Steps 1–3: "Atrás" (hidden on step 0) + "Continuar" (validates step before advancing)
-/// - Step 4: "Publicar evento" [AppButton] + "Guardar borrador" [AppTextButton]
+/// - Step 4: "Publicar evento" [AppButton] únicamente
 class EventStepNavBar extends StatelessWidget {
   const EventStepNavBar({super.key});
 

@@ -170,7 +170,6 @@ void main() {
           expect(l10n.event_step_continue, isNotEmpty);
           expect(l10n.event_step_back, isNotEmpty);
           expect(l10n.event_step_of, isNotEmpty);
-          expect(l10n.event_step_saveDraft, isNotEmpty);
           // event_step_progressLabel is a method (parameterized).
           expect(l10n.event_step_progressLabel(1, 4), isNotEmpty);
         },
@@ -189,7 +188,6 @@ void main() {
           final stepValues = [
             l10n.event_step_continue,
             l10n.event_step_back,
-            l10n.event_step_saveDraft,
             l10n.event_step_reviewAndPublish,
           ];
           expect(

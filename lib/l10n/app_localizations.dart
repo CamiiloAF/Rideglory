@@ -664,12 +664,6 @@ abstract class AppLocalizations {
   /// **'Rodada en progreso'**
   String get event_rideInProgress;
 
-  /// No description provided for @event_saveDraft.
-  ///
-  /// In es, this message translates to:
-  /// **'Guardar borrador'**
-  String get event_saveDraft;
-
   /// No description provided for @event_meetingTimePrefix.
   ///
   /// In es, this message translates to:
@@ -5401,24 +5395,6 @@ abstract class AppLocalizations {
   /// **'Borrador'**
   String get event_draftBadge;
 
-  /// No description provided for @draft_myDraftsTitle.
-  ///
-  /// In es, this message translates to:
-  /// **'Mis borradores'**
-  String get draft_myDraftsTitle;
-
-  /// No description provided for @draft_noDrafts.
-  ///
-  /// In es, this message translates to:
-  /// **'No tienes borradores'**
-  String get draft_noDrafts;
-
-  /// No description provided for @draft_noDraftsHint.
-  ///
-  /// In es, this message translates to:
-  /// **'Guarda un evento como borrador para editarlo y publicarlo después'**
-  String get draft_noDraftsHint;
-
   /// No description provided for @draft_publish.
   ///
   /// In es, this message translates to:
@@ -6174,12 +6150,6 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'de'**
   String get event_step_of;
-
-  /// No description provided for @event_step_saveDraft.
-  ///
-  /// In es, this message translates to:
-  /// **'Guardar borrador'**
-  String get event_step_saveDraft;
 
   /// No description provided for @event_step_progressLabel.
   ///

@@ -2,7 +2,6 @@
 //
 // Mandated by Opus auditor for the following ACs:
 //   AC-2  (validation Step 1: empty name blocks nextStep)
-//   AC-4  (saveDraft only in Step 4 / _PublishRow)
 //   AC-5/6/7 (EventStepIndicator states: completed/active/future)
 //   AC-8  (AnimatedSwitcher with ValueKey(currentStep) in EventFormView)
 //   AC-9  (editing mode shows no EventStepIndicator)

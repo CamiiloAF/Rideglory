@@ -312,9 +312,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_rideInProgress => 'Rodada en progreso';
 
   @override
-  String get event_saveDraft => 'Guardar borrador';
-
-  @override
   String get event_meetingTimePrefix => 'Encuentro: ';
 
   @override
@@ -2883,16 +2880,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get event_draftBadge => 'Borrador';
 
   @override
-  String get draft_myDraftsTitle => 'Mis borradores';
-
-  @override
-  String get draft_noDrafts => 'No tienes borradores';
-
-  @override
-  String get draft_noDraftsHint =>
-      'Guarda un evento como borrador para editarlo y publicarlo después';
-
-  @override
   String get draft_publish => 'Publicar evento';
 
   @override
@@ -3321,9 +3308,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_step_of => 'de';
-
-  @override
-  String get event_step_saveDraft => 'Guardar borrador';
 
   @override
   String event_step_progressLabel(int current, int total) {
