@@ -159,6 +159,9 @@ class TecnomecanicaModel with VehicleDocumentExpiry implements VehicleDocumentMo
 
 > `cdaCode` y `certificateNumber` fueron eliminados del modelo (commit `c07aca4`, "eliminar cdaCode y certificateNumber, validar fechas en SOAT y RTM"). El commit también agregó validación de fechas en tiempo real en el formulario (`TecnomecanicaFormPage`) y modo lectura para RTM de vehículos archivados.
 
+### Borrado de cuenta (cascada)
+Al eliminar la cuenta (`DELETE /users/me`), `hardDeleteAllByOwner` en `vehicles-ms` borra (hard-delete) toda fila `Tecnomecanica` de cada vehículo del owner, dentro de la misma transacción Prisma que borra `Soat` y `Vehicle`. El `documentUrl` de la RTM se incluye en el batch best-effort de limpieza de Firebase Storage; una RTM capturada sin foto (`documentUrl: null`) no bloquea el borrado.
+
 ---
 
 ## 10. Analytics

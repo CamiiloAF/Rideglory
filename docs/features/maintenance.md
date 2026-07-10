@@ -584,6 +584,9 @@ Si entras a `/maintenances` sin extra → muestra selector y filtra. Si entras c
 ### Analytics de mantenimiento
 Los tres cubits reciben `AnalyticsService` inyectado y disparan eventos "fire and forget" (`.ignore()`): `maintenanceHistoryViewed` (con `resultCount`, en `fetchMaintenances()`), `maintenanceAdded`/`maintenanceUpdated` (con `maintenanceType` + `maintenanceMode`, en `MaintenanceFormCubit.saveMaintenance()`) y `maintenanceDeleted` (con `maintenanceType`, en `MaintenanceDeleteCubit`).
 
+### Borrado de cuenta (cascada) — soft-delete por `userId`, sin loop por vehículo
+Al eliminar la cuenta (`DELETE /users/me`), `api-gateway` invoca `softDeleteMaintenancesByUserId` en `maintenances-ms`, que hace **soft-delete** (`isDeleted: true`, mismo criterio que el borrado individual) de todos los registros de `Maintenance` del usuario en un único `updateMany({ where: { userId, isDeleted: false } })` — a diferencia de `softDeleteAllByVehicleId` (usado al borrar un vehículo puntual), este paso no necesita loopear por cada `vehicleId` del owner. Es idempotente: correrlo dos veces la segunda vez actualiza 0 filas.
+
 ---
 
 ## 13. Archivos clave de referencia rápida

@@ -543,6 +543,9 @@ El getter solo retorna `valid` / `expiringSoon` / `expired`. `noSoat` se asigna 
 ### `SoatUploadCubit.pickFromFile` solo PDFs
 `allowedExtensions: ['pdf']`. Si se quiere permitir otras extensiones (Excel, Word), modificar este array. Nota: el único consumidor de este cubit es `SoatVehicleOptionsSheet`.
 
+### Borrado de cuenta (cascada)
+Al eliminar la cuenta (`DELETE /users/me`), `hardDeleteAllByOwner` en `vehicles-ms` borra (hard-delete) toda fila `Soat` de cada vehículo del owner, dentro de la misma transacción Prisma que borra `Tecnomecanica` y `Vehicle`. El `documentUrl` del SOAT se incluye en el batch best-effort de limpieza de Firebase Storage; un SOAT capturado sin foto (`documentUrl: null`) no bloquea el borrado.
+
 ---
 
 ## 12. Archivos clave de referencia rápida

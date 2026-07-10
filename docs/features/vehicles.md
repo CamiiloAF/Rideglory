@@ -446,6 +446,8 @@ Hay **dos imágenes** distintas:
 
 **Entry point único**: las tres acciones (archivar, desarchivar, eliminar permanentemente) se disparan desde `GarageOptionsBottomSheet` (`presentation/garage/widgets/garage_options_bottom_sheet.dart`), que muestra opciones distintas según `vehicle.isArchived` — si está archivado: "Restaurar" + "Eliminar permanentemente"; si no: "Marcar como principal" (si no lo es ya), "Editar", "Agregar mantenimiento", "Archivar". Cada acción destructiva pasa antes por `ConfirmationDialog.show()`.
 
+**Borrado de cuenta (cascada)**: al eliminar la cuenta (`DELETE /users/me`), `api-gateway` invoca `hardDeleteAllByOwner` en `vehicles-ms`, que hace **hard-delete** (no soft-delete) de todos los vehículos del owner — junto con sus documentos SOAT y RTM — en una única transacción Prisma. Las imágenes de los vehículos (y de sus documentos) se borran de Firebase Storage en un paso best-effort posterior (un archivo faltante o una URL corrupta no aborta el borrado de cuenta). Un garage vacío completa el flujo sin error.
+
 ---
 
 ## 9. Sub-features
