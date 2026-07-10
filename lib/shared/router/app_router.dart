@@ -42,6 +42,7 @@ import '../../features/authentication/login/presentation/forgot_password_view.da
 import '../../features/authentication/signup/presentation/signup_view.dart';
 import '../../features/profile/presentation/profile_page.dart';
 import '../../features/profile/presentation/edit_profile_page.dart';
+import '../../features/profile/presentation/delete_account_confirmation_page.dart';
 import '../../features/users/domain/model/user_model.dart';
 import '../../features/maintenance/presentation/detail/maintenance_detail_page.dart';
 import '../../features/maintenance/presentation/form/maintenance_form_page.dart';
@@ -346,6 +347,13 @@ class AppRouter {
                       final user = state.extra as UserModel;
                       return EditProfilePage(user: user);
                     },
+                  ),
+                  GoRoute(
+                    parentNavigatorKey: _rootNavigatorKey,
+                    path: 'delete-account',
+                    name: AppRoutes.deleteAccount,
+                    builder: (context, state) =>
+                        const DeleteAccountConfirmationPage(),
                   ),
                 ],
               ),

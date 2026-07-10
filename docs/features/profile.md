@@ -16,6 +16,7 @@
 5. [Estructura de la pantalla](#5-estructura-de-la-pantalla)
 6. [Flujo de edición](#6-flujo-de-edición)
 7. [Logout](#7-logout)
+   - 7.1 [Eliminación de cuenta](#71-eliminación-de-cuenta-eliminacion-cuenta-phase-01)
 8. [Rutas de navegación](#8-rutas-de-navegación)
 9. [API endpoints](#9-api-endpoints)
 10. [Conexiones con otros features](#10-conexiones-con-otros-features)
@@ -202,6 +203,49 @@ Pasos:
 4. `context.goAndClearStack(AppRoutes.login)` — extensión que reemplaza toda la pila por `/login` (definida en `lib/core/extensions/go_router.dart`).
 
 Antes del logout se muestra `ConfirmationDialog.show(...)` con `dialogType: warning` y `confirmType: danger`.
+
+---
+
+## 7.1 Eliminación de cuenta (`eliminacion-cuenta-phase-01`)
+
+Item destructivo "Eliminar cuenta" en `ProfileActionsList` (bajo "Cerrar sesión", mismo estilo
+rojo/error, sin chevron) navega vía `context.pushNamed(AppRoutes.deleteAccount)` a
+`DeleteAccountConfirmationPage` — a diferencia de logout, la confirmación NO es un
+`ConfirmationDialog` directo desde la lista, sino una pantalla dedicada.
+
+**`DeleteAccountConfirmationPage`** (`lib/features/profile/presentation/delete_account_confirmation_page.dart`):
+- `StatefulWidget` que provee `DeleteAccountCubit` (`GetIt.instance`, `BlocProvider.value` local —
+  cubit de una sola pantalla, no en el `MultiBlocProvider` raíz).
+- Estado local `_understood` (bool) controla si el `AppSwitchTile` "Entiendo que esta acción es
+  irreversible" está activo; el botón de confirmación permanece deshabilitado hasta activarlo.
+- Lista "Qué se elimina" (`DeleteAccountWhatGetsDeletedList` + `DeleteAccountListRow`): perfil,
+  motos/documentos, historial de mantenimiento, historial de eventos — se muestra completa desde
+  el día uno aunque el borrado de vehículos/eventos todavía sea un no-op en el backend (fases 2/3).
+- Al tocar el botón habilitado, se abre un `ConfirmationDialog` (segunda confirmación, patrón de
+  `_logout`); solo al confirmar ahí se invoca `DeleteAccountCubit.deleteAccount()`.
+- Estados vía `BlocBuilder<DeleteAccountCubit, ResultState<Nothing>>`: `loading` deshabilita el
+  botón y muestra un spinner en vez del label (guard de doble-tap en el cubit); `error` muestra
+  `DeleteAccountErrorBanner` (mensaje genérico en español, sin exponer detalles de backend) y el
+  botón cambia a "Reintentar".
+- En éxito (`Data<Nothing>`, vía `BlocListener`), replica el bloque de `_logout()`:
+  `AuthCubit.signOut()` + `VehicleCubit.clearVehicles()` + `ProfileCubit.reset()` +
+  `context.goAndClearStack(AppRoutes.login)`.
+
+**Capa domain/data:** `DeleteAccountUseCase` → `UserRepository.deleteMyAccount()` →
+`UserService.deleteMyAccount()` (`@DELETE(ApiRoutes.me)`) → `DELETE /api/users/me`, sin body,
+`uid` resuelto del token por el backend. Retorna `Either<DomainException, Nothing>`.
+
+**Ruta:** `AppRoutes.deleteAccount` (`/profile/delete-account`), `GoRoute` hijo de `/profile` en
+`app_router.dart`.
+
+**Analítica (sin PII):** `AnalyticsEvents.accountDeletionStarted/Confirmed/Failed`.
+
+**Widget tests:** `test/features/profile/presentation/delete_account_confirmation_page_test.dart`
+cubre switch habilitando el botón, el diálogo de segunda confirmación disparando el cubit, estado
+`loading` (spinner sin label) y estado `error` (banner + "Reintentar").
+
+**Pendiente:** pruebas manuales de navegación real desde Perfil y del flujo de éxito end-to-end
+(ver `docs/exec-runs/eliminacion-cuenta-phase-01/QA_CHECKLIST.md`, sección 3B').
 
 ---
 

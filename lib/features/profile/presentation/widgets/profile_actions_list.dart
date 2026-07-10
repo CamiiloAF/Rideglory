@@ -65,6 +65,15 @@ class ProfileActionsList extends StatelessWidget {
               );
             },
           ),
+          const ProfileMenuDivider(),
+          ProfileMenuItem(
+            icon: Icons.delete_outline,
+            label: context.l10n.profile_deleteAccount_menuItem,
+            iconColor: AppColors.error,
+            labelColor: AppColors.error,
+            showChevron: false,
+            onTap: () => context.pushNamed(AppRoutes.deleteAccount),
+          ),
         ],
       ),
     );

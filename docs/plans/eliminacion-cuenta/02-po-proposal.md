@@ -1,0 +1,37 @@
+# PO proposal — Eliminación de cuenta
+
+_Generado: 2026-07-07T15:53:40Z_
+
+## Fases propuestas
+
+| # | Título | Objetivo (valor) | Resumen |
+|---|--------|-------------------|---------|
+| 1 | Eliminación de cuenta — núcleo de identidad | Como rider, puedo pedir la eliminación de mi cuenta desde el perfil y, tras confirmar dos veces que entiendo que es irreversible, la app borra mi identidad (perfil, credenciales, token de notificaciones) y me regresa a la pantalla de login. | Añade el ítem "Eliminar cuenta" en `ProfileActionsList` con el mismo patrón visual de "Cerrar sesión" (`ConfirmationDialog` tipo danger) pero con una segunda confirmación explícita por ser una acción irreversible de mayor peso. Al confirmar, la app llama a un nuevo endpoint de borrado que elimina el perfil del rider (nombre, email, foto, datos médicos), su token de notificaciones push y su cuenta de autenticación, y lo desloguea. Cubre el mínimo exigible por la revisión de App Store: crear cuenta → poder eliminarla dentro de la app, sin depender de correo/soporte externo. |
+| 2 | Eliminación de cuenta — vehículos y documentos | Como rider que elimina su cuenta, también desaparecen mis motos, sus fotos, mi historial de mantenimientos y mis documentos de SOAT/RTM, cumpliendo la promesa pública de "eliminación inmediata" para todos mis datos de garaje. | Extiende el flujo de la fase 1 (misma pantalla, mismo botón, sin cambios visibles nuevos para el usuario) para que el borrado de cuenta también elimine todas las motos registradas del rider, sus fotos asociadas, el historial completo de mantenimientos y los documentos SOAT/RTM (y sus imágenes). El rider ve el mismo flujo de confirmación de la fase 1; el resultado observable es que, tras eliminar la cuenta y crear una nueva con el mismo correo, no encuentra rastro de su garaje anterior. |
+| 3 | Eliminación de cuenta — historial de eventos y organizadores activos | Como rider que elimina su cuenta, mi historial de participación en eventos deja de mostrar mis datos personales (aunque las estadísticas del evento se conserven); y si soy organizador con eventos activos, la app me explica claramente que debo cancelar o transferir esos eventos antes de poder eliminar mi cuenta. | Completa la cobertura de datos prometida en la página pública: los registros de participación en eventos pasados del rider quedan anonimizados (no borrados) preservando los agregados del evento. Si el rider tiene eventos activos como organizador, el intento de eliminar cuenta se detiene con un mensaje claro que indica qué debe hacer primero (cancelar o transferir), en vez de fallar de forma confusa o dejar eventos huérfanos. |
+| 4 | Eliminación de cuenta — manejo de fallas y estados intermedios | Como rider, si la eliminación de mi cuenta falla a mitad de camino o cierro la app mientras está en curso, entiendo qué pasó y puedo reintentar sin quedar en un estado de cuenta ambiguo o dañado. | Cubre los bordes operativos: mensajes de error claros y accionables cuando el borrado falla (con opción de reintentar), y comportamiento definido si el usuario cierra la app durante el proceso (al reabrir, la sesión ya es inválida o el rider puede reintentar la eliminación con seguridad, sin duplicar efectos ni ver datos fantasma). Esta fase no agrega superficie visible nueva más allá de estados de error/carga sobre el mismo flujo de las fases 1–3. |
+
+## Supuestos
+
+- **Organizador con eventos activos**: se decide bloquear la eliminación (no cancelar automáticamente ni permitir continuar en silencio) hasta que el organizador cancele o transfiera sus eventos activos. Es la opción más determinista y transparente para el usuario, y evita efectos secundarios sorpresivos sobre terceros (asistentes de eventos que quedarían huérfanos).
+- **Alcance de "borrado" vs. "anonimización"** sigue exactamente la promesa ya publicada en `docs/web/delete-account.html`: borrado real para perfil, vehículos, mantenimientos, documentos y token de notificaciones; anonimización (no borrado) solo para el historial de participación en eventos.
+- **Reutilización de correo tras eliminar**: se preserva el comportamiento ya publicado — no hay lista negra de emails; un usuario puede volver a registrarse con el mismo correo después de eliminar su cuenta.
+- **Retención de logs técnicos (30 días)** mencionada en la página pública se documenta como fuera de alcance de estas fases (deuda o promesa de copy sin mecanismo verificado); no se implementa aquí.
+- El **video de demostración para Apple** es un entregable operativo posterior a la implementación (grabación en dispositivo físico), no una fase de este plan.
+- Hay ~10 usuarios reales en producción (confirmado 2026-07-10). El enfoque de borrado directo (sin migraciones de datos históricos) en las fases 1 y 2 se mantiene — es la promesa ya publicada y 10 usuarios no ameritan infraestructura de migración — pero implica que ninguna prueba destructiva del flujo puede correr contra esos usuarios reales; debe usarse siempre una cuenta QA desechable.
+
+## Riesgos
+
+- Si las fases 1 y 2 se liberan por separado y una build llega a revisión de Apple solo con la fase 1 completa, el revisor podría notar que motos/documentos de una cuenta de prueba no se eliminan de inmediato, contradiciendo la página pública ya citada como referencia — conviene agrupar 1+2 antes de la próxima re-sumisión.
+- La decisión de **bloquear a organizadores con eventos activos** (fase 3) añade fricción; si el mensaje en la app no es suficientemente claro sobre qué acción tomar (cancelar vs. transferir), el usuario puede quedar atascado sin poder eliminar su cuenta.
+- El **manejo de fallas parciales** (fase 4) depende de que las fases 1–3 ya tengan definido un orden de operaciones consistente; si ese orden cambia durante la implementación, la lógica de reintento de la fase 4 debe revisarse.
+- La **anonimización de historial de eventos** (fase 3) debe verificarse que no rompa las estadísticas agregadas ni reportes existentes que dependan de los campos personales que se van a limpiar.
+- No existen hoy usuarios/datos de prueba con historial rico en todos los tipos de datos (vehículos, mantenimientos, documentos, eventos) simultáneamente — verificar en QA que exista o se cree un escenario de prueba completo antes de dar por cerrada cada fase.
+
+## Criterios de éxito globales
+
+- Un rider puede crear una cuenta, poblarla con datos (vehículo, mantenimiento, documento, registro a un evento) y eliminarla completamente desde dentro de la app, sin depender de correo o soporte externo — grabable en un solo video continuo para la revisión de Apple.
+- Tras eliminar la cuenta, ninguno de los datos prometidos como "eliminados" (perfil, vehículos, fotos, mantenimientos, documentos, token de notificaciones) es recuperable ni visible en ningún flujo de la app o de una cuenta nueva con el mismo correo.
+- El historial de participación en eventos del rider queda anonimizado (no identificable), pero los agregados/estadísticas de los eventos en los que participó se mantienen intactos.
+- Un organizador con eventos activos recibe un mensaje claro y accionable antes de poder eliminar su cuenta; nunca queda un evento huérfano como efecto secundario silencioso.
+- Ninguna falla parcial del proceso de borrado deja a un rider en un estado ambiguo: siempre puede reintentar, y nunca ve datos fantasma ni queda con una sesión que parece válida pero no lo es.

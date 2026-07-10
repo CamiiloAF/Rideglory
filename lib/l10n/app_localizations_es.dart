@@ -1230,6 +1230,68 @@ class AppLocalizationsEs extends AppLocalizations {
       'No pudimos guardar tu preferencia. Inténtalo de nuevo.';
 
   @override
+  String get profile_deleteAccount_menuItem => 'Eliminar cuenta';
+
+  @override
+  String get profile_deleteAccount_pageTitle => 'Eliminar cuenta';
+
+  @override
+  String get profile_deleteAccount_introTitle => '¿Eliminar tu cuenta?';
+
+  @override
+  String get profile_deleteAccount_introBody =>
+      'Esta acción es permanente y no se puede deshacer. Perderás acceso a toda tu información en Rideglory.';
+
+  @override
+  String get profile_deleteAccount_listLabel => 'QUÉ SE ELIMINA';
+
+  @override
+  String get profile_deleteAccount_itemProfileTitle => 'Tu perfil';
+
+  @override
+  String get profile_deleteAccount_itemProfileDesc =>
+      'Nombre, foto, biografía y credenciales';
+
+  @override
+  String get profile_deleteAccount_itemVehiclesTitle => 'Tus motos';
+
+  @override
+  String get profile_deleteAccount_itemVehiclesDesc =>
+      'Vehículos, fotos y documentos SOAT/RTM';
+
+  @override
+  String get profile_deleteAccount_itemMaintenanceTitle =>
+      'Historial de mantenimiento';
+
+  @override
+  String get profile_deleteAccount_itemMaintenanceDesc =>
+      'Todos los registros de tus motos';
+
+  @override
+  String get profile_deleteAccount_itemEventsTitle => 'Historial de eventos';
+
+  @override
+  String get profile_deleteAccount_itemEventsDesc =>
+      'Se anonimiza tu participación, no se borra';
+
+  @override
+  String get profile_deleteAccount_irreversibleSwitchLabel =>
+      'Entiendo que esta acción es irreversible';
+
+  @override
+  String get profile_deleteAccount_confirmButton => 'Eliminar cuenta';
+
+  @override
+  String get profile_deleteAccount_confirmButtonLoading => 'Eliminando…';
+
+  @override
+  String get profile_deleteAccount_errorMessage =>
+      'No pudimos eliminar tu cuenta. Verifica tu conexión e intenta de nuevo.';
+
+  @override
+  String get profile_deleteAccount_retryButton => 'Reintentar';
+
+  @override
   String get registration_registrationPageTitle => 'Inscripción al Evento';
 
   @override

@@ -6,6 +6,7 @@ abstract class AppRoutes {
   static const String home = '/home';
   static const String profile = '/profile';
   static const String editProfile = '/profile/edit';
+  static const String deleteAccount = '/profile/delete-account';
 
   // Authentication routes
   static const String login = '/login';

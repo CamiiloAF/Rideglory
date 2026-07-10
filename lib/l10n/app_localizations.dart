@@ -2392,6 +2392,114 @@ abstract class AppLocalizations {
   /// **'No pudimos guardar tu preferencia. Inténtalo de nuevo.'**
   String get profile_analyticsOptOutSaveError;
 
+  /// No description provided for @profile_deleteAccount_menuItem.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar cuenta'**
+  String get profile_deleteAccount_menuItem;
+
+  /// No description provided for @profile_deleteAccount_pageTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar cuenta'**
+  String get profile_deleteAccount_pageTitle;
+
+  /// No description provided for @profile_deleteAccount_introTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar tu cuenta?'**
+  String get profile_deleteAccount_introTitle;
+
+  /// No description provided for @profile_deleteAccount_introBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta acción es permanente y no se puede deshacer. Perderás acceso a toda tu información en Rideglory.'**
+  String get profile_deleteAccount_introBody;
+
+  /// No description provided for @profile_deleteAccount_listLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'QUÉ SE ELIMINA'**
+  String get profile_deleteAccount_listLabel;
+
+  /// No description provided for @profile_deleteAccount_itemProfileTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu perfil'**
+  String get profile_deleteAccount_itemProfileTitle;
+
+  /// No description provided for @profile_deleteAccount_itemProfileDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre, foto, biografía y credenciales'**
+  String get profile_deleteAccount_itemProfileDesc;
+
+  /// No description provided for @profile_deleteAccount_itemVehiclesTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Tus motos'**
+  String get profile_deleteAccount_itemVehiclesTitle;
+
+  /// No description provided for @profile_deleteAccount_itemVehiclesDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Vehículos, fotos y documentos SOAT/RTM'**
+  String get profile_deleteAccount_itemVehiclesDesc;
+
+  /// No description provided for @profile_deleteAccount_itemMaintenanceTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Historial de mantenimiento'**
+  String get profile_deleteAccount_itemMaintenanceTitle;
+
+  /// No description provided for @profile_deleteAccount_itemMaintenanceDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Todos los registros de tus motos'**
+  String get profile_deleteAccount_itemMaintenanceDesc;
+
+  /// No description provided for @profile_deleteAccount_itemEventsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Historial de eventos'**
+  String get profile_deleteAccount_itemEventsTitle;
+
+  /// No description provided for @profile_deleteAccount_itemEventsDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Se anonimiza tu participación, no se borra'**
+  String get profile_deleteAccount_itemEventsDesc;
+
+  /// No description provided for @profile_deleteAccount_irreversibleSwitchLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Entiendo que esta acción es irreversible'**
+  String get profile_deleteAccount_irreversibleSwitchLabel;
+
+  /// No description provided for @profile_deleteAccount_confirmButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar cuenta'**
+  String get profile_deleteAccount_confirmButton;
+
+  /// No description provided for @profile_deleteAccount_confirmButtonLoading.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminando…'**
+  String get profile_deleteAccount_confirmButtonLoading;
+
+  /// No description provided for @profile_deleteAccount_errorMessage.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos eliminar tu cuenta. Verifica tu conexión e intenta de nuevo.'**
+  String get profile_deleteAccount_errorMessage;
+
+  /// No description provided for @profile_deleteAccount_retryButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get profile_deleteAccount_retryButton;
+
   /// No description provided for @registration_registrationPageTitle.
   ///
   /// In es, this message translates to:

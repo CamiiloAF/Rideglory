@@ -451,4 +451,23 @@ abstract final class AnalyticsEvents {
   /// Tap en CTA "Ver eventos" en la tarjeta de home vacía (navegación pura).
   /// Max 40 chars: 'home_empty_events_cta'.length == 21. ✓
   static const String homeEmptyEventsCta = 'home_empty_events_cta';
+
+  // ---------------------------------------------------------------------------
+  // Eliminación de cuenta
+  // ---------------------------------------------------------------------------
+
+  /// El rider abre la pantalla de confirmación de eliminación de cuenta
+  /// (tap en el item destructivo de `ProfileActionsList`). Sin params.
+  /// Max 40 chars: 'account_deletion_started'.length == 24. ✓
+  static const String accountDeletionStarted = 'account_deletion_started';
+
+  /// El borrado de cuenta se confirmó exitosamente (backend respondió 204).
+  /// Se emite justo antes del logout/navegación a login. Sin params.
+  /// Max 40 chars: 'account_deletion_confirmed'.length == 26. ✓
+  static const String accountDeletionConfirmed = 'account_deletion_confirmed';
+
+  /// El borrado de cuenta falló (error de backend/red). Sin PII — no incluye
+  /// el mensaje de error crudo, solo la señal de que falló.
+  /// Max 40 chars: 'account_deletion_failed'.length == 23. ✓
+  static const String accountDeletionFailed = 'account_deletion_failed';
 }

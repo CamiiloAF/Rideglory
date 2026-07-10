@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rideglory/core/domain/nothing.dart';
 import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/core/http/rest_client_functions.dart';
 import 'package:rideglory/features/users/data/dto/create_user_dto.dart';
@@ -35,5 +36,15 @@ class UserRepositoryImpl implements UserRepository {
   @override
   Future<Either<DomainException, UserModel>> getUserById(String userId) {
     return executeService(function: () => _userService.getUserById(userId));
+  }
+
+  @override
+  Future<Either<DomainException, Nothing>> deleteMyAccount() {
+    return executeService(
+      function: () async {
+        await _userService.deleteMyAccount();
+        return const Nothing();
+      },
+    );
   }
 }

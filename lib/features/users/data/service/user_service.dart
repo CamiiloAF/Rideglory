@@ -26,4 +26,7 @@ abstract class UserService {
     @Path('id') String id,
     @Body() Map<String, dynamic> body,
   );
+
+  @DELETE(ApiRoutes.me)
+  Future<void> deleteMyAccount();
 }
