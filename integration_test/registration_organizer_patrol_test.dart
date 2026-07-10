@@ -104,7 +104,11 @@ Future<void> _runOrganizerRegistrationFlow(PatrolIntegrationTester $) async {
     return;
   }
 
-  await $(EventDetailParticipantRow).first.tap();
+  // La fila puede quedar fuera del viewport (bajo el pliegue, cerca del
+  // borde donde se dibuja `EventDetailOwnerLifecycleBar` fijo abajo) tras
+  // centrar el header "Inscritos" en el paso anterior — se necesita
+  // `.scrollTo()` antes del tap, mismo gotcha que en otros tests Patrol.
+  await $(EventDetailParticipantRow).first.scrollTo().tap();
   await _settle($, 3);
 
   // 5. Detalle de inscripción en modo organizador: si el piloto autorizó el
