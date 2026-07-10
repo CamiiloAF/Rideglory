@@ -1,6 +1,6 @@
 # Documentación del Feature: Users
 
-> Última actualización: 2026-05-28  
+> Última actualización: 2026-07-04
 > Alcance: `lib/features/users/`
 
 ---
@@ -253,12 +253,12 @@ return BlocProvider(
 Estructura visual (todo center-aligned):
 1. `RiderAvatar(initials)` — círculo 88px con gradient primary y iniciales.
 2. `fullName` (22px bold).
-3. `email` (13px secondary) — opcional.
+3. `email` — **ya NO se muestra en el perfil de otro usuario** (commit `6cbd85c`, "ocultar email en perfil ajeno"). El email solo es visible en el propio perfil (`profile.md`).
 4. `residenceCity` con icono `location_on_outlined` — opcional.
 5. `RiderStatsRow` — 3 celdas: events, followers, following. **Todas hardcoded a "0"**.
-6. Botón "Seguir" — `AppButton` con `onPressed: {}` (no-op).
+6. Botón "Seguir" — al tocarlo abre un bottom sheet "Próximamente" (commit `6cbd85c`); no realiza ninguna acción de follow/unfollow real.
 
-> El botón "Seguir" no hace nada actualmente. Sin endpoint de follow/unfollow ni cubit que lo maneje.
+> El botón "Seguir" no ejecuta una acción de follow real: solo informa al usuario que la funcionalidad llegará más adelante. Sin endpoint de follow/unfollow ni cubit que lo maneje todavía.
 
 ---
 
@@ -336,6 +336,7 @@ Otras rutas relacionadas con usuario están en otros features:
 | `POST` | `/users/sign-up` | `AuthService._registerApiUser` | Body: `{fullName, email}` → `UserDto` |
 | `GET` | `/users/me` | `UserRepository.getCurrentUser` | → `UserDto` |
 | `GET` | `/users/{id}` | `UserRepository.getUserById` | → `UserDto` |
+| `DELETE` | `/users/me` | `UserRepository.deleteMyAccount` (`DeleteAccountUseCase`) | Sin body → `204 No Content`. Hard delete irreversible (`eliminacion-cuenta-phase-01`); ver `profile.md` §7.1 para el estado del flujo de UI (bloqueado por diseño). |
 
 Constantes: `ApiRoutes.signUp = '/users/sign-up'`, `ApiRoutes.me = '/users/me'`. El path `/users/{id}` está hardcoded en `UserService`.
 
@@ -370,8 +371,11 @@ A diferencia de `SharedPreferences`, el storage usa keychain/keystore. **No es p
 ### Stats hardcoded en UI
 `RiderStatsRow` siempre muestra "0/0/0". El modelo no tiene campos para events/followers/following. Si se quiere implementar, agregar al backend + modelo.
 
-### Botón "Seguir" inactivo
-`onPressed: {}` en `RiderProfileContent`. Sin endpoint follow/unfollow. Si se implementa, considerar agregar `FollowCubit` o similar.
+### Botón "Seguir" muestra bottom sheet "Próximamente"
+No ejecuta follow/unfollow real; abre un bottom sheet informativo. Sin endpoint follow/unfollow. Si se implementa, considerar agregar `FollowCubit` o similar.
+
+### Email oculto en perfil ajeno
+`RiderProfileContent` ya no renderiza el `email` del `UserModel` (commit `6cbd85c`). Es una decisión de privacidad: el email solo debe verse en el perfil propio (`profile.md`), nunca en el de otro rider.
 
 ### `GetCurrentUserIdUseCase` delega a `AuthService`
 Atípico para Clean Architecture, pero práctico. El `AuthService` mantiene el `currentUser` cacheado en memoria. Si se quiere desacoplar, hay que exponerlo via repository.

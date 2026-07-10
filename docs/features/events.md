@@ -1,6 +1,6 @@
 # Documentación del Feature: Events
 
-> Última actualización: 2026-06-11  
+> Última actualización: 2026-07-04
 > Alcance: `lib/features/events/`
 
 > Esta documentación cubre únicamente el feature `events/`. El feature de inscripciones, antes incluido aquí, se separó a [event_registration.md](./event_registration.md).
@@ -56,8 +56,6 @@ EventModel
   startDate: DateTime                      (requerido)
   endDate: DateTime?                       — null = evento de un día
   difficulty: EventDifficulty              (requerido, 1–5)
-  meetingPoint: String                     — nombre textual
-  destination: String                      — nombre textual
   meetingTime: DateTime                    — la fecha es ignorada, solo hora
   eventType: EventType                     (requerido)
   allowedBrands: List<String>              (default [])
@@ -69,13 +67,19 @@ EventModel
   state: EventState                        (default scheduled)
   waypoints: List<String>                  (default []) — nombres textuales
   routeGeoJson: Map<String, dynamic>?      — {routeType, points: [{lat, lng, label}]}
+  organizerAcceptedResponsibilityAt: DateTime?  — sello de aceptación de responsabilidad del organizador
+  sosTriggeredAt: DateTime?                — sello de un SOS activado durante el evento
 ```
+
+**`meetingPoint` y `destination` ya NO son campos almacenados** — son **getters computados** desde `routeGeoJson`/`routePoints` (`event_model.dart:98-103`). El enum `RouteType` (simple/custom) **fue eliminado**; todo el flujo de ruta usa waypoints (`routeGeoJson['routeType']` sigue existiendo como string literal `'custom'`, pero no hay un tipo `simple` ni selector en la UI).
 
 **Getters calculados:**
 - `isFree` → `price == null || price == 0`.
 - `isMultiBrand` → `allowedBrands.isEmpty`.
 - `isMultiDay` → `endDate != null`.
 - `routePoints` → parsea `routeGeoJson['points']` a `List<AddressLocation>` para Mapbox.
+- `meetingPoint` / `destination` → derivados de `routePoints` (primer/último punto).
+- `hasEnded` → `state == EventState.finished || state == EventState.cancelled` (`event_model.dart:177-178`). Usado para bloquear acciones de gestión (ej. `AttendeesList` deja de permitir aprobar/rechazar cuando `hasEnded`).
 
 **Igualdad**: solo por `id` (`==` y `hashCode`). **Trampa**: dos eventos con `id == null` se consideran iguales (hash 0).
 
@@ -94,8 +98,6 @@ EventModel
 **`EventDifficulty`** — 5 niveles con `value: int` (1–5), `label` con chiles y `shortLabel`. `fromValue(int)` hace lookup inverso (default `one` si no coincide).
 
 **`EventState`** — `draft`, `scheduled`, `inProgress`, `cancelled`, `finished`.
-
-**`RouteType`** (en `constants/event_form_fields.dart`) — `simple`, `custom`.
 
 ### `RiderTrackingModel`
 > `domain/model/rider_tracking_model.dart`
@@ -158,7 +160,6 @@ localImagePath, eventId?, ownerId?
 
 | Acción | Cubit method | Endpoint | Restricción |
 |---|---|---|---|
-| Guardar borrador | `EventFormCubit.saveDraft()` | `POST/PATCH /events` | `state=draft`, solo requiere `name` |
 | Publicar | `EventDetailCubit.publishEvent()` | `PATCH /events/:id/publish` | Solo owner |
 | Iniciar | `EventDetailCubit.startEvent()` | `POST /events/:id/tracking/start` | Solo owner, estado scheduled |
 | Finalizar | `EventDetailCubit.stopEvent()` | `POST /events/:id/tracking/end` | Solo owner, estado inProgress |
@@ -332,8 +333,6 @@ lib/features/events/presentation/
 │   └── widgets/
 ├── delete/
 │   └── cubit/event_delete_cubit.dart
-├── drafts/
-│   └── my_drafts_page.dart
 └── shared/
     ├── dialogs/cancel_registration_dialog.dart
     └── widgets/
@@ -403,8 +402,6 @@ Métodos clave:
 - `saveEvent(event, {localCoverImagePath?, remoteCoverImageUrl?})`.
 - `generateCover({title, eventType})`, `resetCoverGeneration()`.
 - `buildEventToSave() → EventModel?` — valida y construye.
-- `buildDraftToSave() → EventModel?` — solo requiere `name`.
-- `saveDraft({localCoverImagePath?, remoteCoverImageUrl?})`.
 
 ### `EventDetailState` (freezed)
 ```dart
@@ -569,6 +566,8 @@ Lead tap "Terminar rodada" → EndRideConfirmDialog
   → LiveTrackingSessionHolder.stopSessionForEvent() → cierra cubit
 ```
 
+`LiveTrackingCubit` se suscribe a `_trackingRepository.eventEnded` (`_eventEndedSubscription`); al recibir el evento cancela la suscripción e invoca `StopTrackingUseCase` (GPS + WS), garantizando cleanup incluso si el rider no fue quien terminó la rodada. En el detalle, `event.hasEnded` (`finished`/`cancelled`) oculta la barra de controles del owner (start/stop/SOS/mapa).
+
 ---
 
 ## 7. Sub-features
@@ -582,18 +581,19 @@ Lead tap "Terminar rodada" → EndRideConfirmDialog
 1. Cover (local o IA via `generateCover`).
 2. Basic info: name + description (Quill).
 3. Date/time: rango + toggle multi-day + meetingTime.
-4. Locations: tipo de ruta + meeting + destination (o constructor custom).
+4. Locations: constructor de ruta por waypoints (sin selector simple/custom — ver abajo).
 5. Difficulty: 1–5 chiles.
 6. Event type: chips.
 7. Multi-brand: toggle + selector.
 8. Max participants.
 9. Price.
+10. Responsabilidad del organizador: `EventOrganizerResponsibilitySheet` (bottom sheet) — el organizador debe aceptar explícitamente antes de publicar; al confirmar, setea `organizerAcceptedResponsibilityAt` en el evento a guardar.
 
 Constantes en `EventFormFields` (clase abstracta con string constants).
 
 ### Constructor de ruta personalizada (`form/screens/event_route_config_screen.dart`)
-- Hasta 9 waypoints.
-- Búsqueda textual (`PlaceService` Mapbox Geocoding) o "Seleccionar en mapa" (pin centrado + geocoding inverso).
+- Hasta 9 waypoints. **No hay selector de tipo de ruta simple/custom** — el flujo unificado siempre es por waypoints (el `RouteType` enum fue eliminado).
+- Búsqueda textual (`PlaceService` Mapbox Geocoding) o "Seleccionar en mapa" (pin centrado + geocoding inverso, toggle vía `_togglePickMode()`).
 - Renderiza pin numerado (verde primer, naranja resto) + polyline naranja (`#F98C1F`).
 - `cameraForCoordinatesPadding` ajusta la cámara para mostrar todos los puntos.
 
@@ -601,7 +601,8 @@ Constantes en `EventFormFields` (clase abstracta con string constants).
 - `EventDetailPage` recibe `EventModel` completo.
 - `EventDetailByIdPage` recibe `String id`, llama `loadEvent()` (usado en deep links).
 - `EventDetailView` mantiene `currentEvent` mutable local; listener de `lastUpdatedEventResult` lo sincroniza.
-- Owner ve `EventDetailOwnerLifecycleBar` (start/stop/publish/mapa); rider ve `EventDetailCTABar` (inscribirse/seguir/cancelar según estado).
+- **Rediseño "Hero fullscreen"** (`presentation/detail/widgets/`): `EventDetailHeroSection`, `EventDetailHeaderSection`, `EventDetailHeaderBackground`, `EventDetailHeaderOverlayGradient`, `EventDetailStatusBadge`, `EventDetailDiffPill`, `EventDetailStartedBanner` — cabecera con imagen a pantalla completa, badge de estado y pill de dificultad superpuestos.
+- Owner ve `EventDetailOwnerLifecycleBar` (start/stop/publish/mapa); rider ve `EventDetailCTABar` (inscribirse/seguir/cancelar según estado). La barra de owner (lifecycle/live/SOS) solo se muestra si `state` es `draft`, `scheduled` o `inProgress` — se oculta implícitamente cuando `event.hasEnded` (`finished`/`cancelled`).
 - `PopScope` custom: si viene desde lista, pop retorna `EventModel` actualizado para refrescar el cache de la lista sin re-fetch.
 
 ### Asistentes (`/events/attendees`) — "Gestionar Inscritos" (Pencil `IUxas`)
@@ -615,9 +616,6 @@ Constantes en `EventFormFields` (clase abstracta con string constants).
 ### Live tracking (`/events/live-map`)
 Ver §6.
 
-### Borradores (`/events/drafts`)
-`MyDraftsPage` usa `EventsCubit.myEvents` con filtro local `EventState.draft`. Continúa edición via `editEvent`.
-
 ---
 
 ## 8. Rutas de navegación
@@ -625,7 +623,6 @@ Ver §6.
 ```dart
 AppRoutes.events              → '/events'
 AppRoutes.myEvents            → '/events/mine'
-AppRoutes.myDrafts            → '/events/drafts'
 AppRoutes.createEvent         → '/events/create'
 AppRoutes.editEvent           → '/events/edit'           extra: EventModel?
 AppRoutes.eventDetail         → '/events/detail'         extra: EventModel
@@ -800,7 +797,13 @@ Ver `tracking_location_settings.dart`. Si se cambian estos valores, ajustar el t
 Mencionado en `authentication.md`. No es directamente del feature events, pero `AuthCubit` lo usa al autenticar para poder tracking.
 
 ### `EventState` default es `scheduled`
-Si se omite el campo en el modelo (creación nueva sin pasar state), defaultea a `scheduled`. Para crear un borrador, hay que setearlo explícitamente a `EventState.draft`.
+Si se omite el campo en el modelo (creación nueva sin pasar state), defaultea a `scheduled`. `EventState.draft` sigue siendo un estado válido que puede llegar del backend, pero **no hay ningún camino de UI en el cliente para crear un evento en ese estado** — la funcionalidad de "guardar borrador" (`EventFormCubit.saveDraft()`/`buildDraftToSave()`, `MyDraftsPage`) fue eliminada por ser código muerto sin callsite.
+
+### Edad mínima de 18 años
+No vive en `EventModel` sino en la **inscripción** (`RegistrationFormCubit._calculateAge(birthDate) < 18`, feature `event_registration`). Ver `event_registration.md`.
+
+### Bottom sheet de responsabilidad del organizador
+`EventOrganizerResponsibilitySheet` (`form/widgets/`) exige aceptación explícita antes de publicar; al confirmar, setea `organizerAcceptedResponsibilityAt` en el evento. No es un simple checkbox inline — es un paso bloqueante del flujo de publicación.
 
 ---
 
@@ -835,7 +838,6 @@ Si se omite el campo en el modelo (creación nueva sin pasar state), defaultea a
 | Page live map | `lib/features/events/presentation/tracking/live_map_page.dart` |
 | Cubit asistentes | `lib/features/events/presentation/attendees/attendees_cubit.dart` |
 | Cubit borrar | `lib/features/events/presentation/delete/cubit/event_delete_cubit.dart` |
-| Page borradores | `lib/features/events/presentation/drafts/my_drafts_page.dart` |
 | Constantes del form | `lib/features/events/constants/event_form_fields.dart` |
 | Endpoints API | `lib/core/http/api_routes.dart` |
 | Rutas app | `lib/shared/router/app_routes.dart` |

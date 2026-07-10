@@ -1,8 +1,11 @@
-// Analytics tests — Fase 9: MaintenanceDeleteCubit
+// Tests de MaintenanceDeleteCubit: máquina de estados + analytics.
 // Verifica:
+//   deleteMaintenance exitoso emite loading -> success(deletedId) con el id correcto.
+//   deleteMaintenance fallido emite loading -> error(message) legible.
 //   maintenance_deleted se emite al borrar exitosamente (con maintenanceType correcto).
 //   maintenance_deleted NO se emite si el use case falla.
 
+import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -48,6 +51,60 @@ void main() {
   });
 
   tearDown(() => cubit.close());
+
+  group('MaintenanceDeleteCubit — máquina de estados', () {
+    // TC-maint-del-s1: borrado exitoso emite loading -> success(deletedId)
+    blocTest<MaintenanceDeleteCubit, MaintenanceDeleteState>(
+      'TC-maint-del-s1: deleteMaintenance exitoso emite '
+      'loading y luego success con el deletedId correcto',
+      build: () {
+        when(
+          () => mockDelete(any()),
+        ).thenAnswer((_) async => const Right(Nothing()));
+        return cubit;
+      },
+      act: (cubit) => cubit.deleteMaintenance(maintenanceToDelete),
+      expect: () => [
+        const MaintenanceDeleteState.loading(),
+        const MaintenanceDeleteState.success(deletedId: 'maint-99'),
+      ],
+    );
+
+    // TC-maint-del-s2: borrado fallido emite loading -> error(message)
+    blocTest<MaintenanceDeleteCubit, MaintenanceDeleteState>(
+      'TC-maint-del-s2: deleteMaintenance fallido emite '
+      'loading y luego error con un mensaje legible',
+      build: () {
+        when(() => mockDelete(any())).thenAnswer(
+          (_) async =>
+              const Left(DomainException(message: 'No se pudo borrar')),
+        );
+        return cubit;
+      },
+      act: (cubit) => cubit.deleteMaintenance(maintenanceToDelete),
+      expect: () => [
+        const MaintenanceDeleteState.loading(),
+        const MaintenanceDeleteState.error(message: 'No se pudo borrar'),
+      ],
+    );
+
+    // TC-maint-del-s3: sin id emite error directamente, sin loading previo
+    blocTest<MaintenanceDeleteCubit, MaintenanceDeleteState>(
+      'TC-maint-del-s3: maintenance sin id emite error sin pasar por loading',
+      build: () => cubit,
+      act: (cubit) => cubit.deleteMaintenance(
+        MaintenanceModel(
+          vehicleId: 'v1',
+          type: MaintenanceType.oilChange,
+          mode: MaintenanceMode.completed,
+          serviceDate: DateTime(2026, 6, 1),
+        ),
+      ),
+      expect: () => [
+        const MaintenanceDeleteState.error(message: 'Missing maintenance id'),
+      ],
+    );
+  });
 
   group('MaintenanceDeleteCubit — analytics Fase 9', () {
     // TC-maint-del-a1: maintenance_deleted se emite al borrar exitosamente

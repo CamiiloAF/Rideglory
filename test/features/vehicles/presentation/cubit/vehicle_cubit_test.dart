@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -50,6 +52,10 @@ final _vehicle2WithDate = VehicleModel(
 );
 
 void main() {
+  setUpAll(() {
+    registerFallbackValue(_vehicle1);
+  });
+
   late MockGetMyVehiclesUseCase mockGetVehicles;
   late MockSetMainVehicleUseCase mockSetMain;
   late MockUpdateVehicleUseCase mockUpdateVehicle;
@@ -173,6 +179,18 @@ void main() {
           ),
         ],
       );
+
+      test(
+        'TC-veh-8: adding the first vehicle to an empty list auto-selects '
+        'it as currentVehicle (main)',
+        () {
+          expect(vehicleCubit.currentVehicle, isNull);
+
+          vehicleCubit.addVehicleLocally(_vehicle2);
+
+          expect(vehicleCubit.currentVehicle?.id, 'v2');
+        },
+      );
     });
 
     group('selectVehicle', () {
@@ -217,6 +235,117 @@ void main() {
           }
         },
       );
+    });
+
+    group('updateMileage', () {
+      blocTest<VehicleCubit, ResultState<List<VehicleModel>>>(
+        'TC-10C-1: does NOT update when newMileage is lower than current '
+        '(<= guard)',
+        setUp: () {
+          when(
+            () => mockUpdateVehicle(any()),
+          ).thenAnswer((_) async => const Right(_vehicle1));
+        },
+        build: () => vehicleCubit,
+        act: (cubit) async {
+          cubit.addVehicleLocally(_vehicle1);
+          await cubit.updateMileage(11000, vehicleId: 'v1');
+        },
+        verify: (cubit) {
+          expect(cubit.currentVehicle?.currentMileage, 12000);
+          verifyNever(() => mockUpdateVehicle(any()));
+        },
+      );
+
+      blocTest<VehicleCubit, ResultState<List<VehicleModel>>>(
+        'TC-10C-1b: does NOT update when newMileage equals current '
+        '(<= guard)',
+        setUp: () {
+          when(
+            () => mockUpdateVehicle(any()),
+          ).thenAnswer((_) async => const Right(_vehicle1));
+        },
+        build: () => vehicleCubit,
+        act: (cubit) async {
+          cubit.addVehicleLocally(_vehicle1);
+          await cubit.updateMileage(12000, vehicleId: 'v1');
+        },
+        verify: (cubit) {
+          expect(cubit.currentVehicle?.currentMileage, 12000);
+          verifyNever(() => mockUpdateVehicle(any()));
+        },
+      );
+
+      blocTest<VehicleCubit, ResultState<List<VehicleModel>>>(
+        'TC-10C-2: updates optimistically (local first) when newMileage is '
+        'greater than current, and calls the use case',
+        setUp: () {
+          when(
+            () => mockUpdateVehicle(any()),
+          ).thenAnswer((_) async => const Right(_vehicle1));
+        },
+        build: () => vehicleCubit,
+        act: (cubit) async {
+          cubit.addVehicleLocally(_vehicle1);
+          await cubit.updateMileage(13500, vehicleId: 'v1');
+        },
+        verify: (cubit) {
+          expect(cubit.currentVehicle?.currentMileage, 13500);
+          final captured = verify(
+            () => mockUpdateVehicle(captureAny()),
+          ).captured;
+          expect(captured.single, isA<VehicleModel>());
+          expect(
+            (captured.single as VehicleModel).currentMileage,
+            13500,
+          );
+        },
+      );
+
+      test(
+        'TC-10C-2b: local state updates before awaiting the use case '
+        '(optimistic emit happens synchronously, independent of the API call)',
+        () async {
+          // Arrange: mock use case that never completes within the test —
+          // proves the local mileage change is emitted without waiting on it.
+          when(() => mockUpdateVehicle(any())).thenAnswer(
+            (_) => Future<Either<DomainException, VehicleModel>>.delayed(
+              const Duration(seconds: 5),
+              () => const Right(_vehicle1),
+            ),
+          );
+          vehicleCubit.addVehicleLocally(_vehicle1);
+
+          // Act: fire-and-forget, don't await the outer future.
+          unawaited(vehicleCubit.updateMileage(14000, vehicleId: 'v1'));
+          // Allow the synchronous part of updateMileage to run.
+          await Future<void>.delayed(Duration.zero);
+
+          // Assert: local state already reflects the new mileage even though
+          // the use case call is still pending.
+          expect(vehicleCubit.currentVehicle?.currentMileage, 14000);
+        },
+      );
+
+      test(
+        'TC-10C-3: uses currentVehicle id when vehicleId is omitted',
+        () async {
+          when(
+            () => mockUpdateVehicle(any()),
+          ).thenAnswer((_) async => const Right(_vehicle1));
+          vehicleCubit.addVehicleLocally(_vehicle1);
+
+          await vehicleCubit.updateMileage(15000);
+
+          expect(vehicleCubit.currentVehicle?.currentMileage, 15000);
+        },
+      );
+
+      test('does nothing when there is no current vehicle', () async {
+        await vehicleCubit.updateMileage(1000);
+        expect(vehicleCubit.currentVehicle, isNull);
+        verifyNever(() => mockUpdateVehicle(any()));
+      });
     });
 
     group('clearVehicles', () {

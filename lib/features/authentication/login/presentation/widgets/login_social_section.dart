@@ -17,6 +17,18 @@ enum LoginAuthProvider { google, apple }
 class LoginSocialSection extends StatefulWidget {
   const LoginSocialSection({super.key});
 
+  // `Platform.isAndroid`/`Platform.isIOS` are `static final` in dart:io and
+  // reflect the actual host OS, so they cannot be faked from a `flutter test`
+  // run on a dev machine (it always reports the host OS, e.g. macOS/Linux —
+  // never android/ios). These test-only overrides let widget tests force
+  // either branch to render so the mutual-exclusion logic can be exercised.
+  // They stay `null` in production, so real behavior is untouched.
+  @visibleForTesting
+  static bool? debugIsAndroidOverride;
+
+  @visibleForTesting
+  static bool? debugIsIOSOverride;
+
   @override
   State<LoginSocialSection> createState() => _LoginSocialSectionState();
 }
@@ -43,7 +55,10 @@ class _LoginSocialSectionState extends State<LoginSocialSection> {
 
   @override
   Widget build(BuildContext context) {
-    final showGoogleOnIos = Platform.isIOS && _googleSignInIosEnabled;
+    final isAndroid =
+        LoginSocialSection.debugIsAndroidOverride ?? Platform.isAndroid;
+    final isIOS = LoginSocialSection.debugIsIOSOverride ?? Platform.isIOS;
+    final showGoogleOnIos = isIOS && _googleSignInIosEnabled;
 
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
@@ -54,7 +69,7 @@ class _LoginSocialSectionState extends State<LoginSocialSection> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (Platform.isAndroid || showGoogleOnIos)
+          if (isAndroid || showGoogleOnIos)
             LoginSocialButton(
               label: context.l10n.auth_continue_with_google,
               icon: Icons.g_mobiledata_rounded,
@@ -67,7 +82,7 @@ class _LoginSocialSectionState extends State<LoginSocialSection> {
                 () => context.read<AuthCubit>().signInWithGoogle(),
               ),
             ),
-          if (Platform.isIOS)
+          if (isIOS)
             LoginSocialButton(
               label: context.l10n.auth_appleLabel,
               icon: Icons.apple,

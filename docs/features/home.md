@@ -1,6 +1,6 @@
 # Documentación del Feature: Home
 
-> Última actualización: 2026-06-17  
+> Última actualización: 2026-07-04  
 > Alcance: `lib/features/home/`
 
 ---
@@ -113,20 +113,21 @@ abstract class HomeService {
   factory HomeService(Dio dio) = _HomeService;
 
   @GET(ApiRoutes.home)
-  Future<HomeDto> getHome();
+  Future<HomeDto> getHome({@Query('dateFrom') String? dateFrom});
 }
 ```
 
 **`HomeRepositoryImpl`** (`@Injectable(as: HomeRepository)`):
 ```dart
 Future<Either<DomainException, HomeData>> getHomeData() {
+  final today = DateTime.now().toIso8601String().substring(0, 10);
   return executeService(function: () async {
-    final dto = await _homeService.getHome();
+    final dto = await _homeService.getHome(dateFrom: today);
     return dto.toHomeData();
   });
 }
 ```
-Sin caché local; cada `loadHomeData()` produce un request HTTP.
+`dateFrom` envía la fecha local del dispositivo (`yyyy-MM-dd`) como query param, para que el backend filtre "próximos eventos" según el día del usuario sin depender de la zona horaria del servidor. Sin caché local; cada `loadHomeData()` produce un request HTTP.
 
 ---
 
@@ -226,9 +227,9 @@ Solo crea el `HomeCubit` y llama `loadHomeData()`. Toda la UI vive en `HomeScaff
 - `RefreshIndicator(onRefresh: () => context.read<HomeCubit>().loadHomeData())`.
 - `BlocBuilder<HomeCubit, HomeState>` con un `CustomScrollView` de slivers:
   - `HomeHeader` (siempre visible).
-  - `HomeLoading` → `SliverFillRemaining(AppLoadingIndicator)`.
+  - `HomeLoading`/`HomeInitial` → `SliverFillRemaining(AppLoadingIndicator(variant: page))`.
   - `HomeLoaded` → `HomeGarageSection` + `HomeEventsSection` + `HomeViewAllEventsButton`.
-  - `HomeError` → texto centrado con `state.message`.
+  - `HomeError` → `SliverFillRemaining(PageErrorStateWidget(title, message: state.message, onRetry: () => loadHomeData()))` (shared widget, botón de reintento incluido).
   - Padding final `AppSpacing.gap100` (100px).
 
 ### `HomeHeader` (`widgets/home_header.dart`)
@@ -312,7 +313,8 @@ HomeCubit.loadHomeData()
   ├─ emit(HomeLoading)
   ├─ GetHomeDataUseCase()
   │  └─ HomeRepositoryImpl.getHomeData()
-  │     └─ HomeService.getHome()  → GET /home
+  │     └─ dateFrom = fecha local del dispositivo (yyyy-MM-dd)
+  │     └─ HomeService.getHome(dateFrom: dateFrom)  → GET /home?dateFrom=yyyy-MM-dd
   │        Response: { mainVehicle: VehicleDto?, upcomingEvents: EventDto[] }
   │     └─ dto.toHomeData()  (VehicleDto → VehicleModel, EventDto cast a EventModel)
   │
@@ -351,9 +353,9 @@ Detail event return → cubit.updateEvent / removeEvent (sin re-fetch).
 
 | Método | Endpoint | Descripción |
 |---|---|---|
-| `GET` | `/home` | Retorna `{mainVehicle?, upcomingEvents}` consolidado |
+| `GET` | `/home?dateFrom={yyyy-MM-dd}` | Retorna `{mainVehicle?, upcomingEvents}` consolidado |
 
-Definido en `ApiRoutes.home`.
+Definido en `ApiRoutes.home`. `dateFrom` es un query param opcional (`@Query('dateFrom')`) que `HomeRepositoryImpl` siempre envía con la fecha local del dispositivo, para que el backend filtre los eventos "del día" sin depender del huso horario del servidor.
 
 **Response shape esperada:**
 ```json
@@ -392,6 +394,9 @@ A diferencia de la mayoría del codebase, home no usa el patrón `ResultState`. 
 
 ### Vehículos archivados en Home
 `HomeGarageSection` filtra `!isArchived` antes de elegir el principal. Si todos los vehículos están archivados, muestra `HomeEmptyGarageCard`. Nunca cae al fallback `vehicles.first` con un vehículo archivado.
+
+### `dateFrom` en `GET /home`
+`HomeRepositoryImpl.getHomeData()` calcula `DateTime.now().toIso8601String().substring(0, 10)` (fecha local del dispositivo) y la envía como `dateFrom` en cada request. Se agregó porque el backend filtraba "próximos eventos" con su propia zona horaria, ocultando eventos del mismo día para usuarios en otro huso horario. Si se mueve esta lógica, mantener la fecha basada en el reloj del dispositivo, no en UTC del servidor.
 
 ### `EventDto` se castea directo a `EventModel`
 `HomeDto.toHomeData()` hace `List<EventModel>.from(upcomingEvents)` sin invocar `.toModel()`. Funciona porque `EventDto extends EventModel`. Si en el futuro se separa DTO de modelo, agregar conversión explícita.

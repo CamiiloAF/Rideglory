@@ -1,6 +1,6 @@
 # Documentación del Feature: Notifications
 
-> Última actualización: 2026-05-28  
+> Última actualización: 2026-07-04  
 > Alcance: `lib/features/notifications/` + `lib/core/services/fcm_service.dart`
 
 ---
@@ -20,8 +20,9 @@
 8. [Rutas de navegación](#8-rutas-de-navegación)
 9. [API endpoints](#9-api-endpoints)
 10. [Conexiones con otros features](#10-conexiones-con-otros-features)
-11. [Patrones y trampas conocidas](#11-patrones-y-trampas-conocidas)
-12. [Archivos clave de referencia rápida](#12-archivos-clave-de-referencia-rápida)
+11. [Analytics](#11-analytics)
+12. [Patrones y trampas conocidas](#12-patrones-y-trampas-conocidas)
+13. [Archivos clave de referencia rápida](#13-archivos-clave-de-referencia-rápida)
 
 ---
 
@@ -403,7 +404,23 @@ Constantes en `lib/core/http/api_routes.dart`:
 
 ---
 
-## 11. Patrones y trampas conocidas
+## 11. Analytics
+
+Instrumentación añadida en fase 9 (`AnalyticsService`, aditiva, sin tocar lógica de negocio):
+
+| Evento | Disparado en | Parámetros |
+|---|---|---|
+| `notification_marked_read` | `NotificationsCubit.markRead()` (optimistic, antes de llamar al use case) | `notification_type` (nombre del enum `NotificationType`) |
+| `notifications_all_read` | `NotificationsCubit.markAllRead()` (optimistic, antes de llamar al use case) | — |
+| `fcm_token_registered` | `RegisterFcmTokenUseCase.call()`, solo si `registerFcmToken()` resulta `Right` | — (el token nunca se loguea, por PII/alta cardinalidad) |
+
+Todas las llamadas usan `.ignore()` (fire-and-forget, no bloquean el flujo principal). `NotificationsCubit` y `RegisterFcmTokenUseCase` reciben `AnalyticsService` inyectado por constructor.
+
+Tests: `test/features/notifications/presentation/cubit/notifications_analytics_test.dart` verifica estos 3 eventos con un mock de `AnalyticsService`.
+
+---
+
+## 12. Patrones y trampas conocidas
 
 ### Optimistic update sin rollback
 `markRead()` y `markAllRead()` actualizan localmente primero y llaman al backend después **sin manejo de error**. Si la llamada falla, la UI ya muestra "leído" y queda desincronizada hasta el próximo `load()`. Aceptable hoy; si crece, agregar rollback o retry.
@@ -446,7 +463,7 @@ Vive durante toda la app. `load()` se dispara cada vez que se entra a `Notificat
 
 ---
 
-## 12. Archivos clave de referencia rápida
+## 13. Archivos clave de referencia rápida
 
 | Qué buscar | Archivo |
 |---|---|
@@ -458,6 +475,7 @@ Vive durante toda la app. `load()` se dispara cada vez que se entra a `Notificat
 | Repository impl | `lib/features/notifications/data/repository/notifications_repository_impl.dart` |
 | Cubit global + paginación | `lib/features/notifications/presentation/cubit/notifications_cubit.dart` |
 | Estado freezed | `lib/features/notifications/presentation/cubit/notifications_state.dart` |
+| Tests de analytics | `test/features/notifications/presentation/cubit/notifications_analytics_test.dart` |
 | Page + view | `lib/features/notifications/presentation/notifications_page.dart`, `notifications_view.dart` |
 | Data view (lista + load more) | `lib/features/notifications/presentation/widgets/notifications_data_view.dart` |
 | Item con icono por tipo | `lib/features/notifications/presentation/widgets/notification_item.dart` |

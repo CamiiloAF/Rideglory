@@ -1,6 +1,6 @@
 # Documentación del Feature: SOAT
 
-> Última actualización: 2026-05-31  
+> Última actualización: 2026-07-04  
 > Alcance: `lib/features/soat/`
 
 ---
@@ -21,6 +21,7 @@
    - 6.3 [Flujo durante creación de vehículo](#63-flujo-durante-creación-de-vehículo)
    - 6.4 [Sub-flujo OCR](#64-sub-flujo-ocr-autocompletar-soat)
    - 6.5 [Eliminar el SOAT de un vehículo](#65-eliminar-el-soat-de-un-vehículo)
+   - 6.6 [Modo lectura para vehículos archivados](#66-modo-lectura-para-vehículos-archivados)
 7. [Subida del documento](#7-subida-del-documento)
 8. [Rutas de navegación](#8-rutas-de-navegación)
 9. [API endpoints](#9-api-endpoints)
@@ -57,7 +58,7 @@ Ambas implementaciones apuntan al mismo backend.
 > `lib/features/soat/domain/models/soat_model.dart`
 
 ```
-SoatModel
+SoatModel  with VehicleDocumentExpiry  implements VehicleDocumentModel
   id: String                     (requerido)
   vehicleId: String              (requerido)
   policyNumber: String?
@@ -69,9 +70,12 @@ SoatModel
   updatedAt: DateTime?
 
 Getters:
-  status: SoatStatus             — valid | expiringSoon | expired
-  daysUntilExpiry: int           — negativo si ya venció
+  kind: VehicleDocumentKind       — VehicleDocumentKind.soat
+  status: SoatStatus              — mapea documentStatus (mixin) a valid | expiringSoon | expired | noSoat
+  daysUntilExpiry: int            — del mixin VehicleDocumentExpiry; negativo si ya venció
 ```
+
+`SoatModel` ya no calcula `daysUntilExpiry`/vigencia por sí mismo: usa el mixin compartido `VehicleDocumentExpiry` (`lib/features/vehicle_documents/domain/vehicle_document_expiry.dart`) que expone `daysUntilExpiry` y `documentStatus` (`VehicleDocumentStatus`: `valid`/`expiringSoon`/`expired`/`none`). El getter `status` traduce ese `VehicleDocumentStatus` al enum legacy `SoatStatus` (incluyendo `none → noSoat`) para no romper widgets/router/analytics existentes. Ver [§13](#13-abstracción-vehicle_documents-fase-1--iteración-tecnomecánica).
 
 > Existe **otro `SoatModel`** en `lib/features/vehicles/domain/models/soat_model.dart` (re-export desde feature `vehicles`). Usado por `VehicleRepository.upsertSoat()/getSoat()`. Aunque tengan la misma forma, son **clases distintas** y no son intercambiables sin mapeo manual. Cuando se trabaje con SOAT, verificar cuál import se usa.
 
@@ -214,8 +218,10 @@ lib/features/soat/presentation/
 
 | Cubit | Archivo | DI | Estado | Notas |
 |---|---|---|---|---|
-| `SoatCubit` | `cubit/soat_cubit.dart` | `@injectable` | `ResultState<SoatModel>` | Lectura/guardado/borrado del SOAT (status page) |
+| `SoatCubit` | `cubit/soat_cubit.dart` | `@injectable` | `ResultState<SoatModel>` (extiende `VehicleDocumentCubit<SoatModel>`) | Lectura/guardado/borrado del SOAT (status page) |
 | `SoatUploadCubit` | `cubit/soat_upload_cubit.dart` | `@injectable` | `SoatUploadState` (sealed class) | Selección de archivo (galería/PDF); lo consume `SoatVehicleOptionsSheet` |
+
+`SoatCubit extends VehicleDocumentCubit<SoatModel>` (`lib/features/vehicle_documents/presentation/cubit/vehicle_document_cubit.dart`), la base compartida con `TecnomecanicaCubit`. La clase abstracta solo define el constructor (`ResultState.initial()`) y obliga a implementar `load(String vehicleId)`; `save`/`delete` son extras propios de `SoatCubit`, no del contrato base.
 
 > `SoatFormCubit` fue **eliminado**. `SoatManualCapturePage` (formulario unificado) maneja su propio estado con `setState` e invoca los use cases directamente vía `getIt`.
 
@@ -250,25 +256,36 @@ Cualquiera de los dos emite `SoatUploadImagePicked(XFile)` al éxito y `SoatUplo
 
 ## 5. Cálculo de SoatStatus
 
-`SoatModel.status` (getter en `domain/models/soat_model.dart`):
+El cálculo real vive en el mixin compartido `VehicleDocumentExpiry` (`lib/features/vehicle_documents/domain/vehicle_document_expiry.dart`), que `SoatModel` usa (`with VehicleDocumentExpiry`):
 
 ```dart
-SoatStatus get status {
-  final days = daysUntilExpiry;
-  if (days < 0)     return SoatStatus.expired;
-  if (days <= 30)   return SoatStatus.expiringSoon;
-  return SoatStatus.valid;
-}
-
 int get daysUntilExpiry {
   final now = DateTime.now();
   final today  = DateTime(now.year, now.month, now.day);     // medianoche
   final expiry = DateTime(expiryDate.year, expiryDate.month, expiryDate.day);
   return expiry.difference(today).inDays;
 }
+
+VehicleDocumentStatus get documentStatus {
+  final days = daysUntilExpiry;
+  if (days < 0)   return VehicleDocumentStatus.expired;
+  if (days <= 30) return VehicleDocumentStatus.expiringSoon;
+  return VehicleDocumentStatus.valid;
+}
 ```
 
-Umbral fijo: **30 días**. `noSoat` no se calcula aquí — se asigna externamente cuando no hay registro.
+`SoatModel.status` (getter propio en `domain/models/soat_model.dart`) traduce `documentStatus` al enum legacy `SoatStatus` con un `switch`:
+
+```dart
+SoatStatus get status => switch (documentStatus) {
+  VehicleDocumentStatus.expired      => SoatStatus.expired,
+  VehicleDocumentStatus.expiringSoon => SoatStatus.expiringSoon,
+  VehicleDocumentStatus.valid        => SoatStatus.valid,
+  VehicleDocumentStatus.none         => SoatStatus.noSoat,
+};
+```
+
+Umbral fijo: **30 días** (definido en el mixin, no en `SoatModel`). El getter `documentStatus` del mixin **nunca** retorna `VehicleDocumentStatus.none` (solo se deriva de `daysUntilExpiry`), así que el case `none → noSoat` del switch es defensivo/inalcanzable en la práctica: `SoatStatus.noSoat` sigue asignándose externamente (`SoatCubit.load()` emite `ResultState.empty()`, no un `SoatModel`, cuando el backend no tiene SOAT registrado).
 
 > `VehicleCubit._soatStatusFrom(DateTime expiryDate)` replica este cálculo (también 30 días) para actualizar localmente `VehicleModel.soatStatus` cuando se guarda un SOAT desde el form del vehículo.
 
@@ -278,7 +295,7 @@ Umbral fijo: **30 días**. `noSoat` no se calcula aquí — se asigna externamen
 
 ### 6.1 Flujo con documento (galería / PDF) — `SoatEntryFlow`
 
-El punto de entrada único es el helper **`SoatEntryFlow.start(context, ...)`** (`scan/soat_entry_flow.dart`). Reemplazó a la antigua `SoatUploadPage`. Lo consumen todos los puntos que antes navegaban a `AppRoutes.vehicleSoat` (garage `vehicle_soat_card`/`vehicle_soat_section`, slot del form `vehicle_soat_form_slot`, sección de docs del form, renovación en `SoatDataView`/`SoatEmptyState`). Sirve tanto para **creación** como para **edición** de vehículo.
+El punto de entrada único es el helper **`SoatEntryFlow.start(context, ...)`** (`scan/soat_entry_flow.dart`). Reemplazó a la antigua `SoatUploadPage`. Lo consumen todos los puntos que antes navegaban a `AppRoutes.vehicleSoat` (garage `VehicleDocumentCard` con `kind: VehicleDocumentKind.soat`, slot del form `vehicle_soat_form_slot`, sección de docs del form, renovación en `SoatDataView`/`SoatEmptyState`). Sirve tanto para **creación** como para **edición** de vehículo.
 
 ```
 SoatEntryFlow.start(context, vehicle?, onSaved?, formCubit?)
@@ -319,6 +336,11 @@ SoatManualCapturePage(vehicle?, existingSoat?, initialLocalImagePath?, extractio
   ├─ Si el OCR no reconoce el documento → SoatNotRecognizedWarning (inline, no bloqueante)
   ├─ Form fields: policyNumber, insurer (requerido), startDate, expiryDate
   ├─ SoatValidityCard (vigencia en vivo a partir de las fechas)
+  ├─ Validación de fechas en tiempo real (`_validateDates`, on `onChanged` de ambos date pickers):
+  │     `_datesInvalid = startDate != null && expiryDate != null && !expiryDate.isAfter(startDate)`
+  │     → si es `true`, se muestra el error inline `soat_expiry_after_start_error` (mismo contenedor que `_error`)
+  ├─ `_canSubmit`: `!_saving && insurer.isNotEmpty && startDate != null && expiryDate != null && !_datesInvalid`
+  │     → el botón de guardar queda **deshabilitado** (`onPressed: null`) hasta que se cumpla
   └─ Guardado (_submit):
      ├─ Modo edición (vehicle.id != null):
      │   ├─ Sube imagen/PDF nueva (si hay) a soat/{vehicleId}/{timestamp}.{ext}
@@ -385,7 +407,7 @@ Lectura **on-device** del SOAT desde foto/galería/PDF. Privacidad total: ni la 
 
 ### 6.5 Eliminar el SOAT de un vehículo
 
-El borrado (`DELETE /vehicles/{vehicleId}/soat`) ahora es posible **únicamente desde la pantalla "Mi SOAT"** (`SoatDataView`, dentro de `SoatStatusPage`). Se quitó el borrado del detalle del vehículo (`vehicle_soat_card.dart`), del slot del form de edición (`vehicle_soat_form_slot.dart`) y del formulario de captura/edición (`SoatManualCapturePage`); esos puntos hoy solo inician `SoatEntryFlow` para agregar/renovar.
+El borrado (`DELETE /vehicles/{vehicleId}/soat`) ahora es posible **únicamente desde la pantalla "Mi SOAT"** (`SoatDataView`, dentro de `SoatStatusPage`). Se quitó el borrado del detalle del vehículo (`VehicleDocumentCard`, `vehicle_document_card.dart`), del slot del form de edición (`vehicle_soat_form_slot.dart`) y del formulario de captura/edición (`SoatManualCapturePage`); esos puntos hoy solo inician `SoatEntryFlow` para agregar/renovar.
 
 En `SoatDataView` las acciones se presentan como una **lista discreta** (no botones de color apilados), con `SoatActionTile` (ícono + etiqueta + chevron) dentro de una card:
 - **Ver documento** (`soat_view_document`) — solo si `documentUrl != null`; abre el archivo remoto vía `DocumentDownloader.openRemote`.
@@ -396,6 +418,23 @@ Por separado, cuando el SOAT está **vencido**, la vista muestra un **único CTA
 **Capa:** `DeleteSoatUseCase` → `SoatRepository.deleteSoat` → `SoatService.deleteSoat`. `SoatCubit.delete()` emite `empty` en éxito y retorna `true`.
 
 > El widget reutilizable `SoatDeleteButton` fue **eliminado**; el borrado lo encapsula directamente `SoatDataView` mediante `SoatActionTile`.
+
+> **Con vehículo archivado (`isArchived: true`), estas acciones se ocultan** — ver [§6.6](#66-modo-lectura-para-vehículos-archivados).
+
+---
+
+### 6.6 Modo lectura para vehículos archivados
+
+Cuando el vehículo dueño del SOAT está **archivado**, `SoatStatusPage`/`SoatStatusView`/`SoatDataView` entran en modo solo lectura (sin tocar `SoatCubit`, que sigue cargando normalmente):
+
+- `SoatStatusPage(vehicle, isArchived: false)` recibe `isArchived` desde la ruta y lo propaga a `SoatStatusView`.
+- `SoatStatusView`: oculta el botón "Editar" (`soat_edit_btn`) del `AppBar` cuando `isArchived == true`.
+- `SoatDataView(vehicle, soat, isArchived: false)`:
+  - Oculta el warning inline de vigencia (`warningText`) cuando está archivado.
+  - Oculta el CTA "Registrar nuevo SOAT" (`soat_renew_btn`) aunque el SOAT esté vencido.
+  - Oculta la acción "Eliminar" (`SoatActionTile` con tinte `error`); la card de acciones solo se muestra si queda "Ver documento" (`documentUrl != null`) o si el vehículo no está archivado — si no hay nada que mostrar, la card completa desaparece.
+
+`AppRoutes.soatStatus` acepta un `extra` **polimórfico** (`VehicleModel` o `Map`) para poder propagar `isArchived` sin romper los call-sites existentes que solo pasaban el `VehicleModel`: si `extra` es un `Map`, el router extrae `vehicle`/`isArchived`; si es un `VehicleModel` directo, `isArchived` cae a `false`. Ver `lib/shared/router/app_router.dart` (ruta `soatStatus`).
 
 ---
 
@@ -420,7 +459,7 @@ soat/{vehicleId}/{timestampMs}.{ext}
 
 | Ruta | Constante | Builder | Extras |
 |---|---|---|---|
-| `/soat/status` | `AppRoutes.soatStatus` | `SoatStatusPage(vehicle: extra as VehicleModel)` | `VehicleModel` |
+| `/soat/status` | `AppRoutes.soatStatus` | `SoatStatusPage(vehicle, isArchived)` | `VehicleModel` **o** `Map` (`{'vehicle': VehicleModel, 'isArchived': bool}`) — ver [§6.6](#66-modo-lectura-para-vehículos-archivados) |
 | `/soat/manual-capture` | `AppRoutes.soatManualCapture` | `SoatManualCapturePage(vehicle, existingSoat: params.soat, initialLocalImagePath, extraction)` | `SoatManualCaptureParams` |
 
 > Las rutas `AppRoutes.vehicleSoat` (`/vehicles/soat`), `AppRoutes.soatUpload` (`/soat/upload`), `AppRoutes.soatScan` (`/soat/scan`) y las pantallas `SoatUploadPage` / `SoatScanPage` fueron **eliminadas**. Solo quedan `soatStatus` y `soatManualCapture`. Para agregar/renovar SOAT usa `SoatEntryFlow.start(context, ...)` (ver §6.1).
@@ -464,7 +503,7 @@ extraction: SoatExtraction?      — resultado OCR para ofrecer el autocompletad
 
 | Feature | Conexión |
 |---|---|
-| `vehicles` | `VehicleModel.soatStatus` + `soatExpiryDate` se actualizan vía `VehicleCubit.updateSoatLocally()` tras guardar y se limpian con `VehicleCubit.clearSoatLocally()` tras eliminar. `VehicleFormView` puede iniciar el flujo SOAT durante la creación del vehículo; `vehicle_soat_card.dart`, `vehicle_soat_section.dart` y `vehicle_soat_form_slot.dart` lanzan `SoatEntryFlow` para agregar/renovar (ya **no** borran: el borrado vive solo en "Mi SOAT") |
+| `vehicles` | `VehicleModel.soatStatus` + `soatExpiryDate` se actualizan vía `VehicleCubit.updateSoatLocally()` tras guardar y se limpian con `VehicleCubit.clearSoatLocally()` tras eliminar. `VehicleFormView` puede iniciar el flujo SOAT durante la creación del vehículo; `VehicleDocumentCard` (`kind: soat`, en `vehicle_document_card.dart`, usado desde `vehicle_detail_view.dart`) y `vehicle_soat_form_slot.dart` lanzan `SoatEntryFlow` para agregar/renovar (ya **no** borran: el borrado vive solo en "Mi SOAT"). `VehicleDocumentCard` también propaga `isArchived` al navegar a `soatStatus` — ver [§6.6](#66-modo-lectura-para-vehículos-archivados) |
 | `home` | `HomeGarageSoatBadge` lee `VehicleModel.soatStatus` para mostrar pill de color |
 | `notifications` | Tipos `SOAT_30D`, `SOAT_7D`, `SOAT_DAY_OF` (notificaciones programadas server-side a partir de `expiryDate`) |
 
@@ -496,7 +535,7 @@ Si el backend devuelve `expiryDate: null` (no debería), `SoatDto.toModel()` usa
 `SoatRepositoryImpl.getSoat()` mapea HTTP 404 a `Right(null)`. Esto es deliberado: significa "el vehículo aún no tiene SOAT registrado". Cualquier otro error sí va a `Left`.
 
 ### Borrado centralizado en "Mi SOAT"
-El borrado del SOAT vive **solo** en `soat_data_view.dart` (`SoatActionTile` "Eliminar" → `SoatCubit.delete` → `clearSoatLocally`). Se quitó de `vehicle_soat_card.dart`, `vehicle_soat_form_slot.dart` y `SoatManualCapturePage`, y el widget `SoatDeleteButton` fue eliminado. Ver §6.5.
+El borrado del SOAT vive **solo** en `soat_data_view.dart` (`SoatActionTile` "Eliminar" → `SoatCubit.delete` → `clearSoatLocally`, oculto cuando el vehículo está archivado — ver §6.6). Se quitó de `vehicle_document_card.dart`, `vehicle_soat_form_slot.dart` y `SoatManualCapturePage`, y el widget `SoatDeleteButton` fue eliminado. Ver §6.5.
 
 ### `SoatStatus.noSoat` no proviene de `SoatModel.status`
 El getter solo retorna `valid` / `expiringSoon` / `expired`. `noSoat` se asigna externamente cuando no hay SOAT registrado (`VehicleModel.soatStatus == null`).
@@ -530,7 +569,7 @@ El getter solo retorna `valid` / `expiringSoon` / `expired`. `noSoat` se asigna 
 | Fila de acción discreta | `lib/features/soat/presentation/widgets/soat_action_tile.dart` |
 | Card de validez | `lib/features/soat/presentation/widgets/soat_validity_card.dart` |
 | Sección de documento (rediseño) | `lib/features/soat/presentation/widgets/soat_document_section.dart` |
-| Inicio del flujo SOAT desde vehicles | `lib/features/vehicles/presentation/garage/widgets/vehicle_soat_card.dart`, `lib/features/vehicles/presentation/form/widgets/vehicle_soat_form_slot.dart` |
+| Inicio del flujo SOAT desde vehicles | `lib/features/vehicles/presentation/garage/widgets/vehicle_document_card.dart` (`VehicleDocumentCard`, compartido con RTM vía `kind`), `lib/features/vehicles/presentation/form/widgets/vehicle_soat_form_slot.dart` |
 | Update/clear local del status | `lib/features/vehicles/presentation/cubit/vehicle_cubit.dart` (`updateSoatLocally`, `clearSoatLocally`) |
 | Endpoint | `lib/core/http/api_routes.dart` (`vehicleSoat(id)`) |
 

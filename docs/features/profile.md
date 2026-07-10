@@ -1,6 +1,6 @@
 # Documentación del Feature: Profile
 
-> Última actualización: 2026-05-28  
+> Última actualización: 2026-07-04
 > Alcance: `lib/features/profile/`
 
 ---
@@ -31,7 +31,7 @@ El feature **Profile** es la pantalla del perfil personal del usuario (tab de bo
 
 1. **Mostrar datos del usuario actual** (foto, nombre, email, ciudad).
 2. **Navegar al editor del perfil** (edición de campos personales y de emergencia).
-3. **Listar accesos rápidos** a inscripciones, borradores, mantenimientos.
+3. **Listar accesos rápidos** a inscripciones y mantenimientos.
 4. **Permitir logout** con confirmación.
 
 No tiene capa de datos propia: depende de `UserRepository` (feature `users`) vía `GetMyProfileUseCase` y comparte `VehicleCubit` / `AuthCubit` (globales) para garage y sesión.
@@ -125,12 +125,11 @@ El cubit es **`@lazySingleton`**, no `@injectable`. Esto significa que la misma 
 
 Composición vertical:
 
-1. **`ProfileHeader`** — avatar con iniciales + nombre (22px bold) + email + city + botón "Editar info" (`pushNamed(AppRoutes.editProfile, extra: user)`).
+1. **`ProfileHeader`** — avatar con iniciales + nombre (22px bold) + email + city. **El botón "Editar info" fue eliminado** (commit `6607bee`, "Remove edit profile button"): `ProfileHeader` ya no tiene entry point hacia `EditProfilePage`.
 2. **`ProfileStatsRow`** — 3 celdas (`ProfileStatCell`) con separadores: eventos, km, followers. **Hardcoded a `0`** — sin integración real con backend (TODO).
 3. **`ProfileSectionLabel`** — etiqueta "AJUSTES".
 4. **`ProfileActionsList`** — tarjeta con `ProfileMenuItem`s separados por `ProfileMenuDivider`:
    - Mis inscripciones → `pushNamed(myRegistrations)`
-   - Mis borradores → `pushNamed(myDrafts)`
    - Mantenimientos → `pushNamed(maintenances)`
    - Cerrar sesión (color error, sin chevron) → confirma + `_logout()`
 
@@ -151,6 +150,8 @@ Props: `eventsLabel`, `kmLabel`, `followersLabel`, `eventsCount=0`, `kmCount=0`,
 ---
 
 ## 6. Flujo de edición
+
+> **Sin entry point desde la UI.** `ProfileHeader` ya no tiene el botón "Editar info" (eliminado en `6607bee`). `EditProfilePage` y la ruta `/profile/edit` siguen existiendo en el código (accesibles solo por navegación programática), pero no hay forma de llegar a ellas desde la pantalla de perfil. Código efectivamente inalcanzable desde la UI actual — evaluar si se retoma o se elimina.
 
 ### `EditProfilePage` (`edit_profile_page.dart`)
 
@@ -259,9 +260,7 @@ cubre switch habilitando el botón, el diálogo de segunda confirmación dispara
 Profile vive dentro del cuarto `StatefulShellBranch` (índice 3) del `StatefulShellRoute.indexedStack` definido en `app_router.dart`. Por eso `PopScope` redirige al `home` en lugar de hacer pop nativo (mantener UX consistente entre tabs).
 
 **Navegaciones salientes:**
-- `pushNamed(editProfile, extra: user)` → editor
 - `pushNamed(myRegistrations)` → lista de inscripciones
-- `pushNamed(myDrafts)` → borradores de eventos
 - `pushNamed(maintenances)` → mantenimientos (todos los vehículos)
 - `goAndClearStack(login)` → al hacer logout
 
@@ -287,7 +286,6 @@ Definido en `ApiRoutes.me` (`lib/core/http/api_routes.dart`).
 | `authentication` | `AuthCubit.signOut()` se invoca desde `ProfileActionsList`. `AuthCubit.currentUser` se lee como fallback si el cubit aún no tiene datos |
 | `vehicles` | `VehicleCubit.clearVehicles()` al logout. `ProfileGarageSection` (no montado) lee `currentVehicle` del `VehicleCubit` |
 | `event_registration` | Menu item navega a `myRegistrations` |
-| `events` (drafts) | Menu item navega a `myDrafts` |
 | `maintenance` | Menu item navega a `maintenances` (sin `initialVehicleId` → muestra todos) |
 
 ---

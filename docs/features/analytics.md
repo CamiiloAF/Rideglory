@@ -7,7 +7,8 @@ Cada SDK de Firebase tiene exactamente UN archivo autorizado a importarlo en `li
 | SDK | Archivo autorizado |
 |-----|--------------------|
 | `package:firebase_analytics` | `lib/core/services/analytics/firebase_analytics_service.dart` |
-| `package:firebase_crashlytics` | `lib/core/services/crash/firebase_crash_reporter.dart` |
+
+> **Crashlytics fue reemplazado por Sentry** (ver §"CrashReporter — Contrato" abajo). Ya no existe un import autorizado de `package:firebase_crashlytics` en el proyecto; el paquete fue removido de `pubspec.yaml`.
 
 Los siguientes archivos son **excepciones legítimas** (infraestructura DI y código generado):
 - `lib/core/di/firebase_module.dart` — provee `@lazySingleton` para los SDKs Firebase
@@ -15,10 +16,7 @@ Los siguientes archivos son **excepciones legítimas** (infraestructura DI y có
 
 **Verificación** (debe retornar 0 líneas fuera de los archivos legítimos):
 ```bash
-grep -r "package:firebase_crashlytics" lib/ \
-  | grep -v "lib/core/services/crash/firebase_crash_reporter.dart" \
-  | grep -v "lib/core/di/firebase_module.dart" \
-  | grep -v "lib/core/di/injection.config.dart"
+grep -r "package:firebase_crashlytics" lib/   # debe retornar 0 líneas — el SDK fue removido
 
 grep -r "package:firebase_analytics" lib/ \
   | grep -v "lib/core/services/analytics/firebase_analytics_service.dart" \
@@ -44,8 +42,10 @@ abstract class CrashReporter {
 ```
 
 **Implementaciones:**
-- `FirebaseCrashReporter` — prod/dev, delega a `FirebaseCrashlytics` (único import del SDK)
-- `NoOpCrashReporter` — env test, body vacío para que la suite no contacte Firebase
+- `SentryCrashReporter` (`lib/core/services/crash/sentry_crash_reporter.dart`) — prod/dev, delega a `Sentry.captureException`. Reemplazó a `FirebaseCrashReporter`/Crashlytics.
+- `NoOpCrashReporter` — env test, body vacío para que la suite no contacte servicios externos.
+
+> **Dev:** los errores se registran solo en consola, nunca se envían a Sentry en modo debug (ver [[project_observability_sentry]] en memoria). El envío a Sentry queda gateado a builds no-debug.
 
 **Gating en `main.dart`:** Los handlers `FlutterError.onError` y `PlatformDispatcher.onError` solo se registran cuando `!kDebugMode`. El zone handler de `runZonedGuarded` también gatéa `!kDebugMode`.
 

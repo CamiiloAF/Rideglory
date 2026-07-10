@@ -13,6 +13,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rideglory/core/domain/result_state.dart';
+import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/design_system/foundation/theme/app_theme.dart';
 import 'package:rideglory/features/home/presentation/cubit/home_cubit.dart';
 import 'package:rideglory/features/home/presentation/widgets/home_empty_garage_card.dart';
@@ -216,6 +217,32 @@ void main() {
       expect(find.byType(HomeGarageCard), findsNothing);
     },
   );
+
+  // ── TC-garage-section-5c: error state → HomeEmptyGarageCard ────────────────
+
+  testWidgets('TC-garage-section-5c: VehicleCubit.error → HomeEmptyGarageCard, '
+      'nunca HomeGarageCard', (tester) async {
+    when(() => vehicleCubit.state).thenReturn(
+      const ResultState<List<VehicleModel>>.error(
+        error: DomainException(message: 'Fallo al cargar vehículos'),
+      ),
+    );
+
+    await tester.pumpWidget(
+      _wrap(vehicleCubit: vehicleCubit, homeCubit: homeCubit),
+    );
+    await tester.pump();
+
+    expect(
+      find.byType(HomeEmptyGarageCard),
+      findsOneWidget,
+      reason:
+          'Ante un error de VehicleCubit, HomeGarageSection debe caer al '
+          'mismo estado vacío que cuando no hay vehículos, sin mostrar un '
+          'mensaje de error separado (home_garage_section.dart:44)',
+    );
+    expect(find.byType(HomeGarageCard), findsNothing);
+  });
 
   // ── TC-garage-section-6: Reactivity without HomeCubit.loadHomeData ────────
 

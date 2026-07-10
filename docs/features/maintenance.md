@@ -1,6 +1,6 @@
 # Documentación del Feature: Maintenance
 
-> Última actualización: 2026-05-28  
+> Última actualización: 2026-07-04  
 > Alcance: `lib/features/maintenance/`
 
 ---
@@ -173,7 +173,13 @@ Notar que `addMaintenance` retorna `List<MaintenanceModel>` (1 o 2 records — v
 | `UpdateMaintenanceUseCase` | `call(MaintenanceModel) → Future<Either<DomainException, MaintenanceModel>>` |
 | `DeleteMaintenanceUseCase` | `call(MaintenanceModel) → Future<Either<DomainException, Nothing>>` |
 | `GetMaintenancesByVehicleIdUseCase` | `execute(String vehicleId) → Future<Either<DomainException, MaintenanceVehicleListResult>>` |
-| `GetMaintenanceListUseCase` | `execute({types?, startDate?, endDate?}) → Future<Either<DomainException, MaintenanceUserListAggregate>>` |
+| `GetMaintenanceListUseCase` | `execute({vehicleId?, types?, startDate?, endDate?}) → Future<Either<DomainException, MaintenanceUserListAggregate>>` |
+
+**`GetMaintenanceListUseCase` decide el scoping según `vehicleId`:**
+- Si viene `vehicleId` → un único `GET` a `getMaintenancesByVehicleId()`, y envuelve el resultado en un `MaintenanceUserListAggregate` de un solo vehículo (`summariesByVehicleId: {vehicleId: summary}`).
+- Si no viene `vehicleId` → `getMaintenancesByUserId()` (fan-out a todos los vehículos del usuario, ver §3.2).
+
+Esto es lo que usa `MaintenancesCubit.fetchMaintenances()` para evitar N requests cuando el filtro de vehículo ya está acotado a **exactamente 1** vehículo (ver §4).
 
 ---
 
@@ -190,7 +196,7 @@ lib/features/maintenance/data/
     └── maintenance_repository_impl.dart              (@Injectable(as: MaintenanceRepository))
 ```
 
-**`MaintenanceDto`** mapea 1-a-1 al modelo, con `apiJsonDateTimeConverters`. **Renombra fechas**: `createdDate`/`updatedDate` en model ↔ `createdAt`/`updatedAt` en JSON. Métodos: `fromJson`, `fromModel(MaintenanceModel)`, `toJson`, `toModel`.
+**`MaintenanceDto`** sigue el **Pattern B** (DTO extends Model): `MaintenanceDto extends MaintenanceModel`, con `apiJsonDateTimeConverters`. **Renombra fechas**: `createdDate`/`updatedDate` en model ↔ `createdAt`/`updatedAt` en JSON (`@JsonKey(name: 'createdAt'|'updatedAt')`). Métodos: `MaintenanceDto.fromJson`, `dto.toJson()`; para serializar un `MaintenanceModel` puro se usa la extensión `MaintenanceModelExtension.toJson()` (construye un `MaintenanceDto` temporal y llama su `toJson()`). **No existen** `toModel()`/`fromModel()`/`.toDto()` — un `MaintenanceDto` ya *es* un `MaintenanceModel` (herencia), se puede usar directamente donde se espere el modelo de dominio.
 
 **`CreateMaintenanceResponseDto`**:
 ```dart
@@ -231,7 +237,9 @@ La key `'created'` la define el backend; cuando el cliente envía un completed c
 }
 ```
 
-`MaintenanceRepositoryImpl.getMaintenancesByUserId()` hace **N requests paralelas** (uno por vehículo): obtiene los vehículos vía `VehicleRepository.getMyVehicles()` y dispara `getMaintenancesByVehicleId()` para cada uno con `Future.wait`. Después agrega items + `summariesByVehicleId`.
+`MaintenanceRepositoryImpl.getMaintenancesByUserId()` hace **N requests paralelas** (uno por vehículo): obtiene los vehículos vía `VehicleRepository.getMyVehicles()` y dispara `getMaintenancesByVehicleId()` para cada uno con `Future.wait`. Después agrega items + `summariesByVehicleId`, y ordena el agregado por `serviceDate ?? createdDate` descendente (más reciente primero) — este es solo el orden "crudo" del repository; la UI reordena por urgencia (ver §4/§5).
+
+`updateMaintenance()` llama a `MaintenanceService.update()`, que ya retorna un `MaintenanceDto` (Pattern B) directamente utilizable como `MaintenanceModel` — no hay paso intermedio `.toModel()`.
 
 ---
 
@@ -305,11 +313,13 @@ _currentVehicleMileage: int                  // necesario para calcular status
 - `setCurrentVehicleMileage(int)` — actualiza el odómetro de referencia para cálculo de status.
 - `setInitialVehicleFilter(String vehicleId)` — preset al entrar desde una ruta con `initialVehicleId`.
 - `summaryForHeader() → MaintenanceListSummary?` — retorna summary del único vehículo filtrado (o null si hay más de uno).
-- `fetchMaintenances()` — server-side filters (types, dateRange), aplica client filters después.
+- `fetchMaintenances()` — server-side filters (types, dateRange); **scoping por vehículo activo**: si `_filters.vehicleIds` tiene exactamente 1 elemento, pasa ese `vehicleId` al use case (un único `GET /maintenances/vehicle/{id}` en vez de fan-out a todos los vehículos); si no, deja `vehicleId: null` (fan-out). Al resolver, dispara `AnalyticsEvents.maintenanceHistoryViewed` con `resultCount`, y aplica client filters después.
 - `updateSearchQuery(String)` — refiltra localmente (por nombre del tipo).
 - `updateFilters(MaintenanceFilters)` — si cambian server filters → fetch; si solo cambian client filters → refiltro local.
-- `addMaintenanceLocally(MaintenanceModel)` / `addMaintenancesLocally(List<MaintenanceModel>)` — insertan localmente (lista de 1-2 records).
-- `updateMaintenanceLocally(MaintenanceModel)`, `deleteMaintenanceLocally(String id)`.
+- `addMaintenanceLocally(MaintenanceModel)` / `addMaintenancesLocally(List<MaintenanceModel>)` — insertan localmente (lista de 1-2 records) e invalidan la summary cacheada del vehículo afectado (`_summariesByVehicleId.remove(vehicleId)`).
+- `updateMaintenanceLocally(MaintenanceModel)`, `deleteMaintenanceLocally(String id)` — ídem, invalidan la summary del vehículo afectado.
+
+**Constructor:** `MaintenancesCubit(GetMaintenanceListUseCase, AnalyticsService)`.
 
 ### `MaintenanceFormCubit`
 
@@ -330,10 +340,12 @@ lastSavedRecords: List<MaintenanceModel>?    // 1 o 2 records tras save
 - `initialize({maintenance?, preselectedVehicle?})` — set mode + tipo.
 - `setVehicleId(String?)`, `setCurrentVehicleMileage(int?)`.
 - `updateSelectedType(MaintenanceType)`, `updateMode(MaintenanceMode)`.
-- `saveMaintenance(MaintenanceModel, {int? nextKmInterval})` — si tiene `id` → UPDATE, si no → CREATE.
+- `saveMaintenance(MaintenanceModel, {int? nextKmInterval})` — si tiene `id` → UPDATE (`UpdateMaintenanceUseCase`, dispara `AnalyticsEvents.maintenanceUpdated`), si no → CREATE (`AddMaintenanceUseCase`, dispara `AnalyticsEvents.maintenanceAdded`). Ambos eventos llevan `maintenanceType` y `maintenanceMode` (completed/scheduled) como params.
 - `buildMaintenanceToSave() → MaintenanceModel?` — valida form, construye modelo desde `MaintenanceFormFields`.
 - `buildNextKmInterval() → int?` — extrae el km relativo del campo `nextMaintenanceMileage`.
 - `shouldChangeVehicleMileage(currentMileage, newMileage)` — helper para banner.
+
+**Constructor:** `MaintenanceFormCubit(AddMaintenanceUseCase, UpdateMaintenanceUseCase, AnalyticsService)`.
 
 ### `MaintenanceDeleteCubit`
 
@@ -345,7 +357,9 @@ MaintenanceDeleteState.success({required String deletedId})
 MaintenanceDeleteState.error({required String message})
 ```
 
-Método único `deleteMaintenance(MaintenanceModel)` valida `id != null`, llama use case, emite resultado.
+Método único `deleteMaintenance(MaintenanceModel)` valida `id != null`, llama use case; en éxito dispara `AnalyticsEvents.maintenanceDeleted` (con `maintenanceType`) y emite `success(deletedId)`. También expone `reset()` para volver a `initial()`.
+
+**Constructor:** `MaintenanceDeleteCubit(DeleteMaintenanceUseCase, AnalyticsService)`.
 
 ---
 
@@ -379,6 +393,19 @@ La función `maintenanceStatusOf(MaintenanceModel, int mileage)` mapea:
 - `upToDate` → `current`
 - `overdue` → `overdue`
 
+### Orden por urgencia (`MaintenancesCubit._compareByUrgency`)
+
+`_applyClientFiltersAndEmit()` ordena el listado filtrado con `filtered.sort(_compareByUrgency)` — **no** es un simple orden por fecha. La regla:
+
+1. **Rank de urgencia** (`_statusRank`), de mayor a menor prioridad:
+   - `0` — `scheduled` + `overdue`
+   - `1` — `scheduled` + `next`
+   - `2` — `scheduled` + `upToDate` (o status `null`)
+   - `3` — `completed` (siempre al final, sin importar status)
+2. Si dos registros comparten rank, se desempata por fecha más reciente primero: `serviceDate ?? nextDate ?? createdDate` descendente.
+
+Esto reemplaza el orden simple por `serviceDate`/`createdDate` que hacía antes `MaintenanceRepositoryImpl.getMaintenancesByUserId()` (ese orden "crudo" del repository sigue existiendo como fallback, pero la UI siempre reordena por urgencia después de aplicar filtros).
+
 ---
 
 ## 6. Filtros server-side vs client-side
@@ -390,7 +417,9 @@ La función `maintenanceStatusOf(MaintenanceModel, int mileage)` mapea:
 | `vehicleIds` | **Client** (post-fetch) | `List<String>` |
 | `statusFilter` | **Client** | `MaintenanceStatusFilter` (all / overdue / next / upToDate) |
 | `searchQuery` | **Client** | `String` (busca solo en `type.label`) |
-| `sortBy` | **Client** | `MaintenanceSortOption` |
+| orden final | **Client (fijo)** | `MaintenancesCubit._compareByUrgency` — overdue → next → upToDate → completed (ver §5) |
+
+**`MaintenanceFilters.sortBy` (`MaintenanceSortOption`) existe en el modelo de filtros pero no se usa en `MaintenancesCubit`** — el orden real siempre es el fijo por urgencia (`_compareByUrgency`); es un campo vestigial que puede llevar a pensar que el sort es configurable por el usuario cuando no lo es (ver §12).
 
 **Razón de mezclar:** `getMaintenancesByUserId()` agrega resultados de todos los vehículos en un solo aggregate, y el cubit puede filtrar por vehículo sin reqfetch. El cálculo de status depende del odómetro del vehículo, lo cual conviene resolver client-side.
 
@@ -542,6 +571,18 @@ Es el mecanismo para pre-filtrar la lista al entrar desde `vehicleSoat` o `vehic
 
 ### `MaintenanceVehicleSelector` solo se muestra si no hay `initialVehicleId`
 Si entras a `/maintenances` sin extra → muestra selector y filtra. Si entras con extra (`vehicleId`) → no muestra selector. La summary del header se renderiza solo cuando hay **un solo vehículo** en `_filters.vehicleIds`.
+
+### Scoping automático por vehículo activo (evita fan-out)
+`GetMaintenanceListUseCase.execute({vehicleId, ...})` y `MaintenancesCubit.fetchMaintenances()` colaboran para evitar el fan-out de N requests cuando la lista ya está acotada a un solo vehículo: si `_filters.vehicleIds.length == 1`, se pasa ese id al use case y se hace **un único** `GET /maintenances/vehicle/{id}`; si hay 0 o 2+ vehículos en el filtro, se usa `getMaintenancesByUserId()` (fan-out). Esto es puramente una optimización de red — el resultado final (`MaintenanceUserListAggregate`) tiene la misma forma en ambos casos.
+
+### Orden fijo por urgencia, no por selección del usuario
+`MaintenanceFilters.sortBy` (`MaintenanceSortOption`: `nextMaintenance`/`date`/`name`) **existe en el modelo pero no se lee en ningún lado** — `MaintenancesCubit._applyClientFiltersAndEmit()` siempre ordena con `_compareByUrgency` (overdue → next → upToDate → completed, empate por fecha reciente). Si se expone un selector de orden en la UI, hay que cablear `sortBy` dentro de `_applyClientFiltersAndEmit()`; hoy cualquier UI que lo use no tendría efecto real.
+
+### Pattern B en `MaintenanceDto` (DTO extends Model)
+`MaintenanceDto extends MaintenanceModel` — no hay `toModel()`/`fromModel()`. Para persistir un `MaintenanceModel` de dominio se usa la extensión `MaintenanceModelExtension.toJson()` (crea un `MaintenanceDto` temporal internamente). `MaintenanceRepositoryImpl.updateMaintenance()` envía `maintenance.toJson()` y el `MaintenanceService.update()` ya retorna un `MaintenanceDto` usable directamente como `MaintenanceModel`.
+
+### Analytics de mantenimiento
+Los tres cubits reciben `AnalyticsService` inyectado y disparan eventos "fire and forget" (`.ignore()`): `maintenanceHistoryViewed` (con `resultCount`, en `fetchMaintenances()`), `maintenanceAdded`/`maintenanceUpdated` (con `maintenanceType` + `maintenanceMode`, en `MaintenanceFormCubit.saveMaintenance()`) y `maintenanceDeleted` (con `maintenanceType`, en `MaintenanceDeleteCubit`).
 
 ---
 

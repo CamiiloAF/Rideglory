@@ -2,6 +2,7 @@
 
 > Feature introducido en la iteración `tecnomecanica-rtm` (Fases 1–5).
 > Documentación de cierre: Fase 6 — Calidad, regresión y documentación.
+> Última actualización: 2026-07-04
 
 ---
 
@@ -19,7 +20,7 @@ La **revisión técnico-mecánica (RTM o tecnomecánica)** es el documento legal
 2. Toca el badge → abre `TecnomecanicaStatusPage`.
 3. Estado `empty` → muestra `DocumentEmptyState` con CTA "Registrar RTM".
 4. Toca CTA → navega a `TecnomecanicaFormPage`.
-5. Usuario llena: CDA, número de certificado (opcional), fechas inicio/vencimiento, URL del documento (opcional).
+5. Usuario llena: CDA, fechas inicio/vencimiento, URL del documento (opcional). **El campo `certificateNumber` fue eliminado** (commit `c07aca4`, junto con `cdaCode`).
 6. Confirma → `TecnomecanicaCubit.save()` → estado `data` → regresa al detalle.
 
 ### 2.2 Ver RTM registrado
@@ -146,7 +147,6 @@ class TecnomecanicaModel with VehicleDocumentExpiry implements VehicleDocumentMo
   final String id;
   final String vehicleId;
   final String cdaName;           // Centro de diagnóstico automotor
-  final String? certificateNumber;
   final DateTime startDate;
   final DateTime expiryDate;      // Base para VehicleDocumentExpiry
   final String? documentUrl;
@@ -156,6 +156,8 @@ class TecnomecanicaModel with VehicleDocumentExpiry implements VehicleDocumentMo
   VehicleDocumentKind get kind => VehicleDocumentKind.rtm;
 }
 ```
+
+> `cdaCode` y `certificateNumber` fueron eliminados del modelo (commit `c07aca4`, "eliminar cdaCode y certificateNumber, validar fechas en SOAT y RTM"). El commit también agregó validación de fechas en tiempo real en el formulario (`TecnomecanicaFormPage`) y modo lectura para RTM de vehículos archivados.
 
 ---
 

@@ -58,6 +58,14 @@ const _activeVehicle = VehicleModel(
   isMainVehicle: false,
 );
 
+const _archivedVehicle = VehicleModel(
+  id: 'v-archived',
+  name: 'Yamaha MT-07',
+  currentMileage: 5000,
+  isArchived: true,
+  isMainVehicle: false,
+);
+
 // ─── Test helper ─────────────────────────────────────────────────────────────
 
 /// Wraps [child] in a GoRouter with stub routes so [context.pop()] and
@@ -203,6 +211,17 @@ void main() {
 
       // Verify archiveVehicle was called via the use case
       verify(() => archiveUseCase(_activeVehicle)).called(1);
+
+      // Fila 4.1: tras archiveSuccess, la app muestra el snackbar
+      // "Vehículo archivado" (parentContext, no el sheetContext, que ya se
+      // cerró) y sincroniza el cubit local.
+      expect(find.text('Vehículo archivado'), findsOneWidget);
+      // NOTA: archiveLocally se invoca 2 veces por diseño actual — una desde
+      // VehicleActionCubit.archiveVehicle (línea 55) y otra desde el listener
+      // de este bottom sheet (línea 58 de garage_options_bottom_sheet.dart).
+      // Es una duplicación pre-existente (idempotente, no afecta el resultado
+      // visible), no introducida por este test.
+      verify(() => vehicleCubit.archiveLocally('v-active')).called(2);
     },
   );
 
@@ -244,6 +263,58 @@ void main() {
 
       // Verify archiveVehicle was NOT called
       verifyNever(() => archiveUseCase(any()));
+    },
+  );
+
+  // ── Fila 5.1: desarchivar muestra snackbar "Vehículo restaurado" ─────────
+
+  testWidgets(
+    'Fila 5.1: tapping "Restaurar" on an archived vehicle shows the '
+    '"Vehículo restaurado" snackbar and syncs VehicleCubit.unarchiveLocally',
+    (tester) async {
+      when(() => unarchiveUseCase(_archivedVehicle)).thenAnswer(
+        (_) async => const Right(
+          VehicleModel(
+            id: 'v-archived',
+            name: 'Yamaha MT-07',
+            currentMileage: 5000,
+            isArchived: false,
+            isMainVehicle: false,
+          ),
+        ),
+      );
+      when(() => vehicleCubit.unarchiveLocally(any())).thenReturn(null);
+
+      await tester.pumpWidget(
+        _wrapWithRouter(
+          vehicleCubit: vehicleCubit,
+          homeBuilder: (ctx) => ElevatedButton(
+            onPressed: () => GarageOptionsBottomSheet.show(ctx, _archivedVehicle),
+            child: const Text('Open'),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Open the bottom sheet
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+
+      // Tap "Restaurar" option (archiveRestore icon) — no confirmation dialog
+      final unarchiveTile = find.ancestor(
+        of: find.byIcon(LucideIcons.archiveRestore),
+        matching: find.byType(GestureDetector),
+      );
+      expect(unarchiveTile, findsWidgets);
+      await tester.tap(unarchiveTile.first);
+      await tester.pumpAndSettle();
+
+      verify(() => unarchiveUseCase(_archivedVehicle)).called(1);
+      // NOTA: mismo patrón que archiveLocally — invocado 2 veces (una desde
+      // VehicleActionCubit.unarchiveVehicle, otra desde el listener del
+      // bottom sheet). Ver comentario en TC-bs-1.
+      verify(() => vehicleCubit.unarchiveLocally('v-archived')).called(2);
+      expect(find.text('Vehículo restaurado'), findsOneWidget);
     },
   );
 }

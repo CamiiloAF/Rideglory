@@ -1,6 +1,6 @@
 # Documentación del Feature: Vehicles
 
-> Última actualización: 2026-06-17  
+> Última actualización: 2026-07-04  
 > Alcance: `lib/features/vehicles/`
 
 ---
@@ -80,10 +80,10 @@ VehicleModel
 
 **Igualdad:** valores de campo por campo (`==` y `hashCode`).
 
-### `SoatModel`
-> `lib/features/vehicles/domain/models/soat_model.dart` (versión re-exportada en este feature)
+### `VehicleSoatFormData`
+> `lib/features/vehicles/domain/models/vehicle_soat_form_data.dart`
 
-> Importante: existen **dos** `SoatModel`/`SoatStatus` en el repo: el del feature `vehicles` y el del feature `soat`. El de `vehicles` se usa por `VehicleRepository.upsertSoat()` / `getSoat()`. Ver `soat.md` para el flujo completo de SOAT.
+Ya **no existe** un `SoatModel` propio del feature `vehicles` (el archivo `soat_model.dart` fue eliminado). En su lugar, `VehicleRepository.upsertSoat()` / `getSoat()` usan `VehicleSoatFormData`, un contenedor de datos liviano (no implementa `VehicleDocumentModel`) con `id?`, `vehicleId`, `policyNumber?`, `startDate`, `expiryDate`, `insurer`, `documentUrl?`. El modelo de dominio canónico del SOAT vive en el feature `soat` (`SoatModel`); ver `soat.md` para el flujo completo.
 
 ---
 
@@ -94,30 +94,32 @@ VehicleModel
 lib/features/vehicles/domain/
 ├── models/
 │   ├── vehicle_model.dart
-│   └── soat_model.dart       (espejo del de feature soat)
+│   └── vehicle_soat_form_data.dart   (form data, no es el SoatModel del feature soat)
 ├── repository/
 │   └── vehicle_repository.dart
 └── usecases/
     ├── get_vehicles_usecase.dart
     ├── add_vehicle_usecase.dart
     ├── update_vehicle_usecase.dart
-    ├── delete_vehicle_usecase.dart
+    ├── permanently_delete_vehicle_usecase.dart
     ├── set_main_vehicle_usecase.dart
     ├── archive_vehicle_usecase.dart
     └── unarchive_vehicle_usecase.dart
 ```
 
-**`VehicleRepository`** (interface):
+**`VehicleRepository`** (interface actual):
 ```dart
 Future<Either<DomainException, List<VehicleModel>>> getMyVehicles();
 Future<Either<DomainException, VehicleModel>>       setMainVehicle(String vehicleId);
 Future<Either<DomainException, VehicleModel>>       addVehicle(VehicleModel vehicle);
 Future<Either<DomainException, VehicleModel>>       updateVehicle(VehicleModel vehicle);
-Future<Either<DomainException, void>>               deleteVehicle(String id);
+Future<Either<DomainException, void>>               permanentlyDeleteVehicle(String id);
 Future<Either<DomainException, String>>             uploadVehicleImage({vehicleId, localImagePath});
-Future<Either<DomainException, SoatModel>>          upsertSoat({vehicleId, soat});
-Future<Either<DomainException, SoatModel>>          getSoat(String vehicleId);
+Future<Either<DomainException, VehicleSoatFormData>> upsertSoat({vehicleId, soat});
+Future<Either<DomainException, VehicleSoatFormData>> getSoat(String vehicleId);
 ```
+
+> Ya no existe `deleteVehicle()`/`DeleteVehicleUseCase` (hard delete). El único método de borrado es `permanentlyDeleteVehicle()`, que en el backend es un **soft-delete** (ver §8).
 
 **Use cases:**
 
@@ -126,7 +128,7 @@ Future<Either<DomainException, SoatModel>>          getSoat(String vehicleId);
 | `GetMyVehiclesUseCase` | `@injectable` | `call() → Future<Either<DomainException, List<VehicleModel>>>` |
 | `AddVehicleUseCase` | `@injectable` | `call(VehicleModel) → Future<Either<DomainException, VehicleModel>>` |
 | `UpdateVehicleUseCase` | `@injectable` | `call(VehicleModel) → Future<Either<DomainException, VehicleModel>>` |
-| `DeleteVehicleUseCase` | `@injectable` | `call(String id) → Future<Either<DomainException, void>>` |
+| `PermanentlyDeleteVehicleUseCase` | `@injectable` | `call(String id) → Future<Either<DomainException, void>>` — delega en `VehicleRepository.permanentlyDeleteVehicle()` |
 | `SetMainVehicleUseCase` | `@injectable` | `call(String vehicleId) → Future<Either<DomainException, VehicleModel>>` |
 | `ArchiveVehicleUseCase` | `@injectable` | Copia `isArchived: true` + `updatedDate: now`, llama `UpdateVehicleUseCase` |
 | `UnarchiveVehicleUseCase` | `@injectable` | Copia `isArchived: false` + `updatedDate: now`, llama `UpdateVehicleUseCase` |
@@ -148,7 +150,7 @@ lib/features/vehicles/data/
 
 **`VehicleDto extends VehicleModel`** (patrón especial): hereda todos los campos y añade `@JsonSerializable`. Esto permite que `VehicleService` retorne `VehicleDto` y se use directamente como `VehicleModel` sin un `.toModel()` extra (excepto en `getMyVehicles` que sí mapea con `.toModel()` por consistencia).
 
-**`SoatDto`** es independiente (no hereda de `SoatModel`); su `toModel()` parsea `startDate`/`expiryDate` desde strings ISO.
+**`SoatDto`** (en `data/dto/soat_dto.dart`) es independiente (no hereda de ningún modelo); expone `.toFormData()` para convertirse a `VehicleSoatFormData`, parseando `startDate`/`expiryDate` desde strings ISO.
 
 **`VehicleService` (Retrofit)** — endpoints:
 | Método | HTTP | Path | Body |
@@ -157,11 +159,11 @@ lib/features/vehicles/data/
 | `setMyMainVehicle(vehicleId)` | `PUT` | `/vehicles/my/{vehicleId}/main` | — |
 | `createMyVehicle(request)` | `POST` | `/vehicles/my` | `Map<String, dynamic>` |
 | `updateVehicle(id, request)` | `PATCH` | `/vehicles/{id}` | `Map<String, dynamic>` |
-| `deleteVehicle(id)` | `DELETE` | `/vehicles/hard-delete/{id}` | — |
+| `permanentlyDeleteVehicle(id)` | `DELETE` | `/vehicles/my/{id}` | — |
 | `upsertSoat(vehicleId, body)` | `POST` | `/vehicles/{vehicleId}/soat` | `Map<String, dynamic>` |
 | `getSoat(vehicleId)` | `GET` | `/vehicles/{vehicleId}/soat` | — |
 
-**Importante:** el endpoint de `DELETE` es `/vehicles/hard-delete/{id}`, no `/vehicles/{id}` — borrado físico, no soft delete.
+**Importante:** ya no existe el endpoint `/vehicles/hard-delete/{id}` en el service (ni en ningún otro lugar del código Flutter). El único borrado expuesto a la app es `DELETE /vehicles/my/{id}`, que en el backend es un **soft-delete** (`isDeleted: true`, fila conservada) — ver §8.
 
 **`VehicleRepositoryImpl`** — body builder `_vehicleRequest()`:
 ```dart
@@ -202,30 +204,34 @@ lib/features/vehicles/presentation/
 │   ├── vehicle_cubit.dart
 │   ├── vehicle_form_cubit.dart
 │   ├── vehicle_form_state.dart           (freezed)
-│   └── vehicle_form_state.freezed.dart
+│   └── vehicle_form_cubit.freezed.dart
 ├── delete/
 │   └── cubit/
-│       ├── vehicle_delete_cubit.dart
-│       ├── vehicle_delete_state.dart     (freezed)
-│       └── vehicle_delete_state.freezed.dart
+│       ├── vehicle_action_cubit.dart
+│       ├── vehicle_action_state.dart     (freezed, part of vehicle_action_cubit.dart)
+│       └── vehicle_action_cubit.freezed.dart
 ├── garage/
 │   ├── cubit/
 │   │   └── vehicle_maintenances_cubit.dart
 │   ├── garage_page.dart
+│   ├── garage_page_view.dart
 │   └── widgets/
-│       └── ...                             (≥40 widgets)
+│       └── ...                             (≥45 widgets)
 ├── detail/
 │   └── vehicle_detail_page.dart
 ├── form/
 │   ├── vehicle_form_page.dart
+│   ├── vehicle_form_body.dart
 │   └── widgets/
 │       ├── vehicle_form_view.dart
-│       └── sections/...
+│       └── ...                             (secciones: cover, básica, identificación, specs, docs — incl. slots SOAT/RTM)
 └── widgets/
     ├── vehicle_card.dart
     ├── vehicle_selector.dart
     └── ...
 ```
+
+> **Nota de nomenclatura:** la carpeta se sigue llamando `delete/` mismo aunque el cubit que contiene (`VehicleActionCubit`) ya no solo borra — también archiva y desarchiva (ver §4 y §8). No renombrada para minimizar el diff histórico.
 
 ---
 
@@ -233,9 +239,9 @@ lib/features/vehicles/presentation/
 
 | Cubit | Archivo | DI | Estado | Notas |
 |---|---|---|---|---|
-| `VehicleCubit` | `cubit/vehicle_cubit.dart` | `@injectable` (instancia única en BlocProvider raíz) | `ResultState<List<VehicleModel>>` | Mantiene `_vehicles` + `_selectedVehicleId` (memoria) |
-| `VehicleFormCubit` | `cubit/vehicle_form_cubit.dart` | `@injectable` | `VehicleFormState` (freezed) | Crea/edita, sube imagen, captura SOAT |
-| `VehicleDeleteCubit` | `delete/cubit/vehicle_delete_cubit.dart` | `@injectable` | `VehicleDeleteState` (freezed) | Emite `success(deletedId)` o error |
+| `VehicleCubit` | `cubit/vehicle_cubit.dart` | `@injectable` (instancia única en BlocProvider raíz) | `ResultState<List<VehicleModel>>` | Mantiene `_vehicles` + `_selectedVehicleId` (memoria); inyecta `AnalyticsService` |
+| `VehicleFormCubit` | `cubit/vehicle_form_cubit.dart` | `@injectable` | `VehicleFormState` (freezed) | Crea/edita, sube imagen, captura SOAT y RTM pendientes |
+| `VehicleActionCubit` | `delete/cubit/vehicle_action_cubit.dart` | `@injectable` (instancia scoped, obtenida vía `getIt` por `GarageOptionsBottomSheet.show()`) | `VehicleActionState` (freezed) | Reemplazó a `VehicleDeleteCubit`. Unifica archivar/desarchivar/eliminar permanentemente en un solo cubit |
 | `VehicleMaintenancesCubit` | `garage/cubit/vehicle_maintenances_cubit.dart` | `@injectable` | `ResultState<List<MaintenanceModel>>` | Lista mantenimientos del vehículo en detalle |
 
 ### `VehicleCubit` — API pública
@@ -255,17 +261,18 @@ int? get currentMileage;                    // currentVehicle?.currentMileage
 **Métodos:**
 | Método | Efecto |
 |---|---|
-| `fetchMyVehicles()` | API call → carga `_vehicles`, resetea `_selectedVehicleId` al default (main o first), emite `data`/`empty` |
+| `fetchMyVehicles()` | API call → carga `_vehicles`, asegura un principal local (`_ensureLocalMain`), resetea `_selectedVehicleId` al default (main o first), setea la user property de analytics `has_vehicle` (`'1'`/`'0'`), emite `data`/`empty` |
 | `selectVehicle(VehicleModel)` | Actualiza `_selectedVehicleId` y re-emite (no persiste a backend) |
-| `updateMileage(int newMileage)` | **Optimistic**: actualiza local primero, luego llama `UpdateVehicleUseCase` (fire-and-forget en lo que respecta a errores — no se manejan) |
+| `updateMileage(int newMileage, {String? vehicleId})` | **Solo avanza el odómetro**: si `newMileage <= currentMileage` del vehículo objetivo, no hace nada (ignora valores menores o iguales). Si avanza, actualiza local primero (optimistic) y luego llama `UpdateVehicleUseCase` (no se manejan errores del await) |
 | `applySavedVehicleEdit(VehicleModel)` | Reemplaza vehículo en lista local por ID (usado tras `VehicleFormCubit.save`) |
-| `setMainVehicle(String vehicleId)` | Llama `SetMainVehicleUseCase`. Si éxito, marca `isMainVehicle: true` en el ganador y `false` en los demás, y selecciona el nuevo main |
+| `setMainVehicle(String vehicleId)` | Llama `SetMainVehicleUseCase`. Si éxito, marca `isMainVehicle: true` en el ganador y `false` en los demás, selecciona el nuevo main y registra el evento de analytics `vehicleSetMain`. Retorna `String?` con el mensaje de error (o `null` si OK) |
 | `addVehicleLocally(VehicleModel)` | Append a la lista; si es el primero, lo selecciona |
-| `updateSoatLocally(vehicleId, expiryDate)` | Recalcula `SoatStatus` (umbral 30 días) y actualiza `soatExpiryDate` localmente |
+| `updateSoatLocally(vehicleId, {required expiryDate})` | Recalcula `SoatStatus` (umbral 30 días) y actualiza `soatExpiryDate` localmente |
+| `clearSoatLocally(String vehicleId)` | Reconstruye el `VehicleModel` completo con `soatStatus: SoatStatus.noSoat` y sin `soatExpiryDate` (el `copyWith` normal no puede setear ese campo a `null`) |
 | `archiveLocally(String id)` | Marca `isArchived: true, isMainVehicle: false`. Si era principal, promueve el siguiente activo con `_promoteNewMain()` |
 | `unarchiveLocally(String id)` | Marca `isArchived: false`. Si no queda ningún vehículo activo con `isMainVehicle: true`, promueve el vehículo recién desarchivado a principal |
 | `deleteLocally(String id)` | Elimina de lista. Si era la selección, restaura default. Si queda vacío, emite `empty` |
-| `clearVehicles()` | Vacía todo y emite `empty` (usado en logout) |
+| `clearVehicles()` | Vacía todo y emite `empty` (usado en logout, ver §12 `VehicleSessionSync`) |
 
 **Cálculo de SoatStatus** (`_soatStatusFrom`, líneas 106–111):
 ```
@@ -286,6 +293,7 @@ String? localImagePath;
 String? soatLocalPath;                      // imagen SOAT subida durante form
 String? techReviewLocalPath;                // (no integrado a backend aún)
 PendingManualSoat? pendingManualSoat;       // SOAT manual capturado pre-creación
+PendingRtm? pendingRtm;                     // RTM (tecnomecánica) capturada pre-creación
 ```
 
 **`PendingManualSoat`** (clase auxiliar):
@@ -295,6 +303,15 @@ String insurer;            // requerido
 DateTime startDate;        // requerido
 DateTime expiryDate;       // requerido
 String? localImagePath;    // documento opcional
+```
+
+**`PendingRtm`** (clase auxiliar, agregada con la integración de tecnomecánica al form de vehículo):
+```dart
+String cdaName;             // requerido
+DateTime startDate;         // requerido
+DateTime expiryDate;        // requerido
+String? documentUrl;
+String? localImagePath;     // documento opcional
 ```
 
 **Métodos:**
@@ -312,21 +329,34 @@ String? localImagePath;    // documento opcional
 
 ---
 
-### `VehicleDeleteCubit`
+### `VehicleActionCubit`
 
-**Estado** `VehicleDeleteState` (freezed):
+Reemplazó a `VehicleDeleteCubit` (eliminado). Unifica las tres acciones destructivas/de estado sobre un vehículo — archivar, desarchivar y eliminar permanentemente — en un solo cubit, cada una con su propio use case pero compartiendo estado de loading/error.
+
+**Estado** `VehicleActionState` (freezed):
 ```dart
 initial()
 loading()
-success(String deletedId)
-error(String message)
-errorLastVehicle(String message)   // declarado pero no usado actualmente
+archiveSuccess({required String archivedId})
+unarchiveSuccess({required String unarchivedId})
+permanentDeleteSuccess({required String deletedId})
+error({required String message})
+errorLastVehicle({required String message})   // declarado pero no usado actualmente
 ```
 
-`deleteVehicle(vehicleId, availableVehicles)`:
-1. Llama `DeleteVehicleUseCase(vehicleId)`.
-2. Si éxito, llama `_vehicleCubit.deleteVehicleLocally(vehicleId)`.
-3. Emite `success(deletedId)` o `error`.
+**Constructor:** recibe `PermanentlyDeleteVehicleUseCase`, `ArchiveVehicleUseCase`, `UnarchiveVehicleUseCase`, la instancia de `VehicleCubit` (inyectada, no vía `context.read` — el cubit la usa para actualizar la lista local tras éxito) y `AnalyticsService`.
+
+**Métodos:**
+| Método | Efecto |
+|---|---|
+| `permanentlyDeleteVehicle(String vehicleId)` | Llama `PermanentlyDeleteVehicleUseCase`. Si éxito, registra el evento `vehicleDeleted` y emite `permanentDeleteSuccess`. **No** actualiza `VehicleCubit` directamente — eso lo hace el listener de `GarageOptionsBottomSheet` (`vehicleCubit.deleteLocally(...)`) al recibir el estado |
+| `archiveVehicle(VehicleModel vehicle)` | Llama `ArchiveVehicleUseCase`. Si éxito, sí llama `_vehicleCubit.archiveLocally(vehicle.id!)` directamente, registra `vehicleArchived` y emite `archiveSuccess` |
+| `unarchiveVehicle(VehicleModel vehicle)` | Llama `UnarchiveVehicleUseCase`. Si éxito, llama `_vehicleCubit.unarchiveLocally(vehicle.id!)`, registra `vehicleUnarchived` y emite `unarchiveSuccess` |
+| `reset()` | Vuelve a `initial` |
+
+> Inconsistencia menor: `archiveVehicle`/`unarchiveVehicle` sincronizan `VehicleCubit` desde dentro del cubit; `permanentlyDeleteVehicle` delega esa sincronización al widget consumidor (`GarageOptionsBottomSheet`). Funciona porque ese es el único consumidor hoy, pero si se agrega otro punto de entrada para borrar, hay que recordar llamar `deleteLocally` manualmente.
+
+**Instanciación:** no vive en el `BlocProvider` raíz — `GarageOptionsBottomSheet.show()` crea una instancia scoped por bottom sheet vía `getIt<VehicleActionCubit>()..reset()` y la provee con `BlocProvider<VehicleActionCubit>.value(...)` solo dentro del sheet.
 
 ---
 
@@ -344,10 +374,11 @@ Métodos: `fetchMaintenances(vehicleId)`, `addMaintenanceLocally(...)`, `updateM
 
 ```
 VehicleFormPage(vehicle?)
-  ├─ MultiBlocProvider: FormImageCubit + VehicleFormCubit + VehicleDeleteCubit
+  ├─ MultiBlocProvider: FormImageCubit + VehicleFormCubit
+  │    (VehicleDeleteCubit ya no se provee aquí — el borrado vive en VehicleActionCubit, scoped al garage)
   └─ VehicleFormView
      ├─ if (vehicle != null && vehicle.isArchived) → dialog "este vehículo está archivado"
-     ├─ Form sections: Cover, BasicInfo, Identification, Specs, Docs
+     ├─ Form sections: Cover, BasicInfo, Identification, Specs, Docs (incl. slots SOAT y RTM)
      └─ AppButton "Guardar"
          → VehicleFormCubit.buildVehicleToSave()  (valida form)
             └─ Si vehicle existente está archived → unarchive automáticamente
@@ -357,11 +388,11 @@ VehicleFormPage(vehicle?)
             └─ Emite ResultState.data(vehicle)
 ```
 
-**Listener en `VehicleFormView`** post-save (data state):
+**Listener en `VehicleFormView._formListener`** post-save (data state):
 1. `VehicleCubit.applySavedVehicleEdit(saved)` (si editaba) o `VehicleCubit.addVehicleLocally(saved)` (si creaba).
 2. **Si CREANDO + `soatLocalPath != null`** → `pushReplacementNamed(soatManualCapture, SoatManualCaptureParams(vehicle: saved, initialLocalImagePath: soatPath))` (mantiene VehicleForm fuera del back stack; `SoatConfirmationPage` fue eliminada).
-3. **Si CREANDO + `pendingManualSoat != null`** → `_savePendingManualSoatAndPop()` sube documento (si hay) + `upsertSoat()` + pop.
-4. Otro caso → `pop(savedVehicle)`.
+3. **Si CREANDO + (`pendingManualSoat != null` o `pendingRtm != null`)** → `_savePendingDocumentsAndPop()` (renombrado desde `_savePendingManualSoatAndPop`) sube el/los documento(s) pendiente(s) (si hay) y guarda **SOAT y/o RTM** vía `VehicleRepository.upsertSoat()` y `SaveTecnomecanicaUseCase`, luego muestra snackbar de éxito y hace pop.
+4. Otro caso (sin documentos pendientes) → snackbar de éxito inmediato + `pop(savedVehicle)`.
 
 ---
 
@@ -388,9 +419,14 @@ Hay **dos imágenes** distintas:
 - La URL resultante se incluye en el body como `imageUrl`.
 
 ### Documento SOAT (cuando se sube desde el form de vehículo)
-- Path Firebase: `soat/{vehicleId}/{timestamp}.{ext}`.
-- Manejado por `VehicleFormView._savePendingManualSoatAndPop()` para SOAT manual (modo creación) o por `SoatManualCapturePage` (pantalla unificada) para SOAT con documento (post-creación).
+- Path Firebase: `soat/{vehicleId}/{timestamp}_soat.{ext}`.
+- Manejado por `VehicleFormView._savePendingDocumentsAndPop()` para SOAT manual (modo creación) o por `SoatManualCapturePage` (pantalla unificada) para SOAT con documento (post-creación).
 - Si la subida de imagen falla, el SOAT se guarda **sin documentUrl** (catch silencioso). Ver §13.
+
+### Documento RTM / tecnomecánica (cuando se sube desde el form de vehículo)
+- Path Firebase: `tecnomecanica/{vehicleId}/{timestamp}_rtm.{ext}`.
+- Mismo método `_savePendingDocumentsAndPop()`, que ahora sube SOAT y RTM pendientes en el mismo paso post-creación (antes solo manejaba SOAT). Usa `SaveTecnomecanicaUseCase` del feature `tecnomecanica`.
+- Mismo catch silencioso que SOAT si la subida de imagen falla.
 
 ---
 
@@ -402,11 +438,13 @@ Hay **dos imágenes** distintas:
 | Desarchivar | `UnarchiveVehicleUseCase` | `vehicle.copyWith(isArchived: false)` → `UpdateVehicleUseCase` (PATCH). Si no queda ningún vehículo activo con `isMainVehicle: true`, el backend promueve el vehículo desarchivado a principal. `VehicleCubit.unarchiveLocally()` espeja la misma lógica. |
 | Eliminar permanentemente | `PermanentlyDeleteVehicleUseCase` | `DELETE /vehicles/my/{id}` → soft-delete en backend (`isDeleted: true`, fila conservada en BD). Si el vehículo era principal, el backend promueve el siguiente activo. `VehicleCubit.deleteLocally(id)` lo elimina de la lista local. |
 
-> **Nota:** el endpoint `DELETE /vehicles/hard-delete/{id}` existe en el service pero corresponde a un borrado físico para uso administrativo. El flujo de "Eliminar permanentemente" desde la app usa `DELETE /vehicles/my/{id}` (soft-delete).
+> **Nota:** ya no existe ningún endpoint `/vehicles/hard-delete/{id}` en el código Flutter (ni `DeleteVehicleUseCase`). El único borrado expuesto a la app es `DELETE /vehicles/my/{id}` (soft-delete), vía `VehicleActionCubit.permanentlyDeleteVehicle()`.
 
 **Auto-unarchive al editar**: `VehicleFormCubit.buildVehicleToSave()` desarchiva si el vehículo siendo editado tenía `isArchived: true`. Se complementa con el dialog de advertencia previo en `VehicleFormView`.
 
 **Promoción a principal al desarchivar**: si el usuario desarchiva el único vehículo activo (o el primero cuando no hay ningún principal), el backend (`vehicles.service.ts → update()`) y `VehicleCubit.unarchiveLocally()` lo promueven a `isMainVehicle: true` automáticamente.
+
+**Entry point único**: las tres acciones (archivar, desarchivar, eliminar permanentemente) se disparan desde `GarageOptionsBottomSheet` (`presentation/garage/widgets/garage_options_bottom_sheet.dart`), que muestra opciones distintas según `vehicle.isArchived` — si está archivado: "Restaurar" + "Eliminar permanentemente"; si no: "Marcar como principal" (si no lo es ya), "Editar", "Agregar mantenimiento", "Archivar". Cada acción destructiva pasa antes por `ConfirmationDialog.show()`.
 
 ---
 
@@ -424,7 +462,7 @@ Hay **dos imágenes** distintas:
 - Sub-secciones: foto + specs + último mantenimiento + próximo + lista de mantenimientos.
 
 ### Form (`presentation/form/`)
-- `VehicleFormPage` (envuelve form en 3 cubits).
+- `VehicleFormPage` (envuelve form en 2 cubits: `FormImageCubit` + `VehicleFormCubit`; ya no provee `VehicleDeleteCubit`).
 - `VehicleFormView` — listeners + secciones + bottom bar.
 
 ### Widget compartido — `VehicleSelector`
@@ -461,7 +499,7 @@ Bottom sheet alternativo al dropdown. Usado por `VehicleSelectorField` en el reg
 | Mis vehículos | `GET` | `/vehicles/my` |
 | Crear vehículo | `POST` | `/vehicles/my` |
 | Actualizar vehículo | `PATCH` | `/vehicles/{id}` |
-| Eliminar (hard) | `DELETE` | `/vehicles/hard-delete/{id}` |
+| Eliminar permanentemente (soft-delete) | `DELETE` | `/vehicles/my/{id}` |
 | Asignar principal | `PUT` | `/vehicles/my/{vehicleId}/main` |
 | Upsert SOAT | `POST` | `/vehicles/{vehicleId}/soat` |
 | Get SOAT | `GET` | `/vehicles/{vehicleId}/soat` |
@@ -479,6 +517,8 @@ Constantes en `lib/core/http/api_routes.dart` (`vehicles = '/vehicles'`, `myVehi
 | `maintenance` | `MaintenanceRepositoryImpl.getMaintenancesByUserId()` consume `VehicleRepository.getMyVehicles()`; `MaintenanceFormCubit` lee `VehicleCubit.currentMileage` para pre-llenar odómetro y propone update si aumentó |
 | `profile` | Logout llama `VehicleCubit.clearVehicles()` |
 | `home` | `HomeGarageSection` lee **exclusivamente** `VehicleCubit.state`. Filtra activos (`!isArchived`) antes de mostrar el principal. `MainShell` dispara `fetchMyVehicles()` al montar para que Home tenga datos de inmediato |
+| `authentication` (ciclo de vida de sesión) | `VehicleSessionSync` (`lib/shared/widgets/vehicle_session_sync.dart`), montado en `MyApp` envolviendo `MaterialApp.router`, escucha `AuthCubit` y llama `VehicleCubit.fetchMyVehicles()` al autenticar o `clearVehicles()` al desautenticar — evita que el garage de la sesión anterior quede visible tras cambiar de cuenta sin reiniciar la app (ver §13) |
+| `tecnomecanica` | `VehicleFormView` puede capturar una RTM pendiente (`PendingRtm`) durante la creación del vehículo y guardarla junto al SOAT vía `SaveTecnomecanicaUseCase` en `_savePendingDocumentsAndPop()`; el detalle y el slot del form de edición muestran el estado RTM de forma análoga al SOAT |
 | `soat` | `VehicleFormView` puede iniciar el flujo SOAT (`SoatManualCapturePage`, ruta `soatManualCapture`) durante la creación; el detalle del vehículo (`vehicle_soat_card.dart`) y el slot del form de edición (`vehicle_soat_form_slot.dart`) muestran el estado SOAT y permiten eliminarlo (`DeleteSoatUseCase` + `VehicleCubit.clearSoatLocally`) |
 
 ---
@@ -494,34 +534,39 @@ Patrón inusual: el DTO hereda del modelo. Funciona porque Retrofit puede deseri
 ### `createdDate`/`updatedDate` en `copyWith`
 El `copyWith` recibe `createdDate`/`updatedDate` como parámetros pero asigna a `createdAt`/`updatedAt`. Es un alias heredado. Si se llaman `copyWith(createdAt: ...)` directamente, **no compila** — hay que usar `createdDate`.
 
-### `updateMileage` es optimistic sin rollback
+### `updateMileage` solo avanza, y es optimistic sin rollback
 ```dart
-Future<void> updateMileage(int newMileage) async {
+Future<void> updateMileage(int newMileage, {String? vehicleId}) async {
+  // ...
+  if (newMileage <= vehicle.currentMileage) return;   // ← ignora retrocesos
   // actualiza local primero
   _vehicles = _vehicles.map(...).toList();
   _emitLoadedOrEmpty();
-  await _updateVehicleUseCase(updated);   // ← sin await del resultado, sin rollback
+  await _updateVehicleUseCase(updated);   // ← sin manejar el resultado, sin rollback
 }
 ```
-Si la API falla, el odómetro local queda desincronizado hasta el próximo `fetchMyVehicles()`. Aceptable hoy porque el usuario no recibe error, pero considerar rollback si esto crece.
+Si la API falla, el odómetro local queda desincronizado hasta el próximo `fetchMyVehicles()`. Aceptable hoy porque el usuario no recibe error, pero considerar rollback si esto crece. El guard `newMileage <= currentMileage` es intencional: el odómetro no puede retroceder desde la UI.
 
 ### Selección de vehículo es **session-scoped en RAM**
 `_selectedVehicleId` no persiste. Al reiniciar la app o volver del background, se pierde la selección y vuelve al main vehicle. Si quieres recordarla, persistir en `SharedPreferences` y restaurar en `fetchMyVehicles()`.
 
-### Hard delete + dependencias
-`DELETE /vehicles/hard-delete/{id}` borra el vehículo físicamente. El backend se encarga de soft-delete-ar maintenances relacionados, pero **inscripciones** que referencian al vehículo via `vehicleSummary` quedan con datos congelados (la inscripción tiene snapshot, no FK).
+### Ya no existe "hard delete" en el código Flutter
+Hasta antes de la fase de "eliminación permanente", el service tenía un endpoint `/vehicles/hard-delete/{id}` (borrado físico). Fue eliminado: hoy el único borrado es `DELETE /vehicles/my/{id}` (soft-delete, `PermanentlyDeleteVehicleUseCase` → `VehicleActionCubit.permanentlyDeleteVehicle`). El backend se encarga de soft-delete-ar maintenances relacionados, pero **inscripciones** que referencian al vehículo via `vehicleSummary` quedan con datos congelados (la inscripción tiene snapshot, no FK).
 
 ### `_vehicleRequest` omite campos
 El body solo envía 14 campos. **No envía** `color`, `soatStatus`, `soatExpiryDate`, `isMainVehicle`, `id`, `createdAt`, `updatedAt`. Si en el futuro la API soporta más campos, agregarlos aquí también.
 
-### `_savePendingManualSoatAndPop` se traga la excepción de imagen
-`VehicleFormView._savePendingManualSoatAndPop()` envuelve `uploadImage()` en `try-catch (_) { }`. Si la imagen falla pero el SOAT (sin documentUrl) se guarda OK, se muestra un warning pero el usuario no sabe en qué falló. Considerar separar los errores.
+### `_savePendingDocumentsAndPop` se traga la excepción de imagen
+`VehicleFormView._savePendingDocumentsAndPop()` (renombrado desde `_savePendingManualSoatAndPop` al integrar RTM) envuelve cada `uploadImage()` (SOAT y RTM) en `try-catch (_) { }`. Si la imagen falla pero el documento (sin `documentUrl`) se guarda OK, se muestra un warning pero el usuario no sabe en qué falló. Considerar separar los errores.
 
-### Dual flujo SOAT en creación
-- **Flujo "con imagen"**: usuario adjunta documento durante el form → al guardar, `pushReplacementNamed(soatManualCapture, ...)` (la pantalla unificada `SoatManualCapturePage`).
-- **Flujo "manual"**: usuario llena `PendingManualSoat` (con o sin imagen) → al guardar el vehículo, `_savePendingManualSoatAndPop()` invoca `upsertSoat` + pop.
+### Dual flujo SOAT en creación (y ahora también RTM)
+- **Flujo "con imagen" (solo SOAT)**: usuario adjunta documento SOAT durante el form → al guardar, `pushReplacementNamed(soatManualCapture, ...)` (la pantalla unificada `SoatManualCapturePage`).
+- **Flujo "manual" (SOAT y/o RTM)**: usuario llena `PendingManualSoat` y/o `PendingRtm` (con o sin imagen) → al guardar el vehículo, `_savePendingDocumentsAndPop()` invoca `upsertSoat` y/o `SaveTecnomecanicaUseCase` + pop.
 
-Verificar en `VehicleFormView` listener cuál branch se ejecuta según el state del cubit.
+Verificar en `VehicleFormView._formListener` cuál branch se ejecuta según el state del cubit.
+
+### `VehicleSessionSync` — sin él, el garage "recuerda" al usuario anterior
+`VehicleCubit` es una instancia única de larga vida (vive en el `BlocProvider` raíz, no se recrea entre logins). Sin `VehicleSessionSync` (`lib/shared/widgets/vehicle_session_sync.dart`, envolviendo `MaterialApp.router` en `main.dart`), cerrar sesión y entrar con otra cuenta sin reiniciar la app dejaría el garage de la cuenta anterior visible: el guard `if (state is Initial)` de `MainShell` no vuelve a disparar el fetch. `VehicleSessionSync` escucha `AuthCubit` y llama `fetchMyVehicles()`/`clearVehicles()` en cada transición de autenticación.
 
 ### Auto-unarchive silencioso
 Si editas un vehículo archivado y guardas, el form **lo desarchiva sin avisar de nuevo**. El dialog inicial sí avisa, pero el save no muestra confirmación extra. Si quieres mantener archivado mientras editas detalles, el comportamiento actual lo impide.
@@ -531,6 +576,9 @@ El getter retorna toda la lista. Si un consumidor (como `VehicleSelector`) neces
 
 ### `currentVehicle` con lista grande es lineal
 `currentVehicle` itera para buscar por id. Hoy las listas son pequeñas (< 10 vehículos por usuario en promedio), pero si crece, considerar usar `Map<String, VehicleModel>`.
+
+### `VehicleDeleteCubit` fue reemplazado por `VehicleActionCubit`
+No buscar `vehicle_delete_cubit.dart`/`vehicle_delete_state.dart`; fueron eliminados. `VehicleActionCubit` (`presentation/delete/cubit/vehicle_action_cubit.dart`) asume archivar, desarchivar y eliminar permanentemente. La carpeta se sigue llamando `delete/` por compatibilidad histórica del path.
 
 ### `VehicleCubit` es global pero NO singleton de DI
 Está registrado como `@injectable` (factory). Su instancia única vive en el `BlocProvider` raíz de `main.dart` (sobre `MaterialApp`), que maneja su ciclo de vida. Para acceder a esa instancia compartida usar SIEMPRE `context.read<VehicleCubit>()` (nunca `getIt<VehicleCubit>()`, que crearía una instancia nueva y duplicaría el estado). El `StatefulShellRoute` la reexpone con `BlocProvider.value(value: context.read<VehicleCubit>())` en `main_shell.dart`.
@@ -542,11 +590,13 @@ Está registrado como `@injectable` (factory). Su instancia única vive en el `B
 | Qué buscar | Archivo |
 |---|---|
 | Modelo de vehículo | `lib/features/vehicles/domain/models/vehicle_model.dart` |
+| Form data del SOAT (no es el modelo de dominio) | `lib/features/vehicles/domain/models/vehicle_soat_form_data.dart` |
 | Interface del repository | `lib/features/vehicles/domain/repository/vehicle_repository.dart` |
+| Use case de eliminación permanente (soft-delete) | `lib/features/vehicles/domain/usecases/permanently_delete_vehicle_usecase.dart` |
 | Cubit principal (global) | `lib/features/vehicles/presentation/cubit/vehicle_cubit.dart` |
 | Cubit del formulario | `lib/features/vehicles/presentation/cubit/vehicle_form_cubit.dart` |
 | Estado del formulario | `lib/features/vehicles/presentation/cubit/vehicle_form_state.dart` |
-| Cubit de borrado | `lib/features/vehicles/presentation/delete/cubit/vehicle_delete_cubit.dart` |
+| Cubit de archivar/desarchivar/eliminar | `lib/features/vehicles/presentation/delete/cubit/vehicle_action_cubit.dart` |
 | Cubit de mantenimientos | `lib/features/vehicles/presentation/garage/cubit/vehicle_maintenances_cubit.dart` |
 | Service HTTP | `lib/features/vehicles/data/service/vehicle_service.dart` |
 | Repository impl | `lib/features/vehicles/data/repository/vehicle_repository_impl.dart` |
@@ -554,6 +604,8 @@ Está registrado como `@injectable` (factory). Su instancia única vive en el `B
 | Page del detalle | `lib/features/vehicles/presentation/detail/vehicle_detail_page.dart` |
 | Page del formulario | `lib/features/vehicles/presentation/form/vehicle_form_page.dart` |
 | View del formulario (listeners) | `lib/features/vehicles/presentation/form/widgets/vehicle_form_view.dart` |
+| Bottom sheet de acciones (archivar/eliminar/editar) | `lib/features/vehicles/presentation/garage/widgets/garage_options_bottom_sheet.dart` |
 | Selector reutilizable | `lib/features/vehicles/presentation/widgets/vehicle_selector.dart` |
 | Constantes del form | `lib/features/vehicles/constants/vehicle_form_fields.dart` |
+| Sincronización con ciclo de vida de sesión | `lib/shared/widgets/vehicle_session_sync.dart` |
 | API endpoints | `lib/core/http/api_routes.dart` (`/vehicles*`) |

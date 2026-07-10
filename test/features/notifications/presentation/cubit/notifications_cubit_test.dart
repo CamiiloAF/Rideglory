@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -226,6 +228,52 @@ void main() {
       verify: (c) {
         verify(() => mockGetNotifications()).called(1);
         verifyNever(() => mockGetNotifications(cursor: any(named: 'cursor')));
+      },
+    );
+
+    // TC-2-38b (Caso 9C.2): calling loadMore() a second time while the first
+    // call is still in flight (isLoadingMore == true) must be a no-op — it
+    // must NOT trigger a second request to the use case.
+    blocTest<NotificationsCubit, NotificationsState>(
+      'TC-2-38b: a concurrent loadMore() call while isLoadingMore == true is '
+      'a no-op and does not duplicate the request',
+      setUp: () {
+        when(() => mockGetNotifications()).thenAnswer(
+          (_) async => Right(
+            NotificationsPage(data: [notification1], nextCursor: 'cursor-1'),
+          ),
+        );
+      },
+      build: () => cubit,
+      act: (c) async {
+        await c.load();
+
+        final pageCompleter = Completer<Either<DomainException, NotificationsPage>>();
+        when(
+          () => mockGetNotifications(cursor: 'cursor-1'),
+        ).thenAnswer((_) => pageCompleter.future);
+
+        // Fire the first loadMore() without awaiting it — it sets
+        // isLoadingMore = true and then awaits the (still pending) use case.
+        final firstCall = c.loadMore();
+
+        // While the first call is in flight, fire a second loadMore(): it
+        // must be a no-op since state.isLoadingMore is already true.
+        await c.loadMore();
+
+        // Now resolve the first call's future so it can complete.
+        pageCompleter.complete(
+          Right(NotificationsPage(data: [notification2], nextCursor: null)),
+        );
+        await firstCall;
+      },
+      verify: (c) {
+        verify(() => mockGetNotifications()).called(1);
+        verify(() => mockGetNotifications(cursor: 'cursor-1')).called(1);
+        final state = c.state;
+        final data = (state.listResult as Data<List<NotificationModel>>).data;
+        expect(data.length, 2);
+        expect(state.isLoadingMore, false);
       },
     );
   });

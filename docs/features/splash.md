@@ -1,6 +1,6 @@
 # Documentación del Feature: Splash
 
-> Última actualización: 2026-06-05  
+> Última actualización: 2026-07-04  
 > Alcance: `lib/features/splash/`
 
 ---
@@ -88,10 +88,13 @@ lib/features/splash/presentation/
 `SplashFooter` reacciona al estado:
 - `SplashError` → muestra mensaje rojo + botón "Reintentar".
 - Cualquier otro estado → renderiza la barra de progreso animada (`AnimatedBuilder` sobre `_progressAnimation`).
+- Además, siempre (independiente del estado) muestra la versión instalada (`v${PackageInfo.fromPlatform().version}`) en un `Positioned` bottom: 32, vía `FutureBuilder<PackageInfo>`.
 
 `SplashBrandContent` es estático: muestra `appName.toUpperCase()` + `'Connect. Ride. Explore.'`.
 
 `SplashGlowBackground` existe pero **no está montado** dentro del `Stack` de `SplashScreen` (ver §10).
+
+El `Scaffold` de `_SplashContent` fija `backgroundColor: AppColors.darkBgPrimary` (`#0D0D0F`) para que el splash de Flutter combine con el splash nativo de Android (`launch_background.xml` + `styles.xml` con `Theme.Black`, mismo color) y no haya parpadeo claro→oscuro al arrancar.
 
 ---
 
@@ -99,7 +102,7 @@ lib/features/splash/presentation/
 
 | Cubit | Archivo | DI | Estado base | Notas |
 |---|---|---|---|---|
-| `SplashCubit` | `presentation/cubit/splash_cubit.dart` | `@injectable` | `SplashState` (freezed union) | Llama `initialize()` una sola vez desde `SplashScreen.build()` |
+| `SplashCubit` | `presentation/cubit/splash_cubit.dart` | `@injectable` | `SplashState` (freezed union) | Llama `initialize()` una sola vez desde `SplashScreen.build()`. Depende de `LoadCurrentUserUseCase` y de `FirebaseRemoteConfig` (inyectado directamente, además de `ApiRemoteConfig`) para el chequeo de versión mínima |
 
 **`SplashState`** (freezed sealed union):
 
@@ -117,24 +120,29 @@ abstract class SplashState with _$SplashState {
 
 > No usa `ResultState<T>` porque la salida no es un dato sino una decisión de navegación.
 
-`SplashForceUpdate` se emite cuando la versión instalada es menor a `min_required_version` en Firebase Remote Config. El `BlocListener` muestra un `ForceUpdateDialog` no descartable (`barrierDismissible: false`, `PopScope(canPop: false)`) con un botón "Actualizar" que abre la Play Store / App Store.
+`SplashForceUpdate` se emite cuando la versión instalada (`PackageInfo.fromPlatform()`) es estrictamente menor a `min_required_version` en Firebase Remote Config (comparación semver campo a campo, `_isVersionBelow`). Ya **no existe** un widget `ForceUpdateDialog` propio (se eliminó); el `BlocListener` de `SplashScreen` llama directamente `AppModal.show(variant: AppModalVariant.warning, ...)` con un único botón "Actualizar" (`autoClose: false`, para que el modal no se cierre solo al presionar) que ejecuta `_openStore()` — abre App Store en iOS (`id6778918834`) o Play Store en Android según `defaultTargetPlatform`. El modal no tiene botón de cierre/cancelar, por lo que en la práctica no es descartable sin actualizar.
 
 **`SplashCubit.initialize()`** — único método público (más allá de los heredados):
 
 ```dart
 Future<void> initialize() async {
-  emit(SplashLoading());
+  emit(const SplashLoading());
 
   try {
     await LocationPermissionHandler.requestOnceOnFirstSplashOpen();
     await Future.delayed(const Duration(milliseconds: 1500));   // animación visible
 
-    final result = await _loadCurrentUserUseCase();
-    result.fold(
+    if (await _isForceUpdateRequired()) {
+      emit(const SplashForceUpdate());
+      return;
+    }
+
+    final currentUserResult = await _loadCurrentUserUseCase();
+    currentUserResult.fold(
       (failure) => emit(SplashError(failure.message)),
       (user)    => emit(user == null
-          ? SplashUnauthenticated()
-          : SplashAuthenticated()),
+          ? const SplashUnauthenticated()
+          : const SplashAuthenticated()),
     );
   } catch (e) {
     emit(SplashError('Failed to initialize: ${e.toString()}'));
@@ -142,7 +150,7 @@ Future<void> initialize() async {
 }
 ```
 
-El delay de 1500ms es intencional para que la animación de la barra de progreso se vea aunque el chequeo sea muy rápido.
+El delay de 1500ms es intencional para que la animación de la barra de progreso se vea aunque el chequeo sea muy rápido. El chequeo de force update corre **antes** de cargar el usuario, así que un dispositivo desactualizado nunca llega a `Authenticated`/`Unauthenticated`.
 
 ---
 
@@ -168,22 +176,28 @@ SplashCubit.initialize()
   │
   ├─ delay 1500ms                         ← animación visible
   │
+  ├─ _isForceUpdateRequired()
+  │     └─ PackageInfo.version < remoteConfig['min_required_version'] (semver) → SplashForceUpdate (return, no sigue)
+  │
   └─ LoadCurrentUserUseCase()
         └─ AuthService.loadCurrentUser()
               ├─ FirebaseAuth.currentUser == null → null   →  Unauthenticated
               ├─ UserStorageService.getUser(uid)   → stored →  Authenticated
               └─ fallback: UserRepository.getCurrentUser() →  Authenticated o error
 
-BlocListener<SplashCubit> en _SplashContent:
+BlocListener<SplashCubit> en _SplashContent (_handleNavigation):
   │
-  ├─ SplashForceUpdate     → showDialog(ForceUpdateDialog, barrierDismissible: false)
-  ├─ SplashUnauthenticated → context.pushReplacementNamed('/login')
-  ├─ SplashAuthenticated   → context.pushReplacementNamed('/home')
+  ├─ SplashForceUpdate     → AppModal.show(variant: warning, autoClose: false) con botón "Actualizar" → _openStore() (no navega)
+  ├─ SplashUnauthenticated → _hasNavigated=true; context.pushReplacementNamed('/login')
+  ├─ SplashAuthenticated   → _hasNavigated=true; context.read<AuthCubit>().checkAuthState() (sincroniza AuthCubit
+  │                          con el usuario ya cargado por LoadCurrentUserUseCase) + context.pushReplacementNamed('/home')
   └─ SplashError           → footer muestra error + botón Reintentar
                              onRetry → _hasNavigated=false + cubit.initialize()
 ```
 
 **Navegación protegida adicional**: `AppRouter.redirect` (en `app_router.dart`) bloquea acceso a rutas autenticadas si `FirebaseAuth.instance.currentUser == null`, redirigiendo a `/login`. Splash es ruta pública (no se redirige).
+
+**Arranque previo a Splash (`main.dart`)**: toda la inicialización (`WidgetsFlutterBinding.ensureInitialized`, orientación portrait, `Firebase.initializeApp`, Sentry, Remote Config, DI, `runApp`) corre dentro de un único `runZonedGuarded` para evitar el *zone mismatch* entre `ensureInitialized()` y `runApp()` que podía dejar la app en una pantalla en blanco en el primer arranque. Orden relevante: Sentry se inicializa **antes** de `ApiRemoteConfig.initialize(...)` para capturar errores de red/Firebase del arranque; `fetchAndActivate()` de Remote Config es fault-tolerant (si falla, continúa con caché o defaults en vez de crashear); `ApiBaseUrlResolver` tiene un fallback horneado en build (`config/prod.json` → `PROD_API_BASE_URL`) para cuando Remote Config aún no se ha descargado.
 
 ---
 
@@ -234,7 +248,10 @@ Solo se ejecuta cuando `UserStorageService.getUser(firebaseUid)` retorna `null` 
 | Use case | `LoadCurrentUserUseCase` | propio (`@injectable`) |
 | Repository | `UserRepository` | `lib/features/users/domain/repository/` (vía `AuthService`) |
 | Permission | `LocationPermissionHandler` | `lib/core/permissions/location_permission_handler.dart` |
-| L10n | `context.l10n.appName`, `splash_errorPrefix`, `splash_retryLabel` | `lib/l10n/app_es.arb` |
+| Remote Config | `FirebaseRemoteConfig` + `ApiRemoteConfig.minRequiredVersionKey` | `lib/core/config/api_remote_config.dart` (force update) |
+| Cubit externo | `AuthCubit` | `lib/features/authentication/application/auth_cubit.dart` — `checkAuthState()` llamado desde `SplashScreen` al llegar a `Authenticated` |
+| Modal | `AppModal` / `AppModalAction` | `lib/shared/widgets/modals/` (diálogo de force update) |
+| L10n | `context.l10n.appName`, `splash_errorPrefix`, `splash_retryLabel`, `splash_forceUpdateTitle`, `splash_forceUpdateMessage`, `splash_forceUpdateButton` | `lib/l10n/app_es.arb` |
 
 ---
 
@@ -260,6 +277,18 @@ Si `AuthService.loadCurrentUser()` tarda más de 1500ms, el delay no añade late
 
 ### El cubit es `@injectable`, no singleton
 Cada `SplashScreen.build()` crea una nueva instancia. En la práctica solo se crea uno porque solo se monta una vez, pero si se vuelve a navegar a `/` (no es el flujo normal) se crearía otro.
+
+### `ForceUpdateDialog` fue eliminado
+Hasta jun/2026 existía `widgets/force_update_dialog.dart` con un `AlertDialog` + `PopScope(canPop: false)` propio. Se reemplazó por una llamada directa a `AppModal.show(variant: AppModalVariant.warning, ...)` (el modal compartido de la app) para reutilizar estilo y comportamiento. No buscar ese archivo; ya no existe.
+
+### Sincronización con `AuthCubit` al autenticar
+`SplashScreen._handleNavigation` llama `context.read<AuthCubit>().checkAuthState()` justo antes de navegar a `/home` cuando el estado es `SplashAuthenticated`. Es necesario porque `LoadCurrentUserUseCase` opera sobre `AuthService` directamente (sin pasar por `AuthCubit`), y `AuthCubit` es el cubit consultado por el resto de la app (guards de router, UI). Sin este `checkAuthState()`, `AuthCubit` quedaría desincronizado del usuario ya cargado por Splash.
+
+### Fondo oscuro coordinado con el splash nativo
+El `Scaffold` de `_SplashContent` usa `AppColors.darkBgPrimary` para que combine con `launch_background.xml`/`styles.xml` (Android, `Theme.Black`, mismo `#0D0D0F`), evitando un destello de fondo claro entre el splash nativo y el primer frame de Flutter.
+
+### Blank screen en primer arranque (fix jun/2026)
+Antes de `035450c`/`a07463f`, un fallo de red en el primer arranque (Remote Config sin caché, sin conexión) podía dejar la app en blanco sin ningún log, porque `ensureInitialized()` y `runApp()` corrían en zonas distintas y los errores de Remote Config no eran tolerados. El fix (ver §5, "Arranque previo a Splash") envuelve todo en un solo `runZonedGuarded`, hace `fetchAndActivate()` fault-tolerant, e inicializa Sentry antes de Remote Config para nunca perder el error de arranque.
 
 ---
 

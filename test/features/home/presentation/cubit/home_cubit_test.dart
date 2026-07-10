@@ -11,10 +11,13 @@ import 'package:rideglory/features/home/domain/models/home_data.dart';
 import 'package:rideglory/features/home/domain/use_cases/get_home_data_use_case.dart';
 import 'package:rideglory/features/home/presentation/cubit/home_cubit.dart';
 import 'package:rideglory/features/vehicles/domain/models/vehicle_model.dart';
+import 'package:rideglory/features/vehicles/presentation/cubit/vehicle_cubit.dart';
 
 class MockGetHomeDataUseCase extends Mock implements GetHomeDataUseCase {}
 
 class MockAnalyticsService extends Mock implements AnalyticsService {}
+
+class MockVehicleCubit extends Mock implements VehicleCubit {}
 
 void main() {
   late MockGetHomeDataUseCase mockGetHomeDataUseCase;
@@ -169,5 +172,21 @@ void main() {
         ),
       ],
     );
+
+    // TC-home-4: loadHomeData never calls VehicleCubit.fetchMyVehicles()
+    test('TC-home-4: loadHomeData does not call VehicleCubit.fetchMyVehicles() '
+        '(garage section is populated independently by VehicleCubit, Home '
+        'refresh must not re-trigger a vehicles fetch)', () async {
+      final mockVehicleCubit = MockVehicleCubit();
+      when(() => mockGetHomeDataUseCase()).thenAnswer(
+        (_) async => Right(
+          HomeData(mainVehicle: mockVehicle, upcomingEvents: [mockEvent]),
+        ),
+      );
+
+      await homeCubit.loadHomeData();
+
+      verifyNever(() => mockVehicleCubit.fetchMyVehicles());
+    });
   });
 }

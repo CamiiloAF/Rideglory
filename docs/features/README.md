@@ -19,10 +19,20 @@ El objetivo es servir como **contexto base** para cualquier desarrollador (o age
 | **Home** | [home.md](./home.md) | Dashboard: vehículo principal + próximos eventos + campana de notif |
 | **Vehicles** | [vehicles.md](./vehicles.md) | Garage, CRUD vehículos, vehículo principal, archivar, integración SOAT |
 | **Maintenance** | [maintenance.md](./maintenance.md) | Mantenimientos completed/scheduled, status dinámico, auto-creación post-completed |
+| **Vehicle Documents** | [vehicle_documents.md](./vehicle_documents.md) | Base compartida de documentos legales de vehículo (mixin de vigencia, cubit base, widgets genéricos) usada por SOAT y RTM |
 | **SOAT** | [soat.md](./soat.md) | Captura del SOAT (foto/PDF o manual), cálculo de vigencia, status |
+| **Tecnomecánica (RTM)** | [tecnomecanica.md](./tecnomecanica.md) | Revisión técnico-mecánica: registro/edición/borrado, exención < 2 años, recordatorios push |
 | **Events** | [events.md](./events.md) | CRUD eventos, ciclo de vida (draft→scheduled→inProgress→finished), tracking en vivo, asistentes |
 | **Event Registration** | [event_registration.md](./event_registration.md) | Inscripciones, pre-llenado en cascada, saveToProfile, mis inscripciones |
 | **Notifications** | [notifications.md](./notifications.md) | Centro de notif, FCM, deep linking, badge de no-leídas |
+
+## Documentos transversales
+
+Documentación que no describe un feature de negocio, sino una convención/infraestructura que cruza varios features:
+
+| Documento | Resumen corto |
+|---|---|
+| [analytics.md](./analytics.md) | Reglas de un único punto de importación por SDK Firebase (Analytics/Crashlytics→Sentry), contrato de `CrashReporter` |
 
 ## Cómo usar esta documentación
 

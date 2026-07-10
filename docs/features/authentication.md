@@ -1,6 +1,6 @@
 # Documentación del Feature: Authentication
 
-> Última actualización: 2026-05-28  
+> Última actualización: 2026-07-04  
 > Alcance: `lib/features/authentication/`
 
 ---
@@ -161,11 +161,14 @@ sealed class AuthState {
 | `signOut()` | `Future<void>` | — |
 | `sendPasswordResetEmail(String email)` | `Future<void>` | — |
 
-**Token debug en consola:** `_printFirebaseToken(User)` se invoca solo en `kDebugMode` y solo en `signUpWithEmail`, `signInWithEmail`, `signInWithGoogle` (no en Apple). Logea el `idToken` con `dart:developer log()`.
+**Token debug en consola:** `_printFirebaseToken(User)` se invoca solo en `kDebugMode` en las 4 vías de sign-in con éxito (`signUpWithEmail`, `signInWithEmail`, `signInWithGoogle` **y** `signInWithApple`). Logea el `idToken` con `dart:developer log()`.
 
 **Inyecciones:**
-- `AuthService` — wrapper de Firebase Auth + Google Sign-In.
+- `AuthService` — wrapper de Firebase Auth + Google Sign-In + Apple Sign-In + reconciliación con el backend.
 - `FcmService` — registra el token FCM tras autenticarse (`.initialize().ignore()`, fire-and-forget).
+- `AnalyticsService` — cada método de auth reporta al menos uno de: `authFailed` (con `authMethod` + `authErrorCategory` categorizado, nunca el mensaje crudo), `authFirebaseOk` (tras obtener el usuario de Firebase, indica si el `UserModel` del backend ya cargó), `authSucceeded` + `authFirstHomeEntry` (al cerrar `_onAuthenticated`, que también hashea el `uid` con SHA-256 vía `AnalyticsUidHasher` y fija la user property `login_method`). Documentado en detalle en el feature de analytics; aquí solo se referencia.
+
+**Cancelación silenciosa:** si el usuario cancela el picker nativo, no se muestra error — se emite `AuthState.unauthenticated()` directo. Google reporta esto como `DomainException('sign_in_cancelled')` (mapeado en `rest_client_functions.dart` desde el código de `PlatformException`); Apple lo reporta como `'Inicio de sesión cancelado.'`. Ambos mensajes están *hardcodeados* como comparación exacta en `AuthCubit`; si cambia el texto en `rest_client_functions.dart`, hay que actualizar el `if` correspondiente en el cubit.
 
 ---
 
@@ -338,9 +341,10 @@ Las tres son **rutas públicas** según el guard `redirect` de `AppRouter` (`lib
 
 | Feature | Conexión |
 |---|---|
-| `core/services/auth_service` | El cubit delega TODO a `AuthService` (Firebase Auth + Google Sign-In + cache local de `UserModel`) |
+| `core/services/auth_service` | El cubit delega TODO a `AuthService` (Firebase Auth + Google Sign-In + Apple Sign-In + reconciliación backend + cache local de `UserModel`) |
 | `core/services/fcm_service` | Se inicializa post-autenticación (excepto en `signOut` y `sendPasswordResetEmail`) |
-| `users` | `AuthService` consume `UserRepository.registerUser()` y `UserRepository.getCurrentUser()`; `UserStorageService` persiste `UserModel` |
+| `core/services/analytics` | `AnalyticsService` + `AnalyticsUidHasher` — funnel de adquisición (`authFailed`, `authFirebaseOk`, `authSucceeded`, `authFirstHomeEntry`); inyectado en `AuthCubit` |
+| `users` | `AuthService` consume `UserRepository.registerUser()` (idempotente, usado también para reconciliar) y `UserRepository.getCurrentUser()`; `UserStorageService` persiste `UserModel` |
 | `splash` | `LoadCurrentUserUseCase` invoca `AuthService.loadCurrentUser()` al arrancar |
 | `profile` | `ProfileActionsList._logout()` llama `AuthCubit.signOut()` |
 | `notifications` | El `FcmService.initialize()` post-login obtiene/registra el token FCM (consume `RegisterFcmTokenUseCase`) |
@@ -353,12 +357,23 @@ Las tres son **rutas públicas** según el guard `redirect` de `AppRouter` (`lib
 Las otras features usan `@freezed` o `ResultState<T>`. Aquí se prefiere control manual para evitar el `part 'auth_state.freezed.dart'`. Si se agregan estados, mantener el patrón: declarar la fábrica, su implementación interna `_NombreEstado` y el getter `is...` correspondiente.
 
 ### Apple sign-in — prerequisitos de activación
-El código está completo. Para que funcione en un dispositivo real se necesita:
+El código está completo y probado en iOS real. Para que funcione en un dispositivo se necesita:
 1. Apple Developer Portal → App ID (`com.camiloagudelo.rideglory` y `*.dev`) → capability **Sign In with Apple** activado.
 2. Firebase Console → Authentication → Sign-in providers → **Apple** → habilitar.
 3. `ios/Runner/Runner.entitlements` con `com.apple.developer.applesignin` ya está agregado al proyecto.
 
-Apple solo entrega nombre y email del usuario en el **primer** sign-in; en inicios posteriores el campo viene vacío — el flujo ya lo maneja leyendo desde caché/API.
+Apple solo entrega nombre y email del usuario en el **primer** sign-in; en inicios posteriores el campo viene vacío — el flujo ya lo maneja leyendo desde caché/API (ver reconciliación abajo).
+
+### Apple sign-in — workaround del bug de FlutterFire con el nonce
+En `AuthService.signInWithApple()`, el `OAuthProvider('apple.com').credential(...)` se construye pasando `accessToken: appleCredential.authorizationCode` además de `idToken` y `rawNonce`. Motivo (comentado en el código): en iOS, `signInWithCredential` solo con `idToken` + `rawNonce` dispara un bug del SDK donde el nonce no se propaga a `verifyAssertion` y Firebase responde `invalid-credential` / "Invalid OAuth response from apple.com" aunque el token de Apple sea válido. Incluir el `authorizationCode` como `accessToken` evita esa ruta defectuosa (ref: `github.com/firebase/flutterfire/issues/17466`). **No quitar ese parámetro** aunque parezca redundante.
+
+### Reconciliación Firebase ↔ backend (Google, Apple, email)
+Puede existir un usuario en Firebase Auth sin su contraparte en el backend (p. ej. un registro previo que se cortó a mitad de camino, antes de llamar `UserRepository.registerUser()`). Los tres flujos de `AuthService` reconcilian este caso:
+
+- **`signUpWithEmail`**: si `createUserWithEmailAndPassword` falla con `email-already-in-use`, en vez de propagar el error se hace `signInWithEmailAndPassword` con las mismas credenciales (valida identidad; si la contraseña es incorrecta, el error se mapea genérico para no confirmar que el correo existe — sin enumeración de cuentas) y se marca `isNewFirebaseUser = false`. Luego siempre se llama `_registerApiUser(...)`, que es **idempotente** en el backend (crea o retorna el existente).
+- **`signInWithGoogle`** / **`signInWithApple`**: si `additionalUserInfo.isNewUser` es `false` (Firebase ya conocía al usuario) pero `_loadStoredUser(uid)` no encuentra nada ni en el cache local (`UserStorageService`) ni en `UserRepository.getCurrentUser()`, se asume que el backend nunca tuvo el registro y se llama `_registerApiUser(...)` con los datos disponibles (de Firebase o, en Apple, del `AppleIDCredential` de ese sign-in) para crearlo ahora.
+
+En todos los casos, tras resolver el `UserModel` se cachea con `_cacheUser(uid, user)` (memoria + `UserStorageService`).
 
 ### `_printFirebaseToken` en todos los sign-ins
 Se invoca en `kDebugMode` en `signUpWithEmail`, `signInWithEmail`, `signInWithGoogle` y `signInWithApple`.
@@ -411,4 +426,5 @@ A diferencia de Login y Signup donde el form se levanta en la View, el campo de 
 | Form de forgot password | `lib/features/authentication/login/presentation/widgets/forgot_password_form.dart` |
 | Email enviado screen | `lib/features/authentication/login/presentation/widgets/forgot_password_email_sent_content.dart` |
 | FCM service | `lib/core/services/fcm_service.dart` |
+| Analytics del funnel de auth | `lib/core/services/analytics/analytics_service.dart`, `analytics_events.dart`, `analytics_params.dart`, `analytics_uid_hasher.dart` |
 | Guard del router | `lib/shared/router/app_router.dart` (`redirect`) |
