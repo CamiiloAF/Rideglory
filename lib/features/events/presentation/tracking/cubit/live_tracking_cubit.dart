@@ -278,6 +278,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
             geolocatorPermission: geolocatorPermission,
           ),
         ).listen((position) async {
+          if (isClosed) return;
           if (_lastLatitude != null && _lastLongitude != null) {
             final delta = Geolocator.distanceBetween(
               _lastLatitude!,
@@ -305,6 +306,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
           _lastBackendPush = now;
 
           final battery = await _readBatteryPercent();
+          if (isClosed) return;
 
           final request = UpdateLocationRequest(
             eventId: _eventId,
@@ -317,6 +319,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
           );
 
           final result = await _updateLocationUseCase(request);
+          if (isClosed) return;
           result.fold((_) {}, (_) {
             emit(
               state.copyWith(
@@ -412,7 +415,17 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     _ridersReconnectTimer?.cancel();
     await _authSubscription?.cancel();
     await _ridersSubscription?.cancel();
-    await _positionSubscription?.cancel();
+    // `Geolocator.getPositionStream().cancel()` detiene el foreground service
+    // nativo (ver logs "Stopping location service" / "Stop service in
+    // foreground"); en algunos dispositivos/emuladores ese teardown nativo
+    // puede lanzar una excepción asíncrona fuera del alcance de los guards
+    // `isClosed` del listener Dart — se aísla para no tumbar el cierre del
+    // cubit ni dejar una excepción sin manejar en la zona del test.
+    try {
+      await _positionSubscription?.cancel();
+    } catch (error) {
+      developer.log('Position subscription cancel error (ignored): $error');
+    }
     await _sosSubscription?.cancel();
     await _sosClearedSubscription?.cancel();
     await _eventEndedSubscription?.cancel();
@@ -420,7 +433,11 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     if (uid != null && state.isTracking) {
       // Hito: fin de sesión por cierre del cubit (el rider salió de la pantalla).
       _logSessionEnded(AnalyticsParams.trackingEndReasonUserLeft);
-      await _stopTrackingUseCase(eventId: _eventId, userId: uid);
+      try {
+        await _stopTrackingUseCase(eventId: _eventId, userId: uid);
+      } catch (error) {
+        developer.log('Stop tracking use case error (ignored): $error');
+      }
     }
     return super.close();
   }
@@ -579,6 +596,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
     await _ridersSubscription?.cancel();
     _ridersSubscription = _watchActiveRidersUseCase(_eventId).listen(
       (riders) {
+        if (isClosed) return;
         developer.log('Live tracking riders emission: ${riders.length}');
         _ridersReconnectTimer?.cancel();
         // Hito: primer snapshot con riders en la sesión (el mapa se pobló).
@@ -592,6 +610,7 @@ class LiveTrackingCubit extends Cubit<LiveTrackingState> {
         emit(state.copyWith(ridersResult: ResultState.data(data: riders)));
       },
       onError: (error) {
+        if (isClosed) return;
         developer.log('Live tracking riders stream error: $error');
         _scheduleRidersResubscribe();
         emit(

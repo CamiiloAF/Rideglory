@@ -304,10 +304,15 @@ class TrackingWsClient {
   }
 
   Future<void> _disposeChannel() async {
-    await _subscription?.cancel();
-    _subscription = null;
-    await _channel?.sink.close();
-    _channel = null;
+    try {
+      await _subscription?.cancel();
+      await _channel?.sink.close();
+    } catch (error) {
+      developer.log('Tracking WS dispose error (ignored): $error');
+    } finally {
+      _subscription = null;
+      _channel = null;
+    }
   }
 
   void _onDisconnected() {

@@ -238,6 +238,38 @@ void main() {
     },
   );
 
+  // ── Test 6 ─────────────────────────────────────────────────────────────────
+
+  testWidgets(
+    'TC-arch-6: tapping header a second time collapses the section again '
+    '(hides the vehicle list)',
+    (tester) async {
+      await tester.pumpWidget(
+        _wrap(
+          vehicleCubit: vehicleCubit,
+          actionCubit: actionCubit,
+          child: const GarageArchivedSection(
+            archivedVehicles: [_archivedVehicle],
+          ),
+        ),
+      );
+      await tester.pump();
+
+      // Initially collapsed.
+      expect(find.text('Honda Archivada'), findsNothing);
+
+      // Tap header to expand.
+      await tester.tap(find.text('ARCHIVADOS'));
+      await tester.pump();
+      expect(find.text('Honda Archivada'), findsOneWidget);
+
+      // Tap header again to collapse.
+      await tester.tap(find.text('ARCHIVADOS'));
+      await tester.pump();
+      expect(find.text('Honda Archivada'), findsNothing);
+    },
+  );
+
   // ── Test 5 ─────────────────────────────────────────────────────────────────
 
   testWidgets(

@@ -41,9 +41,16 @@ class TrackingRepositoryImpl implements TrackingRepository {
         controller.add,
         onError: controller.addError,
       );
+      // El fetch HTTP es fire-and-forget: si el listener ya canceló (cubit
+      // cerrado) para cuando la respuesta llega, `controller.add()` sobre un
+      // MultiStreamController sin listener lanza una excepción no capturada
+      // (unawaited .then sin try/catch) — se vuelve especialmente probable
+      // con GPS/eventos mockeados que cierran la sesión rápido en tests.
       unawaited(
         _trackingService.snapshot(eventId).then((snapshot) {
-          controller.add(snapshot);
+          if (controller.hasListener) {
+            controller.add(snapshot);
+          }
         }),
       );
       controller.onCancel = () async {

@@ -287,16 +287,17 @@ class EventDetailCubit extends Cubit<EventDetailState> {
       },
       (_) async {
         final finished = event.copyWith(state: EventState.finished);
-        await getIt<LiveTrackingSessionHolder>().stopSessionForEvent(id);
-        if (isClosed) {
-          return;
-        }
         emit(
           state.copyWith(
             lastUpdatedEventResult: ResultState.data(data: finished),
             eventResult: ResultState.data(data: finished),
           ),
         );
+        // El teardown de la sesión GPS (cancelar el stream de Geolocator, cerrar
+        // el WS) puede tardar decenas de segundos en algunos dispositivos por el
+        // foreground service nativo — no debe bloquear que la UI refleje que el
+        // backend ya confirmó el fin de la rodada.
+        unawaited(getIt<LiveTrackingSessionHolder>().stopSessionForEvent(id));
       },
     );
   }

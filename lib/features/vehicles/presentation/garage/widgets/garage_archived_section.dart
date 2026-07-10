@@ -30,7 +30,7 @@ class _GarageArchivedSectionState extends State<GarageArchivedSection> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.archivedVehicles.isEmpty &&
         widget.archivedVehicles.isNotEmpty) {
-      _isExpanded = true;
+      setState(() => _isExpanded = true);
     }
   }
 

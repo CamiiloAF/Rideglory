@@ -104,6 +104,7 @@ class EventsCubit extends Cubit<ResultState<List<EventModel>>> {
   }
 
   void _onEventFinished(String eventId) {
+    if (isClosed) return;
     final index = _allEvents.indexWhere((e) => e.id == eventId);
     if (index == -1) return;
     final updated = _allEvents[index].copyWith(state: EventState.finished);
