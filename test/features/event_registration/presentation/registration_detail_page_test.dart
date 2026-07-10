@@ -269,4 +269,39 @@ void main() {
       );
     },
   );
+
+  group(
+    'RegistrationDetailPage — anonymized (deleted-account) registration (eliminacion-cuenta-phase-03, AC10)',
+    () {
+      // AC10: when the registrant's account has been deleted, the backend
+      // anonymizes 8 PII fields to null (fullName stays 'Usuario eliminado';
+      // bloodType/bloodTypeRaw are untouched). Every nulled field must fall
+      // back to the dedicated placeholder, never crash, and never reuse
+      // context.l10n.notAvailable.
+      testWidgets(
+        'muestra el placeholder dedicado en los 7 campos de texto + fecha de nacimiento',
+        (tester) async {
+          const registration = EventRegistrationModel(
+            id: 'reg-1',
+            eventId: 'event-1',
+            eventName: 'Rodada Test',
+            userId: 'user-1',
+            fullName: 'Usuario eliminado',
+            bloodType: BloodType.aPositive,
+          );
+
+          await tester.pumpWidget(
+            _buildTestWidget(mockAuthCubit, registration),
+          );
+          await tester.pumpAndSettle();
+
+          expect(tester.takeException(), isNull);
+          expect(find.text('Usuario eliminado'), findsWidgets);
+          // identificationNumber, birthDate, phone, email, residenceCity,
+          // eps, emergencyContactName, emergencyContactPhone == 8 rows.
+          expect(find.text('Cuenta eliminada'), findsNWidgets(8));
+        },
+      );
+    },
+  );
 }

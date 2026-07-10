@@ -79,27 +79,47 @@ class RegistrationDetailPage extends StatelessWidget {
                         ),
                         RegistrationDetailDataRow(
                           label: context.l10n.registration_rowIdentification,
-                          value: registration.identificationNumber,
+                          value:
+                              registration.identificationNumber ??
+                              context
+                                  .l10n
+                                  .registration_deletedAccountFieldPlaceholder,
                           showDivider: true,
                         ),
                         RegistrationDetailDataRow(
                           label: context.l10n.registration_rowBirthDate,
-                          value: registration.birthDate.formattedDate,
+                          value:
+                              registration.birthDate?.formattedDate ??
+                              context
+                                  .l10n
+                                  .registration_deletedAccountFieldPlaceholder,
                           showDivider: true,
                         ),
                         RegistrationDetailDataRow(
                           label: context.l10n.registration_rowPhone,
-                          value: registration.phone,
+                          value:
+                              registration.phone ??
+                              context
+                                  .l10n
+                                  .registration_deletedAccountFieldPlaceholder,
                           showDivider: true,
                         ),
                         RegistrationDetailDataRow(
                           label: context.l10n.registration_rowEmail,
-                          value: registration.email,
+                          value:
+                              registration.email ??
+                              context
+                                  .l10n
+                                  .registration_deletedAccountFieldPlaceholder,
                           showDivider: true,
                         ),
                         RegistrationDetailDataRow(
                           label: context.l10n.registration_rowCity,
-                          value: registration.residenceCity,
+                          value:
+                              registration.residenceCity ??
+                              context
+                                  .l10n
+                                  .registration_deletedAccountFieldPlaceholder,
                           showDivider: true,
                         ),
                       ],
@@ -115,7 +135,11 @@ class RegistrationDetailPage extends StatelessWidget {
                       children: [
                         RegistrationDetailDataRow(
                           label: context.l10n.registration_rowEps,
-                          value: registration.eps,
+                          value:
+                              registration.eps ??
+                              context
+                                  .l10n
+                                  .registration_deletedAccountFieldPlaceholder,
                         ),
                         if (registration.medicalInsurance != null &&
                             registration.medicalInsurance!.isNotEmpty)
@@ -146,11 +170,19 @@ class RegistrationDetailPage extends StatelessWidget {
                       children: [
                         RegistrationDetailDataRow(
                           label: context.l10n.registration_rowContactName,
-                          value: registration.emergencyContactName,
+                          value:
+                              registration.emergencyContactName ??
+                              context
+                                  .l10n
+                                  .registration_deletedAccountFieldPlaceholder,
                         ),
                         RegistrationDetailDataRow(
                           label: context.l10n.registration_rowPhone,
-                          value: registration.emergencyContactPhone,
+                          value:
+                              registration.emergencyContactPhone ??
+                              context
+                                  .l10n
+                                  .registration_deletedAccountFieldPlaceholder,
                           showDivider: true,
                         ),
                       ],

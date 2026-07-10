@@ -7,29 +7,32 @@ import 'package:rideglory/features/event_registration/domain/model/event_registr
 import 'package:rideglory/features/event_registration/presentation/widgets/registration_contact_trigger.dart';
 import 'package:rideglory/l10n/app_localizations.dart';
 
-EventRegistrationModel _registration({bool allowOrganizerContact = true}) =>
-    EventRegistrationModel(
-      id: 'reg-1',
-      eventId: 'event-1',
-      eventName: 'Rodada de prueba',
-      userId: 'user-1',
-      status: RegistrationStatus.approved,
-      fullName: 'Carlos Herrera',
-      identificationNumber: '123456789',
-      birthDate: DateTime(1990, 1, 1),
-      phone: '+57 310 456 7890',
-      email: 'carlos@test.com',
-      residenceCity: 'Bogotá',
-      eps: 'Sura',
-      bloodType: null,
-      emergencyContactName: 'Ana',
-      emergencyContactPhone: '3007654321',
-      allowOrganizerContact: allowOrganizerContact,
-    );
+EventRegistrationModel _registration({
+  bool allowOrganizerContact = true,
+  String? phone = '+57 310 456 7890',
+}) => EventRegistrationModel(
+  id: 'reg-1',
+  eventId: 'event-1',
+  eventName: 'Rodada de prueba',
+  userId: 'user-1',
+  status: RegistrationStatus.approved,
+  fullName: 'Carlos Herrera',
+  identificationNumber: '123456789',
+  birthDate: DateTime(1990, 1, 1),
+  phone: phone,
+  email: 'carlos@test.com',
+  residenceCity: 'Bogotá',
+  eps: 'Sura',
+  bloodType: null,
+  emergencyContactName: 'Ana',
+  emergencyContactPhone: '3007654321',
+  allowOrganizerContact: allowOrganizerContact,
+);
 
 Widget _host({
   bool isOrganizerView = true,
   bool allowOrganizerContact = true,
+  String? phone = '+57 310 456 7890',
 }) => MaterialApp(
   theme: AppTheme.darkTheme,
   localizationsDelegates: const [
@@ -44,6 +47,7 @@ Widget _host({
       child: RegistrationContactTrigger(
         registration: _registration(
           allowOrganizerContact: allowOrganizerContact,
+          phone: phone,
         ),
         isOrganizerView: isOrganizerView,
       ),
@@ -154,6 +158,23 @@ void main() {
 
     expect(launched, contains('https://wa.me/+573104567890'));
   });
+
+  testWidgets(
+    'phone=null (cuenta anonimizada) con Llamar no lanza excepción ni URL (eliminacion-cuenta-phase-03)',
+    (tester) async {
+      final launched = <String>[];
+      _mockUrlLauncher(launched: launched, canLaunchFor: (_) => true);
+
+      await tester.pumpWidget(_host(phone: null));
+      await tester.tap(find.byType(InkWell));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Llamar'));
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(launched, isEmpty);
+    },
+  );
 
   testWidgets('sin app que abra el enlace muestra un SnackBar, no falla mudo', (
     tester,

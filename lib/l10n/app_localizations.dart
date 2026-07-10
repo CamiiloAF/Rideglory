@@ -2494,6 +2494,30 @@ abstract class AppLocalizations {
   /// **'Reintentar'**
   String get profile_deleteAccount_retryButton;
 
+  /// No description provided for @profile_deleteAccountBlocked_title.
+  ///
+  /// In es, this message translates to:
+  /// **'No puedes eliminar tu cuenta todavía'**
+  String get profile_deleteAccountBlocked_title;
+
+  /// No description provided for @profile_deleteAccountBlocked_body.
+  ///
+  /// In es, this message translates to:
+  /// **'Tienes eventos activos como organizador, por ejemplo \"{eventName}\". Cancélalos o finalízalos antes de eliminar tu cuenta.'**
+  String profile_deleteAccountBlocked_body(String eventName);
+
+  /// No description provided for @profile_deleteAccountBlocked_cta.
+  ///
+  /// In es, this message translates to:
+  /// **'Ver mis eventos'**
+  String get profile_deleteAccountBlocked_cta;
+
+  /// No description provided for @profile_deleteAccountBlocked_checkError.
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos verificar tus eventos. Intenta de nuevo.'**
+  String get profile_deleteAccountBlocked_checkError;
+
   /// No description provided for @registration_registrationPageTitle.
   ///
   /// In es, this message translates to:
@@ -3321,6 +3345,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Ciudad'**
   String get registration_rowCity;
+
+  /// No description provided for @registration_deletedAccountFieldPlaceholder.
+  ///
+  /// In es, this message translates to:
+  /// **'Cuenta eliminada'**
+  String get registration_deletedAccountFieldPlaceholder;
 
   /// No description provided for @registration_rowEps.
   ///

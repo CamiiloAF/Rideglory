@@ -1289,6 +1289,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String get profile_deleteAccount_retryButton => 'Reintentar';
 
   @override
+  String get profile_deleteAccountBlocked_title =>
+      'No puedes eliminar tu cuenta todavía';
+
+  @override
+  String profile_deleteAccountBlocked_body(String eventName) {
+    return 'Tienes eventos activos como organizador, por ejemplo \"$eventName\". Cancélalos o finalízalos antes de eliminar tu cuenta.';
+  }
+
+  @override
+  String get profile_deleteAccountBlocked_cta => 'Ver mis eventos';
+
+  @override
+  String get profile_deleteAccountBlocked_checkError =>
+      'No pudimos verificar tus eventos. Intenta de nuevo.';
+
+  @override
   String get registration_registrationPageTitle => 'Inscripción al Evento';
 
   @override
@@ -1737,6 +1753,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get registration_rowCity => 'Ciudad';
+
+  @override
+  String get registration_deletedAccountFieldPlaceholder => 'Cuenta eliminada';
 
   @override
   String get registration_rowEps => 'EPS';

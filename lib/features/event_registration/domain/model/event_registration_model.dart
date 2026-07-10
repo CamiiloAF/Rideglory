@@ -47,15 +47,21 @@ class EventRegistrationModel {
   final RegistrationStatus status;
 
   // Personal info
+  //
+  // These 8 fields are nullable because the backend anonymizes them (sets
+  // them to `null`) when the registrant's account is deleted. `fullName` is
+  // NOT part of this group: the backend always writes the literal
+  // `'Usuario eliminado'` there, never `null`. `bloodType`/`bloodTypeRaw` are
+  // also excluded (explicit guardrail — medical evidence is preserved).
   final String fullName;
-  final String identificationNumber;
-  final DateTime birthDate;
-  final String phone;
-  final String email;
-  final String residenceCity;
+  final String? identificationNumber;
+  final DateTime? birthDate;
+  final String? phone;
+  final String? email;
+  final String? residenceCity;
 
   // Medical info
-  final String eps;
+  final String? eps;
   final String? medicalInsurance;
   final BloodType? bloodType;
   // Raw string from the backend when it could not be mapped to a known
@@ -64,8 +70,8 @@ class EventRegistrationModel {
   final String? bloodTypeRaw;
 
   // Emergency contact
-  final String emergencyContactName;
-  final String emergencyContactPhone;
+  final String? emergencyContactName;
+  final String? emergencyContactPhone;
 
   // Vehicle info
   final String? vehicleId;
@@ -89,17 +95,17 @@ class EventRegistrationModel {
     required this.userId,
     this.status = RegistrationStatus.pending,
     required this.fullName,
-    required this.identificationNumber,
-    required this.birthDate,
-    required this.phone,
-    required this.email,
-    required this.residenceCity,
-    required this.eps,
+    this.identificationNumber,
+    this.birthDate,
+    this.phone,
+    this.email,
+    this.residenceCity,
+    this.eps,
     this.medicalInsurance,
     required this.bloodType,
     this.bloodTypeRaw,
-    required this.emergencyContactName,
-    required this.emergencyContactPhone,
+    this.emergencyContactName,
+    this.emergencyContactPhone,
     this.vehicleId,
     this.vehicleSummary,
     this.createdAt,

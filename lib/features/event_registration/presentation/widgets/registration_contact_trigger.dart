@@ -73,6 +73,7 @@ class RegistrationContactTrigger extends StatelessWidget {
     if (method == null) return;
 
     final phone = registration.phone;
+    if (phone == null) return;
     final (future, failureMessage) = switch (method) {
       RegistrationContactMethod.call => (
         UrlLauncherHelper.openPhone(phone),

@@ -58,17 +58,17 @@ class EventRegistrationDto extends EventRegistrationModel {
     required super.userId,
     super.status = RegistrationStatus.pending,
     required super.fullName,
-    required super.identificationNumber,
-    required super.birthDate,
-    required super.phone,
-    required super.email,
-    required super.residenceCity,
-    required super.eps,
+    super.identificationNumber,
+    super.birthDate,
+    super.phone,
+    super.email,
+    super.residenceCity,
+    super.eps,
     super.medicalInsurance,
     required super.bloodType,
     @JsonKey(includeFromJson: false, includeToJson: false) super.bloodTypeRaw,
-    required super.emergencyContactName,
-    required super.emergencyContactPhone,
+    super.emergencyContactName,
+    super.emergencyContactPhone,
     super.vehicleId,
     super.vehicleSummary,
     super.createdAt,
@@ -122,11 +122,7 @@ class EventRegistrationDto extends EventRegistrationModel {
     );
   }
 
-  Map<String, dynamic> toJson() {
-    final json = _$EventRegistrationDtoToJson(this);
-    json['birthDate'] = apiEncodeRequiredDateTime(birthDate);
-    return json;
-  }
+  Map<String, dynamic> toJson() => _$EventRegistrationDtoToJson(this);
 }
 
 extension EventRegistrationModelExtension on EventRegistrationModel {

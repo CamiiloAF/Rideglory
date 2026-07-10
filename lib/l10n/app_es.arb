@@ -441,6 +441,17 @@
   "profile_deleteAccount_confirmButtonLoading": "Eliminando…",
   "profile_deleteAccount_errorMessage": "No pudimos eliminar tu cuenta. Verifica tu conexión e intenta de nuevo.",
   "profile_deleteAccount_retryButton": "Reintentar",
+  "profile_deleteAccountBlocked_title": "No puedes eliminar tu cuenta todavía",
+  "profile_deleteAccountBlocked_body": "Tienes eventos activos como organizador, por ejemplo \"{eventName}\". Cancélalos o finalízalos antes de eliminar tu cuenta.",
+  "@profile_deleteAccountBlocked_body": {
+    "placeholders": {
+      "eventName": {
+        "type": "String"
+      }
+    }
+  },
+  "profile_deleteAccountBlocked_cta": "Ver mis eventos",
+  "profile_deleteAccountBlocked_checkError": "No pudimos verificar tus eventos. Intenta de nuevo.",
   "registration_registrationPageTitle": "Inscripción al Evento",
   "registration_myRegistrations": "Mis inscripciones",
   "registration_editRegistration": "Editar inscripción",
@@ -591,6 +602,7 @@
   "registration_rowPhone": "Teléfono",
   "registration_rowEmail": "Correo electrónico",
   "registration_rowCity": "Ciudad",
+  "registration_deletedAccountFieldPlaceholder": "Cuenta eliminada",
   "registration_rowEps": "EPS",
   "registration_rowMedicalInsurance": "Seguro médico",
   "registration_rowBloodType": "Tipo de sangre",
