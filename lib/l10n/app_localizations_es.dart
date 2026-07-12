@@ -3479,4 +3479,8 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get event_cover_picker_remove => 'Eliminar portada';
+
+  @override
+  String get auth_sessionEndedSnackbar =>
+      'Tu sesión terminó, inicia sesión de nuevo.';
 }

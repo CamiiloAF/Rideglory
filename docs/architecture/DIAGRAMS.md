@@ -255,7 +255,75 @@ flowchart TD
 
 ---
 
+## `DELETE /users/me` idempotency (eliminacion-cuenta-phase-04)
+
+8-step orchestration in `AccountDeletionService.deleteAccount` (api-gateway). Diagram shows the
+retry-after-full-completion case (step 1 gap found by phase-04) and the concurrent-race case
+(steps 7-8).
+
+```mermaid
+sequenceDiagram
+    participant C1 as Client (call 1)
+    participant C2 as Client (call 2, retry/race)
+    participant GW as api-gateway<br/>AccountDeletionService
+    participant U as users-ms
+    participant FB as Firebase Admin
+
+    Note over C1,C2: Case A — retry AFTER a full previous run completed
+    C1->>GW: DELETE /users/me
+    GW->>U: findUserByEmail(email)
+    U-->>GW: 404 not found (already hard-deleted)
+    Note right of GW: ADR-1 (phase-04): catch "not found"<br/>on step 1 → return early = 204.<br/>Without this fix: 404 leaks to client<br/>(undocumented contract code).
+    GW-->>C1: 204 (idempotent no-op)
+
+    Note over C1,C2: Case B — two overlapping calls, same uid
+    C1->>GW: DELETE /users/me
+    C2->>GW: DELETE /users/me
+    par both resolve user before either finishes
+        GW->>U: findUserByEmail (call 1) → user.id
+        GW->>U: findUserByEmail (call 2) → user.id
+    end
+    Note over GW: steps 2-6 (organizer precondition,<br/>hardDeleteAllByOwner, storage cleanup,<br/>softDeleteMaintenances, anonymizeRegistrations)<br/>already idempotent (findMany/updateMany) — no fix needed
+    GW->>U: hardDeleteUser (call 1) — wins race
+    U-->>GW: deleted
+    GW->>U: hardDeleteUser (call 2) — loses race
+    U-->>GW: P2025 (not found) → no-op (phase-04 fix)
+    GW->>FB: deleteUser(uid) (call 1) — wins race
+    FB-->>GW: deleted
+    GW->>FB: deleteUser(uid) (call 2) — loses race
+    FB-->>GW: auth/user-not-found → no-op (phase-04 fix)
+    GW-->>C1: 204
+    GW-->>C2: 204
+```
+
+Client-side session recovery (Flutter), when the account was fully deleted while the app was
+closed:
+
+```mermaid
+sequenceDiagram
+    participant App as App reopens
+    participant AC as AuthCubit
+    participant API as Any authenticated call
+    participant FAI as FirebaseAuthInterceptor
+    participant Router as GoRouter
+
+    App->>AC: checkAuthState()
+    AC-->>App: authenticated (stale cached session)
+    App->>API: e.g. GET /users/me
+    API-->>FAI: 401
+    FAI->>FAI: getIdToken(true) forced refresh
+    FAI-->>FAI: throws FirebaseAuthException<br/>(user-not-found / user-disabled / user-token-expired)
+    Note right of FAI: phase-04: only these 3 codes trigger<br/>logout — never network-request-failed
+    FAI->>AC: GetIt.instance<AuthCubit>().signOut() (defensive try/catch)
+    AC-->>Router: AuthState.unauthenticated (stream)
+    Router->>Router: GoRouterRefreshStream fires redirect
+    Router-->>App: navigate to /login + snackbar<br/>"Tu sesión terminó, inicia sesión de nuevo."
+```
+
 ## Change log
 
+- 2026-07-11 (eliminacion-cuenta-phase-04): Added `DELETE /users/me` idempotency sequence diagrams
+  (retry-after-completion + concurrent race) and the client-side forced-logout sequence. No ERD
+  change — no schema/data model changes in this phase, only error-handling hardening.
 - 2026-05-14 (iter-1): Initial diagrams document created. Captures design-system layering, new iter-1 primitives (`AppEventBadge`, `DocumentSlotPill`) and their consumers, module PR sequence, and color tokenization decision flow. No ERD or sequence diagrams — iter-1 introduces no new data models or async flows.
 - 2026-05-15 (iter-3): Added ERD (Event + Registration + MaintenanceRecord + Vehicle + Notification with iter-3 fields: `routeGeoJson`, `sosTriggeredAt`, `reminderSentAt`, `soatStatus`, `soatExpiryDate`). Added SOS alert sequence diagram (WS → gateway → events-ms dedup → broadcast + FCM). Added Mapbox migration SDK-swap flowchart (4 Dart files, 4 type replacements).

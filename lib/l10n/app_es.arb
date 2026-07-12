@@ -1377,5 +1377,6 @@
   "event_cover_picker_title": "Portada del evento",
   "event_cover_picker_gallery": "Subir desde galería",
   "event_cover_picker_change": "Cambiar imagen",
-  "event_cover_picker_remove": "Eliminar portada"
+  "event_cover_picker_remove": "Eliminar portada",
+  "auth_sessionEndedSnackbar": "Tu sesión terminó, inicia sesión de nuevo."
 }

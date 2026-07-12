@@ -6468,6 +6468,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Eliminar portada'**
   String get event_cover_picker_remove;
+
+  /// No description provided for @auth_sessionEndedSnackbar.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu sesión terminó, inicia sesión de nuevo.'**
+  String get auth_sessionEndedSnackbar;
 }
 
 class _AppLocalizationsDelegate

@@ -38,6 +38,10 @@ class UserRepositoryImpl implements UserRepository {
     return executeService(function: () => _userService.getUserById(userId));
   }
 
+  // El receiveTimeout global de AppDio es 60s (ver
+  // lib/core/http/app_dio.dart), mayor al estimado de 30-45s de la
+  // orquestación de 8 pasos del backend (account-deletion.service.ts) para
+  // el borrado de cuenta. No se necesita override de timeout en esta llamada.
   @override
   Future<Either<DomainException, Nothing>> deleteMyAccount() {
     return executeService(
