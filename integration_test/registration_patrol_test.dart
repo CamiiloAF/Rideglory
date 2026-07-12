@@ -106,7 +106,11 @@ Future<void> _runRegistrationFlow(PatrolIntegrationTester $) async {
   await _settle($, 3);
   await _grantPendingLocationPermission($);
 
-  await $(_targetEvent).waitUntilVisible(timeout: const Duration(seconds: 45));
+  // La tarjeta de "Mi Evento" puede quedar fuera del viewport inicial según
+  // su posición en la lista (ordenada por fecha) — igual que el CTA
+  // "Inscribirme" más abajo, esperamos EXISTENCIA (no visibilidad en
+  // pantalla) y dejamos que scrollTo() la traiga a vista.
+  await $(_targetEvent).waitUntilExists(timeout: const Duration(seconds: 45));
   await $(_targetEvent).scrollTo().tap();
   await _settle($, 3);
 
