@@ -304,4 +304,52 @@ void main() {
       );
     },
   );
+
+  group(
+    'RegistrationDetailPage — masking regression (eliminacion-cuenta-phase-03, masking != anonymization)',
+    () {
+      // Regression guardrail: a registration where the rider opted out of
+      // sharing medical info (shareMedicalInfo=false, backend masks the
+      // medical/emergency fields as the literal privacy sentinel "••••") is
+      // NOT the same thing as an anonymized (deleted-account) registration.
+      // The page must render the masking sentinel literally and must never
+      // show the anonymization placeholder ("Cuenta eliminada") for a
+      // non-anonymized, merely-masked registration.
+      testWidgets(
+        'shareMedicalInfo=false con campos enmascarados ("••••") no muestra el placeholder de cuenta eliminada',
+        (tester) async {
+          final registration = EventRegistrationModel(
+            id: 'reg-1',
+            eventId: 'event-1',
+            eventName: 'Rodada Test',
+            userId: 'user-1',
+            fullName: 'Rider Test',
+            identificationNumber: '123456',
+            birthDate: DateTime(2000, 1, 1),
+            phone: '3001234567',
+            email: 'rider@test.com',
+            residenceCity: 'Bogotá',
+            eps: '••••',
+            bloodType: null,
+            bloodTypeRaw: '••••',
+            emergencyContactName: '••••',
+            emergencyContactPhone: '••••',
+            shareMedicalInfo: false,
+          );
+
+          await tester.pumpWidget(
+            _buildTestWidget(mockAuthCubit, registration),
+          );
+          await tester.pumpAndSettle();
+
+          expect(tester.takeException(), isNull);
+          expect(find.text('Rider Test'), findsWidgets);
+          // eps, bloodTypeRaw, emergencyContactName, emergencyContactPhone.
+          expect(find.text('••••'), findsNWidgets(4));
+          expect(find.text('Cuenta eliminada'), findsNothing);
+          expect(find.text('Usuario eliminado'), findsNothing);
+        },
+      );
+    },
+  );
 }

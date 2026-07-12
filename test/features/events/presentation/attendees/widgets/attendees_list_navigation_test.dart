@@ -221,5 +221,33 @@ void main() {
         expect(pushedExtra!.registration.id, 'reg-1');
       },
     );
+
+    // AC9 (eliminacion-cuenta-phase-03): a registrant whose account was
+    // deleted is anonymized server-side (fullName='Usuario eliminado', 8 PII
+    // fields null). The row must still render the anonymized name and the
+    // list must not crash or blank out.
+    testWidgets(
+      'AC9: renders a registration with fullName="Usuario eliminado" without crashing',
+      (WidgetTester tester) async {
+        const anonymizedRegistration = EventRegistrationModel(
+          id: 'reg-3',
+          eventId: 'event-1',
+          eventName: 'Test Event',
+          userId: 'user-3',
+          status: RegistrationStatus.approved,
+          fullName: 'Usuario eliminado',
+          bloodType: BloodType.oPositive,
+        );
+
+        await tester.pumpWidget(
+          _buildTestWidget(mockAttendeesCubit, [anonymizedRegistration]),
+        );
+        await tester.pumpAndSettle();
+
+        expect(tester.takeException(), isNull);
+        expect(find.byType(AttendeesList), findsOneWidget);
+        expect(find.text('Usuario eliminado'), findsOneWidget);
+      },
+    );
   });
 }
