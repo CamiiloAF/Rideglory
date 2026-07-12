@@ -85,8 +85,9 @@ void main() {
 
     final gi = GetIt.instance;
     if (gi.isRegistered<SoatCubit>()) gi.unregister<SoatCubit>();
-    if (gi.isRegistered<TecnomecanicaCubit>())
+    if (gi.isRegistered<TecnomecanicaCubit>()) {
       gi.unregister<TecnomecanicaCubit>();
+    }
     if (gi.isRegistered<VehicleMaintenancesCubit>()) {
       gi.unregister<VehicleMaintenancesCubit>();
     }
@@ -98,8 +99,9 @@ void main() {
   tearDown(() {
     final gi = GetIt.instance;
     if (gi.isRegistered<SoatCubit>()) gi.unregister<SoatCubit>();
-    if (gi.isRegistered<TecnomecanicaCubit>())
+    if (gi.isRegistered<TecnomecanicaCubit>()) {
       gi.unregister<TecnomecanicaCubit>();
+    }
     if (gi.isRegistered<VehicleMaintenancesCubit>()) {
       gi.unregister<VehicleMaintenancesCubit>();
     }

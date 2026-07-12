@@ -120,8 +120,9 @@ void _setUp() {
   when(() => analytics.logEvent(any(), any())).thenAnswer((_) async {});
 
   final gi = GetIt.instance;
-  if (gi.isRegistered<VehicleActionCubit>())
+  if (gi.isRegistered<VehicleActionCubit>()) {
     gi.unregister<VehicleActionCubit>();
+  }
   gi.registerFactory<VehicleActionCubit>(
     () => VehicleActionCubit(
       deleteUseCase,
@@ -135,8 +136,9 @@ void _setUp() {
 
 void _tearDown() {
   final gi = GetIt.instance;
-  if (gi.isRegistered<VehicleActionCubit>())
+  if (gi.isRegistered<VehicleActionCubit>()) {
     gi.unregister<VehicleActionCubit>();
+  }
 }
 
 /// Abre el bottom sheet del vehículo archivado, toca "Eliminar permanentemente"

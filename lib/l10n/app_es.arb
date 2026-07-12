@@ -47,7 +47,7 @@
   },
   "auth_emailHint": "correo@ejemplo.com",
   "auth_orContinueWithStitch": "O continúa con",
-  "auth_appleLabel": "Apple",
+  "auth_appleLabel": "Continua con Apple",
   "auth_nameHint": "Ej. Juan Pérez",
   "auth_nameRequired": "El nombre completo es requerido",
   "auth_passwordMinStitch": "Mínimo 8 caracteres",

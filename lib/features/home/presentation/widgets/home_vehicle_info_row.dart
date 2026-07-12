@@ -20,8 +20,9 @@ class HomeVehicleInfoRow extends StatelessWidget {
 
   Future<_MaintenanceAlert> _loadMaintenanceAlert() async {
     final vehicleId = vehicle.id;
-    if (vehicleId == null)
+    if (vehicleId == null) {
       return const _MaintenanceAlert(level: _AlertLevel.none, label: '');
+    }
 
     final useCase = getIt<GetMaintenancesByVehicleIdUseCase>();
     final result = await useCase.execute(vehicleId);

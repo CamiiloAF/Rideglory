@@ -134,8 +134,9 @@ void main() {
 
     final gi = GetIt.instance;
     if (gi.isRegistered<SoatCubit>()) gi.unregister<SoatCubit>();
-    if (gi.isRegistered<TecnomecanicaCubit>())
+    if (gi.isRegistered<TecnomecanicaCubit>()) {
       gi.unregister<TecnomecanicaCubit>();
+    }
     if (gi.isRegistered<SoatUploadCubit>()) gi.unregister<SoatUploadCubit>();
     gi.registerFactory<SoatCubit>(() => soatCubit);
     gi.registerFactory<TecnomecanicaCubit>(() => rtmCubit);
@@ -145,8 +146,9 @@ void main() {
   tearDown(() {
     final gi = GetIt.instance;
     if (gi.isRegistered<SoatCubit>()) gi.unregister<SoatCubit>();
-    if (gi.isRegistered<TecnomecanicaCubit>())
+    if (gi.isRegistered<TecnomecanicaCubit>()) {
       gi.unregister<TecnomecanicaCubit>();
+    }
     if (gi.isRegistered<SoatUploadCubit>()) gi.unregister<SoatUploadCubit>();
   });
 

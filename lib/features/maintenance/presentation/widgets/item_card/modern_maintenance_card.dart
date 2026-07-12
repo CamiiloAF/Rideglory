@@ -46,8 +46,9 @@ class ModernMaintenanceCard extends StatelessWidget {
   double? _getProgressPercent(int? currentMileage) {
     final nextMileage = maintenance.nextOdometer;
     final atService = maintenance.odometerAtService;
-    if (nextMileage == null || currentMileage == null || atService == null)
+    if (nextMileage == null || currentMileage == null || atService == null) {
       return null;
+    }
     final range = nextMileage - atService;
     if (range <= 0) return 1.0;
     final traveled = currentMileage - atService;

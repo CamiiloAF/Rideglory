@@ -41,8 +41,7 @@ class ProfileActionsList extends StatelessWidget {
   /// silent bypass of the precondition).
   Future<void> _handleDeleteAccountTap(BuildContext context) async {
     final messenger = ScaffoldMessenger.of(context);
-    final errorMessage =
-        context.l10n.profile_deleteAccountBlocked_checkError;
+    final errorMessage = context.l10n.profile_deleteAccountBlocked_checkError;
     final result = await getIt<GetMyEventsUseCase>()();
     if (!context.mounted) return;
 
@@ -52,9 +51,7 @@ class ProfileActionsList extends StatelessWidget {
       },
       (events) {
         final activeEvents = events
-            .where(
-              (event) => _activeOrganizerEventStates.contains(event.state),
-            )
+            .where((event) => _activeOrganizerEventStates.contains(event.state))
             .toList();
         if (activeEvents.isEmpty) {
           context.pushNamed(AppRoutes.deleteAccount);
@@ -93,6 +90,15 @@ class ProfileActionsList extends StatelessWidget {
           const ProfileAnalyticsOptOutTile(),
           const ProfileMenuDivider(),
           ProfileMenuItem(
+            icon: Icons.delete_outline,
+            label: context.l10n.profile_deleteAccount_menuItem,
+            iconColor: AppColors.error,
+            labelColor: AppColors.error,
+            showChevron: false,
+            onTap: () => _handleDeleteAccountTap(context),
+          ),
+          const ProfileMenuDivider(),
+          ProfileMenuItem(
             icon: Icons.logout_outlined,
             label: context.l10n.auth_logout,
             iconColor: AppColors.error,
@@ -110,15 +116,6 @@ class ProfileActionsList extends StatelessWidget {
                 onConfirm: () => _logout(context),
               );
             },
-          ),
-          const ProfileMenuDivider(),
-          ProfileMenuItem(
-            icon: Icons.delete_outline,
-            label: context.l10n.profile_deleteAccount_menuItem,
-            iconColor: AppColors.error,
-            labelColor: AppColors.error,
-            showChevron: false,
-            onTap: () => _handleDeleteAccountTap(context),
           ),
         ],
       ),

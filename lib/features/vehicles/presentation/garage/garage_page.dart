@@ -17,10 +17,11 @@ class GaragePage extends StatelessWidget {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, _) {
-        if (!didPop)
+        if (!didPop) {
           context.goNamed(
             AppRoutes.home,
           ); // Intentional: shell-tab navigation resets stack to prevent back-stack accumulation in StatefulShellRoute
+        }
       },
       child: Builder(
         builder: (context) {
