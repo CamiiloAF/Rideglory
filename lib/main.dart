@@ -137,6 +137,11 @@ void main() {
       runApp(const MyApp());
     },
     (error, stack) {
+      if (isBenignMapboxSourceRace(error)) {
+        // Ver isBenignMapboxSourceRace: race conocida del SDK de Mapbox al
+        // navegar fuera de un preview de ruta. No es un crash real de la app.
+        return;
+      }
       if (kDebugMode) {
         // No silenciar errores de arranque en debug: si la config de Firebase
         // falta (p. ej. se corrió sin --dart-define-from-file=config/<flavor>.json)

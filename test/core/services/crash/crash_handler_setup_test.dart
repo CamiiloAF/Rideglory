@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rideglory/core/services/crash/crash_handler_setup.dart';
@@ -183,6 +184,70 @@ void main() {
             fatal: true,
           ),
         ).called(1);
+      },
+    );
+  });
+
+  // ---------------------------------------------------------------------------
+  // isBenignMapboxSourceRace — filtro de la race del SDK de Mapbox
+  // ---------------------------------------------------------------------------
+
+  group('isBenignMapboxSourceRace', () {
+    test('true para PlatformException con mensaje "is not in style"', () {
+      final error = PlatformException(
+        code: 'Throwable',
+        message: "Source 'rg-route-source' is not in style",
+      );
+
+      expect(isBenignMapboxSourceRace(error), isTrue);
+    });
+
+    test('false para otras excepciones', () {
+      expect(isBenignMapboxSourceRace(Exception('otro error')), isFalse);
+      expect(
+        isBenignMapboxSourceRace(
+          PlatformException(code: 'x', message: 'otro mensaje'),
+        ),
+        isFalse,
+      );
+    });
+  });
+
+  group('registerCrashHandlers — filtra la race benigna de Mapbox', () {
+    late MockCrashReporter reporter;
+
+    setUp(() {
+      reporter = MockCrashReporter();
+      registerFallbackValue(StackTrace.empty);
+    });
+
+    tearDown(() {
+      FlutterError.onError = null;
+      PlatformDispatcher.instance.onError = null;
+    });
+
+    test(
+      'PlatformDispatcher.onError ignora la race de Mapbox sin reportarla',
+      () {
+        registerCrashHandlers(isDebug: false, reporter: reporter);
+
+        final handled = PlatformDispatcher.instance.onError!(
+          PlatformException(
+            code: 'Throwable',
+            message: "Source 'rg-route-source' is not in style",
+          ),
+          StackTrace.empty,
+        );
+
+        expect(handled, isTrue);
+        verifyNever(
+          () => reporter.recordError(
+            any(),
+            any(),
+            reason: any(named: 'reason'),
+            fatal: any(named: 'fatal'),
+          ),
+        );
       },
     );
   });
