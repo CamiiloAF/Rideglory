@@ -349,7 +349,7 @@ abstract class AppLocalizations {
   /// No description provided for @auth_appleLabel.
   ///
   /// In es, this message translates to:
-  /// **'Apple'**
+  /// **'Continua con Apple'**
   String get auth_appleLabel;
 
   /// No description provided for @auth_nameHint.

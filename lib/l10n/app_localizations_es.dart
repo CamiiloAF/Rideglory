@@ -143,7 +143,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get auth_orContinueWithStitch => 'O continúa con';
 
   @override
-  String get auth_appleLabel => 'Apple';
+  String get auth_appleLabel => 'Continua con Apple';
 
   @override
   String get auth_nameHint => 'Ej. Juan Pérez';
