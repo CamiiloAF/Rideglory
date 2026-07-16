@@ -74,7 +74,8 @@ SentryEvent scrubPiiFromEvent(SentryEvent event) {
       scrubbed[entry.key] = entry.value;
     }
   }
-  return event.copyWith(tags: scrubbed);
+  event.tags = scrubbed;
+  return event;
 }
 
 /// Redacta claves PII de los datos de un breadcrumb Sentry.
@@ -92,5 +93,6 @@ Breadcrumb scrubPiiFromBreadcrumb(Breadcrumb crumb) {
       scrubbed[entry.key] = entry.value;
     }
   }
-  return crumb.copyWith(data: scrubbed);
+  crumb.data = scrubbed;
+  return crumb;
 }
