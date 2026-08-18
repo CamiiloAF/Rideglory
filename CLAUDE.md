@@ -1,338 +1,148 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guía para trabajar en este repositorio. Léela antes de proponer o escribir código. **Este documento es el contrato**: cuando un agente y este archivo difieran, manda este archivo.
 
-## Overview
+## Qué es este proyecto
 
-**Rideglory** is a Flutter mobile application for motorcycle riding events and community coordination. The codebase uses **Clean Architecture** (domain/data/presentation layers), **BLoC/Cubit** for state management, and **Firebase** for authentication and backend integration. The backend API is located in the separate `rideglory-api` repository.
+**Rideglory** es una app móvil en Flutter para la comunidad motera de Colombia: organizar y unirse a **rodadas**, gestionar el **garaje** de motos, llevar el **mantenimiento**, mantener al día los **documentos legales** (SOAT y tecnomecánica) y **seguir al grupo en tiempo real** durante una salida, con **SOS** en caso de emergencia.
 
-## Quick Commands
+UI 100% en **español colombiano**. Se usa al aire libre, con guantes, con sol directo sobre la pantalla, con casco y a menudo sin señal — eso condiciona cada decisión de diseño y de arquitectura.
 
-### Code Generation & Build
+## Estado: refactor total en curso
+
+El repositorio está en la rama `refactor/v2`, reconstruyendo la app desde cero. Lo que había antes funcionaba y estaba testeado, pero acumulaba decisiones tomadas sobre la marcha y un backend desproporcionado para el producto.
+
+Qué cambia y qué no:
+
+| | |
+|---|---|
+| **Se conserva** | Los identificadores de app (`com.camiloagudelo.rideglory`), la marca y la paleta, y el archivo de diseño `rideglory.pen` |
+| **Se reescribe** | Todo `lib/` desde cero, el modelo de datos, y la infraestructura de agentes |
+| **Se elimina** | El backend NestJS (`rideglory-api`, 6 microservicios en una EC2), y con él Retrofit, Dio y toda la capa REST propia |
+| **Se descarta** | Los datos de producción. Solo había 2 usuarios reales y se decidió arrancar con la base vacía: no hay migración, ni ETL, ni ventana de corte |
+
+Orden de trabajo: **toma de requerimientos → diseño en Pencil → implementación**. No se diseña una pantalla antes de saber qué problema resuelve, y no se implementa una pantalla que no esté diseñada y aprobada.
+
+Mientras el refactor avanza, el código viejo sigue en `main` como referencia de comportamiento. Léelo para entender qué hacía una feature; no lo copies sin decidir si esa feature sobrevive.
+
+## Comandos
+
 ```bash
-# Generate code (freezed models, json serialization, injectable DI, retrofit clients, envied config)
-dart run build_runner build --delete-conflicting-outputs
-
-# Rebuild only (use when code generation fails due to conflicts)
-dart run build_runner rebuild --delete-conflicting-outputs
-
-# Generate localization files from ARB (rare—usually auto-runs with flutter pub get)
-flutter gen-l10n
-
-# Analyze code for lint violations
-dart analyze
-```
-
-### Development & Testing
-```bash
-# Run tests
+flutter pub get
+dart run build_runner build --delete-conflicting-outputs   # freezed, json, injectable
+flutter gen-l10n                                           # tras tocar un .arb
+dart analyze                                               # debe salir limpio
 flutter test
-
-# Run a single test file
-flutter test test/widget_test.dart
-
-# Run with coverage (if configured)
 flutter test --coverage
-
-# Format code
 dart format lib/
-
-# Check formatting without changes
-dart format --output=none lib/
-```
-
-### Building & Running
-```bash
-# Run dev app (hot reload for testing)
 flutter run
-
-# Run on specific device
-flutter run -d <device_id>
-
-# Build APK for Android
-flutter build apk --release
-
-# Build IPA for iOS
-flutter build ios --release
 ```
 
-### Environment Setup
-```bash
-# Copy and configure the .env file
-cp .env.example .env
-# Edit .env with real Firebase and Maps credentials
+Tras cambiar **DTOs, modelos freezed, anotaciones de inyección o el `.env`**, regenera con `build_runner`. Tras tocar `lib/l10n/app_es.arb`, corre `flutter gen-l10n`. Los cambios en interfaces de servicio o en la configuración de DI no los toma el hot reload: requieren rebuild completo.
 
-# Copy Firebase configuration files (keep untracked locally)
-cp android/app/google-services.json.example android/app/google-services.json
-cp ios/Runner/GoogleService-Info.plist.example ios/Runner/GoogleService-Info.plist
+## Arquitectura y decisiones (no cambiar sin justificación)
 
-# After editing .env, regenerate env-related code
-dart run build_runner build --delete-conflicting-outputs
-```
+- **Estado:** `flutter_bloc`, patrón Cubit. Todo resultado asíncrono se modela con la unión freezed `ResultState<T>` (`initial` / `loading` / `data` / `empty` / `error`). **Cero flags booleanos** de carga o error. Estado con dos o más resultados independientes → clase `@freezed` con un `ResultState<T>` por resultado.
+- **Datos y backend:** **Supabase** — Postgres con RLS, Auth (Google y Apple), Realtime, Storage y Edge Functions. Las reglas de acceso viven en la base, no en el cliente.
+- **Push y analítica:** **Firebase**, únicamente FCM y Analytics. No hay Firestore ni Cloud Functions.
+- **Errores:** Sentry. En desarrollo siempre a consola, nunca a Sentry.
+- **Inyección:** `get_it` + `injectable`. **Cubits `@injectable` provistos con `BlocProvider` en el árbol**, nunca `@singleton` ni accedidos con `getIt` desde un widget; los cubits globales se leen con `context.read`. Única excepción justificable: el cubit de autenticación, por el router.
+- **Navegación:** `go_router`. `context.pushNamed()` para transiciones normales (deja el back funcionando); `context.goAndClearStack(ruta)` solo para cambios de estado de sesión (logout, fin del onboarding). Evita `goNamed` dentro de un flujo de feature.
+- **Repositorios** devuelven `Either<DomainException, T>` (`dartz`).
+- **Sin modo offline general** — la app asume conexión. **Excepción crítica:** el SOS es durable y funciona sin red (ver abajo).
 
-## Architecture
+### Estructura por feature
 
-### Layered Structure (Clean Architecture)
+`lib/features/<feature>/` con tres capas y las dependencias siempre apuntando hacia adentro (`presentation → domain ← data`):
 
-Each feature is organized into three layers:
+- **`domain/`** — modelos puros, interfaces de repositorio (`abstract class XRepository`), y un caso de uso por acción de negocio. **Prohibido** importar Flutter, hacer I/O o tocar `dart:io`.
+- **`data/`** — DTOs, datasources de Supabase e implementaciones concretas de los repositorios. **Prohibido** importar widgets o usar `BuildContext`.
+- **`presentation/`** — cubits, páginas y widgets. **Prohibido** llamar a la red directamente o exponer DTOs hacia afuera.
 
-**Domain** (`lib/features/<feature>/domain/`)
-- **Models:** Pure Dart classes (e.g., `VehicleModel`, `EventModel`)
-- **Repositories:** Abstract interfaces defining data contracts
-- **Use Cases:** Single responsibility classes that orchestrate domain logic
-- **Constraints:** No Flutter imports, no HTTP calls, no `dart:io`
+Lo transversal (configuración, tema, l10n, errores, router, utilidades) vive en `lib/core/` y `lib/shared/`.
 
-**Data** (`lib/features/<feature>/data/`)
-- **DTOs:** Data Transfer Objects for API serialization/deserialization (generated with `json_serializable`). **Pattern B is mandatory:** every DTO with a 1:1 domain model MUST extend that model (`XDto extends XModel`) and define a companion `XModelExtension.toJson()` extension. `toModel()`, `fromModel()`, and `.toDto()` are forbidden. Canonical reference: `lib/features/events/data/dto/event_dto.dart`. Exceptions (composite DTOs, request-only DTOs) documented in `.claude/rules/rideglory-coding-standards.mdc` and `docs/prds/prd-dto-inheritance-standard.md`.
-- **Repositories:** Concrete implementations of domain interfaces
-- **Services:** Retrofit clients for HTTP calls; WebSocket clients; Firebase integrations
-- **Constraints:** No UI/widgets; `BuildContext` forbidden
+## Reglas de código (violación de tolerancia cero)
 
-**Presentation** (`lib/features/<feature>/presentation/`)
-- **Cubits:** State management using BLoC pattern (extends `Cubit<ResultState<T>>`)
-- **Pages:** Top-level screens (one per file)
-- **Widgets:** Reusable UI components within the feature
-- **Constraints:** No direct HTTP calls; no DTO exposure (use domain models); depend on Cubits and domain use cases
+Estas son las que ningún lint cubre y las hace cumplir el subagente `ui-convention-reviewer`:
 
-### State Management: ResultState<T>
+1. **Un widget por archivo.** Máximo una clase que extienda `StatelessWidget` / `StatefulWidget` / `PreferredSizeWidget` por archivo. La clase `State<T>` sí acompaña a su `StatefulWidget`.
+2. **Prohibidos los métodos que devuelven `Widget`.** Nada de `Widget _buildHeader()` ni `Widget _ctaBar(context)`: cada pieza de UI es su propia clase, en su propio archivo.
+3. **Cero strings de UI en el código.** Todo texto visible va en `lib/l10n/app_es.arb` y se usa con `context.l10n.<key>`, con prefijo de feature (`event_`, `vehicle_`, `maintenance_`). **Esto incluye los mensajes de error de red y de autenticación**, que en la versión anterior estaban incrustados en Dart.
+4. **Nunca Material crudo si existe el equivalente compartido.** Revisa `lib/shared/widgets/form/` y `lib/design_system/` antes de escribir un control. La app tiene **un solo switch**: `AppSwitch` / `AppSwitchTile` — nunca `Switch`, `SwitchListTile`, `CupertinoSwitch` ni `FormBuilderSwitch`.
+5. **Sobre el naranja primario, todo va oscuro.** Texto, iconos, el knob de un switch encendido y los badges sobre `#f98c1f` usan `colorScheme.onPrimary` o `#0D0D0F`. **Nunca blanco.** Los badges sobre primario usan un relleno oscuro translúcido.
 
-All async operations use the `ResultState<T>` freezed union (from `lib/core/domain/result_state.dart`):
-```dart
-@freezed
-class ResultState<T> {
-  const factory ResultState.initial() = Initial<T>;
-  const factory ResultState.loading() = Loading<T>;
-  const factory ResultState.data({required T data}) = Data<T>;
-  const factory ResultState.empty() = Empty<T>;
-  const factory ResultState.error({required DomainException error}) = Error<T>;
-}
-```
+Además: comillas simples, tipos de retorno explícitos, sin `print`, nombres de dominio en las variables (`vehicle`, `event`, `error` — no `v`, `e`), botones en *sentence case* (`Iniciar sesión`, no `INICIAR SESIÓN`), y `dart analyze` limpio antes de cerrar cualquier cambio.
 
-**Cubit Pattern:**
-- Simple async operations: `Cubit<ResultState<T>>` directly
-- Complex state (2+ independent results): create a `@freezed` state class with a `ResultState<T>` field per result
-- Example: `VehicleCubit` maintains a list of vehicles plus selection state; it extends `Cubit<ResultState<List<VehicleModel>>>`
+## Seguridad del rider (reglas de producto, no de estilo)
 
-### Data Flow Example: Vehicles
+Las hace cumplir el subagente `safety-compliance-reviewer`, y su veredicto es un gate.
 
-1. **Domain** (`lib/features/vehicles/domain/`)
-   - `VehicleModel`: pure Dart model with copyWith
-   - `VehicleRepository`: interface defining `getMyVehicles()`, `addVehicle()`, `setMainVehicle()`, etc.
-   - Use cases like `GetMyVehiclesUseCase` that invoke the repository
+- **El SOS nunca falla en silencio.** Se persiste localmente antes de intentar la red, sobrevive a que maten la app, y toda ruta de fallo termina en alerta entregada o en fallback ofrecido. Nunca en un `return` mudo. *Este es un defecto que ya estuvo en producción: el SOS se enviaba por un WebSocket que, si estaba caído, descartaba la alerta sin avisarle a nadie.*
+- **La UI no dice "enviado" hasta que el servidor confirma.**
+- **Fallback sin datos**: llamada al contacto de emergencia y SMS con las coordenadas. Esos datos se cachean **al empezar la rodada**, no se leen durante la emergencia.
+- **El SOS solo lo cierra una persona**, nunca una desconexión ni el fin del evento.
+- **La ubicación se comparte con consentimiento explícito**, con aviso propio antes del diálogo del sistema, indicador visible mientras está activa y parada siempre accesible.
+- **El tracking en background termina de verdad** al terminar la rodada.
+- **El enmascarado de datos sensibles ocurre en la base**, con RLS y vistas. El cliente nunca recibe un campo que no le corresponde: filtrarlo en Dart no cuenta, porque el dato ya viajó.
+- **Sin permiso de ubicación, sin GPS y sin conexión son estados diseñados**, con mensaje y salida. Nunca una pantalla vacía.
 
-2. **Data** (`lib/features/vehicles/data/`)
-   - `VehicleDto`: JSON-serializable DTO matching API response
-   - `VehicleService`: Retrofit-generated REST client with endpoints (`@GET`, `@POST`, etc.)
-   - `VehicleRepositoryImpl`: uses DTOs directly as domain models (Pattern B — DTO extends Model); handles Firebase image uploads; wraps HTTP errors in `Either<DomainException, Model>`
+## Requisitos legales (no omitir)
 
-3. **Presentation** (`lib/features/vehicles/presentation/`)
-   - `VehicleCubit`: app-wide cubit (`@injectable`, single instance owned by the root `BlocProvider` in `main.dart`; access via `context.read`, never `getIt`) with `fetchMyVehicles()`, `selectVehicle()`, `addVehicleLocally()` methods
-   - Uses `ResultState` to track loading, data, error states
-   - Form cubit `VehicleFormCubit` for multi-step vehicle creation/editing
+- **Borrado de cuenta dentro de la app**, que borre datos de verdad en Supabase y en Storage, no solo cierre sesión (Apple y Google Play lo exigen).
+- **Ley 1581 de 2012** (habeas data, Colombia) como marco principal: los datos médicos son sensibles y requieren consentimiento expreso.
+- **Edad mínima 18 años** para inscribirse a una rodada, validada en el servidor.
+- **Ubicación en segundo plano**: *prominent disclosure* de Google Play y Apple 5.1.5.
+- Las fotos de documentos contienen datos de terceros y la placa: nunca públicas por defecto.
+- Los timestamps y versiones de consentimiento son **evidencia legal**: los sella el servidor, son inmutables y sobreviven a la anonimización.
 
-### HTTP & Error Handling
+## Diseño (Pencil)
 
-**REST Client** (`lib/core/http/`)
-- **Dio configuration** (`AppDio`): timeouts (20s), Firebase Auth interceptor, debug logging
-- **Retrofit**: Code-generated REST clients from annotated service interfaces (e.g., `VehicleService`, `EventService`)
-- **Base URL resolution** (`ApiBaseUrlResolver`): dev uses local backend (emulator: `10.0.2.2:3000/api`, iOS sim: `localhost:3000/api`, physical device: `.env` override); production uses Firebase Remote Config
-- **Error handling** (`rest_client_functions.dart`): `executeService()` wraps HTTP calls, maps Dio/Firebase exceptions to user-friendly Spanish error messages, returns `Either<DomainException, Model>`
+- **Fuente de verdad:** `rideglory.pen`. Está encriptado y solo se lee con las herramientas MCP de Pencil — nunca con `Read` o `Grep`.
+- **Reglas escritas:** `design-system/rideglory/MASTER.md` (globales) + `design-system/rideglory/pages/<pantalla>.md` (overrides por pantalla).
+- **Orden de precedencia:** `pages/<pantalla>.md` → `MASTER.md` → y si cualquiera difiere del `.pen`, **manda el `.pen`** y se corrige el `.md`.
+- **Gate obligatorio:** mirar el frame antes de implementar una pantalla diseñada no es opcional. El `.md` *describe* el diseño; el `.pen` **es** el diseño. **Si Pencil no abre, el desarrollo de esa UI se detiene** — no se implementa a ciegas. Esto ya produjo deriva real: en una iteración temprana el agente de diseño no pudo abrir Pencil e inventó los diseños en HTML.
+- `flutter-dev` tiene acceso de **solo lectura**; escribir en el `.pen` es exclusivo de `pencil-designer`.
+- **Nunca hardcodear un hex**: usar la variable del `.pen`.
 
-**WebSocket** (Real-time Event Tracking)
-- `TrackingWsClient`: manages WebSocket connection to `/tracking/ws` endpoint
-- Auto-reconnect on disconnect
-- Broadcasts rider locations as `Stream<List<RiderTrackingModel>>`
+### Identidad visual
 
-### Core Services
+Dark-only, paleta *Asphalt*: fondo `#0A0A0A`, superficie `#161616`, superficie elevada `#1F1F1F`, borde `#2D2D2D`, primario `#f98c1f`, texto `#F4F4F5` / `#71717A` / `#3F3F46`, éxito `#22C55E`, error `#EF4444`, advertencia `#F59E0B`. Tipografía **Space Grotesk**. Radios 8 (inputs, botones), 12 (cards), 16 (cards grandes), 24 (bottom sheets). Navegación con **Pill Tab Bar** flotante de 4 destinos: INICIO, EVENTOS, GARAJE, PERFIL.
 
-- **AuthService** (`lib/core/services/auth_service.dart`): Firebase Auth (email, Google, Apple sign-in); token management
-- **LocationService**: GPS location updates via `geolocator`
-- **UserStorageService**: `SharedPreferences` wrapper for persistent local data
-- **ImageStorageService**: Firebase Storage for vehicle/user photos
-- **PlaceService**: Mapbox Geocoding API para búsqueda de lugares (Retrofit client)
+Tono: directo y funcional. Es una herramienta, no una red social.
 
-### Dependency Injection (GetIt + Injectable)
+**Estados obligatorios** en toda pantalla: contenido, vacío, carga (skeleton/shimmer, **nunca spinner**), error accionable (mensaje en español llano **con** botón de reintentar), y los tres propios de esta app: **sin permiso de ubicación, sin GPS, sin conexión**.
 
-- **Configuration**: `lib/core/di/injection.dart` with `@InjectableInit` and `configureDependencies()`
-- **Firebase module** (`lib/core/di/firebase_module.dart`): Provides singleton instances of Firebase services
-- **Auto-registration**: Service classes marked with `@injectable`, `@singleton`, or `@lazySingleton`; repositories marked `@Injectable(as: InterfaceType)` to bind implementations
-- **main.dart**: Calls `configureDependencies()` at startup; root `MultiBlocProvider` defines global cubits (`AuthCubit`, `VehicleCubit`, `MyRegistrationsCubit`)
+**Contexto moto**, que se verifica en cada revisión de UI: legible bajo sol directo, targets ≥48dp para uso con guantes, comprensible en menos de dos segundos con el casco puesto, operable a una mano, y **ninguna interacción compleja diseñada para usarse en marcha**.
 
-## Routing & Navigation
+## Subagentes, skills y workflows
 
-**Router** (`lib/shared/router/app_router.dart`)
-- Uses **go_router** for declarative routing
-- Auth guard: `redirect` function checks Firebase auth state; redirects to login if needed
-- Routes: splash → login/signup → home shell (with bottom nav) → nested feature pages
-- **Navigation conventions** (from coding standards):
-  - Use `context.pushNamed()` for normal screen transitions (leaves back button enabled)
-  - Use `context.goAndClearStack(routeName)` for auth state changes (logout, onboarding completion)
-  - Avoid `context.goNamed()` for feature flows
+Definidos en `.claude/` para automatizar este documento. El contexto viaja **en memoria** entre agentes (salida estructurada), no en archivos intermedios; cada corrida deja **un solo artefacto** en `docs/dev-runs/<slug>.md` y **no commitea**.
 
-## Localization
+**Subagentes** (`.claude/agents/`):
 
-**Framework**: Flutter's `gen-l10n` with ARB format
-- **Source file**: `lib/l10n/app_es.arb` (Spanish)
-- **Generated code**: `lib/l10n/app_localizations.dart` (main) and `app_localizations_es.dart` (translations)
-- **Usage**: In widgets with `BuildContext`, call `context.l10n.<keyName>` (extension in `lib/core/extensions/l10n_extensions.dart`)
-- **Key naming**: Prefix by feature (e.g., `auth_`, `event_`, `vehicle_`, `maintenance_`, `registration_`)
-- **Flow**: Edit `.arb` → run `dart run build_runner build` (or `flutter gen-l10n`) → rebuild generated files → use in UI
+| Agente | Rol |
+|---|---|
+| `product-discovery` | Descubrimiento desde el problema. Adversarial, solo lectura, nunca propone features |
+| `architect` | Triage de una petición: tamaño, criterios de aceptación y change map. Solo lectura |
+| `flutter-dev` | Implementa en `lib/`. Lectura obligatoria del frame de Pencil antes de tocar `presentation/` |
+| `supabase-backend-dev` | Esquema, RLS, Edge Functions, `pg_cron`, Realtime, Storage |
+| `sql-migration-helper` | Migraciones SQL versionadas y seguras |
+| `feature-scaffolder` | Boilerplate Clean Architecture de una feature nueva |
+| `qa-automator` | Dueño del testing: unit, widget, golden y Patrol. Solo escribe en `test/` e `integration_test/` |
+| `patrol-e2e-runner` | Solo ejecuta las suites e2e ya escritas. Nunca contra producción |
+| `rideglory-code-reviewer` | Convenciones de código y arquitectura. Solo lectura |
+| `ui-convention-reviewer` | Las 5 reglas de tolerancia cero de arriba. Solo lectura |
+| `safety-compliance-reviewer` | Seguridad del rider, ubicación y datos sensibles. Solo lectura, es un gate |
+| `pencil-designer` | Construye y edita pantallas en `rideglory.pen` |
+| `ui-ux-reviewer` | Audita diseño dentro de Pencil y anota el canvas |
+| `pencil-fidelity-reviewer` | Compara los golden tests contra su nodeId de Pencil. Solo lectura |
+| `privacy-legal-officer` | Documentos legales auditando el código real, nunca desde plantilla |
 
-## Key Dependencies
+**Convención de artefactos:** `docs/dev-runs/<slug>.md` (una por corrida), `docs/fidelidad-visual-tracking.md`, `docs/patrol-e2e-tracking.md`, `docs/product/` (descubrimiento), `docs/features/<feature>.md` (documentación viva: al cambiar el comportamiento de una feature, actualiza su doc).
 
-| Package | Purpose |
-|---------|---------|
-| `flutter_bloc`, `bloc` | State management (Cubit pattern) |
-| `freezed`, `freezed_annotation` | Code-generated immutable models and unions |
-| `json_serializable` | JSON ↔ Dart serialization |
-| `injectable`, `get_it` | Dependency injection |
-| `retrofit`, `dio` | REST client and HTTP layer |
-| `go_router` | Declarative routing and navigation |
-| `firebase_core`, `firebase_auth`, `cloud_firestore`, `firebase_storage`, `firebase_remote_config` | Firebase services |
-| `google_sign_in` | OAuth sign-in |
-| `mapbox_maps_flutter` | Mapas interactivos con estilos dark custom |
-| `geolocator` | GPS location updates |
-| `flutter_form_builder`, `form_builder_validators` | Form UI and validation |
-| `flutter_quill` | Rich text editor |
-| `web_socket_channel` | Real-time event tracking |
-| `envied`, `envied_generator` | Environment variable injection |
-| `shared_preferences` | Local persistence |
-| `dartz` | Functional programming utilities (Either/Right/Left) |
-| `intl` | Internationalization |
-| `google_fonts` | Typography |
+## Trampas conocidas
 
-## Design System
-
-**Atoms** (`lib/design_system/atoms/`)
-Primitive components (buttons, text fields, etc.)
-
-**Molecules** (`lib/design_system/molecules/`)
-Composite components built from atoms
-
-**Organisms** (`lib/design_system/organisms/`)
-Feature-level complex components
-
-**Foundation** (`lib/design_system/foundation/`)
-Spacing, sizing, border radius constants
-
-**Theme**: Dark mode with orange primary (`#f98c1f`), Space Grotesk font, 8px border radius standard
-
-**Shared Widgets** (`lib/shared/widgets/`)
-App-wide reusable components:
-- `AppButton`, `AppTextButton`, `AppTextField`, `AppPasswordTextField`, `AppSwitch`, `AppSwitchTile` (from `form/`)
-- `AppDialog`, `ConfirmationDialog` (from `modals/`)
-- **Switches:** the app has ONE switch style — `AppSwitch` (`value`/`onChanged` pill) and `AppSwitchTile` (form-bound row: title + optional subtitle + switch). Never use Material `Switch`/`SwitchListTile`, `FormBuilderSwitch` or `CupertinoSwitch`.
-- `EmptyStateWidget`, `NoSearchResultsEmptyWidget`, `VehicleListItem`, `VehicleSelectionBottomSheet`
-- Navigation bars, bottom sheets, detail pills, info chips
-
-**Color Scheme**:
-- Prefer `Theme.of(context).colorScheme.<property>` (semantically correct, respects theme mode)
-- Fallback to `AppColors` constants for colors not in colorScheme (dark backgrounds, borders)
-- **On the primary/accent color (`AppColors.primary`, orange `#f98c1f`) text, icons and elements MUST be dark, never white.** Use `colorScheme.onPrimary` or `AppColors.darkBgPrimary` (`#0D0D0F`) — never hardcode `AppColors.textOnDarkPrimary`/`Colors.white` on an accent fill. Applies to button labels, count badges inside primary buttons, and the knob of an "on" switch. Badges over primary use a dark translucent fill (e.g. `darkBgPrimary.withValues(alpha: 0.15)`), not white. Reference: `AppModalVariant.primaryLabelColor`, active filter chips.
-
-## Code Standards (Summarized from `.claude/rules/`)
-
-### Strings (Localization)
-- All user-visible text in `app_es.arb` with `context.l10n.<key>` in widgets
-- Key naming: feature prefix + descriptive name (e.g., `event_title`, `vehicle_licensePlate`)
-- No hardcoded string literals in UI
-
-### Architecture Violations to Avoid
-- **Domain** must not import Flutter packages or do network I/O
-- **Data** must not import widgets or use `BuildContext`
-- **Presentation** must not call HTTP clients directly or expose DTOs
-- Dependencies flow inward: presentation → domain ← data (domain never depends on data/presentation)
-
-### Cubits & State
-- Simple operations: `Cubit<ResultState<T>>`
-- Complex state: `@freezed` state class with multiple `ResultState<T>` fields, part of cubit file
-- No boolean flags for loading/error (use `ResultState`)
-
-### Widgets — Reglas críticas (violación cero tolerancia)
-- **Un widget por archivo**: cada `.dart` tiene máximo 1 clase que extiende `StatelessWidget`/`StatefulWidget`/`PreferredSizeWidget`. La clase `State<T>` sí puede coexistir con su `StatefulWidget`.
-- **Prohibidos los métodos que retornan widgets**: `Widget _buildHeader()`, `Widget _ctaBar(context)`, etc. → cada pieza de UI es su propia clase widget en su propio archivo.
-- **Siempre verificar `lib/shared/widgets/form/` antes de implementar**: `AppTextField`, `AppMileageField`, `AppDatePicker`, `AppButton`, `AppTextButton`, `FormSectionHeader`, etc. Nunca usar `FormBuilderTextField`, `ElevatedButton` o `TextButton` directamente si existe un equivalente shared.
-
-### Naming & Style
-- Variables: avoid single-letter generics (`v`, `e`); prefer domain names (`vehicle`, `event`, `error`)
-- Button text: sentence case (`'Iniciar sesión'`, not `'INICIAR SESIÓN'`)
-- No obvious comments (class/method names should be self-explanatory)
-
-### Linting
-- Follow `analysis_options.yaml` rules: prefer const constructors, avoid print statements, enforce final variables, etc.
-- Run `dart analyze` before committing
-- Exclusions: `**/*.g.dart`, `**/*.freezed.dart` (code generation output)
-
-## Features Overview
-
-| Feature | Purpose | Key Files |
-|---------|---------|-----------|
-| **Authentication** | Email/Google/Apple sign-in | `lib/features/authentication/` |
-| **Home** | Dashboard and main navigation | `lib/features/home/` |
-| **Vehicles** | User garage, add/edit/delete vehicles | `lib/features/vehicles/` |
-| **Events** | Create/browse/detail events, real-time tracking | `lib/features/events/` |
-| **Event Registration** | Register for events, attendance approval workflow | `lib/features/event_registration/` |
-| **Maintenance** | Log vehicle maintenance records | `lib/features/maintenance/` |
-| **SOAT** | Vehicle SOAT insurance document (capture, status, reminders) | `lib/features/soat/` |
-| **Tecnomecánica (RTM)** | Vehicle RTM inspection document (CRUD, status, reminders) | `lib/features/tecnomecanica/` |
-| **Vehicle Documents (shared)** | Shared abstraction for legal vehicle documents (SOAT, RTM); provides mixin `VehicleDocumentExpiry`, base cubit `VehicleDocumentCubit<T>`, generic widgets | `lib/features/vehicle_documents/` |
-| **Users** | User profiles, discovery | `lib/features/users/` |
-| **Profile** | Current user profile page | `lib/features/profile/` |
-| **Splash** | App startup screen | `lib/features/splash/` |
-
-## Backend Integration
-
-**API Gateway**: Located in the `rideglory-api` repository
-- Base URL: resolved from Firebase Remote Config or `.env` override (for dev)
-- Authentication: Firebase ID tokens injected by `FirebaseAuthInterceptor`
-- Contracts: DTOs in service interfaces must match API response shapes; breaking changes require coordination
-
-**WebSocket**: Real-time tracking at `GET /api/tracking/ws`
-- Clients publish location updates; server broadcasts to connected peers
-- Auto-reconnect with exponential backoff on disconnect
-- Used during active event rides
-
-## Backend Repository
-
-Shared contracts and services are in **`rideglory-api`** (separate Git repo):
-- API routes, DTO specs, validation rules
-- Microservices (tracking, event management, user management)
-- When API contracts change, update DTOs in this repo and regenerate code
-
-## Agent Rules
-
-The `.claude/rules/` directory define reglas de arquitectura y estándares:
-- `rideglory-coding-standards.mdc`: Mandatory style/architecture rules (all features)
-
-For complex changes, use the **Workflow JS pipelines** `rg-plan` (planeación por fases) and `rg-exec`
-(ejecución por fase con nivel lite/normal/full y auditor Opus). Reemplazaron al sistema `/iter` /
-`custom-iter` (eliminado). Cada fase: implementador (Sonnet) → auditor (Opus) itera hasta aprobar.
-
-**Nomenclatura de carpetas de fase (obligatoria):** `<feature>-phase-XX` (kebab-case, número de
-2 dígitos). Los planes viven en `docs/plans/<feature>/` con un archivo por fase
-`phases/phase-XX-<titulo>.md`; las corridas de ejecución en `docs/exec-runs/<feature>-phase-XX/`.
-Así todas las fases de una misma feature quedan juntas y son fáciles de encontrar. `rg-exec` deriva
-este slug de forma determinística desde la ruta de la fase de plan (no lo inventa el agente).
-Carpetas anteriores a esta convención (prefijos sueltos como `legal-consentimientos-fase5`,
-`waiver-inscripcion-registro`) se dejan como están; la convención aplica de aquí en adelante.
-
-## Debugging & Troubleshooting
-
-**Code generation fails**
-- Run `dart run build_runner clean` then rebuild
-- Check `.env` for missing/malformed values
-- Ensure all `part` directives are present in files using generated code
-
-**Firebase configuration missing**
-- Copy example Firebase files and fill real credentials
-- Verify `AppEnv` fields in `lib/core/config/app_env.dart` match `.env` keys
-- Run `dart run build_runner build` after `.env` changes
-
-**Hot reload not picking up changes**
-- Changes to service interfaces (Retrofit), DTOs, or DI config require full rebuild
-- Use `flutter run -v` for verbose output
-
-**Lint violations**
-- Check `analysis_options.yaml` for the violated rule
-- Run `dart analyze --no-summary` for detailed output
-- Some rules can be suppressed with `// ignore: rule_name` if justified
+- **Golden tests y Space Grotesk.** Sin desactivar la descarga en runtime de `google_fonts`, los goldens se generan con una fuente de fallback y toda la auditoría de fidelidad visual queda invalidada **sin que ningún test falle**. El helper compartido de `test/support/golden_helpers.dart` debe encargarse de esto.
+- **Mapbox no renderiza en golden tests.** Las pantallas con mapa se auditan por sus overlays aislados (banner de SOS, tarjetas de rider, controles); el mapa es un gap conocido y documentado.
+- **El SDK de Mapbox es frágil** y la versión anterior acumuló parches defensivos para sus condiciones de carrera. Si vuelve a aparecer, trátalo como conocimiento a documentar, no a esconder tras un `catch` global.
+- **Nunca pruebes contra la base de producción.** Usa Supabase local (`supabase start`). Una suite e2e contra producción crea eventos, inscripciones y usuarios reales.
