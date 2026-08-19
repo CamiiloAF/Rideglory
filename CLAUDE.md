@@ -19,7 +19,7 @@ Qué cambia y qué no:
 | **Se conserva** | Los identificadores de app (`com.camiloagudelo.rideglory`), la marca y la paleta, y el archivo de diseño `rideglory.pen` |
 | **Se reescribe** | Todo `lib/` desde cero, el modelo de datos, y la infraestructura de agentes |
 | **Se elimina** | El backend NestJS (`rideglory-api`, 6 microservicios en una EC2), y con él Retrofit, Dio y toda la capa REST propia |
-| **Se descarta** | Los datos de producción. Solo había 2 usuarios reales y se decidió arrancar con la base vacía: no hay migración, ni ETL, ni ventana de corte |
+| **Se descarta** | El backend y el esquema, no necesariamente los datos. Hay **varios usuarios registrados, todos inactivos hace más de un mes** — no se fueron: la app nunca se promocionó, solo la probaron amigos cercanos. Recuperar su garaje, mantenimientos y documentos hacia Supabase es **deseable pero no bloqueante**: si la migración no sale, se arranca con la base vacía. **Sí hay ventana de corte**: la EC2 sigue encendida hasta que la v2 entre a producción, y ese mismo día se migra y se apaga |
 
 Orden de trabajo: **toma de requerimientos → diseño en Pencil → implementación**. No se diseña una pantalla antes de saber qué problema resuelve, y no se implementa una pantalla que no esté diseñada y aprobada.
 
@@ -77,10 +77,13 @@ Además: comillas simples, tipos de retorno explícitos, sin `print`, nombres de
 
 Las hace cumplir el subagente `safety-compliance-reviewer`, y su veredicto es un gate.
 
-- **El SOS nunca falla en silencio.** Se persiste localmente antes de intentar la red, sobrevive a que maten la app, y toda ruta de fallo termina en alerta entregada o en fallback ofrecido. Nunca en un `return` mudo. *Este es un defecto que ya estuvo en producción: el SOS se enviaba por un WebSocket que, si estaba caído, descartaba la alerta sin avisarle a nadie.*
-- **La UI no dice "enviado" hasta que el servidor confirma.**
+> **Estas reglas describen la v2 que hay que construir, no la app que existe hoy.** El descubrimiento del 2026-08-18 verificó que **ninguna** de ellas está implementada en el código actual. Léelas como criterios de aceptación, nunca como comportamiento que se pueda dar por hecho.
+
+- **El SOS nunca falla en silencio.** Se persiste localmente antes de intentar la red, sobrevive a que maten la app, y toda ruta de fallo termina en alerta entregada o en fallback ofrecido. Nunca en un `return` mudo. *Este defecto está **vivo hoy**, no es historia: `tracking_ws_client.dart` publica el SOS con `_channel?.sink.add(...)` sobre un WebSocket — si el canal está caído la alerta se descarta sin excepción, sin reintento y sin persistencia — y `live_tracking_cubit.dart` emite `hasSentSos: true` en la línea siguiente. Estuvo en producción y sigue igual en `refactor/v2`.*
+- **La UI no dice "enviado" hasta que el servidor confirma.** Sin señal, dice que no salió y lo encola; reintenta solo al recuperar cobertura. Hay tramos sin señal reales en el uso previsto: montaña, offroad y túneles.
 - **Fallback sin datos**: llamada al contacto de emergencia y SMS con las coordenadas. Esos datos se cachean **al empezar la rodada**, no se leen durante la emergencia.
 - **El SOS solo lo cierra una persona**, nunca una desconexión ni el fin del evento.
+- **El SOS es de rescate entre pares, no de emergencia médica.** Su razón de ser es que los compañeros que van cerca sepan dónde estás y se devuelvan por ti — eso es lo que el SOS nativo del teléfono no puede hacer, porque no conoce al grupo de la rodada. Si alguna vez llama a servicios de emergencia, es una decisión explícita y configurable, nunca implícita.
 - **La ubicación se comparte con consentimiento explícito**, con aviso propio antes del diálogo del sistema, indicador visible mientras está activa y parada siempre accesible.
 - **El tracking en background termina de verdad** al terminar la rodada.
 - **El enmascarado de datos sensibles ocurre en la base**, con RLS y vistas. El cliente nunca recibe un campo que no le corresponde: filtrarlo en Dart no cuenta, porque el dato ya viajó.
@@ -98,7 +101,7 @@ Las hace cumplir el subagente `safety-compliance-reviewer`, y su veredicto es un
 ## Diseño (Pencil)
 
 - **Fuente de verdad:** `rideglory.pen`. Está encriptado y solo se lee con las herramientas MCP de Pencil — nunca con `Read` o `Grep`.
-- **Reglas escritas:** `design-system/rideglory/MASTER.md` (globales) + `design-system/rideglory/pages/<pantalla>.md` (overrides por pantalla).
+- **Reglas escritas:** `design-system/rideglory/MASTER.md` (globales) + `design-system/rideglory/pages/<pantalla>.md` (overrides por pantalla). **Hoy no existen en disco**: se escriben a medida que `/pencil-screen` aprueba cada pantalla. Mientras falten, el `.pen` es la única fuente — que es justo lo que el orden de precedencia de abajo ya establece.
 - **Orden de precedencia:** `pages/<pantalla>.md` → `MASTER.md` → y si cualquiera difiere del `.pen`, **manda el `.pen`** y se corrige el `.md`.
 - **Gate obligatorio:** mirar el frame antes de implementar una pantalla diseñada no es opcional. El `.md` *describe* el diseño; el `.pen` **es** el diseño. **Si Pencil no abre, el desarrollo de esa UI se detiene** — no se implementa a ciegas. Esto ya produjo deriva real: en una iteración temprana el agente de diseño no pudo abrir Pencil e inventó los diseños en HTML.
 - `flutter-dev` tiene acceso de **solo lectura**; escribir en el `.pen` es exclusivo de `pencil-designer`.
@@ -106,7 +109,22 @@ Las hace cumplir el subagente `safety-compliance-reviewer`, y su veredicto es un
 
 ### Identidad visual
 
-Dark-only, paleta *Asphalt*: fondo `#0A0A0A`, superficie `#161616`, superficie elevada `#1F1F1F`, borde `#2D2D2D`, primario `#f98c1f`, texto `#F4F4F5` / `#71717A` / `#3F3F46`, éxito `#22C55E`, error `#EF4444`, advertencia `#F59E0B`. Tipografía **Space Grotesk**. Radios 8 (inputs, botones), 12 (cards), 16 (cards grandes), 24 (bottom sheets). Navegación con **Pill Tab Bar** flotante de 4 destinos: INICIO, EVENTOS, GARAJE, PERFIL.
+Dark-only, paleta *Asphalt*. **Los valores mandan desde `rideglory.pen`** (30 variables); esta tabla es su reflejo y se corrige contra el archivo, nunca al revés:
+
+| Rol | Variable del `.pen` | Valor |
+|---|---|---|
+| Fondo | `$bg-primary` | `#0D0D0F` |
+| Superficie | `$bg-secondary` | `#1A1A1F` |
+| Superficie elevada | `$bg-tertiary` | `#242429` |
+| Card | `$bg-card` | `#1E1E24` |
+| Borde | `$border` / `$border-light` | `#2A2A32` / `#3A3A44` |
+| Acento | `$accent` / `$accent-light` / `$accent-subtle` | `#F98C1F` / `#FFAB4F` / `#2D2117` |
+| Texto sobre acento | `$text-inverse` | `#0D0D0F` |
+| Texto | `$text-primary` / `$text-secondary` / `$text-tertiary` | `#FFFFFF` / `#9CA3AF` / `#6B7280` |
+| Estado | `$success` / `$error` / `$warning` / `$info` | `#22C55E` / `#EF4444` / `#EAB308` / `#3B82F6` |
+| Tab bar | `$tab-bar-bg` / `$tab-inactive` | `#15151A` / `#6B7280` |
+
+Tipografía **Space Grotesk** (`$font-primary`). Radios `$radius-sm` 8 (inputs, botones), `$radius-md` 12 (cards), `$radius-lg` 16 (cards grandes), `$radius-xl` 24 (bottom sheets). Espaciados `$spacing-xs/sm/md/lg/xl` = 4/8/16/24/32. Navegación con **Pill Tab Bar** flotante de 4 destinos: **MANTENIMIENTO, EVENTOS, GARAJE, PERFIL**. *(El Home/INICIO se eliminó el 2026-08-19: el descubrimiento lo dejó en `kill` por repetir lo que ya vive en otras pestañas, y su puesto lo tomó Mantenimiento, que es lo único de la app con uso real y recurrente. Con eso, consultar el historial cuesta 1 toque y registrar 2.)*
 
 Tono: directo y funcional. Es una herramienta, no una red social.
 
