@@ -5054,66 +5054,6 @@
       "children": [
         {
           "type": "frame",
-          "id": "vrA5M",
-          "name": "Status Bar",
-          "width": "fill_container",
-          "height": 44,
-          "padding": [
-            0,
-            24
-          ],
-          "justifyContent": "space_between",
-          "alignItems": "center",
-          "children": [
-            {
-              "type": "text",
-              "id": "A4pyXq",
-              "fill": "$text-primary",
-              "content": "9:41",
-              "fontFamily": "Space Grotesk",
-              "fontSize": 15,
-              "fontWeight": "600"
-            },
-            {
-              "type": "frame",
-              "id": "WG5Mk",
-              "name": "statusRight",
-              "gap": 6,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "icon",
-                  "id": "WzVzG",
-                  "width": 16,
-                  "height": 16,
-                  "icon": "signal",
-                  "library": "lucide",
-                  "fill": "$text-primary"
-                },
-                {
-                  "type": "icon",
-                  "id": "S8pUX",
-                  "width": 16,
-                  "height": 16,
-                  "icon": "wifi",
-                  "library": "lucide",
-                  "fill": "$text-primary"
-                },
-                {
-                  "type": "icon",
-                  "id": "mYEtO",
-                  "width": 22,
-                  "height": 16,
-                  "icon": "battery-full",
-                  "library": "lucide",
-                  "fill": "$text-primary"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "frame",
           "id": "HNRMG",
           "name": "Hero Image",
           "metadata": {
