@@ -16,11 +16,11 @@
 |---|---|
 | Detalle de moto, con Documentos en fila ancha | `POD7C` |
 | Garaje — galería de 2 columnas | `V02g9` |
-| Garaje — sin foto y nombre largo | `ZSjcI` |
+| Garaje — sin foto y nombre largo (icono centrado 2026-08-20) | `ZSjcI` |
 | Garaje — vacío | `rgLwm` |
 | Garaje — carga | `pBdbp` |
 | Garaje — sin conexión | `ZSUKH` |
-| Garaje — 8 motos | `NQnlL` |
+| Garaje — 8 motos (icono centrado 2026-08-20) | `NQnlL` |
 
 **16 componentes reusables** en la parte de arriba del canvas: tab bar, botones, **FAB** (`Q7Mkr`, nuevo el 2026-08-20), chips de estado, header, bloque de odómetro, celda de moto, fila de registro, campo de formulario, selector de moto, chip de sugerencia, switch, fila de ajuste y banner. Cambiar uno cambia todas las pantallas.
 

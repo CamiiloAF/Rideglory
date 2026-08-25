@@ -10626,6 +10626,8 @@
               "height": 48,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-sm",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "justifyContent": "center",
               "alignItems": "center",
               "children": [
@@ -10649,6 +10651,8 @@
               "height": 48,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-sm",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "justifyContent": "center",
               "alignItems": "center",
               "children": [
@@ -10938,6 +10942,8 @@
                   "width": "fill_container",
                   "fill": "$c-surface",
                   "cornerRadius": "$c-r-md",
+                  "stroke": "$c-border-strong",
+                  "strokeWidth": 1,
                   "gap": 14,
                   "padding": [
                     14,
@@ -11039,6 +11045,8 @@
                   "width": "fill_container",
                   "fill": "$c-surface",
                   "cornerRadius": "$c-r-md",
+                  "stroke": "$c-border-strong",
+                  "strokeWidth": 1,
                   "gap": 14,
                   "padding": [
                     14,
@@ -11229,6 +11237,8 @@
                   "width": "fill_container",
                   "fill": "$c-surface",
                   "cornerRadius": "$c-r-md",
+                  "stroke": "$c-border-strong",
+                  "strokeWidth": 1,
                   "layout": "vertical",
                   "gap": 10,
                   "padding": 16,
@@ -11356,6 +11366,8 @@
                   "width": "fill_container",
                   "fill": "$c-surface",
                   "cornerRadius": "$c-r-md",
+                  "stroke": "$c-border-strong",
+                  "strokeWidth": 1,
                   "layout": "vertical",
                   "gap": 10,
                   "padding": 16,
@@ -11483,6 +11495,8 @@
                   "width": "fill_container",
                   "fill": "$c-surface",
                   "cornerRadius": "$c-r-md",
+                  "stroke": "$c-border-strong",
+                  "strokeWidth": 1,
                   "layout": "vertical",
                   "gap": 10,
                   "padding": 16,
@@ -11573,6 +11587,8 @@
                   "width": "fill_container",
                   "fill": "$c-surface",
                   "cornerRadius": "$c-r-md",
+                  "stroke": "$c-border-strong",
+                  "strokeWidth": 1,
                   "layout": "vertical",
                   "gap": 10,
                   "padding": 16,
@@ -12131,6 +12147,8 @@
                       "height": 169,
                       "fill": "$c-surface",
                       "cornerRadius": "$c-r-md",
+                      "stroke": "$c-border-strong",
+                      "strokeWidth": 1,
                       "layout": "vertical",
                       "gap": 8,
                       "justifyContent": "center",
@@ -12499,6 +12517,8 @@
                       "height": 169,
                       "fill": "$c-surface",
                       "cornerRadius": "$c-r-md",
+                      "stroke": "$c-border-strong",
+                      "strokeWidth": 1,
                       "layout": "vertical",
                       "padding": 10,
                       "justifyContent": "space_between",
@@ -12508,15 +12528,9 @@
                           "type": "frame",
                           "id": "ghQl4",
                           "name": "Sin foto",
-                          "width": "fill_container",
+                          "height": "fill_container",
                           "layout": "vertical",
-                          "gap": 9,
-                          "padding": [
-                            8,
-                            0,
-                            0,
-                            0
-                          ],
+                          "justifyContent": "center",
                           "alignItems": "center",
                           "children": [
                             {
@@ -12719,6 +12733,8 @@
                       "height": 169,
                       "fill": "$c-surface",
                       "cornerRadius": "$c-r-md",
+                      "stroke": "$c-border-strong",
+                      "strokeWidth": 1,
                       "layout": "vertical",
                       "padding": 10,
                       "justifyContent": "space_between",
@@ -12728,15 +12744,9 @@
                           "type": "frame",
                           "id": "vzq2a",
                           "name": "Sin foto",
-                          "width": "fill_container",
+                          "height": "fill_container",
                           "layout": "vertical",
-                          "gap": 9,
-                          "padding": [
-                            8,
-                            0,
-                            0,
-                            0
-                          ],
+                          "justifyContent": "center",
                           "alignItems": "center",
                           "children": [
                             {
@@ -13414,7 +13424,9 @@
                       "width": "fill_container",
                       "height": 169,
                       "fill": "$c-surface",
-                      "cornerRadius": "$c-r-md"
+                      "cornerRadius": "$c-r-md",
+                      "stroke": "$c-border-strong",
+                      "strokeWidth": 1
                     },
                     {
                       "type": "frame",
@@ -13468,7 +13480,9 @@
                       "width": "fill_container",
                       "height": 169,
                       "fill": "$c-surface",
-                      "cornerRadius": "$c-r-md"
+                      "cornerRadius": "$c-r-md",
+                      "stroke": "$c-border-strong",
+                      "strokeWidth": 1
                     },
                     {
                       "type": "frame",
@@ -13531,7 +13545,9 @@
                       "width": "fill_container",
                       "height": 169,
                       "fill": "$c-surface",
-                      "cornerRadius": "$c-r-md"
+                      "cornerRadius": "$c-r-md",
+                      "stroke": "$c-border-strong",
+                      "strokeWidth": 1
                     },
                     {
                       "type": "frame",
@@ -13585,7 +13601,9 @@
                       "width": "fill_container",
                       "height": 169,
                       "fill": "$c-surface",
-                      "cornerRadius": "$c-r-md"
+                      "cornerRadius": "$c-r-md",
+                      "stroke": "$c-border-strong",
+                      "strokeWidth": 1
                     },
                     {
                       "type": "frame",
@@ -14515,6 +14533,8 @@
                       "height": 169,
                       "fill": "$c-surface",
                       "cornerRadius": "$c-r-md",
+                      "stroke": "$c-border-strong",
+                      "strokeWidth": 1,
                       "layout": "vertical",
                       "padding": 10,
                       "justifyContent": "space_between",
@@ -14524,15 +14544,9 @@
                           "type": "frame",
                           "id": "ZYfUC",
                           "name": "Sin foto",
-                          "width": "fill_container",
+                          "height": "fill_container",
                           "layout": "vertical",
-                          "gap": 9,
-                          "padding": [
-                            8,
-                            0,
-                            0,
-                            0
-                          ],
+                          "justifyContent": "center",
                           "alignItems": "center",
                           "children": [
                             {
@@ -14778,6 +14792,8 @@
                       "height": 169,
                       "fill": "$c-surface",
                       "cornerRadius": "$c-r-md",
+                      "stroke": "$c-border-strong",
+                      "strokeWidth": 1,
                       "layout": "vertical",
                       "padding": 10,
                       "justifyContent": "space_between",
@@ -14787,15 +14803,9 @@
                           "type": "frame",
                           "id": "gQi96",
                           "name": "Sin foto",
-                          "width": "fill_container",
+                          "height": "fill_container",
                           "layout": "vertical",
-                          "gap": 9,
-                          "padding": [
-                            8,
-                            0,
-                            0,
-                            0
-                          ],
+                          "justifyContent": "center",
                           "alignItems": "center",
                           "children": [
                             {
@@ -14960,6 +14970,8 @@
                       "height": 169,
                       "fill": "$c-surface",
                       "cornerRadius": "$c-r-md",
+                      "stroke": "$c-border-strong",
+                      "strokeWidth": 1,
                       "layout": "vertical",
                       "gap": 8,
                       "justifyContent": "center",
@@ -15850,36 +15862,6 @@
           "children": [
             {
               "type": "frame",
-              "id": "y0Tc1K",
-              "x": 0,
-              "y": 0,
-              "name": "Sin foto",
-              "enabled": false,
-              "width": "fill_container(0)",
-              "layout": "vertical",
-              "gap": 9,
-              "padding": [
-                8,
-                0,
-                0,
-                0
-              ],
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "icon",
-                  "id": "acpWA",
-                  "name": "bike",
-                  "width": 42,
-                  "height": 42,
-                  "icon": "bike",
-                  "library": "lucide",
-                  "fill": "$c-text-secondary"
-                }
-              ]
-            },
-            {
-              "type": "frame",
               "id": "aokFx",
               "x": 0,
               "y": 0,
@@ -16036,6 +16018,8 @@
               "height": 40,
               "fill": "$c-surface",
               "cornerRadius": 14,
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "justifyContent": "center",
               "alignItems": "center",
               "children": [
@@ -16138,7 +16122,7 @@
           "name": "Duración",
           "fill": "$c-accent-soft",
           "cornerRadius": 10,
-          "stroke": "$c-border",
+          "stroke": "$c-accent",
           "strokeWidth": 1,
           "gap": 6,
           "padding": [
@@ -16314,7 +16298,7 @@
           "height": 56,
           "fill": "$c-surface",
           "cornerRadius": "$c-r-sm",
-          "stroke": "$c-border",
+          "stroke": "$c-border-strong",
           "strokeWidth": 1,
           "gap": 10,
           "padding": [
@@ -16395,6 +16379,7 @@
           "enabled": false,
           "width": "fill_container(0)",
           "gap": 6,
+          "alignItems": "center",
           "children": [
             {
               "type": "icon",
@@ -16477,7 +16462,7 @@
           "height": 60,
           "fill": "$c-surface",
           "cornerRadius": "$c-r-sm",
-          "stroke": "$c-border",
+          "stroke": "$c-border-strong",
           "strokeWidth": 1,
           "gap": 10,
           "padding": [
@@ -16580,7 +16565,7 @@
       "height": 48,
       "fill": "$c-surface",
       "cornerRadius": 16,
-      "stroke": "$c-border",
+      "stroke": "$c-border-strong",
       "strokeWidth": 1,
       "padding": [
         0,
@@ -16742,7 +16727,7 @@
               "fill": "$c-text",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "¿Qué le hiciste a la moto?",
+              "content": "¿Qué mantenimiento registras?",
               "lineHeight": 1.2,
               "fontFamily": "$c-font",
               "fontSize": 24,
@@ -16763,8 +16748,8 @@
               "height": 64,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
-              "stroke": "$c-text",
-              "strokeWidth": 2,
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 12,
               "padding": [
                 0,
@@ -16814,6 +16799,8 @@
               "height": 64,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 12,
               "padding": [
                 0,
@@ -16853,6 +16840,8 @@
               "height": 64,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 12,
               "padding": [
                 0,
@@ -16892,6 +16881,8 @@
               "height": 64,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 12,
               "padding": [
                 0,
@@ -16931,6 +16922,8 @@
               "height": 64,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 12,
               "padding": [
                 0,
@@ -16970,6 +16963,8 @@
               "height": 64,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 12,
               "padding": [
                 0,
@@ -17208,7 +17203,7 @@
               "fill": "$c-text",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "¿A cuántos kilómetros?",
+              "content": "¿Cuál es el kilometraje?",
               "lineHeight": 1.2,
               "fontFamily": "$c-font",
               "fontSize": 24,
@@ -17222,8 +17217,8 @@
               "height": 96,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
-              "stroke": "$c-text",
-              "strokeWidth": 2,
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 8,
               "padding": [
                 0,
@@ -17838,6 +17833,8 @@
               "height": 56,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-sm",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 10,
               "padding": [
                 0,
@@ -17890,8 +17887,8 @@
           "x": 20,
           "y": 766,
           "fill": "$c-accent",
-          "stroke": "$c-on-accent",
-          "strokeWidth": 1.5,
+          "stroke": [],
+          "strokeWidth": 0,
           "descendants": {
             "wf4kj": {
               "enabled": false
@@ -18083,6 +18080,8 @@
               "height": 56,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-sm",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 10,
               "padding": [
                 0,
@@ -18410,6 +18409,8 @@
               "height": 56,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-sm",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 10,
               "padding": [
                 0,
@@ -18523,6 +18524,8 @@
               "width": "fill_container",
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 12,
               "padding": [
                 13,
@@ -18984,6 +18987,8 @@
               "width": "fill_container",
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 12,
               "padding": [
                 13,
@@ -19241,7 +19246,7 @@
               "height": 58,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
-              "stroke": "$c-border",
+              "stroke": "$c-border-strong",
               "strokeWidth": 1,
               "gap": 9,
               "justifyContent": "center",
@@ -19370,6 +19375,8 @@
               "height": 96,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-lg",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "justifyContent": "center",
               "alignItems": "center",
               "children": [
@@ -19919,6 +19926,8 @@
               "height": 96,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-lg",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "justifyContent": "center",
               "alignItems": "center",
               "children": [
@@ -20044,6 +20053,8 @@
               "height": 64,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 12,
               "padding": [
                 0,
@@ -20093,6 +20104,8 @@
               "height": 64,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 12,
               "padding": [
                 0,
@@ -20142,6 +20155,8 @@
               "height": 64,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 12,
               "padding": [
                 0,
@@ -28016,6 +28031,8 @@
               "height": 48,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-sm",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "justifyContent": "center",
               "alignItems": "center",
               "children": [
@@ -28087,6 +28104,8 @@
                   "height": 48,
                   "fill": "$c-surface",
                   "cornerRadius": 16,
+                  "stroke": "$c-border-strong",
+                  "strokeWidth": 1,
                   "padding": [
                     0,
                     13
@@ -28113,6 +28132,8 @@
                   "height": 48,
                   "fill": "$c-surface",
                   "cornerRadius": 16,
+                  "stroke": "$c-border-strong",
+                  "strokeWidth": 1,
                   "padding": [
                     0,
                     13
@@ -28139,6 +28160,8 @@
                   "height": 48,
                   "fill": "$c-surface",
                   "cornerRadius": 16,
+                  "stroke": "$c-border-strong",
+                  "strokeWidth": 1,
                   "padding": [
                     0,
                     13
@@ -28186,6 +28209,8 @@
               "width": "fill_container",
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "layout": "vertical",
               "children": [
                 {
@@ -28200,18 +28225,18 @@
                       "fill": "$c-error-soft"
                     },
                     "N1Daou": {
-                      "icon": "droplet",
+                      "icon": "triangle-alert",
                       "fill": "$c-error-text"
                     },
                     "FBZ8d": {
                       "content": "Cambio de aceite"
                     },
                     "BBRcD": {
-                      "content": "Honda XR 150"
+                      "content": "Honda XR 150 · Vencido"
                     },
                     "qo73e": {
-                      "content": "+2.400 km",
-                      "fontSize": 13.5,
+                      "content": "2.400 km",
+                      "fontSize": 15,
                       "fill": "$c-error-text"
                     },
                     "phwGZ": {
@@ -28252,11 +28277,11 @@
                       "content": "Tecnomecánica"
                     },
                     "BBRcD": {
-                      "content": "Suzuki GN 125"
+                      "content": "Suzuki GN 125 · Este mes"
                     },
                     "qo73e": {
-                      "content": "en 12 días",
-                      "fontSize": 13.5,
+                      "content": "12 días",
+                      "fontSize": 15,
                       "fill": "$c-warning"
                     },
                     "phwGZ": {
@@ -28297,11 +28322,11 @@
                       "content": "Cambio de aceite"
                     },
                     "BBRcD": {
-                      "content": "Yamaha MT-03"
+                      "content": "Yamaha MT-03 · Más adelante"
                     },
                     "qo73e": {
-                      "content": "en 1.550 km",
-                      "fontSize": 13.5,
+                      "content": "1.550 km",
+                      "fontSize": 15,
                       "fill": "$c-text"
                     },
                     "phwGZ": {
@@ -28347,6 +28372,8 @@
               "width": "fill_container",
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "layout": "vertical",
               "children": [
                 {
@@ -28394,6 +28421,8 @@
               "width": "fill_container",
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "layout": "vertical",
               "children": [
                 {
@@ -28828,6 +28857,8 @@
               "height": 64,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-sm",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 12,
               "padding": [
                 0,
@@ -28993,6 +29024,8 @@
               "height": 52,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-sm",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 10,
               "padding": [
                 0,
@@ -30688,8 +30721,8 @@
               "ref": "HYvT4",
               "name": "CTA Guardar",
               "width": "fill_container",
-              "stroke": "$c-on-accent",
-              "strokeWidth": 1.5,
+              "stroke": [],
+              "strokeWidth": 0,
               "descendants": {
                 "wf4kj": {
                   "enabled": false
@@ -31199,6 +31232,8 @@
               "width": "fill_container",
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "layout": "vertical",
               "gap": 2,
               "padding": [
@@ -31239,6 +31274,8 @@
               "width": "fill_container",
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "layout": "vertical",
               "children": [
                 {
@@ -31473,6 +31510,8 @@
               "width": "fill_container",
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "layout": "vertical",
               "children": [
                 {
@@ -31902,6 +31941,8 @@
               "width": "fill_container",
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "layout": "vertical",
               "gap": 2,
               "padding": [
@@ -31942,6 +31983,8 @@
               "width": "fill_container",
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "layout": "vertical",
               "children": [
                 {
@@ -32128,6 +32171,8 @@
               "width": "fill_container",
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "layout": "vertical",
               "children": [
                 {
@@ -32758,6 +32803,8 @@
               "width": "fill_container",
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "layout": "vertical",
               "gap": 2,
               "padding": [
@@ -32798,6 +32845,8 @@
               "width": "fill_container",
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "layout": "vertical",
               "children": [
                 {
@@ -32984,6 +33033,8 @@
               "width": "fill_container",
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "layout": "vertical",
               "children": [
                 {
@@ -33422,6 +33473,8 @@
               "height": 60,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 12,
               "padding": [
                 0,
@@ -33461,6 +33514,8 @@
               "height": 60,
               "fill": "$c-surface",
               "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
               "gap": 12,
               "padding": [
                 0,
@@ -34198,13 +34253,13 @@
       "type": "color",
       "value": [
         {
-          "value": "#E7E5E4",
+          "value": "#D6D2CD",
           "theme": {
             "mode": "light"
           }
         },
         {
-          "value": "#2E2E2E",
+          "value": "#3A3A3A",
           "theme": {
             "mode": "dark"
           }
@@ -34629,6 +34684,23 @@
         },
         {
           "value": "#F87171",
+          "theme": {
+            "mode": "dark"
+          }
+        }
+      ]
+    },
+    "c-border-strong": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#9A948E",
+          "theme": {
+            "mode": "light"
+          }
+        },
+        {
+          "value": "#626262",
           "theme": {
             "mode": "dark"
           }

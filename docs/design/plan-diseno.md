@@ -23,9 +23,17 @@ Auditoría del `ui-ux-reviewer` del 2026-08-20 sobre el flujo de Mantenimiento: 
 
 ---
 
-## Fase 0 · Lo que contamina todo lo demás
+## Fase 0 · Lo que contamina todo lo demás — HECHA el 2026-08-20
 
 **Por qué primero:** son cambios de sistema, no de pantalla. Hacerlos después obliga a revisar las 70 pantallas otra vez.
+
+**Lo que se hizo:**
+
+- **`$c-border` se dividió en dos tokens.** `c-border` (#D6D2CD claro / #3A3A3A oscuro) para divisores internos, donde solo hay que separar filas. **`c-border-strong`** (#9A948E claro / #626262 oscuro) para el límite exterior de cards y controles: ambos valores están calculados para dar **exactamente 3:1** contra su fondo, en su tema. Antes el único borde daba 1.26:1.
+- **Contorno aplicado a 60 nodos de superficie** — las pantallas aprobadas y, sobre todo, los componentes reusables, que lo propagan solos. Antes la estructura de cards se sostenía en 1.09:1 de relleno y desaparecía bajo sol.
+- **Urgencia con palabra, no solo color.** El subtítulo de cada fila de PRÓXIMOS ahora dice «Honda XR 150 · Vencido» / «· Este mes» / «· Más adelante», y lo vencido cambia su icono de pieza por `triangle-alert`. Se descartó «+2.400 km», que en español se lee como *faltan*. **No se devolvieron los encabezados de grupo**: la palabra cabe en el subtítulo y no cuesta altura, que era el precio que M5 había pagado por fusionarse.
+- **Chip de duración con borde de acento.** Separaba de la card por 1.02:1; se leía el texto pero no se percibía como chip.
+- **Nodo Error del componente de campo, arreglado.** Tenía `fill_container(0)` y sin `alignItems`, así que colapsaba a 0px de ancho. Verificado: la instancia habilitada ahora mide 350×32 y renderiza.
 
 1. **Contraste de superficies (S6).** `$c-surface` sobre `$c-bg` da **1.09:1** y `$c-border` sobre blanco **1.26:1**. Toda la estructura de cards se apoya en esa separación y bajo sol directo desaparece. Es cambio de token: se corrige una vez y se propaga a todo.
 2. **Urgencia sin depender del color (B1).** En M5 lo vencido, lo de este mes y lo de más adelante se distinguen solo por el color de la cifra: rojo vs ámbar es **1.25:1 entre sí**, y los fondos de sus iconos **1.00:1**. Además «+2.400 km» en español se lee como *faltan*, no como *vencido hace*. Corregir con palabra («Vencido hace 2.400 km» / «En 12 días») e icono distinto para lo vencido.
