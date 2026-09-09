@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/documents/presentation/documents_routes.dart';
 import '../../features/events/presentation/pages/events_page.dart';
+import '../../features/garage/presentation/garage_routes.dart';
 import '../../features/garage/presentation/pages/garage_page.dart';
 import '../../features/maintenance/presentation/pages/maintenance_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
@@ -67,6 +69,7 @@ GoRouter buildAppRouter() {
                 path: AppRoutes.garagePath,
                 name: AppRoutes.garage,
                 builder: (context, state) => const GaragePage(),
+                routes: [...garageRoutes, ...documentsRoutes],
               ),
             ],
           ),

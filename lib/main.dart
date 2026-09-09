@@ -7,6 +7,7 @@ import 'core/di/injection.dart';
 import 'core/observability/app_sentry.dart';
 import 'core/router/app_router.dart';
 import 'design_system/theme/app_theme.dart';
+import 'features/documents/data/services/document_reminder_scheduler.dart';
 import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
 import 'shared/cubits/connectivity/connectivity_cubit.dart';
@@ -22,6 +23,7 @@ Future<void> main() async {
       publishableKey: AppEnv.supabaseAnonKey,
     );
     await configureDependencies();
+    await getIt<DocumentReminderScheduler>().init();
 
     runApp(const RidegloryApp());
   });

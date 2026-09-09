@@ -5,9 +5,15 @@ import 'package:lucide_icons/lucide_icons.dart';
 import '../tokens/app_colors.dart';
 import '../tokens/app_radii.dart';
 import 'app_photo_chip.dart';
+import 'app_status_chip.dart';
 
 /// Celda de moto para la galería del garaje: foto, nombre, badge principal
 /// y kilometraje, con un chip de estado opcional sobre la foto.
+///
+/// El chip cubre dos avisos distintos del `.pen` (`YXXpJ`): mantenimiento
+/// atrasado (gota, tono error) y documento por vencer (triángulo, tono
+/// warning/error) — por eso [pendingIcon] y [pendingTone] son configurables
+/// en vez de fijos.
 ///
 /// Pencil: YXXpJ
 class VehicleCell extends StatelessWidget {
@@ -17,6 +23,8 @@ class VehicleCell extends StatelessWidget {
     this.imageUrl,
     this.isMain = false,
     this.pendingLabel,
+    this.pendingIcon = LucideIcons.droplet,
+    this.pendingTone = AppStatusTone.error,
     this.onTap,
     super.key,
   });
@@ -26,6 +34,8 @@ class VehicleCell extends StatelessWidget {
   final String? imageUrl;
   final bool isMain;
   final String? pendingLabel;
+  final IconData pendingIcon;
+  final AppStatusTone pendingTone;
   final VoidCallback? onTap;
 
   @override
@@ -56,8 +66,9 @@ class VehicleCell extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.bottomLeft,
                         child: AppPhotoChip(
-                          icon: LucideIcons.droplet,
+                          icon: pendingIcon,
                           label: pendingLabel!,
+                          tone: pendingTone,
                         ),
                       ),
                     ),

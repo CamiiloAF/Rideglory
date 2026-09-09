@@ -11,6 +11,7 @@ class AppSecondaryButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.icon,
+    this.destructive = false,
     super.key,
   });
 
@@ -18,17 +19,23 @@ class AppSecondaryButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final IconData? icon;
 
+  /// Variante roja para acciones irreversibles (ej. eliminar una moto).
+  /// Sigue siendo este componente y no un `OutlinedButton` suelto: solo
+  /// cambia el color de borde/texto/ícono al tono de error.
+  final bool destructive;
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
+    final tone = destructive ? colors.errorText : colors.text;
     return SizedBox(
       width: double.infinity,
       height: 48,
       child: OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
-          foregroundColor: colors.text,
-          side: BorderSide(color: colors.text, width: 1.5),
+          foregroundColor: tone,
+          side: BorderSide(color: tone, width: 1.5),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppRadii.sm),
           ),
@@ -38,7 +45,7 @@ class AppSecondaryButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (icon != null) ...[
-              Icon(icon, size: 16, color: colors.text),
+              Icon(icon, size: 16, color: tone),
               const SizedBox(width: 8),
             ],
             Text(
@@ -46,7 +53,7 @@ class AppSecondaryButton extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
-                color: colors.text,
+                color: tone,
               ),
             ),
           ],

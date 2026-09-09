@@ -1,21 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../l10n/l10n_extensions.dart';
-import '../../../../shared/widgets/states/empty_state_view.dart';
+import '../../../../core/di/injection.dart';
+import '../../../../shared/cubits/connectivity/connectivity_cubit.dart';
+import '../../../../shared/cubits/connectivity/connectivity_state.dart';
+import '../../../../shared/widgets/states/offline_state_view.dart';
+import '../cubit/garage_gallery_cubit.dart';
+import '../widgets/garage_gallery_view.dart';
 
-/// Galería del garaje. Placeholder de F3 — el contenido real llega en F5.
+/// Punto de entrada de la pestaña Garaje (D4: Mantenimiento es la de
+/// entrada; esta es la tercera del Pill Tab Bar).
+///
+/// Pencil: V02g9 (galería), rgLwm (vacío), pBdbp (carga), ZSUKH (sin
+/// conexión).
 class GaragePage extends StatelessWidget {
   const GaragePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: EmptyStateView(
-          icon: LucideIcons.bike,
-          title: context.l10n.garage_empty_title,
-          body: context.l10n.garage_empty_body,
+    final isOffline = context.watch<ConnectivityCubit>().state is ConnectivityOffline;
+    return BlocProvider(
+      create: (_) => getIt<GarageGalleryCubit>()..load(),
+      child: Scaffold(
+        body: SafeArea(
+          child: isOffline
+              ? OfflineStateView(onRetry: () => context.read<GarageGalleryCubit>().load())
+              : const GarageGalleryView(),
         ),
       ),
     );
