@@ -26,6 +26,7 @@ class AppTextField extends StatelessWidget {
     this.onChanged,
     this.onTap,
     this.readOnly = false,
+    this.onSuffixTap,
     super.key,
   });
 
@@ -42,6 +43,7 @@ class AppTextField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final VoidCallback? onTap;
   final bool readOnly;
+  final VoidCallback? onSuffixTap;
 
   @override
   Widget build(BuildContext context) {
@@ -100,12 +102,15 @@ class AppTextField extends StatelessWidget {
               ),
               if (suffixText != null) ...[
                 const SizedBox(width: 10),
-                Text(
-                  suffixText!,
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: colors.textSecondary,
+                GestureDetector(
+                  onTap: onSuffixTap,
+                  child: Text(
+                    suffixText!,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: colors.textSecondary,
+                    ),
                   ),
                 ),
               ],

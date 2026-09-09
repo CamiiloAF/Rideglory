@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/auth/presentation/auth_routes.dart';
 import '../../features/documents/presentation/documents_routes.dart';
 import '../../features/events/presentation/pages/events_page.dart';
 import '../../features/garage/presentation/garage_routes.dart';
 import '../../features/garage/presentation/pages/garage_page.dart';
 import '../../features/maintenance/presentation/pages/maintenance_page.dart';
-import '../../features/profile/presentation/pages/profile_page.dart';
-import '../../features/welcome/presentation/pages/welcome_page.dart';
+import '../../features/profile/presentation/profile_routes.dart';
 import '../auth/auth_cubit.dart';
 import '../auth/auth_state.dart';
 import '../di/injection.dart';
@@ -31,16 +31,11 @@ GoRouter buildAppRouter() {
       return switch (authState) {
         AuthUnknown() => null,
         AuthUnauthenticated() => isAtWelcome ? null : AppRoutes.welcomePath,
-        AuthAuthenticated() =>
-          isAtWelcome ? AppRoutes.maintenancePath : null,
+        AuthAuthenticated() => isAtWelcome ? AppRoutes.maintenancePath : null,
       };
     },
     routes: [
-      GoRoute(
-        path: AppRoutes.welcomePath,
-        name: AppRoutes.welcome,
-        builder: (context, state) => const WelcomePage(),
-      ),
+      ...authRoutes,
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
             AppShell(navigationShell: navigationShell),
@@ -79,6 +74,7 @@ GoRouter buildAppRouter() {
                 path: AppRoutes.profilePath,
                 name: AppRoutes.profile,
                 builder: (context, state) => const ProfilePage(),
+                routes: profileSubRoutes,
               ),
             ],
           ),

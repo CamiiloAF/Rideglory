@@ -8,9 +8,16 @@ import '../../../l10n/l10n_extensions.dart';
 /// Estado propio de esta app: sin conexión. Nunca una pantalla vacía; el
 /// mensaje explica qué pasó y ofrece reintentar al recuperar señal.
 class OfflineStateView extends StatelessWidget {
-  const OfflineStateView({required this.onRetry, super.key});
+  const OfflineStateView({
+    required this.onRetry,
+    this.title,
+    this.body,
+    super.key,
+  });
 
   final VoidCallback onRetry;
+  final String? title;
+  final String? body;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +31,7 @@ class OfflineStateView extends StatelessWidget {
             Icon(LucideIcons.wifiOff, size: 40, color: colors.textSecondary),
             const SizedBox(height: 16),
             Text(
-              context.l10n.common_offline_title,
+              title ?? context.l10n.common_offline_title,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
@@ -34,7 +41,7 @@ class OfflineStateView extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              context.l10n.common_offline_body,
+              body ?? context.l10n.common_offline_body,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 13.5, color: colors.textSecondary),
             ),
