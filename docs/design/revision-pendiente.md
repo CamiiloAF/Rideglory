@@ -31,7 +31,7 @@
 - **Estados del garaje centrados.** `rgLwm` y `ZSUKH` centran el contenido en el cuerpo, y el icono perdió el recuadro de superficie que lo hacía leer como una celda más de la galería —la confusión con el card de agregar moto.
 - **El botón amarillo de ancho completo sale de Mantenimiento.** Lo reemplaza un FAB (`Q7Mkr`, 64dp con contorno oscuro) en `uW3OI`, `n1AmaQ`, `KucgY` y `cZCI4`. Devuelve unos 80px de alto por pantalla. El contorno no es decorativo: el amarillo sobre fondo blanco queda en 1.4:1 y no alcanza el 3:1 que WCAG pide para el límite de un control.
 - **F2 pasa de 4 pasos a 3**, y el tercero dejó de ser un paso más de preguntas: es la hoja de detalles opcionales al estilo de F3 (`FzCw2`).
-- **El kilometraje menor al odómetro dejó de ser un error.** `cbG79` ahora se llama *Kilometraje anterior al odómetro* y avisa en gris que es un registro anterior y que el odómetro no cambia. Guardar queda habilitado.
+- **El kilometraje menor al odómetro dejó de ser un error.** el estado *Kilometraje anterior al odómetro* (hoy `ljdLM`, reconstruido sobre F2 el 2026-08-20) y avisa en gris que es un registro anterior y que el odómetro no cambia. Guardar queda habilitado.
 - **Documentos: elegida la opción (b).** Ver más abajo.
 
 ---
@@ -134,9 +134,15 @@ Ese es todo el trabajo de diseño que queda del asunto: **definir el catálogo d
 
 F1 (formulario completo), F3 (mínimo primero) y F4 (desde plantilla) se borraron con sus tesis y marcadores. También PROG-B (pantalla aparte con Omitir) y las dos variantes de pantalla-aparte-con-interruptor: al vivir el interruptor dentro del paso 3, no hacen falta.
 
-Estados aprobados el 2026-08-20: kilometraje anterior al odómetro (`cbG79`), guardando (`h3lmk`) y error al guardar (`gN2Ua`).
+Estados aprobados el 2026-08-20, reconstruidos el mismo día sobre el layout real de F2 (ya no sobre F3, la variante descartada):
 
-**Deuda conocida y aceptada:** esos tres estados están dibujados sobre el layout de **F3**, la variante descartada — muestran el formulario de una sola pantalla en vez del paso 3. Los textos y las decisiones de contenido son los buenos; el envoltorio hay que rehacerlo sobre el paso 3 de F2 antes de implementar. Está aprobado el *qué*, no el *dónde*.
+| Estado | Vive en | nodeId |
+|---|---|---|
+| Kilometraje anterior al odómetro | Paso 2 (`x74Sa`), donde está el campo | `ljdLM` |
+| Guardando | Paso 3 (`g3rONd`), donde está el botón Guardar | `PPgFL` |
+| Error al guardar | Paso 3 (`g3rONd`) | `mgxIO` |
+
+**Corrección de fondo, no solo de envoltorio:** el kilometraje anterior no vivía en el paso 3 como se había construido primero — vive en el **paso 2**, porque ahí es donde se escribe el número. Guardando y error sí son del paso 3, porque ahí está el botón que dispara el guardado.
 
 **El indicador de guardado se queda como está** (`e5fWGR`): botón «Guardando…» con barra de progreso interna. Se evaluaron el guardado optimista sin loader —cerrar y mostrar el registro ya en el historial, con encolado y reintento si falla—, una barra fina en el borde superior de la pantalla, y el botón mutando a un check. Decisión de Cami: dejarlo como está.
 
@@ -182,29 +188,40 @@ Y arrastra costos que no son de disco: la factura lleva datos del taller y a vec
 - **Caso sin anteriores**: con un solo registro del ítem, la sección «ANTES, EN ESTA MOTO» queda vacía.
 - Carga y error accionable.
 
-## Decisión 4 · Agregar moto
+## Decisión 4 · Agregar moto — RESUELTA el 2026-08-26
 
-| | Apuesta | nodeId |
-|---|---|---|
-| **A1 — Todo en una pantalla** | Se ve el alcance completo | `wNGDQ` |
-| **A2 — Empieza por la placa** | Un ancla concreta antes del formulario | `KIdCH`, `e0fmR` |
-| **A3 — Catálogo de marcas** | Estandariza los nombres | `pik0M`, `g8ry2` |
+**Gana A2 — Empieza por la placa.** Un ancla concreta antes del formulario: primero la placa (`KIdCH`), validada contra el formato real; luego el resto de los datos (`e0fmR`). Descartadas A1 (todo en una pantalla) y A3 (catálogo de marcas como paso 1) — ambas marcadas ❌.
 
-Placa inválida `ruRle` · editar `tbZKM` · guardando `IPfLr`.
+**El giro respecto a la recomendación original:** yo había recomendado A3 porque protegía el dato de marca a futuro. Cami la revirtió: **A2 se queda, pero su campo de marca deja de ser texto libre y usa el selector S1 ya aprobado** (`LHKHl`). Así A2 gana en lo que importaba de A3 —la marca entra normalizada— sin heredar su arquitectura completa. El campo `Marca` en `e0fmR` ahora lleva chevron y abre `LHKHl` al tocarlo.
 
-**Recomendación: A3.** Es la única que protege el dato a futuro: si marca y línea entran normalizadas, M3 y el historial agrupan bien; si entran a mano ("yamaha mt03" contra "Yamaha MT-03"), no hay forma de arreglarlo después.
+**La línea (MT-03, GN 125) sigue siendo texto libre.** Es la advertencia que ya estaba en la Decisión 4b: es la mitad peor del problema de normalización, y no se resuelve con este cambio.
 
-### Decisión 4b · El selector de marca — DECIDIDA el 2026-08-20
+### El selector de marca, mejorado (2026-08-26)
 
-Hoy en A2 la marca es un campo de texto libre — el problema que A3 quiere evitar.
+Cami pidió mejorar la lista (`o6ds2` → ahora `DJNkr`). Cambios:
 
-**Elegida: S1 — buscador y lista alfabética** (`LHKHl`). Descartadas: cuadrícula de comunes (`riMp6`) y la híbrida (`CiSe5`).
+- **Avatar circular con la inicial de la marca**, en vez de texto plano. No es un logo —esos siguen pendientes como asset— pero da un ancla visual sin comprometerse a una identidad de marca que la app no tiene autorización de usar.
+- **Chevron en cada fila**, no solo en la seleccionada. Antes ninguna fila insinuaba que era tocable salvo por estar en una lista; ahora la afordancia es explícita.
+- **La fila seleccionada tiene fondo propio** (`$c-accent-soft`, esquinas redondeadas), no solo negrita y un check. Se distingue de un vistazo, no leyendo.
 
-**El criterio, que vale más que la decisión:** agregar una moto **no se hace en carretera ni con guantes**. Se hace sentado, una vez por moto, en toda la vida de la moto. El contexto moto —guantes, sol, dos segundos— no aplica a esta pantalla, y por eso escribir aquí no es el costo que sería en la pantalla de una rodada. Mi recomendación inicial (S3) sobrepesaba ese contexto donde no correspondía.
+Se ajustó la altura de la hoja (`nh848`) porque las filas más altas (60px, antes 56px) se salían del cálculo original por 31px.
 
-Con eso, S1 gana por lo simple: una sola lista, sin caso «Otra», sin cuadrícula que compita, y escala a cualquier número de marcas sin rediseñar nada.
+*Ajustado el 2026-08-26:* se quitaron los divisores entre filas. Con el avatar y el padding nuevo, cada fila ya se distingue sola; el divisor sobraba.
 
-**Lo que este selector no resuelve:** la **línea** (MT-03, GN 125) sigue siendo texto libre en las tres. Es la mitad del problema de normalización, y probablemente la peor: hay muchas más líneas que marcas y se escriben de más formas. Normalizarla exige un catálogo marca→líneas, que es trabajo de datos, no de diseño. Vale decidir si la v2 lo carga o si acepta la línea sucia.
+**A1 y A3 se borraron del canvas** —pantallas, tesis y marcadores— y la fila de Moto se reordenó sin huecos.
+
+### Estados de Agregar moto — HECHOS el 2026-08-26
+
+`IPfLr` («Agregar moto — Guardando») resultó estar construido sobre el layout viejo de A1, la variante ya descartada: secciones IDENTIDAD/FICHA TÉCNICA en una sola pantalla, en vez del flujo de dos pasos de A2. Se reemplazó.
+
+| Estado | nodeId |
+|---|---|
+| Guardando (sobre el layout real de A2, paso 2) | `M2i66X` |
+| Error al guardar — nuevo, no existía | `sH7QQ` |
+
+De paso, **«Editar moto» (`tbZKM`) tenía el mismo problema**: campo Marca en texto libre, sin el selector S1. Se le agregó el chevron para que abra `LHKHl`, igual que en `e0fmR`.
+
+Fila de Moto reordenada sin huecos: `POD7C` → `KIdCH` → `ruRle` → `e0fmR` → `LHKHl` → `tbZKM` → `M2i66X` → `sH7QQ`.
 
 ## Decisión 5 · Perfil
 
@@ -215,7 +232,28 @@ Con eso, S1 gana por lo simple: una sola lista, sin caso «Otra», sin cuadrícu
 
 Contacto de emergencia: `FNOK0`.
 
-**Recomendación: P2.** El descubrimiento encontró que el contacto de emergencia hoy solo se puede fijar inscribiéndose a una rodada, y que la pantalla de perfil estaba rota. En una lista de ajustes queda condenado a no llenarse nunca; P2 lo destaca hasta que exista.
+**RESUELTA el 2026-08-26: gana P2.** El descubrimiento encontró que el contacto de emergencia hoy solo se puede fijar inscribiéndose a una rodada, y que la pantalla de perfil estaba rota. En una lista de ajustes queda condenado a no llenarse nunca; P2 lo destaca con un banner de advertencia hasta que exista, conectando directo con la regla de seguridad del rider: el SOS necesita ese contacto cacheado antes de la rodada, no leído en la emergencia.
+
+### Estados de P2 — HECHOS el 2026-08-26
+
+Skeleton agrupado por sección (`ZhLW3`): identidad, banner de emergencia, motos y ajustes, cada bloque en el lugar donde después aparece su contenido real — mismo criterio que se corrigió en el skeleton de M5. Error (`iWE6o`) y sin conexión (`HGJYs`) con el patrón centrado ya estándar en la app.
+
+**Feature Perfil completa: decisión + estados.** Falta la limpieza de `BS3wJ` (P1, descartada) del canvas.
+
+### Revisor sobre todo lo de hoy — HECHO el 2026-08-26, veredicto `blocked` → corregido
+
+Auditó Mantenimiento, Agregar/Editar moto y Perfil completos, más el componente `Jiqal`. Dos bloqueantes, los dos corregidos:
+
+1. **Botón "Sí, eliminar" con contraste real de 2.8:1** (`eRpHn`/`PQXRU`): texto blanco hardcodeado sobre `$c-error-text`, que en tema oscuro es un rojo *claro* (#F87171) — pensado para texto sobre fondo oscuro, no para ser fondo de un botón. **El mismo defecto ya existía en dos pantallas aprobadas antes de hoy**: «Sí, borrar mi cuenta» (`H69H3`/`LQl0E`) y «Continuar con el borrado» (`MCSBy`/`JygI0`). Fix sistémico: nuevo token **`$c-error-solid`** (`#B91C1C` fijo en ambos temas, no cambia como `$c-error-text`) para fondo, y texto con `$c-plate-text` (`#FAFAFA` fijo) — contraste real ≈8.2:1. Aplicado a los tres botones.
+2. **`stroke:"$c-border"` en 4 instancias del bloque "Placa confirmada"** (`e0fmR`, `LHKHl`, `M2i66X`, `sH7QQ`) — se escapó de la Fase 0 porque el bloque no es un componente reusable, es un frame copiado y pegado cuatro veces. Corregido a `$c-border-strong` en las cuatro. **Pendiente real:** convertir "Placa confirmada" en componente para que esto no vuelva a pasar.
+
+Hallazgos menores sin corregir todavía: reutilizar el componente `HYvT4` en los botones de `c3w4HW`/`j45TOh`/`P222KC`/`iWE6o`/`HGJYs` en vez de reconstruirlos a mano; el selector `LHKHl` sin divisores tiene la fila seleccionada con padding distinto al resto (desalinea el avatar) y sin separador visual entre marcas consecutivas; los 4 scrims de hoja (`yZ3We`, `eRpHn`, `Z6b3T`, `LHKHl`) usan `#0A0A0AB3` hardcodeado — vale la pena un `$c-scrim` si el patrón se sigue repitiendo.
+
+### Componente nuevo: Botón guardando (2026-08-26)
+
+`Jiqal`, con ícono (apagado por defecto) y barra de progreso (encendida por defecto) toggleables por separado. Reemplaza dos implementaciones sueltas e idénticas que existían en Mantenimiento (`PPgFL`) y Agregar moto (`M2i66X`) — la deriva que las reglas de componentes de la app buscan evitar.
+
+Tres variantes en comparación (`xI4Cz` V1-barra, `U0xKCf` V2-ícono, `Rcdob` V3-ambos), sin decidir. Recomendación: **V1**. El ícono `loader-circle` está pensado para animarse; congelado en un mockup se lee como un glifo roto, no como carga. Conecta con la regla de «nunca spinner» que ya rige los estados de página completa.
 
 ## Decisión 6 · Autenticación
 

@@ -35,20 +35,21 @@ Auditoría del `ui-ux-reviewer` del 2026-08-20 sobre el flujo de Mantenimiento: 
 - **Chip de duración con borde de acento.** Separaba de la card por 1.02:1; se leía el texto pero no se percibía como chip.
 - **Nodo Error del componente de campo, arreglado.** Tenía `fill_container(0)` y sin `alignItems`, así que colapsaba a 0px de ancho. Verificado: la instancia habilitada ahora mide 350×32 y renderiza.
 
-1. **Contraste de superficies (S6).** `$c-surface` sobre `$c-bg` da **1.09:1** y `$c-border` sobre blanco **1.26:1**. Toda la estructura de cards se apoya en esa separación y bajo sol directo desaparece. Es cambio de token: se corrige una vez y se propaga a todo.
-2. **Urgencia sin depender del color (B1).** En M5 lo vencido, lo de este mes y lo de más adelante se distinguen solo por el color de la cifra: rojo vs ámbar es **1.25:1 entre sí**, y los fondos de sus iconos **1.00:1**. Además «+2.400 km» en español se lee como *faltan*, no como *vencido hace*. Corregir con palabra («Vencido hace 2.400 km» / «En 12 días») e icono distinto para lo vencido.
-3. **Contraste del chip de duración (S7).** `$c-accent-soft` sobre `$c-surface`: **1.02:1**. El elemento más valioso del historial no se lee como chip.
-4. **Arreglar el subnodo Error del componente de campo (S10).** Hoy tiene bounds 0×624 y `fully clipped` en las 10 instancias. Está desactivado, así que no se nota — el día que se encienda, el mensaje de error no aparece. Es un defecto latente en un componente compartido.
-
-## Fase 1 · Cerrar Mantenimiento
+## Fase 1 · Cerrar Mantenimiento — HECHA el 2026-08-26
 
 **Por qué segundo:** es la única feature con uso real y recurrente, ya está decidida, y es la que va a validar la arquitectura cuando se implemente.
 
-1. **Estados de M5**: vacío, carga (skeleton, nunca spinner), error accionable, sin conexión. Es el primer destino de la barra: la pantalla que más veces se abre sin datos listos, y el estado vacío es lo primero que ve quien instala la app.
-2. **Confirmación de borrado de un registro (B3)**, advirtiendo que se va también su recordatorio.
-3. **Caso sin anteriores** en el detalle: con un solo registro del ítem, «ANTES, EN ESTA MOTO» queda vacío. Es el estado normal al empezar.
-4. **Rehacer 3 estados sobre el layout de F2**: kilometraje anterior al odómetro, guardando y error al guardar. Hoy están dibujados sobre F3, la variante descartada. El contenido está aprobado; cambia el envoltorio.
-5. **Definir el catálogo de ítems de mantenimiento.** No es una pantalla, es la decisión que sostiene la regla «un registro = un ítem»: qué se agrupa (aceite y filtro) y qué se separa (llanta delantera y trasera). Si un ítem agrupa cosas que duran distinto, el chip vuelve a mentir.
+1. **Estados de M5 — HECHO el 2026-08-20.** Vacío (`c3w4HW`), carga con skeleton (`vpUgh`), error accionable (`j45TOh`), sin conexión (`P222KC`). El vacío usa CTA de ancho completo en el cuerpo, no el FAB — mismo patrón que el garaje (`rgLwm`), consistente con el resto de la app: la primera vez, el llamado a la acción va grande y centrado, no en un botón flotante que hay que descubrir. Carga y error reutilizan la convención de skeleton ya establecida en garaje (`pBdbp`).
+
+   *Corregida el 2026-08-26:* el skeleton de carga (`vpUgh`) tenía tres cards sueltas del mismo tamaño y una etiqueta sin agrupar, sin relación con la estructura real de la pantalla. Se rehizo para espejar exactamente los dos grupos de M5: una sola card con tres filas para PRÓXIMOS, y una card por mes para HISTORIAL.
+
+   Se evaluó apilado vs. side-by-side para el vacío. Confirmado apilado, por consistencia con las otras 4 pantallas vacías/error/carga ya aprobadas y porque a 390px de ancho el icono lado a lado tiene que competir por espacio con el texto y baja de 72px a 56px, identificándose más despacio justo en la primera pantalla que ve alguien que instala la app.
+2. **Confirmación de borrado de un registro (B3) — HECHA el 2026-08-20.** `eRpHn`, hoja desde «Eliminar registro» en el menú de tres puntos. Advierte explícitamente que se va también el recordatorio asociado: «Se borra Cambio de aceite y filtro del 12 ago 2026, y con él el recordatorio del próximo cambio. No se puede deshacer.» Sin casilla de «entiendo»: esa fricción se reservó para borrar la cuenta completa (`H69H3`), que es legal e irreversible a otra escala; un registro de mantenimiento no necesita el mismo peso.
+3. **Caso sin anteriores — HECHO el 2026-08-20.** `wuUsj`. La sección «ANTES, EN ESTA MOTO» se reemplaza por una card con icono y un texto de dos líneas: «Este es el primer registro de este ítem en esta moto. Cuando registres el próximo, aquí verás cuánto te duró.» — dice qué falta y por qué, en vez de dejar el espacio en blanco.
+4. **Rehacer 3 estados sobre el layout de F2 — HECHO el 2026-08-20.** Kilometraje anterior (`ljdLM`), guardando (`PPgFL`), error al guardar (`mgxIO`). Corrección de fondo, no solo de envoltorio: el kilometraje anterior no va en el paso 3 como estaba, va en el **paso 2** — es donde vive el campo. Guardando y error sí van en el paso 3, donde está el botón Guardar.
+5. **Definir el catálogo de ítems de mantenimiento — CRITERIO CERRADO el 2026-08-26.** No es una pantalla, es la decisión que sostiene la regla «un registro = un ítem»: si dos cosas siempre se cambian juntas y duran lo mismo, son un ítem; si pueden durar distinto, son dos. Aceite + filtro → un ítem. Pastillas de freno delanteras + traseras → un ítem, decisión explícita de Cami. Llanta → **un ítem**, también decisión explícita de Cami: aunque delantera y trasera duran distinto, mantener el catálogo simple pesa más que la precisión del chip en este caso. Queda anotado en el detalle del punto 4 (arriba) el costo aceptado y la salida si algún día molesta.
+
+   **Pendiente, fuera de este plan de diseño:** la lista completa de ítems para motos y repuestos comunes en Colombia. Depende del conocimiento de producto de Cami, no es trabajo de Pencil — es insumo para quien implemente el catálogo en Supabase.
 
 **Al terminar esta fase, Mantenimiento se puede implementar** mientras el diseño sigue en las fases siguientes.
 
@@ -56,8 +57,8 @@ Auditoría del `ui-ux-reviewer` del 2026-08-20 sobre el flujo de Mantenimiento: 
 
 **Por qué:** son elegir entre variantes ya dibujadas. Baratas, y desbloquean la Fase 3.
 
-- **Agregar moto**: A1 / A2 / A3 → recomendada A3 (catálogo), que además es la que hace consistente el selector S1 ya aprobado
-- **Perfil**: P1 / P2 → recomendada P2
+- **Agregar moto — RESUELTA el 2026-08-26, estados completos.** Gana A2, con el selector S1 integrado. Se descubrió que «Guardando» estaba construido sobre el layout de A1 (ya descartado) y se reconstruyó sobre el layout real de A2; se agregó «Error al guardar», que no existía; se corrigió «Editar moto», que también usaba texto libre para la marca. Falta la limpieza final del canvas (borrar screenshots viejos si quedó alguno, reordenar) — pendiente hasta que no queden más ajustes sueltos.
+- **Perfil — RESUELTA el 2026-08-26.** Gana P2 (ficha del rider). Pendiente: estados de P2 y limpieza de P1.
 - **Autenticación**: L1 / L2 → recomendada L2
 
 ## Fase 3 · Completar lo que gane
