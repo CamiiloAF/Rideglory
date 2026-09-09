@@ -1,0 +1,84 @@
+{
+  "@@locale": "es",
+
+  "common_retry": "Reintentar",
+  "@common_retry": {"description": "Botón para reintentar tras un error"},
+
+  "common_error_title": "No pudimos cargar esto",
+  "@common_error_title": {"description": "Título genérico de estado de error"},
+
+  "common_error_body": "Algo falló de nuestro lado. Inténtalo de nuevo.",
+  "@common_error_body": {"description": "Cuerpo genérico de estado de error"},
+
+  "common_empty_title": "Todavía no hay nada aquí",
+  "@common_empty_title": {"description": "Título genérico de estado vacío"},
+
+  "common_offline_title": "Sin conexión",
+  "@common_offline_title": {"description": "Título del estado sin internet"},
+
+  "common_offline_body": "Revisa tu conexión e inténtalo de nuevo. Rideglory necesita internet para esto.",
+  "@common_offline_body": {"description": "Cuerpo del estado sin internet"},
+
+  "common_location_permission_title": "Necesitamos tu ubicación",
+  "@common_location_permission_title": {"description": "Título del estado sin permiso de ubicación"},
+
+  "common_location_permission_body": "Sin este permiso no podemos mostrarte esto. Actívalo desde los ajustes del sistema.",
+  "@common_location_permission_body": {"description": "Cuerpo del estado sin permiso de ubicación"},
+
+  "common_location_permission_action": "Dar permiso",
+  "@common_location_permission_action": {"description": "Acción para abrir ajustes de permiso de ubicación"},
+
+  "common_no_gps_title": "Tu GPS está apagado",
+  "@common_no_gps_title": {"description": "Título del estado sin GPS activo"},
+
+  "common_no_gps_body": "Actívalo para que podamos ubicarte con precisión.",
+  "@common_no_gps_body": {"description": "Cuerpo del estado sin GPS activo"},
+
+  "common_no_gps_action": "Activar GPS",
+  "@common_no_gps_action": {"description": "Acción para abrir ajustes de ubicación del sistema"},
+
+  "maintenance_tab_label": "MANTENIMIENTO",
+  "@maintenance_tab_label": {"description": "Etiqueta de la pestaña Mantenimiento en el Pill Tab Bar"},
+
+  "maintenance_empty_title": "Aún no registras mantenimientos",
+  "@maintenance_empty_title": {"description": "Título del estado vacío de la pestaña Mantenimiento"},
+
+  "maintenance_empty_body": "Cuando registres el primero, aquí verás tu historial y lo que se viene.",
+  "@maintenance_empty_body": {"description": "Cuerpo del estado vacío de la pestaña Mantenimiento"},
+
+  "events_tab_label": "EVENTOS",
+  "@events_tab_label": {"description": "Etiqueta de la pestaña Eventos en el Pill Tab Bar"},
+
+  "events_empty_title": "No hay rodadas por ahora",
+  "@events_empty_title": {"description": "Título del estado vacío de la pestaña Eventos"},
+
+  "events_empty_body": "Cuando alguien organice una rodada, aparecerá aquí.",
+  "@events_empty_body": {"description": "Cuerpo del estado vacío de la pestaña Eventos"},
+
+  "garage_tab_label": "GARAJE",
+  "@garage_tab_label": {"description": "Etiqueta de la pestaña Garaje en el Pill Tab Bar"},
+
+  "garage_empty_title": "Tu garaje está vacío",
+  "@garage_empty_title": {"description": "Título del estado vacío de la pestaña Garaje"},
+
+  "garage_empty_body": "Agrega tu primera moto para llevar su mantenimiento y documentos.",
+  "@garage_empty_body": {"description": "Cuerpo del estado vacío de la pestaña Garaje"},
+
+  "profile_tab_label": "PERFIL",
+  "@profile_tab_label": {"description": "Etiqueta de la pestaña Perfil en el Pill Tab Bar"},
+
+  "profile_empty_title": "Tu perfil",
+  "@profile_empty_title": {"description": "Título del estado vacío de la pestaña Perfil"},
+
+  "profile_empty_body": "Aquí vas a gestionar tus datos, tu contacto de emergencia y tu cuenta.",
+  "@profile_empty_body": {"description": "Cuerpo del estado vacío de la pestaña Perfil"},
+
+  "welcome_title": "Rideglory",
+  "@welcome_title": {"description": "Título de la pantalla de bienvenida"},
+
+  "welcome_subtitle": "Tu garaje, tu mantenimiento y tus rodadas en un solo lugar.",
+  "@welcome_subtitle": {"description": "Subtítulo de la pantalla de bienvenida"},
+
+  "welcome_continue_email": "Continuar con correo",
+  "@welcome_continue_email": {"description": "Botón para continuar con correo en bienvenida (deshabilitado hasta F4)"}
+}
