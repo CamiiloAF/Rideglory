@@ -46,6 +46,22 @@ Deno.serve(async (request) => {
   const userId = userData.user.id;
   const admin = createClient(supabaseUrl, serviceRoleKey);
 
+  // Bloqueo: quien organiza una rodada que no ha terminado no puede borrar la cuenta -- sus
+  // inscritos se quedarían sin quién responda. Se revisa antes de tocar cualquier dato.
+  const { data: activeEvents } = await admin
+    .from('events')
+    .select('id')
+    .eq('owner_id', userId)
+    .in('state', ['published', 'started'])
+    .limit(1);
+
+  if (activeEvents && activeEvents.length > 0) {
+    return jsonResponse(
+      { error: 'active_event_owner', eventId: activeEvents[0].id as string },
+      409,
+    );
+  }
+
   try {
     const { data: vehicles } = await admin
       .from('vehicles')
@@ -103,6 +119,7 @@ Deno.serve(async (request) => {
         blood_type: null,
         emergency_contact_name: null,
         emergency_contact_phone: null,
+        emergency_contact_relationship: null,
         deleted_at: new Date().toISOString(),
       })
       .eq('id', userId);

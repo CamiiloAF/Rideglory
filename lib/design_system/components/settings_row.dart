@@ -15,6 +15,7 @@ class SettingsRow extends StatelessWidget {
     this.subtitle,
     this.value,
     this.onTap,
+    this.iconColor,
     super.key,
   });
 
@@ -23,6 +24,7 @@ class SettingsRow extends StatelessWidget {
   final String? subtitle;
   final String? value;
   final VoidCallback? onTap;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class SettingsRow extends StatelessWidget {
         color: colors.surface,
         child: Row(
           children: [
-            Icon(icon, size: 20, color: colors.text),
+            Icon(icon, size: 20, color: iconColor ?? colors.text),
             const SizedBox(width: 12),
             Expanded(
               child: Column(

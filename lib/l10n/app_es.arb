@@ -1,84 +1,670 @@
 {
   "@@locale": "es",
-
   "common_retry": "Reintentar",
-  "@common_retry": {"description": "Botón para reintentar tras un error"},
-
+  "@common_retry": {
+    "description": "Botón para reintentar tras un error"
+  },
   "common_error_title": "No pudimos cargar esto",
-  "@common_error_title": {"description": "Título genérico de estado de error"},
-
+  "@common_error_title": {
+    "description": "Título genérico de estado de error"
+  },
   "common_error_body": "Algo falló de nuestro lado. Inténtalo de nuevo.",
-  "@common_error_body": {"description": "Cuerpo genérico de estado de error"},
-
+  "@common_error_body": {
+    "description": "Cuerpo genérico de estado de error"
+  },
   "common_empty_title": "Todavía no hay nada aquí",
-  "@common_empty_title": {"description": "Título genérico de estado vacío"},
-
+  "@common_empty_title": {
+    "description": "Título genérico de estado vacío"
+  },
   "common_offline_title": "Sin conexión",
-  "@common_offline_title": {"description": "Título del estado sin internet"},
-
+  "@common_offline_title": {
+    "description": "Título del estado sin internet"
+  },
   "common_offline_body": "Revisa tu conexión e inténtalo de nuevo. Rideglory necesita internet para esto.",
-  "@common_offline_body": {"description": "Cuerpo del estado sin internet"},
-
+  "@common_offline_body": {
+    "description": "Cuerpo del estado sin internet"
+  },
   "common_location_permission_title": "Necesitamos tu ubicación",
-  "@common_location_permission_title": {"description": "Título del estado sin permiso de ubicación"},
-
+  "@common_location_permission_title": {
+    "description": "Título del estado sin permiso de ubicación"
+  },
   "common_location_permission_body": "Sin este permiso no podemos mostrarte esto. Actívalo desde los ajustes del sistema.",
-  "@common_location_permission_body": {"description": "Cuerpo del estado sin permiso de ubicación"},
-
+  "@common_location_permission_body": {
+    "description": "Cuerpo del estado sin permiso de ubicación"
+  },
   "common_location_permission_action": "Dar permiso",
-  "@common_location_permission_action": {"description": "Acción para abrir ajustes de permiso de ubicación"},
-
+  "@common_location_permission_action": {
+    "description": "Acción para abrir ajustes de permiso de ubicación"
+  },
   "common_no_gps_title": "Tu GPS está apagado",
-  "@common_no_gps_title": {"description": "Título del estado sin GPS activo"},
-
+  "@common_no_gps_title": {
+    "description": "Título del estado sin GPS activo"
+  },
   "common_no_gps_body": "Actívalo para que podamos ubicarte con precisión.",
-  "@common_no_gps_body": {"description": "Cuerpo del estado sin GPS activo"},
-
+  "@common_no_gps_body": {
+    "description": "Cuerpo del estado sin GPS activo"
+  },
   "common_no_gps_action": "Activar GPS",
-  "@common_no_gps_action": {"description": "Acción para abrir ajustes de ubicación del sistema"},
-
+  "@common_no_gps_action": {
+    "description": "Acción para abrir ajustes de ubicación del sistema"
+  },
   "maintenance_tab_label": "MANTENIMIENTO",
-  "@maintenance_tab_label": {"description": "Etiqueta de la pestaña Mantenimiento en el Pill Tab Bar"},
-
+  "@maintenance_tab_label": {
+    "description": "Etiqueta de la pestaña Mantenimiento en el Pill Tab Bar"
+  },
   "maintenance_empty_title": "Aún no registras mantenimientos",
-  "@maintenance_empty_title": {"description": "Título del estado vacío de la pestaña Mantenimiento"},
-
+  "@maintenance_empty_title": {
+    "description": "Título del estado vacío de la pestaña Mantenimiento"
+  },
   "maintenance_empty_body": "Cuando registres el primero, aquí verás tu historial y lo que se viene.",
-  "@maintenance_empty_body": {"description": "Cuerpo del estado vacío de la pestaña Mantenimiento"},
-
+  "@maintenance_empty_body": {
+    "description": "Cuerpo del estado vacío de la pestaña Mantenimiento"
+  },
   "events_tab_label": "EVENTOS",
-  "@events_tab_label": {"description": "Etiqueta de la pestaña Eventos en el Pill Tab Bar"},
-
+  "@events_tab_label": {
+    "description": "Etiqueta de la pestaña Eventos en el Pill Tab Bar"
+  },
   "events_empty_title": "No hay rodadas por ahora",
-  "@events_empty_title": {"description": "Título del estado vacío de la pestaña Eventos"},
-
+  "@events_empty_title": {
+    "description": "Título del estado vacío de la pestaña Eventos"
+  },
   "events_empty_body": "Cuando alguien organice una rodada, aparecerá aquí.",
-  "@events_empty_body": {"description": "Cuerpo del estado vacío de la pestaña Eventos"},
-
+  "@events_empty_body": {
+    "description": "Cuerpo del estado vacío de la pestaña Eventos"
+  },
   "garage_tab_label": "GARAJE",
-  "@garage_tab_label": {"description": "Etiqueta de la pestaña Garaje en el Pill Tab Bar"},
-
+  "@garage_tab_label": {
+    "description": "Etiqueta de la pestaña Garaje en el Pill Tab Bar"
+  },
   "garage_empty_title": "Tu garaje está vacío",
-  "@garage_empty_title": {"description": "Título del estado vacío de la pestaña Garaje"},
-
+  "@garage_empty_title": {
+    "description": "Título del estado vacío de la pestaña Garaje"
+  },
   "garage_empty_body": "Agrega tu primera moto para llevar su mantenimiento y documentos.",
-  "@garage_empty_body": {"description": "Cuerpo del estado vacío de la pestaña Garaje"},
-
+  "@garage_empty_body": {
+    "description": "Cuerpo del estado vacío de la pestaña Garaje"
+  },
   "profile_tab_label": "PERFIL",
-  "@profile_tab_label": {"description": "Etiqueta de la pestaña Perfil en el Pill Tab Bar"},
-
+  "@profile_tab_label": {
+    "description": "Etiqueta de la pestaña Perfil en el Pill Tab Bar"
+  },
   "profile_empty_title": "Tu perfil",
-  "@profile_empty_title": {"description": "Título del estado vacío de la pestaña Perfil"},
-
+  "@profile_empty_title": {
+    "description": "Título del estado vacío de la pestaña Perfil"
+  },
   "profile_empty_body": "Aquí vas a gestionar tus datos, tu contacto de emergencia y tu cuenta.",
-  "@profile_empty_body": {"description": "Cuerpo del estado vacío de la pestaña Perfil"},
-
-  "welcome_title": "Rideglory",
-  "@welcome_title": {"description": "Título de la pantalla de bienvenida"},
-
-  "welcome_subtitle": "Tu garaje, tu mantenimiento y tus rodadas en un solo lugar.",
-  "@welcome_subtitle": {"description": "Subtítulo de la pantalla de bienvenida"},
-
-  "welcome_continue_email": "Continuar con correo",
-  "@welcome_continue_email": {"description": "Botón para continuar con correo en bienvenida (deshabilitado hasta F4)"}
+  "@profile_empty_body": {
+    "description": "Cuerpo del estado vacío de la pestaña Perfil"
+  },
+  "auth_welcome_title": "Rideglory",
+  "@auth_welcome_title": {
+    "description": "Título de marca en bienvenida"
+  },
+  "auth_welcome_headline": "Lleva la cuenta de tu moto sin acordarte de nada",
+  "@auth_welcome_headline": {
+    "description": "Titular de la pantalla de bienvenida"
+  },
+  "auth_welcome_feature_maintenance_title": "Cuánto te duró cada pieza",
+  "@auth_welcome_feature_maintenance_title": {
+    "description": "Título del primer punto de bienvenida"
+  },
+  "auth_welcome_feature_maintenance_body": "Registras el cambio con el kilometraje y la app te dice cuánto duró la anterior.",
+  "@auth_welcome_feature_maintenance_body": {
+    "description": "Cuerpo del primer punto de bienvenida"
+  },
+  "auth_welcome_feature_garage_title": "Tus motos en un solo lugar",
+  "@auth_welcome_feature_garage_title": {
+    "description": "Título del segundo punto de bienvenida"
+  },
+  "auth_welcome_feature_garage_body": "Kilometraje, mantenimientos y documentos de cada moto.",
+  "@auth_welcome_feature_garage_body": {
+    "description": "Cuerpo del segundo punto de bienvenida"
+  },
+  "auth_welcome_feature_documents_title": "El SOAT abre sin señal",
+  "@auth_welcome_feature_documents_title": {
+    "description": "Título del tercer punto de bienvenida"
+  },
+  "auth_welcome_feature_documents_body": "Queda guardado en el teléfono para mostrarlo en un retén.",
+  "@auth_welcome_feature_documents_body": {
+    "description": "Cuerpo del tercer punto de bienvenida"
+  },
+  "auth_welcome_continue_google": "Continuar con Google",
+  "@auth_welcome_continue_google": {
+    "description": "Botón de acceso con Google"
+  },
+  "auth_welcome_continue_apple": "Continuar con Apple",
+  "@auth_welcome_continue_apple": {
+    "description": "Botón de acceso con Apple"
+  },
+  "auth_welcome_continue_email": "Continuar con correo",
+  "@auth_welcome_continue_email": {
+    "description": "Botón de acceso con correo"
+  },
+  "auth_welcome_legal": "Al continuar aceptas los Términos y la Política de privacidad.",
+  "@auth_welcome_legal": {
+    "description": "Aviso legal de bienvenida"
+  },
+  "auth_email_login_title": "Entrar con correo",
+  "@auth_email_login_title": {
+    "description": "Título del header de login por correo"
+  },
+  "auth_email_field_label": "Correo",
+  "@auth_email_field_label": {
+    "description": "Label del campo correo"
+  },
+  "auth_password_field_label": "Contraseña",
+  "@auth_password_field_label": {
+    "description": "Label del campo contraseña"
+  },
+  "auth_password_show_action": "Ver",
+  "@auth_password_show_action": {
+    "description": "Acción para mostrar la contraseña"
+  },
+  "auth_password_hide_action": "Ocultar",
+  "@auth_password_hide_action": {
+    "description": "Acción para ocultar la contraseña"
+  },
+  "auth_forgot_password_link": "¿Olvidaste tu contraseña?",
+  "@auth_forgot_password_link": {
+    "description": "Enlace a recuperar contraseña"
+  },
+  "auth_sign_in_button": "Iniciar sesión",
+  "@auth_sign_in_button": {
+    "description": "Botón de inicio de sesión"
+  },
+  "auth_create_account_link": "Crear una cuenta nueva",
+  "@auth_create_account_link": {
+    "description": "Enlace para ir a registro"
+  },
+  "auth_have_account_link": "Ya tengo una cuenta",
+  "@auth_have_account_link": {
+    "description": "Enlace para volver a login desde registro"
+  },
+  "auth_error_banner_title": "No pudimos iniciar sesión",
+  "@auth_error_banner_title": {
+    "description": "Título del banner de error de login"
+  },
+  "auth_password_error_helper": "Revisa tu contraseña.",
+  "@auth_password_error_helper": {
+    "description": "Texto de error bajo el campo contraseña"
+  },
+  "auth_register_title": "Crear cuenta",
+  "@auth_register_title": {
+    "description": "Título del header de registro"
+  },
+  "auth_register_name_label": "Nombre",
+  "@auth_register_name_label": {
+    "description": "Label del campo nombre en registro"
+  },
+  "auth_register_button": "Crear cuenta",
+  "@auth_register_button": {
+    "description": "Botón de registro"
+  },
+  "auth_forgot_title": "Recuperar contraseña",
+  "@auth_forgot_title": {
+    "description": "Título del header de recuperar contraseña"
+  },
+  "auth_forgot_heading": "Te mandamos un enlace",
+  "@auth_forgot_heading": {
+    "description": "Titular de recuperar contraseña"
+  },
+  "auth_forgot_body": "Escribe el correo con el que te registraste y te enviamos un enlace para poner una contraseña nueva.",
+  "@auth_forgot_body": {
+    "description": "Cuerpo de recuperar contraseña"
+  },
+  "auth_forgot_send_button": "Enviar enlace",
+  "@auth_forgot_send_button": {
+    "description": "Botón de enviar enlace de recuperación"
+  },
+  "auth_forgot_sent_title": "Enlace enviado",
+  "@auth_forgot_sent_title": {
+    "description": "Confirmación de envío de enlace de recuperación"
+  },
+  "auth_forgot_sent_body": "Revisa tu correo, incluida la carpeta de spam.",
+  "@auth_forgot_sent_body": {
+    "description": "Cuerpo de confirmación de envío de enlace"
+  },
+  "auth_field_required": "Este campo es obligatorio.",
+  "@auth_field_required": {
+    "description": "Validación de campo vacío"
+  },
+  "auth_email_invalid": "Escribe un correo válido.",
+  "@auth_email_invalid": {
+    "description": "Validación de correo inválido"
+  },
+  "auth_password_too_short": "Usa una contraseña de al menos 6 caracteres.",
+  "@auth_password_too_short": {
+    "description": "Validación de contraseña corta"
+  },
+  "auth_error_invalid_credentials": "El correo o la contraseña no coinciden. Revísalos e inténtalo otra vez.",
+  "@auth_error_invalid_credentials": {
+    "description": "Error: credenciales inválidas"
+  },
+  "auth_error_email_already_registered": "Ese correo ya tiene una cuenta. Intenta iniciar sesión.",
+  "@auth_error_email_already_registered": {
+    "description": "Error: correo ya registrado"
+  },
+  "auth_error_weak_password": "Usa una contraseña de al menos 6 caracteres.",
+  "@auth_error_weak_password": {
+    "description": "Error: contraseña débil"
+  },
+  "auth_error_user_not_found": "No encontramos una cuenta con ese correo.",
+  "@auth_error_user_not_found": {
+    "description": "Error: usuario no encontrado"
+  },
+  "auth_error_provider_cancelled": "Cancelaste el inicio de sesión.",
+  "@auth_error_provider_cancelled": {
+    "description": "Error: proveedor cancelado"
+  },
+  "auth_error_offline": "No hay conexión. Revisa tu internet e inténtalo de nuevo.",
+  "@auth_error_offline": {
+    "description": "Error: sin conexión"
+  },
+  "auth_error_unknown": "Algo falló. Inténtalo de nuevo.",
+  "@auth_error_unknown": {
+    "description": "Error: desconocido"
+  },
+  "profile_title": "Perfil",
+  "@profile_title": {
+    "description": "Título del header de Perfil"
+  },
+  "profile_settings_icon_label": "Ajustes",
+  "@profile_settings_icon_label": {
+    "description": "Etiqueta accesible del ícono de ajustes en la ficha del rider"
+  },
+  "profile_section_account": "CUENTA",
+  "@profile_section_account": {
+    "description": "Encabezado de sección Cuenta"
+  },
+  "profile_field_name": "Nombre",
+  "@profile_field_name": {
+    "description": "Fila de ajuste: nombre"
+  },
+  "profile_field_email": "Correo",
+  "@profile_field_email": {
+    "description": "Fila de ajuste: correo"
+  },
+  "profile_section_emergency": "EN CASO DE EMERGENCIA",
+  "@profile_section_emergency": {
+    "description": "Encabezado de sección de emergencia"
+  },
+  "profile_emergency_contact_label": "Contacto de emergencia",
+  "@profile_emergency_contact_label": {
+    "description": "Fila de ajuste: contacto de emergencia"
+  },
+  "profile_emergency_not_configured": "Sin configurar",
+  "@profile_emergency_not_configured": {
+    "description": "Valor cuando no hay contacto de emergencia"
+  },
+  "profile_emergency_add_action": "Agregar",
+  "@profile_emergency_add_action": {
+    "description": "Acción para agregar contacto de emergencia"
+  },
+  "profile_section_notifications": "NOTIFICACIONES Y DATOS",
+  "@profile_section_notifications": {
+    "description": "Encabezado de sección de notificaciones y datos"
+  },
+  "profile_notifications_label": "Notificaciones",
+  "@profile_notifications_label": {
+    "description": "Switch de notificaciones"
+  },
+  "profile_share_usage_label": "Compartir datos de uso",
+  "@profile_share_usage_label": {
+    "description": "Switch de analítica"
+  },
+  "profile_share_usage_subtitle": "Nos ayuda a mejorar la app",
+  "@profile_share_usage_subtitle": {
+    "description": "Subtítulo del switch de analítica"
+  },
+  "profile_section_legal": "LEGAL",
+  "@profile_section_legal": {
+    "description": "Encabezado de sección legal"
+  },
+  "profile_terms": "Términos y condiciones",
+  "@profile_terms": {
+    "description": "Fila de ajuste: términos"
+  },
+  "profile_privacy": "Política de privacidad",
+  "@profile_privacy": {
+    "description": "Fila de ajuste: privacidad"
+  },
+  "profile_my_consents": "Mis consentimientos",
+  "@profile_my_consents": {
+    "description": "Fila de ajuste: consentimientos"
+  },
+  "profile_sign_out": "Cerrar sesión",
+  "@profile_sign_out": {
+    "description": "Fila de ajuste: cerrar sesión"
+  },
+  "profile_delete_account": "Borrar mi cuenta",
+  "@profile_delete_account": {
+    "description": "Fila de ajuste: borrar cuenta"
+  },
+  "profile_emergency_banner_title": "En caso de emergencia",
+  "@profile_emergency_banner_title": {
+    "description": "Título del banner de emergencia en la ficha del rider"
+  },
+  "profile_emergency_banner_body": "Todavía no tienes contacto de emergencia. Es el número al que llamarían tus compañeros si algo pasa en una rodada.",
+  "@profile_emergency_banner_body": {
+    "description": "Cuerpo del banner de emergencia"
+  },
+  "profile_emergency_add_contact_cta": "Agregar contacto",
+  "@profile_emergency_add_contact_cta": {
+    "description": "Botón del banner de emergencia"
+  },
+  "profile_my_vehicles_title": "MIS MOTOS",
+  "@profile_my_vehicles_title": {
+    "description": "Encabezado de la sección de motos en la ficha del rider"
+  },
+  "profile_settings_group_title": "AJUSTES",
+  "@profile_settings_group_title": {
+    "description": "Encabezado del grupo de ajustes en la ficha del rider"
+  },
+  "profile_privacy_and_consents": "Privacidad y consentimientos",
+  "@profile_privacy_and_consents": {
+    "description": "Fila de ajuste combinada en la ficha del rider"
+  },
+  "profile_load_error_title": "No pudimos cargar tu perfil",
+  "@profile_load_error_title": {
+    "description": "Título de error al cargar el perfil"
+  },
+  "profile_load_error_body": "Algo falló de nuestro lado. Inténtalo de nuevo.",
+  "@profile_load_error_body": {
+    "description": "Cuerpo de error al cargar el perfil"
+  },
+  "profile_offline_title": "Sin conexión",
+  "@profile_offline_title": {
+    "description": "Título de estado sin conexión en perfil"
+  },
+  "profile_offline_body": "No pudimos cargar el perfil. Revisa tu conexión e inténtalo de nuevo.",
+  "@profile_offline_body": {
+    "description": "Cuerpo de estado sin conexión en perfil"
+  },
+  "profile_edit_title": "Editar perfil",
+  "@profile_edit_title": {
+    "description": "Título de la pantalla de edición de perfil"
+  },
+  "profile_field_phone": "Teléfono",
+  "@profile_field_phone": {
+    "description": "Campo teléfono en editar perfil"
+  },
+  "profile_field_birth_date": "Fecha de nacimiento",
+  "@profile_field_birth_date": {
+    "description": "Campo fecha de nacimiento en editar perfil"
+  },
+  "profile_field_city": "Ciudad",
+  "@profile_field_city": {
+    "description": "Campo ciudad en editar perfil"
+  },
+  "profile_field_eps": "EPS",
+  "@profile_field_eps": {
+    "description": "Campo EPS en editar perfil"
+  },
+  "profile_field_insurance": "Seguro médico",
+  "@profile_field_insurance": {
+    "description": "Campo seguro médico en editar perfil"
+  },
+  "profile_field_blood_type": "Tipo de sangre",
+  "@profile_field_blood_type": {
+    "description": "Campo tipo de sangre en editar perfil"
+  },
+  "profile_blood_type_placeholder": "Selecciona",
+  "@profile_blood_type_placeholder": {
+    "description": "Placeholder del selector de tipo de sangre"
+  },
+  "profile_blood_type_o_positive": "O+",
+  "@profile_blood_type_o_positive": {
+    "description": "Tipo de sangre O positivo"
+  },
+  "profile_blood_type_o_negative": "O-",
+  "@profile_blood_type_o_negative": {
+    "description": "Tipo de sangre O negativo"
+  },
+  "profile_blood_type_a_positive": "A+",
+  "@profile_blood_type_a_positive": {
+    "description": "Tipo de sangre A positivo"
+  },
+  "profile_blood_type_a_negative": "A-",
+  "@profile_blood_type_a_negative": {
+    "description": "Tipo de sangre A negativo"
+  },
+  "profile_blood_type_b_positive": "B+",
+  "@profile_blood_type_b_positive": {
+    "description": "Tipo de sangre B positivo"
+  },
+  "profile_blood_type_b_negative": "B-",
+  "@profile_blood_type_b_negative": {
+    "description": "Tipo de sangre B negativo"
+  },
+  "profile_blood_type_ab_positive": "AB+",
+  "@profile_blood_type_ab_positive": {
+    "description": "Tipo de sangre AB positivo"
+  },
+  "profile_blood_type_ab_negative": "AB-",
+  "@profile_blood_type_ab_negative": {
+    "description": "Tipo de sangre AB negativo"
+  },
+  "profile_save_button": "Guardar cambios",
+  "@profile_save_button": {
+    "description": "Botón de guardar en editar perfil"
+  },
+  "profile_update_success": "Perfil actualizado.",
+  "@profile_update_success": {
+    "description": "Confirmación de guardado de perfil"
+  },
+  "profile_update_error": "No pudimos guardar los cambios. Inténtalo de nuevo.",
+  "@profile_update_error": {
+    "description": "Error al guardar perfil"
+  },
+  "profile_emergency_page_title": "Contacto de emergencia",
+  "@profile_emergency_page_title": {
+    "description": "Título del header de contacto de emergencia"
+  },
+  "profile_emergency_info_title": "Para qué sirve",
+  "@profile_emergency_info_title": {
+    "description": "Título del aviso de contacto de emergencia"
+  },
+  "profile_emergency_info_body": "Es el número que verían tus compañeros de rodada si algo te pasa. Se guarda en tu teléfono para tenerlo a mano.",
+  "@profile_emergency_info_body": {
+    "description": "Cuerpo del aviso de contacto de emergencia"
+  },
+  "profile_emergency_field_name": "Nombre",
+  "@profile_emergency_field_name": {
+    "description": "Campo nombre del contacto de emergencia"
+  },
+  "profile_emergency_field_phone": "Teléfono",
+  "@profile_emergency_field_phone": {
+    "description": "Campo teléfono del contacto de emergencia"
+  },
+  "profile_emergency_field_relationship": "Parentesco",
+  "@profile_emergency_field_relationship": {
+    "description": "Campo parentesco del contacto de emergencia"
+  },
+  "profile_emergency_consent_note": "Avísale a esta persona que la registraste. Puedes cambiarla o borrarla cuando quieras.",
+  "@profile_emergency_consent_note": {
+    "description": "Nota de consentimiento del contacto de emergencia"
+  },
+  "profile_emergency_save_button": "Guardar contacto",
+  "@profile_emergency_save_button": {
+    "description": "Botón de guardar contacto de emergencia"
+  },
+  "profile_emergency_save_success": "Contacto de emergencia guardado.",
+  "@profile_emergency_save_success": {
+    "description": "Confirmación de guardado de contacto de emergencia"
+  },
+  "profile_emergency_save_error": "No pudimos guardar el contacto. Inténtalo de nuevo.",
+  "@profile_emergency_save_error": {
+    "description": "Error al guardar contacto de emergencia"
+  },
+  "profile_consents_title": "Mis consentimientos",
+  "@profile_consents_title": {
+    "description": "Título de la pantalla de consentimientos"
+  },
+  "profile_consents_empty_title": "Sin consentimientos registrados",
+  "@profile_consents_empty_title": {
+    "description": "Título del estado vacío de consentimientos"
+  },
+  "profile_consents_empty_body": "Aquí vas a ver cada consentimiento que aceptaste, con fecha y versión.",
+  "@profile_consents_empty_body": {
+    "description": "Cuerpo del estado vacío de consentimientos"
+  },
+  "profile_consent_kind_risk_acceptance": "Aceptación de riesgo",
+  "@profile_consent_kind_risk_acceptance": {
+    "description": "Tipo de consentimiento: aceptación de riesgo"
+  },
+  "profile_consent_kind_medical_consent": "Consentimiento médico",
+  "@profile_consent_kind_medical_consent": {
+    "description": "Tipo de consentimiento: médico"
+  },
+  "profile_consent_kind_terms": "Términos y condiciones",
+  "@profile_consent_kind_terms": {
+    "description": "Tipo de consentimiento: términos"
+  },
+  "profile_consent_version_label": "Versión {version}",
+  "@profile_consent_version_label": {
+    "description": "Versión del consentimiento",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "profile_delete_step1_title": "Borrar mi cuenta",
+  "@profile_delete_step1_title": {
+    "description": "Título del header de borrar cuenta"
+  },
+  "profile_delete_headline": "Esto borra tu cuenta y todo lo que has guardado",
+  "@profile_delete_headline": {
+    "description": "Titular de la explicación de borrar cuenta"
+  },
+  "profile_delete_subtext": "No es cerrar sesión: los datos se eliminan y no se pueden recuperar.",
+  "@profile_delete_subtext": {
+    "description": "Subtexto de la explicación de borrar cuenta"
+  },
+  "profile_delete_item_vehicles": "{count} motos de tu garaje",
+  "@profile_delete_item_vehicles": {
+    "description": "Ítem: motos que se borran",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profile_delete_item_maintenances": "{count} mantenimientos registrados",
+  "@profile_delete_item_maintenances": {
+    "description": "Ítem: mantenimientos que se borran",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profile_delete_item_documents": "{count} documentos guardados (SOAT y tecnomecánica)",
+  "@profile_delete_item_documents": {
+    "description": "Ítem: documentos que se borran",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profile_delete_item_registrations": "Tus inscripciones a rodadas",
+  "@profile_delete_item_registrations": {
+    "description": "Ítem: inscripciones que se borran"
+  },
+  "profile_delete_item_profile": "Tu perfil y tu contacto de emergencia",
+  "@profile_delete_item_profile": {
+    "description": "Ítem: perfil que se borra"
+  },
+  "profile_delete_just_logout_title": "¿Solo quieres salir de la app?",
+  "@profile_delete_just_logout_title": {
+    "description": "Aviso de cerrar sesión en vez de borrar cuenta"
+  },
+  "profile_delete_just_logout_body": "Cierra sesión desde el perfil: tus datos se quedan como están.",
+  "@profile_delete_just_logout_body": {
+    "description": "Cuerpo del aviso de cerrar sesión"
+  },
+  "profile_delete_continue_button": "Continuar con el borrado",
+  "@profile_delete_continue_button": {
+    "description": "Botón para continuar con el borrado"
+  },
+  "profile_delete_cancel_button": "Mejor no, cancelar",
+  "@profile_delete_cancel_button": {
+    "description": "Botón para cancelar el borrado desde la explicación"
+  },
+  "profile_delete_confirm_title": "¿Borramos tu cuenta?",
+  "@profile_delete_confirm_title": {
+    "description": "Título del sheet de confirmación de borrado"
+  },
+  "profile_delete_confirm_body": "Se eliminan tus {vehicles} motos, {maintenances} mantenimientos y {documents} documentos. Esta acción no se puede deshacer.",
+  "@profile_delete_confirm_body": {
+    "description": "Cuerpo del sheet de confirmación de borrado",
+    "placeholders": {
+      "vehicles": {
+        "type": "int"
+      },
+      "maintenances": {
+        "type": "int"
+      },
+      "documents": {
+        "type": "int"
+      }
+    }
+  },
+  "profile_delete_confirm_checkbox": "Entiendo que no se puede recuperar",
+  "@profile_delete_confirm_checkbox": {
+    "description": "Casilla de confirmación de borrado"
+  },
+  "profile_delete_confirm_button": "Sí, borrar mi cuenta",
+  "@profile_delete_confirm_button": {
+    "description": "Botón final de confirmación de borrado"
+  },
+  "profile_delete_confirm_cancel": "Cancelar",
+  "@profile_delete_confirm_cancel": {
+    "description": "Botón de cancelar en el sheet de confirmación"
+  },
+  "profile_delete_progress_title": "Borrando tu cuenta...",
+  "@profile_delete_progress_title": {
+    "description": "Título de la pantalla de progreso de borrado"
+  },
+  "profile_delete_progress_body": "No cierres la app. Esto toma unos segundos.",
+  "@profile_delete_progress_body": {
+    "description": "Cuerpo de la pantalla de progreso de borrado"
+  },
+  "profile_delete_blocked_title": "Todavía no puedes borrar la cuenta",
+  "@profile_delete_blocked_title": {
+    "description": "Título del bloqueo por rodada activa"
+  },
+  "profile_delete_blocked_body": "Eres el organizador de una rodada que aún no termina. Si borras tu cuenta ahora, quienes se inscribieron se quedan sin quién responda.",
+  "@profile_delete_blocked_body": {
+    "description": "Cuerpo del bloqueo por rodada activa"
+  },
+  "profile_delete_blocked_what_title": "Para poder borrarla",
+  "@profile_delete_blocked_what_title": {
+    "description": "Título de las opciones del bloqueo"
+  },
+  "profile_delete_blocked_option_cancel_event": "Cancela la rodada, o",
+  "@profile_delete_blocked_option_cancel_event": {
+    "description": "Opción: cancelar la rodada"
+  },
+  "profile_delete_blocked_option_wait": "espera a que termine y vuelve acá",
+  "@profile_delete_blocked_option_wait": {
+    "description": "Opción: esperar a que termine"
+  },
+  "profile_delete_blocked_view_event": "Ver la rodada",
+  "@profile_delete_blocked_view_event": {
+    "description": "Botón para ver la rodada bloqueante"
+  },
+  "profile_delete_blocked_back_to_profile": "Volver al perfil",
+  "@profile_delete_blocked_back_to_profile": {
+    "description": "Botón para volver al perfil desde el bloqueo"
+  },
+  "profile_delete_error_title": "No pudimos borrar tu cuenta",
+  "@profile_delete_error_title": {
+    "description": "Título de error al borrar la cuenta"
+  },
+  "profile_delete_error_body": "Algo falló de nuestro lado. Tu cuenta sigue activa. Inténtalo de nuevo.",
+  "@profile_delete_error_body": {
+    "description": "Cuerpo de error al borrar la cuenta"
+  }
 }
