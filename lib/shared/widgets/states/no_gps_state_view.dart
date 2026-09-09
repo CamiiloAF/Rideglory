@@ -20,7 +20,11 @@ class NoGpsStateView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(LucideIcons.navigationOff, size: 40, color: colors.textSecondary),
+            Icon(
+              LucideIcons.navigationOff,
+              size: 40,
+              color: colors.textSecondary,
+            ),
             const SizedBox(height: 16),
             Text(
               context.l10n.common_no_gps_title,

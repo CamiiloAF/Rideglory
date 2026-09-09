@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../tokens/app_colors.dart';
+import 'app_status_chip.dart';
 
 /// Fila de un registro de mantenimiento: icono, título/subtítulo,
 /// cifras a la derecha y una nota de duración opcional debajo.
@@ -16,6 +17,7 @@ class RecordRow extends StatelessWidget {
     this.durationNote,
     this.icon = LucideIcons.wrench,
     this.onTap,
+    this.tone,
     super.key,
   });
 
@@ -27,9 +29,30 @@ class RecordRow extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onTap;
 
+  /// Urgencia del registro (agenda). `null` = neutro (historial).
+  final AppStatusTone? tone;
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
+    final (iconBackground, iconForeground, valueColor) = switch (tone) {
+      null => (colors.surface, colors.text, colors.text),
+      AppStatusTone.error => (
+        colors.errorSoft,
+        colors.errorText,
+        colors.errorText,
+      ),
+      AppStatusTone.warning => (
+        colors.warningSoft,
+        colors.warning,
+        colors.warning,
+      ),
+      AppStatusTone.success => (
+        colors.successSoft,
+        colors.success,
+        colors.success,
+      ),
+    };
     return InkWell(
       onTap: onTap,
       child: Padding(
@@ -45,12 +68,14 @@ class RecordRow extends StatelessWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: colors.surface,
+                    color: iconBackground,
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: colors.borderStrong),
+                    border: tone == null
+                        ? Border.all(color: colors.borderStrong)
+                        : null,
                   ),
                   alignment: Alignment.center,
-                  child: Icon(icon, size: 20, color: colors.text),
+                  child: Icon(icon, size: 20, color: iconForeground),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -91,7 +116,7 @@ class RecordRow extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w700,
-                        color: colors.text,
+                        color: valueColor,
                       ),
                     ),
                     if (secondaryValue != null)

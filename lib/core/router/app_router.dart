@@ -7,6 +7,7 @@ import '../../features/events/presentation/pages/events_page.dart';
 import '../../features/garage/presentation/pages/garage_page.dart';
 import '../../features/maintenance/presentation/pages/maintenance_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/maintenance/presentation/maintenance_routes.dart';
 import '../../features/welcome/presentation/pages/welcome_page.dart';
 import '../auth/auth_cubit.dart';
 import '../auth/auth_state.dart';
@@ -29,8 +30,7 @@ GoRouter buildAppRouter() {
       return switch (authState) {
         AuthUnknown() => null,
         AuthUnauthenticated() => isAtWelcome ? null : AppRoutes.welcomePath,
-        AuthAuthenticated() =>
-          isAtWelcome ? AppRoutes.maintenancePath : null,
+        AuthAuthenticated() => isAtWelcome ? AppRoutes.maintenancePath : null,
       };
     },
     routes: [
@@ -81,6 +81,7 @@ GoRouter buildAppRouter() {
           ),
         ],
       ),
+      ...maintenanceRoutes,
     ],
   );
 }

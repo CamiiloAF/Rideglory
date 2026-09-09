@@ -8,7 +8,10 @@ import '../../../l10n/l10n_extensions.dart';
 /// Estado propio de esta app: sin permiso de ubicación. La salida siempre
 /// es visible: pide el permiso, nunca deja una pantalla vacía.
 class LocationPermissionStateView extends StatelessWidget {
-  const LocationPermissionStateView({required this.onRequestPermission, super.key});
+  const LocationPermissionStateView({
+    required this.onRequestPermission,
+    super.key,
+  });
 
   final VoidCallback onRequestPermission;
 

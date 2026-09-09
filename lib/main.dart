@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/config/app_env.dart';
 import 'core/di/injection.dart';
 import 'core/observability/app_sentry.dart';
+import 'core/services/notifications/local_notifications_initializer.dart';
 import 'core/router/app_router.dart';
 import 'design_system/theme/app_theme.dart';
 import 'firebase_options.dart';
@@ -16,11 +17,14 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await AppSentry.runGuarded(() async {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     await Supabase.initialize(
       url: AppEnv.supabaseUrl,
       publishableKey: AppEnv.supabaseAnonKey,
     );
+    await LocalNotificationsInitializer.init();
     await configureDependencies();
 
     runApp(const RidegloryApp());
@@ -36,9 +40,7 @@ class RidegloryApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => getIt<ConnectivityCubit>()),
-      ],
+      providers: [BlocProvider(create: (_) => getIt<ConnectivityCubit>())],
       child: MaterialApp.router(
         title: 'Rideglory',
         debugShowCheckedModeBanner: false,

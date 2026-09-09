@@ -26,6 +26,7 @@ class AppTextField extends StatelessWidget {
     this.onChanged,
     this.onTap,
     this.readOnly = false,
+    this.trailingIcon,
     super.key,
   });
 
@@ -42,6 +43,10 @@ class AppTextField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final VoidCallback? onTap;
   final bool readOnly;
+
+  /// Ícono al final de la caja (ej. `chevron-down` en un campo que abre un
+  /// selector, como fecha). No reemplaza [suffixText]: pueden combinarse.
+  final IconData? trailingIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +113,10 @@ class AppTextField extends StatelessWidget {
                     color: colors.textSecondary,
                   ),
                 ),
+              ],
+              if (trailingIcon != null) ...[
+                const SizedBox(width: 8),
+                Icon(trailingIcon, size: 18, color: colors.textSecondary),
               ],
             ],
           ),

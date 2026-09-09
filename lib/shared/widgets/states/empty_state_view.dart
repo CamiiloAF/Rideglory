@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
+import '../../../design_system/components/app_primary_button.dart';
 import '../../../design_system/tokens/app_colors.dart';
 import '../../../l10n/l10n_extensions.dart';
 
@@ -10,12 +11,21 @@ class EmptyStateView extends StatelessWidget {
     this.title,
     this.body,
     this.icon = LucideIcons.calendarDays,
+    this.actionLabel,
+    this.actionIcon,
+    this.onAction,
     super.key,
   });
 
   final String? title;
   final String? body;
   final IconData icon;
+
+  /// Si se provee junto a [onAction], agrega un `AppPrimaryButton` debajo
+  /// del cuerpo (ej. "Registrar mantenimiento").
+  final String? actionLabel;
+  final IconData? actionIcon;
+  final VoidCallback? onAction;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +53,14 @@ class EmptyStateView extends StatelessWidget {
                 body!,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 13.5, color: colors.textSecondary),
+              ),
+            ],
+            if (actionLabel != null && onAction != null) ...[
+              const SizedBox(height: 24),
+              AppPrimaryButton(
+                label: actionLabel!,
+                onPressed: onAction,
+                icon: actionIcon,
               ),
             ],
           ],
