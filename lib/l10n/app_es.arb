@@ -49,17 +49,266 @@
     "description": "Acción para abrir ajustes de ubicación del sistema"
   },
   "maintenance_tab_label": "MANTENIMIENTO",
-  "@maintenance_tab_label": {
-    "description": "Etiqueta de la pestaña Mantenimiento en el Pill Tab Bar"
-  },
-  "maintenance_empty_title": "Aún no registras mantenimientos",
-  "@maintenance_empty_title": {
-    "description": "Título del estado vacío de la pestaña Mantenimiento"
-  },
-  "maintenance_empty_body": "Cuando registres el primero, aquí verás tu historial y lo que se viene.",
-  "@maintenance_empty_body": {
-    "description": "Cuerpo del estado vacío de la pestaña Mantenimiento"
-  },
+  "@maintenance_tab_label": {"description": "Etiqueta de la pestaña Mantenimiento en el Pill Tab Bar"},
+
+  "maintenance_empty_title": "Registra tu primer mantenimiento",
+  "@maintenance_empty_title": {"description": "Título del estado vacío de la pestaña Mantenimiento"},
+
+  "maintenance_empty_body": "Lleva el kilometraje, los cambios de aceite y los recordatorios de tus motos en un solo lugar.",
+  "@maintenance_empty_body": {"description": "Cuerpo del estado vacío de la pestaña Mantenimiento"},
+
+  "maintenance_empty_action": "Registrar mantenimiento",
+  "@maintenance_empty_action": {"description": "Botón del estado vacío de mantenimiento"},
+
+  "maintenance_page_title": "Mantenimiento",
+  "@maintenance_page_title": {"description": "Título del encabezado de la pantalla principal de mantenimiento"},
+
+  "maintenance_filter_action_label": "Filtrar por estado",
+  "@maintenance_filter_action_label": {"description": "Semántica del botón de filtro en el encabezado de mantenimiento"},
+
+  "maintenance_filter_all": "Todas",
+  "@maintenance_filter_all": {"description": "Chip para ver todas las motos en mantenimiento"},
+
+  "maintenance_section_agenda": "PRÓXIMOS",
+  "@maintenance_section_agenda": {"description": "Título de la sección de próximos servicios"},
+
+  "maintenance_section_history": "HISTORIAL",
+  "@maintenance_section_history": {"description": "Título de la sección de historial de mantenimiento"},
+
+  "maintenance_section_reminder": "RECORDATORIO",
+  "@maintenance_section_reminder": {"description": "Título de la sección de recordatorio en detalle y registro"},
+
+  "maintenance_urgency_overdue": "Vencido",
+  "@maintenance_urgency_overdue": {"description": "Etiqueta de urgencia: el servicio ya se pasó"},
+
+  "maintenance_urgency_due_soon": "Este mes",
+  "@maintenance_urgency_due_soon": {"description": "Etiqueta de urgencia: el servicio vence este mes"},
+
+  "maintenance_urgency_upcoming": "Más adelante",
+  "@maintenance_urgency_upcoming": {"description": "Etiqueta de urgencia: el servicio todavía no se acerca"},
+
+  "maintenance_value_km": "{value} km",
+  "@maintenance_value_km": {"description": "Valor en kilómetros", "placeholders": {"value": {"type": "String"}}},
+
+  "maintenance_value_days": "{value} días",
+  "@maintenance_value_days": {"description": "Valor en días", "placeholders": {"value": {"type": "String"}}},
+
+  "maintenance_fab_label": "Registrar mantenimiento",
+  "@maintenance_fab_label": {"description": "Semántica del FAB de registrar mantenimiento"},
+
+  "maintenance_filter_sheet_title": "Filtrar por estado",
+  "@maintenance_filter_sheet_title": {"description": "Título de la hoja de filtro por estado"},
+
+  "maintenance_filter_status_all": "Todos",
+  "@maintenance_filter_status_all": {"description": "Opción de filtro: todos los estados"},
+
+  "maintenance_filter_status_overdue": "Vencidos",
+  "@maintenance_filter_status_overdue": {"description": "Opción de filtro: solo vencidos"},
+
+  "maintenance_filter_status_due_soon": "Este mes",
+  "@maintenance_filter_status_due_soon": {"description": "Opción de filtro: solo los de este mes"},
+
+  "maintenance_filter_status_upcoming": "Al día",
+  "@maintenance_filter_status_upcoming": {"description": "Opción de filtro: solo los que no son urgentes"},
+
+  "maintenance_error_title": "No pudimos cargar tu mantenimiento",
+  "@maintenance_error_title": {"description": "Título del estado de error de la pantalla principal de mantenimiento"},
+
+  "maintenance_offline_body": "No pudimos cargar tu mantenimiento. Revisa tu conexión e inténtalo de nuevo.",
+  "@maintenance_offline_body": {"description": "Cuerpo del estado sin conexión de la pantalla principal de mantenimiento"},
+
+  "maintenance_detail_field_workshop": "Taller",
+  "@maintenance_detail_field_workshop": {"description": "Etiqueta corta del campo taller en el detalle"},
+
+  "maintenance_detail_field_cost": "Costo",
+  "@maintenance_detail_field_cost": {"description": "Etiqueta corta del campo costo en el detalle"},
+
+  "maintenance_detail_field_note": "Nota",
+  "@maintenance_detail_field_note": {"description": "Etiqueta corta del campo nota en el detalle"},
+
+  "maintenance_detail_reminder_next_km": "Próximo a los {value} km",
+  "@maintenance_detail_reminder_next_km": {"description": "Recordatorio por kilometraje en el detalle", "placeholders": {"value": {"type": "String"}}},
+
+  "maintenance_detail_reminder_next_date": "O el {date} · toca para cambiar",
+  "@maintenance_detail_reminder_next_date": {"description": "Recordatorio por fecha en el detalle", "placeholders": {"date": {"type": "String"}}},
+
+  "maintenance_detail_previous_section": "ANTES, EN ESTA MOTO",
+  "@maintenance_detail_previous_section": {"description": "Título de la sección de registros anteriores"},
+
+  "maintenance_detail_duration": "Duró {value} km",
+  "@maintenance_detail_duration": {"description": "Cuánto duró un registro anterior", "placeholders": {"value": {"type": "String"}}},
+
+  "maintenance_detail_see_more": "Ver {count} más",
+  "@maintenance_detail_see_more": {"description": "Expandir la lista de anteriores", "placeholders": {"count": {"type": "int"}}},
+
+  "maintenance_detail_see_less": "Ver menos",
+  "@maintenance_detail_see_less": {"description": "Contraer la lista de anteriores"},
+
+  "maintenance_detail_average": "Te dura {value} km en promedio.",
+  "@maintenance_detail_average": {"description": "Promedio de duración entre servicios", "placeholders": {"value": {"type": "String"}}},
+
+  "maintenance_detail_menu_semantic": "Más acciones",
+  "@maintenance_detail_menu_semantic": {"description": "Semántica del botón de tres puntos en el detalle"},
+
+  "maintenance_actions_sheet_edit": "Editar registro",
+  "@maintenance_actions_sheet_edit": {"description": "Acción de editar en la hoja de acciones del detalle"},
+
+  "maintenance_actions_sheet_delete": "Eliminar registro",
+  "@maintenance_actions_sheet_delete": {"description": "Acción de eliminar en la hoja de acciones del detalle"},
+
+  "maintenance_delete_confirm_title": "¿Eliminar este registro?",
+  "@maintenance_delete_confirm_title": {"description": "Título de la confirmación de borrado"},
+
+  "maintenance_delete_confirm_body": "Se borra {type} del {date}, y con él el recordatorio del próximo cambio. No se puede deshacer.",
+  "@maintenance_delete_confirm_body": {"description": "Cuerpo de la confirmación de borrado", "placeholders": {"type": {"type": "String"}, "date": {"type": "String"}}},
+
+  "maintenance_delete_confirm_action": "Sí, eliminar",
+  "@maintenance_delete_confirm_action": {"description": "Botón de confirmar borrado"},
+
+  "maintenance_delete_confirm_cancel": "Cancelar",
+  "@maintenance_delete_confirm_cancel": {"description": "Botón de cancelar el borrado"},
+
+  "maintenance_register_title": "Registrar mantenimiento",
+  "@maintenance_register_title": {"description": "Título del encabezado del asistente de registro"},
+
+  "maintenance_edit_title": "Editar mantenimiento",
+  "@maintenance_edit_title": {"description": "Título del encabezado del asistente al editar"},
+
+  "maintenance_register_step_label": "Paso {step} de 3",
+  "@maintenance_register_step_label": {"description": "Indicador de paso del asistente", "placeholders": {"step": {"type": "int"}}},
+
+  "maintenance_register_step1_question": "¿Qué mantenimiento registras?",
+  "@maintenance_register_step1_question": {"description": "Pregunta del paso 1 del asistente"},
+
+  "maintenance_register_step1_other_question": "¿Qué mantenimiento fue?",
+  "@maintenance_register_step1_other_question": {"description": "Pregunta del paso 1 cuando el tipo es texto libre"},
+
+  "maintenance_type_oil_change": "Cambio de aceite y filtro",
+  "@maintenance_type_oil_change": {"description": "Sugerencia de tipo de mantenimiento: aceite"},
+
+  "maintenance_type_tire_change": "Cambio de llanta",
+  "@maintenance_type_tire_change": {"description": "Sugerencia de tipo de mantenimiento: llanta"},
+
+  "maintenance_type_brake_pads": "Pastillas de freno",
+  "@maintenance_type_brake_pads": {"description": "Sugerencia de tipo de mantenimiento: frenos"},
+
+  "maintenance_type_drive_kit": "Kit de arrastre",
+  "@maintenance_type_drive_kit": {"description": "Sugerencia de tipo de mantenimiento: kit de arrastre"},
+
+  "maintenance_type_general_check": "Revisión general",
+  "@maintenance_type_general_check": {"description": "Sugerencia de tipo de mantenimiento: revisión general"},
+
+  "maintenance_type_other": "Otro",
+  "@maintenance_type_other": {"description": "Sugerencia de tipo de mantenimiento: texto libre"},
+
+  "maintenance_type_other_field_label": "Tipo de mantenimiento",
+  "@maintenance_type_other_field_label": {"description": "Label del campo de texto libre del tipo de mantenimiento"},
+
+  "maintenance_type_other_field_hint": "Escribe el nombre del mantenimiento, por ejemplo: \"Cambio de bujías\".",
+  "@maintenance_type_other_field_hint": {"description": "Ayuda del campo de texto libre del tipo de mantenimiento"},
+
+  "maintenance_register_step2_question": "¿Cuál es el kilometraje?",
+  "@maintenance_register_step2_question": {"description": "Pregunta del paso 2 del asistente"},
+
+  "maintenance_register_odometer_suffix": "km",
+  "@maintenance_register_odometer_suffix": {"description": "Sufijo del campo de kilometraje"},
+
+  "maintenance_register_odometer_helper_will_update": "Ahora tiene {current} km. Con esto tu odómetro quedaría actualizado a {value} km.",
+  "@maintenance_register_odometer_helper_will_update": {"description": "Ayuda cuando el kilometraje ingresado actualiza el odómetro", "placeholders": {"current": {"type": "String"}, "value": {"type": "String"}}},
+
+  "maintenance_register_odometer_helper_past_record": "Es un registro anterior: tu moto ya va en {current} km y el odómetro no cambia.",
+  "@maintenance_register_odometer_helper_past_record": {"description": "Ayuda cuando el kilometraje ingresado es menor al odómetro actual", "placeholders": {"current": {"type": "String"}}},
+
+  "maintenance_register_step3_question": "¿Algún detalle más?",
+  "@maintenance_register_step3_question": {"description": "Pregunta del paso 3 del asistente"},
+
+  "maintenance_register_step3_subtitle": "Todo esto es opcional. Puedes guardar así.",
+  "@maintenance_register_step3_subtitle": {"description": "Subtítulo del paso 3 del asistente"},
+
+  "maintenance_field_date": "Fecha",
+  "@maintenance_field_date": {"description": "Label del campo fecha"},
+
+  "maintenance_field_workshop": "Taller o quién lo hizo",
+  "@maintenance_field_workshop": {"description": "Label del campo taller en el registro"},
+
+  "maintenance_field_cost": "Costo",
+  "@maintenance_field_cost": {"description": "Label del campo costo"},
+
+  "maintenance_field_note": "Nota",
+  "@maintenance_field_note": {"description": "Label del campo nota"},
+
+  "maintenance_reminder_toggle_label": "Avisarme del próximo",
+  "@maintenance_reminder_toggle_label": {"description": "Label del switch de recordatorio"},
+
+  "maintenance_reminder_toggle_off": "Opcional. Está apagado.",
+  "@maintenance_reminder_toggle_off": {"description": "Subtítulo del switch de recordatorio apagado"},
+
+  "maintenance_reminder_toggle_on": "{summary} · toca para cambiar",
+  "@maintenance_reminder_toggle_on": {"description": "Subtítulo del switch de recordatorio encendido", "placeholders": {"summary": {"type": "String"}}},
+
+  "maintenance_reminder_km_only": "Cada {km} km",
+  "@maintenance_reminder_km_only": {"description": "Resumen de intervalo solo en kilómetros", "placeholders": {"km": {"type": "String"}}},
+
+  "maintenance_reminder_months_only": "Cada {months} meses",
+  "@maintenance_reminder_months_only": {"description": "Resumen de intervalo solo en meses", "placeholders": {"months": {"type": "String"}}},
+
+  "maintenance_reminder_both": "Cada {km} km o {months} meses",
+  "@maintenance_reminder_both": {"description": "Resumen de intervalo en kilómetros y meses", "placeholders": {"km": {"type": "String"}, "months": {"type": "String"}}},
+
+  "maintenance_interval_sheet_title": "¿Cada cuánto te aviso?",
+  "@maintenance_interval_sheet_title": {"description": "Título de la hoja de intervalo del recordatorio"},
+
+  "maintenance_interval_sheet_subtitle": "{type} · {vehicle}",
+  "@maintenance_interval_sheet_subtitle": {"description": "Subtítulo de la hoja de intervalo", "placeholders": {"type": {"type": "String"}, "vehicle": {"type": "String"}}},
+
+  "maintenance_interval_km_label": "Avísame cada",
+  "@maintenance_interval_km_label": {"description": "Label del campo de intervalo en kilómetros"},
+
+  "maintenance_interval_km_suffix": "km",
+  "@maintenance_interval_km_suffix": {"description": "Sufijo del campo de intervalo en kilómetros"},
+
+  "maintenance_interval_months_label": "O cada",
+  "@maintenance_interval_months_label": {"description": "Label del campo de intervalo en meses"},
+
+  "maintenance_interval_months_suffix": "meses",
+  "@maintenance_interval_months_suffix": {"description": "Sufijo del campo de intervalo en meses"},
+
+  "maintenance_interval_helper": "Con uno basta. Si pones los dos, te avisamos con el que se cumpla primero.",
+  "@maintenance_interval_helper": {"description": "Ayuda de la hoja de intervalo"},
+
+  "maintenance_action_next": "Siguiente",
+  "@maintenance_action_next": {"description": "Botón de avanzar de paso"},
+
+  "maintenance_action_save": "Guardar",
+  "@maintenance_action_save": {"description": "Botón de guardar el mantenimiento"},
+
+  "maintenance_action_saving": "Guardando…",
+  "@maintenance_action_saving": {"description": "Estado de guardando del botón"},
+
+  "maintenance_save_error_title": "No pudimos guardar",
+  "@maintenance_save_error_title": {"description": "Título del banner de error al guardar"},
+
+  "maintenance_save_error_body": "Revisa tu conexión e inténtalo de nuevo. Tus datos siguen aquí.",
+  "@maintenance_save_error_body": {"description": "Cuerpo del banner de error al guardar"},
+
+  "maintenance_notification_permission_title": "Activa los avisos de mantenimiento",
+  "@maintenance_notification_permission_title": {"description": "Título del aviso propio antes del permiso de notificaciones del sistema"},
+
+  "maintenance_notification_permission_body": "Te avisamos en el celular cuando se acerque el próximo servicio. Puedes desactivarlo cuando quieras.",
+  "@maintenance_notification_permission_body": {"description": "Cuerpo del aviso propio antes del permiso de notificaciones del sistema"},
+
+  "maintenance_notification_permission_action": "Activar avisos",
+  "@maintenance_notification_permission_action": {"description": "Botón de aceptar el aviso propio de notificaciones"},
+
+  "maintenance_notification_permission_dismiss": "Ahora no",
+  "@maintenance_notification_permission_dismiss": {"description": "Botón de descartar el aviso propio de notificaciones"},
+
+  "maintenance_notification_title": "Se acerca un mantenimiento",
+  "@maintenance_notification_title": {"description": "Título de la notificación local del próximo servicio"},
+
+  "maintenance_notification_body": "{type} de tu {vehicle}.",
+  "@maintenance_notification_body": {"description": "Cuerpo de la notificación local del próximo servicio", "placeholders": {"type": {"type": "String"}, "vehicle": {"type": "String"}}},
+
   "events_tab_label": "EVENTOS",
   "@events_tab_label": {
     "description": "Etiqueta de la pestaña Eventos en el Pill Tab Bar"
@@ -270,9 +519,6 @@
   "@documents_retake_button": {"description": "Botón para repetir la captura en la subida de documento"},
   "documents_reminder_body": "{days, plural, one{Vence mañana} other{Vence en {days} días}}",
   "@documents_reminder_body": {"description": "Cuerpo de la notificación local de recordatorio de vencimiento", "placeholders": {"days": {"type": "int"}}},
-  "@profile_empty_body": {
-    "description": "Cuerpo del estado vacío de la pestaña Perfil"
-  },
   "auth_welcome_title": "Rideglory",
   "@auth_welcome_title": {
     "description": "Título de marca en bienvenida"

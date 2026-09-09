@@ -12,12 +12,16 @@ class OfflineStateView extends StatelessWidget {
     required this.onRetry,
     this.title,
     this.body,
+    this.message,
     super.key,
   });
 
   final VoidCallback onRetry;
   final String? title;
   final String? body;
+
+  /// Alias retrocompatible de [body]: si ambos se pasan, gana [body].
+  final String? message;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +45,7 @@ class OfflineStateView extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              body ?? context.l10n.common_offline_body,
+              body ?? message ?? context.l10n.common_offline_body,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 13.5, color: colors.textSecondary),
             ),

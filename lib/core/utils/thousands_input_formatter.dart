@@ -46,4 +46,9 @@ class ThousandsInputFormatter extends TextInputFormatter {
     if (value == null) return null;
     return _addThousandsDots(value.toInt().toString());
   }
+
+  /// Formats a Colombian peso amount, ej. `$ 480.000`.
+  static String formatCurrency(num value) {
+    return '\$ ${_addThousandsDots(value.toInt().toString())}';
+  }
 }

@@ -27,20 +27,15 @@ class ResultStateBuilder<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return state.when(
-      initial: () => (loadingBuilder ?? (context) => const SkeletonList())(
-        context,
-      ),
-      loading: () => (loadingBuilder ?? (context) => const SkeletonList())(
-        context,
-      ),
+      initial: () =>
+          (loadingBuilder ?? (context) => const SkeletonList())(context),
+      loading: () =>
+          (loadingBuilder ?? (context) => const SkeletonList())(context),
       data: (data) => onData(context, data),
-      empty: () => (emptyBuilder ?? (context) => const EmptyStateView())(
-        context,
-      ),
-      error: (error) => ErrorStateView(
-        message: error.message,
-        onRetry: onRetry,
-      ),
+      empty: () =>
+          (emptyBuilder ?? (context) => const EmptyStateView())(context),
+      error: (error) =>
+          ErrorStateView(message: error.message, onRetry: onRetry),
     );
   }
 }

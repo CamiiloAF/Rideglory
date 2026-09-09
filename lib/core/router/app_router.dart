@@ -9,6 +9,7 @@ import '../../features/events/presentation/pages/events_page.dart';
 import '../../features/garage/presentation/garage_routes.dart';
 import '../../features/garage/presentation/pages/garage_page.dart';
 import '../../features/maintenance/presentation/pages/maintenance_page.dart';
+import '../../features/maintenance/presentation/maintenance_routes.dart';
 import '../../features/profile/presentation/profile_routes.dart';
 import '../auth/auth_cubit.dart';
 import '../auth/auth_state.dart';
@@ -80,6 +81,7 @@ GoRouter buildAppRouter() {
           ),
         ],
       ),
+      ...maintenanceRoutes,
     ],
   );
 }
