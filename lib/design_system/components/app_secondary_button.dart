@@ -48,12 +48,16 @@ class AppSecondaryButton extends StatelessWidget {
               Icon(icon, size: 16, color: tone),
               const SizedBox(width: 8),
             ],
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: tone,
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: tone,
+                ),
               ),
             ),
           ],

@@ -10,12 +10,12 @@ import 'brand_picker_state.dart';
 @injectable
 class BrandPickerCubit extends Cubit<BrandPickerState> {
   BrandPickerCubit()
-      : super(
-          BrandPickerState(
-            query: '',
-            results: List<String>.of(ColombiaMotosBrandsData.brands)..sort(),
-          ),
-        );
+    : super(
+        BrandPickerState(
+          query: '',
+          results: List<String>.of(ColombiaMotosBrandsData.brands)..sort(),
+        ),
+      );
 
   final TextEditingController searchController = TextEditingController();
 
@@ -24,8 +24,10 @@ class BrandPickerCubit extends Cubit<BrandPickerState> {
     final results = trimmed.isEmpty
         ? List<String>.of(ColombiaMotosBrandsData.brands)
         : ColombiaMotosBrandsData.brands
-            .where((brand) => brand.toLowerCase().contains(trimmed.toLowerCase()))
-            .toList();
+              .where(
+                (brand) => brand.toLowerCase().contains(trimmed.toLowerCase()),
+              )
+              .toList();
     results.sort();
     emit(BrandPickerState(query: trimmed, results: results));
   }

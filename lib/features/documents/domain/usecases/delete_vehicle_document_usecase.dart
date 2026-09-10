@@ -11,7 +11,10 @@ class DeleteVehicleDocumentUseCase {
 
   final DocumentsRepository _repository;
 
-  Future<Either<DomainException, Unit>> call(String vehicleId, DocumentKind kind) {
+  Future<Either<DomainException, Unit>> call(
+    String vehicleId,
+    DocumentKind kind,
+  ) {
     return _repository.deleteDocument(vehicleId, kind);
   }
 }

@@ -14,11 +14,14 @@ import 'package:rideglory/features/garage/presentation/cubit/garage_gallery_cubi
 
 class _MockGetVehiclesUseCase extends Mock implements GetVehiclesUseCase {}
 
-class _MockArchiveVehicleUseCase extends Mock implements ArchiveVehicleUseCase {}
+class _MockArchiveVehicleUseCase extends Mock
+    implements ArchiveVehicleUseCase {}
 
-class _MockUnarchiveVehicleUseCase extends Mock implements UnarchiveVehicleUseCase {}
+class _MockUnarchiveVehicleUseCase extends Mock
+    implements UnarchiveVehicleUseCase {}
 
-class _MockSetMainVehicleUseCase extends Mock implements SetMainVehicleUseCase {}
+class _MockSetMainVehicleUseCase extends Mock
+    implements SetMainVehicleUseCase {}
 
 class _MockDeleteVehicleUseCase extends Mock implements DeleteVehicleUseCase {}
 
@@ -48,7 +51,13 @@ void main() {
   });
 
   GarageGalleryCubit buildCubit() {
-    return GarageGalleryCubit(getVehicles, archiveVehicle, unarchiveVehicle, setMainVehicle, deleteVehicle);
+    return GarageGalleryCubit(
+      getVehicles,
+      archiveVehicle,
+      unarchiveVehicle,
+      setMainVehicle,
+      deleteVehicle,
+    );
   }
 
   blocTest<GarageGalleryCubit, ResultState<List<Vehicle>>>(
@@ -80,15 +89,17 @@ void main() {
   blocTest<GarageGalleryCubit, ResultState<List<Vehicle>>>(
     'emits [loading, error] when the repository fails',
     build: () {
-      when(() => getVehicles()).thenAnswer(
-        (_) async => const Left(DomainException(message: 'boom')),
-      );
+      when(
+        () => getVehicles(),
+      ).thenAnswer((_) async => const Left(DomainException(message: 'boom')));
       return buildCubit();
     },
     act: (cubit) => cubit.load(),
     expect: () => [
       const ResultState<List<Vehicle>>.loading(),
-      const ResultState<List<Vehicle>>.error(error: DomainException(message: 'boom')),
+      const ResultState<List<Vehicle>>.error(
+        error: DomainException(message: 'boom'),
+      ),
     ],
   );
 }

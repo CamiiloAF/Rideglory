@@ -44,11 +44,7 @@ class NotificationPermissionSheet extends StatelessWidget {
                 color: colors.accentSoft,
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                LucideIcons.bell,
-                size: 24,
-                color: colors.accentText,
-              ),
+              child: Icon(LucideIcons.bell, size: 24, color: colors.accentText),
             ),
             const SizedBox(height: 14),
             Text(

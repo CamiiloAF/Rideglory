@@ -16,7 +16,9 @@ class VehicleGalleryGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final activeVehicles = vehicles.where((vehicle) => !vehicle.isArchived).toList();
+    final activeVehicles = vehicles
+        .where((vehicle) => !vehicle.isArchived)
+        .toList();
     return GridView.builder(
       padding: const EdgeInsets.fromLTRB(20, 6, 20, 24),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

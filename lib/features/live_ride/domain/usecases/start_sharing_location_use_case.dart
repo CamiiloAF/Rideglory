@@ -39,19 +39,16 @@ class StartSharingLocationUseCase {
     if (permissionError != null) return Left(permissionError);
 
     final contactsResult = await _repository.getContacts(eventId);
-    return contactsResult.fold(
-      (error) async => Left(error),
-      (contacts) async {
-        await _contactsCache.save(eventId, contacts);
-        await _backgroundTrackingService.start(
-          eventId: eventId,
-          notificationTitle: notificationTitle,
-          notificationBody: notificationBody,
-          stopButtonLabel: stopButtonLabel,
-        );
-        return const Right(unit);
-      },
-    );
+    return contactsResult.fold((error) async => Left(error), (contacts) async {
+      await _contactsCache.save(eventId, contacts);
+      await _backgroundTrackingService.start(
+        eventId: eventId,
+        notificationTitle: notificationTitle,
+        notificationBody: notificationBody,
+        stopButtonLabel: stopButtonLabel,
+      );
+      return const Right(unit);
+    });
   }
 
   DomainException? _permissionErrorFor(LocationPermissionState permission) {

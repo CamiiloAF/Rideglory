@@ -21,7 +21,10 @@ class VehiclePrincipalSwitchRow extends StatelessWidget {
     return Container(
       height: 64,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(color: colors.surface, borderRadius: BorderRadius.circular(16)),
+      decoration: BoxDecoration(
+        color: colors.surface,
+        borderRadius: BorderRadius.circular(16),
+      ),
       alignment: Alignment.center,
       child: BlocBuilder<VehicleFormCubit, VehicleFormState>(
         buildWhen: (previous, current) => previous.isMain != current.isMain,

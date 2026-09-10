@@ -7,7 +7,12 @@ import '../../../../design_system/tokens/app_colors.dart';
 ///
 /// Pencil: R9ZYe › fila de opción
 class DocumentUploadOriginRow extends StatelessWidget {
-  const DocumentUploadOriginRow({required this.icon, required this.label, required this.onTap, super.key});
+  const DocumentUploadOriginRow({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    super.key,
+  });
 
   final IconData icon;
   final String label;
@@ -33,10 +38,18 @@ class DocumentUploadOriginRow extends StatelessWidget {
             Expanded(
               child: Text(
                 label,
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: colors.text),
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: colors.text,
+                ),
               ),
             ),
-            Icon(LucideIcons.chevronRight, size: 18, color: colors.textSecondary),
+            Icon(
+              LucideIcons.chevronRight,
+              size: 18,
+              color: colors.textSecondary,
+            ),
           ],
         ),
       ),

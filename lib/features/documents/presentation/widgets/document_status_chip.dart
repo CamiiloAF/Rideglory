@@ -15,10 +15,23 @@ class DocumentStatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final status = document.statusAt(DateTime.now());
     final (label, tone) = switch (status) {
-      DocumentStatus.valid => (context.l10n.documents_status_valid, AppStatusTone.success),
-      DocumentStatus.expiringSoon => (context.l10n.documents_status_expiring_soon, AppStatusTone.warning),
-      DocumentStatus.expired => (context.l10n.documents_status_expired, AppStatusTone.error),
+      DocumentStatus.valid => (
+        context.l10n.documents_status_valid,
+        AppStatusTone.success,
+      ),
+      DocumentStatus.expiringSoon => (
+        context.l10n.documents_status_expiring_soon,
+        AppStatusTone.warning,
+      ),
+      DocumentStatus.expired => (
+        context.l10n.documents_status_expired,
+        AppStatusTone.error,
+      ),
     };
-    return AppStatusChip(icon: LucideIcons.checkCircle2, label: label, tone: tone);
+    return AppStatusChip(
+      icon: LucideIcons.checkCircle2,
+      label: label,
+      tone: tone,
+    );
   }
 }

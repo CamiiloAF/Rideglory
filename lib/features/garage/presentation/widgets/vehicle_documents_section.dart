@@ -31,10 +31,17 @@ class VehicleDocumentsSection extends StatelessWidget {
         children: [
           Text(
             context.l10n.garage_documents_section_title,
-            style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: colors.textSecondary),
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: colors.textSecondary,
+            ),
           ),
           const SizedBox(height: 8),
-          BlocBuilder<VehicleDocumentsCubit, ResultState<VehicleDocumentsSummary>>(
+          BlocBuilder<
+            VehicleDocumentsCubit,
+            ResultState<VehicleDocumentsSummary>
+          >(
             builder: (context, state) {
               return state.when(
                 initial: () => const SkeletonBox(height: 64, borderRadius: 16),
@@ -49,9 +56,17 @@ class VehicleDocumentsSection extends StatelessWidget {
                 error: (_) => const SizedBox.shrink(),
                 data: (summary) => Column(
                   children: [
-                    DocumentRow(vehicleId: vehicleId, kind: DocumentKind.soat, document: summary.soat),
+                    DocumentRow(
+                      vehicleId: vehicleId,
+                      kind: DocumentKind.soat,
+                      document: summary.soat,
+                    ),
                     const SizedBox(height: 10),
-                    DocumentRow(vehicleId: vehicleId, kind: DocumentKind.rtm, document: summary.rtm),
+                    DocumentRow(
+                      vehicleId: vehicleId,
+                      kind: DocumentKind.rtm,
+                      document: summary.rtm,
+                    ),
                   ],
                 ),
               );

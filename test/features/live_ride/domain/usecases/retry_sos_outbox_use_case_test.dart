@@ -59,35 +59,40 @@ void main() {
     when(() => outbox.markAttempt(any())).thenAnswer((_) async {});
   });
 
-  test('reintenta cada item pendiente y devuelve las alertas confirmadas', () async {
-    when(() => outbox.pending())
-        .thenAnswer((_) async => [_item('c1', 'e1'), _item('c2', 'e1')]);
-    when(() => repository.raise(any())).thenAnswer(
-      (invocation) async {
+  test(
+    'reintenta cada item pendiente y devuelve las alertas confirmadas',
+    () async {
+      when(
+        () => outbox.pending(),
+      ).thenAnswer((_) async => [_item('c1', 'e1'), _item('c2', 'e1')]);
+      when(() => repository.raise(any())).thenAnswer((invocation) async {
         final item = invocation.positionalArguments.first as SosOutboxItem;
         return Right(_alert('sos-${item.clientId}', item.eventId));
-      },
-    );
+      });
 
-    final confirmed = await useCase.call();
+      final confirmed = await useCase.call();
 
-    expect(confirmed, hasLength(2));
-    verify(() => outbox.markSent('c1')).called(1);
-    verify(() => outbox.markSent('c2')).called(1);
-  });
+      expect(confirmed, hasLength(2));
+      verify(() => outbox.markSent('c1')).called(1);
+      verify(() => outbox.markSent('c2')).called(1);
+    },
+  );
 
-  test('un item que sigue fallando queda en cola (markAttempt) y no se reporta confirmado', () async {
-    when(() => outbox.pending()).thenAnswer((_) async => [_item('c1', 'e1')]);
-    when(() => repository.raise(any())).thenAnswer(
-      (_) async => const Left(DomainException(message: 'offline')),
-    );
+  test(
+    'un item que sigue fallando queda en cola (markAttempt) y no se reporta confirmado',
+    () async {
+      when(() => outbox.pending()).thenAnswer((_) async => [_item('c1', 'e1')]);
+      when(() => repository.raise(any())).thenAnswer(
+        (_) async => const Left(DomainException(message: 'offline')),
+      );
 
-    final confirmed = await useCase.call();
+      final confirmed = await useCase.call();
 
-    expect(confirmed, isEmpty);
-    verify(() => outbox.markAttempt('c1')).called(1);
-    verifyNever(() => outbox.markSent(any()));
-  });
+      expect(confirmed, isEmpty);
+      verify(() => outbox.markAttempt('c1')).called(1);
+      verifyNever(() => outbox.markSent(any()));
+    },
+  );
 
   test('cola vacía no llama a raise', () async {
     when(() => outbox.pending()).thenAnswer((_) async => []);

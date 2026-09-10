@@ -14,7 +14,5 @@ abstract class SosRepository {
 
   /// Alertas visibles de la rodada (propias y de otros), actualizadas por
   /// Realtime sobre `sos_alerts` (D16).
-  Stream<Either<DomainException, List<SosAlert>>> watchAlerts(
-    String eventId,
-  );
+  Stream<Either<DomainException, List<SosAlert>>> watchAlerts(String eventId);
 }

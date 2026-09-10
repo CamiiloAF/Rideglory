@@ -35,11 +35,13 @@ abstract class VehicleDocumentAlert with _$VehicleDocumentAlert {
     for (final document in documents) {
       final daysLeft = document.expiryDate.difference(now).inDays;
       if (daysLeft < 0) {
-        if (worstExpired == null || document.expiryDate.isBefore(worstExpired.expiryDate)) {
+        if (worstExpired == null ||
+            document.expiryDate.isBefore(worstExpired.expiryDate)) {
           worstExpired = document;
         }
       } else if (daysLeft <= 30) {
-        if (soonestUpcoming == null || document.expiryDate.isBefore(soonestUpcoming.expiryDate)) {
+        if (soonestUpcoming == null ||
+            document.expiryDate.isBefore(soonestUpcoming.expiryDate)) {
           soonestUpcoming = document;
         }
       }
@@ -50,7 +52,9 @@ abstract class VehicleDocumentAlert with _$VehicleDocumentAlert {
 
     return VehicleDocumentAlert(
       kind: chosen.kind,
-      severity: worstExpired != null ? DocumentAlertSeverity.critical : DocumentAlertSeverity.warning,
+      severity: worstExpired != null
+          ? DocumentAlertSeverity.critical
+          : DocumentAlertSeverity.warning,
       daysUntilExpiry: chosen.expiryDate.difference(now).inDays,
     );
   }

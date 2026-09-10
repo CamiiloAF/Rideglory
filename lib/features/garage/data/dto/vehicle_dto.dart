@@ -26,7 +26,8 @@ abstract class VehicleDto with _$VehicleDto {
 
   const VehicleDto._();
 
-  factory VehicleDto.fromJson(Map<String, dynamic> json) => _$VehicleDtoFromJson(json);
+  factory VehicleDto.fromJson(Map<String, dynamic> json) =>
+      _$VehicleDtoFromJson(json);
 
   /// [imageUrl] es la URL firmada, resuelta aparte por el datasource: nunca
   /// viaja en la fila de Postgres.

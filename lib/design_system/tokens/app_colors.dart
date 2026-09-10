@@ -234,7 +234,11 @@ class AppColors extends ThemeExtension<AppColors> {
       shadow: Color.lerp(shadow, other.shadow, t)!,
       block: Color.lerp(block, other.block, t)!,
       onBlock: Color.lerp(onBlock, other.onBlock, t)!,
-      onBlockSecondary: Color.lerp(onBlockSecondary, other.onBlockSecondary, t)!,
+      onBlockSecondary: Color.lerp(
+        onBlockSecondary,
+        other.onBlockSecondary,
+        t,
+      )!,
     );
   }
 }

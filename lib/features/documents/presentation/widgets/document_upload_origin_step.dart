@@ -25,31 +25,40 @@ class DocumentUploadOriginStep extends StatelessWidget {
   final String vehicleId;
 
   Future<void> _fromCamera(BuildContext context) async {
-    final picked = await ImagePicker().pickImage(source: ImageSource.camera, imageQuality: 90);
+    final picked = await ImagePicker().pickImage(
+      source: ImageSource.camera,
+      imageQuality: 90,
+    );
     if (picked == null) return;
     final bytes = await picked.readAsBytes();
     if (!context.mounted) return;
     await context.read<DocumentUploadCubit>().fileSelected(
-          bytes,
-          picked.path.split('.').last.toLowerCase(),
-          imageFileForOcr: File(picked.path),
-        );
+      bytes,
+      picked.path.split('.').last.toLowerCase(),
+      imageFileForOcr: File(picked.path),
+    );
   }
 
   Future<void> _fromGallery(BuildContext context) async {
-    final picked = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 90);
+    final picked = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 90,
+    );
     if (picked == null) return;
     final bytes = await picked.readAsBytes();
     if (!context.mounted) return;
     await context.read<DocumentUploadCubit>().fileSelected(
-          bytes,
-          picked.path.split('.').last.toLowerCase(),
-          imageFileForOcr: File(picked.path),
-        );
+      bytes,
+      picked.path.split('.').last.toLowerCase(),
+      imageFileForOcr: File(picked.path),
+    );
   }
 
   Future<void> _fromPdf(BuildContext context) async {
-    final result = await FilePicker.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
+    final result = await FilePicker.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
     final path = result?.files.single.path;
     if (path == null) return;
     final bytes = await File(path).readAsBytes();
@@ -67,7 +76,11 @@ class DocumentUploadOriginStep extends StatelessWidget {
         children: [
           Text(
             context.l10n.documents_upload_origin_title,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: colors.text),
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+              color: colors.text,
+            ),
           ),
           const SizedBox(height: 4),
           Text(

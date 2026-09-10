@@ -23,12 +23,21 @@ class DocumentLocalCacheService {
     return directory;
   }
 
-  Future<File> _fileFor(String vehicleId, DocumentKind kind, String extension) async {
+  Future<File> _fileFor(
+    String vehicleId,
+    DocumentKind kind,
+    String extension,
+  ) async {
     final directory = await _vehicleDirectory(vehicleId);
     return File('${directory.path}/${kind.name}.$extension');
   }
 
-  Future<File> save(String vehicleId, DocumentKind kind, String extension, Uint8List bytes) async {
+  Future<File> save(
+    String vehicleId,
+    DocumentKind kind,
+    String extension,
+    Uint8List bytes,
+  ) async {
     final file = await _fileFor(vehicleId, kind, extension);
     return file.writeAsBytes(bytes, flush: true);
   }

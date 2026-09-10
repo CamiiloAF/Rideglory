@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import '../../../../design_system/tokens/app_colors.dart';
 import '../../domain/event.dart';
 import '../../domain/event_route_change.dart';
+import '../../domain/event_state.dart';
+import '../../domain/registration_status.dart';
 import 'event_detail_data_rows.dart';
 import 'event_detail_destination_section.dart';
 import 'event_detail_hero.dart';
 import 'event_detail_organizer_row.dart';
 import 'event_detail_route_section.dart';
 import 'event_detail_section_divider.dart';
+import 'event_live_ride_banner.dart';
 import 'event_route_changes_section.dart';
 import 'event_start_overdue_banner.dart';
 
@@ -50,6 +53,11 @@ class EventDetailBody extends StatelessWidget {
               children: [
                 if (event.isOwnedByMe && event.isOverdueToStart)
                   EventStartOverdueBanner(startAt: event.startAt),
+                if (event.state == EventState.started &&
+                    (event.isOwnedByMe ||
+                        event.myRegistrationStatus ==
+                            RegistrationStatus.approved))
+                  EventLiveRideBanner(event: event),
                 Text(
                   event.name,
                   style: TextStyle(

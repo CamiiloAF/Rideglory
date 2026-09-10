@@ -32,27 +32,43 @@ class GarageGalleryCubit extends Cubit<ResultState<List<Vehicle>>> {
     final result = await _getVehicles();
     result.fold(
       (error) => emit(ResultState.error(error: error)),
-      (vehicles) => emit(vehicles.isEmpty ? const ResultState.empty() : ResultState.data(data: vehicles)),
+      (vehicles) => emit(
+        vehicles.isEmpty
+            ? const ResultState.empty()
+            : ResultState.data(data: vehicles),
+      ),
     );
   }
 
   Future<void> archive(String vehicleId) async {
     final result = await _archiveVehicle(vehicleId);
-    result.fold((error) => emit(ResultState.error(error: error)), (_) => load());
+    result.fold(
+      (error) => emit(ResultState.error(error: error)),
+      (_) => load(),
+    );
   }
 
   Future<void> unarchive(String vehicleId) async {
     final result = await _unarchiveVehicle(vehicleId);
-    result.fold((error) => emit(ResultState.error(error: error)), (_) => load());
+    result.fold(
+      (error) => emit(ResultState.error(error: error)),
+      (_) => load(),
+    );
   }
 
   Future<void> setMain(String vehicleId) async {
     final result = await _setMainVehicle(vehicleId);
-    result.fold((error) => emit(ResultState.error(error: error)), (_) => load());
+    result.fold(
+      (error) => emit(ResultState.error(error: error)),
+      (_) => load(),
+    );
   }
 
   Future<void> delete(String vehicleId) async {
     final result = await _deleteVehicle(vehicleId);
-    result.fold((error) => emit(ResultState.error(error: error)), (_) => load());
+    result.fold(
+      (error) => emit(ResultState.error(error: error)),
+      (_) => load(),
+    );
   }
 }

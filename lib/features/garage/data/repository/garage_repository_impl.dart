@@ -20,7 +20,9 @@ class GarageRepositoryImpl implements GarageRepository {
   Future<Either<DomainException, List<Vehicle>>> getVehicles() async {
     try {
       final dtos = await _datasource.fetchVehicles();
-      final expiries = await _datasource.fetchDocumentExpiries(dtos.map((dto) => dto.id).toList());
+      final expiries = await _datasource.fetchDocumentExpiries(
+        dtos.map((dto) => dto.id).toList(),
+      );
       final alertsByVehicleId = _groupAlertsByVehicle(expiries);
       final vehicles = await Future.wait(
         dtos.map((dto) => _toDomainWithImage(dto, alertsByVehicleId[dto.id])),
@@ -32,7 +34,9 @@ class GarageRepositoryImpl implements GarageRepository {
   }
 
   @override
-  Future<Either<DomainException, Vehicle>> createVehicle(VehicleInput input) async {
+  Future<Either<DomainException, Vehicle>> createVehicle(
+    VehicleInput input,
+  ) async {
     try {
       var dto = await _datasource.insertVehicle(_toValues(input));
       dto = await _withUploadedImage(dto, input);
@@ -68,7 +72,9 @@ class GarageRepositoryImpl implements GarageRepository {
   }
 
   @override
-  Future<Either<DomainException, Unit>> unarchiveVehicle(String vehicleId) async {
+  Future<Either<DomainException, Unit>> unarchiveVehicle(
+    String vehicleId,
+  ) async {
     try {
       await _datasource.unarchiveVehicle(vehicleId);
       return const Right(unit);
@@ -114,7 +120,10 @@ class GarageRepositoryImpl implements GarageRepository {
     };
   }
 
-  Future<VehicleDto> _withUploadedImage(VehicleDto dto, VehicleInput input) async {
+  Future<VehicleDto> _withUploadedImage(
+    VehicleDto dto,
+    VehicleInput input,
+  ) async {
     if (input.imageBytes == null || input.imageExtension == null) return dto;
     final imagePath = await _datasource.uploadImage(
       vehicleId: dto.id,
@@ -124,7 +133,10 @@ class GarageRepositoryImpl implements GarageRepository {
     return _datasource.updateVehicle(dto.id, {'image_path': imagePath});
   }
 
-  Future<Vehicle> _toDomainWithImage(VehicleDto dto, VehicleDocumentAlert? alert) async {
+  Future<Vehicle> _toDomainWithImage(
+    VehicleDto dto,
+    VehicleDocumentAlert? alert,
+  ) async {
     if (dto.imagePath == null) return dto.toDomain(documentAlert: alert);
     try {
       final signedUrl = await _datasource.createSignedImageUrl(dto.imagePath!);
@@ -134,13 +146,21 @@ class GarageRepositoryImpl implements GarageRepository {
     }
   }
 
-  Map<String, VehicleDocumentAlert> _groupAlertsByVehicle(List<Map<String, dynamic>> rows) {
-    final byVehicle = <String, List<({DocumentAlertKind kind, DateTime expiryDate})>>{};
+  Map<String, VehicleDocumentAlert> _groupAlertsByVehicle(
+    List<Map<String, dynamic>> rows,
+  ) {
+    final byVehicle =
+        <String, List<({DocumentAlertKind kind, DateTime expiryDate})>>{};
     for (final row in rows) {
       final vehicleId = row['vehicle_id'] as String;
-      final kind = row['kind'] == 'soat' ? DocumentAlertKind.soat : DocumentAlertKind.rtm;
+      final kind = row['kind'] == 'soat'
+          ? DocumentAlertKind.soat
+          : DocumentAlertKind.rtm;
       final expiryDate = DateTime.parse(row['expiry_date'] as String);
-      byVehicle.putIfAbsent(vehicleId, () => []).add((kind: kind, expiryDate: expiryDate));
+      byVehicle.putIfAbsent(vehicleId, () => []).add((
+        kind: kind,
+        expiryDate: expiryDate,
+      ));
     }
     final now = DateTime.now();
     final alerts = <String, VehicleDocumentAlert>{};

@@ -89,9 +89,7 @@ void main() {
       when(
         () => getRouteChanges('e1'),
       ).thenAnswer((_) async => const Right([]));
-      when(
-        () => startEvent('e1'),
-      ).thenAnswer((_) async => const Right(unit));
+      when(() => startEvent('e1')).thenAnswer((_) async => const Right(unit));
       return buildCubit();
     },
     act: (cubit) async {

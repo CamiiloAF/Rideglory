@@ -51,12 +51,16 @@ class AppPrimaryButton extends StatelessWidget {
               Icon(icon, size: 21, color: foreground),
               const SizedBox(width: 9),
             ],
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 16.5,
-                fontWeight: FontWeight.w700,
-                color: foreground,
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 16.5,
+                  fontWeight: FontWeight.w700,
+                  color: foreground,
+                ),
               ),
             ),
           ],

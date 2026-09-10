@@ -52,11 +52,15 @@ class DocumentReminderScheduler {
         bodyBuilder(daysBefore),
         tz.TZDateTime.from(fireDate, tz.local),
         const NotificationDetails(
-          android: AndroidNotificationDetails('document_reminders', 'Documentos'),
+          android: AndroidNotificationDetails(
+            'document_reminders',
+            'Documentos',
+          ),
           iOS: DarwinNotificationDetails(),
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
       );
     }
   }

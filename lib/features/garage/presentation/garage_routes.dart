@@ -17,7 +17,8 @@ List<RouteBase> garageRoutes = [
   GoRoute(
     path: AppRoutes.vehicleEditPath,
     name: AppRoutes.vehicleEdit,
-    builder: (context, state) => VehicleEditPage(vehicle: state.extra! as Vehicle),
+    builder: (context, state) =>
+        VehicleEditPage(vehicle: state.extra! as Vehicle),
   ),
   GoRoute(
     path: AppRoutes.brandPickerPath,

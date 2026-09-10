@@ -16,7 +16,12 @@ import 'document_status_chip.dart';
 /// (ver informe de cierre), así que se construye con `RecordRow`/tokens del
 /// sistema en vez del componente de mantenimiento que sí la tiene.
 class DocumentRow extends StatelessWidget {
-  const DocumentRow({required this.vehicleId, required this.kind, this.document, super.key});
+  const DocumentRow({
+    required this.vehicleId,
+    required this.kind,
+    this.document,
+    super.key,
+  });
 
   final String vehicleId;
   final DocumentKind kind;
@@ -25,8 +30,9 @@ class DocumentRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
-    final kindLabel =
-        kind == DocumentKind.soat ? context.l10n.documents_soat_title : context.l10n.documents_rtm_title;
+    final kindLabel = kind == DocumentKind.soat
+        ? context.l10n.documents_soat_title
+        : context.l10n.documents_rtm_title;
     final document = this.document;
 
     return InkWell(
@@ -39,7 +45,10 @@ class DocumentRow extends StatelessWidget {
       child: Container(
         height: 64,
         padding: const EdgeInsets.symmetric(horizontal: 14),
-        decoration: BoxDecoration(color: colors.surface, borderRadius: BorderRadius.circular(16)),
+        decoration: BoxDecoration(
+          color: colors.surface,
+          borderRadius: BorderRadius.circular(16),
+        ),
         child: Row(
           children: [
             Icon(LucideIcons.fileText, size: 20, color: colors.text),
@@ -51,22 +60,36 @@ class DocumentRow extends StatelessWidget {
                 children: [
                   Text(
                     kindLabel,
-                    style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: colors.text),
+                    style: TextStyle(
+                      fontSize: 14.5,
+                      fontWeight: FontWeight.w700,
+                      color: colors.text,
+                    ),
                   ),
                   Text(
                     document == null
                         ? context.l10n.documents_not_uploaded_short
                         : context.l10n.documents_expires_on(
-                            DateFormat('d MMM yyyy', 'es_CO').format(document.expiryDate),
+                            DateFormat(
+                              'd MMM yyyy',
+                              'es_CO',
+                            ).format(document.expiryDate),
                           ),
-                    style: TextStyle(fontSize: 11.5, color: colors.textSecondary),
+                    style: TextStyle(
+                      fontSize: 11.5,
+                      color: colors.textSecondary,
+                    ),
                   ),
                 ],
               ),
             ),
             if (document != null) DocumentStatusChip(document: document),
             const SizedBox(width: 6),
-            Icon(LucideIcons.chevronRight, size: 18, color: colors.textSecondary),
+            Icon(
+              LucideIcons.chevronRight,
+              size: 18,
+              color: colors.textSecondary,
+            ),
           ],
         ),
       ),

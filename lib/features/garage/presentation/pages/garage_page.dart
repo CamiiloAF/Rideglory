@@ -18,13 +18,16 @@ class GaragePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isOffline = context.watch<ConnectivityCubit>().state is ConnectivityOffline;
+    final isOffline =
+        context.watch<ConnectivityCubit>().state is ConnectivityOffline;
     return BlocProvider(
       create: (_) => getIt<GarageGalleryCubit>()..load(),
       child: Scaffold(
         body: SafeArea(
           child: isOffline
-              ? OfflineStateView(onRetry: () => context.read<GarageGalleryCubit>().load())
+              ? OfflineStateView(
+                  onRetry: () => context.read<GarageGalleryCubit>().load(),
+                )
               : const GarageGalleryView(),
         ),
       ),

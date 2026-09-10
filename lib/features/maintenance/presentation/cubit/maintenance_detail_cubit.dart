@@ -88,9 +88,8 @@ class MaintenanceDetailCubit extends Cubit<MaintenanceDetailState> {
     );
     final result = await _updateMaintenance(maintenance.id, params);
     result.fold(
-      (error) => emit(
-        state.copyWith(reminderUpdate: ResultState.error(error: error)),
-      ),
+      (error) =>
+          emit(state.copyWith(reminderUpdate: ResultState.error(error: error))),
       (updated) => emit(
         state.copyWith(
           maintenance: updated,

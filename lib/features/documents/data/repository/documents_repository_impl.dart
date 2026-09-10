@@ -33,7 +33,9 @@ class DocumentsRepositoryImpl implements DocumentsRepository {
   static const String notFoundMessage = 'not_found';
 
   @override
-  Future<Either<DomainException, VehicleDocumentsSummary>> getDocuments(String vehicleId) async {
+  Future<Either<DomainException, VehicleDocumentsSummary>> getDocuments(
+    String vehicleId,
+  ) async {
     try {
       final dtos = await _datasource.fetchDocuments(vehicleId);
       VehicleDocument? soat;
@@ -73,7 +75,12 @@ class DocumentsRepositoryImpl implements DocumentsRepository {
         'file_path': filePath,
         'reminder_enabled': true,
       });
-      await _localCache.save(vehicleId, input.kind, input.fileExtension, input.fileBytes);
+      await _localCache.save(
+        vehicleId,
+        input.kind,
+        input.fileExtension,
+        input.fileBytes,
+      );
       return Right(dto.toDomain());
     } catch (error) {
       return Left(_mapError(error));
@@ -81,7 +88,10 @@ class DocumentsRepositoryImpl implements DocumentsRepository {
   }
 
   @override
-  Future<Either<DomainException, Unit>> deleteDocument(String vehicleId, DocumentKind kind) async {
+  Future<Either<DomainException, Unit>> deleteDocument(
+    String vehicleId,
+    DocumentKind kind,
+  ) async {
     try {
       await _datasource.deleteDocument(vehicleId, kind.name);
       await _localCache.delete(vehicleId, kind);
@@ -93,7 +103,9 @@ class DocumentsRepositoryImpl implements DocumentsRepository {
   }
 
   @override
-  Future<Either<DomainException, Unit>> deleteAllForVehicle(String vehicleId) async {
+  Future<Either<DomainException, Unit>> deleteAllForVehicle(
+    String vehicleId,
+  ) async {
     try {
       await _datasource.deleteAllFilesForVehicle(vehicleId);
       await _localCache.deleteAllForVehicle(vehicleId);
@@ -105,7 +117,9 @@ class DocumentsRepositoryImpl implements DocumentsRepository {
   }
 
   @override
-  Future<Either<DomainException, Unit>> cancelRemindersForVehicle(String vehicleId) async {
+  Future<Either<DomainException, Unit>> cancelRemindersForVehicle(
+    String vehicleId,
+  ) async {
     try {
       await _reminderScheduler.cancelAllForVehicle(vehicleId);
       return const Right(unit);
@@ -139,7 +153,10 @@ class DocumentsRepositoryImpl implements DocumentsRepository {
 
       final connectivityResults = await _connectivity.checkConnectivity();
       final isOffline =
-          connectivityResults.isEmpty || connectivityResults.every((result) => result == ConnectivityResult.none);
+          connectivityResults.isEmpty ||
+          connectivityResults.every(
+            (result) => result == ConnectivityResult.none,
+          );
       if (isOffline) {
         return const Left(DomainException(message: offlineNoCacheMessage));
       }
@@ -159,5 +176,6 @@ class DocumentsRepositoryImpl implements DocumentsRepository {
     }
   }
 
-  DomainException _mapError(Object error) => DomainException(message: error.toString());
+  DomainException _mapError(Object error) =>
+      DomainException(message: error.toString());
 }

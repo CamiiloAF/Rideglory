@@ -41,13 +41,13 @@ class DocumentUploadSubmitButton extends StatelessWidget {
                 label: context.l10n.documents_save_button,
                 onPressed: state.canSave
                     ? () => cubit.submit(
-                          vehicleId,
-                          notificationTitle: state.kind.name == 'soat'
-                              ? context.l10n.documents_soat_title
-                              : context.l10n.documents_rtm_title,
-                          notificationBodyBuilder: (daysBefore) =>
-                              context.l10n.documents_reminder_body(daysBefore),
-                        )
+                        vehicleId,
+                        notificationTitle: state.kind.name == 'soat'
+                            ? context.l10n.documents_soat_title
+                            : context.l10n.documents_rtm_title,
+                        notificationBodyBuilder: (daysBefore) =>
+                            context.l10n.documents_reminder_body(daysBefore),
+                      )
                     : null,
               ),
           ],

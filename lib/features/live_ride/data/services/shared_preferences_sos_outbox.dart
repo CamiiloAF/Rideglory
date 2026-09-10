@@ -43,7 +43,9 @@ class SharedPreferencesSosOutbox implements SosOutbox {
     if (raw == null || raw.isEmpty) return [];
     final list = jsonDecode(raw) as List<dynamic>;
     return list
-        .map((entry) => SosOutboxItemDto.fromJson(entry as Map<String, dynamic>))
+        .map(
+          (entry) => SosOutboxItemDto.fromJson(entry as Map<String, dynamic>),
+        )
         .toList();
   }
 

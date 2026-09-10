@@ -25,10 +25,18 @@ class BrandPickerRow extends StatelessWidget {
             Expanded(
               child: Text(
                 brand,
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: colors.text),
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: colors.text,
+                ),
               ),
             ),
-            Icon(LucideIcons.chevronRight, size: 18, color: colors.textSecondary),
+            Icon(
+              LucideIcons.chevronRight,
+              size: 18,
+              color: colors.textSecondary,
+            ),
           ],
         ),
       ),

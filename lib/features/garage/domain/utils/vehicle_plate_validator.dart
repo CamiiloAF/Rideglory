@@ -9,5 +9,6 @@ abstract final class VehiclePlateValidator {
     return rawPlate.toUpperCase().replaceAll(RegExp(r'\s+'), '');
   }
 
-  static bool isValid(String rawPlate) => _pattern.hasMatch(normalize(rawPlate));
+  static bool isValid(String rawPlate) =>
+      _pattern.hasMatch(normalize(rawPlate));
 }

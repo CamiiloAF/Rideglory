@@ -14,7 +14,11 @@ import '../widgets/document_viewer_body.dart';
 ///
 /// Pencil: tu2U6 (con red), P5GIm (sin conexión), dB4Au (sin subir)
 class DocumentViewerPage extends StatelessWidget {
-  const DocumentViewerPage({required this.vehicleId, required this.kind, super.key});
+  const DocumentViewerPage({
+    required this.vehicleId,
+    required this.kind,
+    super.key,
+  });
 
   final String vehicleId;
   final DocumentKind kind;
@@ -35,7 +39,8 @@ class DocumentViewerPage extends StatelessWidget {
                 state: state,
                 vehicleId: vehicleId,
                 kind: kind,
-                onRetry: () => context.read<DocumentViewerCubit>().load(vehicleId, kind),
+                onRetry: () =>
+                    context.read<DocumentViewerCubit>().load(vehicleId, kind),
               );
             },
           ),

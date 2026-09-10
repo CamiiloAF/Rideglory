@@ -22,7 +22,8 @@ import 'package:rideglory/features/live_ride/presentation/cubit/sharing_status.d
 
 class _MockWatchLiveRiders extends Mock implements WatchLiveRidersUseCase {}
 
-class _MockWatchEventFinished extends Mock implements WatchEventFinishedUseCase {}
+class _MockWatchEventFinished extends Mock
+    implements WatchEventFinishedUseCase {}
 
 class _MockGetPermissionState extends Mock
     implements GetLocationPermissionStateUseCase {}
@@ -72,13 +73,21 @@ void main() {
     backgroundTrackingService = _MockBackgroundTrackingService();
 
     when(() => watchLiveRiders(any())).thenAnswer((_) => const Stream.empty());
-    when(() => watchEventFinished(any())).thenAnswer((_) => const Stream.empty());
-    when(() => getPermissionState())
-        .thenAnswer((_) async => LocationPermissionState.whileInUse);
+    when(
+      () => watchEventFinished(any()),
+    ).thenAnswer((_) => const Stream.empty());
+    when(
+      () => getPermissionState(),
+    ).thenAnswer((_) async => LocationPermissionState.whileInUse);
     when(() => contactsCache.read(any())).thenAnswer((_) async => null);
-    when(() => backgroundTrackingService.isRunning()).thenAnswer((_) async => false);
-    when(() => locationService.positionStream(distanceFilterMeters: any(named: 'distanceFilterMeters')))
-        .thenAnswer((_) => const Stream.empty());
+    when(
+      () => backgroundTrackingService.isRunning(),
+    ).thenAnswer((_) async => false);
+    when(
+      () => locationService.positionStream(
+        distanceFilterMeters: any(named: 'distanceFilterMeters'),
+      ),
+    ).thenAnswer((_) => const Stream.empty());
   });
 
   LiveRideCubit buildCubit() => LiveRideCubit(
@@ -95,8 +104,9 @@ void main() {
   blocTest<LiveRideCubit, LiveRideState>(
     'load con riders emite ResultState.data',
     build: () {
-      when(() => watchLiveRiders(any()))
-          .thenAnswer((_) => Stream.value(Right([_rider()])));
+      when(
+        () => watchLiveRiders(any()),
+      ).thenAnswer((_) => Stream.value(Right([_rider()])));
       return buildCubit();
     },
     act: (cubit) => cubit.load('event-1'),
@@ -109,7 +119,9 @@ void main() {
   blocTest<LiveRideCubit, LiveRideState>(
     'load sin riders emite ResultState.empty',
     build: () {
-      when(() => watchLiveRiders(any())).thenAnswer((_) => Stream.value(const Right([])));
+      when(
+        () => watchLiveRiders(any()),
+      ).thenAnswer((_) => Stream.value(const Right([])));
       return buildCubit();
     },
     act: (cubit) => cubit.load('event-1'),
@@ -123,7 +135,9 @@ void main() {
     'un error del stream de riders emite ResultState.error',
     build: () {
       when(() => watchLiveRiders(any())).thenAnswer(
-        (_) => Stream.value(const Left(DomainException(message: 'live_ride_offline'))),
+        (_) => Stream.value(
+          const Left(DomainException(message: 'live_ride_offline')),
+        ),
       );
       return buildCubit();
     },
@@ -192,8 +206,9 @@ void main() {
 
   test('el fin del evento mientras se comparte llama a stopSharing', () async {
     final eventFinishedController = StreamController<bool>.broadcast();
-    when(() => watchEventFinished(any()))
-        .thenAnswer((_) => eventFinishedController.stream);
+    when(
+      () => watchEventFinished(any()),
+    ).thenAnswer((_) => eventFinishedController.stream);
     when(
       () => startSharing(
         eventId: any(named: 'eventId'),

@@ -16,7 +16,8 @@ class MaintenanceNotificationScheduler {
   static const _channelId = 'maintenance_reminders';
   static const _channelName = 'Recordatorios de mantenimiento';
 
-  Future<bool> requestPermission() => LocalNotificationsInitializer.requestPermission();
+  Future<bool> requestPermission() =>
+      LocalNotificationsInitializer.requestPermission();
 
   Future<void> scheduleForMaintenance({
     required String maintenanceId,

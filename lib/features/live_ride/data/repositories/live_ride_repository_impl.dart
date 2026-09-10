@@ -64,9 +64,7 @@ class LiveRideRepositoryImpl implements LiveRideRepository {
 
   @override
   Stream<bool> watchEventFinished(String eventId) {
-    return _datasource
-        .watchEventFinished(eventId)
-        .handleError((Object _) {});
+    return _datasource.watchEventFinished(eventId).handleError((Object _) {});
   }
 
   Future<Either<DomainException, T>> _guard<T>(

@@ -15,18 +15,22 @@ import 'package:rideglory/features/maintenance/domain/usecases/update_maintenanc
 import 'package:rideglory/features/maintenance/presentation/cubit/maintenance_detail_cubit.dart';
 import 'package:rideglory/features/maintenance/presentation/cubit/maintenance_detail_state.dart';
 
-class _MockGetMaintenancesUseCase extends Mock implements GetMaintenancesUseCase {}
+class _MockGetMaintenancesUseCase extends Mock
+    implements GetMaintenancesUseCase {}
 
 class _MockGetVehiclesUseCase extends Mock implements GetVehiclesUseCase {}
 
-class _MockDeleteMaintenanceUseCase extends Mock implements DeleteMaintenanceUseCase {}
+class _MockDeleteMaintenanceUseCase extends Mock
+    implements DeleteMaintenanceUseCase {}
 
-class _MockUpdateMaintenanceUseCase extends Mock implements UpdateMaintenanceUseCase {}
+class _MockUpdateMaintenanceUseCase extends Mock
+    implements UpdateMaintenanceUseCase {}
 
 class _MockMaintenanceNotificationScheduler extends Mock
     implements MaintenanceNotificationScheduler {}
 
-class _FakeRegisterMaintenanceParams extends Fake implements RegisterMaintenanceParams {}
+class _FakeRegisterMaintenanceParams extends Fake
+    implements RegisterMaintenanceParams {}
 
 final _maintenance = Maintenance(
   id: 'm1',
@@ -56,22 +60,18 @@ void main() {
     notifications = _MockMaintenanceNotificationScheduler();
   });
 
-  MaintenanceDetailCubit buildCubit() =>
-      MaintenanceDetailCubit(
-          getMaintenances,
-          getVehicles,
-          deleteMaintenance,
-          updateMaintenance,
-          notifications,
-        )
-        ..emit(MaintenanceDetailState(maintenance: _maintenance));
+  MaintenanceDetailCubit buildCubit() => MaintenanceDetailCubit(
+    getMaintenances,
+    getVehicles,
+    deleteMaintenance,
+    updateMaintenance,
+    notifications,
+  )..emit(MaintenanceDetailState(maintenance: _maintenance));
 
   blocTest<MaintenanceDetailCubit, dynamic>(
     'delete emits an error result when the use case fails, without cancelling the reminder',
     setUp: () {
-      when(
-        () => deleteMaintenance('m1'),
-      ).thenAnswer(
+      when(() => deleteMaintenance('m1')).thenAnswer(
         (_) async => const Left(DomainException(message: 'network_error')),
       );
     },
@@ -86,14 +86,13 @@ void main() {
   blocTest<MaintenanceDetailCubit, dynamic>(
     'updateReminder emits an error result when the use case fails',
     setUp: () {
-      when(
-        () => updateMaintenance('m1', any()),
-      ).thenAnswer(
+      when(() => updateMaintenance('m1', any())).thenAnswer(
         (_) async => const Left(DomainException(message: 'network_error')),
       );
     },
     build: buildCubit,
-    act: (cubit) => cubit.updateReminder(const MaintenanceReminder(everyKm: 5000)),
+    act: (cubit) =>
+        cubit.updateReminder(const MaintenanceReminder(everyKm: 5000)),
     verify: (cubit) {
       expect(cubit.state.reminderUpdate, isA<Error<Unit>>());
     },

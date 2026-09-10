@@ -56,10 +56,9 @@ void main() {
   blocTest<ProfileSettingsCubit, ProfileSettingsState>(
     'setNotificationsEnabled keeps previous value when repository fails',
     setUp: () {
-      when(
-        () => preferences.setNotificationsEnabled(true),
-      ).thenAnswer(
-        (_) async => const Left(DomainException(message: 'preferences_unavailable')),
+      when(() => preferences.setNotificationsEnabled(true)).thenAnswer(
+        (_) async =>
+            const Left(DomainException(message: 'preferences_unavailable')),
       );
     },
     build: () => ProfileSettingsCubit(getProfile, preferences),

@@ -62,29 +62,28 @@ void main() {
       expect(find.text('hola'), findsOneWidget);
     });
 
-    testWidgets(
-      'shows an accionable error state with a retry button',
-      (tester) async {
-        var retried = false;
-        await tester.pumpWidget(
-          _wrap(
-            ResultStateBuilder<String>(
-              state: const ResultState.error(
-                error: DomainException(message: 'No hay señal'),
-              ),
-              onData: (context, data) => Text(data),
-              onRetry: () => retried = true,
+    testWidgets('shows an accionable error state with a retry button', (
+      tester,
+    ) async {
+      var retried = false;
+      await tester.pumpWidget(
+        _wrap(
+          ResultStateBuilder<String>(
+            state: const ResultState.error(
+              error: DomainException(message: 'No hay señal'),
             ),
+            onData: (context, data) => Text(data),
+            onRetry: () => retried = true,
           ),
-        );
+        ),
+      );
 
-        expect(find.byType(ErrorStateView), findsOneWidget);
-        expect(find.text('No hay señal'), findsOneWidget);
+      expect(find.byType(ErrorStateView), findsOneWidget);
+      expect(find.text('No hay señal'), findsOneWidget);
 
-        await tester.tap(find.text('Reintentar'));
-        await tester.pump();
-        expect(retried, isTrue);
-      },
-    );
+      await tester.tap(find.text('Reintentar'));
+      await tester.pump();
+      expect(retried, isTrue);
+    });
   });
 }

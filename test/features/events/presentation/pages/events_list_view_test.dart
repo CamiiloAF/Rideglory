@@ -75,9 +75,7 @@ void main() {
     expect(find.byType(ListView), findsWidgets);
   });
 
-  testWidgets('shows the empty state with a CTA for Próximas', (
-    tester,
-  ) async {
+  testWidgets('shows the empty state with a CTA for Próximas', (tester) async {
     when(() => cubit.state).thenReturn(
       const EventsListState(
         upcoming: ResultState.data(data: []),
@@ -106,9 +104,9 @@ void main() {
   });
 
   testWidgets('shows the event cards when there is data', (tester) async {
-    when(() => cubit.state).thenReturn(
-      EventsListState(upcoming: ResultState.data(data: [_event])),
-    );
+    when(
+      () => cubit.state,
+    ).thenReturn(EventsListState(upcoming: ResultState.data(data: [_event])));
 
     await tester.pumpWidget(_wrap(cubit, connectivityCubit));
 

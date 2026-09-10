@@ -17,19 +17,25 @@ import '../widgets/document_upload_origin_step.dart';
 ///
 /// Pencil: R9ZYe (origen), rbRuw (cámara), MG790 (confirmar)
 class DocumentUploadPage extends StatelessWidget {
-  const DocumentUploadPage({required this.vehicleId, required this.kind, super.key});
+  const DocumentUploadPage({
+    required this.vehicleId,
+    required this.kind,
+    super.key,
+  });
 
   final String vehicleId;
   final DocumentKind kind;
 
   @override
   Widget build(BuildContext context) {
-    final title =
-        kind == DocumentKind.soat ? context.l10n.documents_soat_title : context.l10n.documents_rtm_title;
+    final title = kind == DocumentKind.soat
+        ? context.l10n.documents_soat_title
+        : context.l10n.documents_rtm_title;
     return BlocProvider(
       create: (_) => getIt<DocumentUploadCubit>()..start(kind),
       child: BlocListener<DocumentUploadCubit, DocumentUploadState>(
-        listenWhen: (previous, current) => previous.submission != current.submission,
+        listenWhen: (previous, current) =>
+            previous.submission != current.submission,
         listener: (context, state) {
           if (state.submission is Data<Unit>) context.pop(true);
         },

@@ -10,7 +10,8 @@ import 'connectivity_state.dart';
 /// árbol y se lee con `context.watch`/`context.read` — nunca por `getIt`.
 @injectable
 class ConnectivityCubit extends Cubit<ConnectivityState> {
-  ConnectivityCubit(this._connectivity) : super(const ConnectivityState.online()) {
+  ConnectivityCubit(this._connectivity)
+    : super(const ConnectivityState.online()) {
     _subscription = _connectivity.onConnectivityChanged.listen(_onChanged);
     _checkInitial();
   }
@@ -25,8 +26,13 @@ class ConnectivityCubit extends Cubit<ConnectivityState> {
 
   void _onChanged(List<ConnectivityResult> results) {
     final isOffline =
-        results.isEmpty || results.every((result) => result == ConnectivityResult.none);
-    emit(isOffline ? const ConnectivityState.offline() : const ConnectivityState.online());
+        results.isEmpty ||
+        results.every((result) => result == ConnectivityResult.none);
+    emit(
+      isOffline
+          ? const ConnectivityState.offline()
+          : const ConnectivityState.online(),
+    );
   }
 
   @override

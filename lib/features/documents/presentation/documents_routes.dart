@@ -26,4 +26,5 @@ List<RouteBase> documentsRoutes = [
   ),
 ];
 
-DocumentKind _kindFrom(String? raw) => raw == 'rtm' ? DocumentKind.rtm : DocumentKind.soat;
+DocumentKind _kindFrom(String? raw) =>
+    raw == 'rtm' ? DocumentKind.rtm : DocumentKind.soat;

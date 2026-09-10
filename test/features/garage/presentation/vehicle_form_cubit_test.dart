@@ -15,11 +15,14 @@ class _MockCreateVehicleUseCase extends Mock implements CreateVehicleUseCase {}
 
 class _MockUpdateVehicleUseCase extends Mock implements UpdateVehicleUseCase {}
 
-class _MockSetMainVehicleUseCase extends Mock implements SetMainVehicleUseCase {}
+class _MockSetMainVehicleUseCase extends Mock
+    implements SetMainVehicleUseCase {}
 
-class _MockArchiveVehicleUseCase extends Mock implements ArchiveVehicleUseCase {}
+class _MockArchiveVehicleUseCase extends Mock
+    implements ArchiveVehicleUseCase {}
 
-class _MockUnarchiveVehicleUseCase extends Mock implements UnarchiveVehicleUseCase {}
+class _MockUnarchiveVehicleUseCase extends Mock
+    implements UnarchiveVehicleUseCase {}
 
 class _MockDeleteVehicleUseCase extends Mock implements DeleteVehicleUseCase {}
 
@@ -50,8 +53,16 @@ void main() {
         cubit.continueFromPlate();
       },
       expect: () => [
-        isA<VehicleFormState>().having((state) => state.plate, 'plate', 'ABC12D'),
-        isA<VehicleFormState>().having((state) => state.step, 'step', VehicleFormStep.details),
+        isA<VehicleFormState>().having(
+          (state) => state.plate,
+          'plate',
+          'ABC12D',
+        ),
+        isA<VehicleFormState>().having(
+          (state) => state.step,
+          'step',
+          VehicleFormStep.details,
+        ),
       ],
     );
 
@@ -63,8 +74,16 @@ void main() {
         cubit.continueFromPlate();
       },
       expect: () => [
-        isA<VehicleFormState>().having((state) => state.plate, 'plate', 'AB123'),
-        isA<VehicleFormState>().having((state) => state.plateInvalid, 'plateInvalid', true),
+        isA<VehicleFormState>().having(
+          (state) => state.plate,
+          'plate',
+          'AB123',
+        ),
+        isA<VehicleFormState>().having(
+          (state) => state.plateInvalid,
+          'plateInvalid',
+          true,
+        ),
       ],
       verify: (cubit) => expect(cubit.state.step, VehicleFormStep.plate),
     );

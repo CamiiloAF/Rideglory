@@ -1491,4 +1491,254 @@
 
   "live_ride_error_generic": "Algo falló con la rodada en vivo. Inténtalo de nuevo.",
   "@live_ride_error_generic": {"description": "Error genérico de live_ride sin código específico"}
+,
+
+  "live_ride_riders_sheet_title": "Riders en la rodada ({count})",
+  "@live_ride_riders_sheet_title": {"description": "Título de la hoja de riders de LV1", "placeholders": {"count": {"type": "int"}}},
+
+  "live_ride_share_cta": "Compartir mi ubicación",
+  "@live_ride_share_cta": {"description": "CTA para empezar a compartir ubicación (LV1b)"},
+
+  "live_ride_sharing_chip": "Compartiendo ubicación",
+  "@live_ride_sharing_chip": {"description": "Chip del header mientras se comparte ubicación"},
+
+  "live_ride_stop_cta": "Detener",
+  "@live_ride_stop_cta": {"description": "Botón para dejar de compartir ubicación"},
+
+  "live_ride_me_suffix": "(tú)",
+  "@live_ride_me_suffix": {"description": "Sufijo junto al propio nombre en la lista de riders"},
+
+  "live_ride_leader_suffix": "Líder",
+  "@live_ride_leader_suffix": {"description": "Sufijo junto al nombre del organizador/líder en la lista de riders"},
+
+  "live_ride_not_sharing_status": "No comparte su ubicación",
+  "@live_ride_not_sharing_status": {"description": "Estado de un rider que no está compartiendo ubicación"},
+
+  "live_ride_riders_header_action": "Ver riders",
+  "@live_ride_riders_header_action": {"description": "Tooltip/label del icono de riders del header de LV1 (solo organizador)"},
+
+  "live_distance_meters": "A {meters} m",
+  "@live_distance_meters": {"description": "Distancia en metros a un rider", "placeholders": {"meters": {"type": "int"}}},
+
+  "live_distance_km": "A {km} km",
+  "@live_distance_km": {"description": "Distancia en kilómetros a un rider, ya formateada con coma decimal", "placeholders": {"km": {"type": "String"}}},
+
+  "live_freshness_now": "Hace menos de 1 min",
+  "@live_freshness_now": {"description": "Frescura de una posición recién recibida"},
+
+  "live_freshness_minutes": "Hace {minutes} min",
+  "@live_freshness_minutes": {"description": "Frescura de una posición reciente", "placeholders": {"minutes": {"type": "int"}}},
+
+  "live_freshness_stale_minutes": "Sin señal hace {minutes} min",
+  "@live_freshness_stale_minutes": {"description": "Frescura de una posición vieja (D20: solo información, nunca alarma)", "placeholders": {"minutes": {"type": "int"}}},
+
+  "live_ride_permission_title": "Necesitamos tu ubicación",
+  "@live_ride_permission_title": {"description": "LV1 sin permiso: título"},
+
+  "live_ride_permission_body": "Sin permiso de ubicación no podemos mostrarte la rodada ni compartir la tuya con el grupo. Actívalo en los ajustes del teléfono.",
+  "@live_ride_permission_body": {"description": "LV1 sin permiso: cuerpo"},
+
+  "live_ride_permission_open_settings_cta": "Abrir ajustes",
+  "@live_ride_permission_open_settings_cta": {"description": "LV1 sin permiso: CTA principal"},
+
+  "live_ride_permission_retry_cta": "Ya lo activé, reintentar",
+  "@live_ride_permission_retry_cta": {"description": "LV1 sin permiso: CTA secundario"},
+
+  "live_ride_no_gps_title": "No encontramos señal de GPS",
+  "@live_ride_no_gps_title": {"description": "LV1 sin GPS: título"},
+
+  "live_ride_no_gps_body": "Verifica que el GPS de tu teléfono esté encendido. En túneles o zonas de montaña puede tardar un poco en ubicarte.",
+  "@live_ride_no_gps_body": {"description": "LV1 sin GPS: cuerpo"},
+
+  "live_ride_no_gps_open_settings_cta": "Abrir ajustes de ubicación",
+  "@live_ride_no_gps_open_settings_cta": {"description": "LV1 sin GPS: CTA principal"},
+
+  "live_ride_no_gps_retry_cta": "Reintentar",
+  "@live_ride_no_gps_retry_cta": {"description": "LV1 sin GPS: CTA secundario"},
+
+  "live_ride_offline_body": "No pudimos actualizar la rodada en vivo. Revisa tu conexión e inténtalo de nuevo.",
+  "@live_ride_offline_body": {"description": "LV1 sin conexión: cuerpo"},
+
+  "live_ride_error_title": "Algo falló",
+  "@live_ride_error_title": {"description": "LV1 error: título"},
+
+  "live_ride_finished_title": "La rodada terminó",
+  "@live_ride_finished_title": {"description": "LV7: título"},
+
+  "live_ride_finished_body": "Se dejó de compartir tu ubicación con el grupo.",
+  "@live_ride_finished_body": {"description": "LV7: cuerpo"},
+
+  "live_ride_finished_cta": "Volver al evento",
+  "@live_ride_finished_cta": {"description": "LV7: CTA"},
+
+  "live_ride_finished_status_line": "La rodada terminó. Se dejó de compartir tu ubicación.",
+  "@live_ride_finished_status_line": {"description": "LV7 con SOS abierto: línea de estado de la rodada"},
+
+  "live_ride_finished_sos_title": "Tu alerta SOS sigue activa",
+  "@live_ride_finished_sos_title": {"description": "LV7 con SOS abierto: título del aviso"},
+
+  "live_ride_finished_sos_body": "El grupo la sigue viendo aunque la rodada haya terminado. Ciérrala solo cuando estés bien.",
+  "@live_ride_finished_sos_body": {"description": "LV7 con SOS abierto: cuerpo del aviso"},
+
+  "live_ride_consent_title": "Compartir tu ubicación con el grupo",
+  "@live_ride_consent_title": {"description": "LV2: título de la hoja de consentimiento"},
+
+  "live_ride_consent_row_participants": "Solo la ven los inscritos en esta rodada.",
+  "@live_ride_consent_row_participants": {"description": "LV2: fila informativa"},
+
+  "live_ride_consent_row_duration": "Solo se comparte mientras la rodada está en curso.",
+  "@live_ride_consent_row_duration": {"description": "LV2: fila informativa"},
+
+  "live_ride_consent_row_stop": "Para cuando quieras: botón Detener y notificación persistente.",
+  "@live_ride_consent_row_stop": {"description": "LV2: fila informativa"},
+
+  "live_ride_consent_allow_cta": "Permitir",
+  "@live_ride_consent_allow_cta": {"description": "LV2: CTA principal"},
+
+  "live_ride_consent_dismiss_cta": "Ahora no",
+  "@live_ride_consent_dismiss_cta": {"description": "LV2/LV2b: CTA secundario"},
+
+  "live_ride_consent_always_title": "Compartir tu ubicación todo el tiempo",
+  "@live_ride_consent_always_title": {"description": "LV2b: título"},
+
+  "live_ride_consent_always_row_notification": "Verás una notificación mientras compartas, para saber que sigue activa.",
+  "@live_ride_consent_always_row_notification": {"description": "LV2b: fila informativa"},
+
+  "live_ride_consent_always_row_lock": "Sin este permiso, tu posición deja de actualizarse al bloquear la pantalla.",
+  "@live_ride_consent_always_row_lock": {"description": "LV2b: fila informativa"},
+
+  "live_ride_consent_always_allow_cta": "Permitir todo el tiempo",
+  "@live_ride_consent_always_allow_cta": {"description": "LV2b: CTA principal"},
+
+  "live_ride_background_permission_banner": "Sin permiso de ubicación en segundo plano: si bloqueas la pantalla, se deja de compartir.",
+  "@live_ride_background_permission_banner": {"description": "Banner de advertencia cuando el rider comparte solo mientras la app está abierta"},
+
+  "sos_button_label": "SOS",
+  "@sos_button_label": {"description": "Etiqueta del botón flotante de SOS sobre el mapa"},
+
+  "sos_confirm_title": "¿Pedir ayuda al grupo?",
+  "@sos_confirm_title": {"description": "LV3: título de la hoja"},
+
+  "sos_confirm_body": "Avisaremos a los riders de esta rodada con tu ubicación. No llama a emergencias.",
+  "@sos_confirm_body": {"description": "LV3: cuerpo de la hoja"},
+
+  "sos_confirm_hold_label": "Mantén pulsado para enviar",
+  "@sos_confirm_hold_label": {"description": "LV3: etiqueta dentro del botón de mantener pulsado"},
+
+  "sos_confirm_cancel_cta": "Cancelar",
+  "@sos_confirm_cancel_cta": {"description": "LV3: CTA cancelar"},
+
+  "sos_active_header_title": "SOS activo",
+  "@sos_active_header_title": {"description": "LV4a/b: título del header"},
+
+  "sos_pending_title": "Alerta pendiente",
+  "@sos_pending_title": {"description": "LV4a: título de estado"},
+
+  "sos_pending_body": "Sin señal. Tu alerta se enviará al recuperar cobertura.",
+  "@sos_pending_body": {"description": "LV4a: cuerpo de estado"},
+
+  "sos_pending_chip": "Enviando cuando haya señal",
+  "@sos_pending_chip": {"description": "LV4a: chip de estado"},
+
+  "sos_sending_title": "Enviando tu alerta",
+  "@sos_sending_title": {"description": "Estado transitorio entre pulsar SOS y tener respuesta del outbox"},
+
+  "sos_confirmed_title": "El grupo ya sabe dónde estás",
+  "@sos_confirmed_title": {"description": "LV4b: título de estado"},
+
+  "sos_confirmed_body": "El servidor confirmó tu alerta. El grupo ya puede ver tu ubicación.",
+  "@sos_confirmed_body": {"description": "LV4b: cuerpo de estado"},
+
+  "sos_confirmed_chip": "Alerta confirmada",
+  "@sos_confirmed_chip": {"description": "LV4b: chip de estado"},
+
+  "sos_closed_title": "Tu SOS está cerrado",
+  "@sos_closed_title": {"description": "Estado tras cerrar el propio SOS"},
+
+  "sos_closed_body": "El grupo ya no ve tu alerta activa.",
+  "@sos_closed_body": {"description": "Cuerpo del estado cerrado"},
+
+  "sos_coordinates_precision": "Precisión ±{meters} m",
+  "@sos_coordinates_precision": {"description": "Precisión de la posición del SOS", "placeholders": {"meters": {"type": "int"}}},
+
+  "sos_call_contact_cta": "Llamar a mi contacto · {name}",
+  "@sos_call_contact_cta": {"description": "CTA de fallback D17: llamar al contacto de emergencia cacheado", "placeholders": {"name": {"type": "String"}}},
+
+  "sos_call_organizer_cta": "Llamar al organizador · {name}",
+  "@sos_call_organizer_cta": {"description": "CTA de fallback cuando no hay contacto de emergencia cacheado", "placeholders": {"name": {"type": "String"}}},
+
+  "sos_no_contact_warning": "No tienes un contacto de emergencia guardado. Usa el SMS o llama al organizador.",
+  "@sos_no_contact_warning": {"description": "Aviso cuando no hay ni contacto ni teléfono de organizador"},
+
+  "sos_sms_cta": "Enviar SMS con mi ubicación",
+  "@sos_sms_cta": {"description": "CTA de fallback D17: SMS con coordenadas"},
+
+  "sos_call_123_cta": "Llamar al 123",
+  "@sos_call_123_cta": {"description": "D18: CTA terciario, nunca automático"},
+
+  "sos_close_cta": "Ya estoy bien — cerrar SOS",
+  "@sos_close_cta": {"description": "CTA para cerrar el propio SOS"},
+
+  "sos_close_confirm_title": "¿Cerrar tu SOS?",
+  "@sos_close_confirm_title": {"description": "Diálogo de confirmación al cerrar el propio SOS: título"},
+
+  "sos_close_confirm_body": "Ciérralo solo cuando estés bien de verdad.",
+  "@sos_close_confirm_body": {"description": "Diálogo de confirmación al cerrar el propio SOS: cuerpo"},
+
+  "sos_close_confirm_cta": "Sí, estoy bien",
+  "@sos_close_confirm_cta": {"description": "Diálogo de confirmación al cerrar el propio SOS: CTA"},
+
+  "sos_close_confirm_cancel": "Cancelar",
+  "@sos_close_confirm_cancel": {"description": "Diálogo de confirmación: cancelar"},
+
+  "sos_other_banner_title": "{name} pidió ayuda · {distance}",
+  "@sos_other_banner_title": {"description": "LV5a: texto del banner rojo persistente", "placeholders": {"name": {"type": "String"}, "distance": {"type": "String"}}},
+
+  "sos_other_banner_cta": "Ver",
+  "@sos_other_banner_cta": {"description": "LV5a: CTA del banner"},
+
+  "sos_other_asked_help_minutes": "Pidió ayuda · Hace {minutes} min",
+  "@sos_other_asked_help_minutes": {"description": "LV5b: subtítulo bajo el nombre del rider", "placeholders": {"minutes": {"type": "int"}}},
+
+  "sos_other_distance_from_me": "{distance} de ti",
+  "@sos_other_distance_from_me": {"description": "LV5b: distancia a la alerta", "placeholders": {"distance": {"type": "String"}}},
+
+  "sos_other_call_cta": "Llamar a {name}",
+  "@sos_other_call_cta": {"description": "LV5b: CTA de llamar al rider en SOS", "placeholders": {"name": {"type": "String"}}},
+
+  "sos_other_view_map_cta": "Ver en el mapa",
+  "@sos_other_view_map_cta": {"description": "LV5b: CTA de centrar el mapa en la alerta"},
+
+  "sos_other_resolve_cta": "Marcar como resuelto · solo organizador",
+  "@sos_other_resolve_cta": {"description": "LV5b: CTA de cierre, solo visible para el organizador"},
+
+  "sos_other_resolve_note": "Solo el organizador o quien pidió ayuda pueden cerrarlo.",
+  "@sos_other_resolve_note": {"description": "LV5b: nota bajo los CTA"},
+
+  "sos_other_close_confirm_title": "¿Cerrar el SOS de {name}?",
+  "@sos_other_close_confirm_title": {"description": "LV5c: título del diálogo", "placeholders": {"name": {"type": "String"}}},
+
+  "sos_other_close_confirm_body": "Hazlo solo si confirmaste con {name} que ya está bien.",
+  "@sos_other_close_confirm_body": {"description": "LV5c: cuerpo del diálogo", "placeholders": {"name": {"type": "String"}}},
+
+  "sos_other_close_confirm_cta": "Sí, está bien",
+  "@sos_other_close_confirm_cta": {"description": "LV5c: CTA de confirmación"},
+
+  "sos_other_close_confirm_cancel": "Cancelar",
+  "@sos_other_close_confirm_cancel": {"description": "LV5c: CTA de cancelar"},
+
+  "live_ride_leader_distance_suffix": "del líder",
+  "@live_ride_leader_distance_suffix": {"description": "Sufijo de LV6: la distancia mostrada es respecto al líder, no a mí"},
+
+  "live_riders_page_header": "Riders",
+  "@live_riders_page_header": {"description": "Título fijo del header de LV6 (el conteo va en el subtítulo)"},
+
+  "live_riders_page_subtitle": "{count} riders · {sharing} comparten ubicación",
+  "@live_riders_page_subtitle": {"description": "LV6: subtítulo bajo el header", "placeholders": {"count": {"type": "int"}, "sharing": {"type": "int"}}},
+
+  "live_ride_view_live_cta": "Ver rodada en vivo",
+  "@live_ride_view_live_cta": {"description": "CTA en el detalle de evento (EV2) cuando la rodada está en curso"},
+
+  "live_ride_own_sos_banner": "Tienes un SOS activo en esta rodada",
+  "@live_ride_own_sos_banner": {"description": "Banner en el detalle de evento cuando el rider tiene un SOS propio pendiente o confirmado"}
 }

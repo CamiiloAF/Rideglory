@@ -29,14 +29,19 @@ class DocumentUploadInput {
 }
 
 abstract class DocumentsRepository {
-  Future<Either<DomainException, VehicleDocumentsSummary>> getDocuments(String vehicleId);
+  Future<Either<DomainException, VehicleDocumentsSummary>> getDocuments(
+    String vehicleId,
+  );
 
   Future<Either<DomainException, VehicleDocument>> uploadDocument(
     String vehicleId,
     DocumentUploadInput input,
   );
 
-  Future<Either<DomainException, Unit>> deleteDocument(String vehicleId, DocumentKind kind);
+  Future<Either<DomainException, Unit>> deleteDocument(
+    String vehicleId,
+    DocumentKind kind,
+  );
 
   /// Limpieza completa al eliminar una moto: objetos de Storage (SOAT y
   /// RTM), caché local y recordatorios programados. Las filas de
@@ -47,7 +52,9 @@ abstract class DocumentsRepository {
   /// Solo cancela los recordatorios (SOAT y RTM) de una moto, sin tocar
   /// Storage ni la caché: se usa al archivarla, donde los documentos
   /// siguen existiendo pero dejan de avisar.
-  Future<Either<DomainException, Unit>> cancelRemindersForVehicle(String vehicleId);
+  Future<Either<DomainException, Unit>> cancelRemindersForVehicle(
+    String vehicleId,
+  );
 
   Future<Either<DomainException, Unit>> setReminderEnabled(
     String vehicleId,
@@ -57,5 +64,8 @@ abstract class DocumentsRepository {
 
   /// Bytes del archivo, para el visor: primero intenta la caché local
   /// (D7); si no existe y hay red, lo descarga y lo cachea.
-  Future<Either<DomainException, Uint8List>> getDocumentBytes(String vehicleId, DocumentKind kind);
+  Future<Either<DomainException, Uint8List>> getDocumentBytes(
+    String vehicleId,
+    DocumentKind kind,
+  );
 }

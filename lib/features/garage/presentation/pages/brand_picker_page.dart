@@ -24,7 +24,9 @@ class BrandPickerPage extends StatelessWidget {
         builder: (context) {
           final cubit = context.read<BrandPickerCubit>();
           return Scaffold(
-            appBar: AppPageHeader(title: context.l10n.garage_brand_picker_title),
+            appBar: AppPageHeader(
+              title: context.l10n.garage_brand_picker_title,
+            ),
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(20, 6, 20, 0),

@@ -41,7 +41,11 @@ class VehicleAddTile extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               context.l10n.garage_add_vehicle_button_short,
-              style: TextStyle(fontSize: 13.5, fontWeight: FontWeight.w700, color: colors.text),
+              style: TextStyle(
+                fontSize: 13.5,
+                fontWeight: FontWeight.w700,
+                color: colors.text,
+              ),
             ),
           ],
         ),

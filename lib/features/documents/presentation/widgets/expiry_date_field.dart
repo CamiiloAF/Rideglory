@@ -30,13 +30,16 @@ class ExpiryDateField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DocumentUploadCubit, DocumentUploadState>(
-      buildWhen: (previous, current) => previous.expiryDate != current.expiryDate,
+      buildWhen: (previous, current) =>
+          previous.expiryDate != current.expiryDate,
       builder: (context, state) {
         final expiryDate = state.expiryDate;
         return AppTextField(
           label: context.l10n.documents_expiry_date_label,
           controller: TextEditingController(
-            text: expiryDate == null ? '' : DateFormat('d MMM yyyy', 'es_CO').format(expiryDate),
+            text: expiryDate == null
+                ? ''
+                : DateFormat('d MMM yyyy', 'es_CO').format(expiryDate),
           ),
           icon: LucideIcons.calendar,
           readOnly: true,

@@ -99,8 +99,7 @@ class GeolocatorLocationService implements LocationService {
     return switch (permission) {
       LocationPermission.always => LocationPermissionState.always,
       LocationPermission.whileInUse => LocationPermissionState.whileInUse,
-      LocationPermission.deniedForever =>
-        LocationPermissionState.deniedForever,
+      LocationPermission.deniedForever => LocationPermissionState.deniedForever,
       LocationPermission.denied ||
       LocationPermission.unableToDetermine => LocationPermissionState.denied,
     };

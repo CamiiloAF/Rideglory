@@ -31,7 +31,10 @@ class DocumentUploadConfirmStep extends StatelessWidget {
             children: [
               Text(
                 context.l10n.documents_confirm_question,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               const SizedBox(height: 14),
               SizedBox(

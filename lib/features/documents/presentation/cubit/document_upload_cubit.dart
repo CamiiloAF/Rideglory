@@ -22,8 +22,12 @@ import 'document_upload_state.dart';
 /// hay foto que leer y el formulario queda manual directamente.
 @injectable
 class DocumentUploadCubit extends Cubit<DocumentUploadState> {
-  DocumentUploadCubit(this._uploadDocument, this._ocrService, this._soatParser, this._reminderScheduler)
-      : super(const DocumentUploadState(kind: DocumentKind.soat));
+  DocumentUploadCubit(
+    this._uploadDocument,
+    this._ocrService,
+    this._soatParser,
+    this._reminderScheduler,
+  ) : super(const DocumentUploadState(kind: DocumentKind.soat));
 
   final UploadVehicleDocumentUseCase _uploadDocument;
   final OcrService _ocrService;
@@ -37,7 +41,11 @@ class DocumentUploadCubit extends Cubit<DocumentUploadState> {
     emit(DocumentUploadState(kind: kind));
   }
 
-  Future<void> fileSelected(Uint8List bytes, String extension, {File? imageFileForOcr}) async {
+  Future<void> fileSelected(
+    Uint8List bytes,
+    String extension, {
+    File? imageFileForOcr,
+  }) async {
     emit(state.copyWith(fileBytes: bytes, fileExtension: extension));
 
     if (state.kind == DocumentKind.soat && imageFileForOcr != null) {
@@ -53,15 +61,19 @@ class DocumentUploadCubit extends Cubit<DocumentUploadState> {
       final extraction = _soatParser.parse(ocrResult);
       if (!extraction.shouldPrefill) return;
 
-      if (extraction.policyNumber != null) numberController.text = extraction.policyNumber!;
-      if (extraction.insurer != null) issuerController.text = extraction.insurer!;
+      if (extraction.policyNumber != null)
+        numberController.text = extraction.policyNumber!;
+      if (extraction.insurer != null)
+        issuerController.text = extraction.insurer!;
 
       emit(
         state.copyWith(
           number: extraction.policyNumber ?? state.number,
           issuer: extraction.insurer ?? state.issuer,
           startDate: extraction.startDate ?? state.startDate,
-          expiryDate: extraction.datesFailedValidation ? state.expiryDate : (extraction.expiryDate ?? state.expiryDate),
+          expiryDate: extraction.datesFailedValidation
+              ? state.expiryDate
+              : (extraction.expiryDate ?? state.expiryDate),
           wasAutofilled: true,
         ),
       );
@@ -76,9 +88,11 @@ class DocumentUploadCubit extends Cubit<DocumentUploadState> {
 
   void issuerChanged(String value) => emit(state.copyWith(issuer: value));
 
-  void expiryDateChanged(DateTime date) => emit(state.copyWith(expiryDate: date));
+  void expiryDateChanged(DateTime date) =>
+      emit(state.copyWith(expiryDate: date));
 
-  void backToOrigin() => emit(state.copyWith(step: DocumentUploadStep.origin, fileBytes: null));
+  void backToOrigin() =>
+      emit(state.copyWith(step: DocumentUploadStep.origin, fileBytes: null));
 
   Future<void> submit(
     String vehicleId, {
@@ -88,7 +102,8 @@ class DocumentUploadCubit extends Cubit<DocumentUploadState> {
     final expiryDate = state.expiryDate;
     final fileBytes = state.fileBytes;
     final fileExtension = state.fileExtension;
-    if (expiryDate == null || fileBytes == null || fileExtension == null) return;
+    if (expiryDate == null || fileBytes == null || fileExtension == null)
+      return;
 
     emit(state.copyWith(submission: const ResultState.loading()));
     final result = await _uploadDocument(
@@ -105,7 +120,8 @@ class DocumentUploadCubit extends Cubit<DocumentUploadState> {
     );
 
     await result.fold(
-      (error) async => emit(state.copyWith(submission: ResultState.error(error: error))),
+      (error) async =>
+          emit(state.copyWith(submission: ResultState.error(error: error))),
       (document) async {
         await _reminderScheduler.scheduleForDocument(
           vehicleId,

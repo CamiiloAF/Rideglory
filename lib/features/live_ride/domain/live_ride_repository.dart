@@ -9,9 +9,7 @@ abstract class LiveRideRepository {
   /// Última posición conocida de cada rider de la rodada, actualizada por
   /// Realtime sobre `live_positions` (D15). Un error de conexión o de
   /// servidor se emite como `Left` sin cerrar el stream.
-  Stream<Either<DomainException, List<LiveRider>>> watchRiders(
-    String eventId,
-  );
+  Stream<Either<DomainException, List<LiveRider>>> watchRiders(String eventId);
 
   Future<Either<DomainException, Unit>> upsertPosition(
     String eventId,
@@ -22,9 +20,7 @@ abstract class LiveRideRepository {
   /// `live_positions`. Nunca toca un SOS.
   Future<Either<DomainException, Unit>> endRide(String eventId);
 
-  Future<Either<DomainException, LiveRideContacts>> getContacts(
-    String eventId,
-  );
+  Future<Either<DomainException, LiveRideContacts>> getContacts(String eventId);
 
   /// Señal de "el evento terminó" (D22), vista por Realtime sobre `events`.
   /// No usa `Either`: es un disparador de efectos (parar el servicio en

@@ -13,7 +13,10 @@ class GetDocumentBytesUseCase {
 
   final DocumentsRepository _repository;
 
-  Future<Either<DomainException, Uint8List>> call(String vehicleId, DocumentKind kind) {
+  Future<Either<DomainException, Uint8List>> call(
+    String vehicleId,
+    DocumentKind kind,
+  ) {
     return _repository.getDocumentBytes(vehicleId, kind);
   }
 }

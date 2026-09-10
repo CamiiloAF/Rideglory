@@ -2890,6 +2890,504 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Algo falló con la rodada en vivo. Inténtalo de nuevo.'**
   String get live_ride_error_generic;
+
+  /// Título de la hoja de riders de LV1
+  ///
+  /// In es, this message translates to:
+  /// **'Riders en la rodada ({count})'**
+  String live_ride_riders_sheet_title(int count);
+
+  /// CTA para empezar a compartir ubicación (LV1b)
+  ///
+  /// In es, this message translates to:
+  /// **'Compartir mi ubicación'**
+  String get live_ride_share_cta;
+
+  /// Chip del header mientras se comparte ubicación
+  ///
+  /// In es, this message translates to:
+  /// **'Compartiendo ubicación'**
+  String get live_ride_sharing_chip;
+
+  /// Botón para dejar de compartir ubicación
+  ///
+  /// In es, this message translates to:
+  /// **'Detener'**
+  String get live_ride_stop_cta;
+
+  /// Sufijo junto al propio nombre en la lista de riders
+  ///
+  /// In es, this message translates to:
+  /// **'(tú)'**
+  String get live_ride_me_suffix;
+
+  /// Sufijo junto al nombre del organizador/líder en la lista de riders
+  ///
+  /// In es, this message translates to:
+  /// **'Líder'**
+  String get live_ride_leader_suffix;
+
+  /// Estado de un rider que no está compartiendo ubicación
+  ///
+  /// In es, this message translates to:
+  /// **'No comparte su ubicación'**
+  String get live_ride_not_sharing_status;
+
+  /// Tooltip/label del icono de riders del header de LV1 (solo organizador)
+  ///
+  /// In es, this message translates to:
+  /// **'Ver riders'**
+  String get live_ride_riders_header_action;
+
+  /// Distancia en metros a un rider
+  ///
+  /// In es, this message translates to:
+  /// **'A {meters} m'**
+  String live_distance_meters(int meters);
+
+  /// Distancia en kilómetros a un rider, ya formateada con coma decimal
+  ///
+  /// In es, this message translates to:
+  /// **'A {km} km'**
+  String live_distance_km(String km);
+
+  /// Frescura de una posición recién recibida
+  ///
+  /// In es, this message translates to:
+  /// **'Hace menos de 1 min'**
+  String get live_freshness_now;
+
+  /// Frescura de una posición reciente
+  ///
+  /// In es, this message translates to:
+  /// **'Hace {minutes} min'**
+  String live_freshness_minutes(int minutes);
+
+  /// Frescura de una posición vieja (D20: solo información, nunca alarma)
+  ///
+  /// In es, this message translates to:
+  /// **'Sin señal hace {minutes} min'**
+  String live_freshness_stale_minutes(int minutes);
+
+  /// LV1 sin permiso: título
+  ///
+  /// In es, this message translates to:
+  /// **'Necesitamos tu ubicación'**
+  String get live_ride_permission_title;
+
+  /// LV1 sin permiso: cuerpo
+  ///
+  /// In es, this message translates to:
+  /// **'Sin permiso de ubicación no podemos mostrarte la rodada ni compartir la tuya con el grupo. Actívalo en los ajustes del teléfono.'**
+  String get live_ride_permission_body;
+
+  /// LV1 sin permiso: CTA principal
+  ///
+  /// In es, this message translates to:
+  /// **'Abrir ajustes'**
+  String get live_ride_permission_open_settings_cta;
+
+  /// LV1 sin permiso: CTA secundario
+  ///
+  /// In es, this message translates to:
+  /// **'Ya lo activé, reintentar'**
+  String get live_ride_permission_retry_cta;
+
+  /// LV1 sin GPS: título
+  ///
+  /// In es, this message translates to:
+  /// **'No encontramos señal de GPS'**
+  String get live_ride_no_gps_title;
+
+  /// LV1 sin GPS: cuerpo
+  ///
+  /// In es, this message translates to:
+  /// **'Verifica que el GPS de tu teléfono esté encendido. En túneles o zonas de montaña puede tardar un poco en ubicarte.'**
+  String get live_ride_no_gps_body;
+
+  /// LV1 sin GPS: CTA principal
+  ///
+  /// In es, this message translates to:
+  /// **'Abrir ajustes de ubicación'**
+  String get live_ride_no_gps_open_settings_cta;
+
+  /// LV1 sin GPS: CTA secundario
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get live_ride_no_gps_retry_cta;
+
+  /// LV1 sin conexión: cuerpo
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos actualizar la rodada en vivo. Revisa tu conexión e inténtalo de nuevo.'**
+  String get live_ride_offline_body;
+
+  /// LV1 error: título
+  ///
+  /// In es, this message translates to:
+  /// **'Algo falló'**
+  String get live_ride_error_title;
+
+  /// LV7: título
+  ///
+  /// In es, this message translates to:
+  /// **'La rodada terminó'**
+  String get live_ride_finished_title;
+
+  /// LV7: cuerpo
+  ///
+  /// In es, this message translates to:
+  /// **'Se dejó de compartir tu ubicación con el grupo.'**
+  String get live_ride_finished_body;
+
+  /// LV7: CTA
+  ///
+  /// In es, this message translates to:
+  /// **'Volver al evento'**
+  String get live_ride_finished_cta;
+
+  /// LV7 con SOS abierto: línea de estado de la rodada
+  ///
+  /// In es, this message translates to:
+  /// **'La rodada terminó. Se dejó de compartir tu ubicación.'**
+  String get live_ride_finished_status_line;
+
+  /// LV7 con SOS abierto: título del aviso
+  ///
+  /// In es, this message translates to:
+  /// **'Tu alerta SOS sigue activa'**
+  String get live_ride_finished_sos_title;
+
+  /// LV7 con SOS abierto: cuerpo del aviso
+  ///
+  /// In es, this message translates to:
+  /// **'El grupo la sigue viendo aunque la rodada haya terminado. Ciérrala solo cuando estés bien.'**
+  String get live_ride_finished_sos_body;
+
+  /// LV2: título de la hoja de consentimiento
+  ///
+  /// In es, this message translates to:
+  /// **'Compartir tu ubicación con el grupo'**
+  String get live_ride_consent_title;
+
+  /// LV2: fila informativa
+  ///
+  /// In es, this message translates to:
+  /// **'Solo la ven los inscritos en esta rodada.'**
+  String get live_ride_consent_row_participants;
+
+  /// LV2: fila informativa
+  ///
+  /// In es, this message translates to:
+  /// **'Solo se comparte mientras la rodada está en curso.'**
+  String get live_ride_consent_row_duration;
+
+  /// LV2: fila informativa
+  ///
+  /// In es, this message translates to:
+  /// **'Para cuando quieras: botón Detener y notificación persistente.'**
+  String get live_ride_consent_row_stop;
+
+  /// LV2: CTA principal
+  ///
+  /// In es, this message translates to:
+  /// **'Permitir'**
+  String get live_ride_consent_allow_cta;
+
+  /// LV2/LV2b: CTA secundario
+  ///
+  /// In es, this message translates to:
+  /// **'Ahora no'**
+  String get live_ride_consent_dismiss_cta;
+
+  /// LV2b: título
+  ///
+  /// In es, this message translates to:
+  /// **'Compartir tu ubicación todo el tiempo'**
+  String get live_ride_consent_always_title;
+
+  /// LV2b: fila informativa
+  ///
+  /// In es, this message translates to:
+  /// **'Verás una notificación mientras compartas, para saber que sigue activa.'**
+  String get live_ride_consent_always_row_notification;
+
+  /// LV2b: fila informativa
+  ///
+  /// In es, this message translates to:
+  /// **'Sin este permiso, tu posición deja de actualizarse al bloquear la pantalla.'**
+  String get live_ride_consent_always_row_lock;
+
+  /// LV2b: CTA principal
+  ///
+  /// In es, this message translates to:
+  /// **'Permitir todo el tiempo'**
+  String get live_ride_consent_always_allow_cta;
+
+  /// Banner de advertencia cuando el rider comparte solo mientras la app está abierta
+  ///
+  /// In es, this message translates to:
+  /// **'Sin permiso de ubicación en segundo plano: si bloqueas la pantalla, se deja de compartir.'**
+  String get live_ride_background_permission_banner;
+
+  /// Etiqueta del botón flotante de SOS sobre el mapa
+  ///
+  /// In es, this message translates to:
+  /// **'SOS'**
+  String get sos_button_label;
+
+  /// LV3: título de la hoja
+  ///
+  /// In es, this message translates to:
+  /// **'¿Pedir ayuda al grupo?'**
+  String get sos_confirm_title;
+
+  /// LV3: cuerpo de la hoja
+  ///
+  /// In es, this message translates to:
+  /// **'Avisaremos a los riders de esta rodada con tu ubicación. No llama a emergencias.'**
+  String get sos_confirm_body;
+
+  /// LV3: etiqueta dentro del botón de mantener pulsado
+  ///
+  /// In es, this message translates to:
+  /// **'Mantén pulsado para enviar'**
+  String get sos_confirm_hold_label;
+
+  /// LV3: CTA cancelar
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get sos_confirm_cancel_cta;
+
+  /// LV4a/b: título del header
+  ///
+  /// In es, this message translates to:
+  /// **'SOS activo'**
+  String get sos_active_header_title;
+
+  /// LV4a: título de estado
+  ///
+  /// In es, this message translates to:
+  /// **'Alerta pendiente'**
+  String get sos_pending_title;
+
+  /// LV4a: cuerpo de estado
+  ///
+  /// In es, this message translates to:
+  /// **'Sin señal. Tu alerta se enviará al recuperar cobertura.'**
+  String get sos_pending_body;
+
+  /// LV4a: chip de estado
+  ///
+  /// In es, this message translates to:
+  /// **'Enviando cuando haya señal'**
+  String get sos_pending_chip;
+
+  /// Estado transitorio entre pulsar SOS y tener respuesta del outbox
+  ///
+  /// In es, this message translates to:
+  /// **'Enviando tu alerta'**
+  String get sos_sending_title;
+
+  /// LV4b: título de estado
+  ///
+  /// In es, this message translates to:
+  /// **'El grupo ya sabe dónde estás'**
+  String get sos_confirmed_title;
+
+  /// LV4b: cuerpo de estado
+  ///
+  /// In es, this message translates to:
+  /// **'El servidor confirmó tu alerta. El grupo ya puede ver tu ubicación.'**
+  String get sos_confirmed_body;
+
+  /// LV4b: chip de estado
+  ///
+  /// In es, this message translates to:
+  /// **'Alerta confirmada'**
+  String get sos_confirmed_chip;
+
+  /// Estado tras cerrar el propio SOS
+  ///
+  /// In es, this message translates to:
+  /// **'Tu SOS está cerrado'**
+  String get sos_closed_title;
+
+  /// Cuerpo del estado cerrado
+  ///
+  /// In es, this message translates to:
+  /// **'El grupo ya no ve tu alerta activa.'**
+  String get sos_closed_body;
+
+  /// Precisión de la posición del SOS
+  ///
+  /// In es, this message translates to:
+  /// **'Precisión ±{meters} m'**
+  String sos_coordinates_precision(int meters);
+
+  /// CTA de fallback D17: llamar al contacto de emergencia cacheado
+  ///
+  /// In es, this message translates to:
+  /// **'Llamar a mi contacto · {name}'**
+  String sos_call_contact_cta(String name);
+
+  /// CTA de fallback cuando no hay contacto de emergencia cacheado
+  ///
+  /// In es, this message translates to:
+  /// **'Llamar al organizador · {name}'**
+  String sos_call_organizer_cta(String name);
+
+  /// Aviso cuando no hay ni contacto ni teléfono de organizador
+  ///
+  /// In es, this message translates to:
+  /// **'No tienes un contacto de emergencia guardado. Usa el SMS o llama al organizador.'**
+  String get sos_no_contact_warning;
+
+  /// CTA de fallback D17: SMS con coordenadas
+  ///
+  /// In es, this message translates to:
+  /// **'Enviar SMS con mi ubicación'**
+  String get sos_sms_cta;
+
+  /// D18: CTA terciario, nunca automático
+  ///
+  /// In es, this message translates to:
+  /// **'Llamar al 123'**
+  String get sos_call_123_cta;
+
+  /// CTA para cerrar el propio SOS
+  ///
+  /// In es, this message translates to:
+  /// **'Ya estoy bien — cerrar SOS'**
+  String get sos_close_cta;
+
+  /// Diálogo de confirmación al cerrar el propio SOS: título
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cerrar tu SOS?'**
+  String get sos_close_confirm_title;
+
+  /// Diálogo de confirmación al cerrar el propio SOS: cuerpo
+  ///
+  /// In es, this message translates to:
+  /// **'Ciérralo solo cuando estés bien de verdad.'**
+  String get sos_close_confirm_body;
+
+  /// Diálogo de confirmación al cerrar el propio SOS: CTA
+  ///
+  /// In es, this message translates to:
+  /// **'Sí, estoy bien'**
+  String get sos_close_confirm_cta;
+
+  /// Diálogo de confirmación: cancelar
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get sos_close_confirm_cancel;
+
+  /// LV5a: texto del banner rojo persistente
+  ///
+  /// In es, this message translates to:
+  /// **'{name} pidió ayuda · {distance}'**
+  String sos_other_banner_title(String name, String distance);
+
+  /// LV5a: CTA del banner
+  ///
+  /// In es, this message translates to:
+  /// **'Ver'**
+  String get sos_other_banner_cta;
+
+  /// LV5b: subtítulo bajo el nombre del rider
+  ///
+  /// In es, this message translates to:
+  /// **'Pidió ayuda · Hace {minutes} min'**
+  String sos_other_asked_help_minutes(int minutes);
+
+  /// LV5b: distancia a la alerta
+  ///
+  /// In es, this message translates to:
+  /// **'{distance} de ti'**
+  String sos_other_distance_from_me(String distance);
+
+  /// LV5b: CTA de llamar al rider en SOS
+  ///
+  /// In es, this message translates to:
+  /// **'Llamar a {name}'**
+  String sos_other_call_cta(String name);
+
+  /// LV5b: CTA de centrar el mapa en la alerta
+  ///
+  /// In es, this message translates to:
+  /// **'Ver en el mapa'**
+  String get sos_other_view_map_cta;
+
+  /// LV5b: CTA de cierre, solo visible para el organizador
+  ///
+  /// In es, this message translates to:
+  /// **'Marcar como resuelto · solo organizador'**
+  String get sos_other_resolve_cta;
+
+  /// LV5b: nota bajo los CTA
+  ///
+  /// In es, this message translates to:
+  /// **'Solo el organizador o quien pidió ayuda pueden cerrarlo.'**
+  String get sos_other_resolve_note;
+
+  /// LV5c: título del diálogo
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cerrar el SOS de {name}?'**
+  String sos_other_close_confirm_title(String name);
+
+  /// LV5c: cuerpo del diálogo
+  ///
+  /// In es, this message translates to:
+  /// **'Hazlo solo si confirmaste con {name} que ya está bien.'**
+  String sos_other_close_confirm_body(String name);
+
+  /// LV5c: CTA de confirmación
+  ///
+  /// In es, this message translates to:
+  /// **'Sí, está bien'**
+  String get sos_other_close_confirm_cta;
+
+  /// LV5c: CTA de cancelar
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get sos_other_close_confirm_cancel;
+
+  /// Sufijo de LV6: la distancia mostrada es respecto al líder, no a mí
+  ///
+  /// In es, this message translates to:
+  /// **'del líder'**
+  String get live_ride_leader_distance_suffix;
+
+  /// Título fijo del header de LV6 (el conteo va en el subtítulo)
+  ///
+  /// In es, this message translates to:
+  /// **'Riders'**
+  String get live_riders_page_header;
+
+  /// LV6: subtítulo bajo el header
+  ///
+  /// In es, this message translates to:
+  /// **'{count} riders · {sharing} comparten ubicación'**
+  String live_riders_page_subtitle(int count, int sharing);
+
+  /// CTA en el detalle de evento (EV2) cuando la rodada está en curso
+  ///
+  /// In es, this message translates to:
+  /// **'Ver rodada en vivo'**
+  String get live_ride_view_live_cta;
+
+  /// Banner en el detalle de evento cuando el rider tiene un SOS propio pendiente o confirmado
+  ///
+  /// In es, this message translates to:
+  /// **'Tienes un SOS activo en esta rodada'**
+  String get live_ride_own_sos_banner;
 }
 
 class _AppLocalizationsDelegate

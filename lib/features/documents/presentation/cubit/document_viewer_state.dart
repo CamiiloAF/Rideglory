@@ -20,7 +20,8 @@ class DocumentViewerState with _$DocumentViewerState {
 
   const factory DocumentViewerState.notUploaded() = DocumentViewerNotUploaded;
 
-  const factory DocumentViewerState.offlineNoCache() = DocumentViewerOfflineNoCache;
+  const factory DocumentViewerState.offlineNoCache() =
+      DocumentViewerOfflineNoCache;
 
   const factory DocumentViewerState.error() = DocumentViewerError;
 }

@@ -23,7 +23,10 @@ class VehicleCellTile extends StatelessWidget {
   final Vehicle vehicle;
 
   Future<void> _openEditVehicle(BuildContext context) async {
-    final changed = await context.pushNamed<bool>(AppRoutes.vehicleEdit, extra: vehicle);
+    final changed = await context.pushNamed<bool>(
+      AppRoutes.vehicleEdit,
+      extra: vehicle,
+    );
     if (changed == true && context.mounted) {
       context.read<GarageGalleryCubit>().load();
     }
@@ -55,6 +58,9 @@ class VehicleCellTile extends StatelessWidget {
     if (alert.severity == DocumentAlertSeverity.critical) {
       return context.l10n.garage_document_alert_expired(kindLabel);
     }
-    return context.l10n.garage_document_alert_expiring(kindLabel, alert.daysUntilExpiry);
+    return context.l10n.garage_document_alert_expiring(
+      kindLabel,
+      alert.daysUntilExpiry,
+    );
   }
 }

@@ -55,9 +55,7 @@ class ProfileSettingsCubit extends Cubit<ProfileSettingsState> {
   }
 
   Future<void> setAnalyticsEnabled(bool enabled) async {
-    final result = await _appPreferencesRepository.setAnalyticsEnabled(
-      enabled,
-    );
+    final result = await _appPreferencesRepository.setAnalyticsEnabled(enabled);
     if (result.isLeft()) {
       developer.log(
         'No se pudo guardar la preferencia de analítica.',

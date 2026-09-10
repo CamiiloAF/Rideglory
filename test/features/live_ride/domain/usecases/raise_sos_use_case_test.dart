@@ -45,10 +45,16 @@ void main() {
     batteryService = _MockBatteryService();
     outbox = _MockSosOutbox();
     repository = _MockSosRepository();
-    useCase = RaiseSosUseCase(locationService, batteryService, outbox, repository);
+    useCase = RaiseSosUseCase(
+      locationService,
+      batteryService,
+      outbox,
+      repository,
+    );
 
-    when(() => locationService.currentPosition(timeout: any(named: 'timeout')))
-        .thenAnswer((_) async => position);
+    when(
+      () => locationService.currentPosition(timeout: any(named: 'timeout')),
+    ).thenAnswer((_) async => position);
     when(() => batteryService.currentLevel()).thenAnswer((_) async => 80);
     when(() => outbox.enqueue(any())).thenAnswer((_) async {});
     when(() => outbox.markSent(any())).thenAnswer((_) async {});
@@ -70,23 +76,27 @@ void main() {
     expect(callOrder, ['enqueue', 'raise']);
   });
 
-  test('con red caída devuelve Left con el item pendiente y lo deja en cola', () async {
-    when(() => repository.raise(any()))
-        .thenAnswer((_) async => const Left(DomainException(message: 'offline')));
+  test(
+    'con red caída devuelve Left con el item pendiente y lo deja en cola',
+    () async {
+      when(() => repository.raise(any())).thenAnswer(
+        (_) async => const Left(DomainException(message: 'offline')),
+      );
 
-    final result = await useCase.call(eventId: 'event-1', message: 'me caí');
+      final result = await useCase.call(eventId: 'event-1', message: 'me caí');
 
-    expect(result.isLeft(), isTrue);
-    result.fold((item) {
-      expect(item.eventId, 'event-1');
-      expect(item.message, 'me caí');
-      expect(item.position.lat, position.lat);
-      expect(item.position.lng, position.lng);
-      expect(item.position.batteryPct, 80);
-    }, (_) => fail('esperaba Left'));
-    verify(() => outbox.markAttempt(any())).called(1);
-    verifyNever(() => outbox.markSent(any()));
-  });
+      expect(result.isLeft(), isTrue);
+      result.fold((item) {
+        expect(item.eventId, 'event-1');
+        expect(item.message, 'me caí');
+        expect(item.position.lat, position.lat);
+        expect(item.position.lng, position.lng);
+        expect(item.position.batteryPct, 80);
+      }, (_) => fail('esperaba Left'));
+      verify(() => outbox.markAttempt(any())).called(1);
+      verifyNever(() => outbox.markSent(any()));
+    },
+  );
 
   test('con éxito marca enviado y devuelve la alerta confirmada', () async {
     final alert = SosAlert(
@@ -111,19 +121,23 @@ void main() {
     verifyNever(() => outbox.markAttempt(any()));
   });
 
-  test('dos llamadas generan clientId distintos (idempotencia por clientId real)', () async {
-    when(() => repository.raise(any()))
-        .thenAnswer((_) async => const Left(DomainException(message: 'offline')));
+  test(
+    'dos llamadas generan clientId distintos (idempotencia por clientId real)',
+    () async {
+      when(() => repository.raise(any())).thenAnswer(
+        (_) async => const Left(DomainException(message: 'offline')),
+      );
 
-    final captured = <String>[];
-    when(() => outbox.enqueue(any())).thenAnswer((invocation) async {
-      final item = invocation.positionalArguments.first as SosOutboxItem;
-      captured.add(item.clientId);
-    });
+      final captured = <String>[];
+      when(() => outbox.enqueue(any())).thenAnswer((invocation) async {
+        final item = invocation.positionalArguments.first as SosOutboxItem;
+        captured.add(item.clientId);
+      });
 
-    await useCase.call(eventId: 'event-1');
-    await useCase.call(eventId: 'event-1');
+      await useCase.call(eventId: 'event-1');
+      await useCase.call(eventId: 'event-1');
 
-    expect(captured.toSet(), hasLength(2));
-  });
+      expect(captured.toSet(), hasLength(2));
+    },
+  );
 }

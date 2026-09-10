@@ -1615,4 +1615,302 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get live_ride_error_generic =>
       'Algo falló con la rodada en vivo. Inténtalo de nuevo.';
+
+  @override
+  String live_ride_riders_sheet_title(int count) {
+    return 'Riders en la rodada ($count)';
+  }
+
+  @override
+  String get live_ride_share_cta => 'Compartir mi ubicación';
+
+  @override
+  String get live_ride_sharing_chip => 'Compartiendo ubicación';
+
+  @override
+  String get live_ride_stop_cta => 'Detener';
+
+  @override
+  String get live_ride_me_suffix => '(tú)';
+
+  @override
+  String get live_ride_leader_suffix => 'Líder';
+
+  @override
+  String get live_ride_not_sharing_status => 'No comparte su ubicación';
+
+  @override
+  String get live_ride_riders_header_action => 'Ver riders';
+
+  @override
+  String live_distance_meters(int meters) {
+    return 'A $meters m';
+  }
+
+  @override
+  String live_distance_km(String km) {
+    return 'A $km km';
+  }
+
+  @override
+  String get live_freshness_now => 'Hace menos de 1 min';
+
+  @override
+  String live_freshness_minutes(int minutes) {
+    return 'Hace $minutes min';
+  }
+
+  @override
+  String live_freshness_stale_minutes(int minutes) {
+    return 'Sin señal hace $minutes min';
+  }
+
+  @override
+  String get live_ride_permission_title => 'Necesitamos tu ubicación';
+
+  @override
+  String get live_ride_permission_body =>
+      'Sin permiso de ubicación no podemos mostrarte la rodada ni compartir la tuya con el grupo. Actívalo en los ajustes del teléfono.';
+
+  @override
+  String get live_ride_permission_open_settings_cta => 'Abrir ajustes';
+
+  @override
+  String get live_ride_permission_retry_cta => 'Ya lo activé, reintentar';
+
+  @override
+  String get live_ride_no_gps_title => 'No encontramos señal de GPS';
+
+  @override
+  String get live_ride_no_gps_body =>
+      'Verifica que el GPS de tu teléfono esté encendido. En túneles o zonas de montaña puede tardar un poco en ubicarte.';
+
+  @override
+  String get live_ride_no_gps_open_settings_cta => 'Abrir ajustes de ubicación';
+
+  @override
+  String get live_ride_no_gps_retry_cta => 'Reintentar';
+
+  @override
+  String get live_ride_offline_body =>
+      'No pudimos actualizar la rodada en vivo. Revisa tu conexión e inténtalo de nuevo.';
+
+  @override
+  String get live_ride_error_title => 'Algo falló';
+
+  @override
+  String get live_ride_finished_title => 'La rodada terminó';
+
+  @override
+  String get live_ride_finished_body =>
+      'Se dejó de compartir tu ubicación con el grupo.';
+
+  @override
+  String get live_ride_finished_cta => 'Volver al evento';
+
+  @override
+  String get live_ride_finished_status_line =>
+      'La rodada terminó. Se dejó de compartir tu ubicación.';
+
+  @override
+  String get live_ride_finished_sos_title => 'Tu alerta SOS sigue activa';
+
+  @override
+  String get live_ride_finished_sos_body =>
+      'El grupo la sigue viendo aunque la rodada haya terminado. Ciérrala solo cuando estés bien.';
+
+  @override
+  String get live_ride_consent_title => 'Compartir tu ubicación con el grupo';
+
+  @override
+  String get live_ride_consent_row_participants =>
+      'Solo la ven los inscritos en esta rodada.';
+
+  @override
+  String get live_ride_consent_row_duration =>
+      'Solo se comparte mientras la rodada está en curso.';
+
+  @override
+  String get live_ride_consent_row_stop =>
+      'Para cuando quieras: botón Detener y notificación persistente.';
+
+  @override
+  String get live_ride_consent_allow_cta => 'Permitir';
+
+  @override
+  String get live_ride_consent_dismiss_cta => 'Ahora no';
+
+  @override
+  String get live_ride_consent_always_title =>
+      'Compartir tu ubicación todo el tiempo';
+
+  @override
+  String get live_ride_consent_always_row_notification =>
+      'Verás una notificación mientras compartas, para saber que sigue activa.';
+
+  @override
+  String get live_ride_consent_always_row_lock =>
+      'Sin este permiso, tu posición deja de actualizarse al bloquear la pantalla.';
+
+  @override
+  String get live_ride_consent_always_allow_cta => 'Permitir todo el tiempo';
+
+  @override
+  String get live_ride_background_permission_banner =>
+      'Sin permiso de ubicación en segundo plano: si bloqueas la pantalla, se deja de compartir.';
+
+  @override
+  String get sos_button_label => 'SOS';
+
+  @override
+  String get sos_confirm_title => '¿Pedir ayuda al grupo?';
+
+  @override
+  String get sos_confirm_body =>
+      'Avisaremos a los riders de esta rodada con tu ubicación. No llama a emergencias.';
+
+  @override
+  String get sos_confirm_hold_label => 'Mantén pulsado para enviar';
+
+  @override
+  String get sos_confirm_cancel_cta => 'Cancelar';
+
+  @override
+  String get sos_active_header_title => 'SOS activo';
+
+  @override
+  String get sos_pending_title => 'Alerta pendiente';
+
+  @override
+  String get sos_pending_body =>
+      'Sin señal. Tu alerta se enviará al recuperar cobertura.';
+
+  @override
+  String get sos_pending_chip => 'Enviando cuando haya señal';
+
+  @override
+  String get sos_sending_title => 'Enviando tu alerta';
+
+  @override
+  String get sos_confirmed_title => 'El grupo ya sabe dónde estás';
+
+  @override
+  String get sos_confirmed_body =>
+      'El servidor confirmó tu alerta. El grupo ya puede ver tu ubicación.';
+
+  @override
+  String get sos_confirmed_chip => 'Alerta confirmada';
+
+  @override
+  String get sos_closed_title => 'Tu SOS está cerrado';
+
+  @override
+  String get sos_closed_body => 'El grupo ya no ve tu alerta activa.';
+
+  @override
+  String sos_coordinates_precision(int meters) {
+    return 'Precisión ±$meters m';
+  }
+
+  @override
+  String sos_call_contact_cta(String name) {
+    return 'Llamar a mi contacto · $name';
+  }
+
+  @override
+  String sos_call_organizer_cta(String name) {
+    return 'Llamar al organizador · $name';
+  }
+
+  @override
+  String get sos_no_contact_warning =>
+      'No tienes un contacto de emergencia guardado. Usa el SMS o llama al organizador.';
+
+  @override
+  String get sos_sms_cta => 'Enviar SMS con mi ubicación';
+
+  @override
+  String get sos_call_123_cta => 'Llamar al 123';
+
+  @override
+  String get sos_close_cta => 'Ya estoy bien — cerrar SOS';
+
+  @override
+  String get sos_close_confirm_title => '¿Cerrar tu SOS?';
+
+  @override
+  String get sos_close_confirm_body =>
+      'Ciérralo solo cuando estés bien de verdad.';
+
+  @override
+  String get sos_close_confirm_cta => 'Sí, estoy bien';
+
+  @override
+  String get sos_close_confirm_cancel => 'Cancelar';
+
+  @override
+  String sos_other_banner_title(String name, String distance) {
+    return '$name pidió ayuda · $distance';
+  }
+
+  @override
+  String get sos_other_banner_cta => 'Ver';
+
+  @override
+  String sos_other_asked_help_minutes(int minutes) {
+    return 'Pidió ayuda · Hace $minutes min';
+  }
+
+  @override
+  String sos_other_distance_from_me(String distance) {
+    return '$distance de ti';
+  }
+
+  @override
+  String sos_other_call_cta(String name) {
+    return 'Llamar a $name';
+  }
+
+  @override
+  String get sos_other_view_map_cta => 'Ver en el mapa';
+
+  @override
+  String get sos_other_resolve_cta => 'Marcar como resuelto · solo organizador';
+
+  @override
+  String get sos_other_resolve_note =>
+      'Solo el organizador o quien pidió ayuda pueden cerrarlo.';
+
+  @override
+  String sos_other_close_confirm_title(String name) {
+    return '¿Cerrar el SOS de $name?';
+  }
+
+  @override
+  String sos_other_close_confirm_body(String name) {
+    return 'Hazlo solo si confirmaste con $name que ya está bien.';
+  }
+
+  @override
+  String get sos_other_close_confirm_cta => 'Sí, está bien';
+
+  @override
+  String get sos_other_close_confirm_cancel => 'Cancelar';
+
+  @override
+  String get live_ride_leader_distance_suffix => 'del líder';
+
+  @override
+  String get live_riders_page_header => 'Riders';
+
+  @override
+  String live_riders_page_subtitle(int count, int sharing) {
+    return '$count riders · $sharing comparten ubicación';
+  }
+
+  @override
+  String get live_ride_view_live_cta => 'Ver rodada en vivo';
+
+  @override
+  String get live_ride_own_sos_banner => 'Tienes un SOS activo en esta rodada';
 }

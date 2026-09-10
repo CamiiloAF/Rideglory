@@ -7,7 +7,11 @@ import 'brand_picker_row.dart';
 /// Lista de marcas filtradas por el buscador, con separadores por letra
 /// inicial (como el `.pen`).
 class BrandPickerList extends StatelessWidget {
-  const BrandPickerList({required this.brands, required this.onSelected, super.key});
+  const BrandPickerList({
+    required this.brands,
+    required this.onSelected,
+    super.key,
+  });
 
   final List<String> brands;
   final ValueChanged<String> onSelected;

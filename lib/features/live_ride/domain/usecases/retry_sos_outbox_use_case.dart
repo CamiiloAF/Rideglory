@@ -23,13 +23,12 @@ class RetrySosOutboxUseCase {
     final confirmed = <SosAlert>[];
     for (final item in pending) {
       final result = await _repository.raise(item);
-      await result.fold(
-        (_) => _outbox.markAttempt(item.clientId),
-        (alert) async {
-          await _outbox.markSent(item.clientId);
-          confirmed.add(alert);
-        },
-      );
+      await result.fold((_) => _outbox.markAttempt(item.clientId), (
+        alert,
+      ) async {
+        await _outbox.markSent(item.clientId);
+        confirmed.add(alert);
+      });
     }
     return confirmed;
   }

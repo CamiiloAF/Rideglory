@@ -38,11 +38,18 @@ class DocumentPreviewFrame extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(LucideIcons.fileText, size: 48, color: colors.textSecondary),
+                  Icon(
+                    LucideIcons.fileText,
+                    size: 48,
+                    color: colors.textSecondary,
+                  ),
                   const SizedBox(height: 8),
                   Text(
                     context.l10n.documents_pdf_preview_label,
-                    style: TextStyle(fontSize: 12.5, color: colors.textSecondary),
+                    style: TextStyle(
+                      fontSize: 12.5,
+                      color: colors.textSecondary,
+                    ),
                   ),
                 ],
               ),

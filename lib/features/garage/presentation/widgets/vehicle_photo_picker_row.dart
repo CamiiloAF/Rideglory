@@ -17,7 +17,10 @@ class VehiclePhotoPickerRow extends StatelessWidget {
 
   Future<void> _pickImage(BuildContext context) async {
     final cubit = context.read<VehicleFormCubit>();
-    final picked = await ImagePicker().pickImage(source: ImageSource.gallery, imageQuality: 85);
+    final picked = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 85,
+    );
     if (picked == null) return;
     final bytes = await picked.readAsBytes();
     final extension = picked.path.split('.').last.toLowerCase();
@@ -31,7 +34,8 @@ class VehiclePhotoPickerRow extends StatelessWidget {
       onTap: () => _pickImage(context),
       borderRadius: BorderRadius.circular(16),
       child: BlocBuilder<VehicleFormCubit, VehicleFormState>(
-        buildWhen: (previous, current) => previous.imageBytes != current.imageBytes,
+        buildWhen: (previous, current) =>
+            previous.imageBytes != current.imageBytes,
         builder: (context, state) {
           final hasImage = state.imageBytes != null;
           return Container(
@@ -58,16 +62,27 @@ class VehiclePhotoPickerRow extends StatelessWidget {
                         hasImage
                             ? context.l10n.garage_photo_selected_label
                             : context.l10n.garage_photo_add_label,
-                        style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w700, color: colors.text),
+                        style: TextStyle(
+                          fontSize: 14.5,
+                          fontWeight: FontWeight.w700,
+                          color: colors.text,
+                        ),
                       ),
                       Text(
                         context.l10n.garage_photo_add_hint,
-                        style: TextStyle(fontSize: 11.5, color: colors.textSecondary),
+                        style: TextStyle(
+                          fontSize: 11.5,
+                          color: colors.textSecondary,
+                        ),
                       ),
                     ],
                   ),
                 ),
-                Icon(LucideIcons.chevronRight, size: 18, color: colors.textSecondary),
+                Icon(
+                  LucideIcons.chevronRight,
+                  size: 18,
+                  color: colors.textSecondary,
+                ),
               ],
             ),
           );

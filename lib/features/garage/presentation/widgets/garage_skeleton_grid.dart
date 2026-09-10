@@ -20,7 +20,8 @@ class GarageSkeletonGrid extends StatelessWidget {
         childAspectRatio: 0.72,
       ),
       itemCount: 4,
-      itemBuilder: (context, index) => const SkeletonBox(height: 169, borderRadius: 20),
+      itemBuilder: (context, index) =>
+          const SkeletonBox(height: 169, borderRadius: 20),
     );
   }
 }

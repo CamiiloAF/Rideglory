@@ -27,7 +27,11 @@ class GarageEmptyView extends StatelessWidget {
             Text(
               context.l10n.garage_empty_title,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: colors.text),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: colors.text,
+              ),
             ),
             const SizedBox(height: 8),
             Text(

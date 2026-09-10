@@ -8,8 +8,10 @@ import '../../domain/usecases/get_vehicle_documents_usecase.dart';
 /// SOAT y RTM de una moto, para la fila ancha de documentos en editar
 /// moto y para la alerta de la galería del garaje.
 @injectable
-class VehicleDocumentsCubit extends Cubit<ResultState<VehicleDocumentsSummary>> {
-  VehicleDocumentsCubit(this._getVehicleDocuments) : super(const ResultState.initial());
+class VehicleDocumentsCubit
+    extends Cubit<ResultState<VehicleDocumentsSummary>> {
+  VehicleDocumentsCubit(this._getVehicleDocuments)
+    : super(const ResultState.initial());
 
   final GetVehicleDocumentsUseCase _getVehicleDocuments;
 

@@ -31,7 +31,8 @@ class VehicleFormPage extends StatelessWidget {
         return cubit;
       },
       child: BlocListener<VehicleFormCubit, VehicleFormState>(
-        listenWhen: (previous, current) => previous.submission != current.submission,
+        listenWhen: (previous, current) =>
+            previous.submission != current.submission,
         listener: (context, state) {
           if (state.submission is Data<Vehicle>) {
             context.pop(true);

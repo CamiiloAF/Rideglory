@@ -27,7 +27,8 @@ class VehicleEditPage extends StatelessWidget {
     return BlocProvider(
       create: (_) => getIt<VehicleFormCubit>()..startEditing(vehicle),
       child: BlocListener<VehicleFormCubit, VehicleFormState>(
-        listenWhen: (previous, current) => previous.submission != current.submission,
+        listenWhen: (previous, current) =>
+            previous.submission != current.submission,
         listener: (context, state) {
           if (state.submission is Data<Vehicle>) context.pop(true);
         },

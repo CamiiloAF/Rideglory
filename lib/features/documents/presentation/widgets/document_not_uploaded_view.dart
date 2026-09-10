@@ -12,7 +12,11 @@ import '../../domain/models/vehicle_document.dart';
 ///
 /// Pencil: dB4Au
 class DocumentNotUploadedView extends StatelessWidget {
-  const DocumentNotUploadedView({required this.vehicleId, required this.kind, super.key});
+  const DocumentNotUploadedView({
+    required this.vehicleId,
+    required this.kind,
+    super.key,
+  });
 
   final String vehicleId;
   final DocumentKind kind;
@@ -20,8 +24,9 @@ class DocumentNotUploadedView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
-    final kindLabel =
-        kind == DocumentKind.soat ? context.l10n.documents_soat_title : context.l10n.documents_rtm_title;
+    final kindLabel = kind == DocumentKind.soat
+        ? context.l10n.documents_soat_title
+        : context.l10n.documents_rtm_title;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -33,7 +38,11 @@ class DocumentNotUploadedView extends StatelessWidget {
             Text(
               context.l10n.documents_not_uploaded_title(kindLabel),
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: colors.text),
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w700,
+                color: colors.text,
+              ),
             ),
             const SizedBox(height: 8),
             Text(

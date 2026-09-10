@@ -35,14 +35,22 @@ class VehicleFormPlateChip extends StatelessWidget {
               Expanded(
                 child: Text(
                   state.plate,
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: colors.text),
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: colors.text,
+                  ),
                 ),
               ),
               TextButton(
                 onPressed: cubit.changePlate,
                 child: Text(
                   context.l10n.garage_change_plate_button,
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: colors.text),
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: colors.text,
+                  ),
                 ),
               ),
             ],

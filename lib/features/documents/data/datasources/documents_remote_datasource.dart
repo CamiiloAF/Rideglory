@@ -20,7 +20,10 @@ class DocumentsRemoteDatasource {
   String get _ownerId => _client.auth.currentUser!.id;
 
   Future<List<VehicleDocumentDto>> fetchDocuments(String vehicleId) async {
-    final rows = await _client.from(_table).select().eq('vehicle_id', vehicleId);
+    final rows = await _client
+        .from(_table)
+        .select()
+        .eq('vehicle_id', vehicleId);
     return rows.map(VehicleDocumentDto.fromJson).toList();
   }
 
@@ -31,17 +34,29 @@ class DocumentsRemoteDatasource {
   ) async {
     final row = await _client
         .from(_table)
-        .upsert({...values, 'vehicle_id': vehicleId, 'kind': kind}, onConflict: 'vehicle_id,kind')
+        .upsert({
+          ...values,
+          'vehicle_id': vehicleId,
+          'kind': kind,
+        }, onConflict: 'vehicle_id,kind')
         .select()
         .single();
     return VehicleDocumentDto.fromJson(row);
   }
 
   Future<void> deleteDocument(String vehicleId, String kind) async {
-    await _client.from(_table).delete().eq('vehicle_id', vehicleId).eq('kind', kind);
+    await _client
+        .from(_table)
+        .delete()
+        .eq('vehicle_id', vehicleId)
+        .eq('kind', kind);
   }
 
-  Future<void> setReminderEnabled(String vehicleId, String kind, bool enabled) async {
+  Future<void> setReminderEnabled(
+    String vehicleId,
+    String kind,
+    bool enabled,
+  ) async {
     await _client
         .from(_table)
         .update({'reminder_enabled': enabled})
@@ -60,7 +75,9 @@ class DocumentsRemoteDatasource {
     required String extension,
   }) async {
     final path = _storagePath(vehicleId, kind, extension);
-    await _client.storage.from(_bucket).uploadBinary(
+    await _client.storage
+        .from(_bucket)
+        .uploadBinary(
           path,
           bytes,
           fileOptions: const FileOptions(upsert: true),
@@ -73,7 +90,9 @@ class DocumentsRemoteDatasource {
   }
 
   Future<String> createSignedUrl(String filePath) {
-    return _client.storage.from(_bucket).createSignedUrl(filePath, _signedUrlTtl.inSeconds);
+    return _client.storage
+        .from(_bucket)
+        .createSignedUrl(filePath, _signedUrlTtl.inSeconds);
   }
 
   Future<void> deleteFile(String filePath) async {

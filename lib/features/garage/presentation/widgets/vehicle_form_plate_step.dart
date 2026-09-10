@@ -26,7 +26,11 @@ class VehicleFormPlateStep extends StatelessWidget {
         children: [
           Text(
             context.l10n.garage_plate_question,
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: colors.text),
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              color: colors.text,
+            ),
           ),
           const SizedBox(height: 6),
           Text(
@@ -35,7 +39,8 @@ class VehicleFormPlateStep extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           BlocBuilder<VehicleFormCubit, VehicleFormState>(
-            buildWhen: (previous, current) => previous.plateInvalid != current.plateInvalid,
+            buildWhen: (previous, current) =>
+                previous.plateInvalid != current.plateInvalid,
             builder: (context, state) {
               return AppTextField(
                 label: context.l10n.garage_plate_field_label,
@@ -46,18 +51,25 @@ class VehicleFormPlateStep extends StatelessWidget {
                   FilteringTextInputFormatter.allow(RegExp('[a-zA-Z0-9 ]')),
                   LengthLimitingTextInputFormatter(7),
                 ],
-                errorText: state.plateInvalid ? context.l10n.garage_plate_invalid_error : null,
-                helperText: state.plateInvalid ? null : context.l10n.garage_plate_helper,
+                errorText: state.plateInvalid
+                    ? context.l10n.garage_plate_invalid_error
+                    : null,
+                helperText: state.plateInvalid
+                    ? null
+                    : context.l10n.garage_plate_helper,
               );
             },
           ),
           const Spacer(),
           BlocBuilder<VehicleFormCubit, VehicleFormState>(
-            buildWhen: (previous, current) => previous.canContinueFromPlate != current.canContinueFromPlate,
+            buildWhen: (previous, current) =>
+                previous.canContinueFromPlate != current.canContinueFromPlate,
             builder: (context, state) {
               return AppPrimaryButton(
                 label: context.l10n.garage_continue_button,
-                onPressed: state.canContinueFromPlate ? cubit.continueFromPlate : null,
+                onPressed: state.canContinueFromPlate
+                    ? cubit.continueFromPlate
+                    : null,
               );
             },
           ),

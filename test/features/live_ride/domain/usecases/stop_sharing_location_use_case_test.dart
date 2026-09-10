@@ -31,25 +31,32 @@ void main() {
     );
 
     when(() => backgroundTrackingService.stop()).thenAnswer((_) async {});
-    when(() => repository.endRide(any()))
-        .thenAnswer((_) async => const Right(unit));
+    when(
+      () => repository.endRide(any()),
+    ).thenAnswer((_) async => const Right(unit));
     when(() => contactsCache.clear(any())).thenAnswer((_) async {});
   });
 
-  test('para el servicio nativo, termina la rodada en el servidor y borra la caché', () async {
-    await useCase.call('event-1');
+  test(
+    'para el servicio nativo, termina la rodada en el servidor y borra la caché',
+    () async {
+      await useCase.call('event-1');
 
-    verify(() => backgroundTrackingService.stop()).called(1);
-    verify(() => repository.endRide('event-1')).called(1);
-    verify(() => contactsCache.clear('event-1')).called(1);
-  });
+      verify(() => backgroundTrackingService.stop()).called(1);
+      verify(() => repository.endRide('event-1')).called(1);
+      verify(() => contactsCache.clear('event-1')).called(1);
+    },
+  );
 
-  test('nunca toca un SOS: no interactúa con ningún repositorio de SOS', () async {
-    // No hay dependencia de SosRepository/SosOutbox en el constructor:
-    // este test documenta esa garantía estructural. Si alguien la agrega
-    // sin querer, este test deja de compilar.
-    await useCase.call('event-1');
-    verify(() => backgroundTrackingService.stop()).called(1);
-    verifyNoMoreInteractions(backgroundTrackingService);
-  });
+  test(
+    'nunca toca un SOS: no interactúa con ningún repositorio de SOS',
+    () async {
+      // No hay dependencia de SosRepository/SosOutbox en el constructor:
+      // este test documenta esa garantía estructural. Si alguien la agrega
+      // sin querer, este test deja de compilar.
+      await useCase.call('event-1');
+      verify(() => backgroundTrackingService.stop()).called(1);
+      verifyNoMoreInteractions(backgroundTrackingService);
+    },
+  );
 }

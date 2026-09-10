@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/domain/result_state.dart';
+import '../../../../core/exceptions/domain_exception.dart';
 import '../../domain/sos_alert.dart';
 import '../../domain/sos_outbox.dart';
 import '../../domain/sos_status.dart';
@@ -87,7 +89,8 @@ class SosCubit extends Cubit<SosState> {
     final result = await _raiseSos(eventId: _eventId, message: message);
     result.fold(
       (item) => emit(state.copyWith(mine: SosSendState.pending(item: item))),
-      (alert) => emit(state.copyWith(mine: SosSendState.confirmed(alert: alert))),
+      (alert) =>
+          emit(state.copyWith(mine: SosSendState.confirmed(alert: alert))),
     );
   }
 
@@ -109,10 +112,16 @@ class SosCubit extends Cubit<SosState> {
     emit(state.copyWith(mine: SosSendState.closing(alert: mine.alert)));
     final result = await _closeSos(mine.alert.id);
     result.fold(
-      (_) => emit(state.copyWith(mine: SosSendState.confirmed(alert: mine.alert))),
+      (_) =>
+          emit(state.copyWith(mine: SosSendState.confirmed(alert: mine.alert))),
       (alert) => emit(state.copyWith(mine: SosSendState.closed(alert: alert))),
     );
   }
+
+  /// LV5c: el organizador cierra el SOS de otro rider (D19). No toca
+  /// `state.mine` — `others` se actualiza solo por el stream de Realtime.
+  Future<Either<DomainException, SosAlert>> closeOther(String sosId) =>
+      _closeSos(sosId);
 
   @override
   Future<void> close() async {

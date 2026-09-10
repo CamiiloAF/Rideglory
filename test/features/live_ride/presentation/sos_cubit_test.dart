@@ -87,8 +87,12 @@ void main() {
   blocTest<SosCubit, SosState>(
     'raise exitoso emite sending y luego confirmed',
     build: () {
-      when(() => raiseSos.call(eventId: any(named: 'eventId'), message: any(named: 'message')))
-          .thenAnswer((_) async => Right(_alert()));
+      when(
+        () => raiseSos.call(
+          eventId: any(named: 'eventId'),
+          message: any(named: 'message'),
+        ),
+      ).thenAnswer((_) async => Right(_alert()));
       return buildCubit();
     },
     act: (cubit) async {
@@ -103,8 +107,12 @@ void main() {
   blocTest<SosCubit, SosState>(
     'raise sin red emite pending, nunca confirmed (la UI nunca dice enviado sin confirmación)',
     build: () {
-      when(() => raiseSos.call(eventId: any(named: 'eventId'), message: any(named: 'message')))
-          .thenAnswer((_) async => Left(_pendingItem()));
+      when(
+        () => raiseSos.call(
+          eventId: any(named: 'eventId'),
+          message: any(named: 'message'),
+        ),
+      ).thenAnswer((_) async => Left(_pendingItem()));
       return buildCubit();
     },
     act: (cubit) async {
@@ -119,8 +127,9 @@ void main() {
   blocTest<SosCubit, SosState>(
     'others se llena con las alertas de watchAlerts',
     build: () {
-      when(() => watchAlerts(any()))
-          .thenAnswer((_) => Stream.value(Right([_alert()])));
+      when(
+        () => watchAlerts(any()),
+      ).thenAnswer((_) => Stream.value(Right([_alert()])));
       return buildCubit();
     },
     act: (cubit) => cubit.load('event-1'),
@@ -133,10 +142,15 @@ void main() {
   blocTest<SosCubit, SosState>(
     'closeMine llama al caso de uso y refleja el cierre confirmado',
     build: () {
-      when(() => raiseSos.call(eventId: any(named: 'eventId'), message: any(named: 'message')))
-          .thenAnswer((_) async => Right(_alert()));
-      when(() => closeSos.call(any()))
-          .thenAnswer((_) async => Right(_alert(status: SosStatus.closed)));
+      when(
+        () => raiseSos.call(
+          eventId: any(named: 'eventId'),
+          message: any(named: 'message'),
+        ),
+      ).thenAnswer((_) async => Right(_alert()));
+      when(
+        () => closeSos.call(any()),
+      ).thenAnswer((_) async => Right(_alert(status: SosStatus.closed)));
       return buildCubit();
     },
     act: (cubit) async {

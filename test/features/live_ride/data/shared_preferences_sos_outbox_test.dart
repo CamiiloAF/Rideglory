@@ -53,24 +53,30 @@ void main() {
     expect(await outbox.pending(), isEmpty);
   });
 
-  test('markAttempt incrementa el contador sin sacar el item de la cola', () async {
-    await outbox.enqueue(_item('client-1'));
+  test(
+    'markAttempt incrementa el contador sin sacar el item de la cola',
+    () async {
+      await outbox.enqueue(_item('client-1'));
 
-    await outbox.markAttempt('client-1');
-    await outbox.markAttempt('client-1');
+      await outbox.markAttempt('client-1');
+      await outbox.markAttempt('client-1');
 
-    final pending = await outbox.pending();
-    expect(pending, hasLength(1));
-    expect(pending.single.attempts, 2);
-  });
+      final pending = await outbox.pending();
+      expect(pending, hasLength(1));
+      expect(pending.single.attempts, 2);
+    },
+  );
 
-  test('sobrevive a una nueva instancia leyendo el mismo SharedPreferences', () async {
-    await outbox.enqueue(_item('client-1'));
+  test(
+    'sobrevive a una nueva instancia leyendo el mismo SharedPreferences',
+    () async {
+      await outbox.enqueue(_item('client-1'));
 
-    final prefs = await SharedPreferences.getInstance();
-    final reloaded = SharedPreferencesSosOutbox(prefs);
+      final prefs = await SharedPreferences.getInstance();
+      final reloaded = SharedPreferencesSosOutbox(prefs);
 
-    final pending = await reloaded.pending();
-    expect(pending, hasLength(1));
-  });
+      final pending = await reloaded.pending();
+      expect(pending, hasLength(1));
+    },
+  );
 }

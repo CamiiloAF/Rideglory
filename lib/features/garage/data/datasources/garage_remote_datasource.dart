@@ -60,7 +60,10 @@ class GarageRemoteDatasource {
   }
 
   Future<void> unarchiveVehicle(String vehicleId) async {
-    await _client.from(_table).update({'archived_at': null}).eq('id', vehicleId);
+    await _client
+        .from(_table)
+        .update({'archived_at': null})
+        .eq('id', vehicleId);
   }
 
   /// Pone `vehicleId` como principal y quita el flag de las demás; no hay
@@ -97,10 +100,15 @@ class GarageRemoteDatasource {
     required String extension,
   }) async {
     final path = '$_ownerId/$vehicleId.$extension';
-    await _client.storage.from(_bucket).uploadBinary(
+    await _client.storage
+        .from(_bucket)
+        .uploadBinary(
           path,
           bytes,
-          fileOptions: FileOptions(contentType: 'image/$extension', upsert: true),
+          fileOptions: FileOptions(
+            contentType: 'image/$extension',
+            upsert: true,
+          ),
         );
     return path;
   }
@@ -112,12 +120,16 @@ class GarageRemoteDatasource {
   }
 
   Future<String> createSignedImageUrl(String imagePath) {
-    return _client.storage.from(_bucket).createSignedUrl(imagePath, _signedUrlTtl.inSeconds);
+    return _client.storage
+        .from(_bucket)
+        .createSignedUrl(imagePath, _signedUrlTtl.inSeconds);
   }
 
   /// Vencimientos de documentos de un grupo de motos, para la alerta de la
   /// celda de galería (D5: el garaje muestra el estado legal de un vistazo).
-  Future<List<Map<String, dynamic>>> fetchDocumentExpiries(List<String> vehicleIds) async {
+  Future<List<Map<String, dynamic>>> fetchDocumentExpiries(
+    List<String> vehicleIds,
+  ) async {
     if (vehicleIds.isEmpty) return [];
     return _client
         .from('vehicle_documents')

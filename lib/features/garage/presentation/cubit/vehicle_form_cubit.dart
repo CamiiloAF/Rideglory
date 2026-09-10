@@ -129,7 +129,8 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
 
   void modelChanged(String model) => emit(state.copyWith(model: model));
 
-  void yearChanged(String rawYear) => emit(state.copyWith(year: int.tryParse(rawYear)));
+  void yearChanged(String rawYear) =>
+      emit(state.copyWith(year: int.tryParse(rawYear)));
 
   void engineCcChanged(String rawEngineCc) {
     emit(state.copyWith(engineCc: int.tryParse(rawEngineCc)));
@@ -159,11 +160,15 @@ class VehicleFormCubit extends Cubit<VehicleFormState> {
     );
 
     final editingId = _editingVehicleId;
-    final result = editingId == null ? await _createVehicle(input) : await _updateVehicle(editingId, input);
+    final result = editingId == null
+        ? await _createVehicle(input)
+        : await _updateVehicle(editingId, input);
 
     result.fold(
-      (error) => emit(state.copyWith(submission: ResultState.error(error: error))),
-      (vehicle) => emit(state.copyWith(submission: ResultState.data(data: vehicle))),
+      (error) =>
+          emit(state.copyWith(submission: ResultState.error(error: error))),
+      (vehicle) =>
+          emit(state.copyWith(submission: ResultState.data(data: vehicle))),
     );
   }
 

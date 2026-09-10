@@ -28,7 +28,8 @@ class DocumentViewerBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return state.when(
       loading: () => const SkeletonList(itemCount: 3, itemHeight: 100),
-      notUploaded: () => DocumentNotUploadedView(vehicleId: vehicleId, kind: kind),
+      notUploaded: () =>
+          DocumentNotUploadedView(vehicleId: vehicleId, kind: kind),
       offlineNoCache: () => OfflineStateView(onRetry: onRetry),
       error: () => ErrorStateView(onRetry: onRetry),
       loaded: (bytes, isOffline, document) => DocumentViewerContent(

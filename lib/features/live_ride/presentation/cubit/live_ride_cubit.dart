@@ -6,6 +6,7 @@ import 'package:injectable/injectable.dart';
 import '../../../../core/domain/result_state.dart';
 import '../../domain/background_tracking_service.dart';
 import '../../domain/live_ride_contacts_cache.dart';
+import '../../domain/location_permission_state.dart';
 import '../../domain/location_service.dart';
 import '../../domain/usecases/get_location_permission_state_use_case.dart';
 import '../../domain/usecases/start_sharing_location_use_case.dart';
@@ -64,7 +65,8 @@ class LiveRideCubit extends Cubit<LiveRideState> {
     unawaited(_ridersSubscription?.cancel());
     _ridersSubscription = _watchLiveRiders(eventId).listen((result) {
       result.fold(
-        (error) => emit(state.copyWith(riders: ResultState.error(error: error))),
+        (error) =>
+            emit(state.copyWith(riders: ResultState.error(error: error))),
         (riders) => emit(
           state.copyWith(
             riders: riders.isEmpty
@@ -104,14 +106,39 @@ class LiveRideCubit extends Cubit<LiveRideState> {
     );
     final permission = await _getPermissionState();
     result.fold(
-      (_) => emit(state.copyWith(sharing: SharingStatus.notSharing, permission: permission)),
-      (_) => emit(state.copyWith(sharing: SharingStatus.sharing, permission: permission)),
+      (_) => emit(
+        state.copyWith(
+          sharing: SharingStatus.notSharing,
+          permission: permission,
+        ),
+      ),
+      (_) => emit(
+        state.copyWith(sharing: SharingStatus.sharing, permission: permission),
+      ),
     );
     if (result.isRight()) {
       final contacts = await _contactsCache.read(_eventId);
       emit(state.copyWith(contacts: contacts));
       _listenToMyPosition();
     }
+  }
+
+  /// D21 paso 1: se llama al pulsar "Permitir" en la hoja LV2, antes de
+  /// [startSharing]. Dispara el diálogo nativo del sistema.
+  Future<LocationPermissionState> requestWhileInUsePermission() async {
+    final permission = await _locationService.requestWhileInUse();
+    emit(state.copyWith(permission: permission));
+    return permission;
+  }
+
+  /// D21 paso 2: se llama al pulsar "Permitir todo el tiempo" en la hoja
+  /// LV2b, ya con el tracking corriendo. Si el rider la niega, el
+  /// tracking sigue mientras la app está abierta (la UI muestra un
+  /// banner de advertencia con `state.permission != always`).
+  Future<LocationPermissionState> requestAlwaysPermission() async {
+    final permission = await _locationService.requestAlways();
+    emit(state.copyWith(permission: permission));
+    return permission;
   }
 
   Future<void> stopSharing() async {
@@ -124,9 +151,9 @@ class LiveRideCubit extends Cubit<LiveRideState> {
 
   void _listenToMyPosition() {
     unawaited(_myPositionSubscription?.cancel());
-    _myPositionSubscription = _locationService
-        .positionStream()
-        .listen((position) => emit(state.copyWith(myPosition: position)));
+    _myPositionSubscription = _locationService.positionStream().listen(
+      (position) => emit(state.copyWith(myPosition: position)),
+    );
   }
 
   @override

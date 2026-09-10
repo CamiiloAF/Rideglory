@@ -17,9 +17,12 @@ class DocumentUploadSoatFields extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = context.read<DocumentUploadCubit>();
     return BlocBuilder<DocumentUploadCubit, DocumentUploadState>(
-      buildWhen: (previous, current) => previous.wasAutofilled != current.wasAutofilled,
+      buildWhen: (previous, current) =>
+          previous.wasAutofilled != current.wasAutofilled,
       builder: (context, state) {
-        final helper = state.wasAutofilled ? context.l10n.documents_autofilled_hint : null;
+        final helper = state.wasAutofilled
+            ? context.l10n.documents_autofilled_hint
+            : null;
         return Column(
           children: [
             AppTextField(

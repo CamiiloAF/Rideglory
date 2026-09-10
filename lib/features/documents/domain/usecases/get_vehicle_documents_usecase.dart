@@ -11,7 +11,9 @@ class GetVehicleDocumentsUseCase {
 
   final DocumentsRepository _repository;
 
-  Future<Either<DomainException, VehicleDocumentsSummary>> call(String vehicleId) {
+  Future<Either<DomainException, VehicleDocumentsSummary>> call(
+    String vehicleId,
+  ) {
     return _repository.getDocuments(vehicleId);
   }
 }

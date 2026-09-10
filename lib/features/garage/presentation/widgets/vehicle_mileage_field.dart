@@ -19,7 +19,9 @@ class VehicleMileageField extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = context.read<VehicleFormCubit>();
     return AppTextField(
-      label: isEditing ? context.l10n.garage_mileage_current_label : context.l10n.garage_mileage_today_label,
+      label: isEditing
+          ? context.l10n.garage_mileage_current_label
+          : context.l10n.garage_mileage_today_label,
       controller: cubit.mileageController,
       onChanged: cubit.mileageChanged,
       keyboardType: TextInputType.number,
