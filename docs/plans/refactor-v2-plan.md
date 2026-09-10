@@ -50,3 +50,32 @@ Orden real: F1 ∥ F2 ∥ F3 hoy; F4 ∥ F5 ∥ F6 mañana temprano; F7 mañana;
 ## Presupuesto de cuota
 
 Ejecución en Sonnet; Fable solo lee resúmenes y screenshots. Checkpoint de `/usage` al cerrar cada fase. Recortes en orden si hace falta: goldens → Patrol → reviewer de UI → segundo reviewer.
+
+---
+
+## Bloque 3 · En marcha (2026-09-10)
+
+**Desbloqueo:** el fundador decidió el 2026-09-10 abrir el Bloque 3 sin esperar el experimento 1 (*"Demos todo por cerrado hoy"*). Las premisas de `ALCANCE-V2.md` §Bloque 3 se mantienen como criterios de aceptación; lo que el experimento iba a decidir se resolvió así:
+
+| Decisión | Qué se decidió | Por qué |
+|---|---|---|
+| D13 Mapa | **`flutter_map` + `latlong2`** con tiles raster por URL (OpenStreetMap en dev; en prod una URL de MapTiler/Mapbox raster con token en `config/prod.json`, clave `MAP_TILE_URL`) | Sin SDK nativo, sin token para arrancar, renderiza en goldens. Mapbox SDK queda fuera (frágil, token secreto en Gradle) |
+| D14 Ubicación en segundo plano | `geolocator` + `flutter_foreground_task` (Android foreground service con notificación persistente que incluye **Detener**); iOS `location` en `UIBackgroundModes` | Mismo enfoque que la v1, que sí funcionó; la parada es accesible desde la notificación aunque la app esté cerrada |
+| D15 Transporte de posiciones | Tabla `live_positions` (una fila por rider y evento, **upsert** cada 5 s o 25 m) + **Supabase Realtime (postgres_changes)** filtrado por `event_id`. Sin Broadcast | Un solo transporte, durable: quien entra tarde ve la última posición; la última posición de un SOS queda en la base |
+| D16 SOS | Tabla `sos_alerts` (`active`/`closed`, `closed_by`, timestamps sellados por el servidor). Cliente: **cola local persistente antes de la red** (`shared_preferences`, JSON), envío por RPC `raise_sos` que devuelve la fila confirmada, reintento al recuperar conectividad y al abrir la app. UI: `pendiente` (no salió) vs `confirmado` (el servidor respondió). Push a los participantes por Edge Function `notify-sos` (webhook de BD) + Realtime para el banner in-app | Reglas de seguridad de `CLAUDE.md`: nunca falla en silencio, nunca dice "enviado" sin confirmación |
+| D17 Fallback sin datos | Al iniciar el tracking se cachea **contacto de emergencia + teléfono del organizador**. La pantalla de SOS activo ofrece **Llamar a mi contacto** y **SMS con coordenadas** (url_launcher) aunque no haya red | Los datos no se leen durante la emergencia |
+| D18 ¿123? (P-05) | **Rideglory no llama al 123 automáticamente, nunca.** Hay un botón terciario "Llamar al 123" que marca el número solo si el rider lo pulsa | El SOS es de rescate entre pares; llamar a emergencias es decisión explícita del rider |
+| D19 Cierre del SOS | Solo lo cierra **el rider que lo emitió o el organizador** (RPC `close_sos`); un trigger impide cerrarlo al terminar el evento o al perder conexión. Un SOS abierto sigue visible tras terminar la rodada | Regla "el SOS solo lo cierra una persona" |
+| D20 Rezagados | **No se construye detección automática.** El organizador ve por rider distancia al líder y "sin señal hace X min"; nunca una alarma | P-07: tasa base de paradas normales desconocida |
+| D21 Consentimiento | Hoja propia (`LV2`) antes del diálogo del sistema, **solo al pulsar "Compartir mi ubicación"**, nunca en splash ni al abrir el evento. Primero *mientras usa la app*; *todo el tiempo* se pide en un segundo paso explicando la notificación persistente. Indicador visible mientras está activa y **Detener** siempre a un toque | Prominent disclosure Play / Apple 5.1.5 |
+| D22 Fin del tracking | Termina por: Detener del rider, fin del evento (estado `finished` visto por Realtime o al reabrir), o cierre de sesión. Cada una **para el servicio nativo** y borra la fila de `live_positions`. **Ninguna cierra un SOS** | "El tracking en background termina de verdad" |
+| D23 Uso en marcha | La pantalla en vivo se diseña para **paradas**, no para el manubrio (P-16, Waze). Elementos grandes, una mano, dos segundos. El SOS también es accesible desde el detalle del evento en curso y desde la notificación persistente | Uso declarado |
+
+### Fases
+
+| Fase | Contenido | Ejecuta |
+|---|---|---|
+| **F9 Diseño** | LV1 Rodada en vivo (mapa + hoja de riders), LV2 aviso previo de ubicación, LV3 confirmar SOS (mantener pulsado), LV4 SOS activo propio (pendiente/confirmado + fallbacks + cerrar), LV5 SOS de otro rider (banner + tarjeta con distancia, llamar, ver en mapa), LV6 lista de riders del organizador, estados sin permiso / sin GPS / sin conexión / carga / vacío | pencil-designer + ui-ux-reviewer |
+| **F10 Backend** | `live_positions`, `sos_alerts`, RPCs `upsert_live_position`, `raise_sos`, `close_sos`, `end_live_ride`, RLS (solo participantes aprobados + organizador del evento en curso), vistas de enmascarado, Realtime habilitado, Edge Function `notify-sos`, pgTAP | supabase-backend-dev |
+| **F11 App** | Feature `live_ride`: dominio, datos, servicios (ubicación, foreground task, cola SOS), cubits y pantallas según Pencil; integración en detalle de evento (CTA "Ver rodada en vivo" cuando `started`) | flutter-dev |
+| **F12 Cierre** | Tests unit/widget/golden, suite Patrol, safety gate, reviews, fidelidad visual, docs | qa-automator, reviewers |
