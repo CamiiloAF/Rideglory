@@ -1,7 +1,10 @@
+import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/exceptions/domain_exception.dart';
 import '../domain/app_preferences_repository.dart';
+import '../domain/profile_error_code.dart';
 
 const _notificationsEnabledKey = 'profile.notifications_enabled';
 const _analyticsEnabledKey = 'profile.analytics_enabled';
@@ -16,22 +19,55 @@ class AppPreferencesRepositoryImpl implements AppPreferencesRepository {
   final SharedPreferences _sharedPreferences;
 
   @override
-  Future<bool> getNotificationsEnabled() async {
-    return _sharedPreferences.getBool(_notificationsEnabledKey) ?? true;
+  Future<Either<DomainException, bool>> getNotificationsEnabled() async {
+    try {
+      final value =
+          _sharedPreferences.getBool(_notificationsEnabledKey) ?? true;
+      return Right(value);
+    } catch (error) {
+      return const Left(
+        DomainException(message: ProfileErrorCode.preferencesUnavailable),
+      );
+    }
   }
 
   @override
-  Future<void> setNotificationsEnabled(bool enabled) async {
-    await _sharedPreferences.setBool(_notificationsEnabledKey, enabled);
+  Future<Either<DomainException, Unit>> setNotificationsEnabled(
+    bool enabled,
+  ) async {
+    try {
+      await _sharedPreferences.setBool(_notificationsEnabledKey, enabled);
+      return const Right(unit);
+    } catch (error) {
+      return const Left(
+        DomainException(message: ProfileErrorCode.preferencesUnavailable),
+      );
+    }
   }
 
   @override
-  Future<bool> getAnalyticsEnabled() async {
-    return _sharedPreferences.getBool(_analyticsEnabledKey) ?? true;
+  Future<Either<DomainException, bool>> getAnalyticsEnabled() async {
+    try {
+      final value = _sharedPreferences.getBool(_analyticsEnabledKey) ?? true;
+      return Right(value);
+    } catch (error) {
+      return const Left(
+        DomainException(message: ProfileErrorCode.preferencesUnavailable),
+      );
+    }
   }
 
   @override
-  Future<void> setAnalyticsEnabled(bool enabled) async {
-    await _sharedPreferences.setBool(_analyticsEnabledKey, enabled);
+  Future<Either<DomainException, Unit>> setAnalyticsEnabled(
+    bool enabled,
+  ) async {
+    try {
+      await _sharedPreferences.setBool(_analyticsEnabledKey, enabled);
+      return const Right(unit);
+    } catch (error) {
+      return const Left(
+        DomainException(message: ProfileErrorCode.preferencesUnavailable),
+      );
+    }
   }
 }

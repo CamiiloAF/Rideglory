@@ -74,6 +74,7 @@ class MaintenanceDetailCubit extends Cubit<MaintenanceDetailState> {
   }
 
   Future<void> updateReminder(MaintenanceReminder reminder) async {
+    emit(state.copyWith(reminderUpdate: const ResultState.loading()));
     final maintenance = state.maintenance;
     final params = RegisterMaintenanceParams(
       vehicleId: maintenance.vehicleId,
@@ -87,8 +88,15 @@ class MaintenanceDetailCubit extends Cubit<MaintenanceDetailState> {
     );
     final result = await _updateMaintenance(maintenance.id, params);
     result.fold(
-      (error) {},
-      (updated) => emit(state.copyWith(maintenance: updated)),
+      (error) => emit(
+        state.copyWith(reminderUpdate: ResultState.error(error: error)),
+      ),
+      (updated) => emit(
+        state.copyWith(
+          maintenance: updated,
+          reminderUpdate: const ResultState.data(data: unit),
+        ),
+      ),
     );
   }
 

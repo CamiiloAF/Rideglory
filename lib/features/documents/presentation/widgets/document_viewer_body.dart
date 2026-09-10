@@ -31,9 +31,10 @@ class DocumentViewerBody extends StatelessWidget {
       notUploaded: () => DocumentNotUploadedView(vehicleId: vehicleId, kind: kind),
       offlineNoCache: () => OfflineStateView(onRetry: onRetry),
       error: () => ErrorStateView(onRetry: onRetry),
-      loaded: (bytes, isOffline) => DocumentViewerContent(
+      loaded: (bytes, isOffline, document) => DocumentViewerContent(
         bytes: bytes,
         isOffline: isOffline,
+        document: document,
         vehicleId: vehicleId,
         kind: kind,
       ),

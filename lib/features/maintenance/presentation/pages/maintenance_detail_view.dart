@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -5,6 +6,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/domain/result_state.dart';
 import '../../../../core/utils/spanish_date_format.dart';
+import '../../../../design_system/components/app_banner.dart';
 import '../../../../design_system/components/app_page_header.dart';
 import '../../../../l10n/l10n_extensions.dart';
 import '../../../../shared/widgets/states/error_state_view.dart';
@@ -44,21 +46,38 @@ class MaintenanceDetailView extends StatelessWidget {
               actionIcon: LucideIcons.moreVertical,
               onAction: () => _openActions(context, cubit),
             ),
-            body: state.allMaintenances.when(
-              initial: () => const SkeletonList(),
-              loading: () => const SkeletonList(),
-              error: (error) =>
-                  ErrorStateView(onRetry: () => cubit.start(state.maintenance)),
-              empty: () => MaintenanceDetailContent(
-                state: state,
-                onTogglePrevious: cubit.toggleShowAllPrevious,
-                onEditReminder: () => _openIntervalSheet(context, cubit, state),
-              ),
-              data: (_) => MaintenanceDetailContent(
-                state: state,
-                onTogglePrevious: cubit.toggleShowAllPrevious,
-                onEditReminder: () => _openIntervalSheet(context, cubit, state),
-              ),
+            body: Column(
+              children: [
+                if (state.deletion is Error<Unit>)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 6, 20, 0),
+                    child: AppBanner(
+                      title: context.l10n.maintenance_delete_error_title,
+                      body: context.l10n.maintenance_delete_error_body,
+                    ),
+                  ),
+                Expanded(
+                  child: state.allMaintenances.when(
+                    initial: () => const SkeletonList(),
+                    loading: () => const SkeletonList(),
+                    error: (error) => ErrorStateView(
+                      onRetry: () => cubit.start(state.maintenance),
+                    ),
+                    empty: () => MaintenanceDetailContent(
+                      state: state,
+                      onTogglePrevious: cubit.toggleShowAllPrevious,
+                      onEditReminder: () =>
+                          _openIntervalSheet(context, cubit, state),
+                    ),
+                    data: (_) => MaintenanceDetailContent(
+                      state: state,
+                      onTogglePrevious: cubit.toggleShowAllPrevious,
+                      onEditReminder: () =>
+                          _openIntervalSheet(context, cubit, state),
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
         },

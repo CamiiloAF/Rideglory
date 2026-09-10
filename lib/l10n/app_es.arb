@@ -60,6 +60,15 @@
   "maintenance_empty_action": "Registrar mantenimiento",
   "@maintenance_empty_action": {"description": "Botón del estado vacío de mantenimiento"},
 
+  "maintenance_no_vehicles_title": "Primero registra una moto",
+  "@maintenance_no_vehicles_title": {"description": "Título del estado vacío cuando el rider no tiene motos en el garaje"},
+
+  "maintenance_no_vehicles_body": "El mantenimiento se lleva por moto: agrega la tuya al garaje para empezar a registrar.",
+  "@maintenance_no_vehicles_body": {"description": "Cuerpo del estado vacío cuando el rider no tiene motos en el garaje"},
+
+  "maintenance_no_vehicles_action": "Agregar moto",
+  "@maintenance_no_vehicles_action": {"description": "Botón del estado vacío cuando el rider no tiene motos en el garaje"},
+
   "maintenance_page_title": "Mantenimiento",
   "@maintenance_page_title": {"description": "Título del encabezado de la pantalla principal de mantenimiento"},
 
@@ -167,6 +176,18 @@
 
   "maintenance_delete_confirm_cancel": "Cancelar",
   "@maintenance_delete_confirm_cancel": {"description": "Botón de cancelar el borrado"},
+
+  "maintenance_delete_error_title": "No pudimos eliminar el mantenimiento",
+  "@maintenance_delete_error_title": {"description": "Título del banner de error al borrar un mantenimiento"},
+
+  "maintenance_delete_error_body": "Revisa tu conexión e inténtalo de nuevo.",
+  "@maintenance_delete_error_body": {"description": "Cuerpo del banner de error al borrar un mantenimiento"},
+
+  "maintenance_reminder_update_error_title": "No pudimos guardar el recordatorio",
+  "@maintenance_reminder_update_error_title": {"description": "Título del banner de error al editar el recordatorio de un mantenimiento"},
+
+  "maintenance_reminder_update_error_body": "Revisa tu conexión e inténtalo de nuevo.",
+  "@maintenance_reminder_update_error_body": {"description": "Cuerpo del banner de error al editar el recordatorio de un mantenimiento"},
 
   "maintenance_register_title": "Registrar mantenimiento",
   "@maintenance_register_title": {"description": "Título del encabezado del asistente de registro"},
@@ -519,6 +540,18 @@
   "@documents_retake_button": {"description": "Botón para repetir la captura en la subida de documento"},
   "documents_reminder_body": "{days, plural, one{Vence mañana} other{Vence en {days} días}}",
   "@documents_reminder_body": {"description": "Cuerpo de la notificación local de recordatorio de vencimiento", "placeholders": {"days": {"type": "int"}}},
+  "documents_reminder_toggle_label": "Recordarme el vencimiento",
+  "@documents_reminder_toggle_label": {"description": "Label del switch de recordatorio en el visor de documentos"},
+  "documents_reminder_toggle_subtitle": "Te avisamos 30, 7 y 1 día antes.",
+  "@documents_reminder_toggle_subtitle": {"description": "Subtítulo del switch de recordatorio en el visor de documentos"},
+  "notification_permission_sheet_title": "Antes de pedirte el permiso",
+  "@notification_permission_sheet_title": {"description": "Título de la hoja de aviso propio antes del permiso de notificaciones"},
+  "notification_permission_sheet_body": "Rideglory te avisa de vencimientos de documentos y mantenimientos con notificaciones en el teléfono. Ahora te va a aparecer el permiso del sistema — dale \"Permitir\" para no perderte esos avisos.",
+  "@notification_permission_sheet_body": {"description": "Cuerpo de la hoja de aviso propio antes del permiso de notificaciones"},
+  "notification_permission_sheet_allow": "Permitir",
+  "@notification_permission_sheet_allow": {"description": "Botón para continuar al permiso del sistema desde la hoja de aviso propio"},
+  "notification_permission_sheet_cancel": "Ahora no",
+  "@notification_permission_sheet_cancel": {"description": "Botón para cerrar la hoja de aviso propio de notificaciones sin pedir el permiso"},
   "auth_welcome_title": "Rideglory",
   "@auth_welcome_title": {
     "description": "Título de marca en bienvenida"

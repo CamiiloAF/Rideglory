@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../domain/models/vehicle_document.dart';
+
 part 'document_viewer_state.freezed.dart';
 
 /// El visor tiene tres desenlaces propios además de carga/error genéricos:
@@ -10,8 +12,11 @@ part 'document_viewer_state.freezed.dart';
 class DocumentViewerState with _$DocumentViewerState {
   const factory DocumentViewerState.loading() = DocumentViewerLoading;
 
-  const factory DocumentViewerState.loaded({required Uint8List bytes, required bool isOffline}) =
-      DocumentViewerLoaded;
+  const factory DocumentViewerState.loaded({
+    required Uint8List bytes,
+    required bool isOffline,
+    required VehicleDocument document,
+  }) = DocumentViewerLoaded;
 
   const factory DocumentViewerState.notUploaded() = DocumentViewerNotUploaded;
 

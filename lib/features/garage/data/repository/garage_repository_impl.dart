@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/exceptions/domain_exception.dart';
+import '../../../documents/domain/repository/documents_repository.dart';
 import '../../domain/models/vehicle.dart';
 import '../../domain/models/vehicle_document_alert.dart';
 import '../../domain/repository/garage_repository.dart';
@@ -10,9 +11,10 @@ import '../dto/vehicle_dto.dart';
 
 @Injectable(as: GarageRepository)
 class GarageRepositoryImpl implements GarageRepository {
-  GarageRepositoryImpl(this._datasource);
+  GarageRepositoryImpl(this._datasource, this._documentsRepository);
 
   final GarageRemoteDatasource _datasource;
+  final DocumentsRepository _documentsRepository;
 
   @override
   Future<Either<DomainException, List<Vehicle>>> getVehicles() async {
@@ -58,6 +60,7 @@ class GarageRepositoryImpl implements GarageRepository {
   Future<Either<DomainException, Unit>> archiveVehicle(String vehicleId) async {
     try {
       await _datasource.archiveVehicle(vehicleId);
+      await _documentsRepository.cancelRemindersForVehicle(vehicleId);
       return const Right(unit);
     } catch (error) {
       return Left(_mapError(error));
@@ -87,6 +90,11 @@ class GarageRepositoryImpl implements GarageRepository {
   @override
   Future<Either<DomainException, Unit>> deleteVehicle(String vehicleId) async {
     try {
+      final imagePath = await _datasource.fetchImagePath(vehicleId);
+      if (imagePath != null) {
+        await _datasource.deleteImage(imagePath);
+      }
+      await _documentsRepository.deleteAllForVehicle(vehicleId);
       await _datasource.deleteVehicle(vehicleId);
       return const Right(unit);
     } catch (error) {

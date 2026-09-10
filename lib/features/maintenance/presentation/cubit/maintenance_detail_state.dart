@@ -21,6 +21,7 @@ abstract class MaintenanceDetailState with _$MaintenanceDetailState {
     ResultState<List<Maintenance>> allMaintenances,
     @Default(false) bool showAllPrevious,
     @Default(ResultState<Unit>.initial()) ResultState<Unit> deletion,
+    @Default(ResultState<Unit>.initial()) ResultState<Unit> reminderUpdate,
     VehicleOption? vehicle,
   }) = _MaintenanceDetailState;
 

@@ -51,4 +51,13 @@ class DocumentLocalCacheService {
       file.deleteSync();
     }
   }
+
+  /// Borra todo el caché de una moto (SOAT y RTM): se usa al eliminarla del
+  /// garaje, para que no queden documentos huérfanos en el dispositivo.
+  Future<void> deleteAllForVehicle(String vehicleId) async {
+    final directory = await _vehicleDirectory(vehicleId);
+    if (directory.existsSync()) {
+      directory.deleteSync(recursive: true);
+    }
+  }
 }

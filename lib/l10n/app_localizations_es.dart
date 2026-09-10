@@ -62,6 +62,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get maintenance_empty_action => 'Registrar mantenimiento';
 
   @override
+  String get maintenance_no_vehicles_title => 'Primero registra una moto';
+
+  @override
+  String get maintenance_no_vehicles_body =>
+      'El mantenimiento se lleva por moto: agrega la tuya al garaje para empezar a registrar.';
+
+  @override
+  String get maintenance_no_vehicles_action => 'Agregar moto';
+
+  @override
   String get maintenance_page_title => 'Mantenimiento';
 
   @override
@@ -185,6 +195,22 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get maintenance_delete_confirm_cancel => 'Cancelar';
+
+  @override
+  String get maintenance_delete_error_title =>
+      'No pudimos eliminar el mantenimiento';
+
+  @override
+  String get maintenance_delete_error_body =>
+      'Revisa tu conexión e inténtalo de nuevo.';
+
+  @override
+  String get maintenance_reminder_update_error_title =>
+      'No pudimos guardar el recordatorio';
+
+  @override
+  String get maintenance_reminder_update_error_body =>
+      'Revisa tu conexión e inténtalo de nuevo.';
 
   @override
   String get maintenance_register_title => 'Registrar mantenimiento';
@@ -685,6 +711,27 @@ class AppLocalizationsEs extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get documents_reminder_toggle_label => 'Recordarme el vencimiento';
+
+  @override
+  String get documents_reminder_toggle_subtitle =>
+      'Te avisamos 30, 7 y 1 día antes.';
+
+  @override
+  String get notification_permission_sheet_title =>
+      'Antes de pedirte el permiso';
+
+  @override
+  String get notification_permission_sheet_body =>
+      'Rideglory te avisa de vencimientos de documentos y mantenimientos con notificaciones en el teléfono. Ahora te va a aparecer el permiso del sistema — dale \"Permitir\" para no perderte esos avisos.';
+
+  @override
+  String get notification_permission_sheet_allow => 'Permitir';
+
+  @override
+  String get notification_permission_sheet_cancel => 'Ahora no';
 
   @override
   String get auth_welcome_title => 'Rideglory';

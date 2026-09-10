@@ -6,6 +6,7 @@ import '../../../../core/di/injection.dart';
 import '../../../../core/domain/result_state.dart';
 import '../../../../core/router/app_routes.dart';
 import '../../../../design_system/components/app_page_header.dart';
+import '../../../../design_system/components/app_primary_button.dart';
 import '../../../../design_system/components/app_secondary_button.dart';
 import '../../../../l10n/l10n_extensions.dart';
 import '../../../../shared/widgets/states/error_state_view.dart';
@@ -14,7 +15,6 @@ import '../cubit/delete_account_cubit.dart';
 import '../cubit/delete_account_state.dart';
 import '../cubit/delete_account_summary_cubit.dart';
 import '../profile_error_translator.dart';
-import '../widgets/delete_account_destructive_button.dart';
 import '../widgets/delete_account_summary_content.dart';
 import '../widgets/delete_account_summary_skeleton.dart';
 import '../widgets/delete_confirm_sheet.dart';
@@ -96,7 +96,8 @@ class DeleteAccountExplanationPage extends StatelessWidget {
                           padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
                           child: Column(
                             children: [
-                              DeleteAccountDestructiveButton(
+                              AppPrimaryButton(
+                                destructive: true,
                                 label:
                                     context.l10n.profile_delete_continue_button,
                                 onPressed: () => _openConfirmSheet(

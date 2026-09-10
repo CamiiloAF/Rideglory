@@ -10,14 +10,21 @@ import '../../domain/models/vehicle_documents_summary.dart';
 import '../../domain/repository/documents_repository.dart';
 import '../datasources/documents_remote_datasource.dart';
 import '../services/document_local_cache_service.dart';
+import '../services/document_reminder_scheduler.dart';
 
 @Injectable(as: DocumentsRepository)
 class DocumentsRepositoryImpl implements DocumentsRepository {
-  DocumentsRepositoryImpl(this._datasource, this._localCache, this._connectivity);
+  DocumentsRepositoryImpl(
+    this._datasource,
+    this._localCache,
+    this._connectivity,
+    this._reminderScheduler,
+  );
 
   final DocumentsRemoteDatasource _datasource;
   final DocumentLocalCacheService _localCache;
   final Connectivity _connectivity;
+  final DocumentReminderScheduler _reminderScheduler;
 
   /// Mensaje interno (no se muestra crudo en la UI) que la vista del
   /// documento usa para distinguir "sin conexión y sin copia local" de un
@@ -78,6 +85,29 @@ class DocumentsRepositoryImpl implements DocumentsRepository {
     try {
       await _datasource.deleteDocument(vehicleId, kind.name);
       await _localCache.delete(vehicleId, kind);
+      await _reminderScheduler.cancelForDocument(vehicleId, kind);
+      return const Right(unit);
+    } catch (error) {
+      return Left(_mapError(error));
+    }
+  }
+
+  @override
+  Future<Either<DomainException, Unit>> deleteAllForVehicle(String vehicleId) async {
+    try {
+      await _datasource.deleteAllFilesForVehicle(vehicleId);
+      await _localCache.deleteAllForVehicle(vehicleId);
+      await _reminderScheduler.cancelAllForVehicle(vehicleId);
+      return const Right(unit);
+    } catch (error) {
+      return Left(_mapError(error));
+    }
+  }
+
+  @override
+  Future<Either<DomainException, Unit>> cancelRemindersForVehicle(String vehicleId) async {
+    try {
+      await _reminderScheduler.cancelAllForVehicle(vehicleId);
       return const Right(unit);
     } catch (error) {
       return Left(_mapError(error));

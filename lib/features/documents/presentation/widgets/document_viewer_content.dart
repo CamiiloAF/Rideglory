@@ -14,6 +14,7 @@ import '../../../../design_system/tokens/app_colors.dart';
 import '../../../../l10n/l10n_extensions.dart';
 import '../../domain/models/vehicle_document.dart';
 import 'document_preview_frame.dart';
+import 'document_reminder_toggle.dart';
 
 /// Contenido del visor con archivo, banner sin conexión si aplica, y las
 /// acciones de compartir/reemplazar.
@@ -23,6 +24,7 @@ class DocumentViewerContent extends StatelessWidget {
   const DocumentViewerContent({
     required this.bytes,
     required this.isOffline,
+    required this.document,
     required this.vehicleId,
     required this.kind,
     super.key,
@@ -30,6 +32,7 @@ class DocumentViewerContent extends StatelessWidget {
 
   final Uint8List bytes;
   final bool isOffline;
+  final VehicleDocument document;
   final String vehicleId;
   final DocumentKind kind;
 
@@ -58,6 +61,8 @@ class DocumentViewerContent extends StatelessWidget {
             const SizedBox(height: 14),
           ],
           Expanded(child: DocumentPreviewFrame(bytes: bytes)),
+          const SizedBox(height: 12),
+          DocumentReminderToggle(vehicleId: vehicleId, document: document),
           const SizedBox(height: 12),
           Text(
             context.l10n.documents_saved_locally_note,

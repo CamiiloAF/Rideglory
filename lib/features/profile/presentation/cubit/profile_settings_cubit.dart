@@ -19,9 +19,9 @@ class ProfileSettingsCubit extends Cubit<ProfileSettingsState> {
 
   Future<void> load() async {
     emit(state.copyWith(profile: const ResultState.loading()));
-    final notificationsEnabled = await _appPreferencesRepository
+    final notificationsEnabledResult = await _appPreferencesRepository
         .getNotificationsEnabled();
-    final analyticsEnabled = await _appPreferencesRepository
+    final analyticsEnabledResult = await _appPreferencesRepository
         .getAnalyticsEnabled();
     final result = await _getProfile();
     emit(
@@ -30,19 +30,41 @@ class ProfileSettingsCubit extends Cubit<ProfileSettingsState> {
           (error) => ResultState.error(error: error),
           (profile) => ResultState.data(data: profile),
         ),
-        notificationsEnabled: notificationsEnabled,
-        analyticsEnabled: analyticsEnabled,
+        notificationsEnabled: notificationsEnabledResult.getOrElse(
+          () => state.notificationsEnabled,
+        ),
+        analyticsEnabled: analyticsEnabledResult.getOrElse(
+          () => state.analyticsEnabled,
+        ),
       ),
     );
   }
 
   Future<void> setNotificationsEnabled(bool enabled) async {
-    await _appPreferencesRepository.setNotificationsEnabled(enabled);
-    emit(state.copyWith(notificationsEnabled: enabled));
+    final result = await _appPreferencesRepository.setNotificationsEnabled(
+      enabled,
+    );
+    result.fold(
+      (error) => developer.log(
+        'No se pudo guardar la preferencia de notificaciones.',
+        name: 'ProfileSettingsCubit',
+        error: error,
+      ),
+      (_) => emit(state.copyWith(notificationsEnabled: enabled)),
+    );
   }
 
   Future<void> setAnalyticsEnabled(bool enabled) async {
-    await _appPreferencesRepository.setAnalyticsEnabled(enabled);
+    final result = await _appPreferencesRepository.setAnalyticsEnabled(
+      enabled,
+    );
+    if (result.isLeft()) {
+      developer.log(
+        'No se pudo guardar la preferencia de analítica.',
+        name: 'ProfileSettingsCubit',
+      );
+      return;
+    }
     try {
       await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(enabled);
     } catch (error, stackTrace) {

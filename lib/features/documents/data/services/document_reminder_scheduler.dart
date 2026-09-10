@@ -1,14 +1,15 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:injectable/injectable.dart';
-import 'package:timezone/data/latest.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
+import '../../../../core/services/notifications/local_notifications_initializer.dart';
 import '../../domain/models/vehicle_document.dart';
 
 /// Recordatorios locales de vencimiento (D6): 30, 7 y 1 día antes, sin
-/// depender de red ni de servidor propio. Colombia no tiene horario de
-/// verano y es un único huso (`America/Bogota`), así que se fija ese
-/// `Location` en vez de resolver el del dispositivo.
+/// depender de red ni de servidor propio. La zona horaria (`tz.local`) y el
+/// plugin ya quedaron inicializados por `LocalNotificationsInitializer` en
+/// `main.dart`, antes de que se resuelva este servicio por DI — ver ahí para
+/// la resolución de la zona real del dispositivo con fallback a Bogotá.
 @lazySingleton
 class DocumentReminderScheduler {
   DocumentReminderScheduler(this._plugin);
@@ -18,16 +19,10 @@ class DocumentReminderScheduler {
   static const List<int> daysBeforeExpiry = [30, 7, 1];
   static const int _reminderHour = 9;
 
-  Future<void> init() async {
-    tz_data.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation('America/Bogota'));
-
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const iosSettings = DarwinInitializationSettings();
-    await _plugin.initialize(
-      const InitializationSettings(android: androidSettings, iOS: iosSettings),
-    );
-  }
+  /// Diálogo nativo del permiso de notificaciones, siempre precedido por el
+  /// aviso propio (`NotificationPermissionSheet`).
+  Future<bool> requestPermission() =>
+      LocalNotificationsInitializer.requestPermission();
 
   /// Cancela lo anterior y programa de nuevo desde la fecha de vencimiento
   /// actual. Se usa al subir, reemplazar o reactivar el recordatorio.
@@ -69,6 +64,14 @@ class DocumentReminderScheduler {
   Future<void> cancelForDocument(String vehicleId, DocumentKind kind) async {
     for (final daysBefore in daysBeforeExpiry) {
       await _plugin.cancel(reminderId(vehicleId, kind, daysBefore));
+    }
+  }
+
+  /// Cancela SOAT y RTM de una moto: se usa al borrarla o archivarla, para
+  /// que ningún recordatorio sobreviva a una moto que ya no existe.
+  Future<void> cancelAllForVehicle(String vehicleId) async {
+    for (final kind in DocumentKind.values) {
+      await cancelForDocument(vehicleId, kind);
     }
   }
 

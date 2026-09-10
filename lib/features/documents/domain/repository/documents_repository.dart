@@ -38,6 +38,17 @@ abstract class DocumentsRepository {
 
   Future<Either<DomainException, Unit>> deleteDocument(String vehicleId, DocumentKind kind);
 
+  /// Limpieza completa al eliminar una moto: objetos de Storage (SOAT y
+  /// RTM), caché local y recordatorios programados. Las filas de
+  /// `vehicle_documents` se van solas por `on delete cascade` cuando se
+  /// borra la moto.
+  Future<Either<DomainException, Unit>> deleteAllForVehicle(String vehicleId);
+
+  /// Solo cancela los recordatorios (SOAT y RTM) de una moto, sin tocar
+  /// Storage ni la caché: se usa al archivarla, donde los documentos
+  /// siguen existiendo pero dejan de avisar.
+  Future<Either<DomainException, Unit>> cancelRemindersForVehicle(String vehicleId);
+
   Future<Either<DomainException, Unit>> setReminderEnabled(
     String vehicleId,
     DocumentKind kind,

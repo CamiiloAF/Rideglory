@@ -34,12 +34,12 @@ class DeleteAccountBlockedPage extends StatelessWidget {
               children: [
                 AppPrimaryButton(
                   label: context.l10n.profile_delete_blocked_view_event,
-                  onPressed: () => context.goNamed(AppRoutes.events),
+                  onPressed: () => context.pushNamed(AppRoutes.events),
                 ),
                 const SizedBox(height: 10),
                 AppSecondaryButton(
                   label: context.l10n.profile_delete_blocked_back_to_profile,
-                  onPressed: () => context.goNamed(AppRoutes.profile),
+                  onPressed: () => context.pushNamed(AppRoutes.profile),
                 ),
               ],
             ),

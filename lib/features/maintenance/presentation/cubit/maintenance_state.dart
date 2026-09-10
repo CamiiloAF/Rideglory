@@ -55,7 +55,10 @@ abstract class MaintenanceState with _$MaintenanceState {
             .where((item) => item.vehicleId == selectedVehicleId)
             .toList();
 
-  bool get isEmpty => !isLoading && !hasError && maintenanceList.isEmpty;
+  bool get hasNoVehicles => !isLoading && !hasError && vehicleList.isEmpty;
+
+  bool get isEmpty =>
+      !isLoading && !hasError && !hasNoVehicles && maintenanceList.isEmpty;
 
   List<MaintenanceAgendaItem> get agendaItems {
     final items = MaintenanceAgendaCalculator.compute(

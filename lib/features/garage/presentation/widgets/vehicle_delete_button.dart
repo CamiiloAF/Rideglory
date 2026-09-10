@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../design_system/components/app_secondary_button.dart';
-import '../../../../design_system/tokens/app_colors.dart';
 import '../../../../l10n/l10n_extensions.dart';
 import '../cubit/vehicle_form_cubit.dart';
+import 'vehicle_delete_confirm_sheet.dart';
 
 /// "Eliminar moto": borra la moto (y en cascada sus documentos) tras
 /// confirmar. Rojo de error, nunca el naranja/amarillo de marca.
@@ -15,32 +15,19 @@ import '../cubit/vehicle_form_cubit.dart';
 class VehicleDeleteButton extends StatelessWidget {
   const VehicleDeleteButton({super.key});
 
-  Future<void> _confirmAndDelete(BuildContext context) async {
-    final colors = Theme.of(context).extension<AppColors>()!;
-    final confirmed = await showDialog<bool>(
+  void _openDeleteConfirm(BuildContext context) {
+    final cubit = context.read<VehicleFormCubit>();
+    showModalBottomSheet<void>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(dialogContext.l10n.garage_delete_confirm_title),
-        content: Text(dialogContext.l10n.garage_delete_confirm_body),
-        actions: [
-          TextButton(
-            onPressed: () => dialogContext.pop(false),
-            child: Text(dialogContext.l10n.garage_delete_cancel),
-          ),
-          TextButton(
-            onPressed: () => dialogContext.pop(true),
-            child: Text(
-              dialogContext.l10n.garage_delete_confirm_action,
-              style: TextStyle(color: colors.errorText),
-            ),
-          ),
-        ],
+      isScrollControlled: true,
+      builder: (sheetContext) => VehicleDeleteConfirmSheet(
+        onConfirm: () async {
+          Navigator.of(sheetContext).pop();
+          final deleted = await cubit.delete();
+          if (deleted && context.mounted) context.pop(true);
+        },
       ),
     );
-    if (confirmed != true || !context.mounted) return;
-
-    final deleted = await context.read<VehicleFormCubit>().delete();
-    if (deleted && context.mounted) context.pop(true);
   }
 
   @override
@@ -49,7 +36,7 @@ class VehicleDeleteButton extends StatelessWidget {
       label: context.l10n.garage_delete_vehicle_button,
       icon: LucideIcons.trash2,
       destructive: true,
-      onPressed: () => _confirmAndDelete(context),
+      onPressed: () => _openDeleteConfirm(context),
     );
   }
 }

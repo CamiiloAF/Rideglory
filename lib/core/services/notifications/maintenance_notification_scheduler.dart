@@ -2,6 +2,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:injectable/injectable.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import 'local_notifications_initializer.dart';
+
 /// Programa y cancela el recordatorio local del próximo servicio de un
 /// mantenimiento (D6: sin servidor propio, el recordatorio vive en el
 /// dispositivo). Se cancela siempre que el registro se edita o se borra.
@@ -14,19 +16,7 @@ class MaintenanceNotificationScheduler {
   static const _channelId = 'maintenance_reminders';
   static const _channelName = 'Recordatorios de mantenimiento';
 
-  Future<bool> requestPermission() async {
-    final androidGranted = await _plugin
-        .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin
-        >()
-        ?.requestNotificationsPermission();
-    final iosGranted = await _plugin
-        .resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin
-        >()
-        ?.requestPermissions(alert: true, badge: true, sound: true);
-    return (androidGranted ?? iosGranted) ?? true;
-  }
+  Future<bool> requestPermission() => LocalNotificationsInitializer.requestPermission();
 
   Future<void> scheduleForMaintenance({
     required String maintenanceId,

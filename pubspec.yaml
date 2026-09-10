@@ -80,6 +80,7 @@ dependencies:
   # Crash reporting: Sentry SDK, prod-only
   sentry_flutter: ^9.24.0
   package_info_plus: ^9.0.1
+  flutter_timezone: ^5.1.0
 
 dev_dependencies:
   flutter_test:

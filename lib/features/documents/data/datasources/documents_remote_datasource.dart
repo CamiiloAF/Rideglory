@@ -79,4 +79,15 @@ class DocumentsRemoteDatasource {
   Future<void> deleteFile(String filePath) async {
     await _client.storage.from(_bucket).remove([filePath]);
   }
+
+  /// Borra SOAT y RTM del bucket para una moto entera (`<owner>/<vehicleId>/*`),
+  /// sin importar la extensión: se usa al eliminar la moto del garaje.
+  Future<void> deleteAllFilesForVehicle(String vehicleId) async {
+    final prefix = '$_ownerId/$vehicleId';
+    final objects = await _client.storage.from(_bucket).list(path: prefix);
+    if (objects.isEmpty) return;
+    await _client.storage
+        .from(_bucket)
+        .remove(objects.map((object) => '$prefix/${object.name}').toList());
+  }
 }

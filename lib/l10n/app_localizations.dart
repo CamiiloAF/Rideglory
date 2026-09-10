@@ -190,6 +190,24 @@ abstract class AppLocalizations {
   /// **'Registrar mantenimiento'**
   String get maintenance_empty_action;
 
+  /// Título del estado vacío cuando el rider no tiene motos en el garaje
+  ///
+  /// In es, this message translates to:
+  /// **'Primero registra una moto'**
+  String get maintenance_no_vehicles_title;
+
+  /// Cuerpo del estado vacío cuando el rider no tiene motos en el garaje
+  ///
+  /// In es, this message translates to:
+  /// **'El mantenimiento se lleva por moto: agrega la tuya al garaje para empezar a registrar.'**
+  String get maintenance_no_vehicles_body;
+
+  /// Botón del estado vacío cuando el rider no tiene motos en el garaje
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar moto'**
+  String get maintenance_no_vehicles_action;
+
   /// Título del encabezado de la pantalla principal de mantenimiento
   ///
   /// In es, this message translates to:
@@ -405,6 +423,30 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Cancelar'**
   String get maintenance_delete_confirm_cancel;
+
+  /// Título del banner de error al borrar un mantenimiento
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos eliminar el mantenimiento'**
+  String get maintenance_delete_error_title;
+
+  /// Cuerpo del banner de error al borrar un mantenimiento
+  ///
+  /// In es, this message translates to:
+  /// **'Revisa tu conexión e inténtalo de nuevo.'**
+  String get maintenance_delete_error_body;
+
+  /// Título del banner de error al editar el recordatorio de un mantenimiento
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos guardar el recordatorio'**
+  String get maintenance_reminder_update_error_title;
+
+  /// Cuerpo del banner de error al editar el recordatorio de un mantenimiento
+  ///
+  /// In es, this message translates to:
+  /// **'Revisa tu conexión e inténtalo de nuevo.'**
+  String get maintenance_reminder_update_error_body;
 
   /// Título del encabezado del asistente de registro
   ///
@@ -1260,6 +1302,42 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'{days, plural, one{Vence mañana} other{Vence en {days} días}}'**
   String documents_reminder_body(int days);
+
+  /// Label del switch de recordatorio en el visor de documentos
+  ///
+  /// In es, this message translates to:
+  /// **'Recordarme el vencimiento'**
+  String get documents_reminder_toggle_label;
+
+  /// Subtítulo del switch de recordatorio en el visor de documentos
+  ///
+  /// In es, this message translates to:
+  /// **'Te avisamos 30, 7 y 1 día antes.'**
+  String get documents_reminder_toggle_subtitle;
+
+  /// Título de la hoja de aviso propio antes del permiso de notificaciones
+  ///
+  /// In es, this message translates to:
+  /// **'Antes de pedirte el permiso'**
+  String get notification_permission_sheet_title;
+
+  /// Cuerpo de la hoja de aviso propio antes del permiso de notificaciones
+  ///
+  /// In es, this message translates to:
+  /// **'Rideglory te avisa de vencimientos de documentos y mantenimientos con notificaciones en el teléfono. Ahora te va a aparecer el permiso del sistema — dale \"Permitir\" para no perderte esos avisos.'**
+  String get notification_permission_sheet_body;
+
+  /// Botón para continuar al permiso del sistema desde la hoja de aviso propio
+  ///
+  /// In es, this message translates to:
+  /// **'Permitir'**
+  String get notification_permission_sheet_allow;
+
+  /// Botón para cerrar la hoja de aviso propio de notificaciones sin pedir el permiso
+  ///
+  /// In es, this message translates to:
+  /// **'Ahora no'**
+  String get notification_permission_sheet_cancel;
 
   /// Título de marca en bienvenida
   ///

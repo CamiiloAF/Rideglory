@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/router/app_routes.dart';
 import '../../../../design_system/components/app_fab.dart';
 import '../../../../l10n/l10n_extensions.dart';
 import '../../../../shared/cubits/connectivity/connectivity_cubit.dart';
@@ -53,6 +54,15 @@ class MaintenanceView extends StatelessWidget {
                     return ErrorStateView(
                       title: context.l10n.maintenance_error_title,
                       onRetry: cubit.load,
+                    );
+                  }
+                  if (state.hasNoVehicles) {
+                    return EmptyStateView(
+                      icon: Icons.two_wheeler_outlined,
+                      title: context.l10n.maintenance_no_vehicles_title,
+                      body: context.l10n.maintenance_no_vehicles_body,
+                      actionLabel: context.l10n.maintenance_no_vehicles_action,
+                      onAction: () => context.pushNamed(AppRoutes.vehicleAdd),
                     );
                   }
                   if (state.isEmpty) {

@@ -1,8 +1,11 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
+import '../../../../core/domain/result_state.dart';
 import '../../../../core/utils/spanish_date_format.dart';
 import '../../../../core/utils/thousands_input_formatter.dart';
+import '../../../../design_system/components/app_banner.dart';
 import '../../../../design_system/components/app_outlined_card.dart';
 import '../../../../l10n/l10n_extensions.dart';
 import '../cubit/maintenance_detail_state.dart';
@@ -57,6 +60,13 @@ class MaintenanceDetailContent extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 6, 20, 32),
       children: [
+        if (state.reminderUpdate is Error<Unit>) ...[
+          AppBanner(
+            title: l10n.maintenance_reminder_update_error_title,
+            body: l10n.maintenance_reminder_update_error_body,
+          ),
+          const SizedBox(height: 14),
+        ],
         MaintenanceTicket(
           odometerLabel: l10n.maintenance_value_km(
             ThousandsInputFormatter.format(maintenance.odometer) ??

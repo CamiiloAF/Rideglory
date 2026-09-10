@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
+import '../../../../design_system/components/app_primary_button.dart';
 import '../../../../design_system/components/app_secondary_button.dart';
 import '../../../../design_system/tokens/app_colors.dart';
 import '../../../../l10n/l10n_extensions.dart';
 import '../../domain/delete_account_summary.dart';
 import '../cubit/delete_account_cubit.dart';
 import '../cubit/delete_account_state.dart';
-import 'delete_account_destructive_button.dart';
 
 /// Paso 2 — hoja de confirmación: casilla "entiendo que no se puede
 /// recuperar" y el botón final de borrado. Cierra sola al iniciarse el
@@ -133,7 +133,8 @@ class _DeleteConfirmSheetState extends State<DeleteConfirmSheet> {
               ),
             ),
             const SizedBox(height: 14),
-            DeleteAccountDestructiveButton(
+            AppPrimaryButton(
+              destructive: true,
               label: context.l10n.profile_delete_confirm_button,
               onPressed: _understood
                   ? () => context.read<DeleteAccountCubit>().confirm()

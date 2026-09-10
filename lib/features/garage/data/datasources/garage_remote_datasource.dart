@@ -79,6 +79,17 @@ class GarageRemoteDatasource {
     await _client.from(_table).delete().eq('id', vehicleId);
   }
 
+  /// `image_path` de la moto, para poder borrar su foto de Storage antes de
+  /// eliminarla. `null` si nunca tuvo una.
+  Future<String?> fetchImagePath(String vehicleId) async {
+    final row = await _client
+        .from(_table)
+        .select('image_path')
+        .eq('id', vehicleId)
+        .single();
+    return row['image_path'] as String?;
+  }
+
   /// Sube la foto y devuelve el `image_path` guardado en la fila.
   Future<String> uploadImage({
     required String vehicleId,
@@ -92,6 +103,12 @@ class GarageRemoteDatasource {
           fileOptions: FileOptions(contentType: 'image/$extension', upsert: true),
         );
     return path;
+  }
+
+  /// Borra la foto de la moto del bucket, si tiene una: se usa al
+  /// eliminarla del garaje.
+  Future<void> deleteImage(String imagePath) async {
+    await _client.storage.from(_bucket).remove([imagePath]);
   }
 
   Future<String> createSignedImageUrl(String imagePath) {
