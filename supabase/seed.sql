@@ -1,6 +1,6 @@
 -- Seed de QA local. Password 'Test123.' para ambos usuarios (bcrypt precomputado con costo 10).
 -- qa1@gmail.com: rider con moto, mantenimiento y SOAT.
--- qa2@gmail.com: organizador de "Mi Evento" (publicado).
+-- qa2@gmail.com: organizador de "Mi Evento" (publicado) y de "Rodada en curso" (started).
 
 do $$
 declare
@@ -8,6 +8,7 @@ declare
   v_qa2_id uuid := '22222222-2222-2222-2222-222222222222';
   v_vehicle_id uuid := '33333333-3333-3333-3333-333333333333';
   v_event_id uuid := '44444444-4444-4444-4444-444444444444';
+  v_live_event_id uuid := '55555555-5555-5555-5555-555555555555';
   v_encrypted_password text := crypt('Test123.', gen_salt('bf'));
 begin
   insert into auth.users (
@@ -100,4 +101,33 @@ begin
   ) on conflict (id) do nothing;
 
   update public.events set state = 'published' where id = v_event_id;
+
+  -- Rodada en curso: qa2 organiza, qa1 inscrito y aprobado, tracking activo (Bloque 3).
+  insert into public.events (
+    id, owner_id, name, description, route_text, start_at, difficulty,
+    destination_name, destination_lat, destination_lng, price, max_participants, state
+  ) values (
+    v_live_event_id, v_qa2_id, 'Rodada en curso',
+    'Rodada de prueba con tracking en vivo para QA.', 'Salida desde El Poblado hacia Santa Elena',
+    now() - interval '30 minutes', 2, 'Santa Elena', 6.2000, -75.5000, 0, 20, 'draft'
+  ) on conflict (id) do nothing;
+
+  update public.events set state = 'published' where id = v_live_event_id;
+  update public.events set state = 'started' where id = v_live_event_id;
+
+  insert into public.event_registrations (
+    event_id, user_id, vehicle_id, status, full_name, phone, blood_type, eps,
+    emergency_contact_name, emergency_contact_phone, share_medical_info, allow_organizer_contact,
+    risk_accepted_at, medical_consent_at, consent_version
+  ) values (
+    v_live_event_id, v_qa1_id, v_vehicle_id, 'approved', 'QA Rider Uno', '3001112233',
+    'o_positive', 'Sura EPS', 'Contacto QA Uno', '3009998877', true, true,
+    now(), now(), 'v1'
+  ) on conflict (event_id, user_id) do nothing;
+
+  insert into public.live_positions (
+    event_id, user_id, lat, lng, speed_kmh, heading, battery_pct, accuracy_m, recorded_at, updated_at
+  ) values (
+    v_live_event_id, v_qa2_id, 6.2442, -75.5812, 35, 90, 80, 10, now(), now()
+  ) on conflict (event_id, user_id) do nothing;
 end $$;
