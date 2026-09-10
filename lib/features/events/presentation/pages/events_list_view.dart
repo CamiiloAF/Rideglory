@@ -88,7 +88,7 @@ class EventsListView extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 76),
+        padding: const EdgeInsets.only(bottom: 96),
         child: Semantics(
           button: true,
           label: context.l10n.events_list_empty_cta,

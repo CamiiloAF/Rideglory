@@ -95,7 +95,7 @@ class MaintenanceView extends StatelessWidget {
         builder: (context, state) {
           if (state.vehicleList.isEmpty) return const SizedBox.shrink();
           return Padding(
-            padding: const EdgeInsets.only(bottom: 76),
+            padding: const EdgeInsets.only(bottom: 96),
             child: Semantics(
               button: true,
               label: context.l10n.maintenance_fab_label,
