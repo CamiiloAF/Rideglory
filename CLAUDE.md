@@ -12,6 +12,8 @@ UI 100% en **español colombiano**. Se usa al aire libre, con guantes, con sol d
 
 El repositorio está en la rama `refactor/v2`, reconstruyendo la app desde cero. Lo que había antes funcionaba y estaba testeado, pero acumulaba decisiones tomadas sobre la marcha y un backend desproporcionado para el producto.
 
+`lib/` ya está reconstruido sobre Supabase: **Bloques 0, 1 y 2 de `docs/product/ALCANCE-V2.md` están implementados** (cimientos, auth, perfil, garaje, documentos, mantenimiento y eventos con inscripción). El **Bloque 3 (mapa en vivo, tracking, SOS) sigue bloqueado por el experimento 1** de `docs/product/validacion.md` — no se diseña ni se implementa hasta que ese experimento diga qué se abre y cuándo. Ver `docs/dev-runs/refactor-v2.md` para el cierre completo de esta corrida.
+
 Qué cambia y qué no:
 
 | | |
@@ -36,6 +38,9 @@ flutter test
 flutter test --coverage
 dart format lib/
 flutter run
+supabase start                                             # backend local, requerido para desarrollar
+supabase db reset                                          # reaplica migraciones + seed sobre local
+supabase test db                                           # pruebas de RLS y triggers en pgTAP
 ```
 
 Tras cambiar **DTOs, modelos freezed, anotaciones de inyección o el `.env`**, regenera con `build_runner`. Tras tocar `lib/l10n/app_es.arb`, corre `flutter gen-l10n`. Los cambios en interfaces de servicio o en la configuración de DI no los toma el hot reload: requieren rebuild completo.
@@ -69,7 +74,7 @@ Estas son las que ningún lint cubre y las hace cumplir el subagente `ui-convent
 2. **Prohibidos los métodos que devuelven `Widget`.** Nada de `Widget _buildHeader()` ni `Widget _ctaBar(context)`: cada pieza de UI es su propia clase, en su propio archivo.
 3. **Cero strings de UI en el código.** Todo texto visible va en `lib/l10n/app_es.arb` y se usa con `context.l10n.<key>`, con prefijo de feature (`event_`, `vehicle_`, `maintenance_`). **Esto incluye los mensajes de error de red y de autenticación**, que en la versión anterior estaban incrustados en Dart.
 4. **Nunca Material crudo si existe el equivalente compartido.** Revisa `lib/shared/widgets/form/` y `lib/design_system/` antes de escribir un control. La app tiene **un solo switch**: `AppSwitch` / `AppSwitchTile` — nunca `Switch`, `SwitchListTile`, `CupertinoSwitch` ni `FormBuilderSwitch`.
-5. **Sobre el naranja primario, todo va oscuro.** Texto, iconos, el knob de un switch encendido y los badges sobre `#f98c1f` usan `colorScheme.onPrimary` o `#0D0D0F`. **Nunca blanco.** Los badges sobre primario usan un relleno oscuro translúcido.
+5. **Sobre el amarillo de acento, todo va oscuro.** Texto, iconos, el knob de un switch encendido y los badges sobre `$c-accent` (`#FFD400`) usan el token `onAccent` (`AppColors.onAccent`, `#0A0A0A` en claro y oscuro). **Nunca blanco.** Los badges sobre acento usan un relleno oscuro translúcido.
 
 Además: comillas simples, tipos de retorno explícitos, sin `print`, nombres de dominio en las variables (`vehicle`, `event`, `error` — no `v`, `e`), botones en *sentence case* (`Iniciar sesión`, no `INICIAR SESIÓN`), y `dart analyze` limpio antes de cerrar cualquier cambio.
 
@@ -109,22 +114,22 @@ Las hace cumplir el subagente `safety-compliance-reviewer`, y su veredicto es un
 
 ### Identidad visual
 
-Dark-only, paleta *Asphalt*. **Los valores mandan desde `rideglory.pen`** (30 variables); esta tabla es su reflejo y se corrige contra el archivo, nunca al revés:
+La paleta *Asphalt* (dark-only, naranja `#F98C1F`, Space Grotesk) quedó descartada el 2026-08-19: el fundador la rechazó explícitamente (*"estos diseños no me dan ganas de usar la aplicación"*) durante el diseño de la v2. La identidad vigente es la **dirección C2** del `.pen`: tipografía **Outfit**, acento **amarillo de señalización `#FFD400` en dosis baja** (reservado a la acción principal, nunca como color de fondo extendido), radios grandes, bloques planos, y tema **claro y oscuro** (ya no dark-only).
 
-| Rol | Variable del `.pen` | Valor |
-|---|---|---|
-| Fondo | `$bg-primary` | `#0D0D0F` |
-| Superficie | `$bg-secondary` | `#1A1A1F` |
-| Superficie elevada | `$bg-tertiary` | `#242429` |
-| Card | `$bg-card` | `#1E1E24` |
-| Borde | `$border` / `$border-light` | `#2A2A32` / `#3A3A44` |
-| Acento | `$accent` / `$accent-light` / `$accent-subtle` | `#F98C1F` / `#FFAB4F` / `#2D2117` |
-| Texto sobre acento | `$text-inverse` | `#0D0D0F` |
-| Texto | `$text-primary` / `$text-secondary` / `$text-tertiary` | `#FFFFFF` / `#9CA3AF` / `#6B7280` |
-| Estado | `$success` / `$error` / `$warning` / `$info` | `#22C55E` / `#EF4444` / `#EAB308` / `#3B82F6` |
-| Tab bar | `$tab-bar-bg` / `$tab-inactive` | `#15151A` / `#6B7280` |
+**Los valores mandan desde `rideglory.pen`**; esta tabla es su reflejo, leída de `lib/design_system/tokens/app_colors.dart`, y se corrige contra el `.pen` nunca al revés. Solo se listan los tokens cuyo nombre `$c-*` exacto está confirmado por comentarios de código — el resto de campos de `AppColors` (`border`, `borderStrong`, `error*`, `block`/`onBlock` de la tab bar, `shadow`, `plateChip`, etc.) existen y tienen valor en el archivo, pero su nombre de variable del `.pen` no está documentado ahí, así que se dejan fuera de la tabla en vez de inventarlo:
 
-Tipografía **Space Grotesk** (`$font-primary`). Radios `$radius-sm` 8 (inputs, botones), `$radius-md` 12 (cards), `$radius-lg` 16 (cards grandes), `$radius-xl` 24 (bottom sheets). Espaciados `$spacing-xs/sm/md/lg/xl` = 4/8/16/24/32. Navegación con **Pill Tab Bar** flotante de 4 destinos: **MANTENIMIENTO, EVENTOS, GARAJE, PERFIL**. *(El Home/INICIO se eliminó el 2026-08-19: el descubrimiento lo dejó en `kill` por repetir lo que ya vive en otras pestañas, y su puesto lo tomó Mantenimiento, que es lo único de la app con uso real y recurrente. Con eso, consultar el historial cuesta 1 toque y registrar 2.)*
+| Rol | Variable del `.pen` | Claro | Oscuro |
+|---|---|---|---|
+| Fondo | `$c-bg` | `#FFFFFF` | `#0C0C0C` |
+| Superficie | `$c-surface` | `#F5F5F4` | `#1A1A1A` |
+| Acento | `$c-accent` | `#FFD400` | `#FFD400` |
+| Texto sobre acento | `$c-on-accent` | `#0A0A0A` | `#0A0A0A` |
+| Texto | `$c-text` / `$c-text-secondary` | `#0A0A0A` / `#6B6B6B` | `#FAFAFA` / `#A3A3A3` |
+| Éxito | `$c-success` / `$c-success-soft` | `#15803D` / `#E6F4EA` | `#4ADE80` / `#0F2A18` |
+| Advertencia | `$c-warning` / `$c-warning-soft` | `#C2410C` / `#FDEDE3` | `#FB923C` / `#331A0A` |
+| Placa (motivo visual moto) | `$c-plate` / `$c-plate-text` | `#F20A0A0A` / `#FAFAFA` | `#F2000000` / `#FAFAFA` |
+
+Tipografía **Outfit** (`$c-font`). Radios `$c-r-sm` 16, `$c-r-md` 20, `$c-r-lg` 28, `$c-r-xl` 32 (`lib/design_system/tokens/app_radii.dart`) — notoriamente más grandes que en Asphalt. Espaciados `4/8/16/24/32`: el `.pen` no expone variables `$c-spacing-*` (los componentes usan `gap`/`padding` puntuales), así que esta escala se mantiene como convención de layout, no como token leído del archivo. Navegación con **Pill Tab Bar** flotante de 4 destinos: **MANTENIMIENTO, EVENTOS, GARAJE, PERFIL**. *(El Home/INICIO se eliminó el 2026-08-19: el descubrimiento lo dejó en `kill` por repetir lo que ya vive en otras pestañas, y su puesto lo tomó Mantenimiento, que es lo único de la app con uso real y recurrente. Con eso, consultar el historial cuesta 1 toque y registrar 2.)*
 
 Tono: directo y funcional. Es una herramienta, no una red social.
 
@@ -160,7 +165,8 @@ Definidos en `.claude/` para automatizar este documento. El contexto viaja **en 
 
 ## Trampas conocidas
 
-- **Golden tests y Space Grotesk.** Sin desactivar la descarga en runtime de `google_fonts`, los goldens se generan con una fuente de fallback y toda la auditoría de fidelidad visual queda invalidada **sin que ningún test falle**. El helper compartido de `test/support/golden_helpers.dart` debe encargarse de esto.
+- **Golden tests y Outfit.** Bajo `flutter_test`, `TestWidgetsFlutterBinding` hace que toda petición HTTP falle, y la descarga en runtime de `google_fonts` nunca puede completar ahí — sin cortarla, el error queda pendiente y revienta el test después de que ya terminó. `AppTypography` (`lib/design_system/tokens/app_typography.dart`) lo resuelve detectando la variable de entorno `FLUTTER_TEST` (la misma que usa `google_fonts` internamente) para no intentar la descarga y aplicar Outfit como `fontFamily` directo sobre el `TextTheme` por defecto. El helper compartido `test/support/golden_helpers.dart` (o `test/flutter_test_config.dart` mientras no exista) debe encargarse de que los goldens usen esa ruta, o toda la auditoría de fidelidad visual queda invalidada **sin que ningún test falle**.
+- **Dos migraciones no pueden compartir prefijo de versión.** Las migraciones de Supabase usan timestamp+secuencial (`20260909000017_...`); dos features desarrolladas en paralelo pueden calcular el mismo próximo número libre de forma independiente y colisionar (ya pasó entre garaje y mantenimiento: ambas commitearon inicialmente `20260909000017`, una tuvo que renumerarse a `20260909000019`). Antes de crear una migración nueva, revisa `ls supabase/migrations/` para tomar el siguiente prefijo real, no el que calculaste en memoria.
 - **Mapbox no renderiza en golden tests.** Las pantallas con mapa se auditan por sus overlays aislados (banner de SOS, tarjetas de rider, controles); el mapa es un gap conocido y documentado.
 - **El SDK de Mapbox es frágil** y la versión anterior acumuló parches defensivos para sus condiciones de carrera. Si vuelve a aparecer, trátalo como conocimiento a documentar, no a esconder tras un `catch` global.
 - **Nunca pruebes contra la base de producción.** Usa Supabase local (`supabase start`). Una suite e2e contra producción crea eventos, inscripciones y usuarios reales.

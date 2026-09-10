@@ -8,23 +8,18 @@ El objetivo es servir como **contexto base** para cualquier desarrollador (o age
 
 > Regla de mantenimiento: **al modificar código de un feature, actualizar la sección relevante de su doc**. Ver `feedback_update_feature_docs` en el sistema de memorias.
 
+> **v2 (`refactor/v2`):** estos documentos describen el comportamiento real de `lib/` reconstruido en los Bloques 0-2 de `docs/product/ALCANCE-V2.md`. El Bloque 3 (mapa en vivo, tracking, SOS) no existe todavía — sigue bloqueado por el experimento 1. Ver `docs/dev-runs/refactor-v2.md` para el cierre de la corrida que los produjo.
+
 ## Features
 
 | Feature | Documento | Resumen corto |
 |---|---|---|
-| **Splash** | [splash.md](./splash.md) | Pantalla inicial, permisos de ubicación, decisión login vs home |
-| **Authentication** | [authentication.md](./authentication.md) | Login/Signup email + Google (+ Apple stub), forgot password, AuthCubit singleton |
-| **Profile** | [profile.md](./profile.md) | Perfil propio (lectura + atajos). Edición no persiste todavía |
-| **Users** | [users.md](./users.md) | UserModel + UserRepository, RiderProfilePage (perfil de otro rider), storage local |
-| **Home** | [home.md](./home.md) | Dashboard: vehículo principal + próximos eventos + campana de notif |
-| **Vehicles** | [vehicles.md](./vehicles.md) | Garage, CRUD vehículos, vehículo principal, archivar, integración SOAT |
-| **Maintenance** | [maintenance.md](./maintenance.md) | Mantenimientos completed/scheduled, status dinámico, auto-creación post-completed |
-| **Vehicle Documents** | [vehicle_documents.md](./vehicle_documents.md) | Base compartida de documentos legales de vehículo (mixin de vigencia, cubit base, widgets genéricos) usada por SOAT y RTM |
-| **SOAT** | [soat.md](./soat.md) | Captura del SOAT (foto/PDF o manual), cálculo de vigencia, status |
-| **Tecnomecánica (RTM)** | [tecnomecanica.md](./tecnomecanica.md) | Revisión técnico-mecánica: registro/edición/borrado, exención < 2 años, recordatorios push |
-| **Events** | [events.md](./events.md) | CRUD eventos, ciclo de vida (draft→scheduled→inProgress→finished), tracking en vivo, asistentes |
-| **Event Registration** | [event_registration.md](./event_registration.md) | Inscripciones, pre-llenado en cascada, saveToProfile, mis inscripciones |
-| **Notifications** | [notifications.md](./notifications.md) | Centro de notif, FCM, deep linking, badge de no-leídas |
+| **Auth** | [auth.md](./auth.md) | Bienvenida L2, Supabase Auth (Google/Apple/correo), AuthCubit observa la sesión |
+| **Profile** | [profile.md](./profile.md) | Ficha del rider, contacto de emergencia, consentimientos, borrado de cuenta in-app |
+| **Garage** | [garage.md](./garage.md) | Galería de motos, alta por placa, moto principal, archivar, alerta de documentos |
+| **Documents** | [documents.md](./documents.md) | SOAT y RTM como un solo modelo, OCR on-device, caché offline, recordatorios locales |
+| **Maintenance** | [maintenance.md](./maintenance.md) | Agenda derivada + historial, registro en 3 pasos, odómetro derivado (D5) |
+| **Events** | [events.md](./events.md) | Rodadas sin mapa: crear/publicar, inscripción con capa legal, aviso de inicio, inscritos del organizador |
 
 ## Documentos transversales
 
