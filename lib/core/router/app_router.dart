@@ -33,7 +33,7 @@ GoRouter buildAppRouter() {
     refreshListenable: AuthCubitListenable(authCubit),
     redirect: (context, state) {
       final authState = authCubit.state;
-      final isAtWelcome = state.matchedLocation == AppRoutes.welcomePath;
+      final isAtWelcome = state.matchedLocation.startsWith(AppRoutes.welcomePath);
 
       return switch (authState) {
         AuthUnknown() => null,
