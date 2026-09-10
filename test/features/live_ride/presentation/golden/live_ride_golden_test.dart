@@ -212,8 +212,8 @@ void main() {
 
   testWidgets('LV4a - SOS activo, pendiente', (tester) async {
     when(() => liveRideCubit.state).thenReturn(
-      LiveRideState(
-        contacts: const LiveRideContacts(
+      const LiveRideState(
+        contacts: LiveRideContacts(
           organizerName: 'Juan Camilo',
           organizerPhone: '+573001110000',
           emergencyContactName: 'Laura Agudelo',
@@ -252,8 +252,8 @@ void main() {
 
   testWidgets('LV4b - SOS activo, confirmado', (tester) async {
     when(() => liveRideCubit.state).thenReturn(
-      LiveRideState(
-        contacts: const LiveRideContacts(
+      const LiveRideState(
+        contacts: LiveRideContacts(
           organizerName: 'Juan Camilo',
           organizerPhone: '+573001110000',
           emergencyContactName: 'Laura Agudelo',
@@ -310,10 +310,10 @@ void main() {
   testWidgets('LV6 - riders del organizador', (tester) async {
     final registrantsCubit = _MockRegistrantsCubit();
     when(() => registrantsCubit.state).thenReturn(
-      RegistrantsState(
+      const RegistrantsState(
         registrants: ResultState.data(
           data: [
-            const EventRegistrant(
+            EventRegistrant(
               id: 'owner-1',
               userId: 'owner-1',
               fullName: 'Juan Camilo',
@@ -322,7 +322,7 @@ void main() {
               allowOrganizerContact: true,
               phone: '+573001110000',
             ),
-            const EventRegistrant(
+            EventRegistrant(
               id: 'reg-2',
               userId: 'user-2',
               fullName: 'Camilo Agudelo',
@@ -331,7 +331,7 @@ void main() {
               allowOrganizerContact: true,
               phone: '+573002223344',
             ),
-            const EventRegistrant(
+            EventRegistrant(
               id: 'reg-3',
               userId: 'user-3',
               fullName: 'Sofía Pardo',

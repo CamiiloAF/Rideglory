@@ -61,10 +61,12 @@ class DocumentUploadCubit extends Cubit<DocumentUploadState> {
       final extraction = _soatParser.parse(ocrResult);
       if (!extraction.shouldPrefill) return;
 
-      if (extraction.policyNumber != null)
+      if (extraction.policyNumber != null) {
         numberController.text = extraction.policyNumber!;
-      if (extraction.insurer != null)
+      }
+      if (extraction.insurer != null) {
         issuerController.text = extraction.insurer!;
+      }
 
       emit(
         state.copyWith(
@@ -102,8 +104,9 @@ class DocumentUploadCubit extends Cubit<DocumentUploadState> {
     final expiryDate = state.expiryDate;
     final fileBytes = state.fileBytes;
     final fileExtension = state.fileExtension;
-    if (expiryDate == null || fileBytes == null || fileExtension == null)
+    if (expiryDate == null || fileBytes == null || fileExtension == null) {
       return;
+    }
 
     emit(state.copyWith(submission: const ResultState.loading()));
     final result = await _uploadDocument(
