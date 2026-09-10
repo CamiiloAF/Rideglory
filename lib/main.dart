@@ -9,6 +9,7 @@ import 'core/services/notifications/local_notifications_initializer.dart';
 import 'core/router/app_router.dart';
 import 'design_system/theme/app_theme.dart';
 import 'features/events/presentation/event_push_navigator.dart';
+import 'features/live_ride/presentation/cubit/sos_outbox_retry_cubit.dart';
 import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
 import 'shared/cubits/connectivity/connectivity_cubit.dart';
@@ -42,7 +43,14 @@ class RidegloryApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => getIt<ConnectivityCubit>())],
+      providers: [
+        BlocProvider(create: (_) => getIt<ConnectivityCubit>()),
+        // Sin UI propia: reintenta la cola de SOS al recuperar señal
+        // (D16). Se provee junto a `ConnectivityCubit` para que corra
+        // durante toda la sesión, no solo mientras la pantalla de SOS
+        // está abierta.
+        BlocProvider(create: (_) => getIt<SosOutboxRetryCubit>()),
+      ],
       child: MaterialApp.router(
         title: 'Rideglory',
         debugShowCheckedModeBanner: false,

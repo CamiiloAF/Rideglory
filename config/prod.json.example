@@ -13,5 +13,6 @@
   "SENTRY_DSN": "<obtener-de-sentry-dashboard>",
   "PROD_API_BASE_URL": "<url-base-api-produccion>",
   "SUPABASE_URL": "",
-  "SUPABASE_ANON_KEY": ""
+  "SUPABASE_ANON_KEY": "",
+  "MAP_TILE_URL": ""
 }

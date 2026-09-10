@@ -82,6 +82,13 @@ dependencies:
   package_info_plus: ^9.0.1
   flutter_timezone: ^5.1.0
 
+  # Bloque 3: rodada en vivo, tracking en segundo plano y SOS (D13-D14)
+  flutter_map: ^8.3.2
+  latlong2: ^0.10.1
+  geolocator: ^14.0.2
+  flutter_foreground_task: ^10.0.0
+  battery_plus: ^7.1.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

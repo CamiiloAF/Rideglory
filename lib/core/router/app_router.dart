@@ -9,6 +9,7 @@ import '../../features/events/presentation/events_routes.dart';
 import '../../features/events/presentation/pages/events_page.dart';
 import '../../features/garage/presentation/garage_routes.dart';
 import '../../features/garage/presentation/pages/garage_page.dart';
+import '../../features/live_ride/presentation/live_ride_routes.dart';
 import '../../features/maintenance/presentation/pages/maintenance_page.dart';
 import '../../features/maintenance/presentation/maintenance_routes.dart';
 import '../../features/profile/presentation/profile_routes.dart';
@@ -62,7 +63,7 @@ GoRouter buildAppRouter() {
                 path: AppRoutes.eventsPath,
                 name: AppRoutes.events,
                 builder: (context, state) => const EventsPage(),
-                routes: eventsRoutes,
+                routes: [...eventsRoutes, ...liveRideRoutes],
               ),
             ],
           ),

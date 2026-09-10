@@ -2818,6 +2818,78 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Avisar a los inscritos'**
   String get events_route_change_cta;
+
+  /// Título de la notificación persistente del tracking en segundo plano (D14)
+  ///
+  /// In es, this message translates to:
+  /// **'Compartiendo tu ubicación con la rodada'**
+  String get live_notification_title;
+
+  /// Cuerpo de la notificación persistente del tracking en segundo plano
+  ///
+  /// In es, this message translates to:
+  /// **'Toca Detener para dejar de compartir'**
+  String get live_notification_body;
+
+  /// Botón de la notificación persistente que para el tracking (D14)
+  ///
+  /// In es, this message translates to:
+  /// **'Detener'**
+  String get live_notification_stop_button;
+
+  /// Error: el usuario no es participante aprobado de la rodada
+  ///
+  /// In es, this message translates to:
+  /// **'No estás inscrito en esta rodada, así que no podemos mostrarte esto.'**
+  String get live_ride_error_not_a_participant;
+
+  /// Error: la rodada no está en estado started
+  ///
+  /// In es, this message translates to:
+  /// **'Esta rodada todavía no arrancó.'**
+  String get live_ride_error_event_not_started;
+
+  /// Error: el sos_id no existe
+  ///
+  /// In es, this message translates to:
+  /// **'No encontramos esa alerta de SOS.'**
+  String get live_ride_error_sos_not_found;
+
+  /// Error: D19, solo el emisor o el organizador cierran un SOS
+  ///
+  /// In es, this message translates to:
+  /// **'Solo quien lanzó el SOS o el organizador pueden cerrarlo.'**
+  String get live_ride_error_not_allowed_to_close;
+
+  /// Error: permiso de ubicación denegado al intentar compartir
+  ///
+  /// In es, this message translates to:
+  /// **'Necesitamos tu ubicación para compartirla con la rodada. Actívala desde los ajustes del sistema.'**
+  String get live_ride_error_location_permission_denied;
+
+  /// Error: servicio de ubicación del sistema apagado
+  ///
+  /// In es, this message translates to:
+  /// **'Tu GPS está apagado. Actívalo para compartir tu ubicación.'**
+  String get live_ride_error_location_service_disabled;
+
+  /// Error: ni una lectura fresca ni la última conocida están disponibles
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos obtener tu ubicación. Muévete a un lugar con mejor señal de GPS e inténtalo de nuevo.'**
+  String get live_ride_error_location_unavailable;
+
+  /// Error: sin conectividad al llamar al servidor de tracking en vivo
+  ///
+  /// In es, this message translates to:
+  /// **'Sin conexión. Revisa tu señal e inténtalo de nuevo.'**
+  String get live_ride_error_offline;
+
+  /// Error genérico de live_ride sin código específico
+  ///
+  /// In es, this message translates to:
+  /// **'Algo falló con la rodada en vivo. Inténtalo de nuevo.'**
+  String get live_ride_error_generic;
 }
 
 class _AppLocalizationsDelegate
