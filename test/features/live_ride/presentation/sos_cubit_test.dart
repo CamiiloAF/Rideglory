@@ -163,4 +163,58 @@ void main() {
       verify(() => closeSos.call('sos-1')).called(1);
     },
   );
+
+  blocTest<SosCubit, SosState>(
+    'closeMine con el SOS aun pendiente reintenta con el mismo clientId '
+    'antes de cerrarlo — nunca descarta la cola sin comprobar que el '
+    'servidor no lo tenga activo (respuesta perdida != envio fallido)',
+    build: () {
+      when(
+        () => raiseSos.call(
+          eventId: any(named: 'eventId'),
+          message: any(named: 'message'),
+        ),
+      ).thenAnswer((_) async => Left(_pendingItem()));
+      when(() => retryOutbox.call()).thenAnswer((_) async => [_alert()]);
+      when(
+        () => closeSos.call(any()),
+      ).thenAnswer((_) async => Right(_alert(status: SosStatus.closed)));
+      return buildCubit();
+    },
+    act: (cubit) async {
+      await cubit.load('event-1');
+      await cubit.raise();
+      expect(cubit.state.mine, isA<SosSendPending>());
+      await cubit.closeMine();
+    },
+    verify: (cubit) {
+      expect(cubit.state.mine, isA<SosSendClosed>());
+      verify(() => retryOutbox.call()).called(greaterThanOrEqualTo(1));
+      verify(() => closeSos.call('sos-1')).called(1);
+    },
+  );
+
+  blocTest<SosCubit, SosState>(
+    'closeMine con el SOS pendiente y sin poder confirmarlo se queda '
+    'pendiente — nunca dice cerrado sin que el servidor lo confirme',
+    build: () {
+      when(
+        () => raiseSos.call(
+          eventId: any(named: 'eventId'),
+          message: any(named: 'message'),
+        ),
+      ).thenAnswer((_) async => Left(_pendingItem()));
+      when(() => retryOutbox.call()).thenAnswer((_) async => []);
+      return buildCubit();
+    },
+    act: (cubit) async {
+      await cubit.load('event-1');
+      await cubit.raise();
+      await cubit.closeMine();
+    },
+    verify: (cubit) {
+      expect(cubit.state.mine, isA<SosSendPending>());
+      verifyNever(() => closeSos.call(any()));
+    },
+  );
 }
