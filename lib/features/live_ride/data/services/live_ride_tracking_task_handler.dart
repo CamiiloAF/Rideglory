@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/config/app_env.dart';
+import 'live_ride_tracking_keys.dart';
 
 /// Entry point del isolate del foreground service. `@pragma('vm:entry-point')`
 /// es obligatorio: sin ella el compilador AOT elimina esta función porque no
@@ -25,43 +26,92 @@ void startLiveRideTrackingCallback() {
 /// depende de `shared_preferences`/plugins que este isolate no tiene
 /// garantizado tener listos.
 ///
-/// Limitación conocida (pendiente, fuera de este alcance): el access token
-/// no se refresca dentro del isolate. Una rodada más larga que la vida del
-/// token (~1 h) necesitará que la app en primer plano vuelva a llamar
-/// `saveData` con un token fresco, o migrar a pasar el refresh token y
-/// refrescar aquí mismo.
+/// Refresco de token: el access token dura ~1h y una rodada puede durar
+/// más. `ForegroundTaskBackgroundTrackingService` también guarda el
+/// refresh token; este handler lo usa con `client.auth.setSession` al
+/// arrancar (por si el token guardado ya venía viejo) y cada 45 min con
+/// un `Timer.periodic`, reconstruyendo `_client` con el access token
+/// fresco que devuelve la respuesta (el mismo patrón de header estático
+/// que el arranque, por la misma razón: sin `Supabase.initialize` en este
+/// isolate, no hay sesión "viva" de la que `PostgrestClient` pueda leer
+/// el token en cada request).
+///
+/// D22 (fin del tracking): tanto el botón "Detener" de la notificación
+/// como cualquier otra causa de que el servicio se detenga pasan por
+/// [onDestroy], que llama a `end_live_ride` (mejor esfuerzo — un fallo de
+/// red aquí no debe bloquear que el servicio pare), borra la clave de
+/// "rodada activa" que lee `SignOutUseCase`, y avisa a la app por
+/// `sendDataToMain` para que `LiveRideCubit` pase a `notSharing` sin que
+/// el rider tenga que reabrir la app. `end_live_ride` solo borra
+/// `live_positions`, nunca toca un SOS.
 class LiveRideTrackingTaskHandler extends TaskHandler {
   SupabaseClient? _client;
   StreamSubscription<Position>? _positionSubscription;
+  Timer? _refreshTimer;
   final Battery _battery = Battery();
   String? _eventId;
+  String? _refreshToken;
   DateTime _lastPublishAt = DateTime.fromMillisecondsSinceEpoch(0);
 
-  static const String _dataKeyEventId = 'live_ride_event_id';
-  static const String _dataKeyAccessToken = 'live_ride_access_token';
-  static const String _stopButtonId = 'live_ride_stop';
   static const Duration _minPublishInterval = Duration(seconds: 5);
+  static const Duration _refreshInterval = Duration(minutes: 45);
 
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
     final eventId = await FlutterForegroundTask.getData<String>(
-      key: _dataKeyEventId,
+      key: LiveRideTrackingKeys.eventId,
     );
     final accessToken = await FlutterForegroundTask.getData<String>(
-      key: _dataKeyAccessToken,
+      key: LiveRideTrackingKeys.accessToken,
+    );
+    final refreshToken = await FlutterForegroundTask.getData<String>(
+      key: LiveRideTrackingKeys.refreshToken,
     );
     _eventId = eventId;
+    _refreshToken = (refreshToken != null && refreshToken.isNotEmpty)
+        ? refreshToken
+        : null;
     if (accessToken == null || accessToken.isEmpty || eventId == null) return;
 
-    _client = SupabaseClient(
-      AppEnv.supabaseUrl,
-      AppEnv.supabaseAnonKey,
-      headers: {'Authorization': 'Bearer $accessToken'},
+    _client = _clientWithAccessToken(accessToken);
+
+    if (_refreshToken != null) {
+      await _refreshSession();
+    }
+    _refreshTimer = Timer.periodic(
+      _refreshInterval,
+      (_) => unawaited(_refreshSession()),
     );
 
     _positionSubscription = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(distanceFilter: 25),
     ).listen(_onPosition);
+  }
+
+  SupabaseClient _clientWithAccessToken(String accessToken) {
+    return SupabaseClient(
+      AppEnv.supabaseUrl,
+      AppEnv.supabaseAnonKey,
+      headers: {'Authorization': 'Bearer $accessToken'},
+    );
+  }
+
+  Future<void> _refreshSession() async {
+    final refreshToken = _refreshToken;
+    final client = _client;
+    if (refreshToken == null || client == null) return;
+    try {
+      final response = await client.auth.setSession(refreshToken);
+      final newAccessToken = response.session?.accessToken;
+      if (newAccessToken != null && newAccessToken.isNotEmpty) {
+        _client = _clientWithAccessToken(newAccessToken);
+      }
+    } catch (_) {
+      // Mejor esfuerzo: si el refresh falla (sin red en ese instante), la
+      // próxima publicación de posición fallará silenciosamente (ver
+      // `_onPosition`, también mejor esfuerzo) hasta que este mismo Timer
+      // lo reintente en 45 min o el rider reabra la app.
+    }
   }
 
   Future<void> _onPosition(Position position) async {
@@ -102,11 +152,35 @@ class LiveRideTrackingTaskHandler extends TaskHandler {
   Future<void> onDestroy(DateTime timestamp, bool isTimeout) async {
     await _positionSubscription?.cancel();
     _positionSubscription = null;
+    _refreshTimer?.cancel();
+    _refreshTimer = null;
+
+    await _endRideBestEffort();
+    await FlutterForegroundTask.removeData(
+      key: LiveRideTrackingKeys.activeEventId,
+    );
+    FlutterForegroundTask.sendDataToMain(
+      LiveRideTrackingKeys.stoppedExternallyMessage,
+    );
+  }
+
+  Future<void> _endRideBestEffort() async {
+    final eventId = _eventId;
+    final client = _client;
+    if (eventId == null || client == null) return;
+    try {
+      await client.rpc<void>('end_live_ride', params: {'p_event_id': eventId});
+    } catch (_) {
+      // Mejor esfuerzo: `end_live_ride` es idempotente (borra
+      // `live_positions`), así que si esto falla por falta de red al
+      // parar, el servidor igual reconcilia cuando el rider vuelva a
+      // tener señal (o `LiveRideCubit.load` al reabrir la app).
+    }
   }
 
   @override
   void onNotificationButtonPressed(String id) {
-    if (id == _stopButtonId) {
+    if (id == LiveRideTrackingKeys.stopButtonId) {
       FlutterForegroundTask.stopService();
     }
   }

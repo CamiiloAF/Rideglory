@@ -108,6 +108,9 @@ void main() {
       () => backgroundTrackingService.isRunning(),
     ).thenAnswer((_) async => false);
     when(
+      () => backgroundTrackingService.stoppedExternally,
+    ).thenAnswer((_) => const Stream.empty());
+    when(
       () => locationService.positionStream(
         distanceFilterMeters: any(named: 'distanceFilterMeters'),
       ),
@@ -260,6 +263,36 @@ void main() {
     verify(() => stopSharing('event-1')).called(1);
 
     await eventFinishedController.close();
+    await cubit.close();
+  });
+
+  test('el botón "Detener" de la notificación pasa a notSharing sin llamar a '
+      'StopSharingLocationUseCase de nuevo', () async {
+    final stoppedExternallyController = StreamController<void>.broadcast();
+    when(
+      () => backgroundTrackingService.stoppedExternally,
+    ).thenAnswer((_) => stoppedExternallyController.stream);
+    when(
+      () => backgroundTrackingService.isRunning(),
+    ).thenAnswer((_) async => true);
+    when(
+      () => locationService.positionStream(
+        distanceFilterMeters: any(named: 'distanceFilterMeters'),
+      ),
+    ).thenAnswer((_) => const Stream.empty());
+
+    final cubit = buildCubit();
+    await cubit.load('event-1');
+    expect(cubit.state.sharing, SharingStatus.sharing);
+
+    stoppedExternallyController.add(null);
+    await Future<void>.delayed(const Duration(milliseconds: 20));
+
+    expect(cubit.state.sharing, SharingStatus.notSharing);
+    expect(cubit.state.myPosition, isNull);
+    verifyNever(() => stopSharing(any()));
+
+    await stoppedExternallyController.close();
     await cubit.close();
   });
 

@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../domain/background_tracking_service.dart';
+import 'live_ride_tracking_keys.dart';
 import 'live_ride_tracking_task_handler.dart';
 
 /// D14: foreground service de Android (con notificación persistente y
@@ -16,13 +17,12 @@ class ForegroundTaskBackgroundTrackingService
     implements BackgroundTrackingService {
   ForegroundTaskBackgroundTrackingService(this._client) {
     FlutterForegroundTask.initCommunicationPort();
+    FlutterForegroundTask.addTaskDataCallback(_onTaskData);
   }
 
   final SupabaseClient _client;
-
-  static const String _dataKeyEventId = 'live_ride_event_id';
-  static const String _dataKeyAccessToken = 'live_ride_access_token';
-  static const String _stopButtonId = 'live_ride_stop';
+  final StreamController<void> _stoppedExternallyController =
+      StreamController<void>.broadcast();
 
   bool _initialized = false;
 
@@ -63,19 +63,31 @@ class ForegroundTaskBackgroundTrackingService
     // `FlutterForegroundTask.saveData` (respaldado por `SharedPreferences`
     // nativo, accesible desde cualquier isolate) y el handler construye un
     // `SupabaseClient` puro con ese token como header — ver
-    // `LiveRideTaskHandler`.
+    // `LiveRideTaskHandler`. También se pasa el refresh token: una rodada
+    // puede durar más que la vida del access token (~1h) y el handler no
+    // tiene forma de pedirle uno nuevo a la app en primer plano.
     final session = _client.auth.currentSession;
-    await FlutterForegroundTask.saveData(key: _dataKeyEventId, value: eventId);
     await FlutterForegroundTask.saveData(
-      key: _dataKeyAccessToken,
+      key: LiveRideTrackingKeys.eventId,
+      value: eventId,
+    );
+    await FlutterForegroundTask.saveData(
+      key: LiveRideTrackingKeys.accessToken,
       value: session?.accessToken ?? '',
+    );
+    await FlutterForegroundTask.saveData(
+      key: LiveRideTrackingKeys.refreshToken,
+      value: session?.refreshToken ?? '',
     );
 
     await FlutterForegroundTask.startService(
       notificationTitle: notificationTitle,
       notificationText: notificationBody,
       notificationButtons: [
-        NotificationButton(id: _stopButtonId, text: stopButtonLabel),
+        NotificationButton(
+          id: LiveRideTrackingKeys.stopButtonId,
+          text: stopButtonLabel,
+        ),
       ],
       callback: startLiveRideTrackingCallback,
     );
@@ -89,4 +101,13 @@ class ForegroundTaskBackgroundTrackingService
 
   @override
   Future<bool> isRunning() => FlutterForegroundTask.isRunningService;
+
+  @override
+  Stream<void> get stoppedExternally => _stoppedExternallyController.stream;
+
+  void _onTaskData(Object data) {
+    if (data == LiveRideTrackingKeys.stoppedExternallyMessage) {
+      _stoppedExternallyController.add(null);
+    }
+  }
 }

@@ -16,6 +16,9 @@ class AppPrimaryButton extends StatelessWidget {
     required this.onPressed,
     this.icon,
     this.destructive = false,
+    this.compact = false,
+    this.backgroundColor,
+    this.foregroundColor,
     super.key,
   });
 
@@ -24,22 +27,40 @@ class AppPrimaryButton extends StatelessWidget {
   final IconData? icon;
   final bool destructive;
 
+  /// `true` para un botón de 48 de alto, ancho ajustado al contenido
+  /// (nunca `double.infinity`) y padding horizontal 18 — para cuando el
+  /// botón comparte una fila con otro elemento (header de rodada en
+  /// vivo, banner de SOS ajeno) en vez de ocupar la pantalla completa.
+  final bool compact;
+
+  /// Overrides puntuales para paletas que no son ni el acento por
+  /// defecto ni [destructive] (ej. el botón blanco-sobre-rojo del banner
+  /// de SOS ajeno) — para no inventar un `ElevatedButton` ad hoc ni un
+  /// hex nuevo en el sitio de uso.
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
-    final background = destructive ? colors.errorSolid : colors.accent;
-    final foreground = destructive ? colors.plateText : colors.onAccent;
+    final background =
+        backgroundColor ?? (destructive ? colors.errorSolid : colors.accent);
+    final foreground =
+        foregroundColor ?? (destructive ? colors.plateText : colors.onAccent);
     return SizedBox(
-      width: double.infinity,
-      height: 58,
+      width: compact ? null : double.infinity,
+      height: compact ? 48 : 58,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: background,
           disabledBackgroundColor: background.withValues(alpha: 0.4),
           foregroundColor: foreground,
+          padding: compact ? const EdgeInsets.symmetric(horizontal: 18) : null,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppRadii.md),
+            borderRadius: BorderRadius.circular(
+              compact ? AppRadii.sm : AppRadii.md,
+            ),
           ),
           elevation: 0,
         ),
@@ -48,8 +69,8 @@ class AppPrimaryButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (icon != null) ...[
-              Icon(icon, size: 21, color: foreground),
-              const SizedBox(width: 9),
+              Icon(icon, size: compact ? 16 : 21, color: foreground),
+              SizedBox(width: compact ? 8 : 9),
             ],
             Flexible(
               child: Text(
@@ -57,7 +78,7 @@ class AppPrimaryButton extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: 16.5,
+                  fontSize: compact ? 14 : 16.5,
                   fontWeight: FontWeight.w700,
                   color: foreground,
                 ),

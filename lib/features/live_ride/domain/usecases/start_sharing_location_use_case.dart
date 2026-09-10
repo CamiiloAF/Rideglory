@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/exceptions/domain_exception.dart';
+import '../active_live_ride_tracker.dart';
 import '../background_tracking_service.dart';
 import '../live_ride_contacts_cache.dart';
 import '../live_ride_error_code.dart';
@@ -21,12 +22,14 @@ class StartSharingLocationUseCase {
     this._repository,
     this._contactsCache,
     this._backgroundTrackingService,
+    this._activeLiveRideTracker,
   );
 
   final LocationService _locationService;
   final LiveRideRepository _repository;
   final LiveRideContactsCache _contactsCache;
   final BackgroundTrackingService _backgroundTrackingService;
+  final ActiveLiveRideTracker _activeLiveRideTracker;
 
   Future<Either<DomainException, Unit>> call({
     required String eventId,
@@ -47,6 +50,9 @@ class StartSharingLocationUseCase {
         notificationBody: notificationBody,
         stopButtonLabel: stopButtonLabel,
       );
+      // Logout (D22 extra): `SignOutUseCase` necesita saber qué rodada
+      // parar sin depender de que `LiveRideCubit` siga vivo.
+      await _activeLiveRideTracker.save(eventId);
       return const Right(unit);
     });
   }

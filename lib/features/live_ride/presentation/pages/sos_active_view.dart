@@ -84,7 +84,7 @@ class SosActiveView extends StatelessWidget {
     if (context.canPop()) {
       context.pop();
     } else {
-      context.goNamed(
+      context.pushReplacementNamed(
         AppRoutes.eventLive,
         pathParameters: {'id': eventId},
         extra: args,

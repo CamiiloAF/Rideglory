@@ -62,7 +62,10 @@ class LiveRideFinishedGate extends StatelessWidget {
     if (context.canPop()) {
       context.pop();
     } else {
-      context.goNamed(AppRoutes.eventDetail, pathParameters: {'id': eventId});
+      context.pushReplacementNamed(
+        AppRoutes.eventDetail,
+        pathParameters: {'id': eventId},
+      );
     }
   }
 }

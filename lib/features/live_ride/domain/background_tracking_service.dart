@@ -15,4 +15,10 @@ abstract class BackgroundTrackingService {
   Future<void> stop();
 
   Future<bool> isRunning();
+
+  /// Avisa cuando el servicio se detuvo por fuera de [stop] — el botón
+  /// "Detener" de la notificación persistente, o el sistema matando el
+  /// proceso. `LiveRideCubit` se suscribe para pasar a `notSharing` sin
+  /// que el rider tenga que reabrir la app.
+  Stream<void> get stoppedExternally;
 }

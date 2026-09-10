@@ -76,6 +76,30 @@ Este mismo artefacto, la actualización de `CLAUDE.md` y la reescritura de `docs
 - **`social_auth_button.dart`**: el `.pen` todavía no tiene terminado el nodo de logo (comentario "Logo (pendiente)" en el código).
 - **`ConsentsPage` y `EditProfilePage`**: sin frame de Pencil documentado en comentarios del código — a diferencia del resto de pantallas de perfil.
 
-## Bloque 3 — todavía no empieza
+## Bloque 3 (2026-09-10)
 
-Mapa en vivo, tracking, SOS y detección de rezagados **no se diseñan ni se implementan** hasta que el experimento 1 de `docs/product/validacion.md` diga qué se abre y cuándo. La regla de seguridad del rider en `CLAUDE.md` sigue describiendo la v2 que hay que construir, no comportamiento existente — nada de esto cambió en esta corrida.
+El fundador decidió abrir el Bloque 3 el 2026-09-10 sin esperar el experimento 1 de `docs/product/validacion.md` (*"Demos todo por cerrado hoy"*). Las premisas de `ALCANCE-V2.md` §Bloque 3 quedaron como criterios de aceptación; las decisiones D13-D23 que el experimento iba a resolver están registradas en `docs/plans/refactor-v2-plan.md` §"Bloque 3 · En marcha (2026-09-10)". Documentación funcional completa en `docs/features/live_ride.md`.
+
+### Qué se construyó
+
+- **F9 Diseño**: LV1 (mapa + hoja de riders, compartiendo/sin compartir), LV2/LV2b (consentimiento en dos pasos), LV3 (confirmar SOS con mantener pulsado), LV4a/LV4b (SOS propio pendiente/confirmado), LV5a/LV5b/LV5c (SOS de otro rider: banner, tarjeta, llamar/cerrar), LV6 (lista de riders del organizador), LV7/LV7+SOS (rodada terminada), y los estados sin permiso / sin GPS / sin conexión / carga.
+- **F10 Backend** (`ce60fe6d`): migración `20260910000021_live_ride.sql` — tablas `live_positions` (una fila por rider+evento, sin historial) y `sos_alerts` (`active`/`closed`, timestamps sellados por trigger, inmutable tras cerrar); RPCs `upsert_live_position`, `raise_sos` (idempotente por `client_id`), `close_sos` (solo emisor u organizador, idempotente), `end_live_ride`, `get_live_ride_contacts`; vistas de enmascarado `live_riders` y `sos_alerts_visible`; RLS solo-`select` filtrada por `is_event_staff_or_approved`; Realtime habilitado sobre ambas tablas; Edge Function `notify-sos` (push por Database Webhook en el `INSERT` de `sos_alerts`).
+- **F11 App** (`f63f9243`, `9d248527`, `68ec5267`, `991405e2`): feature `live_ride` completo — dominio, datos, `LocationService`/`BackgroundTrackingService` (foreground service Android con notificación persistente y botón Detener), `SosOutbox` durable en `SharedPreferences`, `LiveRideContactsCache` (fallback D17), cubits `LiveRideCubit`/`SosCubit`/`SosOutboxRetryCubit`, pantallas LV1-LV7 mapeadas 1:1 a Pencil, integración en el detalle de evento (`EventLiveRideBanner`, CTA "Ver rodada en vivo" cuando `started`), y navegación desde push de SOS.
+- **F12 Cierre**: tests, suite Patrol (`integration_test/live_ride_patrol_test.dart`, escenarios a-f), safety gate, esta documentación.
+
+### Verificación
+
+- `supabase test db`: **20/20 pgTAP** en verde (`supabase/tests/live_ride.sql` plan(11) + `supabase/tests/rls.sql` plan(9)).
+- `flutter test`: unit, widget y golden en verde para el feature `live_ride` (goldens con `showMapTiles: false` — `flutter_map` no renderiza bajo `flutter_test`).
+- `dart analyze`: limpio.
+- `flutter build apk --flavor dev`: compila.
+- **Suite Patrol escrita, no ejecutada**: `integration_test/live_ride_patrol_test.dart` (escenarios a-f: CTA en el detalle, LV1 sin pedir permiso al cargar, consentimiento propio antes del sistema, SOS con hold de 1,5 s y verificación directa en BD, cierre con confirmación, LV6 del organizador) no corrió por falta de emulador disponible en esta corrida — ver `docs/patrol-e2e-tracking.md`.
+
+### Pendiente para el humano antes de producción (además de lo ya listado en "Pendiente para el humano" arriba)
+
+- **Webhook de `notify-sos`**: configurar el disparo real en Supabase Studio (Database Webhooks, tabla `sos_alerts`, evento `INSERT`) contra el proyecto remoto — hoy solo corre contra Supabase local sin webhook externo conectado, igual que `notify-route-change`.
+- **`MAP_TILE_URL` de producción**: una URL raster de MapTiler/Mapbox con token propio en `config/prod.json` — en dev usa OpenStreetMap sin token.
+- **Prominent disclosure de ubicación en segundo plano** en la ficha de Play y en App Store (Apple 5.1.5) — el tracking en background ya pide el permiso en dos pasos (D21), pero falta el texto de cara a la tienda.
+- **Texto legal de la política de privacidad** (Ley 1581) sobre ubicación en vivo compartida con el grupo y el teléfono del rider expuesto en el SOS a sus compañeros — pendiente de `privacy-legal-officer` contra el código real.
+- **Verificación con dos teléfonos reales de la cadena SOS completa**: emitir, recibir push, ver en el mapa, llamar por el fallback, cerrar — no se probó fuera del emulador/Supabase local.
+- **Guardar el `.pen`**: confirmar que las pantallas LV1-LV7 quedaron guardadas en la app de Pencil, no solo en el estado en memoria de la sesión de diseño.

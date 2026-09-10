@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
+import '../../../../design_system/components/app_primary_button.dart';
 import '../../../../design_system/tokens/app_colors.dart';
 import '../../../../l10n/l10n_extensions.dart';
 import '../cubit/sharing_status.dart';
@@ -118,33 +119,12 @@ class LiveRideHeader extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                SizedBox(
-                  height: 48,
-                  child: ElevatedButton.icon(
-                    onPressed: sharing == SharingStatus.stopping
-                        ? null
-                        : onStop,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: colors.errorSolid,
-                      foregroundColor: colors.onBlock,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                    icon: Icon(
-                      LucideIcons.square,
-                      size: 16,
-                      color: colors.onBlock,
-                    ),
-                    label: Text(
-                      context.l10n.live_ride_stop_cta,
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: colors.onBlock,
-                      ),
-                    ),
-                  ),
+                AppPrimaryButton(
+                  label: context.l10n.live_ride_stop_cta,
+                  icon: LucideIcons.square,
+                  destructive: true,
+                  compact: true,
+                  onPressed: sharing == SharingStatus.stopping ? null : onStop,
                 ),
               ],
             )

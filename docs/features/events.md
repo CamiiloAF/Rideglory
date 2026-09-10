@@ -4,7 +4,7 @@
 
 ## Problema que resuelve
 
-Bloque 2 de `docs/product/ALCANCE-V2.md`: "la rodada, sin el mapa" — coordinación previa que ocurre parado y con señal, sin depender del supuesto en marcha (Bloque 3, bloqueado por el experimento 1). Resuelve P-08 (crear y publicar rodada con el mínimo real, y destino con punto exacto — el fallo textual de la única rodada real de la v1), P-09 (aviso de inicio, para que nadie descubra al final que el mapa nunca arrancó) y P-13/P-14 (datos de emergencia del inscrito accesibles al organizador en la vía, con botón de llamar). La capa legal de la inscripción (edad ≥18 validada en servidor, consentimientos sellados) es requisito de `CLAUDE.md`, no una decisión de producto.
+Bloque 2 de `docs/product/ALCANCE-V2.md`: "la rodada, sin el mapa" — coordinación previa que ocurre parado y con señal, sin depender del supuesto en marcha (eso era el Bloque 3, ya desbloqueado el 2026-09-10 — ver `docs/features/live_ride.md`). Resuelve P-08 (crear y publicar rodada con el mínimo real, y destino con punto exacto — el fallo textual de la única rodada real de la v1), P-09 (aviso de inicio, para que nadie descubra al final que el mapa nunca arrancó) y P-13/P-14 (datos de emergencia del inscrito accesibles al organizador en la vía, con botón de llamar). La capa legal de la inscripción (edad ≥18 validada en servidor, consentimientos sellados) es requisito de `CLAUDE.md`, no una decisión de producto.
 
 ## Flujos
 
@@ -17,6 +17,7 @@ Bloque 2 de `docs/product/ALCANCE-V2.md`: "la rodada, sin el mapa" — coordinac
 - **Cambio de ruta con aviso** (EV6): `AddRouteChangeUseCase` inserta en `event_route_changes`, un log inmutable (sin update/delete) — es el mecanismo detrás de "contingencias del día antes" del `ALCANCE-V2`.
 - **Aviso de inicio atrasado** (EV7): `Event.isOverdueToStart` (publicado + hora de inicio ya pasada) se muestra como banner (`EventStartOverdueBanner`) y CTA de "iniciar" en el footer del organizador — aplica la lección de P-09: el ciclo de vida no puede depender de que alguien se acuerde de pulsar un botón sin que nadie se entere si no lo hace.
 - **Navegación desde push FCM**: `EventPushNavigator` (singleton) escucha `onMessageOpenedApp`/`getInitialMessage` y navega al detalle del evento cuando el payload trae `eventId`. Tolerante a Firebase sin configurar.
+- **Ver rodada en vivo** (`EventLiveRideBanner`, EV2): cuando el evento está `started` y quien mira es organizador o inscrito aprobado, CTA a la pantalla LV1 del feature `live_ride` (Bloque 3, desbloqueado el 2026-09-10). Si el rider ya tiene un SOS propio pendiente o confirmado, un banner encima ("SOS activo") lleva directo a la pantalla de SOS en vez de perderlo en el mapa — ver `docs/features/live_ride.md`.
 - **Ciclo de vida**: `EventState` (`draft/published/started/finished/cancelled`) con las transiciones **impuestas por un trigger de base** (`enforce_event_state_transition`), nunca asumidas del lado cliente. El cliente dispara `draft→published` (al crear), `→started` (`StartEventUseCase`) y `→cancelled` (`CancelEventUseCase`); no se encontró una transición a `finished` disparada desde este feature — ocurre en otro punto del sistema (trigger o job), a verificar antes de asumir que el cliente la controla.
 
 ## Pantallas (Pencil)
@@ -54,4 +55,4 @@ Obligatorios: skeleton (`SkeletonList`), vacío (`EmptyStateView`, usado dos vec
 - Ninguna nota `TODO`/`FIXME`/pendiente encontrada en el código de esta feature (solo coincidencias falsas con la palabra "independientes").
 - Verificar dónde se dispara la transición a `finished` — no está en este feature; documentar su origen real antes de asumir un flujo cliente-controlado.
 - Ninguna página de eventos lleva el comentario `/// Pencil: <id>` estándar — a diferencia de garaje/documentos/mantenimiento. Si se vuelve a tocar el feature, vale la pena alinear la convención.
-- El Bloque 3 (mapa en vivo, tracking, SOS) sigue bloqueado por el experimento 1; nada de esto se diseña ni se implementa hasta esa decisión.
+- El Bloque 3 (mapa en vivo, tracking, SOS) se desbloqueó el 2026-09-10 y ya está implementado como feature propio `live_ride` — ver `docs/features/live_ride.md`. Este feature solo aporta el CTA de entrada (`EventLiveRideBanner`) cuando el evento está `started`.

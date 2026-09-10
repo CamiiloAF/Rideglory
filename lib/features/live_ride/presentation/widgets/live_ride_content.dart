@@ -162,7 +162,7 @@ class _LiveRideContentState extends State<LiveRideContent> {
     if (context.canPop()) {
       context.pop();
     } else {
-      context.goNamed(
+      context.pushReplacementNamed(
         AppRoutes.eventDetail,
         pathParameters: {'id': widget.eventId},
       );

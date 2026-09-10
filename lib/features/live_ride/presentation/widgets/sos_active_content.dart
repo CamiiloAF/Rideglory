@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../design_system/components/app_secondary_button.dart';
 import '../../../../design_system/tokens/app_colors.dart';
+import '../../../../l10n/l10n_extensions.dart';
 import '../cubit/live_ride_cubit.dart';
-import 'internal/sos_close_button.dart';
 import 'sos_active_status_header.dart';
 import 'sos_coordinates_card.dart';
 import 'sos_fallback_actions.dart';
@@ -47,7 +48,11 @@ class SosActiveContent extends StatelessWidget {
           const SizedBox(height: 14),
           Container(width: double.infinity, height: 1, color: colors.border),
           const SizedBox(height: 14),
-          SosCloseButton(isBusy: isBusy, onPressed: onClose),
+          AppSecondaryButton(
+            label: context.l10n.sos_close_cta,
+            destructive: true,
+            onPressed: isBusy ? null : onClose,
+          ),
         ],
       ),
     );

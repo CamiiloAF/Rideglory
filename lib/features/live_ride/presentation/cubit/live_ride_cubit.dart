@@ -48,6 +48,7 @@ class LiveRideCubit extends Cubit<LiveRideState> {
   StreamSubscription<dynamic>? _ridersSubscription;
   StreamSubscription<dynamic>? _eventFinishedSubscription;
   StreamSubscription<dynamic>? _myPositionSubscription;
+  StreamSubscription<void>? _stoppedExternallySubscription;
   late String _eventId;
 
   Future<void> load(String eventId) async {
@@ -65,6 +66,21 @@ class LiveRideCubit extends Cubit<LiveRideState> {
       ),
     );
     if (isRunning) _listenToMyPosition();
+
+    // D22 extra: el botón "Detener" de la notificación (o el sistema
+    // matando el servicio) termina el tracking fuera de `stopSharing()`
+    // — sin esto, la UI seguiría mostrando "Compartiendo" con el
+    // servicio nativo ya muerto.
+    unawaited(_stoppedExternallySubscription?.cancel());
+    _stoppedExternallySubscription = _backgroundTrackingService
+        .stoppedExternally
+        .listen((_) async {
+          await _myPositionSubscription?.cancel();
+          _myPositionSubscription = null;
+          emit(
+            state.copyWith(sharing: SharingStatus.notSharing, myPosition: null),
+          );
+        });
 
     unawaited(_ridersSubscription?.cancel());
     _ridersSubscription = _watchLiveRiders(eventId).listen((result) {
@@ -190,6 +206,7 @@ class LiveRideCubit extends Cubit<LiveRideState> {
     await _ridersSubscription?.cancel();
     await _eventFinishedSubscription?.cancel();
     await _myPositionSubscription?.cancel();
+    await _stoppedExternallySubscription?.cancel();
     return super.close();
   }
 }

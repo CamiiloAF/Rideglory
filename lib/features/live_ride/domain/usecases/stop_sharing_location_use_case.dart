@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/exceptions/domain_exception.dart';
+import '../active_live_ride_tracker.dart';
 import '../background_tracking_service.dart';
 import '../live_ride_contacts_cache.dart';
 import '../live_ride_repository.dart';
@@ -17,16 +18,19 @@ class StopSharingLocationUseCase {
     this._backgroundTrackingService,
     this._repository,
     this._contactsCache,
+    this._activeLiveRideTracker,
   );
 
   final BackgroundTrackingService _backgroundTrackingService;
   final LiveRideRepository _repository;
   final LiveRideContactsCache _contactsCache;
+  final ActiveLiveRideTracker _activeLiveRideTracker;
 
   Future<Either<DomainException, Unit>> call(String eventId) async {
     await _backgroundTrackingService.stop();
     final result = await _repository.endRide(eventId);
     await _contactsCache.clear(eventId);
+    await _activeLiveRideTracker.clear();
     return result;
   }
 }
