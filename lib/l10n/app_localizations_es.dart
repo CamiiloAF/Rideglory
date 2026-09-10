@@ -383,6 +383,14 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get maintenance_reminder_declined_title =>
+      'Mantenimiento guardado sin recordatorio';
+
+  @override
+  String get maintenance_reminder_declined_body =>
+      'Sin el permiso de notificaciones no podemos avisarte del próximo servicio. Puedes activarlo cuando quieras desde el mantenimiento.';
+
+  @override
   String get events_tab_label => 'EVENTOS';
 
   @override

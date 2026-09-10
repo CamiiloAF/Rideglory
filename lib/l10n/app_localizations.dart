@@ -733,6 +733,18 @@ abstract class AppLocalizations {
   /// **'{type} de tu {vehicle}.'**
   String maintenance_notification_body(String type, String vehicle);
 
+  /// Título del banner informativo cuando se guarda el mantenimiento sin recordatorio por no dar el permiso de notificaciones
+  ///
+  /// In es, this message translates to:
+  /// **'Mantenimiento guardado sin recordatorio'**
+  String get maintenance_reminder_declined_title;
+
+  /// Cuerpo del banner informativo cuando se guarda el mantenimiento sin recordatorio por no dar el permiso de notificaciones
+  ///
+  /// In es, this message translates to:
+  /// **'Sin el permiso de notificaciones no podemos avisarte del próximo servicio. Puedes activarlo cuando quieras desde el mantenimiento.'**
+  String get maintenance_reminder_declined_body;
+
   /// Etiqueta de la pestaña Eventos en el Pill Tab Bar
   ///
   /// In es, this message translates to:

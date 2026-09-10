@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../../core/domain/result_state.dart';
@@ -9,6 +10,7 @@ import '../../../../design_system/components/app_page_header.dart';
 import '../../../../design_system/components/app_primary_button.dart';
 import '../../../../design_system/components/saving_button.dart';
 import '../../../../l10n/l10n_extensions.dart';
+import '../../../../shared/widgets/notification_permission_sheet.dart';
 import '../cubit/register_maintenance_cubit.dart';
 import '../cubit/register_maintenance_state.dart';
 import '../widgets/maintenance_wizard_progress.dart';
@@ -32,16 +34,40 @@ class RegisterMaintenanceView extends StatelessWidget {
         final navigator = Navigator.of(context);
         final scheduler = getIt<MaintenanceNotificationScheduler>();
         await scheduler.cancel(maintenance.id);
+        if (!context.mounted) return;
         if (maintenance.nextDate != null) {
-          await scheduler.scheduleForMaintenance(
-            maintenanceId: maintenance.id,
-            title: l10n.maintenance_notification_title,
-            body: l10n.maintenance_notification_body(
-              maintenance.type,
-              maintenance.vehicleDisplayName,
-            ),
-            date: maintenance.nextDate!,
+          final granted = await requestNotificationPermissionWithConsent(
+            context,
+            requestSystemPermission: scheduler.requestPermission,
           );
+          if (!context.mounted) return;
+          if (granted) {
+            await scheduler.scheduleForMaintenance(
+              maintenanceId: maintenance.id,
+              title: l10n.maintenance_notification_title,
+              body: l10n.maintenance_notification_body(
+                maintenance.type,
+                maintenance.vehicleDisplayName,
+              ),
+              date: maintenance.nextDate!,
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                duration: const Duration(seconds: 3),
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                behavior: SnackBarBehavior.floating,
+                content: AppBanner(
+                  icon: LucideIcons.bellOff,
+                  title: l10n.maintenance_reminder_declined_title,
+                  body: l10n.maintenance_reminder_declined_body,
+                ),
+              ),
+            );
+            await Future<void>.delayed(const Duration(milliseconds: 900));
+            if (!context.mounted) return;
+          }
         }
         navigator.pop(true);
       },
