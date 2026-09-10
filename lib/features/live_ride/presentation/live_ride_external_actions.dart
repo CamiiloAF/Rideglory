@@ -9,15 +9,10 @@ Future<void> openSosPhoneDialer(String phone) async {
 }
 
 /// SMS con las coordenadas y un link de Google Maps, para cuando no hay
-/// datos móviles pero sí señal de voz/SMS.
-Future<void> openSosSms({
-  required String phone,
-  required double lat,
-  required double lng,
-}) async {
-  final body =
-      'Necesito ayuda. Mi ubicación: $lat,$lng '
-      'https://maps.google.com/?q=$lat,$lng';
+/// datos móviles pero sí señal de voz/SMS. `body` viene ya resuelto desde
+/// `context.l10n.sos_sms_body` — este archivo es `presentation/` puro, sin
+/// strings de UI hardcodeados.
+Future<void> openSosSms({required String phone, required String body}) async {
   final uri = Uri(scheme: 'sms', path: phone, queryParameters: {'body': body});
   await launchUrl(uri, mode: LaunchMode.externalApplication);
 }

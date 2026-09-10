@@ -49,6 +49,7 @@ Widget _wrap({
   required LiveRideCubit liveRideCubit,
   required SosCubit sosCubit,
   required ConnectivityCubit connectivityCubit,
+  LiveRideRouteArgs? args = _args,
 }) {
   return MultiBlocProvider(
     providers: [
@@ -60,11 +61,7 @@ Widget _wrap({
       theme: AppTheme.light,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const LiveRideView(
-        eventId: 'event-1',
-        args: _args,
-        showMapTiles: false,
-      ),
+      home: LiveRideView(eventId: 'event-1', args: args, showMapTiles: false),
     ),
   );
 }
@@ -82,6 +79,9 @@ void main() {
       () => connectivityCubit.state,
     ).thenReturn(const ConnectivityState.online());
     when(() => sosCubit.state).thenReturn(const SosState());
+    when(
+      () => liveRideCubit.resolveArgs(any(), any()),
+    ).thenAnswer((_) async {});
   });
 
   testWidgets('shows a skeleton while loading', (tester) async {
@@ -164,6 +164,7 @@ void main() {
       LiveRideState(
         permission: LocationPermissionState.whileInUse,
         riders: ResultState.data(data: [_rider()]),
+        args: _args,
       ),
     );
 
@@ -202,4 +203,44 @@ void main() {
     expect(find.text('La rodada terminó'), findsOneWidget);
     expect(find.text('Volver al evento'), findsOneWidget);
   });
+
+  testWidgets(
+    'asks the cubit to resolve args with what came from the route extra',
+    (tester) async {
+      when(() => liveRideCubit.state).thenReturn(
+        const LiveRideState(permission: LocationPermissionState.whileInUse),
+      );
+
+      await tester.pumpWidget(
+        _wrap(
+          liveRideCubit: liveRideCubit,
+          sosCubit: sosCubit,
+          connectivityCubit: connectivityCubit,
+        ),
+      );
+
+      verify(() => liveRideCubit.resolveArgs('event-1', _args)).called(1);
+    },
+  );
+
+  testWidgets(
+    'asks the cubit to resolve args on its own when opened from a SOS push '
+    '(no extra)',
+    (tester) async {
+      when(() => liveRideCubit.state).thenReturn(
+        const LiveRideState(permission: LocationPermissionState.whileInUse),
+      );
+
+      await tester.pumpWidget(
+        _wrap(
+          liveRideCubit: liveRideCubit,
+          sosCubit: sosCubit,
+          connectivityCubit: connectivityCubit,
+          args: null,
+        ),
+      );
+
+      verify(() => liveRideCubit.resolveArgs('event-1', null)).called(1);
+    },
+  );
 }

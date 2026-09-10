@@ -24,7 +24,7 @@ List<RouteBase> liveRideRoutes = [
         name: AppRoutes.eventLive,
         builder: (context, state) => LiveRideView(
           eventId: state.pathParameters['id']!,
-          args: state.extra as LiveRideRouteArgs? ?? LiveRideRouteArgs.empty,
+          args: state.extra as LiveRideRouteArgs?,
         ),
       ),
       GoRoute(

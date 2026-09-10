@@ -7,6 +7,7 @@ import '../../../../design_system/tokens/app_colors.dart';
 import '../../../../l10n/l10n_extensions.dart';
 import '../../domain/live_ride_contacts.dart';
 import '../live_ride_external_actions.dart';
+import '../live_ride_formatters.dart';
 
 /// D17/D18: llamar al contacto cacheado (o al organizador si no hay
 /// contacto), SMS con coordenadas y el botón terciario "Llamar al 123"
@@ -68,8 +69,11 @@ class SosFallbackActions extends StatelessWidget {
               ? null
               : () => openSosSms(
                   phone: primaryPhone ?? organizerPhone!,
-                  lat: lat,
-                  lng: lng,
+                  body: context.l10n.sos_sms_body(
+                    lat.toString(),
+                    lng.toString(),
+                    sosGoogleMapsLink(lat, lng),
+                  ),
                 ),
         ),
         const SizedBox(height: 10),

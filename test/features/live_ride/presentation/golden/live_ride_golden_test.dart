@@ -101,6 +101,9 @@ void main() {
     when(
       () => connectivityCubit.state,
     ).thenReturn(const ConnectivityState.online());
+    when(
+      () => liveRideCubit.resolveArgs(any(), any()),
+    ).thenAnswer((_) async {});
   });
 
   Widget wrapLiveRide(Widget child) {
@@ -132,6 +135,7 @@ void main() {
           lng: -75.658,
           recordedAt: DateTime.now().toUtc(),
         ),
+        args: _args,
       ),
     );
 
@@ -158,6 +162,7 @@ void main() {
       LiveRideState(
         permission: LocationPermissionState.whileInUse,
         riders: ResultState.data(data: [_leader()]),
+        args: _args,
       ),
     );
 

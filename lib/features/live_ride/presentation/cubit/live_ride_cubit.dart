@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/domain/result_state.dart';
+import '../../../events/domain/usecases/get_event_detail_use_case.dart';
 import '../../domain/background_tracking_service.dart';
 import '../../domain/live_ride_contacts_cache.dart';
 import '../../domain/location_permission_state.dart';
@@ -13,6 +14,7 @@ import '../../domain/usecases/start_sharing_location_use_case.dart';
 import '../../domain/usecases/stop_sharing_location_use_case.dart';
 import '../../domain/usecases/watch_event_finished_use_case.dart';
 import '../../domain/usecases/watch_live_riders_use_case.dart';
+import '../live_ride_route_args.dart';
 import 'live_ride_state.dart';
 import 'sharing_status.dart';
 
@@ -30,6 +32,7 @@ class LiveRideCubit extends Cubit<LiveRideState> {
     this._locationService,
     this._contactsCache,
     this._backgroundTrackingService,
+    this._getEventDetail,
   ) : super(const LiveRideState());
 
   final WatchLiveRidersUseCase _watchLiveRiders;
@@ -40,6 +43,7 @@ class LiveRideCubit extends Cubit<LiveRideState> {
   final LocationService _locationService;
   final LiveRideContactsCache _contactsCache;
   final BackgroundTrackingService _backgroundTrackingService;
+  final GetEventDetailUseCase _getEventDetail;
 
   StreamSubscription<dynamic>? _ridersSubscription;
   StreamSubscription<dynamic>? _eventFinishedSubscription;
@@ -147,6 +151,31 @@ class LiveRideCubit extends Cubit<LiveRideState> {
     _myPositionSubscription = null;
     await _stopSharing(_eventId);
     emit(state.copyWith(sharing: SharingStatus.notSharing, myPosition: null));
+  }
+
+  /// Se abre `/live` desde el push de un SOS (deep link) sin haber pasado
+  /// por el detalle del evento (EV2), así que `extra` viene vacío. Si
+  /// `provided` ya trae datos reales, se usan tal cual; si no, se resuelven
+  /// contra `GetEventDetailUseCase` una sola vez por sesión.
+  Future<void> resolveArgs(String eventId, LiveRideRouteArgs? provided) async {
+    if (provided != null && provided != LiveRideRouteArgs.empty) {
+      emit(state.copyWith(args: provided));
+      return;
+    }
+    if (state.args != LiveRideRouteArgs.empty) return;
+
+    final result = await _getEventDetail(eventId);
+    result.fold((_) => null, (event) {
+      emit(
+        state.copyWith(
+          args: LiveRideRouteArgs(
+            eventName: event.name,
+            isOwner: event.isOwnedByMe,
+            ownerId: event.ownerId,
+          ),
+        ),
+      );
+    });
   }
 
   void _listenToMyPosition() {

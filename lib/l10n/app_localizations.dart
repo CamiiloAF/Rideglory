@@ -3251,6 +3251,12 @@ abstract class AppLocalizations {
   /// **'Enviar SMS con mi ubicación'**
   String get sos_sms_cta;
 
+  /// D17: cuerpo del SMS de fallback con las coordenadas y un link de mapa
+  ///
+  /// In es, this message translates to:
+  /// **'Necesito ayuda. Mi ubicación: {lat},{lng} {link}'**
+  String sos_sms_body(String lat, String lng, String link);
+
   /// D18: CTA terciario, nunca automático
   ///
   /// In es, this message translates to:

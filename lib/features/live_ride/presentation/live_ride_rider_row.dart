@@ -23,14 +23,23 @@ class LiveRiderRow {
   bool get isSharing => liveRider != null;
 }
 
-/// Fusiona los inscritos aprobados con `live_riders`, por `userId`.
+/// Fusiona los inscritos aprobados con `live_riders`, por `userId`. El
+/// organizador nunca se inscribe a su propia rodada, así que no aparece en
+/// `registrants` — cuando el viewer es un participante aprobado (no el
+/// propio organizador), `organizerName`/`organizerPhone` (de
+/// `get_live_ride_contacts`, ya cacheados en `LiveRideState.contacts`)
+/// completan su fila como líder aunque no figure en `event_registrations`.
+/// Cuando el viewer es el organizador, no se pasan (no necesita su propio
+/// teléfono).
 List<LiveRiderRow> mergeLiveRiderRows({
   required List<EventRegistrant> registrants,
   required List<LiveRider> liveRiders,
   required String ownerId,
+  String? organizerName,
+  String? organizerPhone,
 }) {
   final liveByUserId = {for (final rider in liveRiders) rider.userId: rider};
-  return [
+  final rows = [
     for (final registrant in registrants)
       LiveRiderRow(
         userId: registrant.userId,
@@ -40,4 +49,18 @@ List<LiveRiderRow> mergeLiveRiderRows({
         liveRider: liveByUserId[registrant.userId],
       ),
   ];
+  final hasOrganizerRow = rows.any((row) => row.userId == ownerId);
+  if (!hasOrganizerRow && organizerName != null && ownerId.isNotEmpty) {
+    rows.insert(
+      0,
+      LiveRiderRow(
+        userId: ownerId,
+        fullName: organizerName,
+        isLeader: true,
+        phone: organizerPhone,
+        liveRider: liveByUserId[ownerId],
+      ),
+    );
+  }
+  return rows;
 }

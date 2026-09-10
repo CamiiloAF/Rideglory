@@ -1673,6 +1673,9 @@
   "sos_sms_cta": "Enviar SMS con mi ubicación",
   "@sos_sms_cta": {"description": "CTA de fallback D17: SMS con coordenadas"},
 
+  "sos_sms_body": "Necesito ayuda. Mi ubicación: {lat},{lng} {link}",
+  "@sos_sms_body": {"description": "D17: cuerpo del SMS de fallback con las coordenadas y un link de mapa", "placeholders": {"lat": {"type": "String"}, "lng": {"type": "String"}, "link": {"type": "String"}}},
+
   "sos_call_123_cta": "Llamar al 123",
   "@sos_call_123_cta": {"description": "D18: CTA terciario, nunca automático"},
 

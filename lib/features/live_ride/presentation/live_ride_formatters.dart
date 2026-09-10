@@ -33,6 +33,11 @@ String liveRideInitials(String fullName) {
   return (first + last).toUpperCase();
 }
 
+/// Link de Google Maps para el SMS de fallback del SOS (D17), a partir de
+/// las coordenadas ya obtenidas — no hace red, solo arma la URL.
+String sosGoogleMapsLink(double lat, double lng) =>
+    'https://maps.google.com/?q=$lat,$lng';
+
 /// Minutos transcurridos desde [recordedAt], para interpolar en las cadenas
 /// "Hace X min" / "Sin señal hace X min" del `.arb`.
 int liveRideMinutesSince(DateTime recordedAt, {DateTime? now}) {

@@ -1830,6 +1830,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sos_sms_cta => 'Enviar SMS con mi ubicación';
 
   @override
+  String sos_sms_body(String lat, String lng, String link) {
+    return 'Necesito ayuda. Mi ubicación: $lat,$lng $link';
+  }
+
+  @override
   String get sos_call_123_cta => 'Llamar al 123';
 
   @override

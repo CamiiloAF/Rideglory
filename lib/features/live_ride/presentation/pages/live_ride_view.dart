@@ -26,22 +26,38 @@ import '../widgets/live_ride_permission_state_view.dart';
 /// Pencil: RJ9Aq (compartiendo) / gcRLk (sin compartir) / lMJpQ (carga) /
 /// J22QFC (sin permiso) / eYAbY (sin GPS) / o19cv (sin conexión) /
 /// OQJZS (terminada) / NdP2O (terminada con SOS abierto)
-class LiveRideView extends StatelessWidget {
+class LiveRideView extends StatefulWidget {
   const LiveRideView({
     required this.eventId,
-    required this.args,
     super.key,
+    this.args,
     this.showMapTiles = true,
   });
 
   final String eventId;
-  final LiveRideRouteArgs args;
+
+  /// `null` cuando la pantalla se abre desde un push de SOS (deep link,
+  /// sin pasar por el detalle del evento) — `LiveRideCubit.resolveArgs`
+  /// la completa por su cuenta.
+  final LiveRideRouteArgs? args;
 
   /// `false` en tests/goldens (ver `LiveRideContent.showMapTiles`).
   final bool showMapTiles;
 
   @override
+  State<LiveRideView> createState() => _LiveRideViewState();
+}
+
+class _LiveRideViewState extends State<LiveRideView> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<LiveRideCubit>().resolveArgs(widget.eventId, widget.args);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final eventId = widget.eventId;
     return BlocBuilder<LiveRideCubit, LiveRideState>(
       builder: (context, state) {
         if (state.permission == LocationPermissionState.serviceDisabled) {
@@ -94,21 +110,21 @@ class LiveRideView extends StatelessWidget {
                   ? LiveRideFinishedGate(eventId: eventId)
                   : LiveRideContent(
                       eventId: eventId,
-                      args: args,
+                      args: state.args,
                       riders: const [],
                       sharing: state.sharing,
                       myPosition: state.myPosition,
-                      showMapTiles: showMapTiles,
+                      showMapTiles: widget.showMapTiles,
                     ),
               data: (riders) => state.isEventFinished
                   ? LiveRideFinishedGate(eventId: eventId)
                   : LiveRideContent(
                       eventId: eventId,
-                      args: args,
+                      args: state.args,
                       riders: riders,
                       sharing: state.sharing,
                       myPosition: state.myPosition,
-                      showMapTiles: showMapTiles,
+                      showMapTiles: widget.showMapTiles,
                     ),
             );
           },
