@@ -1569,4 +1569,50 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get events_route_change_cta => 'Avisar a los inscritos';
+
+  @override
+  String get live_notification_title =>
+      'Compartiendo tu ubicación con la rodada';
+
+  @override
+  String get live_notification_body => 'Toca Detener para dejar de compartir';
+
+  @override
+  String get live_notification_stop_button => 'Detener';
+
+  @override
+  String get live_ride_error_not_a_participant =>
+      'No estás inscrito en esta rodada, así que no podemos mostrarte esto.';
+
+  @override
+  String get live_ride_error_event_not_started =>
+      'Esta rodada todavía no arrancó.';
+
+  @override
+  String get live_ride_error_sos_not_found =>
+      'No encontramos esa alerta de SOS.';
+
+  @override
+  String get live_ride_error_not_allowed_to_close =>
+      'Solo quien lanzó el SOS o el organizador pueden cerrarlo.';
+
+  @override
+  String get live_ride_error_location_permission_denied =>
+      'Necesitamos tu ubicación para compartirla con la rodada. Actívala desde los ajustes del sistema.';
+
+  @override
+  String get live_ride_error_location_service_disabled =>
+      'Tu GPS está apagado. Actívalo para compartir tu ubicación.';
+
+  @override
+  String get live_ride_error_location_unavailable =>
+      'No pudimos obtener tu ubicación. Muévete a un lugar con mejor señal de GPS e inténtalo de nuevo.';
+
+  @override
+  String get live_ride_error_offline =>
+      'Sin conexión. Revisa tu señal e inténtalo de nuevo.';
+
+  @override
+  String get live_ride_error_generic =>
+      'Algo falló con la rodada en vivo. Inténtalo de nuevo.';
 }

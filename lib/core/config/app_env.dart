@@ -21,5 +21,17 @@ abstract final class AppEnv {
 
   static const String sentryDsn = String.fromEnvironment('SENTRY_DSN');
 
+  /// D13: tiles raster por URL. Vacío en dev usa OpenStreetMap; en prod se
+  /// espera una URL de MapTiler/Mapbox raster con token embebido en
+  /// `config/prod.json`. Sin SDK nativo, sin token para arrancar en dev.
+  static const String _mapTileUrl = String.fromEnvironment('MAP_TILE_URL');
+
+  static String get mapTileUrl => _mapTileUrl.isEmpty
+      ? 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+      : _mapTileUrl;
+
+  /// Exigido por la política de uso de tiles de OpenStreetMap.
+  static const String mapUserAgentPackageName = 'com.camiloagudelo.rideglory';
+
   static bool get isProd => flavor == 'prod';
 }

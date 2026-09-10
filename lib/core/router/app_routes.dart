@@ -30,6 +30,17 @@ abstract final class AppRoutes {
   static const String eventRegistrants = 'event-registrants';
   static const String eventRegistrantsPath = 'detail/:id/inscritos';
 
+  // Bloque 3 (F11): pantallas LV1-LV6 aún sin diseño aprobado, ver
+  // `features/live_ride/presentation/live_ride_routes.dart`.
+  static const String eventLive = 'event-live';
+  static const String eventLivePath = 'detail/:id/live';
+
+  static const String eventLiveSos = 'event-live-sos';
+  static const String eventLiveSosPath = 'detail/:id/live/sos';
+
+  static const String eventLiveRiders = 'event-live-riders';
+  static const String eventLiveRidersPath = 'detail/:id/live/riders';
+
   static const String garage = 'garage';
   static const String garagePath = '/garage';
 

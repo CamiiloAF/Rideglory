@@ -12,5 +12,6 @@
   "FIREBASE_IOS_BUNDLE_ID": "",
   "SENTRY_DSN": "",
   "SUPABASE_URL": "",
-  "SUPABASE_ANON_KEY": ""
+  "SUPABASE_ANON_KEY": "",
+  "MAP_TILE_URL": ""
 }
