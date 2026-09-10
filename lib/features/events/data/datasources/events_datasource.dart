@@ -31,8 +31,9 @@ class EventsDatasource {
     final rows = await _client
         .from(_eventsPublicView)
         .select()
-        .inFilter('state', ['published', 'started'])
-        .gte('start_at', nowIso)
+        // Una rodada ya iniciada sigue siendo "próxima" aunque su hora
+        // pactada haya pasado: es justo cuando el rider necesita entrar.
+        .or('state.eq.started,and(state.eq.published,start_at.gte.$nowIso)')
         .order('start_at');
     final events = rows.map(EventDto.fromJson).toList();
     return _withMyRegistrationStatus(events);

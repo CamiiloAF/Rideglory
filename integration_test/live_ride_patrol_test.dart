@@ -207,11 +207,17 @@ void main() {
     (tester) async {
       app.main();
       await tester.pumpAndSettle(const Duration(seconds: 3));
+      // Una corrida anterior pudo dejar sesión persistida: la app abriría en
+      // Mantenimiento y nunca aparecería la bienvenida.
+      if (Supabase.instance.client.auth.currentSession != null) {
+        await Supabase.instance.client.auth.signOut();
+        await tester.pumpAndSettle(const Duration(seconds: 2));
+      }
 
       // --- a. qa1 entra al detalle de "Rodada en curso" y ve el CTA ------
       await _login(tester, 'qa1@gmail.com', 'Test123.');
       await _waitForText(tester, 'Mantenimiento');
-      await tester.tap(find.text('EVENTOS'));
+      await tester.tap(find.bySemanticsLabel('EVENTOS'));
       await _settle(tester);
       await _waitForText(tester, 'Rodada en curso');
       await tester.tap(find.text('Rodada en curso'));
@@ -298,14 +304,14 @@ void main() {
       await _settle(tester);
       await tester.pageBack();
       await _settle(tester);
-      await tester.tap(find.text('PERFIL'));
+      await tester.tap(find.bySemanticsLabel('PERFIL'));
       await _settle(tester);
       await _signOut(tester);
 
       // --- f. qa2 (organizador) ve la lista completa de riders (LV6) -----
       await _login(tester, 'qa2@gmail.com', 'Test123.');
       await _waitForText(tester, 'Mantenimiento');
-      await tester.tap(find.text('EVENTOS'));
+      await tester.tap(find.bySemanticsLabel('EVENTOS'));
       await _settle(tester);
       await tester.tap(find.text('Mías'));
       await _settle(tester);

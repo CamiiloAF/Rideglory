@@ -8,6 +8,7 @@ import 'package:rideglory/core/exceptions/domain_exception.dart';
 import 'package:rideglory/design_system/theme/app_theme.dart';
 import 'package:rideglory/features/live_ride/domain/live_rider.dart';
 import 'package:rideglory/features/live_ride/domain/location_permission_state.dart';
+import 'package:rideglory/features/live_ride/presentation/cubit/sharing_status.dart';
 import 'package:rideglory/features/live_ride/presentation/cubit/live_ride_cubit.dart';
 import 'package:rideglory/features/live_ride/presentation/cubit/live_ride_state.dart';
 import 'package:rideglory/features/live_ride/presentation/cubit/sos_cubit.dart';
@@ -104,7 +105,10 @@ void main() {
     tester,
   ) async {
     when(() => liveRideCubit.state).thenReturn(
-      const LiveRideState(permission: LocationPermissionState.denied),
+      const LiveRideState(
+        permission: LocationPermissionState.denied,
+        sharing: SharingStatus.requestingPermission,
+      ),
     );
 
     await tester.pumpWidget(
@@ -119,9 +123,39 @@ void main() {
     expect(find.text('Abrir ajustes'), findsOneWidget);
   });
 
+  testWidgets(
+    'shows the map and riders (LV1b) without my location permission when '
+    'not sharing — never blocks just viewing the ride',
+    (tester) async {
+      when(() => liveRideCubit.state).thenReturn(
+        LiveRideState(
+          permission: LocationPermissionState.denied,
+          sharing: SharingStatus.notSharing,
+          riders: ResultState.data(data: [_rider()]),
+          args: _args,
+        ),
+      );
+
+      await tester.pumpWidget(
+        _wrap(
+          liveRideCubit: liveRideCubit,
+          sosCubit: sosCubit,
+          connectivityCubit: connectivityCubit,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Necesitamos tu ubicación'), findsNothing);
+      expect(find.textContaining('Juan Camilo'), findsOneWidget);
+    },
+  );
+
   testWidgets('shows the no-GPS state', (tester) async {
     when(() => liveRideCubit.state).thenReturn(
-      const LiveRideState(permission: LocationPermissionState.serviceDisabled),
+      const LiveRideState(
+        permission: LocationPermissionState.serviceDisabled,
+        sharing: SharingStatus.sharing,
+      ),
     );
 
     await tester.pumpWidget(

@@ -41958,6 +41958,5332 @@
           ]
         }
       ]
+    },
+    {
+      "type": "frame",
+      "id": "eq7IG",
+      "x": 7480,
+      "y": -1500,
+      "name": "Componente · Tarjeta de rider en vivo",
+      "reusable": true,
+      "width": "fill_container(350)",
+      "fill": "$c-surface",
+      "cornerRadius": "$c-r-md",
+      "stroke": "$c-border-strong",
+      "strokeWidth": 1,
+      "gap": 12,
+      "padding": 12,
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "REx7E",
+          "name": "Avatar",
+          "width": 44,
+          "height": 44,
+          "fill": "$c-block",
+          "cornerRadius": 22,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "W9tS4",
+              "name": "Iniciales",
+              "fill": "$c-on-block",
+              "content": "CA",
+              "fontFamily": "$c-font",
+              "fontSize": 15,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "i5jD9u",
+          "name": "Texto",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 3,
+          "children": [
+            {
+              "type": "text",
+              "id": "rfMYu",
+              "name": "Nombre",
+              "fill": "$c-text",
+              "content": "Camilo Agudelo",
+              "fontFamily": "$c-font",
+              "fontSize": 14.5,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "DNAgK",
+              "name": "Meta",
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "k6MMRg",
+                  "name": "map-pin",
+                  "width": 12,
+                  "height": 12,
+                  "icon": "map-pin",
+                  "library": "lucide",
+                  "fill": "$c-text-secondary"
+                },
+                {
+                  "type": "text",
+                  "id": "pzLPZ",
+                  "name": "Distancia",
+                  "fill": "$c-text-secondary",
+                  "content": "A 350 m",
+                  "fontFamily": "$c-font",
+                  "fontSize": 12.5,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "Qzlot",
+                  "name": "Separador",
+                  "fill": "$c-text-secondary",
+                  "content": "·",
+                  "fontFamily": "$c-font",
+                  "fontSize": 12.5,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "PCPEz",
+                  "name": "Estado",
+                  "fill": "$c-text-secondary",
+                  "content": "Hace 2 min",
+                  "fontFamily": "$c-font",
+                  "fontSize": 12.5,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Uv2i4",
+          "x": 0,
+          "y": 0,
+          "name": "Llamar",
+          "enabled": false,
+          "width": 48,
+          "height": 48,
+          "fill": "$c-accent-soft",
+          "cornerRadius": "$c-r-sm",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "t2kFCi",
+              "name": "phone",
+              "width": 18,
+              "height": 18,
+              "icon": "phone",
+              "library": "lucide",
+              "fill": "$c-accent-text"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "yVKpQ",
+      "x": 8080,
+      "y": -1500,
+      "name": "Componente · Botón SOS",
+      "reusable": true,
+      "width": 68,
+      "height": 68,
+      "fill": "$c-error-solid",
+      "cornerRadius": 34,
+      "layout": "vertical",
+      "gap": 2,
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "icon",
+          "id": "V1L3xS",
+          "name": "siren",
+          "width": 22,
+          "height": 22,
+          "icon": "siren",
+          "library": "lucide",
+          "fill": "$c-on-block"
+        },
+        {
+          "type": "text",
+          "id": "ku9ii",
+          "name": "Etiqueta",
+          "fill": "$c-on-block",
+          "content": "SOS",
+          "fontFamily": "$c-font",
+          "fontSize": 11,
+          "fontWeight": "800"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "RJ9Aq",
+      "x": 0,
+      "y": 16580,
+      "name": "LV1 — Rodada en vivo",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "children": [
+        {
+          "type": "frame",
+          "id": "pGeHO",
+          "name": "Mapa",
+          "width": 390,
+          "height": 844,
+          "fill": "$c-surface",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "w40Z6",
+              "layoutPosition": "absolute",
+              "x": 20,
+              "y": 150,
+              "fill": "$c-text-secondary",
+              "content": "MAPA",
+              "fontFamily": "$c-font",
+              "fontSize": 13,
+              "fontWeight": "700",
+              "letterSpacing": 2
+            },
+            {
+              "type": "frame",
+              "id": "adL5e",
+              "layoutPosition": "absolute",
+              "x": 177,
+              "y": 282,
+              "name": "Marker líder",
+              "width": 36,
+              "height": 36,
+              "fill": "$c-accent",
+              "cornerRadius": 18,
+              "stroke": "$c-bg",
+              "strokeWidth": 2,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "N8AawB",
+                  "fill": "$c-on-accent",
+                  "content": "JC",
+                  "fontFamily": "$c-font",
+                  "fontSize": 12,
+                  "fontWeight": "800"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "w6yd6K",
+              "layoutPosition": "absolute",
+              "x": 70,
+              "y": 360,
+              "name": "Marker rider 1",
+              "width": 32,
+              "height": 32,
+              "fill": "$c-block",
+              "cornerRadius": 16,
+              "stroke": "$c-bg",
+              "strokeWidth": 2,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "m59Cj",
+                  "fill": "$c-on-block",
+                  "content": "CA",
+                  "fontFamily": "$c-font",
+                  "fontSize": 11,
+                  "fontWeight": "800"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "GIY9t",
+              "layoutPosition": "absolute",
+              "x": 280,
+              "y": 230,
+              "name": "Marker rider 2",
+              "width": 32,
+              "height": 32,
+              "fill": "$c-block",
+              "cornerRadius": 16,
+              "stroke": "$c-bg",
+              "strokeWidth": 2,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "y71du",
+                  "fill": "$c-on-block",
+                  "content": "LM",
+                  "fontFamily": "$c-font",
+                  "fontSize": 11,
+                  "fontWeight": "800"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "yCFgQ",
+              "layoutPosition": "absolute",
+              "x": 230,
+              "y": 420,
+              "name": "Marker rider 3",
+              "width": 32,
+              "height": 32,
+              "fill": "$c-block",
+              "cornerRadius": 16,
+              "stroke": "$c-bg",
+              "strokeWidth": 2,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "YJTFX",
+                  "fill": "$c-on-block",
+                  "content": "SP",
+                  "fontFamily": "$c-font",
+                  "fontSize": 11,
+                  "fontWeight": "800"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "GzYAP",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Header flotante",
+          "width": 390,
+          "fill": "$c-plate",
+          "layout": "vertical",
+          "gap": 10,
+          "padding": [
+            14,
+            16,
+            12,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "ZQ9P1",
+              "name": "Fila título",
+              "width": "fill_container",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "IbVkr",
+                  "name": "Volver",
+                  "width": 48,
+                  "height": 48,
+                  "fill": "$c-plate-chip",
+                  "cornerRadius": 24,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "rlf2M",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "arrow-left",
+                      "library": "lucide",
+                      "fill": "$c-plate-text"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "lLW72",
+                  "name": "Nombre evento",
+                  "fill": "$c-plate-text",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Rodada al Nevado del Ruiz",
+                  "fontFamily": "$c-font",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "qWUz4",
+              "name": "Fila estado",
+              "width": "fill_container",
+              "gap": 8,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "OsNTE",
+                  "name": "Chip compartiendo",
+                  "fill": "$c-plate-chip",
+                  "cornerRadius": 20,
+                  "gap": 6,
+                  "padding": [
+                    8,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ellipse",
+                      "id": "Y51Dn",
+                      "name": "Punto",
+                      "fill": "$c-success-on-block",
+                      "width": 8,
+                      "height": 8
+                    },
+                    {
+                      "type": "text",
+                      "id": "O8qwlg",
+                      "fill": "$c-plate-text",
+                      "content": "Compartiendo ubicación",
+                      "fontFamily": "$c-font",
+                      "fontSize": 12.5,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "xA0pW",
+                  "name": "Botón Detener",
+                  "height": 48,
+                  "fill": "$c-error-solid",
+                  "cornerRadius": "$c-r-sm",
+                  "gap": 6,
+                  "padding": [
+                    0,
+                    16
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "V6E9f",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "square",
+                      "library": "lucide",
+                      "fill": "$c-on-block"
+                    },
+                    {
+                      "type": "text",
+                      "id": "mMeIT",
+                      "fill": "$c-on-block",
+                      "content": "Detener",
+                      "fontFamily": "$c-font",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "TB1ls",
+          "type": "ref",
+          "ref": "yVKpQ",
+          "name": "SOS",
+          "x": 306,
+          "y": 424,
+          "layoutPosition": "absolute"
+        },
+        {
+          "type": "frame",
+          "id": "juEgy",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 508,
+          "name": "Hoja riders",
+          "width": 390,
+          "height": 336,
+          "fill": "$c-bg",
+          "cornerRadius": [
+            "$c-r-xl",
+            "$c-r-xl",
+            0,
+            0
+          ],
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            10,
+            20,
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 2,
+              "id": "Ehbiw",
+              "name": "Handle",
+              "fill": "$c-border",
+              "width": 40,
+              "height": 4
+            },
+            {
+              "type": "frame",
+              "id": "d9LI8f",
+              "name": "Espacio handle",
+              "width": "fill_container",
+              "height": 4
+            },
+            {
+              "type": "text",
+              "id": "y3BHek",
+              "name": "Título hoja",
+              "fill": "$c-text",
+              "content": "Riders en la rodada (6)",
+              "fontFamily": "$c-font",
+              "fontSize": 16,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "cqQJp",
+              "name": "Lista riders",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "id": "bjh2D",
+                  "type": "ref",
+                  "ref": "eq7IG",
+                  "name": "Rider Juan Camilo (líder)",
+                  "descendants": {
+                    "W9tS4": {
+                      "content": "JC"
+                    },
+                    "rfMYu": {
+                      "content": "Juan Camilo · Líder"
+                    },
+                    "pzLPZ": {
+                      "content": "A 0 m"
+                    },
+                    "PCPEz": {
+                      "content": "Hace 1 min"
+                    }
+                  }
+                },
+                {
+                  "id": "u2bdMP",
+                  "type": "ref",
+                  "ref": "eq7IG",
+                  "name": "Rider Camilo",
+                  "descendants": {
+                    "rfMYu": {
+                      "content": "Camilo Agudelo"
+                    },
+                    "pzLPZ": {
+                      "content": "A 350 m"
+                    },
+                    "PCPEz": {
+                      "content": "Hace 2 min"
+                    }
+                  }
+                },
+                {
+                  "id": "fs5a3",
+                  "type": "ref",
+                  "ref": "eq7IG",
+                  "name": "Rider Sofía",
+                  "descendants": {
+                    "W9tS4": {
+                      "content": "SP"
+                    },
+                    "rfMYu": {
+                      "content": "Sofía Pardo"
+                    },
+                    "pzLPZ": {
+                      "content": "A 1,2 km"
+                    },
+                    "PCPEz": {
+                      "content": "Sin señal hace 6 min",
+                      "fill": "$c-warning"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "D7WZ03",
+      "x": 440,
+      "y": 16580,
+      "name": "LV1 — Rodada en vivo (oscuro)",
+      "theme": {
+        "mode": "dark"
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "children": [
+        {
+          "type": "frame",
+          "id": "nRc9o",
+          "name": "Mapa",
+          "width": 390,
+          "height": 844,
+          "fill": "$c-surface",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "Z7M5o",
+              "layoutPosition": "absolute",
+              "x": 20,
+              "y": 150,
+              "fill": "$c-text-secondary",
+              "content": "MAPA",
+              "fontFamily": "$c-font",
+              "fontSize": 13,
+              "fontWeight": "700",
+              "letterSpacing": 2
+            },
+            {
+              "type": "frame",
+              "id": "fA1qz",
+              "layoutPosition": "absolute",
+              "x": 177,
+              "y": 282,
+              "name": "Marker líder",
+              "width": 36,
+              "height": 36,
+              "fill": "$c-accent",
+              "cornerRadius": 18,
+              "stroke": "$c-bg",
+              "strokeWidth": 2,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "U8E3G",
+                  "fill": "$c-on-accent",
+                  "content": "JC",
+                  "fontFamily": "$c-font",
+                  "fontSize": 12,
+                  "fontWeight": "800"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "re969",
+              "layoutPosition": "absolute",
+              "x": 70,
+              "y": 360,
+              "name": "Marker rider 1",
+              "width": 32,
+              "height": 32,
+              "fill": "$c-block",
+              "cornerRadius": 16,
+              "stroke": "$c-bg",
+              "strokeWidth": 2,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "yp9jM",
+                  "fill": "$c-on-block",
+                  "content": "CA",
+                  "fontFamily": "$c-font",
+                  "fontSize": 11,
+                  "fontWeight": "800"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Tgjx5",
+              "layoutPosition": "absolute",
+              "x": 280,
+              "y": 230,
+              "name": "Marker rider 2",
+              "width": 32,
+              "height": 32,
+              "fill": "$c-block",
+              "cornerRadius": 16,
+              "stroke": "$c-bg",
+              "strokeWidth": 2,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "u2P9w",
+                  "fill": "$c-on-block",
+                  "content": "LM",
+                  "fontFamily": "$c-font",
+                  "fontSize": 11,
+                  "fontWeight": "800"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Rvx3N",
+              "layoutPosition": "absolute",
+              "x": 230,
+              "y": 420,
+              "name": "Marker rider 3",
+              "width": 32,
+              "height": 32,
+              "fill": "$c-block",
+              "cornerRadius": 16,
+              "stroke": "$c-bg",
+              "strokeWidth": 2,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "T8okT",
+                  "fill": "$c-on-block",
+                  "content": "SP",
+                  "fontFamily": "$c-font",
+                  "fontSize": 11,
+                  "fontWeight": "800"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "B4SoOc",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Header flotante",
+          "width": 390,
+          "fill": "$c-plate",
+          "layout": "vertical",
+          "gap": 10,
+          "padding": [
+            14,
+            16,
+            12,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "OWpAt",
+              "name": "Fila título",
+              "width": "fill_container",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "rnwxb",
+                  "name": "Volver",
+                  "width": 48,
+                  "height": 48,
+                  "fill": "$c-plate-chip",
+                  "cornerRadius": 24,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "x4MzZF",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "arrow-left",
+                      "library": "lucide",
+                      "fill": "$c-plate-text"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "WkMZm",
+                  "name": "Nombre evento",
+                  "fill": "$c-plate-text",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Rodada al Nevado del Ruiz",
+                  "fontFamily": "$c-font",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "wSTTc",
+              "name": "Fila estado",
+              "width": "fill_container",
+              "gap": 8,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ABLkh",
+                  "name": "Chip compartiendo",
+                  "fill": "$c-plate-chip",
+                  "cornerRadius": 20,
+                  "gap": 6,
+                  "padding": [
+                    8,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ellipse",
+                      "id": "PGCdu",
+                      "name": "Punto",
+                      "fill": "$c-success-on-block",
+                      "width": 8,
+                      "height": 8
+                    },
+                    {
+                      "type": "text",
+                      "id": "PQpvN",
+                      "fill": "$c-plate-text",
+                      "content": "Compartiendo ubicación",
+                      "fontFamily": "$c-font",
+                      "fontSize": 12.5,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "OTd7j",
+                  "name": "Botón Detener",
+                  "height": 48,
+                  "fill": "$c-error-solid",
+                  "cornerRadius": "$c-r-sm",
+                  "gap": 6,
+                  "padding": [
+                    0,
+                    16
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "nKznT",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "square",
+                      "library": "lucide",
+                      "fill": "$c-on-block"
+                    },
+                    {
+                      "type": "text",
+                      "id": "zDtuF",
+                      "fill": "$c-on-block",
+                      "content": "Detener",
+                      "fontFamily": "$c-font",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "XTpfv",
+          "type": "ref",
+          "ref": "yVKpQ",
+          "name": "SOS",
+          "x": 306,
+          "y": 424,
+          "layoutPosition": "absolute"
+        },
+        {
+          "type": "frame",
+          "id": "q40CV",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 508,
+          "name": "Hoja riders",
+          "width": 390,
+          "height": 336,
+          "fill": "$c-bg",
+          "cornerRadius": [
+            "$c-r-xl",
+            "$c-r-xl",
+            0,
+            0
+          ],
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            10,
+            20,
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 2,
+              "id": "fEBCz",
+              "name": "Handle",
+              "fill": "$c-border",
+              "width": 40,
+              "height": 4
+            },
+            {
+              "type": "frame",
+              "id": "q7Bha",
+              "name": "Espacio handle",
+              "width": "fill_container",
+              "height": 4
+            },
+            {
+              "type": "text",
+              "id": "scwtp",
+              "name": "Título hoja",
+              "fill": "$c-text",
+              "content": "Riders en la rodada (6)",
+              "fontFamily": "$c-font",
+              "fontSize": 16,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "Tl3rZ",
+              "name": "Lista riders",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "id": "lRcv5",
+                  "type": "ref",
+                  "ref": "eq7IG",
+                  "name": "Rider Juan Camilo (líder)",
+                  "descendants": {
+                    "W9tS4": {
+                      "content": "JC"
+                    },
+                    "rfMYu": {
+                      "content": "Juan Camilo · Líder"
+                    },
+                    "pzLPZ": {
+                      "content": "A 0 m"
+                    },
+                    "PCPEz": {
+                      "content": "Hace 1 min"
+                    }
+                  }
+                },
+                {
+                  "id": "N1lLCN",
+                  "type": "ref",
+                  "ref": "eq7IG",
+                  "name": "Rider Camilo",
+                  "descendants": {
+                    "rfMYu": {
+                      "content": "Camilo Agudelo"
+                    },
+                    "pzLPZ": {
+                      "content": "A 350 m"
+                    },
+                    "PCPEz": {
+                      "content": "Hace 2 min"
+                    }
+                  }
+                },
+                {
+                  "id": "DsrAe",
+                  "type": "ref",
+                  "ref": "eq7IG",
+                  "name": "Rider Sofía",
+                  "descendants": {
+                    "W9tS4": {
+                      "content": "SP"
+                    },
+                    "rfMYu": {
+                      "content": "Sofía Pardo"
+                    },
+                    "pzLPZ": {
+                      "content": "A 1,2 km"
+                    },
+                    "PCPEz": {
+                      "content": "Sin señal hace 6 min",
+                      "fill": "$c-warning"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "gcRLk",
+      "x": 880,
+      "y": 16580,
+      "name": "LV1b — Rodada en vivo, sin compartir",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "children": [
+        {
+          "type": "frame",
+          "id": "PgiF2",
+          "name": "Mapa",
+          "width": 390,
+          "height": 844,
+          "fill": "$c-surface",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "ZVqgg",
+              "layoutPosition": "absolute",
+              "x": 20,
+              "y": 150,
+              "fill": "$c-text-secondary",
+              "content": "MAPA",
+              "fontFamily": "$c-font",
+              "fontSize": 13,
+              "fontWeight": "700",
+              "letterSpacing": 2
+            },
+            {
+              "type": "frame",
+              "id": "PWQaK",
+              "layoutPosition": "absolute",
+              "x": 177,
+              "y": 282,
+              "name": "Marker líder",
+              "width": 36,
+              "height": 36,
+              "fill": "$c-accent",
+              "cornerRadius": 18,
+              "stroke": "$c-bg",
+              "strokeWidth": 2,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "B8n0J",
+                  "fill": "$c-on-accent",
+                  "content": "JC",
+                  "fontFamily": "$c-font",
+                  "fontSize": 12,
+                  "fontWeight": "800"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "fGvOk",
+              "layoutPosition": "absolute",
+              "x": 280,
+              "y": 230,
+              "name": "Marker rider 2",
+              "width": 32,
+              "height": 32,
+              "fill": "$c-block",
+              "cornerRadius": 16,
+              "stroke": "$c-bg",
+              "strokeWidth": 2,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "pMxiY",
+                  "fill": "$c-on-block",
+                  "content": "LM",
+                  "fontFamily": "$c-font",
+                  "fontSize": 11,
+                  "fontWeight": "800"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "e1uBV",
+              "layoutPosition": "absolute",
+              "x": 230,
+              "y": 420,
+              "name": "Marker rider 3",
+              "width": 32,
+              "height": 32,
+              "fill": "$c-block",
+              "cornerRadius": 16,
+              "stroke": "$c-bg",
+              "strokeWidth": 2,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "EAat5",
+                  "fill": "$c-on-block",
+                  "content": "SP",
+                  "fontFamily": "$c-font",
+                  "fontSize": 11,
+                  "fontWeight": "800"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "uIOZR",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Header flotante",
+          "width": 390,
+          "fill": "$c-plate",
+          "layout": "vertical",
+          "gap": 10,
+          "padding": [
+            14,
+            16,
+            12,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "fI3Y9",
+              "name": "Fila título",
+              "width": "fill_container",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "TFM09",
+                  "name": "Volver",
+                  "width": 48,
+                  "height": 48,
+                  "fill": "$c-plate-chip",
+                  "cornerRadius": 24,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "BX5BF",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "arrow-left",
+                      "library": "lucide",
+                      "fill": "$c-plate-text"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "hMg8g",
+                  "name": "Nombre evento",
+                  "fill": "$c-plate-text",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Rodada al Nevado del Ruiz",
+                  "fontFamily": "$c-font",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Q9zuZ7",
+              "name": "Fila estado",
+              "width": "fill_container",
+              "height": 48,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "TzANv",
+                  "name": "CTA Compartir",
+                  "width": "fill_container",
+                  "height": 48,
+                  "fill": "$c-accent",
+                  "cornerRadius": "$c-r-sm",
+                  "gap": 8,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "WrjbF",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "map-pin",
+                      "library": "lucide",
+                      "fill": "$c-on-accent"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Zt4dz",
+                      "fill": "$c-on-accent",
+                      "content": "Compartir mi ubicación",
+                      "fontFamily": "$c-font",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "HFfKW",
+          "type": "ref",
+          "ref": "yVKpQ",
+          "name": "SOS",
+          "x": 306,
+          "y": 424,
+          "layoutPosition": "absolute"
+        },
+        {
+          "type": "frame",
+          "id": "EkYfz",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 508,
+          "name": "Hoja riders",
+          "width": 390,
+          "height": 336,
+          "fill": "$c-bg",
+          "cornerRadius": [
+            "$c-r-xl",
+            "$c-r-xl",
+            0,
+            0
+          ],
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            10,
+            20,
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 2,
+              "id": "pcHKO",
+              "name": "Handle",
+              "fill": "$c-border",
+              "width": 40,
+              "height": 4
+            },
+            {
+              "type": "frame",
+              "id": "z0uOJS",
+              "name": "Espacio handle",
+              "width": "fill_container",
+              "height": 4
+            },
+            {
+              "type": "text",
+              "id": "XCq5x",
+              "name": "Título hoja",
+              "fill": "$c-text",
+              "content": "Riders en la rodada (6)",
+              "fontFamily": "$c-font",
+              "fontSize": 16,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "ODTnQ",
+              "name": "Lista riders",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "id": "Rv7m2",
+                  "type": "ref",
+                  "ref": "eq7IG",
+                  "name": "Rider Juan Camilo (líder)",
+                  "descendants": {
+                    "W9tS4": {
+                      "content": "JC"
+                    },
+                    "rfMYu": {
+                      "content": "Juan Camilo · Líder"
+                    },
+                    "pzLPZ": {
+                      "content": "A 0 m"
+                    },
+                    "PCPEz": {
+                      "content": "Hace 1 min"
+                    }
+                  }
+                },
+                {
+                  "id": "N7OAYa",
+                  "type": "ref",
+                  "ref": "eq7IG",
+                  "name": "Rider Camilo",
+                  "descendants": {
+                    "rfMYu": {
+                      "content": "Camilo Agudelo (tú)"
+                    },
+                    "pzLPZ": {
+                      "content": "No comparte"
+                    },
+                    "PCPEz": {
+                      "content": "ubicación",
+                      "fill": "$c-text-secondary"
+                    }
+                  }
+                },
+                {
+                  "id": "M1dTnx",
+                  "type": "ref",
+                  "ref": "eq7IG",
+                  "name": "Rider Sofía",
+                  "descendants": {
+                    "W9tS4": {
+                      "content": "SP"
+                    },
+                    "rfMYu": {
+                      "content": "Sofía Pardo"
+                    },
+                    "pzLPZ": {
+                      "content": "A 1,2 km"
+                    },
+                    "PCPEz": {
+                      "content": "Sin señal hace 6 min",
+                      "fill": "$c-warning"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "lMJpQ",
+      "x": 1320,
+      "y": 16580,
+      "name": "LV1 — Carga",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "children": [
+        {
+          "type": "frame",
+          "id": "igqpC",
+          "name": "Mapa",
+          "width": 390,
+          "height": 844,
+          "fill": "$c-surface"
+        },
+        {
+          "type": "frame",
+          "id": "Bompg",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Header flotante",
+          "width": 390,
+          "fill": "$c-plate",
+          "layout": "vertical",
+          "gap": 10,
+          "padding": [
+            14,
+            16,
+            12,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "RqKnR",
+              "name": "Fila título",
+              "width": "fill_container",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "IBOSg",
+                  "name": "Volver",
+                  "width": 48,
+                  "height": 48,
+                  "fill": "$c-plate-chip",
+                  "cornerRadius": 24,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "w2mwG",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "arrow-left",
+                      "library": "lucide",
+                      "fill": "$c-plate-text"
+                    }
+                  ]
+                },
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 4,
+                  "id": "YqjoX",
+                  "fill": "$c-plate-chip",
+                  "width": 200,
+                  "height": 16
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "QB6kB",
+              "name": "Fila estado",
+              "width": "fill_container",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 20,
+                  "id": "TNiFc",
+                  "fill": "$c-plate-chip",
+                  "width": 200,
+                  "height": 32
+                },
+                {
+                  "type": "rectangle",
+                  "cornerRadius": "$c-r-sm",
+                  "id": "p7NXp",
+                  "fill": "$c-plate-chip",
+                  "width": 108,
+                  "height": 48
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "qDMIK",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 508,
+          "name": "Hoja riders",
+          "width": 390,
+          "height": 336,
+          "fill": "$c-bg",
+          "cornerRadius": [
+            "$c-r-xl",
+            "$c-r-xl",
+            0,
+            0
+          ],
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            10,
+            20,
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 2,
+              "id": "YoLZ4",
+              "name": "Handle",
+              "fill": "$c-border",
+              "width": 40,
+              "height": 4
+            },
+            {
+              "type": "frame",
+              "id": "LzqNc",
+              "name": "Espacio handle",
+              "width": "fill_container",
+              "height": 4
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 4,
+              "id": "DHCcX",
+              "fill": "$c-border",
+              "width": 160,
+              "height": 18
+            },
+            {
+              "type": "frame",
+              "id": "qi7Bw",
+              "name": "Lista skeleton",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "A3eXH",
+                  "name": "Skeleton rider",
+                  "width": "fill_container",
+                  "fill": "$c-surface",
+                  "cornerRadius": "$c-r-md",
+                  "stroke": "$c-border-strong",
+                  "strokeWidth": 1,
+                  "gap": 12,
+                  "padding": 14,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ellipse",
+                      "id": "r4aD0",
+                      "fill": "$c-border",
+                      "width": 44,
+                      "height": 44
+                    },
+                    {
+                      "type": "frame",
+                      "id": "c2NMC4",
+                      "name": "Texto",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 4,
+                          "id": "hFwys",
+                          "fill": "$c-border",
+                          "width": 130,
+                          "height": 14
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 4,
+                          "id": "cfi0Z",
+                          "fill": "$c-border",
+                          "width": 90,
+                          "height": 10
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "vNQGe",
+                  "name": "Skeleton rider",
+                  "width": "fill_container",
+                  "fill": "$c-surface",
+                  "cornerRadius": "$c-r-md",
+                  "stroke": "$c-border-strong",
+                  "strokeWidth": 1,
+                  "gap": 12,
+                  "padding": 14,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ellipse",
+                      "id": "vm0VK",
+                      "fill": "$c-border",
+                      "width": 44,
+                      "height": 44
+                    },
+                    {
+                      "type": "frame",
+                      "id": "z4XuT7",
+                      "name": "Texto",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 4,
+                          "id": "PtelI",
+                          "fill": "$c-border",
+                          "width": 130,
+                          "height": 14
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 4,
+                          "id": "qyFEb",
+                          "fill": "$c-border",
+                          "width": 90,
+                          "height": 10
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "xrJzZ",
+                  "name": "Skeleton rider",
+                  "width": "fill_container",
+                  "fill": "$c-surface",
+                  "cornerRadius": "$c-r-md",
+                  "stroke": "$c-border-strong",
+                  "strokeWidth": 1,
+                  "gap": 12,
+                  "padding": 14,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ellipse",
+                      "id": "d5bpp9",
+                      "fill": "$c-border",
+                      "width": 44,
+                      "height": 44
+                    },
+                    {
+                      "type": "frame",
+                      "id": "jYL1W",
+                      "name": "Texto",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 4,
+                          "id": "N5Utf",
+                          "fill": "$c-border",
+                          "width": 130,
+                          "height": 14
+                        },
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 4,
+                          "id": "U39iv",
+                          "fill": "$c-border",
+                          "width": 90,
+                          "height": 10
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "J22QFC",
+      "x": 1760,
+      "y": 16580,
+      "name": "LV1 — Sin permiso de ubicación",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "uN5lx",
+          "type": "ref",
+          "ref": "AILBo",
+          "name": "Header",
+          "width": "fill_container",
+          "descendants": {
+            "PvdLA": {
+              "content": "Rodada en vivo"
+            },
+            "OmdP1": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "z07PE",
+          "name": "Estado",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            40,
+            32
+          ],
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "X173p",
+              "name": "Icono",
+              "width": 64,
+              "height": 64,
+              "fill": "$c-accent-soft",
+              "cornerRadius": 32,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "pbLQO",
+                  "width": 28,
+                  "height": 28,
+                  "icon": "map-pin-off",
+                  "library": "lucide",
+                  "fill": "$c-accent-text"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Y3C95",
+              "name": "Texto",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "IVjkd",
+                  "fill": "$c-text",
+                  "content": "Necesitamos tu ubicación",
+                  "textAlign": "center",
+                  "fontFamily": "$c-font",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "GqfUK",
+                  "fill": "$c-text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Sin permiso de ubicación no podemos mostrarte la rodada ni compartir la tuya con el grupo. Actívalo en los ajustes del teléfono.",
+                  "lineHeight": 1.4,
+                  "textAlign": "center",
+                  "fontFamily": "$c-font",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "id": "l0PTBO",
+              "type": "ref",
+              "ref": "HYvT4",
+              "name": "CTA principal",
+              "width": "fill_container",
+              "descendants": {
+                "wf4kj": {
+                  "icon": "settings"
+                },
+                "gu9Cw": {
+                  "content": "Abrir ajustes"
+                }
+              }
+            },
+            {
+              "id": "SOJTZ",
+              "type": "ref",
+              "ref": "vxf42",
+              "name": "CTA secundario",
+              "width": "fill_container",
+              "descendants": {
+                "mkM4l": {
+                  "icon": "refresh-cw"
+                },
+                "t3yUU": {
+                  "content": "Ya lo activé, reintentar"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "eYAbY",
+      "x": 2200,
+      "y": 16580,
+      "name": "LV1 — Sin GPS",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "JtGxl",
+          "type": "ref",
+          "ref": "AILBo",
+          "name": "Header",
+          "width": "fill_container",
+          "descendants": {
+            "PvdLA": {
+              "content": "Rodada en vivo"
+            },
+            "OmdP1": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "O8gjeY",
+          "name": "Estado",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            40,
+            32
+          ],
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "Azdog",
+              "name": "Icono",
+              "width": 64,
+              "height": 64,
+              "fill": "$c-accent-soft",
+              "cornerRadius": 32,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "Tu4kl",
+                  "width": 28,
+                  "height": 28,
+                  "icon": "satellite-dish",
+                  "library": "lucide",
+                  "fill": "$c-accent-text"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "usKku",
+              "name": "Texto",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "v21Cyu",
+                  "fill": "$c-text",
+                  "content": "No encontramos señal de GPS",
+                  "textAlign": "center",
+                  "fontFamily": "$c-font",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "TviL5",
+                  "fill": "$c-text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Verifica que el GPS de tu teléfono esté encendido. En túneles o zonas de montaña puede tardar un poco en ubicarte.",
+                  "lineHeight": 1.4,
+                  "textAlign": "center",
+                  "fontFamily": "$c-font",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "id": "m6ODg7",
+              "type": "ref",
+              "ref": "HYvT4",
+              "name": "CTA principal",
+              "width": "fill_container",
+              "descendants": {
+                "wf4kj": {
+                  "icon": "settings"
+                },
+                "gu9Cw": {
+                  "content": "Abrir ajustes de ubicación"
+                }
+              }
+            },
+            {
+              "id": "nJTAY",
+              "type": "ref",
+              "ref": "vxf42",
+              "name": "CTA secundario",
+              "width": "fill_container",
+              "descendants": {
+                "mkM4l": {
+                  "icon": "refresh-cw"
+                },
+                "t3yUU": {
+                  "content": "Reintentar"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "o19cv",
+      "x": 2640,
+      "y": 16580,
+      "name": "LV1 — Sin conexión",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "wuCcB",
+          "type": "ref",
+          "ref": "AILBo",
+          "name": "Header",
+          "width": "fill_container",
+          "descendants": {
+            "PvdLA": {
+              "content": "Rodada en vivo"
+            },
+            "OmdP1": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "Hn724",
+          "name": "Estado",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            40,
+            32
+          ],
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "drZyy",
+              "name": "Icono",
+              "width": 64,
+              "height": 64,
+              "fill": "$c-accent-soft",
+              "cornerRadius": 32,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "CBhJW",
+                  "width": 28,
+                  "height": 28,
+                  "icon": "wifi-off",
+                  "library": "lucide",
+                  "fill": "$c-accent-text"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "BmAuV",
+              "name": "Texto",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "z6FxHZ",
+                  "fill": "$c-text",
+                  "content": "Sin conexión",
+                  "textAlign": "center",
+                  "fontFamily": "$c-font",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "q4JvY",
+                  "fill": "$c-text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "No pudimos actualizar la rodada en vivo. Revisa tu conexión e inténtalo de nuevo.",
+                  "lineHeight": 1.4,
+                  "textAlign": "center",
+                  "fontFamily": "$c-font",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "id": "jjRzu",
+              "type": "ref",
+              "ref": "HYvT4",
+              "name": "CTA principal",
+              "width": "fill_container",
+              "descendants": {
+                "wf4kj": {
+                  "icon": "refresh-cw"
+                },
+                "gu9Cw": {
+                  "content": "Reintentar"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "iJUhj",
+      "x": 3080,
+      "y": 16580,
+      "name": "LV2 — Aviso previo de ubicación",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "QKZLx",
+          "type": "ref",
+          "ref": "AILBo",
+          "name": "Header",
+          "width": "fill_container",
+          "descendants": {
+            "PvdLA": {
+              "content": "Rodada en vivo"
+            },
+            "OmdP1": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "rectangle",
+          "id": "A1zW8N",
+          "name": "Scrim",
+          "fill": "$c-plate",
+          "width": "fill_container",
+          "height": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "VBSP1",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 444,
+          "name": "Hoja",
+          "width": 390,
+          "height": 400,
+          "fill": "$c-bg",
+          "cornerRadius": [
+            "$c-r-xl",
+            "$c-r-xl",
+            0,
+            0
+          ],
+          "layout": "vertical",
+          "gap": 14,
+          "padding": [
+            10,
+            20,
+            34,
+            20
+          ],
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 2,
+              "id": "xRZ4U",
+              "name": "Handle",
+              "fill": "$c-border",
+              "width": 40,
+              "height": 4
+            },
+            {
+              "type": "frame",
+              "id": "TVtJp",
+              "name": "Espacio handle",
+              "width": "fill_container",
+              "height": 8
+            },
+            {
+              "type": "text",
+              "id": "F68Dp",
+              "fill": "$c-text",
+              "content": "Compartir tu ubicación con el grupo",
+              "lineHeight": 1.25,
+              "fontFamily": "$c-font",
+              "fontSize": 20,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "OV4VT",
+              "name": "Filas",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "dkfqB",
+                  "name": "Info row",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "yJIFp",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "users",
+                      "library": "lucide",
+                      "fill": "$c-text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "WDBAc",
+                      "fill": "$c-text",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Solo la ven los inscritos en esta rodada.",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$c-font",
+                      "fontSize": 13.5,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "MMofR",
+                  "name": "Info row",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "S8phM",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "clock",
+                      "library": "lucide",
+                      "fill": "$c-text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "qLxA9",
+                      "fill": "$c-text",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Solo se comparte mientras la rodada está en curso.",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$c-font",
+                      "fontSize": 13.5,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "M3QRI",
+                  "name": "Info row",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "mdhxi",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "square",
+                      "library": "lucide",
+                      "fill": "$c-text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "RHlQO",
+                      "fill": "$c-text",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Para cuando quieras: botón Detener y notificación persistente.",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$c-font",
+                      "fontSize": 13.5,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "KUrko",
+              "type": "ref",
+              "ref": "HYvT4",
+              "name": "CTA Permitir",
+              "width": "fill_container",
+              "descendants": {
+                "wf4kj": {
+                  "enabled": false
+                },
+                "gu9Cw": {
+                  "content": "Permitir"
+                }
+              }
+            },
+            {
+              "id": "ttPyR",
+              "type": "ref",
+              "ref": "vxf42",
+              "name": "CTA Ahora no",
+              "width": "fill_container",
+              "descendants": {
+                "mkM4l": {
+                  "enabled": false
+                },
+                "t3yUU": {
+                  "content": "Ahora no"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "DdSIR",
+      "x": 3520,
+      "y": 16580,
+      "name": "LV2b — Aviso ubicación todo el tiempo",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "dt5xy",
+          "type": "ref",
+          "ref": "AILBo",
+          "name": "Header",
+          "width": "fill_container",
+          "descendants": {
+            "PvdLA": {
+              "content": "Rodada en vivo"
+            },
+            "OmdP1": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "rectangle",
+          "id": "oTiTy",
+          "name": "Scrim",
+          "fill": "$c-plate",
+          "width": "fill_container",
+          "height": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "S6vAAB",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 444,
+          "name": "Hoja",
+          "width": 390,
+          "height": 400,
+          "fill": "$c-bg",
+          "cornerRadius": [
+            "$c-r-xl",
+            "$c-r-xl",
+            0,
+            0
+          ],
+          "layout": "vertical",
+          "gap": 14,
+          "padding": [
+            10,
+            20,
+            34,
+            20
+          ],
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 2,
+              "id": "KY5mZ",
+              "name": "Handle",
+              "fill": "$c-border",
+              "width": 40,
+              "height": 4
+            },
+            {
+              "type": "frame",
+              "id": "G8EKp5",
+              "name": "Espacio handle",
+              "width": "fill_container",
+              "height": 8
+            },
+            {
+              "type": "text",
+              "id": "R5szYr",
+              "fill": "$c-text",
+              "content": "Compartir tu ubicación todo el tiempo",
+              "lineHeight": 1.25,
+              "fontFamily": "$c-font",
+              "fontSize": 20,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "l8Q3b",
+              "name": "Filas",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "IgCqE",
+                  "name": "Info row",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "j6Fep",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "bell",
+                      "library": "lucide",
+                      "fill": "$c-text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "ZVscL",
+                      "fill": "$c-text",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Verás una notificación mientras compartas, para saber que sigue activa.",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$c-font",
+                      "fontSize": 13.5,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "e42qf",
+                  "name": "Info row",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "x4Twf3",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "lock",
+                      "library": "lucide",
+                      "fill": "$c-text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "CM86i",
+                      "fill": "$c-text",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Sin este permiso, tu posición deja de actualizarse al bloquear la pantalla.",
+                      "lineHeight": 1.35,
+                      "fontFamily": "$c-font",
+                      "fontSize": 13.5,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "xou8E",
+              "type": "ref",
+              "ref": "HYvT4",
+              "name": "CTA Permitir",
+              "width": "fill_container",
+              "descendants": {
+                "wf4kj": {
+                  "enabled": false
+                },
+                "gu9Cw": {
+                  "content": "Permitir todo el tiempo"
+                }
+              }
+            },
+            {
+              "id": "w2pab3",
+              "type": "ref",
+              "ref": "vxf42",
+              "name": "CTA Ahora no",
+              "width": "fill_container",
+              "descendants": {
+                "mkM4l": {
+                  "enabled": false
+                },
+                "t3yUU": {
+                  "content": "Ahora no"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "k4dms",
+      "x": 3960,
+      "y": 16580,
+      "name": "LV3 — Confirmar SOS",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "t4tF8",
+          "type": "ref",
+          "ref": "AILBo",
+          "name": "Header",
+          "width": "fill_container",
+          "descendants": {
+            "PvdLA": {
+              "content": "Rodada en vivo"
+            },
+            "OmdP1": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "rectangle",
+          "id": "t5kvYO",
+          "name": "Scrim",
+          "fill": "$c-plate",
+          "width": "fill_container",
+          "height": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "WjOBa",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 404,
+          "name": "Hoja",
+          "width": 390,
+          "height": 440,
+          "fill": "$c-bg",
+          "cornerRadius": [
+            "$c-r-xl",
+            "$c-r-xl",
+            0,
+            0
+          ],
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            10,
+            20,
+            34,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 2,
+              "id": "b1DSd",
+              "name": "Handle",
+              "fill": "$c-border",
+              "width": 40,
+              "height": 4
+            },
+            {
+              "type": "frame",
+              "id": "F6oAdd",
+              "name": "Espacio handle",
+              "width": "fill_container",
+              "height": 6
+            },
+            {
+              "type": "text",
+              "id": "Zb8gP",
+              "fill": "$c-text",
+              "content": "¿Pedir ayuda al grupo?",
+              "textAlign": "center",
+              "fontFamily": "$c-font",
+              "fontSize": 20,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "H6wdi",
+              "fill": "$c-text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Avisaremos a los riders de esta rodada con tu ubicación. No llama a emergencias.",
+              "lineHeight": 1.4,
+              "textAlign": "center",
+              "fontFamily": "$c-font",
+              "fontSize": 13.5,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "IZNg5",
+              "name": "Botón mantener",
+              "width": 168,
+              "height": 168,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ellipse",
+                  "id": "BdpR8",
+                  "layoutPosition": "absolute",
+                  "x": 0,
+                  "y": 0,
+                  "name": "Track",
+                  "fill": "$c-bg",
+                  "width": 168,
+                  "height": 168,
+                  "stroke": "$c-error-soft",
+                  "strokeWidth": 6
+                },
+                {
+                  "type": "frame",
+                  "id": "W2LNUs",
+                  "layoutPosition": "absolute",
+                  "x": 16,
+                  "y": 16,
+                  "name": "Botón",
+                  "width": 136,
+                  "height": 136,
+                  "fill": "$c-error-solid",
+                  "cornerRadius": 68,
+                  "layout": "vertical",
+                  "gap": 6,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "j5rp2F",
+                      "width": 30,
+                      "height": 30,
+                      "icon": "siren",
+                      "library": "lucide",
+                      "fill": "$c-on-block"
+                    },
+                    {
+                      "type": "text",
+                      "id": "ZHrWf",
+                      "fill": "$c-on-block",
+                      "textGrowth": "fixed-width",
+                      "width": 96,
+                      "content": "Mantén pulsado para enviar",
+                      "lineHeight": 1.2,
+                      "textAlign": "center",
+                      "fontFamily": "$c-font",
+                      "fontSize": 11.5,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "OHzmN",
+              "type": "ref",
+              "ref": "vxf42",
+              "name": "CTA Cancelar",
+              "width": "fill_container",
+              "descendants": {
+                "mkM4l": {
+                  "enabled": false
+                },
+                "t3yUU": {
+                  "content": "Cancelar"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "bAklu",
+      "x": 4400,
+      "y": 16580,
+      "name": "LV4a — SOS activo, pendiente",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "affuy",
+          "name": "Franja",
+          "fill": "$c-error-solid",
+          "width": "fill_container",
+          "height": 8
+        },
+        {
+          "type": "frame",
+          "id": "eWftM",
+          "name": "Header",
+          "width": "fill_container",
+          "padding": [
+            16,
+            20,
+            8,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "I9fNc",
+              "name": "Volver",
+              "width": 40,
+              "height": 40,
+              "fill": "$c-surface",
+              "cornerRadius": "$c-r-sm",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "Guxei",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "arrow-left",
+                  "library": "lucide",
+                  "fill": "$c-text"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "Y58Iv",
+              "fill": "$c-error",
+              "content": "SOS activo",
+              "fontFamily": "$c-font",
+              "fontSize": 15,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "r9B4NT",
+              "width": 40,
+              "height": 40
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "nNN9d",
+          "name": "Contenido",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            8,
+            20,
+            24,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "XZ2EL",
+              "name": "Estado",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "padding": [
+                8,
+                0,
+                4,
+                0
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "B4OKR",
+                  "name": "Icono estado",
+                  "width": 56,
+                  "height": 56,
+                  "fill": "$c-warning-soft",
+                  "cornerRadius": 28,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "HdUCt",
+                      "width": 26,
+                      "height": 26,
+                      "icon": "cloud-off",
+                      "library": "lucide",
+                      "fill": "$c-warning"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "upSwV",
+                  "fill": "$c-text",
+                  "content": "Alerta pendiente",
+                  "textAlign": "center",
+                  "fontFamily": "$c-font",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "DO9kS",
+                  "fill": "$c-text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Sin señal. Tu alerta se enviará al recuperar cobertura.",
+                  "lineHeight": 1.4,
+                  "textAlign": "center",
+                  "fontFamily": "$c-font",
+                  "fontSize": 13.5,
+                  "fontWeight": "600"
+                },
+                {
+                  "id": "y5RfC",
+                  "type": "ref",
+                  "ref": "epyf0",
+                  "name": "Chip pendiente",
+                  "descendants": {
+                    "TD6HZ": {
+                      "icon": "clock"
+                    },
+                    "xBnhh": {
+                      "content": "Enviando cuando haya señal"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "luLBm",
+              "name": "Card coordenadas",
+              "width": "fill_container",
+              "fill": "$c-surface",
+              "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "pB6Q5",
+                  "name": "Fila coords",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "xwUXK",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "map-pin",
+                      "library": "lucide",
+                      "fill": "$c-text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "LnDH3",
+                      "fill": "$c-text",
+                      "content": "4.678, -75.658",
+                      "fontFamily": "$c-font",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Fhx6j",
+                  "name": "Fila precisión",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "k6sMGe",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "crosshair",
+                      "library": "lucide",
+                      "fill": "$c-text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "JykFX",
+                      "fill": "$c-text-secondary",
+                      "content": "Precisión ±8 m",
+                      "fontFamily": "$c-font",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "SzA3e",
+              "type": "ref",
+              "ref": "HYvT4",
+              "name": "CTA Llamar contacto",
+              "width": "fill_container",
+              "descendants": {
+                "wf4kj": {
+                  "icon": "phone"
+                },
+                "gu9Cw": {
+                  "content": "Llamar a mi contacto · Laura Agudelo"
+                }
+              }
+            },
+            {
+              "id": "A4aOXv",
+              "type": "ref",
+              "ref": "vxf42",
+              "name": "CTA SMS",
+              "width": "fill_container",
+              "descendants": {
+                "mkM4l": {
+                  "icon": "message-square"
+                },
+                "t3yUU": {
+                  "content": "Enviar SMS con mi ubicación"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "f0Mu5",
+              "name": "CTA Llamar 123",
+              "width": "fill_container",
+              "height": 48,
+              "cornerRadius": "$c-r-sm",
+              "stroke": "$c-border",
+              "strokeWidth": 1,
+              "gap": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "dC0UI",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "phone",
+                  "library": "lucide",
+                  "fill": "$c-text"
+                },
+                {
+                  "type": "text",
+                  "id": "ORetk",
+                  "fill": "$c-text",
+                  "content": "Llamar al 123",
+                  "fontFamily": "$c-font",
+                  "fontSize": 14,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Hv3gq",
+              "name": "Separador cierre",
+              "width": "fill_container",
+              "height": 1,
+              "fill": "$c-border"
+            },
+            {
+              "id": "vOQWV",
+              "type": "ref",
+              "ref": "vxf42",
+              "name": "CTA Cerrar SOS",
+              "width": "fill_container",
+              "stroke": "$c-error",
+              "descendants": {
+                "mkM4l": {
+                  "icon": "check",
+                  "fill": "$c-error"
+                },
+                "t3yUU": {
+                  "content": "Ya estoy bien — cerrar SOS",
+                  "fill": "$c-error"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "KVhKk",
+      "x": 4840,
+      "y": 16580,
+      "name": "LV4b — SOS activo, confirmado",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "HxEmL",
+          "name": "Franja",
+          "fill": "$c-error-solid",
+          "width": "fill_container",
+          "height": 8
+        },
+        {
+          "type": "frame",
+          "id": "E2OXU",
+          "name": "Header",
+          "width": "fill_container",
+          "padding": [
+            16,
+            20,
+            8,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "kqiEv",
+              "name": "Volver",
+              "width": 40,
+              "height": 40,
+              "fill": "$c-surface",
+              "cornerRadius": "$c-r-sm",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "ruQp6",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "arrow-left",
+                  "library": "lucide",
+                  "fill": "$c-text"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "Kh5bo",
+              "fill": "$c-error",
+              "content": "SOS activo",
+              "fontFamily": "$c-font",
+              "fontSize": 15,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "qEad8",
+              "width": 40,
+              "height": 40
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "X3Be4",
+          "name": "Contenido",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            8,
+            20,
+            24,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "e40crK",
+              "name": "Estado",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "padding": [
+                8,
+                0,
+                4,
+                0
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "BKcdd",
+                  "name": "Icono estado",
+                  "width": 56,
+                  "height": 56,
+                  "fill": "$c-success-soft",
+                  "cornerRadius": 28,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "jOo2b",
+                      "width": 26,
+                      "height": 26,
+                      "icon": "circle-check-big",
+                      "library": "lucide",
+                      "fill": "$c-success"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "OQgus",
+                  "fill": "$c-text",
+                  "content": "El grupo ya sabe dónde estás",
+                  "textAlign": "center",
+                  "fontFamily": "$c-font",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "EDfkG",
+                  "fill": "$c-text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Confirmado a las 3:42 p.m. · 2 riders lo vieron",
+                  "lineHeight": 1.4,
+                  "textAlign": "center",
+                  "fontFamily": "$c-font",
+                  "fontSize": 13.5,
+                  "fontWeight": "600"
+                },
+                {
+                  "id": "YAjEI",
+                  "type": "ref",
+                  "ref": "epyf0",
+                  "name": "Chip confirmado",
+                  "fill": "$c-success-soft",
+                  "descendants": {
+                    "TD6HZ": {
+                      "icon": "check",
+                      "fill": "$c-success"
+                    },
+                    "xBnhh": {
+                      "content": "Alerta confirmada",
+                      "fill": "$c-success"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "PgAft",
+              "name": "Card coordenadas",
+              "width": "fill_container",
+              "fill": "$c-surface",
+              "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "uA85E",
+                  "name": "Fila coords",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "JFgu3",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "map-pin",
+                      "library": "lucide",
+                      "fill": "$c-text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Q6Vor",
+                      "fill": "$c-text",
+                      "content": "4.678, -75.658",
+                      "fontFamily": "$c-font",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "dDDnx",
+                  "name": "Fila precisión",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "OqcRm",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "crosshair",
+                      "library": "lucide",
+                      "fill": "$c-text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "fywxw",
+                      "fill": "$c-text-secondary",
+                      "content": "Precisión ±8 m",
+                      "fontFamily": "$c-font",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "P7ABn",
+              "type": "ref",
+              "ref": "HYvT4",
+              "name": "CTA Llamar contacto",
+              "width": "fill_container",
+              "descendants": {
+                "wf4kj": {
+                  "icon": "phone"
+                },
+                "gu9Cw": {
+                  "content": "Llamar a mi contacto · Laura Agudelo"
+                }
+              }
+            },
+            {
+              "id": "H0wjd",
+              "type": "ref",
+              "ref": "vxf42",
+              "name": "CTA SMS",
+              "width": "fill_container",
+              "descendants": {
+                "mkM4l": {
+                  "icon": "message-square"
+                },
+                "t3yUU": {
+                  "content": "Enviar SMS con mi ubicación"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "B357pB",
+              "name": "CTA Llamar 123",
+              "width": "fill_container",
+              "height": 48,
+              "cornerRadius": "$c-r-sm",
+              "stroke": "$c-border",
+              "strokeWidth": 1,
+              "gap": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "UGobY",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "phone",
+                  "library": "lucide",
+                  "fill": "$c-text"
+                },
+                {
+                  "type": "text",
+                  "id": "P3Uby",
+                  "fill": "$c-text",
+                  "content": "Llamar al 123",
+                  "fontFamily": "$c-font",
+                  "fontSize": 14,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "rtdDz",
+              "name": "Separador cierre",
+              "width": "fill_container",
+              "height": 1,
+              "fill": "$c-border"
+            },
+            {
+              "id": "j1Wj9",
+              "type": "ref",
+              "ref": "vxf42",
+              "name": "CTA Cerrar SOS",
+              "width": "fill_container",
+              "stroke": "$c-error",
+              "descendants": {
+                "mkM4l": {
+                  "icon": "check",
+                  "fill": "$c-error"
+                },
+                "t3yUU": {
+                  "content": "Ya estoy bien — cerrar SOS",
+                  "fill": "$c-error"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "bfMHX",
+      "x": 5280,
+      "y": 16580,
+      "name": "LV4b — SOS activo, confirmado (oscuro)",
+      "theme": {
+        "mode": "dark"
+      },
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "RCSjl",
+          "name": "Franja",
+          "fill": "$c-error-solid",
+          "width": "fill_container",
+          "height": 8
+        },
+        {
+          "type": "frame",
+          "id": "IuiQw",
+          "name": "Header",
+          "width": "fill_container",
+          "padding": [
+            16,
+            20,
+            8,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "qHURd",
+              "name": "Volver",
+              "width": 40,
+              "height": 40,
+              "fill": "$c-surface",
+              "cornerRadius": "$c-r-sm",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "bEFML",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "arrow-left",
+                  "library": "lucide",
+                  "fill": "$c-text"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "a6xkZ",
+              "fill": "$c-error",
+              "content": "SOS activo",
+              "fontFamily": "$c-font",
+              "fontSize": 15,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "K1Q2SC",
+              "width": 40,
+              "height": 40
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "zM44v",
+          "name": "Contenido",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            8,
+            20,
+            24,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "AOCp7",
+              "name": "Estado",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "padding": [
+                8,
+                0,
+                4,
+                0
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "gEPBV",
+                  "name": "Icono estado",
+                  "width": 56,
+                  "height": 56,
+                  "fill": "$c-success-soft",
+                  "cornerRadius": 28,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "a62F1",
+                      "width": 26,
+                      "height": 26,
+                      "icon": "circle-check-big",
+                      "library": "lucide",
+                      "fill": "$c-success"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "v6ivE2",
+                  "fill": "$c-text",
+                  "content": "El grupo ya sabe dónde estás",
+                  "textAlign": "center",
+                  "fontFamily": "$c-font",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "HFZ5a",
+                  "fill": "$c-text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Confirmado a las 3:42 p.m. · 2 riders lo vieron",
+                  "lineHeight": 1.4,
+                  "textAlign": "center",
+                  "fontFamily": "$c-font",
+                  "fontSize": 13.5,
+                  "fontWeight": "600"
+                },
+                {
+                  "id": "B3kGnm",
+                  "type": "ref",
+                  "ref": "epyf0",
+                  "name": "Chip confirmado",
+                  "fill": "$c-success-soft",
+                  "descendants": {
+                    "TD6HZ": {
+                      "icon": "check",
+                      "fill": "$c-success"
+                    },
+                    "xBnhh": {
+                      "content": "Alerta confirmada",
+                      "fill": "$c-success"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "NLjEy",
+              "name": "Card coordenadas",
+              "width": "fill_container",
+              "fill": "$c-surface",
+              "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "nVzZl",
+                  "name": "Fila coords",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "MmDLN",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "map-pin",
+                      "library": "lucide",
+                      "fill": "$c-text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "VejQ8",
+                      "fill": "$c-text",
+                      "content": "4.678, -75.658",
+                      "fontFamily": "$c-font",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "i7egma",
+                  "name": "Fila precisión",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "WU7ri",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "crosshair",
+                      "library": "lucide",
+                      "fill": "$c-text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Tpze1",
+                      "fill": "$c-text-secondary",
+                      "content": "Precisión ±8 m",
+                      "fontFamily": "$c-font",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "a4qrI0",
+              "type": "ref",
+              "ref": "HYvT4",
+              "name": "CTA Llamar contacto",
+              "width": "fill_container",
+              "descendants": {
+                "wf4kj": {
+                  "icon": "phone"
+                },
+                "gu9Cw": {
+                  "content": "Llamar a mi contacto · Laura Agudelo"
+                }
+              }
+            },
+            {
+              "id": "Oim1a",
+              "type": "ref",
+              "ref": "vxf42",
+              "name": "CTA SMS",
+              "width": "fill_container",
+              "descendants": {
+                "mkM4l": {
+                  "icon": "message-square"
+                },
+                "t3yUU": {
+                  "content": "Enviar SMS con mi ubicación"
+                }
+              }
+            },
+            {
+              "type": "frame",
+              "id": "IULmX",
+              "name": "CTA Llamar 123",
+              "width": "fill_container",
+              "height": 48,
+              "cornerRadius": "$c-r-sm",
+              "stroke": "$c-border",
+              "strokeWidth": 1,
+              "gap": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "lMcTg",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "phone",
+                  "library": "lucide",
+                  "fill": "$c-text"
+                },
+                {
+                  "type": "text",
+                  "id": "erZOt",
+                  "fill": "$c-text",
+                  "content": "Llamar al 123",
+                  "fontFamily": "$c-font",
+                  "fontSize": 14,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "B19WUx",
+              "name": "Separador cierre",
+              "width": "fill_container",
+              "height": 1,
+              "fill": "$c-border"
+            },
+            {
+              "id": "r2Su68",
+              "type": "ref",
+              "ref": "vxf42",
+              "name": "CTA Cerrar SOS",
+              "width": "fill_container",
+              "stroke": "$c-error",
+              "descendants": {
+                "mkM4l": {
+                  "icon": "check",
+                  "fill": "$c-error"
+                },
+                "t3yUU": {
+                  "content": "Ya estoy bien — cerrar SOS",
+                  "fill": "$c-error"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Dzdc7",
+      "x": 5720,
+      "y": 16580,
+      "name": "LV5a — Banner SOS de otro rider",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "children": [
+        {
+          "type": "frame",
+          "id": "gMn3F",
+          "name": "Mapa",
+          "width": 390,
+          "height": 844,
+          "fill": "$c-surface",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "zKvZ0",
+              "layoutPosition": "absolute",
+              "x": 20,
+              "y": 150,
+              "fill": "$c-text-secondary",
+              "content": "MAPA",
+              "fontFamily": "$c-font",
+              "fontSize": 13,
+              "fontWeight": "700",
+              "letterSpacing": 2
+            },
+            {
+              "type": "frame",
+              "id": "xIUKj",
+              "layoutPosition": "absolute",
+              "x": 177,
+              "y": 282,
+              "name": "Marker líder",
+              "width": 36,
+              "height": 36,
+              "fill": "$c-accent",
+              "cornerRadius": 18,
+              "stroke": "$c-bg",
+              "strokeWidth": 2,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "TXVj2",
+                  "fill": "$c-on-accent",
+                  "content": "JC",
+                  "fontFamily": "$c-font",
+                  "fontSize": 12,
+                  "fontWeight": "800"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "kqpfL",
+              "layoutPosition": "absolute",
+              "x": 70,
+              "y": 360,
+              "name": "Marker rider 1",
+              "width": 32,
+              "height": 32,
+              "fill": "$c-block",
+              "cornerRadius": 16,
+              "stroke": "$c-bg",
+              "strokeWidth": 2,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "vjWB4",
+                  "fill": "$c-on-block",
+                  "content": "CA",
+                  "fontFamily": "$c-font",
+                  "fontSize": 11,
+                  "fontWeight": "800"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "IXa7y",
+              "layoutPosition": "absolute",
+              "x": 280,
+              "y": 230,
+              "name": "Marker rider 2",
+              "width": 32,
+              "height": 32,
+              "fill": "$c-block",
+              "cornerRadius": 16,
+              "stroke": "$c-bg",
+              "strokeWidth": 2,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "ITDQD",
+                  "fill": "$c-on-block",
+                  "content": "LM",
+                  "fontFamily": "$c-font",
+                  "fontSize": 11,
+                  "fontWeight": "800"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Ie5Tb",
+              "layoutPosition": "absolute",
+              "x": 230,
+              "y": 420,
+              "name": "Marker rider 3",
+              "width": 32,
+              "height": 32,
+              "fill": "$c-block",
+              "cornerRadius": 16,
+              "stroke": "$c-bg",
+              "strokeWidth": 2,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "qxRSX",
+                  "fill": "$c-on-block",
+                  "content": "SP",
+                  "fontFamily": "$c-font",
+                  "fontSize": 11,
+                  "fontWeight": "800"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "YEAUC",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 0,
+          "name": "Header flotante",
+          "width": 390,
+          "fill": "$c-plate",
+          "layout": "vertical",
+          "gap": 10,
+          "padding": [
+            14,
+            16,
+            12,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "XUHbp",
+              "name": "Fila título",
+              "width": "fill_container",
+              "gap": 12,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "MDJ7o",
+                  "name": "Volver",
+                  "width": 48,
+                  "height": 48,
+                  "fill": "$c-plate-chip",
+                  "cornerRadius": 24,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "r3sSme",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "arrow-left",
+                      "library": "lucide",
+                      "fill": "$c-plate-text"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "u2BRP",
+                  "name": "Nombre evento",
+                  "fill": "$c-plate-text",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Rodada al Nevado del Ruiz",
+                  "fontFamily": "$c-font",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "aGQcj",
+              "name": "Fila estado",
+              "width": "fill_container",
+              "gap": 8,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "A7thIH",
+                  "name": "Chip compartiendo",
+                  "fill": "$c-plate-chip",
+                  "cornerRadius": 20,
+                  "gap": 6,
+                  "padding": [
+                    8,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "ellipse",
+                      "id": "HBwHN",
+                      "name": "Punto",
+                      "fill": "$c-success-on-block",
+                      "width": 8,
+                      "height": 8
+                    },
+                    {
+                      "type": "text",
+                      "id": "YC4zp",
+                      "fill": "$c-plate-text",
+                      "content": "Compartiendo ubicación",
+                      "fontFamily": "$c-font",
+                      "fontSize": 12.5,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ZrPRh",
+                  "name": "Botón Detener",
+                  "height": 48,
+                  "fill": "$c-error-solid",
+                  "cornerRadius": "$c-r-sm",
+                  "gap": 6,
+                  "padding": [
+                    0,
+                    16
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "SwDFz",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "square",
+                      "library": "lucide",
+                      "fill": "$c-on-block"
+                    },
+                    {
+                      "type": "text",
+                      "id": "qTsog",
+                      "fill": "$c-on-block",
+                      "content": "Detener",
+                      "fontFamily": "$c-font",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "aDprh",
+          "type": "ref",
+          "ref": "yVKpQ",
+          "name": "SOS",
+          "x": 306,
+          "y": 424,
+          "layoutPosition": "absolute"
+        },
+        {
+          "type": "frame",
+          "id": "ILs2W",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 508,
+          "name": "Hoja riders",
+          "width": 390,
+          "height": 336,
+          "fill": "$c-bg",
+          "cornerRadius": [
+            "$c-r-xl",
+            "$c-r-xl",
+            0,
+            0
+          ],
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            10,
+            20,
+            20,
+            20
+          ],
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 2,
+              "id": "VRFlj",
+              "name": "Handle",
+              "fill": "$c-border",
+              "width": 40,
+              "height": 4
+            },
+            {
+              "type": "frame",
+              "id": "J98jQa",
+              "name": "Espacio handle",
+              "width": "fill_container",
+              "height": 4
+            },
+            {
+              "type": "text",
+              "id": "N8FmRl",
+              "name": "Título hoja",
+              "fill": "$c-text",
+              "content": "Riders en la rodada (6)",
+              "fontFamily": "$c-font",
+              "fontSize": 16,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "k2XEGk",
+              "name": "Lista riders",
+              "clip": true,
+              "width": "fill_container",
+              "height": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "id": "Q0GzQ",
+                  "type": "ref",
+                  "ref": "eq7IG",
+                  "name": "Rider Juan Camilo (líder)",
+                  "descendants": {
+                    "W9tS4": {
+                      "content": "JC"
+                    },
+                    "rfMYu": {
+                      "content": "Juan Camilo · Líder"
+                    },
+                    "pzLPZ": {
+                      "content": "A 0 m"
+                    },
+                    "PCPEz": {
+                      "content": "Hace 1 min"
+                    }
+                  }
+                },
+                {
+                  "id": "p0Be78",
+                  "type": "ref",
+                  "ref": "eq7IG",
+                  "name": "Rider Camilo",
+                  "descendants": {
+                    "rfMYu": {
+                      "content": "Camilo Agudelo"
+                    },
+                    "pzLPZ": {
+                      "content": "A 350 m"
+                    },
+                    "PCPEz": {
+                      "content": "Hace 2 min"
+                    }
+                  }
+                },
+                {
+                  "id": "ynLOz",
+                  "type": "ref",
+                  "ref": "eq7IG",
+                  "name": "Rider Sofía",
+                  "descendants": {
+                    "W9tS4": {
+                      "content": "SP"
+                    },
+                    "rfMYu": {
+                      "content": "Sofía Pardo"
+                    },
+                    "pzLPZ": {
+                      "content": "A 1,2 km"
+                    },
+                    "PCPEz": {
+                      "content": "Sin señal hace 6 min",
+                      "fill": "$c-warning"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "KkFzQ",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 124,
+          "name": "Banner SOS ajeno",
+          "width": 390,
+          "height": 76,
+          "fill": "$c-error-solid",
+          "gap": 10,
+          "padding": [
+            12,
+            16
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "stGmd",
+              "name": "Texto banner",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "R78m4m",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "siren",
+                  "library": "lucide",
+                  "fill": "$c-on-block"
+                },
+                {
+                  "type": "text",
+                  "id": "f8xhh3",
+                  "fill": "$c-on-block",
+                  "content": "Carlos pidió ayuda · A 1,2 km",
+                  "fontFamily": "$c-font",
+                  "fontSize": 13,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Z8Smq0",
+              "name": "Botón Ver",
+              "height": 48,
+              "fill": "$c-on-block",
+              "cornerRadius": 24,
+              "padding": [
+                0,
+                18
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "wWJtj",
+                  "fill": "$c-error-solid",
+                  "content": "Ver",
+                  "fontFamily": "$c-font",
+                  "fontSize": 13,
+                  "fontWeight": "700"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "p4830",
+      "x": 6160,
+      "y": 16580,
+      "name": "LV5b — Tarjeta SOS de otro rider",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "fGySX",
+          "type": "ref",
+          "ref": "AILBo",
+          "name": "Header",
+          "width": "fill_container",
+          "descendants": {
+            "PvdLA": {
+              "content": "Rodada en vivo"
+            },
+            "OmdP1": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "rectangle",
+          "id": "fVTxs",
+          "name": "Scrim",
+          "fill": "$c-plate",
+          "width": "fill_container",
+          "height": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "H0Se3",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 384,
+          "name": "Hoja",
+          "width": 390,
+          "height": 460,
+          "fill": "$c-bg",
+          "cornerRadius": [
+            "$c-r-xl",
+            "$c-r-xl",
+            0,
+            0
+          ],
+          "layout": "vertical",
+          "gap": 14,
+          "padding": [
+            10,
+            20,
+            34,
+            20
+          ],
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 2,
+              "id": "tI33N",
+              "name": "Handle",
+              "fill": "$c-border",
+              "width": 40,
+              "height": 4
+            },
+            {
+              "type": "frame",
+              "id": "x3MzeZ",
+              "name": "Espacio handle",
+              "width": "fill_container",
+              "height": 6
+            },
+            {
+              "type": "frame",
+              "id": "j9xcGK",
+              "name": "Fila rider",
+              "width": "fill_container",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "e1oTg",
+                  "name": "Avatar",
+                  "width": 48,
+                  "height": 48,
+                  "fill": "$c-error-solid",
+                  "cornerRadius": 24,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "lUvAF",
+                      "fill": "$c-on-block",
+                      "content": "CR",
+                      "fontFamily": "$c-font",
+                      "fontSize": 16,
+                      "fontWeight": "800"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "W83f4h",
+                  "name": "Texto rider",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "yQpfL",
+                      "fill": "$c-text",
+                      "content": "Carlos Ramírez",
+                      "fontFamily": "$c-font",
+                      "fontSize": 16.5,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Pl8Rv",
+                      "fill": "$c-error",
+                      "content": "Pidió ayuda · Hace 3 min",
+                      "fontFamily": "$c-font",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "OTDGS",
+              "name": "Card coordenadas",
+              "width": "fill_container",
+              "fill": "$c-surface",
+              "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "WtLtv",
+                  "name": "Fila distancia",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "TjcTM",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "map-pin",
+                      "library": "lucide",
+                      "fill": "$c-text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "apqcB",
+                      "fill": "$c-text",
+                      "content": "A 1,2 km de ti",
+                      "fontFamily": "$c-font",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "EYgpv",
+                  "name": "Fila coords",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "Q5oCK",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "crosshair",
+                      "library": "lucide",
+                      "fill": "$c-text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "K8uVt",
+                      "fill": "$c-text-secondary",
+                      "content": "4.681, -75.651",
+                      "fontFamily": "$c-font",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "h3Keb",
+              "type": "ref",
+              "ref": "HYvT4",
+              "name": "CTA Llamar",
+              "width": "fill_container",
+              "descendants": {
+                "wf4kj": {
+                  "icon": "phone"
+                },
+                "gu9Cw": {
+                  "content": "Llamar a Carlos"
+                }
+              }
+            },
+            {
+              "id": "d7zbak",
+              "type": "ref",
+              "ref": "vxf42",
+              "name": "CTA Ver mapa",
+              "width": "fill_container",
+              "descendants": {
+                "mkM4l": {
+                  "icon": "map"
+                },
+                "t3yUU": {
+                  "content": "Ver en el mapa"
+                }
+              }
+            },
+            {
+              "id": "vmahw",
+              "type": "ref",
+              "ref": "vxf42",
+              "name": "CTA Marcar resuelto",
+              "width": "fill_container",
+              "stroke": "$c-success",
+              "descendants": {
+                "mkM4l": {
+                  "icon": "check",
+                  "fill": "$c-success"
+                },
+                "t3yUU": {
+                  "content": "Marcar como resuelto · solo organizador",
+                  "fill": "$c-success"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "oWONm",
+              "name": "Nota cierre",
+              "fill": "$c-text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Solo el organizador o quien pidió ayuda pueden cerrarlo.",
+              "textAlign": "center",
+              "fontFamily": "$c-font",
+              "fontSize": 11.5,
+              "fontWeight": "600"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "UGgbU",
+      "x": 6600,
+      "y": 16580,
+      "name": "LV6 — Riders (organizador)",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "zQMCa",
+          "type": "ref",
+          "ref": "AILBo",
+          "name": "Header",
+          "width": "fill_container",
+          "descendants": {
+            "PvdLA": {
+              "content": "Riders (6)"
+            },
+            "OmdP1": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "qKIh3",
+          "name": "Scroll",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 10,
+          "padding": [
+            4,
+            20,
+            24,
+            20
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "guF8L",
+              "fill": "$c-text-secondary",
+              "content": "6 riders · 5 comparten ubicación",
+              "fontFamily": "$c-font",
+              "fontSize": 12.5,
+              "fontWeight": "700"
+            },
+            {
+              "id": "qspBt",
+              "type": "ref",
+              "ref": "eq7IG",
+              "name": "Rider Juan Camilo · Líder",
+              "descendants": {
+                "W9tS4": {
+                  "content": "JC"
+                },
+                "rfMYu": {
+                  "content": "Juan Camilo · Líder"
+                },
+                "pzLPZ": {
+                  "content": "A 0 m del líder"
+                },
+                "PCPEz": {
+                  "content": "Compartiendo",
+                  "fill": "$c-success"
+                },
+                "Uv2i4": {
+                  "enabled": true
+                }
+              }
+            },
+            {
+              "id": "pz5ek",
+              "type": "ref",
+              "ref": "eq7IG",
+              "name": "Rider Camilo Agudelo",
+              "descendants": {
+                "W9tS4": {
+                  "content": "CA"
+                },
+                "rfMYu": {
+                  "content": "Camilo Agudelo"
+                },
+                "pzLPZ": {
+                  "content": "A 350 m del líder"
+                },
+                "PCPEz": {
+                  "content": "Compartiendo",
+                  "fill": "$c-success"
+                },
+                "Uv2i4": {
+                  "enabled": true
+                }
+              }
+            },
+            {
+              "id": "vBWnR",
+              "type": "ref",
+              "ref": "eq7IG",
+              "name": "Rider Laura Martínez",
+              "descendants": {
+                "W9tS4": {
+                  "content": "LM"
+                },
+                "rfMYu": {
+                  "content": "Laura Martínez"
+                },
+                "pzLPZ": {
+                  "content": "A 900 m del líder"
+                },
+                "PCPEz": {
+                  "content": "Compartiendo",
+                  "fill": "$c-success"
+                },
+                "Uv2i4": {
+                  "enabled": true
+                }
+              }
+            },
+            {
+              "id": "Jca06",
+              "type": "ref",
+              "ref": "eq7IG",
+              "name": "Rider Sofía Pardo",
+              "descendants": {
+                "W9tS4": {
+                  "content": "SP"
+                },
+                "rfMYu": {
+                  "content": "Sofía Pardo"
+                },
+                "pzLPZ": {
+                  "content": "A 1,2 km del líder"
+                },
+                "PCPEz": {
+                  "content": "Sin señal hace 6 min",
+                  "fill": "$c-warning"
+                },
+                "Uv2i4": {
+                  "enabled": true
+                }
+              }
+            },
+            {
+              "id": "weJtV",
+              "type": "ref",
+              "ref": "eq7IG",
+              "name": "Rider Daniel Rincón",
+              "descendants": {
+                "W9tS4": {
+                  "content": "DR"
+                },
+                "rfMYu": {
+                  "content": "Daniel Rincón"
+                },
+                "pzLPZ": {
+                  "content": "A 2 km del líder"
+                },
+                "PCPEz": {
+                  "content": "Compartiendo",
+                  "fill": "$c-success"
+                },
+                "Uv2i4": {
+                  "enabled": true
+                }
+              }
+            },
+            {
+              "id": "k1oYD",
+              "type": "ref",
+              "ref": "eq7IG",
+              "name": "Rider María Gómez",
+              "descendants": {
+                "W9tS4": {
+                  "content": "MG"
+                },
+                "rfMYu": {
+                  "content": "María Gómez"
+                },
+                "pzLPZ": {
+                  "content": "—"
+                },
+                "PCPEz": {
+                  "content": "No comparte su ubicación",
+                  "fill": "$c-text-secondary"
+                },
+                "Uv2i4": {
+                  "enabled": true
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "OQJZS",
+      "x": 7040,
+      "y": 16580,
+      "name": "LV7 — Rodada terminada",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "U7YERL",
+          "name": "Estado",
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            40,
+            32
+          ],
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "KaPp6",
+              "name": "Icono",
+              "width": 64,
+              "height": 64,
+              "fill": "$c-accent-soft",
+              "cornerRadius": 32,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "s4zdC",
+                  "width": 28,
+                  "height": 28,
+                  "icon": "flag",
+                  "library": "lucide",
+                  "fill": "$c-accent-text"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Wg22a",
+              "name": "Texto",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "AJfvQ",
+                  "fill": "$c-text",
+                  "content": "La rodada terminó",
+                  "textAlign": "center",
+                  "fontFamily": "$c-font",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "jO8da",
+                  "fill": "$c-text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Se dejó de compartir tu ubicación con el grupo.",
+                  "lineHeight": 1.4,
+                  "textAlign": "center",
+                  "fontFamily": "$c-font",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "id": "TwCZx",
+              "type": "ref",
+              "ref": "HYvT4",
+              "name": "CTA Volver",
+              "width": "fill_container",
+              "descendants": {
+                "wf4kj": {
+                  "enabled": false
+                },
+                "gu9Cw": {
+                  "content": "Volver al evento"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "NdP2O",
+      "x": 7480,
+      "y": 16580,
+      "name": "LV7 — Rodada terminada, con SOS abierto",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "gG1ld",
+          "name": "Franja",
+          "fill": "$c-error-solid",
+          "width": "fill_container",
+          "height": 8
+        },
+        {
+          "type": "frame",
+          "id": "lW6YI",
+          "name": "Contenido",
+          "clip": true,
+          "width": "fill_container",
+          "height": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            24,
+            20
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "oTLNN",
+              "name": "Estado rodada",
+              "width": "fill_container",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "F0Xuf7",
+                  "width": 20,
+                  "height": 20,
+                  "icon": "flag",
+                  "library": "lucide",
+                  "fill": "$c-text-secondary"
+                },
+                {
+                  "type": "text",
+                  "id": "XG2D5",
+                  "fill": "$c-text",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "La rodada terminó. Se dejó de compartir tu ubicación.",
+                  "lineHeight": 1.35,
+                  "fontFamily": "$c-font",
+                  "fontSize": 13.5,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "CIqBX",
+              "name": "Separador",
+              "width": "fill_container",
+              "height": 1,
+              "fill": "$c-border"
+            },
+            {
+              "type": "frame",
+              "id": "rb4Ev",
+              "name": "Aviso SOS",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "padding": [
+                8,
+                0,
+                4,
+                0
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "tiBtr",
+                  "name": "Icono SOS",
+                  "width": 56,
+                  "height": 56,
+                  "fill": "$c-error-soft",
+                  "cornerRadius": 28,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "ny7wk",
+                      "width": 26,
+                      "height": 26,
+                      "icon": "siren",
+                      "library": "lucide",
+                      "fill": "$c-error"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "OxBNS",
+                  "fill": "$c-text",
+                  "content": "Tu alerta SOS sigue activa",
+                  "textAlign": "center",
+                  "fontFamily": "$c-font",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "Cu2Ux",
+                  "fill": "$c-text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "El grupo la sigue viendo aunque la rodada haya terminado. Ciérrala solo cuando estés bien.",
+                  "lineHeight": 1.4,
+                  "textAlign": "center",
+                  "fontFamily": "$c-font",
+                  "fontSize": 13.5,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "xwuh3",
+              "name": "Card coordenadas",
+              "width": "fill_container",
+              "fill": "$c-surface",
+              "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "D9pN8b",
+                  "name": "Fila coords",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "N3jhd",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "map-pin",
+                      "library": "lucide",
+                      "fill": "$c-text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "vaqqd",
+                      "fill": "$c-text",
+                      "content": "4.678, -75.658",
+                      "fontFamily": "$c-font",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "cvbEM",
+                  "name": "Fila precisión",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "H0EHu1",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "crosshair",
+                      "library": "lucide",
+                      "fill": "$c-text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "xZsRw",
+                      "fill": "$c-text-secondary",
+                      "content": "Precisión ±8 m",
+                      "fontFamily": "$c-font",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "eKSqX",
+              "type": "ref",
+              "ref": "vxf42",
+              "name": "CTA Cerrar SOS",
+              "width": "fill_container",
+              "stroke": "$c-error",
+              "descendants": {
+                "mkM4l": {
+                  "icon": "check",
+                  "fill": "$c-error"
+                },
+                "t3yUU": {
+                  "content": "Ya estoy bien — cerrar SOS",
+                  "fill": "$c-error"
+                }
+              }
+            },
+            {
+              "id": "x5dJx",
+              "type": "ref",
+              "ref": "vxf42",
+              "name": "CTA Volver",
+              "width": "fill_container",
+              "descendants": {
+                "mkM4l": {
+                  "enabled": false
+                },
+                "t3yUU": {
+                  "content": "Volver al evento"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "TBtCm",
+      "x": 7920,
+      "y": 16580,
+      "name": "LV5c — Confirmar cierre de SOS",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$c-bg",
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "waYnf",
+          "type": "ref",
+          "ref": "AILBo",
+          "name": "Header",
+          "width": "fill_container",
+          "descendants": {
+            "PvdLA": {
+              "content": "Rodada en vivo"
+            },
+            "OmdP1": {
+              "enabled": false
+            }
+          }
+        },
+        {
+          "type": "rectangle",
+          "id": "P6UKmC",
+          "name": "Scrim",
+          "fill": "$c-plate",
+          "width": "fill_container",
+          "height": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "cLVf3",
+          "layoutPosition": "absolute",
+          "x": 0,
+          "y": 384,
+          "name": "Hoja",
+          "width": 390,
+          "height": 460,
+          "fill": "$c-bg",
+          "cornerRadius": [
+            "$c-r-xl",
+            "$c-r-xl",
+            0,
+            0
+          ],
+          "layout": "vertical",
+          "gap": 14,
+          "padding": [
+            10,
+            20,
+            34,
+            20
+          ],
+          "children": [
+            {
+              "type": "rectangle",
+              "cornerRadius": 2,
+              "id": "HtRA3",
+              "name": "Handle",
+              "fill": "$c-border",
+              "width": 40,
+              "height": 4
+            },
+            {
+              "type": "frame",
+              "id": "fnq3W",
+              "name": "Espacio handle",
+              "width": "fill_container",
+              "height": 6
+            },
+            {
+              "type": "frame",
+              "id": "VVSYW",
+              "name": "Fila rider",
+              "width": "fill_container",
+              "gap": 10,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "dSWoJ",
+                  "name": "Avatar",
+                  "width": 48,
+                  "height": 48,
+                  "fill": "$c-error-solid",
+                  "cornerRadius": 24,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "g6byQ",
+                      "fill": "$c-on-block",
+                      "content": "CR",
+                      "fontFamily": "$c-font",
+                      "fontSize": 16,
+                      "fontWeight": "800"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JAdks",
+                  "name": "Texto rider",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "f9eVZD",
+                      "fill": "$c-text",
+                      "content": "Carlos Ramírez",
+                      "fontFamily": "$c-font",
+                      "fontSize": 16.5,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "w0XrrM",
+                      "fill": "$c-error",
+                      "content": "Pidió ayuda · Hace 3 min",
+                      "fontFamily": "$c-font",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "zNFUd",
+              "name": "Card coordenadas",
+              "width": "fill_container",
+              "fill": "$c-surface",
+              "cornerRadius": "$c-r-md",
+              "stroke": "$c-border-strong",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "DM7Va",
+                  "name": "Fila distancia",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "n8HHJ",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "map-pin",
+                      "library": "lucide",
+                      "fill": "$c-text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "EajzE",
+                      "fill": "$c-text",
+                      "content": "A 1,2 km de ti",
+                      "fontFamily": "$c-font",
+                      "fontSize": 14,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "fez9p",
+                  "name": "Fila coords",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "b589Z",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "crosshair",
+                      "library": "lucide",
+                      "fill": "$c-text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "oGXUF",
+                      "fill": "$c-text-secondary",
+                      "content": "4.681, -75.651",
+                      "fontFamily": "$c-font",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "gXpz9",
+              "type": "ref",
+              "ref": "HYvT4",
+              "name": "CTA Llamar",
+              "width": "fill_container",
+              "descendants": {
+                "wf4kj": {
+                  "icon": "phone"
+                },
+                "gu9Cw": {
+                  "content": "Llamar a Carlos"
+                }
+              }
+            },
+            {
+              "id": "pfOgj",
+              "type": "ref",
+              "ref": "vxf42",
+              "name": "CTA Ver mapa",
+              "width": "fill_container",
+              "descendants": {
+                "mkM4l": {
+                  "icon": "map"
+                },
+                "t3yUU": {
+                  "content": "Ver en el mapa"
+                }
+              }
+            },
+            {
+              "id": "EyTli",
+              "type": "ref",
+              "ref": "vxf42",
+              "name": "CTA Marcar resuelto",
+              "width": "fill_container",
+              "stroke": "$c-success",
+              "descendants": {
+                "mkM4l": {
+                  "icon": "check",
+                  "fill": "$c-success"
+                },
+                "t3yUU": {
+                  "content": "Marcar como resuelto · solo organizador",
+                  "fill": "$c-success"
+                }
+              }
+            },
+            {
+              "type": "text",
+              "id": "QNABj",
+              "name": "Nota cierre",
+              "fill": "$c-text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Solo el organizador o quien pidió ayuda pueden cerrarlo.",
+              "textAlign": "center",
+              "fontFamily": "$c-font",
+              "fontSize": 11.5,
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "type": "rectangle",
+          "id": "ZIgUK",
+          "name": "Scrim dialogo",
+          "fill": "$c-plate",
+          "width": "fill_container",
+          "height": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "ZcYOj",
+          "layoutPosition": "absolute",
+          "x": 28,
+          "y": 320,
+          "name": "Diálogo confirmar cierre",
+          "width": 334,
+          "fill": "$c-bg",
+          "cornerRadius": "$c-r-lg",
+          "layout": "vertical",
+          "gap": 12,
+          "padding": 22,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "G5YeM5",
+              "fill": "$c-text",
+              "content": "¿Cerrar el SOS de Carlos?",
+              "textAlign": "center",
+              "fontFamily": "$c-font",
+              "fontSize": 17,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "oLKiF",
+              "fill": "$c-text-secondary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Hazlo solo si confirmaste con Carlos que ya está bien.",
+              "lineHeight": 1.4,
+              "textAlign": "center",
+              "fontFamily": "$c-font",
+              "fontSize": 13.5,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "MMFgR",
+              "name": "Botón Sí",
+              "width": "fill_container",
+              "height": 48,
+              "fill": "$c-error-solid",
+              "cornerRadius": "$c-r-sm",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "glwDs",
+                  "fill": "$c-on-block",
+                  "content": "Sí, está bien",
+                  "fontFamily": "$c-font",
+                  "fontSize": 14.5,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "TKXxE",
+              "name": "Botón Cancelar",
+              "width": "fill_container",
+              "height": 48,
+              "cornerRadius": "$c-r-sm",
+              "stroke": "$c-text",
+              "strokeWidth": 1.5,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "hTSC5",
+                  "fill": "$c-text",
+                  "content": "Cancelar",
+                  "fontFamily": "$c-font",
+                  "fontSize": 14.5,
+                  "fontWeight": "700"
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
   "themes": {

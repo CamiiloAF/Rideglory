@@ -1,0 +1,17 @@
+{
+  "FLAVOR": "dev",
+  "FIREBASE_ANDROID_API_KEY": "AIzaSyDmOZzFuvFv_u1f7rrkjptNYGJcB1jgg9c",
+  "FIREBASE_ANDROID_APP_ID": "1:357754414277:android:46d0a4c0f7489b0d30bcac",
+  "FIREBASE_IOS_API_KEY": "AIzaSyCL0s7fi4fDNzUassZef4TnkPBJqSdUwbk",
+  "FIREBASE_IOS_APP_ID": "1:357754414277:ios:acd5af61f824a91d30bcac",
+  "FIREBASE_MESSAGING_SENDER_ID": "357754414277",
+  "FIREBASE_PROJECT_ID": "rideglory-dev",
+  "FIREBASE_STORAGE_BUCKET": "rideglory-dev.firebasestorage.app",
+  "FIREBASE_ANDROID_CLIENT_ID": "",
+  "FIREBASE_IOS_CLIENT_ID": "357754414277-ptt1jvhidn14jhfk4id33tblm5uouu57.apps.googleusercontent.com",
+  "FIREBASE_IOS_BUNDLE_ID": "com.camiloagudelo.rideglory.dev",
+  "SENTRY_DSN": "",
+  "SENTRY_DEV_VERIFY": false,
+  "SUPABASE_URL": "http://10.0.2.2:54321",
+  "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0"
+}

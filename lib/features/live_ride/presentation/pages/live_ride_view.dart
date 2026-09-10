@@ -11,6 +11,7 @@ import '../../../../shared/widgets/states/skeleton_list.dart';
 import '../../domain/location_permission_state.dart';
 import '../cubit/live_ride_cubit.dart';
 import '../cubit/live_ride_state.dart';
+import '../cubit/sharing_status.dart';
 import '../live_ride_error_translator.dart';
 import '../live_ride_route_args.dart';
 import '../widgets/live_ride_content.dart';
@@ -60,7 +61,19 @@ class _LiveRideViewState extends State<LiveRideView> {
     final eventId = widget.eventId;
     return BlocBuilder<LiveRideCubit, LiveRideState>(
       builder: (context, state) {
-        if (state.permission == LocationPermissionState.serviceDisabled) {
+        // Ver a los demás riders (LV1b) nunca depende de MI permiso de
+        // ubicación: solo "Compartir mi ubicación" lo necesita (D21), y
+        // ese flujo pide el permiso por sí mismo desde `LiveRideContent`
+        // (LV2/LV2b). Los estados de pantalla completa "sin permiso" /
+        // "sin GPS" solo bloquean cuando estoy compartiendo (o
+        // intentándolo) y el permiso se pierde a mitad de la rodada —
+        // ahí sí hay que avisar de inmediato, no dejar la app publicando
+        // a ciegas.
+        final isSharingFlow =
+            state.sharing == SharingStatus.sharing ||
+            state.sharing == SharingStatus.requestingPermission;
+        if (isSharingFlow &&
+            state.permission == LocationPermissionState.serviceDisabled) {
           return Scaffold(
             body: SafeArea(
               child: LiveRideNoGpsStateView(
@@ -69,8 +82,9 @@ class _LiveRideViewState extends State<LiveRideView> {
             ),
           );
         }
-        if (state.permission == LocationPermissionState.denied ||
-            state.permission == LocationPermissionState.deniedForever) {
+        if (isSharingFlow &&
+            (state.permission == LocationPermissionState.denied ||
+                state.permission == LocationPermissionState.deniedForever)) {
           return Scaffold(
             body: SafeArea(
               child: LiveRidePermissionStateView(

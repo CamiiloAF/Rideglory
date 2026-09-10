@@ -17,6 +17,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:rideglory/design_system/components/app_switch.dart';
 import 'package:rideglory/features/events/presentation/widgets/registration_risk_row.dart';
@@ -105,6 +106,12 @@ void main() {
   ) async {
     app.main();
     await tester.pumpAndSettle(const Duration(seconds: 3));
+    // Una corrida anterior pudo dejar sesión persistida: la app abriría en
+    // Mantenimiento y nunca aparecería la bienvenida.
+    if (Supabase.instance.client.auth.currentSession != null) {
+      await Supabase.instance.client.auth.signOut();
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+    }
 
     // --- a. Bienvenida -> login qa1 -> pestaña Mantenimiento -----------
     await _login(tester, 'qa1@gmail.com', 'Test123.');
@@ -146,7 +153,7 @@ void main() {
     await _waitForText(tester, '9.200');
 
     // --- c. Garaje -> moto del seed -> editar -> fila de documentos SOAT
-    await tester.tap(find.text('GARAJE'));
+    await tester.tap(find.bySemanticsLabel('GARAJE'));
     await _settle(tester);
     await _waitForText(tester, 'La Negra');
     await tester.tap(find.text('La Negra'));
@@ -157,7 +164,7 @@ void main() {
     await _settle(tester);
 
     // --- d. Eventos -> Mi Evento -> Inscribirme -> EV4 -> Confirmar -----
-    await tester.tap(find.text('EVENTOS'));
+    await tester.tap(find.bySemanticsLabel('EVENTOS'));
     await _settle(tester);
     await _waitForText(tester, 'Mi Evento');
     await tester.tap(find.text('Mi Evento'));
@@ -180,13 +187,13 @@ void main() {
     await _waitForText(tester, 'Inscrito');
 
     // --- e. Cerrar sesión -> login qa2 -> Mías -> Mi Evento -> inscritos
-    await tester.tap(find.text('PERFIL'));
+    await tester.tap(find.bySemanticsLabel('PERFIL'));
     await _settle(tester);
     await _signOut(tester);
 
     await _login(tester, 'qa2@gmail.com', 'Test123.');
     await _waitForText(tester, 'Mantenimiento');
-    await tester.tap(find.text('EVENTOS'));
+    await tester.tap(find.bySemanticsLabel('EVENTOS'));
     await _settle(tester);
     await tester.tap(find.text('Mías'));
     await _settle(tester);
@@ -201,7 +208,7 @@ void main() {
     // --- f. Perfil -> editar contacto de emergencia -> guardar ----------
     await tester.pageBack();
     await _settle(tester);
-    await tester.tap(find.text('PERFIL'));
+    await tester.tap(find.bySemanticsLabel('PERFIL'));
     await _settle(tester);
     await tester.tap(find.byIcon(Icons.settings).hitTestable());
     await _settle(tester);
