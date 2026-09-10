@@ -49,17 +49,15 @@ Future<void> _waitForText(
 
 Future<void> _login(WidgetTester tester, String email, String password) async {
   // Bienvenida -> "Continuar con correo".
+  // NOTA: el bug de redirect de `app_router.dart` (`==` en vez de
+  // `startsWith` para /welcome) que describía esta cabecera ya está
+  // corregido en HEAD (b41a19b8) — se verificó `startsWith` en el código y
+  // que los 2 TextField de EmailAuthPage aparecen sin problema. Se deja
+  // este comentario como registro, no como advertencia vigente.
   await _waitForText(tester, 'Continuar con correo');
   await tester.tap(find.text('Continuar con correo'), warnIfMissed: true);
   await tester.pump(const Duration(seconds: 1));
   await tester.pumpAndSettle();
-  // BUG conocido (ver informe de la corrida): `app_router.dart` compara
-  // `state.matchedLocation == AppRoutes.welcomePath` en el `redirect` para
-  // decidir `isAtWelcome`. Cualquier subruta de bienvenida (`/welcome/correo`,
-  // `/welcome/crear-cuenta`, `/welcome/recuperar`) no matchea exactamente y el
-  // usuario no autenticado es redirigido de vuelta a `/welcome` de inmediato,
-  // bloqueando el login por correo por completo. Este `pump` adicional no lo
-  // arregla: solo evidencia que, tras asentarse, seguimos en Bienvenida.
   await tester.pump(const Duration(seconds: 2));
 
   final fields = find.byType(TextField);
@@ -68,15 +66,23 @@ Future<void> _login(WidgetTester tester, String email, String password) async {
     findsNWidgets(2),
     reason:
         'Se esperaban campos correo/clave en EmailAuthPage. Si esto falla '
-        'con 0 campos y el dispositivo sigue en Bienvenida, ver el bug '
-        'conocido del redirect de app_router.dart documentado arriba de '
-        '_login().',
+        'con 0 campos y el dispositivo sigue en Bienvenida, revisar el '
+        'redirect de app_router.dart.',
   );
   await tester.enterText(fields.at(0), email);
   await tester.enterText(fields.at(1), password);
   await _settle(tester);
-  await tester.tap(find.text('Iniciar sesión'));
-  await _settle(tester, seconds: 6);
+  // El teclado nativo real (dispositivo real vía integration_test, no un
+  // widget test puro) puede achicar el viewport y dejar el botón fuera del
+  // área "hit-testable", lo que en una corrida real produjo un warning de
+  // "derived an Offset that would not hit test". Se cierra el teclado antes
+  // de tocar el botón para que quede dentro del viewport visible.
+  FocusManager.instance.primaryFocus?.unfocus();
+  await _settle(tester);
+  await tester.tap(find.text('Iniciar sesión'), warnIfMissed: true);
+  // Login real contra Supabase local: el tiempo de red no es determinista,
+  // se da más margen que a otras transiciones locales.
+  await _settle(tester, seconds: 8);
 }
 
 Future<void> _signOut(WidgetTester tester) async {
