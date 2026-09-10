@@ -1,10 +1,11 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/auth_routes.dart';
 import '../../features/documents/presentation/documents_routes.dart';
+import '../../features/events/presentation/events_routes.dart';
 import '../../features/events/presentation/pages/events_page.dart';
 import '../../features/garage/presentation/garage_routes.dart';
 import '../../features/garage/presentation/pages/garage_page.dart';
@@ -17,12 +18,17 @@ import '../di/injection.dart';
 import 'app_routes.dart';
 import 'app_shell.dart';
 
+/// `NavigatorState` raíz, para navegar desde fuera del árbol de widgets
+/// (ej. al tocar una notificación push de FCM en `EventPushNavigator`).
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>();
+
 /// Router raíz. La pestaña inicial es Mantenimiento (D4): es la única
 /// parte de la app con uso real y recurrente.
 GoRouter buildAppRouter() {
   final authCubit = getIt<AuthCubit>();
 
   return GoRouter(
+    navigatorKey: rootNavigatorKey,
     initialLocation: AppRoutes.maintenancePath,
     refreshListenable: AuthCubitListenable(authCubit),
     redirect: (context, state) {
@@ -56,6 +62,7 @@ GoRouter buildAppRouter() {
                 path: AppRoutes.eventsPath,
                 name: AppRoutes.events,
                 builder: (context, state) => const EventsPage(),
+                routes: eventsRoutes,
               ),
             ],
           ),

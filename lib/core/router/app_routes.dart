@@ -18,6 +18,18 @@ abstract final class AppRoutes {
   static const String events = 'events';
   static const String eventsPath = '/events';
 
+  static const String eventCreate = 'event-create';
+  static const String eventCreatePath = 'create';
+
+  static const String eventDetail = 'event-detail';
+  static const String eventDetailPath = 'detail/:id';
+
+  static const String eventRegistration = 'event-registration';
+  static const String eventRegistrationPath = 'detail/:id/inscripcion';
+
+  static const String eventRegistrants = 'event-registrants';
+  static const String eventRegistrantsPath = 'detail/:id/inscritos';
+
   static const String garage = 'garage';
   static const String garagePath = '/garage';
 

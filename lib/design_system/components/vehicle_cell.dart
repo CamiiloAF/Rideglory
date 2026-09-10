@@ -56,10 +56,7 @@ class VehicleCell extends StatelessWidget {
                 children: [
                   ColoredBox(color: colors.surface),
                   if (imageUrl != null)
-                    CachedNetworkImage(
-                      imageUrl: imageUrl!,
-                      fit: BoxFit.cover,
-                    ),
+                    CachedNetworkImage(imageUrl: imageUrl!, fit: BoxFit.cover),
                   if (pendingLabel != null)
                     Padding(
                       padding: const EdgeInsets.all(10),

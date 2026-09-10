@@ -9,6 +9,7 @@ import 'core/services/notifications/local_notifications_initializer.dart';
 import 'core/router/app_router.dart';
 import 'design_system/theme/app_theme.dart';
 import 'features/documents/data/services/document_reminder_scheduler.dart';
+import 'features/events/presentation/event_push_navigator.dart';
 import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
 import 'shared/cubits/connectivity/connectivity_cubit.dart';
@@ -28,6 +29,7 @@ Future<void> main() async {
     await LocalNotificationsInitializer.init();
     await configureDependencies();
     await getIt<DocumentReminderScheduler>().init();
+    await getIt<EventPushNavigator>().init();
 
     runApp(const RidegloryApp());
   });

@@ -2074,6 +2074,660 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Algo falló de nuestro lado. Tu cuenta sigue activa. Inténtalo de nuevo.'**
   String get profile_delete_error_body;
+
+  /// Título de la lista de rodadas
+  ///
+  /// In es, this message translates to:
+  /// **'Rodadas'**
+  String get events_list_title;
+
+  /// Segmento de rodadas próximas
+  ///
+  /// In es, this message translates to:
+  /// **'Próximas'**
+  String get events_segment_upcoming;
+
+  /// Segmento de rodadas propias (organizadas o inscritas)
+  ///
+  /// In es, this message translates to:
+  /// **'Mías'**
+  String get events_segment_mine;
+
+  /// Título del estado vacío de la lista de rodadas
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía no hay rodadas'**
+  String get events_list_empty_title;
+
+  /// Cuerpo del estado vacío de la lista de rodadas
+  ///
+  /// In es, this message translates to:
+  /// **'Crea la primera o vuelve cuando alguien publique una cerca de ti.'**
+  String get events_list_empty_body;
+
+  /// Cuerpo del estado vacío del segmento Mías
+  ///
+  /// In es, this message translates to:
+  /// **'Organiza una rodada o inscríbete a una para verla aquí.'**
+  String get events_list_mine_empty_body;
+
+  /// CTA del estado vacío de la lista de rodadas
+  ///
+  /// In es, this message translates to:
+  /// **'Crear rodada'**
+  String get events_list_empty_cta;
+
+  /// Título de error de la lista de rodadas
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cargar las rodadas'**
+  String get events_list_error_title;
+
+  /// Cuerpo sin conexión de la lista de rodadas
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cargar las rodadas. Revisa tu conexión e inténtalo de nuevo.'**
+  String get events_list_offline_body;
+
+  /// Precio de una rodada gratuita en la tarjeta
+  ///
+  /// In es, this message translates to:
+  /// **'Gratis'**
+  String get events_card_free;
+
+  /// Dificultad fácil
+  ///
+  /// In es, this message translates to:
+  /// **'Fácil'**
+  String get events_difficulty_easy;
+
+  /// Dificultad media
+  ///
+  /// In es, this message translates to:
+  /// **'Media'**
+  String get events_difficulty_medium;
+
+  /// Dificultad difícil
+  ///
+  /// In es, this message translates to:
+  /// **'Difícil'**
+  String get events_difficulty_hard;
+
+  /// Punto de encuentro en el detalle
+  ///
+  /// In es, this message translates to:
+  /// **'Punto de encuentro: {point}'**
+  String events_detail_meeting_point(String point);
+
+  /// Etiqueta de sección destino
+  ///
+  /// In es, this message translates to:
+  /// **'DESTINO'**
+  String get events_detail_destination_label;
+
+  /// Etiqueta de sección ruta
+  ///
+  /// In es, this message translates to:
+  /// **'RUTA'**
+  String get events_detail_route_label;
+
+  /// Botón para abrir el destino en la app de mapas
+  ///
+  /// In es, this message translates to:
+  /// **'Abrir en Waze/Maps'**
+  String get events_detail_open_maps;
+
+  /// Nombre del organizador en el detalle
+  ///
+  /// In es, this message translates to:
+  /// **'Organiza {name}'**
+  String events_detail_organizer_prefix(String name);
+
+  /// Cupos ocupados con límite
+  ///
+  /// In es, this message translates to:
+  /// **'{approved} de {max} cupos ocupados'**
+  String events_detail_spots(int approved, int max);
+
+  /// Cupos ocupados sin límite
+  ///
+  /// In es, this message translates to:
+  /// **'{approved} inscritos'**
+  String events_detail_spots_unlimited(int approved);
+
+  /// CTA para inscribirse a una rodada
+  ///
+  /// In es, this message translates to:
+  /// **'Inscribirme'**
+  String get events_detail_register_cta;
+
+  /// Insignia de inscripción confirmada
+  ///
+  /// In es, this message translates to:
+  /// **'Inscrito'**
+  String get events_detail_registered_badge;
+
+  /// CTA para cancelar la inscripción propia
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar inscripción'**
+  String get events_detail_cancel_registration_cta;
+
+  /// CTA del organizador para iniciar la rodada
+  ///
+  /// In es, this message translates to:
+  /// **'Iniciar rodada'**
+  String get events_detail_start_cta;
+
+  /// CTA del organizador para avisar un cambio de ruta
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar ruta'**
+  String get events_detail_change_route_cta;
+
+  /// CTA del organizador para ver inscritos
+  ///
+  /// In es, this message translates to:
+  /// **'Ver inscritos'**
+  String get events_detail_view_registrants_cta;
+
+  /// CTA del organizador para cancelar la rodada
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar rodada'**
+  String get events_detail_cancel_event_cta;
+
+  /// Título de confirmación al cancelar una rodada
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cancelar esta rodada?'**
+  String get events_detail_cancel_event_confirm_title;
+
+  /// Cuerpo de confirmación al cancelar una rodada
+  ///
+  /// In es, this message translates to:
+  /// **'Se avisará a todos los inscritos. Esta acción no se puede deshacer.'**
+  String get events_detail_cancel_event_confirm_body;
+
+  /// CTA de confirmación al cancelar una rodada
+  ///
+  /// In es, this message translates to:
+  /// **'Sí, cancelar rodada'**
+  String get events_detail_cancel_event_confirm_cta;
+
+  /// Título de confirmación al cancelar la inscripción propia
+  ///
+  /// In es, this message translates to:
+  /// **'¿Cancelar tu inscripción?'**
+  String get events_detail_cancel_registration_confirm_title;
+
+  /// Cuerpo de confirmación al cancelar la inscripción propia
+  ///
+  /// In es, this message translates to:
+  /// **'Perderás tu cupo en esta rodada.'**
+  String get events_detail_cancel_registration_confirm_body;
+
+  /// CTA para no confirmar una acción destructiva
+  ///
+  /// In es, this message translates to:
+  /// **'No, mantener'**
+  String get events_detail_confirm_keep;
+
+  /// Etiqueta de sección de cambios de ruta en el detalle
+  ///
+  /// In es, this message translates to:
+  /// **'AVISOS DE RUTA'**
+  String get events_detail_route_changes_title;
+
+  /// Título de error del detalle de rodada
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cargar la rodada'**
+  String get events_detail_error_title;
+
+  /// Título del banner de aviso de inicio atrasado
+  ///
+  /// In es, this message translates to:
+  /// **'Tu rodada debía empezar a las {time}'**
+  String events_detail_start_overdue_title(String time);
+
+  /// Cuerpo del banner de aviso de inicio atrasado
+  ///
+  /// In es, this message translates to:
+  /// **'Los inscritos ya están esperando. Inícia la rodada o avísales si se retrasa.'**
+  String get events_detail_start_overdue_body;
+
+  /// Insignia de rodada cancelada
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelada'**
+  String get events_detail_cancelled_badge;
+
+  /// Insignia de rodada finalizada
+  ///
+  /// In es, this message translates to:
+  /// **'Finalizada'**
+  String get events_detail_finished_badge;
+
+  /// Título del asistente de creación de rodada
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva rodada'**
+  String get events_create_title;
+
+  /// Indicador de paso del asistente
+  ///
+  /// In es, this message translates to:
+  /// **'Paso {step} de 3'**
+  String events_create_step_label(int step);
+
+  /// Título del paso 1 del asistente
+  ///
+  /// In es, this message translates to:
+  /// **'Crea tu rodada'**
+  String get events_create_step1_title;
+
+  /// CTA para agregar foto de portada
+  ///
+  /// In es, this message translates to:
+  /// **'Agregar foto de portada'**
+  String get events_create_photo_cta;
+
+  /// Label del campo nombre
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre de la rodada'**
+  String get events_create_name_label;
+
+  /// Hint del campo nombre
+  ///
+  /// In es, this message translates to:
+  /// **'Por ejemplo: Rodada al Nevado del Ruiz'**
+  String get events_create_name_hint;
+
+  /// Label del campo fecha y hora
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha y hora'**
+  String get events_create_datetime_label;
+
+  /// Placeholder del campo fecha y hora
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona fecha y hora'**
+  String get events_create_datetime_placeholder;
+
+  /// Label del campo punto de encuentro
+  ///
+  /// In es, this message translates to:
+  /// **'Punto de encuentro'**
+  String get events_create_meeting_point_label;
+
+  /// Hint del campo punto de encuentro
+  ///
+  /// In es, this message translates to:
+  /// **'Por ejemplo: Estación Terpel Sur, Autopista Sur'**
+  String get events_create_meeting_point_hint;
+
+  /// CTA para avanzar de paso en el asistente
+  ///
+  /// In es, this message translates to:
+  /// **'Siguiente'**
+  String get events_create_next_cta;
+
+  /// Título del paso 2 del asistente
+  ///
+  /// In es, this message translates to:
+  /// **'¿A dónde van?'**
+  String get events_create_step2_title;
+
+  /// Label del buscador de destino
+  ///
+  /// In es, this message translates to:
+  /// **'Destino'**
+  String get events_create_destination_label;
+
+  /// Hint del buscador de destino
+  ///
+  /// In es, this message translates to:
+  /// **'Busca un lugar o escribe la dirección'**
+  String get events_create_destination_hint;
+
+  /// Label del campo de ruta en texto
+  ///
+  /// In es, this message translates to:
+  /// **'Ruta (texto)'**
+  String get events_create_route_label;
+
+  /// Hint del campo de ruta en texto
+  ///
+  /// In es, this message translates to:
+  /// **'Describe el trayecto: por dónde salen, por dónde regresan'**
+  String get events_create_route_hint;
+
+  /// Label del selector de dificultad
+  ///
+  /// In es, this message translates to:
+  /// **'Dificultad'**
+  String get events_create_difficulty_label;
+
+  /// Título del paso 3 del asistente
+  ///
+  /// In es, this message translates to:
+  /// **'Cupos y precio'**
+  String get events_create_step3_title;
+
+  /// Label del campo de cupos
+  ///
+  /// In es, this message translates to:
+  /// **'Cupos disponibles'**
+  String get events_create_spots_label;
+
+  /// Sufijo del campo de cupos
+  ///
+  /// In es, this message translates to:
+  /// **'personas'**
+  String get events_create_spots_suffix;
+
+  /// Ayuda del campo de cupos
+  ///
+  /// In es, this message translates to:
+  /// **'Máximo de riders que pueden inscribirse'**
+  String get events_create_spots_hint;
+
+  /// Label del switch de rodada gratuita
+  ///
+  /// In es, this message translates to:
+  /// **'Rodada gratis'**
+  String get events_create_free_label;
+
+  /// Ayuda del switch de rodada gratuita
+  ///
+  /// In es, this message translates to:
+  /// **'Sin costo para los inscritos'**
+  String get events_create_free_subtitle;
+
+  /// Label del campo de precio
+  ///
+  /// In es, this message translates to:
+  /// **'Precio (COP)'**
+  String get events_create_price_label;
+
+  /// Etiqueta de la sección resumen
+  ///
+  /// In es, this message translates to:
+  /// **'RESUMEN'**
+  String get events_create_summary_label;
+
+  /// Fila resumen: nombre
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre'**
+  String get events_create_summary_name;
+
+  /// Fila resumen: fecha
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha'**
+  String get events_create_summary_date;
+
+  /// Fila resumen: precio
+  ///
+  /// In es, this message translates to:
+  /// **'Precio'**
+  String get events_create_summary_price;
+
+  /// CTA final para publicar la rodada
+  ///
+  /// In es, this message translates to:
+  /// **'Publicar rodada'**
+  String get events_create_publish_cta;
+
+  /// Estado del botón mientras se publica
+  ///
+  /// In es, this message translates to:
+  /// **'Publicando…'**
+  String get events_create_saving;
+
+  /// Subtítulo mientras se publica o hay error
+  ///
+  /// In es, this message translates to:
+  /// **'Todo esto es opcional. Puedes guardar así.'**
+  String get events_create_saving_subtitle;
+
+  /// Título de error al publicar
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos publicar la rodada'**
+  String get events_create_error_title;
+
+  /// Cuerpo de error al publicar
+  ///
+  /// In es, this message translates to:
+  /// **'Revisa tu conexión e inténtalo de nuevo. Tus datos siguen aquí.'**
+  String get events_create_error_body;
+
+  /// Título de la pantalla de inscripción
+  ///
+  /// In es, this message translates to:
+  /// **'Inscripción'**
+  String get events_register_title;
+
+  /// Etiqueta de sección de datos propios
+  ///
+  /// In es, this message translates to:
+  /// **'TUS DATOS'**
+  String get events_register_your_data_label;
+
+  /// Fila de datos: nombre
+  ///
+  /// In es, this message translates to:
+  /// **'Nombre'**
+  String get events_register_name_field;
+
+  /// Fila de datos: teléfono
+  ///
+  /// In es, this message translates to:
+  /// **'Teléfono'**
+  String get events_register_phone_field;
+
+  /// Fila de datos: tipo de sangre
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo de sangre'**
+  String get events_register_blood_type_field;
+
+  /// Fila de datos: EPS
+  ///
+  /// In es, this message translates to:
+  /// **'EPS'**
+  String get events_register_eps_field;
+
+  /// Fila de datos: contacto de emergencia
+  ///
+  /// In es, this message translates to:
+  /// **'Contacto de emergencia'**
+  String get events_register_emergency_contact_field;
+
+  /// Valor de una fila de datos sin diligenciar
+  ///
+  /// In es, this message translates to:
+  /// **'Sin registrar'**
+  String get events_register_not_provided;
+
+  /// Nota para editar el perfil desde la inscripción
+  ///
+  /// In es, this message translates to:
+  /// **'¿Algo desactualizado? Corrígelo en tu perfil.'**
+  String get events_register_edit_profile_note;
+
+  /// Etiqueta de sección de permisos
+  ///
+  /// In es, this message translates to:
+  /// **'PERMISOS'**
+  String get events_register_permissions_label;
+
+  /// Switch de compartir datos médicos
+  ///
+  /// In es, this message translates to:
+  /// **'Compartir mis datos médicos con el organizador'**
+  String get events_register_share_medical_label;
+
+  /// Ayuda del switch de datos médicos
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo de sangre y EPS, solo si hay una emergencia'**
+  String get events_register_share_medical_subtitle;
+
+  /// Switch de permitir contacto del organizador
+  ///
+  /// In es, this message translates to:
+  /// **'Permitir que el organizador me contacte'**
+  String get events_register_allow_contact_label;
+
+  /// Ayuda del switch de permitir contacto
+  ///
+  /// In es, this message translates to:
+  /// **'Solo antes y durante la rodada'**
+  String get events_register_allow_contact_subtitle;
+
+  /// Etiqueta de sección de aceptación de riesgos
+  ///
+  /// In es, this message translates to:
+  /// **'ACEPTACIÓN DE RIESGOS'**
+  String get events_register_risk_label;
+
+  /// Texto de aceptación de riesgos
+  ///
+  /// In es, this message translates to:
+  /// **'Entiendo que rodar tiene riesgos y participo bajo mi propia responsabilidad.'**
+  String get events_register_risk_text;
+
+  /// Nota de versión de términos y edad mínima
+  ///
+  /// In es, this message translates to:
+  /// **'Términos de participación v1.0 · edad mínima 18 años'**
+  String get events_register_risk_terms;
+
+  /// Label del selector de moto en la inscripción
+  ///
+  /// In es, this message translates to:
+  /// **'Moto'**
+  String get events_register_vehicle_label;
+
+  /// Placa vacía en el selector de moto
+  ///
+  /// In es, this message translates to:
+  /// **'Sin placa registrada'**
+  String get events_register_no_vehicle_plate;
+
+  /// CTA para confirmar la inscripción
+  ///
+  /// In es, this message translates to:
+  /// **'Confirmar inscripción'**
+  String get events_register_confirm_cta;
+
+  /// Título del estado de perfil incompleto
+  ///
+  /// In es, this message translates to:
+  /// **'Completa tu perfil antes de inscribirte'**
+  String get events_register_incomplete_title;
+
+  /// Cuerpo del estado de perfil incompleto
+  ///
+  /// In es, this message translates to:
+  /// **'El organizador necesita tu teléfono y tu contacto de emergencia para poder ayudarte en la vía.'**
+  String get events_register_incomplete_body;
+
+  /// CTA para ir a completar el perfil
+  ///
+  /// In es, this message translates to:
+  /// **'Completar perfil'**
+  String get events_register_incomplete_cta;
+
+  /// Error de edad mínima al inscribirse
+  ///
+  /// In es, this message translates to:
+  /// **'Debes ser mayor de 18 años para inscribirte a una rodada.'**
+  String get events_register_underage_error;
+
+  /// Error de inscripción duplicada
+  ///
+  /// In es, this message translates to:
+  /// **'Ya estás inscrito en esta rodada.'**
+  String get events_register_already_registered_error;
+
+  /// Error genérico de inscripción
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos completar tu inscripción. Inténtalo de nuevo.'**
+  String get events_register_generic_error;
+
+  /// Título de la pantalla de inscritos con cupo máximo
+  ///
+  /// In es, this message translates to:
+  /// **'Inscritos · {approved}/{max}'**
+  String events_registrants_title(int approved, int max);
+
+  /// Título de la pantalla de inscritos sin cupo máximo
+  ///
+  /// In es, this message translates to:
+  /// **'Inscritos · {approved}'**
+  String events_registrants_title_unlimited(int approved);
+
+  /// CTA para llamar a un inscrito
+  ///
+  /// In es, this message translates to:
+  /// **'Llamar'**
+  String get events_registrants_call;
+
+  /// CTA para llamar al contacto de emergencia de un inscrito
+  ///
+  /// In es, this message translates to:
+  /// **'Contacto de emergencia'**
+  String get events_registrants_call_emergency;
+
+  /// Título del estado vacío de inscritos
+  ///
+  /// In es, this message translates to:
+  /// **'Todavía no hay inscritos'**
+  String get events_registrants_empty_title;
+
+  /// Cuerpo del estado vacío de inscritos
+  ///
+  /// In es, this message translates to:
+  /// **'Cuando alguien se inscriba, lo verás aquí.'**
+  String get events_registrants_empty_body;
+
+  /// Título de error de la pantalla de inscritos
+  ///
+  /// In es, this message translates to:
+  /// **'No pudimos cargar los inscritos'**
+  String get events_registrants_error_title;
+
+  /// Título de la hoja de cambio de ruta
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar la ruta'**
+  String get events_route_change_title;
+
+  /// Cuerpo de la hoja de cambio de ruta
+  ///
+  /// In es, this message translates to:
+  /// **'Se lo avisamos a los {count} inscritos apenas guardes.'**
+  String events_route_change_body(int count);
+
+  /// Label del campo de nueva ruta
+  ///
+  /// In es, this message translates to:
+  /// **'Nueva ruta'**
+  String get events_route_change_field_label;
+
+  /// CTA para avisar el cambio de ruta
+  ///
+  /// In es, this message translates to:
+  /// **'Avisar a los inscritos'**
+  String get events_route_change_cta;
 }
 
 class _AppLocalizationsDelegate

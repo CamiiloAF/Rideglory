@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../l10n/l10n_extensions.dart';
-import '../../../../shared/widgets/states/empty_state_view.dart';
+import '../../../../core/di/injection.dart';
+import '../cubit/events_list_cubit.dart';
+import 'events_list_view.dart';
 
-/// Lista de rodadas. Placeholder de F3 — el contenido real llega en F7.
+/// Pestaña Eventos: lista de rodadas (EV1).
 class EventsPage extends StatelessWidget {
   const EventsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: EmptyStateView(
-          icon: LucideIcons.calendarDays,
-          title: context.l10n.events_empty_title,
-          body: context.l10n.events_empty_body,
-        ),
-      ),
+    return BlocProvider(
+      create: (_) => getIt<EventsListCubit>()..load(),
+      child: const EventsListView(),
     );
   }
 }

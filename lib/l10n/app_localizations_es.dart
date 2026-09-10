@@ -1139,4 +1139,379 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get profile_delete_error_body =>
       'Algo falló de nuestro lado. Tu cuenta sigue activa. Inténtalo de nuevo.';
+
+  @override
+  String get events_list_title => 'Rodadas';
+
+  @override
+  String get events_segment_upcoming => 'Próximas';
+
+  @override
+  String get events_segment_mine => 'Mías';
+
+  @override
+  String get events_list_empty_title => 'Todavía no hay rodadas';
+
+  @override
+  String get events_list_empty_body =>
+      'Crea la primera o vuelve cuando alguien publique una cerca de ti.';
+
+  @override
+  String get events_list_mine_empty_body =>
+      'Organiza una rodada o inscríbete a una para verla aquí.';
+
+  @override
+  String get events_list_empty_cta => 'Crear rodada';
+
+  @override
+  String get events_list_error_title => 'No pudimos cargar las rodadas';
+
+  @override
+  String get events_list_offline_body =>
+      'No pudimos cargar las rodadas. Revisa tu conexión e inténtalo de nuevo.';
+
+  @override
+  String get events_card_free => 'Gratis';
+
+  @override
+  String get events_difficulty_easy => 'Fácil';
+
+  @override
+  String get events_difficulty_medium => 'Media';
+
+  @override
+  String get events_difficulty_hard => 'Difícil';
+
+  @override
+  String events_detail_meeting_point(String point) {
+    return 'Punto de encuentro: $point';
+  }
+
+  @override
+  String get events_detail_destination_label => 'DESTINO';
+
+  @override
+  String get events_detail_route_label => 'RUTA';
+
+  @override
+  String get events_detail_open_maps => 'Abrir en Waze/Maps';
+
+  @override
+  String events_detail_organizer_prefix(String name) {
+    return 'Organiza $name';
+  }
+
+  @override
+  String events_detail_spots(int approved, int max) {
+    return '$approved de $max cupos ocupados';
+  }
+
+  @override
+  String events_detail_spots_unlimited(int approved) {
+    return '$approved inscritos';
+  }
+
+  @override
+  String get events_detail_register_cta => 'Inscribirme';
+
+  @override
+  String get events_detail_registered_badge => 'Inscrito';
+
+  @override
+  String get events_detail_cancel_registration_cta => 'Cancelar inscripción';
+
+  @override
+  String get events_detail_start_cta => 'Iniciar rodada';
+
+  @override
+  String get events_detail_change_route_cta => 'Cambiar ruta';
+
+  @override
+  String get events_detail_view_registrants_cta => 'Ver inscritos';
+
+  @override
+  String get events_detail_cancel_event_cta => 'Cancelar rodada';
+
+  @override
+  String get events_detail_cancel_event_confirm_title =>
+      '¿Cancelar esta rodada?';
+
+  @override
+  String get events_detail_cancel_event_confirm_body =>
+      'Se avisará a todos los inscritos. Esta acción no se puede deshacer.';
+
+  @override
+  String get events_detail_cancel_event_confirm_cta => 'Sí, cancelar rodada';
+
+  @override
+  String get events_detail_cancel_registration_confirm_title =>
+      '¿Cancelar tu inscripción?';
+
+  @override
+  String get events_detail_cancel_registration_confirm_body =>
+      'Perderás tu cupo en esta rodada.';
+
+  @override
+  String get events_detail_confirm_keep => 'No, mantener';
+
+  @override
+  String get events_detail_route_changes_title => 'AVISOS DE RUTA';
+
+  @override
+  String get events_detail_error_title => 'No pudimos cargar la rodada';
+
+  @override
+  String events_detail_start_overdue_title(String time) {
+    return 'Tu rodada debía empezar a las $time';
+  }
+
+  @override
+  String get events_detail_start_overdue_body =>
+      'Los inscritos ya están esperando. Inícia la rodada o avísales si se retrasa.';
+
+  @override
+  String get events_detail_cancelled_badge => 'Cancelada';
+
+  @override
+  String get events_detail_finished_badge => 'Finalizada';
+
+  @override
+  String get events_create_title => 'Nueva rodada';
+
+  @override
+  String events_create_step_label(int step) {
+    return 'Paso $step de 3';
+  }
+
+  @override
+  String get events_create_step1_title => 'Crea tu rodada';
+
+  @override
+  String get events_create_photo_cta => 'Agregar foto de portada';
+
+  @override
+  String get events_create_name_label => 'Nombre de la rodada';
+
+  @override
+  String get events_create_name_hint =>
+      'Por ejemplo: Rodada al Nevado del Ruiz';
+
+  @override
+  String get events_create_datetime_label => 'Fecha y hora';
+
+  @override
+  String get events_create_datetime_placeholder => 'Selecciona fecha y hora';
+
+  @override
+  String get events_create_meeting_point_label => 'Punto de encuentro';
+
+  @override
+  String get events_create_meeting_point_hint =>
+      'Por ejemplo: Estación Terpel Sur, Autopista Sur';
+
+  @override
+  String get events_create_next_cta => 'Siguiente';
+
+  @override
+  String get events_create_step2_title => '¿A dónde van?';
+
+  @override
+  String get events_create_destination_label => 'Destino';
+
+  @override
+  String get events_create_destination_hint =>
+      'Busca un lugar o escribe la dirección';
+
+  @override
+  String get events_create_route_label => 'Ruta (texto)';
+
+  @override
+  String get events_create_route_hint =>
+      'Describe el trayecto: por dónde salen, por dónde regresan';
+
+  @override
+  String get events_create_difficulty_label => 'Dificultad';
+
+  @override
+  String get events_create_step3_title => 'Cupos y precio';
+
+  @override
+  String get events_create_spots_label => 'Cupos disponibles';
+
+  @override
+  String get events_create_spots_suffix => 'personas';
+
+  @override
+  String get events_create_spots_hint =>
+      'Máximo de riders que pueden inscribirse';
+
+  @override
+  String get events_create_free_label => 'Rodada gratis';
+
+  @override
+  String get events_create_free_subtitle => 'Sin costo para los inscritos';
+
+  @override
+  String get events_create_price_label => 'Precio (COP)';
+
+  @override
+  String get events_create_summary_label => 'RESUMEN';
+
+  @override
+  String get events_create_summary_name => 'Nombre';
+
+  @override
+  String get events_create_summary_date => 'Fecha';
+
+  @override
+  String get events_create_summary_price => 'Precio';
+
+  @override
+  String get events_create_publish_cta => 'Publicar rodada';
+
+  @override
+  String get events_create_saving => 'Publicando…';
+
+  @override
+  String get events_create_saving_subtitle =>
+      'Todo esto es opcional. Puedes guardar así.';
+
+  @override
+  String get events_create_error_title => 'No pudimos publicar la rodada';
+
+  @override
+  String get events_create_error_body =>
+      'Revisa tu conexión e inténtalo de nuevo. Tus datos siguen aquí.';
+
+  @override
+  String get events_register_title => 'Inscripción';
+
+  @override
+  String get events_register_your_data_label => 'TUS DATOS';
+
+  @override
+  String get events_register_name_field => 'Nombre';
+
+  @override
+  String get events_register_phone_field => 'Teléfono';
+
+  @override
+  String get events_register_blood_type_field => 'Tipo de sangre';
+
+  @override
+  String get events_register_eps_field => 'EPS';
+
+  @override
+  String get events_register_emergency_contact_field =>
+      'Contacto de emergencia';
+
+  @override
+  String get events_register_not_provided => 'Sin registrar';
+
+  @override
+  String get events_register_edit_profile_note =>
+      '¿Algo desactualizado? Corrígelo en tu perfil.';
+
+  @override
+  String get events_register_permissions_label => 'PERMISOS';
+
+  @override
+  String get events_register_share_medical_label =>
+      'Compartir mis datos médicos con el organizador';
+
+  @override
+  String get events_register_share_medical_subtitle =>
+      'Tipo de sangre y EPS, solo si hay una emergencia';
+
+  @override
+  String get events_register_allow_contact_label =>
+      'Permitir que el organizador me contacte';
+
+  @override
+  String get events_register_allow_contact_subtitle =>
+      'Solo antes y durante la rodada';
+
+  @override
+  String get events_register_risk_label => 'ACEPTACIÓN DE RIESGOS';
+
+  @override
+  String get events_register_risk_text =>
+      'Entiendo que rodar tiene riesgos y participo bajo mi propia responsabilidad.';
+
+  @override
+  String get events_register_risk_terms =>
+      'Términos de participación v1.0 · edad mínima 18 años';
+
+  @override
+  String get events_register_vehicle_label => 'Moto';
+
+  @override
+  String get events_register_no_vehicle_plate => 'Sin placa registrada';
+
+  @override
+  String get events_register_confirm_cta => 'Confirmar inscripción';
+
+  @override
+  String get events_register_incomplete_title =>
+      'Completa tu perfil antes de inscribirte';
+
+  @override
+  String get events_register_incomplete_body =>
+      'El organizador necesita tu teléfono y tu contacto de emergencia para poder ayudarte en la vía.';
+
+  @override
+  String get events_register_incomplete_cta => 'Completar perfil';
+
+  @override
+  String get events_register_underage_error =>
+      'Debes ser mayor de 18 años para inscribirte a una rodada.';
+
+  @override
+  String get events_register_already_registered_error =>
+      'Ya estás inscrito en esta rodada.';
+
+  @override
+  String get events_register_generic_error =>
+      'No pudimos completar tu inscripción. Inténtalo de nuevo.';
+
+  @override
+  String events_registrants_title(int approved, int max) {
+    return 'Inscritos · $approved/$max';
+  }
+
+  @override
+  String events_registrants_title_unlimited(int approved) {
+    return 'Inscritos · $approved';
+  }
+
+  @override
+  String get events_registrants_call => 'Llamar';
+
+  @override
+  String get events_registrants_call_emergency => 'Contacto de emergencia';
+
+  @override
+  String get events_registrants_empty_title => 'Todavía no hay inscritos';
+
+  @override
+  String get events_registrants_empty_body =>
+      'Cuando alguien se inscriba, lo verás aquí.';
+
+  @override
+  String get events_registrants_error_title =>
+      'No pudimos cargar los inscritos';
+
+  @override
+  String get events_route_change_title => 'Cambiar la ruta';
+
+  @override
+  String events_route_change_body(int count) {
+    return 'Se lo avisamos a los $count inscritos apenas guardes.';
+  }
+
+  @override
+  String get events_route_change_field_label => 'Nueva ruta';
+
+  @override
+  String get events_route_change_cta => 'Avisar a los inscritos';
 }

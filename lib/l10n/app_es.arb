@@ -1089,5 +1089,331 @@
   "profile_delete_error_body": "Algo falló de nuestro lado. Tu cuenta sigue activa. Inténtalo de nuevo.",
   "@profile_delete_error_body": {
     "description": "Cuerpo de error al borrar la cuenta"
-  }
+  },
+  "events_list_title": "Rodadas",
+  "@events_list_title": {"description": "Título de la lista de rodadas"},
+
+  "events_segment_upcoming": "Próximas",
+  "@events_segment_upcoming": {"description": "Segmento de rodadas próximas"},
+
+  "events_segment_mine": "Mías",
+  "@events_segment_mine": {"description": "Segmento de rodadas propias (organizadas o inscritas)"},
+
+  "events_list_empty_title": "Todavía no hay rodadas",
+  "@events_list_empty_title": {"description": "Título del estado vacío de la lista de rodadas"},
+
+  "events_list_empty_body": "Crea la primera o vuelve cuando alguien publique una cerca de ti.",
+  "@events_list_empty_body": {"description": "Cuerpo del estado vacío de la lista de rodadas"},
+
+  "events_list_mine_empty_body": "Organiza una rodada o inscríbete a una para verla aquí.",
+  "@events_list_mine_empty_body": {"description": "Cuerpo del estado vacío del segmento Mías"},
+
+  "events_list_empty_cta": "Crear rodada",
+  "@events_list_empty_cta": {"description": "CTA del estado vacío de la lista de rodadas"},
+
+  "events_list_error_title": "No pudimos cargar las rodadas",
+  "@events_list_error_title": {"description": "Título de error de la lista de rodadas"},
+
+  "events_list_offline_body": "No pudimos cargar las rodadas. Revisa tu conexión e inténtalo de nuevo.",
+  "@events_list_offline_body": {"description": "Cuerpo sin conexión de la lista de rodadas"},
+
+  "events_card_free": "Gratis",
+  "@events_card_free": {"description": "Precio de una rodada gratuita en la tarjeta"},
+
+  "events_difficulty_easy": "Fácil",
+  "@events_difficulty_easy": {"description": "Dificultad fácil"},
+
+  "events_difficulty_medium": "Media",
+  "@events_difficulty_medium": {"description": "Dificultad media"},
+
+  "events_difficulty_hard": "Difícil",
+  "@events_difficulty_hard": {"description": "Dificultad difícil"},
+
+  "events_detail_meeting_point": "Punto de encuentro: {point}",
+  "@events_detail_meeting_point": {"description": "Punto de encuentro en el detalle", "placeholders": {"point": {"type": "String"}}},
+
+  "events_detail_destination_label": "DESTINO",
+  "@events_detail_destination_label": {"description": "Etiqueta de sección destino"},
+
+  "events_detail_route_label": "RUTA",
+  "@events_detail_route_label": {"description": "Etiqueta de sección ruta"},
+
+  "events_detail_open_maps": "Abrir en Waze/Maps",
+  "@events_detail_open_maps": {"description": "Botón para abrir el destino en la app de mapas"},
+
+  "events_detail_organizer_prefix": "Organiza {name}",
+  "@events_detail_organizer_prefix": {"description": "Nombre del organizador en el detalle", "placeholders": {"name": {"type": "String"}}},
+
+  "events_detail_spots": "{approved} de {max} cupos ocupados",
+  "@events_detail_spots": {"description": "Cupos ocupados con límite", "placeholders": {"approved": {"type": "int"}, "max": {"type": "int"}}},
+
+  "events_detail_spots_unlimited": "{approved} inscritos",
+  "@events_detail_spots_unlimited": {"description": "Cupos ocupados sin límite", "placeholders": {"approved": {"type": "int"}}},
+
+  "events_detail_register_cta": "Inscribirme",
+  "@events_detail_register_cta": {"description": "CTA para inscribirse a una rodada"},
+
+  "events_detail_registered_badge": "Inscrito",
+  "@events_detail_registered_badge": {"description": "Insignia de inscripción confirmada"},
+
+  "events_detail_cancel_registration_cta": "Cancelar inscripción",
+  "@events_detail_cancel_registration_cta": {"description": "CTA para cancelar la inscripción propia"},
+
+  "events_detail_start_cta": "Iniciar rodada",
+  "@events_detail_start_cta": {"description": "CTA del organizador para iniciar la rodada"},
+
+  "events_detail_change_route_cta": "Cambiar ruta",
+  "@events_detail_change_route_cta": {"description": "CTA del organizador para avisar un cambio de ruta"},
+
+  "events_detail_view_registrants_cta": "Ver inscritos",
+  "@events_detail_view_registrants_cta": {"description": "CTA del organizador para ver inscritos"},
+
+  "events_detail_cancel_event_cta": "Cancelar rodada",
+  "@events_detail_cancel_event_cta": {"description": "CTA del organizador para cancelar la rodada"},
+
+  "events_detail_cancel_event_confirm_title": "¿Cancelar esta rodada?",
+  "@events_detail_cancel_event_confirm_title": {"description": "Título de confirmación al cancelar una rodada"},
+
+  "events_detail_cancel_event_confirm_body": "Se avisará a todos los inscritos. Esta acción no se puede deshacer.",
+  "@events_detail_cancel_event_confirm_body": {"description": "Cuerpo de confirmación al cancelar una rodada"},
+
+  "events_detail_cancel_event_confirm_cta": "Sí, cancelar rodada",
+  "@events_detail_cancel_event_confirm_cta": {"description": "CTA de confirmación al cancelar una rodada"},
+
+  "events_detail_cancel_registration_confirm_title": "¿Cancelar tu inscripción?",
+  "@events_detail_cancel_registration_confirm_title": {"description": "Título de confirmación al cancelar la inscripción propia"},
+
+  "events_detail_cancel_registration_confirm_body": "Perderás tu cupo en esta rodada.",
+  "@events_detail_cancel_registration_confirm_body": {"description": "Cuerpo de confirmación al cancelar la inscripción propia"},
+
+  "events_detail_confirm_keep": "No, mantener",
+  "@events_detail_confirm_keep": {"description": "CTA para no confirmar una acción destructiva"},
+
+  "events_detail_route_changes_title": "AVISOS DE RUTA",
+  "@events_detail_route_changes_title": {"description": "Etiqueta de sección de cambios de ruta en el detalle"},
+
+  "events_detail_error_title": "No pudimos cargar la rodada",
+  "@events_detail_error_title": {"description": "Título de error del detalle de rodada"},
+
+  "events_detail_start_overdue_title": "Tu rodada debía empezar a las {time}",
+  "@events_detail_start_overdue_title": {"description": "Título del banner de aviso de inicio atrasado", "placeholders": {"time": {"type": "String"}}},
+
+  "events_detail_start_overdue_body": "Los inscritos ya están esperando. Inícia la rodada o avísales si se retrasa.",
+  "@events_detail_start_overdue_body": {"description": "Cuerpo del banner de aviso de inicio atrasado"},
+
+  "events_detail_cancelled_badge": "Cancelada",
+  "@events_detail_cancelled_badge": {"description": "Insignia de rodada cancelada"},
+
+  "events_detail_finished_badge": "Finalizada",
+  "@events_detail_finished_badge": {"description": "Insignia de rodada finalizada"},
+
+  "events_create_title": "Nueva rodada",
+  "@events_create_title": {"description": "Título del asistente de creación de rodada"},
+
+  "events_create_step_label": "Paso {step} de 3",
+  "@events_create_step_label": {"description": "Indicador de paso del asistente", "placeholders": {"step": {"type": "int"}}},
+
+  "events_create_step1_title": "Crea tu rodada",
+  "@events_create_step1_title": {"description": "Título del paso 1 del asistente"},
+
+  "events_create_photo_cta": "Agregar foto de portada",
+  "@events_create_photo_cta": {"description": "CTA para agregar foto de portada"},
+
+  "events_create_name_label": "Nombre de la rodada",
+  "@events_create_name_label": {"description": "Label del campo nombre"},
+
+  "events_create_name_hint": "Por ejemplo: Rodada al Nevado del Ruiz",
+  "@events_create_name_hint": {"description": "Hint del campo nombre"},
+
+  "events_create_datetime_label": "Fecha y hora",
+  "@events_create_datetime_label": {"description": "Label del campo fecha y hora"},
+
+  "events_create_datetime_placeholder": "Selecciona fecha y hora",
+  "@events_create_datetime_placeholder": {"description": "Placeholder del campo fecha y hora"},
+
+  "events_create_meeting_point_label": "Punto de encuentro",
+  "@events_create_meeting_point_label": {"description": "Label del campo punto de encuentro"},
+
+  "events_create_meeting_point_hint": "Por ejemplo: Estación Terpel Sur, Autopista Sur",
+  "@events_create_meeting_point_hint": {"description": "Hint del campo punto de encuentro"},
+
+  "events_create_next_cta": "Siguiente",
+  "@events_create_next_cta": {"description": "CTA para avanzar de paso en el asistente"},
+
+  "events_create_step2_title": "¿A dónde van?",
+  "@events_create_step2_title": {"description": "Título del paso 2 del asistente"},
+
+  "events_create_destination_label": "Destino",
+  "@events_create_destination_label": {"description": "Label del buscador de destino"},
+
+  "events_create_destination_hint": "Busca un lugar o escribe la dirección",
+  "@events_create_destination_hint": {"description": "Hint del buscador de destino"},
+
+  "events_create_route_label": "Ruta (texto)",
+  "@events_create_route_label": {"description": "Label del campo de ruta en texto"},
+
+  "events_create_route_hint": "Describe el trayecto: por dónde salen, por dónde regresan",
+  "@events_create_route_hint": {"description": "Hint del campo de ruta en texto"},
+
+  "events_create_difficulty_label": "Dificultad",
+  "@events_create_difficulty_label": {"description": "Label del selector de dificultad"},
+
+  "events_create_step3_title": "Cupos y precio",
+  "@events_create_step3_title": {"description": "Título del paso 3 del asistente"},
+
+  "events_create_spots_label": "Cupos disponibles",
+  "@events_create_spots_label": {"description": "Label del campo de cupos"},
+
+  "events_create_spots_suffix": "personas",
+  "@events_create_spots_suffix": {"description": "Sufijo del campo de cupos"},
+
+  "events_create_spots_hint": "Máximo de riders que pueden inscribirse",
+  "@events_create_spots_hint": {"description": "Ayuda del campo de cupos"},
+
+  "events_create_free_label": "Rodada gratis",
+  "@events_create_free_label": {"description": "Label del switch de rodada gratuita"},
+
+  "events_create_free_subtitle": "Sin costo para los inscritos",
+  "@events_create_free_subtitle": {"description": "Ayuda del switch de rodada gratuita"},
+
+  "events_create_price_label": "Precio (COP)",
+  "@events_create_price_label": {"description": "Label del campo de precio"},
+
+  "events_create_summary_label": "RESUMEN",
+  "@events_create_summary_label": {"description": "Etiqueta de la sección resumen"},
+
+  "events_create_summary_name": "Nombre",
+  "@events_create_summary_name": {"description": "Fila resumen: nombre"},
+
+  "events_create_summary_date": "Fecha",
+  "@events_create_summary_date": {"description": "Fila resumen: fecha"},
+
+  "events_create_summary_price": "Precio",
+  "@events_create_summary_price": {"description": "Fila resumen: precio"},
+
+  "events_create_publish_cta": "Publicar rodada",
+  "@events_create_publish_cta": {"description": "CTA final para publicar la rodada"},
+
+  "events_create_saving": "Publicando…",
+  "@events_create_saving": {"description": "Estado del botón mientras se publica"},
+
+  "events_create_saving_subtitle": "Todo esto es opcional. Puedes guardar así.",
+  "@events_create_saving_subtitle": {"description": "Subtítulo mientras se publica o hay error"},
+
+  "events_create_error_title": "No pudimos publicar la rodada",
+  "@events_create_error_title": {"description": "Título de error al publicar"},
+
+  "events_create_error_body": "Revisa tu conexión e inténtalo de nuevo. Tus datos siguen aquí.",
+  "@events_create_error_body": {"description": "Cuerpo de error al publicar"},
+
+  "events_register_title": "Inscripción",
+  "@events_register_title": {"description": "Título de la pantalla de inscripción"},
+
+  "events_register_your_data_label": "TUS DATOS",
+  "@events_register_your_data_label": {"description": "Etiqueta de sección de datos propios"},
+
+  "events_register_name_field": "Nombre",
+  "@events_register_name_field": {"description": "Fila de datos: nombre"},
+
+  "events_register_phone_field": "Teléfono",
+  "@events_register_phone_field": {"description": "Fila de datos: teléfono"},
+
+  "events_register_blood_type_field": "Tipo de sangre",
+  "@events_register_blood_type_field": {"description": "Fila de datos: tipo de sangre"},
+
+  "events_register_eps_field": "EPS",
+  "@events_register_eps_field": {"description": "Fila de datos: EPS"},
+
+  "events_register_emergency_contact_field": "Contacto de emergencia",
+  "@events_register_emergency_contact_field": {"description": "Fila de datos: contacto de emergencia"},
+
+  "events_register_not_provided": "Sin registrar",
+  "@events_register_not_provided": {"description": "Valor de una fila de datos sin diligenciar"},
+
+  "events_register_edit_profile_note": "¿Algo desactualizado? Corrígelo en tu perfil.",
+  "@events_register_edit_profile_note": {"description": "Nota para editar el perfil desde la inscripción"},
+
+  "events_register_permissions_label": "PERMISOS",
+  "@events_register_permissions_label": {"description": "Etiqueta de sección de permisos"},
+
+  "events_register_share_medical_label": "Compartir mis datos médicos con el organizador",
+  "@events_register_share_medical_label": {"description": "Switch de compartir datos médicos"},
+
+  "events_register_share_medical_subtitle": "Tipo de sangre y EPS, solo si hay una emergencia",
+  "@events_register_share_medical_subtitle": {"description": "Ayuda del switch de datos médicos"},
+
+  "events_register_allow_contact_label": "Permitir que el organizador me contacte",
+  "@events_register_allow_contact_label": {"description": "Switch de permitir contacto del organizador"},
+
+  "events_register_allow_contact_subtitle": "Solo antes y durante la rodada",
+  "@events_register_allow_contact_subtitle": {"description": "Ayuda del switch de permitir contacto"},
+
+  "events_register_risk_label": "ACEPTACIÓN DE RIESGOS",
+  "@events_register_risk_label": {"description": "Etiqueta de sección de aceptación de riesgos"},
+
+  "events_register_risk_text": "Entiendo que rodar tiene riesgos y participo bajo mi propia responsabilidad.",
+  "@events_register_risk_text": {"description": "Texto de aceptación de riesgos"},
+
+  "events_register_risk_terms": "Términos de participación v1.0 · edad mínima 18 años",
+  "@events_register_risk_terms": {"description": "Nota de versión de términos y edad mínima"},
+
+  "events_register_vehicle_label": "Moto",
+  "@events_register_vehicle_label": {"description": "Label del selector de moto en la inscripción"},
+
+  "events_register_no_vehicle_plate": "Sin placa registrada",
+  "@events_register_no_vehicle_plate": {"description": "Placa vacía en el selector de moto"},
+
+  "events_register_confirm_cta": "Confirmar inscripción",
+  "@events_register_confirm_cta": {"description": "CTA para confirmar la inscripción"},
+
+  "events_register_incomplete_title": "Completa tu perfil antes de inscribirte",
+  "@events_register_incomplete_title": {"description": "Título del estado de perfil incompleto"},
+
+  "events_register_incomplete_body": "El organizador necesita tu teléfono y tu contacto de emergencia para poder ayudarte en la vía.",
+  "@events_register_incomplete_body": {"description": "Cuerpo del estado de perfil incompleto"},
+
+  "events_register_incomplete_cta": "Completar perfil",
+  "@events_register_incomplete_cta": {"description": "CTA para ir a completar el perfil"},
+
+  "events_register_underage_error": "Debes ser mayor de 18 años para inscribirte a una rodada.",
+  "@events_register_underage_error": {"description": "Error de edad mínima al inscribirse"},
+
+  "events_register_already_registered_error": "Ya estás inscrito en esta rodada.",
+  "@events_register_already_registered_error": {"description": "Error de inscripción duplicada"},
+
+  "events_register_generic_error": "No pudimos completar tu inscripción. Inténtalo de nuevo.",
+  "@events_register_generic_error": {"description": "Error genérico de inscripción"},
+
+  "events_registrants_title": "Inscritos · {approved}/{max}",
+  "@events_registrants_title": {"description": "Título de la pantalla de inscritos con cupo máximo", "placeholders": {"approved": {"type": "int"}, "max": {"type": "int"}}},
+
+  "events_registrants_title_unlimited": "Inscritos · {approved}",
+  "@events_registrants_title_unlimited": {"description": "Título de la pantalla de inscritos sin cupo máximo", "placeholders": {"approved": {"type": "int"}}},
+
+  "events_registrants_call": "Llamar",
+  "@events_registrants_call": {"description": "CTA para llamar a un inscrito"},
+
+  "events_registrants_call_emergency": "Contacto de emergencia",
+  "@events_registrants_call_emergency": {"description": "CTA para llamar al contacto de emergencia de un inscrito"},
+
+  "events_registrants_empty_title": "Todavía no hay inscritos",
+  "@events_registrants_empty_title": {"description": "Título del estado vacío de inscritos"},
+
+  "events_registrants_empty_body": "Cuando alguien se inscriba, lo verás aquí.",
+  "@events_registrants_empty_body": {"description": "Cuerpo del estado vacío de inscritos"},
+
+  "events_registrants_error_title": "No pudimos cargar los inscritos",
+  "@events_registrants_error_title": {"description": "Título de error de la pantalla de inscritos"},
+
+  "events_route_change_title": "Cambiar la ruta",
+  "@events_route_change_title": {"description": "Título de la hoja de cambio de ruta"},
+
+  "events_route_change_body": "Se lo avisamos a los {count} inscritos apenas guardes.",
+  "@events_route_change_body": {"description": "Cuerpo de la hoja de cambio de ruta", "placeholders": {"count": {"type": "int"}}},
+
+  "events_route_change_field_label": "Nueva ruta",
+  "@events_route_change_field_label": {"description": "Label del campo de nueva ruta"},
+
+  "events_route_change_cta": "Avisar a los inscritos",
+  "@events_route_change_cta": {"description": "CTA para avisar el cambio de ruta"}
 }

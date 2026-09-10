@@ -7,11 +7,7 @@ import '../tokens/app_colors.dart';
 ///
 /// Pencil: c1ny5S
 class AppSwitch extends StatelessWidget {
-  const AppSwitch({
-    required this.value,
-    required this.onChanged,
-    super.key,
-  });
+  const AppSwitch({required this.value, required this.onChanged, super.key});
 
   final bool value;
   final ValueChanged<bool>? onChanged;
