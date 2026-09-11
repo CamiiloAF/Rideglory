@@ -14,6 +14,7 @@ import '../../domain/usecases/close_sos_use_case.dart';
 import '../../domain/usecases/raise_sos_use_case.dart';
 import '../../domain/usecases/retry_sos_outbox_use_case.dart';
 import '../../domain/usecases/watch_sos_alerts_use_case.dart';
+import '../live_ride_current_user.dart';
 import 'sos_send_state.dart';
 import 'sos_state.dart';
 
@@ -71,11 +72,33 @@ class SosCubit extends Cubit<SosState> {
     });
   }
 
-  /// Si el SOS que tenemos como "propio" (ya confirmado) aparece cerrado
-  /// en la lista de Realtime, refleja el cierre sin que el rider tenga que
-  /// hacer nada (D19: puede haberlo cerrado el organizador).
+  /// Reconcilia `mine` contra lo que Realtime va entregando de
+  /// `sos_alerts_visible`, en dos direcciones:
+  ///
+  /// - **pendiente → confirmado**: la respuesta de `raise_sos` se pudo
+  ///   perder aunque el alta sí llegara al servidor (D16). Sin esto,
+  ///   `mine` se queda "pendiente" para siempre si además el reintento
+  ///   de la cola (que depende de otro viaje de red) también se pierde
+  ///   — sería un SOS activo en el servidor que la UI del propio rider
+  ///   nunca reconoce como confirmado. Realtime ya nos dice que existe:
+  ///   no hace falta esperar un segundo éxito de red para saberlo.
+  /// - **confirmado → cerrado**: si el SOS que tenemos como propio
+  ///   aparece cerrado, refleja el cierre sin que el rider tenga que
+  ///   hacer nada (D19: puede haberlo cerrado el organizador).
   void _reconcileMine(List<SosAlert> alerts) {
     final mine = state.mine;
+    if (mine is SosSendPending) {
+      final myUserId = liveRideCurrentUserId();
+      if (myUserId == null) return;
+      final match = alerts.where(
+        (alert) => alert.userId == myUserId && alert.status != SosStatus.closed,
+      );
+      if (match.isNotEmpty) {
+        unawaited(_outbox.markSent(mine.item.clientId));
+        emit(state.copyWith(mine: SosSendState.confirmed(alert: match.first)));
+      }
+      return;
+    }
     if (mine is! SosSendConfirmed) return;
     final updated = alerts.where((alert) => alert.id == mine.alert.id);
     if (updated.isEmpty) return;

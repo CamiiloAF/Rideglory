@@ -66,6 +66,7 @@ void main() {
     retryOutbox = _MockRetryOutbox();
     outbox = _MockSosOutbox();
     when(() => outbox.pending()).thenAnswer((_) async => []);
+    when(() => outbox.markSent(any())).thenAnswer((_) async {});
     when(() => watchAlerts(any())).thenAnswer((_) => const Stream.empty());
   });
 
@@ -121,6 +122,37 @@ void main() {
     },
     verify: (cubit) {
       expect(cubit.state.mine, isA<SosSendPending>());
+    },
+  );
+
+  blocTest<SosCubit, SosState>(
+    'un SOS pendiente que Realtime ya confirma como propio pasa a '
+    'confirmed sin esperar un segundo exito de red (D16: la respuesta de '
+    'raise_sos se pudo perder aunque el alta si haya llegado al servidor). '
+    'Nota: sin sesion de Supabase en el entorno de test, liveRideCurrentUserId() '
+    'devuelve null y esta rama no reconcilia nada (queda pending) — se '
+    'verifica aqui que ese caso no revienta ni reconcilia por error; el '
+    'camino con identidad resuelta se cubre en integration_test.',
+    build: () {
+      when(
+        () => raiseSos.call(
+          eventId: any(named: 'eventId'),
+          message: any(named: 'message'),
+        ),
+      ).thenAnswer((_) async => Left(_pendingItem()));
+      when(
+        () => watchAlerts(any()),
+      ).thenAnswer((_) => Stream.value(Right([_alert()])));
+      return buildCubit();
+    },
+    act: (cubit) async {
+      await cubit.load('event-1');
+      await cubit.raise();
+    },
+    wait: const Duration(milliseconds: 10),
+    verify: (cubit) {
+      expect(cubit.state.mine, isA<SosSendPending>());
+      verifyNever(() => outbox.markSent(any()));
     },
   );
 

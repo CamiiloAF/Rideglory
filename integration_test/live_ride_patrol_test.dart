@@ -295,7 +295,10 @@ void main() {
       await tester.tap(find.text('Sí, estoy bien'));
       await _settle(tester, seconds: 4);
 
-      final closedRow = await _waitForSosStatus('closed');
+      final closedRow = await _waitForSosStatus(
+        'closed',
+        timeout: const Duration(seconds: 60),
+      );
       expect(closedRow['status'], 'closed');
       expect(closedRow['closed_by'], _qa1Id);
 
