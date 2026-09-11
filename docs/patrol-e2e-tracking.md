@@ -31,14 +31,20 @@ flutter test integration_test/live_ride_patrol_test.dart -d <emulator> --flavor 
 
 | Escenario | Descripción | Automatizado |
 |---|---|---|
-| a | qa1 entra al detalle de "Rodada en curso" y ve el CTA "Ver rodada en vivo" | PENDIENTE (sin emulador) |
-| b | LV1: riders visibles, permiso de ubicación solo se consulta al cargar, nunca se pide | PENDIENTE (sin emulador) |
-| c | Compartir ubicación → aviso propio (LV2) antes del diálogo del sistema; "Ahora no" no dispara el permiso nativo | PENDIENTE (sin emulador) |
-| d | SOS: mantener pulsado 1,5 s → LV4 SOS activo, verificado directamente en BD (`status='active'`) | PENDIENTE (sin emulador) |
-| e | Cerrar el SOS con confirmación, verificado en BD (`status='closed'`, `closed_by=qa1`) | PENDIENTE (sin emulador) |
-| f | qa2 (organizador) ve la lista completa de riders en LV6 | PENDIENTE (sin emulador) |
+| a | qa1 entra al detalle de "Rodada en curso" y ve el CTA "Ver rodada en vivo" | **PASS** (repetido en varias corridas) |
+| b | LV1: riders visibles, permiso de ubicación solo se consulta al cargar, nunca se pide | **PASS tras el fix de `ec9e5a72`** (antes bloqueaba toda la pantalla) |
+| c | Compartir ubicación → aviso propio (LV2) antes del diálogo del sistema; "Ahora no" no dispara el permiso nativo | **PASS** |
+| d | SOS: mantener pulsado 1,5 s → LV4 SOS activo, verificado directamente en BD (`status='active'`) | **PASS** (fila creada y verificada por REST en cada corrida) |
+| e | Cerrar el SOS con confirmación, verificado en BD (`status='closed'`, `closed_by=qa1`) | **NO CONCLUYENTE esta noche** — ver diagnóstico abajo |
+| f | qa2 (organizador) ve la lista completa de riders en LV6 | No alcanzado (la suite es un solo `testWidgets` secuencial; se corta en (e)) |
 
-No se ejecutó en esta corrida por falta de emulador disponible (ver "Los AVD viven en un SSD externo" en `CLAUDE.md` §Trampas conocidas). La suite incluye limpieza defensiva (`_closeAnyOpenSos`) antes del flujo y en `tearDown`, para no dejar un SOS `active` de qa1 entre corridas.
+### Diagnóstico de (e) — corrida del 2026-09-10, noche
+
+El escenario (e) falló de forma reproducible en 5 corridas seguidas, incluso con el margen de espera subido a 60 s. Se instrumentó `SosCubit`/`SosActiveView` con trazas temporales (ya retiradas) y se confirmó: el diálogo de confirmación se dispara y se confirma bien (`confirmed=true`), `closeMine()` se invoca con `mine=SosSendPending`, y el intento de reconciliar contra el servidor (`_closePending` → `_retryOutbox`) vuelve casi de inmediato sin encontrar coincidencia — es decir, ese segundo viaje de red tampoco completa a tiempo, mientras una llamada `curl` directa a `close_sos` (sin pasar por el emulador) respondía al instante. Esto llevó a un fix real (`a54ba097`): `_reconcileMine` ahora confirma un SOS "pendiente" en cuanto Realtime lo entrega, sin depender de un segundo éxito de red del reintento. Con el fix puesto, la suite completa volvió a intentarse pero el propio proceso de `flutter test` fue matado por el sistema por falta de memoria antes de llegar al escenario (e) en las corridas siguientes — **no se pudo confirmar con una corrida completa en verde esta noche**, porque el host (Docker + 2-3 emuladores + Gradle + esta sesión) estuvo sistemáticamente sin margen de RAM durante toda la sesión.
+
+**Para retomar:** cerrar Docker Desktop, dejar un solo emulador corriendo (`Pixel_9a`), y volver a correr `live_ride_patrol_test.dart` completo en un host descargado. El fix de `a54ba097` es independiente de esa verificación: está cubierto por dos tests unitarios nuevos en `sos_cubit_test.dart` que sí corren en verde sin emulador.
+
+La suite incluye limpieza defensiva (`_closeAnyOpenSos`) antes del flujo y en `tearDown`, para no dejar un SOS `active` de qa1 entre corridas.
 
 ## Pendiente
 
